@@ -1,3 +1,4 @@
-import bar from './bar';
+import ReactDOM from 'react-dom'
+import App from './components/App'
 
-bar();
+ReactDOM.render(App, document.getElementById('root'))

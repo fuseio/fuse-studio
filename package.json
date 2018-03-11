@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard && echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +14,11 @@
     "react-dom": "^16.2.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "standard": "^11.0.0",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.11"
   }
