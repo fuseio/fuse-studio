@@ -1,8 +1,19 @@
+const HtmlWebPackPlugin = require('html-webpack-plugin')
+
 module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'bundle.js'
   },
+  devServer: {
+    port: 9000
+  },
+  plugins: [
+    new HtmlWebPackPlugin({
+      template: './src/index.html',
+      filename: './index.html'
+    })
+  ],
   module: {
     rules: [
       {
@@ -11,6 +22,15 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         }
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader',
+            options: { minimize: true }
+          }
+        ]
       }
     ]
   }
