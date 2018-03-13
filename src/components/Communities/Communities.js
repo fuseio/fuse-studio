@@ -1,15 +1,25 @@
 import React, {Component} from 'react'
-import Web3 from 'web3'
-import CurrencyFactoryAbi from 'constants/abi/CurrencyFactory'
+import web3 from 'services/web3'
+import Network from 'components/Network'
+import CLN from 'components/CLN'
 
-const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8546')
-console.log(CurrencyFactoryAbi)
-console.log(web3)
 
 class Communities extends Component {
+  constructor (props) {
+    super(props)
+    setInterval(() => {
+      this.setState({time: Date()})
+    }, 1000)
+    this.state = {
+      time: Date()
+    }
+  }
+
   render () {
     return (<div>
       Communities
+      <Network time={this.state.time} />
+      <CLN time={this.state.time} />
     </div>)
   }
 }
