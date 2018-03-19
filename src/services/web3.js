@@ -42,7 +42,6 @@ currencyFactoryContract.methods.supportsToken('0x41C9d91E96b933b74ae21bCBb617369
   data.supportsToken = result
 })
 
-
 // coluLocalNetworkSale.
 
 export default web3
