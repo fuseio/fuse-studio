@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 
+import Network from 'containers/Network'
 import Communities from 'components/Communities'
 import {fetchSupportsToken} from 'actions'
 import {fetchName, balanceOf, transfer} from 'actions/erc20'
@@ -14,6 +15,7 @@ class App extends Component {
 
   render () {
     return <div>
+      <Network />
       <Communities />
     </div>
   }

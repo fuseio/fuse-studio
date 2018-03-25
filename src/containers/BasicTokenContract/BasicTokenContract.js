@@ -3,7 +3,16 @@ import { connect } from 'react-redux'
 
 import { transfer } from 'actions/erc20'
 
-class Contract extends Component {
+const styles = {
+  contract: {
+    border: '2px solid blue',
+    borderRadius: 10,
+    margin: 10,
+    padding: 10
+  }
+}
+
+class BasicTokenContract extends Component {
   state = {
     to: '0x28eF70800b19B3bf15bF8210f351a95F15613aeb',
     value: 1000
@@ -22,9 +31,10 @@ class Contract extends Component {
   }
 
   render () {
-    return <div>
-      <div>contract name: {this.props.name} </div>
-      <div>balanceOf: {this.props.balance} </div>
+    return <div style={styles.contract}>
+      <div>Contract Name: ColuLocalNetwork</div>
+      <div>Token Name: {this.props.contract.name} </div>
+      <div>balanceOf: {this.props.contract.balance} </div>
       <div>
         to: <input type='text' value={this.state.to} onChange={this.handleToChange} />
         value: <input type='text' value={this.state.value} onChange={this.handleValueChange} />
@@ -34,10 +44,10 @@ class Contract extends Component {
   }
 }
 
-const mapStateToProps = (state) => state.basicToken
+const mapStateToProps = (state) => ({contract: state.basicToken})
 
 export default connect(
   mapStateToProps, {
     transfer
   }
-)(Contract)
+)(BasicTokenContract)

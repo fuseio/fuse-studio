@@ -2,6 +2,7 @@ import { takeEvery, put, all, take, call, fork } from 'redux-saga/effects'
 import * as actions from 'actions'
 
 import erc20Saga from './erc20'
+import currencyFactorySaga from './currencyFactory'
 import { getContract } from 'services/web3/contracts'
 import web3 from 'services/web3/web3'
 
@@ -9,8 +10,6 @@ const currencyFactoryContract = getContract('CurrencyFactory')
 
 export function * fetchSupportsToken (tokenAddress) {
   try {
-    // const {tokenAddress} = yield take(actions.FETCH_SUPPORTS_TOKEN_REQUESTED)
-    // console.log(tokenAddress)
     const data = yield currencyFactoryContract.methods.supportsToken(tokenAddress).call()
     yield put({type: 'FETCH_SUPPORTS_TOKEN_SUCCEEDED', data})
   } catch (error) {
@@ -20,7 +19,7 @@ export function * fetchSupportsToken (tokenAddress) {
 
 export function * getNetwork () {
   try {
-    const data = yield web3.eth.net.getId()
+    const data = yield web3.eth.net.getNetworkType()
     yield put({type: 'GET_NETWORK_SUCCEEDED', data})
   } catch (error) {
     yield put({type: 'GET_NETWORK_FAILED', error})
@@ -40,6 +39,7 @@ export default function * rootSaga () {
   yield all([
     fork(watchSupportsToken),
     fork(watchGetNetwork),
-    fork(erc20Saga)
+    fork(erc20Saga),
+    fork(currencyFactorySaga)
   ])
 }
