@@ -1,7 +1,7 @@
 import { takeEvery, put, all, take, call, fork } from 'redux-saga/effects'
 import * as actions from 'actions'
 
-import {watchName, watchBalanceOf, watchTransfer, watchTransferSuccess} from './erc20'
+import erc20Saga from './erc20'
 import { getContract } from 'services/web3/contracts'
 import web3 from 'services/web3/web3'
 
@@ -40,9 +40,6 @@ export default function * rootSaga () {
   yield all([
     fork(watchSupportsToken),
     fork(watchGetNetwork),
-    fork(watchName),
-    fork(watchBalanceOf),
-    fork(watchTransfer),
-    fork(watchTransferSuccess)
+    fork(erc20Saga)
   ])
 }

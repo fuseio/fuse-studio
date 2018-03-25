@@ -23,9 +23,8 @@ class Contract extends Component {
 
   render () {
     return <div>
-      <div>CLN: {this.props.name} </div>
+      <div>contract name: {this.props.name} </div>
       <div>balanceOf: {this.props.balance} </div>
-      <div>supportsToken: {this.props.supportsToken ? 'yes' : 'no'}</div>
       <div>
         to: <input type='text' value={this.state.to} onChange={this.handleToChange} />
         value: <input type='text' value={this.state.value} onChange={this.handleValueChange} />

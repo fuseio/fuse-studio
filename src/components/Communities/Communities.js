@@ -15,7 +15,6 @@ class Communities extends Component {
 
   render () {
     return (<div>
-      Contract
       <Network time={this.state.time} />
       <Contract />
     </div>)
