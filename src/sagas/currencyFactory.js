@@ -1,4 +1,4 @@
-import { takeEvery, all, put, take, fork } from 'redux-saga/effects'
+import { all, put, take, fork } from 'redux-saga/effects'
 
 import * as actions from 'actions/currencyFactory'
 import { getContract } from 'services/web3/contracts'
@@ -16,9 +16,7 @@ export function * supportsToken (address) {
 
 export function * tokens (index) {
   try {
-    console.log('fsdfsdd')
     const data = yield CurrencyFactoryContract.methods.tokens(index).call()
-    console.log(data)
     yield put({type: actions.TOKENS.SUCCESS, data})
   } catch (error) {
     yield put({type: actions.TOKENS.ERROR, error})
