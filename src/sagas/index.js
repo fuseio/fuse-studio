@@ -1,7 +1,7 @@
 import { takeEvery, put, all, take, call, fork } from 'redux-saga/effects'
 import * as actions from 'actions'
 
-import erc20Saga from './erc20'
+import erc20Saga from './basicToken'
 import currencyFactorySaga from './currencyFactory'
 import { getContract } from 'services/web3/contracts'
 import web3 from 'services/web3/web3'

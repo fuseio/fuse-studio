@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import erc20Reducer from './erc20'
+import erc20Reducer from './basicToken'
 import currencyFactory from './currencyFactory'
 
 function web3 (state = {}, action) {

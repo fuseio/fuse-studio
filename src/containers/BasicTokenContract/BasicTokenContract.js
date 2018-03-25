@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 
-import { transfer } from 'actions/erc20'
+import { transfer } from 'actions/basicToken'
 
 const styles = {
   contract: {

@@ -1,10 +1,10 @@
-import * as erc20 from 'actions/erc20'
+import * as basicToken from 'actions/basicToken'
 
 export default (state = {}, action) => {
   switch (action.type) {
-    case erc20.BALANCE_OF.SUCCESS:
+    case basicToken.BALANCE_OF.SUCCESS:
       return {...state, balance: action.data}
-    case erc20.NAME.SUCCESS:
+    case basicToken.NAME.SUCCESS:
       return {...state, name: action.data}
     default:
       return state
