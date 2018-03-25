@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
-import web3 from 'services/web3'
-import Network from 'components/Network'
-import CLN from 'components/CLN'
-
+import Network from 'containers/Network'
+import Contract from 'containers/Contract'
 
 class Communities extends Component {
   constructor (props) {
@@ -17,9 +15,9 @@ class Communities extends Component {
 
   render () {
     return (<div>
-      Communities
+      Contract
       <Network time={this.state.time} />
-      <CLN time={this.state.time} />
+      <Contract />
     </div>)
   }
 }

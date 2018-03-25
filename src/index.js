@@ -1,5 +1,16 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './components/App'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+import Root from 'containers/Root'
+import configureStore from 'store/configureStore'
+import rootSaga from 'sagas/index'
+
+const store = configureStore(window.__INITIAL_STATE__)
+
+store.runSaga(rootSaga)
+
+ReactDOM.render(<Root
+  store={store} />,
+document.getElementById('root'))
