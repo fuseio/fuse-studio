@@ -1,9 +1,9 @@
 import { all, put, take, fork } from 'redux-saga/effects'
 
 import * as actions from 'actions/currencyFactory'
-import { getContract } from 'services/web3/contracts'
+import { contract } from 'osseus-wallet'
 
-const CurrencyFactoryContract = getContract('CurrencyFactory')
+const CurrencyFactoryContract = contract.getContract('CurrencyFactory')
 
 export function * supportsToken (address) {
   try {

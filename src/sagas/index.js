@@ -3,10 +3,10 @@ import * as actions from 'actions'
 
 import erc20Saga from './basicToken'
 import currencyFactorySaga from './currencyFactory'
-import { getContract } from 'services/web3/contracts'
-import web3 from 'services/web3/web3'
+import { contract } from 'osseus-wallet'
+import web3 from 'services/web3'
 
-const currencyFactoryContract = getContract('CurrencyFactory')
+const currencyFactoryContract = contract.getContract('CurrencyFactory')
 
 export function * fetchSupportsToken (tokenAddress) {
   try {

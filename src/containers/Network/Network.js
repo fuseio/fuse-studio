@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 
-import web3 from 'services/web3/web3'
+import web3 from 'services/web3'
 import {getNetwork} from 'actions'
 
 class Network extends Component {
