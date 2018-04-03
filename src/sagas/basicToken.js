@@ -11,7 +11,7 @@ export function * name () {
     const data = yield ColuLocalNetworkContract.methods.name().call()
     yield put({type: actions.NAME.SUCCESS, data})
   } catch (error) {
-    yield put({type: actions.NAME.ERROR, error})
+    yield put({type: actions.NAME.FAILURE, error})
   }
 }
 
@@ -20,7 +20,7 @@ export function * balanceOf (address) {
     const data = yield ColuLocalNetworkContract.methods.balanceOf(address).call()
     yield put({type: actions.BALANCE_OF.SUCCESS, data})
   } catch (error) {
-    yield put({type: actions.BALANCE_OF.ERROR, error})
+    yield put({type: actions.BALANCE_OF.FAILURE, error})
   }
 }
 
@@ -32,7 +32,7 @@ export function * transfer (to, value) {
     yield put({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
     yield put({type: actions.TRANSFER.SUCCESS, receipt})
   } catch (error) {
-    yield put({type: actions.TRANSFER.ERROR, error})
+    yield put({type: actions.TRANSFER.FAILURE, error})
   }
 }
 

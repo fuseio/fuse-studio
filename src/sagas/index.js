@@ -1,21 +1,9 @@
-import { takeEvery, put, all, take, call, fork } from 'redux-saga/effects'
+import { takeEvery, put, all, fork } from 'redux-saga/effects'
 import * as actions from 'actions'
 
-import erc20Saga from './basicToken'
+import basicTokenSaga from './basicToken'
 import currencyFactorySaga from './currencyFactory'
-import { contract } from 'osseus-wallet'
 import web3 from 'services/web3'
-
-const currencyFactoryContract = contract.getContract('CurrencyFactory')
-
-export function * fetchSupportsToken (tokenAddress) {
-  try {
-    const data = yield currencyFactoryContract.methods.supportsToken(tokenAddress).call()
-    yield put({type: 'FETCH_SUPPORTS_TOKEN_SUCCEEDED', data})
-  } catch (error) {
-    yield put({type: 'FETCH_SUPPORTS_TOKEN_FAILED', error})
-  }
-}
 
 export function * getNetwork () {
   try {
@@ -26,20 +14,14 @@ export function * getNetwork () {
   }
 }
 
-export function * watchSupportsToken () {
-  const { tokenAddress } = yield take(actions.FETCH_SUPPORTS_TOKEN_REQUESTED)
-  yield call(fetchSupportsToken, tokenAddress)
-}
-
 export function * watchGetNetwork () {
   yield takeEvery(actions.GET_NETWORK, getNetwork)
 }
 
 export default function * rootSaga () {
   yield all([
-    fork(watchSupportsToken),
     fork(watchGetNetwork),
-    fork(erc20Saga),
+    fork(basicTokenSaga),
     fork(currencyFactorySaga)
   ])
 }

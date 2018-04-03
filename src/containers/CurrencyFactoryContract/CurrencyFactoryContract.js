@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 
-import { supportsToken, tokens } from 'actions/currencyFactory'
+import { supportsToken, tokens, createCurrency } from 'actions/currencyFactory'
 
 const styles = {
   contract: {
@@ -29,11 +29,27 @@ class CurrencyFactoryContract extends Component {
     this.props.tokens(this.state.tokenIndex)
   }
 
+  handleCreateCurrency = (event) => this.props.createCurrency(this.state.currency)
+
   handleClick = () => this.props.supportsToken(this.state.address)
+
+  handleNameChange = (event) => this.setState({currency: {...this.state.currency, name: event.target.value}})
+
+  handleSymbolChange = (event) => this.setState({currency: {...this.state.currency, symbol: event.target.value}})
+
+  handleDecimalsChange = (event) => this.setState({currency: {...this.state.currency, decimals: event.target.value}})
+
+  handleSupplyChange = (event) => this.setState({currency: {...this.state.currency, totalSupply: event.target.value}})
 
   state = {
     address: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
-    tokenIndex: 0
+    tokenIndex: 0,
+    currency: {
+      name: 'CoolCoin',
+      symbol: 'CC',
+      decimals: 18,
+      totalSupply: 1e+24
+    }
   }
 
   render () {
@@ -49,6 +65,23 @@ class CurrencyFactoryContract extends Component {
         <button onClick={this.handleQueryTokens}>Query</button>
         result: {this.props.contract.tokens}
       </div>
+      <br />
+      <div>
+        <span>Create CC</span>
+        <div>
+          name: <input type='text' value={this.state.currency.name} onChange={this.handleNameChange} />
+        </div>
+        <div>
+          symbol: <input type='text' value={this.state.currency.symbol} onChange={this.handleSymbolChange} />
+        </div>
+        <div>
+          decimals: <input type='number' value={this.state.currency.decimals} onChange={this.handleDecimalsChange} />
+        </div>
+        <div>
+          totalSupply: <input type='number' value={this.state.currency.totalSupply} onChange={this.handleSupplyChange} />
+        </div>
+        <button onClick={this.handleCreateCurrency}>create CC</button>
+      </div>
     </div>
   }
 }
@@ -58,6 +91,7 @@ const mapStateToProps = (state) => ({contract: state.currencyFactory})
 export default connect(
   mapStateToProps, {
     supportsToken,
-    tokens
+    tokens,
+    createCurrency
   }
 )(CurrencyFactoryContract)

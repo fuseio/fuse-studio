@@ -15,6 +15,7 @@
     "parser": "babel-eslint"
   },
   "dependencies": {
+    "bignumber.js": "^6.0.0",
     "osseus-wallet": "git+https://github.com/leonprou/CLN-wallet.git",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
