@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import Network from 'containers/Network'
 import Communities from 'components/Communities'
+import Storage from 'components/Storage'
 import {fetchSupportsToken} from 'actions'
 import {fetchName, balanceOf, transfer} from 'actions/basicToken'
 
@@ -17,6 +18,7 @@ class App extends Component {
     return <div>
       <Network />
       <Communities />
+      <Storage />
     </div>
   }
 }
