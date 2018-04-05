@@ -31,7 +31,8 @@ export function * createCurrency (currencyData) {
       currencyData.name,
       currencyData.symbol,
       currencyData.decimals,
-      new BigNumber(currencyData.totalSupply)
+      new BigNumber(currencyData.totalSupply),
+      ''
     ).send({
       from: web3.eth.defaultAccount
     })
