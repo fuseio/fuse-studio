@@ -41,6 +41,8 @@ class CurrencyFactoryContract extends Component {
 
   handleSupplyChange = (event) => this.setState({currency: {...this.state.currency, totalSupply: event.target.value}})
 
+  handleDataChange = (event) => this.setState({currency: {...this.state.currency, data: event.target.value}})
+
   state = {
     address: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
     tokenIndex: 0,
@@ -79,6 +81,9 @@ class CurrencyFactoryContract extends Component {
         </div>
         <div>
           totalSupply: <input type='number' value={this.state.currency.totalSupply} onChange={this.handleSupplyChange} />
+        </div>
+        <div>
+          data: <input type='string' value={this.state.currency.data} onChange={this.handleDataChange} />
         </div>
         <button onClick={this.handleCreateCurrency}>create CC</button>
       </div>

@@ -32,7 +32,7 @@ export function * createCurrency (currencyData) {
       currencyData.symbol,
       currencyData.decimals,
       new BigNumber(currencyData.totalSupply),
-      ''
+      currencyData.data
     ).send({
       from: web3.eth.defaultAccount
     })
