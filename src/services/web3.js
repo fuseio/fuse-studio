@@ -4,7 +4,8 @@ import abi from 'constants/abi'
 
 const config = {
     addresses,
-    abi
+    abi,
+    fallbackProvider: 'https://ropsten.infura.io/CdAtL4kE55uikRNN1pON'
 }
 
 init(config)
