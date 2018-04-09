@@ -5,13 +5,13 @@ const enc = new window.TextDecoder('utf-8')
 
 class Storage extends Component {
   state = {
-    added_file_hash: null,
-    added_file_contents: null,
+    fileHash: '',
+    fileContent: '',
     tokenData: {
       lat: '',
       lng: '',
       title: ''
-    }
+    },
   }
 
   handleLatChange = (event) => this.setState({tokenData: {...this.state.tokenData, lat: event.target.value}})
@@ -20,6 +20,16 @@ class Storage extends Component {
 
   handleTitleChange = (event) => this.setState({tokenData: {...this.state.tokenData, title: event.target.value}})
 
+  handleFileHashChange = (event) => {
+    const hash = event.target.value
+    this.setState({fileHash: hash})
+
+    ipfs.files.cat(hash, (err, data) => {
+      if (err) { throw err }
+      self.setState({fileContent: enc.decode(data)})
+    })
+  }
+
   submitIPFS = () => {
     const self = this
 
@@ -27,11 +37,11 @@ class Storage extends Component {
       if (err) { throw err }
 
       const hash = filesAdded[0].hash
-      self.setState({added_file_hash: hash})
+      self.setState({fileHash: hash})
 
       ipfs.files.cat(hash, (err, data) => {
         if (err) { throw err }
-        self.setState({added_file_contents: enc.decode(data)})
+        self.setState({fileContent: enc.decode(data)})
       })
     })
   }
@@ -53,13 +63,13 @@ class Storage extends Component {
         <hr />
         <div>
           Added a file: <br />
-          {this.state.added_file_hash}
+          <input type='text' value={this.state.fileHash} onChange={this.handleFileHashChange} />
         </div>
         <br />
         <br />
         <p>
           Contents of this file: <br />
-          {this.state.added_file_contents}
+          {this.state.fileContent}
         </p>
       </div>
     )
