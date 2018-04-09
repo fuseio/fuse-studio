@@ -1,4 +1,5 @@
-import IPFS from 'ipfs'
+// import IPFS from 'ipfs'
+import ipfsAPI from 'ipfs-api'
 
 function ops (node) {
   node.id((err, res) => {
@@ -14,14 +15,15 @@ function ops (node) {
 }
 
 const init = () => {
-  const node = new IPFS({ repo: String(Math.random() + Date.now()) })
+  const ipfs = new ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+  ops(ipfs)
+  // debugger
+  // ipfs.once('ready', () => {
+  //   console.log('IPFS node is ready')
+  //   ops(ipfs)
+  // })
 
-  node.once('ready', () => {
-    console.log('IPFS node is ready')
-    ops(node)
-  })
-
-  return node
+  return ipfs
 }
 
 const ipfs = init()

@@ -26,7 +26,7 @@ class Storage extends Component {
 
     ipfs.files.cat(hash, (err, data) => {
       if (err) { throw err }
-      self.setState({fileContent: enc.decode(data)})
+      this.setState({fileContent: enc.decode(data)})
     })
   }
 
