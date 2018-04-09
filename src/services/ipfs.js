@@ -17,11 +17,6 @@ function ops (node) {
 const init = () => {
   const ipfs = new ipfsAPI('/ip4/127.0.0.1/tcp/5001')
   ops(ipfs)
-  // debugger
-  // ipfs.once('ready', () => {
-  //   console.log('IPFS node is ready')
-  //   ops(ipfs)
-  // })
 
   return ipfs
 }
