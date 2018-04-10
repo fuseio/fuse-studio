@@ -1,5 +1,5 @@
 // import IPFS from 'ipfs'
-import ipfsAPI from 'ipfs-api'
+import IpfsAPI from 'ipfs-api'
 
 function ops (node) {
   node.id((err, res) => {
@@ -15,7 +15,7 @@ function ops (node) {
 }
 
 const init = () => {
-  const ipfs = new ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+  const ipfs = new IpfsAPI('/ip4/127.0.0.1/tcp/5001')
   ops(ipfs)
 
   return ipfs

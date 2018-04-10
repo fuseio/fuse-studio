@@ -18,7 +18,7 @@
     "bignumber.js": "^6.0.0",
     "ipfs": "^0.28.2",
     "ipfs-api": "^20.0.0",
-    "osseus-wallet": "git+https://github.com/colucom/osseus-wallet.git#1051711bc0b80245edbfec6a586c10c376a0930a",
+    "osseus-wallet": "git+https://github.com/colucom/osseus-wallet.git",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
