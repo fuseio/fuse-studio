@@ -1,5 +1,11 @@
 [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
 
-This is a prototype of CLN app for community management
+# CLN Community App
+Welcome to the CLN community app repo. Please open an issue for requests/contribute ideas/bugs.
 
-It's a temporary repository!
+# Contributing Guide
+
+Yes, you can contribute to this repo!
+
+- make a PR
+- merge + squash are welcomed
