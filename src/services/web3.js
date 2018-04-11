@@ -6,7 +6,7 @@ const config = {
   osseus_wallet: {
     addresses,
     abi,
-    fallbackProvider: 'https://ropsten.infura.io/CdAtL4kE55uikRNN1pON'
+    provider: 'https://ropsten.infura.io/CdAtL4kE55uikRNN1pON'
   }
 }
 
