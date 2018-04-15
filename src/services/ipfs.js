@@ -16,7 +16,7 @@ function ops (node) {
 
 const init = () => {
   // const ipfs = new IpfsAPI('/ip4/ec2-34-211-228-220.us-west-2.compute.amazonaws.com/tcp/80')
-  const ipfs = new IpfsAPI({host: 'ec2-34-211-228-220.us-west-2.compute.amazonaws.com', port: 80, protocol: 'http'})
+  const ipfs = new IpfsAPI({host: 'qa-ipfs.colu.com', port: 443, protocol: 'https'})
   ops(ipfs)
 
   return ipfs
