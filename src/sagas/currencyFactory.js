@@ -5,7 +5,7 @@ import * as actions from 'actions/currencyFactory'
 import { contract } from 'osseus-wallet'
 import web3 from 'services/web3'
 
-const CurrencyFactoryContract = contract.getContract('CurrencyFactory')
+const CurrencyFactoryContract = contract.getContract({contractName: 'CurrencyFactory'})
 
 export function * supportsToken (address) {
   try {
