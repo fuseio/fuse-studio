@@ -4,7 +4,7 @@ import * as actions from 'actions/basicToken'
 import web3 from 'services/web3'
 import { contract } from 'osseus-wallet'
 
-const ColuLocalNetworkContract = contract.getContract('ColuLocalNetwork')
+const ColuLocalNetworkContract = contract.getContract({contractName: 'ColuLocalNetwork'})
 
 export function * name () {
   try {
