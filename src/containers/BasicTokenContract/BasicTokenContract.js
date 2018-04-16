@@ -32,7 +32,7 @@ class BasicTokenContract extends Component {
 
   render () {
     return <div style={styles.contract}>
-      <div>Contract Name: ColuLocalNetwork</div>
+      <div>Contract Name: {this.props.contractName}</div>
       <div>Token Name: {this.props.contract.name} </div>
       <div>balanceOf: {this.props.contract.balance} </div>
       <div>

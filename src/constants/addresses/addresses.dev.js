@@ -1,5 +1,5 @@
 export default {
   ColuLocalNetwork: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
-  CurrencyFactory: '0x412a32d19E562dE521Ed794635Bf731e50aa1075',
+  CurrencyFactory: '0xe820Ed6c3181144F8D109C6102EB268207e9054E',
   ColuLocalNetworkSale: '0xa973fa1cF412AC6A76C749aA6E1fcA7251814A48'
 }
