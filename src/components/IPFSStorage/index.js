@@ -3,7 +3,7 @@ import ipfs from 'services/ipfs'
 
 const enc = new window.TextDecoder('utf-8')
 
-class Storage extends Component {
+class IPFSStorage extends Component {
   state = {
     fileHash: '',
     fileContent: '',
@@ -11,7 +11,7 @@ class Storage extends Component {
       lat: '',
       lng: '',
       title: ''
-    },
+    }
   }
 
   handleLatChange = (event) => this.setState({tokenData: {...this.state.tokenData, lat: event.target.value}})
@@ -76,4 +76,4 @@ class Storage extends Component {
   }
 }
 
-export default Storage
+export default IPFSStorage

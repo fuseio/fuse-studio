@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import erc20Reducer from './basicToken'
+import basicToken from './basicToken'
 import currencyFactory from './currencyFactory'
 
 function web3 (state = {}, action) {
@@ -15,7 +15,7 @@ function web3 (state = {}, action) {
 
 const rootReducer = combineReducers({
   web3,
-  basicToken: erc20Reducer,
+  tokens: basicToken,
   currencyFactory
 })
 
