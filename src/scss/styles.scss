@@ -1,0 +1,115 @@
+@import url("https://www.colu.com/fonts/354639/B6EF1FBC1ECBDE833.css");
+
+$dark-grey: #3d3d3d;
+$light-grey: #f8f8f8;
+$colu-green: #4dd9b4;
+$nav-height: 60px;
+$page-width: 1024px;
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin flex-box() {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin flex-direction($direction) {
+  -webkit-flex-direction: $direction;
+  -ms-flex-direction: $direction;
+  flex-direction: $direction;
+}
+
+@mixin  transformTranslate($x,$y){
+  -ms-transform: translate($x,$y); /* IE 9 */
+  -webkit-transform: translate($x,$y); /* Chrome, Safari, Opera */
+  transform: translate($x,$y);
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
+}
+
+div {
+	box-sizing: border-box;
+}
+
+.flex {
+	@include flex-box();
+	&.column {
+		@include flex-direction(column)
+	}
+	&.center {
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.switch-wrapper {
+  position: relative;
+}
+
+.switch-wrapper > div {
+  position: absolute;
+}
+
+.sidebar {
+	position: absolute;
+	top: $nav-height;
+	bottom: 0;
+	//right: calc((100vw - 1024px)/2);
+	right: 0;
+
+}
+
+.main-container {
+	//max-width: $page-width;
+	height: 100%;
+	width: 100%;
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
+}
+
+.community-sidebar {
+	background-color: white;
+	height: calc(100vh - 60px);
+	width: 500px;
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
+}
+
+.top-navigator {
+	height: $nav-height;
+	width: 100%;
+	background-color: $light-grey;
+	@include flex-box();
+	align-items: center;
+	justify-content: flex-end;
+	padding: 10px;
+	.top-nav-text {
+		color: $dark-grey;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 25px;
+		margin: 0 14px;
+	}
+}
+
+.marker {
+	overflow: visible;
+	.e-marker__circle {
+		fill: white;
+	}
+}
+
+
+
+
+
+

@@ -13,7 +13,9 @@ module.exports = {
     ]
   },
   devServer: {
-    port: 9000
+    host: "local.colu.com",
+    port: 9000,
+    historyApiFallback: true
   },
   plugins: [
     new HtmlWebPackPlugin({
@@ -39,23 +41,23 @@ module.exports = {
           }
         ]
       },
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     { loader: "style-loader" },
+      //     { loader: "css-loader" }
+      //   ]
+      // },
       {
-        test: /\.css$/,
-        use: [
-          { loader: "style-loader" },
-          { loader: "css-loader" }
-        ]
-      },
-      {
-          test: /\.scss$/,
-          use: [{
-              loader: "style-loader" // creates style nodes from JS strings
-          }, {
-              loader: "css-loader" // translates CSS into CommonJS
-          }, {
-              loader: "sass-loader" // compiles Sass to CSS
-          }]
-      }
+            test: /\.scss$/,
+            use: [{
+                loader: "style-loader" // creates style nodes from JS strings
+            }, {
+                loader: "css-loader" // translates CSS into CommonJS
+            }, {
+                loader: "sass-loader" // compiles Sass to CSS
+            }]
+        }
     ]
   }
 }
