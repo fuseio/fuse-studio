@@ -4,11 +4,10 @@ import { connect } from 'react-redux'
 import BasicTokenContract from 'containers/BasicTokenContract'
 import ContractStorage from 'containers/ContractStorage'
 import { metadata, setMetadata } from 'actions/basicToken'
-// Object.keys({})
 
 class ColuLocalCurrencyContract extends Component {
   state ={
-    address: '0x79f78b09c3661a6355272Cfd711d43D5D9DCe0A5',
+    address: '0x296582CAb0e44009d2142D7daf33C81f153407F8',
     open: true
   }
 

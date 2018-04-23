@@ -10,6 +10,8 @@ export const OWNER = createRequestTypes('OWNER')
 export const BALANCE_OF = createRequestTypes('BALANCE_OF')
 export const TRANSFER = createRequestTypes('TRANSFER')
 
+export const FETCH_CONTRACT_DATA = createRequestTypes('FETCH_CONTRACT_DATA')
+
 export const name = (contractAddress) => action(NAME.REQUEST, {contractAddress})
 export const symbol = (contractAddress) => action(SYMBOL.REQUEST, {contractAddress})
 export const totalSupply = (contractAddress) => action(TOTAL_SUPPLY.REQUEST, {contractAddress})
@@ -19,3 +21,5 @@ export const owner = (contractAddress) => action(OWNER.REQUEST, {contractAddress
 
 export const balanceOf = (contractAddress, address) => action(BALANCE_OF.REQUEST, {contractAddress, address})
 export const transfer = (contractAddress, to, value) => action(TRANSFER.REQUEST, {contractAddress, to, value})
+
+export const fetchContractData = (contractAddress) => action(FETCH_CONTRACT_DATA.REQUEST, {contractAddress})

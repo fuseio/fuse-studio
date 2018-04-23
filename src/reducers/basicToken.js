@@ -16,6 +16,8 @@ export default (state = {}, action) => {
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case basicToken.OWNER.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+    case basicToken.FETCH_CONTRACT_DATA.SUCCESS:
+      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     default:
       return state
   }

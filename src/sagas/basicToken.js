@@ -1,15 +1,15 @@
-import { all, put, take, fork } from 'redux-saga/effects'
+import { all, call, put, take, fork } from 'redux-saga/effects'
 
 import * as actions from 'actions/basicToken'
 import web3 from 'services/web3'
 import { contract } from 'osseus-wallet'
-
+import addresses from 'constants/addresses'
 // const ColuLocalNetworkContract = contract.getContract({contractName: 'ColuLocalNetwork'})
 
 export function * name (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
-    const name = yield ColuLocalNetworkContract.methods.name().call()
+    const name = yield call(ColuLocalNetworkContract.methods.name().call)
     yield put({type: actions.NAME.SUCCESS,
       contractAddress,
       response: {
@@ -23,7 +23,7 @@ export function * name (contractAddress) {
 export function * symbol (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
-    const symbol = yield ColuLocalNetworkContract.methods.symbol().call()
+    const symbol = yield call(ColuLocalNetworkContract.methods.symbol().call)
     yield put({type: actions.SYMBOL.SUCCESS,
       contractAddress,
       response: {
@@ -37,7 +37,7 @@ export function * symbol (contractAddress) {
 export function * totalSupply (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
-    const totalSupply = yield ColuLocalNetworkContract.methods.totalSupply().call()
+    const totalSupply = yield call(ColuLocalNetworkContract.methods.totalSupply().call)
     yield put({type: actions.TOTAL_SUPPLY.SUCCESS,
       contractAddress,
       response: {
@@ -51,7 +51,7 @@ export function * totalSupply (contractAddress) {
 export function * metadata (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    const metadata = yield ColuLocalNetworkContract.methods.metadata().call()
+    const metadata = yield call(ColuLocalNetworkContract.methods.metadata().call)
     yield put({type: actions.METADATA.SUCCESS,
       contractAddress,
       response: {
@@ -65,7 +65,6 @@ export function * metadata (contractAddress) {
 export function * setMetadata (contractAddress, metadataUri) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    console.log(metadataUri)
     const metadata = yield ColuLocalNetworkContract.methods.setMetadata(metadataUri).send({
       from: web3.eth.defaultAccount
     })
@@ -82,7 +81,7 @@ export function * setMetadata (contractAddress, metadataUri) {
 export function * owner (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    const owner = yield ColuLocalNetworkContract.methods.owner().call()
+    const owner = yield call(ColuLocalNetworkContract.methods.owner().call)
     yield put({type: actions.OWNER.SUCCESS,
       contractAddress,
       response: {
@@ -96,7 +95,7 @@ export function * owner (contractAddress) {
 export function * balanceOf (contractAddress, address) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
-    const balanceOf = yield ColuLocalNetworkContract.methods.balanceOf(address).call()
+    const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(address).call)
     yield put({type: actions.BALANCE_OF.SUCCESS,
       contractAddress,
       response: {
@@ -120,6 +119,39 @@ export function * transfer (contractAddress, to, value) {
   }
 }
 
+export function * fetchContractData (contractAddress) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+
+    const calls = [
+      call(ColuLocalNetworkContract.methods.name().call),
+      call(ColuLocalNetworkContract.methods.symbol().call),
+      call(ColuLocalNetworkContract.methods.totalSupply().call),
+      call(ColuLocalNetworkContract.methods.owner().call)
+    ]
+
+    if (contractAddress !== addresses.ColuLocalNetwork) {
+      calls.push(call(ColuLocalNetworkContract.methods.metadata().call))
+    }
+
+    const [name, symbol, totalSupply, owner, metadata] = yield all(calls)
+    yield put({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
+      contractAddress,
+      response: {
+        name,
+        symbol,
+        totalSupply,
+        owner,
+        metadata
+      }})
+    if (metadata) {
+      console.log('fetchhhhh')
+    }
+  } catch (error) {
+    console.error(error)
+    yield put({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
+  }
+}
 export function * watchBalanceOf () {
   while (true) {
     const {contractAddress, address} = yield take(actions.BALANCE_OF.REQUEST)
@@ -183,6 +215,12 @@ export function * watchTransferSuccess () {
   }
 }
 
+export function * watchFetchContractData () {
+  while (true) {
+    const {contractAddress} = yield take(actions.FETCH_CONTRACT_DATA.REQUEST)
+    yield fork(fetchContractData, contractAddress)
+  }
+}
 export default function * rootSaga () {
   yield all([
     fork(watchName),
@@ -192,6 +230,7 @@ export default function * rootSaga () {
     fork(watchSetMetadata),
     fork(watchOwner),
     fork(watchBalanceOf),
-    fork(watchTransfer)
+    fork(watchTransfer),
+    fork(watchFetchContractData)
   ])
 }

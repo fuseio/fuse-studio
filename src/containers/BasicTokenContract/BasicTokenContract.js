@@ -20,20 +20,20 @@ class BasicTokenContract extends Component {
   }
 
   componentDidMount () {
-    this.props.name(this.props.address)
-    this.props.symbol(this.props.address)
-    this.props.totalSupply(this.props.address)
-    this.props.balanceOf(this.props.address, '0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
-    this.props.owner(this.props.address)
+    // this.props.name(this.props.address)
+    // this.props.symbol(this.props.address)
+    // this.props.totalSupply(this.props.address)
+    // this.props.balanceOf(this.props.address, '0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
+    // this.props.owner(this.props.address)
   }
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.address !== this.props.address) {
-      this.props.name(nextProps.address)
-      this.props.symbol(nextProps.address)
-      this.props.totalSupply(nextProps.address)
-      this.props.balanceOf(nextProps.address, '0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
-      this.props.owner(nextProps.address)
+      // this.props.name(nextProps.address)
+      // this.props.symbol(nextProps.address)
+      // this.props.totalSupply(nextProps.address)
+      // this.props.balanceOf(nextProps.address, '0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
+      // this.props.owner(nextProps.address)
     }
   }
 
