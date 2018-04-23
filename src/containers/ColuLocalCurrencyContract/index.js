@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 
 import BasicTokenContract from 'containers/BasicTokenContract'
 import ContractStorage from 'containers/ContractStorage'
-import { metadata } from 'actions/basicToken'
+import { metadata, setMetadata } from 'actions/basicToken'
+// Object.keys({})
 
 class ColuLocalCurrencyContract extends Component {
   state ={
-    address: '0x43260f716e81701720ADcbb0De2C564799419D95',
+    address: '0x79f78b09c3661a6355272Cfd711d43D5D9DCe0A5',
     open: true
   }
 
@@ -21,6 +22,7 @@ class ColuLocalCurrencyContract extends Component {
 
   handleLoadContract = () => {
     this.setState({open: true})
+    this.props.metadata(this.state.address)
   }
 
   render = () => (
@@ -35,9 +37,10 @@ class ColuLocalCurrencyContract extends Component {
             address={this.state.address}
             contract={this.props.tokens[this.state.address]} />
           {
-            this.state.address && this.props.tokens[this.state.address] && this.props.tokens[this.state.address].metadata &&
+            this.state.address && this.props.tokens[this.state.address] &&
             <ContractStorage
               metadata={this.props.tokens[this.state.address].metadata}
+              setMetadata={this.props.setMetadata}
               address={this.state.address}
             />
           }
@@ -52,6 +55,7 @@ const mapStateToProps = (state) => ({tokens: state.tokens})
 
 export default connect(
   mapStateToProps, {
-    metadata
+    metadata,
+    setMetadata
   }
 )(ColuLocalCurrencyContract)

@@ -50,7 +50,8 @@ class CurrencyFactoryContract extends Component {
       name: 'CoolCoin',
       symbol: 'CC',
       decimals: 18,
-      totalSupply: 1e+24
+      totalSupply: 1e+24,
+      data: ''
     }
   }
 

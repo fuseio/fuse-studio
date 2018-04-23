@@ -62,6 +62,37 @@ export function * metadata (contractAddress) {
   }
 }
 
+export function * setMetadata (contractAddress, metadataUri) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    console.log(metadataUri)
+    const metadata = yield ColuLocalNetworkContract.methods.setMetadata(metadataUri).send({
+      from: web3.eth.defaultAccount
+    })
+    yield put({type: actions.SET_METADATA.SUCCESS,
+      contractAddress,
+      response: {
+        metadata
+      }})
+  } catch (error) {
+    yield put({type: actions.SET_METADATA.FAILURE, error})
+  }
+}
+
+export function * owner (contractAddress) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const owner = yield ColuLocalNetworkContract.methods.owner().call()
+    yield put({type: actions.OWNER.SUCCESS,
+      contractAddress,
+      response: {
+        owner
+      }})
+  } catch (error) {
+    yield put({type: actions.OWNER.FAILURE, error})
+  }
+}
+
 export function * balanceOf (contractAddress, address) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
@@ -131,6 +162,20 @@ export function * watchMetadata () {
   }
 }
 
+export function * watchSetMetadata () {
+  while (true) {
+    const {contractAddress, metadataUri} = yield take(actions.SET_METADATA.REQUEST)
+    yield fork(setMetadata, contractAddress, metadataUri)
+  }
+}
+
+export function * watchOwner () {
+  while (true) {
+    const {contractAddress} = yield take(actions.OWNER.REQUEST)
+    yield fork(owner, contractAddress)
+  }
+}
+
 export function * watchTransferSuccess () {
   while (true) {
     const {receipt} = yield take(actions.TRANSFER.SUCCESS)
@@ -144,6 +189,8 @@ export default function * rootSaga () {
     fork(watchSymbol),
     fork(watchTotalSupply),
     fork(watchMetadata),
+    fork(watchSetMetadata),
+    fork(watchOwner),
     fork(watchBalanceOf),
     fork(watchTransfer)
   ])

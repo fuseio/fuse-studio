@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 
-import { name, symbol, totalSupply, balanceOf, transfer } from 'actions/basicToken'
+import { name, symbol, totalSupply, balanceOf, transfer, owner } from 'actions/basicToken'
+import { openMarket } from 'actions/currencyFactory'
 
 const styles = {
   contract: {
@@ -23,11 +24,22 @@ class BasicTokenContract extends Component {
     this.props.symbol(this.props.address)
     this.props.totalSupply(this.props.address)
     this.props.balanceOf(this.props.address, '0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
+    this.props.owner(this.props.address)
   }
 
-  handleClick = () => {
-    this.props.transfer(this.props.address, this.state.to, this.state.value)
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.address !== this.props.address) {
+      this.props.name(nextProps.address)
+      this.props.symbol(nextProps.address)
+      this.props.totalSupply(nextProps.address)
+      this.props.balanceOf(nextProps.address, '0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
+      this.props.owner(nextProps.address)
+    }
   }
+
+  handleTransfer = () => this.props.transfer(this.props.address, this.state.to, this.state.value)
+
+  handleOpenMarket = () => this.props.openMarket(this.props.address)
 
   handleToChange = (event) => {
     this.setState({to: event.target.value})
@@ -45,14 +57,15 @@ class BasicTokenContract extends Component {
       <div>Contract Name: {this.props.contractName}</div>
       <div>Name: {this.props.contract.name} </div>
       <div>Symbol: {this.props.contract.symbol} </div>
+      <div>Owner: {this.props.contract.owner} </div>
       <div>Total Supply: {this.props.contract.totalSupply} </div>
-
       <div>balanceOf: {this.props.contract.balanceOf} </div>
       <div>
         to: <input type='text' value={this.state.to} onChange={this.handleToChange} />
         value: <input type='text' value={this.state.value} onChange={this.handleValueChange} />
-        <button onClick={this.handleClick}>transfer</button>
+        <button onClick={this.handleTransfer}>transfer</button>
       </div>
+      <button onClick={this.handleOpenMarket}>open market</button>
     </div>
   }
 }
@@ -65,6 +78,8 @@ export default connect(
     symbol,
     totalSupply,
     balanceOf,
-    transfer
+    transfer,
+    openMarket,
+    owner
   }
 )(BasicTokenContract)
