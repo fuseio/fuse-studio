@@ -41,9 +41,6 @@ class App extends Component {
 		if (currentRoute === '/sidebar') {
 			panBy = { x: -100, y: 0 }
 		}
-		let example = classNames({
-			"fullscreen": true
-		})
 
 		return <div className="flex column center">
 			<div className="main-container flex column">
@@ -53,14 +50,6 @@ class App extends Component {
 
 		</div>
 	}
-
-	//render () {
-	//  return <div>
-	//    <Network />
-	//    <Communities />
-	//    <Storage />
-	//  </div>
-	//}
 }
 
 const mapStateToProps = (state) => state

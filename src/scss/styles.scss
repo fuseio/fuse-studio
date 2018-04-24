@@ -3,6 +3,7 @@
 $dark-grey: #3d3d3d;
 $light-grey: #f8f8f8;
 $colu-green: #4dd9b4;
+$colu-purple: #301eaa;
 $nav-height: 60px;
 $page-width: 1024px;
 
@@ -42,6 +43,27 @@ div {
 	box-sizing: border-box;
 }
 
+a {
+	text-decoration: none !important;
+	color: white !important;
+}
+h1 {
+	font-size: 32px;
+	line-height: 1.06;
+	letter-spacing: 0;
+	text-align: left;
+	margin: 0;
+	font-weight:lighter;
+}
+
+h2 {
+	font-size: 16px;
+	font-weight: 500;
+	margin: 0;
+	line-height: 1.25;
+	letter-spacing: 0;
+}
+
 .flex {
 	@include flex-box();
 	&.column {
@@ -78,38 +100,227 @@ div {
 }
 
 .community-sidebar {
-	background-color: white;
-	height: calc(100vh - 60px);
+	background-color: #ffffff36;
+	height: calc(100vh - 100px);
 	width: 500px;
 	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
+    margin: 20px;
+	.header {
+		background-color: #ffffff36;
+		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+		padding: 32px;
+		.coin-header {
+			@include flex-box();
+			img {
+				height: 90px;
+				width: 90px;
+			}
+			.coin-details {
+				margin-left: 16px;
+				h1 {
+					color: white;
+					margin: 12px 0;
+					//border-bottom: solid 1px #e1dedc;
+					width: 100%;
+				}
+				h2 {
+					text-align: left;
+					color: #414058;
+					margin: 8px 0;
+				}
+				
+			}
+		}
+		.header-buttons {
+			@include flex-box();
+			justify-content: space-between;
+			margin-top: 30px;
+			.header-button {
+				width: 207px;
+				height: 40px;
+				border-radius: 2px;
+				background-color: #cbd1d3;
+				cursor: pointer;
+				@include flex-box();
+				justify-content: center;
+				align-items: center;
+			}
+		}
+	}
 }
 
 .top-navigator {
-	height: $nav-height;
-	width: 100%;
-	background-color: $light-grey;
 	@include flex-box();
+	height: $nav-height;
+	background-color: $colu-green;
+	width: 100%;
 	align-items: center;
-	justify-content: flex-end;
-	padding: 10px;
-	.top-nav-text {
-		color: $dark-grey;
-		font-size: 16px;
-		font-weight: 500;
-		line-height: 25px;
-		margin: 0 14px;
+	justify-content: space-between;
+	padding: 10px 30px;
+	.top-nav-links {
+		@include flex-box();
+		.top-nav-text {
+			color: white;
+			font-size: 16px;
+			font-weight: 400;
+			line-height: 25px;
+			margin: 0 14px;
+		}
+	}
+	img {
+		height: 40px;
+		width: 40px;
 	}
 }
 
 .marker {
 	overflow: visible;
+	cursor: pointer;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	transform-origin: bottom center;
+
+	@include flex-box();
 	.e-marker__circle {
-		fill: white;
+		fill: none;
+	}
+	.e-marker__marker {
+		fill: #50E3C2;
+		&.purple {
+			fill: $colu-purple;
+		}
+	}
+
+	.e-marker__icon {
+		//margin-top: -30px;
+	}
+
+
+
+	.community-label {
+		font-color: white;
+		@include flex-box();
+		flex-direction: column;
+		opacity: 0;
+		transition: all 0.3s ease-in;
+		font-size: 16px;
+		font-weight: 500;
+		text-decoration: none;
+		//margin-left: 50px;
+		&.community-label-active {
+			opacity: 1;
+		}
+
+		.coin-label-name {
+
+		}
+
+		.coin-label-price {
+			margin-left: 10px;
+		}
 	}
 }
 
+ .particletext {
+      position: relative;
+      width:30px;
+      height:30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      z-index: 3;
+      &.bubbles {
+      	&:before {
+      		content: ' ';
+      		top: 15px;
+      		left:15px;
+      		position: absolute;
+      		z-index: 2;
+      		width: 7px;
+      		height: 7px;
+      		transition: all 0.3s ease-in;
+      		border-radius: 50%;
+      		background: rgba(255,255,255,1);
+    		box-shadow: inset 0px 0px 20px 12px rgba(255,255,255,0.9),
+                      0px 0px 40px 6px rgba(255,255,255,1);
+      	}
+        >.particle {
+        	transition: all 0.3s ease-in;
+            opacity:0.3;
+            position: absolute;
+            background-color:rgba(77,217,180,0.5);
+            animation: bubbles 2s ease-in infinite;
+            border-radius:100%;
+            box-shadow: 5px 4px 17px 0px rgba(77,217,180, 0.1);
+         }
+        >.particle2 {
+        	transition: all 0.3s ease-in;
+            opacity:0.3;
+            position: absolute;
+            background-color:rgba(77,217,180,0.5);
+            animation: bubbles2 2s ease-in infinite;
+            border-radius:100%;
+            box-shadow: 5px 4px 17px 0px rgba(203, 255, 241, 0.1);
+        }
+       }
+      
+      &:hover {
+      	transform:scale(1.1);
+      	transition: transform 0.2s linear;
+      	&.bubbles {
+      	&:before {
+      		width: 8px;
+      		height: 8px;
+    		box-shadow: inset 0px 0px 20px 12px rgba(255,255,255,0.9),
+                      0px 0px 60px 16px rgba(255,255,255,1);
+      	}
+      	>.particle, .particle2 {
+      		background-color:rgba(77,217,180,0.8);
+      		box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
+      	}
+      }
+  }
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    background: rgba(255,255,255,1);
+    box-shadow: inset 0px 0px 10px 2px rgba(117,182,255,0.5),
+                      0px 0px 40px 2px rgba(105,135,255,1);
+  }
+  100% {
+    background: rgba(255,255,255,0);
+    box-shadow: inset 0px 0px 10px 2px rgba(117,182,255,0.5),
+                      0px 0px 30px 2px rgba(105,135,255,0.3);
+  }
+}
+
+@keyframes bubbles {
+   0% {
+      opacity: 0.1;
+   }
+   20% { //show and hint at moving
+      opacity: 1;
+      transform:translate(0, -20%);
+   }
+   100% {
+      opacity: 0.1;
+      transform:translate(0, -100%); //Big bubbles move faster
+   }
+}
 
 
+@keyframes bubbles2 {
+   0% {
+      opacity: 0.1;
+   }
+   20% { //show and hint at moving
+      opacity: 1;
+      transform:translate(0, 20%);
+   }
+   100% {
+      opacity: 0.1;
+      transform:translate(0, 100%); //Big bubbles move faster
+   }
+}
 
 
 

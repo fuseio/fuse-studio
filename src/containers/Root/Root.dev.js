@@ -8,15 +8,9 @@ import { Route } from 'react-router'
 import { AnimatedRoute } from 'react-router-transition';
 
 import App from 'containers/App'
+import CommunitySidebar from 'components/CommunitySidebar'
 
 const history = createHistory()
-
-const Sidebar = () => (
-  <div className="community-sidebar">Tel Aviv Community Currency Page
-      <p><Link to="/">Close me.</Link></p>
-
-  </div>
-)
 
 const sidebarTransition = {
   atEnter: {
@@ -47,7 +41,7 @@ export default class Root extends Component {
             <div className="sidebar">
               <AnimatedRoute
                 path="/sidebar"
-                component={Sidebar}
+                component={CommunitySidebar}
                 mapStyles={mapStyles}
                 {...sidebarTransition}
               />

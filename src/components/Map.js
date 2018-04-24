@@ -52,19 +52,36 @@ const MyMapComponent = compose(
 )(props => (
 	<GoogleMap
 		defaultZoom={4}
-		defaultCenter={{ lat: 34.769132300000024, lng: 32.0825589 }}
+		defaultCenter={{ lat:34.0507729, lng: 32.75446020000004}}
 		defaultOptions={{styles: mapStyle, disableDefaultUI: true}}
 		ref={props.onMapMounted}
 		>
 
-		<OverlayView position={{ lat: 34.769132300000024, lng: 32.0825589 }} 
+		<OverlayView position={{ lat: 32.0852, lng: 34.7817 }} 
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-			getPixelPositionOffset={getPixelPositionOffset}>
-			<Marker />
-			
+			>
+			<Marker community={{name: 'Tel Aviv Coin', price: '0.9CLN'}}/>
+    	</OverlayView>
+    	<OverlayView position={{ lat: 32.7940, lng: 34.9895 }} 
+			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+			>
+			<Marker community={{name: 'Haifa Coin', price: '0.8CLN'}}/>
+    	</OverlayView>
+    	<OverlayView position={{ lat: 51.5073, lng: -0.1277 }} 
+			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+
+			>
+			<Marker community={{name: 'London Coin', price: '0.7CLN'}}/>
+    	</OverlayView>
+    	<OverlayView position={{ lat: 53.4083, lng: -2.9915 }} 
+			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+			>
+			<Marker community={{name: 'Liverpool Coin', price: '0.6CLN'}}/>
     	</OverlayView>
 	</GoogleMap>
 ));
+
+//getPixelPositionOffset={getPixelPositionOffset}
 
 //<div style={{ background: `white`, border: `1px solid #ccc`, padding: 15 }}>
 //      		  <h1>OverlayView</h1>
