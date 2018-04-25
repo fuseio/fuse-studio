@@ -64,16 +64,27 @@ h2 {
 	letter-spacing: 0;
 }
 
+h3 {
+	font-size: 42px;
+	line-height: 1.06;
+	letter-spacing: 0;
+	margin: 0;
+}
+
+h4 {
+	margin: 0;
+}
+
 .flex {
 	@include flex-box();
-	&.column {
-		@include flex-direction(column)
+}
+.column {
+		@include flex-direction(column);
 	}
-	&.center {
+.center {
 		justify-content: center;
 		align-items: center;
 	}
-}
 
 .switch-wrapper {
   position: relative;
@@ -89,7 +100,6 @@ h2 {
 	bottom: 0;
 	//right: calc((100vw - 1024px)/2);
 	right: 0;
-
 }
 
 .main-container {
@@ -97,16 +107,75 @@ h2 {
 	height: 100%;
 	width: 100%;
 	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
+	.map-wrapper {
+		height: calc(100vh + 20px);
+		width: 110%;
+		margin: 10px -10px -10px -10px; 
+		transition: all 1s cubic-bezier(0,.52,.28,.94);
+		transform: scale(1);
+		filter: blur(7px);
+		&.active {
+			filter: none;
+			transform: scale(1.1);
+		}
+	}
 }
 
+
+@mixin button {
+	@include flex-box();
+	border-radius: 2px;
+	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+}
+
+.welcome-wrapper {
+	position: absolute;
+	z-index: 10;
+	@include flex-box();
+	@include flex-direction(column);
+	justify-content: center;
+	align-items: center;
+	opacity: 0;
+	transition: all 0.4s ease-in-out;
+	&.active {
+		opacity: 1;
+	}
+	h3 {
+		color: white;
+		text-align: center;
+	}
+	h4 {
+		color: white;
+		text-align: center;
+		margin: 20px;
+	}
+	.button {
+		@include button();
+		text-align: center;
+		width: 207px;
+		height: 40px;
+		color: white;
+		border: 1px white solid;
+		margin-top: 30px;
+	}
+}
+
+.communities-list {
+	position: absolute;
+	z-index: 11;
+	right: 0;
+}
 .community-sidebar {
-	background-color: #ffffff36;
-	height: calc(100vh - 100px);
+	background-color: #ffffff76;
+	height: calc(100vh - 60px);
 	width: 500px;
 	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
-    margin: 20px;
+	overflow: scroll;
+    //margin: 20px;
 	.header {
-		background-color: #ffffff36;
+		background-color: #ffffff70;
 		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 		padding: 32px;
 		.coin-header {
@@ -138,12 +207,39 @@ h2 {
 			.header-button {
 				width: 207px;
 				height: 40px;
-				border-radius: 2px;
+				@include button();
 				background-color: #cbd1d3;
-				cursor: pointer;
+			}
+		}
+	}
+	.community-data-wrapper {
+		padding: 32px;
+		overflow: scroll;
+		.box {
+			background-color: #ffffff76;
+			border-radius: 4px;
+			box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.05);
+			overflow: hidden;
+			.box-header {
+				background-color: #ebf0f2;
+				padding: 14px 22px;
+				font-size: 14px;
+				font-weight: 500;
+				line-height: 1.43;
+				letter-spacing: 0;
+				text-align: left;
+				color: #301eaa;
+			}
+			.box-info {
 				@include flex-box();
-				justify-content: center;
-				align-items: center;
+				padding: 10px 22px;
+				.box-title {
+					width: 130px;
+					color: #404040;
+				}
+			}
+			&:nth-child(2) {
+				margin-top: 22px;
 			}
 		}
 	}
@@ -157,6 +253,8 @@ h2 {
 	align-items: center;
 	justify-content: space-between;
 	padding: 10px 30px;
+	position: absolute;
+	z-index: 3;
 	.top-nav-links {
 		@include flex-box();
 		.top-nav-text {
@@ -170,6 +268,9 @@ h2 {
 	img {
 		height: 40px;
 		width: 40px;
+	}
+	&.active {
+
 	}
 }
 

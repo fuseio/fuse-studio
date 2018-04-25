@@ -1,4 +1,4 @@
-import React from "react"
+import React, {Component} from "react"
 import { compose, withProps, withStateHandlers, withState, withHandlers } from "recompose"
 import { mapStyle, googleMapsUrl } from '../constants/uiConstants'
 import {
@@ -7,6 +7,7 @@ import {
 	GoogleMap,
 	OverlayView
 } from "react-google-maps"
+import classNames from 'classnames'
 
 import Marker from 'components/Marker'
 
@@ -21,7 +22,7 @@ const MyMapComponent = compose(
 	withProps({
 		googleMapURL: googleMapsUrl,
 		loadingElement: <div style={{ height: `100%` }} />,
-		containerElement: <div style={{ height: `100vh`, width: `100%` }} />,
+		containerElement: <div style={{ width: `100%`,  height: `100vh`  }} />,
 		mapElement: <div style={{ height: `100%` }} />
 	}),
 	withScriptjs,
@@ -89,5 +90,17 @@ const MyMapComponent = compose(
 //      		    I have been clicked {props.count} time{props.count > 1 ? `s` : ``}
 //      		  </button>
 //      		</div>
-
-export default MyMapComponent
+class MyFancyComponent extends Component {
+	render() {
+		let mapWrapperClass = classNames({
+			"active": this.props.active,
+			"map-wrapper": true
+		})
+  		return (
+  			<div className={mapWrapperClass} >
+  		  		<MyMapComponent />
+  			</div>
+  		)
+  	}
+}
+export default MyFancyComponent
