@@ -108,7 +108,6 @@ export function * balanceOf (contractAddress, address) {
 
 export function * transfer (contractAddress, to, value) {
   try {
-    debugger
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const receipt = yield ColuLocalNetworkContract.methods.transfer(to, value).send({
       from: web3.eth.defaultAccount
@@ -130,7 +129,6 @@ export function * fetchContractData (contractAddress) {
       call(ColuLocalNetworkContract.methods.totalSupply().call),
       call(ColuLocalNetworkContract.methods.owner().call)
     ]
-
 
     if (web3.eth.defaultAccount) {
       calls.push(call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call))
