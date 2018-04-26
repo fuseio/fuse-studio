@@ -3,7 +3,6 @@ import * as actions from 'actions'
 
 import basicTokenSaga from './basicToken'
 import currencyFactorySaga from './currencyFactory'
-import ipfsSaga from './ipfs'
 
 import web3 from 'services/web3'
 
@@ -24,7 +23,6 @@ export default function * rootSaga () {
   yield all([
     fork(watchGetNetwork),
     fork(basicTokenSaga),
-    fork(currencyFactorySaga),
-    fork(ipfsSaga)
+    fork(currencyFactorySaga)
   ])
 }

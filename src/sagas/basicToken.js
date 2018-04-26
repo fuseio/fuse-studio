@@ -1,7 +1,7 @@
 import { all, call, put, take, fork } from 'redux-saga/effects'
 
 import * as actions from 'actions/basicToken'
-import web3 from 'services/web3'
+import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import {fetchMetadata} from 'services/api'
@@ -108,6 +108,7 @@ export function * balanceOf (contractAddress, address) {
 
 export function * transfer (contractAddress, to, value) {
   try {
+    debugger
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const receipt = yield ColuLocalNetworkContract.methods.transfer(to, value).send({
       from: web3.eth.defaultAccount
@@ -130,25 +131,30 @@ export function * fetchContractData (contractAddress) {
       call(ColuLocalNetworkContract.methods.owner().call)
     ]
 
+
+    if (web3.eth.defaultAccount) {
+      calls.push(call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call))
+    } else {
+      yield onWeb3Ready
+      calls.push(call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call))
+    }
+
     if (contractAddress !== addresses.ColuLocalNetwork) {
       calls.push(call(ColuLocalNetworkContract.methods.metadata().call))
     }
 
-    if (web3.eth.defaultAccount) {
-      call(ColuLocalNetworkContract.methods.balanceOf().call, web3.eth.defaultAccount),
-    }
-
-    const [name, symbol, totalSupply, owner, metadataHash, balanceOf] = yield all(calls)
+    // be careful wich changing this, ordering is important
+    // also metadataHash can be undefined.
+    const [name, symbol, totalSupply, owner, balanceOf, metadataHash] = yield all(calls)
 
     const response = {
       name,
       symbol,
       totalSupply,
       owner,
-      metadataHash,
-      balanceOf
+      balanceOf,
+      metadataHash
     }
-
     if (response.metadataHash) {
       const {metadata} = yield fetchMetadata(response.metadataHash)
       response.metadata = metadata
