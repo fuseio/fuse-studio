@@ -11,6 +11,7 @@ import classNames from 'classnames'
 
 import Marker from 'components/Marker'
 
+const panByHorizontalOffset = 1.8 // because of the community sidebar
 
 const getPixelPositionOffset = (width, height) => ({
   x: -(width / 2),
@@ -28,25 +29,29 @@ const MyMapComponent = compose(
 	withScriptjs,
 	withGoogleMap,
 	//withStateHandlers(() => ({
-  	//  count: 0,
+  	//  zoom: 4,
   	//}), {
   	//  onClick: ({ count }) => () => ({
-  	//    count: count + 1,
+  	//    zoom: 1,
   	//  })
   	//}),
-  	withState('zoom', 'onZoomChange', 8),
+  	withState('zoom', 'zoomIn', 4),
   	withHandlers(() => {
   	  const refs = {
   	    map: undefined,
   	  }
-	
+
   	  return {
   	    onMapMounted: () => ref => {
-  	      refs.map = ref
+  	    	refs.map = ref
   	    },
-  	    onClick: () => () => {
-  	    	console.log("here", refs.map)
-  	      refs.map.panTo({lat: 25.0112183,lng: 121.52067570000001})
+  	    onClick: ({zoomIn}) => () => {
+  	    	let n = 5
+  	    	refs.map.panTo({lat: 32.0852, lng: 34.7817 + panByHorizontalOffset})
+  	    	zoomIn(n)
+  	    	setTimeout(() => {zoomIn(n + 1)}, 150)
+  	    	setTimeout(() => {zoomIn(n + 2)}, 300)
+  	    	setTimeout(() => {zoomIn(n + 3)}, 450)
   	    }
   	  }
   	})
@@ -56,12 +61,14 @@ const MyMapComponent = compose(
 		defaultCenter={{ lat:34.0507729, lng: 32.75446020000004}}
 		defaultOptions={{styles: mapStyle, disableDefaultUI: true}}
 		ref={props.onMapMounted}
+		zoom={props.zoom}
 		>
 
 		<OverlayView position={{ lat: 32.0852, lng: 34.7817 }} 
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+			
 			>
-			<Marker community={{name: 'Tel Aviv Coin', price: '0.9CLN'}}/>
+			<Marker community={{name: 'Tel Aviv Coin', price: '0.9CLN'}} onClick={props.onClick}/>
     	</OverlayView>
     	<OverlayView position={{ lat: 32.7940, lng: 34.9895 }} 
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}

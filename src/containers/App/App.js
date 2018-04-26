@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-
 import Network from 'containers/Network'
 import Communities from 'components/Communities'
 import Map from 'components/Map'
@@ -17,9 +16,12 @@ import 'scss/styles.scss'
 
 class App extends Component {
 	state = {
-		isWelcome: true
+		isWelcome: true,
+		out: false
 	}
 	componentDidMount () {
+
+		
 		//this.props.fetchSupportsToken('0x41C9d91E96b933b74ae21bCBb617369CBE022530')
 		//this.props.fetchName()
 		//this.props.balanceOf('0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
@@ -41,8 +43,15 @@ class App extends Component {
 	onClickExplore() {
 		this.setState({
 			isWelcome: !this.state.isWelcome,
+
 			panBy: { x: -100, y: 0 }
 		})
+
+		setTimeout(() => {
+			this.setState({
+				out: true
+			})
+		}, 1000)
 	}
 
 	render() {
@@ -56,7 +65,8 @@ class App extends Component {
 		})
 		let welcomeClass = classNames({
 			"welcome-wrapper": true,
-			"active": this.state.isWelcome
+			"hide": !this.state.isWelcome,
+			"out": this.state.out
 		})
 		if (currentRoute === '/sidebar') {
 			panBy = { x: -100, y: 0 }

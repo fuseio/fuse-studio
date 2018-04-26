@@ -116,7 +116,7 @@ h4 {
 		filter: blur(7px);
 		&.active {
 			filter: none;
-			transform: scale(1.1);
+			transform: scale(1);
 		}
 	}
 }
@@ -137,10 +137,14 @@ h4 {
 	@include flex-direction(column);
 	justify-content: center;
 	align-items: center;
-	opacity: 0;
+	//opacity: 0;
 	transition: all 0.4s ease-in-out;
-	&.active {
-		opacity: 1;
+	animation: appear 3s linear;
+	&.hide {
+		opacity: 0;
+	}
+	&.out {
+		display: none;
 	}
 	h3 {
 		color: white;
@@ -321,13 +325,14 @@ h4 {
 	}
 }
 
- .particletext {
+ .particles {
       position: relative;
       width:30px;
       height:30px;
       margin-left: -15px;
       margin-top: -15px;
       z-index: 3;
+      transition: all 2s ease-in;
       &.bubbles {
       	&:before {
       		content: ' ';
@@ -362,9 +367,35 @@ h4 {
             box-shadow: 5px 4px 17px 0px rgba(203, 255, 241, 0.1);
         }
        }
-      
+      &.grow {
+      	width:120px;
+      	height:120px;
+      	margin-left: -60px;
+      	margin-top: -60px;
+      	transition: all 2s ease-in;
+      	transform: scale(1.1);
+
+      	&.bubbles {
+      		&:before {
+      			width: 20px;
+      			height: 20px;
+      			top: 50px;
+      			left:50px;
+    			box-shadow: inset 0px 0px 10px 12px rgba(255,255,255,0.9),
+      	                0px 0px 40px 12px rgba(255,255,255,1);
+      		}
+      		>.particle, .particle2 {
+      			background-color:rgba(77,217,180,0.8);
+      			box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
+      		}
+      	}
+      	&:before {
+      		top: 60px;
+      		left:60px;
+      	}
+      }
       &:hover {
-      	transform:scale(1.1);
+      	transform: scale(1.1);
       	transition: transform 0.2s linear;
       	&.bubbles {
       	&:before {
@@ -379,6 +410,15 @@ h4 {
       	}
       }
   }
+}
+
+@keyframes appear {
+   0% {
+      opacity: 0;
+   }
+   100% {
+      opacity: 1;
+   }
 }
 
 @-webkit-keyframes pulse {
