@@ -38,7 +38,7 @@ class ColuLocalCurrencyContract extends Component {
           {
             this.state.address && this.props.tokens[this.state.address] &&
             <ContractStorage
-              metadata={this.props.tokens[this.state.address].metadata}
+              metadata={this.props.tokens[this.state.address].metadataHash}
               setMetadata={this.props.setMetadata}
               address={this.state.address}
             />

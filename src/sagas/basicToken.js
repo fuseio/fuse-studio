@@ -4,7 +4,7 @@ import * as actions from 'actions/basicToken'
 import web3 from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
-// const ColuLocalNetworkContract = contract.getContract({contractName: 'ColuLocalNetwork'})
+import {fetchMetadata} from 'services/api'
 
 export function * name (contractAddress) {
   try {
@@ -134,24 +134,38 @@ export function * fetchContractData (contractAddress) {
       calls.push(call(ColuLocalNetworkContract.methods.metadata().call))
     }
 
-    const [name, symbol, totalSupply, owner, metadata] = yield all(calls)
+    if (web3.eth.defaultAccount) {
+      call(ColuLocalNetworkContract.methods.balanceOf().call, web3.eth.defaultAccount),
+    }
+
+    const [name, symbol, totalSupply, owner, metadataHash, balanceOf] = yield all(calls)
+
+    const response = {
+      name,
+      symbol,
+      totalSupply,
+      owner,
+      metadataHash,
+      balanceOf
+    }
+
+    if (response.metadataHash) {
+      const {metadata} = yield fetchMetadata(response.metadataHash)
+      response.metadata = metadata
+    }
+
     yield put({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
       contractAddress,
-      response: {
-        name,
-        symbol,
-        totalSupply,
-        owner,
-        metadata
-      }})
-    if (metadata) {
-      console.log('fetchhhhh')
-    }
+      response
+    })
   } catch (error) {
     console.error(error)
     yield put({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
   }
 }
+
+
+
 export function * watchBalanceOf () {
   while (true) {
     const {contractAddress, address} = yield take(actions.BALANCE_OF.REQUEST)
@@ -221,6 +235,7 @@ export function * watchFetchContractData () {
     yield fork(fetchContractData, contractAddress)
   }
 }
+
 export default function * rootSaga () {
   yield all([
     fork(watchName),
