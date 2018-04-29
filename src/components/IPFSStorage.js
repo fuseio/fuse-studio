@@ -8,17 +8,27 @@ class IPFSStorage extends Component {
     fileHash: '',
     fileContent: '',
     tokenData: {
-      lat: '',
-      lng: '',
-      title: ''
+      location: {
+        lat: '',
+        lng: ''
+      },
+      description: '',
+      website: '',
+      social: [
+
+      ]
     }
   }
 
-  handleLatChange = (event) => this.setState({tokenData: {...this.state.tokenData, lat: event.target.value}})
+  handleLatChange = (event) => this.setState({tokenData:
+    {...this.state.tokenData, location: {...this.state.tokenData.location, lat: event.target.value}}})
 
-  handleLngChange = (event) => this.setState({tokenData: {...this.state.tokenData, lng: event.target.value}})
+  handleLngChange = (event) => this.setState({tokenData:
+    {...this.state.tokenData, location: {...this.state.tokenData.location, lng: event.target.value}}})
 
-  handleTitleChange = (event) => this.setState({tokenData: {...this.state.tokenData, title: event.target.value}})
+  handleDescriptionChange = (event) => this.setState({tokenData: {...this.state.tokenData, description: event.target.value}})
+
+  handleWebsiteChange = (event) => this.setState({tokenData: {...this.state.tokenData, website: event.target.value}})
 
   handleFileHashChange = (event) => {
     const hash = event.target.value
@@ -57,7 +67,10 @@ class IPFSStorage extends Component {
           lng: <input type='text' value={this.state.tokenData.lng} onChange={this.handleLngChange} />
         </div>
         <div>
-          title: <input type='text' value={this.state.tokenData.title} onChange={this.handleTitleChange} />
+          description: <input type='text' value={this.state.tokenData.description} onChange={this.handleDescriptionChange} />
+        </div>
+        <div>
+          website: <input type='text' value={this.state.tokenData.website} onChange={this.handleWebsiteChange} />
         </div>
         <button onClick={this.submitIPFS}>submit IPFS</button>
         <hr />

@@ -143,8 +143,8 @@ export function * fetchContractData (contractAddress) {
     const response = yield all(calls)
 
     if (response.metadataHash) {
-      const {metadata} = yield fetchMetadata(response.metadataHash)
-      response.metadata = metadata
+      const {data} = yield fetchMetadata(response.metadataHash)
+      response.metadata = data
     }
 
     yield put({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
@@ -156,8 +156,6 @@ export function * fetchContractData (contractAddress) {
     yield put({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
   }
 }
-
-
 
 export function * watchBalanceOf () {
   while (true) {
