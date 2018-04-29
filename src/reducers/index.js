@@ -17,7 +17,7 @@ function web3 (state = {}, action) {
 
 const rootReducer = combineReducers({
   web3,
-  basicToken,
+  tokens: basicToken,
   currencyFactory,
   router: routerReducer
 })
