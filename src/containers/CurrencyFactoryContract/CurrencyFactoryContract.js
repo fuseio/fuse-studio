@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 
+import IPFSStorage from 'components/IPFSStorage'
 import { supportsToken, tokens, createCurrency } from 'actions/currencyFactory'
 
 const styles = {
@@ -88,6 +89,7 @@ class CurrencyFactoryContract extends Component {
         </div>
         <button onClick={this.handleCreateCurrency}>create CC</button>
       </div>
+      <IPFSStorage />
     </div>
   }
 }

@@ -4,10 +4,12 @@ import { Provider } from 'react-redux'
 import { Route } from 'react-router'
 import { ConnectedRouter, push } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
-import { AnimatedRoute } from 'react-router-transition';
+import { AnimatedRoute } from 'react-router-transition'
+import { Route } from 'react-router'
 
 import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'
+import CurrencyFactoryContract from 'containers/CurrencyFactoryContract'
 
 const history = createHistory()
 
@@ -36,7 +38,8 @@ export default class Root extends Component {
 			<Provider store={store}>
 				<ConnectedRouter history={history}>
 					<div>
-						<App supportsToken={store.supportsToken}/>
+						<Route path="/create" component={CurrencyFactoryContract} />
+						<App path="/app" />
 						<div className="sidebar">
 							<AnimatedRoute
 								path="/sidebar"
