@@ -19,7 +19,7 @@
     "ipfs": "^0.28.2",
     "ipfs-api": "^20.0.0",
     "isomorphic-fetch": "^2.2.1",
-    "osseus-wallet": "git+https://github.com/colucom/osseus-wallet.git",
+    "osseus-wallet": "git+https://github.com/colucom/osseus-wallet.git#v0.0.4",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

@@ -123,36 +123,25 @@ export function * fetchContractData (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
 
-    const calls = [
-      call(ColuLocalNetworkContract.methods.name().call),
-      call(ColuLocalNetworkContract.methods.symbol().call),
-      call(ColuLocalNetworkContract.methods.totalSupply().call),
-      call(ColuLocalNetworkContract.methods.owner().call)
-    ]
+    const calls = {
+      name: call(ColuLocalNetworkContract.methods.name().call),
+      symbol: call(ColuLocalNetworkContract.methods.symbol().call),
+      totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
+      owner: call(ColuLocalNetworkContract.methods.owner().call)
+    }
 
+    // wait untill web3 is ready
+    yield onWeb3Ready
     if (web3.eth.defaultAccount) {
-      calls.push(call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call))
-    } else {
-      yield onWeb3Ready
-      calls.push(call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call))
+      calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
     }
 
     if (contractAddress !== addresses.ColuLocalNetwork) {
-      calls.push(call(ColuLocalNetworkContract.methods.metadata().call))
+      calls.metadataHash = call(ColuLocalNetworkContract.methods.metadata().call)
     }
 
-    // be careful wich changing this, ordering is important
-    // also metadataHash can be undefined.
-    const [name, symbol, totalSupply, owner, balanceOf, metadataHash] = yield all(calls)
+    const response = yield all(calls)
 
-    const response = {
-      name,
-      symbol,
-      totalSupply,
-      owner,
-      balanceOf,
-      metadataHash
-    }
     if (response.metadataHash) {
       const {metadata} = yield fetchMetadata(response.metadataHash)
       response.metadata = metadata
