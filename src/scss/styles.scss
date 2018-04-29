@@ -172,14 +172,15 @@ h4 {
 	right: 0;
 }
 .community-sidebar {
-	background-color: #ffffff76;
+	background-color: #808090eb;
 	height: calc(100vh - 60px);
 	width: 500px;
-	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
+	box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.37);
+	
 	overflow: scroll;
 	.header {
 		background-color: #52586d;
-		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+		box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
 		padding: 32px;
 		.sidebar-close {
 			position: absolute;
@@ -201,7 +202,7 @@ h4 {
 				}
 				h2 {
 					text-align: left;
-					color: #414058;
+					color: #b7b7c1;
 					margin: 8px 0;
 				}
 				

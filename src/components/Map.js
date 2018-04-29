@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import { connect } from 'react-redux'
 import { compose, withProps, withStateHandlers, withState, withHandlers } from "recompose"
 import { mapStyle, googleMapsUrl } from '../constants/uiConstants'
 import {
@@ -10,6 +11,8 @@ import {
 import classNames from 'classnames'
 
 import Marker from 'components/Marker'
+
+import { name, symbol, totalSupply, balanceOf, transfer, owner } from 'actions/basicToken'
 
 const panByHorizontalOffset = 1.8 // because of the community sidebar
 
@@ -55,7 +58,7 @@ const GoogleMapComponent = compose(
 
 		<OverlayView position={{ lat: 32.0852, lng: 34.7817 }} 
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
-			<Marker community={{name: 'Tel Aviv Coin', price: '0.9CLN'}} onClick={props.onClick}/>
+			<Marker community={{name: props.name, price: '0.9CLN'}} onClick={props.onClick}/>
 		</OverlayView>
 		<OverlayView position={{ lat: 32.7940, lng: 34.9895 }} 
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
@@ -78,12 +81,21 @@ class MapComponent extends Component {
 			"active": this.props.active,
 			"map-wrapper": true
 		})
+		console.log("PROPS", this.props)
 		return (
 			<div className={mapWrapperClass} >
-				<GoogleMapComponent />
+				<GoogleMapComponent props={this.props} />
 			</div>
 		)
 	}
 }
 
-export default MapComponent
+const mapStateToProps = state => {
+	return {
+		tokens: state.tokens
+	}
+}
+
+export default connect(
+  mapStateToProps
+)(MapComponent)

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
+import { Route } from 'react-router'
 import { ConnectedRouter, push } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
 import { AnimatedRoute } from 'react-router-transition';
@@ -44,6 +45,7 @@ export default class Root extends Component {
 								{...sidebarTransition}
 							/>
 						</div>
+						<Route exact path="/leon" component={CommunitySidebar}/>
 					</div>
 				</ConnectedRouter>
 			</Provider>
