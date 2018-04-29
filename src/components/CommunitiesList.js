@@ -33,44 +33,40 @@ import classNames from 'classnames'
 //}
 
 const Sidebar = posed.div({
-  open: { x: '-100%', staggerChildren: 200 },
-  closed: { x: '0%' }
+	open: { x: '-100%', staggerChildren: 200 },
+	closed: { x: '0%' }
 })
 
 const NavItem = posed.li({
-  open: { opacity: 1 },
-  closed: { opacity: 0 }
+	open: { opacity: 1 },
+	closed: { opacity: 0 }
 })
 
 const Nav = ({ isOpen, navItems }) => (
-  <Sidebar pose={isOpen ? 'open' : 'closed'} className="communities-list">
-    <ul>
-      {navItems.map(({ url, name }) => (
-        <NavItem>
-          <a href={url}>{name}</a>
-        </NavItem>
-      ))}
-    </ul>
-  </Sidebar>
+	<Sidebar pose={isOpen ? 'open' : 'closed'} className="communities-list">
+		<ul>
+			{navItems.map(({ url, name }) => (
+				<NavItem>
+					<a href={url}>{name}</a>
+				</NavItem>
+			))}
+		</ul>
+	</Sidebar>
 )
 
-/** Demo setup below **/
 const navLinks = [
-  { url: '#', name: 'Popmotion' },
-  { url: '#', name: 'Pose' },
-  { url: '#', name: 'Blog' },
-  { url: '#', name: 'GitHub' },
+	{ url: '#', name: 'Popmotion' },
+	{ url: '#', name: 'Pose' },
+	{ url: '#', name: 'Blog' },
+	{ url: '#', name: 'GitHub' },
 ];
 
 class CommunitiesList extends React.Component {
-  state = {}
+	state = {}
 
-
-
-  render() {
-  	//conso
-    return <Nav isOpen={this.props.active} navItems={navLinks} />;
-  }
+	render() {
+		return <Nav isOpen={this.props.active} navItems={navLinks} />;
+	}
 };
 
 export default CommunitiesList

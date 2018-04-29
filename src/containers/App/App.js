@@ -20,8 +20,6 @@ class App extends Component {
 		out: false
 	}
 	componentDidMount () {
-
-		
 		//this.props.fetchSupportsToken('0x41C9d91E96b933b74ae21bCBb617369CBE022530')
 		//this.props.fetchName()
 		//this.props.balanceOf('0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
@@ -43,7 +41,6 @@ class App extends Component {
 	onClickExplore() {
 		this.setState({
 			isWelcome: !this.state.isWelcome,
-
 			panBy: { x: -100, y: 0 }
 		})
 

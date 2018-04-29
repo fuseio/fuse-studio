@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import { mapStyle, googleMapsUrl } from '../constants/uiConstants'
 import classNames from 'classnames'
 
 class TopNav extends Component {

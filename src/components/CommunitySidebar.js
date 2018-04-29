@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import classNames from 'classnames'
 import Link from 'react-router-dom/Link'
 
 class CommunitySidebar extends Component {
@@ -7,12 +6,13 @@ class CommunitySidebar extends Component {
 		return (
 			<div className="community-sidebar">
 				<div className="header">
+					<div className="sidebar-close"><Link to="/">X</Link></div>
 					<div className="coin-header">
 						<img src="src/images/lnd-coin.png"/>
 						<div className="coin-details">
 							<h1>TLV Coin</h1>
-							<h2>CURRENT PRICE
-								<span>0.5CLN(+51)</span>
+							<h2>CURRENT PRICE 
+								<span>0.5CLN (+51)</span>
 							</h2>
 						</div>
 					</div>
@@ -65,7 +65,7 @@ class CommunitySidebar extends Component {
 						</div>
 					</div>
 				</div>
-				<p><Link to="/">X</Link></p>
+				
 			</div>
 		)
 	}
