@@ -10,6 +10,6 @@ const config = {
   }
 }
 
-init({config})
+export const onWeb3Ready = init({config})
 
 export default get()

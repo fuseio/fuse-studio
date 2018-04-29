@@ -3,6 +3,7 @@ import * as actions from 'actions'
 
 import basicTokenSaga from './basicToken'
 import currencyFactorySaga from './currencyFactory'
+
 import web3 from 'services/web3'
 
 export function * getNetwork () {

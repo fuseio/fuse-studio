@@ -1,31 +1,114 @@
-import { all, takeEvery, put, take, fork } from 'redux-saga/effects'
+import { all, call, put, take, fork } from 'redux-saga/effects'
 
 import * as actions from 'actions/basicToken'
-import web3 from 'services/web3'
+import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
+import addresses from 'constants/addresses'
+import {fetchMetadata} from 'services/api'
 
-const ColuLocalNetworkContract = contract.getContract({contractName: 'ColuLocalNetwork'})
-
-export function * name () {
+export function * name (contractAddress) {
   try {
-    const data = yield ColuLocalNetworkContract.methods.name().call()
-    yield put({type: actions.NAME.SUCCESS, data})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const name = yield call(ColuLocalNetworkContract.methods.name().call)
+    yield put({type: actions.NAME.SUCCESS,
+      contractAddress,
+      response: {
+        name
+      }})
   } catch (error) {
     yield put({type: actions.NAME.FAILURE, error})
   }
 }
 
-export function * balanceOf (address) {
+export function * symbol (contractAddress) {
   try {
-    const data = yield ColuLocalNetworkContract.methods.balanceOf(address).call()
-    yield put({type: actions.BALANCE_OF.SUCCESS, data})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const symbol = yield call(ColuLocalNetworkContract.methods.symbol().call)
+    yield put({type: actions.SYMBOL.SUCCESS,
+      contractAddress,
+      response: {
+        symbol
+      }})
+  } catch (error) {
+    yield put({type: actions.SYMBOL.FAILURE, error})
+  }
+}
+
+export function * totalSupply (contractAddress) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const totalSupply = yield call(ColuLocalNetworkContract.methods.totalSupply().call)
+    yield put({type: actions.TOTAL_SUPPLY.SUCCESS,
+      contractAddress,
+      response: {
+        totalSupply
+      }})
+  } catch (error) {
+    yield put({type: actions.TOTAL_SUPPLY.FAILURE, error})
+  }
+}
+
+export function * metadata (contractAddress) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const metadata = yield call(ColuLocalNetworkContract.methods.metadata().call)
+    yield put({type: actions.METADATA.SUCCESS,
+      contractAddress,
+      response: {
+        metadata
+      }})
+  } catch (error) {
+    yield put({type: actions.METADATA.FAILURE, error})
+  }
+}
+
+export function * setMetadata (contractAddress, metadataUri) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const metadata = yield ColuLocalNetworkContract.methods.setMetadata(metadataUri).send({
+      from: web3.eth.defaultAccount
+    })
+    yield put({type: actions.SET_METADATA.SUCCESS,
+      contractAddress,
+      response: {
+        metadata
+      }})
+  } catch (error) {
+    yield put({type: actions.SET_METADATA.FAILURE, error})
+  }
+}
+
+export function * owner (contractAddress) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const owner = yield call(ColuLocalNetworkContract.methods.owner().call)
+    yield put({type: actions.OWNER.SUCCESS,
+      contractAddress,
+      response: {
+        owner
+      }})
+  } catch (error) {
+    yield put({type: actions.OWNER.FAILURE, error})
+  }
+}
+
+export function * balanceOf (contractAddress, address) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(address).call)
+    yield put({type: actions.BALANCE_OF.SUCCESS,
+      contractAddress,
+      response: {
+        balanceOf
+      }})
   } catch (error) {
     yield put({type: actions.BALANCE_OF.FAILURE, error})
   }
 }
 
-export function * transfer (to, value) {
+export function * transfer (contractAddress, to, value) {
   try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const receipt = yield ColuLocalNetworkContract.methods.transfer(to, value).send({
       from: web3.eth.defaultAccount
     })
@@ -36,21 +119,99 @@ export function * transfer (to, value) {
   }
 }
 
+export function * fetchContractData (contractAddress) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+
+    const calls = {
+      name: call(ColuLocalNetworkContract.methods.name().call),
+      symbol: call(ColuLocalNetworkContract.methods.symbol().call),
+      totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
+      owner: call(ColuLocalNetworkContract.methods.owner().call)
+    }
+
+    // wait untill web3 is ready
+    yield onWeb3Ready
+    if (web3.eth.defaultAccount) {
+      calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
+    }
+
+    if (contractAddress !== addresses.ColuLocalNetwork) {
+      calls.metadataHash = call(ColuLocalNetworkContract.methods.metadata().call)
+    }
+
+    const response = yield all(calls)
+
+    if (response.metadataHash) {
+      const {metadata} = yield fetchMetadata(response.metadataHash)
+      response.metadata = metadata
+    }
+
+    yield put({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
+      contractAddress,
+      response
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
+  }
+}
+
+
+
 export function * watchBalanceOf () {
   while (true) {
-    const {address} = yield take(actions.BALANCE_OF.REQUEST)
-    yield fork(balanceOf, address)
+    const {contractAddress, address} = yield take(actions.BALANCE_OF.REQUEST)
+    yield fork(balanceOf, contractAddress, address)
   }
 }
 
 export function * watchName () {
-  yield takeEvery(actions.NAME.REQUEST, name)
+  while (true) {
+    const {contractAddress} = yield take(actions.NAME.REQUEST)
+    yield fork(name, contractAddress)
+  }
+}
+
+export function * watchSymbol () {
+  while (true) {
+    const {contractAddress} = yield take(actions.SYMBOL.REQUEST)
+    yield fork(symbol, contractAddress)
+  }
+}
+
+export function * watchTotalSupply () {
+  while (true) {
+    const {contractAddress} = yield take(actions.TOTAL_SUPPLY.REQUEST)
+    yield fork(totalSupply, contractAddress)
+  }
 }
 
 export function * watchTransfer () {
   while (true) {
-    const {to, value} = yield take(actions.TRANSFER.REQUEST)
-    yield fork(transfer, to, value)
+    const {contractAddress, to, value} = yield take(actions.TRANSFER.REQUEST)
+    yield fork(transfer, contractAddress, to, value)
+  }
+}
+
+export function * watchMetadata () {
+  while (true) {
+    const {contractAddress} = yield take(actions.METADATA.REQUEST)
+    yield fork(metadata, contractAddress)
+  }
+}
+
+export function * watchSetMetadata () {
+  while (true) {
+    const {contractAddress, metadataUri} = yield take(actions.SET_METADATA.REQUEST)
+    yield fork(setMetadata, contractAddress, metadataUri)
+  }
+}
+
+export function * watchOwner () {
+  while (true) {
+    const {contractAddress} = yield take(actions.OWNER.REQUEST)
+    yield fork(owner, contractAddress)
   }
 }
 
@@ -61,10 +222,23 @@ export function * watchTransferSuccess () {
   }
 }
 
+export function * watchFetchContractData () {
+  while (true) {
+    const {contractAddress} = yield take(actions.FETCH_CONTRACT_DATA.REQUEST)
+    yield fork(fetchContractData, contractAddress)
+  }
+}
+
 export default function * rootSaga () {
   yield all([
     fork(watchName),
+    fork(watchSymbol),
+    fork(watchTotalSupply),
+    fork(watchMetadata),
+    fork(watchSetMetadata),
+    fork(watchOwner),
     fork(watchBalanceOf),
-    fork(watchTransfer)
+    fork(watchTransfer),
+    fork(watchFetchContractData)
   ])
 }

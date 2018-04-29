@@ -1,15 +1,22 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import Network from 'containers/Network'
-import Communities from 'components/Communities'
 import Map from 'components/Map'
 import TopNav from 'components/TopNav'
 import CommunitiesList from 'components/CommunitiesList'
-import Storage from 'components/Storage'
 import classNames from 'classnames'
-import {fetchSupportsToken} from 'actions'
-import {fetchName, balanceOf, transfer} from 'actions/basicToken'
 import { AnimatedRoute } from 'react-router-transition';
+
+import IPFSStorage from 'components/IPFSStorage'
+import {fetchSupportsToken} from 'actions'
+import {name, balanceOf, transfer, fetchContractData} from 'actions/basicToken'
+
+const clnAddress = '0x41C9d91E96b933b74ae21bCBb617369CBE022530'
+
+const coluTokens = [
+	clnAddress,
+	'0x296582CAb0e44009d2142D7daf33C81f153407F8',
+	'0x3355e0C28D759d6d4eF649EF3a6dba11402d1a7f'
+]
 
 import 'scss/styles.scss' 
 
@@ -20,9 +27,11 @@ class App extends Component {
 		out: false
 	}
 	componentDidMount () {
-		//this.props.fetchSupportsToken('0x41C9d91E96b933b74ae21bCBb617369CBE022530')
-		//this.props.fetchName()
-		//this.props.balanceOf('0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
+		coluTokens.forEach(this.props.fetchContractData)
+    	// this.props.fetchContractData(clnAddress)
+    	this.props.fetchSupportsToken(clnAddress, '0x41C9d91E96b933b74ae21bCBb617369CBE022530')
+    	// this.props.name(clnAddress)
+    	this.props.balanceOf(clnAddress, '0x0d4DF041Dbef6fFC0E444a4a213774AdB0c118C2')
 
 		// Fetch token info (from blockchain and ipfs and combine them), try to fetch all fields in one call
 		// all 4 tokens info: 
@@ -86,14 +95,16 @@ class App extends Component {
 	}
 }
 
+
 //<CommunitiesList active={!this.state.isWelcome}/>
 const mapStateToProps = (state) => state
 
 export default connect(
 	mapStateToProps, {
 		fetchSupportsToken,
-		fetchName,
+		name,
 		balanceOf,
-		transfer
+		transfer,
+		fetchContractData
 	}
 )(App)

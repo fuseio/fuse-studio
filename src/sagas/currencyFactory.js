@@ -1,5 +1,5 @@
 import { all, put, take, fork } from 'redux-saga/effects'
-import {BigNumber} from 'bignumber.js';
+import {BigNumber} from 'bignumber.js'
 
 import * as actions from 'actions/currencyFactory'
 import { contract } from 'osseus-wallet'
@@ -42,6 +42,19 @@ export function * createCurrency (currencyData) {
   }
 }
 
+export function * openMarket (address) {
+  try {
+    const data = yield CurrencyFactoryContract.methods.openMarket(
+      address
+    ).send({
+      from: web3.eth.defaultAccount
+    })
+    yield put({type: actions.OPEN_MARKET.SUCCESS, data})
+  } catch (error) {
+    yield put({type: actions.OPEN_MARKET.FAILURE, error})
+  }
+}
+
 export function * watchSupportsToken () {
   while (true) {
     const {address} = yield take(actions.SUPPORTS_TOKEN.REQUEST)
@@ -56,6 +69,13 @@ export function * watchTokens () {
   }
 }
 
+export function * watchOpenMarket () {
+  while (true) {
+    const {address} = yield take(actions.OPEN_MARKET.REQUEST)
+    yield fork(openMarket, address)
+  }
+}
+
 export function * watchCreateCurrency () {
   while (true) {
     const {currencyData} = yield take(actions.CREATE_CURRENCY.REQUEST)
@@ -67,6 +87,7 @@ export default function * rootSaga () {
   yield all([
     fork(watchSupportsToken),
     fork(watchTokens),
-    fork(watchCreateCurrency)
+    fork(watchCreateCurrency),
+    fork(watchOpenMarket)
   ])
 }
