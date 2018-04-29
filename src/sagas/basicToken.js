@@ -4,7 +4,7 @@ import * as actions from 'actions/basicToken'
 import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
-import {fetchMetadata} from 'services/api'
+import * as api from 'services/api'
 
 export function * name (contractAddress) {
   try {
@@ -143,7 +143,7 @@ export function * fetchContractData (contractAddress) {
     const response = yield all(calls)
 
     if (response.metadataHash) {
-      const {data} = yield fetchMetadata(response.metadataHash)
+      const {data} = yield api.fetchMetadata(response.metadataHash)
       response.metadata = data
     }
 

@@ -10,7 +10,6 @@ export const OWNER = createRequestTypes('OWNER')
 export const BALANCE_OF = createRequestTypes('BALANCE_OF')
 export const TRANSFER = createRequestTypes('TRANSFER')
 
-export const FETCH_METADATA = createRequestTypes('FETCH_METADATA')
 export const FETCH_CONTRACT_DATA = createRequestTypes('FETCH_CONTRACT_DATA')
 
 export const name = (contractAddress) => action(NAME.REQUEST, {contractAddress})

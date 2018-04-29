@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import { AnimatedRoute } from 'react-router-transition'
 
 import {fetchContractData} from 'actions/basicToken'
+import {getNetworkType} from 'actions/web3'
 
 const clnAddress = '0x41C9d91E96b933b74ae21bCBb617369CBE022530'
 
@@ -25,6 +26,7 @@ class App extends Component {
 		out: false
 	}
 	componentDidMount () {
+		this.props.getNetworkType()
 		coluTokens.forEach(this.props.fetchContractData)
 
 		// Fetch token info (from blockchain and ipfs and combine them), try to fetch all fields in one call
@@ -95,6 +97,7 @@ const mapStateToProps = (state) => state
 
 export default connect(
 	mapStateToProps, {
-		fetchContractData
+		fetchContractData,
+		getNetworkType
 	}
 )(App)

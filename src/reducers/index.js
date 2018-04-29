@@ -1,24 +1,14 @@
 import { combineReducers } from 'redux'
-import basicToken from './basicToken'
-import currencyFactory from './currencyFactory'
-
 import { routerReducer } from 'react-router-redux'
 
-function web3 (state = {}, action) {
-  switch (action.type) {
-    case 'FETCH_SUPPORTS_TOKEN_SUCCEEDED':
-      return {...state, supportsToken: action.data}
-    case 'GET_NETWORK_SUCCEEDED':
-      return {...state, networkType: action.data}
-    default:
-      return state
-  }
-}
+import basicToken from './basicToken'
+import currencyFactory from './currencyFactory'
+import web3 from './web3'
 
 const rootReducer = combineReducers({
-  web3,
   tokens: basicToken,
   currencyFactory,
+  web3,
   router: routerReducer
 })
 

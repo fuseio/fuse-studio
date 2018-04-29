@@ -1,28 +1,13 @@
-import { takeEvery, put, all, fork } from 'redux-saga/effects'
-import * as actions from 'actions'
+import { all, fork } from 'redux-saga/effects'
 
 import basicTokenSaga from './basicToken'
 import currencyFactorySaga from './currencyFactory'
-
-import web3 from 'services/web3'
-
-export function * getNetwork () {
-  try {
-    const data = yield web3.eth.net.getNetworkType()
-    yield put({type: 'GET_NETWORK_SUCCEEDED', data})
-  } catch (error) {
-    yield put({type: 'GET_NETWORK_FAILED', error})
-  }
-}
-
-export function * watchGetNetwork () {
-  yield takeEvery(actions.GET_NETWORK, getNetwork)
-}
+import web3Saga from './web3'
 
 export default function * rootSaga () {
   yield all([
-    fork(watchGetNetwork),
     fork(basicTokenSaga),
-    fork(currencyFactorySaga)
+    fork(currencyFactorySaga),
+    fork(web3Saga)
   ])
 }
