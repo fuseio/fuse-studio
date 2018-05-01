@@ -13,8 +13,8 @@ const clnAddress = '0x41C9d91E96b933b74ae21bCBb617369CBE022530'
 
 const coluTokens = [
 	clnAddress,
-	'0x7629f7166270b236c9e04f180f0a8c8b4050613D',
-	'0x228c74ff966b0EdE38E60DF560d4948fdA59ef9e'
+	'0x647ffaCf736eFf6e7665Ea88e2E1CE2040199934',
+	'0x0B7d4f3FdB3b517984b68F67Fb2c4528eBf44A7B'
 ]
 
 import 'scss/styles.scss'

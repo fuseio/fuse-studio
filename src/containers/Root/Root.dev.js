@@ -38,7 +38,7 @@ export default class Root extends Component {
 				<ConnectedRouter history={history}>
 					<div>
 						<Route path="/create" component={CurrencyFactoryContract} />
-						<App path="/app" />
+						<App />
 						<div className="sidebar">
 							<AnimatedRoute
 								path="/sidebar"

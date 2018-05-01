@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import ipfs from 'services/ipfs'
+import * as api from 'services/api'
 
 const enc = new window.TextDecoder('utf-8')
 
@@ -34,24 +34,18 @@ class IPFSStorage extends Component {
     const hash = event.target.value
     this.setState({fileHash: hash})
 
-    ipfs.files.cat(hash, (err, data) => {
-      if (err) { throw err }
-      this.setState({fileContent: enc.decode(data)})
+    api.fetchMetadata(hash).then(({data}) => {
+      this.setState({fileContent: JSON.stringify(data.data)})
     })
   }
 
   submitIPFS = () => {
     const self = this
 
-    ipfs.files.add([Buffer.from(JSON.stringify(this.state.tokenData))], (err, filesAdded) => {
-      if (err) { throw err }
-
-      const hash = filesAdded[0].hash
-      self.setState({fileHash: hash})
-
-      ipfs.files.cat(hash, (err, data) => {
-        if (err) { throw err }
-        self.setState({fileContent: enc.decode(data)})
+    api.addMetadata(this.state.tokenData).then(({data}) => {
+      self.setState({fileHash: data.hash})
+      api.fetchMetadata(data.hash).then(({data}) => {
+        this.setState({fileContent: JSON.stringify(data.data)})
       })
     })
   }

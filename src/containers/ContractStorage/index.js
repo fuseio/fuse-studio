@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import ipfs from 'services/ipfs'
 
 const enc = new window.TextDecoder('utf-8')
 
@@ -9,14 +8,14 @@ class ContractStorage extends Component {
   }
 
   catIpfs = () => {
-    try {
-      ipfs.files.cat(this.props.metadata, (err, data) => {
-        if (err) { throw err }
-        this.setState({fileContent: enc.decode(data)})
-      })
-    } catch (e) {
-      console.log(e)
-    }
+    // try {
+    //   ipfs.files.cat(this.props.metadata, (err, data) => {
+    //     if (err) { throw err }
+    //     this.setState({fileContent: enc.decode(data)})
+    //   })
+    // } catch (e) {
+    //   console.log(e)
+    // }
   }
   componentDidMount = () => {
     if (this.props.metadata) {
