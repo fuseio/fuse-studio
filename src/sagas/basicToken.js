@@ -48,33 +48,33 @@ export function * totalSupply (contractAddress) {
   }
 }
 
-export function * metadata (contractAddress) {
+export function * tokenURI (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    const metadata = yield call(ColuLocalNetworkContract.methods.metadata().call)
-    yield put({type: actions.METADATA.SUCCESS,
+    const tokenURI = yield call(ColuLocalNetworkContract.methods.tokenURI().call)
+    yield put({type: actions.TOKEN_URI.SUCCESS,
       contractAddress,
       response: {
-        metadata
+        tokenURI
       }})
   } catch (error) {
-    yield put({type: actions.METADATA.FAILURE, error})
+    yield put({type: actions.TOKEN_URI.FAILURE, error})
   }
 }
 
-export function * setMetadata (contractAddress, metadataUri) {
+export function * setTokenURI (contractAddress, tokenURI) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    const metadata = yield ColuLocalNetworkContract.methods.setMetadata(metadataUri).send({
+    const tokenURI = yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
       from: web3.eth.defaultAccount
     })
-    yield put({type: actions.SET_METADATA.SUCCESS,
+    yield put({type: actions.SET_TOKEN_URI.SUCCESS,
       contractAddress,
       response: {
-        metadata
+        tokenURI
       }})
   } catch (error) {
-    yield put({type: actions.SET_METADATA.FAILURE, error})
+    yield put({type: actions.SET_TOKEN_URI.FAILURE, error})
   }
 }
 
@@ -137,14 +137,14 @@ export function * fetchContractData (contractAddress) {
     }
 
     if (contractAddress !== addresses.ColuLocalNetwork) {
-      calls.metadataHash = call(ColuLocalNetworkContract.methods.metadata().call)
+      calls.tokenURI = call(ColuLocalNetworkContract.methods.tokenURI().call)
     }
 
     const response = yield all(calls)
 
-    if (response.metadataHash) {
-      const {data} = yield api.fetchMetadata(response.metadataHash)
-      response.metadata = data
+    if (response.tokenURI) {
+      const {data} = yield api.fetchMetadata(response.tokenURI)
+      response.metadata = data.metadata
     }
 
     yield put({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
@@ -192,17 +192,17 @@ export function * watchTransfer () {
   }
 }
 
-export function * watchMetadata () {
+export function * watchTokenURI () {
   while (true) {
-    const {contractAddress} = yield take(actions.METADATA.REQUEST)
-    yield fork(metadata, contractAddress)
+    const {contractAddress} = yield take(actions.TOKEN_URI.REQUEST)
+    yield fork(tokenURI, contractAddress)
   }
 }
 
-export function * watchSetMetadata () {
+export function * watchSetTokenURI () {
   while (true) {
-    const {contractAddress, metadataUri} = yield take(actions.SET_METADATA.REQUEST)
-    yield fork(setMetadata, contractAddress, metadataUri)
+    const {contractAddress, tokenURI} = yield take(actions.SET_TOKEN_URI.REQUEST)
+    yield fork(setTokenURI, contractAddress, tokenURI)
   }
 }
 
@@ -232,8 +232,8 @@ export default function * rootSaga () {
     fork(watchName),
     fork(watchSymbol),
     fork(watchTotalSupply),
-    fork(watchMetadata),
-    fork(watchSetMetadata),
+    fork(watchTokenURI),
+    fork(watchSetTokenURI),
     fork(watchOwner),
     fork(watchBalanceOf),
     fork(watchTransfer),
