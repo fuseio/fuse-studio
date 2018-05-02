@@ -141,7 +141,7 @@ export function * fetchContractData (contractAddress) {
     }
 
     const response = yield all(calls)
-    debugger
+
     if (response.tokenURI) {
       const [protocol, hash] = response.tokenURI.split('://')
       const {data} = yield api.fetchMetadata(protocol, hash)

@@ -8,13 +8,6 @@ import web3 from 'services/web3'
 
 const CurrencyFactoryContract = contract.getContract({contractName: 'CurrencyFactory'})
 
-// setTimeout(() => {
-//   debugger
-//   CurrencyFactoryContract.methods.setTokenURI('0xBB302a3d28eBa4a0452EB0107E56E356482b02E9', 'ipfs://QmdKAUdWWW8iwAEHCvUDbB5V766VCNZw2VQ4ZJTyvaMJKS').send({
-//     from: web3.eth.defaultAccount
-//   })
-// }, 3000)
-
 export function * supportsToken (address) {
   try {
     const data = yield CurrencyFactoryContract.methods.supportsToken(address).call()
