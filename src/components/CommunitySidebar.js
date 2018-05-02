@@ -1,18 +1,34 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 
+import * as uiActions from '../actions/ui'
+
 class CommunitySidebar extends Component {
+	onClose() {
+		let n = 7
+		this.props.uiActions.zoomToMarker(n)
+		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
+		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 2)}, 400)
+		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 3)}, 550)
+		this.props.uiActions.setActiveMarker()
+	}
 	render() {
+		const currentCoin = this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker] || {}
+		//console.log("currentCoin", currentCoin)
 		return (
 			<div className="community-sidebar">
 				<div className="header">
-					<div className="sidebar-close"><Link to="/">X</Link></div>
+					<div className="sidebar-close" onClick={this.onClose.bind(this)}>
+						<Link to="/">X</Link>
+					</div>
 					<div className="coin-header">
 						<img src="src/images/lnd-coin.png"/>
 						<div className="coin-details">
-							<h1>TLV Coin</h1>
+							<h1>{currentCoin.name}</h1>
 							<h2>CURRENT PRICE 
-								<span>0.5CLN (+51)</span>
+								<span> 0.5CLN (+51)</span>
 							</h2>
 						</div>
 					</div>
@@ -32,12 +48,12 @@ class CommunitySidebar extends Component {
 								<p>Volume</p>
 								<p>CLN reserve</p>
 								<p>Asset ID</p>
-								<p>d9ohgk6wruYptPeoDQRHRif8fG2vJe1uN4ryz</p>
+								<p>{this.props.ui.activeMarker}</p>
 							</div>
 							<div className="box-data column">
-								<p>TLV</p>
-								<p>Colu</p>
-								<p>50,000,000</p>
+								<p>{currentCoin.symbol}</p>
+								<p>{currentCoin.owner}</p>
+								<p>{currentCoin.totalSupply}</p>
 								<p>20 CLN</p>
 								<p>500 CLN</p>
 							</div>
@@ -47,7 +63,7 @@ class CommunitySidebar extends Component {
 						<div className="box-header">COMMUNITY</div>
 						<div className="box-info column">
 							<div className="box-data">
-								<p>TLV is Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s </p>
+								<p>{currentCoin.metadata && currentCoin.metadata.description}</p>
 							</div>
 						</div>
 						<div className="box-info">
@@ -57,11 +73,10 @@ class CommunitySidebar extends Component {
 								<p>Social</p>
 							</div>
 							<div className="box-data column">
-								<p>TLV - Jaffa</p>
-								<p>www.colu.com</p>
-								<p>F T</p>
+								<p>{currentCoin.metadata && currentCoin.metadata.website}</p>
+								<p></p>
+								<p>{currentCoin.metadata && currentCoin.metadata.social}</p>
 							</div>
-						
 						</div>
 					</div>
 				</div>
@@ -71,4 +86,20 @@ class CommunitySidebar extends Component {
 	}
 }
 
-export default CommunitySidebar
+const mapStateToProps = state => {
+	return {
+		tokens: state.tokens,
+		ui: state.ui
+	}
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch),
+    }
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(CommunitySidebar)

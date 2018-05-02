@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import basicToken from './basicToken'
 import currencyFactory from './currencyFactory'
+import ui from './uiReducer'
 
 import { routerReducer } from 'react-router-redux'
 
@@ -16,6 +17,7 @@ function web3 (state = {}, action) {
 }
 
 const rootReducer = combineReducers({
+  ui,
   web3,
   tokens: basicToken,
   currencyFactory,

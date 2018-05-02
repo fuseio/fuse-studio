@@ -114,6 +114,9 @@ h4 {
 		transition: all 1s cubic-bezier(0,.52,.28,.94);
 		transform: scale(1);
 		filter: blur(7px);
+		.map-element > div {
+			background-color: rgb(36, 35, 52) !important;
+		}
 		&.active {
 			filter: none;
 			transform: scale(1);
@@ -338,67 +341,65 @@ h4 {
 		margin-left: -15px;
 		margin-top: -15px;
 		z-index: 3;
-		transition: all 2s ease-in;
-		&.bubbles {
-		&:before {
-			content: ' ';
-			top: 15px;
-			left:15px;
-			position: absolute;
-			z-index: 2;
-			width: 7px;
-			height: 7px;
-			transition: all 0.3s ease-in;
-			border-radius: 50%;
-			background: rgba(255,255,255,1);
-			box-shadow: inset 0px 0px 20px 12px rgba(255,255,255,0.9),
-						0px 0px 40px 6px rgba(255,255,255,1);
-		}
-		>.particle {
-			transition: all 0.3s ease-in;
-			opacity:0.3;
-			position: absolute;
-			background-color:rgba(77,217,180,0.5);
-			animation: bubbles 2s ease-in infinite;
-			border-radius:100%;
-			box-shadow: 5px 4px 17px 0px rgba(77,217,180, 0.1);
-		 }
-		>.particle2 {
-			transition: all 0.3s ease-in;
-			opacity:0.3;
-			position: absolute;
-			background-color:rgba(77,217,180,0.5);
-			animation: bubbles2 2s ease-in infinite;
-			border-radius:100%;
-			box-shadow: 5px 4px 17px 0px rgba(203, 255, 241, 0.1);
-		}
-		 }
-		&.grow {
-		width:120px;
-		height:120px;
-		margin-left: -60px;
-		margin-top: -60px;
-		transition: all 2s ease-in;
-		transform: scale(1.1);
-
+		//transition: all 2s ease-in 1s;
 		&.bubbles {
 			&:before {
-				width: 20px;
-				height: 20px;
-				top: 50px;
-				left:50px;
-				box-shadow: inset 0px 0px 10px 12px rgba(255,255,255,0.9),
-						0px 0px 40px 12px rgba(255,255,255,1);
+				content: ' ';
+				top: 15px;
+				left:15px;
+				position: absolute;
+				z-index: 2;
+				width: 7px;
+				height: 7px;
+				transition: all 0.3s ease-in;
+				border-radius: 50%;
+				background: rgba(255,255,255,1);
+				box-shadow: inset 0px 0px 20px 12px rgba(255,255,255,0.9),
+							0px 0px 40px 6px rgba(255,255,255,1);
 			}
-			>.particle, .particle2 {
-				background-color:rgba(77,217,180,0.8);
-				box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
+			>.particle {
+				transition: all 0.3s ease-in;
+				opacity:0.3;
+				position: absolute;
+				background-color:rgba(77,217,180,0.5);
+				animation: bubbles 2s ease-in infinite;
+				border-radius:100%;
+				box-shadow: 5px 4px 17px 0px rgba(77,217,180, 0.1);
+			 }
+			>.particle2 {
+				transition: all 0.3s ease-in;
+				opacity:0.3;
+				position: absolute;
+				background-color:rgba(77,217,180,0.5);
+				animation: bubbles2 2s ease-in infinite;
+				border-radius:100%;
+				box-shadow: 5px 4px 17px 0px rgba(203, 255, 241, 0.1);
 			}
 		}
-		&:before {
-			top: 60px;
-			left:60px;
-		}
+		&.grow {
+			width:120px;
+			height:120px;
+			margin-left: -60px;
+			margin-top: -60px;
+			transform: scale(1.1);
+			&.bubbles {
+				&:before {
+					width: 20px;
+					height: 20px;
+					top: 50px;
+					left:50px;
+					box-shadow: inset 0px 0px 10px 12px rgba(255,255,255,0.9),
+							0px 0px 40px 12px rgba(255,255,255,1);
+				}
+				>.particle, .particle2 {
+					background-color:rgba(77,217,180,0.8);
+					box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
+				}
+			}
+			&:before {
+				top: 60px;
+				left:60px;
+			}
 		}
 		&:hover {
 		transform: scale(1.1);

@@ -5,7 +5,6 @@ import { Route } from 'react-router'
 import { ConnectedRouter, push } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
 import { AnimatedRoute } from 'react-router-transition'
-import { Route } from 'react-router'
 
 import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'
@@ -48,7 +47,6 @@ export default class Root extends Component {
 								{...sidebarTransition}
 							/>
 						</div>
-						<Route exact path="/leon" component={CommunitySidebar}/>
 					</div>
 				</ConnectedRouter>
 			</Provider>
