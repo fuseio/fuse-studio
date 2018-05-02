@@ -10,9 +10,9 @@ export default (state = {}, action) => {
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case basicToken.TOTAL_SUPPLY.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.METADATA.SUCCESS:
+    case basicToken.TOKEN_URI.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.SET_METADATA.SUCCESS:
+    case basicToken.SET_TOKEN_URI.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case basicToken.OWNER.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}

@@ -2,6 +2,7 @@ import { all, put, take, fork } from 'redux-saga/effects'
 import {BigNumber} from 'bignumber.js'
 
 import * as actions from 'actions/currencyFactory'
+import {ADD_COMMUNITY} from 'actions/api'
 import { contract } from 'osseus-wallet'
 import web3 from 'services/web3'
 
@@ -32,12 +33,19 @@ export function * createCurrency (currencyData) {
       currencyData.symbol,
       currencyData.decimals,
       new BigNumber(currencyData.totalSupply),
-      currencyData.data
+      currencyData.tokenURI
     ).send({
       from: web3.eth.defaultAccount
     })
+
     yield put({type: actions.CREATE_CURRENCY.SUCCESS, data})
+    yield put({type: ADD_COMMUNITY.REQUEST, community: {
+      name: currencyData.name,
+      symbol: currencyData.symbol,
+      address: data.address
+    }})
   } catch (error) {
+    console.log(error)
     yield put({type: actions.CREATE_CURRENCY.FAILURE, error})
   }
 }
