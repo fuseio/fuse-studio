@@ -2,7 +2,9 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 
 import IPFSStorage from 'components/IPFSStorage'
+import ContractStorage from 'components/ContractStorage'
 import { supportsToken, tokens, createCurrency } from 'actions/currencyFactory'
+import { setTokenURI } from 'actions/basicToken'
 
 const styles = {
   contract: {
@@ -42,7 +44,7 @@ class CurrencyFactoryContract extends Component {
 
   handleSupplyChange = (event) => this.setState({currency: {...this.state.currency, totalSupply: event.target.value}})
 
-  handleDataChange = (event) => this.setState({currency: {...this.state.currency, data: event.target.value}})
+  handleTokenURIChange = (event) => this.setState({currency: {...this.state.currency, tokenURI: event.target.value}})
 
   state = {
     address: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
@@ -52,7 +54,7 @@ class CurrencyFactoryContract extends Component {
       symbol: 'CC',
       decimals: 18,
       totalSupply: 1e+24,
-      data: ''
+      tokenURI: ''
     }
   }
 
@@ -85,11 +87,12 @@ class CurrencyFactoryContract extends Component {
           totalSupply: <input type='number' value={this.state.currency.totalSupply} onChange={this.handleSupplyChange} />
         </div>
         <div>
-          data: <input type='string' value={this.state.currency.data} onChange={this.handleDataChange} />
+          tokenURI: <input type='string' value={this.state.currency.tokenURI} onChange={this.handleTokenURIChange} />
         </div>
         <button onClick={this.handleCreateCurrency}>create CC</button>
       </div>
       <IPFSStorage />
+      <ContractStorage setTokenURI={this.props.setTokenURI} />
     </div>
   }
 }
@@ -100,6 +103,7 @@ export default connect(
   mapStateToProps, {
     supportsToken,
     tokens,
-    createCurrency
+    createCurrency,
+    setTokenURI
   }
 )(CurrencyFactoryContract)

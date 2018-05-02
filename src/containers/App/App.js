@@ -8,13 +8,12 @@ import { AnimatedRoute } from 'react-router-transition'
 
 import {fetchContractData} from 'actions/basicToken'
 import {getNetworkType} from 'actions/web3'
-
-const clnAddress = '0x41C9d91E96b933b74ae21bCBb617369CBE022530'
+import addresses from 'constants/addresses'
 
 const coluTokens = [
-	clnAddress,
-	'0x7629f7166270b236c9e04f180f0a8c8b4050613D',
-	'0x228c74ff966b0EdE38E60DF560d4948fdA59ef9e'
+	addresses.ColuLocalNetwork,
+	'0x4188bA0bFDA56254ac66C54B1998007188c43D8C',
+	'0xBB302a3d28eBa4a0452EB0107E56E356482b02E9'
 ]
 
 import 'scss/styles.scss'

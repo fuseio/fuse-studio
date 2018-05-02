@@ -1,446 +1,446 @@
 module.exports = [
   {
-    'constant': true,
-    'inputs': [],
-    'name': 'name',
-    'outputs': [
+    "constant": true,
+    "inputs": [],
+    "name": "name",
+    "outputs": [
       {
-        'name': '',
-        'type': 'string'
+        "name": "",
+        "type": "string"
       }
     ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': false,
-    'inputs': [
+    "constant": false,
+    "inputs": [
       {
-        'name': '_newOwnerCandidate',
-        'type': 'address'
+        "name": "_newOwnerCandidate",
+        "type": "address"
       }
     ],
-    'name': 'requestOwnershipTransfer',
-    'outputs': [],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'function'
+    "name": "requestOwnershipTransfer",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    'constant': false,
-    'inputs': [
+    "constant": false,
+    "inputs": [
       {
-        'name': '_spender',
-        'type': 'address'
+        "name": "_spender",
+        "type": "address"
       },
       {
-        'name': '_value',
-        'type': 'uint256'
+        "name": "_value",
+        "type": "uint256"
       }
     ],
-    'name': 'approve',
-    'outputs': [
+    "name": "approve",
+    "outputs": [
       {
-        'name': '',
-        'type': 'bool'
+        "name": "",
+        "type": "bool"
       }
     ],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    'constant': true,
-    'inputs': [],
-    'name': 'totalSupply',
-    'outputs': [
+    "constant": true,
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [
       {
-        'name': '',
-        'type': 'uint256'
+        "name": "",
+        "type": "uint256"
       }
     ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': false,
-    'inputs': [
+    "constant": false,
+    "inputs": [
       {
-        'name': '_from',
-        'type': 'address'
+        "name": "_from",
+        "type": "address"
       },
       {
-        'name': '_to',
-        'type': 'address'
+        "name": "_to",
+        "type": "address"
       },
       {
-        'name': '_value',
-        'type': 'uint256'
+        "name": "_value",
+        "type": "uint256"
       }
     ],
-    'name': 'transferFrom',
-    'outputs': [
+    "name": "transferFrom",
+    "outputs": [
       {
-        'name': '',
-        'type': 'bool'
+        "name": "",
+        "type": "bool"
       }
     ],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    'constant': true,
-    'inputs': [],
-    'name': 'decimals',
-    'outputs': [
+    "constant": true,
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [
       {
-        'name': '',
-        'type': 'uint8'
+        "name": "",
+        "type": "uint8"
       }
     ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': true,
-    'inputs': [],
-    'name': 'metadata',
-    'outputs': [
+    "constant": true,
+    "inputs": [],
+    "name": "tokenURI",
+    "outputs": [
       {
-        'name': '',
-        'type': 'string'
+        "name": "",
+        "type": "string"
       }
     ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': false,
-    'inputs': [
+    "constant": false,
+    "inputs": [
       {
-        'name': '_to',
-        'type': 'address'
+        "name": "_to",
+        "type": "address"
       },
       {
-        'name': '_value',
-        'type': 'uint256'
+        "name": "_value",
+        "type": "uint256"
       },
       {
-        'name': '_data',
-        'type': 'bytes'
+        "name": "_data",
+        "type": "bytes"
       }
     ],
-    'name': 'transferAndCall',
-    'outputs': [
+    "name": "transferAndCall",
+    "outputs": [
       {
-        'name': '',
-        'type': 'bool'
+        "name": "",
+        "type": "bool"
       }
     ],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    'constant': true,
-    'inputs': [
+    "constant": true,
+    "inputs": [
       {
-        'name': '_owner',
-        'type': 'address'
+        "name": "_owner",
+        "type": "address"
       }
     ],
-    'name': 'balanceOf',
-    'outputs': [
+    "name": "balanceOf",
+    "outputs": [
       {
-        'name': 'balance',
-        'type': 'uint256'
+        "name": "balance",
+        "type": "uint256"
       }
     ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': false,
-    'inputs': [],
-    'name': 'acceptOwnership',
-    'outputs': [],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'function'
+    "constant": false,
+    "inputs": [],
+    "name": "acceptOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    'constant': true,
-    'inputs': [],
-    'name': 'owner',
-    'outputs': [
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
       {
-        'name': '',
-        'type': 'address'
+        "name": "",
+        "type": "address"
       }
     ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': true,
-    'inputs': [],
-    'name': 'symbol',
-    'outputs': [
+    "constant": true,
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
       {
-        'name': '',
-        'type': 'string'
+        "name": "",
+        "type": "string"
       }
     ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': false,
-    'inputs': [
+    "constant": false,
+    "inputs": [
       {
-        'name': '_metadata',
-        'type': 'string'
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "name": "_value",
+        "type": "uint256"
       }
     ],
-    'name': 'setMetadata',
-    'outputs': [],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'function'
+    "name": "transfer",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    'constant': false,
-    'inputs': [
+    "constant": true,
+    "inputs": [],
+    "name": "newOwnerCandidate",
+    "outputs": [
       {
-        'name': '_to',
-        'type': 'address'
-      },
-      {
-        'name': '_value',
-        'type': 'uint256'
+        "name": "",
+        "type": "address"
       }
     ],
-    'name': 'transfer',
-    'outputs': [
-      {
-        'name': '',
-        'type': 'bool'
-      }
-    ],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': true,
-    'inputs': [],
-    'name': 'newOwnerCandidate',
-    'outputs': [
+    "constant": false,
+    "inputs": [
       {
-        'name': '',
-        'type': 'address'
+        "name": "_tokenAddress",
+        "type": "address"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256"
       }
     ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "name": "transferAnyERC20Token",
+    "outputs": [
+      {
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    'constant': false,
-    'inputs': [
+    "constant": true,
+    "inputs": [
       {
-        'name': '_tokenAddress',
-        'type': 'address'
+        "name": "_owner",
+        "type": "address"
       },
       {
-        'name': '_amount',
-        'type': 'uint256'
+        "name": "_spender",
+        "type": "address"
       }
     ],
-    'name': 'transferAnyERC20Token',
-    'outputs': [
+    "name": "allowance",
+    "outputs": [
       {
-        'name': 'success',
-        'type': 'bool'
+        "name": "remaining",
+        "type": "uint256"
       }
     ],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'function'
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    'constant': true,
-    'inputs': [
+    "constant": false,
+    "inputs": [
       {
-        'name': '_owner',
-        'type': 'address'
-      },
-      {
-        'name': '_spender',
-        'type': 'address'
+        "name": "_tokenURI",
+        "type": "string"
       }
     ],
-    'name': 'allowance',
-    'outputs': [
-      {
-        'name': 'remaining',
-        'type': 'uint256'
-      }
-    ],
-    'payable': false,
-    'stateMutability': 'view',
-    'type': 'function'
+    "name": "setTokenURI",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    'inputs': [
+    "inputs": [
       {
-        'name': '_name',
-        'type': 'string'
+        "name": "_name",
+        "type": "string"
       },
       {
-        'name': '_symbol',
-        'type': 'string'
+        "name": "_symbol",
+        "type": "string"
       },
       {
-        'name': '_decimals',
-        'type': 'uint8'
+        "name": "_decimals",
+        "type": "uint8"
       },
       {
-        'name': '_totalSupply',
-        'type': 'uint256'
+        "name": "_totalSupply",
+        "type": "uint256"
       },
       {
-        'name': '_metadata',
-        'type': 'string'
+        "name": "_tokenURI",
+        "type": "string"
       }
     ],
-    'payable': false,
-    'stateMutability': 'nonpayable',
-    'type': 'constructor'
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    'anonymous': false,
-    'inputs': [
+    "anonymous": false,
+    "inputs": [
       {
-        'indexed': false,
-        'name': 'metadata',
-        'type': 'string'
+        "indexed": false,
+        "name": "tokenURI",
+        "type": "string"
       }
     ],
-    'name': 'MetadataChanged',
-    'type': 'event'
+    "name": "TokenURIChanged",
+    "type": "event"
   },
   {
-    'anonymous': false,
-    'inputs': [
+    "anonymous": false,
+    "inputs": [
       {
-        'indexed': true,
-        'name': '_by',
-        'type': 'address'
+        "indexed": true,
+        "name": "by",
+        "type": "address"
       },
       {
-        'indexed': true,
-        'name': '_to',
-        'type': 'address'
+        "indexed": true,
+        "name": "to",
+        "type": "address"
       }
     ],
-    'name': 'OwnershipRequested',
-    'type': 'event'
+    "name": "OwnershipRequested",
+    "type": "event"
   },
   {
-    'anonymous': false,
-    'inputs': [
+    "anonymous": false,
+    "inputs": [
       {
-        'indexed': true,
-        'name': '_from',
-        'type': 'address'
+        "indexed": true,
+        "name": "from",
+        "type": "address"
       },
       {
-        'indexed': true,
-        'name': '_to',
-        'type': 'address'
+        "indexed": true,
+        "name": "to",
+        "type": "address"
       }
     ],
-    'name': 'OwnershipTransferred',
-    'type': 'event'
+    "name": "OwnershipTransferred",
+    "type": "event"
   },
   {
-    'anonymous': false,
-    'inputs': [
+    "anonymous": false,
+    "inputs": [
       {
-        'indexed': true,
-        'name': 'owner',
-        'type': 'address'
+        "indexed": true,
+        "name": "owner",
+        "type": "address"
       },
       {
-        'indexed': true,
-        'name': 'spender',
-        'type': 'address'
+        "indexed": true,
+        "name": "spender",
+        "type": "address"
       },
       {
-        'indexed': false,
-        'name': 'value',
-        'type': 'uint256'
+        "indexed": false,
+        "name": "value",
+        "type": "uint256"
       }
     ],
-    'name': 'Approval',
-    'type': 'event'
+    "name": "Approval",
+    "type": "event"
   },
   {
-    'anonymous': false,
-    'inputs': [
+    "anonymous": false,
+    "inputs": [
       {
-        'indexed': true,
-        'name': 'from',
-        'type': 'address'
+        "indexed": true,
+        "name": "from",
+        "type": "address"
       },
       {
-        'indexed': true,
-        'name': 'to',
-        'type': 'address'
+        "indexed": true,
+        "name": "to",
+        "type": "address"
       },
       {
-        'indexed': false,
-        'name': 'value',
-        'type': 'uint256'
+        "indexed": false,
+        "name": "value",
+        "type": "uint256"
       }
     ],
-    'name': 'Transfer',
-    'type': 'event'
+    "name": "Transfer",
+    "type": "event"
   },
   {
-    'anonymous': false,
-    'inputs': [
+    "anonymous": false,
+    "inputs": [
       {
-        'indexed': true,
-        'name': 'from',
-        'type': 'address'
+        "indexed": true,
+        "name": "from",
+        "type": "address"
       },
       {
-        'indexed': true,
-        'name': 'to',
-        'type': 'address'
+        "indexed": true,
+        "name": "to",
+        "type": "address"
       },
       {
-        'indexed': false,
-        'name': 'value',
-        'type': 'uint256'
+        "indexed": false,
+        "name": "value",
+        "type": "uint256"
       },
       {
-        'indexed': false,
-        'name': 'data',
-        'type': 'bytes'
+        "indexed": false,
+        "name": "data",
+        "type": "bytes"
       }
     ],
-    'name': 'TransferAndCall',
-    'type': 'event'
+    "name": "TransferAndCall",
+    "type": "event"
   }
 ]
