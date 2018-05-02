@@ -34,7 +34,7 @@ class IPFSStorage extends Component {
     const hash = event.target.value
     this.setState({fileHash: hash})
 
-    api.fetchMetadata(hash).then(({data}) => {
+    api.fetchMetadata('ipfs', hash).then(({data}) => {
       this.setState({fileContent: JSON.stringify(data.data)})
     })
   }
@@ -44,7 +44,7 @@ class IPFSStorage extends Component {
 
     api.addMetadata(this.state.tokenData).then(({data}) => {
       self.setState({fileHash: data.hash})
-      api.fetchMetadata(data.hash).then(({data}) => {
+      api.fetchMetadata(data.protocol, data.hash).then(({data}) => {
         this.setState({fileContent: JSON.stringify(data.data)})
       })
     })

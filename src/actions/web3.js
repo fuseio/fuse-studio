@@ -1,4 +1,4 @@
-import {action, createRequestTypes} from './index'
+import {action, createRequestTypes} from './utils'
 
 export const GET_NETWORK_TYPE = createRequestTypes('GET_NETWORK_TYPE')
 

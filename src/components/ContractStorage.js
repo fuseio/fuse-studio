@@ -4,7 +4,8 @@ const enc = new window.TextDecoder('utf-8')
 
 class ContractStorage extends Component {
   state = {
-    metadata: ''
+    tokenURI: '',
+    address: ''
   }
 
   catIpfs = () => {
@@ -18,27 +19,29 @@ class ContractStorage extends Component {
     // }
   }
   componentDidMount = () => {
-    if (this.props.metadata) {
+    if (this.props.tokenURI) {
       this.catIpfs()
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.metadata !== this.props.metadata) {
+    if (nextProps.tokenURI !== this.props.tokenURI) {
       this.catIpfs()
     }
   }
 
-  handleMetadataChange = (event) => this.setState({metadata: event.target.value})
+  handleTokenURIChange = (event) => this.setState({tokenURI: event.target.value})
 
-  handleSetMetadata = () => this.props.setMetadata(this.props.address, this.state.metadata)
+  handleAddressChange = (event) => this.setState({address: event.target.value})
+
+  handleSetTokenURI = () => this.props.setTokenURI(this.state.address, this.state.tokenURI)
 
   render = () => (
     <div>
       <div>IPFS Storage</div>
-      <div>metadata hash: {this.props.metadata}</div>
-      setMetadata: <input type='text' value={this.state.metadata} onChange={this.handleMetadataChange} />
-      <button onClick={this.handleSetMetadata}>submit</button>
+      address: <input type='text' value={this.state.address} onChange={this.handleAddressChange} />
+      tokenURI: <input type='text' value={this.state.tokenURI} onChange={this.handleTokenURIChange} />
+      <button onClick={this.handleSetTokenURI}>set</button>
       <div>
         {this.state.fileContent}
       </div>

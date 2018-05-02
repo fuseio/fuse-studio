@@ -1,4 +1,4 @@
-import {action, createRequestTypes} from './index'
+import {action, createRequestTypes} from './utils'
 
 export const NAME = createRequestTypes('NAME')
 export const SYMBOL = createRequestTypes('SYMBOL')

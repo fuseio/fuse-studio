@@ -65,7 +65,7 @@ export function * tokenURI (contractAddress) {
 export function * setTokenURI (contractAddress, tokenURI) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    const tokenURI = yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
+    const receipt = yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
       from: web3.eth.defaultAccount
     })
     yield put({type: actions.SET_TOKEN_URI.SUCCESS,
@@ -141,10 +141,11 @@ export function * fetchContractData (contractAddress) {
     }
 
     const response = yield all(calls)
-
+    debugger
     if (response.tokenURI) {
-      const {data} = yield api.fetchMetadata(response.tokenURI)
-      response.metadata = data.metadata
+      const [protocol, hash] = response.tokenURI.split('://')
+      const {data} = yield api.fetchMetadata(protocol, hash)
+      response.metadata = data.data
     }
 
     yield put({type: actions.FETCH_CONTRACT_DATA.SUCCESS,

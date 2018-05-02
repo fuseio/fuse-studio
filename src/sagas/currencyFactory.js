@@ -2,10 +2,18 @@ import { all, put, take, fork } from 'redux-saga/effects'
 import {BigNumber} from 'bignumber.js'
 
 import * as actions from 'actions/currencyFactory'
+import {ADD_COMMUNITY} from 'actions/api'
 import { contract } from 'osseus-wallet'
 import web3 from 'services/web3'
 
 const CurrencyFactoryContract = contract.getContract({contractName: 'CurrencyFactory'})
+
+// setTimeout(() => {
+//   debugger
+//   CurrencyFactoryContract.methods.setTokenURI('0xBB302a3d28eBa4a0452EB0107E56E356482b02E9', 'ipfs://QmdKAUdWWW8iwAEHCvUDbB5V766VCNZw2VQ4ZJTyvaMJKS').send({
+//     from: web3.eth.defaultAccount
+//   })
+// }, 3000)
 
 export function * supportsToken (address) {
   try {
@@ -32,12 +40,19 @@ export function * createCurrency (currencyData) {
       currencyData.symbol,
       currencyData.decimals,
       new BigNumber(currencyData.totalSupply),
-      currencyData.data
+      currencyData.tokenURI
     ).send({
       from: web3.eth.defaultAccount
     })
+
     yield put({type: actions.CREATE_CURRENCY.SUCCESS, data})
+    yield put({type: ADD_COMMUNITY.REQUEST, community: {
+      name: currencyData.name,
+      symbol: currencyData.symbol,
+      address: data.address
+    }})
   } catch (error) {
+    console.log(error)
     yield put({type: actions.CREATE_CURRENCY.FAILURE, error})
   }
 }
