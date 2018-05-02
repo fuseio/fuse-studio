@@ -25,7 +25,6 @@ class App extends Component {
 		out: false
 	}
 	componentDidMount () {
-		this.props.getNetworkType()
 		coluTokens.forEach(this.props.fetchContractData)
 
 		// Fetch token info (from blockchain and ipfs and combine them), try to fetch all fields in one call
