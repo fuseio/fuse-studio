@@ -57,7 +57,7 @@ class App extends Component {
 	render() {
 		let currentRoute = this.props && this.props.router && this.props.router.location && this.props.router.location.pathname
 		console.log("render app new", currentRoute)
-		let panBy = { x: 0, y: 0 }
+		//let panBy = { x: 0, y: 0 }
 		let mainContainerClass = classNames({
 			"main-container": true,
 			"flex": true,
@@ -68,9 +68,9 @@ class App extends Component {
 			"hide": !this.state.isWelcome,
 			"out": this.state.out
 		})
-		if (currentRoute === '/sidebar') {
-			panBy = { x: -100, y: 0 }
-		}
+		//if (currentRoute === '/sidebar') {
+		//	panBy = { x: -100, y: 0 }
+		//}
 
 		const welcome = <div className={welcomeClass}>
 							<h3>Welcome to CLN Community App</h3>
@@ -91,7 +91,9 @@ class App extends Component {
 
 
 //<CommunitiesList active={!this.state.isWelcome}/>
-const mapStateToProps = (state) => state
+const mapStateToProps = state => {
+	return {}
+}
 
 export default connect(
 	mapStateToProps, {
