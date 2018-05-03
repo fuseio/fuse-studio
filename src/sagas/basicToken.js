@@ -1,22 +1,25 @@
-import { all, call, put, take, fork } from 'redux-saga/effects'
+import { all, call, take, fork } from 'redux-saga/effects'
 
+import {createEnitityPut} from './shared'
 import * as actions from 'actions/basicToken'
 import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import * as api from 'services/api'
 
+const entityPut = createEnitityPut('basicToken')
+
 export function * name (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const name = yield call(ColuLocalNetworkContract.methods.name().call)
-    yield put({type: actions.NAME.SUCCESS,
+    yield entityPut({type: actions.NAME.SUCCESS,
       contractAddress,
       response: {
         name
       }})
   } catch (error) {
-    yield put({type: actions.NAME.FAILURE, error})
+    yield entityPut({type: actions.NAME.FAILURE, error})
   }
 }
 
@@ -24,13 +27,13 @@ export function * symbol (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const symbol = yield call(ColuLocalNetworkContract.methods.symbol().call)
-    yield put({type: actions.SYMBOL.SUCCESS,
+    yield entityPut({type: actions.SYMBOL.SUCCESS,
       contractAddress,
       response: {
         symbol
       }})
   } catch (error) {
-    yield put({type: actions.SYMBOL.FAILURE, error})
+    yield entityPut({type: actions.SYMBOL.FAILURE, error})
   }
 }
 
@@ -38,13 +41,13 @@ export function * totalSupply (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const totalSupply = yield call(ColuLocalNetworkContract.methods.totalSupply().call)
-    yield put({type: actions.TOTAL_SUPPLY.SUCCESS,
+    yield entityPut({type: actions.TOTAL_SUPPLY.SUCCESS,
       contractAddress,
       response: {
         totalSupply
       }})
   } catch (error) {
-    yield put({type: actions.TOTAL_SUPPLY.FAILURE, error})
+    yield entityPut({type: actions.TOTAL_SUPPLY.FAILURE, error})
   }
 }
 
@@ -52,29 +55,29 @@ export function * tokenURI (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
     const tokenURI = yield call(ColuLocalNetworkContract.methods.tokenURI().call)
-    yield put({type: actions.TOKEN_URI.SUCCESS,
+    yield entityPut({type: actions.TOKEN_URI.SUCCESS,
       contractAddress,
       response: {
         tokenURI
       }})
   } catch (error) {
-    yield put({type: actions.TOKEN_URI.FAILURE, error})
+    yield entityPut({type: actions.TOKEN_URI.FAILURE, error})
   }
 }
 
 export function * setTokenURI (contractAddress, tokenURI) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    const receipt = yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
+    yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
       from: web3.eth.defaultAccount
     })
-    yield put({type: actions.SET_TOKEN_URI.SUCCESS,
+    yield entityPut({type: actions.SET_TOKEN_URI.SUCCESS,
       contractAddress,
       response: {
         tokenURI
       }})
   } catch (error) {
-    yield put({type: actions.SET_TOKEN_URI.FAILURE, error})
+    yield entityPut({type: actions.SET_TOKEN_URI.FAILURE, error})
   }
 }
 
@@ -82,13 +85,13 @@ export function * owner (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
     const owner = yield call(ColuLocalNetworkContract.methods.owner().call)
-    yield put({type: actions.OWNER.SUCCESS,
+    yield entityPut({type: actions.OWNER.SUCCESS,
       contractAddress,
       response: {
         owner
       }})
   } catch (error) {
-    yield put({type: actions.OWNER.FAILURE, error})
+    yield entityPut({type: actions.OWNER.FAILURE, error})
   }
 }
 
@@ -96,13 +99,13 @@ export function * balanceOf (contractAddress, address) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(address).call)
-    yield put({type: actions.BALANCE_OF.SUCCESS,
+    yield entityPut({type: actions.BALANCE_OF.SUCCESS,
       contractAddress,
       response: {
         balanceOf
       }})
   } catch (error) {
-    yield put({type: actions.BALANCE_OF.FAILURE, error})
+    yield entityPut({type: actions.BALANCE_OF.FAILURE, error})
   }
 }
 
@@ -112,10 +115,10 @@ export function * transfer (contractAddress, to, value) {
     const receipt = yield ColuLocalNetworkContract.methods.transfer(to, value).send({
       from: web3.eth.defaultAccount
     })
-    yield put({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
-    yield put({type: actions.TRANSFER.SUCCESS, receipt})
+    yield entityPut({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
+    yield entityPut({type: actions.TRANSFER.SUCCESS, receipt})
   } catch (error) {
-    yield put({type: actions.TRANSFER.FAILURE, error})
+    yield entityPut({type: actions.TRANSFER.FAILURE, error})
   }
 }
 
@@ -148,13 +151,13 @@ export function * fetchContractData (contractAddress) {
       response.metadata = data.data
     }
 
-    yield put({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
+    yield entityPut({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
       contractAddress,
       response
     })
   } catch (error) {
     console.error(error)
-    yield put({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
+    yield entityPut({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
   }
 }
 
@@ -217,7 +220,7 @@ export function * watchOwner () {
 export function * watchTransferSuccess () {
   while (true) {
     const {receipt} = yield take(actions.TRANSFER.SUCCESS)
-    yield put({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
+    yield entityPut({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
   }
 }
 
