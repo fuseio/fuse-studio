@@ -1,40 +1,21 @@
 import React, {Component} from 'react'
 
-const enc = new window.TextDecoder('utf-8')
-
 class ContractStorage extends Component {
   state = {
     tokenURI: '',
-    address: ''
-  }
-
-  catIpfs = () => {
-    // try {
-    //   ipfs.files.cat(this.props.metadata, (err, data) => {
-    //     if (err) { throw err }
-    //     this.setState({fileContent: enc.decode(data)})
-    //   })
-    // } catch (e) {
-    //   console.log(e)
-    // }
-  }
-  componentDidMount = () => {
-    if (this.props.tokenURI) {
-      this.catIpfs()
-    }
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.tokenURI !== this.props.tokenURI) {
-      this.catIpfs()
-    }
+    address: '0x4188bA0bFDA56254ac66C54B1998007188c43D8C',
+    clnAmount: ''
   }
 
   handleTokenURIChange = (event) => this.setState({tokenURI: event.target.value})
 
   handleAddressChange = (event) => this.setState({address: event.target.value})
 
+  handleClnAmountChange = (event) => this.setState({clnAmount: event.target.value})
+
   handleSetTokenURI = () => this.props.setTokenURI(this.state.address, this.state.tokenURI)
+
+  handleInsertCLNtoMarketMaker = () => this.props.insertCLNtoMarketMaker(this.state.address, this.state.clnAmount)
 
   render = () => (
     <div>
@@ -42,6 +23,10 @@ class ContractStorage extends Component {
       address: <input type='text' value={this.state.address} onChange={this.handleAddressChange} />
       tokenURI: <input type='text' value={this.state.tokenURI} onChange={this.handleTokenURIChange} />
       <button onClick={this.handleSetTokenURI}>set</button>
+      <div>
+        clnAmount: <input type='text' value={this.state.clnAmount} onChange={this.handleClnAmountChange} />
+        <button onClick={this.handleInsertCLNtoMarketMaker}>insert</button>
+      </div>
       <div>
         {this.state.fileContent}
       </div>

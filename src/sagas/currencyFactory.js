@@ -39,11 +39,12 @@ export function * createCurrency (currencyData) {
     })
 
     yield put({type: actions.CREATE_CURRENCY.SUCCESS, data})
-    yield put({type: ADD_COMMUNITY.REQUEST, community: {
-      name: currencyData.name,
-      symbol: currencyData.symbol,
-      address: data.address
-    }})
+    yield put({type: ADD_COMMUNITY.REQUEST,
+      community: {
+        name: currencyData.name,
+        symbol: currencyData.symbol,
+        address: data.address
+      }})
   } catch (error) {
     console.log(error)
     yield put({type: actions.CREATE_CURRENCY.FAILURE, error})
@@ -60,6 +61,20 @@ export function * openMarket (address) {
     yield put({type: actions.OPEN_MARKET.SUCCESS, data})
   } catch (error) {
     yield put({type: actions.OPEN_MARKET.FAILURE, error})
+  }
+}
+
+export function * insertCLNtoMarketMaker (address, clnAmount) {
+  try {
+    const data = yield CurrencyFactoryContract.methods.insertCLNtoMarketMaker(
+      address,
+      clnAmount
+    ).send({
+      from: web3.eth.defaultAccount
+    })
+    yield put({type: actions.INSERT_CLN_TO_MARKET_MAKER.SUCCESS, data})
+  } catch (error) {
+    yield put({type: actions.INSERT_CLN_TO_MARKET_MAKER.FAILURE, error})
   }
 }
 
@@ -91,11 +106,19 @@ export function * watchCreateCurrency () {
   }
 }
 
+export function * watchInsertCLNtoMarketMaker () {
+  while (true) {
+    const {address, clnAmount} = yield take(actions.INSERT_CLN_TO_MARKET_MAKER.REQUEST)
+    yield fork(insertCLNtoMarketMaker, address, clnAmount)
+  }
+}
+
 export default function * rootSaga () {
   yield all([
     fork(watchSupportsToken),
     fork(watchTokens),
     fork(watchCreateCurrency),
-    fork(watchOpenMarket)
+    fork(watchOpenMarket),
+    fork(watchInsertCLNtoMarketMaker)
   ])
 }

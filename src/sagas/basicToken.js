@@ -1,13 +1,14 @@
-import { all, call, take, fork } from 'redux-saga/effects'
+import { all, put, call, take, fork } from 'redux-saga/effects'
 
-import {createEnitityPut} from './shared'
+import {createEntityPut} from './utils'
 import * as actions from 'actions/basicToken'
+import {GET_CURRENT_PRICE} from 'actions/marketMaker'
 import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import * as api from 'services/api'
 
-const entityPut = createEnitityPut('basicToken')
+const entityPut = createEntityPut('basicToken')
 
 export function * name (contractAddress) {
   try {
@@ -122,9 +123,22 @@ export function * transfer (contractAddress, to, value) {
   }
 }
 
+export function * approve (contractAddress, spender, value) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const receipt = yield ColuLocalNetworkContract.methods.approve(spender, value).send({
+      from: web3.eth.defaultAccount
+    })
+    yield entityPut({type: actions.APPROVE.REQUEST, address: receipt.from})
+  } catch (error) {
+    yield entityPut({type: actions.APPROVE.FAILURE, error})
+  }
+}
+
 export function * fetchContractData (contractAddress) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const CurrencyFactoryContract = contract.getContract({contractName: 'CurrencyFactory'})
 
     const calls = {
       name: call(ColuLocalNetworkContract.methods.name().call),
@@ -141,14 +155,24 @@ export function * fetchContractData (contractAddress) {
 
     if (contractAddress !== addresses.ColuLocalNetwork) {
       calls.tokenURI = call(ColuLocalNetworkContract.methods.tokenURI().call)
+      calls.mmAddress = call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
     }
 
     const response = yield all(calls)
+    response.address = contractAddress
 
     if (response.tokenURI) {
       const [protocol, hash] = response.tokenURI.split('://')
       const {data} = yield api.fetchMetadata(protocol, hash)
       response.metadata = data.data
+    }
+
+    if (response.mmAddress) {
+      yield put({
+        type: GET_CURRENT_PRICE.REQUEST,
+        address: response.mmAddress,
+        contractAddress
+      })
     }
 
     yield entityPut({type: actions.FETCH_CONTRACT_DATA.SUCCESS,

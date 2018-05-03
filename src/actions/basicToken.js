@@ -13,6 +13,7 @@ export const OWNER = createRequestTypes('OWNER')
 
 export const BALANCE_OF = createRequestTypes('BALANCE_OF')
 export const TRANSFER = createRequestTypes('TRANSFER')
+export const APPROVE = createRequestTypes('APPROVE')
 
 export const FETCH_CONTRACT_DATA = createRequestTypes('FETCH_CONTRACT_DATA')
 
@@ -25,5 +26,6 @@ export const owner = (contractAddress) => basicTokenAction(OWNER.REQUEST, {contr
 
 export const balanceOf = (contractAddress, address) => basicTokenAction(BALANCE_OF.REQUEST, {contractAddress, address})
 export const transfer = (contractAddress, to, value) => basicTokenAction(TRANSFER.REQUEST, {contractAddress, to, value})
+export const approve = (contractAddress, spender, value) => basicTokenAction(APPROVE.REQUEST, {contractAddress, spender, value})
 
 export const fetchContractData = (contractAddress) => basicTokenAction(FETCH_CONTRACT_DATA.REQUEST, {contractAddress})

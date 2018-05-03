@@ -18,5 +18,5 @@ export function createRequestTypes (base) {
   }, {})
 }
 
-export const createEntityAction = (enitity) => (...args) =>
-  ({...action.apply(null, args), enitity})
+export const createEntityAction = (entity) => (...args) =>
+  ({...action.apply(null, args), entity})
