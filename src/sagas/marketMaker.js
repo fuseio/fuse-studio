@@ -26,6 +26,34 @@ export function * getCurrentPrice (address, contractAddress) {
   }
 }
 
+export function * clnReserve (address, contractAddress) {
+  try {
+    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
+    const clnReserve = yield call(EllipseMarketMakerContract.methods.R1().call)
+    yield put({type: actions.CLN_RESERVE.SUCCESS,
+      contractAddress,
+      response: {
+        clnReserve
+      }})
+  } catch (error) {
+    yield put({type: actions.CLN_RESERVE.FAILURE, error})
+  }
+}
+
+export function * ccReserve (address, contractAddress) {
+  try {
+    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
+    const ccReserve = yield call(EllipseMarketMakerContract.methods.R2().call)
+    yield put({type: actions.CC_RESERVE.SUCCESS,
+      contractAddress,
+      response: {
+        ccReserve
+      }})
+  } catch (error) {
+    yield put({type: actions.CC_RESERVE.FAILURE, error})
+  }
+}
+
 export function * watchGetCurrentPrice () {
   while (true) {
     const {address, contractAddress} = yield take(actions.GET_CURRENT_PRICE.REQUEST)
@@ -33,8 +61,24 @@ export function * watchGetCurrentPrice () {
   }
 }
 
+export function * watchClnReserve () {
+  while (true) {
+    const {address, contractAddress} = yield take(actions.CLN_RESERVE.REQUEST)
+    yield fork(clnReserve, address, contractAddress)
+  }
+}
+
+export function * watchCcReserve () {
+  while (true) {
+    const {address, contractAddress} = yield take(actions.CC_RESERVE.REQUEST)
+    yield fork(ccReserve, address, contractAddress)
+  }
+}
+
 export default function * rootSaga () {
   yield all([
-    fork(watchGetCurrentPrice)
+    fork(watchGetCurrentPrice),
+    fork(watchClnReserve),
+    fork(watchCcReserve)
   ])
 }

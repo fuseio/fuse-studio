@@ -2,7 +2,7 @@ import { all, put, call, take, fork } from 'redux-saga/effects'
 
 import {createEntityPut} from './utils'
 import * as actions from 'actions/basicToken'
-import {GET_CURRENT_PRICE} from 'actions/marketMaker'
+import * as marketMakerActions from 'actions/marketMaker'
 import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
@@ -169,7 +169,17 @@ export function * fetchContractData (contractAddress) {
 
     if (response.mmAddress) {
       yield put({
-        type: GET_CURRENT_PRICE.REQUEST,
+        type: marketMakerActions.GET_CURRENT_PRICE.REQUEST,
+        address: response.mmAddress,
+        contractAddress
+      })
+      yield put({
+        type: marketMakerActions.CLN_RESERVE.REQUEST,
+        address: response.mmAddress,
+        contractAddress
+      })
+      yield put({
+        type: marketMakerActions.CC_RESERVE.REQUEST,
         address: response.mmAddress,
         contractAddress
       })
