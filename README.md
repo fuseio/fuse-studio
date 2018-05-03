@@ -3,6 +3,10 @@
 # CLN Community App
 Welcome to the CLN community app repo. Please open an issue for requests/contribute ideas/bugs.
 
+
+# Server
+Server project: https://github.com/colucom/CLN-community-server
+
 # Contributing Guide
 
 Yes, you can contribute to this repo!

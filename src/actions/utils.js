@@ -18,5 +18,5 @@ export function createRequestTypes (base) {
   }, {})
 }
 
-export const fetchSupportsToken = (tokenAddress) => action(FETCH_SUPPORTS_TOKEN_REQUESTED, {tokenAddress})
-export const getNetwork = () => action(GET_NETWORK)
+export const createEntityAction = (entity) => (...args) =>
+  ({...action.apply(null, args), entity})
