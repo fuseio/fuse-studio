@@ -1,15 +1,16 @@
 import {init, get} from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import abi from 'constants/abi'
+import config from 'config'
 
-const config = {
+const osseusConfig = {
   osseus_wallet: {
     addresses,
     abi,
-    provider: 'https://ropsten.infura.io/CdAtL4kE55uikRNN1pON'
+    ...config.web3
   }
 }
 
-export const onWeb3Ready = init({config})
+export const onWeb3Ready = init({config: osseusConfig})
 
 export default get()
