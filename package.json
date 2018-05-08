@@ -18,7 +18,7 @@
     "bignumber.js": "^6.0.0",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
-    "osseus-wallet": "git+https://github.com/colucom/osseus-wallet.git#v0.0.4",
+    "osseus-wallet": "0.0.6",
     "popmotion": "^8.1.22",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",

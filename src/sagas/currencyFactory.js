@@ -1,4 +1,4 @@
-import { all, put, take, fork } from 'redux-saga/effects'
+import { all, put, takeEvery } from 'redux-saga/effects'
 import {BigNumber} from 'bignumber.js'
 
 import * as actions from 'actions/currencyFactory'
@@ -8,7 +8,7 @@ import web3 from 'services/web3'
 
 const CurrencyFactoryContract = contract.getContract({contractName: 'CurrencyFactory'})
 
-export function * supportsToken (address) {
+export function * supportsToken ({address}) {
   try {
     const data = yield CurrencyFactoryContract.methods.supportsToken(address).call()
     yield put({type: actions.SUPPORTS_TOKEN.SUCCESS, data})
@@ -17,7 +17,7 @@ export function * supportsToken (address) {
   }
 }
 
-export function * tokens (index) {
+export function * tokens ({index}) {
   try {
     const data = yield CurrencyFactoryContract.methods.tokens(index).call()
     yield put({type: actions.TOKENS.SUCCESS, data})
@@ -26,7 +26,7 @@ export function * tokens (index) {
   }
 }
 
-export function * createCurrency (currencyData) {
+export function * createCurrency ({currencyData}) {
   try {
     const data = yield CurrencyFactoryContract.methods.createCurrency(
       currencyData.name,
@@ -51,7 +51,7 @@ export function * createCurrency (currencyData) {
   }
 }
 
-export function * openMarket (address) {
+export function * openMarket ({address}) {
   try {
     const data = yield CurrencyFactoryContract.methods.openMarket(
       address
@@ -64,7 +64,7 @@ export function * openMarket (address) {
   }
 }
 
-export function * insertCLNtoMarketMaker (address, clnAmount) {
+export function * insertCLNtoMarketMaker ({address, clnAmount}) {
   try {
     const data = yield CurrencyFactoryContract.methods.insertCLNtoMarketMaker(
       address,
@@ -78,47 +78,12 @@ export function * insertCLNtoMarketMaker (address, clnAmount) {
   }
 }
 
-export function * watchSupportsToken () {
-  while (true) {
-    const {address} = yield take(actions.SUPPORTS_TOKEN.REQUEST)
-    yield fork(supportsToken, address)
-  }
-}
-
-export function * watchTokens () {
-  while (true) {
-    const {index} = yield take(actions.TOKENS.REQUEST)
-    yield fork(tokens, index)
-  }
-}
-
-export function * watchOpenMarket () {
-  while (true) {
-    const {address} = yield take(actions.OPEN_MARKET.REQUEST)
-    yield fork(openMarket, address)
-  }
-}
-
-export function * watchCreateCurrency () {
-  while (true) {
-    const {currencyData} = yield take(actions.CREATE_CURRENCY.REQUEST)
-    yield fork(createCurrency, currencyData)
-  }
-}
-
-export function * watchInsertCLNtoMarketMaker () {
-  while (true) {
-    const {address, clnAmount} = yield take(actions.INSERT_CLN_TO_MARKET_MAKER.REQUEST)
-    yield fork(insertCLNtoMarketMaker, address, clnAmount)
-  }
-}
-
 export default function * rootSaga () {
   yield all([
-    fork(watchSupportsToken),
-    fork(watchTokens),
-    fork(watchCreateCurrency),
-    fork(watchOpenMarket),
-    fork(watchInsertCLNtoMarketMaker)
+    takeEvery(actions.SUPPORTS_TOKEN.REQUEST, supportsToken),
+    takeEvery(actions.TOKENS.REQUEST, tokens),
+    takeEvery(actions.CREATE_CURRENCY.REQUEST, createCurrency),
+    takeEvery(actions.OPEN_MARKET.REQUEST, openMarket),
+    takeEvery(actions.INSERT_CLN_TO_MARKET_MAKER.REQUEST, insertCLNtoMarketMaker)
   ])
 }

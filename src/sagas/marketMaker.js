@@ -1,9 +1,9 @@
-import { all, call, put, take, fork } from 'redux-saga/effects'
+import { all, call, put, takeEvery } from 'redux-saga/effects'
 
 import * as actions from 'actions/marketMaker'
 import { contract } from 'osseus-wallet'
 
-export function * getCurrentPrice (address, contractAddress) {
+export function * getCurrentPrice ({address, contractAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
     const currentPrice = yield call(EllipseMarketMakerContract.methods.getCurrentPrice().call)
@@ -26,7 +26,7 @@ export function * getCurrentPrice (address, contractAddress) {
   }
 }
 
-export function * clnReserve (address, contractAddress) {
+export function * clnReserve ({address, contractAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
     const clnReserve = yield call(EllipseMarketMakerContract.methods.R1().call)
@@ -40,7 +40,7 @@ export function * clnReserve (address, contractAddress) {
   }
 }
 
-export function * ccReserve (address, contractAddress) {
+export function * ccReserve ({address, contractAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
     const ccReserve = yield call(EllipseMarketMakerContract.methods.R2().call)
@@ -54,31 +54,10 @@ export function * ccReserve (address, contractAddress) {
   }
 }
 
-export function * watchGetCurrentPrice () {
-  while (true) {
-    const {address, contractAddress} = yield take(actions.GET_CURRENT_PRICE.REQUEST)
-    yield fork(getCurrentPrice, address, contractAddress)
-  }
-}
-
-export function * watchClnReserve () {
-  while (true) {
-    const {address, contractAddress} = yield take(actions.CLN_RESERVE.REQUEST)
-    yield fork(clnReserve, address, contractAddress)
-  }
-}
-
-export function * watchCcReserve () {
-  while (true) {
-    const {address, contractAddress} = yield take(actions.CC_RESERVE.REQUEST)
-    yield fork(ccReserve, address, contractAddress)
-  }
-}
-
 export default function * rootSaga () {
   yield all([
-    fork(watchGetCurrentPrice),
-    fork(watchClnReserve),
-    fork(watchCcReserve)
+    takeEvery(actions.GET_CURRENT_PRICE.REQUEST, getCurrentPrice),
+    takeEvery(actions.CLN_RESERVE.REQUEST, clnReserve),
+    takeEvery(actions.CC_RESERVE.REQUEST, ccReserve)
   ])
 }

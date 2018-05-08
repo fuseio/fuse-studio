@@ -1,4 +1,4 @@
-import { all, put, takeEvery, fork } from 'redux-saga/effects'
+import { all, put, takeEvery } from 'redux-saga/effects'
 import web3 from 'services/web3'
 
 import * as actions from 'actions/web3'
@@ -15,12 +15,8 @@ export function * getNetworkType () {
   }
 }
 
-export function * watchGetNetworkType () {
-  yield takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType)
-}
-
 export default function * rootSaga () {
   yield all([
-    fork(watchGetNetworkType)
+    takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType)
   ])
 }
