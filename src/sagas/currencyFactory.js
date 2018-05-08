@@ -1,4 +1,4 @@
-import { all, put, take, takeEvery, fork } from 'redux-saga/effects'
+import { all, put, takeEvery } from 'redux-saga/effects'
 import {BigNumber} from 'bignumber.js'
 
 import * as actions from 'actions/currencyFactory'
