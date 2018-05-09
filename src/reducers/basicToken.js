@@ -1,22 +1,15 @@
-import * as basicToken from 'actions/basicToken'
+import * as marketMaker from 'actions/marketMaker'
 
 export default (state = {}, action) => {
+  if (action.entity === 'basicToken') {
+    return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+  }
   switch (action.type) {
-    case basicToken.BALANCE_OF.SUCCESS:
+    case marketMaker.GET_CURRENT_PRICE.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.NAME.SUCCESS:
+    case marketMaker.CLN_RESERVE.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.SYMBOL.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.TOTAL_SUPPLY.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.TOKEN_URI.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.SET_TOKEN_URI.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.OWNER.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case basicToken.FETCH_CONTRACT_DATA.SUCCESS:
+    case marketMaker.CC_RESERVE.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     default:
       return state

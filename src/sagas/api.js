@@ -3,10 +3,9 @@ import { all, call, put, take, fork } from 'redux-saga/effects'
 import * as api from 'services/api'
 import * as actions from 'actions/api'
 
-
 export function * addCommunity (community) {
   try {
-    const response = yield call(api.addCommunity, community)
+    yield call(api.addCommunity, community)
     yield put({type: actions.ADD_COMMUNITY.SUCCESS,
       response: {
         community

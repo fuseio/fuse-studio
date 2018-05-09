@@ -1,127 +1,144 @@
-import { all, call, put, take, fork } from 'redux-saga/effects'
+import { all, put, call, take, takeEvery, fork } from 'redux-saga/effects'
 
+import {createEntityPut} from './utils'
 import * as actions from 'actions/basicToken'
+import * as marketMakerActions from 'actions/marketMaker'
 import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import * as api from 'services/api'
 
-export function * name (contractAddress) {
+const entityPut = createEntityPut('basicToken')
+
+export function * name ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const name = yield call(ColuLocalNetworkContract.methods.name().call)
-    yield put({type: actions.NAME.SUCCESS,
+    yield entityPut({type: actions.NAME.SUCCESS,
       contractAddress,
       response: {
         name
       }})
   } catch (error) {
-    yield put({type: actions.NAME.FAILURE, error})
+    yield entityPut({type: actions.NAME.FAILURE, error})
   }
 }
 
-export function * symbol (contractAddress) {
+export function * symbol ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const symbol = yield call(ColuLocalNetworkContract.methods.symbol().call)
-    yield put({type: actions.SYMBOL.SUCCESS,
+    yield entityPut({type: actions.SYMBOL.SUCCESS,
       contractAddress,
       response: {
         symbol
       }})
   } catch (error) {
-    yield put({type: actions.SYMBOL.FAILURE, error})
+    yield entityPut({type: actions.SYMBOL.FAILURE, error})
   }
 }
 
-export function * totalSupply (contractAddress) {
+export function * totalSupply ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const totalSupply = yield call(ColuLocalNetworkContract.methods.totalSupply().call)
-    yield put({type: actions.TOTAL_SUPPLY.SUCCESS,
+    yield entityPut({type: actions.TOTAL_SUPPLY.SUCCESS,
       contractAddress,
       response: {
         totalSupply
       }})
   } catch (error) {
-    yield put({type: actions.TOTAL_SUPPLY.FAILURE, error})
+    yield entityPut({type: actions.TOTAL_SUPPLY.FAILURE, error})
   }
 }
 
-export function * tokenURI (contractAddress) {
+export function * tokenURI ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
     const tokenURI = yield call(ColuLocalNetworkContract.methods.tokenURI().call)
-    yield put({type: actions.TOKEN_URI.SUCCESS,
+    yield entityPut({type: actions.TOKEN_URI.SUCCESS,
       contractAddress,
       response: {
         tokenURI
       }})
   } catch (error) {
-    yield put({type: actions.TOKEN_URI.FAILURE, error})
+    yield entityPut({type: actions.TOKEN_URI.FAILURE, error})
   }
 }
 
-export function * setTokenURI (contractAddress, tokenURI) {
+export function * setTokenURI ({contractAddress, tokenURI}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    const receipt = yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
+    yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
       from: web3.eth.defaultAccount
     })
-    yield put({type: actions.SET_TOKEN_URI.SUCCESS,
+    yield entityPut({type: actions.SET_TOKEN_URI.SUCCESS,
       contractAddress,
       response: {
         tokenURI
       }})
   } catch (error) {
-    yield put({type: actions.SET_TOKEN_URI.FAILURE, error})
+    yield entityPut({type: actions.SET_TOKEN_URI.FAILURE, error})
   }
 }
 
-export function * owner (contractAddress) {
+export function * owner ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
     const owner = yield call(ColuLocalNetworkContract.methods.owner().call)
-    yield put({type: actions.OWNER.SUCCESS,
+    yield entityPut({type: actions.OWNER.SUCCESS,
       contractAddress,
       response: {
         owner
       }})
   } catch (error) {
-    yield put({type: actions.OWNER.FAILURE, error})
+    yield entityPut({type: actions.OWNER.FAILURE, error})
   }
 }
 
-export function * balanceOf (contractAddress, address) {
+export function * balanceOf ({contractAddress, address}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(address).call)
-    yield put({type: actions.BALANCE_OF.SUCCESS,
+    yield entityPut({type: actions.BALANCE_OF.SUCCESS,
       contractAddress,
       response: {
         balanceOf
       }})
   } catch (error) {
-    yield put({type: actions.BALANCE_OF.FAILURE, error})
+    yield entityPut({type: actions.BALANCE_OF.FAILURE, error})
   }
 }
 
-export function * transfer (contractAddress, to, value) {
+export function * transfer ({contractAddress, to, value}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const receipt = yield ColuLocalNetworkContract.methods.transfer(to, value).send({
       from: web3.eth.defaultAccount
     })
-    yield put({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
-    yield put({type: actions.TRANSFER.SUCCESS, receipt})
+    yield entityPut({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
+    yield entityPut({type: actions.TRANSFER.SUCCESS, receipt})
   } catch (error) {
-    yield put({type: actions.TRANSFER.FAILURE, error})
+    yield entityPut({type: actions.TRANSFER.FAILURE, error})
   }
 }
 
-export function * fetchContractData (contractAddress) {
+export function * approve ({contractAddress, spender, value}) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const receipt = yield ColuLocalNetworkContract.methods.approve(spender, value).send({
+      from: web3.eth.defaultAccount
+    })
+    yield entityPut({type: actions.APPROVE.REQUEST, address: receipt.from})
+  } catch (error) {
+    yield entityPut({type: actions.APPROVE.FAILURE, error})
+  }
+}
+
+export function * fetchContractData ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const CurrencyFactoryContract = contract.getContract({contractName: 'CurrencyFactory'})
 
     const calls = {
       name: call(ColuLocalNetworkContract.methods.name().call),
@@ -138,9 +155,11 @@ export function * fetchContractData (contractAddress) {
 
     if (contractAddress !== addresses.ColuLocalNetwork) {
       calls.tokenURI = call(ColuLocalNetworkContract.methods.tokenURI().call)
+      calls.mmAddress = call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
     }
 
     const response = yield all(calls)
+    response.address = contractAddress
 
     if (response.tokenURI) {
       const [protocol, hash] = response.tokenURI.split('://')
@@ -148,96 +167,53 @@ export function * fetchContractData (contractAddress) {
       response.metadata = data.data
     }
 
-    yield put({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
+    if (response.mmAddress) {
+      yield put({
+        type: marketMakerActions.GET_CURRENT_PRICE.REQUEST,
+        address: response.mmAddress,
+        contractAddress
+      })
+      yield put({
+        type: marketMakerActions.CLN_RESERVE.REQUEST,
+        address: response.mmAddress,
+        contractAddress
+      })
+      yield put({
+        type: marketMakerActions.CC_RESERVE.REQUEST,
+        address: response.mmAddress,
+        contractAddress
+      })
+    }
+
+    yield entityPut({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
       contractAddress,
       response
     })
   } catch (error) {
     console.error(error)
-    yield put({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
-  }
-}
-
-export function * watchBalanceOf () {
-  while (true) {
-    const {contractAddress, address} = yield take(actions.BALANCE_OF.REQUEST)
-    yield fork(balanceOf, contractAddress, address)
-  }
-}
-
-export function * watchName () {
-  while (true) {
-    const {contractAddress} = yield take(actions.NAME.REQUEST)
-    yield fork(name, contractAddress)
-  }
-}
-
-export function * watchSymbol () {
-  while (true) {
-    const {contractAddress} = yield take(actions.SYMBOL.REQUEST)
-    yield fork(symbol, contractAddress)
-  }
-}
-
-export function * watchTotalSupply () {
-  while (true) {
-    const {contractAddress} = yield take(actions.TOTAL_SUPPLY.REQUEST)
-    yield fork(totalSupply, contractAddress)
-  }
-}
-
-export function * watchTransfer () {
-  while (true) {
-    const {contractAddress, to, value} = yield take(actions.TRANSFER.REQUEST)
-    yield fork(transfer, contractAddress, to, value)
-  }
-}
-
-export function * watchTokenURI () {
-  while (true) {
-    const {contractAddress} = yield take(actions.TOKEN_URI.REQUEST)
-    yield fork(tokenURI, contractAddress)
-  }
-}
-
-export function * watchSetTokenURI () {
-  while (true) {
-    const {contractAddress, tokenURI} = yield take(actions.SET_TOKEN_URI.REQUEST)
-    yield fork(setTokenURI, contractAddress, tokenURI)
-  }
-}
-
-export function * watchOwner () {
-  while (true) {
-    const {contractAddress} = yield take(actions.OWNER.REQUEST)
-    yield fork(owner, contractAddress)
+    yield entityPut({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
   }
 }
 
 export function * watchTransferSuccess () {
   while (true) {
     const {receipt} = yield take(actions.TRANSFER.SUCCESS)
-    yield put({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
-  }
-}
-
-export function * watchFetchContractData () {
-  while (true) {
-    const {contractAddress} = yield take(actions.FETCH_CONTRACT_DATA.REQUEST)
-    yield fork(fetchContractData, contractAddress)
+    yield entityPut({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
   }
 }
 
 export default function * rootSaga () {
   yield all([
-    fork(watchName),
-    fork(watchSymbol),
-    fork(watchTotalSupply),
-    fork(watchTokenURI),
-    fork(watchSetTokenURI),
-    fork(watchOwner),
-    fork(watchBalanceOf),
-    fork(watchTransfer),
-    fork(watchFetchContractData)
+    takeEvery(actions.NAME.REQUEST, name),
+    takeEvery(actions.SYMBOL.REQUEST, symbol),
+    takeEvery(actions.TOTAL_SUPPLY.REQUEST, totalSupply),
+    takeEvery(actions.TOKEN_URI.REQUEST, tokenURI),
+    takeEvery(actions.SET_TOKEN_URI.REQUEST, setTokenURI),
+    takeEvery(actions.OWNER.REQUEST, owner),
+    takeEvery(actions.BALANCE_OF.REQUEST, balanceOf),
+    takeEvery(actions.TRANSFER.REQUEST, transfer),
+    takeEvery(actions.APPROVE.REQUEST, approve),
+    takeEvery(actions.FETCH_CONTRACT_DATA.REQUEST, fetchContractData),
+    fork(watchTransferSuccess)
   ])
 }

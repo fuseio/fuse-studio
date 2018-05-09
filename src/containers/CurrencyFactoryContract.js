@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import IPFSStorage from 'components/IPFSStorage'
 import ContractStorage from 'components/ContractStorage'
-import { supportsToken, tokens, createCurrency } from 'actions/currencyFactory'
+import { supportsToken, tokens, createCurrency, insertCLNtoMarketMaker } from 'actions/currencyFactory'
 import { setTokenURI } from 'actions/basicToken'
 
 const styles = {
@@ -92,7 +92,7 @@ class CurrencyFactoryContract extends Component {
         <button onClick={this.handleCreateCurrency}>create CC</button>
       </div>
       <IPFSStorage />
-      <ContractStorage setTokenURI={this.props.setTokenURI} />
+      <ContractStorage insertCLNtoMarketMaker={this.props.insertCLNtoMarketMaker} setTokenURI={this.props.setTokenURI} />
     </div>
   }
 }
@@ -104,6 +104,7 @@ export default connect(
     supportsToken,
     tokens,
     createCurrency,
-    setTokenURI
+    setTokenURI,
+    insertCLNtoMarketMaker
   }
 )(CurrencyFactoryContract)
