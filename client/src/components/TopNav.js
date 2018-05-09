@@ -1,7 +1,10 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import classNames from 'classnames'
 import Link from 'react-router-dom/Link'
-import { isBrowser, isMobile, BrowserView, MobileView } from "react-device-detect"
+import { isMobile, MobileView } from 'react-device-detect'
+import ClnIcon from 'images/cln.png'
+import ProfileIcon from 'images/profile.png'
+import MenuIcon from 'images/menu.png'
 
 class TopNav extends Component {
 	render() {
@@ -10,8 +13,8 @@ class TopNav extends Component {
 			"top-navigator": true
 		})
 		return <div className={topNavClass}>
-			<img src="src/images/cln.png"/>
-			
+			<img src={ClnIcon}/>
+
 				<div className="top-nav-links">
 					<a className="top-nav-text">Whitepaper</a>
 					<a className="top-nav-text">Q&A</a>
@@ -19,13 +22,13 @@ class TopNav extends Component {
 						<a className="top-nav-text">Contact us</a>
 					</Link>
 					<div className="top-nav-text">
-						<img src="src/images/profile.png"/>
+						<img src={ProfileIcon}/>
 						<span>Disconnected</span>
 					</div>
 				</div>
-			
+
 			<MobileView device={isMobile}>
-				<img src="src/images/menu.png" className="mobile-menu-icon"/>
+				<img src={MenuIcon} className="mobile-menu-icon"/>
 			</MobileView>
 		</div>
 	}

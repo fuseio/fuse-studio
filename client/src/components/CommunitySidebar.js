@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 
-import * as uiActions from '../actions/ui'
-import { pagePath } from '../constants/uiConstants'
+import * as uiActions from 'actions/ui'
+import { pagePath } from 'constants/uiConstants'
+import TlvCoin from 'images/tlv-coin.png'
 
 class CommunitySidebar extends Component {
 	onClose() {
@@ -24,7 +25,7 @@ class CommunitySidebar extends Component {
 			}
 		})//Object.values(pagePath) && Object.values(pagePath)
 		console.log("RRRRRR", currentCoinAdress)
-		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker]) 
+		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker])
 							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || {}
 		return (
 			<div className="community-sidebar">
@@ -33,10 +34,10 @@ class CommunitySidebar extends Component {
 						<Link to="/">X</Link>
 					</div>
 					<div className="coin-header">
-						<img src="src/images/tlv-coin.png"/>
+						<img src={TlvCoin} />
 						<div className="coin-details">
 							<h1>{currentCoin.name}</h1>
-							<h2>CURRENT PRICE 
+							<h2>CURRENT PRICE
 								<span> 0.5CLN (+51)</span>
 							</h2>
 						</div>
@@ -57,7 +58,7 @@ class CommunitySidebar extends Component {
 								<p>Volume</p>
 								<p>CLN reserve</p>
 								<p>Asset ID</p>
-								
+
 							</div>
 							<div className="box-data column">
 								<p>{currentCoin.symbol}</p>
@@ -90,7 +91,7 @@ class CommunitySidebar extends Component {
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		)
 	}

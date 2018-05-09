@@ -1,5 +1,8 @@
 const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+
+//TODO: ExtractTextPlugin
 
 module.exports = {
   entry: './src/index.js',
@@ -9,6 +12,7 @@ module.exports = {
   resolve: {
     modules: [
       path.resolve(__dirname, 'src'),
+      path.resolve(__dirname, 'assets'),
       'node_modules'
     ]
   },
@@ -21,6 +25,12 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: './src/index.html',
       filename: './index.html'
+    }),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "[name].css",
+      chunkFilename: "[id].css"
     })
   ],
   module: {
@@ -44,12 +54,18 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [{
-          loader: 'style-loader' // creates style nodes from JS strings
+          loader: process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader
         }, {
-          loader: 'css-loader' // translates CSS into CommonJS
+          loader: 'css-loader'
         }, {
-          loader: 'sass-loader' // compiles Sass to CSS
+          loader: 'sass-loader'
         }]
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: {
+          loader: 'file-loader'
+        }
       }
     ]
   }
