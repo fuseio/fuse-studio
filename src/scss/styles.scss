@@ -378,6 +378,11 @@ h5 {
 				height:28px;
 			}
 		}
+		@media (max-width: 1024px) {
+			position: absolute;
+			top:0;
+			@include flex-direction(column);
+		}
 	}
 	img {
 		height: 40px;
