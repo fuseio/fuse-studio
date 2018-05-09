@@ -14,6 +14,7 @@ import classNames from 'classnames'
 import addresses from '../constants/addresses'
 import Marker from 'components/Marker'
 import * as uiActions from '../actions/ui'
+import { pagePath } from '../constants/uiConstants'
 
 const panByHorizontalOffset = 1.4 // because of the community sidebar, so it's a bit off the center
 
@@ -42,7 +43,7 @@ const GoogleMapComponent = compose(
 			onClick: ({zoomIn}) => (location, coinAddress, uiActions) => {
 				let n = 5
 				refs.map.panTo({lat: parseFloat(location.lat), lng: parseFloat(location.lng) + panByHorizontalOffset})
-				//zoomIn(n)
+
 				uiActions.zoomToMarker(n)
 				setTimeout(() => {uiActions.zoomToMarker(n + 1)}, 150)
 				setTimeout(() => {uiActions.zoomToMarker(n + 2)}, 300)
@@ -66,6 +67,7 @@ const GoogleMapComponent = compose(
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={addresses.TelAvivCoinAddress}
+					pagePath={pagePath.telaviv.path}
 					community={{name: props.tokens[addresses.TelAvivCoinAddress].name, price: '0.9CLN'}}
 					onClick={props.onClick.bind(this, props.tokens[addresses.TelAvivCoinAddress].metadata.location, addresses.TelAvivCoinAddress,  props.uiActions)}/>
 			</OverlayView>
@@ -73,7 +75,10 @@ const GoogleMapComponent = compose(
 
 		<OverlayView position={{ lat: 32.7940, lng: 34.9895 }} 
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
-			<Marker community={{name: 'Haifa Coin', price: '0.8CLN'}} id={'placeholder'}/>
+			<Marker
+				pagePath={pagePath.haifa.path}
+				community={{name: 'Haifa Coin', price: '0.8CLN'}}
+				id={'placeholder'}/>
 		</OverlayView>
 
 		{ props.tokens && props.tokens[addresses.LondonCoinAddress] && props.tokens[addresses.LondonCoinAddress].metadata &&
@@ -81,6 +86,7 @@ const GoogleMapComponent = compose(
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={addresses.LondonCoinAddress}
+					pagePath={pagePath.london.path}
 					community={{name: props.tokens[addresses.LondonCoinAddress].name, price: '0.7CLN'}}
 					onClick={props.onClick.bind(this, props.tokens[addresses.LondonCoinAddress].metadata.location, addresses.LondonCoinAddress, props.uiActions)}/>
 			</OverlayView>
@@ -88,23 +94,16 @@ const GoogleMapComponent = compose(
 
 		<OverlayView position={{ lat: 53.4083, lng: -2.9915 }} 
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
-			<Marker community={{name: 'Liverpool Coin', price: '0.6CLN'}} id={'placeholder'}/>
+			<Marker
+				pagePath={pagePath.liverpool.path}
+				community={{name: 'Liverpool Coin', price: '0.6CLN'}}
+				id={'placeholder'}/>
 		</OverlayView>
 	</GoogleMap>
 ));
 
 class MapComponent extends Component {
-	//onClick() {
-	//	//console.log("click props", props.googleMapURL)
-	//	//let n = 5
-	//	refs.map.panTo({lat: 32.0852, lng: 34.7817 + panByHorizontalOffset})
-	//	//zoomIn(n)
-	//	//setTimeout(() => {zoomIn(n + 1)}, 150)
-	//	//setTimeout(() => {zoomIn(n + 2)}, 300)
-	//	//setTimeout(() => {zoomIn(n + 3)}, 450)
-	//}
 	render() {
-		//console.log("zoom PROPS", this.props.ui && this.props.ui.zoom)
 		let mapWrapperClass = classNames({
 			"active": this.props.active,
 			"map-wrapper": true
