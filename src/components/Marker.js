@@ -6,6 +6,7 @@ import Link from 'react-router-dom/Link'
 
 import * as uiActions from '../actions/ui'
 
+
 function rnd(m,n) {
 	m = parseInt(m);
 	n = parseInt(n);
@@ -55,11 +56,12 @@ class Marker extends React.PureComponent {
 		let markerArea = classNames({
 			"particles": true,
 			"bubbles": true,
-			"grow": this.state.grow
+			"grow": this.state.grow,
+			"grow-center": this.state.grow
 		})
 
 		const bubblecount = this.state.grow ? 120 : 20
-		const bubblesize = this.state.grow ? 100 : 50
+		const bubblesize = this.state.grow ? 60 : 50
 		const limits = this.state.grow ? 120 : 30
 		let particles = []
 
@@ -98,7 +100,7 @@ class Marker extends React.PureComponent {
 		//console.log("RENDER MARKER")
 
 		return (
-			<Link to="/sidebar">
+			<Link to={this.props.pagePath}>
 				<div className='marker' 
 					onMouseEnter={this.handleHover.bind(this, true)}
 					onMouseLeave={this.handleHover.bind(this, false)}

@@ -12,8 +12,8 @@ import addresses from 'constants/addresses'
 
 const coluTokens = [
 	addresses.ColuLocalNetwork,
-	'0x4188bA0bFDA56254ac66C54B1998007188c43D8C',
-	'0xBB302a3d28eBa4a0452EB0107E56E356482b02E9'
+	addresses.TelAvivCoinAddress,
+	addresses.LondonCoinAddress
 ]
 
 import 'scss/styles.scss'
@@ -26,17 +26,6 @@ class App extends Component {
 	}
 	componentDidMount () {
 		coluTokens.forEach(this.props.fetchContractData)
-
-		// Fetch token info (from blockchain and ipfs and combine them), try to fetch all fields in one call
-		// all 4 tokens info:
-		// Coin name
-		// Symbol
-		// Owner
-		// Total supply
-		// Link to contract
-		// Location
-		// Community info
-		// Website
 
 		// From market maker/factory contract fetch price, CLN reserve
 	}
@@ -56,8 +45,6 @@ class App extends Component {
 
 	render() {
 		let currentRoute = this.props && this.props.router && this.props.router.location && this.props.router.location.pathname
-		console.log("render app new", currentRoute)
-		//let panBy = { x: 0, y: 0 }
 		let mainContainerClass = classNames({
 			"main-container": true,
 			"flex": true,
@@ -68,19 +55,15 @@ class App extends Component {
 			"hide": !this.state.isWelcome,
 			"out": this.state.out
 		})
-		//if (currentRoute === '/sidebar') {
-		//	panBy = { x: -100, y: 0 }
-		//}
 
 		const welcome = <div className={welcomeClass}>
-							<h3>Welcome to CLN Community App</h3>
-							<h4>You can buy and sell community currencies with your CLN tokens</h4>
+							<h3>Welcome to the CLN Community dApp</h3>
+							<h4>Here you can monitor the status of the CLN economies, buy and sell local community currencies issued on the network and more</h4>
 							<div className="button" onClick={this.onClickExplore.bind(this)}>EXPLORE</div>
 						</div>
 
 		return <div className="flex column center">
-			{welcome}
-
+			{}
 			<div className={mainContainerClass}>
 				<TopNav active={!this.state.isWelcome}/>
 				<Map key="map" active={!this.state.isWelcome}/>

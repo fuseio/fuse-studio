@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 
 import * as uiActions from '../actions/ui'
+import { pagePath } from '../constants/uiConstants'
 
 class CommunitySidebar extends Component {
 	onClose() {
@@ -15,8 +16,16 @@ class CommunitySidebar extends Component {
 		this.props.uiActions.setActiveMarker()
 	}
 	render() {
-		const currentCoin = this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker] || {}
-		//console.log("currentCoin", currentCoin)
+		let currentCoinAdress
+		pagePath && Object.values(pagePath) && Object.values(pagePath).forEach((page) => {
+			if (page.path === this.props.match.path) {
+				currentCoinAdress = page.address
+				return
+			}
+		})//Object.values(pagePath) && Object.values(pagePath)
+		console.log("RRRRRR", currentCoinAdress)
+		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker]) 
+							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || {}
 		return (
 			<div className="community-sidebar">
 				<div className="header">
@@ -24,7 +33,7 @@ class CommunitySidebar extends Component {
 						<Link to="/">X</Link>
 					</div>
 					<div className="coin-header">
-						<img src="src/images/lnd-coin.png"/>
+						<img src="src/images/tlv-coin.png"/>
 						<div className="coin-details">
 							<h1>{currentCoin.name}</h1>
 							<h2>CURRENT PRICE 
@@ -48,7 +57,7 @@ class CommunitySidebar extends Component {
 								<p>Volume</p>
 								<p>CLN reserve</p>
 								<p>Asset ID</p>
-								<p>{this.props.ui.activeMarker}</p>
+								
 							</div>
 							<div className="box-data column">
 								<p>{currentCoin.symbol}</p>
@@ -56,6 +65,7 @@ class CommunitySidebar extends Component {
 								<p>{currentCoin.totalSupply}</p>
 								<p>20 CLN</p>
 								<p>500 CLN</p>
+								<p>{this.props.ui.activeMarker}</p>
 							</div>
 						</div>
 					</div>

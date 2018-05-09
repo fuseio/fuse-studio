@@ -1,4 +1,20 @@
 module.exports = {
+    pagePath: {
+        telaviv: {
+            path: "/telavivcoin",
+            address: '0xBB302a3d28eBa4a0452EB0107E56E356482b02E9'
+        },
+        london: {
+            path: "/londoncoin",
+            address: '0x4188bA0bFDA56254ac66C54B1998007188c43D8C'
+        },
+        haifa: {
+            path: "/haifacoin",
+        },
+        liverpool: {
+            path: "/liverpoolcoin"
+        }
+    },
 	googleMapsUrl: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAtvydUDXH2lMMjNDSNwxYmhXobsJBHo4g&v=3.exp&libraries=geometry,drawing,places",
 	mapStyle: [
     {
