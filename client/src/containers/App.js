@@ -4,7 +4,6 @@ import Map from 'components/Map'
 import TopNav from 'components/TopNav'
 // import CommunitiesList from 'components/CommunitiesList'
 import classNames from 'classnames'
-import { AnimatedRoute } from 'react-router-transition'
 
 import {fetchContractData} from 'actions/basicToken'
 import {getNetworkType} from 'actions/web3'

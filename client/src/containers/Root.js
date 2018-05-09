@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { Route } from 'react-router'
-import { ConnectedRouter, push } from 'react-router-redux'
+import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
 import { AnimatedRoute } from 'react-router-transition'
-import { isBrowser, isMobile } from "react-device-detect"
 
 import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'
@@ -19,13 +18,13 @@ const history = createHistory()
 
 const sidebarTransition = {
 	atEnter: {
-		offset: 100,
+		offset: 100
 	},
 	atLeave: {
-		offset: 100,
+		offset: 100
 	},
 	atActive: {
-		offset: 0,
+		offset: 0
 	},
 }
 
