@@ -5,6 +5,7 @@ import { Route } from 'react-router'
 import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
 import { AnimatedRoute } from 'react-router-transition'
+import { isMobile } from "react-device-detect"
 
 import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'

@@ -27,7 +27,7 @@ class TopNav extends Component {
 
 		return <div className={topNavClass}>
 			<img src={ClnIcon}/>
-			
+
 			<div className={navLinksClass}>
 				<a className="top-nav-text">Whitepaper</a>
 				<a className="top-nav-text">Q&A</a>
@@ -35,11 +35,11 @@ class TopNav extends Component {
 					<a className="top-nav-text">Contact us</a>
 				</Link>
 				<div className="top-nav-text">
-					<img src="src/images/profile.png"/>
+					<img src={ProfileIcon} />
 					<span>Disconnected</span>
 				</div>
 			</div>
-			
+
 			<MobileView device={isMobile}>
 				<img src={MenuIcon} className="mobile-menu-icon" onClick={this.onClickMenu.bind(this)}/>
 			</MobileView>
