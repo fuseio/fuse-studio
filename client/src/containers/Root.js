@@ -28,6 +28,18 @@ const sidebarTransition = {
 	},
 }
 
+const sidebarMobileTransition = {
+	atEnter: {
+		offset: 20,
+	},
+	atLeave: {
+		offset: 20,
+	},
+	atActive: {
+		offset: 0,
+	},
+}
+
 const contactFormTransition = {
 	atEnter: {
 		offset: 100,
@@ -49,6 +61,12 @@ function mapStyles(styles) {
 	};
 }
 
+function mapStylesMobile(styles) {
+	return {
+		transform: `translateY(${styles.offset}%)`,
+	};
+}
+
 function mapStylesContact(styles) {
 	return {
 		transform: `translateY(${styles.offset}%)`,
@@ -59,6 +77,7 @@ function mapStylesContact(styles) {
 export default class Root extends Component {
 	render () {
 		const { store } = this.props
+		const sidebarAnimation = isMobile ? sidebarMobileTransition : sidebarTransition
 		return (
 			<Provider store={store}>
 				<Web3Loader>
@@ -70,26 +89,26 @@ export default class Root extends Component {
 								<AnimatedRoute
 									path={pagePath.telaviv.path}
 									component={CommunitySidebar}
-									mapStyles={mapStyles}
-									{...sidebarTransition}
+									mapStyles={isMobile ? mapStylesMobile : mapStyles}
+									{...sidebarAnimation}
 								/>
 								<AnimatedRoute
 									path={pagePath.london.path}
 									component={CommunitySidebar}
-									mapStyles={mapStyles}
-									{...sidebarTransition}
+									mapStyles={isMobile ? mapStylesMobile : mapStyles}
+									{...sidebarAnimation}
 								/>
 								<AnimatedRoute
 									path={pagePath.haifa.path}
 									component={CommunitySidebar}
-									mapStyles={mapStyles}
-									{...sidebarTransition}
+									mapStyles={isMobile ? mapStylesMobile : mapStyles}
+									{...sidebarAnimation}
 								/>
 								<AnimatedRoute
 									path={pagePath.liverpool.path}
 									component={CommunitySidebar}
-									mapStyles={mapStyles}
-									{...sidebarTransition}
+									mapStyles={isMobile ? mapStylesMobile : mapStyles}
+									{...sidebarAnimation}
 								/>
 							</div>
 							<div className="contact-form-wrapper">

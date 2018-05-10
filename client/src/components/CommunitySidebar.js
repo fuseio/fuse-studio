@@ -2,12 +2,80 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
+import { isBrowser, isMobile } from "react-device-detect"
+import classNames from 'classnames'
+import * as uiActions from '../actions/ui'
+import { pagePath } from '../constants/uiConstants'
 
-import * as uiActions from 'actions/ui'
-import { pagePath } from 'constants/uiConstants'
 import TlvCoin from 'images/tlv-coin.png'
 
+
 class CommunitySidebar extends Component {
+	state = {
+		pos: {y: 0},
+    	dragging: false,
+    	rel: null
+	}
+	componentDidMount() {
+
+	}
+
+	componentWillUnmount() {
+		this.refs.bar.removeEventListener('touchmove', this.onMouseMove.bind(this))
+		this.refs.bar.removeEventListener('touchend', this.onMouseUp.bind(this))
+	}
+
+	componentDidUpdate(props, state) {
+		if (this.state.dragging && !state.dragging) {
+			this.refs.bar.addEventListener('touchmove', this.onMouseMove.bind(this))
+			this.refs.bar.addEventListener('touchend', this.onMouseUp.bind(this))
+		} else if (!this.state.dragging && state.dragging) {
+			this.refs.bar.removeEventListener('touchmove', this.onMouseMove.bind(this))
+			this.refs.bar.removeEventListener('touchend', this.onMouseUp.bind(this))
+		}
+	}
+
+	onMouseDown(e) {
+		var posTop = this.refs.bar.offsetTop
+		this.setState({
+			dragging: true,
+			open: false,
+			closed: false,
+			pos: {y: 0},
+			rel: { y: e.touches[0].pageY - posTop }
+		})
+		
+		e.stopPropagation()
+		e.preventDefault()
+	}
+	onMouseUp(e) {
+		if (this.state.open) {
+			this.refs.bar.removeEventListener('touchmove', this.onMouseMove.bind(this))
+			this.refs.bar.removeEventListener('touchend', this.onMouseUp.bind(this))
+			return
+		}
+		this.setState({
+			dragging: false,
+			open: this.state.pos.y < -80 ? true : false,
+			closed: this.state.pos.y >= -80 ? true : false,
+		})
+		e.stopPropagation()
+		e.preventDefault()
+	}
+	onMouseMove(e) {
+		if (!this.state.dragging) return
+		this.setState({
+			pos: { y: e.touches[0].pageY - this.state.rel.y }
+		})
+		e.stopPropagation()
+		e.preventDefault()
+	}
+	onBackMobile() {
+		this.setState({
+			closed: true,
+			open: false
+		})
+	}
 	onClose() {
 		let n = 7
 		this.props.uiActions.zoomToMarker(n)
@@ -23,22 +91,56 @@ class CommunitySidebar extends Component {
 				currentCoinAdress = page.address
 				return
 			}
-		})//Object.values(pagePath) && Object.values(pagePath)
-		console.log("RRRRRR", currentCoinAdress)
-		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker])
+
+		})
+		let communitySidebarClass = classNames({
+			"community-sidebar": true,
+		})
+
+		let topPosition
+
+		if (this.state.open) {
+			topPosition = 'calc(-100vh + 150px)'
+		} else if (this.state.closed) {
+			topPosition = '0px'
+		} else {
+			topPosition =  this.state.pos.y + 'px'
+		}
+
+		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker]) 
 							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || {}
-		return (
-			<div className="community-sidebar">
-				<div className="header">
-					<div className="sidebar-close" onClick={this.onClose.bind(this)}>
+		
+		let control 
+		
+		if (isMobile && !this.state.open) {
+			control = <div className="sidebar-drag" onTouchStart={this.onMouseDown.bind(this)}>
+						<div className="drag-line"/>
+					</div>
+		} else if (isMobile && this.state.open) {
+			control = <div className="sidebar-back" onClick={this.onBackMobile.bind(this)}>
+						BACK
+					</div>
+		} else {
+			control = <div className="sidebar-close" onClick={this.onClose.bind(this)}>
 						<Link to="/">X</Link>
 					</div>
+		}
+
+		return (
+			<div className={communitySidebarClass} ref="bar"
+   				style={{
+   					top: topPosition,
+   					transition: this.state.open || this.state.closed ? 'all 350ms ease-in' : 'none'
+   				}}>
+				<div className="header">
+					{control}
 					<div className="coin-header">
 						<img src={TlvCoin} />
 						<div className="coin-details">
 							<h1>{currentCoin.name}</h1>
+							<div className="separator"/>
 							<h2>CURRENT PRICE
-								<span> 0.5CLN (+51)</span>
+								<span>{currentCoin.currentPrice + 'CLN'}</span>
 							</h2>
 						</div>
 					</div>
@@ -64,9 +166,9 @@ class CommunitySidebar extends Component {
 								<p>{currentCoin.symbol}</p>
 								<p>{currentCoin.owner}</p>
 								<p>{currentCoin.totalSupply}</p>
-								<p>20 CLN</p>
-								<p>500 CLN</p>
-								<p>{this.props.ui.activeMarker}</p>
+								<p>{currentCoin.ccReserve + 'CLN'}</p>
+								<p>{currentCoin.clnReserve + 'CLN'}</p>
+								<p>{this.props.ui.activeMarker || currentCoin.address}</p>
 							</div>
 						</div>
 					</div>
