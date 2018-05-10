@@ -8,7 +8,7 @@ import Yup from 'yup'
 import classnames from 'classnames'
 
 import * as uiActions from '../actions/ui'
-import Select from './select'
+import Select from './Select'
 
 const InputFeedback = ({ error }) =>
   error ? (
