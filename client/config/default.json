@@ -1,0 +1,8 @@
+{
+  "web3": {
+    "provider": "http://localhost:8545"
+  },
+  "api": {
+    "url": "http://localhost:3000/api/v1"
+  }
+}

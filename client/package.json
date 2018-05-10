@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
-    "dev": "webpack --mode development",
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --mode development --open",
+    "dev": "./node_modules/webpack/bin/webpack.js --mode development",
     "build": "./node_modules/webpack/bin/webpack.js --mode production",
     "test": "standard && echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "standard": {
     "parser": "babel-eslint"
   },
@@ -51,6 +51,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
+    "config": "^1.30.0",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.11",
