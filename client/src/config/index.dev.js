@@ -1,8 +1,8 @@
 module.exports = {
   web3: {
-    provider: 'https://ropsten.infura.io/CdAtL4kE55uikRNN1pON'
+    provider: process.env.COMMUNITY_ETHEREUM_PROVIDER
   },
   api: {
-    url: 'http://localhost:3000/api/v1'
+    url: process.env.COMMUNITY_API || 'http://localhost:3000/api/v1'
   }
 }

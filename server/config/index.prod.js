@@ -8,7 +8,7 @@ module.exports = {
   mongo: {
     uri: process.env.COMMUNITY_MONGO_URI,
     options: {
-      user: process.env.COMMUNITY_MONG_USER,
+      user: process.env.COMMUNITY_MONGO_USER,
       pass: process.env.COMMUNITY_MONGO_PASS,
       authSource: process.env.COMMUNITY_MONGO_AUTH_SOURCE
     }
