@@ -1,0 +1,34 @@
+{
+  "name": "CLN-community-server",
+  "version": "0.0.1",
+  "description": "backend for the CLN community dApp",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./app.js",
+    "dev": "nodemon ./app.js",
+    "test": "echo \"no tests for now:(\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colucom/CLN-community-server.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.15.0",
+    "cors": "2.7.1",
+    "errorhandler": "1.4.3",
+    "express": "4.16.3",
+    "express-async-errors": "^2.1.2",
+    "express-jwt": "^5.3.1",
+    "ipfs-api": "^20.0.1",
+    "method-override": "2.3.5",
+    "methods": "1.1.2",
+    "mongoose": "^5.0.17",
+    "mongoose-unique-validator": "1.0.2",
+    "morgan": "1.7.0",
+    "slug": "0.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
