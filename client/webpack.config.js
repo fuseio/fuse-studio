@@ -3,7 +3,6 @@ const HtmlWebPackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const webpack = require('webpack')
 const config = require('config')
-//TODO: ExtractTextPlugin
 
 module.exports = {
   entry: './src/index.js',
@@ -56,7 +55,7 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [{
-          loader: process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader
+          loader: process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader
         }, {
           loader: 'css-loader'
         }, {
