@@ -1,7 +1,7 @@
 const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-
+const webpack = require('webpack')
 //TODO: ExtractTextPlugin
 
 module.exports = {
@@ -26,6 +26,7 @@ module.exports = {
       template: './src/index.html',
       filename: './index.html'
     }),
+    new webpack.DefinePlugin({ CONFIG: JSON.stringify(require("config")) }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional

@@ -1,16 +1,15 @@
 import {init, get} from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import abi from 'constants/abi'
-import config from 'config'
 
-const osseusConfig = {
+const config = {
   osseus_wallet: {
     addresses,
     abi,
-    ...config.web3
+    ...CONFIG.web3
   }
 }
 
-export const onWeb3Ready = init({config: osseusConfig})
+export const onWeb3Ready = init({config})
 
 export default get()

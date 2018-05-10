@@ -1,7 +1,6 @@
 import request from 'superagent'
-import config from 'config'
 
-const API_ROOT = config.api.url
+const API_ROOT = CONFIG.api.url
 
 export const fetchMetadata = (protocol, hash) =>
   request.get(`${API_ROOT}/metadata/${protocol}/${hash}`).then(response => response.body)
