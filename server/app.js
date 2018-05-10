@@ -6,6 +6,7 @@ const morgan = require('morgan')
 const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 const path = require('path')
+const compression = require('compression')
 const config = require('./config')
 require('express-async-errors')
 
@@ -22,6 +23,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(methodOverride())
+
+if (isProduction) {
+  app.use(compression())
+}
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 if (!isProduction) {
