@@ -8,7 +8,8 @@ const config = require('config')
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   resolve: {
     modules: [
