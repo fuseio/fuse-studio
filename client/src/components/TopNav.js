@@ -32,7 +32,7 @@ class TopNav extends Component {
 				<a className="top-nav-text">Whitepaper</a>
 				<a className="top-nav-text">Q&A</a>
 				<Link to="/contact-us">
-					<a className="top-nav-text">Contact us</a>
+					<div className="top-nav-text">Contact us</div>
 				</Link>
 				<div className="top-nav-text">
 					<img src={ProfileIcon} />
