@@ -31,6 +31,11 @@ if (isProduction) {
 
 app.use(express.static(path.join(__dirname, 'public')))
 
+// react-router routing
+app.get('/view/*', function (request, response) {
+  response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+})
+
 if (!isProduction) {
   app.use(errorhandler())
 }

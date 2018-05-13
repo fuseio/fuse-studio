@@ -15,15 +15,15 @@ router.get('/:protocol/:hash', async (req, res, next) => {
   if (protocol === 'ipfs') {
     try {
       data = await ipfs.files.cat(hash)
-      return res.json({data: {hash, protocol, data: JSON.parse(data.toString())}})
+      return res.json({data: {hash, protocol, metadata: JSON.parse(data.toString())}})
     } catch (e) {
       console.error(e)
-      const metadata = await Metadata.findOne({protocol, hash})
-      return res.json({data: metadata.toJSON()})
+      const metadataObj = await Metadata.findOne({protocol, hash})
+      return res.json({data: metadataObj.toJSON()})
     }
   } else {
-    const metadata = await Metadata.findOne({protocol, hash})
-    return res.json({data: metadata.toJSON()})
+    const metadataObj = await Metadata.findOne({protocol, hash})
+    return res.json({data: metadataObj.toJSON()})
   }
 })
 
