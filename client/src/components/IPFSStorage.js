@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import * as api from 'services/api'
 
+
 class IPFSStorage extends Component {
   state = {
     fileHash: '',
@@ -13,6 +14,7 @@ class IPFSStorage extends Component {
         },
         name: ''
       },
+      image: '',
       description: '',
       website: '',
       social: '{"facebook": "www.facebook.com",  "twitter": "www.twitter.com"}'
@@ -53,6 +55,8 @@ class IPFSStorage extends Component {
 
   handleSocialChange = (event) => this.setState({tokenData: {...this.state.tokenData, social: event.target.value}})
 
+  handleImageChange = (event) => this.setState({tokenData: {...this.state.tokenData, image: event.target.value}})
+
   handleFileHashChange = (event) => {
     const hash = event.target.value
     this.setState({fileHash: hash})
@@ -73,7 +77,7 @@ class IPFSStorage extends Component {
   }
 
   render = () => (
-    <form style={{textAlign: 'center'}}>
+    <div style={{textAlign: 'center'}}>
       <div>
         lat: <input type='text' value={this.state.tokenData.location.geo.lat} onChange={this.handleLatChange} />
       </div>
@@ -92,6 +96,9 @@ class IPFSStorage extends Component {
       <div>
         social: <input type='text' value={this.state.tokenData.social} onChange={this.handleSocialChange} />
       </div>
+      <div>
+        image: <input type='text' value={this.state.tokenData.image} onChange={this.handleImageChange} />
+      </div>
       <button onClick={this.submitIPFS}>submit IPFS</button>
       <hr />
       <div>
@@ -104,7 +111,7 @@ class IPFSStorage extends Component {
         Contents of this file: <br />
         {this.state.fileContent}
       </p>
-    </form>
+    </div>
   )
 }
 

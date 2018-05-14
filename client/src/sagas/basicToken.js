@@ -153,41 +153,47 @@ export function * fetchContractData ({contractAddress}) {
       calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
     }
 
+    let tokenData = {}
     if (contractAddress !== addresses.ColuLocalNetwork) {
       calls.tokenURI = call(ColuLocalNetworkContract.methods.tokenURI().call)
       calls.mmAddress = call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
+      tokenData.isLocalCurrency = true
+    } else {
+      tokenData.isLocalCurrency = false
     }
 
-    const response = yield all(calls)
-    response.address = contractAddress
+    const web3Response = yield all(calls)
+    tokenData = {...tokenData, ...web3Response}
+    tokenData.address = contractAddress
 
-    if (response.tokenURI) {
-      const [protocol, hash] = response.tokenURI.split('://')
+    if (tokenData.tokenURI) {
+      const [protocol, hash] = web3Response.tokenURI.split('://')
       const {data} = yield api.fetchMetadata(protocol, hash)
-      response.metadata = data.metadata
+      tokenData.metadata = data.metadata
+      tokenData.metadata.imageLink = api.API_ROOT + '/images/' + data.metadata.image.split('//')[1]
     }
 
-    if (response.mmAddress) {
+    if (tokenData.mmAddress) {
       yield put({
         type: marketMakerActions.GET_CURRENT_PRICE.REQUEST,
-        address: response.mmAddress,
+        address: tokenData.mmAddress,
         contractAddress
       })
       yield put({
         type: marketMakerActions.CLN_RESERVE.REQUEST,
-        address: response.mmAddress,
+        address: tokenData.mmAddress,
         contractAddress
       })
       yield put({
         type: marketMakerActions.CC_RESERVE.REQUEST,
-        address: response.mmAddress,
+        address: tokenData.mmAddress,
         contractAddress
       })
     }
 
     yield entityPut({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
       contractAddress,
-      response
+      response: tokenData
     })
   } catch (error) {
     console.error(error)

@@ -44,7 +44,7 @@ const GoogleMapComponent = compose(
 				setTimeout(() => {uiActions.zoomToMarker(n + 1)}, 150)
 				setTimeout(() => {uiActions.zoomToMarker(n + 2)}, 300)
 				setTimeout(() => {uiActions.zoomToMarker(n + 3)}, 450)
-				
+
 				uiActions.setActiveMarker(coinAddress)
 			}
 		}
@@ -58,17 +58,17 @@ const GoogleMapComponent = compose(
 		zoom={props.ui.zoom || defaultZoom}>
 
 		{ props.tokens && props.tokens[addresses.TelAvivCoinAddress] && props.tokens[addresses.TelAvivCoinAddress].metadata &&
-			<OverlayView position={props.tokens[addresses.TelAvivCoinAddress].metadata.location} 
+			<OverlayView position={props.tokens[addresses.TelAvivCoinAddress].metadata.location.geo}
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={addresses.TelAvivCoinAddress}
 					pagePath={pagePath.telaviv.path}
 					community={{name: props.tokens[addresses.TelAvivCoinAddress].name, price: '0.9CLN'}}
-					onClick={props.onClick.bind(this, props.tokens[addresses.TelAvivCoinAddress].metadata.location, addresses.TelAvivCoinAddress,  props.uiActions)}/>
+					onClick={props.onClick.bind(this, props.tokens[addresses.TelAvivCoinAddress].metadata.location.geo, addresses.TelAvivCoinAddress,  props.uiActions)}/>
 			</OverlayView>
 		}
 
-		<OverlayView position={{ lat: 32.7940, lng: 34.9895 }} 
+		<OverlayView position={{ lat: 32.7940, lng: 34.9895 }}
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 			<Marker
 				pagePath={pagePath.haifa.path}
@@ -77,17 +77,17 @@ const GoogleMapComponent = compose(
 		</OverlayView>
 
 		{ props.tokens && props.tokens[addresses.LondonCoinAddress] && props.tokens[addresses.LondonCoinAddress].metadata &&
-			<OverlayView position={props.tokens[addresses.LondonCoinAddress].metadata.location} 
+			<OverlayView position={props.tokens[addresses.LondonCoinAddress].metadata.location.geo}
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={addresses.LondonCoinAddress}
 					pagePath={pagePath.london.path}
 					community={{name: props.tokens[addresses.LondonCoinAddress].name, price: '0.7CLN'}}
-					onClick={props.onClick.bind(this, props.tokens[addresses.LondonCoinAddress].metadata.location, addresses.LondonCoinAddress, props.uiActions)}/>
+					onClick={props.onClick.bind(this, props.tokens[addresses.LondonCoinAddress].metadata.location.geo, addresses.LondonCoinAddress, props.uiActions)}/>
 			</OverlayView>
 		}
 
-		<OverlayView position={{ lat: 53.4083, lng: -2.9915 }} 
+		<OverlayView position={{ lat: 53.4083, lng: -2.9915 }}
 			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 			<Marker
 				pagePath={pagePath.liverpool.path}

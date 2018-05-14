@@ -25,8 +25,6 @@ class App extends Component {
 	}
 	componentDidMount () {
 		coluTokens.forEach(this.props.fetchContractData)
-
-		// From market maker/factory contract fetch price, CLN reserve
 	}
 
 	onClickExplore() {
