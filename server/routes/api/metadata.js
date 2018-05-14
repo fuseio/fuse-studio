@@ -1,8 +1,10 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const IpfsAPI = require('ipfs-api')
+const multer = require('multer')
 const ipfsConfig = require('../../config').ipfs
 
+const upload = multer()
 const auth = require('../auth')
 const Metadata = mongoose.model('Metadata')
 
@@ -28,30 +30,34 @@ router.get('/:protocol/:hash', async (req, res, next) => {
 })
 
 router.post('/', auth.required, async (req, res, next) => {
-  const data = Buffer.from(JSON.stringify(req.body.metadata))
+  const metadata = Buffer.from(JSON.stringify(req.body.metadata))
 
-  const filesAdded = await ipfs.files.add(data)
+  const filesAdded = await ipfs.files.add(metadata)
   const hash = filesAdded[0].hash
 
-  const metadata = new Metadata({
+  const metadataObj = new Metadata({
     hash,
-    data,
+    metadata,
     protocol: 'ipfs'
   })
 
   try {
-    console.log('hello')
-    await metadata.save()
-    console.log('after')
-    return res.json({data: metadata.toJSON()})
+    await metadataObj.save()
+    return res.json({data: metadataObj.toJSON()})
   } catch (error) {
     // duplication error, someone already added this hash to db
     if (error.name === 'MongoError' && error.code === 11000) {
-      return res.json({data: metadata.toJSON()})
+      return res.json({data: metadataObj.toJSON()})
     }
-    console.log('error')
     throw error
   }
+})
+
+router.post('/image', auth.required, upload.single('image'), async (req, res) => {
+  const filesAdded = await ipfs.files.add(req.file.buffer)
+  const hash = filesAdded[0].hash
+
+  return res.json({data: {hash}})
 })
 
 module.exports = router

@@ -1,10 +1,10 @@
 module.exports = {
     pagePath: {
-        telaviv: {
+        london: {
             path: "/view/londoncoin",
             address: '0xBB302a3d28eBa4a0452EB0107E56E356482b02E9'
         },
-        london: {
+        telaviv: {
             path: "/view/telavivcoin",
             address: '0x4188bA0bFDA56254ac66C54B1998007188c43D8C'
         },
