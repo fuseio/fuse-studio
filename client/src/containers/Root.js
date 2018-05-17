@@ -19,10 +19,10 @@ const history = createHistory()
 
 const sidebarTransition = {
 	atEnter: {
-		offset: 100
+	//	offset: 100
 	},
 	atLeave: {
-		offset: 100
+	//	offset: 100
 	},
 	atActive: {
 		offset: 0
@@ -85,7 +85,7 @@ export default class Root extends Component {
 					<ConnectedRouter history={history}>
 						<div>
 							<Route path="/create" component={CurrencyFactoryContract} />
-							<App />
+							<Route path="/" component={App} />
 							<div className="sidebar">
 								<AnimatedRoute
 									path={pagePath.telaviv.path}

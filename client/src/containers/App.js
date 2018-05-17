@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import Map from 'components/Map'
 import TopNav from 'components/TopNav'
-// import CommunitiesList from 'components/CommunitiesList'
+import CommunitiesList from 'components/CommunitiesList'
 import classNames from 'classnames'
 
 import {fetchContractData} from 'actions/basicToken'
@@ -43,7 +43,7 @@ class App extends Component {
 	}
 
 	render() {
-		let currentRoute = this.props && this.props.router && this.props.router.location && this.props.router.location.pathname
+		let currentRoute = this.props && this.props && this.props.location && this.props.location.pathname
 		let mainContainerClass = classNames({
 			"main-container": true,
 			"flex": true,
@@ -54,6 +54,8 @@ class App extends Component {
 			"hide": !this.state.isWelcome,
 			"out": this.state.out
 		})
+
+		let communityNav = currentRoute === '/' ? <CommunitiesList active={!this.state.isWelcome} history={this.props.history}/> : null
 
 		const welcome = <div className={welcomeClass}>
 							<h3>Welcome to the CLN Community dApp</h3>
@@ -66,13 +68,13 @@ class App extends Component {
 			<div className={mainContainerClass}>
 				<TopNav active={!this.state.isWelcome}/>
 				<Map key="map" active={!this.state.isWelcome}/>
+				{communityNav}
 			</div>
 		</div>
 	}
 }
 
 
-//<CommunitiesList active={!this.state.isWelcome}/>
 const mapStateToProps = state => {
 	return {}
 }

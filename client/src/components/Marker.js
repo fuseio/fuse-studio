@@ -17,10 +17,7 @@ class Marker extends React.PureComponent {
 	state = {
 
 	}
-	//shouldComponentUpdate(thisProps, nextProps) {
-	//	if (thisProps.activeMarker !== nextProps.activeMarker) return true
-	//	else return false
-	//}
+
 	componentWillReceiveProps(nextProps) {
 		
 		if (nextProps.activeMarker !== this.props.activeMarker && nextProps.activeMarker === this.props.id) {
@@ -38,16 +35,7 @@ class Marker extends React.PureComponent {
 		this.setState({isOpen: value})
 	}
 
-	//onClick = () => {
-	//	this.props.onClick();
-	//}
-
 	render() {
-		//let markerClass = classNames({
-		//	"purple": this.state.isOpen,
-		//	"e-marker__marker": true
-		//})
-
 		let communityLabel = classNames({
 			"community-label-active": this.state.isOpen || this.state.grow,
 			"community-label": true
@@ -60,7 +48,7 @@ class Marker extends React.PureComponent {
 			"grow-center": this.state.grow
 		})
 
-		const bubblecount = this.state.grow ? 120 : 20
+		const bubblecount = this.state.grow ? 100 : 15
 		const bubblesize = this.state.grow ? 60 : 50
 		const limits = this.state.grow ? 120 : 30
 		let particles = []
@@ -96,8 +84,6 @@ class Marker extends React.PureComponent {
 				}}/>)
 			}
 		}
-
-		//console.log("RENDER MARKER")
 
 		return (
 			<Link to={this.props.pagePath}>

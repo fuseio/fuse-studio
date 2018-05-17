@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { compose, withProps, withStateHandlers, withState, withHandlers } from "recompose"
+import { compose, withProps, withStateHandlers, withState, withHandlers, lifecycle } from "recompose"
 import { mapStyle, googleMapsUrl, pagePath } from '../constants/uiConstants'
 import {
 	withScriptjs,
@@ -28,24 +28,29 @@ const GoogleMapComponent = compose(
 	}),
 	withScriptjs,
 	withGoogleMap,
-	//withState('zoom', 'zoomIn', 4),
+	withState('refs', 'setRefs', {}),
+	lifecycle({
+		componentWillUpdate(nextProps, nextState) {
+			if (nextProps !== this.props && nextProps.ui.zoom === 7 && nextProps.ui.activeMarker) {
+				this.props.refs.map.panTo({lat: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lat), lng: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lng) + panByHorizontalOffset})
+			}
+		}
+	}),
+	
 	withHandlers(() => {
-		const refs = {map: undefined}
-
 		return {
-			onMapMounted: () => ref => {
-				refs.map = ref
+			onMapMounted: () => (props, ref) => {
+				if (!props.refs.map) props.refs.map = ref
 			},
-			onClick: ({zoomIn}) => (location, coinAddress, uiActions) => {
+			onClick: ({zoomIn}) => (location, coinAddress, uiActions, refs) => {
 				let n = 5
 				refs.map.panTo({lat: parseFloat(location.lat), lng: parseFloat(location.lng) + panByHorizontalOffset})
-
 				uiActions.zoomToMarker(n)
 				setTimeout(() => {uiActions.zoomToMarker(n + 1)}, 150)
 				setTimeout(() => {uiActions.zoomToMarker(n + 2)}, 300)
 				setTimeout(() => {uiActions.zoomToMarker(n + 3)}, 450)
 				
-				uiActions.setActiveMarker(coinAddress)
+				uiActions.setActiveMarker(coinAddress, location)
 			}
 		}
 	})
@@ -53,18 +58,18 @@ const GoogleMapComponent = compose(
 	<GoogleMap
 		defaultCenter={defaultCenter}
 		defaultOptions={{styles: mapStyle, disableDefaultUI: true}}
-		ref={props.onMapMounted}
+		ref={props.onMapMounted.bind(this, props)}
 		style={{backgroundColor: 'rgb(229, 227, 223)'}}
 		zoom={props.ui.zoom || defaultZoom}>
 
 		{ props.tokens && props.tokens[addresses.TelAvivCoinAddress] && props.tokens[addresses.TelAvivCoinAddress].metadata &&
-			<OverlayView position={props.tokens[addresses.TelAvivCoinAddress].metadata.location} 
+			<OverlayView position={props.tokens[addresses.TelAvivCoinAddress].metadata.location.geo} 
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={addresses.TelAvivCoinAddress}
 					pagePath={pagePath.telaviv.path}
 					community={{name: props.tokens[addresses.TelAvivCoinAddress].name, price: '0.9CLN'}}
-					onClick={props.onClick.bind(this, props.tokens[addresses.TelAvivCoinAddress].metadata.location, addresses.TelAvivCoinAddress,  props.uiActions)}/>
+					onClick={props.onClick.bind(this, props.tokens[addresses.TelAvivCoinAddress].metadata.location.geo, addresses.TelAvivCoinAddress, props.uiActions, props.refs)}/>
 			</OverlayView>
 		}
 
@@ -77,13 +82,13 @@ const GoogleMapComponent = compose(
 		</OverlayView>
 
 		{ props.tokens && props.tokens[addresses.LondonCoinAddress] && props.tokens[addresses.LondonCoinAddress].metadata &&
-			<OverlayView position={props.tokens[addresses.LondonCoinAddress].metadata.location} 
+			<OverlayView position={props.tokens[addresses.LondonCoinAddress].metadata.location.geo} 
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={addresses.LondonCoinAddress}
 					pagePath={pagePath.london.path}
 					community={{name: props.tokens[addresses.LondonCoinAddress].name, price: '0.7CLN'}}
-					onClick={props.onClick.bind(this, props.tokens[addresses.LondonCoinAddress].metadata.location, addresses.LondonCoinAddress, props.uiActions)}/>
+					onClick={props.onClick.bind(this, props.tokens[addresses.LondonCoinAddress].metadata.location.geo, addresses.LondonCoinAddress, props.uiActions, props.refs)}/>
 			</OverlayView>
 		}
 

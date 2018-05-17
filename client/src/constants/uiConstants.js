@@ -2,17 +2,20 @@ module.exports = {
     pagePath: {
         telaviv: {
             path: "/telavivcoin",
-            address: '0xBB302a3d28eBa4a0452EB0107E56E356482b02E9'
+            address: '0x4188bA0bFDA56254ac66C54B1998007188c43D8C'
         },
         london: {
             path: "/londoncoin",
-            address: '0x4188bA0bFDA56254ac66C54B1998007188c43D8C'
+            
+            address: '0xBB302a3d28eBa4a0452EB0107E56E356482b02E9'
         },
         haifa: {
             path: "/haifacoin",
+            address: ''
         },
         liverpool: {
-            path: "/liverpoolcoin"
+            path: "/liverpoolcoin",
+            address: ''
         }
     },
 	googleMapsUrl: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAtvydUDXH2lMMjNDSNwxYmhXobsJBHo4g&v=3.exp&libraries=geometry,drawing,places",
@@ -79,7 +82,7 @@ module.exports = {
                 "weight": "1.2"
             },
             {
-                "color": "#454568"
+                "color": "#443a81"
             }
         ]
     },
@@ -106,7 +109,7 @@ module.exports = {
         "elementType": "geometry",
         "stylers": [
             {
-                "color": "#2d2c43"
+                "color": "#393174"
             }
         ]
     },
@@ -238,7 +241,7 @@ module.exports = {
         "elementType": "geometry",
         "stylers": [
             {
-                "color": "#232334"
+                "color": "#241c4a"
             }
         ]
     },
