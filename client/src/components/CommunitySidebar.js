@@ -7,8 +7,6 @@ import classNames from 'classnames'
 import * as uiActions from '../actions/ui'
 import { pagePath } from '../constants/uiConstants'
 
-import TlvCoin from 'images/tlv-coin.png'
-
 
 class CommunitySidebar extends Component {
 	state = {
@@ -135,7 +133,7 @@ class CommunitySidebar extends Component {
 				<div className="header">
 					{control}
 					<div className="coin-header">
-						<img src={TlvCoin} />
+						<img src={currentCoin.metadata && currentCoin.metadata.imageLink} />
 						<div className="coin-details">
 							<h1>{currentCoin.name}</h1>
 							<div className="separator"/>
