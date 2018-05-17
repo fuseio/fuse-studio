@@ -12,7 +12,9 @@ import addresses from 'constants/addresses'
 const coluTokens = [
 	addresses.ColuLocalNetwork,
 	addresses.TelAvivCoinAddress,
-	addresses.LondonCoinAddress
+	addresses.LondonCoinAddress,
+	addresses.HaifaCoinAddress,
+	addresses.LiverpoolCoinAddress
 ]
 
 import 'scss/styles.scss'
