@@ -5,7 +5,7 @@ import { Route } from 'react-router'
 import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
 import { AnimatedRoute } from 'react-router-transition'
-import { isMobile } from "react-device-detect"
+import { isMobile } from 'react-device-detect'
 
 import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'
@@ -84,8 +84,8 @@ export default class Root extends Component {
 				<Web3Loader>
 					<ConnectedRouter history={history}>
 						<div>
-							<Route path="/create" component={CurrencyFactoryContract} />
-							<Route path="/" component={App} />
+							<Route path="/view/create" component={CurrencyFactoryContract} />
+							<App />
 							<div className="sidebar">
 								<AnimatedRoute
 									path={pagePath.telaviv.path}

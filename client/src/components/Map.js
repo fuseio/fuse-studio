@@ -49,7 +49,7 @@ const GoogleMapComponent = compose(
 				setTimeout(() => {uiActions.zoomToMarker(n + 1)}, 150)
 				setTimeout(() => {uiActions.zoomToMarker(n + 2)}, 300)
 				setTimeout(() => {uiActions.zoomToMarker(n + 3)}, 450)
-				
+
 				uiActions.setActiveMarker(coinAddress, location)
 			}
 		}
@@ -63,6 +63,7 @@ const GoogleMapComponent = compose(
 		zoom={props.ui.zoom || defaultZoom}>
 
 		{ props.tokens && props.tokens[addresses.TelAvivCoinAddress] && props.tokens[addresses.TelAvivCoinAddress].metadata &&
+
 			<OverlayView position={props.tokens[addresses.TelAvivCoinAddress].metadata.location.geo} 
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
@@ -73,13 +74,16 @@ const GoogleMapComponent = compose(
 			</OverlayView>
 		}
 
-		<OverlayView position={{ lat: 32.7940, lng: 34.9895 }} 
-			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
-			<Marker
-				pagePath={pagePath.haifa.path}
-				community={{name: 'Haifa Coin', price: '0.8CLN'}}
-				id={'placeholder'}/>
-		</OverlayView>
+		{ props.tokens && props.tokens[addresses.HaifaCoinAddress] && props.tokens[addresses.HaifaCoinAddress].metadata &&
+			<OverlayView position={props.tokens[addresses.HaifaCoinAddress].metadata.location.geo}
+				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
+				<Marker
+					id={addresses.HaifaCoinAddress}
+					pagePath={pagePath.haifa.path}
+					community={{name: props.tokens[addresses.HaifaCoinAddress].name, price: '0.7CLN'}}
+					onClick={props.onClick.bind(this, props.tokens[addresses.HaifaCoinAddress].metadata.location.geo, addresses.HaifaCoinAddress, props.uiActions)}/>
+			</OverlayView>
+		}
 
 		{ props.tokens && props.tokens[addresses.LondonCoinAddress] && props.tokens[addresses.LondonCoinAddress].metadata &&
 			<OverlayView position={props.tokens[addresses.LondonCoinAddress].metadata.location.geo} 
@@ -92,13 +96,16 @@ const GoogleMapComponent = compose(
 			</OverlayView>
 		}
 
-		<OverlayView position={{ lat: 53.4083, lng: -2.9915 }} 
-			mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
-			<Marker
-				pagePath={pagePath.liverpool.path}
-				community={{name: 'Liverpool Coin', price: '0.6CLN'}}
-				id={'placeholder'}/>
-		</OverlayView>
+		{ props.tokens && props.tokens[addresses.LiverpoolCoinAddress] && props.tokens[addresses.LiverpoolCoinAddress].metadata &&
+			<OverlayView position={props.tokens[addresses.LiverpoolCoinAddress].metadata.location.geo}
+				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
+				<Marker
+					id={addresses.LiverpoolCoinAddress}
+					pagePath={pagePath.liverpool.path}
+					community={{name: props.tokens[addresses.LiverpoolCoinAddress].name, price: '0.7CLN'}}
+					onClick={props.onClick.bind(this, props.tokens[addresses.LiverpoolCoinAddress].metadata.location.geo, addresses.LiverpoolCoinAddress, props.uiActions)}/>
+			</OverlayView>
+		}
 	</GoogleMap>
 ));
 

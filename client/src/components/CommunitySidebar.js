@@ -7,9 +7,11 @@ import classNames from 'classnames'
 import * as uiActions from '../actions/ui'
 import { pagePath } from '../constants/uiConstants'
 
+
 import TlvCoin from 'images/tlv-coin.png'
 
 import CoinHeader from './CoinHeader'
+
 
 class CommunitySidebar extends Component {
 	state = {
@@ -45,7 +47,7 @@ class CommunitySidebar extends Component {
 			pos: {y: 0},
 			rel: { y: e.touches[0].pageY - posTop }
 		})
-		
+
 		e.stopPropagation()
 		e.preventDefault()
 	}
@@ -108,11 +110,11 @@ class CommunitySidebar extends Component {
 			topPosition =  this.state.pos.y + 'px'
 		}
 
-		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker]) 
+		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker])
 							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || {}
-		
-		let control 
-		
+
+		let control
+
 		if (isMobile && !this.state.open) {
 			control = <div className="sidebar-drag" onTouchStart={this.onMouseDown.bind(this)}>
 						<div className="drag-line"/>
@@ -179,7 +181,9 @@ class CommunitySidebar extends Component {
 							</div>
 							<div className="box-data column">
 								<p>{currentCoin.metadata && currentCoin.metadata.website}</p>
+
 								<p>{currentCoin.metadata && currentCoin.metadata.location.name}</p>
+
 								<p>{currentCoin.metadata && currentCoin.metadata.social.facebook}</p>
 							</div>
 						</div>

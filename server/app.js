@@ -7,6 +7,7 @@ const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 const path = require('path')
 const compression = require('compression')
+require('dotenv').config()
 const config = require('./config')
 require('express-async-errors')
 
@@ -30,11 +31,16 @@ if (isProduction) {
 
 app.use(express.static(path.join(__dirname, 'public')))
 
+// react-router routing
+app.get('/view/*', function (request, response) {
+  response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+})
+
 if (!isProduction) {
   app.use(errorhandler())
 }
 
-// cloning optios object cause mongoose is filling it with data about the connection
+// cloning options object cause mongoose is filling it with unneeded data about the connection
 mongoose.connect(config.mongo.uri, {...config.mongo.options})
 
 if (!isProduction) {
