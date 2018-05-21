@@ -1,10 +1,8 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const IpfsAPI = require('ipfs-api')
-const multer = require('multer')
 const ipfsConfig = require('../../config').ipfs
 
-const upload = multer()
 const auth = require('../auth')
 const Metadata = mongoose.model('Metadata')
 
@@ -17,15 +15,15 @@ router.get('/:protocol/:hash', async (req, res, next) => {
   if (protocol === 'ipfs') {
     try {
       data = await ipfs.files.cat(hash)
-      return res.json({data: {hash, protocol, metadata: JSON.parse(data.toString())}})
+      return res.json({source: 'ipfs', data: {hash, protocol, metadata: JSON.parse(data.toString())}})
     } catch (e) {
       console.error(e)
       const metadataObj = await Metadata.findOne({protocol, hash})
-      return res.json({data: metadataObj.toJSON()})
+      return res.json({sdata: metadataObj.toJSON()})
     }
   } else {
     const metadataObj = await Metadata.findOne({protocol, hash})
-    return res.json({data: metadataObj.toJSON()})
+    return res.json({source: 'mongo', data: metadataObj.toJSON()})
   }
 })
 
@@ -51,13 +49,6 @@ router.post('/', auth.required, async (req, res, next) => {
     }
     throw error
   }
-})
-
-router.post('/image', auth.required, upload.single('image'), async (req, res) => {
-  const filesAdded = await ipfs.files.add(req.file.buffer)
-  const hash = filesAdded[0].hash
-
-  return res.json({data: {hash}})
 })
 
 module.exports = router
