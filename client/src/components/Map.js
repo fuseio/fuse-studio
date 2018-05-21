@@ -31,8 +31,13 @@ const GoogleMapComponent = compose(
 	withState('refs', 'setRefs', {}),
 	lifecycle({
 		componentWillUpdate(nextProps, nextState) {
-			if (nextProps !== this.props && nextProps.ui.zoom === 7 && nextProps.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
+			// Pan to the chosen marker location
+			if (nextProps !== this.props && nextProps.ui.zoom === 5 && nextProps.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
 				this.props.refs.map.panTo({lat: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lat), lng: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lng) + panByHorizontalOffset})
+			}
+			// Pan out to default center
+			if (nextProps !== this.props && nextProps.ui.zoom === 4 && !nextProps.ui.activeMarker) {
+				this.props.refs.map.panTo(defaultCenter)
 			}
 		}
 	}),
@@ -69,7 +74,7 @@ const GoogleMapComponent = compose(
 				<Marker
 					id={addresses.TelAvivCoinAddress}
 					pagePath={pagePath.telaviv.path}
-					community={{name: props.tokens[addresses.TelAvivCoinAddress].name, price: '0.9CLN'}}
+					community={{name: props.tokens[addresses.TelAvivCoinAddress].name, price: props.tokens[addresses.TelAvivCoinAddress].currentPrice}}
 					onClick={props.onClick.bind(this, props.tokens[addresses.TelAvivCoinAddress].metadata.location.geo, addresses.TelAvivCoinAddress, props.uiActions, props.refs)}/>
 			</OverlayView>
 		}
@@ -80,8 +85,8 @@ const GoogleMapComponent = compose(
 				<Marker
 					id={addresses.HaifaCoinAddress}
 					pagePath={pagePath.haifa.path}
-					community={{name: props.tokens[addresses.HaifaCoinAddress].name, price: '0.7CLN'}}
-					onClick={props.onClick.bind(this, props.tokens[addresses.HaifaCoinAddress].metadata.location.geo, addresses.HaifaCoinAddress, props.uiActions)}/>
+					community={{name: props.tokens[addresses.HaifaCoinAddress].name, price: props.tokens[addresses.HaifaCoinAddress].currentPrice}}
+					onClick={props.onClick.bind(this, props.tokens[addresses.HaifaCoinAddress].metadata.location.geo, addresses.HaifaCoinAddress, props.uiActions, props.refs)}/>
 			</OverlayView>
 		}
 
@@ -91,7 +96,7 @@ const GoogleMapComponent = compose(
 				<Marker
 					id={addresses.LondonCoinAddress}
 					pagePath={pagePath.london.path}
-					community={{name: props.tokens[addresses.LondonCoinAddress].name, price: '0.7CLN'}}
+					community={{name: props.tokens[addresses.LondonCoinAddress].name, price: props.tokens[addresses.LondonCoinAddress].currentPrice}}
 					onClick={props.onClick.bind(this, props.tokens[addresses.LondonCoinAddress].metadata.location.geo, addresses.LondonCoinAddress, props.uiActions, props.refs)}/>
 			</OverlayView>
 		}
@@ -102,8 +107,8 @@ const GoogleMapComponent = compose(
 				<Marker
 					id={addresses.LiverpoolCoinAddress}
 					pagePath={pagePath.liverpool.path}
-					community={{name: props.tokens[addresses.LiverpoolCoinAddress].name, price: '0.7CLN'}}
-					onClick={props.onClick.bind(this, props.tokens[addresses.LiverpoolCoinAddress].metadata.location.geo, addresses.LiverpoolCoinAddress, props.uiActions)}/>
+					community={{name: props.tokens[addresses.LiverpoolCoinAddress].name, price: props.tokens[addresses.LiverpoolCoinAddress].currentPrice}}
+					onClick={props.onClick.bind(this, props.tokens[addresses.LiverpoolCoinAddress].metadata.location.geo, addresses.LiverpoolCoinAddress, props.uiActions, props.refs)}/>
 			</OverlayView>
 		}
 	</GoogleMap>
