@@ -8,6 +8,11 @@ import * as uiActions from '../actions/ui'
 import { pagePath } from '../constants/uiConstants'
 
 
+import TlvCoin from 'images/tlv-coin.png'
+
+import CoinHeader from './CoinHeader'
+
+
 class CommunitySidebar extends Component {
 	state = {
 		pos: {y: 0},
@@ -98,7 +103,7 @@ class CommunitySidebar extends Component {
 		let topPosition
 
 		if (this.state.open) {
-			topPosition = 'calc(-100vh + 150px)'
+			topPosition = 'calc(-100vh + 100px)'
 		} else if (this.state.closed) {
 			topPosition = '0px'
 		} else {
@@ -131,17 +136,8 @@ class CommunitySidebar extends Component {
    					transition: this.state.open || this.state.closed ? 'all 350ms ease-in' : 'none'
    				}}>
 				<div className="header">
+					<CoinHeader coinImage={TlvCoin} name={currentCoin.name} price={currentCoin.currentPrice}/>
 					{control}
-					<div className="coin-header">
-						<img src={currentCoin.metadata && currentCoin.metadata.imageLink} />
-						<div className="coin-details">
-							<h1>{currentCoin.name}</h1>
-							<div className="separator"/>
-							<h2>CURRENT PRICE
-								<span>{currentCoin.currentPrice + 'CLN'}</span>
-							</h2>
-						</div>
-					</div>
 					<div className="header-buttons">
 						<div className="header-button">BUY</div>
 						<div className="header-button">SELL</div>
@@ -174,7 +170,7 @@ class CommunitySidebar extends Component {
 						<div className="box-header">COMMUNITY</div>
 						<div className="box-info column">
 							<div className="box-data">
-								<p>{currentCoin.metadata && currentCoin.metadata.description}</p>
+								<p className="description">{currentCoin.metadata && currentCoin.metadata.description}</p>
 							</div>
 						</div>
 						<div className="box-info">
@@ -185,7 +181,9 @@ class CommunitySidebar extends Component {
 							</div>
 							<div className="box-data column">
 								<p>{currentCoin.metadata && currentCoin.metadata.website}</p>
-								<p></p>
+
+								<p>{currentCoin.metadata && currentCoin.metadata.location.name}</p>
+
 								<p>{currentCoin.metadata && currentCoin.metadata.social.facebook}</p>
 							</div>
 						</div>

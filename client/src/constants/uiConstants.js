@@ -81,7 +81,7 @@ module.exports = {
                 "weight": "1.2"
             },
             {
-                "color": "#454568"
+                "color": "#443a81"
             }
         ]
     },
@@ -108,7 +108,7 @@ module.exports = {
         "elementType": "geometry",
         "stylers": [
             {
-                "color": "#2d2c43"
+                "color": "#393174"
             }
         ]
     },
@@ -240,7 +240,7 @@ module.exports = {
         "elementType": "geometry",
         "stylers": [
             {
-                "color": "#232334"
+                "color": "#241c4a"
             }
         ]
     },

@@ -30,14 +30,18 @@ class TopNav extends Component {
 
 			<div className={navLinksClass}>
 				<a className="top-nav-text">Whitepaper</a>
+				<div className="separator"/>
 				<a className="top-nav-text">Q&A</a>
+				<div className="separator"/>
 				<Link to="/contact-us">
 					<div className="top-nav-text">Contact us</div>
 				</Link>
+				<div className="separator"/>
 				<div className="top-nav-text">
 					<img src={ProfileIcon} />
 					<span>Disconnected</span>
 				</div>
+				<div className="separator"/>
 			</div>
 
 			<MobileView device={isMobile}>
