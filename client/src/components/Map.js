@@ -31,7 +31,7 @@ const GoogleMapComponent = compose(
 	withState('refs', 'setRefs', {}),
 	lifecycle({
 		componentWillUpdate(nextProps, nextState) {
-			if (nextProps !== this.props && nextProps.ui.zoom === 7 && nextProps.ui.activeMarker) {
+			if (nextProps !== this.props && nextProps.ui.zoom === 7 && nextProps.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
 				this.props.refs.map.panTo({lat: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lat), lng: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lng) + panByHorizontalOffset})
 			}
 		}

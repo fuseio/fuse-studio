@@ -327,7 +327,7 @@ h5 {
 	bottom: 0;
 	right: 0;
 	z-index: 100;
-	border-left: 10px $colu-green solid;
+	
 	@media (max-width: 1024px) {
 		top: calc(100vh - 100px);
 		z-index: 10;
@@ -336,9 +336,10 @@ h5 {
 	.community-sidebar {
 		//background-color: #808090eb;
 		//background-color: white;
+		border-left: 10px $colu-green solid;
 		overflow: scroll;
 		height: calc(100vh - 60px);
-		width: 500px;
+		width: 510px;
 		box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.37);
 		
 		.header {
