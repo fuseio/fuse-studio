@@ -19,7 +19,7 @@ router.get('/:protocol/:hash', async (req, res, next) => {
     } catch (e) {
       console.error(e)
       const metadataObj = await Metadata.findOne({protocol, hash})
-      return res.json({sdata: metadataObj.toJSON()})
+      return res.json({data: metadataObj.toJSON()})
     }
   } else {
     const metadataObj = await Metadata.findOne({protocol, hash})
