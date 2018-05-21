@@ -28,9 +28,12 @@ const CoinWrapper = posed.div({
 const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy }) => {
 	let poseValue = isOpen ? 'open' : 'closed'
 	let top = (keyy) * 110 + (keyy+1)*20
+	let communityCoins = coins && coins.filter((coin) => {
+		return coin.isLocalCurrency
+	})
 	return (
 	<Sidebar pose={poseValue} className="communities-list" style={{transform: openCoinInfo ? 'translateY(-' + top + 'px)' : 'none'}}>
-		{coins.map(((coin, i) => 
+		{communityCoins.map(((coin, i) => 
 			<NavItem className="list-item" key={i} pose={isOpen ? 'open' : 'closed'} onClick={onClick.bind(this, coin.address, i)}>
 				<CoinWrapper className="coin-wrapper" pose={openCoinInfo && keyy === i ? 'openCoinInfo' : 'closedCoinInfo'} >
 					<CoinHeader coinImage={TlvCoin} name={coin.name} price={coin.currentPrice} />

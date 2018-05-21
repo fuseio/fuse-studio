@@ -141,17 +141,14 @@ h5 {
 }
 
 .main-container {
-	//max-width: $page-width;
 	height: 100%;
 	width: 100%;
 	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
 	.map-wrapper {
 		height: calc(100vh + 20px);
 		width: 100%;
-		//margin: 10px -10px -10px -10px; 
 		transition: all 1s cubic-bezier(0,.52,.28,.94);
 		transform: scale(1);
-		//filter: blur(7px);
 		.map-element > div {
 			background-color: rgb(36, 35, 52) !important;
 			a {
@@ -241,21 +238,8 @@ h5 {
 
 .coin-header {
 	@include flex-box();
-	//width: 490px;
-	//margin-top:20px;
 	padding: 20px 24px;
 	
-	
-
-	
-	//img {
-	//	height: 90px;
-	//	width: 90px;
-	//	@media (max-width: 1024px) {
-	//		height: 60px;
-	//		width: 60px;
-	//	}
-	//}
 	img {
 			width: 70px;
 			height: 70px;
@@ -334,8 +318,6 @@ h5 {
 	}
 
 	.community-sidebar {
-		//background-color: #808090eb;
-		//background-color: white;
 		border-left: 10px $colu-green solid;
 		overflow: scroll;
 		height: calc(100vh - 60px);
@@ -345,7 +327,6 @@ h5 {
 		.header {
 			background-color: $light-grey;
 			border-bottom: solid 1px #e1dedc;
-			//padding: 10px 30px 32px;
 			@media (max-width: 1024px) {
 				padding: 0 20px 20px;
 				border-bottom: 1px solid #e1dedc;
@@ -367,7 +348,6 @@ h5 {
 			.header-buttons {
 				@include flex-box();
 				justify-content: space-between;
-				//margin-top: 30px;
 				padding: 0 24px 20px;
 				.header-button {
 					width: 207px;
@@ -548,7 +528,7 @@ h5 {
 .contact-form-wrapper {
 	border-radius: 2px;
 	position: absolute;
-	overflow: hidden;
+	overflow: scroll;
     top: 130px;
     bottom: 0;
     right: calc((100vw - 450px)/2);
@@ -701,14 +681,6 @@ button:disabled, button[disabled] {
 		margin-top: -60px;
 		transform: scale(1.1);
 		&.bubbles {
-			//&:before {
-			//	width: 20px;
-			//	height: 20px;
-			//	top: 50px;
-			//	left:50px;
-			//	box-shadow: inset 0px 0px 10px 12px rgba(255,255,255,0.9),
-			//			0px 0px 40px 12px rgba(255,255,255,1);
-			//}
 			>.particle {
 				background-color:rgba(77,217,180,0.8);
 				box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
@@ -739,12 +711,6 @@ button:disabled, button[disabled] {
 		transform: scale(1.1);
 		transition: transform 0.2s linear;
 		&.bubbles {
-			//&:before {
-			//	width: 8px;
-			//	height: 8px;
-			//	box-shadow: inset 0px 0px 20px 12px rgba(255,255,255,0.9),
-			//				0px 0px 60px 16px rgba(255,255,255,1);
-			//}
 			>.particle, .particle2 {
 				background-color:rgba(77,217,180,0.8);
 				box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
@@ -759,7 +725,6 @@ button:disabled, button[disabled] {
 	display: flex;
     flex-direction: column;
     right: 0px;
-    //height: calc(100% - 60px);
     width: 510px;
 	top: $nav-height;
 	overflow: hidden;
@@ -777,10 +742,8 @@ button:disabled, button[disabled] {
 			cursor: pointer;
 			&:hover {
 				border-left: 10px $colu-green solid;
-				//background-color: white;
 			}
 			.coin-header {
-				//width: 490px;
 				margin-top:20px;
 				padding: 20px 24px;
 				

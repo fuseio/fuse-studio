@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
-
+import { formatAmountReal } from '../services/global'
 import * as uiActions from '../actions/ui'
 
 
@@ -14,9 +14,7 @@ function rnd(m,n) {
 }
 
 class Marker extends React.PureComponent {
-	state = {
-
-	}
+	state = {}
 
 	componentWillReceiveProps(nextProps) {
 		
@@ -85,6 +83,8 @@ class Marker extends React.PureComponent {
 			}
 		}
 
+		const formattedPrice = this.props.community.price || this.props.community.price === 0 ? formatAmountReal(this.props.community.price, 18) : 'loading'
+
 		return (
 			<Link to={this.props.pagePath}>
 				<div className='marker' 
@@ -94,15 +94,17 @@ class Marker extends React.PureComponent {
 					<div className={markerArea} >
 						{particles}
 					</div>
-					<div className={communityLabel}>
-						<div className="coin-label-name">{this.props.community.name}</div>
-						<div className="coin-label-price">{this.props.community.price}</div>
-					</div>
+					
 				</div>
 			</Link>
 		)
 	}
 }
+
+//<div className={communityLabel}>
+//	<div className="coin-label-name">{this.props.community.name}</div>
+//	<div className="coin-label-price">{formattedPrice + 'CLN'}</div>
+//</div>
 
 const mapStateToProps = state => {
 	return {

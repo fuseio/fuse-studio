@@ -13,7 +13,9 @@
   "license": "MIT",
   "standard": {
     "parser": "babel-eslint",
-    "globals": ["CONFIG"]
+    "globals": [
+      "CONFIG"
+    ]
   },
   "dependencies": {
     "bignumber.js": "^6.0.0",

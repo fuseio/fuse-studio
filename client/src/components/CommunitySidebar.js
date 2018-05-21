@@ -6,7 +6,7 @@ import { isBrowser, isMobile } from "react-device-detect"
 import classNames from 'classnames'
 import * as uiActions from '../actions/ui'
 import { pagePath } from '../constants/uiConstants'
-
+import { formatAmount } from '../services/global'
 
 import TlvCoin from 'images/tlv-coin.png'
 
@@ -129,6 +129,9 @@ class CommunitySidebar extends Component {
 					</div>
 		}
 
+		const totalSupply = currentCoin.totalSupply ? formatAmount(currentCoin.totalSupply, 18) : 'loading'
+		const ccReserve = currentCoin.ccReserve ? formatAmount(currentCoin.ccReserve, 18) : 'loading'
+
 		return (
 			<div className={communitySidebarClass} ref="bar"
    				style={{
@@ -151,7 +154,7 @@ class CommunitySidebar extends Component {
 								<p>Symbol</p>
 								<p>Owner</p>
 								<p>Total supply</p>
-								<p>Volume</p>
+								<p>CC Reserve</p>
 								<p>CLN reserve</p>
 								<p>Asset ID</p>
 
@@ -159,8 +162,8 @@ class CommunitySidebar extends Component {
 							<div className="box-data column">
 								<p>{currentCoin.symbol}</p>
 								<p>{currentCoin.owner}</p>
-								<p>{currentCoin.totalSupply}</p>
-								<p>{currentCoin.ccReserve + 'CLN'}</p>
+								<p>{totalSupply}</p>
+								<p>{ccReserve + 'CLN'}</p>
 								<p>{currentCoin.clnReserve + 'CLN'}</p>
 								<p>{this.props.ui.activeMarker || currentCoin.address}</p>
 							</div>
@@ -172,7 +175,9 @@ class CommunitySidebar extends Component {
 							<div className="box-data">
 								<p className="description">{currentCoin.metadata && currentCoin.metadata.description}</p>
 							</div>
+							<div className="separator" />
 						</div>
+
 						<div className="box-info">
 							<div className="box-title column">
 								<p>Website</p>
