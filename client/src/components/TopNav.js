@@ -33,7 +33,7 @@ class TopNav extends Component {
 				<div className="separator"/>
 				<a className="top-nav-text">Q&A</a>
 				<div className="separator"/>
-				<Link to="/contact-us">
+				<Link to="/view/contact-us">
 					<div className="top-nav-text">Contact us</div>
 				</Link>
 				<div className="separator"/>
