@@ -114,7 +114,7 @@ export default class Root extends Component {
 							</div>
 							<div className="contact-form-wrapper">
 								<AnimatedRoute
-									path="/contact-us"
+									path="/view/contact-us"
 									component={ContactForm}
 									mapStyles={mapStylesContact}
 									{...contactFormTransition}

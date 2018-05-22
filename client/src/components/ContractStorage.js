@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 class ContractStorage extends Component {
   state = {
     tokenURI: '',
-    address: '0x4188bA0bFDA56254ac66C54B1998007188c43D8C',
+    address: '0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91',
     clnAmount: ''
   }
 
