@@ -55,7 +55,7 @@ class CommunitiesList extends React.Component {
 			this.setState({
 				active: true
 			})
-		}, 100)
+		}, 500)
 	}
 	onClick(item, key) {
 		this.setState({

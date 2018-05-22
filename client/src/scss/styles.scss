@@ -117,8 +117,12 @@ h5 {
 	font-weight:lighter;
 }
 .hide {
-	display: none !important;
+	display: none;
 	//opacity:0 !important; 
+}
+
+.map-element {
+
 }
 
 .flex {
@@ -181,46 +185,56 @@ h5 {
 
 .welcome-wrapper {
 	position: absolute;
-	z-index: 10;
 	@include flex-box();
-	@include flex-direction(column);
 	justify-content: center;
 	align-items: center;
-	//opacity: 0;
-	max-width: 580px;
+	top:0;
+	z-index: 100;
+	width:100%;
+	height:100%;
+	opacity: 1;
+	background-color: rgba(61, 61, 61, 0.6);
 	transition: all 0.4s ease-in-out;
-	animation: appear 3s linear;
+	//animation: appear 3s linear;
 	&.hide {
 		opacity: 0;
 	}
 	&.out {
 		display: none;
 	}
-	h3 {
-		font-size: 40px;
-		font-weight: bold;
-		line-height: 1.0;
-		letter-spacing: 0.7px;
-		text-align: center;
-		color: #ffffff;
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-	}
-	h4 {
-		color: white;
-		text-align: center;
-		margin: 20px;
-		font-weight: normal;
-	}
-	.button {
-		@include button($colu-green);
-		text-align: center;
-		width: 207px;
-		height: 40px;
-		color: white;
-		margin-top: 30px;
+	.welcome-container {
+		max-width: 580px;
+		@include flex-box();
+		@include flex-direction(column);
+		justify-content: center;
+		align-items: center;
+		transition: all 0.4s ease-in-out;
+		animation: appear 3s linear;
+		h3 {
+			font-size: 40px;
+			font-weight: bold;
+			line-height: 1.0;
+			letter-spacing: 0.7px;
+			text-align: center;
+			color: #ffffff;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+		}
+		h4 {
+			color: white;
+			text-align: center;
+			margin: 20px;
+			font-weight: normal;
+		}
+		.button {
+			@include button($colu-green);
+			text-align: center;
+			width: 207px;
+			height: 40px;
+			color: white;
+			margin-top: 30px;
+		}
 	}
 }
-
 
 .sidebar-close {
 	position: absolute;
@@ -229,6 +243,65 @@ h5 {
 	color: $dark-grey !important;
 	cursor: pointer;
 }
+
+.sign-up-wrapper {
+	display: flex;
+    height: 60px;
+    bottom: 0;
+    background-color: #e0e0e0;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px;
+    position: absolute;
+    z-index: 20;
+    transition: all 0.4s ease-in-out;
+    &.closed {
+    	transform: translateY(60px);
+    }
+    form {
+    	@include flex-box();
+    	align-items: center;
+    	justify-content: center;
+    	margin-right:10px;
+    	.contact-field-wrapper {
+			@include flex-box();
+    		margin-bottom: 15px;
+    		position: relative;
+    		input {
+    			font-size: 16px;
+				font-weight: 500;
+				letter-spacing: 0;
+				color: #3d3d3d;
+				border: none;
+				border-bottom: solid 1px #979797;
+				margin-top: 12px;
+				margin-right: 15px;
+				line-height: 40px;
+				background-color: transparent;
+    		}
+    		.input-feedback {
+    			font-size: 14px;
+				color: #ff5705;
+				position: absolute;
+    			bottom: 14px;
+    			left: -180px;
+    		}
+    	}
+    }
+
+	button {
+		@include button($colu-green);
+		color: white;
+		width:122px;
+		height: 40px;
+	}
+
+	.sidebar-close {
+		top: 8px;
+	}
+}
+
 
 .separator {
 	background-color: #e1dedc;
@@ -574,13 +647,12 @@ h5 {
 			@include button($colu-green);
 			color: white;
 			width: 100%;
-
 		}
 	}
 }
 
 button:disabled, button[disabled] {
-	background-color: rgb(230, 230, 230) !important;
+	background-color: rgb(151, 151, 151) !important;
 }
 
 .marker {
@@ -606,8 +678,6 @@ button:disabled, button[disabled] {
 		//margin-top: -30px;
 	}
 
-
-
 	.community-label {
 		font-color: white;
 		@include flex-box();
@@ -623,7 +693,10 @@ button:disabled, button[disabled] {
 		}
 
 		.coin-label-name {
-
+			color: $colu-green;
+			text-transform: uppercase;
+			font-weight: lighter;
+			margin-left: 20px;
 		}
 
 		.coin-label-price {
@@ -632,7 +705,7 @@ button:disabled, button[disabled] {
 	}
 }
 
- .particles {
+.particles {
 	position: relative;
 	width:30px;
 	height:30px;

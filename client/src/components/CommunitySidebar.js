@@ -19,9 +19,6 @@ class CommunitySidebar extends Component {
     	dragging: false,
     	rel: null
 	}
-	componentDidMount() {
-
-	}
 
 	componentWillUnmount() {
 		this.refs.bar.removeEventListener('touchmove', this.onMouseMove.bind(this))
@@ -186,15 +183,12 @@ class CommunitySidebar extends Component {
 							</div>
 							<div className="box-data column">
 								<p>{currentCoin.metadata && currentCoin.metadata.website}</p>
-
 								<p>{currentCoin.metadata && currentCoin.metadata.location.name}</p>
-
 								<p>{currentCoin.metadata && currentCoin.metadata.social.facebook}</p>
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
 		)
 	}

@@ -17,7 +17,7 @@ import * as uiActions from '../actions/ui'
 
 const panByHorizontalOffset = isMobile ? 0 : 1.4 // because of the community sidebar, so it's a bit off the center
 const defaultZoom = isMobile ? 3 : 4
-const defaultCenter = isMobile ? { lat: 41.9, lng: 15.49 } : { lat:34.0507729, lng: 32.75446020000004 }
+const defaultCenter = isMobile ? { lat: 41.9, lng: 15.49 } : { lat:44.0507729, lng: 32.75446020000004 }
 
 const GoogleMapComponent = compose(
 	withProps({

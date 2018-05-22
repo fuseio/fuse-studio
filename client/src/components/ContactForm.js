@@ -32,8 +32,7 @@ const options = [
 	{ value: 'Buy & Sell CLN / CC', label: 'Buy & Sell CLN / CC'},
 	{ value: 'Issue new coin', label: 'Issue new coin' },
 	{ value: 'Partnerships', label: 'Partnerships' },
-	{ value: 'Bring Colu to my location!', label: 'Bring Colu to my location!' },
-	{ value: 'Technical Issue (?)', label: 'Technical Issue (?)' },
+	{ value: 'Technical Issue', label: 'Technical Issue (?)' },
 	{ value: 'General Inquiry', label: 'General Inquiry' }
 ]
 
@@ -114,7 +113,6 @@ const MyInnerForm = props => {
 		history,
 		handleReset,
 	} = props;
-	console.log("this.props", props)
 	
 	return (
 		<div className="contact-form">
