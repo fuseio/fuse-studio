@@ -12,5 +12,9 @@ module.exports = {
       pass: process.env.COMMUNITY_MONGO_PASS,
       authSource: process.env.COMMUNITY_MONGO_AUTH_SOURCE
     }
+  },
+  mandrill: {
+    apiKey: process.env.COMMUNITY_MANDRILL_API_KEY,
+    sendTo: process.env.COMMUNITY_MANDRILL_SEND_TO
   }
 }
