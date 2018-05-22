@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Map from 'components/Map'
 import TopNav from 'components/TopNav'
 import CommunitiesList from 'components/CommunitiesList'
+import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 
 import {fetchContractData} from 'actions/basicToken'
@@ -23,10 +24,14 @@ import 'scss/styles.scss'
 class App extends Component {
 	state = {
 		isWelcome: true,
-		out: false
+		out: false,
+		welcomeDone: false
 	}
 	componentDidMount () {
 		coluTokens.forEach(this.props.fetchContractData)
+		this.setState({
+			welcomeDone: localStorage.getItem("welcome")
+		})
 	}
 
 	onClickExplore() {
@@ -34,6 +39,8 @@ class App extends Component {
 			isWelcome: !this.state.isWelcome,
 			panBy: { x: -100, y: 0 }
 		})
+
+		localStorage.setItem("welcome", true)
 
 		setTimeout(() => {
 			this.setState({
@@ -55,20 +62,25 @@ class App extends Component {
 			"out": this.state.out
 		})
 
-		let communityNav = currentRoute === '/' ? <CommunitiesList active={!this.state.isWelcome} history={this.props.history}/> : null
+		const communityNav = currentRoute === '/' && (!this.state.isWelcome || this.state.welcomeDone) ? <CommunitiesList history={this.props.history}/> : null
 
-		const welcome = <div className={welcomeClass}>
-							<h3>Welcome to the CLN Community dApp</h3>
-							<h4>Here you can monitor the status of the CLN economies, buy and sell local community currencies issued on the network and more</h4>
-							<div className="button" onClick={this.onClickExplore.bind(this)}>EXPLORE</div>
-						</div>
+		const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
+							<div className="welcome-container">
+								<h3>Welcome to the CLN Community dApp</h3>
+								<h4>Here you can monitor the status of the CLN economies, buy and sell local community currencies issued on the network and more</h4>
+								<div className="button" onClick={this.onClickExplore.bind(this)}>EXPLORE</div>
+							</div>
+						</div> : null
+
+		const signUpEmail = currentRoute === '/' ? <SignUp /> : null
 
 		return <div className="flex column center">
-			{}
+			{welcome}
 			<div className={mainContainerClass}>
 				<TopNav active={!this.state.isWelcome}/>
 				<Map key="map" active={!this.state.isWelcome}/>
 				{communityNav}
+				{signUpEmail}
 			</div>
 		</div>
 	}
