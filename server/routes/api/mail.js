@@ -4,7 +4,7 @@ const mandrillConfig = require('../../config').mandrill
 const router = require('express').Router()
 const mandrillClient = new mandrill.Mandrill(mandrillConfig.apiKey)
 
-var message = {
+const message = {
   'merge_language': 'handlebars',
   'to': [{
     'email': mandrillConfig.sendTo,
