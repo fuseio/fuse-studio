@@ -15,6 +15,6 @@ module.exports = {
   },
   mandrill: {
     apiKey: process.env.COMMUNITY_MANDRILL_API_KEY,
-    sendTo: process.env.COMMUNITY_MANDRILL_SEND_TO
+    sendTo: process.env.COMMUNITY_MANDRILL_SEND_TO || 'cln@colu.com'
   }
 }
