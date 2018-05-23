@@ -218,7 +218,9 @@ const EnhancedForm = withFormik({
 			console.log(JSON.stringify(values, null, 2));
 			setSubmitting(false);
 
-      sendContactUs(values)
+      const valuesCopy = {...values}
+      delete valuesCopy.history
+      sendContactUs(valuesCopy)
 		//}, 1000);
 		//setTimeout(() => {history.goBack()}, 3000)
 	},
