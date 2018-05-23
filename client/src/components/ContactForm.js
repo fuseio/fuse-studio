@@ -9,6 +9,7 @@ import classnames from 'classnames'
 
 import * as uiActions from '../actions/ui'
 import Select from './Select'
+import {sendContactUs} from 'services/api'
 
 const InputFeedback = ({ error }) =>
   error ? (
@@ -113,7 +114,7 @@ const MyInnerForm = props => {
 		history,
 		handleReset,
 	} = props;
-	
+
 	return (
 		<div className="contact-form">
 			<h4>CONTACT US</h4>
@@ -216,6 +217,8 @@ const EnhancedForm = withFormik({
 		//setTimeout(() => {
 			console.log(JSON.stringify(values, null, 2));
 			setSubmitting(false);
+
+      sendContactUs(values)
 		//}, 1000);
 		//setTimeout(() => {history.goBack()}, 3000)
 	},
