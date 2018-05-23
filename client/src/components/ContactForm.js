@@ -222,10 +222,6 @@ const EnhancedForm = withFormik({
 		//}, 1000);
 		//setTimeout(() => {history.goBack()}, 3000)
 	},
-	close: (history) => {
-		console.log("HHHH")
-		history.goBack()
-	},
 	displayName: 'BasicForm', // helps with React DevTools
 })(MyInnerForm)
 
