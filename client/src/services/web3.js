@@ -1,5 +1,5 @@
 import {init, get} from 'osseus-wallet'
-import addresses from 'constants/addresses'
+import addresses from 'constants/addresses/ropsten'
 import abi from 'constants/abi'
 
 const config = {

@@ -1,6 +1,4 @@
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports = require('./addresses.prod')
-} else {
-  module.exports = require('./addresses.dev')
+module.exports = {
+  mainnet: require('./mainnet').default,
+  ropsten: require('./ropsten').default
 }

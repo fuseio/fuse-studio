@@ -8,18 +8,9 @@ import classNames from 'classnames'
 
 import {fetchContractData} from 'actions/basicToken'
 import {getNetworkType} from 'actions/web3'
-import addresses from 'constants/addresses'
-
-const coluTokens = [
-	addresses.ColuLocalNetwork,
-	addresses.TelAvivCoinAddress,
-	addresses.LondonCoinAddress,
-	addresses.HaifaCoinAddress,
-	addresses.LiverpoolCoinAddress
-]
+import {getAddresses} from 'selectors/web3'
 
 import 'scss/styles.scss'
-
 
 class App extends Component {
 	state = {
@@ -27,8 +18,21 @@ class App extends Component {
 		out: false,
 		welcomeDone: false
 	}
+
+	componentWillReceiveProps = (nextProps) => {
+		if (nextProps.addresses !== this.props.addresses) {
+			const coluTokens = [
+				nextProps.addresses.ColuLocalNetwork,
+				nextProps.addresses.TelAvivCoinAddress,
+				nextProps.addresses.LondonCoinAddress,
+				nextProps.addresses.HaifaCoinAddress,
+				nextProps.addresses.LiverpoolCoinAddress
+			]
+			coluTokens.forEach(this.props.fetchContractData)
+		}
+	}
+
 	componentDidMount () {
-		coluTokens.forEach(this.props.fetchContractData)
 		this.setState({
 			welcomeDone: localStorage.getItem("welcome")
 		})
@@ -87,9 +91,9 @@ class App extends Component {
 }
 
 
-const mapStateToProps = state => {
-	return {}
-}
+const mapStateToProps = state => ({
+	addresses: getAddresses(state)
+})
 
 export default connect(
 	mapStateToProps, {

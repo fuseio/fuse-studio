@@ -11,7 +11,7 @@ import {
 } from "react-google-maps"
 import classNames from 'classnames'
 import { isBrowser, isMobile, BrowserView, MobileView } from "react-device-detect"
-import addresses from '../constants/addresses'
+import addresses from 'constants/addresses/ropsten'
 import Marker from 'components/Marker'
 import * as uiActions from '../actions/ui'
 
@@ -41,7 +41,7 @@ const GoogleMapComponent = compose(
 			}
 		}
 	}),
-	
+
 	withHandlers(() => {
 		return {
 			onMapMounted: () => (props, ref) => {
@@ -69,7 +69,7 @@ const GoogleMapComponent = compose(
 
 		{ props.tokens && props.tokens[addresses.TelAvivCoinAddress] && props.tokens[addresses.TelAvivCoinAddress].metadata &&
 
-			<OverlayView position={props.tokens[addresses.TelAvivCoinAddress].metadata.location.geo} 
+			<OverlayView position={props.tokens[addresses.TelAvivCoinAddress].metadata.location.geo}
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={addresses.TelAvivCoinAddress}
@@ -91,7 +91,7 @@ const GoogleMapComponent = compose(
 		}
 
 		{ props.tokens && props.tokens[addresses.LondonCoinAddress] && props.tokens[addresses.LondonCoinAddress].metadata &&
-			<OverlayView position={props.tokens[addresses.LondonCoinAddress].metadata.location.geo} 
+			<OverlayView position={props.tokens[addresses.LondonCoinAddress].metadata.location.geo}
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={addresses.LondonCoinAddress}
