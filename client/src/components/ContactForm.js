@@ -196,7 +196,7 @@ const MyInnerForm = props => {
 };
 
 const EnhancedForm = withFormik({
-	mapPropsToValues: () => ({ fullName: '', email: '', history }),
+	mapPropsToValues: () => ({ fullName: '', email: '' }),
 	validationSchema: Yup.object().shape({
 		fullName: Yup.string()
 			.min(2, "C'mon, your name is longer than that")
@@ -218,10 +218,6 @@ const EnhancedForm = withFormik({
 			setSubmitting(false);
 		//}, 1000);
 		//setTimeout(() => {history.goBack()}, 3000)
-	},
-	close: (history) => {
-		console.log("HHHH")
-		history.goBack()
 	},
 	displayName: 'BasicForm', // helps with React DevTools
 })(MyInnerForm)

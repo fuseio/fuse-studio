@@ -8,7 +8,7 @@ $nav-height: 60px;
 $nav-height-mobile: 50px;
 $page-width: 1024px;
 
-$breakpoint-tablet: 768px;
+$breakpoint-tablet: 1024px;
 
 body > * {
 	box-sizing: border-box;
@@ -37,6 +37,10 @@ body > * {
 	-ms-transform: translate($x,$y); /* IE 9 */
 	-webkit-transform: translate($x,$y); /* Chrome, Safari, Opera */
 	transform: translate($x,$y);
+}
+
+@mixin easeOut {
+	transition: all .6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 html, body {
@@ -386,8 +390,9 @@ h5 {
 	z-index: 100;
 	
 	@media (max-width: 1024px) {
-		top: calc(100vh - 100px);
-		z-index: 10;
+		//top: calc(100vh - 100px);
+		//z-index: 10;
+		top: 50px;
 	}
 
 	.community-sidebar {
@@ -396,7 +401,9 @@ h5 {
 		height: calc(100vh - 60px);
 		width: 510px;
 		box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.37);
-		
+		@media (max-width: 1024px) {
+			border-left: none;
+		}
 		.header {
 			background-color: $light-grey;
 			border-bottom: solid 1px #e1dedc;
@@ -426,8 +433,8 @@ h5 {
 					width: 207px;
 					height: 40px;
 					@include button($colu-green);
-					@media (max-width: 1024px) {
-						width: 160px;
+					&:nth-child(2) {
+						margin-left: 12px;
 					}
 				}
 			}
@@ -488,15 +495,52 @@ h5 {
 		}
 		@media (max-width:$breakpoint-tablet) {
 			width: 100vw;
-			right: 0;
+			right: 0px;
+			height: calc(100vh - 240px) !important;
+			//width: calc(100vw - 20px);
 			position: absolute;
-			touch-action: none;
-			height: auto;
+			//touch-action: none;
+			//height: auto;
 			z-index: 10;
+			top: 190px !important;
 			//&.open {
 			//	transition: all 350ms ease-in;
 			//	top: calc(-100vh + 150px) !important;
 			//}
+			.header {
+				
+				.header-buttons {
+					@include flex-box();
+					justify-content: space-between;
+					padding: 0;
+					.header-button {
+						@include button($colu-green);
+						//width: 160px;
+						height: 40px;
+					}
+				}
+			}
+			.coin-header {
+				padding: 20px 0px;
+				img {
+					width: 45px;
+					min-width: 45px;
+					height: 45px;
+				}
+				.coin-details {
+					margin-left:9px;
+					h1 {
+						font-size: 12px;
+					}
+					
+					.price-wrapper {
+						h2, p {
+							font-size: 10px;
+							margin: 0;
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -572,6 +616,9 @@ h5 {
 			.separator {
 				display: block;
 			}
+			&.hide {
+				display: none;
+			}
 			//opacity: 1;
 			//transition: opacity 1s ease-in 1s;
 			.top-nav-text {
@@ -604,6 +651,7 @@ h5 {
 	overflow: scroll;
     top: 130px;
     bottom: 0;
+    width: auto;
     right: calc((100vw - 450px)/2);
 	.contact-form {
 		width: 450px;
@@ -646,6 +694,14 @@ h5 {
 		button {
 			@include button($colu-green);
 			color: white;
+			width: 100%;
+		}
+	}
+	@media (max-width: 1024px) {
+		top:50px;
+		width:100vw;
+		right: 0;
+		.contact-form {
 			width: 100%;
 		}
 	}
@@ -776,7 +832,7 @@ button:disabled, button[disabled] {
 				top: 50px;
 				left:50px;
 				box-shadow: inset 0px 0px 10px 12px rgba(77,217,180,0.5),
-						0px 0px 40px 12px rgba(77,217,180,1);
+						0px 0px 20px 2px rgba(77,217,180,1);
 			}
 		}
 	}
@@ -802,9 +858,9 @@ button:disabled, button[disabled] {
 	top: $nav-height;
 	overflow: hidden;
 	transition: transform 200ms ease-in-out;
-
 	.list-item {
 		height: auto;
+		@include easeOut();
 		.coin-wrapper {
 			box-sizing: content-box;
 			background-color: $light-grey;
@@ -839,6 +895,65 @@ button:disabled, button[disabled] {
 						-webkit-margin-before: 0;
    						-webkit-margin-after: 0;
 						font-size: 14px;
+
+					}
+				}
+			}
+		}
+	}
+	@media (max-width: 1024px) {
+		flex-direction: row;
+		bottom: 0px;
+		padding-bottom: 30px;
+		top: auto;
+		overflow: auto;
+		width: 100%;
+		align-items: flex-end;
+		
+		.list-item {
+			height: auto;
+			.coin-wrapper {
+				border-left: 4px #cbd1d3 solid;
+				margin-left: 9px;
+				margin-right: 4px;
+				@include easeOut();
+				height: 82px;
+				//width: 100%;
+				width: 270px;
+				
+				.coin-header {
+					margin-top:20px;
+					padding: 20px 6px;
+					img {
+						width: 45px;
+						min-width: 45px;
+						height: 45px;
+					}
+					.coin-details {
+						margin-left:9px;
+						h1 {
+							font-size: 12px;
+						}
+						
+						.price-wrapper {
+							h2, p {
+								font-size: 10px;
+							}
+						}
+					}
+				}
+
+				&:hover {
+					border-left: 4px $colu-green solid;
+				}
+				&.open-mobile {
+					height: calc(100vh - 240px) !important;
+					//width: calc(100vw - 20px);
+					width: 101vw;
+					border-left: none;
+					transform: translate(-9px, 30px);
+					.coin-header {
+						padding: 20px;
 					}
 				}
 			}

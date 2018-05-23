@@ -77,12 +77,14 @@ class CommunitySidebar extends Component {
 		})
 	}
 	onClose() {
+		//this.set
 		let n = 7
 		this.props.uiActions.zoomToMarker(n)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 2)}, 400)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 3)}, 550)
 		this.props.uiActions.setActiveMarker()
+
 	}
 	render() {
 		let currentCoinAdress
@@ -112,19 +114,19 @@ class CommunitySidebar extends Component {
 
 		let control
 
-		if (isMobile && !this.state.open) {
-			control = <div className="sidebar-drag" onTouchStart={this.onMouseDown.bind(this)}>
-						<div className="drag-line"/>
-					</div>
-		} else if (isMobile && this.state.open) {
-			control = <div className="sidebar-back" onClick={this.onBackMobile.bind(this)}>
-						BACK
-					</div>
-		} else {
+		//if (isMobile && !this.state.open) {
+		//	control = <div className="sidebar-drag" onTouchStart={this.onMouseDown.bind(this)}>
+		//				<div className="drag-line"/>
+		//			</div>
+		//} else if (isMobile && this.state.open) {
+		//	control = <div className="sidebar-back" onClick={this.onBackMobile.bind(this)}>
+		//				BACK
+		//			</div>
+		//} else {
 			control = <div className="sidebar-close" onClick={this.onClose.bind(this)}>
 						<Link to="/">X</Link>
 					</div>
-		}
+		//}
 
 		const totalSupply = currentCoin.totalSupply ? formatAmount(currentCoin.totalSupply, 18) : 'loading'
 		const ccReserve = currentCoin.ccReserve ? formatAmount(currentCoin.ccReserve, 18) : 'loading'
@@ -154,7 +156,6 @@ class CommunitySidebar extends Component {
 								<p>CC Reserve</p>
 								<p>CLN reserve</p>
 								<p>Asset ID</p>
-
 							</div>
 							<div className="box-data column">
 								<p>{currentCoin.symbol}</p>
