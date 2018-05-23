@@ -197,7 +197,7 @@ const MyInnerForm = props => {
 };
 
 const EnhancedForm = withFormik({
-	mapPropsToValues: () => ({ fullName: '', email: '', history }),
+	mapPropsToValues: () => ({ fullName: '', email: '' }),
 	validationSchema: Yup.object().shape({
 		fullName: Yup.string()
 			.min(2, "C'mon, your name is longer than that")
@@ -218,9 +218,7 @@ const EnhancedForm = withFormik({
 			console.log(JSON.stringify(values, null, 2));
 			setSubmitting(false);
 
-      const valuesCopy = {...values}
-      delete valuesCopy.history
-      sendContactUs(valuesCopy)
+      sendContactUs(values)
 		//}, 1000);
 		//setTimeout(() => {history.goBack()}, 3000)
 	},
