@@ -16,6 +16,10 @@ export const addMetadata = (metadata) =>
 export const addCommunity = (community) =>
   request.post(`${API_ROOT}/communities`).send({community}).then(response => response.body)
 
-export const sendContactUs = (formData) => request.post(`${API_ROOT}/mail`)
+export const sendContactUs = (formData) => request.post(`${API_ROOT}/mails`)
+  .send({formData})
+  .then(response => response.body)
+
+export const subcribeToMailingList = (formData) => request.post(`${API_ROOT}/subscriptions`)
   .send({formData})
   .then(response => response.body)

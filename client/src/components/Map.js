@@ -16,6 +16,7 @@ import Marker from 'components/Marker'
 import * as uiActions from '../actions/ui'
 
 const panByHorizontalOffset = isMobile ? 0 : 1.4 // because of the community sidebar, so it's a bit off the center
+const panByVerticalOffset = isMobile ? 0.8 : 0
 const defaultZoom = isMobile ? 3 : 4
 const defaultCenter = isMobile ? { lat: 41.9, lng: 15.49 } : { lat:44.0507729, lng: 32.75446020000004 }
 
@@ -33,7 +34,7 @@ const GoogleMapComponent = compose(
 		componentWillUpdate(nextProps, nextState) {
 			// Pan to the chosen marker location
 			if (nextProps !== this.props && nextProps.ui.zoom === 5 && nextProps.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
-				this.props.refs.map.panTo({lat: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lat), lng: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lng) + panByHorizontalOffset})
+				this.props.refs.map.panTo({lat: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lat) - panByVerticalOffset, lng: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lng) + panByHorizontalOffset})
 			}
 			// Pan out to default center
 			if (nextProps !== this.props && nextProps.ui.zoom === 4 && !nextProps.ui.activeMarker) {
@@ -49,7 +50,7 @@ const GoogleMapComponent = compose(
 			},
 			onClick: ({zoomIn}) => (location, coinAddress, uiActions, refs) => {
 				let n = 5
-				refs.map.panTo({lat: parseFloat(location.lat), lng: parseFloat(location.lng) + panByHorizontalOffset})
+				refs.map.panTo({lat: parseFloat(location.lat) - panByVerticalOffset, lng: parseFloat(location.lng) + panByHorizontalOffset})
 				uiActions.zoomToMarker(n)
 				setTimeout(() => {uiActions.zoomToMarker(n + 1)}, 150)
 				setTimeout(() => {uiActions.zoomToMarker(n + 2)}, 300)

@@ -87,25 +87,25 @@ export default class Root extends Component {
 							<Route path="/view/create" component={CurrencyFactoryContract} />
 							<Route path="/" component={App} />
 							<div className="sidebar">
-								<AnimatedRoute
+								<Route
 									path={pagePath.telaviv.path}
 									component={CommunitySidebar}
 									mapStyles={isMobile ? mapStylesMobile : mapStyles}
 									{...sidebarAnimation}
 								/>
-								<AnimatedRoute
+								<Route
 									path={pagePath.london.path}
 									component={CommunitySidebar}
 									mapStyles={isMobile ? mapStylesMobile : mapStyles}
 									{...sidebarAnimation}
 								/>
-								<AnimatedRoute
+								<Route
 									path={pagePath.haifa.path}
 									component={CommunitySidebar}
 									mapStyles={isMobile ? mapStylesMobile : mapStyles}
 									{...sidebarAnimation}
 								/>
-								<AnimatedRoute
+								<Route
 									path={pagePath.liverpool.path}
 									component={CommunitySidebar}
 									mapStyles={isMobile ? mapStylesMobile : mapStyles}

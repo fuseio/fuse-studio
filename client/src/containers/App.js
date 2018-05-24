@@ -65,8 +65,8 @@ class App extends Component {
 			"hide": !this.state.isWelcome,
 			"out": this.state.out
 		})
-
-		const communityNav = currentRoute === '/' && (!this.state.isWelcome || this.state.welcomeDone) ? <CommunitiesList history={this.props.history}/> : null
+console.log("currentRoute", currentRoute)
+		const communityNav = (!this.state.isWelcome || this.state.welcomeDone) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
 
 		const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
 							<div className="welcome-container">
@@ -84,8 +84,9 @@ class App extends Component {
 				<TopNav active={!this.state.isWelcome}/>
 				<Map key="map" active={!this.state.isWelcome}/>
 				{communityNav}
-				{signUpEmail}
+
 			</div>
+			{signUpEmail}
 		</div>
 	}
 }

@@ -1,9 +1,10 @@
 import React, { Component, Link } from "react"
 import posed from 'react-pose'
-import { mapStyle, googleMapsUrl } from '../constants/uiConstants'
+import { isBrowser, isMobile } from "react-device-detect"
+import { mapStyle, googleMapsUrl } from 'constants/uiConstants'
 import classNames from 'classnames'
-import * as uiActions from '../actions/ui'
-import { pagePath } from '../constants/uiConstants'
+import * as uiActions from 'actions/ui'
+import { pagePath } from 'constants/uiConstants'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -16,38 +17,47 @@ const Sidebar = posed.div({
 })
 
 const NavItem = posed.div({
-	open: {  x: 0,  opacity: 1, duration: 100},
+	open: {  x: 0,  opacity: 1, duration: 1000},
 	closed: { x: 500, opacity: 0, duration: 100 },
 })
 
 const CoinWrapper = posed.div({
-	openCoinInfo: { height: '100vh', duration: 700, delay: 100},
+	openCoinInfo: { height: '100vh', duration: 1000, delay: 100},
 	closedCoinInfo: { height: 'auto', duration: 300 }
 })
 
-const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy }) => {
+const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy, setRef }) => {
 	let poseValue = isOpen ? 'open' : 'closed'
 	let top = (keyy) * 110 + (keyy+1)*20
 	let communityCoins = coins && coins.filter((coin) => {
 		return coin.isLocalCurrency
 	})
+	const sidebarStyle = isMobile ? {} : {transform: openCoinInfo ? 'translateY(-' + top + 'px)' : 'none'}
+	
 	return (
-	<Sidebar pose={poseValue} className="communities-list" style={{transform: openCoinInfo ? 'translateY(-' + top + 'px)' : 'none'}}>
-		{communityCoins.map(((coin, i) => 
-			<NavItem className="list-item" key={i} pose={isOpen ? 'open' : 'closed'} onClick={onClick.bind(this, coin.address, i)}>
-				<CoinWrapper className="coin-wrapper" pose={openCoinInfo && keyy === i ? 'openCoinInfo' : 'closedCoinInfo'} >
+	<Sidebar pose={poseValue} className="communities-list" style={sidebarStyle}>
+		{communityCoins.map(((coin, i) => {
+			const coinWrapperStyle = classNames({
+				"coin-wrapper": true,
+				"open-mobile": isMobile && openCoinInfo && keyy === i
+			})
+			return <NavItem className="list-item" key={i} pose={isOpen ? 'open' : 'closed'} onClick={onClick.bind(this, coin.address, i)}>
+				<CoinWrapper className={coinWrapperStyle} pose={openCoinInfo && keyy === i ? 'openCoinInfo' : 'closedCoinInfo'} >
 					<CoinHeader coinImage={TlvCoin} name={coin.name} price={coin.currentPrice} />
 				</CoinWrapper>
 			</NavItem>
+		}
 		))}
 	</Sidebar>)
 }
 
-class CommunitiesList extends React.Component {
+class CommunitiesList extends Component {
 	state = {
 		active: false,
 		openCoinInfo: false,
-		key: 1
+		key: 1,
+		scrollLeft: 0,
+		scrollOffset: 0
 	}
 
 	componentDidMount() {
@@ -56,10 +66,29 @@ class CommunitiesList extends React.Component {
 				active: true
 			})
 		}, 500)
+
+		
+		if (isMobile) this.refs.CommunitiesList.addEventListener('scroll', this.handleScroll.bind(this))
+	}
+
+	componentWillUnmount() {
+		if (isMobile) this.refs.CommunitiesList.removeEventListener('scroll', this.handleScrollRemove.bind(this))
+	}
+	
+	handleScrollRemove(e) {
+		e.stopPropagation()
+		e.preventDefault()
+	}
+
+	handleScroll(e) {
+		this.setState({
+			scrollLeft: e.target.scrollLeft
+		})
 	}
 	onClick(item, key) {
 		this.setState({
-			key: key
+			key: key,
+			scrollOffset: (key * 288) - this.state.scrollLeft
 		})
 
 		let n = 5
@@ -80,7 +109,7 @@ class CommunitiesList extends React.Component {
 		})
 		setTimeout(() => {
 			this.props.history.push(path)
-		}, 500)
+		}, 1500)
 	}
 	render() {
 		let currentCoinAdress
@@ -92,11 +121,29 @@ class CommunitiesList extends React.Component {
 		})
 		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker]) 
 							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || null
-
-		return (
-			Object.values(this.props.tokens) && Object.values(this.props.tokens).length ? 
-			<Nav isOpen={this.state.active} coins={Object.values(this.props.tokens)} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyy={this.state.key}/> : null
-		)
+		const communityCoins = Object.values(this.props.tokens) && Object.values(this.props.tokens).filter((coin) => {
+			return coin.isLocalCurrency
+		})
+		
+		if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && !isMobile) {
+			return <Nav isOpen={this.state.active} coins={Object.values(this.props.tokens)} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyy={this.state.key}/>
+		} else if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && isMobile) {
+			return <div className="communities-list" ref="CommunitiesList">
+				{communityCoins.map(((coin, i) => {
+					const coinWrapperStyle = classNames({
+						"coin-wrapper": true,
+						"open-mobile": currentCoin && this.state.key === i
+					})
+					return <div className="list-item" key={i} style={{transform: 'translateX(-' + (currentCoin ? this.state.scrollOffset : 0) + 'px)'}} onClick={this.onClick.bind(this, coin.address, i)}>
+						<div className={coinWrapperStyle}>
+							<CoinHeader coinImage={TlvCoin} name={coin.name} price={coin.currentPrice} />
+						</div>
+					</div>
+				}))}
+			</div>
+		} else {
+			return null
+		}
 	}
 };
 
