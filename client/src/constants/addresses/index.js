@@ -1,4 +1,4 @@
 module.exports = {
-  mainnet: require('./mainnet').default,
+  main: require('./main').default,
   ropsten: require('./ropsten').default
 }

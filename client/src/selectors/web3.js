@@ -1,7 +1,9 @@
 import { createSelector } from 'reselect'
 
+export const getNetworkType = state => state.web3.networkType
+
 export const getAddresses = createSelector(
-  state => state.web3.networkType,
+  getNetworkType,
   state => state.web3.addresses,
   (networkType, addresses) => addresses[networkType] || []
 )

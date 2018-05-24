@@ -10,6 +10,12 @@ export function * getNetworkType () {
       response: {
         networkType
       }})
+    if (!CONFIG.web3.supportedNetworks.includes(networkType)) {
+      yield put({type: actions.UNSUPPORTED_NETWORK_ERROR,
+        response: {
+          networkType
+        }})
+    }
   } catch (error) {
     yield put({type: actions.GET_NETWORK_TYPE.FAILURE, error})
   }
