@@ -1,7 +1,7 @@
 import * as web3 from 'actions/web3'
+import addresses from 'constants/addresses'
 
-
-export default (state = {}, action) => {
+export default (state = {addresses}, action) => {
   switch (action.type) {
     case web3.SET_READY_STATUS:
       return {...state, ...action.response}
