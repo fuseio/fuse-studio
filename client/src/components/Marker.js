@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
+import { isMobile } from "react-device-detect"
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import { formatAmountReal } from '../services/global'
@@ -46,10 +47,18 @@ class Marker extends React.PureComponent {
 			"grow-center": this.state.grow
 		})
 
-		const bubblecount = this.state.grow ? 100 : 15
-		const bubblesize = this.state.grow ? 60 : 50
-		const limits = this.state.grow ? 120 : 30
+		let bubblecount, bubblesize, limits
 		let particles = []
+
+		if (isMobile) {
+			bubblecount = this.state.grow ? 60 : 7
+			bubblesize = this.state.grow ? 60 : 40
+			limits = this.state.grow ? 120 : 30
+		} else {
+			bubblecount = this.state.grow ? 100 : 15
+			bubblesize = this.state.grow ? 60 : 50
+			limits = this.state.grow ? 120 : 30
+		}
 
 		// to make the points show up in round area instead of square
 		const randRadiusCoords = ([x, y], size) => {

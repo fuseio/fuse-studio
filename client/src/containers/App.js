@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Map from 'components/Map'
 import TopNav from 'components/TopNav'
 import CommunitiesList from 'components/CommunitiesList'
+import ModalContainer from 'containers/ModalContainer';
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 
@@ -67,7 +68,7 @@ class App extends Component {
 			"hide": !this.state.isWelcome,
 			"out": this.state.out
 		})
-console.log("currentRoute", currentRoute)
+
 		const communityNav = (!this.state.isWelcome || this.state.welcomeDone) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
 
 		const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
@@ -86,9 +87,9 @@ console.log("currentRoute", currentRoute)
 				<TopNav active={!this.state.isWelcome}/>
 				<Map key="map" active={!this.state.isWelcome}/>
 				{communityNav}
-
+				{signUpEmail}
+				<ModalContainer />
 			</div>
-			{signUpEmail}
 		</div>
 	}
 }
