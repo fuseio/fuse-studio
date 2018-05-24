@@ -1,6 +1,6 @@
 import React, { Component, Link } from "react"
 import posed from 'react-pose'
-import { isBrowser, isMobile } from "react-device-detect"
+import { isBrowser, isMobile } from 'react-device-detect'
 import { mapStyle, googleMapsUrl } from 'constants/uiConstants'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
@@ -43,7 +43,7 @@ const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy, setRef }
 			})
 			return <NavItem className="list-item" key={i} pose={isOpen ? 'open' : 'closed'} onClick={onClick.bind(this, coin.address, i)}>
 				<CoinWrapper className={coinWrapperStyle} pose={openCoinInfo && keyy === i ? 'openCoinInfo' : 'closedCoinInfo'} >
-					<CoinHeader coinImage={TlvCoin} name={coin.name} price={coin.currentPrice} />
+					<CoinHeader coinImage={coin.metadata && coin.metadata.imageLink} name={coin.name} price={coin.currentPrice} />
 				</CoinWrapper>
 			</NavItem>
 		}
@@ -109,7 +109,7 @@ class CommunitiesList extends Component {
 		})
 		setTimeout(() => {
 			this.props.history.push(path)
-		}, 1500)
+		}, 700)
 	}
 	render() {
 		let currentCoinAdress
@@ -136,7 +136,7 @@ class CommunitiesList extends Component {
 					})
 					return <div className="list-item" key={i} style={{transform: 'translateX(-' + (currentCoin ? this.state.scrollOffset : 0) + 'px)'}} onClick={this.onClick.bind(this, coin.address, i)}>
 						<div className={coinWrapperStyle}>
-							<CoinHeader coinImage={TlvCoin} name={coin.name} price={coin.currentPrice} />
+							<CoinHeader coinImage={coin.metadata && coin.metadata.imageLink} name={coin.name} price={coin.currentPrice} />
 						</div>
 					</div>
 				}))}

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
+import { isMobile } from "react-device-detect"
+
 import { render } from 'react-dom'
 import { withFormik } from 'formik'
 import Yup from 'yup'
@@ -66,6 +68,7 @@ const TextInput = ({
 					type={type}
 					value={value}
 					onChange={onChange}
+					style={{height: isMobile ? 'auto' : '111px'}}
 					{...props}
 				/>
 			break;
@@ -123,6 +126,7 @@ const MyInnerForm = props => {
 			</div>
 			<div className="contact-container">
 				<form onSubmit={handleSubmit}>
+					<div className="contact-horizontal">
 					<TextInput
 					  id="fullName"
 					  type="text"
@@ -163,6 +167,8 @@ const MyInnerForm = props => {
 					  onChange={handleChange}
 					  onBlur={handleBlur}
 					/>
+					</div>
+					<div className="contact-horizontal">
 					<TextInput
 					  id="subject"
 					  type="subject"
@@ -190,6 +196,7 @@ const MyInnerForm = props => {
 					<button type="submit" disabled={!isValid}>
 						Submit
 					</button>
+					</div>
 				</form>
 			</div>
 		</div>

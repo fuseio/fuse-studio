@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import classNames from 'classnames'
 import Link from 'react-router-dom/Link'
 import { isMobile, MobileView } from 'react-device-detect'
+import * as uiActions from 'actions/ui'
+
+import { LOGIN_MODAL } from 'constants/uiConstants'
+
 import ClnIcon from 'images/cln.png'
 import MenuIcon from 'images/menu.png'
 import ProfileIcon from 'images/profile.png'
@@ -10,11 +16,14 @@ class TopNav extends Component {
 	state = {
 		openMenu: false
 	}
-	onClickMenu() {
+	onClickMenu = () => {
 		this.setState({
 			openMenu: !this.state.openMenu
 		})
 	}
+	showLoginMenu() {
+    	this.props.uiActions.loadModal(LOGIN_MODAL);
+  	}
 	render() {
 		let topNavClass = classNames({
 			"active": this.props.active,
@@ -33,11 +42,11 @@ class TopNav extends Component {
 				<div className="separator"/>
 				<a className="top-nav-text">Q&A</a>
 				<div className="separator"/>
-				<Link to="/view/contact-us">
+				<Link to="/view/contact-us" >
 					<div className="top-nav-text">Contact us</div>
 				</Link>
 				<div className="separator"/>
-				<div className="top-nav-text">
+				<div className="top-nav-text" onClick={this.showLoginMenu.bind(this)}>
 					<img src={ProfileIcon} />
 					<span>Disconnected</span>
 				</div>
@@ -45,10 +54,16 @@ class TopNav extends Component {
 			</div>
 
 			<MobileView device={isMobile}>
-				<img src={MenuIcon} className="mobile-menu-icon" onClick={this.onClickMenu.bind(this)}/>
+				<img src={MenuIcon} className="mobile-menu-icon" onClick={this.onClickMenu}/>
 			</MobileView>
 		</div>
 	}
 }
 
-export default TopNav
+
+const mapDispatchToProps = dispatch => {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch),
+    }
+}
+export default connect(null, mapDispatchToProps)(TopNav)

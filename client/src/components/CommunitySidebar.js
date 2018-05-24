@@ -4,11 +4,17 @@ import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import { isBrowser, isMobile } from "react-device-detect"
 import classNames from 'classnames'
-import * as uiActions from '../actions/ui'
-import { pagePath } from '../constants/uiConstants'
-import { formatAmount } from '../services/global'
+import * as uiActions from 'actions/ui'
+import { pagePath } from 'constants/uiConstants'
+import { formatAmount, formatMoney } from 'services/global'
+
+import { SOON_MODAL } from 'constants/uiConstants'
 
 import TlvCoin from 'images/tlv-coin.png'
+import Facebook from 'images/fb.png'
+import Twitter from 'images/twitter.png'
+import CloseButton from 'images/x.png'
+import clnCurrencyIcon from 'images/cln-coin.png'
 
 import CoinHeader from './CoinHeader'
 
@@ -34,6 +40,14 @@ class CommunitySidebar extends Component {
 			this.refs.bar.removeEventListener('touchend', this.onMouseUp.bind(this))
 		}
 	}
+
+	onClickBuy = () => {
+    	this.props.uiActions.loadModal(SOON_MODAL);
+  	}
+
+  	onClickSell = () => {
+    	this.props.uiActions.loadModal(SOON_MODAL);
+  	}
 
 	onMouseDown(e) {
 		var posTop = this.refs.bar.offsetTop
@@ -95,9 +109,6 @@ class CommunitySidebar extends Component {
 			}
 
 		})
-		let communitySidebarClass = classNames({
-			"community-sidebar": true,
-		})
 
 		let topPosition
 
@@ -112,37 +123,29 @@ class CommunitySidebar extends Component {
 		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker])
 							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || {}
 
-		let control
-
-		//if (isMobile && !this.state.open) {
-		//	control = <div className="sidebar-drag" onTouchStart={this.onMouseDown.bind(this)}>
-		//				<div className="drag-line"/>
-		//			</div>
-		//} else if (isMobile && this.state.open) {
-		//	control = <div className="sidebar-back" onClick={this.onBackMobile.bind(this)}>
-		//				BACK
-		//			</div>
-		//} else {
-			control = <div className="sidebar-close" onClick={this.onClose.bind(this)}>
-						<Link to="/">X</Link>
+		const control = <div className="sidebar-close" onClick={this.onClose.bind(this)}>
+						<Link to="/">
+							<img src={CloseButton}/>
+						</Link>
 					</div>
-		//}
 
-		const totalSupply = currentCoin.totalSupply ? formatAmount(currentCoin.totalSupply, 18) : 'loading'
-		const ccReserve = currentCoin.ccReserve ? formatAmount(currentCoin.ccReserve, 18) : 'loading'
-
+		const totalSupply = currentCoin.totalSupply ? formatMoney(formatAmount(currentCoin.totalSupply, 18), 0, '.', ',') : 'loading'
+		const circulatingSupply = currentCoin.ccReserve ? formatMoney(formatAmount(currentCoin.totalSupply - currentCoin.ccReserve, 18), 0, '.', ',') : 'loading'
+		const clnReserve = currentCoin.clnReserve ? formatMoney(formatAmount(currentCoin.clnReserve, 18), 0, '.', ',') : 'loading'
+		const owner = currentCoin.owner === "0xA1F05144f9d3298a702c8EEE3ca360bc87d05207" ? "Colu" : currentCoin.owner
+		
 		return (
-			<div className={communitySidebarClass} ref="bar"
+			<div className="community-sidebar" ref="bar"
    				style={{
    					top: topPosition,
    					transition: this.state.open || this.state.closed ? 'all 350ms ease-in' : 'none'
    				}}>
 				<div className="header">
-					<CoinHeader coinImage={TlvCoin} name={currentCoin.name} price={currentCoin.currentPrice}/>
+					<CoinHeader coinImage={currentCoin.metadata && currentCoin.metadata.imageLink} name={currentCoin.name} price={currentCoin.currentPrice}/>
 					{control}
 					<div className="header-buttons">
-						<div className="header-button">BUY</div>
-						<div className="header-button">SELL</div>
+						<div className="header-button" onClick={this.onClickBuy}>BUY</div>
+						<div className="header-button" onClick={this.onClickSell}>SELL</div>
 					</div>
 				</div>
 				<div className="community-data-wrapper">
@@ -153,17 +156,25 @@ class CommunitySidebar extends Component {
 								<p>Symbol</p>
 								<p>Owner</p>
 								<p>Total supply</p>
-								<p>CC Reserve</p>
+								<p>Circulating Supply</p>
 								<p>CLN reserve</p>
 								<p>Asset ID</p>
+								<p>Market Maker ID</p>
 							</div>
 							<div className="box-data column">
-								<p>{currentCoin.symbol}</p>
-								<p>{currentCoin.owner}</p>
-								<p>{totalSupply}</p>
-								<p>{ccReserve + 'CLN'}</p>
-								<p>{currentCoin.clnReserve + 'CLN'}</p>
-								<p>{this.props.ui.activeMarker || currentCoin.address}</p>
+								<p>{currentCoin.symbol || 'loading'}</p>
+								<p>
+									<a href={"https://etherscan.io/address/" + currentCoin.owner} target="blank">{owner || 'loading'}</a>
+								</p>
+								<p>{totalSupply || 'loading'}</p>
+								<p><img src={clnCurrencyIcon}/>{circulatingSupply || 'loading'}</p>
+								<p><img src={clnCurrencyIcon}/>{clnReserve || 'loading'}</p>
+								<p>
+									<a href={"https://etherscan.io/address/" + (this.props.ui.activeMarker || currentCoin.address)} target="blank">{this.props.ui.activeMarker || currentCoin.address}</a>
+								</p>
+								<p>
+									<a href={"https://etherscan.io/address/" + currentCoin.mmAddress} target="blank">{currentCoin.mmAddress}</a>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -171,7 +182,7 @@ class CommunitySidebar extends Component {
 						<div className="box-header">COMMUNITY</div>
 						<div className="box-info column">
 							<div className="box-data">
-								<p className="description">{currentCoin.metadata && currentCoin.metadata.description}</p>
+								<p className="description">{currentCoin.metadata && currentCoin.metadata.description || 'loading'}</p>
 							</div>
 							<div className="separator" />
 						</div>
@@ -183,9 +194,17 @@ class CommunitySidebar extends Component {
 								<p>Social</p>
 							</div>
 							<div className="box-data column">
-								<p>{currentCoin.metadata && currentCoin.metadata.website}</p>
+								<p><a href={currentCoin.metadata && currentCoin.metadata.website} target="blank">{currentCoin.metadata && currentCoin.metadata.website}</a></p>
 								<p>{currentCoin.metadata && currentCoin.metadata.location.name}</p>
-								<p>{currentCoin.metadata && currentCoin.metadata.social.facebook}</p>
+								
+								<div className="social flex">
+									<a href={currentCoin.metadata && currentCoin.metadata.social.facebook} target="blank">
+										<img src={Facebook}/>
+									</a>
+									<a href={currentCoin.metadata && currentCoin.metadata.social.twitter} target="blank">
+										<img src={Twitter}/>
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
