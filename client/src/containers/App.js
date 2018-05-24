@@ -80,8 +80,9 @@ console.log("currentRoute", currentRoute)
 				<TopNav active={!this.state.isWelcome}/>
 				<Map key="map" active={!this.state.isWelcome}/>
 				{communityNav}
-				
+
 			</div>
+			{signUpEmail}
 		</div>
 	}
 }

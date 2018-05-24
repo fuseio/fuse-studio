@@ -16,5 +16,9 @@ module.exports = {
   mandrill: {
     apiKey: process.env.COMMUNITY_MANDRILL_API_KEY,
     sendTo: process.env.COMMUNITY_MANDRILL_SEND_TO
+  },
+  mailchimp: {
+    apiBase: process.env.COMMUNITY_MAILCHIMP_API_BASE,
+    list: process.env.COMMUNITY_MAILCHIMP_LIST
   }
 }
