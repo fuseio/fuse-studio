@@ -1,4 +1,4 @@
-import { all, put, call, take, takeEvery, fork } from 'redux-saga/effects'
+import { all, put, call, take, takeEvery, fork, select } from 'redux-saga/effects'
 
 import {createEntityPut} from './utils'
 import * as actions from 'actions/basicToken'
@@ -7,6 +7,7 @@ import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import * as api from 'services/api'
+import {getNetworkType} from 'selectors/web3'
 
 const entityPut = createEntityPut('basicToken')
 
@@ -137,8 +138,11 @@ export function * approve ({contractAddress, spender, value}) {
 
 export function * fetchContractData ({contractAddress}) {
   try {
+    const networkType = yield select(getNetworkType)
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
-    const CurrencyFactoryContract = contract.getContract({contractName: 'CurrencyFactory'})
+    const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
+      address: addresses[networkType].CurrencyFactory
+    })
 
     const calls = {
       name: call(ColuLocalNetworkContract.methods.name().call),
@@ -149,12 +153,14 @@ export function * fetchContractData ({contractAddress}) {
 
     // wait untill web3 is ready
     yield onWeb3Ready
+
     if (web3.eth.defaultAccount) {
       calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
     }
 
     let tokenData = {}
-    if (contractAddress !== addresses.ColuLocalNetwork) {
+
+    if (contractAddress !== addresses[networkType].ColuLocalNetwork) {
       calls.tokenURI = call(ColuLocalNetworkContract.methods.tokenURI().call)
       calls.mmAddress = call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
       tokenData.isLocalCurrency = true
