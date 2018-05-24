@@ -9,6 +9,7 @@ import classNames from 'classnames'
 import {fetchContractData} from 'actions/basicToken'
 import {getNetworkType} from 'actions/web3'
 import {getAddresses} from 'selectors/web3'
+import {isNetworkSupported} from 'utils/web3'
 
 import 'scss/styles.scss'
 
@@ -20,7 +21,8 @@ class App extends Component {
 	}
 
 	componentWillReceiveProps = (nextProps) => {
-		if (nextProps.addresses !== this.props.addresses) {
+		if (nextProps.addresses !== this.props.addresses &&
+				isNetworkSupported(nextProps.networkType)) {
 			const coluTokens = [
 				nextProps.addresses.ColuLocalNetwork,
 				nextProps.addresses.TelAvivCoinAddress,
@@ -93,7 +95,8 @@ console.log("currentRoute", currentRoute)
 
 
 const mapStateToProps = state => ({
-	addresses: getAddresses(state)
+	addresses: getAddresses(state),
+	networkType: state.web3.networkType
 })
 
 export default connect(

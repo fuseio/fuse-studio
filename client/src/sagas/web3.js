@@ -1,6 +1,6 @@
 import { all, put, takeEvery } from 'redux-saga/effects'
 import web3 from 'services/web3'
-
+import {isNetworkSupported} from 'utils/web3'
 import * as actions from 'actions/web3'
 
 export function * getNetworkType () {
@@ -10,11 +10,14 @@ export function * getNetworkType () {
       response: {
         networkType
       }})
-    if (!CONFIG.web3.supportedNetworks.includes(networkType)) {
+    if (!isNetworkSupported(networkType)) {
       yield put({type: actions.UNSUPPORTED_NETWORK_ERROR,
-        response: {
-          networkType
-        }})
+        error: {
+          msg: `${networkType} is not supported`,
+          networkType,
+          supportedNetworks: CONFIG.web3.supportedNetworks
+        }
+      })
     }
   } catch (error) {
     yield put({type: actions.GET_NETWORK_TYPE.FAILURE, error})
