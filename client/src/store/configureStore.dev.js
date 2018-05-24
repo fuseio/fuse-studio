@@ -1,10 +1,10 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware, { END } from 'redux-saga'
-import rootReducer from '../reducers'
-
 import createHistory from 'history/createBrowserHistory'
 import { routerMiddleware } from 'react-router-redux'
+
+import rootReducer from '../reducers'
 
 const history = createHistory()
 
