@@ -31,7 +31,20 @@ const GoogleMapComponent = compose(
 	withGoogleMap,
 	withState('refs', 'setRefs', {}),
 	lifecycle({
-		componentWillUpdate(nextProps, nextState) {
+		componentWillReceiveProps(nextProps, nextState) {
+			let currentCoinAdress = this.props.currentCoinAdress
+			let n = 5
+
+			if (!nextProps.ui.activeMarker && nextProps !== this.props && (!this.props.ui.zoom || this.props.ui.zoom === defaultZoom ) && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata) {
+				nextProps.refs.map.panTo({lat: parseFloat(nextProps.tokens[currentCoinAdress].metadata.location.geo.lat) - panByVerticalOffset, lng: parseFloat(nextProps.tokens[currentCoinAdress].metadata.location.geo.lng) + panByHorizontalOffset})
+
+				this.props.uiActions.zoomToMarker(n)
+				setTimeout(() => {this.props.uiActions.zoomToMarker(n + 1)}, 200)
+				setTimeout(() => {this.props.uiActions.zoomToMarker(n + 2)}, 400)
+				setTimeout(() => {this.props.uiActions.zoomToMarker(n + 3)}, 550)
+
+				this.props.uiActions.setActiveMarker(currentCoinAdress, nextProps.tokens[currentCoinAdress].metadata.location.geo)
+			}
 			// Pan to the chosen marker location
 			if (nextProps !== this.props && nextProps.ui.zoom === 5 && nextProps.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
 				this.props.refs.map.panTo({lat: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lat) - panByVerticalOffset, lng: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lng) + panByHorizontalOffset})
@@ -48,14 +61,16 @@ const GoogleMapComponent = compose(
 			onMapMounted: () => (props, ref) => {
 				if (!props.refs.map) props.refs.map = ref
 			},
-			onClick: ({zoomIn}) => (location, coinAddress, uiActions, refs) => {
+			onClick: ({zoomIn}) => (location, coinAddress, uiActions, refs, currentCoinAdress) => {
 				let n = 5
 				refs.map.panTo({lat: parseFloat(location.lat) - panByVerticalOffset, lng: parseFloat(location.lng) + panByHorizontalOffset})
-				uiActions.zoomToMarker(n)
-				setTimeout(() => {uiActions.zoomToMarker(n + 1)}, 150)
-				setTimeout(() => {uiActions.zoomToMarker(n + 2)}, 300)
-				setTimeout(() => {uiActions.zoomToMarker(n + 3)}, 450)
 
+				if (!currentCoinAdress) {
+					uiActions.zoomToMarker(n)
+					setTimeout(() => {uiActions.zoomToMarker(n + 1)}, 150)
+					setTimeout(() => {uiActions.zoomToMarker(n + 2)}, 300)
+					setTimeout(() => {uiActions.zoomToMarker(n + 3)}, 450)
+				}
 				uiActions.setActiveMarker(coinAddress, location)
 			}
 		}
@@ -66,7 +81,7 @@ const GoogleMapComponent = compose(
 		defaultOptions={{styles: mapStyle, disableDefaultUI: true}}
 		ref={props.onMapMounted.bind(this, props)}
 		style={{backgroundColor: 'rgb(229, 227, 223)'}}
-		zoom={props.ui.zoom || defaultZoom}>
+		zoom={props.zoomToMarker || props.ui.zoom || defaultZoom}>
 
 		{ props.tokens && props.tokens[props.addresses.TelAvivCoinAddress] && props.tokens[props.addresses.TelAvivCoinAddress].metadata &&
 
@@ -74,9 +89,10 @@ const GoogleMapComponent = compose(
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={props.addresses.TelAvivCoinAddress}
+					currentCoinAdress={props.currentCoinAdress}
 					pagePath={pagePath.telaviv.path}
 					community={{name: props.tokens[props.addresses.TelAvivCoinAddress].name, price: props.tokens[props.addresses.TelAvivCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.TelAvivCoinAddress].metadata.location.geo, props.addresses.TelAvivCoinAddress, props.uiActions, props.refs)}/>
+					onClick={props.onClick.bind(this, props.tokens[props.addresses.TelAvivCoinAddress].metadata.location.geo, props.addresses.TelAvivCoinAddress, props.uiActions, props.refs, props.currentCoinAdress)}/>
 			</OverlayView>
 		}
 
@@ -85,9 +101,10 @@ const GoogleMapComponent = compose(
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={props.addresses.HaifaCoinAddress}
+					currentCoinAdress={props.currentCoinAdress}
 					pagePath={pagePath.haifa.path}
 					community={{name: props.tokens[props.addresses.HaifaCoinAddress].name, price: props.tokens[props.addresses.HaifaCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.HaifaCoinAddress].metadata.location.geo, props.addresses.HaifaCoinAddress, props.uiActions, props.refs)}/>
+					onClick={props.onClick.bind(this, props.tokens[props.addresses.HaifaCoinAddress].metadata.location.geo, props.addresses.HaifaCoinAddress, props.uiActions, props.refs, props.currentCoinAdress)}/>
 			</OverlayView>
 		}
 
@@ -96,9 +113,10 @@ const GoogleMapComponent = compose(
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={props.addresses.LiverpoolCoinAddress}
+					currentCoinAdress={props.currentCoinAdress}
 					pagePath={pagePath.liverpool.path}
 					community={{name: props.tokens[props.addresses.LiverpoolCoinAddress].name, price: props.tokens[props.addresses.LiverpoolCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.LiverpoolCoinAddress].metadata.location.geo, props.addresses.LiverpoolCoinAddress, props.uiActions, props.refs)}/>
+					onClick={props.onClick.bind(this, props.tokens[props.addresses.LiverpoolCoinAddress].metadata.location.geo, props.addresses.LiverpoolCoinAddress, props.uiActions, props.refs, props.currentCoinAdress)}/>
 			</OverlayView>
 		}
 	</GoogleMap>
@@ -110,10 +128,18 @@ class MapComponent extends Component {
 			"active": this.props.active,
 			"map-wrapper": true
 		})
+		let currentCoinAdress
+
+		pagePath && Object.values(pagePath) && Object.values(pagePath).forEach((page) => {
+			if (page.path === this.props.currentRoute) {
+				currentCoinAdress = page.address
+				return
+			}
+		})
 
 		return (
 			<div className={mapWrapperClass} >
-				<GoogleMapComponent addresses={this.props.addresses} tokens={this.props.tokens} ui={this.props.ui} uiActions={this.props.uiActions} />
+				nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata ? <GoogleMapComponent addresses={this.props.addresses} tokens={this.props.tokens} ui={this.props.ui} uiActions={this.props.uiActions} currentCoinAdress={currentCoinAdress}/> : null
 			</div>
 		)
 	}

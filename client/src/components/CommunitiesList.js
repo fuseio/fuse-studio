@@ -9,7 +9,7 @@ import { pagePath } from 'constants/uiConstants'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import CoinHeader from './CoinHeader'
-import TlvCoin from 'images/tlv-coin.png'
+import {getSelectedCommunity} from 'selectors/basicToken'
 import find from 'lodash/find'
 
 const Sidebar = posed.div({
@@ -103,16 +103,12 @@ class CommunitiesList extends Component {
 
 		const selectedCommunity = find(this.props.tokens, {address: item})
 		setTimeout(() => {
-			this.props.history.push('/view/' + selectedCommunity.name.toLowerCase().replace(/ /g, ""))
+			this.props.history.push(selectedCommunity.path)
 		}, 700)
 	}
 	render() {
-		const selectedCommunity = find(this.props.tokens, {address: this.props.history.location.pathname})
+		const currentCoin = this.props.selectedCommunity
 
-		const currentCoinAdress = selectedCommunity ? selectedCommunity.address : undefined
-
-		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker])
-							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || null
 		const communityCoins = Object.values(this.props.tokens) && Object.values(this.props.tokens).filter((coin) => {
 			return coin.isLocalCurrency
 		})
@@ -142,13 +138,14 @@ class CommunitiesList extends Component {
 const mapStateToProps = state => {
 	return {
 		tokens: state.tokens,
-		ui: state.ui
+		ui: state.ui,
+		selectedCommunity: getSelectedCommunity(state)
 	}
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        uiActions: bindActionCreators(uiActions, dispatch),
+        uiActions: bindActionCreators(uiActions, dispatch)
     }
 }
 

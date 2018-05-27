@@ -12,6 +12,7 @@ import classnames from 'classnames'
 import * as uiActions from '../actions/ui'
 import Select from './Select'
 import {sendContactUs} from 'services/api'
+import CloseButton from 'images/x.png'
 
 const InputFeedback = ({ error }) =>
   error ? (
@@ -55,6 +56,7 @@ const TextInput = ({
 	const classes = classnames(
 		'contact-field-wrapper',
 		{
+			'checkbox': fieldType === 'checkbox',
 			'animated shake error': !!error,
 		},
 		className
@@ -75,6 +77,15 @@ const TextInput = ({
 		}
 		case "select": {
 			field = <Select id={id} value={value} setFieldValue={setFieldValue} options={options} {...props}/>
+			break;
+		}
+		case "checkbox": {
+			field = <input
+					id={id}
+					type={type}
+					checked={value}
+					onChange={onChange}
+					{...props}/>
 			break;
 		}
 		default: {
@@ -122,7 +133,7 @@ const MyInnerForm = props => {
 		<div className="contact-form">
 			<h4>CONTACT US</h4>
 			<div className="sidebar-close" onClick={history.goBack}>
-				X
+				<img src={CloseButton}/>
 			</div>
 			<div className="contact-container">
 				<form onSubmit={handleSubmit}>
@@ -189,6 +200,15 @@ const MyInnerForm = props => {
 					  fieldType="textarea"
 					  error={touched.message && errors.message}
 					  value={values.message}
+					  onChange={handleChange}
+					  onBlur={handleBlur}
+					/>
+					<TextInput
+					  id="signup"
+					  type="checkbox"
+					  label="SIGN UP FOR UPDATES"
+					  fieldType="checkbox"	
+					  value={!!values.signup}
 					  onChange={handleChange}
 					  onBlur={handleBlur}
 					/>

@@ -83,8 +83,8 @@ class App extends Component {
 		return <div className="flex column center">
 			{welcome}
 			<div className={mainContainerClass}>
-				<TopNav active={!this.state.isWelcome}/>
-				<Map key="map" active={!this.state.isWelcome}/>
+				<TopNav active={!this.state.isWelcome} history={this.props.history}/>
+				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute}/>
 				{communityNav}
 				{signUpEmail}
 				<ModalContainer />

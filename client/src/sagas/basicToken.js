@@ -171,6 +171,7 @@ export function * fetchContractData ({contractAddress}) {
     const web3Response = yield all(calls)
     tokenData = {...tokenData, ...web3Response}
     tokenData.address = contractAddress
+    tokenData.path = '/view/' + tokenData.name.toLowerCase().replace(/ /g, '')
 
     if (tokenData.tokenURI) {
       const [protocol, hash] = web3Response.tokenURI.split('://')

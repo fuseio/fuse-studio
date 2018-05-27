@@ -403,7 +403,7 @@ h5 {
 
 	.community-sidebar {
 		border-left: 10px $colu-green solid;
-		overflow: scroll;
+		//overflow: scroll;
 		height: calc(100vh - 60px);
 		width: 510px;
 		box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.37);
@@ -455,7 +455,7 @@ h5 {
 			padding: 32px;
 			overflow: scroll;
 			background: white;
-			height:100%;
+			height: calc(100% - 200px);
 			.box {
 				background-color: #ffffff76;
 				border-radius: 4px;
@@ -677,7 +677,11 @@ h5 {
 		width: auto;
 	}
 }
-
+input[type="checkbox" i] {
+	margin: 0;
+	padding: 0;
+	display: block;
+}
 .contact-form-wrapper {
 	border-radius: 2px;
 	position: absolute;
@@ -730,13 +734,22 @@ h5 {
 						border: none;
 						border-bottom: solid 1px #979797;
 						margin-top: 12px;
-		
     				}
+
     				.input-feedback {
     					font-size: 14px;
 						color: #ff5705;
 						position: absolute;
 						bottom: -20px;
+    				}
+
+    				&.checkbox {
+    					flex-direction: row-reverse;
+    					align-items: center;
+    					justify-content: flex-end;
+    					label {
+    						padding: 10px 0 0 10px;
+    					}
     				}
 				}
 				button {
@@ -828,14 +841,15 @@ button:disabled, button[disabled] {
 			z-index: 2;
 			width: 7px;
 			height: 7px;
-			transition: all 0.3s ease-in;
+			//transition: all 0.3s ease-in;
 			border-radius: 50%;
 			background: rgba(255,255,255,1);
 			box-shadow: inset 0px 0px 20px 12px rgba(255,255,255,0.9),
 						0px 0px 40px 6px rgba(255,255,255,1);
 		}
 		>.particle {
-			transition: all 0.3s ease-in;
+			transition: 0.3s ease-in;
+			transition-property: all;
 			opacity:0.3;
 			position: absolute;
 			background-color:rgba(77,217,180,0.5);
@@ -844,7 +858,8 @@ button:disabled, button[disabled] {
 			box-shadow: 5px 4px 17px 0px rgba(77,217,180, 0.1);
 		 }
 		>.particle2 {
-			transition: all 0.3s ease-in;
+			transition: 0.3s ease-in;
+			transition-property: all;
 			opacity:0.3;
 			position: absolute;
 			background-color:rgba(154, 139, 255,0.5);
