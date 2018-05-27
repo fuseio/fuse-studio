@@ -94,12 +94,6 @@ export default class Root extends Component {
 									{...sidebarAnimation}
 								/>
 								<Route
-									path={pagePath.london.path}
-									component={CommunitySidebar}
-									mapStyles={isMobile ? mapStylesMobile : mapStyles}
-									{...sidebarAnimation}
-								/>
-								<Route
 									path={pagePath.haifa.path}
 									component={CommunitySidebar}
 									mapStyles={isMobile ? mapStylesMobile : mapStyles}

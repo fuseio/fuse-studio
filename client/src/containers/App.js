@@ -27,7 +27,6 @@ class App extends Component {
 			const coluTokens = [
 				nextProps.addresses.ColuLocalNetwork,
 				nextProps.addresses.TelAvivCoinAddress,
-				nextProps.addresses.LondonCoinAddress,
 				nextProps.addresses.HaifaCoinAddress,
 				nextProps.addresses.LiverpoolCoinAddress
 			]
