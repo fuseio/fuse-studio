@@ -91,7 +91,6 @@ class CommunitySidebar extends Component {
 		})
 	}
 	onClose() {
-		//this.set
 		let n = 7
 		this.props.uiActions.zoomToMarker(n)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
@@ -107,7 +106,6 @@ class CommunitySidebar extends Component {
 				currentCoinAdress = page.address
 				return
 			}
-
 		})
 
 		let topPosition
@@ -167,7 +165,7 @@ class CommunitySidebar extends Component {
 									<a href={"https://etherscan.io/address/" + currentCoin.owner} target="blank">{owner || 'loading'}</a>
 								</p>
 								<p>{totalSupply || 'loading'}</p>
-								<p><img src={clnCurrencyIcon}/>{circulatingSupply || 'loading'}</p>
+								<p>{circulatingSupply || 'loading'}</p>
 								<p><img src={clnCurrencyIcon}/>{clnReserve || 'loading'}</p>
 								<p>
 									<a href={"https://etherscan.io/address/" + (this.props.ui.activeMarker || currentCoin.address)} target="blank">{this.props.ui.activeMarker || currentCoin.address}</a>

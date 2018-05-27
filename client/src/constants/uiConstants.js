@@ -19,6 +19,7 @@ module.exports = {
     },
     LOGIN_MODAL: 'LOGIN_MODAL',
     SOON_MODAL: 'SOON_MODAL',
+    CONTACT_MODAL: 'CONTACT_MODAL',
 	googleMapsUrl: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAtvydUDXH2lMMjNDSNwxYmhXobsJBHo4g&v=3.exp&libraries=geometry,drawing,places",
 	mapStyle: [
     {

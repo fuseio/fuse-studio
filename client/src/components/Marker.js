@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import { formatAmountReal } from '../services/global'
 import * as uiActions from '../actions/ui'
+import { pagePath } from 'constants/uiConstants'
 
 
 function rnd(m,n) {
@@ -18,13 +19,14 @@ class Marker extends React.PureComponent {
 	state = {}
 
 	componentWillReceiveProps(nextProps) {
-		
-		if (nextProps.activeMarker !== this.props.activeMarker && nextProps.activeMarker === this.props.id) {
+		let currentCoinAdress = this.props.currentCoinAdress
+
+		if ((nextProps.activeMarker !== this.props.activeMarker && nextProps.activeMarker === this.props.id) || (nextProps.activeMarker && currentCoinAdress === this.props.id && currentCoinAdress === nextProps.activeMarker)) {
 			setTimeout(() => {
 				this.setState({grow: true})
-			}, 1000)
+			}, 500)
 		}
-		if (nextProps.activeMarker !== this.props.id) {
+		if (nextProps.activeMarker !== this.props.activeMarker && nextProps.activeMarker !== this.props.id) {
 			//setTimeout(() => {
 				this.setState({grow: false})
 			//}, 1000)
