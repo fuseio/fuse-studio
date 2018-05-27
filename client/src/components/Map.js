@@ -91,17 +91,6 @@ const GoogleMapComponent = compose(
 			</OverlayView>
 		}
 
-		{ props.tokens && props.tokens[props.addresses.LondonCoinAddress] && props.tokens[props.addresses.LondonCoinAddress].metadata &&
-			<OverlayView position={props.tokens[props.addresses.LondonCoinAddress].metadata.location.geo}
-				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
-				<Marker
-					id={props.addresses.LondonCoinAddress}
-					pagePath={pagePath.london.path}
-					community={{name: props.tokens[props.addresses.LondonCoinAddress].name, price: props.tokens[props.addresses.LondonCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.LondonCoinAddress].metadata.location.geo, props.addresses.LondonCoinAddress, props.uiActions, props.refs)}/>
-			</OverlayView>
-		}
-
 		{ props.tokens && props.tokens[props.addresses.LiverpoolCoinAddress] && props.tokens[props.addresses.LiverpoolCoinAddress].metadata &&
 			<OverlayView position={props.tokens[props.addresses.LiverpoolCoinAddress].metadata.location.geo}
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>

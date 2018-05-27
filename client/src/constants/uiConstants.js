@@ -1,20 +1,13 @@
 module.exports = {
     pagePath: {
-        london: {
-            path: "/view/londoncoin",
-            address: '0xB8ef4FF697Df6586b9C73412904A6AB7b8dD727E'
-        },
         telaviv: {
-            path: "/view/telavivcoin",
-            address: '0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'
+            path: "/view/telavivcoin"
         },
         haifa: {
-            path: "/view/haifacoin",
-            address: '0x245Cf01FeCAA32AB0566c318D1f28Df91CaF7865'
+            path: "/view/haifacoin"
         },
         liverpool: {
-            path: "/view/liverpoolcoin",
-            address: '0x2578Db1F17290559198c3f78fF56f50471261441'
+            path: "/view/liverpoolcoin"
         }
     },
     LOGIN_MODAL: 'LOGIN_MODAL',
