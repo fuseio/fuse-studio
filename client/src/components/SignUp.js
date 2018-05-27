@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { withFormik } from 'formik'
 import Yup from 'yup'
 import classnames from 'classnames'
+import {subcribeToMailingList} from 'services/api'
 
 const InputFeedback = ({ error }) => error ? (<div className="input-feedback">{error}</div>) : null
 
@@ -85,14 +86,15 @@ const SignUpForm = withFormik({
 	handleSubmit: (values, props) => {
 		console.log(JSON.stringify(values, null, 2));
 		props.setSubmitting(false);
-		props.props.closeMe()
+		subcribeToMailingList(values)
+		// props.props.closeMe()
 	},
 	displayName: 'SignUpForm', // helps with React DevTools
 })(SignUp)
 
 class SignUpFormBar extends Component {
 	state = { closed: false }
-	close() {
+	close = () => {
 		this.setState({ closed: true })
 	}
 	render() {
@@ -104,8 +106,8 @@ class SignUpFormBar extends Component {
 		return (
 			<div className={wrapperClass}>
 				<p>Keep updated! Sign up for our emails.</p>
-				<SignUpForm closeMe={this.close.bind(this)}/>
-				<div className="sidebar-close" onClick={this.close.bind(this)}>X</div>
+				<SignUpForm closeMe={this.close}/>
+				<div className="sidebar-close" onClick={this.close}>X</div>
 			</div>
 		)
 	}
