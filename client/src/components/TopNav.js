@@ -24,6 +24,14 @@ class TopNav extends Component {
 	showLoginMenu() {
     	this.props.uiActions.loadModal(LOGIN_MODAL);
   	}
+  	showContactUs() {
+  		if (this.props.history.location.pathname === '/view/contact-us') {
+  			this.props.history.replace('/view/contact-us')
+  		} else {
+  			this.props.history.push('/view/contact-us')
+  		}
+  		
+  	}
 	render() {
 		let topNavClass = classNames({
 			"active": this.props.active,
@@ -42,9 +50,9 @@ class TopNav extends Component {
 				<div className="separator"/>
 				<a className="top-nav-text">Q&A</a>
 				<div className="separator"/>
-				<Link to="/view/contact-us" >
+				<div onClick={this.showContactUs.bind(this)} >
 					<div className="top-nav-text">Contact us</div>
-				</Link>
+				</div>
 				<div className="separator"/>
 				<div className="top-nav-text" onClick={this.showLoginMenu.bind(this)}>
 					<img src={ProfileIcon} />
