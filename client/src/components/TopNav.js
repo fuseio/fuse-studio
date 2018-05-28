@@ -6,7 +6,7 @@ import Link from 'react-router-dom/Link'
 import { isMobile, MobileView } from 'react-device-detect'
 import * as uiActions from 'actions/ui'
 
-import { LOGIN_MODAL } from 'constants/uiConstants'
+import { LOGIN_MODAL, EMPTY } from 'constants/uiConstants'
 
 import ClnIcon from 'images/cln.png'
 import MenuIcon from 'images/menu.png'
@@ -42,6 +42,8 @@ class TopNav extends Component {
 			"top-nav-links": true
 		})
 
+		console.log("this.props.web3", this.props.web3)
+
 		return <div className={topNavClass}>
 			<img src={ClnIcon}/>
 
@@ -56,7 +58,7 @@ class TopNav extends Component {
 				<div className="separator"/>
 				<div className="top-nav-text" onClick={this.showLoginMenu.bind(this)}>
 					<img src={ProfileIcon} />
-					<span>Disconnected</span>
+					<span>{this.props.web3.account || 'Disconnected'}</span>
 				</div>
 				<div className="separator"/>
 			</div>
@@ -68,10 +70,14 @@ class TopNav extends Component {
 	}
 }
 
-
+const mapStateToProps = state => {
+	return {
+		web3: state.web3
+	}
+}
 const mapDispatchToProps = dispatch => {
     return {
         uiActions: bindActionCreators(uiActions, dispatch),
     }
 }
-export default connect(null, mapDispatchToProps)(TopNav)
+export default connect(mapStateToProps, mapDispatchToProps)(TopNav)

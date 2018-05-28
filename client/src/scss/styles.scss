@@ -607,11 +607,13 @@ h5 {
 			@include flex-box();
 			align-items: center;
 			color: $dark-grey;
-			font-size: 16px;
+			font-size: 14px;
 			font-weight: 400;
 			line-height: 25px;
 			margin: 0 14px;
 			position:relative;
+			min-width: 80px;
+			justify-content: center;
 			&:after {
 				content: "";
 				position: absolute;
@@ -629,6 +631,10 @@ h5 {
 			}
 			span {
 				margin-left: 11px;
+				white-space: nowrap;
+    			overflow: hidden !important;
+    			text-overflow: ellipsis;
+    			width: 150px;
 			}
 			img {
 				width:28px;
@@ -688,7 +694,6 @@ input[type="checkbox" i] {
 	overflow: scroll;
     top: 130px;
     bottom: 0;
-    width: auto;
     right: calc((100vw - 842px)/2);
     @media (max-width: $breakpoint-tablet) {
     	right: calc((100vw - 450px)/2);
