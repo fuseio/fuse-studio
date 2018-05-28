@@ -100,13 +100,6 @@ class CommunitySidebar extends Component {
 
 	}
 	render() {
-		let currentCoinAdress
-		pagePath && Object.values(pagePath) && Object.values(pagePath).forEach((page) => {
-			if (page.path === this.props.match.path) {
-				currentCoinAdress = page.address
-				return
-			}
-		})
 
 		let topPosition
 

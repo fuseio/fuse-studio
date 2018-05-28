@@ -42,7 +42,7 @@ class TopNav extends Component {
 			"top-nav-links": true
 		})
 
-		console.log("this.props.web3", this.props.web3)
+		//console.log("this.props.web3", this.props.web3)
 
 		return <div className={topNavClass}>
 			<img src={ClnIcon}/>
