@@ -73,10 +73,10 @@ module.exports = {
                 "visibility": "on"
             },
             {
-                "weight": "1.2"
+                "weight": "2"
             },
             {
-                "color": "#443a81"
+                "color": "#2A2057"
             }
         ]
     },

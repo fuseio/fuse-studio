@@ -105,9 +105,6 @@ class Marker extends React.PureComponent {
 					<div className={markerArea} >
 						{particles}
 					</div>
-					<div className={communityLabel}>
-						<div className="coin-label-name">{this.props.community.name}</div>
-					</div>
 				</div>
 			</Link>
 		)
