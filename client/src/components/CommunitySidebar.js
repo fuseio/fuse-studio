@@ -100,17 +100,6 @@ class CommunitySidebar extends Component {
 
 	}
 	render() {
-
-		let topPosition
-
-		if (this.state.open) {
-			topPosition = 'calc(-100vh + 100px)'
-		} else if (this.state.closed) {
-			topPosition = '0px'
-		} else {
-			topPosition =  this.state.pos.y + 'px'
-		}
-
 		const currentCoin = this.props.selectedCommunity || {}
 
 		const control = <div className="sidebar-close" onClick={this.onClose.bind(this)}>
@@ -127,7 +116,6 @@ class CommunitySidebar extends Component {
 		return (
 			<div className="community-sidebar" ref="bar"
    				style={{
-   					top: topPosition,
    					transition: this.state.open || this.state.closed ? 'all 350ms ease-in' : 'none'
    				}}>
 				<div className="header">
@@ -156,8 +144,8 @@ class CommunitySidebar extends Component {
 								<p>
 									<a href={"https://etherscan.io/address/" + currentCoin.owner} target="blank">{owner || 'loading'}</a>
 								</p>
-								<p>{totalSupply || 'loading'}</p>
-								<p>{circulatingSupply || 'loading'}</p>
+								<p>{totalSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
+								<p>{circulatingSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
 								<p><img src={clnCurrencyIcon}/>{clnReserve || 'loading'}</p>
 								<p>
 									<a href={"https://etherscan.io/address/" + (this.props.ui.activeMarker || currentCoin.address)} target="blank">{this.props.ui.activeMarker || currentCoin.address}</a>

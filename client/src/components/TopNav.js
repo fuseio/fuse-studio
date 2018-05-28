@@ -5,12 +5,15 @@ import classNames from 'classnames'
 import Link from 'react-router-dom/Link'
 import { isMobile, MobileView } from 'react-device-detect'
 import * as uiActions from 'actions/ui'
+import { getClnToken } from 'selectors/basicToken'
+import { formatAmount, formatMoney } from 'services/global'
 
-import { LOGIN_MODAL, EMPTY } from 'constants/uiConstants'
+import { LOGIN_MODAL } from 'constants/uiConstants'
 
 import ClnIcon from 'images/cln.png'
 import MenuIcon from 'images/menu.png'
 import ProfileIcon from 'images/profile.png'
+import ClnCoinIcon from 'images/cln-coin.png'
 
 class TopNav extends Component {
 	state = {
@@ -21,8 +24,12 @@ class TopNav extends Component {
 			openMenu: !this.state.openMenu
 		})
 	}
-	showLoginMenu() {
-    	this.props.uiActions.loadModal(LOGIN_MODAL);
+	showConnectMetamask() {
+		if (!this.props.web3.isMetaMask) {
+			this.props.uiActions.loadModal(LOGIN_MODAL);
+		} else if (!this.props.web3.isAccountUnlocked) {
+			this.props.uiActions.loadModal(LOGIN_MODAL);
+		}
   	}
   	showContactUs() {
   		if (this.props.history.location.pathname === '/view/contact-us') {
@@ -42,8 +49,6 @@ class TopNav extends Component {
 			"top-nav-links": true
 		})
 
-		//console.log("this.props.web3", this.props.web3)
-
 		return <div className={topNavClass}>
 			<img src={ClnIcon}/>
 
@@ -56,10 +61,16 @@ class TopNav extends Component {
 					<div className="top-nav-text">Contact us</div>
 				</div>
 				<div className="separator"/>
-				<div className="top-nav-text" onClick={this.showLoginMenu.bind(this)}>
+				<div className="separator-vertical"/>
+				<div className="top-nav-text" onClick={this.showConnectMetamask.bind(this)}>
 					<img src={ProfileIcon} />
 					<span>{this.props.web3.account || 'Disconnected'}</span>
 				</div>
+				{this.props.web3.account ? <div className="top-nav-balance">
+					<span>Balance:</span>
+					<img src={ClnCoinIcon} />
+					<span className="balance-text">{this.props.clnToken && this.props.clnToken.balanceOf && formatMoney(formatAmount(this.props.clnToken.balanceOf, 18), 2, '.', ',')}</span>
+				</div> : null}
 				<div className="separator"/>
 			</div>
 
@@ -72,7 +83,8 @@ class TopNav extends Component {
 
 const mapStateToProps = state => {
 	return {
-		web3: state.web3
+		web3: state.web3,
+		clnToken: getClnToken(state)
 	}
 }
 const mapDispatchToProps = dispatch => {

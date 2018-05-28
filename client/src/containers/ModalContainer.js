@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import LoginModal from 'components/LoginModal'
 import ComingSoonModal from 'components/ComingSoonModal'
 
-import { LOGIN_MODAL } from 'constants/uiConstants'
+import { LOGIN_MODAL, SOON_MODAL } from 'constants/uiConstants'
 
 const MODAL_COMPONENTS = {
   LOGIN_MODAL: <LoginModal />,
