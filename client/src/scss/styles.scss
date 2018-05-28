@@ -640,7 +640,23 @@ h5 {
 				width:28px;
 				height:28px;
 			}
-			
+		}
+		.top-nav-balance {
+			border-radius: 10px;
+			background-color: #ebf0f2;
+			padding: 8px 12px 10px ;
+			font-size: 14px;
+			color: $dark-grey;
+			img {
+				width:9px;
+				height: 14px;
+				margin-right: 2px;
+				margin-left: 8px;
+			}
+			.balance-text {
+				font-size: 16px;
+				font-weight: 500;
+			}
 		}
 		@media (max-width: 1024px) {
 			@include flex-direction(column);

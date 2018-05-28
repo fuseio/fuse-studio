@@ -5,12 +5,15 @@ import classNames from 'classnames'
 import Link from 'react-router-dom/Link'
 import { isMobile, MobileView } from 'react-device-detect'
 import * as uiActions from 'actions/ui'
+import { getClnToken } from 'selectors/basicToken'
+import { formatAmount, formatMoney } from 'services/global'
 
 import { LOGIN_MODAL, EMPTY } from 'constants/uiConstants'
 
 import ClnIcon from 'images/cln.png'
 import MenuIcon from 'images/menu.png'
 import ProfileIcon from 'images/profile.png'
+import ClnCoinIcon from 'images/cln-coin.png'
 
 class TopNav extends Component {
 	state = {
@@ -60,6 +63,11 @@ class TopNav extends Component {
 					<img src={ProfileIcon} />
 					<span>{this.props.web3.account || 'Disconnected'}</span>
 				</div>
+				{this.props.web3.account ? <div className="top-nav-balance">
+					<span>Balance:</span>
+					<img src={ClnCoinIcon} />
+					<span className="balance-text">{this.props.clnToken && this.props.clnToken.balanceOf && formatMoney(formatAmount(this.props.clnToken.balanceOf, 18), 2, '.', ',')}</span>
+				</div> : null}
 				<div className="separator"/>
 			</div>
 
@@ -72,7 +80,8 @@ class TopNav extends Component {
 
 const mapStateToProps = state => {
 	return {
-		web3: state.web3
+		web3: state.web3,
+		clnToken: getClnToken(state)
 	}
 }
 const mapDispatchToProps = dispatch => {
