@@ -9,7 +9,8 @@ import { pagePath } from 'constants/uiConstants'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import CoinHeader from './CoinHeader'
-import TlvCoin from 'images/tlv-coin.png'
+import {getSelectedCommunity} from 'selectors/basicToken'
+import find from 'lodash/find'
 
 const Sidebar = posed.div({
 	open: { staggerChildren: 50, duration: 300 },
@@ -33,7 +34,7 @@ const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy, setRef }
 		return coin.isLocalCurrency
 	})
 	const sidebarStyle = isMobile ? {} : {transform: openCoinInfo ? 'translateY(-' + top + 'px)' : 'none'}
-	
+
 	return (
 	<Sidebar pose={poseValue} className="communities-list" style={sidebarStyle}>
 		{communityCoins.map(((coin, i) => {
@@ -67,14 +68,14 @@ class CommunitiesList extends Component {
 			})
 		}, 500)
 
-		
+
 		if (isMobile) this.refs.CommunitiesList.addEventListener('scroll', this.handleScroll.bind(this))
 	}
 
 	componentWillUnmount() {
 		if (isMobile) this.refs.CommunitiesList.removeEventListener('scroll', this.handleScrollRemove.bind(this))
 	}
-	
+
 	handleScrollRemove(e) {
 		e.stopPropagation()
 		e.preventDefault()
@@ -97,34 +98,21 @@ class CommunitiesList extends Component {
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n + 1)}, 150)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n + 2)}, 300)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n + 3)}, 450)
-		
+
 		this.props.uiActions.setActiveMarker(item)
 
-		let path
-		pagePath && Object.values(pagePath) && Object.values(pagePath).forEach((page) => {
-			if (page.address === item) {
-				path = page.path
-				return
-			}
-		})
+		const selectedCommunity = find(this.props.tokens, {address: item})
 		setTimeout(() => {
-			this.props.history.push(path)
+			this.props.history.push(selectedCommunity.path)
 		}, 700)
 	}
 	render() {
-		let currentCoinAdress
-		pagePath && Object.values(pagePath) && Object.values(pagePath).forEach((page) => {
-			if (page && page.path === this.props.history.location.pathname) {
-				currentCoinAdress = page.address
-				return
-			}
-		})
-		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker]) 
-							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || null
+		const currentCoin = this.props.selectedCommunity
+
 		const communityCoins = Object.values(this.props.tokens) && Object.values(this.props.tokens).filter((coin) => {
 			return coin.isLocalCurrency
 		})
-		
+
 		if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && !isMobile) {
 			return <Nav isOpen={this.state.active} coins={Object.values(this.props.tokens)} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyy={this.state.key}/>
 		} else if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && isMobile) {
@@ -150,13 +138,14 @@ class CommunitiesList extends Component {
 const mapStateToProps = state => {
 	return {
 		tokens: state.tokens,
-		ui: state.ui
+		ui: state.ui,
+		selectedCommunity: getSelectedCommunity(state)
 	}
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        uiActions: bindActionCreators(uiActions, dispatch),
+        uiActions: bindActionCreators(uiActions, dispatch)
     }
 }
 

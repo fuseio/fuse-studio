@@ -15,7 +15,7 @@ import Facebook from 'images/fb.png'
 import Twitter from 'images/twitter.png'
 import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
-
+import {getSelectedCommunity} from 'selectors/basicToken'
 import CoinHeader from './CoinHeader'
 
 
@@ -118,8 +118,7 @@ class CommunitySidebar extends Component {
 			topPosition =  this.state.pos.y + 'px'
 		}
 
-		const currentCoin = (this.props.tokens && this.props.ui && this.props.ui.activeMarker && this.props.tokens[this.props.ui.activeMarker])
-							|| (this.props.tokens && this.props.tokens[currentCoinAdress]) || {}
+		const currentCoin = this.props.selectedCommunity || {}
 
 		const control = <div className="sidebar-close" onClick={this.onClose.bind(this)}>
 						<Link to="/">
@@ -131,7 +130,7 @@ class CommunitySidebar extends Component {
 		const circulatingSupply = currentCoin.ccReserve ? formatMoney(formatAmount(currentCoin.totalSupply - currentCoin.ccReserve, 18), 0, '.', ',') : 'loading'
 		const clnReserve = currentCoin.clnReserve ? formatMoney(formatAmount(currentCoin.clnReserve, 18), 0, '.', ',') : 'loading'
 		const owner = currentCoin.owner === "0xA1F05144f9d3298a702c8EEE3ca360bc87d05207" ? "Colu" : currentCoin.owner
-		
+
 		return (
 			<div className="community-sidebar" ref="bar"
    				style={{
@@ -194,7 +193,7 @@ class CommunitySidebar extends Component {
 							<div className="box-data column">
 								<p><a href={currentCoin.metadata && currentCoin.metadata.website} target="blank">{currentCoin.metadata && currentCoin.metadata.website}</a></p>
 								<p>{currentCoin.metadata && currentCoin.metadata.location.name}</p>
-								
+
 								<div className="social flex">
 									<a href={currentCoin.metadata && currentCoin.metadata.social.facebook} target="blank">
 										<img src={Facebook}/>
@@ -215,7 +214,8 @@ class CommunitySidebar extends Component {
 const mapStateToProps = state => {
 	return {
 		tokens: state.tokens,
-		ui: state.ui
+		ui: state.ui,
+		selectedCommunity: getSelectedCommunity(state)
 	}
 }
 
