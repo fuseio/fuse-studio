@@ -14,6 +14,7 @@ import { isBrowser, isMobile, BrowserView, MobileView } from "react-device-detec
 import Marker from 'components/Marker'
 import * as uiActions from '../actions/ui'
 import {getAddresses} from 'selectors/web3'
+import {getSelectedCommunity} from 'selectors/basicToken'
 
 const panByHorizontalOffset = isMobile ? 0 : 1.4 // because of the community sidebar, so it's a bit off the center
 const panByVerticalOffset = isMobile ? 0.8 : 0
@@ -32,7 +33,9 @@ const GoogleMapComponent = compose(
 	withState('refs', 'setRefs', {}),
 	lifecycle({
 		componentWillReceiveProps(nextProps, nextState) {
-			let currentCoinAdress = this.props.currentCoinAdress
+			
+			let currentCoinAdress = nextProps.selectedCommunity && nextProps.selectedCommunity.address
+			debugger
 			let n = 5
 
 			if (!nextProps.ui.activeMarker && nextProps !== this.props && (!this.props.ui.zoom || this.props.ui.zoom === defaultZoom ) && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata) {
@@ -89,10 +92,10 @@ const GoogleMapComponent = compose(
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={props.addresses.TelAvivCoinAddress}
-					currentCoinAdress={props.currentCoinAdress}
+					currentCoinAdress={props.selectedCommunity && props.selectedCommunity.address}
 					pagePath={pagePath.telaviv.path}
 					community={{name: props.tokens[props.addresses.TelAvivCoinAddress].name, price: props.tokens[props.addresses.TelAvivCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.TelAvivCoinAddress].metadata.location.geo, props.addresses.TelAvivCoinAddress, props.uiActions, props.refs, props.currentCoinAdress)}/>
+					onClick={props.onClick.bind(this, props.tokens[props.addresses.TelAvivCoinAddress].metadata.location.geo, props.addresses.TelAvivCoinAddress, props.uiActions, props.refs, props.selectedCommunity && props.selectedCommunity.address)}/>
 			</OverlayView>
 		}
 
@@ -101,10 +104,10 @@ const GoogleMapComponent = compose(
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={props.addresses.HaifaCoinAddress}
-					currentCoinAdress={props.currentCoinAdress}
+					currentCoinAdress={props.selectedCommunity && props.selectedCommunity.address}
 					pagePath={pagePath.haifa.path}
 					community={{name: props.tokens[props.addresses.HaifaCoinAddress].name, price: props.tokens[props.addresses.HaifaCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.HaifaCoinAddress].metadata.location.geo, props.addresses.HaifaCoinAddress, props.uiActions, props.refs, props.currentCoinAdress)}/>
+					onClick={props.onClick.bind(this, props.tokens[props.addresses.HaifaCoinAddress].metadata.location.geo, props.addresses.HaifaCoinAddress, props.uiActions, props.refs, props.selectedCommunity && props.selectedCommunity.address)}/>
 			</OverlayView>
 		}
 
@@ -113,10 +116,10 @@ const GoogleMapComponent = compose(
 				mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
 				<Marker
 					id={props.addresses.LiverpoolCoinAddress}
-					currentCoinAdress={props.currentCoinAdress}
+					currentCoinAdress={props.selectedCommunity && props.selectedCommunity.address}
 					pagePath={pagePath.liverpool.path}
 					community={{name: props.tokens[props.addresses.LiverpoolCoinAddress].name, price: props.tokens[props.addresses.LiverpoolCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.LiverpoolCoinAddress].metadata.location.geo, props.addresses.LiverpoolCoinAddress, props.uiActions, props.refs, props.currentCoinAdress)}/>
+					onClick={props.onClick.bind(this, props.tokens[props.addresses.LiverpoolCoinAddress].metadata.location.geo, props.addresses.LiverpoolCoinAddress, props.uiActions, props.refs, props.selectedCommunity && props.selectedCommunity.address)}/>
 			</OverlayView>
 		}
 	</GoogleMap>
@@ -136,10 +139,10 @@ class MapComponent extends Component {
 				return
 			}
 		})
-
+		console.log("this.props.selectedCommunity", this.props.selectedCommunity)
 		return (
 			<div className={mapWrapperClass} >
-				nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata ? <GoogleMapComponent addresses={this.props.addresses} tokens={this.props.tokens} ui={this.props.ui} uiActions={this.props.uiActions} currentCoinAdress={currentCoinAdress}/> : null
+				this.props.selectedCommunity && this.props.selectedCommunity.metadata ? <GoogleMapComponent selectedCommunity={this.props.selectedCommunity} addresses={this.props.addresses} tokens={this.props.tokens} ui={this.props.ui} uiActions={this.props.uiActions} /> : null
 			</div>
 		)
 	}
@@ -149,6 +152,7 @@ const mapStateToProps = state => {
 	return {
 		tokens: state.tokens,
 		addresses: getAddresses(state),
+		selectedCommunity: getSelectedCommunity(state),
 		ui: state.ui
 	}
 }
