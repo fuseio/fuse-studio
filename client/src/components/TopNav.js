@@ -8,7 +8,7 @@ import * as uiActions from 'actions/ui'
 import { getClnToken } from 'selectors/basicToken'
 import { formatAmount, formatMoney } from 'services/global'
 
-import { LOGIN_MODAL, EMPTY } from 'constants/uiConstants'
+import { LOGIN_MODAL } from 'constants/uiConstants'
 
 import ClnIcon from 'images/cln.png'
 import MenuIcon from 'images/menu.png'
@@ -24,8 +24,12 @@ class TopNav extends Component {
 			openMenu: !this.state.openMenu
 		})
 	}
-	showLoginMenu() {
-    	this.props.uiActions.loadModal(LOGIN_MODAL);
+	showConnectMetamask() {
+		if (!this.props.web3.isMetaMask) {
+			this.props.uiActions.loadModal(LOGIN_MODAL);
+		} else if (!this.props.web3.isAccountUnlocked) {
+			this.props.uiActions.loadModal(LOGIN_MODAL);
+		}
   	}
   	showContactUs() {
   		if (this.props.history.location.pathname === '/view/contact-us') {
@@ -45,8 +49,6 @@ class TopNav extends Component {
 			"top-nav-links": true
 		})
 
-		//console.log("this.props.web3", this.props.web3)
-
 		return <div className={topNavClass}>
 			<img src={ClnIcon}/>
 
@@ -59,7 +61,8 @@ class TopNav extends Component {
 					<div className="top-nav-text">Contact us</div>
 				</div>
 				<div className="separator"/>
-				<div className="top-nav-text" onClick={this.showLoginMenu.bind(this)}>
+				<div className="separator-vertical"/>
+				<div className="top-nav-text" onClick={this.showConnectMetamask.bind(this)}>
 					<img src={ProfileIcon} />
 					<span>{this.props.web3.account || 'Disconnected'}</span>
 				</div>

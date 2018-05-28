@@ -603,6 +603,12 @@ h5 {
 		.separator {
 			display: none;
 		}
+		.separator-vertical {
+			width: 2px;
+			height: 44px;
+			background-color: #cbd1d3;
+			margin: 0 10px;
+		}
 		.top-nav-text {
 			@include flex-box();
 			align-items: center;
@@ -610,7 +616,7 @@ h5 {
 			font-size: 14px;
 			font-weight: 400;
 			line-height: 25px;
-			margin: 0 14px;
+			margin: 0 12px;
 			position:relative;
 			min-width: 80px;
 			justify-content: center;
@@ -634,7 +640,7 @@ h5 {
 				white-space: nowrap;
     			overflow: hidden !important;
     			text-overflow: ellipsis;
-    			width: 150px;
+    			max-width: 150px;
 			}
 			img {
 				width:28px;
@@ -670,6 +676,9 @@ h5 {
 			padding: 20px 28px;
 			.separator {
 				display: block;
+			}
+			.separator-vertical {
+				display: none;
 			}
 			&.hide {
 				display: none;
@@ -1095,21 +1104,60 @@ button:disabled, button[disabled] {
 
 .modal-dialog-div {
     position: relative;
-    width: 420px;
+    width: 432px;
 	height: auto;
     outline: 0;
     cursor: default;
     border-radius: 4px;
     background-color: #fafafa;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-	padding: 40px;
+	padding: 35px;
+	
+	p {
+		font-weight: lighter;
+    	font-size: 16px;
+    	letter-spacing: 0;
+    	line-height: 1.38;
+	}
 	img {
 		height: 92px;
 		min-width: 92px;
 	}
 	h4 {
-		font-weight: normal;
+		font-weight: 500;
 		padding: 20px 0;
+	}
+	.button {
+		@include button($colu-green);
+		text-align: center;
+		min-width: 210px;
+		padding: 0 10px;
+		height: 40px;
+		color: white;
+		margin-top: 30px;
+	}
+	.lock-icon {
+		width:68px;
+		height: 93px;
+		min-width:68px;
+	}
+	.modal-content-wrapper {
+		@include flex-box;
+		@include flex-direction(column);
+		align-items: center;
+		.images {
+			color: #8d9293;
+			font-size: 20px;
+			font-weight: bold;
+			margin-bottom: 15px;
+			span {
+				margin: 5px 5px 0;
+			}
+			img {
+				height: 75px;
+				min-width: 75px;
+			}
+		}
 	}
 }
 

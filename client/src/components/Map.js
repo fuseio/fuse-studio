@@ -129,15 +129,7 @@ class MapComponent extends Component {
 			"active": this.props.active,
 			"map-wrapper": true
 		})
-		let currentCoinAdress
 
-		pagePath && Object.values(pagePath) && Object.values(pagePath).forEach((page) => {
-			if (page.path === this.props.currentRoute) {
-				currentCoinAdress = page.address
-				return
-			}
-		})
-		console.log("this.props.selectedCommunity", this.props.selectedCommunity)
 		return (
 			<div className={mapWrapperClass} >
 				this.props.selectedCommunity && this.props.selectedCommunity.metadata ? <GoogleMapComponent selectedCommunity={this.props.selectedCommunity} addresses={this.props.addresses} tokens={this.props.tokens} ui={this.props.ui} uiActions={this.props.uiActions} /> : null
