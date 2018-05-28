@@ -80,13 +80,14 @@ class App extends Component {
 
 		const signUpEmail = currentRoute === '/' ? <SignUp /> : null
 
-		return <div className="flex column center">
+		return <div className="flex column center fullscreen">
 			{welcome}
+			{signUpEmail}
 			<div className={mainContainerClass}>
 				<TopNav active={!this.state.isWelcome} history={this.props.history}/>
 				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute}/>
 				{communityNav}
-				{signUpEmail}
+				
 				<ModalContainer />
 			</div>
 		</div>

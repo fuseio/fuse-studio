@@ -25,7 +25,7 @@ const GoogleMapComponent = compose(
 	withProps({
 		googleMapURL: googleMapsUrl,
 		loadingElement: <div style={{ height: `100%`, backgroundColor: 'rgb(36, 35, 52)' }} />,
-		containerElement: <div style={{ width: `100%`,  height: `100vh`, backgroundColor: 'rgb(36, 35, 52)'  }} />,
+		containerElement: <div style={{ width: `100%`,  height: `100%`, backgroundColor: 'rgb(36, 35, 52)'  }} />,
 		mapElement: <div className="map-element" style={{ height: `100%`, backgroundColor: 'rgb(36, 35, 52)' }} />
 	}),
 	withScriptjs,
@@ -132,7 +132,7 @@ class MapComponent extends Component {
 
 		return (
 			<div className={mapWrapperClass} >
-				this.props.selectedCommunity && this.props.selectedCommunity.metadata ? <GoogleMapComponent selectedCommunity={this.props.selectedCommunity} addresses={this.props.addresses} tokens={this.props.tokens} ui={this.props.ui} uiActions={this.props.uiActions} /> : null
+				<GoogleMapComponent selectedCommunity={this.props.selectedCommunity} addresses={this.props.addresses} tokens={this.props.tokens} ui={this.props.ui} uiActions={this.props.uiActions}/>
 			</div>
 		)
 	}
