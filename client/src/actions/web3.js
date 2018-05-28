@@ -6,4 +6,4 @@ export const UNSUPPORTED_NETWORK_ERROR = 'UNSUPPORTED_NETWORK_ERROR'
 
 export const getNetworkType = () => action(GET_NETWORK_TYPE.REQUEST)
 export const setReadyStatus = (isReady, account) => action(SET_READY_STATUS,
-  {response: {isReady, account}})
+  {response: {isReady, account, isAccountUnlocked: !!account}})

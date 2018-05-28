@@ -6,9 +6,11 @@ import * as actions from 'actions/web3'
 export function * getNetworkType () {
   try {
     const networkType = yield web3.eth.net.getNetworkType()
+
     yield put({type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
-        networkType
+        networkType,
+        isMetaMask: web3.currentProvider.isMetaMask || false
       }})
     if (!isNetworkSupported(networkType)) {
       yield put({type: actions.UNSUPPORTED_NETWORK_ERROR,

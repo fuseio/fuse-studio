@@ -33,9 +33,8 @@ const GoogleMapComponent = compose(
 	withState('refs', 'setRefs', {}),
 	lifecycle({
 		componentWillReceiveProps(nextProps, nextState) {
-			
+
 			let currentCoinAdress = nextProps.selectedCommunity && nextProps.selectedCommunity.address
-			debugger
 			let n = 5
 
 			if (!nextProps.ui.activeMarker && nextProps !== this.props && (!this.props.ui.zoom || this.props.ui.zoom === defaultZoom ) && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata) {
