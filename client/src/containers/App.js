@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
+import { isMobile } from 'react-device-detect'
 import Map from 'components/Map'
 import TopNav from 'components/TopNav'
 import CommunitiesList from 'components/CommunitiesList'
@@ -73,7 +74,7 @@ class App extends Component {
 			"out": this.state.out
 		})
 
-		const communityNav = (!this.state.isWelcome || this.state.welcomeDone) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
+		const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
 
 		const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
 							<div className="welcome-container">

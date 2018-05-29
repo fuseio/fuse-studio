@@ -143,7 +143,7 @@ const MyInnerForm = props => {
 					  id="fullName"
 					  type="text"
 					  label="FULL NAME *"
-					  placeholder="John"
+					  placeholder="Enter your full name"
 					  error={touched.fullName && errors.fullName}
 					  value={values.fullName}
 					  onChange={handleChange}
@@ -173,7 +173,7 @@ const MyInnerForm = props => {
 					  id="company"
 					  type="company"
 					  label="COMPANY / ORGANIZATION"
-					  placeholder="Company"
+					  placeholder="Enter your company"
 					  error={touched.company && errors.company}
 					  value={values.company}
 					  onChange={handleChange}
@@ -197,7 +197,7 @@ const MyInnerForm = props => {
 					  id="message"
 					  type="message"
 					  label="MESSAGE *"
-					  placeholder="Message"
+					  placeholder="Enter your message"
 					  fieldType="textarea"
 					  error={touched.message && errors.message}
 					  value={values.message}
@@ -243,7 +243,6 @@ const EnhancedForm = withFormik({
 		message: Yup.string()
 			.max(500, 'Your message is too long.')
 			.required('Message is required.')
-			.matches(/^[a-z0-9]+$/i, 'Invalid input'),
 	}),
 
 	handleSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
