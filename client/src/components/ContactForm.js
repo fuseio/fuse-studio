@@ -36,7 +36,7 @@ const options = [
 	{ value: 'Buy & Sell CLN / CC', label: 'Buy & Sell CLN / CC'},
 	{ value: 'Issue new coin', label: 'Issue new coin' },
 	{ value: 'Partnerships', label: 'Partnerships' },
-	{ value: 'Technical Issue', label: 'Technical Issue (?)' },
+	{ value: 'Technical Issue', label: 'Technical Issue' },
 	{ value: 'General Inquiry', label: 'General Inquiry' }
 ]
 
@@ -163,7 +163,7 @@ const MyInnerForm = props => {
 					  id="phone"
 					  type="phone"
 					  label="PHONE NUMBER"
-					  placeholder="Enter your email"
+					  placeholder="Enter your phone number"
 					  error={touched.phone && errors.phone}
 					  value={values.phone}
 					  onChange={handleChange}
@@ -196,7 +196,7 @@ const MyInnerForm = props => {
 					<TextInput
 					  id="message"
 					  type="message"
-					  label="MESSAGE"
+					  label="MESSAGE *"
 					  placeholder="Message"
 					  fieldType="textarea"
 					  error={touched.message && errors.message}
@@ -226,7 +226,7 @@ const MyInnerForm = props => {
 };
 
 const EnhancedForm = withFormik({
-	mapPropsToValues: () => ({ fullName: '', email: '' }),
+	mapPropsToValues: () => ({ fullName: '', email: '', phone: '', company: '', subject: '', message: '' }),
 	validationSchema: Yup.object().shape({
 		fullName: Yup.string()
 			.min(2, "C'mon, your name is longer than that")
@@ -240,16 +240,20 @@ const EnhancedForm = withFormik({
 			.matches(/^[a-z0-9]+$/i, 'Invalid input'),
 		subject: Yup.string()
 			.required('Subject is required.'),
+		message: Yup.string()
+			.max(500, 'Your message is too long.')
+			.required('Message is required.')
+			.matches(/^[a-z0-9]+$/i, 'Invalid input'),
 	}),
 
 	handleSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
 		setSubmitting(false)
-    sendContactUs(values)
-    if (values.signup) {
-       subcribeToMailingList({email: values.email})
-    }
-    resetForm()
-    setStatus({ success: true })
+		sendContactUs(values)
+		if (values.signup) {
+			subcribeToMailingList({email: values.email})
+		}
+		resetForm()
+		setStatus({ success: true })
 	},
 	displayName: 'BasicForm', // helps with React DevTools
 })(MyInnerForm)

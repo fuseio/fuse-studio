@@ -215,7 +215,7 @@ button:disabled, button[disabled] {
 	justify-content: center;
 	align-items: center;
 	top:0;
-	z-index: 100;
+	z-index: 300;
 	width:100%;
 	height:100%;
 	opacity: 1;
@@ -750,6 +750,12 @@ button:disabled, button[disabled] {
 				&:after {
 					display: none;
 				}
+				&.profile {
+					display: none;
+				}
+			}
+			.top-nav-balance {
+				display: none;
 			}
 		}
 	}
@@ -865,6 +871,7 @@ input[type="checkbox" i] {
 		right: 0;
 		.contact-form {
 			width: 100vw;
+			min-height: calc(100vh - 50px);
 			padding: 40px 17px;
 		}
 	}

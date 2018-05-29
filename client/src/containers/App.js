@@ -6,9 +6,10 @@ import CommunitiesList from 'components/CommunitiesList'
 import ModalContainer from 'containers/ModalContainer';
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
-
+import { ERROR_MODAL } from 'constants/uiConstants'
 import {fetchContractData} from 'actions/basicToken'
 import {getNetworkType} from 'actions/web3'
+import {loadModal} from 'actions/ui'
 import {getAddresses} from 'selectors/web3'
 import {isNetworkSupported} from 'utils/web3'
 
@@ -31,6 +32,9 @@ class App extends Component {
 				nextProps.addresses.LiverpoolCoinAddress
 			]
 			coluTokens.forEach(this.props.fetchContractData)
+		}
+		if (nextProps.web3.isMetaMask && nextProps.web3.isAccountUnlocked && nextProps.networkType !== 'main' && nextProps.networkType !== this.props.networkType) {
+			this.props.loadModal(ERROR_MODAL);
 		}
 	}
 
@@ -88,7 +92,6 @@ class App extends Component {
 				<TopNav active={!this.state.isWelcome} history={this.props.history}/>
 				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute}/>
 				{communityNav}
-				
 				<ModalContainer />
 			</div>
 		</div>
@@ -98,12 +101,14 @@ class App extends Component {
 
 const mapStateToProps = state => ({
 	addresses: getAddresses(state),
-	networkType: state.web3.networkType
+	networkType: state.web3.networkType,
+	web3: state.web3
 })
 
 export default connect(
 	mapStateToProps, {
 		fetchContractData,
-		getNetworkType
+		getNetworkType,
+		loadModal
 	}
 )(App)

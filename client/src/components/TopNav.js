@@ -55,9 +55,9 @@ class TopNav extends Component {
 			<div className={navLinksClass}>
 				<a className="top-nav-text">Whitepaper</a>
 				<div className="separator"/>
-				<a className="top-nav-text">Q&A</a>
+				<a className="top-nav-text">FAQ</a>
 				<div className="separator"/>
-				<div onClick={this.showContactUs.bind(this)} >
+				<div style={{width: isMobile ? '100%' : 'auto'}} onClick={this.showContactUs.bind(this)} >
 					<div className="top-nav-text">Contact us</div>
 				</div>
 				<div className="separator"/>

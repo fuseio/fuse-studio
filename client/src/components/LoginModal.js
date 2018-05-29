@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 import Modal from 'components/Modal'
 import { getClnToken } from 'selectors/basicToken'
 
-import TlvIcon from 'images/tlv-coin.png'
+import ClnIcon from 'images/cln.png'
 import LockIcon from 'images/lock.png'
 import MetamaskIcon from 'images/metamask.png'
 
@@ -46,7 +46,7 @@ class LoginModal extends React.Component {
           </div>
     } else if (!this.props.web3.isMetaMask) {
       modalContent = <div className="modal-content-wrapper">
-            <div className="images flex center"><img src={TlvIcon}/><span>+</span><img src={MetamaskIcon}/></div>
+            <div className="images flex center"><img src={ClnIcon}/><span>+</span><img src={MetamaskIcon}/></div>
             <h4>Want to connect?</h4>
             <p>You’ll need a safe place to store your coins, in order to do that you need to download the MetaMask wallet. The wallet will also act as your login to the dashboard.</p>
             <div className="button" onClick={this.installMetamask}>INSTALL METAMASK</div>
