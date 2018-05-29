@@ -7,7 +7,7 @@ import Modal from 'components/Modal'
 import Mail from 'images/mail.png'
 
 
-class ComingSoonModal extends React.Component {
+class ErrorModal extends React.Component {
   constructor(props) {
     super(props)
     this.onClose = this.onClose.bind(this)
@@ -21,9 +21,8 @@ class ComingSoonModal extends React.Component {
   render() {
     return (
       <Modal onClose={this.onClose}>
-         <img src={Mail}/>
-         <h4>Hold your horses</h4>
-         <p>You'll soon be able to buy and sell community coins with your CLN tokens. This isn't ready yet - so hang tight.</p>
+        <h4>Hi there, seems that you're on the wrong network.</h4>
+        <p>Please open Metamask and switch to the Main Ethereum Network to view correct CLN and CC information</p>
       </Modal>
     );
   }
@@ -34,4 +33,4 @@ const mapDispatchToProps = dispatch => {
         uiActions: bindActionCreators(uiActions, dispatch),
     }
 }
-export default connect(null, mapDispatchToProps)(ComingSoonModal)
+export default connect(null, mapDispatchToProps)(ErrorModal)

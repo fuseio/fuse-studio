@@ -54,28 +54,34 @@ const SignUp = props => {
 		handleBlur,
 		handleSubmit,
 		close,
+		status,
 		closed,
 		handleReset,
 	} = props
 
+	const formContent = status && status.success ?
+			<p className="success-message">Thanks for getting in touch. We'll reach out to you shortly.</p> :
+			<form onSubmit={handleSubmit}>
+				<TextInput
+				  id="email"
+				  type="email"
+				  label="EMAIL *"
+				  autoComplete="off"
+				  placeholder={isMobile ? "Get CLN Updates" : "Enter your email"}
+				  error={touched.email && errors.email}
+				  value={values.email}
+				  onChange={handleChange}
+				  onBlur={handleBlur}
+				/>
+	
+				<button type="submit" disabled={!isValid}>
+					{isMobile ? <img className="mobile-submit" src={MobileSubmit}/> : 'Submit'}
+				</button>
+			</form>
 	return (
-		<form onSubmit={handleSubmit}>
-			<TextInput
-			  id="email"
-			  type="email"
-			  label="EMAIL *"
-			  autocomplete="off"
-			  placeholder="Enter your email"
-			  error={touched.email && errors.email}
-			  value={values.email}
-			  onChange={handleChange}
-			  onBlur={handleBlur}
-			/>
-
-			<button type="submit" disabled={!isValid}>
-				{isMobile ? <img className="mobile-submit" src={MobileSubmit}/> : 'Submit'}
-			</button>
-		</form>
+		<div>
+		{formContent}
+		</div>
 	)
 }
 
@@ -86,26 +92,31 @@ const SignUpForm = withFormik({
 			.required('')
 	}),
 	handleSubmit: (values, props) => {
-		props.setSubmitting(false);
+		props.setSubmitting(false)
+		props.setStatus({success: true})
 		subcribeToMailingList(values)
+		localStorage.setItem("signup", true)
 	},
 	displayName: 'SignUpForm', // helps with React DevTools
 })(SignUp)
 
 class SignUpFormBar extends Component {
-	state = { closed: false }
+	state = {
+		closed: false,
+		signupDone: localStorage.getItem("signup")
+	}
 	close = () => {
 		this.setState({ closed: true })
 	}
 	render() {
 		const wrapperClass = classnames({
 			'sign-up-wrapper': true,
-			'closed': this.state.closed
+			'closed': this.state.closed || this.state.signupDone
 		})
 
 		return (
 			<div className={wrapperClass}>
-				{isMobile ? null : <p>Keep updated! Sign up for our emails.</p>}
+				{isMobile ? null : <p>Get CLN Updates</p>}
 				<SignUpForm closeMe={this.close}/>
 				<div className="sidebar-close" onClick={this.close}>
 					<img src={CloseButton}/>

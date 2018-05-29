@@ -6,9 +6,10 @@ import CommunitiesList from 'components/CommunitiesList'
 import ModalContainer from 'containers/ModalContainer';
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
-
+import { ERROR_MODAL } from 'constants/uiConstants'
 import {fetchContractData} from 'actions/basicToken'
 import {getNetworkType} from 'actions/web3'
+import {loadModal} from 'actions/ui'
 import {getAddresses} from 'selectors/web3'
 import {isNetworkSupported} from 'utils/web3'
 
@@ -32,11 +33,15 @@ class App extends Component {
 			]
 			coluTokens.forEach(this.props.fetchContractData)
 		}
+		if (nextProps.web3.isMetaMask && nextProps.web3.isAccountUnlocked && nextProps.networkType !== 'main' && nextProps.networkType !== this.props.networkType) {
+			this.props.loadModal(ERROR_MODAL);
+		}
 	}
 
 	componentDidMount () {
 		this.setState({
-			welcomeDone: localStorage.getItem("welcome")
+			welcomeDone: localStorage.getItem("welcome"),
+			signupDone: localStorage.getItem("signup")
 		})
 	}
 
@@ -72,13 +77,13 @@ class App extends Component {
 
 		const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
 							<div className="welcome-container">
-								<h3>Welcome to the CLN Community dApp</h3>
-								<h4>Here you can monitor the status of the CLN economies, buy and sell local community currencies issued on the network and more</h4>
+								<h3>Welcome to the CLN community dApp</h3>
+								<h4>Monitor the status of the CLN economies, buy and sell local community currencies issued on the network, and more</h4>
 								<div className="button" onClick={this.onClickExplore.bind(this)}>EXPLORE</div>
 							</div>
 						</div> : null
 
-		const signUpEmail = currentRoute === '/' ? <SignUp /> : null
+		const signUpEmail = (currentRoute === '/' && !this.state.signupDone) ? <SignUp /> : null
 
 		return <div className="flex column center fullscreen">
 			{welcome}
@@ -87,7 +92,6 @@ class App extends Component {
 				<TopNav active={!this.state.isWelcome} history={this.props.history}/>
 				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute}/>
 				{communityNav}
-				
 				<ModalContainer />
 			</div>
 		</div>
@@ -97,12 +101,14 @@ class App extends Component {
 
 const mapStateToProps = state => ({
 	addresses: getAddresses(state),
-	networkType: state.web3.networkType
+	networkType: state.web3.networkType,
+	web3: state.web3
 })
 
 export default connect(
 	mapStateToProps, {
 		fetchContractData,
-		getNetworkType
+		getNetworkType,
+		loadModal
 	}
 )(App)

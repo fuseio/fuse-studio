@@ -165,8 +165,8 @@ button:disabled, button[disabled] {
 	.map-wrapper {
 		height: 100%;
 		width: 100%;
-		transition: all 1s cubic-bezier(0,.52,.28,.94);
-		transform: scale(1);
+		//transition: all 1s cubic-bezier(0,.52,.28,.94);
+		//transform: scale(1);
 		.map-element > div {
 			background-color: rgb(36, 35, 52) !important;
 			a {
@@ -215,7 +215,7 @@ button:disabled, button[disabled] {
 	justify-content: center;
 	align-items: center;
 	top:0;
-	z-index: 100;
+	z-index: 300;
 	width:100%;
 	height:100%;
 	opacity: 1;
@@ -279,6 +279,10 @@ button:disabled, button[disabled] {
     &.closed {
     	display: none;
     	//transform: translateY(-60px);
+    }
+    .success-message {
+    	color: $dark-grey;
+    	margin-right: 20px;
     }
     form {
     	@include flex-box();
@@ -668,11 +672,15 @@ button:disabled, button[disabled] {
 				content: "";
 				position: absolute;
 				bottom: -17px;
+				right:0;
 				width: 100%;
 				height: 10px;
 				background-color: $colu-green;
 				opacity: 0;
 				transition: opacity 0.2s ease-in;
+			}
+			&.profile:after {
+				display: none;
 			}
 			&:hover {
 				&:after {
@@ -739,6 +747,15 @@ button:disabled, button[disabled] {
 				font-size: 15px;
 				width: 100%;
 				justify-content: flex-start;
+				&:after {
+					display: none;
+				}
+				&.profile {
+					display: none;
+				}
+			}
+			.top-nav-balance {
+				display: none;
 			}
 		}
 	}
@@ -765,6 +782,7 @@ input[type="checkbox" i] {
 	position: absolute;
 	overflow: scroll;
     top: 130px;
+    width: auto;
     bottom: 0;
     right: calc((100vw - 842px)/2);
     @media (max-width: $breakpoint-tablet) {
@@ -780,6 +798,10 @@ input[type="checkbox" i] {
 			font-weight: 500;
 			margin-bottom: 33px;
 		}
+		.success-message {
+    		color: $colu-green;
+    		text-align: center;
+    	}
 		form {
 			@include flex-box();
 			@media (max-width: $breakpoint-tablet) {
@@ -825,6 +847,7 @@ input[type="checkbox" i] {
     					flex-direction: row-reverse;
     					align-items: center;
     					justify-content: flex-end;
+    					margin-bottom: 38px;
     					label {
     						padding: 10px 0 0 10px;
     					}
@@ -848,6 +871,7 @@ input[type="checkbox" i] {
 		right: 0;
 		.contact-form {
 			width: 100vw;
+			min-height: calc(100vh - 50px);
 			padding: 40px 17px;
 		}
 	}

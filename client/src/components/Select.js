@@ -22,9 +22,9 @@ export default class SingleSelect extends Component {
 					styles={{
 						option: (base, state) => ({...base, backgroundColor: "#ffffff", color: state.isSelected ? "#3d3d3d" : "#8d9293", fontWeight: state.isSelected ? "bold" : "normal" }),
 						container: (base) => ({...base, backgroundColor: "#ffffff", border: "none"}),
-						menu: (base) => ({...base, borderRadius: 0}),
+						menu: (base) => ({...base,  borderRadius: 0}),
 						indicatorSeparator: (base) => ({...base, backgroundColor: "#ffffff", border: "none"}),
-						control: (base, state) => ({...base, boxShadow: "none", backgroundColor: "#ffffff", border: "none", borderColor: "#979797", borderBottom: "1px solid #979797", borderRadius: 0}),
+						control: (base, state) => ({...base, boxShadow: "none", minHeight: '32px', height: '32px', backgroundColor: "#ffffff", border: "none", borderColor: "#979797", borderBottom: "1px solid #979797", borderRadius: 0}),
 					}}
 				/>
 			</Fragment>
