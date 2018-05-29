@@ -126,6 +126,7 @@ const MyInnerForm = props => {
 		handleSubmit,
 		close,
 		history,
+		status,
 		handleReset,
 	} = props;
 
@@ -218,6 +219,7 @@ const MyInnerForm = props => {
 					</button>
 					</div>
 				</form>
+				<p className="success-message">{status && status.success ? "Thanks for getting in touch. We'll reach out to you shortly." : null}</p>
 			</div>
 		</div>
 	);
@@ -239,15 +241,11 @@ const EnhancedForm = withFormik({
 		subject: Yup.string()
 			.required('Subject is required.'),
 	}),
-	handleSubmit: (values, { setSubmitting }) => {
-
-		//setTimeout(() => {
-			console.log(JSON.stringify(values, null, 2));
-			setSubmitting(false);
-
-      sendContactUs(values)
-		//}, 1000);
-		//setTimeout(() => {history.goBack()}, 3000)
+	handleSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
+		setSubmitting(false)
+		resetForm()
+    	sendContactUs(values)
+    	setStatus({ success: true })
 	},
 	displayName: 'BasicForm', // helps with React DevTools
 })(MyInnerForm)
