@@ -67,7 +67,7 @@ const SignUp = props => {
 				  type="email"
 				  label="EMAIL *"
 				  autoComplete="off"
-				  placeholder={isMobile ? "Get CLN Updates" : "Enter your email"}
+				  placeholder={isMobile ? "Get CLN Updates (enter email)" : "Enter your email"}
 				  error={touched.email && errors.email}
 				  value={values.email}
 				  onChange={handleChange}
@@ -79,7 +79,7 @@ const SignUp = props => {
 				</button>
 			</form>
 	return (
-		<div>
+		<div style={{width: isMobile ? 'calc(100% - 16px)' : 'auto'}}>
 		{formContent}
 		</div>
 	)
@@ -111,7 +111,7 @@ class SignUpFormBar extends Component {
 	render() {
 		const wrapperClass = classnames({
 			'sign-up-wrapper': true,
-			'closed': this.state.closed || this.state.signupDone
+			'closed': this.state.closed
 		})
 
 		return (

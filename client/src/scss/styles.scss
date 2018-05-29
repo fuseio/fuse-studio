@@ -143,6 +143,9 @@ h5 {
 
 .fullscreen {
 	height: 100vh;
+	@media (max-width: $breakpoint-tablet) {
+		height: calc(100vh - 50px);
+	}
 }
 
 .switch-wrapper {
@@ -1117,7 +1120,7 @@ input[type="checkbox" i] {
 					border-left: 4px $colu-green solid;
 				}
 				&.open-mobile {
-					height: calc(100vh - 240px) !important;
+					height: calc(100vh - 290px) !important;
 					//width: calc(100vw - 20px);
 					width: 101vw;
 					border-left: none;
