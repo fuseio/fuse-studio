@@ -11,7 +11,7 @@ import classnames from 'classnames'
 
 import * as uiActions from '../actions/ui'
 import Select from './Select'
-import {sendContactUs} from 'services/api'
+import {sendContactUs, subcribeToMailingList} from 'services/api'
 import CloseButton from 'images/x.png'
 
 const InputFeedback = ({ error }) =>
@@ -208,7 +208,7 @@ const MyInnerForm = props => {
 					  id="signup"
 					  type="checkbox"
 					  label="SIGN UP FOR UPDATES"
-					  fieldType="checkbox"	
+					  fieldType="checkbox"
 					  value={!!values.signup}
 					  onChange={handleChange}
 					  onBlur={handleBlur}
@@ -241,11 +241,15 @@ const EnhancedForm = withFormik({
 		subject: Yup.string()
 			.required('Subject is required.'),
 	}),
+
 	handleSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
 		setSubmitting(false)
-		resetForm()
-    	sendContactUs(values)
-    	setStatus({ success: true })
+    sendContactUs(values)
+    if (values.signup) {
+       subcribeToMailingList({email: values.email})
+    }
+    resetForm()
+    setStatus({ success: true })
 	},
 	displayName: 'BasicForm', // helps with React DevTools
 })(MyInnerForm)

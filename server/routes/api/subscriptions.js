@@ -3,7 +3,7 @@ const mailchimpConfig = require('../../config').mailchimp
 
 const router = require('express').Router()
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
   const mailchimpURL = mailchimpConfig.apiBase + '/lists/' + mailchimpConfig.list + '/members'
   request.post(mailchimpURL, {
     json: true,
@@ -11,7 +11,20 @@ router.post('/', (req, res) => {
       email_address: req.body.formData.email,
       email_type: 'html',
       status: 'subscribed'
-    }}).on('response', (response) => {
+    }
+  }, (error, response, body) => {
+    if (error) {
+      return next(error)
+    }
+
+    if (body.status >= 400) {
+      return next(body)
+    }
+
+    if (response.statusCode >= 400) {
+      return next(new Error(`failed to subscribe ${req.body.formData.email}`))
+    }
+
     res.send({status: 'ok'})
   })
 })
