@@ -67,7 +67,7 @@ const SignUp = props => {
 				  type="email"
 				  label="EMAIL *"
 				  autoComplete="off"
-				  placeholder="Enter your email"
+				  placeholder={isMobile ? "Get CLN Updates" : "Enter your email"}
 				  error={touched.email && errors.email}
 				  value={values.email}
 				  onChange={handleChange}

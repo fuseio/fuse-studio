@@ -33,7 +33,7 @@ class App extends Component {
 			]
 			coluTokens.forEach(this.props.fetchContractData)
 		}
-		if (nextProps.web3.isMetaMask && nextProps.web3.isAccountUnlocked && nextProps.networkType !== 'main') {
+		if (nextProps.web3.isMetaMask && nextProps.web3.isAccountUnlocked && nextProps.networkType !== 'main' && nextProps.networkType !== this.props.networkType) {
 			this.props.loadModal(ERROR_MODAL);
 		}
 	}

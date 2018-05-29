@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
+import _ from  'lodash'
 import { isBrowser, isMobile } from "react-device-detect"
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
@@ -13,6 +14,7 @@ import { SOON_MODAL } from 'constants/uiConstants'
 import TlvCoin from 'images/tlv-coin.png'
 import Facebook from 'images/fb.png'
 import Twitter from 'images/twitter.png'
+import Instagram from 'images/ig.png'
 import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
 import {getSelectedCommunity} from 'selectors/basicToken'
@@ -112,7 +114,15 @@ class CommunitySidebar extends Component {
 		const circulatingSupply = currentCoin.ccReserve ? formatMoney(formatAmount(currentCoin.totalSupply - currentCoin.ccReserve, 18), 0, '.', ',') : 'loading'
 		const clnReserve = currentCoin.clnReserve ? formatMoney(formatAmount(currentCoin.clnReserve, 18), 0, '.', ',') : 'loading'
 		const owner = currentCoin.owner === "0xA1F05144f9d3298a702c8EEE3ca360bc87d05207" ? "Colu" : currentCoin.owner
-
+		const social = currentCoin.metadata && currentCoin.metadata.social && _.flatMap(currentCoin.metadata.social, (value, key) => {
+										let imgSrc
+										if (key === 'facebook') imgSrc = Facebook
+										else if (key === 'twitter') imgSrc = Twitter
+										else if (key === 'instagram') imgSrc = Instagram
+										return <a href={value} target="blank" key={key}>
+											<img src={imgSrc}/>
+										</a>
+									})
 		return (
 			<div className="community-sidebar" ref="bar"
    				style={{
@@ -176,12 +186,7 @@ class CommunitySidebar extends Component {
 								<p>{currentCoin.metadata && currentCoin.metadata.location.name}</p>
 
 								<div className="social flex">
-									<a href={currentCoin.metadata && currentCoin.metadata.social.facebook} target="blank">
-										<img src={Facebook}/>
-									</a>
-									<a href={currentCoin.metadata && currentCoin.metadata.social.twitter} target="blank">
-										<img src={Twitter}/>
-									</a>
+									{social}
 								</div>
 							</div>
 						</div>
