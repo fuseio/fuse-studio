@@ -11,3 +11,7 @@ export const getSelectedCommunity = createSelector(
   state => state.router.location.pathname,
   (communities, pathname) => find(communities, {path: pathname})
 )
+
+export const getClnToken = createSelector(state => state.tokens, (tokens) =>
+  find(tokens,{isLocalCurrency: false})
+)

@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import classNames from 'classnames'
 import { withFormik } from 'formik'
+import { isMobile } from 'react-device-detect'
 import Yup from 'yup'
 import classnames from 'classnames'
 import {subcribeToMailingList} from 'services/api'
+import CloseButton from 'images/x.png'
+import MobileSubmit from 'images/mobile-submit.png'
 
 const InputFeedback = ({ error }) => error ? (<div className="input-feedback">{error}</div>) : null
 
@@ -34,7 +37,6 @@ const TextInput = ({
 	return (
 		<div className={classes}>
 			{field}
-			<InputFeedback error={error} />
 		</div>
 	)
 }
@@ -71,7 +73,7 @@ const SignUp = props => {
 			/>
 
 			<button type="submit" disabled={!isValid}>
-				Submit
+				{isMobile ? <img className="mobile-submit" src={MobileSubmit}/> : 'Submit'}
 			</button>
 		</form>
 	)
@@ -81,13 +83,11 @@ const SignUpForm = withFormik({
 	validationSchema: Yup.object().shape({
 		email: Yup.string()
 			.email('Invalid email address')
-			.required('Email is required.')
+			.required('')
 	}),
 	handleSubmit: (values, props) => {
-		console.log(JSON.stringify(values, null, 2));
 		props.setSubmitting(false);
 		subcribeToMailingList(values)
-		// props.props.closeMe()
 	},
 	displayName: 'SignUpForm', // helps with React DevTools
 })(SignUp)
@@ -105,9 +105,11 @@ class SignUpFormBar extends Component {
 
 		return (
 			<div className={wrapperClass}>
-				<p>Keep updated! Sign up for our emails.</p>
+				{isMobile ? null : <p>Keep updated! Sign up for our emails.</p>}
 				<SignUpForm closeMe={this.close}/>
-				<div className="sidebar-close" onClick={this.close}>X</div>
+				<div className="sidebar-close" onClick={this.close}>
+					<img src={CloseButton}/>
+				</div>
 			</div>
 		)
 	}

@@ -69,11 +69,11 @@ class CommunitiesList extends Component {
 		}, 500)
 
 
-		if (isMobile) this.refs.CommunitiesList.addEventListener('scroll', this.handleScroll.bind(this))
+		if (isMobile) this.refs.CommunitiesList && this.refs.CommunitiesList.addEventListener('scroll', this.handleScroll.bind(this))
 	}
 
 	componentWillUnmount() {
-		if (isMobile) this.refs.CommunitiesList.removeEventListener('scroll', this.handleScrollRemove.bind(this))
+		if (isMobile) this.refs.CommunitiesList && this.refs.CommunitiesList.removeEventListener('scroll', this.handleScrollRemove.bind(this))
 	}
 
 	handleScrollRemove(e) {
@@ -88,6 +88,7 @@ class CommunitiesList extends Component {
 	}
 	onClick(item, key) {
 		this.setState({
+			item,
 			key: key,
 			scrollOffset: (key * 288) - this.state.scrollLeft
 		})
@@ -107,8 +108,8 @@ class CommunitiesList extends Component {
 		}, 700)
 	}
 	render() {
-		const currentCoin = this.props.selectedCommunity
-
+		const currentCoin = find(this.props.tokens, {address: this.state.item}) && this.props.ui.activeMarker
+		//const selectedCommunity = find(this.props.tokens, {address: item})
 		const communityCoins = Object.values(this.props.tokens) && Object.values(this.props.tokens).filter((coin) => {
 			return coin.isLocalCurrency
 		})
