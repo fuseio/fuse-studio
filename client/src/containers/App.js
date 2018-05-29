@@ -36,7 +36,8 @@ class App extends Component {
 
 	componentDidMount () {
 		this.setState({
-			welcomeDone: localStorage.getItem("welcome")
+			welcomeDone: localStorage.getItem("welcome"),
+			signupDone: localStorage.getItem("signup")
 		})
 	}
 
@@ -72,13 +73,13 @@ class App extends Component {
 
 		const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
 							<div className="welcome-container">
-								<h3>Welcome to the CLN Community dApp</h3>
-								<h4>Here you can monitor the status of the CLN economies, buy and sell local community currencies issued on the network and more</h4>
+								<h3>Welcome to the CLN community dApp</h3>
+								<h4>Monitor the status of the CLN economies, buy and sell local community currencies issued on the network, and more</h4>
 								<div className="button" onClick={this.onClickExplore.bind(this)}>EXPLORE</div>
 							</div>
 						</div> : null
 
-		const signUpEmail = currentRoute === '/' ? <SignUp /> : null
+		const signUpEmail = (currentRoute === '/' && !this.state.signupDone) ? <SignUp /> : null
 
 		return <div className="flex column center fullscreen">
 			{welcome}

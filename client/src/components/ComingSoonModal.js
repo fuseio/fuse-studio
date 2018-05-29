@@ -22,8 +22,8 @@ class ComingSoonModal extends React.Component {
     return (
       <Modal onClose={this.onClose}>
          <img src={Mail}/>
-         <h4>Coming Soon</h4>
-         <p>You will have the ability to buy and sell community tokens with your CLN tokens. Stay tuned.</p>
+         <h4>Hold your horses</h4>
+         <p>You'll soon be able to buy and sell community coins with your CLN tokens. This isn't ready yet - so hang tight.</p>
       </Modal>
     );
   }
