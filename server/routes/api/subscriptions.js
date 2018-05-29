@@ -11,14 +11,21 @@ router.post('/', (req, res, next) => {
       email_address: req.body.formData.email,
       email_type: 'html',
       status: 'subscribed'
-    }}).on('response', (response) => {
-      if (response.statusCode < 400) {
-        res.send({status: response.statusCode})
-      } else {
-        next(new Error(`failed to subscribe ${req.body.formData.email}`))
-      }
-  }).on('error', (error) => {
-    next(error)
+    }
+  }, (error, response, body) => {
+    if (error) {
+      return next(error)
+    }
+
+    if (body.status >= 400) {
+      return next(body)
+    }
+
+    if (response.statusCode >= 400) {
+      return next(new Error(`failed to subscribe ${req.body.formData.email}`))
+    }
+
+    res.send({status: 'ok'})
   })
 })
 
