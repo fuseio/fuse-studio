@@ -78,7 +78,8 @@ class App extends Component {
 			"column": true,
 			"center": true,
 			"fullscreen": true,
-			"mobile-screen": isAndroid || (isSafari && isIOS)
+			"mobile-screen": isAndroid || (isSafari && isIOS),
+			"tablet": isTablet && !isIOS
 		})
 
 		const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
