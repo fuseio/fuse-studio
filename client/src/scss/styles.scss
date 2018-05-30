@@ -144,7 +144,7 @@ h5 {
 .fullscreen {
 	height: 100vh;
 	@media (max-width: $breakpoint-tablet) {
-		height: calc(100vh - 50px);
+		//height: calc(100vh - 50px);
 	}
 }
 
