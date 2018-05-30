@@ -38,7 +38,6 @@ const GoogleMapComponent = compose(
 
 			if (!nextProps.ui.activeMarker && nextProps !== this.props && (!this.props.ui.zoom || this.props.ui.zoom === defaultZoom ) && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata) {
 				nextProps.refs.map.panTo({lat: parseFloat(nextProps.tokens[currentCoinAdress].metadata.location.geo.lat) - panByVerticalOffset, lng: parseFloat(nextProps.tokens[currentCoinAdress].metadata.location.geo.lng) + panByHorizontalOffset})
-
 				this.props.uiActions.zoomToMarker(n)
 				setTimeout(() => {this.props.uiActions.zoomToMarker(n + 1)}, 200)
 				setTimeout(() => {this.props.uiActions.zoomToMarker(n + 2)}, 400)
@@ -47,11 +46,11 @@ const GoogleMapComponent = compose(
 				this.props.uiActions.setActiveMarker(currentCoinAdress, nextProps.tokens[currentCoinAdress].metadata.location.geo)
 			}
 			// Pan to the chosen marker location
-			if (nextProps !== this.props && nextProps.ui.zoom === 5 && nextProps.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
+			if (nextProps !== this.props && nextProps.ui.zoom === n && nextProps.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
 				this.props.refs.map.panTo({lat: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lat) - panByVerticalOffset, lng: parseFloat(nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo.lng) + panByHorizontalOffset})
 			}
 			// Pan out to default center
-			if (nextProps !== this.props && nextProps.ui.zoom === 4 && !nextProps.ui.activeMarker) {
+			if (nextProps !== this.props && nextProps.ui.zoom === (n-1) && !nextProps.ui.activeMarker) {
 				this.props.refs.map.panTo(defaultCenter)
 			}
 		}

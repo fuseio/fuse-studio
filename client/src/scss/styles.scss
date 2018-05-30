@@ -148,6 +148,10 @@ h5 {
 	}
 }
 
+.mobile-screen {
+	height: calc(100vh - 50px);
+}
+
 .switch-wrapper {
 	position: relative;
 }
@@ -270,13 +274,13 @@ button:disabled, button[disabled] {
 .sign-up-wrapper {
 	display: flex;
     height: 60px;
-    top:0;
+    bottom:0;
     background-color: #e0e0e0;
     width: 100%;
     align-items: center;
     justify-content: space-between;
     padding: 10px 30px;
-    //position: absolute;
+    position: absolute;
     z-index: 20;
     transition: all 0.4s ease-in-out;
     &.closed {
@@ -354,8 +358,9 @@ button:disabled, button[disabled] {
 	}
 	@media (max-width: $breakpoint-tablet) {
 		top: 50px;
-		position: absolute;
+		//position: absolute;
 	}
+
 }
 
 
@@ -577,13 +582,15 @@ button:disabled, button[disabled] {
 		@media (max-width:$breakpoint-tablet) {
 			width: 100vw;
 			right: 0px;
-			height: calc(100vh - 240px) !important;
+			//height: calc(100vh - 240px) !important;
+			height: 60vh;
 			//width: calc(100vw - 20px);
 			position: absolute;
 			//touch-action: none;
 			//height: auto;
 			z-index: 10;
 			top: 190px !important;
+			top: calc(40vh - 100px) !important;
 			//&.open {
 			//	transition: all 350ms ease-in;
 			//	top: calc(-100vh + 150px) !important;
@@ -783,13 +790,14 @@ input[type="checkbox" i] {
 .contact-form-wrapper {
 	border-radius: 2px;
 	position: absolute;
-	overflow: scroll;
+	//overflow: scroll;
     top: 130px;
     width: auto;
     bottom: 0;
     right: calc((100vw - 842px)/2);
     @media (max-width: $breakpoint-tablet) {
     	right: calc((100vw - 450px)/2);
+    	overflow: scroll;
     }
 	.contact-form {
 		width: 820px;
@@ -1120,7 +1128,8 @@ input[type="checkbox" i] {
 					border-left: 4px $colu-green solid;
 				}
 				&.open-mobile {
-					height: calc(100vh - 290px) !important;
+					//height: calc(100vh - 290px) !important;
+					height: 60vh !important;
 					//width: calc(100vw - 20px);
 					width: 101vw;
 					border-left: none;
