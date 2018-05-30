@@ -60,7 +60,7 @@ const SignUp = props => {
 	} = props
 
 	const formContent = status && status.success ?
-			<p className="success-message">Thanks for getting in touch. We'll reach out to you shortly.</p> :
+			null :
 			<form onSubmit={handleSubmit}>
 				<TextInput
 				  id="email"

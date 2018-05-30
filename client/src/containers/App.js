@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { isMobile, isIOS, isChrome, isTablet } from 'react-device-detect'
+import { isMobile, isAndroid, isIOS, isSafari, isTablet } from 'react-device-detect'
 import Map from 'components/Map'
 import TopNav from 'components/TopNav'
 import CommunitiesList from 'components/CommunitiesList'
@@ -78,7 +78,8 @@ class App extends Component {
 			"column": true,
 			"center": true,
 			"fullscreen": true,
-			"mobile-screen": (isMobile || isTablet) && !(isIOS && isChrome)
+			"mobile-screen": isAndroid || (isSafari && isIOS),
+			"tablet": isTablet && !isIOS
 		})
 
 		const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
