@@ -5,17 +5,26 @@ import { bindActionCreators } from 'redux'
 
 import Modal from 'components/Modal'
 import Mail from 'images/mail.png'
-
+import ReactGA from 'services/ga'
 
 class ErrorModal extends React.Component {
   constructor(props) {
     super(props)
     this.onClose = this.onClose.bind(this)
+    ReactGA.event({
+      category: 'Network',
+      action: 'View',
+      label: 'Wrong network message'
+    })
   }
 
   onClose() {
     this.props.uiActions.hideModal()
-    
+    ReactGA.event({
+      category: 'Network',
+      action: 'Close',
+      label: 'Wrong network message'
+    })
   }
 
   render() {

@@ -8,6 +8,7 @@ import { getClnToken } from 'selectors/basicToken'
 import ClnIcon from 'images/cln.png'
 import LockIcon from 'images/lock.png'
 import MetamaskIcon from 'images/metamask.png'
+import ReactGA from 'services/ga'
 
 class LoginModal extends React.Component {
   constructor(props) {
@@ -22,6 +23,13 @@ class LoginModal extends React.Component {
 
   onClose() {
     this.props.uiActions.hideModal()
+    if (!this.props.web3.isAccountUnlocked) {
+      ReactGA.event({
+        category: 'Network',
+        action: 'Close',
+        label: 'Metamask locked message'
+      })
+    }
   }
 
   finishInstalling() {
@@ -52,6 +60,11 @@ class LoginModal extends React.Component {
             <div className="button" onClick={this.installMetamask}>INSTALL METAMASK</div>
           </div>
     } else if (!this.props.web3.isAccountUnlocked) {
+      ReactGA.event({
+        category: 'Network',
+        action: 'View',
+        label: 'Metamask locked message'
+      })
       modalContent = <div className="modal-content-wrapper">
             <img className="lock-icon" src={LockIcon}/>
             <h4>Your MetaMask is locked</h4>
