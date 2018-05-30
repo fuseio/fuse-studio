@@ -834,6 +834,9 @@ input[type="checkbox" i] {
 		.success-message {
     		color: $colu-green;
     		text-align: center;
+    		@media (max-width: $breakpoint-tablet) {
+    			padding-top: 20px;
+    		}
     	}
 		form {
 			@include flex-box();
@@ -1075,9 +1078,6 @@ input[type="checkbox" i] {
 			&:hover {
 				border-left: 10px $colu-green solid;
 			}
-			&.open {
-				height: 100vh !important;
-			}
 			.coin-header {
 				margin-top:20px;
 				padding: 20px 24px;
@@ -1101,8 +1101,13 @@ input[type="checkbox" i] {
 						-webkit-margin-before: 0;
    						-webkit-margin-after: 0;
 						font-size: 14px;
-
 					}
+				}
+			}
+			&.open {
+				height: 100vh !important;
+				.coin-header {
+					padding: 32px;
 				}
 			}
 		}

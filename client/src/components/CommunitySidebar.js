@@ -116,7 +116,7 @@ class CommunitySidebar extends Component {
 		const totalSupply = currentCoin.totalSupply ? formatMoney(formatAmount(currentCoin.totalSupply, 18), 0, '.', ',') : 'loading'
 		const circulatingSupply = currentCoin.ccReserve ? formatMoney(formatAmount(currentCoin.totalSupply - currentCoin.ccReserve, 18), 0, '.', ',') : 'loading'
 		const clnReserve = currentCoin.clnReserve ? formatMoney(formatAmount(currentCoin.clnReserve, 18), 0, '.', ',') : 'loading'
-		const owner = currentCoin.owner === "0xA1F05144f9d3298a702c8EEE3ca360bc87d05207" ? "Colu" : currentCoin.owner
+		const owner = (currentCoin.owner === "0x04f3663E2E6eF3FD3B0dF4936C2577BeCb5E19e7" || currentCoin.owner === "0xA1F05144f9d3298a702c8EEE3ca360bc87d05207") ? "Colu" : currentCoin.owner
 		const social = currentCoin.metadata && currentCoin.metadata.social && _.flatMap(currentCoin.metadata.social, (value, key) => {
 										let imgSrc
 										if (key === 'facebook') imgSrc = Facebook
