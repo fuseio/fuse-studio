@@ -282,11 +282,18 @@ button:disabled, button[disabled] {
     background-color: #e0e0e0;
     width: 100%;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px 30px;
     position: absolute;
     z-index: 20;
     transition: all 0.4s ease-in-out;
+    .sign-up-container {
+    	display: flex;
+    	justify-content: space-between;
+    	width: 100%;
+    	align-items: center;
+    	max-width: 500px;
+    }
     &.closed {
     	display: none;
     	//transform: translateY(-60px);
@@ -314,9 +321,9 @@ button:disabled, button[disabled] {
 				color: #3d3d3d;
 				border: none;
 				border-bottom: solid 1px #979797;
-				margin-top: 20px;
+				margin-top: 16px;
 				margin-right: 15px;
-				line-height: 1.8;
+				line-height: 2.3;
 				background-color: transparent;
 				@media (max-width: $breakpoint-tablet) {
     				width: 100%;
@@ -340,7 +347,9 @@ button:disabled, button[disabled] {
     	}
     }
     p {
-    	font-weight: 300;
+    	font-weight: 500;
+    	color: #3d3d3d;
+    	text-transform: uppercase;
     }
 
 	button {
@@ -604,6 +613,9 @@ button:disabled, button[disabled] {
 			&.tablet {
 				top: calc(40vh - 140px) !important;
 			}
+			&.ios-chrome {
+				top: calc(40vh - 50px) !important;
+			}
 			.header {
 				
 				.header-buttons {
@@ -781,6 +793,7 @@ button:disabled, button[disabled] {
 	img {
 		height: 40px;
 		width: 40px;
+		margin-top: 3px;
 	}
 	&.active {
 

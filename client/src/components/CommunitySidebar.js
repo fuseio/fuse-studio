@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import _ from  'lodash'
-import { isMobile, isAndroid, isIOS, isSafari, isTablet } from 'react-device-detect'
+import { isMobile, isAndroid, isIOS, isSafari, isTablet, isChrome } from 'react-device-detect'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { pagePath } from 'constants/uiConstants'
@@ -128,6 +128,7 @@ class CommunitySidebar extends Component {
 									})
 		const sidebarClass = classNames({
 			"community-sidebar": true,
+			"ios-chrome": isIOS && isChrome,
 			"tablet": isTablet && !isIOS
 		})
 		return (
