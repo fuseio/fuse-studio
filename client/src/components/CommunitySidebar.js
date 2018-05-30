@@ -11,13 +11,13 @@ import { formatAmount, formatMoney } from 'services/global'
 
 import { SOON_MODAL } from 'constants/uiConstants'
 
-import TlvCoin from 'images/tlv-coin.png'
 import Facebook from 'images/fb.png'
 import Twitter from 'images/twitter.png'
 import Instagram from 'images/ig.png'
 import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
 import {getSelectedCommunity} from 'selectors/basicToken'
+import {getEtherscanUrl} from 'selectors/web3'
 import CoinHeader from './CoinHeader'
 
 
@@ -98,6 +98,9 @@ class CommunitySidebar extends Component {
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 2)}, 400)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 3)}, 550)
+		if (isMobile) {
+			setTimeout(() => {this.props.uiActions.zoomToMarker(n - 4)}, 550)
+		}
 		this.props.uiActions.setActiveMarker()
 
 	}
@@ -152,16 +155,16 @@ class CommunitySidebar extends Component {
 							<div className="box-data column">
 								<p>{currentCoin.symbol || 'loading'}</p>
 								<p>
-									<a href={"https://etherscan.io/address/" + currentCoin.owner} target="blank">{owner || 'loading'}</a>
+									<a href={`${this.props.etherscanUrl}address/${currentCoin.owner}`} target="blank">{owner || 'loading'}</a>
 								</p>
 								<p>{totalSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
 								<p>{circulatingSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
 								<p><img src={clnCurrencyIcon}/>{clnReserve || 'loading'}</p>
 								<p>
-									<a href={"https://etherscan.io/address/" + (this.props.ui.activeMarker || currentCoin.address)} target="blank">{this.props.ui.activeMarker || currentCoin.address}</a>
+									<a href={`${this.props.etherscanUrl}address/${this.props.ui.activeMarker || currentCoin.address}`} target="blank">{this.props.ui.activeMarker || currentCoin.address}</a>
 								</p>
 								<p>
-									<a href={"https://etherscan.io/address/" + currentCoin.mmAddress} target="blank">{currentCoin.mmAddress}</a>
+									<a href={`${this.props.etherscanUrl}address/${currentCoin.mmAddress}`} target="blank">{currentCoin.mmAddress}</a>
 								</p>
 							</div>
 						</div>
@@ -201,13 +204,14 @@ const mapStateToProps = state => {
 	return {
 		tokens: state.tokens,
 		ui: state.ui,
-		selectedCommunity: getSelectedCommunity(state)
+		selectedCommunity: getSelectedCommunity(state),
+		etherscanUrl: getEtherscanUrl(state)
 	}
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        uiActions: bindActionCreators(uiActions, dispatch),
+        uiActions: bindActionCreators(uiActions, dispatch)
     }
 }
 

@@ -13,8 +13,8 @@ import {getSelectedCommunity} from 'selectors/basicToken'
 import find from 'lodash/find'
 
 const Sidebar = posed.div({
-	open: { staggerChildren: 50, duration: 300 },
-	closed: {  staggerChildren: 50, duration: 300},
+	open: { staggerChildren: 0, duration: 300 },
+	closed: {  staggerChildren: 0, duration: 300},
 })
 
 const NavItem = posed.div({
@@ -67,9 +67,15 @@ class CommunitiesList extends Component {
 				active: true
 			})
 		}, 500)
+	}
 
-
-		if (isMobile) this.refs.CommunitiesList && this.refs.CommunitiesList.addEventListener('scroll', this.handleScroll.bind(this))
+	componentWillReceiveProps(nextProps) {
+		if (isMobile && this.refs.CommunitiesList && !this.state.scrolling) {
+			this.setState({
+				scrolling: true
+			})
+			this.refs.CommunitiesList.addEventListener('scroll', this.handleScroll.bind(this))
+		}
 	}
 
 	componentWillUnmount() {
@@ -82,6 +88,8 @@ class CommunitiesList extends Component {
 	}
 
 	handleScroll(e) {
+		e.stopPropagation()
+		e.preventDefault()
 		this.setState({
 			scrollLeft: e.target.scrollLeft
 		})
@@ -94,6 +102,8 @@ class CommunitiesList extends Component {
 		})
 
 		let n = 5
+
+		this.props.uiActions.hideSignup()
 
 		this.props.uiActions.zoomToMarker(n)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n + 1)}, 150)

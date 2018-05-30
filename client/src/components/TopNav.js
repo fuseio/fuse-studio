@@ -50,12 +50,12 @@ class TopNav extends Component {
 		})
 
 		return <div className={topNavClass}>
-			<img src={ClnIcon}/>
+			<a href="https://cln.network/" target="_blank"><img src={ClnIcon}/></a>
 
 			<div className={navLinksClass}>
-				<a className="top-nav-text">Whitepaper</a>
+				<a className="top-nav-text" href="https://cln.network/pdf/cln_whitepaper.pdf" target="_blank">Whitepaper</a>
 				<div className="separator"/>
-				<a className="top-nav-text">FAQ</a>
+				<a className="top-nav-text" href="https://intercom.help/colu_cln/community-currencies" target="_blank">FAQ</a>
 				<div className="separator"/>
 				<div style={{width: isMobile ? '100%' : 'auto'}} onClick={this.showContactUs.bind(this)} >
 					<div className="top-nav-text">Contact us</div>
