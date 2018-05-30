@@ -18,13 +18,13 @@ const Sidebar = posed.div({
 })
 
 const NavItem = posed.div({
-	open: {  x: 0,  opacity: 1, duration: 1000},
-	closed: { x: 500, opacity: 0, duration: 100 },
+	open: {  damping: 0, staggerChildren: 0, x: 0,  opacity: 1, duration: 700},
+	closed: { damping: 0, staggerChildren: 0, x: 500, opacity: 0, duration: 100 },
 })
 
 const CoinWrapper = posed.div({
-	openCoinInfo: { height: '100vh', duration: 1000, delay: 100},
-	closedCoinInfo: { height: 'auto', duration: 300 }
+	openCoinInfo: { damping: 0, staggerChildren: 0, height: '100vh', duration: 700, delay: 100},
+	closedCoinInfo: { damping: 0, staggerChildren: 0,height: 'auto', duration: 300 }
 })
 
 const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy, setRef }) => {
@@ -40,10 +40,10 @@ const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy, setRef }
 		{communityCoins.map(((coin, i) => {
 			const coinWrapperStyle = classNames({
 				"coin-wrapper": true,
-				"open-mobile": isMobile && openCoinInfo && keyy === i
+				"open": openCoinInfo && keyy === i
 			})
 			return <NavItem className="list-item" key={i} pose={isOpen ? 'open' : 'closed'} onClick={onClick.bind(this, coin.address, i)}>
-				<CoinWrapper className={coinWrapperStyle} pose={openCoinInfo && keyy === i ? 'openCoinInfo' : 'closedCoinInfo'} >
+				<CoinWrapper className={coinWrapperStyle} >
 					<CoinHeader coinImage={coin.metadata && coin.metadata.imageLink} name={coin.name} price={coin.currentPrice} />
 				</CoinWrapper>
 			</NavItem>

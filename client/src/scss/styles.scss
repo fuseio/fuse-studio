@@ -153,7 +153,7 @@ h5 {
 }
 
 .tablet {
-	height: calc(100vh - 100px);
+	height: calc(100vh - 90px);
 }
 
 .switch-wrapper {
@@ -518,6 +518,7 @@ button:disabled, button[disabled] {
 				border-radius: 4px;
 				box-shadow:  0 15px 30px 0 rgba(0, 0, 0, 0.05);
 				overflow: hidden;
+				animation: load-box 200ms ease-in;
 				.box-header {
 					background-color: #ebf0f2;
 					padding: 14px 22px;
@@ -576,6 +577,7 @@ button:disabled, button[disabled] {
 	
 				&:nth-child(2) {
 					margin-top: 22px;
+					animation: load-box 300ms ease-in;
 				}
 			}
 			@media (max-width:$breakpoint-tablet) {
@@ -599,6 +601,9 @@ button:disabled, button[disabled] {
 			//	transition: all 350ms ease-in;
 			//	top: calc(-100vh + 150px) !important;
 			//}
+			&.tablet {
+				top: calc(40vh - 140px) !important;
+			}
 			.header {
 				
 				.header-buttons {
@@ -1057,6 +1062,9 @@ input[type="checkbox" i] {
 			&:hover {
 				border-left: 10px $colu-green solid;
 			}
+			&.open {
+				height: 100vh !important;
+			}
 			.coin-header {
 				margin-top:20px;
 				padding: 20px 24px;
@@ -1253,6 +1261,15 @@ input[type="checkbox" i] {
 }
 
 @keyframes appear {
+	 0% {
+		opacity: 0;
+	 }
+	 100% {
+		opacity: 1;
+	 }
+}
+
+@keyframes load-box {
 	 0% {
 		opacity: 0;
 	 }
