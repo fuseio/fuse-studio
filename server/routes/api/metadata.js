@@ -14,7 +14,9 @@ router.get('/:protocol/:hash', async (req, res, next) => {
   let data
   if (protocol === 'ipfs') {
     try {
+      console.log(`ipfs_request: ${new Date().toISOString()}`)
       data = await ipfs.files.cat(hash)
+      console.log(`ipfs_request_done: ${new Date().toISOString()}`)
       return res.json({source: 'ipfs', data: {hash, protocol, metadata: JSON.parse(data.toString())}})
     } catch (e) {
       console.error(e)
