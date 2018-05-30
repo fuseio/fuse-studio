@@ -16,3 +16,9 @@ export const hideModal = () => {
     type: 'HIDE_MODAL'
   }
 }
+
+export const hideSignup = () => {
+  return {
+    type: 'SIGNUP_HIDE'
+  }
+}

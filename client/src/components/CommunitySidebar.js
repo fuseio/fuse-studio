@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import _ from  'lodash'
-import { isBrowser, isMobile } from "react-device-detect"
+import { isMobile, isAndroid, isIOS, isSafari, isTablet } from 'react-device-detect'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { pagePath } from 'constants/uiConstants'
@@ -17,6 +17,7 @@ import Instagram from 'images/ig.png'
 import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
 import {getSelectedCommunity} from 'selectors/basicToken'
+import {getEtherscanUrl} from 'selectors/web3'
 import CoinHeader from './CoinHeader'
 import ReactGA from 'services/ga'
 
@@ -108,6 +109,9 @@ class CommunitySidebar extends Component {
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 2)}, 400)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 3)}, 550)
+		if (isMobile) {
+			setTimeout(() => {this.props.uiActions.zoomToMarker(n - 4)}, 550)
+		}
 		this.props.uiActions.setActiveMarker()
 
 	}
@@ -133,8 +137,12 @@ class CommunitySidebar extends Component {
 											<img src={imgSrc}/>
 										</a>
 									})
+		const sidebarClass = classNames({
+			"community-sidebar": true,
+			"tablet": isTablet && !isIOS
+		})
 		return (
-			<div className="community-sidebar" ref="bar"
+			<div className={sidebarClass} ref="bar"
    				style={{
    					transition: this.state.open || this.state.closed ? 'all 350ms ease-in' : 'none'
    				}}>
@@ -162,16 +170,16 @@ class CommunitySidebar extends Component {
 							<div className="box-data column">
 								<p>{currentCoin.symbol || 'loading'}</p>
 								<p>
-									<a href={"https://etherscan.io/address/" + currentCoin.owner} target="blank">{owner || 'loading'}</a>
+									<a href={`${this.props.etherscanUrl}address/${currentCoin.owner}`} target="blank">{owner || 'loading'}</a>
 								</p>
 								<p>{totalSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
 								<p>{circulatingSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
 								<p><img src={clnCurrencyIcon}/>{clnReserve || 'loading'}</p>
 								<p>
-									<a href={"https://etherscan.io/address/" + (this.props.ui.activeMarker || currentCoin.address)} target="blank">{this.props.ui.activeMarker || currentCoin.address}</a>
+									<a href={`${this.props.etherscanUrl}address/${this.props.ui.activeMarker || currentCoin.address}`} target="blank">{this.props.ui.activeMarker || currentCoin.address}</a>
 								</p>
 								<p>
-									<a href={"https://etherscan.io/address/" + currentCoin.mmAddress} target="blank">{currentCoin.mmAddress}</a>
+									<a href={`${this.props.etherscanUrl}address/${currentCoin.mmAddress}`} target="blank">{currentCoin.mmAddress}</a>
 								</p>
 							</div>
 						</div>
@@ -211,13 +219,14 @@ const mapStateToProps = state => {
 	return {
 		tokens: state.tokens,
 		ui: state.ui,
-		selectedCommunity: getSelectedCommunity(state)
+		selectedCommunity: getSelectedCommunity(state),
+		etherscanUrl: getEtherscanUrl(state)
 	}
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        uiActions: bindActionCreators(uiActions, dispatch),
+        uiActions: bindActionCreators(uiActions, dispatch)
     }
 }
 

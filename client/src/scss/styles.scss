@@ -144,8 +144,16 @@ h5 {
 .fullscreen {
 	height: 100vh;
 	@media (max-width: $breakpoint-tablet) {
-		height: calc(100vh - 50px);
+		//height: calc(100vh - 50px);
 	}
+}
+
+.mobile-screen {
+	height: calc(100vh - 50px);
+}
+
+.tablet {
+	height: calc(100vh - 90px);
 }
 
 .switch-wrapper {
@@ -270,13 +278,13 @@ button:disabled, button[disabled] {
 .sign-up-wrapper {
 	display: flex;
     height: 60px;
-    top:0;
+    bottom:0;
     background-color: #e0e0e0;
     width: 100%;
     align-items: center;
     justify-content: space-between;
     padding: 10px 30px;
-    //position: absolute;
+    position: absolute;
     z-index: 20;
     transition: all 0.4s ease-in-out;
     &.closed {
@@ -354,8 +362,9 @@ button:disabled, button[disabled] {
 	}
 	@media (max-width: $breakpoint-tablet) {
 		top: 50px;
-		position: absolute;
+		//position: absolute;
 	}
+
 }
 
 
@@ -509,6 +518,7 @@ button:disabled, button[disabled] {
 				border-radius: 4px;
 				box-shadow:  0 15px 30px 0 rgba(0, 0, 0, 0.05);
 				overflow: hidden;
+				animation: load-box 200ms ease-in;
 				.box-header {
 					background-color: #ebf0f2;
 					padding: 14px 22px;
@@ -567,6 +577,7 @@ button:disabled, button[disabled] {
 	
 				&:nth-child(2) {
 					margin-top: 22px;
+					animation: load-box 300ms ease-in;
 				}
 			}
 			@media (max-width:$breakpoint-tablet) {
@@ -577,17 +588,22 @@ button:disabled, button[disabled] {
 		@media (max-width:$breakpoint-tablet) {
 			width: 100vw;
 			right: 0px;
-			height: calc(100vh - 240px) !important;
+			//height: calc(100vh - 240px) !important;
+			height: 60vh;
 			//width: calc(100vw - 20px);
 			position: absolute;
 			//touch-action: none;
 			//height: auto;
 			z-index: 10;
 			top: 190px !important;
+			top: calc(40vh - 100px) !important;
 			//&.open {
 			//	transition: all 350ms ease-in;
 			//	top: calc(-100vh + 150px) !important;
 			//}
+			&.tablet {
+				top: calc(40vh - 140px) !important;
+			}
 			.header {
 				
 				.header-buttons {
@@ -783,13 +799,14 @@ input[type="checkbox" i] {
 .contact-form-wrapper {
 	border-radius: 2px;
 	position: absolute;
-	overflow: scroll;
+	//overflow: scroll;
     top: 130px;
     width: auto;
     bottom: 0;
     right: calc((100vw - 842px)/2);
     @media (max-width: $breakpoint-tablet) {
     	right: calc((100vw - 450px)/2);
+    	overflow: scroll;
     }
 	.contact-form {
 		width: 820px;
@@ -1045,6 +1062,9 @@ input[type="checkbox" i] {
 			&:hover {
 				border-left: 10px $colu-green solid;
 			}
+			&.open {
+				height: 100vh !important;
+			}
 			.coin-header {
 				margin-top:20px;
 				padding: 20px 24px;
@@ -1120,7 +1140,8 @@ input[type="checkbox" i] {
 					border-left: 4px $colu-green solid;
 				}
 				&.open-mobile {
-					height: calc(100vh - 290px) !important;
+					//height: calc(100vh - 290px) !important;
+					height: 60vh !important;
 					//width: calc(100vw - 20px);
 					width: 101vw;
 					border-left: none;
@@ -1240,6 +1261,15 @@ input[type="checkbox" i] {
 }
 
 @keyframes appear {
+	 0% {
+		opacity: 0;
+	 }
+	 100% {
+		opacity: 1;
+	 }
+}
+
+@keyframes load-box {
 	 0% {
 		opacity: 0;
 	 }

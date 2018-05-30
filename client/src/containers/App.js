@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { isMobile } from 'react-device-detect'
+import { isMobile, isAndroid, isIOS, isSafari, isTablet } from 'react-device-detect'
 import Map from 'components/Map'
 import TopNav from 'components/TopNav'
 import CommunitiesList from 'components/CommunitiesList'
@@ -34,7 +34,7 @@ class App extends Component {
 			]
 			coluTokens.forEach(this.props.fetchContractData)
 		}
-		if (nextProps.web3.isMetaMask && nextProps.web3.isAccountUnlocked && nextProps.networkType !== 'main' && nextProps.networkType !== this.props.networkType) {
+		if (nextProps.web3.isMetaMask && nextProps.networkType !== 'main' && nextProps.networkType !== this.props.networkType) {
 			this.props.loadModal(ERROR_MODAL);
 		}
 	}
@@ -79,6 +79,14 @@ class App extends Component {
 			"hide": !this.state.isWelcome,
 			"out": this.state.out
 		})
+		const mainWrapperClass = classNames({
+			"flex": true,
+			"column": true,
+			"center": true,
+			"fullscreen": true,
+			"mobile-screen": isAndroid || (isSafari && isIOS),
+			"tablet": isTablet && !isIOS
+		})
 
 		const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
 
@@ -90,9 +98,9 @@ class App extends Component {
 							</div>
 						</div> : null
 
-		const signUpEmail = (currentRoute === '/' && !this.state.signupDone) ? <SignUp /> : null
+		const signUpEmail = (currentRoute === '/' && !this.props.ui.signupHide) ? <SignUp /> : null
 
-		return <div className="flex column center fullscreen">
+		return <div className={mainWrapperClass}>
 			{welcome}
 			{signUpEmail}
 			<div className={mainContainerClass}>
@@ -109,7 +117,8 @@ class App extends Component {
 const mapStateToProps = state => ({
 	addresses: getAddresses(state),
 	networkType: state.web3.networkType,
-	web3: state.web3
+	web3: state.web3,
+	ui: state.ui
 })
 
 export default connect(
