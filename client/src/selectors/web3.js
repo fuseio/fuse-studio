@@ -7,3 +7,10 @@ export const getAddresses = createSelector(
   state => state.web3.addresses,
   (networkType, addresses) => addresses[networkType] || []
 )
+
+export const getEtherscanUrl = createSelector(
+  getNetworkType,
+  networkType => networkType === 'main'
+    ? 'https://etherscan.io/'
+    : 'https://ropsten.etherscan.io/'
+)
