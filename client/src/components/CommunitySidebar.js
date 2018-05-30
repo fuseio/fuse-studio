@@ -98,6 +98,9 @@ class CommunitySidebar extends Component {
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 2)}, 400)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 3)}, 550)
+		if (isMobile) {
+			setTimeout(() => {this.props.uiActions.zoomToMarker(n - 4)}, 550)
+		}
 		this.props.uiActions.setActiveMarker()
 
 	}
