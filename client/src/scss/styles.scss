@@ -367,11 +367,14 @@ button:disabled, button[disabled] {
 	}
 
 	.sidebar-close {
-		top: 8px;
+		top: 21px;
 	}
 	@media (max-width: $breakpoint-tablet) {
 		top: 50px;
 		//position: absolute;
+		.sidebar-close {
+			top: 22px;
+		}
 	}
 
 }
@@ -519,7 +522,7 @@ button:disabled, button[disabled] {
 		}
 		.community-data-wrapper {
 			padding: 32px;
-			overflow: scroll;
+			overflow-y: scroll;
 			background: white;
 			height: calc(100% - 200px);
 			.box {
