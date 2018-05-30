@@ -11,7 +11,6 @@ import { formatAmount, formatMoney } from 'services/global'
 
 import { SOON_MODAL } from 'constants/uiConstants'
 
-import TlvCoin from 'images/tlv-coin.png'
 import Facebook from 'images/fb.png'
 import Twitter from 'images/twitter.png'
 import Instagram from 'images/ig.png'
@@ -19,6 +18,7 @@ import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import CoinHeader from './CoinHeader'
+import ReactGA from 'services/ga'
 
 
 class CommunitySidebar extends Component {
@@ -44,11 +44,21 @@ class CommunitySidebar extends Component {
 	}
 
 	onClickBuy = () => {
-    	this.props.uiActions.loadModal(SOON_MODAL);
+    	this.props.uiActions.loadModal(SOON_MODAL)
+			ReactGA.event({
+				category: this.props.selectedCommunity.name,
+				action: 'Click',
+				label: 'Buy'
+			})
   	}
 
   	onClickSell = () => {
-    	this.props.uiActions.loadModal(SOON_MODAL);
+    	this.props.uiActions.loadModal(SOON_MODAL)
+			ReactGA.event({
+				category: this.props.selectedCommunity.name,
+				action: 'Click',
+				label: 'Sell'
+			})
   	}
 
 	onMouseDown(e) {

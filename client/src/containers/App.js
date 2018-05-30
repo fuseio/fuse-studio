@@ -13,7 +13,7 @@ import {getNetworkType} from 'actions/web3'
 import {loadModal} from 'actions/ui'
 import {getAddresses} from 'selectors/web3'
 import {isNetworkSupported} from 'utils/web3'
-
+import ReactGA from 'services/ga'
 import 'scss/styles.scss'
 
 class App extends Component {
@@ -46,7 +46,7 @@ class App extends Component {
 		})
 	}
 
-	onClickExplore() {
+	onClickExplore = () => {
 		this.setState({
 			isWelcome: !this.state.isWelcome,
 			panBy: { x: -100, y: 0 }
@@ -59,6 +59,12 @@ class App extends Component {
 				out: true
 			})
 		}, 1000)
+
+		ReactGA.event({
+			category: 'Map',
+			action: 'Click',
+			label: 'Explore'
+		})
 	}
 
 	render() {
@@ -80,7 +86,7 @@ class App extends Component {
 							<div className="welcome-container">
 								<h3>Welcome to the CLN community dApp</h3>
 								<h4>Monitor the status of the CLN economies, buy and sell local community currencies issued on the network, and more</h4>
-								<div className="button" onClick={this.onClickExplore.bind(this)}>EXPLORE</div>
+								<div className="button" onClick={this.onClickExplore}>EXPLORE</div>
 							</div>
 						</div> : null
 

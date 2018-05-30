@@ -15,6 +15,7 @@ import Marker from 'components/Marker'
 import * as uiActions from '../actions/ui'
 import {getAddresses} from 'selectors/web3'
 import {getSelectedCommunity} from 'selectors/basicToken'
+import ReactGA from 'services/ga'
 
 const panByHorizontalOffset = isMobile ? 0 : 1.4 // because of the community sidebar, so it's a bit off the center
 const panByVerticalOffset = isMobile ? 0.8 : 0
@@ -62,17 +63,25 @@ const GoogleMapComponent = compose(
 			onMapMounted: () => (props, ref) => {
 				if (!props.refs.map) props.refs.map = ref
 			},
-			onClick: ({zoomIn}) => (location, coinAddress, uiActions, refs, currentCoinAdress) => {
-				let n = 5
-				refs.map.panTo({lat: parseFloat(location.lat) - panByVerticalOffset, lng: parseFloat(location.lng) + panByHorizontalOffset})
+			onClick: (props) => (coinAddress) => {
 
-				if (!currentCoinAdress) {
+				const community = props.tokens[coinAddress]
+				let n = 5
+				props.refs.map.panTo({lat: parseFloat(community.metadata.location.geo.lat) - panByVerticalOffset, lng: parseFloat(community.metadata.location.geo.lng) + panByHorizontalOffset})
+
+				if (!props.selectedCommunity) {
 					uiActions.zoomToMarker(n)
-					setTimeout(() => {uiActions.zoomToMarker(n + 1)}, 150)
-					setTimeout(() => {uiActions.zoomToMarker(n + 2)}, 300)
-					setTimeout(() => {uiActions.zoomToMarker(n + 3)}, 450)
+					setTimeout(() => {props.uiActions.zoomToMarker(n + 1)}, 150)
+					setTimeout(() => {props.uiActions.zoomToMarker(n + 2)}, 300)
+					setTimeout(() => {props.uiActions.zoomToMarker(n + 3)}, 450)
 				}
-				uiActions.setActiveMarker(coinAddress, location)
+				uiActions.setActiveMarker(coinAddress, community.metadata.location.geo)
+
+				ReactGA.event({
+					category: 'Map',
+					action: 'Click',
+					label: community.name
+				})
 			}
 		}
 	})
@@ -93,7 +102,7 @@ const GoogleMapComponent = compose(
 					currentCoinAdress={props.selectedCommunity && props.selectedCommunity.address}
 					pagePath={pagePath.telaviv.path}
 					community={{name: props.tokens[props.addresses.TelAvivCoinAddress].name, price: props.tokens[props.addresses.TelAvivCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.TelAvivCoinAddress].metadata.location.geo, props.addresses.TelAvivCoinAddress, props.uiActions, props.refs, props.selectedCommunity && props.selectedCommunity.address)}/>
+					onClick={props.onClick.bind(this, props.addresses.TelAvivCoinAddress)}/>
 			</OverlayView>
 		}
 
@@ -105,7 +114,7 @@ const GoogleMapComponent = compose(
 					currentCoinAdress={props.selectedCommunity && props.selectedCommunity.address}
 					pagePath={pagePath.haifa.path}
 					community={{name: props.tokens[props.addresses.HaifaCoinAddress].name, price: props.tokens[props.addresses.HaifaCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.HaifaCoinAddress].metadata.location.geo, props.addresses.HaifaCoinAddress, props.uiActions, props.refs, props.selectedCommunity && props.selectedCommunity.address)}/>
+					onClick={props.onClick.bind(this, props.addresses.HaifaCoinAddress)}/>
 			</OverlayView>
 		}
 
@@ -117,7 +126,7 @@ const GoogleMapComponent = compose(
 					currentCoinAdress={props.selectedCommunity && props.selectedCommunity.address}
 					pagePath={pagePath.liverpool.path}
 					community={{name: props.tokens[props.addresses.LiverpoolCoinAddress].name, price: props.tokens[props.addresses.LiverpoolCoinAddress].currentPrice}}
-					onClick={props.onClick.bind(this, props.tokens[props.addresses.LiverpoolCoinAddress].metadata.location.geo, props.addresses.LiverpoolCoinAddress, props.uiActions, props.refs, props.selectedCommunity && props.selectedCommunity.address)}/>
+					onClick={props.onClick.bind(this, props.addresses.LiverpoolCoinAddress)}/>
 			</OverlayView>
 		}
 	</GoogleMap>
