@@ -97,7 +97,7 @@ class App extends Component {
 								<div className="button" onClick={this.onClickExplore}>EXPLORE</div>
 							</div>
 						</div> : null
-
+console.log("this.props.ui.signupHide", this.props.ui.signupHide)
 		const signUpEmail = (currentRoute === '/' && !this.props.ui.signupHide) ? <SignUp /> : null
 
 		return <div className={mainWrapperClass}>

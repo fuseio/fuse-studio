@@ -59,6 +59,7 @@ p {
 }
 input {
 	font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
+	border-radius: 0;
 }
 
 input:focus, textarea:focus {
@@ -891,6 +892,12 @@ input[type="checkbox" i] {
     						padding: 10px 0 0 10px;
     					}
     				}
+    				&.error {
+						input {
+							border-bottom: solid 1px #ff5705;
+						}
+					}
+
 				}
 				button {
 					@include button($colu-green);
