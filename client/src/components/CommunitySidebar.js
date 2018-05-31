@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import map from  'lodash/map'
-import { isMobile, isAndroid, isIOS, isSafari, isTablet } from 'react-device-detect'
+import { isMobile, isAndroid, isIOS, isSafari, isTablet, isChrome } from 'react-device-detect'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { pagePath } from 'constants/uiConstants'
@@ -17,7 +17,7 @@ import Instagram from 'images/ig.png'
 import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
 import {getSelectedCommunity} from 'selectors/basicToken'
-import {getEtherscanUrl} from 'selectors/web3'
+import {getEtherscanUrl, getColuWallet} from 'selectors/web3'
 import CoinHeader from './CoinHeader'
 import ReactGA from 'services/ga'
 
@@ -146,7 +146,7 @@ class CommunitySidebar extends Component {
 		const totalSupply = currentCoin.totalSupply ? formatMoney(formatAmount(currentCoin.totalSupply, 18), 0, '.', ',') : 'loading'
 		const circulatingSupply = currentCoin.ccReserve ? formatMoney(formatAmount(currentCoin.totalSupply - currentCoin.ccReserve, 18), 0, '.', ',') : 'loading'
 		const clnReserve = currentCoin.clnReserve ? formatMoney(formatAmount(currentCoin.clnReserve, 18), 0, '.', ',') : 'loading'
-		const owner = currentCoin.owner === "0xA1F05144f9d3298a702c8EEE3ca360bc87d05207" ? "Colu" : currentCoin.owner
+		const owner = currentCoin.owner === this.props.coluWallet ? "Colu" : currentCoin.owner
 
 		const social = currentCoin.metadata && currentCoin.metadata.social
 			&& map(currentCoin.metadata.social, (value, key) => <SocialImage
@@ -154,6 +154,7 @@ class CommunitySidebar extends Component {
 
 		const sidebarClass = classNames({
 			"community-sidebar": true,
+			"ios-chrome": isIOS && isChrome,
 			"tablet": isTablet && !isIOS
 		})
 
@@ -258,7 +259,8 @@ const mapStateToProps = state => {
 		tokens: state.tokens,
 		ui: state.ui,
 		selectedCommunity: getSelectedCommunity(state),
-		etherscanUrl: getEtherscanUrl(state)
+		etherscanUrl: getEtherscanUrl(state),
+		coluWallet: getColuWallet(state)
 	}
 }
 

@@ -87,7 +87,7 @@ const GoogleMapComponent = compose(
 )(props => (
 	<GoogleMap
 		defaultCenter={defaultCenter}
-		defaultOptions={{styles: mapStyle, disableDefaultUI: true}}
+		defaultOptions={{styles: mapStyle, disableDefaultUI: true, maxZoom: 8, minZoom: 3}}
 		ref={props.onMapMounted.bind(this, props)}
 		style={{backgroundColor: 'rgb(229, 227, 223)'}}
 		zoom={props.zoomToMarker || props.ui.zoom || defaultZoom}>

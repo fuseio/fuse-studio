@@ -60,9 +60,7 @@ const SignUp = props => {
 		handleReset,
 	} = props
 
-	const formContent = status && status.success ?
-			null :
-			<form onSubmit={handleSubmit}>
+	const formContent = <form onSubmit={handleSubmit}>
 				<TextInput
 				  id="email"
 				  type="email"
@@ -87,6 +85,7 @@ const SignUp = props => {
 }
 
 const SignUpForm = withFormik({
+	mapPropsToValues: () => ({ email: '' }),
 	validationSchema: Yup.object().shape({
 		email: Yup.string()
 			.email('Invalid email address')
@@ -94,8 +93,8 @@ const SignUpForm = withFormik({
 	}),
 	handleSubmit: (values, props) => {
 		props.setSubmitting(false)
-		props.setStatus({success: true})
 		subcribeToMailingList(values)
+		props.resetForm()
 		localStorage.setItem("signup", true)
 		ReactGA.event({
 			category: 'Subscription',
@@ -127,10 +126,12 @@ class SignUpFormBar extends Component {
 
 		return (
 			<div className={wrapperClass}>
-				{isMobile ? null : <p>Get CLN Updates</p>}
-				<SignUpForm closeMe={this.close}/>
-				<div className="sidebar-close" onClick={this.close}>
-					<img src={CloseButton}/>
+				<div className="sign-up-container">
+					{isMobile ? null : <p>Get CLN Updates</p>}
+					<SignUpForm closeMe={this.close}/>
+					<div className="sidebar-close" onClick={this.close}>
+						<img src={CloseButton}/>
+					</div>
 				</div>
 			</div>
 		)

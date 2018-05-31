@@ -282,11 +282,18 @@ button:disabled, button[disabled] {
     background-color: #e0e0e0;
     width: 100%;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px 30px;
     position: absolute;
     z-index: 20;
     transition: all 0.4s ease-in-out;
+    .sign-up-container {
+    	display: flex;
+    	justify-content: space-between;
+    	width: 100%;
+    	align-items: center;
+    	max-width: 500px;
+    }
     &.closed {
     	display: none;
     	//transform: translateY(-60px);
@@ -314,9 +321,9 @@ button:disabled, button[disabled] {
 				color: #3d3d3d;
 				border: none;
 				border-bottom: solid 1px #979797;
-				margin-top: 20px;
+				margin-top: 16px;
 				margin-right: 15px;
-				line-height: 1.8;
+				line-height: 2.3;
 				background-color: transparent;
 				@media (max-width: $breakpoint-tablet) {
     				width: 100%;
@@ -340,7 +347,9 @@ button:disabled, button[disabled] {
     	}
     }
     p {
-    	font-weight: 300;
+    	font-weight: 500;
+    	color: #3d3d3d;
+    	text-transform: uppercase;
     }
 
 	button {
@@ -358,11 +367,14 @@ button:disabled, button[disabled] {
 	}
 
 	.sidebar-close {
-		top: 8px;
+		top: 21px;
 	}
 	@media (max-width: $breakpoint-tablet) {
 		top: 50px;
 		//position: absolute;
+		.sidebar-close {
+			top: 22px;
+		}
 	}
 
 }
@@ -510,7 +522,7 @@ button:disabled, button[disabled] {
 		}
 		.community-data-wrapper {
 			padding: 32px;
-			overflow: scroll;
+			overflow-y: scroll;
 			background: white;
 			height: calc(100% - 200px);
 			.box {
@@ -603,6 +615,9 @@ button:disabled, button[disabled] {
 			//}
 			&.tablet {
 				top: calc(40vh - 140px) !important;
+			}
+			&.ios-chrome {
+				top: calc(40vh - 50px) !important;
 			}
 			.header {
 				
@@ -781,6 +796,7 @@ button:disabled, button[disabled] {
 	img {
 		height: 40px;
 		width: 40px;
+		margin-top: 3px;
 	}
 	&.active {
 
@@ -821,6 +837,9 @@ input[type="checkbox" i] {
 		.success-message {
     		color: $colu-green;
     		text-align: center;
+    		@media (max-width: $breakpoint-tablet) {
+    			padding-top: 20px;
+    		}
     	}
 		form {
 			@include flex-box();
@@ -1062,9 +1081,6 @@ input[type="checkbox" i] {
 			&:hover {
 				border-left: 10px $colu-green solid;
 			}
-			&.open {
-				height: 100vh !important;
-			}
 			.coin-header {
 				margin-top:20px;
 				padding: 20px 24px;
@@ -1088,8 +1104,13 @@ input[type="checkbox" i] {
 						-webkit-margin-before: 0;
    						-webkit-margin-after: 0;
 						font-size: 14px;
-
 					}
+				}
+			}
+			&.open {
+				height: 100vh !important;
+				.coin-header {
+					padding: 32px;
 				}
 			}
 		}
