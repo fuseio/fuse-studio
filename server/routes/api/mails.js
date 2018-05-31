@@ -20,7 +20,6 @@ router.post('/', (req, res) => {
     'message': {
       ...message,
       'subject': req.body.formData.subject,
-      'from_email': req.body.formData.email,
       'from_name': req.body.formData.fullName,
       'global_merge_vars': Object.keys(req.body.formData).map(key => ({
         name: key,
