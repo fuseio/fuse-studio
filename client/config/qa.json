@@ -4,5 +4,10 @@
   },
   "api": {
     "url": "/api/v1"
+  },
+  "reactGA": {
+    "gaOptions": {
+      "testMode": false
+    }
   }
 }
