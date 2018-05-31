@@ -88,7 +88,19 @@ export default class Root extends Component {
 							<Route path="/" component={withTracker(App)} />
 							<div className="sidebar">
 								<Route
-									path={'/view/:name'}
+									path={pagePath.telaviv.path}
+									component={withTracker(CommunitySidebar)}
+									mapStyles={isMobile ? mapStylesMobile : mapStyles}
+									{...sidebarAnimation}
+								/>
+								<Route
+									path={pagePath.haifa.path}
+									component={withTracker(CommunitySidebar)}
+									mapStyles={isMobile ? mapStylesMobile : mapStyles}
+									{...sidebarAnimation}
+								/>
+								<Route
+									path={pagePath.liverpool.path}
 									component={withTracker(CommunitySidebar)}
 									mapStyles={isMobile ? mapStylesMobile : mapStyles}
 									{...sidebarAnimation}
