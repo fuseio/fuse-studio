@@ -98,8 +98,9 @@ class App extends Component {
 							</div>
 						</div> : null
 
-		const signUpEmail = (currentRoute === '/' && !this.props.ui.signupHide) ? <SignUp /> : null
-
+		const signUpEmail = (currentRoute === '/' && !this.props.ui.signupHide && !this.props.ui.signupClose) ? <SignUp /> : null
+console.log("this.props.ui.signupHide", this.props.ui.signupHide)
+console.log("this.props.ui.signupClose", this.props.ui.signupClose)
 		return <div className={mainWrapperClass}>
 			{welcome}
 			{signUpEmail}

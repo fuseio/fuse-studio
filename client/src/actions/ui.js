@@ -23,3 +23,10 @@ export const hideSignup = (hide) => {
     hide
   }
 }
+
+export const closeSignup = (close) => {
+  return {
+    type: 'SIGNUP_CLOSE',
+    close
+  }
+}

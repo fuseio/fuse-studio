@@ -860,6 +860,9 @@ input[type="checkbox" i] {
     				margin-bottom: 45px;
     				position: relative;
     				font-size: 14px;
+    				@media (max-width: $breakpoint-tablet) {
+						font-size: 16px;
+					}
     				label {
     					font-size: 12px;
 						font-weight: 500;
@@ -874,6 +877,9 @@ input[type="checkbox" i] {
 						border: none;
 						border-bottom: solid 1px #979797;
 						margin-top: 12px;
+						@media (max-width: $breakpoint-tablet) {
+							font-size: 16px;
+						}
     				}
 
     				.input-feedback {
@@ -893,7 +899,7 @@ input[type="checkbox" i] {
     					}
     				}
     				&.error {
-						input {
+						input, textarea, select {
 							border-bottom: solid 1px #ff5705;
 						}
 					}

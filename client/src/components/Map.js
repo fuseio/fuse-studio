@@ -69,12 +69,12 @@ const GoogleMapComponent = compose(
 				props.refs.map.panTo({lat: parseFloat(community.metadata.location.geo.lat) - panByVerticalOffset, lng: parseFloat(community.metadata.location.geo.lng) + panByHorizontalOffset})
 
 				if (!props.selectedCommunity) {
-					uiActions.zoomToMarker(n)
+					props.uiActions.zoomToMarker(n)
 					setTimeout(() => {props.uiActions.zoomToMarker(n + 1)}, 150)
 					setTimeout(() => {props.uiActions.zoomToMarker(n + 2)}, 300)
 					setTimeout(() => {props.uiActions.zoomToMarker(n + 3)}, 450)
 				}
-				uiActions.setActiveMarker(coinAddress, community.metadata.location.geo)
+				props.uiActions.setActiveMarker(coinAddress, community.metadata.location.geo)
 
 				ReactGA.event({
 					category: 'Map',
