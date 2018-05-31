@@ -10,7 +10,10 @@ router.post('/', (req, res, next) => {
     body: {
       email_address: req.body.formData.email,
       email_type: 'html',
-      status: 'subscribed'
+      status: 'subscribed',
+      merge_fields: {
+        'SOURCE': 'dapp'
+      }
     }
   }, (error, response, body) => {
     if (error) {
