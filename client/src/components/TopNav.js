@@ -43,6 +43,9 @@ class TopNav extends Component {
 		} else {
 			this.props.history.push('/view/contact-us')
 		}
+		this.setState({
+			openMenu: !this.state.openMenu
+		})
 		ReactGA.event({
 			category: 'Top Bar',
 			action: 'Click',
