@@ -57,7 +57,7 @@ const TextInput = ({
 		'contact-field-wrapper',
 		{
 			'checkbox': fieldType === 'checkbox',
-			'animated shake error': !!error,
+			'error': !!error,
 		},
 		className
 	)

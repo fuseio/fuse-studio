@@ -16,7 +16,7 @@ export default (state = {
     case 'HIDE_MODAL':
     	return {...state, modalType: null}
     case 'SIGNUP_HIDE':
-      return {...state, signupHide: true}
+      return {...state, signupHide: action.hide}
     default:
       return state
   }

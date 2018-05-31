@@ -17,8 +17,9 @@ export const hideModal = () => {
   }
 }
 
-export const hideSignup = () => {
+export const hideSignup = (hide) => {
   return {
-    type: 'SIGNUP_HIDE'
+    type: 'SIGNUP_HIDE',
+    hide
   }
 }

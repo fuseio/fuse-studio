@@ -103,7 +103,7 @@ class CommunitiesList extends Component {
 
 		let n = 5
 
-		this.props.uiActions.hideSignup()
+		this.props.uiActions.hideSignup(true)
 
 		this.props.uiActions.zoomToMarker(n)
 		setTimeout(() => {this.props.uiActions.zoomToMarker(n + 1)}, 150)
