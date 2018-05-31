@@ -12,6 +12,7 @@ $breakpoint-tablet: 1024px;
 
 body > * {
 	box-sizing: border-box;
+	-webkit-overflow-scrolling: touch;
 }
 
 @mixin border-radius($radius) {
@@ -51,6 +52,7 @@ html, body {
 	-webkit-font-smoothing: antialiased;
   	-moz-osx-font-smoothing: grayscale;
   	overflow: hidden;
+  	-webkit-overflow-scrolling: touch;
 }
 p {
 	-webkit-margin-before: 0;
@@ -151,6 +153,7 @@ h5 {
 
 .mobile-screen {
 	height: calc(100vh - 50px);
+	-webkit-overflow-scrolling: touch;
 }
 
 .tablet {
@@ -328,6 +331,7 @@ button:disabled, button[disabled] {
 				background-color: transparent;
 				@media (max-width: $breakpoint-tablet) {
     				width: 100%;
+    				font-size: 16px;
     			}
     		}
     		.input-feedback {
@@ -360,6 +364,7 @@ button:disabled, button[disabled] {
 		height: 34px;
 		@media (max-width:$breakpoint-tablet) {
 			width:34px;
+			min-width: 34px;
 			border-radius: 50%;
 			&:disabled {
 				background-color: rgb(224, 224, 224) !important;
@@ -469,6 +474,7 @@ button:disabled, button[disabled] {
 		//top: calc(100vh - 100px);
 		//z-index: 10;
 		top: 50px;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.community-sidebar {
@@ -479,6 +485,7 @@ button:disabled, button[disabled] {
 		box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.37);
 		@media (max-width: 1024px) {
 			border-left: none;
+			 -webkit-overflow-scrolling: touch;
 		}
 		a {
 			text-decoration: underline !important;
@@ -524,6 +531,7 @@ button:disabled, button[disabled] {
 		.community-data-wrapper {
 			padding: 32px;
 			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
 			background: white;
 			height: calc(100% - 200px);
 			.box {
