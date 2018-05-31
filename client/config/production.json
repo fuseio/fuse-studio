@@ -1,6 +1,6 @@
 {
   "api": {
-    "url": "/api/v1",
+    "url": "/api/v1"
   },
   "reactGA": {
     "gaOptions": {
