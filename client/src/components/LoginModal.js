@@ -69,6 +69,7 @@ class LoginModal extends React.Component {
             <img className="lock-icon" src={LockIcon}/>
             <h4>Your MetaMask is locked</h4>
             <p>Please unlock your MetaMask extension in order to use the dashboard.</p>
+            <div className="button" onClick={this.finishInstalling}>I'VE UNLOCKED METAMASK</div>
           </div>
     }
 

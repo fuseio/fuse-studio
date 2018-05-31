@@ -37,4 +37,4 @@ node_modules
 .idea
 
 # Putting to public dir the client dist
-public
+

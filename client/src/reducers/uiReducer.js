@@ -17,6 +17,8 @@ export default (state = {
     	return {...state, modalType: null}
     case 'SIGNUP_HIDE':
       return {...state, signupHide: action.hide}
+    case 'SIGNUP_CLOSE':
+      return {...state, signupClose: action.close}
     default:
       return state
   }

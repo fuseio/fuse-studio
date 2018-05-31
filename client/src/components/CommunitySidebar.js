@@ -28,7 +28,7 @@ const keyToImage = {
 }
 
 const SocialImage = ({link, name, onClick}) => (
-	<a href={link} target="blank" onClick={onClick} name={name}>
+	<a href={link} target="_blank" onClick={onClick} name={name}>
 		<img src={keyToImage[name]} name={name} />
 	</a>
 )
@@ -123,7 +123,7 @@ class CommunitySidebar extends Component {
 		if (isMobile) {
 			setTimeout(() => {this.props.uiActions.zoomToMarker(n - 4)}, 550)
 		}
-		this.props.uiActions.hideSignup(false)
+		this.props.uiActions.hideSignup()
 		this.props.uiActions.setActiveMarker()
 
 	}
@@ -189,7 +189,7 @@ class CommunitySidebar extends Component {
 								<p>{currentCoin.symbol || 'loading'}</p>
 								<p>
 									<a href={`${this.props.etherscanUrl}address/${currentCoin.owner}`}
-										target="blank"
+										target="_blank"
 										name="owner"
 										onClick={this.handleLinkClick}>
 										{owner || 'loading'}
@@ -200,7 +200,7 @@ class CommunitySidebar extends Component {
 								<p><img src={clnCurrencyIcon}/>{clnReserve || 'loading'}</p>
 								<p>
 									<a href={`${this.props.etherscanUrl}address/${this.props.ui.activeMarker || currentCoin.address}`}
-										target="blank"
+										target="_blank"
 										name="assetId"
 										onClick={this.handleLinkClick}>
 											{this.props.ui.activeMarker || currentCoin.address}
@@ -208,7 +208,7 @@ class CommunitySidebar extends Component {
 								</p>
 								<p>
 									<a href={`${this.props.etherscanUrl}address/${currentCoin.mmAddress}`}
-										target="blank"
+										target="_blank"
 										name="marketMakerId"
 										onClick={this.handleLinkClick}>
 										{currentCoin.mmAddress}
@@ -235,7 +235,7 @@ class CommunitySidebar extends Component {
 							<div className="box-data column">
 								<p>
 									<a href={currentCoin.metadata && currentCoin.metadata.website}
-										target="blank"
+										target="_blank"
 										name="website"
 										onClick={this.handleLinkClick}>
 										{currentCoin.metadata && currentCoin.metadata.website}
