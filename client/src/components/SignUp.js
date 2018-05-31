@@ -7,6 +7,7 @@ import classnames from 'classnames'
 import {subcribeToMailingList} from 'services/api'
 import CloseButton from 'images/x.png'
 import MobileSubmit from 'images/mobile-submit.png'
+import ReactGA from 'services/ga'
 
 const InputFeedback = ({ error }) => error ? (<div className="input-feedback">{error}</div>) : null
 
@@ -71,7 +72,7 @@ const SignUp = props => {
 				  onChange={handleChange}
 				  onBlur={handleBlur}
 				/>
-	
+
 				<button type="submit" disabled={!isValid}>
 					{isMobile ? <img className="mobile-submit" src={MobileSubmit}/> : 'Submit'}
 				</button>
@@ -95,6 +96,11 @@ const SignUpForm = withFormik({
 		subcribeToMailingList(values)
 		props.resetForm()
 		localStorage.setItem("signup", true)
+		ReactGA.event({
+			category: 'Subscription',
+			action: 'Click',
+			label: 'Subscribe'
+		})
 	},
 	displayName: 'SignUpForm', // helps with React DevTools
 })(SignUp)
@@ -106,6 +112,11 @@ class SignUpFormBar extends Component {
 	}
 	close = () => {
 		this.setState({ closed: true })
+		ReactGA.event({
+			category: 'Subscription',
+			action: 'Click',
+			label: 'Close'
+		})
 	}
 	render() {
 		const wrapperClass = classnames({

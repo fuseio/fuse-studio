@@ -14,6 +14,7 @@ import ClnIcon from 'images/cln.png'
 import MenuIcon from 'images/menu.png'
 import ProfileIcon from 'images/profile.png'
 import ClnCoinIcon from 'images/cln-coin.png'
+import ReactGA from 'services/ga'
 
 class TopNav extends Component {
 	state = {
@@ -24,21 +25,38 @@ class TopNav extends Component {
 			openMenu: !this.state.openMenu
 		})
 	}
-	showConnectMetamask() {
-		if (!this.props.web3.isMetaMask) {
-			this.props.uiActions.loadModal(LOGIN_MODAL);
-		} else if (!this.props.web3.isAccountUnlocked) {
-			this.props.uiActions.loadModal(LOGIN_MODAL);
+
+	showConnectMetamask = () => {
+		if (!this.props.web3.isMetaMask || !this.props.web3.isAccountUnlocked) {
+			this.props.uiActions.loadModal(LOGIN_MODAL)
+			ReactGA.event({
+				category: 'Top Bar',
+				action: 'Click',
+				label: 'Disconnect'
+			})
 		}
-  	}
-  	showContactUs() {
-  		if (this.props.history.location.pathname === '/view/contact-us') {
-  			this.props.history.replace('/view/contact-us')
-  		} else {
-  			this.props.history.push('/view/contact-us')
-  		}
-  		
-  	}
+	}
+
+	showContactUs = () => {
+		if (this.props.history.location.pathname === '/view/contact-us') {
+			this.props.history.replace('/view/contact-us')
+		} else {
+			this.props.history.push('/view/contact-us')
+		}
+		ReactGA.event({
+			category: 'Top Bar',
+			action: 'Click',
+			label: 'contactUs'
+		})
+	}
+
+	handleLinkClick = (event) =>
+		ReactGA.event({
+			category: 'Top Bar',
+			action: 'Click',
+			label: event.target.name
+		})
+
 	render() {
 		let topNavClass = classNames({
 			"active": this.props.active,
@@ -53,16 +71,25 @@ class TopNav extends Component {
 			<a href="https://cln.network/" target="_blank"><img src={ClnIcon}/></a>
 
 			<div className={navLinksClass}>
-				<a className="top-nav-text" href="https://cln.network/pdf/cln_whitepaper.pdf" target="_blank">Whitepaper</a>
+				<a className="top-nav-text"
+					href="https://cln.network/pdf/cln_whitepaper.pdf"
+					target="_blank"
+					name='whitepaper'
+					onClick={this.handleLinkClick}>
+					Whitepaper</a>
 				<div className="separator"/>
-				<a className="top-nav-text" href="https://intercom.help/colu_cln/community-currencies" target="_blank">FAQ</a>
+				<a className="top-nav-text"
+					href="https://intercom.help/colu_cln/community-currencies"
+					target="_blank"
+					name='FAQ'
+					onClick={this.handleLinkClick}>FAQ</a>
 				<div className="separator"/>
-				<div style={{width: isMobile ? '100%' : 'auto'}} onClick={this.showContactUs.bind(this)} >
+				<div style={{width: isMobile ? '100%' : 'auto'}} onClick={this.showContactUs} >
 					<div className="top-nav-text">Contact us</div>
 				</div>
 				<div className="separator"/>
 				<div className="separator-vertical"/>
-				<div className="top-nav-text profile" onClick={this.showConnectMetamask.bind(this)}>
+				<div className="top-nav-text profile" onClick={this.showConnectMetamask}>
 					<img src={ProfileIcon} />
 					<span>{this.props.web3.account || 'Disconnected'}</span>
 				</div>
@@ -87,6 +114,7 @@ const mapStateToProps = state => {
 		clnToken: getClnToken(state)
 	}
 }
+
 const mapDispatchToProps = dispatch => {
     return {
         uiActions: bindActionCreators(uiActions, dispatch),

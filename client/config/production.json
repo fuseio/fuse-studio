@@ -1,8 +1,10 @@
 {
-  "web3": {
-    "provider": "http://localhost:8545"
-  },
   "api": {
-    "url": "/api/v1"
+    "url": "/api/v1",
+  },
+  "reactGA": {
+    "gaOptions": {
+      "testMode": false
+    }
   }
 }

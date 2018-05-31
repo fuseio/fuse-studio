@@ -3,5 +3,6 @@ export default {
   TelAvivCoinAddress: '0xa27D94001A2a58395b1bb34Ea2F842912A906163',
   HaifaCoinAddress: '0xB74a54b41eA5501117D6d39d6BF7f182Aec176fD',
   LiverpoolCoinAddress: '0x90CAEa54c91883473998Af705b3F9A2511787dEC',
-  CurrencyFactory: '0xE3e3bed21fC39d0915f66509eD0AAc05dB6d6454'
+  CurrencyFactory: '0xE3e3bed21fC39d0915f66509eD0AAc05dB6d6454',
+  ColuWallet: '0xE3e3bed21fC39d0915f66509eD0AAc05dB6d6454'
 }

@@ -13,6 +13,7 @@ import * as uiActions from '../actions/ui'
 import Select from './Select'
 import {sendContactUs, subcribeToMailingList} from 'services/api'
 import CloseButton from 'images/x.png'
+import ReactGA from 'services/ga'
 
 const InputFeedback = ({ error }) =>
   error ? (
@@ -130,10 +131,19 @@ const MyInnerForm = props => {
 		handleReset,
 	} = props;
 
+  const handleClose = () => {
+    ReactGA.event({
+      category: 'Contact us',
+      action: 'Click',
+      label: 'Close'
+    })
+    history.goBack()
+  }
+
 	return (
 		<div className="contact-form">
 			<h4>CONTACT US</h4>
-			<div className="sidebar-close" onClick={history.goBack}>
+			<div className="sidebar-close" onClick={handleClose}>
 				<img src={CloseButton}/>
 			</div>
 			<div className="contact-container">
@@ -244,7 +254,6 @@ const EnhancedForm = withFormik({
 			.max(500, 'Your message is too long.')
 			.required('Message is required.')
 	}),
-
 	handleSubmit: (values, { setSubmitting, setStatus, resetForm }) => {
 		setSubmitting(false)
 		sendContactUs(values)
@@ -253,6 +262,11 @@ const EnhancedForm = withFormik({
 		}
 		resetForm()
 		setStatus({ success: true })
+    ReactGA.event({
+      category: 'Contact us',
+      action: 'Click',
+      label: 'Submit'
+    })
 	},
 	displayName: 'BasicForm', // helps with React DevTools
 })(MyInnerForm)

@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux'
 import CoinHeader from './CoinHeader'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import find from 'lodash/find'
+import ReactGA from 'services/ga'
 
 const Sidebar = posed.div({
 	open: { staggerChildren: 0, duration: 300 },
@@ -116,6 +117,12 @@ class CommunitiesList extends Component {
 		setTimeout(() => {
 			this.props.history.push(selectedCommunity.path)
 		}, 700)
+
+		ReactGA.event({
+			category: 'List',
+			action: 'Click',
+			label: selectedCommunity.name
+		})
 	}
 	render() {
 		const currentCoin = find(this.props.tokens, {address: this.state.item}) && this.props.ui.activeMarker

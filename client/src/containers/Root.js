@@ -12,7 +12,7 @@ import CommunitySidebar from 'components/CommunitySidebar'
 import ContactForm from 'components/ContactForm'
 import CurrencyFactoryContract from 'containers/CurrencyFactoryContract'
 import Web3Loader from 'containers/Web3Loader'
-
+import withTracker from 'containers/withTracker'
 import { pagePath } from 'constants/uiConstants'
 
 const history = createHistory()
@@ -84,24 +84,12 @@ export default class Root extends Component {
 				<Web3Loader>
 					<ConnectedRouter history={history}>
 						<div>
-							<Route path="/view/create" component={CurrencyFactoryContract} />
-							<Route path="/" component={App} />
+							<Route path="/view/create" component={withTracker(CurrencyFactoryContract)} />
+							<Route path="/" component={withTracker(App)} />
 							<div className="sidebar">
 								<Route
-									path={pagePath.telaviv.path}
-									component={CommunitySidebar}
-									mapStyles={isMobile ? mapStylesMobile : mapStyles}
-									{...sidebarAnimation}
-								/>
-								<Route
-									path={pagePath.haifa.path}
-									component={CommunitySidebar}
-									mapStyles={isMobile ? mapStylesMobile : mapStyles}
-									{...sidebarAnimation}
-								/>
-								<Route
-									path={pagePath.liverpool.path}
-									component={CommunitySidebar}
+									path={'/view/:name'}
+									component={withTracker(CommunitySidebar)}
 									mapStyles={isMobile ? mapStylesMobile : mapStyles}
 									{...sidebarAnimation}
 								/>
@@ -109,7 +97,7 @@ export default class Root extends Component {
 							<div className="contact-form-wrapper">
 								<AnimatedRoute
 									path="/view/contact-us"
-									component={ContactForm}
+									component={withTracker(ContactForm)}
 									mapStyles={mapStylesContact}
 									{...contactFormTransition}
 								/>
