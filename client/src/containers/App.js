@@ -83,9 +83,9 @@ class App extends Component {
 			"flex": true,
 			"column": true,
 			"center": true,
-			"fullscreen": true,
-			"mobile-screen": isAndroid || (isSafari && isIOS),
-			"tablet": isTablet && !isIOS
+			//"fullscreen": true,
+			"mobile-screen": isMobile,
+			//"tablet": isTablet && !isIOS
 		})
 
 		const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
@@ -99,8 +99,7 @@ class App extends Component {
 						</div> : null
 
 		const signUpEmail = (currentRoute === '/' && !this.props.ui.signupHide && !this.props.ui.signupClose) ? <SignUp /> : null
-console.log("this.props.ui.signupHide", this.props.ui.signupHide)
-console.log("this.props.ui.signupClose", this.props.ui.signupClose)
+
 		return <div className={mainWrapperClass}>
 			{welcome}
 			{signUpEmail}

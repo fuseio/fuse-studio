@@ -152,7 +152,8 @@ h5 {
 }
 
 .mobile-screen {
-	height: calc(100vh - 50px);
+	//height: calc(200% - 100vh);
+	height: 100%;
 	-webkit-overflow-scrolling: touch;
 }
 
@@ -170,6 +171,13 @@ h5 {
 
 button:disabled, button[disabled] {
 	background-color: rgb(151, 151, 151) !important;
+}
+
+#root {
+	height: 100%;
+	&>div {
+		height: 100%;
+	}
 }
 
 .main-container {
@@ -332,8 +340,12 @@ button:disabled, button[disabled] {
 				@media (max-width: $breakpoint-tablet) {
     				width: 100%;
     				font-size: 16px;
+    				&::placeholder {
+    					font-size: 14px;
+    				}
     			}
     		}
+
     		.input-feedback {
     			font-size: 14px;
 				color: #ff5705;
@@ -610,14 +622,15 @@ button:disabled, button[disabled] {
 			width: 100vw;
 			right: 0px;
 			//height: calc(100vh - 240px) !important;
-			height: 60vh;
+			height: 65vh;
 			//width: calc(100vw - 20px);
 			position: absolute;
 			//touch-action: none;
 			//height: auto;
 			z-index: 10;
-			top: 190px !important;
-			top: calc(40vh - 100px) !important;
+			bottom: 0;
+			//top: 190px !important;
+			//top: calc(40vh - 100px) !important;
 			//&.open {
 			//	transition: all 350ms ease-in;
 			//	top: calc(-100vh + 150px) !important;
@@ -1183,7 +1196,7 @@ input[type="checkbox" i] {
 				}
 				&.open-mobile {
 					//height: calc(100vh - 290px) !important;
-					height: 60vh !important;
+					height: 65vh !important;
 					//width: calc(100vw - 20px);
 					width: 101vw;
 					border-left: none;
