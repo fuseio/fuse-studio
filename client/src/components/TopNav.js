@@ -32,7 +32,7 @@ class TopNav extends Component {
 			ReactGA.event({
 				category: 'Top Bar',
 				action: 'Click',
-				label: 'Disconnect'
+				label: 'Connect Metamask'
 			})
 		}
 	}

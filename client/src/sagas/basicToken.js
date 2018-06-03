@@ -8,6 +8,7 @@ import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import * as api from 'services/api'
 import {getNetworkType} from 'selectors/web3'
+import ReactGA from 'services/ga'
 
 const entityPut = createEntityPut('basicToken')
 
@@ -178,6 +179,12 @@ export function * fetchContractData ({contractAddress}) {
       const {data} = yield api.fetchMetadata(protocol, hash)
       tokenData.metadata = data.metadata
       tokenData.metadata.imageLink = api.API_ROOT + '/images/' + data.metadata.image.split('//')[1]
+    } else {
+      ReactGA.event({
+        category: 'Metamask',
+        action: 'CLN balance',
+        label: tokenData.balanceOf > 0 ? 'Yes' : 'No'
+      })
     }
 
     if (tokenData.mmAddress) {
