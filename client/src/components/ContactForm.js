@@ -240,14 +240,15 @@ const EnhancedForm = withFormik({
 	validationSchema: Yup.object().shape({
 		fullName: Yup.string()
 			.min(2, "C'mon, your name is longer than that")
+			.matches(/^[a-z ,.'-]+$/i, 'Invalid input')
 			.required('Your name is required.'),
 		email: Yup.string()
 			.email('Invalid email address')
 			.required('Email is required.'),
 		phone: Yup.string()
-			.matches(/^[a-z0-9]+$/i, 'Invalid phone number'),
+			.matches(/^(?:\+\d{1,3}|0\d{1,3}|00\d{1,2})?(?:\s?\(\d+\))?(?:[-\/\s.]|\d)+$/i, 'Invalid phone number'),
 		company: Yup.string()
-			.matches(/^[a-z0-9]+$/i, 'Invalid input'),
+			.matches(/^[a-z 0-9,.'-]+$/i, 'Invalid input'),
 		subject: Yup.string()
 			.required('Subject is required.'),
 		message: Yup.string()

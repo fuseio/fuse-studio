@@ -94,7 +94,7 @@ class TopNav extends Component {
 				<div className="separator-vertical"/>
 				<div className="top-nav-text profile" onClick={this.showConnectMetamask}>
 					<img src={ProfileIcon} />
-					<span>{this.props.web3.account || 'Disconnected'}</span>
+					<span>{this.props.web3.account || 'Connect Metamask'}</span>
 				</div>
 				{this.props.web3.account ? <div className="top-nav-balance">
 					<span>Balance:</span>
