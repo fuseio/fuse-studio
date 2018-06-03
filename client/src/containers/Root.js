@@ -83,7 +83,7 @@ export default class Root extends Component {
 			<Provider store={store}>
 				<Web3Loader>
 					<ConnectedRouter history={history}>
-						<div>
+						<div style={{height:'100%'}}>
 							<Route path="/view/create" component={withTracker(CurrencyFactoryContract)} />
 							<Route path="/" component={withTracker(App)} />
 							<div className="sidebar">

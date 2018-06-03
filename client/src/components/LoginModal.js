@@ -16,29 +16,58 @@ class LoginModal extends React.Component {
     this.state = {
       finishInstall: false
     }
-    this.onClose = this.onClose.bind(this)
-    this.installMetamask = this.installMetamask.bind(this)
-    this.finishInstalling = this.finishInstalling.bind(this)
   }
 
-  onClose() {
+  onClose = () => {
     this.props.uiActions.hideModal()
-    if (!this.props.web3.isAccountUnlocked) {
+    if (this.state.finishInstall) {
       ReactGA.event({
-        category: 'Network',
+        category: 'Metamask',
         action: 'Close',
-        label: 'Metamask locked message'
+        label: 'Finish Metamask Install'
+      })
+    }
+    else if (!this.props.web3.isAccountUnlocked) {
+      ReactGA.event({
+        category: 'Metamask',
+        action: 'Close',
+        label: 'Metamask locked'
+      })
+    } else if (!this.props.web3.isMetaMask) {
+      ReactGA.event({
+        category: 'Metamask',
+        action: 'Close',
+        label: 'Install Metamask'
       })
     }
   }
 
-  finishInstalling() {
+  finishInstalling = () => {
+    ReactGA.event({
+      category: 'Metamask',
+      action: 'Click',
+      label: 'Finish Metamask Install'
+    })
     window.location.reload(false)
   }
 
-  installMetamask() {
+  finishUnlocking = () => {
+    ReactGA.event({
+      category: 'Metamask',
+      action: 'Click',
+      label: 'Metamask locked'
+    })
+    window.location.reload(false)
+  }
+
+  installMetamask = () => {
     this.setState({
       finishInstall: true
+    })
+    ReactGA.event({
+      category: 'Metamask',
+      action: 'Click',
+      label: 'Install Metamask'
     })
     window.open('https://metamask.io/', '_blank')
   }
@@ -46,6 +75,11 @@ class LoginModal extends React.Component {
   render() {
     let modalContent
     if (this.state.finishInstall) {
+      ReactGA.event({
+        category: 'Metamask',
+        action: 'View',
+        label: 'Finish Metamask Install'
+      })
       modalContent = <div className="modal-content-wrapper">
             <img src={MetamaskIcon}/>
             <h4>Finish installing MetaMask  to continue</h4>
@@ -53,6 +87,11 @@ class LoginModal extends React.Component {
             <div className="button" onClick={this.finishInstalling}>I INSTALLED METAMASK</div>
           </div>
     } else if (!this.props.web3.isMetaMask) {
+      ReactGA.event({
+        category: 'Metamask',
+        action: 'View',
+        label: 'Install Metamask'
+      })
       modalContent = <div className="modal-content-wrapper">
             <div className="images flex center"><img src={ClnIcon}/><span>+</span><img src={MetamaskIcon}/></div>
             <h4>Want to connect?</h4>
@@ -61,15 +100,15 @@ class LoginModal extends React.Component {
           </div>
     } else if (!this.props.web3.isAccountUnlocked) {
       ReactGA.event({
-        category: 'Network',
+        category: 'Metamask',
         action: 'View',
-        label: 'Metamask locked message'
+        label: 'Metamask locked'
       })
       modalContent = <div className="modal-content-wrapper">
             <img className="lock-icon" src={LockIcon}/>
             <h4>Your MetaMask is locked</h4>
             <p>Please unlock your MetaMask extension in order to use the dashboard.</p>
-            <div className="button" onClick={this.finishInstalling}>I'VE UNLOCKED METAMASK</div>
+            <div className="button" onClick={this.finishUnlocking}>I'VE UNLOCKED METAMASK</div>
           </div>
     }
 

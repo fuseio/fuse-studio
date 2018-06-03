@@ -260,6 +260,11 @@ const EnhancedForm = withFormik({
 		sendContactUs(values)
 		if (values.signup) {
 			subcribeToMailingList({email: values.email})
+      ReactGA.event({
+        category: 'Contact us',
+        action: 'Click',
+        label: 'Sign up (checkbox)'
+      })
 		}
 		resetForm()
 		setStatus({ success: true })

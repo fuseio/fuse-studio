@@ -30,7 +30,7 @@ class ErrorModal extends React.Component {
   render() {
     return (
       <Modal onClose={this.onClose}>
-        <h4>Hi there, seems that you're on the wrong network.</h4>
+        <h4>{'Hi there, seems that you\'re on the wrong network.'}</h4>
         <p>Please open Metamask and switch to the <strong>Main Ethereum Network</strong> to view correct CLN and CC information</p>
       </Modal>
     );

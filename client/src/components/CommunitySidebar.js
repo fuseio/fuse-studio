@@ -126,6 +126,11 @@ class CommunitySidebar extends Component {
 		this.props.uiActions.hideSignup()
 		this.props.uiActions.setActiveMarker()
 
+		ReactGA.event({
+			category: this.props.selectedCommunity.name,
+			action: 'Click',
+			label: 'Close'
+		})
 	}
 
 	handleLinkClick = (event) =>
