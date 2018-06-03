@@ -83,7 +83,7 @@ class App extends Component {
 			"flex": true,
 			"column": true,
 			"center": true,
-			//"fullscreen": true,
+			"fullscreen": !isMobile,
 			"mobile-screen": isMobile,
 			//"tablet": isTablet && !isIOS
 		})
