@@ -27,17 +27,18 @@ class LoginModal extends React.Component {
         label: 'Finish Metamask Install'
       })
     }
+    else if (!this.props.web3.isMetaMask) {
+      ReactGA.event({
+        category: 'Metamask',
+        action: 'Close',
+        label: 'Install Metamask'
+      })
+    }
     else if (!this.props.web3.isAccountUnlocked) {
       ReactGA.event({
         category: 'Metamask',
         action: 'Close',
         label: 'Metamask locked'
-      })
-    } else if (!this.props.web3.isMetaMask) {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'Close',
-        label: 'Install Metamask'
       })
     }
   }
@@ -55,12 +56,13 @@ class LoginModal extends React.Component {
     ReactGA.event({
       category: 'Metamask',
       action: 'Click',
-      label: 'Metamask locked'
+      label: 'Unlocked Metmask'
     })
     window.location.reload(false)
   }
 
   installMetamask = () => {
+    debugger
     this.setState({
       finishInstall: true
     })
