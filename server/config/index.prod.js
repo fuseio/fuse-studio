@@ -3,7 +3,8 @@ module.exports = {
   ipfs: {
     host: process.env.COMMUNITY_IPFS_HOST || 'qa-ipfs.colu.com',
     port: 443,
-    protocol: 'https'
+    protocol: 'https',
+    timeout: process.env.COMMUNITY_IPFS_TIMEOUT || 3000
   },
   mongo: {
     uri: process.env.COMMUNITY_MONGO_URI,
