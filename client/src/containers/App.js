@@ -44,7 +44,7 @@ class App extends Component {
 		this.props.getNetworkType()
 		onWeb3Ready.then(() => {
 			this.props.checkAccountChange()
-			setInterval(this.props.checkAccountChange, 200)
+			setInterval(this.props.checkAccountChange, CONFIG.metaMask.accountPolling)
 		})
 		this.setState({
 			welcomeDone: localStorage.getItem("welcome"),
