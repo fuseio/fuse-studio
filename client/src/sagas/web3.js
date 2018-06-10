@@ -1,4 +1,4 @@
-import { all, put, takeEvery } from 'redux-saga/effects'
+import { all, put, takeEvery, select } from 'redux-saga/effects'
 import web3 from 'services/web3'
 import {isNetworkSupported} from 'utils/web3'
 import * as actions from 'actions/web3'
@@ -26,8 +26,17 @@ export function * getNetworkType () {
   }
 }
 
+export function * watchAccountChanges () {
+  const account = yield select(state => state.web3.account)
+  const currentAccount = (yield web3.eth.getAccounts())[0]
+  if (account !== currentAccount) {
+    yield put(actions.selectAccount(currentAccount))
+  }
+}
+
 export default function * rootSaga () {
   yield all([
-    takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType)
+    takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
+    takeEvery(actions.CHECK_ACCOUNT_CHANGE, watchAccountChanges)
   ])
 }
