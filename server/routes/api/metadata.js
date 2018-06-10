@@ -1,9 +1,11 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const IpfsAPI = require('ipfs-api')
-const ipfsConfig = require('../../config').ipfs
+const race = require('async/race')
 
 const auth = require('../auth')
+const ipfsConfig = require('../../config').ipfs
+
 const Metadata = mongoose.model('Metadata')
 
 const ipfs = new IpfsAPI(ipfsConfig)
@@ -11,16 +13,18 @@ const ipfs = new IpfsAPI(ipfsConfig)
 router.get('/:protocol/:hash', async (req, res, next) => {
   const protocol = req.params.protocol
   const hash = req.params.hash
-  let data
   if (protocol === 'ipfs') {
-    try {
-      data = await ipfs.files.cat(hash)
-      return res.json({source: 'ipfs', data: {hash, protocol, metadata: JSON.parse(data.toString())}})
-    } catch (e) {
-      console.error(e)
-      const metadataObj = await Metadata.findOne({protocol, hash})
-      return res.json({data: metadataObj.toJSON()})
-    }
+    await race([
+      (callback) => ipfs.files.cat(hash).then((data) => callback(null, data)),
+      (callback) => setTimeout(() => callback(new Error('timeout'), null), ipfsConfig.timeout)
+    ], async (err, data) => {
+      if (err) {
+        console.error(err)
+        const metadataObj = await Metadata.findOne({protocol, hash})
+        return res.json({source: 'mongo', data: metadataObj.toJSON()})
+      }
+      res.json({source: 'ipfs', data: {hash, protocol, metadata: JSON.parse(data.toString())}})
+    })
   } else {
     const metadataObj = await Metadata.findOne({protocol, hash})
     return res.json({source: 'mongo', data: metadataObj.toJSON()})
