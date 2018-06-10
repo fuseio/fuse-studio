@@ -11,7 +11,6 @@ import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'
 import ContactForm from 'components/ContactForm'
 import CurrencyFactoryContract from 'containers/CurrencyFactoryContract'
-import Web3Loader from 'containers/Web3Loader'
 import withTracker from 'containers/withTracker'
 import { pagePath } from 'constants/uiConstants'
 
@@ -81,42 +80,40 @@ export default class Root extends Component {
 		const sidebarAnimation = isMobile ? sidebarMobileTransition : sidebarTransition
 		return (
 			<Provider store={store}>
-				<Web3Loader>
-					<ConnectedRouter history={history}>
-						<div style={{height:'100%'}}>
-							<Route path="/view/create" component={withTracker(CurrencyFactoryContract)} />
-							<Route path="/" component={withTracker(App)} />
-							<div className="sidebar">
-								<Route
-									path={pagePath.telaviv.path}
-									component={withTracker(CommunitySidebar)}
-									mapStyles={isMobile ? mapStylesMobile : mapStyles}
-									{...sidebarAnimation}
-								/>
-								<Route
-									path={pagePath.haifa.path}
-									component={withTracker(CommunitySidebar)}
-									mapStyles={isMobile ? mapStylesMobile : mapStyles}
-									{...sidebarAnimation}
-								/>
-								<Route
-									path={pagePath.liverpool.path}
-									component={withTracker(CommunitySidebar)}
-									mapStyles={isMobile ? mapStylesMobile : mapStyles}
-									{...sidebarAnimation}
-								/>
-							</div>
-							<div className="contact-form-wrapper">
-								<AnimatedRoute
-									path="/view/contact-us"
-									component={withTracker(ContactForm)}
-									mapStyles={mapStylesContact}
-									{...contactFormTransition}
-								/>
-							</div>
+				<ConnectedRouter history={history}>
+					<div style={{height:'100%'}}>
+						<Route path="/view/create" component={withTracker(CurrencyFactoryContract)} />
+						<Route path="/" component={withTracker(App)} />
+						<div className="sidebar">
+							<Route
+								path={pagePath.telaviv.path}
+								component={withTracker(CommunitySidebar)}
+								mapStyles={isMobile ? mapStylesMobile : mapStyles}
+								{...sidebarAnimation}
+							/>
+							<Route
+								path={pagePath.haifa.path}
+								component={withTracker(CommunitySidebar)}
+								mapStyles={isMobile ? mapStylesMobile : mapStyles}
+								{...sidebarAnimation}
+							/>
+							<Route
+								path={pagePath.liverpool.path}
+								component={withTracker(CommunitySidebar)}
+								mapStyles={isMobile ? mapStylesMobile : mapStyles}
+								{...sidebarAnimation}
+							/>
 						</div>
-					</ConnectedRouter>
-				</Web3Loader>
+						<div className="contact-form-wrapper">
+							<AnimatedRoute
+								path="/view/contact-us"
+								component={withTracker(ContactForm)}
+								mapStyles={mapStylesContact}
+								{...contactFormTransition}
+							/>
+						</div>
+					</div>
+				</ConnectedRouter>
 			</Provider>
 		)
 	}
