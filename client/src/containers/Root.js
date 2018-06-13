@@ -5,14 +5,13 @@ import { Route } from 'react-router'
 import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
 import { AnimatedRoute } from 'react-router-transition'
-import { isMobile } from "react-device-detect"
+import { isMobile } from 'react-device-detect'
 
 import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'
 import ContactForm from 'components/ContactForm'
 import CurrencyFactoryContract from 'containers/CurrencyFactoryContract'
 import withTracker from 'containers/withTracker'
-import { pagePath } from 'constants/uiConstants'
 
 const history = createHistory()
 
@@ -86,19 +85,7 @@ export default class Root extends Component {
 						<Route path="/" component={withTracker(App)} />
 						<div className="sidebar">
 							<Route
-								path={pagePath.telaviv.path}
-								component={withTracker(CommunitySidebar)}
-								mapStyles={isMobile ? mapStylesMobile : mapStyles}
-								{...sidebarAnimation}
-							/>
-							<Route
-								path={pagePath.haifa.path}
-								component={withTracker(CommunitySidebar)}
-								mapStyles={isMobile ? mapStylesMobile : mapStyles}
-								{...sidebarAnimation}
-							/>
-							<Route
-								path={pagePath.liverpool.path}
+								path="/view/community/:name"
 								component={withTracker(CommunitySidebar)}
 								mapStyles={isMobile ? mapStylesMobile : mapStyles}
 								{...sidebarAnimation}
@@ -113,9 +100,16 @@ export default class Root extends Component {
 							/>
 						</div>
 					</div>
+					<div className="contact-form-wrapper">
+						<AnimatedRoute
+							path="/view/contact-us"
+							component={withTracker(ContactForm)}
+							mapStyles={mapStylesContact}
+							{...contactFormTransition}
+						/>
+					</div>
 				</ConnectedRouter>
-			</Provider>
-		)
+			</Provider>)
 	}
 }
 

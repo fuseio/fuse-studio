@@ -6,8 +6,6 @@ import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import { formatAmountReal } from '../services/global'
 import * as uiActions from '../actions/ui'
-import { pagePath } from 'constants/uiConstants'
-
 
 function rnd(m,n) {
 	m = parseInt(m);
@@ -15,26 +13,37 @@ function rnd(m,n) {
 	return Math.floor( Math.random() * (n - m + 1) ) + m;
 }
 
+// to make the points show up in round area instead of square
+const randRadiusCoords = ([x, y], size) => {
+	const t = 2 * Math.PI * Math.random()
+	const h = size * Math.random()
+	return [
+		x + h * Math.cos(t),
+		y + h * Math.sin(t),
+	]
+}
+
 class Marker extends React.PureComponent {
 	state = {}
 
 	componentWillReceiveProps(nextProps) {
-		let currentCoinAdress = this.props.currentCoinAdress
+		// this marker was not selected and isn't selected now
+		if (nextProps.activeMarker !== this.props.activeMarker && nextProps.activeMarker !== this.props.id) {
+				this.setState({grow: false})
+		}
 
-		if ((nextProps.activeMarker !== this.props.activeMarker && nextProps.activeMarker === this.props.id) || (nextProps.activeMarker && currentCoinAdress === this.props.id && currentCoinAdress === nextProps.activeMarker)) {
+		// this marker is selected now
+		if (nextProps.activeMarker === this.props.id) {
 			setTimeout(() => {
 				this.setState({grow: true})
 			}, 500)
-		}
-		if (nextProps.activeMarker !== this.props.activeMarker && nextProps.activeMarker !== this.props.id) {
-			//setTimeout(() => {
-				this.setState({grow: false})
-			//}, 1000)
 		}
 	}
 	handleHover = (value) => {
 		this.setState({isOpen: value})
 	}
+
+	handleClick = () => this.props.onClick(this.props.community)
 
 	render() {
 		let communityLabel = classNames({
@@ -62,16 +71,6 @@ class Marker extends React.PureComponent {
 			limits = this.state.grow ? 120 : 30
 		}
 
-		// to make the points show up in round area instead of square
-		const randRadiusCoords = ([x, y], size) => {
-			const t = 2 * Math.PI * Math.random()
-			const h = size * Math.random()
-			return [
-				x + h * Math.cos(t),
-				y + h * Math.sin(t),
-			]
-		}
-
 		for (var i = 0; i <= bubblecount; i++) {
 			var size = (rnd(20,bubblesize)/10)
 			var coords = randRadiusCoords([0.9 * limits/2, 0.9 * limits/2], limits/2)
@@ -94,14 +93,14 @@ class Marker extends React.PureComponent {
 			}
 		}
 
-		const formattedPrice = this.props.community.price || this.props.community.price === 0 ? formatAmountReal(this.props.community.price, 18) : 'loading'
+		const formattedPrice = this.props.community.currentPrice || this.props.community.currentPrice === 0 ? formatAmountReal(this.props.community.currentPrice, 18) : 'loading'
 
 		return (
-			<Link to={this.props.pagePath}>
-				<div className='marker' 
+			<Link to={this.props.community.path}>
+				<div className='marker'
 					onMouseEnter={this.handleHover.bind(this, true)}
 					onMouseLeave={this.handleHover.bind(this, false)}
-					onClick={this.props.onClick}>
+					onClick={this.handleClick}>
 					<div className={markerArea} >
 						{particles}
 					</div>

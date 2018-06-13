@@ -6,7 +6,6 @@ import map from  'lodash/map'
 import { isMobile, isAndroid, isIOS, isSafari, isTablet, isChrome } from 'react-device-detect'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
-import { pagePath } from 'constants/uiConstants'
 import { formatAmount, formatMoney } from 'services/global'
 
 import { SOON_MODAL } from 'constants/uiConstants'
