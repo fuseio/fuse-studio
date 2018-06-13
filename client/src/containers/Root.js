@@ -80,16 +80,26 @@ export default class Root extends Component {
 		return (
 			<Provider store={store}>
 				<ConnectedRouter history={history}>
-					<div style={{height:'100%'}}>
-						<Route path="/view/create" component={withTracker(CurrencyFactoryContract)} />
-						<Route path="/" component={withTracker(App)} />
-						<div className="sidebar">
-							<Route
-								path="/view/community/:name"
-								component={withTracker(CommunitySidebar)}
-								mapStyles={isMobile ? mapStylesMobile : mapStyles}
-								{...sidebarAnimation}
-							/>
+					<div>
+						<div style={{height:'100%'}}>
+							<Route path="/view/create" component={withTracker(CurrencyFactoryContract)} />
+							<Route path="/" component={withTracker(App)} />
+							<div className="sidebar">
+								<Route
+									path="/view/community/:name"
+									component={withTracker(CommunitySidebar)}
+									mapStyles={isMobile ? mapStylesMobile : mapStyles}
+									{...sidebarAnimation}
+								/>
+							</div>
+							<div className="contact-form-wrapper">
+								<AnimatedRoute
+									path="/view/contact-us"
+									component={withTracker(ContactForm)}
+									mapStyles={mapStylesContact}
+									{...contactFormTransition}
+								/>
+							</div>
 						</div>
 						<div className="contact-form-wrapper">
 							<AnimatedRoute
@@ -99,14 +109,6 @@ export default class Root extends Component {
 								{...contactFormTransition}
 							/>
 						</div>
-					</div>
-					<div className="contact-form-wrapper">
-						<AnimatedRoute
-							path="/view/contact-us"
-							component={withTracker(ContactForm)}
-							mapStyles={mapStylesContact}
-							{...contactFormTransition}
-						/>
 					</div>
 				</ConnectedRouter>
 			</Provider>)
