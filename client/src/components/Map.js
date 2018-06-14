@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
@@ -8,16 +8,15 @@ import {
 	Markers,
 	Marker,
 	Geography
-} from "react-simple-maps"
-import { Motion, spring } from "react-motion"
+} from 'react-simple-maps'
+import { Motion, spring } from 'react-motion'
 import classNames from 'classnames'
-import { isBrowser, isMobile, BrowserView, MobileView } from "react-device-detect"
+import { isBrowser, isMobile, BrowserView, MobileView } from 'react-device-detect'
 import MarkerSVG from 'components/Marker'
 import * as uiActions from 'actions/ui'
-
 import { mapStyle, mapSettings } from 'constants/uiConstants'
-
 import {getSelectedCommunity, getCommunitiesWithMetadata} from 'selectors/basicToken'
+import ReactGA from 'services/ga'
 import topo110 from 'topojson/110m.json'
 import topo50 from 'topojson/50m.json'
 
