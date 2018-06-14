@@ -9,7 +9,8 @@ import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 import { ERROR_MODAL } from 'constants/uiConstants'
 import {fetchContractData} from 'actions/basicToken'
-import {getNetworkType} from 'actions/web3'
+import {getNetworkType, checkAccountChange} from 'actions/web3'
+import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
 import {getAddresses} from 'selectors/web3'
 import {isNetworkSupported} from 'utils/web3'
@@ -40,6 +41,11 @@ class App extends Component {
 	}
 
 	componentDidMount () {
+		this.props.getNetworkType()
+		onWeb3Ready.then(() => {
+			this.props.checkAccountChange()
+			setInterval(this.props.checkAccountChange, CONFIG.metaMask.accountPolling)
+		})
 		this.setState({
 			welcomeDone: localStorage.getItem("welcome"),
 			signupDone: localStorage.getItem("signup")
@@ -105,7 +111,7 @@ class App extends Component {
 			{signUpEmail}
 			<div className={mainContainerClass}>
 				<TopNav active={!this.state.isWelcome} history={this.props.history}/>
-				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute}/>
+				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute} history={this.props.history}/>
 				{communityNav}
 				<ModalContainer />
 			</div>
@@ -125,6 +131,7 @@ export default connect(
 	mapStateToProps, {
 		fetchContractData,
 		getNetworkType,
+		checkAccountChange,
 		loadModal
 	}
 )(App)

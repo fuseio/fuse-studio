@@ -1,17 +1,6 @@
 module.exports = {
-    pagePath: {
-        telaviv: {
-            path: "/view/telavivcoin"
-        },
-        haifa: {
-            path: "/view/haifacoin"
-        },
-        liverpool: {
-            path: "/view/liverpoolcoin"
-        }
-    },
     LOGIN_MODAL: 'LOGIN_MODAL',
-    ERROR_MODAL: 'ERROR_MODAL', 
+    ERROR_MODAL: 'ERROR_MODAL',
     SOON_MODAL: 'SOON_MODAL',
 	mapStyle: {
         WATER_COLOR:'#241c4a',
@@ -24,6 +13,6 @@ module.exports = {
         MAX_ZOOM: 6.7,
         MIN_ZOOM: 0.5,
         ZOOM_STEPS: 1.1,
-        ZOOM_CENTER: 2.5,
+        CENTER_ZOOM: 2.5,
     }
 }

@@ -6,15 +6,24 @@ import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import { formatAmountReal } from '../services/global'
 import * as uiActions from '../actions/ui'
+import ReactGA from 'services/ga'
+
 import { pagePath } from 'constants/uiConstants'
-
-import Instagram from 'images/ig.png'
-
 
 function rnd(m,n) {
 	m = parseInt(m);
 	n = parseInt(n);
 	return Math.floor( Math.random() * (n - m + 1) ) + m;
+}
+
+// to make the points show up in round area instead of square
+const randRadiusCoords = ([x, y], size) => {
+	const t = 2 * Math.PI * Math.random()
+	const h = size * Math.random()
+	return [
+		x + h * Math.cos(t),
+		y + h * Math.sin(t),
+	]
 }
 
 class MarkerSVG extends Component {
@@ -24,14 +33,11 @@ class MarkerSVG extends Component {
 
 		if ((nextProps.activeMarker !== activeMarker && nextProps.activeMarker === community.address) ||
 			(nextProps.activeMarker && currentCoinAdress === community.address && currentCoinAdress === nextProps.activeMarker)) {
-			//setTimeout(() => {
 				this.setState({grow: true})
-			//}, 500)
 		}
+
 		if (nextProps.activeMarker !== activeMarker && nextProps.activeMarker !== community.address) {
-			//setTimeout(() => {
-				this.setState({grow: false})
-			//}, 1000)
+			this.setState({grow: false})
 		}
 	}
 	shouldComponentUpdate(nextProps) {
@@ -40,20 +46,24 @@ class MarkerSVG extends Component {
 			nextProps.community === this.props.community) return false
 		return true
 	}
+
 	onClick() {
 		const community = this.props.community
+		console.log("this.props", this.props)
 		this.props.uiActions.setActiveMarker(this.props.community.address, community.metadata.location.geo)
+		this.props.history.push(community.path)
+
 		ReactGA.event({
 			category: 'Map',
 			action: 'Click',
 			label: community.name
 		})
 	}
+
 	render() {
 		let bubblecount, bubblesize, limits, markerTransform
 		let particles = []
 		const currentCoin = this.props.community
-  		//const price = this.props.community.currentPrice
 
 		if (isMobile) {
 			bubblecount = this.state.grow ? 60 : 7
@@ -65,16 +75,6 @@ class MarkerSVG extends Component {
 			bubblesize = this.state.grow ? 30 : 15
 			limits = this.state.grow ? 30 : 10
 			markerTransform = this.state.grow ? "translate(-15, -17)" : "translate(-4, -4)"
-		}
-
-		// to make the points show up in round area instead of square
-		const randRadiusCoords = ([x, y], size) => {
-			const t = 2 * Math.PI * Math.random()
-			const h = size * Math.random()
-			return [
-				x + h * Math.cos(t),
-				y + h * Math.sin(t),
-			]
 		}
 
 		for (var i = 0; i <= bubblecount; i++) {

@@ -3,11 +3,12 @@ import { all, put, call, take, takeEvery, fork, select } from 'redux-saga/effect
 import {createEntityPut} from './utils'
 import * as actions from 'actions/basicToken'
 import * as marketMakerActions from 'actions/marketMaker'
+import {SELECT_ACCOUNT} from 'actions/web3'
 import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import * as api from 'services/api'
-import {getNetworkType} from 'selectors/web3'
+import {getNetworkType, getAddresses} from 'selectors/web3'
 import ReactGA from 'services/ga'
 
 const entityPut = createEntityPut('basicToken')
@@ -172,7 +173,7 @@ export function * fetchContractData ({contractAddress}) {
     const web3Response = yield all(calls)
     tokenData = {...tokenData, ...web3Response}
     tokenData.address = contractAddress
-    tokenData.path = '/view/' + tokenData.name.toLowerCase().replace(/ /g, '')
+    tokenData.path = '/view/community/' + tokenData.name.toLowerCase().replace(/ /g, '')
 
     if (tokenData.tokenURI) {
       const [protocol, hash] = web3Response.tokenURI.split('://')
@@ -222,6 +223,15 @@ export function * watchTransferSuccess () {
   }
 }
 
+export function * watchSelectAccount () {
+  while (true) {
+    const {response} = yield take(SELECT_ACCOUNT)
+    const addresses = yield select(getAddresses)
+    const contractAddress = addresses.ColuLocalNetwork
+    yield entityPut({type: actions.BALANCE_OF.REQUEST, contractAddress, address: response.account})
+  }
+}
+
 export default function * rootSaga () {
   yield all([
     takeEvery(actions.NAME.REQUEST, name),
@@ -234,6 +244,7 @@ export default function * rootSaga () {
     takeEvery(actions.TRANSFER.REQUEST, transfer),
     takeEvery(actions.APPROVE.REQUEST, approve),
     takeEvery(actions.FETCH_CONTRACT_DATA.REQUEST, fetchContractData),
-    fork(watchTransferSuccess)
+    fork(watchTransferSuccess),
+    fork(watchSelectAccount)
   ])
 }

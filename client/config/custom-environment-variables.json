@@ -1,5 +1,8 @@
 {
   "web3": {
     "provider": "COMMUNITY_WEB3_PROVIDER"
+  },
+  "metaMask": {
+    "accountPolling": "COMMUNITY_METAMASK_ACCOUNT_POLLING"
   }
 }

@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 import Modal from 'components/Modal'
-import { getClnToken } from 'selectors/basicToken'
 
 import ClnIcon from 'images/cln.png'
 import LockIcon from 'images/lock.png'
@@ -11,7 +10,7 @@ import MetamaskIcon from 'images/metamask.png'
 import ReactGA from 'services/ga'
 
 class LoginModal extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       finishInstall: false
@@ -27,17 +26,18 @@ class LoginModal extends React.Component {
         label: 'Finish Metamask Install'
       })
     }
+    else if (!this.props.web3.isMetaMask) {
+      ReactGA.event({
+        category: 'Metamask',
+        action: 'Close',
+        label: 'Install Metamask'
+      })
+    }
     else if (!this.props.web3.isAccountUnlocked) {
       ReactGA.event({
         category: 'Metamask',
         action: 'Close',
         label: 'Metamask locked'
-      })
-    } else if (!this.props.web3.isMetaMask) {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'Close',
-        label: 'Install Metamask'
       })
     }
   }
@@ -47,15 +47,6 @@ class LoginModal extends React.Component {
       category: 'Metamask',
       action: 'Click',
       label: 'Finish Metamask Install'
-    })
-    window.location.reload(false)
-  }
-
-  finishUnlocking = () => {
-    ReactGA.event({
-      category: 'Metamask',
-      action: 'Click',
-      label: 'Metamask locked'
     })
     window.location.reload(false)
   }
@@ -72,7 +63,13 @@ class LoginModal extends React.Component {
     window.open('https://metamask.io/', '_blank')
   }
 
-  render() {
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.web3.isMetaMask && nextProps.web3.isAccountUnlocked) {
+      this.props.uiActions.hideModal()
+    }
+  }
+
+  render () {
     let modalContent
     if (this.state.finishInstall) {
       ReactGA.event({
@@ -108,7 +105,6 @@ class LoginModal extends React.Component {
             <img className="lock-icon" src={LockIcon}/>
             <h4>Your MetaMask is locked</h4>
             <p>Please unlock your MetaMask extension in order to use the dashboard.</p>
-            <div className="button" onClick={this.finishUnlocking}>I'VE UNLOCKED METAMASK</div>
           </div>
     }
 
@@ -116,7 +112,7 @@ class LoginModal extends React.Component {
       <Modal onClose={this.onClose}>
         {modalContent}
       </Modal>
-    );
+    )
   }
 }
 
@@ -128,7 +124,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    uiActions: bindActionCreators(uiActions, dispatch),
+    uiActions: bindActionCreators(uiActions, dispatch)
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(LoginModal)

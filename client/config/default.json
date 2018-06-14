@@ -3,6 +3,9 @@
     "provider": "http://localhost:8545",
     "supportedNetworks": ["main", "ropsten"]
   },
+  "metaMask": {
+    "accountPolling": 200
+  },
   "api": {
     "url": "http://localhost:3000/api/v1"
   },

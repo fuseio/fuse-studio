@@ -14,30 +14,35 @@ import classNames from 'classnames'
 import { isBrowser, isMobile, BrowserView, MobileView } from "react-device-detect"
 import MarkerSVG from 'components/Marker'
 import _ from 'lodash'
-import * as uiActions from '../actions/ui'
+import * as uiActions from 'actions/ui'
 import {getAddresses} from 'selectors/web3'
-import {getSelectedCommunity} from 'selectors/basicToken'
+
 import { pagePath, mapStyle, mapSettings } from 'constants/uiConstants'
+
+import {getSelectedCommunity, getCommunities} from 'selectors/basicToken'
+
 import ReactGA from 'services/ga'
 import topo110 from 'topojson/110m.json'
 import topo50 from 'topojson/50m.json'
 
 
-//const panByHorizontalOffset = isMobile ? 0 : 1.4 // because of the community sidebar, so it's a bit off the center
+const panByHorizontalOffset = isMobile ? 0 : 5 // because of the community sidebar, so it's a bit off the center
 //const panByVerticalOffset = isMobile ? 0.8 : 0
 const defaultZoom = isMobile ? 3 : 4
-const defaultCenter = isMobile ? { lat: 49.8397, lng: 24.0297 } : { lat: 49.8397, lng: 24.0297 }
-const startCenter = isMobile ? { lat: 41.9, lng: 15.49 } : { lat: 48.0507729, lng: -20.75446020000004 }
+
+const defaultCenter = isMobile ? { lat: 49.8397, lng: 24.0297 } : { lat: 49.8397, lng: 24.0297 + panByHorizontalOffset }
+const startCenter = isMobile ? { lat: 41.9, lng: 15.49 } : { lat: 48.0507729, lng: -20.75446020000004 + panByHorizontalOffset }
 
 const mapStyles = {
 	width: '100%',
-	height: '100%'
+	height: '100%',
+	//marginLeft: '-450px'
 }
 
 class MapComponent extends Component {
 	state = {
 		scrolling: false,
-		zoom: 1,
+		zoom: 0.81,
 		center: startCenter,
 		movingCenter: startCenter,
 		geography: topo110,
@@ -45,7 +50,6 @@ class MapComponent extends Component {
 	}
 	componentWillReceiveProps(nextProps, nextState) {
 		const currentCoinAdress = nextProps.selectedCommunity && nextProps.selectedCommunity.address
-
 		// Start with active community
 		if (!nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata && nextProps.tokens.finishedMostCalls) {
 			this.setState({
@@ -130,7 +134,7 @@ class MapComponent extends Component {
 	
 	handleMoveEnd(newCenter) {
 	  this.setState({
-	  	movingCenter: { lat: newCenter[1], lng: newCenter[0]}
+	  	movingCenter: { lat: newCenter[1], lng: newCenter[0] - panByHorizontalOffset}
 	  })
 	}
 
@@ -142,7 +146,6 @@ class MapComponent extends Component {
 	}
 
 	onRest() {
-		console.log("this.state.zoom", this.state.zoom)
 		if (this.state.zoom === mapSettings.MAX_ZOOM || this.state.zoom === mapSettings.MAX_ZOOM + 0.01) {
 			this.setState({
 				geography: topo50,
@@ -164,7 +167,9 @@ class MapComponent extends Component {
 		const {
 			tokens,
 			selectedCommunity,
-			addresses
+			addresses,
+			communities,
+			history
 		} = this.props
 
 		const {
@@ -175,55 +180,17 @@ class MapComponent extends Component {
 			geography
 		} = this.state
 
-		const markers = [
-  			{
-  				coordinates: [
-  					tokens[addresses.HaifaCoinAddress] &&
-  					tokens[addresses.HaifaCoinAddress].metadata && 
-  					tokens[addresses.HaifaCoinAddress].metadata.location &&
-  					tokens[addresses.HaifaCoinAddress].metadata.location.geo &&
-  					tokens[addresses.HaifaCoinAddress].metadata.location.geo.lng,
-  					tokens[addresses.HaifaCoinAddress] &&
-  					tokens[addresses.HaifaCoinAddress].metadata &&
-  					tokens[addresses.HaifaCoinAddress].metadata.location &&
-  					tokens[addresses.HaifaCoinAddress].metadata.location.geo &&
-  					tokens[addresses.HaifaCoinAddress].metadata.location.geo.lat],
-  				currentCoinAdress: selectedCommunity && selectedCommunity.address,
-  				community: tokens[addresses.HaifaCoinAddress]
-  			},
-  			{
-  				coordinates: [
-  					tokens[addresses.TelAvivCoinAddress] &&
-  					tokens[addresses.TelAvivCoinAddress].metadata && 
-  					tokens[addresses.TelAvivCoinAddress].metadata.location &&
-  					tokens[addresses.TelAvivCoinAddress].metadata.location.geo &&
-  					tokens[addresses.TelAvivCoinAddress].metadata.location.geo.lng,
-  					tokens[addresses.TelAvivCoinAddress] &&
-  					tokens[addresses.TelAvivCoinAddress].metadata &&
-  					tokens[addresses.TelAvivCoinAddress].metadata.location &&
-  					tokens[addresses.TelAvivCoinAddress].metadata.location.geo &&
-  					tokens[addresses.TelAvivCoinAddress].metadata.location.geo.lat],
-  				currentCoinAdress: selectedCommunity && selectedCommunity.address,
-  				community: tokens[addresses.TelAvivCoinAddress]
-  			},
-  			{
-  				coordinates: [
-  					tokens[addresses.LiverpoolCoinAddress] &&
-  					tokens[addresses.LiverpoolCoinAddress].metadata && 
-  					tokens[addresses.LiverpoolCoinAddress].metadata.location &&
-  					tokens[addresses.LiverpoolCoinAddress].metadata.location.geo &&
-  					tokens[addresses.LiverpoolCoinAddress].metadata.location.geo.lng,
-  					tokens[addresses.LiverpoolCoinAddress] &&
-  					tokens[addresses.LiverpoolCoinAddress].metadata &&
-  					tokens[addresses.LiverpoolCoinAddress].metadata.location &&
-  					tokens[addresses.LiverpoolCoinAddress].metadata.location.geo &&
-  					tokens[addresses.LiverpoolCoinAddress].metadata.location.geo.lat],
-  				currentCoinAdress: selectedCommunity && selectedCommunity.address,
-  				community: tokens[addresses.LiverpoolCoinAddress]
-  			},
-		]
-
-		//console.log("render")
+		const markers = communities && communities.map((community) => {
+			return {
+				coordinates: [
+					community.metadata && community.metadata.location && community.metadata.location.geo && community.metadata.location.geo.lng,
+					community.metadata && community.metadata.location && community.metadata.location.geo && community.metadata.location.geo.lat
+				],
+				currentCoinAdress: selectedCommunity && selectedCommunity.address,
+				path: community.path,
+				community
+			}
+		})
 
 		return (
 			<div className={mapWrapperClass} ref="mapWrapper">
@@ -231,7 +198,7 @@ class MapComponent extends Component {
 				      defaultStyle={{
 				        x: startCenter.lng,
 				        y: startCenter.lat,
-				        zoom: 1
+				        zoom: 0.81
 				      }}
 				      style={{
 				        x: movingCenter && parseFloat(movingCenter.lng) || spring(parseFloat(center.lng), {stiffness: 184}),
@@ -246,8 +213,8 @@ class MapComponent extends Component {
 				          projectionConfig={{ scale: 220 }}
 				          style={mapStyles}
 				        >
-				          <ZoomableGlobe zoom={zoom} center={[x, y]} onMoveEnd={this.handleMoveEnd.bind(this)} onMoveStart={this.handleMoveStart.bind(this)}>
-				            <circle cx={400} cy={224} r={220} fill="#241c4a" stroke="#393174"/>
+				          <ZoomableGlobe zoom={zoom} center={[x + panByHorizontalOffset, y]} onMoveEnd={this.handleMoveEnd.bind(this)} onMoveStart={this.handleMoveStart.bind(this)}>
+				            <circle cx={400} cy={224} r={220} fill={mapStyle.WATER_COLOR} stroke={mapStyle.STROKE_COLOR}/>
 				            <Geographies
 				              disableOptimization
 				              geography={geography}
@@ -261,20 +228,20 @@ class MapComponent extends Component {
 				                    projection={proj}
 				                    style={{
 				                    	default: {
-				                    	  	fill: "#393174",
-				                    	  	stroke: "#47399f",
+				                    	  	fill: mapStyle.LAND_COLOR,
+				                    	  	stroke: mapStyle.STROKE_COLOR,
 				                    	    strokeWidth: strokeWidth,
 				                    	    outline: "none"
 				                    	},
 				                    	hover: {
-				                    		fill: "#393174",
-				                    	  	stroke: "#47399f",
+				                    		fill: mapStyle.LAND_COLOR,
+				                    	  	stroke: mapStyle.STROKE_COLOR,
 				                    	    strokeWidth: strokeWidth,
 				                    	    outline: "none"
 				                    	},
 				                    	pressed: {
-				                    		fill: "#393174",
-				                    	  	stroke: "#47399f",
+				                    		fill: mapStyle.LAND_COLOR,
+				                    	  	stroke: mapStyle.STROKE_COLOR,
 				                    	    strokeWidth: strokeWidth,
 				                    	    outline: "none"
 				                    	}
@@ -292,7 +259,8 @@ class MapComponent extends Component {
 				                  >
 				                  <MarkerSVG 
 									currentCoinAdress={marker.currentCoinAdress}
-									pagePath={pagePath.haifa.path}
+									path={marker.path}
+									history={history}
 									community={marker.community}/>
 				                </Marker>
 				              ))}
@@ -305,12 +273,12 @@ class MapComponent extends Component {
 		)
 	}
 }
-//<GoogleMapComponent selectedCommunity={this.props.selectedCommunity} addresses={this.props.addresses} tokens={this.props.tokens} ui={this.props.ui} uiActions={this.props.uiActions}/>
 
 const mapStateToProps = state => {
 	return {
 		tokens: state.tokens,
 		addresses: getAddresses(state),
+		communities: getCommunities(state),
 		selectedCommunity: getSelectedCommunity(state),
 		ui: state.ui
 	}

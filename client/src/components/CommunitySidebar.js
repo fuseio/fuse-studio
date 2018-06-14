@@ -6,7 +6,6 @@ import map from  'lodash/map'
 import { isMobile, isAndroid, isIOS, isSafari, isTablet, isChrome } from 'react-device-detect'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
-import { pagePath } from 'constants/uiConstants'
 import { formatAmount, formatMoney } from 'services/global'
 
 import { SOON_MODAL } from 'constants/uiConstants'
@@ -35,79 +34,26 @@ const SocialImage = ({link, name, onClick}) => (
 
 class CommunitySidebar extends Component {
 	state = {
-		pos: {y: 0},
-    	dragging: false,
     	rel: null
 	}
-
-	componentWillUnmount() {
-		this.refs.bar.removeEventListener('touchmove', this.onMouseMove.bind(this))
-		this.refs.bar.removeEventListener('touchend', this.onMouseUp.bind(this))
-	}
-
-	componentDidUpdate(props, state) {
-		if (this.state.dragging && !state.dragging) {
-			this.refs.bar.addEventListener('touchmove', this.onMouseMove.bind(this))
-			this.refs.bar.addEventListener('touchend', this.onMouseUp.bind(this))
-		} else if (!this.state.dragging && state.dragging) {
-			this.refs.bar.removeEventListener('touchmove', this.onMouseMove.bind(this))
-			this.refs.bar.removeEventListener('touchend', this.onMouseUp.bind(this))
-		}
-	}
-
 	onClickBuy = () => {
     	this.props.uiActions.loadModal(SOON_MODAL)
-			ReactGA.event({
-				category: this.props.selectedCommunity.name,
-				action: 'Click',
-				label: 'Buy'
-			})
+		ReactGA.event({
+			category: this.props.selectedCommunity.name,
+			action: 'Click',
+			label: 'Buy'
+		})
   	}
 
   	onClickSell = () => {
     	this.props.uiActions.loadModal(SOON_MODAL)
-			ReactGA.event({
-				category: this.props.selectedCommunity.name,
-				action: 'Click',
-				label: 'Sell'
-			})
+		ReactGA.event({
+			category: this.props.selectedCommunity.name,
+			action: 'Click',
+			label: 'Sell'
+		})
   	}
 
-	onMouseDown(e) {
-		var posTop = this.refs.bar.offsetTop
-		this.setState({
-			dragging: true,
-			open: false,
-			closed: false,
-			pos: {y: 0},
-			rel: { y: e.touches[0].pageY - posTop }
-		})
-
-		e.stopPropagation()
-		e.preventDefault()
-	}
-	onMouseUp(e) {
-		if (this.state.open) {
-			this.refs.bar.removeEventListener('touchmove', this.onMouseMove.bind(this))
-			this.refs.bar.removeEventListener('touchend', this.onMouseUp.bind(this))
-			return
-		}
-		this.setState({
-			dragging: false,
-			open: this.state.pos.y < -80 ? true : false,
-			closed: this.state.pos.y >= -80 ? true : false,
-		})
-		e.stopPropagation()
-		e.preventDefault()
-	}
-	onMouseMove(e) {
-		if (!this.state.dragging) return
-		this.setState({
-			pos: { y: e.touches[0].pageY - this.state.rel.y }
-		})
-		e.stopPropagation()
-		e.preventDefault()
-	}
 	onBackMobile() {
 		this.setState({
 			closed: true,
@@ -116,13 +62,6 @@ class CommunitySidebar extends Component {
 	}
 	onClose() {
 		let n = 7
-		//this.props.uiActions.zoomToMarker(n)
-		//setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
-		//setTimeout(() => {this.props.uiActions.zoomToMarker(n - 2)}, 400)
-		//setTimeout(() => {this.props.uiActions.zoomToMarker(n - 3)}, 550)
-		//if (isMobile) {
-		//	setTimeout(() => {this.props.uiActions.zoomToMarker(n - 4)}, 550)
-		//}
 		this.props.uiActions.hideSignup()
 		this.props.uiActions.setActiveMarker()
 

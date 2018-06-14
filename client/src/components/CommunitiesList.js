@@ -4,7 +4,6 @@ import { isBrowser, isMobile } from 'react-device-detect'
 import { mapStyle, googleMapsUrl } from 'constants/uiConstants'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
-import { pagePath } from 'constants/uiConstants'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
