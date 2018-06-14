@@ -116,13 +116,13 @@ class CommunitySidebar extends Component {
 	}
 	onClose() {
 		let n = 7
-		this.props.uiActions.zoomToMarker(n)
-		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
-		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 2)}, 400)
-		setTimeout(() => {this.props.uiActions.zoomToMarker(n - 3)}, 550)
-		if (isMobile) {
-			setTimeout(() => {this.props.uiActions.zoomToMarker(n - 4)}, 550)
-		}
+		//this.props.uiActions.zoomToMarker(n)
+		//setTimeout(() => {this.props.uiActions.zoomToMarker(n - 1)}, 250)
+		//setTimeout(() => {this.props.uiActions.zoomToMarker(n - 2)}, 400)
+		//setTimeout(() => {this.props.uiActions.zoomToMarker(n - 3)}, 550)
+		//if (isMobile) {
+		//	setTimeout(() => {this.props.uiActions.zoomToMarker(n - 4)}, 550)
+		//}
 		this.props.uiActions.hideSignup()
 		this.props.uiActions.setActiveMarker()
 
