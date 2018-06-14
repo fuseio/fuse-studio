@@ -111,7 +111,7 @@ class App extends Component {
 			{signUpEmail}
 			<div className={mainContainerClass}>
 				<TopNav active={!this.state.isWelcome} history={this.props.history}/>
-				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute}/>
+				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute} history={this.props.history}/>
 				{communityNav}
 				<ModalContainer />
 			</div>

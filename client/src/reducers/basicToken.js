@@ -8,7 +8,7 @@ export default (state = {}, action) => {
     case marketMaker.GET_CURRENT_PRICE.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case marketMaker.CLN_RESERVE.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}, finishedMostCalls: true}
     case marketMaker.CC_RESERVE.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     default:
