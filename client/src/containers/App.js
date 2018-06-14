@@ -8,7 +8,7 @@ import ModalContainer from 'containers/ModalContainer';
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 import { ERROR_MODAL } from 'constants/uiConstants'
-import {fetchContractData} from 'actions/basicToken'
+import {fetchCommunityContract, fetchClnContract} from 'actions/basicToken'
 import {getNetworkType, checkAccountChange} from 'actions/web3'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
@@ -28,12 +28,12 @@ class App extends Component {
 		if (nextProps.addresses !== this.props.addresses &&
 				isNetworkSupported(nextProps.networkType)) {
 			const coluTokens = [
-				nextProps.addresses.ColuLocalNetwork,
 				nextProps.addresses.TelAvivCoinAddress,
 				nextProps.addresses.HaifaCoinAddress,
 				nextProps.addresses.LiverpoolCoinAddress
 			]
-			coluTokens.forEach(this.props.fetchContractData)
+			this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
+			coluTokens.forEach(this.props.fetchCommunityContract)
 		}
 		if (nextProps.web3.isMetaMask && nextProps.networkType !== 'main' && nextProps.networkType !== this.props.networkType) {
 			this.props.loadModal(ERROR_MODAL);
@@ -129,7 +129,8 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps, {
-		fetchContractData,
+		fetchCommunityContract,
+		fetchClnContract,
 		getNetworkType,
 		checkAccountChange,
 		loadModal

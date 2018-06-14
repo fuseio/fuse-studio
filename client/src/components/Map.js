@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
@@ -8,19 +8,14 @@ import {
 	Markers,
 	Marker,
 	Geography
-} from "react-simple-maps"
-import { Motion, spring } from "react-motion"
+} from 'react-simple-maps'
+import { Motion, spring } from 'react-motion'
 import classNames from 'classnames'
-import { isBrowser, isMobile, BrowserView, MobileView } from "react-device-detect"
+import { isBrowser, isMobile, BrowserView, MobileView } from 'react-device-detect'
 import MarkerSVG from 'components/Marker'
-import _ from 'lodash'
 import * as uiActions from 'actions/ui'
-import {getAddresses} from 'selectors/web3'
-
-import { pagePath, mapStyle, mapSettings } from 'constants/uiConstants'
-
-import {getSelectedCommunity, getCommunities} from 'selectors/basicToken'
-
+import { mapStyle, mapSettings } from 'constants/uiConstants'
+import {getSelectedCommunity, getCommunitiesWithMetadata} from 'selectors/basicToken'
 import ReactGA from 'services/ga'
 import topo110 from 'topojson/110m.json'
 import topo50 from 'topojson/50m.json'
@@ -79,7 +74,7 @@ class MapComponent extends Component {
 				strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
 			})
 		}
-		
+
 		// Pan out to default center
 		if (nextProps !== this.props && !nextProps.ui.activeMarker && nextProps.ui.activeMarker !== this.props.ui.activeMarker) {
 			this.setState({
@@ -97,7 +92,7 @@ class MapComponent extends Component {
 				geography: topo110,
 				strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
 			})
-		}		
+		}
 	}
 	componentDidMount() {
 		this.refs.mapWrapper.addEventListener('wheel', this.handleScroll.bind(this))
@@ -131,7 +126,7 @@ class MapComponent extends Component {
 			})
 		}
 	}
-	
+
 	handleMoveEnd(newCenter) {
 	  this.setState({
 	  	movingCenter: { lat: newCenter[1], lng: newCenter[0] - panByHorizontalOffset}
@@ -156,7 +151,7 @@ class MapComponent extends Component {
 				geography: topo110,
 				strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
 			})
-		}		
+		}
 	}
 
 	render() {
@@ -257,7 +252,7 @@ class MapComponent extends Component {
 				                  marker={marker}
 				                  style={{ hidden: { display: "none" }}}
 				                  >
-				                  <MarkerSVG 
+				                  <MarkerSVG
 									currentCoinAdress={marker.currentCoinAdress}
 									path={marker.path}
 									history={history}
@@ -277,8 +272,7 @@ class MapComponent extends Component {
 const mapStateToProps = state => {
 	return {
 		tokens: state.tokens,
-		addresses: getAddresses(state),
-		communities: getCommunities(state),
+		communities: getCommunitiesWithMetadata(state),
 		selectedCommunity: getSelectedCommunity(state),
 		ui: state.ui
 	}
