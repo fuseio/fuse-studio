@@ -1,7 +1,7 @@
 module.exports = {
   secret: process.env.COMMUNITY_API_SECRET,
   ipfs: {
-    host: process.env.COMMUNITY_IPFS_HOST || 'qa-ipfs.colu.com',
+    host: process.env.COMMUNITY_IPFS_HOST || 'ipfs.colu.com',
     port: 443,
     protocol: 'https',
     timeout: process.env.COMMUNITY_IPFS_TIMEOUT || 3000

@@ -105,10 +105,10 @@ class CommunitiesList extends Component {
 
 		this.props.uiActions.hideSignup(true)
 
-		this.props.uiActions.zoomToMarker(n)
-		setTimeout(() => {this.props.uiActions.zoomToMarker(n + 1)}, 150)
-		setTimeout(() => {this.props.uiActions.zoomToMarker(n + 2)}, 300)
-		setTimeout(() => {this.props.uiActions.zoomToMarker(n + 3)}, 450)
+		//this.props.uiActions.zoomToMarker(n)
+		//setTimeout(() => {this.props.uiActions.zoomToMarker(n + 1)}, 150)
+		//setTimeout(() => {this.props.uiActions.zoomToMarker(n + 2)}, 300)
+		//setTimeout(() => {this.props.uiActions.zoomToMarker(n + 3)}, 450)
 
 		this.props.uiActions.setActiveMarker(item)
 

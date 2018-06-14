@@ -54,6 +54,9 @@ html, body {
   	overflow: hidden;
   	-webkit-overflow-scrolling: touch;
 }
+path:focus, g:focus {
+	outline: 0 !important;
+}
 p {
 	-webkit-margin-before: 0;
     -webkit-margin-after: 0;
@@ -188,6 +191,7 @@ button:disabled, button[disabled] {
 	.map-wrapper {
 		height: 100%;
 		width: 100%;
+		background-color: #1d1737;
 		//transition: all 1s cubic-bezier(0,.52,.28,.94);
 		//transform: scale(1);
 		.map-element > div {
@@ -1004,27 +1008,28 @@ input[type="checkbox" i] {
 
 .particles {
 	position: relative;
-	width:30px;
-	height:30px;
-	margin-left: -15px;
-	margin-top: -15px;
+	//width:30px;
+	//height:30px;
+	//margin-left: -15px;
+	//margin-top: -15px;
 	z-index: 3;
 	//transition: all 2s ease-in 1s;
+	cursor: pointer;
 	&.bubbles {
-		&:before {
-			content: ' ';
-			top: 15px;
-			left:15px;
-			position: absolute;
-			z-index: 2;
-			width: 7px;
-			height: 7px;
-			//transition: all 0.3s ease-in;
-			border-radius: 50%;
-			background: rgba(255,255,255,1);
-			box-shadow: inset 0px 0px 10px 8px rgba(77,217,180,0.9),
-						0px 0px 40px 6px rgba(77,217,180,1);
-		}
+		//&:before {
+		//	content: ' ';
+		//	top: 15px;
+		//	left:15px;
+		//	position: absolute;
+		//	z-index: 2;
+		//	width: 7px;
+		//	height: 7px;
+		//	//transition: all 0.3s ease-in;
+		//	border-radius: 50%;
+		//	background: rgba(255,255,255,1);
+		//	box-shadow: inset 0px 0px 10px 8px rgba(77,217,180,0.9),
+		//				0px 0px 40px 6px rgba(77,217,180,1);
+		//}
 		>.particle {
 			transition: 0.3s ease-in;
 			transition-property: all;
@@ -1044,6 +1049,19 @@ input[type="checkbox" i] {
 			animation: bubbles2 2s ease-in infinite;
 			border-radius:100%;
 			box-shadow: 5px 4px 17px 0px rgba(154, 139, 255, 0.1);
+		}
+		>.central {
+			position: absolute;
+			z-index: 2;
+			width: 7px;
+			height: 7px;
+			//transition: all 0.3s ease-in;
+			border-radius: 50%;
+			background: rgba(255,255,255,1);
+			box-shadow: inset 0px 0px 10px 8px rgba(77,217,180,0.9),
+						0px 0px 40px 6px rgba(77,217,180,1);
+			
+
 		}
 	}
 	&.grow {
@@ -1079,16 +1097,16 @@ input[type="checkbox" i] {
 			}
 		}
 	}
-	&:hover {
-		transform: scale(1.1);
-		transition: transform 0.2s linear;
-		&.bubbles {
-			>.particle, .particle2 {
-				background-color:rgba(77,217,180,0.8);
-				box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
-			}
-		}
-	}
+	//&:hover {
+	//	transform: scale(1.1);
+	//	transition: transform 0.2s linear;
+	//	&.bubbles {
+	//		>.particle, .particle2 {
+	//			background-color:rgba(77,217,180,0.8);
+	//			box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
+	//		}
+	//	}
+	//}
 }
 
 .communities-list {
@@ -1346,17 +1364,32 @@ input[type="checkbox" i] {
 	}
 }
 
+//@keyframes bubbles {
+//	 0% {
+//		opacity: 0.1;
+//	 }
+//	 20% { //show and hint at moving
+//		opacity: 1;
+//		transform:translate(0, -20%);
+//	 }
+//	 100% {
+//		opacity: 0.1;
+//		transform:translate(0, -100%); //Big bubbles move faster
+//	 }
+//}
+
+
 @keyframes bubbles {
 	 0% {
 		opacity: 0.1;
 	 }
 	 20% { //show and hint at moving
 		opacity: 1;
-		transform:translate(0, -20%);
+		transform:translate(0, 0px);
 	 }
 	 100% {
 		opacity: 0.1;
-		transform:translate(0, -100%); //Big bubbles move faster
+		transform:translate(0, -2px); //Big bubbles move faster
 	 }
 }
 
@@ -1367,11 +1400,11 @@ input[type="checkbox" i] {
 	 }
 	 20% { //show and hint at moving
 		opacity: 1;
-		transform:translate(0, 20%);
+		transform:translate(0, 0px);
 	 }
 	 100% {
 		opacity: 0.1;
-		transform:translate(0, 100%); //Big bubbles move faster
+		transform:translate(0, 2px); //Big bubbles move faster
 	 }
 }
 

@@ -6,6 +6,9 @@ import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import { formatAmountReal } from '../services/global'
 import * as uiActions from '../actions/ui'
+import ReactGA from 'services/ga'
+
+import { pagePath } from 'constants/uiConstants'
 
 function rnd(m,n) {
 	m = parseInt(m);
@@ -23,89 +26,107 @@ const randRadiusCoords = ([x, y], size) => {
 	]
 }
 
-class Marker extends React.PureComponent {
+class MarkerSVG extends Component {
 	state = {}
-
 	componentWillReceiveProps(nextProps) {
-		// this marker was not selected and isn't selected now
-		if (nextProps.activeMarker !== this.props.activeMarker && nextProps.activeMarker !== this.props.id) {
-				this.setState({grow: false})
-		}
+		const { currentCoinAdress, activeMarker, community } = this.props
 
-		// this marker is selected now
-		if (nextProps.activeMarker === this.props.id) {
-			setTimeout(() => {
+		if ((nextProps.activeMarker !== activeMarker && nextProps.activeMarker === community.address) ||
+			(nextProps.activeMarker && currentCoinAdress === community.address && currentCoinAdress === nextProps.activeMarker)) {
 				this.setState({grow: true})
-			}, 500)
+		}
+
+		if (nextProps.activeMarker !== activeMarker && nextProps.activeMarker !== community.address) {
+			this.setState({grow: false})
 		}
 	}
-	handleHover = (value) => {
-		this.setState({isOpen: value})
+	shouldComponentUpdate(nextProps) {
+		if (nextProps.currentCoinAdress === this.props.currentCoinAdress && 
+			nextProps.activeMarker === this.props.activeMarker &&
+			nextProps.community === this.props.community) return false
+		return true
 	}
 
-	handleClick = () => this.props.onClick(this.props.community)
+	onClick() {
+		const community = this.props.community
+		console.log("this.props", this.props)
+		this.props.uiActions.setActiveMarker(this.props.community.address, community.metadata.location.geo)
+		this.props.history.push(community.path)
+
+		ReactGA.event({
+			category: 'Map',
+			action: 'Click',
+			label: community.name
+		})
+	}
 
 	render() {
-		let communityLabel = classNames({
-			"community-label-active": this.state.isOpen || this.state.grow,
-			"community-label": true
-		})
-
-		let markerArea = classNames({
-			"particles": true,
-			"bubbles": true,
-			"grow": this.state.grow,
-			"grow-center": this.state.grow
-		})
-
-		let bubblecount, bubblesize, limits
+		let bubblecount, bubblesize, limits, markerTransform
 		let particles = []
+		const currentCoin = this.props.community
 
 		if (isMobile) {
 			bubblecount = this.state.grow ? 60 : 7
-			bubblesize = this.state.grow ? 60 : 40
-			limits = this.state.grow ? 120 : 30
+			bubblesize = this.state.grow ? 30 : 15
+			limits = this.state.grow ? 40 : 15
+			markerTransform = this.state.grow ? "translate(-12, -24)" : "translate(-4, -14)"
 		} else {
-			bubblecount = this.state.grow ? 100 : 15
-			bubblesize = this.state.grow ? 60 : 50
-			limits = this.state.grow ? 120 : 30
+			bubblecount = this.state.grow ? 60 : 10
+			bubblesize = this.state.grow ? 30 : 15
+			limits = this.state.grow ? 30 : 10
+			markerTransform = this.state.grow ? "translate(-15, -17)" : "translate(-4, -4)"
 		}
 
 		for (var i = 0; i <= bubblecount; i++) {
-			var size = (rnd(20,bubblesize)/10)
+			var size = (rnd(20,bubblesize)/25)
 			var coords = randRadiusCoords([0.9 * limits/2, 0.9 * limits/2], limits/2)
 			if (i % 2 == 0) {
-				particles.push(<div key={i} className="particle" style={{
-					top: coords[0],
-					left: coords[1],
-					width: size + 'px',
-					height: size + 'px',
+				particles.push(<circle className="particle" style={{
 					animationDelay: (rnd(0,30)/10) + 's'
-				}}/>)
+				}}
+            	  fill="rgba(77, 217, 180, 0.7)"
+            	  stroke="none"
+            	  cx={coords[1]}
+            	  cy={coords[0]}
+            	  r={size}
+            	/>)
 			} else {
-				particles.push(<div key={i} className="particle2" style={{
-					top: coords[0],
-					left: coords[1],
-					width: size + 'px',
-					height: size + 'px',
-					animationDelay: (rnd(0,30)/10) + 's'
-				}}/>)
+				particles.push(<circle className="particle2"
+					style={{ animationDelay: (rnd(0,30)/10) + 's'}}
+            		fill="rgba(154, 139, 255, 0.7)"
+            		stroke="none"
+            		cx={coords[1]}
+            		cy={coords[0]}
+            		r={size}
+            	/>)
 			}
 		}
 
-		const formattedPrice = this.props.community.currentPrice || this.props.community.currentPrice === 0 ? formatAmountReal(this.props.community.currentPrice, 18) : 'loading'
-
 		return (
-			<Link to={this.props.community.path}>
-				<div className='marker'
-					onMouseEnter={this.handleHover.bind(this, true)}
-					onMouseLeave={this.handleHover.bind(this, false)}
-					onClick={this.handleClick}>
-					<div className={markerArea} >
-						{particles}
-					</div>
-				</div>
-			</Link>
+			<g className="particles bubbles" transform={markerTransform} onClick={this.onClick.bind(this)}>
+				<defs>
+					<filter id="dropshadow" x="-42.3%" y="-42.3%" width="200%" height="200%">
+					  <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+					    <feMerge>
+					        <feMergeNode in="coloredBlur"/>
+					        <feMergeNode in="SourceGraphic"/>
+					    </feMerge>
+					</filter>
+				</defs>
+             	{particles}
+             	<circle className="central"
+             		style={{
+						animationDelay: (rnd(0,30)/10) + 's',
+						filter:'url(#dropshadow)'
+					}}
+            		fill="rgba(77, 217, 180, 0.9)"
+            		stroke="none"
+            		cx={this.state.grow ? 15 : 4}
+            		cy={this.state.grow ? 14 : 4}
+            		r={this.state.grow ? '8px' : '2px'}
+            	/>
+            	{this.state.grow ? <image width={"16px"} x="7" y="6" xlinkHref={currentCoin.metadata && currentCoin.metadata.imageLink} /> : null}
+            </g>
 		)
 	}
 }
@@ -117,7 +138,6 @@ class Marker extends React.PureComponent {
 
 const mapStateToProps = state => {
 	return {
-		tokens: state.tokens,
 		activeMarker: state.ui.activeMarker
 	}
 }
@@ -131,4 +151,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Marker)
+)(MarkerSVG)

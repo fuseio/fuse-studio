@@ -1,14 +1,15 @@
-import { all, put, call, take, takeEvery, fork, select } from 'redux-saga/effects'
+import { all, put, race, call, take, takeEvery, fork, select } from 'redux-saga/effects'
 
 import {createEntityPut} from './utils'
 import * as actions from 'actions/basicToken'
 import * as marketMakerActions from 'actions/marketMaker'
+import {FETCH_METADATA} from 'actions/api'
 import {SELECT_ACCOUNT} from 'actions/web3'
 import web3, {onWeb3Ready} from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
-import * as api from 'services/api'
 import {getNetworkType, getAddresses} from 'selectors/web3'
+import { delay } from 'redux-saga'
 import ReactGA from 'services/ga'
 
 const entityPut = createEntityPut('basicToken')
@@ -138,13 +139,81 @@ export function * approve ({contractAddress, spender, value}) {
   }
 }
 
-export function * fetchContractData ({contractAddress}) {
+export function * fetchCommunityContract ({contractAddress}) {
   try {
     const networkType = yield select(getNetworkType)
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
     const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
       address: addresses[networkType].CurrencyFactory
     })
+
+    const calls = {
+      name: call(ColuLocalNetworkContract.methods.name().call),
+      symbol: call(ColuLocalNetworkContract.methods.symbol().call),
+      totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
+      owner: call(ColuLocalNetworkContract.methods.owner().call),
+      tokenURI: call(ColuLocalNetworkContract.methods.tokenURI().call),
+      mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
+    }
+
+    // wait untill web3 is ready
+    yield onWeb3Ready
+
+    if (web3.eth.defaultAccount) {
+      calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
+    }
+
+    const response = yield all(calls)
+    response.isLocalCurrency = true
+    response.address = contractAddress
+    response.path = '/view/community/' + response.name.toLowerCase().replace(/ /g, '')
+
+    if (response.tokenURI) {
+      const [protocol, hash] = response.tokenURI.split('://')
+      yield put({
+        type: FETCH_METADATA.REQUEST,
+        protocol,
+        hash,
+        contractAddress
+      })
+
+      // wait until timeout to receive the metadata
+      yield race({
+        metadata: take(action =>
+          action.type === FETCH_METADATA.SUCCESS && action.contractAddress === contractAddress),
+        timeout: call(delay, CONFIG.api.timeout)
+      })
+    }
+
+    yield put({
+      type: marketMakerActions.GET_CURRENT_PRICE.REQUEST,
+      address: response.mmAddress,
+      contractAddress
+    })
+    yield put({
+      type: marketMakerActions.CLN_RESERVE.REQUEST,
+      address: response.mmAddress,
+      contractAddress
+    })
+    yield put({
+      type: marketMakerActions.CC_RESERVE.REQUEST,
+      address: response.mmAddress,
+      contractAddress
+    })
+
+    yield entityPut({type: actions.FETCH_COMMUNITY_CONTRACT.SUCCESS,
+      contractAddress,
+      response
+    })
+  } catch (error) {
+    console.error(error)
+    yield entityPut({type: actions.FETCH_COMMUNITY_CONTRACT.FAILURE, contractAddress, error})
+  }
+}
+
+export function * fetchClnContract ({contractAddress}) {
+  try {
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
 
     const calls = {
       name: call(ColuLocalNetworkContract.methods.name().call),
@@ -160,59 +229,22 @@ export function * fetchContractData ({contractAddress}) {
       calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
     }
 
-    let tokenData = {}
+    const response = yield all(calls)
+    response.isLocalCurrency = false
+    response.address = contractAddress
+    ReactGA.event({
+      category: 'Metamask',
+      action: 'CLN balance',
+      label: response.balanceOf > 0 ? 'Yes' : 'No'
+    })
 
-    if (contractAddress !== addresses[networkType].ColuLocalNetwork) {
-      calls.tokenURI = call(ColuLocalNetworkContract.methods.tokenURI().call)
-      calls.mmAddress = call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
-      tokenData.isLocalCurrency = true
-    } else {
-      tokenData.isLocalCurrency = false
-    }
-
-    const web3Response = yield all(calls)
-    tokenData = {...tokenData, ...web3Response}
-    tokenData.address = contractAddress
-    tokenData.path = '/view/community/' + tokenData.name.toLowerCase().replace(/ /g, '')
-
-    if (tokenData.tokenURI) {
-      const [protocol, hash] = web3Response.tokenURI.split('://')
-      const {data} = yield api.fetchMetadata(protocol, hash)
-      tokenData.metadata = data.metadata
-      tokenData.metadata.imageLink = api.API_ROOT + '/images/' + data.metadata.image.split('//')[1]
-    } else {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'CLN balance',
-        label: tokenData.balanceOf > 0 ? 'Yes' : 'No'
-      })
-    }
-
-    if (tokenData.mmAddress) {
-      yield put({
-        type: marketMakerActions.GET_CURRENT_PRICE.REQUEST,
-        address: tokenData.mmAddress,
-        contractAddress
-      })
-      yield put({
-        type: marketMakerActions.CLN_RESERVE.REQUEST,
-        address: tokenData.mmAddress,
-        contractAddress
-      })
-      yield put({
-        type: marketMakerActions.CC_RESERVE.REQUEST,
-        address: tokenData.mmAddress,
-        contractAddress
-      })
-    }
-
-    yield entityPut({type: actions.FETCH_CONTRACT_DATA.SUCCESS,
+    yield entityPut({type: actions.FETCH_CLN_CONTRACT.SUCCESS,
       contractAddress,
-      response: tokenData
+      response
     })
   } catch (error) {
     console.error(error)
-    yield entityPut({type: actions.FETCH_CONTRACT_DATA.FAILURE, contractAddress, error})
+    yield entityPut({type: actions.FETCH_CLN_CONTRACT.FAILURE, contractAddress, error})
   }
 }
 
@@ -243,7 +275,8 @@ export default function * rootSaga () {
     takeEvery(actions.BALANCE_OF.REQUEST, balanceOf),
     takeEvery(actions.TRANSFER.REQUEST, transfer),
     takeEvery(actions.APPROVE.REQUEST, approve),
-    takeEvery(actions.FETCH_CONTRACT_DATA.REQUEST, fetchContractData),
+    takeEvery(actions.FETCH_COMMUNITY_CONTRACT.REQUEST, fetchCommunityContract),
+    takeEvery(actions.FETCH_CLN_CONTRACT.REQUEST, fetchClnContract),
     fork(watchTransferSuccess),
     fork(watchSelectAccount)
   ])
