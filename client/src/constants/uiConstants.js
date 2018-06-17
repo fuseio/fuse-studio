@@ -10,9 +10,11 @@ module.exports = {
         TOPO50_STROKE_WIDTH: 0.15,
     },
     mapSettings: {
-        MAX_ZOOM: 6.7,
+        MAX_ZOOM: 10.0,
         MIN_ZOOM: 0.5,
+        MIN_ZOOM_MOBILE: 1,
         ZOOM_STEPS: 1.1,
         CENTER_ZOOM: 2.5,
+        CENTER_ZOOM_MOBILE: 5.4,
     }
 }

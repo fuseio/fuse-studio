@@ -626,7 +626,7 @@ button:disabled, button[disabled] {
 			width: 100vw;
 			right: 0px;
 			//height: calc(100vh - 240px) !important;
-			height: 65vh;
+			height: calc(100vh - 50px);
 			//width: calc(100vw - 20px);
 			position: absolute;
 			//touch-action: none;
@@ -1121,7 +1121,8 @@ input[type="checkbox" i] {
 	transition: transform 200ms ease-in-out;
 	.list-item {
 		height: auto;
-		@include easeOut();
+
+		//transition: all 0.15s ease-in;
 		.coin-wrapper {
 			box-sizing: content-box;
 			background-color: $light-grey;
@@ -1178,11 +1179,21 @@ input[type="checkbox" i] {
 		
 		.list-item {
 			height: auto;
+			-webkit-transition: transform 0.4s 0.1s;
+    			transition: transform 0.4s 0.1s;
+    			-webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+    			transition-timing-function: cubic-bezier(0.7,0,0.3,1);
 			.coin-wrapper {
 				border-left: 4px $colu-green solid;
 				margin-left: 9px;
 				margin-right: 4px;
-				@include easeOut();
+				//@include easeOut();
+				//transition: all 0.15s ease-in;
+				-webkit-transition: opacity 0.3s 0.5s, width 0.2s 0.1s, height 0.2s 0.1s, transform 0.1s 0.1s, left 0.2s 0.1s, margin 0.2s 0.1s;
+    			transition: opacity 0.3s 0.5s, width 0.2s 0.1s, height 0.2s 0.1s, transform 0.1s 0.1s, left 0.2s 0.1s, margin 0.2s 0.1s;
+    			-webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+    			transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+    			//transition-delay: 0.5s;
 				height: 82px;
 				//width: 100%;
 				width: 270px;
@@ -1214,11 +1225,12 @@ input[type="checkbox" i] {
 				}
 				&.open-mobile {
 					//height: calc(100vh - 290px) !important;
-					height: 65vh !important;
+					height: calc(100vh - 50px) !important;
 					//width: calc(100vw - 20px);
 					width: 101vw;
 					border-left: none;
-					transform: translate(-9px, 30px);
+					margin: 0 0 -30px 0px;
+					//transform: translate(-9px, 30px);
 					.coin-header {
 						padding: 20px;
 						img {

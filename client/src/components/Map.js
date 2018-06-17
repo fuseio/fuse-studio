@@ -8,45 +8,45 @@ import {
 	Markers,
 	Marker,
 	Geography
-} from 'react-simple-maps'
-import { Motion, spring } from 'react-motion'
+} from "utils/react-simple-maps"
+import { Motion, spring } from "react-motion"
 import classNames from 'classnames'
 import { isBrowser, isMobile, BrowserView, MobileView } from 'react-device-detect'
 import MarkerSVG from 'components/Marker'
 import * as uiActions from 'actions/ui'
 import { mapStyle, mapSettings } from 'constants/uiConstants'
 import {getSelectedCommunity, getCommunitiesWithMetadata} from 'selectors/basicToken'
+
 import ReactGA from 'services/ga'
 import topo110 from 'topojson/110m.json'
 import topo50 from 'topojson/50m.json'
 
 
 const panByHorizontalOffset = isMobile ? 0 : 5 // because of the community sidebar, so it's a bit off the center
-//const panByVerticalOffset = isMobile ? 0.8 : 0
 const defaultZoom = isMobile ? 3 : 4
 
-const defaultCenter = isMobile ? { lat: 49.8397, lng: 24.0297 } : { lat: 49.8397, lng: 24.0297 + panByHorizontalOffset }
+const defaultCenter = isMobile ? { lat: 45.10, lng: 18.68 } : { lat: 45.8397, lng: 24.0297 + panByHorizontalOffset }
 const startCenter = isMobile ? { lat: 41.9, lng: 15.49 } : { lat: 48.0507729, lng: -20.75446020000004 + panByHorizontalOffset }
 
 const mapStyles = {
 	width: '100%',
 	height: '100%',
-	//marginLeft: '-450px'
 }
 
 class MapComponent extends Component {
 	state = {
 		scrolling: false,
-		zoom: 0.81,
+		zoom: isMobile ? 1.5 : 0.81,
 		center: startCenter,
 		movingCenter: startCenter,
 		geography: topo110,
-		strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
+		strokeWidth: mapStyle.TOPO110_STROKE_WIDTH,
 	}
+	dist = 0
 	componentWillReceiveProps(nextProps, nextState) {
 		const currentCoinAdress = nextProps.selectedCommunity && nextProps.selectedCommunity.address
 		// Start with active community
-		if (!nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata && nextProps.tokens.finishedMostCalls) {
+		if (!isMobile && !nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata && nextProps.tokens.finishedMostCalls) {
 			this.setState({
 				center: nextProps.tokens[currentCoinAdress].metadata.location.geo,
 				zoom: mapSettings.MAX_ZOOM,
@@ -60,12 +60,12 @@ class MapComponent extends Component {
 			this.setState({
 				center: defaultCenter,
 				movingCenter: null,
-				zoom: mapSettings.CENTER_ZOOM,
+				zoom: isMobile ? mapSettings.CENTER_ZOOM_MOBILE : mapSettings.CENTER_ZOOM,
 			})
 		}
 
 		// Pan to the chosen marker location
-		if (nextProps !== this.props && nextProps.ui.activeMarker && nextProps.ui.activeMarker !== this.props.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
+		if (!isMobile && nextProps !== this.props && nextProps.ui.activeMarker && nextProps.ui.activeMarker !== this.props.ui.activeMarker && nextProps.tokens[nextProps.ui.activeMarker].metadata) {
 			this.setState({
 				center: nextProps.tokens[nextProps.ui.activeMarker].metadata.location.geo,
 				zoom: mapSettings.MAX_ZOOM,
@@ -76,11 +76,11 @@ class MapComponent extends Component {
 		}
 
 		// Pan out to default center
-		if (nextProps !== this.props && !nextProps.ui.activeMarker && nextProps.ui.activeMarker !== this.props.ui.activeMarker) {
+		if (!isMobile && nextProps !== this.props && !nextProps.ui.activeMarker && nextProps.ui.activeMarker !== this.props.ui.activeMarker) {
 			this.setState({
 				center: defaultCenter,
 				movingCenter: null,
-				zoom: mapSettings.CENTER_ZOOM,
+				zoom: isMobile ? mapSettings.CENTER_ZOOM_MOBILE : mapSettings.CENTER_ZOOM,
 				geography: topo110,
 				strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
 			})
@@ -96,10 +96,16 @@ class MapComponent extends Component {
 	}
 	componentDidMount() {
 		this.refs.mapWrapper.addEventListener('wheel', this.handleScroll.bind(this))
+		this.refs.mapWrapper.addEventListener("touchmove", this.handlePinch.bind(this))
+		this.refs.mapWrapper.addEventListener("touchstart", this.handlePinchStart.bind(this))
+		this.refs.mapWrapper.addEventListener("touchend", this.handlePinchEnd.bind(this))
 	}
 
 	componentWillUnmount() {
 		this.refs.mapWrapper.removeEventListener('wheel', this.handleScrollRemove.bind(this))
+		this.refs.mapWrapper.removeEventListener("touchmove", this.handleScrollRemove.bind(this))
+		this.refs.mapWrapper.removeEventListener("touchstart", this.handleScrollRemove.bind(this))
+		this.refs.mapWrapper.removeEventListener("touchend", this.handleScrollRemove.bind(this))
 	}
 
 	handleScrollRemove(e) {
@@ -124,6 +130,50 @@ class MapComponent extends Component {
 			this.setState({
 				zoom: roundedZoom / mapSettings.ZOOM_STEPS
 			})
+		}
+	}
+
+	handlePinch(e) {
+		//e.stopPropagation()
+		//e.preventDefault()
+		const roundedZoom = Math.round(this.state.zoom * 10)/10
+		if (e.touches.length > 1) {
+			const dist = Math.hypot(
+    			e.touches[0].pageX - e.touches[1].pageX,
+    			e.touches[0].pageY - e.touches[1].pageY);
+			const direction = dist - this.dist
+
+			if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
+				this.setState({
+					zoom: direction > 0 ? roundedZoom * mapSettings.ZOOM_STEPS : roundedZoom / mapSettings.ZOOM_STEPS
+				})
+			} else if (roundedZoom === mapSettings.MIN_ZOOM && direction > 0) {
+				this.setState({
+					zoom: roundedZoom * mapSettings.ZOOM_STEPS
+				})
+			} else if (roundedZoom === mapSettings.MAX_ZOOM && direction < 0) {
+				this.setState({
+					zoom: roundedZoom / mapSettings.ZOOM_STEPS
+				})
+			}
+		}
+	}
+
+	handlePinchStart(e) {
+		//e.stopPropagation()
+		//e.preventDefault()
+		if (e.touches.length > 1) {
+			this.dist = Math.hypot(
+    			e.touches[0].pageX - e.touches[1].pageX,
+    			e.touches[0].pageY - e.touches[1].pageY)
+		}
+	}
+
+	handlePinchEnd(e) {
+		//e.stopPropagation()
+		//e.preventDefault()
+		if (e.touches.length > 1) {
+			this.dist = 0
 		}
 	}
 
@@ -188,12 +238,12 @@ class MapComponent extends Component {
 		})
 
 		return (
-			<div className={mapWrapperClass} ref="mapWrapper">
+				<div className={mapWrapperClass} ref="mapWrapper">
 				    <Motion
 				      defaultStyle={{
 				        x: startCenter.lng,
 				        y: startCenter.lat,
-				        zoom: 0.81
+				        zoom: isMobile ? 1.5 : 0.81
 				      }}
 				      style={{
 				        x: movingCenter && parseFloat(movingCenter.lng) || spring(parseFloat(center.lng), {stiffness: 184}),

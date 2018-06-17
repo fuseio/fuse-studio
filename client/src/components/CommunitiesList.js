@@ -105,11 +105,6 @@ class CommunitiesList extends Component {
 
 		this.props.uiActions.hideSignup(true)
 
-		//this.props.uiActions.zoomToMarker(n)
-		//setTimeout(() => {this.props.uiActions.zoomToMarker(n + 1)}, 150)
-		//setTimeout(() => {this.props.uiActions.zoomToMarker(n + 2)}, 300)
-		//setTimeout(() => {this.props.uiActions.zoomToMarker(n + 3)}, 450)
-
 		this.props.uiActions.setActiveMarker(item)
 
 		const selectedCommunity = find(this.props.tokens, {address: item})
@@ -139,8 +134,8 @@ class CommunitiesList extends Component {
 						"coin-wrapper": true,
 						"open-mobile": currentCoin && this.state.key === i
 					})
-					return <div className="list-item" key={i} style={{transform: 'translateX(-' + (currentCoin ? this.state.scrollOffset : 0) + 'px)'}} onClick={this.onClick.bind(this, coin.address, i)}>
-						<div className={coinWrapperStyle}>
+					return <div className="list-item" key={i}  onClick={this.onClick.bind(this, coin.address, i)}>
+						<div className={coinWrapperStyle} style={{transform: 'translateX(-' + (currentCoin ? this.state.scrollOffset : 0) + 'px)'}}>
 							<CoinHeader coinImage={coin.metadata && coin.metadata.imageLink} name={coin.name} price={coin.currentPrice} />
 						</div>
 					</div>
