@@ -49,7 +49,7 @@ class MarkerSVG extends Component {
 
 	onClick() {
 		const community = this.props.community
-		console.log("this.props", this.props)
+		
 		this.props.uiActions.setActiveMarker(this.props.community.address, community.metadata.location.geo)
 		this.props.history.push(community.path)
 
@@ -61,7 +61,7 @@ class MarkerSVG extends Component {
 	}
 
 	render() {
-		let bubblecount, bubblesize, limits, markerTransform
+		let bubblecount, bubblesize, limits, markerTransform, r
 		let particles = []
 		const currentCoin = this.props.community
 
@@ -102,6 +102,14 @@ class MarkerSVG extends Component {
 			}
 		}
 
+		if (this.state.grow) {
+			r =  '8px'
+		} else if (!this.state.grow && !isMobile) {
+			r =  '2px'
+		} else {
+			r = '8px'
+		}
+
 		return (
 			<g className="particles bubbles" transform={markerTransform} onClick={this.onClick.bind(this)}>
 				<defs>
@@ -123,7 +131,7 @@ class MarkerSVG extends Component {
             		stroke="none"
             		cx={this.state.grow ? 15 : 4}
             		cy={this.state.grow ? 14 : 4}
-            		r={this.state.grow ? '8px' : '2px'}
+            		r={r}
             	/>
             	{this.state.grow ? <image width={"16px"} x="7" y="6" xlinkHref={currentCoin.metadata && currentCoin.metadata.imageLink} /> : null}
             </g>
