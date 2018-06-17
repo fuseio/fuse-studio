@@ -1,3 +1,5 @@
+set -e
+
 cd client
 
 if ! [ -n "$NO_INSTALL" ]

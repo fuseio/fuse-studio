@@ -1,5 +1,5 @@
 import {action, createRequestTypes} from './utils'
 
-export const ADD_COMMUNITY = createRequestTypes('ADD_COMMUNITY')
+export const FETCH_METADATA = createRequestTypes('FETCH_METADATA')
 
-export const addCommunity = (community) => action(ADD_COMMUNITY.REQUEST, {community})
+export const fetchMetadata = ({hash, protocol}) => action(FETCH_METADATA.REQUEST, {hash, protocol})
