@@ -1,29 +1,23 @@
-import { all, call, put, take, fork } from 'redux-saga/effects'
+import { all, takeEvery, put } from 'redux-saga/effects'
 
 import * as api from 'services/api'
 import * as actions from 'actions/api'
 
-export function * addCommunity (community) {
-  try {
-    yield call(api.addCommunity, community)
-    yield put({type: actions.ADD_COMMUNITY.SUCCESS,
-      response: {
-        community
-      }})
-  } catch (error) {
-    yield put({type: actions.ADD_COMMUNITY.FAILURE, error})
-  }
-}
+export function * fetchMetadata ({protocol, hash, contractAddress}) {
+  const {data} = yield api.fetchMetadata(protocol, hash)
+  data.metadata.imageLink = api.API_ROOT + '/images/' + data.metadata.image.split('//')[1]
 
-export function * watchAddCommunity () {
-  while (true) {
-    const {community} = yield take(actions.ADD_COMMUNITY.REQUEST)
-    yield fork(addCommunity, community)
-  }
+  yield put({
+    type: actions.FETCH_METADATA.SUCCESS,
+    contractAddress,
+    response: {
+      metadata: data.metadata
+    }
+  })
 }
 
 export default function * rootSaga () {
   yield all([
-    fork(watchAddCommunity)
+    takeEvery(actions.FETCH_METADATA.REQUEST, fetchMetadata)
   ])
 }
