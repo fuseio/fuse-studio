@@ -626,7 +626,7 @@ button:disabled, button[disabled] {
 			width: 100vw;
 			right: 0px;
 			//height: calc(100vh - 240px) !important;
-			height: calc(100vh - 50px);
+			height: calc(100vh - 100px);
 			//width: calc(100vw - 20px);
 			position: absolute;
 			//touch-action: none;
@@ -640,10 +640,10 @@ button:disabled, button[disabled] {
 			//	top: calc(-100vh + 150px) !important;
 			//}
 			&.tablet {
-				top: calc(40vh - 140px) !important;
+				top: calc(100vh - 100px) !important;
 			}
 			&.ios-chrome {
-				top: calc(40vh - 50px) !important;
+				top: calc(100vh - 50px) !important;
 			}
 			.header {
 				
@@ -1225,12 +1225,18 @@ input[type="checkbox" i] {
 				}
 				&.open-mobile {
 					//height: calc(100vh - 290px) !important;
-					height: calc(100vh - 50px) !important;
+					height: calc(100vh - 100px) !important;
 					//width: calc(100vw - 20px);
 					width: 101vw;
 					border-left: none;
 					margin: 0 0 -30px 0px;
 					//transform: translate(-9px, 30px);
+					&.ios-chrome {
+						top: calc(100vh - 50px) !important;
+					}
+					&.tablet {
+						top: calc(100vh - 100px) !important;
+					}
 					.coin-header {
 						padding: 20px;
 						img {
