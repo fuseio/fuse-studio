@@ -130,9 +130,8 @@ class MapComponent extends Component {
 		}
 	}
 
-	handlePinchOut(e) {
-		e.stopPropagation()
-		e.preventDefault()
+	handlePinchOut() {
+		
 		const roundedZoom = Math.round(this.state.zoom * 10)/10
 		if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
 			this.setState({
@@ -144,9 +143,8 @@ class MapComponent extends Component {
 			})
 		}
 	}
-	handlePinchIn(e) {
-		e.stopPropagation()
-		e.preventDefault()
+	handlePinchIn() {
+		
 		const roundedZoom = Math.round(this.state.zoom * 10)/10
 		if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
 			this.setState({
