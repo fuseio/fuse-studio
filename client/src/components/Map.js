@@ -9,6 +9,7 @@ import {
 	Marker,
 	Geography
 } from "utils/react-simple-maps"
+import Hammer from 'react-hammerjs'
 import { Motion, spring } from "react-motion"
 import classNames from 'classnames'
 import { isBrowser, isMobile, BrowserView, MobileView } from 'react-device-detect'
@@ -87,25 +88,21 @@ class MapComponent extends Component {
 		}
 	}
 	componentWillUpdate(nextProps, nextState) {
-		if (this.state.zoom > nextState.zoom && (this.state.zoom === mapSettings.MAX_ZOOM || this.state.zoom === mapSettings.MAX_ZOOM + 0.01)) {
-			this.setState({
-				geography: topo110,
-				strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
-			})
+		if (!isMobile) {
+			if (this.state.zoom > nextState.zoom && (this.state.zoom === mapSettings.MAX_ZOOM || this.state.zoom === mapSettings.MAX_ZOOM + 0.01)) {
+				this.setState({
+					geography: topo110,
+					strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
+				})
+			}
 		}
 	}
 	componentDidMount() {
-		this.refs.mapWrapper.addEventListener('wheel', this.handleScroll.bind(this))
-		this.refs.mapWrapper.addEventListener("touchmove", this.handlePinch.bind(this))
-		this.refs.mapWrapper.addEventListener("touchstart", this.handlePinchStart.bind(this))
-		this.refs.mapWrapper.addEventListener("touchend", this.handlePinchEnd.bind(this))
+		if (!isMobile) this.refs.mapWrapper.addEventListener('wheel', this.handleScroll.bind(this))
 	}
 
 	componentWillUnmount() {
-		this.refs.mapWrapper.removeEventListener('wheel', this.handleScrollRemove.bind(this))
-		this.refs.mapWrapper.removeEventListener("touchmove", this.handleScrollRemove.bind(this))
-		this.refs.mapWrapper.removeEventListener("touchstart", this.handleScrollRemove.bind(this))
-		this.refs.mapWrapper.removeEventListener("touchend", this.handleScrollRemove.bind(this))
+		if (!isMobile) this.refs.mapWrapper.removeEventListener('wheel', this.handleScrollRemove.bind(this))
 	}
 
 	handleScrollRemove(e) {
@@ -133,74 +130,61 @@ class MapComponent extends Component {
 		}
 	}
 
-	handlePinch(e) {
-		//e.stopPropagation()
-		//e.preventDefault()
+	handlePinchOut(e) {
+		e.stopPropagation()
+		e.preventDefault()
 		const roundedZoom = Math.round(this.state.zoom * 10)/10
-		if (e.touches.length > 1) {
-			const dist = Math.hypot(
-    			e.touches[0].pageX - e.touches[1].pageX,
-    			e.touches[0].pageY - e.touches[1].pageY);
-			const direction = dist - this.dist
-
-			if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
-				this.setState({
-					zoom: direction > 0 ? roundedZoom * mapSettings.ZOOM_STEPS : roundedZoom / mapSettings.ZOOM_STEPS
-				})
-			} else if (roundedZoom === mapSettings.MIN_ZOOM && direction > 0) {
-				this.setState({
-					zoom: roundedZoom * mapSettings.ZOOM_STEPS
-				})
-			} else if (roundedZoom === mapSettings.MAX_ZOOM && direction < 0) {
-				this.setState({
-					zoom: roundedZoom / mapSettings.ZOOM_STEPS
-				})
-			}
+		if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
+			this.setState({
+				zoom: roundedZoom * mapSettings.ZOOM_STEPS
+			})
+		} else if (roundedZoom === mapSettings.MIN_ZOOM) {
+			this.setState({
+				zoom: roundedZoom * mapSettings.ZOOM_STEPS
+			})
 		}
 	}
-
-	handlePinchStart(e) {
-		//e.stopPropagation()
-		//e.preventDefault()
-		if (e.touches.length > 1) {
-			this.dist = Math.hypot(
-    			e.touches[0].pageX - e.touches[1].pageX,
-    			e.touches[0].pageY - e.touches[1].pageY)
-		}
-	}
-
-	handlePinchEnd(e) {
-		//e.stopPropagation()
-		//e.preventDefault()
-		if (e.touches.length > 1) {
-			this.dist = 0
+	handlePinchIn(e) {
+		e.stopPropagation()
+		e.preventDefault()
+		const roundedZoom = Math.round(this.state.zoom * 10)/10
+		if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
+			this.setState({
+				zoom: roundedZoom / mapSettings.ZOOM_STEPS
+			})
 		}
 	}
 
 	handleMoveEnd(newCenter) {
-	  this.setState({
-	  	movingCenter: { lat: newCenter[1], lng: newCenter[0] - panByHorizontalOffset}
-	  })
+		if (!isMobile) {
+			this.setState({
+				movingCenter: { lat: newCenter[1], lng: newCenter[0] - panByHorizontalOffset}
+			})
+		}
 	}
 
 	handleMoveStart(newCenter) {
-	  this.setState({
-	  	geography: topo110,
-	  	strokeWidth: mapStyle.TOPO50_STROKE_WIDTH
-	  })
+		if (!isMobile) {
+			this.setState({
+				geography: topo110,
+				strokeWidth: mapStyle.TOPO50_STROKE_WIDTH
+			})
+		}
 	}
 
 	onRest() {
-		if (this.state.zoom === mapSettings.MAX_ZOOM || this.state.zoom === mapSettings.MAX_ZOOM + 0.01) {
-			this.setState({
-				geography: topo50,
-				strokeWidth: mapStyle.TOPO50_STROKE_WIDTH
-			})
-		} else {
-			this.setState({
-				geography: topo110,
-				strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
-			})
+		if (!isMobile) {
+			if (this.state.zoom === mapSettings.MAX_ZOOM || this.state.zoom === mapSettings.MAX_ZOOM + 0.01) {
+				this.setState({
+					geography: topo50,
+					strokeWidth: mapStyle.TOPO50_STROKE_WIDTH
+				})
+			} else {
+				this.setState({
+					geography: topo110,
+					strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
+				})
+			}
 		}
 	}
 
@@ -237,8 +221,7 @@ class MapComponent extends Component {
 			}
 		})
 
-		return (
-				<div className={mapWrapperClass} ref="mapWrapper">
+		const SvgMap = 	<div className={mapWrapperClass} ref="mapWrapper">
 				    <Motion
 				      defaultStyle={{
 				        x: startCenter.lng,
@@ -268,7 +251,6 @@ class MapComponent extends Component {
 				                geos.map((geo, i) => (
 				                  <Geography
 				                    key={i}
-				                    cacheId={null}
 				                    geography={geo}
 				                    projection={proj}
 				                    style={{
@@ -314,9 +296,20 @@ class MapComponent extends Component {
 				        </ComposableMap>
 				      )}
 				    </Motion>
-			</div>
+				</div>
+		return (
+			isMobile ? 
+				<Hammer onPinchOut={this.handlePinchOut.bind(this)} onPinchIn={this.handlePinchIn.bind(this)} options={{
+					   recognizers:{
+					      pinch : { enable: true }
+					   }
+					}}>
+					{SvgMap}
+				</Hammer>
+			: SvgMap
 		)
 	}
+
 }
 
 const mapStateToProps = state => {
