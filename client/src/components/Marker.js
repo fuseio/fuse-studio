@@ -66,7 +66,7 @@ class MarkerSVG extends Component {
 		const currentCoin = this.props.community
 
 		if (isMobile) {
-			bubblecount = this.state.grow ? 60 : 7
+			bubblecount = this.state.grow ? 60 : 2
 			bubblesize = this.state.grow ? 30 : 15
 			limits = this.state.grow ? 40 : 15
 			markerTransform = this.state.grow ? "translate(-12, -24)" : "translate(-4, -14)"
