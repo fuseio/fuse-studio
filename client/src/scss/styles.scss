@@ -312,7 +312,6 @@ button:disabled, button[disabled] {
     }
     &.closed {
     	display: none;
-    	//transform: translateY(-60px);
     }
     .success-message {
     	color: $dark-grey;
@@ -393,7 +392,6 @@ button:disabled, button[disabled] {
 	}
 	@media (max-width: $breakpoint-tablet) {
 		top: 50px;
-		//position: absolute;
 		.sidebar-close {
 			top: 22px;
 		}
@@ -487,8 +485,6 @@ button:disabled, button[disabled] {
 	z-index: 100;
 	
 	@media (max-width: 1024px) {
-		//top: calc(100vh - 100px);
-		//z-index: 10;
 		top: 50px;
 		-webkit-overflow-scrolling: touch;
 	}
@@ -625,25 +621,15 @@ button:disabled, button[disabled] {
 		@media (max-width:$breakpoint-tablet) {
 			width: 100vw;
 			right: 0px;
-			//height: calc(100vh - 240px) !important;
-			height: calc(100vh - 100px);
-			//width: calc(100vw - 20px);
+			height: 100%;
 			position: absolute;
-			//touch-action: none;
-			//height: auto;
 			z-index: 10;
 			bottom: 0;
-			//top: 190px !important;
-			//top: calc(40vh - 100px) !important;
-			//&.open {
-			//	transition: all 350ms ease-in;
-			//	top: calc(-100vh + 150px) !important;
-			//}
 			&.tablet {
-				top: calc(100vh - 100px) !important;
+				top: calc(50px) !important;
 			}
 			&.ios-chrome {
-				top: calc(100vh - 50px) !important;
+				top: calc(50px) !important;
 			}
 			.header {
 				
@@ -653,7 +639,6 @@ button:disabled, button[disabled] {
 					padding: 0;
 					.header-button {
 						@include button(#cbd1d3);
-						//width: 160px;
 						width: 100%;
 						height: 40px;
 					}
@@ -797,8 +782,6 @@ button:disabled, button[disabled] {
 			&.hide {
 				display: none;
 			}
-			//opacity: 1;
-			//transition: opacity 1s ease-in 1s;
 			.top-nav-text {
 				line-height: 1;
 				margin: 0;
@@ -1118,11 +1101,9 @@ input[type="checkbox" i] {
     width: 450px;
 	top: $nav-height;
 	overflow: hidden;
-	transition: transform 200ms ease-in-out;
+	
 	.list-item {
 		height: auto;
-
-		//transition: all 0.15s ease-in;
 		.coin-wrapper {
 			box-sizing: content-box;
 			background-color: $light-grey;
@@ -1170,36 +1151,33 @@ input[type="checkbox" i] {
 	}
 	@media (max-width: 1024px) {
 		flex-direction: row;
-		bottom: 0px;
-		padding-bottom: 30px;
+		bottom: 30px;
 		top: auto;
 		overflow: auto;
+		overflow-y: hidden;
+		height: 112px;
 		width: 100%;
 		align-items: flex-end;
-		
+		-webkit-transition: all 0.4s ;
+    	transition: all 0.4s ;
+    	-webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+    	transition-timing-function: cubic-bezier(0.7,0,0.3,1);
 		.list-item {
-			height: auto;
-			-webkit-transition: transform 0.4s 0.1s;
-    			transition: transform 0.4s 0.1s;
-    			-webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
-    			transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+			height: 82px;
+			-webkit-transition: all 0.3s ease-in-out;
+    		transition: all 0.3s ease-in-out;
 			.coin-wrapper {
 				border-left: 4px $colu-green solid;
 				margin-left: 9px;
 				margin-right: 4px;
-				//@include easeOut();
-				//transition: all 0.15s ease-in;
 				-webkit-transition: opacity 0.3s 0.5s, width 0.2s 0.1s, height 0.2s 0.1s, transform 0.1s 0.1s, left 0.2s 0.1s, margin 0.2s 0.1s;
     			transition: opacity 0.3s 0.5s, width 0.2s 0.1s, height 0.2s 0.1s, transform 0.1s 0.1s, left 0.2s 0.1s, margin 0.2s 0.1s;
     			-webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
     			transition-timing-function: cubic-bezier(0.7,0,0.3,1);
-    			//transition-delay: 0.5s;
 				height: 82px;
-				//width: 100%;
 				width: 270px;
-				
 				.coin-header {
-					margin-top:20px;
+					margin-top:0px;
 					padding: 20px 6px;
 					img {
 						width: 45px;
@@ -1224,13 +1202,10 @@ input[type="checkbox" i] {
 					border-left: 4px $colu-green solid;
 				}
 				&.open-mobile {
-					//height: calc(100vh - 290px) !important;
-					height: calc(100vh - 100px) !important;
-					//width: calc(100vw - 20px);
+					height: 100%;
 					width: 101vw;
 					border-left: none;
 					margin: 0 0 -30px 0px;
-					//transform: translate(-9px, 30px);
 					&.ios-chrome {
 						top: calc(100vh - 50px) !important;
 					}
@@ -1259,6 +1234,13 @@ input[type="checkbox" i] {
 						}
 					}
 				}
+			}
+		}
+		&.open-mobile {
+			height: calc(100% - 50px);
+			bottom: 0px;
+			.list-item {
+				height: 100%;
 			}
 		}
 	}
@@ -1382,21 +1364,6 @@ input[type="checkbox" i] {
 	}
 }
 
-//@keyframes bubbles {
-//	 0% {
-//		opacity: 0.1;
-//	 }
-//	 20% { //show and hint at moving
-//		opacity: 1;
-//		transform:translate(0, -20%);
-//	 }
-//	 100% {
-//		opacity: 0.1;
-//		transform:translate(0, -100%); //Big bubbles move faster
-//	 }
-//}
-
-
 @keyframes bubbles {
 	 0% {
 		opacity: 0.1;
@@ -1410,7 +1377,6 @@ input[type="checkbox" i] {
 		transform:translate(0, -2px); //Big bubbles move faster
 	 }
 }
-
 
 @keyframes bubbles2 {
 	 0% {

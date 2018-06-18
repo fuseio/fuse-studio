@@ -1,6 +1,6 @@
 import React, { Component, Link } from "react"
 import posed from 'react-pose'
-import { isBrowser, isMobile } from 'react-device-detect'
+import { isBrowser, isMobile, isIOS, isChrome } from 'react-device-detect'
 import { mapStyle, googleMapsUrl } from 'constants/uiConstants'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
@@ -120,7 +120,7 @@ class CommunitiesList extends Component {
 	}
 	render() {
 		const currentCoin = find(this.props.tokens, {address: this.state.item}) && this.props.ui.activeMarker
-		//const selectedCommunity = find(this.props.tokens, {address: item})
+
 		const communityCoins = Object.values(this.props.tokens) && Object.values(this.props.tokens).filter((coin) => {
 			return coin.isLocalCurrency
 		})
@@ -128,7 +128,11 @@ class CommunitiesList extends Component {
 		if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && !isMobile) {
 			return <Nav isOpen={this.state.active} coins={Object.values(this.props.tokens)} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyy={this.state.key}/>
 		} else if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && isMobile) {
-			return <div className="communities-list" ref="CommunitiesList">
+			const communitiesListStyle = classNames({
+				"communities-list": true,
+				"open-mobile": currentCoin
+			})
+			return <div className={communitiesListStyle} ref="CommunitiesList">
 				{communityCoins.map(((coin, i) => {
 					const coinWrapperStyle = classNames({
 						"coin-wrapper": true,
