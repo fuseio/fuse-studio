@@ -55,16 +55,11 @@ class App extends Component {
 	onClickExplore = () => {
 		this.setState({
 			isWelcome: !this.state.isWelcome,
-			panBy: { x: -100, y: 0 }
+			panBy: { x: -100, y: 0 },
+			welcomeDone: true
 		})
 
 		localStorage.setItem("welcome", true)
-
-		setTimeout(() => {
-			this.setState({
-				out: true
-			})
-		}, 1000)
 
 		ReactGA.event({
 			category: 'Map',
@@ -111,7 +106,7 @@ class App extends Component {
 			{signUpEmail}
 			<div className={mainContainerClass}>
 				<TopNav active={!this.state.isWelcome} history={this.props.history}/>
-				<Map key="map" active={!this.state.isWelcome} currentRoute={currentRoute} history={this.props.history}/>
+				<Map key="map" active={this.state.welcomeDone} currentRoute={currentRoute} history={this.props.history}/>
 				{communityNav}
 				<ModalContainer />
 			</div>

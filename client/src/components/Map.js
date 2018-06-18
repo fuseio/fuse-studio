@@ -43,11 +43,10 @@ class MapComponent extends Component {
 		geography: topo110,
 		strokeWidth: mapStyle.TOPO110_STROKE_WIDTH,
 	}
-	dist = 0
 	componentWillReceiveProps(nextProps, nextState) {
 		const currentCoinAdress = nextProps.selectedCommunity && nextProps.selectedCommunity.address
 		// Start with active community
-		if (!isMobile && !nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata && nextProps.tokens.finishedMostCalls) {
+		if (!isMobile && nextProps.active && !nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata && nextProps.tokens.finishedMostCalls) {
 			this.setState({
 				center: nextProps.tokens[currentCoinAdress].metadata.location.geo,
 				zoom: mapSettings.MAX_ZOOM,
@@ -57,7 +56,7 @@ class MapComponent extends Component {
 		}
 
 		// Default clean main start
-		if (!nextProps.ui.activeMarker && !currentCoinAdress && nextProps.tokens.finishedMostCalls) {
+		if (!nextProps.ui.activeMarker && !currentCoinAdress && nextProps.tokens.finishedMostCalls && nextProps.active) {
 			this.setState({
 				center: defaultCenter,
 				movingCenter: null,
@@ -88,13 +87,12 @@ class MapComponent extends Component {
 		}
 	}
 	componentWillUpdate(nextProps, nextState) {
-		if (!isMobile) {
-			if (this.state.zoom > nextState.zoom && (this.state.zoom === mapSettings.MAX_ZOOM || this.state.zoom === mapSettings.MAX_ZOOM + 0.01)) {
-				this.setState({
-					geography: topo110,
-					strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
-				})
-			}
+		const roundedZoom = Math.round(this.state.zoom * 10)/10
+		if (this.state.zoom > nextState.zoom && (this.state.zoom === mapSettings.MAX_ZOOM || roundedZoom === mapSettings.MAX_ZOOM)) {
+			this.setState({
+				geography: topo110,
+				strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
+			})
 		}
 	}
 	componentDidMount() {
@@ -114,7 +112,6 @@ class MapComponent extends Component {
 		e.stopPropagation()
 		e.preventDefault()
 		const roundedZoom = Math.round(this.state.zoom * 10)/10
-
 		if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
 			this.setState({
 				zoom: e.deltaY > 0 ? roundedZoom * mapSettings.ZOOM_STEPS : roundedZoom / mapSettings.ZOOM_STEPS
@@ -131,22 +128,20 @@ class MapComponent extends Component {
 	}
 
 	handlePinchOut() {
-		
 		const roundedZoom = Math.round(this.state.zoom * 10)/10
-		if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
+		if (roundedZoom < mapSettings.MAX_ZOOM_MOBILE && roundedZoom > mapSettings.MIN_ZOOM_MOBILE) {
 			this.setState({
 				zoom: roundedZoom * mapSettings.ZOOM_STEPS
 			})
-		} else if (roundedZoom === mapSettings.MIN_ZOOM) {
+		} else if (roundedZoom === mapSettings.MIN_ZOOM_MOBILE) {
 			this.setState({
 				zoom: roundedZoom * mapSettings.ZOOM_STEPS
 			})
 		}
 	}
 	handlePinchIn() {
-		
 		const roundedZoom = Math.round(this.state.zoom * 10)/10
-		if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
+		if (roundedZoom < mapSettings.MAX_ZOOM_MOBILE && roundedZoom > mapSettings.MIN_ZOOM_MOBILE) {
 			this.setState({
 				zoom: roundedZoom / mapSettings.ZOOM_STEPS
 			})
@@ -172,7 +167,8 @@ class MapComponent extends Component {
 
 	onRest() {
 		if (!isMobile) {
-			if (this.state.zoom === mapSettings.MAX_ZOOM || this.state.zoom === mapSettings.MAX_ZOOM + 0.01) {
+			const roundedZoom = Math.round(this.state.zoom * 10)/10
+			if (this.state.zoom === mapSettings.MAX_ZOOM || roundedZoom === mapSettings.MAX_ZOOM) {
 				this.setState({
 					geography: topo50,
 					strokeWidth: mapStyle.TOPO50_STROKE_WIDTH

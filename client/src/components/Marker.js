@@ -66,15 +66,15 @@ class MarkerSVG extends Component {
 		const currentCoin = this.props.community
 
 		if (isMobile) {
-			bubblecount = this.state.grow ? 60 : 2
+			bubblecount = this.state.grow ? 10 : 10
 			bubblesize = this.state.grow ? 30 : 15
 			limits = this.state.grow ? 40 : 15
 			markerTransform = this.state.grow ? "translate(-12, -24)" : "translate(-4, -14)"
 		} else {
-			bubblecount = this.state.grow ? 60 : 10
+			bubblecount = this.state.grow ? 70 : 10
 			bubblesize = this.state.grow ? 30 : 15
-			limits = this.state.grow ? 30 : 10
-			markerTransform = this.state.grow ? "translate(-15, -17)" : "translate(-4, -4)"
+			limits = this.state.grow ? 40 : 10
+			markerTransform = this.state.grow ? "translate(-19, -22)" : "translate(-4, -4)"
 		}
 
 		for (var i = 0; i <= bubblecount; i++) {
@@ -114,7 +114,7 @@ class MarkerSVG extends Component {
 			<g className="particles bubbles" transform={markerTransform} onClick={this.onClick.bind(this)}>
 				<defs>
 					<filter id="dropshadow" x="-42.3%" y="-42.3%" width="200%" height="200%">
-					  <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+					  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
 					    <feMerge>
 					        <feMergeNode in="coloredBlur"/>
 					        <feMergeNode in="SourceGraphic"/>
@@ -129,11 +129,11 @@ class MarkerSVG extends Component {
 					}}
             		fill="rgba(77, 217, 180, 0.9)"
             		stroke="none"
-            		cx={this.state.grow ? 15 : 4}
-            		cy={this.state.grow ? 14 : 4}
+            		cx={this.state.grow ? 19 : 4}
+            		cy={this.state.grow ? 19 : 4}
             		r={r}
             	/>
-            	{this.state.grow ? <image width={"16px"} x="7" y="6" xlinkHref={currentCoin.metadata && currentCoin.metadata.imageLink} /> : null}
+            	{this.state.grow ? <image width={"16px"} x="11" y="11" xlinkHref={currentCoin.metadata && currentCoin.metadata.imageLink} /> : null}
             </g>
 		)
 	}
