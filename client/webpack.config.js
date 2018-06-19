@@ -19,7 +19,7 @@ module.exports = {
     ]
   },
   devServer: {
-    host: '40.0.0.13',
+    host: 'local.colu.com',
     port: 9000,
     historyApiFallback: true
   },
