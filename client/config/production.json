@@ -1,4 +1,7 @@
 {
+  "web3": {
+    "desiredNetworks": ["main"]
+  },
   "api": {
     "url": "/api/v1"
   },

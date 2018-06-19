@@ -1,7 +1,8 @@
 {
   "web3": {
     "provider": "http://localhost:8545",
-    "supportedNetworks": ["main", "ropsten"]
+    "supportedNetworks": ["main", "ropsten"],
+    "desiredNetworks": ["main", "ropsten"]
   },
   "metaMask": {
     "accountPolling": 200

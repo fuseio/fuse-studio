@@ -15,7 +15,6 @@ export const getEtherscanUrl = createSelector(
     : 'https://ropsten.etherscan.io/'
 )
 
-
 export const getColuWallet = createSelector(
   getAddresses,
   (addresses) => addresses.ColuWallet

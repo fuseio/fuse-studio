@@ -13,7 +13,7 @@ import {getNetworkType, checkAccountChange} from 'actions/web3'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
 import {getAddresses} from 'selectors/web3'
-import {isNetworkSupported} from 'utils/web3'
+import {isNetworkSupported, isNetworkDesired} from 'utils/web3'
 import ReactGA from 'services/ga'
 import 'scss/styles.scss'
 
@@ -35,8 +35,8 @@ class App extends Component {
 			this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
 			coluTokens.forEach(this.props.fetchCommunityContract)
 		}
-		if (nextProps.web3.isMetaMask && nextProps.networkType !== 'main' && nextProps.networkType !== this.props.networkType) {
-			this.props.loadModal(ERROR_MODAL);
+		if (nextProps.networkType !== this.props.networkType && !isNetworkDesired(nextProps.networkType)) {
+			this.props.loadModal(ERROR_MODAL)
 		}
 	}
 
