@@ -114,15 +114,15 @@ class MapComponent extends Component {
 		const roundedZoom = Math.round(this.state.zoom * 10)/10
 		if (roundedZoom < mapSettings.MAX_ZOOM && roundedZoom > mapSettings.MIN_ZOOM) {
 			this.setState({
-				zoom: e.deltaY > 0 ? roundedZoom * mapSettings.ZOOM_STEPS : roundedZoom / mapSettings.ZOOM_STEPS
+				zoom: e.deltaY < 0 ? roundedZoom * mapSettings.ZOOM_STEPS : roundedZoom / mapSettings.ZOOM_STEPS
 			})
-		} else if (roundedZoom === mapSettings.MIN_ZOOM && e.deltaY > 0) {
-			this.setState({
-				zoom: roundedZoom * mapSettings.ZOOM_STEPS
-			})
-		} else if (roundedZoom === mapSettings.MAX_ZOOM && e.deltaY < 0) {
+		} else if (roundedZoom === mapSettings.MAX_ZOOM && e.deltaY > 0) {
 			this.setState({
 				zoom: roundedZoom / mapSettings.ZOOM_STEPS
+			})
+		} else if (roundedZoom === mapSettings.MIN_ZOOM && e.deltaY < 0) {
+			this.setState({
+				zoom: roundedZoom * mapSettings.ZOOM_STEPS
 			})
 		}
 	}

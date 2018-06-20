@@ -99,8 +99,8 @@ class CommunitySidebar extends Component {
 
 		const sidebarClass = classNames({
 			"community-sidebar": true,
-			"ios-chrome": isIOS && isChrome,
-			"tablet": isTablet && !isIOS
+			"ios-chrome": isIOS && isChrome
+			//"tablet": isTablet && !isIOS
 		})
 
 		return (
