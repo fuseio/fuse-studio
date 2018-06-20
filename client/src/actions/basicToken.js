@@ -18,6 +18,8 @@ export const APPROVE = createRequestTypes('APPROVE')
 export const FETCH_COMMUNITY_CONTRACT = createRequestTypes('FETCH_COMMUNITY_CONTRACT')
 export const FETCH_CLN_CONTRACT = createRequestTypes('FETCH_CLN_CONTRACT')
 
+export const TRANSFER_EVENT = 'TRANSFER_EVENT'
+
 export const name = (contractAddress) => basicTokenAction(NAME.REQUEST, {contractAddress})
 export const symbol = (contractAddress) => basicTokenAction(SYMBOL.REQUEST, {contractAddress})
 export const totalSupply = (contractAddress) => basicTokenAction(TOTAL_SUPPLY.REQUEST, {contractAddress})

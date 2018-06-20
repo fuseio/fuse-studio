@@ -2,6 +2,8 @@ import filter from 'lodash/filter'
 import find from 'lodash/find'
 import { createSelector } from 'reselect'
 
+export const getCommunity = (state, address) => state.tokens[address]
+
 export const getCommunities = createSelector(state => state.tokens, (tokens) =>
   filter(tokens, {isLocalCurrency: true})
 )

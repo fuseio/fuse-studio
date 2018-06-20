@@ -5,7 +5,7 @@ import * as actions from 'actions/web3'
 import {loadModal} from 'actions/ui'
 import { ERROR_MODAL } from 'constants/uiConstants'
 
-export function * getNetworkType () {
+function * getNetworkType () {
   try {
     const networkType = yield web3.eth.net.getNetworkType()
 
@@ -28,7 +28,7 @@ export function * getNetworkType () {
   }
 }
 
-export function * watchAccountChanges () {
+function * watchAccountChanges () {
   const account = yield select(state => state.web3.account)
   const currentAccount = (yield web3.eth.getAccounts())[0]
   if (account !== currentAccount) {

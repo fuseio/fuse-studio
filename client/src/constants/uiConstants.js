@@ -2,6 +2,7 @@ module.exports = {
     LOGIN_MODAL: 'LOGIN_MODAL',
     ERROR_MODAL: 'ERROR_MODAL',
     SOON_MODAL: 'SOON_MODAL',
+    EXCHANGE_MODAL: 'EXCHANGE_MODAL',
 	mapStyle: {
         WATER_COLOR:'#241c4a',
         LAND_COLOR: '#393174',

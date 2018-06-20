@@ -8,7 +8,7 @@ import web3 from 'services/web3'
 
 const CurrencyFactoryContract = contract.getContract({contractName: 'CurrencyFactory'})
 
-export function * supportsToken ({address}) {
+function * supportsToken ({address}) {
   try {
     const data = yield CurrencyFactoryContract.methods.supportsToken(address).call()
     yield put({type: actions.SUPPORTS_TOKEN.SUCCESS, data})
@@ -17,7 +17,7 @@ export function * supportsToken ({address}) {
   }
 }
 
-export function * tokens ({index}) {
+function * tokens ({index}) {
   try {
     const data = yield CurrencyFactoryContract.methods.tokens(index).call()
     yield put({type: actions.TOKENS.SUCCESS, data})
@@ -26,7 +26,7 @@ export function * tokens ({index}) {
   }
 }
 
-export function * createCurrency ({currencyData}) {
+function * createCurrency ({currencyData}) {
   try {
     const data = yield CurrencyFactoryContract.methods.createCurrency(
       currencyData.name,
@@ -51,7 +51,7 @@ export function * createCurrency ({currencyData}) {
   }
 }
 
-export function * openMarket ({address}) {
+function * openMarket ({address}) {
   try {
     const data = yield CurrencyFactoryContract.methods.openMarket(
       address
@@ -64,7 +64,7 @@ export function * openMarket ({address}) {
   }
 }
 
-export function * insertCLNtoMarketMaker ({address, clnAmount}) {
+function * insertCLNtoMarketMaker ({address, clnAmount}) {
   try {
     const data = yield CurrencyFactoryContract.methods.insertCLNtoMarketMaker(
       address,

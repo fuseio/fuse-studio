@@ -2,7 +2,7 @@ import { all, put, race, call, take, takeEvery, fork, select } from 'redux-saga/
 
 import {createEntityPut} from './utils'
 import * as actions from 'actions/basicToken'
-import * as marketMakerActions from 'actions/marketMaker'
+import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {FETCH_METADATA} from 'actions/api'
 import {SELECT_ACCOUNT} from 'actions/web3'
 import web3, {onWeb3Ready} from 'services/web3'
@@ -42,7 +42,7 @@ export function * symbol ({contractAddress}) {
   }
 }
 
-export function * totalSupply ({contractAddress}) {
+function * totalSupply ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const totalSupply = yield call(ColuLocalNetworkContract.methods.totalSupply().call)
@@ -56,7 +56,7 @@ export function * totalSupply ({contractAddress}) {
   }
 }
 
-export function * tokenURI ({contractAddress}) {
+function * tokenURI ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
     const tokenURI = yield call(ColuLocalNetworkContract.methods.tokenURI().call)
@@ -70,7 +70,7 @@ export function * tokenURI ({contractAddress}) {
   }
 }
 
-export function * setTokenURI ({contractAddress, tokenURI}) {
+function * setTokenURI ({contractAddress, tokenURI}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
     yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
@@ -86,7 +86,7 @@ export function * setTokenURI ({contractAddress, tokenURI}) {
   }
 }
 
-export function * owner ({contractAddress}) {
+function * owner ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
     const owner = yield call(ColuLocalNetworkContract.methods.owner().call)
@@ -100,7 +100,7 @@ export function * owner ({contractAddress}) {
   }
 }
 
-export function * balanceOf ({contractAddress, address}) {
+function * balanceOf ({contractAddress, address}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(address).call)
@@ -114,7 +114,7 @@ export function * balanceOf ({contractAddress, address}) {
   }
 }
 
-export function * transfer ({contractAddress, to, value}) {
+function * transfer ({contractAddress, to, value}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const receipt = yield ColuLocalNetworkContract.methods.transfer(to, value).send({
@@ -127,7 +127,7 @@ export function * transfer ({contractAddress, to, value}) {
   }
 }
 
-export function * approve ({contractAddress, spender, value}) {
+function * approve ({contractAddress, spender, value}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
     const receipt = yield ColuLocalNetworkContract.methods.approve(spender, value).send({
@@ -139,7 +139,7 @@ export function * approve ({contractAddress, spender, value}) {
   }
 }
 
-export function * fetchCommunityContract ({contractAddress}) {
+function * fetchCommunityContract ({contractAddress}) {
   try {
     const networkType = yield select(getNetworkType)
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
@@ -185,21 +185,7 @@ export function * fetchCommunityContract ({contractAddress}) {
       })
     }
 
-    yield put({
-      type: marketMakerActions.GET_CURRENT_PRICE.REQUEST,
-      address: response.mmAddress,
-      contractAddress
-    })
-    yield put({
-      type: marketMakerActions.CLN_RESERVE.REQUEST,
-      address: response.mmAddress,
-      contractAddress
-    })
-    yield put({
-      type: marketMakerActions.CC_RESERVE.REQUEST,
-      address: response.mmAddress,
-      contractAddress
-    })
+    yield fetchMarketMakerData(contractAddress, response.mmAddress)
 
     yield entityPut({type: actions.FETCH_COMMUNITY_CONTRACT.SUCCESS,
       contractAddress,
@@ -211,7 +197,7 @@ export function * fetchCommunityContract ({contractAddress}) {
   }
 }
 
-export function * fetchClnContract ({contractAddress}) {
+function * fetchClnContract ({contractAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
 
@@ -248,14 +234,14 @@ export function * fetchClnContract ({contractAddress}) {
   }
 }
 
-export function * watchTransferSuccess () {
+function * watchTransferSuccess () {
   while (true) {
     const {receipt} = yield take(actions.TRANSFER.SUCCESS)
     yield entityPut({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
   }
 }
 
-export function * watchSelectAccount () {
+function * watchSelectAccount () {
   while (true) {
     const {response} = yield take(SELECT_ACCOUNT)
     const addresses = yield select(getAddresses)
@@ -263,6 +249,16 @@ export function * watchSelectAccount () {
     yield entityPut({type: actions.BALANCE_OF.REQUEST, contractAddress, address: response.account})
   }
 }
+
+// function * transferEventHandler ({event}) {
+//   console.log(event)
+//   if (event.from)
+//   yield entityPut({type: actions.BALANCE_OF.SUCCESS,
+//     contractAddress,
+//     response: {
+//       balanceOf
+//     }})
+// }
 
 export default function * rootSaga () {
   yield all([

@@ -7,7 +7,7 @@ import CommunitiesList from 'components/CommunitiesList'
 import ModalContainer from 'containers/ModalContainer';
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
-import { ERROR_MODAL } from 'constants/uiConstants'
+import { ERROR_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
 import {fetchCommunityContract, fetchClnContract} from 'actions/basicToken'
 import {getNetworkType, checkAccountChange} from 'actions/web3'
 import {onWeb3Ready} from 'services/web3'
@@ -34,6 +34,7 @@ class App extends Component {
 			]
 			this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
 			coluTokens.forEach(this.props.fetchCommunityContract)
+			this.props.loadModal(EXCHANGE_MODAL)
 		}
 		if (nextProps.networkType !== this.props.networkType && !isNetworkDesired(nextProps.networkType)) {
 			this.props.loadModal(ERROR_MODAL)
