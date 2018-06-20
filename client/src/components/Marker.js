@@ -61,24 +61,28 @@ class MarkerSVG extends Component {
 	}
 
 	render() {
-		let bubblecount, bubblesize, limits, markerTransform, r
+		let bubblecount, bubblesize, limits, markerTransform, r, minBubbleSize, centerTransform
 		let particles = []
 		const currentCoin = this.props.community
 
 		if (isMobile) {
-			bubblecount = this.state.grow ? 10 : 10
-			bubblesize = this.state.grow ? 30 : 15
-			limits = this.state.grow ? 40 : 15
-			markerTransform = this.state.grow ? "translate(-12, -24)" : "translate(-4, -14)"
+			centerTransform = 11
+			minBubbleSize = this.state.grow ? 20 : 70
+			bubblecount = this.state.grow ? 7 : 7
+			bubblesize = this.state.grow ? 30 : 80
+			limits = this.state.grow ? 40 : 30
+			markerTransform = this.state.grow ? "translate(-12, -24)" : "translate(-12, -14)"
 		} else {
-			bubblecount = this.state.grow ? 70 : 10
+			minBubbleSize = 20
+			centerTransform = 4
+			bubblecount = this.state.grow ? 70 : 15
 			bubblesize = this.state.grow ? 30 : 15
 			limits = this.state.grow ? 40 : 10
 			markerTransform = this.state.grow ? "translate(-19, -22)" : "translate(-4, -4)"
 		}
 
 		for (var i = 0; i <= bubblecount; i++) {
-			var size = (rnd(20,bubblesize)/25)
+			var size = (rnd(minBubbleSize,bubblesize)/25)
 			var coords = randRadiusCoords([0.9 * limits/2, 0.9 * limits/2], limits/2)
 			if (i % 2 == 0) {
 				particles.push(<circle className="particle" style={{
@@ -107,14 +111,14 @@ class MarkerSVG extends Component {
 		} else if (!this.state.grow && !isMobile) {
 			r =  '2px'
 		} else {
-			r = '8px'
+			r = '6px'
 		}
 
 		return (
 			<g className="particles bubbles" transform={markerTransform} onClick={this.onClick.bind(this)}>
 				<defs>
-					<filter id="dropshadow" x="-42.3%" y="-42.3%" width="200%" height="200%">
-					  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+					<filter id="dropshadow" x="-42.3%" y="-42.3%" width="300%" height="300%">
+					  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
 					    <feMerge>
 					        <feMergeNode in="coloredBlur"/>
 					        <feMergeNode in="SourceGraphic"/>
@@ -129,8 +133,8 @@ class MarkerSVG extends Component {
 					}}
             		fill="rgba(77, 217, 180, 0.9)"
             		stroke="none"
-            		cx={this.state.grow ? 19 : 4}
-            		cy={this.state.grow ? 19 : 4}
+            		cx={this.state.grow ? 19 : centerTransform}
+            		cy={this.state.grow ? 19 : centerTransform}
             		r={r}
             	/>
             	{this.state.grow ? <image width={"16px"} x="11" y="11" xlinkHref={currentCoin.metadata && currentCoin.metadata.imageLink} /> : null}
