@@ -9,8 +9,10 @@ export default (state = {}, action) => {
     case marketMaker.GET_CURRENT_PRICE.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case marketMaker.CLN_RESERVE.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}, finishedMostCalls: true}
+      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case marketMaker.CC_RESERVE.SUCCESS:
+      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+    case marketMaker.FETCH_MARKET_MAKER_DATA.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case FETCH_METADATA.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}

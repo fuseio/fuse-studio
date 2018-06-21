@@ -14,6 +14,9 @@ function * getNetworkType () {
         networkType,
         isMetaMask: web3.currentProvider.isMetaMask || false
       }})
+    yield put({
+      type: actions.CHECK_ACCOUNT_CHANGE
+    })
     if (!isNetworkSupported(networkType)) {
       yield put({type: actions.UNSUPPORTED_NETWORK_ERROR,
         error: {

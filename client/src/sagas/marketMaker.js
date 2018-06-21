@@ -3,7 +3,7 @@ import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/marketMaker'
-import {TRANSFER_EVENT, BALANCE_OF} from 'actions/basicToken'
+import {BALANCE_OF} from 'actions/basicToken'
 import {getClnToken, getCommunity} from 'selectors/basicToken'
 import web3 from 'services/web3'
 
@@ -62,29 +62,28 @@ export function * quote ({fromToken, inAmount, toToken}) {
   try {
     const clnToken = yield select(getClnToken)
     const ccAddress = clnToken.address === fromToken ? toToken : fromToken
-    let token = yield select(getCommunity, ccAddress)
-    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
-    const returnAmount = yield call(EllipseMarketMakerContract.methods.quote(fromToken, inAmount, toToken).call)
 
-    if (toToken === clnToken.address) {
-      yield put({type: actions.QUOTE.SUCCESS,
-        address: token.address,
-        response: {
-          address: token.address,
-          returnAmount
-        }})
-    } else {
-      token = yield select(getCommunity, ccAddress)
+    const token = yield select(getCommunity, ccAddress)
+
+    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
+    let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromToken, inAmount, toToken).call)
+
+    if (toToken === ccAddress) {
       const ccReserve = yield call(EllipseMarketMakerContract.methods.calcReserve(
-        new BigNumber(token.clnReserve).minus(returnAmount), token.ccReserve, token.totalSupply).call)
-      const returnAmountCC = new BigNumber(token.ccReserve).minus(ccReserve)
-      yield put({type: actions.QUOTE.SUCCESS,
-        address: token.address,
-        response: {
-          address: token.address,
-          returnAmountCC: returnAmountCC.toString()
-        }})
+        new BigNumber(token.clnReserve).plus(outAmount), clnToken.totalSupply, token.totalSupply).call)
+      outAmount = new BigNumber(token.ccReserve).minus(ccReserve).toString()
     }
+
+    yield put({type: actions.QUOTE.SUCCESS,
+      address: token.address,
+      response: {
+        quotePair: {
+          fromToken,
+          toToken,
+          inAmount,
+          outAmount
+        }
+      }})
   } catch (error) {
     yield put({type: actions.QUOTE.FAILURE, error})
   }
@@ -115,7 +114,7 @@ export function * change ({fromToken, inAmount, toToken}) {
       address: web3.eth.defaultAccount
     })
 
-    yield fetchMarketMakerData(token.address, token.mmAddress)
+    yield fetchMarketMakerData({contractAddress: token.address, mmAddress: token.mmAddress})
 
     yield put({type: actions.CHANGE.SUCCESS,
       address: token.address,
@@ -123,26 +122,30 @@ export function * change ({fromToken, inAmount, toToken}) {
         address: token.address
       }})
   } catch (error) {
-    yield put({type: actions.CHANGE.FAILURE, error})
+    yield put({type: actions.CC_RESERVE.FAILURE, error})
   }
 }
 
-export function * fetchMarketMakerData (contractAddress, mmAddress) {
-  yield put({
-    type: actions.GET_CURRENT_PRICE.REQUEST,
-    address: mmAddress,
-    contractAddress
-  })
-  yield put({
-    type: actions.CLN_RESERVE.REQUEST,
-    address: mmAddress,
-    contractAddress
-  })
-  yield put({
-    type: actions.CC_RESERVE.REQUEST,
-    address: mmAddress,
-    contractAddress
-  })
+export function * fetchMarketMakerData ({contractAddress, mmAddress}) {
+  try {
+    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
+
+    const calls = {
+      currentPrice: call(EllipseMarketMakerContract.methods.getCurrentPrice().call),
+      clnReserve: call(EllipseMarketMakerContract.methods.R1().call),
+      ccReserve: call(EllipseMarketMakerContract.methods.R2().call)
+    }
+
+    const response = yield all(calls)
+    response.isMarketMakerLoaded = true
+    yield put({type: actions.FETCH_MARKET_MAKER_DATA.SUCCESS,
+      contractAddress,
+      response
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({type: actions.FETCH_MARKET_MAKER_DATA.FAILURE, contractAddress, error})
+  }
 }
 
 export default function * rootSaga () {
@@ -151,6 +154,7 @@ export default function * rootSaga () {
     takeEvery(actions.CLN_RESERVE.REQUEST, clnReserve),
     takeEvery(actions.CC_RESERVE.REQUEST, ccReserve),
     takeEvery(actions.QUOTE.REQUEST, quote),
-    takeEvery(actions.CHANGE.REQUEST, change)
+    takeEvery(actions.CHANGE.REQUEST, change),
+    takeEvery(actions.FETCH_MARKET_MAKER_DATA.REQUEST, fetchMarketMakerData)
   ])
 }

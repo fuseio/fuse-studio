@@ -15,6 +15,9 @@ export const BALANCE_OF = createRequestTypes('BALANCE_OF')
 export const TRANSFER = createRequestTypes('TRANSFER')
 export const APPROVE = createRequestTypes('APPROVE')
 
+export const FETCH_COMMUNITY = createRequestTypes('FETCH_COMMUNITY')
+export const FETCH_COMMUNITY_TOKEN = createRequestTypes('FETCH_COMMUNITY_TOKEN')
+
 export const FETCH_COMMUNITY_CONTRACT = createRequestTypes('FETCH_COMMUNITY_CONTRACT')
 export const FETCH_CLN_CONTRACT = createRequestTypes('FETCH_CLN_CONTRACT')
 
@@ -31,5 +34,6 @@ export const balanceOf = (contractAddress, address) => basicTokenAction(BALANCE_
 export const transfer = (contractAddress, to, value) => basicTokenAction(TRANSFER.REQUEST, {contractAddress, to, value})
 export const approve = (contractAddress, spender, value) => basicTokenAction(APPROVE.REQUEST, {contractAddress, spender, value})
 
+export const fetchCommunity = (contractAddress) => basicTokenAction(FETCH_COMMUNITY.REQUEST, {contractAddress})
 export const fetchCommunityContract = (contractAddress) => basicTokenAction(FETCH_COMMUNITY_CONTRACT.REQUEST, {contractAddress})
 export const fetchClnContract = (contractAddress) => basicTokenAction(FETCH_CLN_CONTRACT.REQUEST, {contractAddress})

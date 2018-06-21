@@ -8,7 +8,7 @@ import ModalContainer from 'containers/ModalContainer';
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 import { ERROR_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
-import {fetchCommunityContract, fetchClnContract} from 'actions/basicToken'
+import {fetchClnContract, fetchCommunity} from 'actions/basicToken'
 import {getNetworkType, checkAccountChange} from 'actions/web3'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
@@ -33,7 +33,7 @@ class App extends Component {
 				nextProps.addresses.LiverpoolCoinAddress
 			]
 			this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
-			coluTokens.forEach(this.props.fetchCommunityContract)
+			coluTokens.forEach(this.props.fetchCommunity)
 			this.props.loadModal(EXCHANGE_MODAL)
 		}
 		if (nextProps.networkType !== this.props.networkType && !isNetworkDesired(nextProps.networkType)) {
@@ -44,7 +44,6 @@ class App extends Component {
 	componentDidMount () {
 		this.props.getNetworkType()
 		onWeb3Ready.then(() => {
-			this.props.checkAccountChange()
 			setInterval(this.props.checkAccountChange, CONFIG.metaMask.accountPolling)
 		})
 		this.setState({
@@ -125,8 +124,8 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps, {
-		fetchCommunityContract,
 		fetchClnContract,
+		fetchCommunity,
 		getNetworkType,
 		checkAccountChange,
 		loadModal

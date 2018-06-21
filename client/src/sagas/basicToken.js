@@ -139,6 +139,108 @@ function * approve ({contractAddress, spender, value}) {
   }
 }
 
+function * fetchCommunityToken ({contractAddress}) {
+  try {
+    const networkType = yield select(getNetworkType)
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
+      address: addresses[networkType].CurrencyFactory
+    })
+
+    const calls = {
+      name: call(ColuLocalNetworkContract.methods.name().call),
+      symbol: call(ColuLocalNetworkContract.methods.symbol().call),
+      totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
+      owner: call(ColuLocalNetworkContract.methods.owner().call),
+      tokenURI: call(ColuLocalNetworkContract.methods.tokenURI().call),
+      mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
+    }
+
+    // wait untill web3 is ready
+    yield onWeb3Ready
+
+    if (web3.eth.defaultAccount) {
+      calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
+    }
+
+    const response = yield all(calls)
+    response.isLocalCurrency = true
+    response.address = contractAddress
+    response.path = '/view/community/' + response.name.toLowerCase().replace(/ /g, '')
+
+    if (response.tokenURI) {
+      const [protocol, hash] = response.tokenURI.split('://')
+      yield put({
+        type: FETCH_METADATA.REQUEST,
+        protocol,
+        hash,
+        contractAddress
+      })
+
+      // wait until timeout to receive the metadata
+      yield race({
+        metadata: take(action =>
+          action.type === FETCH_METADATA.SUCCESS && action.contractAddress === contractAddress),
+        timeout: call(delay, CONFIG.api.timeout)
+      })
+    }
+
+    yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.SUCCESS,
+      contractAddress,
+      response
+    })
+    return response
+  } catch (error) {
+    console.error(error)
+    yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.FAILURE, contractAddress, error})
+  }
+}
+
+// function * fetchCommunityMetadata ({contractAddress, tokenURI}) {
+//   try {
+//     if (tokenURI) {
+//       const [protocol, hash] = tokenURI.split('://')
+//       yield put({
+//         type: FETCH_METADATA.REQUEST,
+//         protocol,
+//         hash,
+//         contractAddress
+//       })
+//       // wait until timeout to receive the metadata
+//       const {timeout} = yield race({
+//         metadata: take(action =>
+//           action.type === FETCH_METADATA.SUCCESS && action.contractAddress === contractAddress),
+//         timeout: call(delay, CONFIG.api.timeout)
+//       })
+//       if (timeout) {
+//         yield put({
+//           type: actions.FETCH_METADATA.SUCCESS,
+//           contractAddress,
+//           response: {
+//             metadata: {
+//               timeout: true
+//             }
+//           }
+//         })
+//       }
+//     }
+//   } catch (error) {
+//     console.error(error)
+//     yield entityPut({type: FETCH_METADATA.FAILURE, contractAddress, error})
+//   }
+// }
+
+function * fetchCommunity ({contractAddress}) {
+  try {
+    const tokenResponse = yield call(fetchCommunityToken, {contractAddress})
+    yield call(fetchMarketMakerData, {contractAddress, mmAddress: tokenResponse.mmAddress})
+    yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, contractAddress})
+  } catch (error) {
+    console.error(error)
+    yield entityPut({type: actions.FETCH_COMMUNITY.FAILURE, contractAddress, error})
+  }
+}
+
 function * fetchCommunityContract ({contractAddress}) {
   try {
     const networkType = yield select(getNetworkType)
@@ -185,7 +287,7 @@ function * fetchCommunityContract ({contractAddress}) {
       })
     }
 
-    yield fetchMarketMakerData(contractAddress, response.mmAddress)
+    yield fetchMarketMakerData({contractAddress, mmAddress: response.mmAddress})
 
     yield entityPut({type: actions.FETCH_COMMUNITY_CONTRACT.SUCCESS,
       contractAddress,
@@ -234,13 +336,6 @@ function * fetchClnContract ({contractAddress}) {
   }
 }
 
-function * watchTransferSuccess () {
-  while (true) {
-    const {receipt} = yield take(actions.TRANSFER.SUCCESS)
-    yield entityPut({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
-  }
-}
-
 function * watchSelectAccount () {
   while (true) {
     const {response} = yield take(SELECT_ACCOUNT)
@@ -249,16 +344,6 @@ function * watchSelectAccount () {
     yield entityPut({type: actions.BALANCE_OF.REQUEST, contractAddress, address: response.account})
   }
 }
-
-// function * transferEventHandler ({event}) {
-//   console.log(event)
-//   if (event.from)
-//   yield entityPut({type: actions.BALANCE_OF.SUCCESS,
-//     contractAddress,
-//     response: {
-//       balanceOf
-//     }})
-// }
 
 export default function * rootSaga () {
   yield all([
@@ -273,7 +358,7 @@ export default function * rootSaga () {
     takeEvery(actions.APPROVE.REQUEST, approve),
     takeEvery(actions.FETCH_COMMUNITY_CONTRACT.REQUEST, fetchCommunityContract),
     takeEvery(actions.FETCH_CLN_CONTRACT.REQUEST, fetchClnContract),
-    fork(watchTransferSuccess),
+    takeEvery(actions.FETCH_COMMUNITY.REQUEST, fetchCommunity),
     fork(watchSelectAccount)
   ])
 }

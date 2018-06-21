@@ -46,7 +46,7 @@ class MapComponent extends Component {
 	componentWillReceiveProps(nextProps, nextState) {
 		const currentCoinAdress = nextProps.selectedCommunity && nextProps.selectedCommunity.address
 		// Start with active community
-		if (!isMobile && nextProps.active && !nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata && nextProps.tokens.finishedMostCalls) {
+		if (!isMobile && nextProps.active && !nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata) {
 			this.setState({
 				center: nextProps.tokens[currentCoinAdress].metadata.location.geo,
 				zoom: mapSettings.MAX_ZOOM,
@@ -56,7 +56,7 @@ class MapComponent extends Component {
 		}
 
 		// Default clean main start
-		if (!nextProps.ui.activeMarker && !currentCoinAdress && nextProps.tokens.finishedMostCalls && nextProps.active) {
+		if (!nextProps.ui.activeMarker && !currentCoinAdress && nextProps.active) {
 			this.setState({
 				center: defaultCenter,
 				movingCenter: null,
@@ -292,7 +292,7 @@ class MapComponent extends Component {
 				    </Motion>
 				</div>
 		return (
-			isMobile ? 
+			isMobile ?
 				<Hammer onPinchOut={this.handlePinchOut.bind(this)} onPinchIn={this.handlePinchIn.bind(this)} options={{
 					   recognizers:{
 					      pinch : { enable: true }
