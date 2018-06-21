@@ -381,6 +381,7 @@ button:disabled, button[disabled] {
 			width:34px;
 			min-width: 34px;
 			border-radius: 50%;
+			padding: 0px;
 			&:disabled {
 				background-color: rgb(224, 224, 224) !important;
 			}
