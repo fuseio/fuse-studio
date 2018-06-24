@@ -68,10 +68,20 @@ export function * quote ({fromToken, inAmount, toToken}) {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
     let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromToken, inAmount, toToken).call)
 
+    // debugger
+    // if (toToken === ccAddress) {
+    //   const ccReserve = yield call(EllipseMarketMakerContract.methods.calcReserve(
+    //     new BigNumber(token.clnReserve).plus(outAmount), clnToken.totalSupply, token.totalSupply).call)
+    //   debugger
+    //   outAmount = new BigNumber(token.ccReserve).minus(ccReserve).toString()
+    // }
+
+    let price
+
     if (toToken === ccAddress) {
-      const ccReserve = yield call(EllipseMarketMakerContract.methods.calcReserve(
-        new BigNumber(token.clnReserve).plus(outAmount), clnToken.totalSupply, token.totalSupply).call)
-      outAmount = new BigNumber(token.ccReserve).minus(ccReserve).toString()
+      price = inAmount / outAmount
+    } else {
+      price = outAmount / inAmount
     }
 
     yield put({type: actions.QUOTE.SUCCESS,
@@ -81,7 +91,8 @@ export function * quote ({fromToken, inAmount, toToken}) {
           fromToken,
           toToken,
           inAmount,
-          outAmount
+          outAmount,
+          price
         }
       }})
   } catch (error) {
@@ -89,14 +100,20 @@ export function * quote ({fromToken, inAmount, toToken}) {
   }
 }
 
-export function * change ({fromToken, inAmount, toToken}) {
+export function * change ({fromToken, inAmount, toToken, minReturn}) {
   try {
     const clnToken = yield select(getClnToken)
     let token = yield select(getCommunity, clnToken.address === fromToken ? toToken : fromToken)
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
     const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency', address: fromToken})
-    const data = EllipseMarketMakerContract.methods.change(toToken).encodeABI()
+
+    let data
+    if (minReturn) {
+      data = EllipseMarketMakerContract.methods.change(toToken, minReturn).encodeABI()
+    } else {
+      data = EllipseMarketMakerContract.methods.change(toToken).encodeABI()
+    }
 
     yield call(ColuLocalCurrency.methods.transferAndCall(token.mmAddress, inAmount, data).send, {
       from: web3.eth.defaultAccount

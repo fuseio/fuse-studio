@@ -13,5 +13,6 @@ export const getCurrentPrice = (address, contractAddress) => action(GET_CURRENT_
 export const clnReserve = (address, contractAddress) => action(CLN_RESERVE.REQUEST, {address, contractAddress})
 export const ccReserve = (address, contractAddress) => action(CC_RESERVE.REQUEST, {address, contractAddress})
 export const fetchMarketMakerData = (contractAddress, mmAddress) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {contractAddress, mmAddress})
+
 export const quote = (fromToken, inAmount, toToken) => action(QUOTE.REQUEST, {fromToken, inAmount, toToken})
-export const change = (fromToken, inAmount, toToken) => action(CHANGE.REQUEST, {fromToken, inAmount, toToken})
+export const change = (fromToken, inAmount, toToken, minReturn) => action(CHANGE.REQUEST, {fromToken, inAmount, toToken, minReturn})
