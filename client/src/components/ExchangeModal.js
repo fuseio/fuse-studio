@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { quote, change } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
@@ -55,17 +56,40 @@ class InnerExchangeModal extends React.Component {
     }
   }
 
-  render () {
-    return (
-      <Modal onClose={this.onClose}>
-        <h4>{'Exchange CC'}</h4>
-        <div><button onClick={this.quoteCCtoCLN}>quote CC to CLN</button></div>
-        <div><button onClick={this.quoteCLNtoCC}>quote CLN to CC</button></div>
-        <div><button onClick={this.changeCCtoCLN}>exchange CC to CLN</button></div>
-        <div><button onClick={this.changeCLNtoCC}>exchange CLN to CC</button></div>
+  handleChangeTab = (type) => {
+    this.setState({
+      buyTab: type === 'buy'? true : false
+    })
+  }
 
-        <div>CLN: <input type='text' value={this.state.cln} onChange={this.handleCLNInput} /></div>
-        <div>TLV: <input type='text' value={this.state.cc} onChange={this.handleCCInput} /></div>
+  render () {
+    const buyTabClass = classNames({
+      "buy-tab": true,
+      "active": this.state.buyTab
+    })
+    const sellTabClass = classNames({
+      "buy-tab": true,
+      "active": !this.state.buyTab
+    })
+    const ccSymbol = this.props.community && this.props.community.symbol
+    const ccPrice = this.props.community && this.props.community.price
+    return (
+      <Modal styles={{backgroundColor: '#f2f6f6'}} onClose={this.onClose}>
+        <div className="buy-sell-top">
+          <div className="buy-sell-tab">
+            <div className={buyTabClass} onClick={this.handleChangeTab.bind(this, 'buy')}>BUY</div>
+            <div className={sellTabClass} onClick={this.handleChangeTab.bind(this, 'sell')}>SELL</div>
+          </div>
+          <input className="buy-sell-input" type='text' placeholder="Enter amount in CLN" value={this.state.cln} onChange={this.handleCLNInput} />
+        </div>
+        <div className="buy-sell-bottom">
+          <div className="cc-to-cln">{'1 ' + ccSymbol + " = " + ccPrice + " " + ccSymbol}</div>
+          <input className="buy-sell-input" type='text' placeholder={"Enter amount in " + ccSymbol} value={this.state.cc} onChange={this.handleCCInput} />
+          <div><button onClick={this.quoteCCtoCLN}>quote CC to CLN</button></div>
+          <div><button onClick={this.quoteCLNtoCC}>quote CLN to CC</button></div>
+          <div><button onClick={this.changeCCtoCLN}>exchange CC to CLN</button></div>
+          <div><button onClick={this.changeCLNtoCC}>exchange CLN to CC</button></div>
+        </div>
       </Modal>
     )
   }
