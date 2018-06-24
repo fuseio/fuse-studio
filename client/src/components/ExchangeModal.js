@@ -13,7 +13,8 @@ import {BigNumber} from 'bignumber.js'
 class InnerExchangeModal extends React.Component {
   state = {
     cln: '1e20',
-    toCC: true
+    toCC: true,
+    buyTab: true
   }
 
   onClose = () => this.props.uiActions.hideModal()
@@ -39,13 +40,21 @@ class InnerExchangeModal extends React.Component {
   handleCLNInput = (event) => {
     this.setState({cln: event.target.value})
     this.setState({toCC: true})
-    this.props.quote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress)
+    if (this.state.buyTab) {
+      this.props.quote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress)
+    } else {
+      this.props.invertQuote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress)
+    }
   }
 
   handleCCInput = (event) => {
     this.setState({cc: event.target.value})
     this.setState({toCC: false})
-    this.props.invertQuote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
+    if (this.state.buyTab) {
+      this.props.invertQuote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
+    } else {
+      this.props.quote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
+    }
   }
 
   componentDidMount () {
@@ -66,7 +75,7 @@ class InnerExchangeModal extends React.Component {
 
   handleChangeTab = (type) => {
     this.setState({
-      buyTab: type === 'buy'? true : false
+      buyTab: type === 'buy'
     })
   }
 
@@ -80,8 +89,8 @@ class InnerExchangeModal extends React.Component {
       "active": !this.state.buyTab
     })
     const ccSymbol = this.props.community && this.props.community.symbol
-    const ccPrice = this.props.community && this.props.community.currentPrice
-    const formattedPrice = ccPrice ? formatMoney(formatAmountReal(ccPrice, 18), 4, '.', ',') : 'loading'
+    const formattedPrice = this.props.quotePair.price
+    // const formattedPrice = ccPrice ? formatMoney(formatAmountReal(ccPrice, 18), 4, '.', ',') : 'loading'
 
 
     return (
@@ -96,9 +105,10 @@ class InnerExchangeModal extends React.Component {
         <div className="buy-sell-bottom">
           <div className="cc-to-cln">{'1 ' + ccSymbol + " = " + formattedPrice + " CLN"}</div>
           <input className="buy-sell-input" type='text' placeholder={"Enter amount in " + ccSymbol} value={this.state.cc} onChange={this.handleCCInput} />
-          
-          <div><button onClick={this.changeCCtoCLN}>exchange CC to CLN</button></div>
-          <div><button onClick={this.changeCLNtoCC}>exchange CLN to CC</button></div>
+
+          <div><button onClick={this.state.buyTab ? this.changeCLNtoCC : this.changeCCtoCLN}>
+            {this.state.buyTab ? 'Buy' : 'Sell'}
+          </button></div>
         </div>
 
       </Modal>
@@ -131,7 +141,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, props) => ({
   community: state.tokens['0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'],
-  quotePair: state.marketMaker.quotePair
+  quotePair: state.marketMaker.quotePair || {}
   // quotePair: getQuotePair(state, {toToken: '0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91', fromToken: '0x41C9d91E96b933b74ae21bCBb617369CBE022530'})
 })
 

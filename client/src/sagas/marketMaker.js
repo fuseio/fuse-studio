@@ -58,6 +58,14 @@ export function * ccReserve ({address, contractAddress}) {
   }
 }
 
+function * calcInvertQuoteAmount ({r1, r2, s1, s2, inAmount, marketMakerContract}) {
+  const updatedR1 = new BigNumber(r1).minus(inAmount)
+  const updatedR2 = yield call(marketMakerContract.methods.calcReserve(
+    updatedR1, s1, s2).call)
+  const outAmount = new BigNumber(updatedR2).minus(r2)
+  return outAmount
+}
+
 export function * invertQuote ({fromToken, inAmount, toToken}) {
   try {
     const clnToken = yield select(getClnToken)
@@ -67,26 +75,28 @@ export function * invertQuote ({fromToken, inAmount, toToken}) {
 
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
-    const ccReserve = new BigNumber(token.ccReserve).minus(inAmount)
-    const clnReserve = yield call(EllipseMarketMakerContract.methods.calcReserve(
-      ccReserve, token.totalSupply, clnToken.totalSupply).call)
-
-    const outAmount = new BigNumber(clnReserve).minus(token.clnReserve)
-    // let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromToken, inAmount, toToken).call)
-
-    // if (toToken === ccAddress) {
-    //   const ccReserve = yield call(EllipseMarketMakerContract.methods.calcReserve(
-    //     new BigNumber(token.clnReserve).plus(outAmount), clnToken.totalSupply, token.totalSupply).call)
-    //   outAmount = new BigNumber(token.ccReserve).minus(ccReserve).toString()
-    // }
-
-    let price = 0
-
-    // if (toToken === ccAddress) {
-    //   price = inAmount / outAmount
-    // } else {
-    //   price = outAmount / inAmount
-    // }
+    let outAmount, price
+    if (fromToken === ccAddress) {
+      outAmount = yield call(calcInvertQuoteAmount, {
+        r1: token.ccReserve,
+        r2: token.clnReserve,
+        s1: token.totalSupply,
+        s2: clnToken.totalSupply,
+        inAmount,
+        marketMakerContract: EllipseMarketMakerContract
+      })
+      price = outAmount / inAmount
+    } else {
+      outAmount = yield call(calcInvertQuoteAmount, {
+        r1: token.clnReserve,
+        r2: token.ccReserve,
+        s1: clnToken.totalSupply,
+        s2: token.totalSupply,
+        inAmount,
+        marketMakerContract: EllipseMarketMakerContract
+      })
+      price = inAmount / outAmount
+    }
 
     yield put({type: actions.INVERT_QUOTE.SUCCESS,
       address: token.address,
@@ -183,7 +193,7 @@ export function * change ({fromToken, inAmount, toToken, minReturn}) {
         address: token.address
       }})
   } catch (error) {
-    yield put({type: actions.CC_RESERVE.FAILURE, error})
+    yield put({type: actions.CHANGE.FAILURE, error})
   }
 }
 
