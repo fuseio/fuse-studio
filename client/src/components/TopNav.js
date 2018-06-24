@@ -96,7 +96,7 @@ class TopNav extends Component {
 					<img src={ProfileIcon} />
 					<span>{this.props.web3.account || 'Connect Metamask'}</span>
 				</div>
-				{this.props.web3.account ? <div className="top-nav-balance">
+				{this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf ? <div className="top-nav-balance">
 					<span>Balance:</span>
 					<img src={ClnCoinIcon} />
 					<span className="balance-text">{this.props.clnToken && this.props.clnToken.balanceOf && formatMoney(formatAmount(this.props.clnToken.balanceOf, 18), 2, '.', ',')}</span>
