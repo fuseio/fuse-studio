@@ -7,6 +7,8 @@ export const CC_RESERVE = createRequestTypes('CC_RESERVE')
 export const FETCH_MARKET_MAKER_DATA = createRequestTypes('FETCH_MARKET_MAKER_DATA')
 
 export const QUOTE = createRequestTypes('QUOTE')
+export const INVERT_QUOTE = createRequestTypes('INVERT_QUOTE')
+
 export const CHANGE = createRequestTypes('CHANGE')
 
 export const getCurrentPrice = (address, contractAddress) => action(GET_CURRENT_PRICE.REQUEST, {address, contractAddress})
@@ -15,4 +17,6 @@ export const ccReserve = (address, contractAddress) => action(CC_RESERVE.REQUEST
 export const fetchMarketMakerData = (contractAddress, mmAddress) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {contractAddress, mmAddress})
 
 export const quote = (fromToken, inAmount, toToken) => action(QUOTE.REQUEST, {fromToken, inAmount, toToken})
+export const invertQuote = (fromToken, inAmount, toToken) => action(INVERT_QUOTE.REQUEST, {fromToken, inAmount, toToken})
+
 export const change = (fromToken, inAmount, toToken, minReturn) => action(CHANGE.REQUEST, {fromToken, inAmount, toToken, minReturn})

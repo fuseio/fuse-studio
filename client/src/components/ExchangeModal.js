@@ -2,11 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import * as uiActions from 'actions/ui'
-import { quote, change } from 'actions/marketMaker'
+import { quote, invertQuote, change } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import Modal from 'components/Modal'
 import {BigNumber} from 'bignumber.js'
-import {getQuotePair} from 'selectors/marketMaker'
 
 class InnerExchangeModal extends React.Component {
   state = {
@@ -43,7 +42,7 @@ class InnerExchangeModal extends React.Component {
   handleCCInput = (event) => {
     this.setState({cc: event.target.value})
     this.setState({toCC: false})
-    this.props.quote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
+    this.props.invertQuote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
   }
 
   componentDidMount () {
@@ -95,6 +94,7 @@ const ExchangeModal = (props) => (
 const mapDispatchToProps = dispatch => ({
   uiActions: bindActionCreators(uiActions, dispatch),
   quote: bindActionCreators(quote, dispatch),
+  invertQuote: bindActionCreators(invertQuote, dispatch),
   change: bindActionCreators(change, dispatch)
 })
 

@@ -58,6 +58,52 @@ export function * ccReserve ({address, contractAddress}) {
   }
 }
 
+export function * invertQuote ({fromToken, inAmount, toToken}) {
+  try {
+    const clnToken = yield select(getClnToken)
+    const ccAddress = clnToken.address === fromToken ? toToken : fromToken
+
+    const token = yield select(getCommunity, ccAddress)
+
+    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
+
+    const ccReserve = new BigNumber(token.ccReserve).minus(inAmount)
+    const clnReserve = yield call(EllipseMarketMakerContract.methods.calcReserve(
+      ccReserve, token.totalSupply, clnToken.totalSupply).call)
+
+    const outAmount = new BigNumber(clnReserve).minus(token.clnReserve)
+    // let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromToken, inAmount, toToken).call)
+
+    // if (toToken === ccAddress) {
+    //   const ccReserve = yield call(EllipseMarketMakerContract.methods.calcReserve(
+    //     new BigNumber(token.clnReserve).plus(outAmount), clnToken.totalSupply, token.totalSupply).call)
+    //   outAmount = new BigNumber(token.ccReserve).minus(ccReserve).toString()
+    // }
+
+    let price = 0
+
+    // if (toToken === ccAddress) {
+    //   price = inAmount / outAmount
+    // } else {
+    //   price = outAmount / inAmount
+    // }
+
+    yield put({type: actions.INVERT_QUOTE.SUCCESS,
+      address: token.address,
+      response: {
+        quotePair: {
+          fromToken,
+          toToken,
+          inAmount,
+          outAmount,
+          price
+        }
+      }})
+  } catch (error) {
+    yield put({type: actions.INVERT_QUOTE.FAILURE, error})
+  }
+}
+
 export function * quote ({fromToken, inAmount, toToken}) {
   try {
     const clnToken = yield select(getClnToken)
@@ -68,11 +114,9 @@ export function * quote ({fromToken, inAmount, toToken}) {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
     let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromToken, inAmount, toToken).call)
 
-    // debugger
     // if (toToken === ccAddress) {
     //   const ccReserve = yield call(EllipseMarketMakerContract.methods.calcReserve(
     //     new BigNumber(token.clnReserve).plus(outAmount), clnToken.totalSupply, token.totalSupply).call)
-    //   debugger
     //   outAmount = new BigNumber(token.ccReserve).minus(ccReserve).toString()
     // }
 
@@ -154,6 +198,7 @@ export function * fetchMarketMakerData ({contractAddress, mmAddress}) {
     }
 
     const response = yield all(calls)
+    response.currentPrice = 1 / response.currentPrice
     response.isMarketMakerLoaded = true
     yield put({type: actions.FETCH_MARKET_MAKER_DATA.SUCCESS,
       contractAddress,
@@ -171,6 +216,7 @@ export default function * rootSaga () {
     takeEvery(actions.CLN_RESERVE.REQUEST, clnReserve),
     takeEvery(actions.CC_RESERVE.REQUEST, ccReserve),
     takeEvery(actions.QUOTE.REQUEST, quote),
+    takeEvery(actions.INVERT_QUOTE.REQUEST, invertQuote),
     takeEvery(actions.CHANGE.REQUEST, change),
     takeEvery(actions.FETCH_MARKET_MAKER_DATA.REQUEST, fetchMarketMakerData)
   ])
