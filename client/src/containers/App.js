@@ -9,6 +9,7 @@ import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 import { ERROR_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
 import {fetchClnContract, fetchCommunity} from 'actions/basicToken'
+import {fetchMarketMakerData} from 'actions/marketMaker'
 import {getNetworkType, checkAccountChange} from 'actions/web3'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
@@ -45,6 +46,10 @@ class App extends Component {
 		this.props.getNetworkType()
 		onWeb3Ready.then(() => {
 			setInterval(this.props.checkAccountChange, CONFIG.metaMask.accountPolling)
+
+			// setInterval(() => {
+			// 	this.props.fetchMarketMakerData(this.props.addresses.TelAvivCoinAddress, '0x54B35eE5D1739018a9ce29c44bDF145529136706')
+			// }, 5000)
 		})
 		this.setState({
 			welcomeDone: localStorage.getItem("welcome"),
@@ -124,6 +129,7 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps, {
+		fetchMarketMakerData,
 		fetchClnContract,
 		fetchCommunity,
 		getNetworkType,

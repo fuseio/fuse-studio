@@ -11,48 +11,55 @@ import {getQuotePair} from 'selectors/marketMaker'
 
 class InnerExchangeModal extends React.Component {
   state = {
-    cln: '1e20'
+    cln: '1e20',
+    toCC: true
   }
 
   onClose = () => this.props.uiActions.hideModal()
 
-  quoteCCtoCLN = () => {
-    this.props.quote(this.props.ccAddress, new BigNumber('31038481756201995358'), this.props.clnAddress)
-  }
-
-  quoteCLNtoCC = () => {
-    this.props.quote(this.props.ccAddress, new BigNumber('1e20'), this.props.clnAddress)
-  }
+  // quoteCCtoCLN = () => {
+  //   this.props.quote(this.props.ccAddress, new BigNumber('31038481756201995358'), this.props.clnAddress)
+  // }
+  //
+  // quoteCLNtoCC = () => {
+  //   this.props.quote(this.props.ccAddress, new BigNumber('1e20'), this.props.clnAddress)
+  // }
 
   changeCCtoCLN = () => {
-    this.props.change(this.props.ccAddress, new BigNumber('31038481756201995358'), this.props.clnAddress)
+    this.props.change(this.props.ccAddress, new BigNumber(this.state.cc), this.props.clnAddress)
     // this.props.quote(this.props.ccAddress, new BigNumber('1e21'), this.props.clnAddress)
   }
 
   changeCLNtoCC = () => {
-    this.props.change(this.props.clnAddress, new BigNumber('1e21'), this.props.ccAddress)
+    this.props.change(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress)
     // this.props.quote(this.props.ccAddress, new BigNumber('1e21'), this.props.clnAddress)
   }
 
   handleCLNInput = (event) => {
     this.setState({cln: event.target.value})
+    this.setState({toCC: true})
     this.props.quote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress)
   }
 
   handleCCInput = (event) => {
     this.setState({cc: event.target.value})
+    this.setState({toCC: false})
     this.props.quote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
   }
 
   componentDidMount () {
-    if (this.state.cln) {
+    if (this.state.toCC) {
       this.props.quote(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress)
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.quotePair !== this.props.quotePair) {
-      this.setState({cc: nextProps.quotePair.outAmount})
+      if (this.state.toCC) {
+        this.setState({cc: nextProps.quotePair.outAmount})
+      } else {
+        this.setState({cln: nextProps.quotePair.outAmount})
+      }
     }
   }
 
@@ -85,11 +92,11 @@ class InnerExchangeModal extends React.Component {
         <div className="buy-sell-bottom">
           <div className="cc-to-cln">{'1 ' + ccSymbol + " = " + ccPrice + " " + ccSymbol}</div>
           <input className="buy-sell-input" type='text' placeholder={"Enter amount in " + ccSymbol} value={this.state.cc} onChange={this.handleCCInput} />
-          <div><button onClick={this.quoteCCtoCLN}>quote CC to CLN</button></div>
-          <div><button onClick={this.quoteCLNtoCC}>quote CLN to CC</button></div>
+          
           <div><button onClick={this.changeCCtoCLN}>exchange CC to CLN</button></div>
           <div><button onClick={this.changeCLNtoCC}>exchange CLN to CC</button></div>
         </div>
+
       </Modal>
     )
   }
