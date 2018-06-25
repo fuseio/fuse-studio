@@ -3,13 +3,12 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
-import { quote, change } from 'actions/marketMaker'
+import { quote, invertQuote, change } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
 import TextInput from 'components/TextInput'
 import Modal from 'components/Modal'
 import {BigNumber} from 'bignumber.js'
-import {getQuotePair} from 'selectors/marketMaker'
 
 import DownArrow from 'images/down-arrow.png'
 
@@ -17,7 +16,8 @@ class InnerExchangeModal extends React.Component {
   state = {
     cln: '1e20',
     toCC: true,
-    advanced: false
+    advanced: false,
+    buyTab: true
   }
 
   onClose = () => this.props.uiActions.hideModal()
@@ -30,31 +30,37 @@ class InnerExchangeModal extends React.Component {
   //   this.props.quote(this.props.ccAddress, new BigNumber('1e20'), this.props.clnAddress)
   // }
 
-  changeCCtoCLN = () => {
-    this.props.change(this.props.ccAddress, new BigNumber(this.state.cc), this.props.clnAddress)
-    // this.props.quote(this.props.ccAddress, new BigNumber('1e21'), this.props.clnAddress)
+  sell = () => {
+    this.props.change(this.props.ccAddress, new BigNumber(this.state.cc), this.props.clnAddress, undefined, this.state.buyTab)
   }
 
-  changeCLNtoCC = () => {
-    this.props.change(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress)
-    // this.props.quote(this.props.ccAddress, new BigNumber('1e21'), this.props.clnAddress)
+  buy = () => {
+    this.props.change(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress, undefined, this.state.buyTab)
   }
 
   handleCLNInput = (event) => {
     this.setState({cln: event.target.value})
     this.setState({toCC: true})
-    this.props.quote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress)
+    if (this.state.buyTab) {
+      this.props.quote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress, this.state.buyTab)
+    } else {
+      this.props.invertQuote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress)
+    }
   }
 
   handleCCInput = (event) => {
     this.setState({cc: event.target.value})
     this.setState({toCC: false})
-    this.props.quote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
+    if (this.state.buyTab) {
+      this.props.invertQuote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
+    } else {
+      this.props.quote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress, this.state.buyTab)
+    }
   }
 
   componentDidMount () {
     if (this.state.toCC) {
-      this.props.quote(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress)
+      this.props.quote(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress, this.state.buyTab)
     }
   }
 
@@ -70,7 +76,7 @@ class InnerExchangeModal extends React.Component {
 
   handleChangeTab = (type) => {
     this.setState({
-      buyTab: type === 'buy'? true : false
+      buyTab: type === 'buy'
     })
   }
 
@@ -94,8 +100,8 @@ class InnerExchangeModal extends React.Component {
       "open": this.state.advanced
     })
     const ccSymbol = this.props.community && this.props.community.symbol
-    const ccPrice = this.props.community && this.props.community.currentPrice
-    const formattedPrice = ccPrice ? formatMoney(formatAmountReal(ccPrice, 18), 4, '.', ',') : 'loading'
+    const formattedPrice = this.props.quotePair.price
+    // const formattedPrice = ccPrice ? formatMoney(formatAmountReal(ccPrice, 18), 4, '.', ',') : 'loading'
 
 
     return (
@@ -136,8 +142,9 @@ class InnerExchangeModal extends React.Component {
             />
             <p className="annotation">{'The transaction will fail if the price of 1 ' + ccSymbol + ' is higher than ' + ' CLN'}</p>
           </div>
-          <div><button onClick={this.changeCCtoCLN}>exchange CC to CLN</button></div>
-          <div><button onClick={this.changeCLNtoCC}>exchange CLN to CC</button></div>
+          <div><button onClick={this.state.buyTab ? this.buy : this.sell}>
+            {this.state.buyTab ? 'Buy' : 'Sell'}
+          </button></div>
         </div>
       </Modal>
     )
@@ -163,12 +170,13 @@ const ExchangeModal = (props) => (
 const mapDispatchToProps = dispatch => ({
   uiActions: bindActionCreators(uiActions, dispatch),
   quote: bindActionCreators(quote, dispatch),
+  invertQuote: bindActionCreators(invertQuote, dispatch),
   change: bindActionCreators(change, dispatch)
 })
 
 const mapStateToProps = (state, props) => ({
   community: state.tokens['0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'],
-  quotePair: state.marketMaker.quotePair
+  quotePair: state.marketMaker.quotePair || {}
   // quotePair: getQuotePair(state, {toToken: '0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91', fromToken: '0x41C9d91E96b933b74ae21bCBb617369CBE022530'})
 })
 
