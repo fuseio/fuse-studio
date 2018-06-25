@@ -6,15 +6,18 @@ import * as uiActions from 'actions/ui'
 import { quote, change } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
-
+import TextInput from 'components/TextInput'
 import Modal from 'components/Modal'
 import {BigNumber} from 'bignumber.js'
 import {getQuotePair} from 'selectors/marketMaker'
 
+import DownArrow from 'images/down-arrow.png'
+
 class InnerExchangeModal extends React.Component {
   state = {
     cln: '1e20',
-    toCC: true
+    toCC: true,
+    advanced: false
   }
 
   onClose = () => this.props.uiActions.hideModal()
@@ -71,6 +74,12 @@ class InnerExchangeModal extends React.Component {
     })
   }
 
+  handleAdvanced = () => {
+    this.setState({
+      advanced: !this.state.advanced
+    })
+  }
+
   render () {
     const buyTabClass = classNames({
       "buy-tab": true,
@@ -79,6 +88,10 @@ class InnerExchangeModal extends React.Component {
     const sellTabClass = classNames({
       "buy-tab": true,
       "active": !this.state.buyTab
+    })
+     const advancedClass = classNames({
+      "advanced-settings": true,
+      "open": this.state.advanced
     })
     const ccSymbol = this.props.community && this.props.community.symbol
     const ccPrice = this.props.community && this.props.community.currentPrice
@@ -97,11 +110,35 @@ class InnerExchangeModal extends React.Component {
         <div className="buy-sell-bottom">
           <div className="cc-to-cln">{'1 ' + ccSymbol + " = " + formattedPrice + " CLN"}</div>
           <input className="buy-sell-input" type='text' placeholder={"Enter amount in " + ccSymbol} value={this.state.cc} onChange={this.handleCCInput} />
-          
+          <div className="price-slippage-header">
+            <label>PRICE SLIPPAGE</label>
+            <div>0%</div>
+          </div>
+          <div className={advancedClass}>
+            <div className="advanced-header">
+              <h5 onClick={this.handleAdvanced}>Advanced settings</h5>
+              <img src={DownArrow} />
+            </div>
+            <TextInput id="email"
+              type="number"
+              label="MINIMUM"
+              placeholder="Enter mininal currency price"
+            />
+            <TextInput id="email"
+              type="number"
+              label={ccSymbol + ' PRICE CHANGE'}
+              placeholder="Enter mininal currency price"
+            />
+            <TextInput id="email"
+              type="number"
+              label={ccSymbol + ' PRICE LIMIT'}
+              placeholder="Enter mininal currency price"
+            />
+            <p className="annotation">{'The transaction will fail if the price of 1 ' + ccSymbol + ' is higher than ' + ' CLN'}</p>
+          </div>
           <div><button onClick={this.changeCCtoCLN}>exchange CC to CLN</button></div>
           <div><button onClick={this.changeCLNtoCC}>exchange CLN to CC</button></div>
         </div>
-
       </Modal>
     )
   }
