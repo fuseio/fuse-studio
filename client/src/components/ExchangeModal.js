@@ -27,21 +27,19 @@ class InnerExchangeModal extends React.Component {
   //   this.props.quote(this.props.ccAddress, new BigNumber('1e20'), this.props.clnAddress)
   // }
 
-  changeCCtoCLN = () => {
-    this.props.change(this.props.ccAddress, new BigNumber(this.state.cc), this.props.clnAddress)
-    // this.props.quote(this.props.ccAddress, new BigNumber('1e21'), this.props.clnAddress)
+  sell = () => {
+    this.props.change(this.props.ccAddress, new BigNumber(this.state.cc), this.props.clnAddress, undefined, this.state.buyTab)
   }
 
-  changeCLNtoCC = () => {
-    this.props.change(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress)
-    // this.props.quote(this.props.ccAddress, new BigNumber('1e21'), this.props.clnAddress)
+  buy = () => {
+    this.props.change(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress, undefined, this.state.buyTab)
   }
 
   handleCLNInput = (event) => {
     this.setState({cln: event.target.value})
     this.setState({toCC: true})
     if (this.state.buyTab) {
-      this.props.quote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress)
+      this.props.quote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress, this.state.buyTab)
     } else {
       this.props.invertQuote(this.props.clnAddress, new BigNumber(event.target.value), this.props.ccAddress)
     }
@@ -53,13 +51,13 @@ class InnerExchangeModal extends React.Component {
     if (this.state.buyTab) {
       this.props.invertQuote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
     } else {
-      this.props.quote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress)
+      this.props.quote(this.props.ccAddress, new BigNumber(event.target.value), this.props.clnAddress, this.state.buyTab)
     }
   }
 
   componentDidMount () {
     if (this.state.toCC) {
-      this.props.quote(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress)
+      this.props.quote(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress, this.state.buyTab)
     }
   }
 
@@ -106,7 +104,7 @@ class InnerExchangeModal extends React.Component {
           <div className="cc-to-cln">{'1 ' + ccSymbol + " = " + formattedPrice + " CLN"}</div>
           <input className="buy-sell-input" type='text' placeholder={"Enter amount in " + ccSymbol} value={this.state.cc} onChange={this.handleCCInput} />
 
-          <div><button onClick={this.state.buyTab ? this.changeCLNtoCC : this.changeCCtoCLN}>
+          <div><button onClick={this.state.buyTab ? this.buy : this.sell}>
             {this.state.buyTab ? 'Buy' : 'Sell'}
           </button></div>
         </div>
