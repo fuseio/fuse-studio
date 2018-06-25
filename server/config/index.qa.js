@@ -23,6 +23,6 @@ module.exports = {
     list: process.env.COMMUNITY_MAILCHIMP_LIST
   },
   amazon: {
-    apiBase: 'https://s3-eu-west-1.amazonaws.com/cln-dapp-images-qa/'
+    apiBase: process.env.COMMUNITY_AMAZON_BUCKET_API
   }
 }
