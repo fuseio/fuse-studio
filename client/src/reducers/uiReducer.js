@@ -4,7 +4,8 @@ const panByHorizontalOffset = 1.4
 export default (state = {
 	activeMarker: null,
 	modalType: null,
-  signupHide: false
+  signupHide: false,
+  buyStage: 1
 }, action) => {
   switch (action.type) {
     case 'ACTIVE_MARKER':
@@ -19,6 +20,8 @@ export default (state = {
       return {...state, signupHide: action.hide}
     case 'SIGNUP_CLOSE':
       return {...state, signupClose: action.close}
+    case 'BUY_STAGE':
+      return {...state, buyStage: action.stage}
     default:
       return state
   }

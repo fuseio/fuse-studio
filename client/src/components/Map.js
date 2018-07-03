@@ -235,7 +235,7 @@ class MapComponent extends Component {
 				          projectionConfig={{ scale: 220 }}
 				          style={mapStyles}
 				        >
-				          <ZoomableGlobe zoom={zoom} center={[x + panByHorizontalOffset, y]} onMoveEnd={this.handleMoveEnd.bind(this)} onMoveStart={this.handleMoveStart.bind(this)}>
+				          <ZoomableGlobe sensitivity={1/(2.2*zoom)} zoom={zoom} center={[x + panByHorizontalOffset, y]} onMoveEnd={this.handleMoveEnd.bind(this)} onMoveStart={this.handleMoveStart.bind(this)}>
 				            <circle cx={400} cy={224} r={220} fill={mapStyle.WATER_COLOR} stroke={mapStyle.STROKE_COLOR}/>
 				            <Geographies
 				              disableOptimization
@@ -244,7 +244,7 @@ class MapComponent extends Component {
 				              {(geos, proj) =>
 				                geos.map((geo, i) => (
 				                  <Geography
-				                    key={i}
+				                    key={`${geo.properties.ISO_A3}-${i}`}
 				                    geography={geo}
 				                    projection={proj}
 				                    style={{

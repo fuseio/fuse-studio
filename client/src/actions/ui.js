@@ -30,3 +30,10 @@ export const closeSignup = (close) => {
     close
   }
 }
+
+export const setBuyStage = (stage) => {
+  return {
+    type: 'BUY_STAGE',
+    stage
+  }
+}

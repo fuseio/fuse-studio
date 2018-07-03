@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import LoginModal from 'components/LoginModal'
 import ComingSoonModal from 'components/ComingSoonModal'
 import ErrorModal from 'components/ErrorModal'
-import ExchangeModal from 'components/ExchangeModal'
+import ExchangeModal from 'components/exchange/ExchangeModal'
 
 import { LOGIN_MODAL, SOON_MODAL, ERROR_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
 

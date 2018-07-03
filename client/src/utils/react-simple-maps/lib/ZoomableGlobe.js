@@ -62,7 +62,6 @@ var ZoomableGlobe = function (_Component) {
 
       var differenceX = clientX - this.state.mouseXStart;
       var differenceY = clientY - this.state.mouseYStart;
-
       this.setState({
         mouseX: clientX,
         mouseY: clientY,
