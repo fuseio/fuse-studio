@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 
-import Metamask from 'images/metamask-dark.png'
+import Vimage from 'images/v.png'
 
 class Pending extends React.Component {
   done = () => {
@@ -16,7 +16,7 @@ class Pending extends React.Component {
       <div className="transaction-in-progress">
         <h4>TRANSACTION IN PROGRESS</h4>
         <div className="summary-prices-wrapper">
-          <img className="metamask-icon" src={Metamask} />
+          <img className="metamask-icon" src={Vimage} />
           <p>Your transaction is pending blockchain confirmation, please check your wallet again in a few minutes.</p>
           <div className="line"/>
           <h5>TRANSACTION HASH:</h5>

@@ -123,11 +123,11 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
     const token = yield select(getCommunity, tokenAddress)
     const fromTokenAddress = isBuying ? clnToken.address : tokenAddress
     const toTokenAddress = isBuying ? tokenAddress : clnToken.address
-    debugger
+
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
     const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, token, isBuying)
-    debugger
+
     const updatedR1 = new BigNumber(r1).minus(amount)
     const updatedR2 = yield call(EllipseMarketMakerContract.methods.calcReserve(
       updatedR1, s1, s2).call)
@@ -138,7 +138,7 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
     const quotePair = {
       fromToken: fromTokenAddress,
       toToken: toTokenAddress,
-      inAmount,
+      inAmount: inAmount,
       outAmount: amount,
       price
     }
@@ -264,7 +264,7 @@ export function * invertBuyQuote ({tokenAddress, ccAmount}) {
 }
 
 export function * invertSellQuote ({tokenAddress, clnAmount}) {
-  const buyQuote = yield call(invertQuote, {
+  const sellQuote = yield call(invertQuote, {
     tokenAddress,
     amount: clnAmount,
     isBuying: false
@@ -273,7 +273,7 @@ export function * invertSellQuote ({tokenAddress, clnAmount}) {
   yield put({type: actions.INVERT_SELL_QUOTE.SUCCESS,
     address: tokenAddress,
     response: {
-      buyQuote
+      sellQuote
     }})
 }
 

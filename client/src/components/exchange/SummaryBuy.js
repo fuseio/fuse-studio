@@ -32,8 +32,8 @@ class SummaryBuy extends React.Component {
   render () {
     const ccSymbol = this.props.community && this.props.community.symbol
     const formattedPrice = this.props.quotePair.price
-    const inAmount = formatMoney(new BigNumber(this.props.quotePair.inAmount).div(1e18), 5, '.', ',')
-    const outAmount = formatMoney(new BigNumber(this.props.quotePair.outAmount).div(1e18), 5, '.', ',')
+    const inAmount = new BigNumber(this.props.quotePair.inAmount).div(1e18).toFixed(5)
+    const outAmount = new BigNumber(this.props.quotePair.outAmount).div(1e18).toFixed(5)
     const fromCoin = this.props.addresses.ColuLocalNetwork === this.props.quotePair.fromToken ? inAmount : outAmount
     const toCoin = this.props.addresses.ColuLocalNetwork === this.props.quotePair.fromToken ? outAmount : inAmount
     const fromSymbol = this.props.addresses.ColuLocalNetwork === this.props.quotePair.fromToken ? 'CLN' : ccSymbol
@@ -46,14 +46,14 @@ class SummaryBuy extends React.Component {
         <div className="summary-prices-wrapper">
           <div className="summary-price">
             <h5>FROM COIN</h5>
-            <div className="price">{fromCoin + fromSymbol}</div>
+            <div className="price">{fromCoin}{fromSymbol}</div>
           </div>
           <div className="right-arrow">
             <img src={RightArrow} />
           </div>
           <div className="summary-price">
             <h5>TO COIN</h5>
-            <div className="price">{toCoin + toSymbol}</div>
+            <div className="price">{toCoin}{toSymbol}</div>
           </div>
         </div>
         <div className="info-price">

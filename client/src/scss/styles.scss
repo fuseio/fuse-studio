@@ -102,6 +102,12 @@ input:focus, textarea:focus {
 	outline: none !important;
 }
 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   color: #a4a9b2;
   font-weight: lighter;
@@ -456,6 +462,11 @@ button:disabled, button[disabled] {
     text-align: center;
     padding: 4px;
     cursor: pointer;
+    @media (max-width: $breakpoint-tablet) {
+    	&.fullscreen {
+    		padding:0;
+    	}
+    }
 }
 
 .modal-dialog-div {
@@ -513,6 +524,12 @@ button:disabled, button[disabled] {
 				height: 75px;
 				min-width: 75px;
 			}
+		}
+	}
+	@media (max-width: $breakpoint-tablet) {
+		&.fullscreen {
+			height: 100%;
+			width: 100%;
 		}
 	}
 }
@@ -1043,6 +1060,7 @@ input[type="checkbox" i] {
 		//transition: all 0.1s ease-in;
 		@include easeOut();
 		height: 30px;
+		cursor: pointer;
 		.advanced-header {
 			@include flex-box();
 			flex-direction: row;
@@ -1136,8 +1154,18 @@ input[type="checkbox" i] {
 		color: white;
 		width: 100%;
 		height:40px;
+		&:disabled {
+			background-color: #cbd1d3 !important;
+			color: white;
+		}
 	}
 }
+.input-coin-symbol {
+		position: absolute;
+    	right: 30px;
+    	margin-top: -50px;
+    	color: #251783;
+	}
 .buy-sell-top {
 	background-color: #f2f6f6;
 	padding: 45px 30px;
@@ -1153,11 +1181,12 @@ input[type="checkbox" i] {
     	border-radius: 4px;
     	background-color: #f2f6f6;
     	border: solid 1px #251783;
-    	margin-top: -58px;
+    	margin-top: -94px;
     	&.error {
     		border-color: #ff5705;
     	}
 	}
+
 }
 .arrows {
 	background-color: white;
@@ -1201,7 +1230,7 @@ input[type="checkbox" i] {
 	}
 	.summary-prices-wrapper {
 		@include flex-box();
-		flex-direction: row;
+		flex-direction: column;
 		border-radius: 4px;
 		background-color: #f2f6f6;
 		border: solid 1px #cdcdcd;
@@ -1215,7 +1244,7 @@ input[type="checkbox" i] {
     		align-items: center;
     		justify-content: center;
 			&:nth-child(3) {
-				border-left: solid 1px #cbd1d3;
+				border-top: solid 1px #cbd1d3;
 			}
 			.price {
 				font-size: 24px;
@@ -1238,11 +1267,13 @@ input[type="checkbox" i] {
     		justify-content: center;
     		align-items: center;
     		left: calc(50% - 25px);
-    		margin-top: 26px;
+    		margin-top: 80px;
+
 			img {
 				width:24px;
 				min-width: 22px;
 				height: 12px;
+				transform: rotate(90deg);
 			}
 		}
 	}
