@@ -32,9 +32,9 @@ export default class Modal extends Component {
 	render() {
 		return (
 			<div>
-			  <div className="modal-overlay-div"  />
-			  <div className="modal-content-div" onClick={this.onOverlayClick.bind(this)}>
-			    <div className="modal-dialog-div" style={{ width: this.props.width || '432px' }} onClick={this.onDialogClick}>
+			  <div className={"modal-overlay-div"}  />
+			  <div className={"modal-content-div " + this.props.class} onClick={this.onOverlayClick.bind(this)}>
+			    <div className={"modal-dialog-div " + this.props.class} style={{ width: this.props.width || '432px' }} onClick={this.onDialogClick}>
 			    	<div className="sidebar-close" onClick={this.onOverlayClick.bind(this)}>
 						<img src={CloseButton}/>
 					</div>

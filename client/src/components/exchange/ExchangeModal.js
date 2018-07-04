@@ -12,7 +12,7 @@ import OpenMetamask from 'components/exchange/OpenMetamask'
 import Pending from 'components/exchange/Pending'
 
 class InnerExchangeModal extends React.Component {
-  
+
   onClose = () => this.props.uiActions.hideModal()
 
   renderStage = (buyStage) => {
@@ -43,7 +43,7 @@ class InnerExchangeModal extends React.Component {
     const { buyStage } = this.props
 
     return (
-      <Modal onClose={this.onClose} width='500px'>
+      <Modal class='fullscreen' onClose={this.onClose} width='500px'>
         {this.renderStage(buyStage)}
       </Modal>
     )
