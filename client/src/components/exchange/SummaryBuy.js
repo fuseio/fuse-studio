@@ -11,49 +11,48 @@ import {getAddresses} from 'selectors/web3'
 
 import RightArrow from 'images/right-arrow.png'
 import Info from 'images/info.png'
+import BackButton from 'images/down-arrow.png'
 
 class SummaryBuy extends React.Component {
   next = () => {
     this.props.uiActions.setBuyStage(3)
+    if (this.props.isBuy) {
+      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum)
+    } else {
+      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum)
+    }
   }
 
-  componentWillMount () {
-
-  }
-
-  sell = () => {
-    this.props.sellCc(this.props.ccAddress, new BigNumber(this.state.cc), undefined)
-  }
-
-  buy = () => {
-    this.props.buyCc(this.props.clnAddress, new BigNumber(this.state.cln), undefined)
+  back = () => {
+    this.props.uiActions.setBuyStage(1)
   }
 
   render () {
-    const ccSymbol = this.props.community && this.props.community.symbol
+    const { community, isBuy, cln, cc } = this.props
+    const ccSymbol = community && community.symbol
     const formattedPrice = this.props.quotePair.price
-    const inAmount = new BigNumber(this.props.quotePair.inAmount).div(1e18).toFixed(5)
-    const outAmount = new BigNumber(this.props.quotePair.outAmount).div(1e18).toFixed(5)
-    const fromCoin = this.props.addresses.ColuLocalNetwork === this.props.quotePair.fromToken ? inAmount : outAmount
-    const toCoin = this.props.addresses.ColuLocalNetwork === this.props.quotePair.fromToken ? outAmount : inAmount
-    const fromSymbol = this.props.addresses.ColuLocalNetwork === this.props.quotePair.fromToken ? 'CLN' : ccSymbol
-    const toSymbol = this.props.addresses.ColuLocalNetwork === this.props.quotePair.fromToken ? ccSymbol : 'CLN'
+    const fromCoin = isBuy ? cln : cc
+    const toCoin = isBuy ? cc : cln
+    const fromSymbol = isBuy ? 'CLN' : ccSymbol
+    const toSymbol = isBuy ? ccSymbol : 'CLN'
 
-    console.log("props.marketMaker.quotePair", this.props.quotePair, this.props.addresses.ColuLocalNetwork)
     return (
       <div className="summary">
+        <div className="modal-back" onClick={this.back}>
+          <img src={BackButton}/>
+        </div>
         <h4>SUMMARY</h4>
         <div className="summary-prices-wrapper">
           <div className="summary-price">
             <h5>FROM COIN</h5>
-            <div className="price">{fromCoin}{fromSymbol}</div>
+            <div className="price">{fromCoin}<span>{fromSymbol}</span></div>
           </div>
           <div className="right-arrow">
             <img src={RightArrow} />
           </div>
           <div className="summary-price">
             <h5>TO COIN</h5>
-            <div className="price">{toCoin}{toSymbol}</div>
+            <div className="price">{toCoin}<span>{toSymbol}</span></div>
           </div>
         </div>
         <div className="info-price">
@@ -82,11 +81,14 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  addresses: getAddresses(state),
-  networkType: state.web3.networkType,
   community: state.tokens['0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'],
   quotePair: state.marketMaker.quotePair || {},
-  buyStage: state.ui.buyStage
+  buyStage: state.ui.buyStage,
+  isBuy: state.ui.isBuy,
+  cln: state.ui.cln,
+  cc: state.ui.cc,
+  ccAddress: state.ui.ccAddress,
+  minimum: state.ui.minimum
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SummaryBuy)

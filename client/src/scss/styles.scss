@@ -469,6 +469,20 @@ button:disabled, button[disabled] {
     }
 }
 
+.modal-back {
+	position: absolute;
+	left: 16px;
+	top: 16px;
+	color: $dark-grey !important;
+	cursor: pointer;
+	img {
+		transform: rotate(90deg);
+		height: 8px !important;
+		width:13px !important;
+		min-width: 13px !important;
+	}
+}
+
 .modal-dialog-div {
     position: relative;
     width: 432px;
@@ -1247,12 +1261,17 @@ input[type="checkbox" i] {
 				border-top: solid 1px #cbd1d3;
 			}
 			.price {
-				font-size: 24px;
+				font-size: 30px;
 				font-weight: 300;
 				line-height: 1.33;
 				letter-spacing: -0.2px;
 				text-align: center;
 				color: #251783;
+				span {
+					font-size: 14px;
+    				font-weight: 500;
+    				margin-left: 5px;
+				}
 			}
 		}
 
