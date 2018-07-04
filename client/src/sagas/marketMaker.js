@@ -68,15 +68,15 @@ function * calcInvertQuoteAmount ({r1, r2, s1, s2, inAmount, marketMakerContract
 
 const getReservesAndSupplies = (clnToken, ccToken, isBuying) => isBuying
   ? {
-    r1: ccToken.clnReserve,
-    r2: ccToken.ccReserve,
-    s1: clnToken.totalSupply,
-    s2: ccToken.totalSupply
-  } : {
     r1: ccToken.ccReserve,
     r2: ccToken.clnReserve,
     s1: ccToken.totalSupply,
     s2: clnToken.totalSupply
+  } : {
+    r1: ccToken.clnReserve,
+    r2: ccToken.ccReserve,
+    s1: clnToken.totalSupply,
+    s2: ccToken.totalSupply
   }
 
 const computePrice = (isBuying, inAmount, outAmount) => {
@@ -87,103 +87,93 @@ const computePrice = (isBuying, inAmount, outAmount) => {
   }
 }
 
-export function * quote ({fromToken, inAmount, toToken, isBuying}) {
+export function * quote ({tokenAddress, amount, isBuying}) {
   try {
-    const ccAddress = isBuying ? toToken : fromToken
-
-    const token = yield select(getCommunity, ccAddress)
+    const clnToken = yield select(getClnToken)
+    const token = yield select(getCommunity, tokenAddress)
+    const fromTokenAddress = isBuying ? clnToken.address : tokenAddress
+    const toTokenAddress = isBuying ? tokenAddress : clnToken.address
 
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
-    let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromToken, inAmount, toToken).call)
+    let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromTokenAddress, amount, toTokenAddress).call)
 
-    const price = computePrice(isBuying, inAmount, outAmount)
+    const price = computePrice(isBuying, amount, outAmount)
 
+    const quotePair = {
+      fromTokenAddress,
+      toTokenAddress,
+      inAmount: amount,
+      outAmount,
+      price
+    }
     yield put({type: actions.QUOTE.SUCCESS,
       address: token.address,
       response: {
-        quotePair: {
-          fromToken,
-          toToken,
-          inAmount,
-          outAmount,
-          price
-        }
+        quotePair
       }})
+    return quotePair
   } catch (error) {
     yield put({type: actions.QUOTE.FAILURE, error})
   }
 }
 
-export function * invertQuote ({fromToken, inAmount, toToken, isBuying}) {
+export function * invertQuote ({tokenAddress, amount, isBuying}) {
   try {
     const clnToken = yield select(getClnToken)
-    const ccAddress = clnToken.address === fromToken ? toToken : fromToken
-
-    const token = yield select(getCommunity, ccAddress)
-
+    const token = yield select(getCommunity, tokenAddress)
+    const fromTokenAddress = isBuying ? clnToken.address : tokenAddress
+    const toTokenAddress = isBuying ? tokenAddress : clnToken.address
+    debugger
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
     const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, token, isBuying)
-
-    const updatedR1 = new BigNumber(r1).minus(inAmount)
+    debugger
+    const updatedR1 = new BigNumber(r1).minus(amount)
     const updatedR2 = yield call(EllipseMarketMakerContract.methods.calcReserve(
       updatedR1, s1, s2).call)
-    const outAmount = new BigNumber(updatedR2).minus(r2)
+    const inAmount = new BigNumber(updatedR2).minus(r2)
 
-    const price = computePrice(isBuying, inAmount, outAmount)
+    const price = computePrice(isBuying, inAmount, amount)
 
+    const quotePair = {
+      fromToken: fromTokenAddress,
+      toToken: toTokenAddress,
+      inAmount,
+      outAmount: amount,
+      price
+    }
     yield put({type: actions.INVERT_QUOTE.SUCCESS,
       address: token.address,
       response: {
-        quotePair: {
-          fromToken,
-          toToken,
-          inAmount,
-          outAmount,
-          price
-        }
+        quotePair
       }})
+
+    return quotePair
   } catch (error) {
     yield put({type: actions.INVERT_QUOTE.FAILURE, error})
   }
 }
 
-export function * slippage ({fromToken, inAmount, outAmount, toToken, isBuying}) {
-  const clnToken = yield select(getClnToken)
-  let ccToken = yield select(getCommunity, isBuying ? toToken : fromToken)
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: ccToken.mmAddress})
-
-  const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, ccToken, isBuying)
-  const updatedR1 = new BigNumber(r1).plus(inAmount)
-  const updatedR2 = new BigNumber(r2).minus(outAmount)
-
-  const futurePrice = yield call(EllipseMarketMakerContract.methods.getCurrentPrice(
-    updatedR1, updatedR2, s1, s2).call)
-  // const slippage =
-  // yield put({
-  //   type: actions.SLIPPAGE.SUCCESS,
-  //   response: {
-  //     slippage:
-  //   }
-  // })
-}
-
-export function * change ({fromToken, inAmount, toToken, minReturn, isBuying}) {
+export function * change ({tokenAddress, amount, minReturn, isBuying}) {
   try {
     const clnToken = yield select(getClnToken)
-    let token = yield select(getCommunity, isBuying ? toToken : fromToken)
+    let token = yield select(getCommunity, tokenAddress)
+    const fromTokenAddress = isBuying ? clnToken.address : tokenAddress
+    const toTokenAddress = isBuying ? tokenAddress : clnToken.address
+
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
-    const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency', address: fromToken})
+    const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency',
+      address: fromTokenAddress})
 
     let data
     if (minReturn) {
-      data = EllipseMarketMakerContract.methods.change(toToken, minReturn).encodeABI()
+      data = EllipseMarketMakerContract.methods.change(toTokenAddress, minReturn).encodeABI()
     } else {
-      data = EllipseMarketMakerContract.methods.change(toToken).encodeABI()
+      data = EllipseMarketMakerContract.methods.change(toTokenAddress).encodeABI()
     }
 
-    yield call(ColuLocalCurrency.methods.transferAndCall(token.mmAddress, inAmount, data).send, {
+    yield call(ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send, {
       from: web3.eth.defaultAccount
     })
 
@@ -208,6 +198,119 @@ export function * change ({fromToken, inAmount, toToken, minReturn, isBuying}) {
       }})
   } catch (error) {
     yield put({type: actions.CHANGE.FAILURE, error})
+  }
+}
+
+export function * slippage ({fromToken, inAmount, outAmount, toToken, isBuying}) {
+  const clnToken = yield select(getClnToken)
+  let ccToken = yield select(getCommunity, isBuying ? toToken : fromToken)
+  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: ccToken.mmAddress})
+
+  const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, ccToken, isBuying)
+  const updatedR1 = new BigNumber(r1).plus(inAmount)
+  const updatedR2 = new BigNumber(r2).minus(outAmount)
+
+  const futurePrice = yield call(EllipseMarketMakerContract.methods.getCurrentPrice(
+    updatedR1, updatedR2, s1, s2).call)
+  // const slippage =
+  // yield put({
+  //   type: actions.SLIPPAGE.SUCCESS,
+  //   response: {
+  //     slippage:
+  //   }
+  // })
+}
+
+export function * buyQuote ({tokenAddress, clnAmount}) {
+  const buyQuote = yield call(quote, {
+    tokenAddress,
+    amount: clnAmount,
+    isBuying: true
+  })
+
+  yield put({type: actions.BUY_QUOTE.SUCCESS,
+    address: tokenAddress,
+    response: {
+      buyQuote
+    }})
+}
+
+export function * sellQuote ({tokenAddress, ccAmount}) {
+  const sellQuote = yield call(quote, {
+    tokenAddress,
+    amount: ccAmount,
+    isBuying: false
+  })
+
+  yield put({type: actions.SELL_QUOTE.SUCCESS,
+    address: tokenAddress,
+    response: {
+      sellQuote
+    }})
+}
+
+export function * invertBuyQuote ({tokenAddress, ccAmount}) {
+  const buyQuote = yield call(invertQuote, {
+    tokenAddress,
+    amount: ccAmount,
+    isBuying: true
+  })
+
+  yield put({type: actions.INVERT_BUY_QUOTE.SUCCESS,
+    address: tokenAddress,
+    response: {
+      buyQuote
+    }})
+}
+
+export function * invertSellQuote ({tokenAddress, clnAmount}) {
+  const buyQuote = yield call(invertQuote, {
+    tokenAddress,
+    amount: clnAmount,
+    isBuying: false
+  })
+
+  yield put({type: actions.INVERT_SELL_QUOTE.SUCCESS,
+    address: tokenAddress,
+    response: {
+      buyQuote
+    }})
+}
+
+export function * buyCc ({amount, tokenAddress, minReturn}) {
+  try {
+    yield call(change, {
+      tokenAddress,
+      amount,
+      isBuying: true,
+      minReturn
+    })
+    yield put({type: actions.BUY_CC.SUCCESS,
+      address: tokenAddress,
+      response: {
+        address: tokenAddress
+      }})
+  } catch (error) {
+    yield put({type: actions.BUY_CC.FAILURE, error})
+  }
+}
+
+export function * sellCc ({amount, tokenAddress, minReturn}) {
+  try {
+    yield call(change, {
+      tokenAddress,
+      amount,
+      isBuying: false,
+      minReturn
+    })
+
+    yield put({type: actions.SELL_CC.SUCCESS,
+      address: tokenAddress,
+      response: {
+        address: tokenAddress
+      }})
+  } catch (error) {
+    yield put({type: actions.SELL_CC.FAILURE, error})
   }
 }
 
@@ -240,8 +343,13 @@ export default function * rootSaga () {
     takeEvery(actions.CLN_RESERVE.REQUEST, clnReserve),
     takeEvery(actions.CC_RESERVE.REQUEST, ccReserve),
     takeEvery(actions.QUOTE.REQUEST, quote),
-    takeEvery(actions.INVERT_QUOTE.REQUEST, invertQuote),
+    takeEvery(actions.BUY_QUOTE.REQUEST, buyQuote),
+    takeEvery(actions.SELL_QUOTE.REQUEST, sellQuote),
+    takeEvery(actions.INVERT_BUY_QUOTE.REQUEST, invertBuyQuote),
+    takeEvery(actions.INVERT_SELL_QUOTE.REQUEST, invertSellQuote),
     takeEvery(actions.CHANGE.REQUEST, change),
+    takeEvery(actions.BUY_CC.REQUEST, buyCc),
+    takeEvery(actions.SELL_CC.REQUEST, sellCc),
     takeEvery(actions.SLIPPAGE.REQUEST, slippage),
     takeEvery(actions.FETCH_MARKET_MAKER_DATA.REQUEST, fetchMarketMakerData)
   ])

@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
+import { change, buyCc, sellCc } from 'actions/marketMaker'
 import {BigNumber} from 'bignumber.js'
 import {getAddresses} from 'selectors/web3'
 
@@ -21,14 +22,14 @@ class SummaryBuy extends React.Component {
   }
 
   sell = () => {
-    this.props.change(this.props.ccAddress, new BigNumber(this.state.cc), this.props.clnAddress, undefined, this.state.buyTab)
+    this.props.sellCc(this.props.ccAddress, new BigNumber(this.state.cc), undefined)
   }
 
   buy = () => {
-    this.props.change(this.props.clnAddress, new BigNumber(this.state.cln), this.props.ccAddress, undefined, this.state.buyTab)
+    this.props.buyCc(this.props.clnAddress, new BigNumber(this.state.cln), undefined)
   }
 
-  render() {
+  render () {
     const ccSymbol = this.props.community && this.props.community.symbol
     const formattedPrice = this.props.quotePair.price
     const inAmount = formatMoney(new BigNumber(this.props.quotePair.inAmount).div(1e18), 5, '.', ',')
@@ -74,7 +75,10 @@ class SummaryBuy extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch)
+  uiActions: bindActionCreators(uiActions, dispatch),
+  change: bindActionCreators(change, dispatch),
+  buyCc: bindActionCreators(buyCc, dispatch),
+  sellCc: bindActionCreators(sellCc, dispatch)
 })
 
 const mapStateToProps = (state, props) => ({

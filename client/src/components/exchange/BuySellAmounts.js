@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
-import { quote, invertQuote, change } from 'actions/marketMaker'
+import { buyQuote, sellQuote, invertBuyQuote, invertSellQuote, invertQuote, buyCc, sellCc } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
 import TextInput from 'components/TextInput'
@@ -21,8 +21,12 @@ class BuySellAmounts extends React.Component {
   }
 
   next = () => {
+    if (this.state.buyTab) {
+      this.props.buyCc(this.props.ccAddress, new BigNumber(this.state.cln), undefined)
+    } else {
+      this.props.sellCc(this.props.ccAddress, new BigNumber(this.state.cc), undefined)
+    }
     this.props.uiActions.setBuyStage(2)
-    
   }
 
   handleCLNInput = (event) => {
@@ -30,10 +34,11 @@ class BuySellAmounts extends React.Component {
     const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
 
     this.setState({cln, toCC: true, maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'})
+
     if (this.state.buyTab) {
-      this.props.quote(this.props.clnAddress, cln, this.props.ccAddress, this.state.buyTab)
+      this.props.buyQuote(this.props.ccAddress, cln)
     } else {
-      this.props.invertQuote(this.props.clnAddress, cln, this.props.ccAddress)
+      this.props.invertSellQuote(this.props.ccAddress, cln)
     }
   }
 
@@ -42,9 +47,9 @@ class BuySellAmounts extends React.Component {
 
     this.setState({cc, toCC: false})
     if (this.state.buyTab) {
-      this.props.invertQuote(this.props.ccAddress, cc, this.props.clnAddress)
+      this.props.invertBuyQuote(this.props.ccAddress, cc)
     } else {
-      this.props.quote(this.props.ccAddress, cc, this.props.clnAddress, this.state.buyTab)
+      this.props.sellQuote(this.props.ccAddress, cc)
     }
   }
 
@@ -57,12 +62,15 @@ class BuySellAmounts extends React.Component {
 
   componentWillUpdate = (nextProps, nextState) => {
     const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
-
     if (nextProps.quotePair !== this.props.quotePair) {
-      if (this.state.toCC) {
-        this.setState({cc: nextProps.quotePair.outAmount})
+      if (this.state.buyTab) {
+        this.setState({cln: nextProps.quotePair.inAmount,
+          cc: nextProps.quotePair.outAmount,
+          maxAmountError: nextProps.quotePair.outAmount && new BigNumber(nextProps.quotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'})
       } else {
-        this.setState({cln: nextProps.quotePair.outAmount, maxAmountError: nextProps.quotePair.outAmount && new BigNumber(nextProps.quotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'})
+        this.setState({cc: nextProps.quotePair.inAmount,
+          cln: nextProps.quotePair.outAmount,
+          maxAmountError: nextProps.quotePair.outAmount && new BigNumber(nextProps.quotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'})
       }
     }
     if (nextState.buyTab !== this.state.buyTab) {
@@ -173,7 +181,7 @@ class BuySellAmounts extends React.Component {
             value={this.state.cc && new BigNumber(this.state.cc).div(1e18)}
             onChange={this.handleCCInput}
           />
-          
+
           <div className={advancedClass}>
             <div className="advanced-header">
               <h5 onClick={this.handleAdvanced}>Advanced settings</h5>
@@ -223,9 +231,13 @@ BuySellAmounts.defaultProps = {
 
 const mapDispatchToProps = dispatch => ({
   uiActions: bindActionCreators(uiActions, dispatch),
-  quote: bindActionCreators(quote, dispatch),
+  buyQuote: bindActionCreators(buyQuote, dispatch),
+  sellQuote: bindActionCreators(sellQuote, dispatch),
+  invertBuyQuote: bindActionCreators(invertBuyQuote, dispatch),
+  invertSellQuote: bindActionCreators(invertSellQuote, dispatch),
   invertQuote: bindActionCreators(invertQuote, dispatch),
-  change: bindActionCreators(change, dispatch)
+  buyCc: bindActionCreators(buyCc, dispatch),
+  sellCc: bindActionCreators(sellCc, dispatch)
 })
 
 const mapStateToProps = (state, props) => ({
