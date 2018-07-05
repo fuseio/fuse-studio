@@ -58,14 +58,6 @@ export function * ccReserve ({address, contractAddress}) {
   }
 }
 
-function * calcInvertQuoteAmount ({r1, r2, s1, s2, inAmount, marketMakerContract}) {
-  const updatedR1 = new BigNumber(r1).minus(inAmount)
-  const updatedR2 = yield call(marketMakerContract.methods.calcReserve(
-    updatedR1, s1, s2).call)
-  const outAmount = new BigNumber(updatedR2).minus(r2)
-  return outAmount
-}
-
 const getReservesAndSupplies = (clnToken, ccToken, isBuying) => isBuying
   ? {
     r1: ccToken.ccReserve,

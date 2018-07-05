@@ -18,9 +18,9 @@ class SummaryBuy extends React.Component {
     this.props.uiActions.setBuyStage(3)
     if (this.props.isBuy) {
       console.log("HERE", this.props.minimum)
-      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), new BigNumber(this.props.minimum).multipliedBy(1e18))
+      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum).multipliedBy(1e18))
     } else {
-      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), new BigNumber(this.props.minimum).multipliedBy(1e18))
+      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum).multipliedBy(1e18))
     }
   }
 
