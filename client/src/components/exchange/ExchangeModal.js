@@ -41,7 +41,6 @@ class InnerExchangeModal extends React.Component {
   }
   render() {
     const { buyStage } = this.props
-
     return (
       <Modal class='fullscreen' onClose={this.onClose} width='500px'>
         {this.renderStage(buyStage)}

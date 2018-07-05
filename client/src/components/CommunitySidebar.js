@@ -8,7 +8,7 @@ import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { formatAmount, formatMoney } from 'services/global'
 
-import { SOON_MODAL } from 'constants/uiConstants'
+import { SOON_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
 
 import Facebook from 'images/fb.png'
 import Twitter from 'images/twitter.png'
@@ -37,7 +37,8 @@ class CommunitySidebar extends Component {
     	rel: null
 	}
 	onClickBuy = () => {
-    	this.props.uiActions.loadModal(SOON_MODAL)
+		//this.props.uiActions.loadModal(SOON_MODAL)
+    	this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy:true})
 		ReactGA.event({
 			category: this.props.selectedCommunity.name,
 			action: 'Click',
@@ -46,7 +47,8 @@ class CommunitySidebar extends Component {
   	}
 
   	onClickSell = () => {
-    	this.props.uiActions.loadModal(SOON_MODAL)
+    	//this.props.uiActions.loadModal(SOON_MODAL)
+    	this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy:false})
 		ReactGA.event({
 			category: this.props.selectedCommunity.name,
 			action: 'Click',

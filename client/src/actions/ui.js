@@ -4,10 +4,11 @@ export const setActiveMarker = (coinAddress) => action('ACTIVE_MARKER', {coinAdd
 //export const closeCommunitySidebar = () => action('CLOSE_COMMUNITY_SIDEBAR', { zoom: 4 })
 export const zoomToMarker = (zoom) => action('ZOOM', { zoom })
 
-export const loadModal = (modalType) => {
+export const loadModal = (modalType, options) => {
   return {
     type: 'SHOW_MODAL',
-    modalType
+    modalType,
+    options
   }
 }
 
