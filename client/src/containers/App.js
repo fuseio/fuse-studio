@@ -31,7 +31,6 @@ class App extends Component {
         isNetworkSupported(nextProps.networkType)) {
       this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
       nextProps.communityAddresses.forEach(this.props.fetchCommunity)
-      this.props.loadModal(EXCHANGE_MODAL)
     }
     if (nextProps.networkType !== this.props.networkType && !isNetworkDesired(nextProps.networkType)) {
       this.props.loadModal(ERROR_MODAL)

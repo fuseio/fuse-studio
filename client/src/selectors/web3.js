@@ -26,5 +26,5 @@ export const getEtherscanUrl = createSelector(
 
 export const getColuWallet = createSelector(
   getAddresses,
-  (addresses) => addresses.ColuWallet
+  (addresses) => addresses && addresses.ColuWallet
 )

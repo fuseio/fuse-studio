@@ -7,9 +7,10 @@ import * as uiActions from 'actions/ui'
 import { buyQuote, sellQuote, invertBuyQuote, invertSellQuote, invertQuote, buyCc, sellCc } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
+import { getSelectedCommunity, getClnToken } from 'selectors/basicToken'
+
 import TextInput from 'components/TextInput'
 import { BigNumber } from 'bignumber.js'
-import { getClnToken } from 'selectors/basicToken'
 import DownArrow from 'images/down-arrow.png'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
@@ -17,25 +18,33 @@ import Info from 'images/info.png'
 class BuySellAmounts extends React.Component {
   state = {
     toCC: true,
-    cln: '',
-    cc: '',
-    advanced: false,
-    buyTab: true
+    cln: this.props.cln || '',
+    cc: this.props.cc || '',
+    advanced: false
+  }
+
+  componentWillMount () {
+    if (this.props.isBuy === true || this.props.isBuy === false) {
+      this.setState({buyTab: this.props.isBuy})
+    } else {
+      this.setState({buyTab: true})
+    }
   }
 
   next = () => {
-    if (this.state.buyTab) {
-      this.props.buyCc(this.props.ccAddress, new BigNumber(this.state.cln), undefined)
-    } else {
-      this.props.sellCc(this.props.ccAddress, new BigNumber(this.state.cc), undefined)
-    }
     this.props.uiActions.setBuyStage(2)
+    this.props.uiActions.setBuySellAmounts({
+      ccAddress: this.props.ccAddress,
+      cln: this.state.cln,
+      cc: this.state.cc,
+      isBuy: this.state.buyTab,
+      minimum: this.state.minimum
+    })
   }
 
   handleCLNInput = (event) => {
     const cln = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
     const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
-
 
     this.setState({cln: event.target.value, toCC: true, loading: true, maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'})
     if (this.state.buyTab) {
@@ -59,11 +68,31 @@ class BuySellAmounts extends React.Component {
   componentWillUpdate = (nextProps, nextState) => {
     const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
 
-    if (!isEqual(nextProps.quotePair, this.props.quotePair)) {
-      if (this.state.toCC) {
-        this.setState({cc: new BigNumber(nextProps.quotePair.outAmount), loading: false})
-      } else {
-        this.setState({cln: new BigNumber(nextProps.quotePair.outAmount).div(1e18).toFixed(5), loading: false, maxAmountError: nextProps.quotePair.outAmount && new BigNumber(nextProps.quotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'})
+    if (!isEqual(nextProps.buyQuotePair, this.props.buyQuotePair) || !isEqual(nextProps.sellQuotePair, this.props.sellQuotePair)) {
+      if (this.state.buyTab && this.state.toCC) {
+        this.setState({
+          cc: new BigNumber(nextProps.buyQuotePair.outAmount).div(1e18).toFixed(5),
+          loading: false
+          //maxAmountError: nextProps.quotePair.outAmount && new BigNumber(nextProps.quotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
+        })
+      } else if (this.state.buyTab && !this.state.toCC) {
+        this.setState({
+          cln: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18).toFixed(5),
+          loading: false,
+          maxAmountError: nextProps.buyQuotePair.inAmount && new BigNumber(nextProps.buyQuotePair.inAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
+        })
+      } else if (!this.state.buyTab && this.state.toCC) {
+        this.setState({
+          cc: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18).toFixed(5),
+          loading: false
+          //maxAmountError: nextProps.quotePair.outAmount && new BigNumber(nextProps.quotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
+        })
+      } else if (!this.state.buyTab && !this.state.toCC) {
+        this.setState({
+          cln: new BigNumber(nextProps.sellQuotePair.outAmount).div(1e18).toFixed(5),
+          loading: false,
+          maxAmountError: nextProps.sellQuotePair.outAmount && new BigNumber(nextProps.sellQuotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
+        })
       }
     }
     if (nextState.buyTab !== this.state.buyTab) {
@@ -84,8 +113,8 @@ class BuySellAmounts extends React.Component {
     if (this.state.cln) {
       this.setState({
         minimum,
-        priceChange: 100 - 100*(minimum/new BigNumber(this.state.cc).div(1e18)),
-        priceLimit: new BigNumber(this.state.cln).div(1e18)/minimum
+        priceChange: 100 - 100*(minimum/this.state.cc),
+        priceLimit: this.state.cln/minimum
       })
     } //else error
   }
@@ -94,8 +123,8 @@ class BuySellAmounts extends React.Component {
     if (this.state.cln) {
       this.setState({
         priceChange,
-        minimum: (-1)*((priceChange - 100)*new BigNumber(this.state.cc).div(1e18))/100,
-        priceLimit: new BigNumber(this.state.cln).div(1e18)/((-1)*((priceChange - 100)*new BigNumber(this.state.cc).div(1e18))/100)
+        minimum: (-1)*((priceChange - 100)*this.state.cc)/100,
+        priceLimit: this.state.cln/((-1)*((priceChange - 100)*this.state.cc)/100)
       })
     } //else error
   }
@@ -103,8 +132,8 @@ class BuySellAmounts extends React.Component {
     const priceLimit = event.target.value
     if (this.state.cln) {
       this.setState({
-        minimum: new BigNumber(this.state.cln).div(1e18)/priceLimit,
-        priceChange: 100 - 100*((new BigNumber(this.state.cln).div(1e18)/priceLimit)/new BigNumber(this.state.cc).div(1e18)),
+        minimum: this.state.cln/priceLimit,
+        priceChange: 100 - 100*((this.state.cln/priceLimit)/this.state.cc),
         priceLimit
       })
     } //else error
@@ -143,7 +172,7 @@ class BuySellAmounts extends React.Component {
             <div className={buyTabClass} onClick={this.handleChangeTab.bind(this, 'buy')}>BUY</div>
             <div className={sellTabClass} onClick={this.handleChangeTab.bind(this, 'sell')}>SELL</div>
           </div>
-          <TextInput id="buy-sell-input-cln"
+          <TextInput id="in-amount"
             type="number"
             className={buySellInputClass}
             placeholder={'Enter amount in ' + (this.state.buyTab ? 'CLN' : ccSymbol)}
@@ -160,7 +189,7 @@ class BuySellAmounts extends React.Component {
             <div className="cc-to-cln">{'1 ' + ccSymbol + " = " + formattedPrice + " CLN"}</div>
             <div>PRICE SLIPPAGE<img src={Info} />0%</div>
           </div>
-          <TextInput id="buy-sell-input-cc"
+          <TextInput id="out-amount"
             type="number"
             className="buy-sell-input"
             placeholder={'Enter amount in ' + (this.state.buyTab ? ccSymbol : 'CLN')}
@@ -225,9 +254,14 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  community: state.tokens['0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'],
+  community: getSelectedCommunity(state),
   quotePair: state.marketMaker.quotePair || {},
+  buyQuotePair: state.marketMaker.buyQuote || {},
+  sellQuotePair: state.marketMaker.sellQuote || {},
   web3: state.web3,
+  isBuy: state.ui.isBuy,
+  cln: state.ui.cln,
+  cc: state.ui.cc,
   clnToken: getClnToken(state)
 })
 

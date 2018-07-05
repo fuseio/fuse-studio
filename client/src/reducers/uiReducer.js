@@ -13,7 +13,7 @@ export default (state = {
     case 'ZOOM':
     	return {...state, zoom: action.zoom}
     case 'SHOW_MODAL':
-    	return {...state, modalType: action.modalType}
+    	return {...state, modalType: action.modalType, ...action.options}
     case 'HIDE_MODAL':
     	return {...state, modalType: null}
     case 'SIGNUP_HIDE':
@@ -22,6 +22,8 @@ export default (state = {
       return {...state, signupClose: action.close}
     case 'BUY_STAGE':
       return {...state, buyStage: action.stage}
+    case 'BUY_SELL_AMOUNTS':
+      return { ...state, isBuy: action.isBuy, ccAddress: action.ccAddress, cln: action.cln,  cc: action.cc, minimum: action.minimum }
     default:
       return state
   }

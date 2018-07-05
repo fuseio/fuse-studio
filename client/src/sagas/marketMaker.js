@@ -58,14 +58,6 @@ export function * ccReserve ({address, contractAddress}) {
   }
 }
 
-function * calcInvertQuoteAmount ({r1, r2, s1, s2, inAmount, marketMakerContract}) {
-  const updatedR1 = new BigNumber(r1).minus(inAmount)
-  const updatedR2 = yield call(marketMakerContract.methods.calcReserve(
-    updatedR1, s1, s2).call)
-  const outAmount = new BigNumber(updatedR2).minus(r2)
-  return outAmount
-}
-
 const getReservesAndSupplies = (clnToken, ccToken, isBuying) => isBuying
   ? {
     r1: ccToken.ccReserve,
@@ -98,13 +90,16 @@ export function * quote ({tokenAddress, amount, isBuying}) {
     let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromTokenAddress, amount, toTokenAddress).call)
 
     const price = computePrice(isBuying, amount, outAmount)
+    const currentPrice = new BigNumber(token.currentPrice.toString()).multipliedBy(1e18)
+    const slippage = currentPrice.minus(price.toString()).div(currentPrice).abs()
 
     const quotePair = {
       fromTokenAddress,
       toTokenAddress,
       inAmount: amount,
       outAmount,
-      price
+      price,
+      slippage
     }
     yield put({type: actions.QUOTE.SUCCESS,
       address: token.address,
@@ -134,13 +129,16 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
     const inAmount = new BigNumber(updatedR2).minus(r2)
 
     const price = computePrice(isBuying, inAmount, amount)
+    const currentPrice = new BigNumber(token.currentPrice.toString()).multipliedBy(1e18)
+    const slippage = currentPrice.minus(price.toString()).div(currentPrice).abs()
 
     const quotePair = {
       fromToken: fromTokenAddress,
       toToken: toTokenAddress,
       inAmount: inAmount,
       outAmount: amount,
-      price
+      price,
+      slippage
     }
     yield put({type: actions.INVERT_QUOTE.SUCCESS,
       address: token.address,
