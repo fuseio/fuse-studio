@@ -196,40 +196,6 @@ function * fetchCommunityToken ({contractAddress}) {
   }
 }
 
-// function * fetchCommunityMetadata ({contractAddress, tokenURI}) {
-//   try {
-//     if (tokenURI) {
-//       const [protocol, hash] = tokenURI.split('://')
-//       yield put({
-//         type: FETCH_METADATA.REQUEST,
-//         protocol,
-//         hash,
-//         contractAddress
-//       })
-//       // wait until timeout to receive the metadata
-//       const {timeout} = yield race({
-//         metadata: take(action =>
-//           action.type === FETCH_METADATA.SUCCESS && action.contractAddress === contractAddress),
-//         timeout: call(delay, CONFIG.api.timeout)
-//       })
-//       if (timeout) {
-//         yield put({
-//           type: actions.FETCH_METADATA.SUCCESS,
-//           contractAddress,
-//           response: {
-//             metadata: {
-//               timeout: true
-//             }
-//           }
-//         })
-//       }
-//     }
-//   } catch (error) {
-//     console.error(error)
-//     yield entityPut({type: FETCH_METADATA.FAILURE, contractAddress, error})
-//   }
-// }
-
 function * fetchCommunity ({contractAddress}) {
   try {
     const tokenResponse = yield call(fetchCommunityToken, {contractAddress})

@@ -1,31 +1,23 @@
-// import * as marketMaker from 'actions/marketMaker'
-// import {QUOTE, INVERT_QUOTE} from 'actions/marketMaker'
 import * as actions from 'actions/marketMaker'
 
-const initialState = {
-  quotePairs: []
-}
+import {filterSuccessActions} from 'utils/actions'
 
-export default (state = initialState, action) => {
-  // if (actions.hasOwnProperty(action.type)) {
-  //   return {...state, ...action.response}
-  // } else {
-  //   return state
-  // }
+const successActions = filterSuccessActions(actions)
+
+export default (state = {}, action) => {
   switch (action.type) {
-    case actions.QUOTE.SUCCESS:
-      return {...state, ...action.response}
-    case actions.INVERT_QUOTE.SUCCESS:
-      return {...state, ...action.response}
-    case actions.INVERT_BUY_QUOTE.SUCCESS:
-      return {...state, ...action.response}
-    case actions.INVERT_SELL_QUOTE.SUCCESS:
-      return {...state, ...action.response}
-    case actions.BUY_QUOTE.SUCCESS:
-      return {...state, ...action.response}
-    case actions.SELL_QUOTE.SUCCESS:
-      return {...state, ...action.response}
-    default:
-      return state
+    case actions.GET_CURRENT_PRICE.SUCCESS:
+      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+    case actions.CLN_RESERVE.SUCCESS:
+      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+    case actions.CC_RESERVE.SUCCESS:
+      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+    case actions.FETCH_MARKET_MAKER_DATA.SUCCESS:
+      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+  }
+  if (successActions.hasOwnProperty(action.type)) {
+    return {...state, ...action.response}
+  } else {
+    return state
   }
 }

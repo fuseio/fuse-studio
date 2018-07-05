@@ -8,7 +8,7 @@ import * as uiActions from 'actions/ui'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import CoinHeader from './CoinHeader'
-import {getSelectedCommunity} from 'selectors/basicToken'
+import {getSelectedCommunity, getCommunities} from 'selectors/basicToken'
 import find from 'lodash/find'
 import ReactGA from 'services/ga'
 
@@ -27,9 +27,9 @@ const CoinWrapper = posed.div({
 	closedCoinInfo: { damping: 0, staggerChildren: 0,height: 'auto', duration: 300 }
 })
 
-const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy, setRef }) => {
+const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, key, setRef }) => {
 	let poseValue = isOpen ? 'open' : 'closed'
-	let top = (keyy) * 110 + (keyy+1)*20
+	let top = (key) * 110 + (key+1)*20
 	let communityCoins = coins && coins.filter((coin) => {
 		return coin.isLocalCurrency
 	})
@@ -40,7 +40,7 @@ const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyy, setRef }
 		{communityCoins.map(((coin, i) => {
 			const coinWrapperStyle = classNames({
 				"coin-wrapper": true,
-				"open": openCoinInfo && keyy === i
+				"open": openCoinInfo && key === i
 			})
 			return <NavItem className="list-item" key={i} pose={isOpen ? 'open' : 'closed'} onClick={onClick.bind(this, coin.address, i)}>
 				<CoinWrapper className={coinWrapperStyle} >
@@ -126,7 +126,7 @@ class CommunitiesList extends Component {
 		})
 
 		if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && !isMobile) {
-			return <Nav isOpen={this.state.active} coins={Object.values(this.props.tokens)} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyy={this.state.key}/>
+			return <Nav isOpen={this.state.active} coins={Object.values(this.props.tokens)} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} key={this.state.key} />
 		} else if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && isMobile) {
 			const communitiesListStyle = classNames({
 				"communities-list": true,
@@ -153,7 +153,7 @@ class CommunitiesList extends Component {
 
 const mapStateToProps = state => {
 	return {
-		tokens: state.tokens,
+		tokens: getCommunities(state),
 		ui: state.ui,
 		selectedCommunity: getSelectedCommunity(state)
 	}

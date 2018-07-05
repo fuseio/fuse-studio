@@ -9,7 +9,8 @@
   },
   "api": {
     "url": "http://localhost:3000/api/v1",
-    "timeout": 3000
+    "timeout": 3000,
+    "marketsPolling": 30000
   },
   "reactGA": {
     "trackingId": "UA-108913015-5",

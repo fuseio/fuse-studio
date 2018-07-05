@@ -1,4 +1,3 @@
-import * as marketMaker from 'actions/marketMaker'
 import {FETCH_METADATA} from 'actions/api'
 
 export default (state = {}, action) => {
@@ -6,14 +5,6 @@ export default (state = {}, action) => {
     return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
   }
   switch (action.type) {
-    case marketMaker.GET_CURRENT_PRICE.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case marketMaker.CLN_RESERVE.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case marketMaker.CC_RESERVE.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
-    case marketMaker.FETCH_MARKET_MAKER_DATA.SUCCESS:
-      return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case FETCH_METADATA.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     default:

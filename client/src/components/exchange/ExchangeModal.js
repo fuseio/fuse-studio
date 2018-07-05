@@ -1,7 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 
@@ -10,36 +8,31 @@ import BuySellAmounts from 'components/exchange/BuySellAmounts'
 import SummaryBuy from 'components/exchange/SummaryBuy'
 import OpenMetamask from 'components/exchange/OpenMetamask'
 import Pending from 'components/exchange/Pending'
+import {getSelectedCommunity} from 'selectors/basicToken'
 
 class InnerExchangeModal extends React.Component {
-
   onClose = () => this.props.uiActions.hideModal()
 
   renderStage = (buyStage) => {
-    switch(buyStage) {
+    switch (buyStage) {
       case 1: {
         return <BuySellAmounts />
-        break
       }
       case 2: {
         return <SummaryBuy />
-        break
       }
       case 3: {
         return <OpenMetamask />
-        break
       }
       case 4: {
         return <Pending />
-        break
       }
       default: {
         return <BuySellAmounts />
-        break
       }
     }
   }
-  render() {
+  render () {
     const { buyStage } = this.props
     return (
       <Modal class='fullscreen' onClose={this.onClose} width='500px'>
@@ -56,11 +49,11 @@ const ExchangeModal = (props) => (
 )
 
 const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch),
+  uiActions: bindActionCreators(uiActions, dispatch)
 })
 
 const mapStateToProps = (state, props) => ({
-  community: state.tokens['0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'],
+  community: getSelectedCommunity(state),
   buyStage: state.ui.buyStage
 })
 

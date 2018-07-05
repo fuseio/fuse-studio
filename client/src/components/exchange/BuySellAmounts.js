@@ -2,16 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
 import * as uiActions from 'actions/ui'
 import { buyQuote, sellQuote, invertBuyQuote, invertSellQuote, invertQuote, buyCc, sellCc } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
-import { getSelectedCommunity } from 'selectors/basicToken'
+import { getSelectedCommunity, getClnToken } from 'selectors/basicToken'
 
 import TextInput from 'components/TextInput'
 import { BigNumber } from 'bignumber.js'
-import { getClnToken } from 'selectors/basicToken'
 import DownArrow from 'images/down-arrow.png'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
@@ -24,7 +23,7 @@ class BuySellAmounts extends React.Component {
     advanced: false
   }
 
-  componentWillMount() {
+  componentWillMount () {
     if (this.props.isBuy === true || this.props.isBuy === false) {
       this.setState({buyTab: this.props.isBuy})
     } else {
@@ -69,11 +68,11 @@ class BuySellAmounts extends React.Component {
   componentWillUpdate = (nextProps, nextState) => {
     const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
 
-    if (!_.isEqual(nextProps.buyQuotePair, this.props.buyQuotePair) || !_.isEqual(nextProps.sellQuotePair, this.props.sellQuotePair)) {
+    if (!isEqual(nextProps.buyQuotePair, this.props.buyQuotePair) || !isEqual(nextProps.sellQuotePair, this.props.sellQuotePair)) {
       if (this.state.buyTab && this.state.toCC) {
         this.setState({
           cc: new BigNumber(nextProps.buyQuotePair.outAmount).div(1e18).toFixed(5),
-          loading: false,
+          loading: false
           //maxAmountError: nextProps.quotePair.outAmount && new BigNumber(nextProps.quotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
         })
       } else if (this.state.buyTab && !this.state.toCC) {
@@ -85,7 +84,7 @@ class BuySellAmounts extends React.Component {
       } else if (!this.state.buyTab && this.state.toCC) {
         this.setState({
           cc: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18).toFixed(5),
-          loading: false,
+          loading: false
           //maxAmountError: nextProps.quotePair.outAmount && new BigNumber(nextProps.quotePair.outAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
         })
       } else if (!this.state.buyTab && !this.state.toCC) {
