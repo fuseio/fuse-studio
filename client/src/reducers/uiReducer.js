@@ -22,6 +22,8 @@ export default (state = {
       return {...state, signupClose: action.close}
     case 'BUY_STAGE':
       return {...state, buyStage: action.stage}
+    case 'BUY_SELL_AMOUNTS':
+      return { ...state, isBuy: action.isBuy, ccAddress: action.ccAddress, cln: action.cln,  cc: action.cc, minimum: action.minimum }
     default:
       return state
   }
