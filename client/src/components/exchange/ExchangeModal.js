@@ -10,6 +10,8 @@ import BuySellAmounts from 'components/exchange/BuySellAmounts'
 import SummaryBuy from 'components/exchange/SummaryBuy'
 import OpenMetamask from 'components/exchange/OpenMetamask'
 import Pending from 'components/exchange/Pending'
+import {getCommunities} from 'selectors/basicToken'
+import find from 'lodash/find'
 
 class InnerExchangeModal extends React.Component {
 
@@ -39,7 +41,7 @@ class InnerExchangeModal extends React.Component {
       }
     }
   }
-  render() {
+  render () {
     const { buyStage } = this.props
 
     return (
@@ -57,11 +59,11 @@ const ExchangeModal = (props) => (
 )
 
 const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch),
+  uiActions: bindActionCreators(uiActions, dispatch)
 })
 
 const mapStateToProps = (state, props) => ({
-  community: state.tokens['0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'],
+  community: find(getCommunities(state), {address: '0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'}),
   buyStage: state.ui.buyStage
 })
 

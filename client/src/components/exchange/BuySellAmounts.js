@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
 import * as uiActions from 'actions/ui'
 import { buyQuote, sellQuote, invertBuyQuote, invertSellQuote, invertQuote, buyCc, sellCc } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
@@ -59,8 +59,7 @@ class BuySellAmounts extends React.Component {
   componentWillUpdate = (nextProps, nextState) => {
     const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
 
-
-    if (!_.isEqual(nextProps.quotePair, this.props.quotePair)) {
+    if (!isEqual(nextProps.quotePair, this.props.quotePair)) {
       if (this.state.toCC) {
         this.setState({cc: new BigNumber(nextProps.quotePair.outAmount), loading: false})
       } else {
