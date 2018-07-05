@@ -37,7 +37,7 @@ class BuySellAmounts extends React.Component {
       cln: this.state.cln,
       cc: this.state.cc,
       isBuy: this.state.buyTab,
-      minAmount: this.state.minimum
+      minimum: this.state.minimum
     })
   }
 
@@ -112,8 +112,8 @@ class BuySellAmounts extends React.Component {
     if (this.state.cln) {
       this.setState({
         minimum,
-        priceChange: 100 - 100*(minimum/new BigNumber(this.state.cc).div(1e18)),
-        priceLimit: new BigNumber(this.state.cln).div(1e18)/minimum
+        priceChange: 100 - 100*(minimum/this.state.cc),
+        priceLimit: this.state.cln/minimum
       })
     } //else error
   }
@@ -122,8 +122,8 @@ class BuySellAmounts extends React.Component {
     if (this.state.cln) {
       this.setState({
         priceChange,
-        minimum: (-1)*((priceChange - 100)*new BigNumber(this.state.cc).div(1e18))/100,
-        priceLimit: new BigNumber(this.state.cln).div(1e18)/((-1)*((priceChange - 100)*new BigNumber(this.state.cc).div(1e18))/100)
+        minimum: (-1)*((priceChange - 100)*this.state.cc)/100,
+        priceLimit: this.state.cln/((-1)*((priceChange - 100)*this.state.cc)/100)
       })
     } //else error
   }
@@ -131,8 +131,8 @@ class BuySellAmounts extends React.Component {
     const priceLimit = event.target.value
     if (this.state.cln) {
       this.setState({
-        minimum: new BigNumber(this.state.cln).div(1e18)/priceLimit,
-        priceChange: 100 - 100*((new BigNumber(this.state.cln).div(1e18)/priceLimit)/new BigNumber(this.state.cc).div(1e18)),
+        minimum: this.state.cln/priceLimit,
+        priceChange: 100 - 100*((this.state.cln/priceLimit)/this.state.cc),
         priceLimit
       })
     } //else error
