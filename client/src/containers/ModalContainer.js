@@ -16,6 +16,7 @@ const MODAL_COMPONENTS = {
 }
 
 const ModalContainer = (props) => {
+  
   if (!props.modalType) {
     return null
   }

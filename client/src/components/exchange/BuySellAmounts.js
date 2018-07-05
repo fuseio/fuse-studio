@@ -7,6 +7,8 @@ import * as uiActions from 'actions/ui'
 import { buyQuote, sellQuote, invertBuyQuote, invertSellQuote, invertQuote, buyCc, sellCc } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
+import { getSelectedCommunity } from 'selectors/basicToken'
+
 import TextInput from 'components/TextInput'
 import { BigNumber } from 'bignumber.js'
 import { getClnToken } from 'selectors/basicToken'
@@ -253,7 +255,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  community: state.tokens['0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'],
+  community: getSelectedCommunity(state),
   quotePair: state.marketMaker.quotePair || {},
   buyQuotePair: state.marketMaker.buyQuote || {},
   sellQuotePair: state.marketMaker.sellQuote || {},

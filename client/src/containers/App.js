@@ -35,7 +35,7 @@ class App extends Component {
 			]
 			this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
 			coluTokens.forEach(this.props.fetchCommunity)
-			this.props.loadModal(EXCHANGE_MODAL)
+			//this.props.loadModal(EXCHANGE_MODAL)
 		}
 		if (nextProps.networkType !== this.props.networkType && !isNetworkDesired(nextProps.networkType)) {
 			this.props.loadModal(ERROR_MODAL)
