@@ -679,7 +679,7 @@ button:disabled, button[disabled] {
 				padding: 0 32px 32px;
 				.header-button {
 					width: 207px;
-					@include button(#cbd1d3);
+					@include button($colu-green);
 					color: white;
 					height: 36px;
 					&:nth-child(2) {
@@ -1044,13 +1044,15 @@ input[type="checkbox" i] {
 		width: 14px;
 		height: 14px;
 		min-width: 14px;
-		padding-top: 3px;
+		    margin: 0 10px 0 3px;
 	}
 	div {
 		font-size: 10px;
 		//line-height: 2.6;
 		letter-spacing: 0.2px;
 		color: #8d9293;
+		display: flex;
+    	align-items: center;
 	}
 	.cc-to-cln {
 		font-size: 10px;
