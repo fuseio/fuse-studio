@@ -171,9 +171,24 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
       data = EllipseMarketMakerContract.methods.change(toTokenAddress).encodeABI()
     }
 
-    yield call(ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send, {
+    const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
       from: web3.eth.defaultAccount
     })
+
+    const transactionHash = yield new Promise((resolve) => {
+      sendPromise.on('transactionHash', function (transactionHash) {
+        resolve(transactionHash)
+      })
+    })
+
+    yield put({type: actions.CHANGE.PENDING,
+      address: token.address,
+      response: {
+        transactionHash
+      }
+    })
+
+    const receipt = yield sendPromise
 
     yield put({
       type: BALANCE_OF.REQUEST,
@@ -187,36 +202,23 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
       address: web3.eth.defaultAccount
     })
 
-    yield fetchMarketMakerData({contractAddress: token.address, mmAddress: token.mmAddress})
+    yield put({
+      type: actions.FETCH_MARKET_MAKER_DATA.REQUEST,
+      contractAddress: token.address,
+      mmAddress: token.mmAddress
+    })
 
     yield put({type: actions.CHANGE.SUCCESS,
       address: token.address,
       response: {
-        address: token.address
-      }})
+        receipt
+      }
+    })
+
+    return receipt
   } catch (error) {
     yield put({type: actions.CHANGE.FAILURE, error})
   }
-}
-
-export function * slippage ({fromToken, inAmount, outAmount, toToken, isBuying}) {
-  const clnToken = yield select(getClnToken)
-  let ccToken = yield select(getCommunity, isBuying ? toToken : fromToken)
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: ccToken.mmAddress})
-
-  const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, ccToken, isBuying)
-  const updatedR1 = new BigNumber(r1).plus(inAmount)
-  const updatedR2 = new BigNumber(r2).minus(outAmount)
-
-  const futurePrice = yield call(EllipseMarketMakerContract.methods.getCurrentPrice(
-    updatedR1, updatedR2, s1, s2).call)
-  // const slippage =
-  // yield put({
-  //   type: actions.SLIPPAGE.SUCCESS,
-  //   response: {
-  //     slippage:
-  //   }
-  // })
 }
 
 export function * buyQuote ({tokenAddress, clnAmount}) {
@@ -314,6 +316,7 @@ export function * sellCc ({amount, tokenAddress, minReturn}) {
 
 export function * fetchMarketMakerData ({contractAddress, mmAddress}) {
   try {
+    debugger
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
 
     const calls = {
@@ -348,7 +351,6 @@ export default function * rootSaga () {
     takeEvery(actions.CHANGE.REQUEST, change),
     takeEvery(actions.BUY_CC.REQUEST, buyCc),
     takeEvery(actions.SELL_CC.REQUEST, sellCc),
-    takeEvery(actions.SLIPPAGE.REQUEST, slippage),
     takeEvery(actions.FETCH_MARKET_MAKER_DATA.REQUEST, fetchMarketMakerData)
   ])
 }

@@ -7,7 +7,7 @@ import CommunitiesList from 'components/CommunitiesList'
 import ModalContainer from 'containers/ModalContainer'
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
-import { ERROR_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
+import { ERROR_MODAL } from 'constants/uiConstants'
 import {fetchClnContract, fetchCommunity} from 'actions/basicToken'
 import {fetchMarketMakerData} from 'actions/marketMaker'
 import {getNetworkType, checkAccountChange} from 'actions/web3'
@@ -42,9 +42,9 @@ class App extends Component {
     onWeb3Ready.then(() => {
       setInterval(this.props.checkAccountChange, CONFIG.metaMask.accountPolling)
 
-      setInterval(() => {
-        this.props.communityTokens.forEach((token) => this.props.fetchMarketMakerData(token.address, token.mmAddress))
-      }, CONFIG.api.marketsPolling)
+      // setInterval(() => {
+      //   this.props.communityTokens.forEach((token) => this.props.fetchMarketMakerData(token.address, token.mmAddress))
+      // }, CONFIG.api.marketsPolling)
     })
     this.setState({
       welcomeDone: window.localStorage.getItem('welcome'),
@@ -89,7 +89,7 @@ class App extends Component {
       //'tablet': isTablet && !isIOS
     })
 
-    const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history}/> : null
+    const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history} /> : null
 
     const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
       <div className='welcome-container'>
