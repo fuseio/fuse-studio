@@ -39,11 +39,11 @@ const handlers = {
       }
     }
     return {...state, transactions}
+  },
+  [BALANCE_OF.SUCCESS]: (state, action) => {
+    const balances = {...state.balances, [action.tokenAddress]: action.response.balanceOf}
+    return {...state, balances}
   }
-  // [BALANCE_OF.SUCCESS]: (state, action) => {
-  //   const balances = {...state.balances, [action.contractAddress]: action.response.balanceOf}
-  //   return {...state, balances}
-  // }
 }
 
 export default (state = {}, action) => {
