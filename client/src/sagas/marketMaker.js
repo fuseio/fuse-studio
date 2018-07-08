@@ -182,7 +182,8 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
     })
 
     yield put({type: actions.CHANGE.PENDING,
-      address: token.address,
+      tokenAddress: token.address,
+      accountAddress: web3.eth.defaultAccount,
       response: {
         transactionHash
       }
@@ -209,7 +210,8 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
     })
 
     yield put({type: actions.CHANGE.SUCCESS,
-      address: token.address,
+      tokenAddress: token.address,
+      accountAddress: web3.eth.defaultAccount,
       response: {
         receipt
       }
@@ -316,7 +318,6 @@ export function * sellCc ({amount, tokenAddress, minReturn}) {
 
 export function * fetchMarketMakerData ({contractAddress, mmAddress}) {
   try {
-    debugger
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
 
     const calls = {
