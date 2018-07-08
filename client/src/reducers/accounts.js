@@ -4,31 +4,40 @@ import {BALANCE_OF} from 'actions/basicToken'
 const initialAccount = {
   balances: {},
   transactions: {
-    pending: [],
-    confirmed: []
   }
 }
 
 const handlers = {
   [actions.CHANGE.PENDING]: (state, action) => {
-    const account = state[action.accountAddress] || initialAccount
-    const pending = [...account.transactions.pending, action.response.transactionHash]
-    const transactions = {...account.transactions, pending}
+    const transactionHash = action.response.transactionHash
+    const transactions = {...state.transactions,
+      [transactionHash]: {
+        isPending: true,
+        transactionHash
+      }}
     return {...state, transactions}
   },
   [actions.CHANGE.SUCCESS]: (state, action) => {
     const receipt = action.response.receipt
-    const account = state[action.accountAddress] || initialAccount
-    const pending = account.transactions.pending.filter(transaction => transaction !== receipt.transactionHash)
-    const confirmed = [...account.transactions.confirmed, receipt]
-    const transactions = {...account.transactions, confirmed, pending}
+    const transactionHash = receipt.transactionHash
+    const transactions = {...state.transactions,
+      [transactionHash]: {
+        isPending: false,
+        ...receipt
+      }
+    }
     return {...state, transactions}
   },
   [actions.CHANGE.FAILURE]: (state, action) => {
     const receipt = action.response.receipt
-    const account = state[action.accountAddress] || initialAccount
-    const pending = account.transactions.pending.filter(transaction => transaction !== receipt.transactionHash)
-    const transactions = {...account.transactions, pending}
+    const transactionHash = receipt.transactionHash
+    const transactions = {...state.transactions,
+      [transactionHash]: {
+        isPending: false,
+        isFailed: true,
+        ...receipt
+      }
+    }
     return {...state, transactions}
   }
   // [BALANCE_OF.SUCCESS]: (state, action) => {

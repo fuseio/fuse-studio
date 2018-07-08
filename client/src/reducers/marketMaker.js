@@ -14,6 +14,8 @@ export default (state = {}, action) => {
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
     case actions.FETCH_MARKET_MAKER_DATA.SUCCESS:
       return {...state, [action.contractAddress]: {...state[action.contractAddress], ...action.response}}
+    case actions.CHANGE.PENDING:
+      return {...state, ...action.response}
   }
   if (successActions.hasOwnProperty(action.type)) {
     return {...state, ...action.response}

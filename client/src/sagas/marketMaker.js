@@ -185,12 +185,21 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
       tokenAddress: token.address,
       accountAddress: web3.eth.defaultAccount,
       response: {
+        latestTransaction: transactionHash,
         transactionHash
       }
     })
 
     const receipt = yield sendPromise
-
+    if (!Number(receipt.status)) {
+      yield put({
+        type: actions.CHANGE.FAILURE,
+        tokenAddress: token.address,
+        accountAddress: web3.eth.defaultAccount,
+        response: {receipt}
+      })
+      return receipt
+    }
     yield put({
       type: BALANCE_OF.REQUEST,
       contractAddress: clnToken.address,
