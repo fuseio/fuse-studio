@@ -185,7 +185,6 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
       tokenAddress: token.address,
       accountAddress: web3.eth.defaultAccount,
       response: {
-        latestTransaction: transactionHash,
         transactionHash
       }
     })
