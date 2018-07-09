@@ -1,4 +1,6 @@
 import { all, put, takeEvery, select } from 'redux-saga/effects'
+import request from 'superagent'
+
 import web3 from 'services/web3'
 import {isNetworkSupported} from 'utils/web3'
 import * as actions from 'actions/web3'
@@ -31,6 +33,16 @@ function * getNetworkType () {
   }
 }
 
+function * fetchGasPrices () {
+  const response = yield request.get('https://ethgasstation.info/json/ethgasAPI.json')
+  yield put({
+    type: actions.FETCH_GAS_PRICES.SUCCESS,
+    response: {
+      gas: response.body
+    }
+  })
+}
+
 function * watchAccountChanges ({selectedAddress, networkVersion}) {
   const account = yield select(state => state.web3.account)
   const checksummedAddress = selectedAddress && web3.utils.toChecksumAddress(selectedAddress)
@@ -42,6 +54,7 @@ function * watchAccountChanges ({selectedAddress, networkVersion}) {
 export default function * rootSaga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
-    takeEvery(actions.CHECK_ACCOUNT_CHANGE, watchAccountChanges)
+    takeEvery(actions.CHECK_ACCOUNT_CHANGE, watchAccountChanges),
+    takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices)
   ])
 }

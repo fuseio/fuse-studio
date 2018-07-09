@@ -4,6 +4,7 @@ import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/marketMaker'
 import {BALANCE_OF} from 'actions/basicToken'
+import {fetchGasPrices} from 'actions/web3'
 import {getClnToken, getCommunity} from 'selectors/basicToken'
 import web3 from 'services/web3'
 
@@ -152,7 +153,7 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
   }
 }
 
-export function * change ({tokenAddress, amount, minReturn, isBuying}) {
+export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimation}) {
   try {
     const clnToken = yield select(getClnToken)
     let token = yield select(getCommunity, tokenAddress)
@@ -169,6 +170,11 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
       data = EllipseMarketMakerContract.methods.change(toTokenAddress, minReturn).encodeABI()
     } else {
       data = EllipseMarketMakerContract.methods.change(toTokenAddress).encodeABI()
+    }
+
+    if (isEstimation) {
+      return yield ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).estimateGas(
+        {from: web3.eth.defaultAccount})
     }
 
     const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
@@ -324,6 +330,50 @@ export function * sellCc ({amount, tokenAddress, minReturn}) {
   }
 }
 
+export function * estimateGasBuyCc ({amount, tokenAddress, minReturn}) {
+  try {
+    const estimatedGas = yield call(change, {
+      tokenAddress,
+      amount,
+      isBuying: true,
+      minReturn,
+      isEstimation: true
+    })
+
+    yield put(fetchGasPrices())
+
+    yield put({type: actions.ESTIMATE_GAS_BUY_CC.SUCCESS,
+      address: tokenAddress,
+      response: {
+        estimatedGas
+      }})
+  } catch (error) {
+    yield put({type: actions.ESTIMATE_GAS_BUY_CC.FAILURE, error})
+  }
+}
+
+function * estimateGasSellCc ({amount, tokenAddress, minReturn}) {
+  try {
+    const estimatedGas = yield call(change, {
+      tokenAddress,
+      amount,
+      isBuying: false,
+      minReturn,
+      isEstimation: true
+    })
+
+    yield put(fetchGasPrices())
+
+    yield put({type: actions.ESTIMATE_GAS_SELL_CC.SUCCESS,
+      address: tokenAddress,
+      response: {
+        estimatedGas
+      }})
+  } catch (error) {
+    yield put({type: actions.ESTIMATE_GAS_SELL_CC.FAILURE, error})
+  }
+}
+
 export function * fetchMarketMakerData ({tokenAddress, mmAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
@@ -360,6 +410,8 @@ export default function * rootSaga () {
     takeEvery(actions.CHANGE.REQUEST, change),
     takeEvery(actions.BUY_CC.REQUEST, buyCc),
     takeEvery(actions.SELL_CC.REQUEST, sellCc),
+    takeEvery(actions.ESTIMATE_GAS_BUY_CC.REQUEST, estimateGasBuyCc),
+    takeEvery(actions.ESTIMATE_GAS_SELL_CC.REQUEST, estimateGasSellCc),
     takeEvery(actions.FETCH_MARKET_MAKER_DATA.REQUEST, fetchMarketMakerData)
   ])
 }
