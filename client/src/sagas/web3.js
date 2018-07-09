@@ -31,11 +31,10 @@ function * getNetworkType () {
   }
 }
 
-function * watchAccountChanges () {
+function * watchAccountChanges ({selectedAddress, networkVersion}) {
   const account = yield select(state => state.web3.account)
-  const currentAccount = (yield web3.eth.getAccounts())[0]
-  if (account !== currentAccount) {
-    yield put(actions.selectAccount(currentAccount))
+  if (account !== selectedAddress) {
+    yield put(actions.selectAccount(selectedAddress))
   }
 }
 

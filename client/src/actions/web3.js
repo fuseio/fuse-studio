@@ -11,4 +11,5 @@ export const selectAccount = (account) => action(SELECT_ACCOUNT,
   {response: {account, isAccountUnlocked: !!account}})
 export const setReadyStatus = (isReady, account) => action(SET_READY_STATUS,
   {response: {isReady}})
-export const checkAccountChange = () => action(CHECK_ACCOUNT_CHANGE)
+export const checkAccountChange = ({selectedAddress, networkVersion}) => action(CHECK_ACCOUNT_CHANGE,
+  {selectedAddress, networkVersion})

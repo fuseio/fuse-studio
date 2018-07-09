@@ -14,7 +14,6 @@ import { Motion, spring } from 'react-motion'
 import classNames from 'classnames'
 import { isMobile } from 'react-device-detect'
 import map from 'lodash/map'
-import isEmpty from 'lodash/isEmpty'
 
 import MarkerSVG from 'components/Marker'
 import * as uiActions from 'actions/ui'

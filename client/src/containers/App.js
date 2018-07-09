@@ -39,8 +39,10 @@ class App extends Component {
 
   componentDidMount () {
     this.props.getNetworkType()
-    onWeb3Ready.then(() => {
-      setInterval(this.props.checkAccountChange, CONFIG.metaMask.accountPolling)
+    onWeb3Ready.then(({web3}) => {
+      if (web3.currentProvider.isMetaMask) {
+        web3.currentProvider.publicConfigStore.on('update', this.props.checkAccountChange)
+      }
 
       setInterval(() => {
         this.props.communityTokens.forEach((token) => this.props.fetchMarketMakerData(token.address, token.mmAddress))
@@ -85,8 +87,7 @@ class App extends Component {
       'column': true,
       'center': true,
       'fullscreen': !isMobile,
-      'mobile-screen': isMobile,
-      //'tablet': isTablet && !isIOS
+      'mobile-screen': isMobile
     })
 
     const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history} /> : null
