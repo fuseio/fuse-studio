@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
-
+import {getEtherscanUrl} from 'selectors/web3'
 import Vimage from 'images/v.png'
 
 class Pending extends React.Component {
@@ -20,7 +20,7 @@ class Pending extends React.Component {
           <p>Your transaction is pending blockchain confirmation, please check your wallet again in a few minutes.</p>
           <div className="line"/>
           <h5>TRANSACTION HASH:</h5>
-          <a className="tx-link">d0998732</a>
+          <a href={`${this.props.etherscanUrl}tx/${this.props.pending}`} className="tx-link">{this.props.pending}</a>
         </div>
         <button onClick={this.done}>DONE</button>
       </div>
@@ -33,7 +33,8 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  web3: state.web3
+  pending: state.marketMaker.transactionHash,
+  etherscanUrl: getEtherscanUrl(state),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pending)

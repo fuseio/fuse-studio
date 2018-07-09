@@ -24,6 +24,8 @@ export default (state = {
       return {...state, buyStage: action.stage}
     case 'BUY_SELL_AMOUNTS':
       return { ...state, isBuy: action.isBuy, ccAddress: action.ccAddress, cln: action.cln,  cc: action.cc, minimum: action.minimum, priceChange: action.priceChange, priceLimit: action.priceLimit }
+    case 'RESET_EXCHANGE':
+      return {... state, isBuy: null, ccAddress: null, cln: null, cc: null, minimum: null, priceChange: null, priceLimit: null, buyStage: 1}
     default:
       return state
   }

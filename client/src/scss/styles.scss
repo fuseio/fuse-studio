@@ -1398,7 +1398,10 @@ input[type="checkbox" i] {
 			letter-spacing: -0.1px;
 			color: #00bd94;
 			text-align: left;
-			text-decoration:underline;
+			text-decoration:underline !important;
+			white-space: nowrap;
+    		overflow: hidden !important;
+    		text-overflow: ellipsis;
 		}
 	}
 	.metamask-icon {

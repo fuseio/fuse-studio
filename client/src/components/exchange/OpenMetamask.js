@@ -7,8 +7,10 @@ import { bindActionCreators } from 'redux'
 import Metamask from 'images/metamask-dark.png'
 
 class OpenMetamask extends React.Component {
-  next = () => {
-    this.props.uiActions.setBuyStage(4)
+  componentWillReceiveProps(nextProps) {
+    if (this.props.pending !== nextProps.pending) {
+      this.props.uiActions.setBuyStage(4)
+    }
   }
 
   render() {
@@ -29,7 +31,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  web3: state.web3
+  pending: state.marketMaker.transactionHash
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenMetamask)

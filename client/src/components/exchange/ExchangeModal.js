@@ -12,7 +12,9 @@ import {getSelectedCommunity} from 'selectors/basicToken'
 
 class InnerExchangeModal extends React.Component {
   onClose = () => this.props.uiActions.hideModal()
-
+  componentWillMount() {
+    this.props.uiActions.resetExchange()
+  }
   renderStage = (buyStage) => {
     switch (buyStage) {
       case 1: {

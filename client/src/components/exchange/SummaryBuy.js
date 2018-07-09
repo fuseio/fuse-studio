@@ -17,9 +17,9 @@ class SummaryBuy extends React.Component {
   next = () => {
     this.props.uiActions.setBuyStage(3)
     if (this.props.isBuy) {
-      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18))
+      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), new BigNumber(this.props.estimatedGas*(this.props.gas.average/10)).div(1e9))
     } else {
-      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18))
+      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), new BigNumber(this.props.estimatedGas*(this.props.gas.average/10)).div(1e9))
     }
   }
 
@@ -35,7 +35,7 @@ class SummaryBuy extends React.Component {
     const toCoin = isBuy ? cc : cln
     const fromSymbol = isBuy ? 'CLN' : ccSymbol
     const toSymbol = isBuy ? ccSymbol : 'CLN'
-    const gasPrice = (gas && estimatedGas) ? new BigNumber(estimatedGas*(gas.average/10)).div(1e18) : ''
+    const gasPrice = (gas && estimatedGas) ? new BigNumber(estimatedGas*(gas.average/10)).div(1e9) : ''
 
     return (
       <div className="summary">
