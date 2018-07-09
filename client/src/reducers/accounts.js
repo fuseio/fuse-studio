@@ -50,7 +50,7 @@ const handlers = {
 }
 
 export default (state = {}, action) => {
-  if (handlers.hasOwnProperty(action.type)) {
+  if (handlers.hasOwnProperty(action.type) && action.accountAddress) {
     const account = state[action.accountAddress] || initialAccount
     return {...state, [action.accountAddress]: handlers[action.type](account, action)}
   }
