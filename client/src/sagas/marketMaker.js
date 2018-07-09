@@ -4,6 +4,7 @@ import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/marketMaker'
 import {BALANCE_OF} from 'actions/basicToken'
+import {fetchGasPrices} from 'actions/web3'
 import {getClnToken, getCommunity} from 'selectors/basicToken'
 import web3 from 'services/web3'
 
@@ -152,7 +153,7 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
   }
 }
 
-export function * change ({tokenAddress, amount, minReturn, isBuying}) {
+export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimation, options}) {
   try {
     const clnToken = yield select(getClnToken)
     let token = yield select(getCommunity, tokenAddress)
@@ -171,8 +172,14 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
       data = EllipseMarketMakerContract.methods.change(toTokenAddress).encodeABI()
     }
 
+    if (isEstimation) {
+      return yield ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).estimateGas(
+        {from: web3.eth.defaultAccount})
+    }
+
     const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
-      from: web3.eth.defaultAccount
+      from: web3.eth.defaultAccount,
+      ...options
     })
 
     const transactionHash = yield new Promise((resolve) => {
@@ -287,13 +294,14 @@ export function * invertSellQuote ({tokenAddress, clnAmount}) {
     }})
 }
 
-export function * buyCc ({amount, tokenAddress, minReturn}) {
+export function * buyCc ({amount, tokenAddress, minReturn, options}) {
   try {
     yield call(change, {
       tokenAddress,
       amount,
       isBuying: true,
-      minReturn
+      minReturn,
+      options
     })
     yield put({type: actions.BUY_CC.SUCCESS,
       address: tokenAddress,
@@ -305,13 +313,14 @@ export function * buyCc ({amount, tokenAddress, minReturn}) {
   }
 }
 
-export function * sellCc ({amount, tokenAddress, minReturn}) {
+export function * sellCc ({amount, tokenAddress, minReturn, options}) {
   try {
     yield call(change, {
       tokenAddress,
       amount,
       isBuying: false,
-      minReturn
+      minReturn,
+      options
     })
 
     yield put({type: actions.SELL_CC.SUCCESS,
@@ -321,6 +330,50 @@ export function * sellCc ({amount, tokenAddress, minReturn}) {
       }})
   } catch (error) {
     yield put({type: actions.SELL_CC.FAILURE, error})
+  }
+}
+
+export function * estimateGasBuyCc ({amount, tokenAddress, minReturn}) {
+  try {
+    const estimatedGas = yield call(change, {
+      tokenAddress,
+      amount,
+      isBuying: true,
+      minReturn,
+      isEstimation: true
+    })
+
+    yield put(fetchGasPrices())
+
+    yield put({type: actions.ESTIMATE_GAS_BUY_CC.SUCCESS,
+      address: tokenAddress,
+      response: {
+        estimatedGas
+      }})
+  } catch (error) {
+    yield put({type: actions.ESTIMATE_GAS_BUY_CC.FAILURE, error})
+  }
+}
+
+function * estimateGasSellCc ({amount, tokenAddress, minReturn}) {
+  try {
+    const estimatedGas = yield call(change, {
+      tokenAddress,
+      amount,
+      isBuying: false,
+      minReturn,
+      isEstimation: true
+    })
+
+    yield put(fetchGasPrices())
+
+    yield put({type: actions.ESTIMATE_GAS_SELL_CC.SUCCESS,
+      address: tokenAddress,
+      response: {
+        estimatedGas
+      }})
+  } catch (error) {
+    yield put({type: actions.ESTIMATE_GAS_SELL_CC.FAILURE, error})
   }
 }
 
@@ -360,6 +413,8 @@ export default function * rootSaga () {
     takeEvery(actions.CHANGE.REQUEST, change),
     takeEvery(actions.BUY_CC.REQUEST, buyCc),
     takeEvery(actions.SELL_CC.REQUEST, sellCc),
+    takeEvery(actions.ESTIMATE_GAS_BUY_CC.REQUEST, estimateGasBuyCc),
+    takeEvery(actions.ESTIMATE_GAS_SELL_CC.REQUEST, estimateGasSellCc),
     takeEvery(actions.FETCH_MARKET_MAKER_DATA.REQUEST, fetchMarketMakerData)
   ])
 }

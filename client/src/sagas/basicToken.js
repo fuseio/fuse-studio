@@ -14,7 +14,7 @@ import ReactGA from 'services/ga'
 
 const entityPut = createEntityPut('basicToken')
 
-export function * name ({tokenAddress}) {
+function * name ({tokenAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
     const name = yield call(ColuLocalNetworkContract.methods.name().call)
@@ -28,7 +28,7 @@ export function * name ({tokenAddress}) {
   }
 }
 
-export function * symbol ({tokenAddress}) {
+function * symbol ({tokenAddress}) {
   try {
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
     const symbol = yield call(ColuLocalNetworkContract.methods.symbol().call)

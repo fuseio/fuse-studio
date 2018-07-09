@@ -9,6 +9,8 @@ export default (state = {addresses}, action) => {
       return {...state, ...action.response}
     case web3.GET_NETWORK_TYPE.SUCCESS:
       return {...state, ...action.response}
+    case web3.FETCH_GAS_PRICES.SUCCESS:
+      return {...state, ...action.response}
     default:
       return state
   }

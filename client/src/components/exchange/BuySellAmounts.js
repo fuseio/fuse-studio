@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import classNames from 'classnames'
 import isEqual from 'lodash/isEqual'
 import * as uiActions from 'actions/ui'
-import { buyQuote, sellQuote, invertBuyQuote, invertSellQuote, invertQuote, buyCc, sellCc } from 'actions/marketMaker'
+import { buyQuote, sellQuote, invertBuyQuote, invertSellQuote, estimateGasBuyCc, estimateGasSellCc } from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
 import { getSelectedCommunity, getClnToken } from 'selectors/basicToken'
@@ -32,6 +32,12 @@ class BuySellAmounts extends React.Component {
   }
 
   next = () => {
+    if (this.props.isBuy) {
+      this.props.estimateGasBuyCc(this.props.community.address, new BigNumber(this.state.cln).multipliedBy(1e18), this.state.minimum)
+    } else {
+      this.props.estimateGasSellCc(this.props.community.address, new BigNumber(this.state.cc).multipliedBy(1e18), this.state.minimum)
+    }
+
     this.props.uiActions.setBuyStage(2)
     this.props.uiActions.setBuySellAmounts({
       ccAddress: this.props.community.address,
@@ -243,7 +249,8 @@ const mapDispatchToProps = dispatch => ({
   sellQuote: bindActionCreators(sellQuote, dispatch),
   invertBuyQuote: bindActionCreators(invertBuyQuote, dispatch),
   invertSellQuote: bindActionCreators(invertSellQuote, dispatch),
-  invertQuote: bindActionCreators(invertQuote, dispatch),
+  estimateGasBuyCc: bindActionCreators(estimateGasBuyCc, dispatch),
+  estimateGasSellCc: bindActionCreators(estimateGasSellCc, dispatch)
 })
 
 const mapStateToProps = (state, props) => ({
