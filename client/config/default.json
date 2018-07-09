@@ -4,9 +4,6 @@
     "supportedNetworks": ["main", "ropsten"],
     "desiredNetworks": ["main", "ropsten"]
   },
-  "metaMask": {
-    "accountPolling": 200
-  },
   "api": {
     "url": "http://localhost:3000/api/v1",
     "timeout": 3000,

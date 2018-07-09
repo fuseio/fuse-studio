@@ -14,12 +14,12 @@ import ReactGA from 'services/ga'
 
 const entityPut = createEntityPut('basicToken')
 
-export function * name ({contractAddress}) {
+function * name ({tokenAddress}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
     const name = yield call(ColuLocalNetworkContract.methods.name().call)
     yield entityPut({type: actions.NAME.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         name
       }})
@@ -28,12 +28,12 @@ export function * name ({contractAddress}) {
   }
 }
 
-export function * symbol ({contractAddress}) {
+function * symbol ({tokenAddress}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
     const symbol = yield call(ColuLocalNetworkContract.methods.symbol().call)
     yield entityPut({type: actions.SYMBOL.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         symbol
       }})
@@ -42,12 +42,12 @@ export function * symbol ({contractAddress}) {
   }
 }
 
-function * totalSupply ({contractAddress}) {
+function * totalSupply ({tokenAddress}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
     const totalSupply = yield call(ColuLocalNetworkContract.methods.totalSupply().call)
     yield entityPut({type: actions.TOTAL_SUPPLY.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         totalSupply
       }})
@@ -56,12 +56,12 @@ function * totalSupply ({contractAddress}) {
   }
 }
 
-function * tokenURI ({contractAddress}) {
+function * tokenURI ({tokenAddress}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
     const tokenURI = yield call(ColuLocalNetworkContract.methods.tokenURI().call)
     yield entityPut({type: actions.TOKEN_URI.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         tokenURI
       }})
@@ -70,14 +70,14 @@ function * tokenURI ({contractAddress}) {
   }
 }
 
-function * setTokenURI ({contractAddress, tokenURI}) {
+function * setTokenURI ({tokenAddress, tokenURI}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
     yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
       from: web3.eth.defaultAccount
     })
     yield entityPut({type: actions.SET_TOKEN_URI.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         tokenURI
       }})
@@ -86,12 +86,12 @@ function * setTokenURI ({contractAddress, tokenURI}) {
   }
 }
 
-function * owner ({contractAddress}) {
+function * owner ({tokenAddress}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
     const owner = yield call(ColuLocalNetworkContract.methods.owner().call)
     yield entityPut({type: actions.OWNER.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         owner
       }})
@@ -100,12 +100,14 @@ function * owner ({contractAddress}) {
   }
 }
 
-function * balanceOf ({contractAddress, address}) {
+function * balanceOf ({tokenAddress, accountAddress}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
-    const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(address).call)
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
+    const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(accountAddress).call)
+
     yield entityPut({type: actions.BALANCE_OF.SUCCESS,
-      contractAddress,
+      tokenAddress,
+      accountAddress,
       response: {
         balanceOf
       }})
@@ -114,22 +116,22 @@ function * balanceOf ({contractAddress, address}) {
   }
 }
 
-function * transfer ({contractAddress, to, value}) {
+function * transfer ({tokenAddress, to, value}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
     const receipt = yield ColuLocalNetworkContract.methods.transfer(to, value).send({
       from: web3.eth.defaultAccount
     })
-    yield entityPut({type: actions.BALANCE_OF.REQUEST, address: receipt.from})
+    yield entityPut({type: actions.BALANCE_OF.REQUEST, accountAddress: receipt.from, tokenAddress})
     yield entityPut({type: actions.TRANSFER.SUCCESS, receipt})
   } catch (error) {
     yield entityPut({type: actions.TRANSFER.FAILURE, error})
   }
 }
 
-function * approve ({contractAddress, spender, value}) {
+function * approve ({tokenAddress, spender, value}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
     const receipt = yield ColuLocalNetworkContract.methods.approve(spender, value).send({
       from: web3.eth.defaultAccount
     })
@@ -139,10 +141,10 @@ function * approve ({contractAddress, spender, value}) {
   }
 }
 
-function * fetchCommunityToken ({contractAddress}) {
+function * fetchCommunityToken ({tokenAddress}) {
   try {
     const networkType = yield select(getNetworkType)
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
     const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
       address: addresses[networkType].CurrencyFactory
     })
@@ -153,19 +155,23 @@ function * fetchCommunityToken ({contractAddress}) {
       totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
       owner: call(ColuLocalNetworkContract.methods.owner().call),
       tokenURI: call(ColuLocalNetworkContract.methods.tokenURI().call),
-      mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
+      mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(tokenAddress).call)
     }
 
     // wait untill web3 is ready
     yield onWeb3Ready
 
     if (web3.eth.defaultAccount) {
-      calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
+      yield put({
+        type: actions.BALANCE_OF.REQUEST,
+        tokenAddress,
+        accountAddress: web3.eth.defaultAccount
+      })
     }
 
     const response = yield all(calls)
     response.isLocalCurrency = true
-    response.address = contractAddress
+    response.address = tokenAddress
     response.path = '/view/community/' + response.name.toLowerCase().replace(/ /g, '')
 
     if (response.tokenURI) {
@@ -174,43 +180,43 @@ function * fetchCommunityToken ({contractAddress}) {
         type: FETCH_METADATA.REQUEST,
         protocol,
         hash,
-        contractAddress
+        tokenAddress
       })
 
       // wait until timeout to receive the metadata
       yield race({
         metadata: take(action =>
-          action.type === FETCH_METADATA.SUCCESS && action.contractAddress === contractAddress),
+          action.type === FETCH_METADATA.SUCCESS && action.tokenAddress === tokenAddress),
         timeout: call(delay, CONFIG.api.timeout)
       })
     }
 
     yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response
     })
     return response
   } catch (error) {
     console.error(error)
-    yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.FAILURE, contractAddress, error})
+    yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.FAILURE, tokenAddress, error})
   }
 }
 
-function * fetchCommunity ({contractAddress}) {
+function * fetchCommunity ({tokenAddress}) {
   try {
-    const tokenResponse = yield call(fetchCommunityToken, {contractAddress})
-    yield call(fetchMarketMakerData, {contractAddress, mmAddress: tokenResponse.mmAddress})
-    yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, contractAddress})
+    const tokenResponse = yield call(fetchCommunityToken, {tokenAddress})
+    yield call(fetchMarketMakerData, {tokenAddress, mmAddress: tokenResponse.mmAddress})
+    yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, tokenAddress})
   } catch (error) {
     console.error(error)
-    yield entityPut({type: actions.FETCH_COMMUNITY.FAILURE, contractAddress, error})
+    yield entityPut({type: actions.FETCH_COMMUNITY.FAILURE, tokenAddress, error})
   }
 }
 
-function * fetchCommunityContract ({contractAddress}) {
+function * fetchCommunityContract ({tokenAddress}) {
   try {
     const networkType = yield select(getNetworkType)
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
     const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
       address: addresses[networkType].CurrencyFactory
     })
@@ -221,19 +227,24 @@ function * fetchCommunityContract ({contractAddress}) {
       totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
       owner: call(ColuLocalNetworkContract.methods.owner().call),
       tokenURI: call(ColuLocalNetworkContract.methods.tokenURI().call),
-      mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(contractAddress).call)
+      mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(tokenAddress).call)
     }
 
     // wait untill web3 is ready
     yield onWeb3Ready
 
     if (web3.eth.defaultAccount) {
-      calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
+      yield put({
+        type: actions.BALANCE_OF.REQUEST,
+        tokenAddress,
+        accountAddress: web3.eth.defaultAccount
+      })
+      // calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
     }
 
     const response = yield all(calls)
     response.isLocalCurrency = true
-    response.address = contractAddress
+    response.address = tokenAddress
     response.path = '/view/community/' + response.name.toLowerCase().replace(/ /g, '')
 
     if (response.tokenURI) {
@@ -242,32 +253,32 @@ function * fetchCommunityContract ({contractAddress}) {
         type: FETCH_METADATA.REQUEST,
         protocol,
         hash,
-        contractAddress
+        tokenAddress
       })
 
       // wait until timeout to receive the metadata
       yield race({
         metadata: take(action =>
-          action.type === FETCH_METADATA.SUCCESS && action.contractAddress === contractAddress),
+          action.type === FETCH_METADATA.SUCCESS && action.tokenAddress === tokenAddress),
         timeout: call(delay, CONFIG.api.timeout)
       })
     }
 
-    yield fetchMarketMakerData({contractAddress, mmAddress: response.mmAddress})
+    yield fetchMarketMakerData({tokenAddress, mmAddress: response.mmAddress})
 
     yield entityPut({type: actions.FETCH_COMMUNITY_CONTRACT.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response
     })
   } catch (error) {
     console.error(error)
-    yield entityPut({type: actions.FETCH_COMMUNITY_CONTRACT.FAILURE, contractAddress, error})
+    yield entityPut({type: actions.FETCH_COMMUNITY_CONTRACT.FAILURE, tokenAddress, error})
   }
 }
 
-function * fetchClnContract ({contractAddress}) {
+function * fetchClnContract ({tokenAddress}) {
   try {
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: contractAddress})
+    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
 
     const calls = {
       name: call(ColuLocalNetworkContract.methods.name().call),
@@ -285,7 +296,7 @@ function * fetchClnContract ({contractAddress}) {
 
     const response = yield all(calls)
     response.isLocalCurrency = false
-    response.address = contractAddress
+    response.address = tokenAddress
     ReactGA.event({
       category: 'Metamask',
       action: 'CLN balance',
@@ -293,12 +304,12 @@ function * fetchClnContract ({contractAddress}) {
     })
 
     yield entityPut({type: actions.FETCH_CLN_CONTRACT.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response
     })
   } catch (error) {
     console.error(error)
-    yield entityPut({type: actions.FETCH_CLN_CONTRACT.FAILURE, contractAddress, error})
+    yield entityPut({type: actions.FETCH_CLN_CONTRACT.FAILURE, tokenAddress, error})
   }
 }
 
@@ -306,8 +317,8 @@ function * watchSelectAccount () {
   while (true) {
     const {response} = yield take(SELECT_ACCOUNT)
     const addresses = yield select(getAddresses)
-    const contractAddress = addresses.ColuLocalNetwork
-    yield entityPut({type: actions.BALANCE_OF.REQUEST, contractAddress, address: response.account})
+    const tokenAddress = addresses.ColuLocalNetwork
+    yield entityPut({type: actions.BALANCE_OF.REQUEST, tokenAddress, accountAddress: response.account})
   }
 }
 

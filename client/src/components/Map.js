@@ -14,12 +14,11 @@ import { Motion, spring } from 'react-motion'
 import classNames from 'classnames'
 import { isMobile } from 'react-device-detect'
 import map from 'lodash/map'
-import isEmpty from 'lodash/isEmpty'
 
 import MarkerSVG from 'components/Marker'
 import * as uiActions from 'actions/ui'
 import { mapStyle, mapSettings } from 'constants/uiConstants'
-import {getSelectedCommunity, getTokensWithMetadata} from 'selectors/basicToken'
+import {getSelectedToken, getTokensWithMetadata} from 'selectors/basicToken'
 
 import topo110 from 'topojson/110m.json'
 import topo50 from 'topojson/50m.json'
@@ -45,7 +44,7 @@ class MapComponent extends Component {
     strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
   }
   componentWillReceiveProps (nextProps, nextState) {
-    const currentCoinAdress = nextProps.selectedCommunity && nextProps.selectedCommunity.address
+    const currentCoinAdress = nextProps.selectedToken && nextProps.selectedToken.address
     // Start with active community
     if (!isMobile && nextProps.active && !nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata) {
       this.setState({
@@ -191,7 +190,7 @@ class MapComponent extends Component {
     })
     const {
       tokens,
-      selectedCommunity,
+      selectedToken,
       history
     } = this.props
 
@@ -208,7 +207,7 @@ class MapComponent extends Component {
         community.metadata && community.metadata.location && community.metadata.location.geo && community.metadata.location.geo.lng,
         community.metadata && community.metadata.location && community.metadata.location.geo && community.metadata.location.geo.lat
       ],
-      currentCoinAdress: selectedCommunity && selectedCommunity.address,
+      currentCoinAdress: selectedToken && selectedToken.address,
       path: community.path,
       community
     }))
@@ -306,7 +305,7 @@ class MapComponent extends Component {
 const mapStateToProps = state => {
   return {
     tokens: getTokensWithMetadata(state),
-    selectedCommunity: getSelectedCommunity(state),
+    selectedToken: getSelectedToken(state),
     ui: state.ui
   }
 }
