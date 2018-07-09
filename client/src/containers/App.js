@@ -42,9 +42,9 @@ class App extends Component {
     onWeb3Ready.then(() => {
       setInterval(this.props.checkAccountChange, CONFIG.metaMask.accountPolling)
 
-      // setInterval(() => {
-      //   this.props.communityTokens.forEach((token) => this.props.fetchMarketMakerData(token.address, token.mmAddress))
-      // }, CONFIG.api.marketsPolling)
+      setInterval(() => {
+        this.props.communityTokens.forEach((token) => this.props.fetchMarketMakerData(token.address, token.mmAddress))
+      }, CONFIG.api.marketsPolling)
     })
     this.setState({
       welcomeDone: window.localStorage.getItem('welcome'),
