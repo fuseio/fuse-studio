@@ -17,10 +17,9 @@ class SummaryBuy extends React.Component {
   next = () => {
     this.props.uiActions.setBuyStage(3)
     if (this.props.isBuy) {
-      console.log("HERE", this.props.minimum)
-      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum).multipliedBy(1e18))
+      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18))
     } else {
-      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum).multipliedBy(1e18))
+      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18))
     }
   }
 
@@ -29,13 +28,14 @@ class SummaryBuy extends React.Component {
   }
 
   render () {
-    const { community, isBuy, cln, cc } = this.props
+    const { community, isBuy, cln, cc, gas, estimatedGas } = this.props
     const ccSymbol = community && community.symbol
-    const formattedPrice = this.props.quotePair.price
+    const formattedPrice = this.props.quotePair.price.toFixed(5)
     const fromCoin = isBuy ? cln : cc
     const toCoin = isBuy ? cc : cln
     const fromSymbol = isBuy ? 'CLN' : ccSymbol
     const toSymbol = isBuy ? ccSymbol : 'CLN'
+    const gasPrice = (gas && estimatedGas) ? new BigNumber(estimatedGas*(gas.average/10)).div(1e18) : ''
 
     return (
       <div className="summary">
@@ -59,7 +59,7 @@ class SummaryBuy extends React.Component {
         <div className="info-price">
           <div>ESTIMATED TRANSACTION FEE
           <img src={Info} /></div>
-          <div>0.0000018563 ETH</div>
+          <div>{gasPrice + ' ETH'}</div>
         </div>
         <div className="info-price">
           <div>RATE</div>
@@ -89,7 +89,9 @@ const mapStateToProps = (state, props) => ({
   cln: state.ui.cln,
   cc: state.ui.cc,
   ccAddress: state.ui.ccAddress,
-  minimum: state.ui.minimum
+  minimum: state.ui.minimum,
+  estimatedGas: state.marketMaker.estimatedGas,
+  gas: state.web3.gas
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SummaryBuy)

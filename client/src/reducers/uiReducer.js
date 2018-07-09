@@ -23,7 +23,7 @@ export default (state = {
     case 'BUY_STAGE':
       return {...state, buyStage: action.stage}
     case 'BUY_SELL_AMOUNTS':
-      return { ...state, isBuy: action.isBuy, ccAddress: action.ccAddress, cln: action.cln,  cc: action.cc, minimum: action.minimum }
+      return { ...state, isBuy: action.isBuy, ccAddress: action.ccAddress, cln: action.cln,  cc: action.cc, minimum: action.minimum, priceChange: action.priceChange, priceLimit: action.priceLimit }
     default:
       return state
   }
