@@ -8,15 +8,15 @@ import { ERROR_MODAL } from 'constants/uiConstants'
 function * getNetworkType () {
   try {
     const networkType = yield web3.eth.net.getNetworkType()
-
     yield put({type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
         isMetaMask: web3.currentProvider.isMetaMask || false
       }})
-    yield put({
-      type: actions.CHECK_ACCOUNT_CHANGE
-    })
+    if (web3.eth.defaultAccount) {
+      yield put(actions.selectAccount(web3.eth.defaultAccount))
+    }
+
     if (!isNetworkSupported(networkType)) {
       yield put({type: actions.UNSUPPORTED_NETWORK_ERROR,
         error: {
@@ -33,8 +33,9 @@ function * getNetworkType () {
 
 function * watchAccountChanges ({selectedAddress, networkVersion}) {
   const account = yield select(state => state.web3.account)
-  if (account !== selectedAddress) {
-    yield put(actions.selectAccount(selectedAddress))
+  const checksummedAddress = selectedAddress && web3.utils.toChecksumAddress(selectedAddress)
+  if (account !== checksummedAddress) {
+    yield put(actions.selectAccount(checksummedAddress))
   }
 }
 
