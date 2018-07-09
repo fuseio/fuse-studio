@@ -51,3 +51,9 @@ export const setBuySellAmounts = (obj) => {
     priceLimit: obj.priceLimit
   }
 }
+
+export const resetExchange = () => {
+  return {
+    type: 'RESET_EXCHANGE'
+  }
+}
