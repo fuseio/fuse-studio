@@ -19,7 +19,15 @@ export default function configureStore (initialState) {
       applyMiddleware(
         routerMd,
         sagaMiddleware,
-        createLogger()
+        createLogger({
+          collapsed: (getState, action, logEntry) => !action.error,
+          actionTransformer: (action) => {
+            if (action.error) {
+              console.error(action.error)
+            }
+            return action
+          }
+        })
       )
     )
   )

@@ -29,6 +29,9 @@ const handlers = {
     return {...state, transactions}
   },
   [actions.CHANGE.FAILURE]: (state, action) => {
+    if (!action.response) {
+      return state
+    }
     const receipt = action.response.receipt
     const transactionHash = receipt.transactionHash
     const transactions = {...state.transactions,
