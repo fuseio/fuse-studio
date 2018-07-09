@@ -46,6 +46,8 @@ export const setBuySellAmounts = (obj) => {
     ccAddress: obj.ccAddress,
     cln: obj.cln,
     cc: obj.cc,
-    minimum: obj.minimum
+    minimum: obj.minimum,
+    priceChange: obj.priceChange,
+    priceLimit: obj.priceLimit
   }
 }

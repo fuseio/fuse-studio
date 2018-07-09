@@ -18,5 +18,8 @@ module.exports = {
         CENTER_ZOOM: 2.5,
         CENTER_ZOOM_MOBILE: 5.4,
         MAX_ZOOM_MOBILE: 12.2
+    },
+    buySell: {
+        DEFAULT_PRICE_CHANGE: 2
     }
 }

@@ -17,10 +17,9 @@ class SummaryBuy extends React.Component {
   next = () => {
     this.props.uiActions.setBuyStage(3)
     if (this.props.isBuy) {
-      console.log("HERE", this.props.minimum)
-      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum).multipliedBy(1e18))
+      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18))
     } else {
-      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum).multipliedBy(1e18))
+      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18))
     }
   }
 
@@ -31,7 +30,7 @@ class SummaryBuy extends React.Component {
   render () {
     const { community, isBuy, cln, cc } = this.props
     const ccSymbol = community && community.symbol
-    const formattedPrice = this.props.quotePair.price
+    const formattedPrice = this.props.quotePair.price.toFixed(5)
     const fromCoin = isBuy ? cln : cc
     const toCoin = isBuy ? cc : cln
     const fromSymbol = isBuy ? 'CLN' : ccSymbol
