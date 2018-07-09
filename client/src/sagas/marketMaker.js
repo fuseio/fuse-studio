@@ -153,7 +153,7 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
   }
 }
 
-export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimation}) {
+export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimation, options}) {
   try {
     const clnToken = yield select(getClnToken)
     let token = yield select(getCommunity, tokenAddress)
@@ -178,7 +178,8 @@ export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimati
     }
 
     const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
-      from: web3.eth.defaultAccount
+      from: web3.eth.defaultAccount,
+      ...options
     })
 
     const transactionHash = yield new Promise((resolve) => {
@@ -293,13 +294,14 @@ export function * invertSellQuote ({tokenAddress, clnAmount}) {
     }})
 }
 
-export function * buyCc ({amount, tokenAddress, minReturn}) {
+export function * buyCc ({amount, tokenAddress, minReturn, options}) {
   try {
     yield call(change, {
       tokenAddress,
       amount,
       isBuying: true,
-      minReturn
+      minReturn,
+      options
     })
     yield put({type: actions.BUY_CC.SUCCESS,
       address: tokenAddress,
@@ -311,13 +313,14 @@ export function * buyCc ({amount, tokenAddress, minReturn}) {
   }
 }
 
-export function * sellCc ({amount, tokenAddress, minReturn}) {
+export function * sellCc ({amount, tokenAddress, minReturn, options}) {
   try {
     yield call(change, {
       tokenAddress,
       amount,
       isBuying: false,
-      minReturn
+      minReturn,
+      options
     })
 
     yield put({type: actions.SELL_CC.SUCCESS,

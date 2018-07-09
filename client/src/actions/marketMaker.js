@@ -38,8 +38,8 @@ export const sellQuote = (tokenAddress, ccAmount) => action(SELL_QUOTE.REQUEST, 
 export const invertBuyQuote = (tokenAddress, ccAmount) => action(INVERT_BUY_QUOTE.REQUEST, {tokenAddress, ccAmount})
 export const invertSellQuote = (tokenAddress, clnAmount) => action(INVERT_SELL_QUOTE.REQUEST, {tokenAddress, clnAmount})
 
-export const buyCc = (tokenAddress, amount, minReturn) => action(BUY_CC.REQUEST, {tokenAddress, amount, minReturn})
-export const sellCc = (tokenAddress, amount, minReturn) => action(SELL_CC.REQUEST, {tokenAddress, amount, minReturn})
+export const buyCc = (tokenAddress, amount, minReturn, options) => action(BUY_CC.REQUEST, {tokenAddress, amount, minReturn, options})
+export const sellCc = (tokenAddress, amount, minReturn, options) => action(SELL_CC.REQUEST, {tokenAddress, amount, minReturn, options})
 
 export const estimateGasBuyCc = (tokenAddress, amount, minReturn) => action(ESTIMATE_GAS_BUY_CC.REQUEST, {tokenAddress, amount, minReturn})
 export const estimateGasSellCc = (tokenAddress, amount, minReturn) => action(ESTIMATE_GAS_SELL_CC.REQUEST, {tokenAddress, amount, minReturn})
