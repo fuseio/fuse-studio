@@ -7,12 +7,12 @@ import {BALANCE_OF} from 'actions/basicToken'
 import {getClnToken, getCommunity} from 'selectors/basicToken'
 import web3 from 'services/web3'
 
-export function * getCurrentPrice ({address, contractAddress}) {
+export function * getCurrentPrice ({address, tokenAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
     const currentPrice = yield call(EllipseMarketMakerContract.methods.getCurrentPrice().call)
     yield put({type: actions.GET_CURRENT_PRICE.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         currentPrice: 1 / currentPrice
       }})
@@ -20,7 +20,7 @@ export function * getCurrentPrice ({address, contractAddress}) {
     // no CLN inserted to the contract, so the CC has to value at all
     if (error.message === 'Couldn\'t decode uint256 from ABI: 0x') {
       yield put({type: actions.GET_CURRENT_PRICE.SUCCESS,
-        contractAddress,
+        tokenAddress,
         response: {
           currentPrice: 0
         }})
@@ -30,12 +30,12 @@ export function * getCurrentPrice ({address, contractAddress}) {
   }
 }
 
-export function * clnReserve ({address, contractAddress}) {
+export function * clnReserve ({address, tokenAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
     const clnReserve = yield call(EllipseMarketMakerContract.methods.R1().call)
     yield put({type: actions.CLN_RESERVE.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         clnReserve
       }})
@@ -44,12 +44,12 @@ export function * clnReserve ({address, contractAddress}) {
   }
 }
 
-export function * ccReserve ({address, contractAddress}) {
+export function * ccReserve ({address, tokenAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
     const ccReserve = yield call(EllipseMarketMakerContract.methods.R2().call)
     yield put({type: actions.CC_RESERVE.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response: {
         ccReserve
       }})
@@ -171,52 +171,64 @@ export function * change ({tokenAddress, amount, minReturn, isBuying}) {
       data = EllipseMarketMakerContract.methods.change(toTokenAddress).encodeABI()
     }
 
-    yield call(ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send, {
+    const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
       from: web3.eth.defaultAccount
     })
 
+    const transactionHash = yield new Promise((resolve) => {
+      sendPromise.on('transactionHash', function (transactionHash) {
+        resolve(transactionHash)
+      })
+    })
+
+    yield put({type: actions.CHANGE.PENDING,
+      tokenAddress: token.address,
+      accountAddress: web3.eth.defaultAccount,
+      response: {
+        transactionHash
+      }
+    })
+
+    const receipt = yield sendPromise
+    if (!Number(receipt.status)) {
+      yield put({
+        type: actions.CHANGE.FAILURE,
+        tokenAddress: token.address,
+        accountAddress: web3.eth.defaultAccount,
+        response: {receipt}
+      })
+      return receipt
+    }
     yield put({
       type: BALANCE_OF.REQUEST,
-      contractAddress: clnToken.address,
+      tokenAddress: clnToken.address,
       address: web3.eth.defaultAccount
     })
 
     yield put({
       type: BALANCE_OF.REQUEST,
-      contractAddress: token.address,
+      tokenAddress: token.address,
       address: web3.eth.defaultAccount
     })
 
-    yield fetchMarketMakerData({contractAddress: token.address, mmAddress: token.mmAddress})
+    yield put({
+      type: actions.FETCH_MARKET_MAKER_DATA.REQUEST,
+      tokenAddress: token.address,
+      mmAddress: token.mmAddress
+    })
 
     yield put({type: actions.CHANGE.SUCCESS,
-      address: token.address,
+      tokenAddress: token.address,
+      accountAddress: web3.eth.defaultAccount,
       response: {
-        address: token.address
-      }})
+        receipt
+      }
+    })
+
+    return receipt
   } catch (error) {
     yield put({type: actions.CHANGE.FAILURE, error})
   }
-}
-
-export function * slippage ({fromToken, inAmount, outAmount, toToken, isBuying}) {
-  const clnToken = yield select(getClnToken)
-  let ccToken = yield select(getCommunity, isBuying ? toToken : fromToken)
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: ccToken.mmAddress})
-
-  const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, ccToken, isBuying)
-  const updatedR1 = new BigNumber(r1).plus(inAmount)
-  const updatedR2 = new BigNumber(r2).minus(outAmount)
-
-  const futurePrice = yield call(EllipseMarketMakerContract.methods.getCurrentPrice(
-    updatedR1, updatedR2, s1, s2).call)
-  // const slippage =
-  // yield put({
-  //   type: actions.SLIPPAGE.SUCCESS,
-  //   response: {
-  //     slippage:
-  //   }
-  // })
 }
 
 export function * buyQuote ({tokenAddress, clnAmount}) {
@@ -312,7 +324,7 @@ export function * sellCc ({amount, tokenAddress, minReturn}) {
   }
 }
 
-export function * fetchMarketMakerData ({contractAddress, mmAddress}) {
+export function * fetchMarketMakerData ({tokenAddress, mmAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
 
@@ -326,12 +338,12 @@ export function * fetchMarketMakerData ({contractAddress, mmAddress}) {
     response.currentPrice = 1 / response.currentPrice
     response.isMarketMakerLoaded = true
     yield put({type: actions.FETCH_MARKET_MAKER_DATA.SUCCESS,
-      contractAddress,
+      tokenAddress,
       response
     })
   } catch (error) {
     console.error(error)
-    yield put({type: actions.FETCH_MARKET_MAKER_DATA.FAILURE, contractAddress, error})
+    yield put({type: actions.FETCH_MARKET_MAKER_DATA.FAILURE, tokenAddress, error})
   }
 }
 
@@ -348,7 +360,6 @@ export default function * rootSaga () {
     takeEvery(actions.CHANGE.REQUEST, change),
     takeEvery(actions.BUY_CC.REQUEST, buyCc),
     takeEvery(actions.SELL_CC.REQUEST, sellCc),
-    takeEvery(actions.SLIPPAGE.REQUEST, slippage),
     takeEvery(actions.FETCH_MARKET_MAKER_DATA.REQUEST, fetchMarketMakerData)
   ])
 }
