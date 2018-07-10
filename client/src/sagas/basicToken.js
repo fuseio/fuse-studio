@@ -239,7 +239,6 @@ function * fetchCommunityContract ({tokenAddress}) {
         tokenAddress,
         accountAddress: web3.eth.defaultAccount
       })
-      // calls.balanceOf = call(ColuLocalNetworkContract.methods.balanceOf(web3.eth.defaultAccount).call)
     }
 
     const response = yield all(calls)
@@ -313,12 +312,11 @@ function * fetchClnContract ({tokenAddress}) {
   }
 }
 
-function * watchSelectAccount () {
-  while (true) {
-    const {response} = yield take(SELECT_ACCOUNT)
-    const addresses = yield select(getAddresses)
+function * selectAccount ({response}) {
+  const addresses = yield select(getAddresses)
+  if (addresses) {
     const tokenAddress = addresses.ColuLocalNetwork
-    yield entityPut({type: actions.BALANCE_OF.REQUEST, tokenAddress, accountAddress: response.account})
+    yield entityPut({type: actions.BALANCE_OF.REQUEST, tokenAddress, accountAddress: response.accountAddress})
   }
 }
 
@@ -336,6 +334,6 @@ export default function * rootSaga () {
     takeEvery(actions.FETCH_COMMUNITY_CONTRACT.REQUEST, fetchCommunityContract),
     takeEvery(actions.FETCH_CLN_CONTRACT.REQUEST, fetchClnContract),
     takeEvery(actions.FETCH_COMMUNITY.REQUEST, fetchCommunity),
-    fork(watchSelectAccount)
+    takeEvery(SELECT_ACCOUNT, selectAccount)
   ])
 }

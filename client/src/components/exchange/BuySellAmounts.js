@@ -27,10 +27,10 @@ class BuySellAmounts extends React.Component {
 
   componentWillMount () {
     const currentPrice = this.props.community && this.props.community.currentPrice && new BigNumber(this.props.community.currentPrice.toString()).multipliedBy(1e18)
-    
+
     if (this.props.isBuy === true || this.props.isBuy === false) {
       this.setState({
-        buyTab: this.props.isBuy, 
+        buyTab: this.props.isBuy,
         priceLimit: this.props.priceLimit || currentPrice.multipliedBy(1 + this.state.priceChange/100).toString(),
         minimum: this.props.minimum || ''
       })
@@ -64,7 +64,7 @@ class BuySellAmounts extends React.Component {
 
   handleCLNInput = (event) => {
     const cln = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
-    const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
+    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
 
     this.setState({cln: event.target.value, toCC: true, loading: true, maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'})
     if (this.state.buyTab) {
@@ -88,9 +88,9 @@ class BuySellAmounts extends React.Component {
   componentWillUpdate = (nextProps, nextState) => {
     const priceChange = this.state.priceChange
     const price = this.props.quotePair.price ? this.props.quotePair.price : new BigNumber(this.props.community && this.props.community.currentPrice && this.props.community.currentPrice.toString()).multipliedBy(1e18)
-    const priceLimit = this.props.quotePair.price ? price*(1 + priceChange/100) : price.multipliedBy(1 + priceChange/100)
-    const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
-    const ccBalance = this.props.web3.account && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf)
+    const priceLimit = this.props.quotePair.price ? price * (1 + priceChange / 100) : price.multipliedBy(1 + priceChange / 100)
+    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
+    const ccBalance = this.props.web3.accountAddress && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf)
 
     if (!isEqual(nextProps.buyQuotePair, this.props.buyQuotePair) || !isEqual(nextProps.sellQuotePair, this.props.sellQuotePair)) {
       if (this.state.buyTab && this.state.toCC) {
@@ -209,8 +209,8 @@ class BuySellAmounts extends React.Component {
     })
   }
   handleClickMax = () => {
-    const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
-    const ccBalance = this.props.web3.account && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf)
+    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
+    const ccBalance = this.props.web3.accountAddress && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf)
 
     if (this.state.buyTab) {
       this.setState({
@@ -220,7 +220,7 @@ class BuySellAmounts extends React.Component {
       })
 
       this.props.buyQuote(this.props.community.address, clnBalance)
-      
+
     } else {
       this.setState({
         cc: ccBalance.div(1e18),
@@ -256,8 +256,8 @@ class BuySellAmounts extends React.Component {
     const ccPrice = this.props.community && this.props.community.currentPrice
     const formattedPrice = this.props.quotePair.price ? this.props.quotePair.price : new BigNumber(this.props.community && this.props.community.currentPrice && this.props.community.currentPrice.toString()).multipliedBy(1e18)
     BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
-    const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf).div(1e18).toFormat(5)
-    const ccBalance = this.props.web3.account && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf).div(1e18).toFormat(5)
+    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf).div(1e18).toFormat(5)
+    const ccBalance = this.props.web3.accountAddress && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf).div(1e18).toFormat(5)
     return (
       <div>
         <div className="buy-sell-top">
