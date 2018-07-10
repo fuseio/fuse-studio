@@ -50,7 +50,7 @@ class BuySellAmounts extends React.Component {
 
   handleCLNInput = (event) => {
     const cln = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
-    const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
+    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
 
     this.setState({cln: event.target.value, toCC: true, loading: true, maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'})
     if (this.state.buyTab) {
@@ -72,7 +72,7 @@ class BuySellAmounts extends React.Component {
   }
 
   componentWillUpdate = (nextProps, nextState) => {
-    const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
+    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
 
     if (!isEqual(nextProps.buyQuotePair, this.props.buyQuotePair) || !isEqual(nextProps.sellQuotePair, this.props.sellQuotePair)) {
       if (this.state.buyTab && this.state.toCC) {
@@ -174,7 +174,7 @@ class BuySellAmounts extends React.Component {
     const ccSymbol = this.props.community && this.props.community.symbol
     const ccPrice = this.props.community && this.props.community.currentPrice
     const formattedPrice = (this.props.quotePair.price && formatMoney(this.props.quotePair.price, 5, '.', ',')) || formatMoney(formatAmountReal(ccPrice, 18), 5, '.', ',')
-    const clnBalance = this.props.web3.account && this.props.clnToken && this.props.clnToken.balanceOf && formatMoney(new BigNumber(this.props.clnToken.balanceOf).div(1e18))
+    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && formatMoney(new BigNumber(this.props.clnToken.balanceOf).div(1e18))
 
     return (
       <div>

@@ -44,9 +44,9 @@ function * fetchGasPrices () {
 }
 
 function * watchAccountChanges ({selectedAddress, networkVersion}) {
-  const account = yield select(state => state.web3.account)
+  const accountAddress = yield select(state => state.web3.accountAddress)
   const checksummedAddress = selectedAddress && web3.utils.toChecksumAddress(selectedAddress)
-  if (account !== checksummedAddress) {
+  if (accountAddress !== checksummedAddress) {
     yield put(actions.selectAccount(checksummedAddress))
   }
 }
