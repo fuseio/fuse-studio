@@ -282,11 +282,6 @@ export function * buyCc ({amount, tokenAddress, minReturn, options}) {
     minReturn,
     options
   })
-  yield put({type: actions.BUY_CC.SUCCESS,
-    address: tokenAddress,
-    response: {
-      address: tokenAddress
-    }})
 }
 
 export function * sellCc ({amount, tokenAddress, minReturn, options}) {
@@ -297,12 +292,6 @@ export function * sellCc ({amount, tokenAddress, minReturn, options}) {
     minReturn,
     options
   })
-
-  yield put({type: actions.SELL_CC.SUCCESS,
-    address: tokenAddress,
-    response: {
-      address: tokenAddress
-    }})
 }
 
 export function * estimateGasBuyCc ({amount, tokenAddress, minReturn}) {
