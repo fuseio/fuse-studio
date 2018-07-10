@@ -7,7 +7,6 @@ import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
 import { change, buyCc, sellCc } from 'actions/marketMaker'
 import {BigNumber} from 'bignumber.js'
-import {getAddresses} from 'selectors/web3'
 
 import RightArrow from 'images/right-arrow.png'
 import Info from 'images/info.png'
@@ -17,9 +16,15 @@ class SummaryBuy extends React.Component {
   next = () => {
     this.props.uiActions.setBuyStage(3)
     if (this.props.isBuy) {
-      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), new BigNumber(this.props.estimatedGas*(this.props.gas.average/10)).div(1e9))
+      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
+        gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
+        gas: this.props.estimatedGas
+      })
     } else {
-      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), new BigNumber(this.props.estimatedGas*(this.props.gas.average/10)).div(1e9))
+      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
+        gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
+        gas: this.props.estimatedGas
+      })
     }
   }
 
