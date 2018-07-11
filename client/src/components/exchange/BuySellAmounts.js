@@ -30,23 +30,16 @@ class BuySellAmounts extends React.Component {
   componentWillMount () {
     const currentPrice = this.props.community && this.props.community.currentPrice && new BigNumber(this.props.community.currentPrice.toString()).multipliedBy(1e18)
 
-    if (this.props.isBuy === true || this.props.isBuy === false) {
-      this.setState({
-        buyTab: this.props.isBuy,
-        priceLimit: this.props.priceLimit || currentPrice.multipliedBy(1 + this.state.priceChange/100).toString(),
-        minimum: this.props.minimum || ''
-      })
-    } else {
-      this.setState({
-        buyTab: true,
-        priceLimit: this.props.priceLimit || currentPrice.multipliedBy(1 + this.state.priceChange/100).toString(),
-        minimum: this.props.minimum || ''
-      })
-    }
+    this.setState({
+      buyTab: this.props.isBuy,
+      priceLimit: this.props.priceLimit || currentPrice.multipliedBy(1 + this.state.priceChange/100).toString(),
+      minimum: this.props.minimum || ''
+    })
   }
 
   next = () => {
-    if (this.props.isBuy) {
+    debugger
+    if (this.state.buyTab) {
       this.props.estimateGasBuyCc(this.props.community.address, new BigNumber(this.state.cln).multipliedBy(1e18), this.state.minimum)
     } else {
       this.props.estimateGasSellCc(this.props.community.address, new BigNumber(this.state.cc).multipliedBy(1e18), this.state.minimum)
@@ -348,7 +341,7 @@ const mapStateToProps = (state, props) => ({
   buyQuotePair: state.marketMaker.buyQuote || {},
   sellQuotePair: state.marketMaker.sellQuote || {},
   web3: state.web3,
-  isBuy: state.ui.isBuy,
+  isBuy: state.ui.modalOptions.isBuy,
   cln: state.ui.cln,
   cc: state.ui.cc,
   priceChange: state.ui.priceChange,

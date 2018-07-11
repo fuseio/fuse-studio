@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import classNames from 'classnames'
 import { isMobile, MobileView } from 'react-device-detect'
+import { BigNumber } from 'bignumber.js'
 
 import * as uiActions from 'actions/ui'
 import { formatAmount, formatMoney } from 'services/global'
@@ -61,14 +62,17 @@ class TopNav extends Component {
     })
 
   render () {
-    let topNavClass = classNames({
+    const topNavClass = classNames({
       'active': this.props.active,
       'top-navigator': true
     })
-    let navLinksClass = classNames({
+    const navLinksClass = classNames({
       'hide': !this.state.openMenu && isMobile,
       'top-nav-links': true
     })
+
+    BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
+    const clnBalance = this.props.balances[this.props.addresses && this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork]).div(1e18).toFormat(5)
 
     return <div className={topNavClass}>
       <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>
@@ -99,7 +103,7 @@ class TopNav extends Component {
         {(this.props.addresses && this.props.balances[this.props.addresses.ColuLocalNetwork]) ? <div className='top-nav-balance'>
           <span>Balance:</span>
           <img src={ClnCoinIcon} />
-          <span className='balance-text'>{this.props.balances[this.props.addresses.ColuLocalNetwork] && formatMoney(formatAmount(this.props.balances[this.props.addresses.ColuLocalNetwork], 18), 2, '.', ',')}</span>
+          <span className='balance-text'>{clnBalance}</span>
         </div> : null}
         <div className='separator' />
       </div>

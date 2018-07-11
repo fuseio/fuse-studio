@@ -56,7 +56,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, props) => ({
   community: getSelectedCommunity(state),
-  buyStage: state.ui.buyStage
+  buyStage: state.ui.buyStage,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExchangeModal)
