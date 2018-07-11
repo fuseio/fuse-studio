@@ -2,11 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
+import {BigNumber} from 'bignumber.js'
+
 import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
 import { change, buyCc, sellCc } from 'actions/marketMaker'
-import {BigNumber} from 'bignumber.js'
+import { getSelectedCommunity } from 'selectors/basicToken'
 
 import RightArrow from 'images/right-arrow.png'
 import Info from 'images/info.png'
@@ -87,7 +89,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  community: state.tokens['0x24a85B72700cEc4cF1912ADCEBdB9E8f60BdAb91'],
+  community: getSelectedCommunity(state),
   quotePair: state.marketMaker.quotePair || {},
   buyStage: state.ui.buyStage,
   isBuy: state.ui.isBuy,
