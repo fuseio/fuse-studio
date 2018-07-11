@@ -9,6 +9,8 @@ import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
 import { getSelectedCommunity, getClnToken } from 'selectors/basicToken'
 import { buySell } from 'constants/uiConstants'
+import {getBalances} from 'selectors/accounts'
+import {getAddresses} from 'selectors/web3'
 
 import TextInput from 'components/TextInput'
 import { BigNumber } from 'bignumber.js'
@@ -64,7 +66,7 @@ class BuySellAmounts extends React.Component {
 
   handleCLNInput = (event) => {
     const cln = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
-    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
+    const clnBalance = this.props.balances[this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork])
 
     this.setState({cln: event.target.value, toCC: true, loading: true, maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'})
     if (this.state.buyTab) {
@@ -89,8 +91,9 @@ class BuySellAmounts extends React.Component {
     const priceChange = this.state.priceChange
     const price = this.props.quotePair.price ? this.props.quotePair.price : new BigNumber(this.props.community && this.props.community.currentPrice && this.props.community.currentPrice.toString()).multipliedBy(1e18)
     const priceLimit = this.props.quotePair.price ? price * (1 + priceChange / 100) : price.multipliedBy(1 + priceChange / 100)
-    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
-    const ccBalance = this.props.web3.accountAddress && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf)
+
+    const clnBalance = this.props.balances[this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork])
+    const ccBalance = this.props.community && this.props.balances[this.props.community.address] && new BigNumber(this.props.balances[this.props.community.address])
 
     if (!isEqual(nextProps.buyQuotePair, this.props.buyQuotePair) || !isEqual(nextProps.sellQuotePair, this.props.sellQuotePair)) {
       if (this.state.buyTab && this.state.toCC) {
@@ -209,18 +212,17 @@ class BuySellAmounts extends React.Component {
     })
   }
   handleClickMax = () => {
-    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf)
-    const ccBalance = this.props.web3.accountAddress && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf)
+    const clnBalance = this.props.balances[this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork])
+    const ccBalance = this.props.community && this.props.balances[this.props.community.address] && new BigNumber(this.props.balances[this.props.community.address])
 
     if (this.state.buyTab) {
       this.setState({
         cln: clnBalance.div(1e18),
         toCC: true,
-        loading: true,
+        loading: true
       })
 
       this.props.buyQuote(this.props.community.address, clnBalance)
-
     } else {
       this.setState({
         cc: ccBalance.div(1e18),
@@ -256,8 +258,8 @@ class BuySellAmounts extends React.Component {
     const ccPrice = this.props.community && this.props.community.currentPrice
     const formattedPrice = this.props.quotePair.price ? this.props.quotePair.price : new BigNumber(this.props.community && this.props.community.currentPrice && this.props.community.currentPrice.toString()).multipliedBy(1e18)
     BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
-    const clnBalance = this.props.web3.accountAddress && this.props.clnToken && this.props.clnToken.balanceOf && new BigNumber(this.props.clnToken.balanceOf).div(1e18).toFormat(5)
-    const ccBalance = this.props.web3.accountAddress && this.props.community && this.props.community.balanceOf && new BigNumber(this.props.community.balanceOf).div(1e18).toFormat(5)
+    const clnBalance = this.props.balances[this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork]).div(1e18).toFormat(5)
+    const ccBalance = this.props.community && this.props.balances[this.props.community.address] && new BigNumber(this.props.balances[this.props.community.address]).div(1e18).toFormat(5)
     return (
       <div>
         <div className="buy-sell-top">
@@ -339,6 +341,8 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
+  addresses: getAddresses(state),
+  balances: getBalances(state),
   community: getSelectedCommunity(state),
   quotePair: state.marketMaker.quotePair || {},
   buyQuotePair: state.marketMaker.buyQuote || {},

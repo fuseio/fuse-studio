@@ -8,9 +8,9 @@ import ModalContainer from 'containers/ModalContainer'
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 import { ERROR_MODAL } from 'constants/uiConstants'
-import {fetchClnContract, fetchCommunity} from 'actions/basicToken'
+import {fetchClnContract, fetchCommunity, updateBalances} from 'actions/basicToken'
 import {fetchMarketMakerData} from 'actions/marketMaker'
-import {getNetworkType, checkAccountChange} from 'actions/web3'
+import {getNetworkType, checkAccountChanged} from 'actions/web3'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
 import {getAddresses, getCommunityAddresses} from 'selectors/web3'
@@ -41,11 +41,14 @@ class App extends Component {
     this.props.getNetworkType()
     onWeb3Ready.then(({web3}) => {
       if (web3.currentProvider.isMetaMask) {
-        web3.currentProvider.publicConfigStore.on('update', this.props.checkAccountChange)
+        web3.currentProvider.publicConfigStore.on('update', this.props.checkAccountChanged)
       }
 
       setInterval(() => {
         this.props.communityTokens.forEach((token) => this.props.fetchMarketMakerData(token.address, token.mmAddress))
+        if (web3.eth.defaultAccount) {
+          this.props.updateBalances(web3.eth.defaultAccount)
+        }
       }, CONFIG.api.marketsPolling)
     })
     this.setState({
@@ -130,7 +133,8 @@ export default connect(
     fetchClnContract,
     fetchCommunity,
     getNetworkType,
-    checkAccountChange,
-    loadModal
+    checkAccountChanged,
+    loadModal,
+    updateBalances
   }
 )(App)

@@ -1,4 +1,4 @@
-import {createRequestTypes, createEntityAction} from './utils'
+import {createRequestTypes, createEntityAction, action} from './utils'
 
 const entity = 'basicToken'
 
@@ -14,6 +14,8 @@ export const OWNER = createRequestTypes('OWNER')
 export const BALANCE_OF = createRequestTypes('BALANCE_OF')
 export const TRANSFER = createRequestTypes('TRANSFER')
 export const APPROVE = createRequestTypes('APPROVE')
+
+export const UPDATE_BALANCES = createRequestTypes('UPDATE_BALANCES')
 
 export const FETCH_COMMUNITY = createRequestTypes('FETCH_COMMUNITY')
 export const FETCH_COMMUNITY_TOKEN = createRequestTypes('FETCH_COMMUNITY_TOKEN')
@@ -33,6 +35,8 @@ export const owner = (tokenAddress) => basicTokenAction(OWNER.REQUEST, {tokenAdd
 export const balanceOf = (tokenAddress, accountAddress) => basicTokenAction(BALANCE_OF.REQUEST, {tokenAddress, accountAddress})
 export const transfer = (tokenAddress, to, value) => basicTokenAction(TRANSFER.REQUEST, {tokenAddress, to, value})
 export const approve = (tokenAddress, spender, value) => basicTokenAction(APPROVE.REQUEST, {tokenAddress, spender, value})
+
+export const updateBalances = (accountAddress) => action(UPDATE_BALANCES.REQUEST, {accountAddress})
 
 export const fetchCommunity = (tokenAddress) => basicTokenAction(FETCH_COMMUNITY.REQUEST, {tokenAddress})
 export const fetchCommunityContract = (tokenAddress) => basicTokenAction(FETCH_COMMUNITY_CONTRACT.REQUEST, {tokenAddress})
