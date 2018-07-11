@@ -11,7 +11,8 @@ function * fetchMetadata ({protocol, hash, tokenAddress}) {
     type: actions.FETCH_METADATA.SUCCESS,
     tokenAddress,
     response: {
-      metadata: data.metadata
+      metadata: data.metadata,
+      address: tokenAddress
     }
   })
 }

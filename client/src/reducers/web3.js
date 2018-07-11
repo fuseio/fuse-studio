@@ -3,7 +3,7 @@ import addresses from 'constants/addresses'
 
 export default (state = {addresses}, action) => {
   switch (action.type) {
-    case web3.SELECT_ACCOUNT:
+    case web3.CHECK_ACCOUNT_CHANGED.SUCCESS:
       return {...state, ...action.response}
     case web3.GET_NETWORK_TYPE.SUCCESS:
       return {...state, ...action.response}

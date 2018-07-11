@@ -44,19 +44,19 @@ class MapComponent extends Component {
     strokeWidth: mapStyle.TOPO110_STROKE_WIDTH
   }
   componentWillReceiveProps (nextProps, nextState) {
-    const currentCoinAdress = nextProps.selectedToken && nextProps.selectedToken.address
+    const selectedTokenAddress = nextProps.selectedToken && nextProps.selectedToken.address
     // Start with active community
-    if (!isMobile && nextProps.active && !nextProps.ui.activeMarker && nextProps !== this.props && currentCoinAdress && nextProps.tokens[currentCoinAdress] && nextProps.tokens[currentCoinAdress].metadata) {
+    if (!isMobile && nextProps.active && !nextProps.ui.activeMarker && nextProps !== this.props && selectedTokenAddress && nextProps.tokens[selectedTokenAddress] && nextProps.tokens[selectedTokenAddress].metadata) {
       this.setState({
-        center: nextProps.tokens[currentCoinAdress].metadata.location.geo,
+        center: nextProps.tokens[selectedTokenAddress].metadata.location.geo,
         zoom: mapSettings.MAX_ZOOM,
         movingCenter: null
       })
-      this.props.uiActions.setActiveMarker(currentCoinAdress, nextProps.tokens[currentCoinAdress].metadata.location.geo)
+      this.props.uiActions.setActiveMarker(selectedTokenAddress, nextProps.tokens[selectedTokenAddress].metadata.location.geo)
     }
 
     // Default clean main start
-    if (!nextProps.ui.activeMarker && !currentCoinAdress && nextProps.active) {
+    if (!nextProps.ui.activeMarker && !selectedTokenAddress && nextProps.active) {
       this.setState({
         center: defaultCenter,
         movingCenter: null,
@@ -202,14 +202,14 @@ class MapComponent extends Component {
       geography
     } = this.state
 
-    const markers = map(tokens, community => ({
+    const markers = map(tokens, token => ({
       coordinates: [
-        community.metadata && community.metadata.location && community.metadata.location.geo && community.metadata.location.geo.lng,
-        community.metadata && community.metadata.location && community.metadata.location.geo && community.metadata.location.geo.lat
+        token.metadata && token.metadata.location && token.metadata.location.geo && token.metadata.location.geo.lng,
+        token.metadata && token.metadata.location && token.metadata.location.geo && token.metadata.location.geo.lat
       ],
-      currentCoinAdress: selectedToken && selectedToken.address,
-      path: community.path,
-      community
+      selectedTokenAddress: selectedToken && selectedToken.address,
+      path: token.path,
+      token
     }))
 
     const SvgMap = <div className={mapWrapperClass} ref='mapWrapper'>
@@ -276,10 +276,10 @@ class MapComponent extends Component {
                     style={{hidden: { display: 'none' }}}
                   >
                     <MarkerSVG
-                      currentCoinAdress={marker.currentCoinAdress}
+                      selectedTokenAddress={marker.selectedTokenAddress}
                       path={marker.path}
                       history={history}
-                      community={marker.community} />
+                      token={marker.token} />
                   </Marker>
                 ))}
               </Markers>
