@@ -13,7 +13,7 @@ export default (state = {
     case 'ZOOM':
     	return {...state, zoom: action.zoom}
     case 'SHOW_MODAL':
-    	return {...state, modalType: action.modalType, ...action.options}
+    	return {...state, modalType: action.modalType, modalOptions: action.options}
     case 'HIDE_MODAL':
     	return {...state, modalType: null}
     case 'SIGNUP_HIDE':
