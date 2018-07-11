@@ -40,9 +40,9 @@ class BuySellAmounts extends React.Component {
   next = () => {
     debugger
     if (this.state.buyTab) {
-      this.props.estimateGasBuyCc(this.props.community.address, new BigNumber(this.state.cln).multipliedBy(1e18), this.state.minimum)
+      this.props.estimateGasBuyCc(this.props.community.address, new BigNumber(this.state.cln).multipliedBy(1e18), this.state.minimum && new BigNumber(this.state.minimum.toString()).multipliedBy(1e18))
     } else {
-      this.props.estimateGasSellCc(this.props.community.address, new BigNumber(this.state.cc).multipliedBy(1e18), this.state.minimum)
+      this.props.estimateGasSellCc(this.props.community.address, new BigNumber(this.state.cc).multipliedBy(1e18), this.state.minimum && new BigNumber(this.state.minimum.toString()).multipliedBy(1e18))
     }
 
     this.props.uiActions.setBuyStage(2)
