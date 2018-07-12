@@ -7,28 +7,29 @@ import {getEtherscanUrl} from 'selectors/web3'
 import {getAccount} from 'selectors/accounts'
 import Vimage from 'images/v.png'
 
-class Pending extends React.Component {
+class Completed extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { account, pendingTx } = nextProps
-    console.log("account", account)
-    if (account && account.transactions && account.transactions[pendingTx] && account.transactions[pendingTx].isPending !== this.props.account.transactions[pendingTx].isPending && !account.transactions[pendingTx].isPending) {
-      this.props.uiActions.setBuyStage(5)
-    }
+    
   }
+
   done = () => {
     this.props.uiActions.hideModal()
   }
 
   render() {
+    const { account, pendingTx } = this.props
+    const status = (account && account.transactions && account.transactions[pendingTx] && !account.transactions[pendingTx].isFailed) ? 'SUCCESS' : 'FAILURE'
     return (
       <div className="transaction-in-progress">
-        <h4>TRANSACTION IN PROGRESS</h4>
+        <h4>TRANSACTION COMPLETED</h4>
         <div className="summary-prices-wrapper">
           <img className="metamask-icon" src={Vimage} />
-          <p>Your transaction is pending blockchain confirmation, please check your wallet again in a few minutes.</p>
+          <p>Your transaction is completed.</p>
           <div className="line"/>
+          <h5>STATUS:</h5>
+          <p className="tx-link">{status}</p>
           <h5>TRANSACTION HASH:</h5>
-          <a href={`${this.props.etherscanUrl}tx/${this.props.pendingTx}`} target="_blank" className="tx-link">{this.props.pendingTx}</a>
+          <a href={`${this.props.etherscanUrl}tx/${pendingTx}`} target="_blank" className="tx-link">{pendingTx}</a>
         </div>
         <button onClick={this.done}>DONE</button>
       </div>
@@ -46,4 +47,4 @@ const mapStateToProps = (state, props) => ({
   account: getAccount(state)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Pending)
+export default connect(mapStateToProps, mapDispatchToProps)(Completed)

@@ -42,8 +42,7 @@ class SummaryBuy extends React.Component {
     const toCoin = isBuy ? cc : cln
     const fromSymbol = isBuy ? 'CLN' : ccSymbol
     const toSymbol = isBuy ? ccSymbol : 'CLN'
-    const gasPrice = (gas && estimatedGas) ? new BigNumber(estimatedGas*(gas.average/10)).div(1e9) : ''
-
+    const gasPrice = (gas && estimatedGas) ? new BigNumber(estimatedGas).multipliedBy(gas.average).div(10).div(1e9) : ''
     return (
       <div className="summary">
         <div className="modal-back" onClick={this.back}>
