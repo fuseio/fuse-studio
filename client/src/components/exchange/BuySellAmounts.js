@@ -38,7 +38,6 @@ class BuySellAmounts extends React.Component {
   }
 
   next = () => {
-    debugger
     if (this.state.buyTab) {
       this.props.estimateGasBuyCc(this.props.community.address, new BigNumber(this.state.cln).multipliedBy(1e18), this.state.minimum)
     } else {
@@ -60,7 +59,6 @@ class BuySellAmounts extends React.Component {
   handleCLNInput = (event) => {
     const cln = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
     const clnBalance = this.props.balances[this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork])
-
     this.setState({cln: event.target.value, toCC: true, loading: true, maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'})
     if (this.state.buyTab) {
       this.props.buyQuote(this.props.community.address, cln)
@@ -90,9 +88,8 @@ class BuySellAmounts extends React.Component {
 
     if (!isEqual(nextProps.buyQuotePair, this.props.buyQuotePair) || !isEqual(nextProps.sellQuotePair, this.props.sellQuotePair)) {
       if (this.state.buyTab && this.state.toCC) {
-        BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
         this.setState({
-          cc: new BigNumber(nextProps.buyQuotePair.outAmount).div(1e18),
+          cc: new BigNumber(nextProps.buyQuotePair.outAmount).div(1e18).toFormat(5, 1),
           loading: false,
           minimum: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18)/priceLimit,
           priceLimit: priceLimit.toString(),
@@ -100,9 +97,9 @@ class BuySellAmounts extends React.Component {
           maxAmountError: nextProps.buyQuotePair.inAmount && new BigNumber(nextProps.buyQuotePair.inAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
         })
       } else if (this.state.buyTab && !this.state.toCC) {
-        BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 4 }) //round up
+        //BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 4 }) //round up
         this.setState({
-          cln: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18),
+          cln: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18).toFormat(5, 4),
           loading: false,
           minimum: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18)/priceLimit,
           priceLimit: priceLimit.toString(),
@@ -110,9 +107,9 @@ class BuySellAmounts extends React.Component {
           maxAmountError: nextProps.buyQuotePair.inAmount && new BigNumber(nextProps.buyQuotePair.inAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
         })
       } else if (!this.state.buyTab && this.state.toCC) {
-        BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 4 }) //round up
+        //BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 4 }) //round up
         this.setState({
-          cc: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18),
+          cc: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18).toFormat(5, 4),
           loading: false,
           minimum: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18)*priceLimit,
           priceLimit: priceLimit.toString(),
@@ -120,9 +117,9 @@ class BuySellAmounts extends React.Component {
           maxAmountError: nextProps.sellQuotePair.inAmount && new BigNumber(nextProps.sellQuotePair.inAmount).isGreaterThan(ccBalance) && 'Insufficient Funds'
         })
       } else if (!this.state.buyTab && !this.state.toCC) {
-        BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
+        //BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
         this.setState({
-          cln: new BigNumber(nextProps.sellQuotePair.outAmount).div(1e18),
+          cln: new BigNumber(nextProps.sellQuotePair.outAmount).div(1e18).toFormat(5, 1),
           loading: false,
           minimum: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18)*priceLimit,
           priceLimit: priceLimit.toString(),
@@ -250,9 +247,9 @@ class BuySellAmounts extends React.Component {
     const ccSymbol = this.props.community && this.props.community.symbol
     const ccPrice = this.props.community && this.props.community.currentPrice
     const formattedPrice = this.props.quotePair.price ? this.props.quotePair.price : new BigNumber(this.props.community && this.props.community.currentPrice && this.props.community.currentPrice.toString()).multipliedBy(1e18)
-    BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
-    const clnBalance = this.props.balances[this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork]).div(1e18).toFormat(5)
-    const ccBalance = this.props.community && this.props.balances[this.props.community.address] && new BigNumber(this.props.balances[this.props.community.address]).div(1e18).toFormat(5)
+    //BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
+    const clnBalance = this.props.balances[this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork]).div(1e18).toFormat(5, 1)
+    const ccBalance = this.props.community && this.props.balances[this.props.community.address] && new BigNumber(this.props.balances[this.props.community.address]).div(1e18).toFormat(5, 1)
     return (
       <div>
         <div className="buy-sell-top">

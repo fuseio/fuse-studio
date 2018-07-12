@@ -71,8 +71,8 @@ class TopNav extends Component {
       'top-nav-links': true
     })
 
-    BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
-    const clnBalance = this.props.balances[this.props.addresses && this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork]).div(1e18).toFormat(5)
+    //BigNumber.config({ DECIMAL_PLACES: 2, ROUNDING_MODE: 1 }) //round down
+    const clnBalance = this.props.balances[this.props.addresses && this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork]).div(1e18).toFormat(2, 1)
 
     return <div className={topNavClass}>
       <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>

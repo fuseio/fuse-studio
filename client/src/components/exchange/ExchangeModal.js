@@ -8,6 +8,7 @@ import BuySellAmounts from 'components/exchange/BuySellAmounts'
 import SummaryBuy from 'components/exchange/SummaryBuy'
 import OpenMetamask from 'components/exchange/OpenMetamask'
 import Pending from 'components/exchange/Pending'
+import Completed from 'components/exchange/Completed'
 import {getSelectedCommunity} from 'selectors/basicToken'
 
 class InnerExchangeModal extends React.Component {
@@ -28,6 +29,9 @@ class InnerExchangeModal extends React.Component {
       }
       case 4: {
         return <Pending />
+      }
+      case 5: {
+        return <Completed />
       }
       default: {
         return <BuySellAmounts />
