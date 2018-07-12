@@ -8,7 +8,7 @@ import {
   Markers,
   Marker,
   Geography
-} from 'utils/react-simple-maps'
+} from 'react-simple-maps'
 import Hammer from 'react-hammerjs'
 import { Motion, spring } from 'react-motion'
 import classNames from 'classnames'
