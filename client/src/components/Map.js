@@ -220,8 +220,8 @@ class MapComponent extends Component {
           zoom: isMobile ? 1.5 : 0.81
         }}
         style={{
-          x: movingCenter && parseFloat(movingCenter.lng) || spring(parseFloat(center.lng), {stiffness: 184}),
-          y: movingCenter && parseFloat(movingCenter.lat) || spring(parseFloat(center.lat), {stiffness: 184}),
+          x: (movingCenter && parseFloat(movingCenter.lng)) || spring(parseFloat(center.lng), {stiffness: 184}),
+          y: (movingCenter && parseFloat(movingCenter.lat)) || spring(parseFloat(center.lat), {stiffness: 184}),
           zoom: spring(zoom, {stiffness: 284})
         }}
         onRest={this.onRest.bind(this)}

@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-import classNames from 'classnames'
 import { connect } from 'react-redux'
 import { isMobile } from 'react-device-detect'
 import { bindActionCreators } from 'redux'
-import Link from 'react-router-dom/Link'
-import { formatAmountReal } from '../services/global'
 import * as uiActions from '../actions/ui'
 import ReactGA from 'services/ga'
 
@@ -81,11 +78,11 @@ class MarkerSVG extends Component {
     }
 
     for (var i = 0; i <= bubblecount; i++) {
-      var size = (rnd(minBubbleSize,bubblesize)/25)
-      var coords = randRadiusCoords([0.9 * limits/2, 0.9 * limits/2], limits/2)
-      if (i % 2 == 0) {
+      var size = (rnd(minBubbleSize, bubblesize) / 25)
+      var coords = randRadiusCoords([0.9 * limits / 2, 0.9 * limits / 2], limits / 2)
+      if (i % 2 === 0) {
         particles.push(<circle className='particle' style={{
-          animationDelay: (rnd(0,30)/10) + 's'
+          animationDelay: (rnd(0,30) / 10) + 's'
         }}
               fill='rgba(77, 217, 180, 0.7)'
               stroke='none'
@@ -150,7 +147,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-      uiActions: bindActionCreators(uiActions, dispatch),
+    uiActions: bindActionCreators(uiActions, dispatch)
   }
 }
 

@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { isMobile } from "react-device-detect"
+import React from 'react'
+import { isMobile } from 'react-device-detect'
 import classnames from 'classnames'
 import Select from './Select'
 
 const options = [
-  { value: 'Buy & Sell CLN / CC', label: 'Buy & Sell CLN / CC'},
+  { value: 'Buy & Sell CLN / CC', label: 'Buy & Sell CLN / CC' },
   { value: 'Issue new coin', label: 'Issue new coin' },
   { value: 'Partnerships', label: 'Partnerships' },
   { value: 'Technical Issue', label: 'Technical Issue' },
@@ -13,20 +13,19 @@ const options = [
 
 const InputFeedback = ({ error }) =>
   error ? (
-  <div className="input-feedback">{error}</div>
-  ) : null;
+    <div className='input-feedback'>{error}</div>
+  ) : null
 
 const Label = ({
-  error,
   className,
   children,
   ...props
 }) => {
   return (
-  <label className="label" {...props}>
-    {children}
-  </label>
-  );
+    <label className='label' {...props}>
+      {children}
+    </label>
+  )
 }
 
 const TextInput = ({
@@ -46,46 +45,46 @@ const TextInput = ({
     'contact-field-wrapper',
     {
       'checkbox': fieldType === 'checkbox',
-      'error': !!error,
+      'error': !!error
     },
     className
   )
   let field
-  switch(fieldType) {
-    case "textarea": {
+  switch (fieldType) {
+    case 'textarea': {
       field = <textarea
-          id={id}
-          className="text-input"
-          type={type}
-          value={value}
-          onChange={onChange}
-          style={{height: isMobile ? 'auto' : '52px'}}
-          {...props}
-        />
-      break;
+        id={id}
+        className='text-input'
+        type={type}
+        value={value}
+        onChange={onChange}
+        style={{height: isMobile ? 'auto' : '52px'}}
+        {...props}
+      />
+      break
     }
-    case "select": {
-      field = <Select id={id} value={value} setFieldValue={setFieldValue} options={options} {...props}/>
-      break;
+    case 'select': {
+      field = <Select id={id} value={value} setFieldValue={setFieldValue} options={options} {...props} />
+      break
     }
-    case "checkbox": {
+    case 'checkbox': {
       field = <input
-          id={id}
-          type={type}
-          checked={value}
-          onChange={onChange}
-          {...props}/>
-      break;
+        id={id}
+        type={type}
+        checked={value}
+        onChange={onChange}
+        {...props} />
+      break
     }
     default: {
       field = <input
-          id={id}
-          className="text-input"
-          type={type}
-          value={value}
-          onChange={onChange}
-          {...props}/>
-      break;
+        id={id}
+        className='text-input'
+        type={type}
+        value={value}
+        onChange={onChange}
+        {...props} />
+      break
     }
   }
   return (

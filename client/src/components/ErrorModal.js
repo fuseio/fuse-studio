@@ -4,11 +4,10 @@ import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 
 import Modal from 'components/Modal'
-import Mail from 'images/mail.png'
 import ReactGA from 'services/ga'
 
 class ErrorModal extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.onClose = this.onClose.bind(this)
     ReactGA.event({
@@ -18,7 +17,7 @@ class ErrorModal extends React.Component {
     })
   }
 
-  onClose() {
+  onClose () {
     this.props.uiActions.hideModal()
     ReactGA.event({
       category: 'Network',
@@ -27,19 +26,19 @@ class ErrorModal extends React.Component {
     })
   }
 
-  render() {
+  render () {
     return (
       <Modal onClose={this.onClose}>
         <h4>{'Hi there, seems that you\'re on the wrong network.'}</h4>
         <p>Please open Metamask and switch to the <strong>Main Ethereum Network</strong> to view correct CLN and CC information</p>
       </Modal>
-    );
+    )
   }
 }
 
 const mapDispatchToProps = dispatch => {
-    return {
-        uiActions: bindActionCreators(uiActions, dispatch),
-    }
+  return {
+    uiActions: bindActionCreators(uiActions, dispatch)
+  }
 }
 export default connect(null, mapDispatchToProps)(ErrorModal)

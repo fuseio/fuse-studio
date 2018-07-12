@@ -8,7 +8,7 @@ import Mail from 'images/mail.png'
 import ReactGA from 'services/ga'
 
 class ComingSoonModal extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.onClose = this.onClose.bind(this)
     ReactGA.event({
@@ -18,7 +18,7 @@ class ComingSoonModal extends React.Component {
     })
   }
 
-  onClose() {
+  onClose () {
     this.props.uiActions.hideModal()
     ReactGA.event({
       category: 'Coming Soon',
@@ -27,20 +27,20 @@ class ComingSoonModal extends React.Component {
     })
   }
 
-  render() {
+  render () {
     return (
       <Modal onClose={this.onClose}>
-         <img src={Mail}/>
-         <h4>HODL your horses</h4>
-         <p>You'll soon be able to buy and sell community coins with your CLN tokens. This isn't ready yet - so hang tight.</p>
+        <img src={Mail} />
+        <h4>HODL your horses</h4>
+        <p>You'll soon be able to buy and sell community coins with your CLN tokens. This isn't ready yet - so hang tight.</p>
       </Modal>
-    );
+    )
   }
 }
 
 const mapDispatchToProps = dispatch => {
-    return {
-        uiActions: bindActionCreators(uiActions, dispatch),
-    }
+  return {
+    uiActions: bindActionCreators(uiActions, dispatch)
+  }
 }
 export default connect(null, mapDispatchToProps)(ComingSoonModal)
