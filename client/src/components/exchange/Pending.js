@@ -5,12 +5,11 @@ import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 import {getEtherscanUrl} from 'selectors/web3'
 import {getAccount} from 'selectors/accounts'
-import Vimage from 'images/v.png'
+import Vimage from 'images/three.svg'
 
 class Pending extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { account, pendingTx } = nextProps
-    console.log("account", account)
     if (account && account.transactions && account.transactions[pendingTx] && account.transactions[pendingTx].isPending !== this.props.account.transactions[pendingTx].isPending && !account.transactions[pendingTx].isPending) {
       this.props.uiActions.setBuyStage(5)
     }

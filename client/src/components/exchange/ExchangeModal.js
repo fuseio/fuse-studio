@@ -17,6 +17,7 @@ class InnerExchangeModal extends React.Component {
     this.props.uiActions.resetExchange()
   }
   renderStage = (buyStage) => {
+    console.log(buyStage)
     switch (buyStage) {
       case 1: {
         return <BuySellAmounts />
