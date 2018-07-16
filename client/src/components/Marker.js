@@ -78,27 +78,29 @@ class MarkerSVG extends Component {
     }
 
     for (var i = 0; i <= bubblecount; i++) {
-      var size = (rnd(minBubbleSize, bubblesize) / 25)
-      var coords = randRadiusCoords([0.9 * limits / 2, 0.9 * limits / 2], limits / 2)
+      const size = (rnd(minBubbleSize, bubblesize) / 25)
+      const coords = randRadiusCoords([0.9 * limits / 2, 0.9 * limits / 2], limits / 2)
+
       if (i % 2 === 0) {
-        particles.push(<circle className='particle' style={{
-          animationDelay: (rnd(0,30) / 10) + 's'
-        }}
-              fill='rgba(77, 217, 180, 0.7)'
-              stroke='none'
-              cx={coords[1]}
-              cy={coords[0]}
-              r={size}
-            />)
+        particles.push(<circle className='particle'
+          key={i}
+          style={{animationDelay: (rnd(0, 30) / 10) + 's'}}
+          fill='rgba(77, 217, 180, 0.7)'
+          stroke='none'
+          cx={coords[1]}
+          cy={coords[0]}
+          r={size}
+        />)
       } else {
         particles.push(<circle className='particle2'
-          style={{ animationDelay: (rnd(0,30)/10) + 's'}}
-                fill='rgba(154, 139, 255, 0.7)'
-                stroke='none'
-                cx={coords[1]}
-                cy={coords[0]}
-                r={size}
-              />)
+          key={i}
+          style={{animationDelay: (rnd(0, 30) / 10) + 's'}}
+          fill='rgba(154, 139, 255, 0.7)'
+          stroke='none'
+          cx={coords[1]}
+          cy={coords[0]}
+          r={size}
+        />)
       }
     }
 
@@ -114,27 +116,27 @@ class MarkerSVG extends Component {
       <g className='particles bubbles' transform={markerTransform} onClick={this.onClick.bind(this)}>
         <defs>
           <filter id='dropshadow' x='-42.3%' y='-42.3%' width='300%' height='300%'>
-            <feGaussianBlur stdDeviation='3' result='coloredBlur'/>
-              <feMerge>
-                  <feMergeNode in='coloredBlur'/>
-                  <feMergeNode in='SourceGraphic'/>
-              </feMerge>
+            <feGaussianBlur stdDeviation='3' result='coloredBlur' />
+            <feMerge>
+              <feMergeNode in='coloredBlur' />
+              <feMergeNode in='SourceGraphic' />
+            </feMerge>
           </filter>
         </defs>
-               {particles}
-               <circle className='central'
-                 style={{
-            animationDelay: (rnd(0,30)/10) + 's',
-            filter:'url(#dropshadow)'
+        {particles}
+        <circle className='central'
+          style={{
+            animationDelay: (rnd(0, 30) / 10) + 's',
+            filter: 'url(#dropshadow)'
           }}
-                fill='rgba(77, 217, 180, 0.9)'
-                stroke='none'
-                cx={this.state.grow ? 19 : centerTransform}
-                cy={this.state.grow ? 19 : centerTransform}
-                r={r}
-              />
-              {this.state.grow ? <image width={'16px'} x='11' y='11' xlinkHref={currentCoin.metadata && currentCoin.metadata.imageLink} /> : null}
-            </g>
+          fill='rgba(77, 217, 180, 0.9)'
+          stroke='none'
+          cx={this.state.grow ? 19 : centerTransform}
+          cy={this.state.grow ? 19 : centerTransform}
+          r={r}
+        />
+        {this.state.grow ? <image width={'16px'} x='11' y='11' xlinkHref={currentCoin.metadata && currentCoin.metadata.imageLink} /> : null}
+      </g>
     )
   }
 }
