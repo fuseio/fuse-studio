@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux'
 import CoinHeader from './CoinHeader'
 import {getSelectedCommunity, getCommunities} from 'selectors/basicToken'
 import find from 'lodash/find'
+import sortBy from 'lodash/sortBy'
 import ReactGA from 'services/ga'
 
 const Sidebar = posed.div({
@@ -117,14 +118,14 @@ class CommunitiesList extends Component {
   }
   render () {
     const currentCoin = find(this.props.tokens, {address: this.state.item}) && this.props.ui.activeMarker
+    const communityCoins = sortBy(this.props.tokens, 'name')
 
-    const communityCoins = Object.values(this.props.tokens) && Object.values(this.props.tokens).filter((coin) => {
-      return coin.isLocalCurrency
-    })
-
-    if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && !isMobile) {
-      return <Nav isOpen={this.state.active} coins={Object.values(this.props.tokens)} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyProp={this.state.key} />
-    } else if (Object.values(this.props.tokens) && Object.values(this.props.tokens).length && isMobile) {
+    if (this.props.tokens.length === 0) {
+      return null
+    }
+    if (!isMobile) {
+      return <Nav isOpen={this.state.active} coins={communityCoins} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyProp={this.state.key} />
+    } else {
       const communitiesListStyle = classNames({
         'communities-list': true,
         'open-mobile': currentCoin
@@ -142,8 +143,6 @@ class CommunitiesList extends Component {
           </div>
         })}
       </div>
-    } else {
-      return null
     }
   }
 };

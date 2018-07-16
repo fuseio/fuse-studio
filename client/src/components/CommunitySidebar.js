@@ -7,17 +7,22 @@ import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { formatAmount, formatMoney } from 'services/global'
 
-import { SOON_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
+import { LOGIN_MODAL, SOON_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
 
 import Facebook from 'images/fb.png'
 import Twitter from 'images/twitter.png'
 import Instagram from 'images/ig.png'
 import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
+import {isOpenForPublic} from 'actions/marketMaker'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import {getEtherscanUrl, getColuWallet} from 'selectors/web3'
 import CoinHeader from './CoinHeader'
 import ReactGA from 'services/ga'
+import withEither from 'containers/withEither'
+
+const withCommunity = withEither(props => !props.selectedCommunity,
+  (props) => null)
 
 const keyToImage = {
   facebook: Facebook,
@@ -35,24 +40,43 @@ class CommunitySidebar extends Component {
   state = {
     rel: null
   }
+
+  componentDidMount = () => {
+    this.props.isOpenForPublic(this.props.selectedCommunity.address)
+  }
+
   onClickBuy = () => {
-    //this.props.uiActions.loadModal(SOON_MODAL)
-    this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy: true})
-    ReactGA.event({
-      category: this.props.selectedCommunity.name,
-      action: 'Click',
-      label: 'Buy'
-    })
+    if (this.props.selectedCommunity.isOpenForPublic) {
+      ReactGA.event({
+        category: this.props.selectedCommunity.name,
+        action: 'Click',
+        label: 'Buy'
+      })
+      if (this.props.accountAddress) {
+        this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy: true})
+      } else {
+        this.props.uiActions.loadModal(LOGIN_MODAL)
+      }
+    } else {
+      this.props.uiActions.loadModal(SOON_MODAL)
+    }
   }
 
   onClickSell = () => {
-    //this.props.uiActions.loadModal(SOON_MODAL)
-    this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy: false})
-    ReactGA.event({
-      category: this.props.selectedCommunity.name,
-      action: 'Click',
-      label: 'Sell'
-    })
+    if (this.props.selectedCommunity.isOpenForPublic) {
+      ReactGA.event({
+        category: this.props.selectedCommunity.name,
+        action: 'Click',
+        label: 'Sell'
+      })
+      if (this.props.accountAddress) {
+        this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy: false})
+      } else {
+        this.props.uiActions.loadModal(LOGIN_MODAL)
+      }
+    } else {
+      this.props.uiActions.loadModal(SOON_MODAL)
+    }
   }
 
   onBackMobile () {
@@ -61,7 +85,8 @@ class CommunitySidebar extends Component {
       open: false
     })
   }
-  onClose () {
+
+  onClose = () => {
     this.props.uiActions.hideSignup()
     this.props.uiActions.setActiveMarker()
 
@@ -80,27 +105,27 @@ class CommunitySidebar extends Component {
     })
 
   render () {
-    const currentCoin = this.props.selectedCommunity || {}
+    const {selectedCommunity} = this.props
 
-    const control = <div className='sidebar-close' onClick={this.onClose.bind(this)}>
+    const control = <div className='sidebar-close' onClick={this.onClose}>
       <Link to='/'>
         <img src={CloseButton} />
       </Link>
     </div>
 
-    const totalSupply = currentCoin.totalSupply ? formatMoney(formatAmount(currentCoin.totalSupply, 18), 0, '.', ',') : 'loading'
-    const circulatingSupply = currentCoin.ccReserve ? formatMoney(formatAmount(currentCoin.totalSupply - currentCoin.ccReserve, 18), 0, '.', ',') : 'loading'
-    const clnReserve = currentCoin.clnReserve ? formatMoney(formatAmount(currentCoin.clnReserve, 18), 0, '.', ',') : 'loading'
-    const owner = currentCoin.owner === this.props.coluWallet ? 'Colu' : currentCoin.owner
+    const totalSupply = selectedCommunity.totalSupply ? formatMoney(formatAmount(selectedCommunity.totalSupply, 18), 0, '.', ',') : 'loading'
+    const circulatingSupply = selectedCommunity.ccReserve ? formatMoney(formatAmount(selectedCommunity.totalSupply - selectedCommunity.ccReserve, 18), 0, '.', ',') : 'loading'
+    const clnReserve = selectedCommunity.clnReserve ? formatMoney(formatAmount(selectedCommunity.clnReserve, 18), 0, '.', ',') : 'loading'
+    const owner = selectedCommunity.owner === this.props.coluWallet ? 'Colu' : selectedCommunity.owner
 
-    const social = currentCoin.metadata && currentCoin.metadata.social &&
-      map(currentCoin.metadata.social, (value, key) => <SocialImage
+    const social = selectedCommunity.metadata && selectedCommunity.metadata.social &&
+      map(selectedCommunity.metadata.social, (value, key) => <SocialImage
         link={value} name={key} key={key} onClick={this.handleLinkClick} />)
 
     const sidebarClass = classNames({
-      'community-sidebar': true,
-      //'ios-chrome': isIOS && isChrome
-      //'tablet': isTablet && !isIOS
+      'community-sidebar': true
+      // 'ios-chrome': isIOS && isChrome
+      // 'tablet': isTablet && !isIOS
     })
 
     return (
@@ -109,7 +134,7 @@ class CommunitySidebar extends Component {
           transition: this.state.open || this.state.closed ? 'all 350ms ease-in' : 'none'
         }}>
         <div className='header'>
-          <CoinHeader coinImage={currentCoin.metadata && currentCoin.metadata.imageLink} name={currentCoin.name} price={currentCoin.currentPrice} />
+          <CoinHeader coinImage={selectedCommunity.metadata && selectedCommunity.metadata.imageLink} name={selectedCommunity.name} price={selectedCommunity.currentPrice} />
           {control}
           <div className='header-buttons'>
             <div className='header-button' onClick={this.onClickBuy}>BUY</div>
@@ -130,32 +155,32 @@ class CommunitySidebar extends Component {
                 <p>Market Maker ID</p>
               </div>
               <div className='box-data column'>
-                <p>{currentCoin.symbol || 'loading'}</p>
+                <p>{selectedCommunity.symbol || 'loading'}</p>
                 <p>
-                  <a href={`${this.props.etherscanUrl}address/${currentCoin.owner}`}
+                  <a href={`${this.props.etherscanUrl}address/${selectedCommunity.owner}`}
                     target='_blank'
                     name='owner'
                     onClick={this.handleLinkClick}>
                     {owner || 'loading'}
                   </a>
                 </p>
-                <p>{totalSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
-                <p>{circulatingSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
+                <p>{totalSupply + ' ' + (selectedCommunity.symbol || 'loading') || 'loading'}</p>
+                <p>{circulatingSupply + ' ' + (selectedCommunity.symbol || 'loading') || 'loading'}</p>
                 <p><img src={clnCurrencyIcon} />{clnReserve || 'loading'}</p>
                 <p>
-                  <a href={`${this.props.etherscanUrl}address/${this.props.ui.activeMarker || currentCoin.address}`}
+                  <a href={`${this.props.etherscanUrl}address/${this.props.ui.activeMarker || selectedCommunity.address}`}
                     target='_blank'
                     name='assetId'
                     onClick={this.handleLinkClick}>
-                    {this.props.ui.activeMarker || currentCoin.address}
+                    {this.props.ui.activeMarker || selectedCommunity.address}
                   </a>
                 </p>
                 <p>
-                  <a href={`${this.props.etherscanUrl}address/${currentCoin.mmAddress}`}
+                  <a href={`${this.props.etherscanUrl}address/${selectedCommunity.mmAddress}`}
                     target='_blank'
                     name='marketMakerId'
                     onClick={this.handleLinkClick}>
-                    {currentCoin.mmAddress}
+                    {selectedCommunity.mmAddress}
                   </a>
                 </p>
               </div>
@@ -165,7 +190,7 @@ class CommunitySidebar extends Component {
             <div className='box-header'>COMMUNITY</div>
             <div className='box-info column'>
               <div className='box-data'>
-                <p className='description'>{(currentCoin.metadata && currentCoin.metadata.description) || 'loading'}</p>
+                <p className='description'>{(selectedCommunity.metadata && selectedCommunity.metadata.description) || 'loading'}</p>
               </div>
               <div className='separator' />
             </div>
@@ -178,14 +203,14 @@ class CommunitySidebar extends Component {
               </div>
               <div className='box-data column'>
                 <p>
-                  <a href={currentCoin.metadata && currentCoin.metadata.website}
+                  <a href={selectedCommunity.metadata && selectedCommunity.metadata.website}
                     target='_blank'
                     name='website'
                     onClick={this.handleLinkClick}>
-                    {currentCoin.metadata && currentCoin.metadata.website}
+                    {selectedCommunity.metadata && selectedCommunity.metadata.website}
                   </a>
                 </p>
-                <p>{currentCoin.metadata && currentCoin.metadata.location.name}</p>
+                <p>{selectedCommunity.metadata && selectedCommunity.metadata.location.name}</p>
 
                 <div className='social flex'>
                   {social}
@@ -205,17 +230,19 @@ const mapStateToProps = state => {
     ui: state.ui,
     selectedCommunity: getSelectedCommunity(state),
     etherscanUrl: getEtherscanUrl(state),
-    coluWallet: getColuWallet(state)
+    coluWallet: getColuWallet(state),
+    accountAddress: state.web3.accountAddress
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    uiActions: bindActionCreators(uiActions, dispatch)
+    uiActions: bindActionCreators(uiActions, dispatch),
+    isOpenForPublic: bindActionCreators(isOpenForPublic, dispatch)
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CommunitySidebar)
+)(withCommunity(CommunitySidebar))
