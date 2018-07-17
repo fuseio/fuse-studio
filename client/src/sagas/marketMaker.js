@@ -179,10 +179,13 @@ export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimati
     ...options
   })
 
-  const transactionHash = yield new Promise((resolve) => {
-    sendPromise.on('transactionHash', function (transactionHash) {
+  const transactionHash = yield new Promise((resolve, reject) => {
+    sendPromise.on('transactionHash', (transactionHash) =>
       resolve(transactionHash)
-    })
+    )
+    sendPromise.on('error', (error) =>
+      reject(error)
+    )
   })
 
   yield put({type: actions.CHANGE.PENDING,
