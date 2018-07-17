@@ -1,8 +1,9 @@
-import { put, takeEvery } from 'redux-saga/effects'
+import { put, takeEvery, takeLatest } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 
 export const createEntityPut = (entity) => (action) => put({...action, entity})
 
-export function tryCatch (saga, action) {
+export function tryCatch (action, saga) {
   return function * wrappedTryCatch (args) {
     try {
       yield saga(args)
@@ -16,4 +17,21 @@ export function tryCatch (saga, action) {
   }
 }
 
-export const takeEveryWithCatch = (action, saga) => takeEvery(action.REQUEST, tryCatch(saga, action))
+export function tryCatchWithDebounce (action, saga, timeout) {
+  return function * wrappedTryCatch (args) {
+    try {
+      yield delay(timeout)
+      yield saga(args)
+    } catch (error) {
+      yield put({
+        ...args,
+        error,
+        type: action.FAILURE
+      })
+    }
+  }
+}
+
+export const tryTakeEvery = (action, saga) => takeEvery(action.REQUEST, tryCatch(action, saga))
+export const tryTakeLatestWithDebounce = (action, saga, timeout = CONFIG.ui.debounce) =>
+  takeLatest(action.REQUEST, tryCatchWithDebounce(action, saga, 500))

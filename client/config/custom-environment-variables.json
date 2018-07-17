@@ -4,5 +4,8 @@
   },
   "api": {
     "marketsPolling": "COMMUNITY_API_MARKETS_POLLING"
+  },
+  "ui": {
+    "debounce": "COMMUNITY_UI_DEBOUNCE"
   }
 }
