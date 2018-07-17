@@ -18,6 +18,7 @@ import clnCurrencyIcon from 'images/cln-coin.png'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import {getEtherscanUrl, getColuWallet} from 'selectors/web3'
 import CoinHeader from './CoinHeader'
+import Loader from 'components/Loader'
 import ReactGA from 'services/ga'
 
 const keyToImage = {
@@ -90,9 +91,9 @@ class CommunitySidebar extends Component {
             </Link>
           </div>
 
-    const totalSupply = currentCoin.totalSupply ? formatMoney(formatAmount(currentCoin.totalSupply, 18), 0, '.', ',') : 'loading'
-    const circulatingSupply = currentCoin.ccReserve ? formatMoney(formatAmount(currentCoin.totalSupply - currentCoin.ccReserve, 18), 0, '.', ',') : 'loading'
-    const clnReserve = currentCoin.clnReserve ? formatMoney(formatAmount(currentCoin.clnReserve, 18), 0, '.', ',') : 'loading'
+    const totalSupply = currentCoin.totalSupply ? formatMoney(formatAmount(currentCoin.totalSupply, 18), 0, '.', ',') : <Loader class="loader"/>
+    const circulatingSupply = currentCoin.ccReserve && formatMoney(formatAmount(currentCoin.totalSupply - currentCoin.ccReserve, 18), 0, '.', ',')
+    const clnReserve = currentCoin.clnReserve && formatMoney(formatAmount(currentCoin.clnReserve, 18), 0, '.', ',')
     const owner = currentCoin.owner === this.props.coluWallet ? "Colu" : currentCoin.owner
 
     const social = currentCoin.metadata && currentCoin.metadata.social
@@ -101,8 +102,6 @@ class CommunitySidebar extends Component {
 
     const sidebarClass = classNames({
       "community-sidebar": true,
-      //"ios-chrome": isIOS && isChrome
-      //"tablet": isTablet && !isIOS
     })
 
     return (
@@ -132,24 +131,24 @@ class CommunitySidebar extends Component {
                 <p>Market Maker ID</p>
               </div>
               <div className="box-data column">
-                <p>{currentCoin.symbol || 'loading'}</p>
+                <p>{currentCoin.symbol ? currentCoin.symbol : <Loader class="loader"/>}</p>
                 <p>
                   <a href={`${this.props.etherscanUrl}address/${currentCoin.owner}`}
                     target="_blank"
                     name="owner"
                     onClick={this.handleLinkClick}>
-                    {owner || 'loading'}
+                    {owner || <Loader class="loader"/>}
                   </a>
                 </p>
-                <p>{totalSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
-                <p>{circulatingSupply + ' ' + (currentCoin.symbol || 'loading') || 'loading'}</p>
-                <p><img src={clnCurrencyIcon}/>{clnReserve || 'loading'}</p>
+                <p>{totalSupply && currentCoin.symbol ? totalSupply + ' ' + currentCoin.symbol : <Loader class="loader"/>}</p>
+                <p>{circulatingSupply && currentCoin.symbol ? circulatingSupply + ' ' + currentCoin.symbol : <Loader class="loader"/>}</p>
+                <p>{clnReserve && <img src={clnCurrencyIcon}/>}{clnReserve ? clnReserve : <Loader class="loader"/>}</p>
                 <p>
                   <a href={`${this.props.etherscanUrl}address/${this.props.ui.activeMarker || currentCoin.address}`}
                     target="_blank"
                     name="assetId"
                     onClick={this.handleLinkClick}>
-                      {this.props.ui.activeMarker || currentCoin.address}
+                      {this.props.ui.activeMarker || currentCoin.address || <Loader class="loader"/>}
                     </a>
                 </p>
                 <p>
@@ -157,7 +156,7 @@ class CommunitySidebar extends Component {
                     target="_blank"
                     name="marketMakerId"
                     onClick={this.handleLinkClick}>
-                    {currentCoin.mmAddress}
+                    {currentCoin.mmAddress || <Loader class="loader"/>}
                   </a>
                 </p>
               </div>
@@ -167,7 +166,7 @@ class CommunitySidebar extends Component {
             <div className="box-header">COMMUNITY</div>
             <div className="box-info column">
               <div className="box-data">
-                <p className="description">{currentCoin.metadata && currentCoin.metadata.description || 'loading'}</p>
+                <p className="description">{currentCoin.metadata && currentCoin.metadata.description || <Loader class="loader"/>}</p>
               </div>
               <div className="separator" />
             </div>
@@ -184,13 +183,13 @@ class CommunitySidebar extends Component {
                     target="_blank"
                     name="website"
                     onClick={this.handleLinkClick}>
-                    {currentCoin.metadata && currentCoin.metadata.website}
+                    {(currentCoin.metadata && currentCoin.metadata.website) || <Loader class="loader"/>}
                   </a>
                 </p>
-                <p>{currentCoin.metadata && currentCoin.metadata.location.name}</p>
+                <p>{(currentCoin.metadata && currentCoin.metadata.location.name) || <Loader class="loader"/>}</p>
 
                 <div className="social flex">
-                  {social}
+                  {social || <Loader class="loader"/>}
                 </div>
               </div>
             </div>

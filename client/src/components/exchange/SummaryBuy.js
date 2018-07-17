@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux'
 import { formatAmountReal, formatMoney } from 'services/global'
 import { change, buyCc, sellCc } from 'actions/marketMaker'
 import { getSelectedCommunity } from 'selectors/basicToken'
+import Loader from 'components/Loader'
 
 import RightArrow from 'images/right-arrow.png'
 import Info from 'images/info.png'
@@ -42,7 +43,7 @@ class SummaryBuy extends React.Component {
     const toCoin = isBuy ? cc : cln
     const fromSymbol = isBuy ? 'CLN' : ccSymbol
     const toSymbol = isBuy ? ccSymbol : 'CLN'
-    const gasPrice = (gas && estimatedGas) ? new BigNumber(estimatedGas).multipliedBy(gas.average).div(10).div(1e9) : ''
+    const gasPrice = (gas && estimatedGas) && new BigNumber(estimatedGas).multipliedBy(gas.average).div(10).div(1e9)
     return (
       <div className="summary">
         <div className="modal-back" onClick={this.back}>
@@ -65,7 +66,7 @@ class SummaryBuy extends React.Component {
         <div className="info-price">
           <div>ESTIMATED TRANSACTION FEE
           <img src={Info} /></div>
-          <div>{gasPrice + ' ETH'}</div>
+          <div>{gasPrice ? gasPrice + ' ETH' : <Loader class="loader" />}</div>
         </div>
         <div className="info-price">
           <div>RATE</div>
@@ -74,7 +75,7 @@ class SummaryBuy extends React.Component {
         <div className="line"/>
         <h5>GAS PRICE NOTICE:</h5>
         <p>Increasing gas above the present value will result in failed transaction</p>
-        <button onClick={this.next}>PROCEED</button>
+        <button disabled={!gasPrice} onClick={this.next}>PROCEED</button>
       </div>
     )
   }
