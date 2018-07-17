@@ -52,8 +52,7 @@ function * checkAccountChanged ({selectedAddress, networkVersion}) {
     yield put({
       type: actions.CHECK_ACCOUNT_CHANGED.SUCCESS,
       response: {
-        accountAddress: checksummedAddress,
-        isAccountUnlocked: !!accountAddress
+        accountAddress: checksummedAddress
       }
     })
   }

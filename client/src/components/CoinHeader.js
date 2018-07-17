@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import classNames from 'classnames'
 import { formatAmountReal, formatMoney } from 'services/global'
 import Loader from 'components/Loader'
 

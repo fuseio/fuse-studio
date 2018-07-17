@@ -1,7 +1,6 @@
 import {action} from './utils'
 
-export const setActiveMarker = (coinAddress) => action('ACTIVE_MARKER', {coinAddress, location})
-//export const closeCommunitySidebar = () => action('CLOSE_COMMUNITY_SIDEBAR', { zoom: 4 })
+export const setActiveMarker = (coinAddress) => action('ACTIVE_MARKER', {coinAddress})
 export const zoomToMarker = (zoom) => action('ZOOM', { zoom })
 
 export const loadModal = (modalType, options) => {
@@ -42,7 +41,7 @@ export const setBuyStage = (stage) => {
 export const setBuySellAmounts = (obj) => {
   return {
     type: 'BUY_SELL_AMOUNTS',
-    isBuy: obj.isBuy, 
+    isBuy: obj.isBuy,
     ccAddress: obj.ccAddress,
     cln: obj.cln,
     cc: obj.cc,

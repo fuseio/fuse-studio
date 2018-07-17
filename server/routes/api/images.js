@@ -1,8 +1,10 @@
 const router = require('express').Router()
 const IpfsAPI = require('ipfs-api')
 const multer = require('multer')
-const ipfsConfig = require('../../config').ipfs
-const amazonConfig = require('../../config').amazon
+const config = require('config')
+
+const ipfsConfig = config.get('ipfs')
+const amazonConfig = config.get('amazon')
 
 const upload = multer()
 const auth = require('../auth')

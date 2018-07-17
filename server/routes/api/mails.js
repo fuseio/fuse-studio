@@ -1,5 +1,7 @@
 const mandrill = require('mandrill-api/mandrill')
-const mandrillConfig = require('../../config').mandrill
+const config = require('config')
+
+const mandrillConfig = config.get('mandrill')
 
 const router = require('express').Router()
 const mandrillClient = new mandrill.Mandrill(mandrillConfig.apiKey)

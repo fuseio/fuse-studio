@@ -1,5 +1,7 @@
 const request = require('request')
-const mailchimpConfig = require('../../config').mailchimp
+const config = require('config')
+
+const mailchimpConfig = config.get('mailchimp')
 
 const router = require('express').Router()
 

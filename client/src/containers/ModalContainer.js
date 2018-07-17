@@ -16,7 +16,6 @@ const MODAL_COMPONENTS = {
 }
 
 const ModalContainer = (props) => {
-  
   if (!props.modalType) {
     return null
   }
@@ -27,8 +26,7 @@ const ModalContainer = (props) => {
 
 const mapStateToProps = state => {
   return {
-    modalType: state.ui.modalType,
-    isBuy: state.ui.isBuy
+    modalType: state.ui.modalType
   }
 }
 

@@ -12,6 +12,8 @@ export default (state = {}, action) => {
       return {...state, [action.tokenAddress]: {...state[action.tokenAddress], ...action.response}}
     case actions.CC_RESERVE.SUCCESS:
       return {...state, [action.tokenAddress]: {...state[action.tokenAddress], ...action.response}}
+    case actions.IS_OPEN_FOR_PUBLIC.SUCCESS:
+      return {...state, [action.tokenAddress]: {...state[action.tokenAddress], ...action.response}}
     case actions.FETCH_MARKET_MAKER_DATA.SUCCESS:
       return {...state, [action.tokenAddress]: {...state[action.tokenAddress], ...action.response}}
     case actions.CHANGE.PENDING:

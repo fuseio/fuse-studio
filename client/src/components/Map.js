@@ -8,7 +8,7 @@ import {
   Markers,
   Marker,
   Geography
-} from 'utils/react-simple-maps'
+} from 'react-simple-maps'
 import Hammer from 'react-hammerjs'
 import { Motion, spring } from 'react-motion'
 import classNames from 'classnames'
@@ -220,8 +220,8 @@ class MapComponent extends Component {
           zoom: isMobile ? 1.5 : 0.81
         }}
         style={{
-          x: movingCenter && parseFloat(movingCenter.lng) || spring(parseFloat(center.lng), {stiffness: 184}),
-          y: movingCenter && parseFloat(movingCenter.lat) || spring(parseFloat(center.lat), {stiffness: 184}),
+          x: (movingCenter && parseFloat(movingCenter.lng)) || spring(parseFloat(center.lng), {stiffness: 184}),
+          y: (movingCenter && parseFloat(movingCenter.lat)) || spring(parseFloat(center.lat), {stiffness: 184}),
           zoom: spring(zoom, {stiffness: 284})
         }}
         onRest={this.onRest.bind(this)}

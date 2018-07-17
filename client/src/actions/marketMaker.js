@@ -3,6 +3,7 @@ import {action, createRequestTypes} from './utils'
 export const GET_CURRENT_PRICE = createRequestTypes('GET_CURRENT_PRICE')
 export const CLN_RESERVE = createRequestTypes('CLN_RESERVE')
 export const CC_RESERVE = createRequestTypes('CC_RESERVE')
+export const IS_OPEN_FOR_PUBLIC = createRequestTypes('IS_OPEN_FOR_PUBLIC')
 
 export const FETCH_MARKET_MAKER_DATA = createRequestTypes('FETCH_MARKET_MAKER_DATA')
 
@@ -31,6 +32,7 @@ export const fetchMarketMakerData = (tokenAddress, mmAddress) => action(FETCH_MA
 export const quote = (fromToken, inAmount, toToken, isBuying) => action(QUOTE.REQUEST, {fromToken, inAmount, toToken, isBuying})
 export const invertQuote = (fromToken, inAmount, toToken) => action(INVERT_QUOTE.REQUEST, {fromToken, inAmount, toToken})
 export const change = (tokenAddress, amount, minReturn, isBuying) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuying})
+export const isOpenForPublic = (tokenAddress) => action(IS_OPEN_FOR_PUBLIC.REQUEST, {tokenAddress})
 
 export const buyQuote = (tokenAddress, clnAmount) => action(BUY_QUOTE.REQUEST, {tokenAddress, clnAmount})
 export const sellQuote = (tokenAddress, ccAmount) => action(SELL_QUOTE.REQUEST, {tokenAddress, ccAmount})

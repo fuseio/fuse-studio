@@ -6,7 +6,6 @@ import { isMobile, MobileView } from 'react-device-detect'
 import { BigNumber } from 'bignumber.js'
 
 import * as uiActions from 'actions/ui'
-import { formatAmount, formatMoney } from 'services/global'
 import {getBalances} from 'selectors/accounts'
 import {getAddresses} from 'selectors/web3'
 import { LOGIN_MODAL } from 'constants/uiConstants'
@@ -28,7 +27,7 @@ class TopNav extends Component {
   }
 
   showConnectMetamask = () => {
-    if (!this.props.web3.isMetaMask || !this.props.web3.isAccountUnlocked) {
+    if (!this.props.web3.isMetaMask || !this.props.web3.account) {
       this.props.uiActions.loadModal(LOGIN_MODAL)
       ReactGA.event({
         category: 'Top Bar',
@@ -71,7 +70,6 @@ class TopNav extends Component {
       'top-nav-links': true
     })
 
-    //BigNumber.config({ DECIMAL_PLACES: 2, ROUNDING_MODE: 1 }) //round down
     const clnBalance = this.props.balances[this.props.addresses && this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork]).div(1e18).toFormat(2, 1)
 
     return <div className={topNavClass}>

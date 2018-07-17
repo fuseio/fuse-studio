@@ -39,5 +39,4 @@ export const approve = (tokenAddress, spender, value) => basicTokenAction(APPROV
 export const updateBalances = (accountAddress) => action(UPDATE_BALANCES.REQUEST, {accountAddress})
 
 export const fetchCommunity = (tokenAddress) => basicTokenAction(FETCH_COMMUNITY.REQUEST, {tokenAddress})
-export const fetchCommunityContract = (tokenAddress) => basicTokenAction(FETCH_COMMUNITY_CONTRACT.REQUEST, {tokenAddress})
 export const fetchClnContract = (tokenAddress) => basicTokenAction(FETCH_CLN_CONTRACT.REQUEST, {tokenAddress})

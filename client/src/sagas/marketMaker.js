@@ -102,6 +102,18 @@ export function * quote ({tokenAddress, amount, isBuying}) {
   return quotePair
 }
 
+export function * isOpenForPublic ({tokenAddress}) {
+  const token = yield select(getCommunity, tokenAddress)
+  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
+  const isOpenForPublic = yield call(EllipseMarketMakerContract.methods.openForPublic().call)
+
+  yield put({type: actions.IS_OPEN_FOR_PUBLIC.SUCCESS,
+    tokenAddress,
+    response: {
+      isOpenForPublic
+    }})
+}
+
 export function * invertQuote ({tokenAddress, amount, isBuying}) {
   const clnToken = yield select(getClnToken)
   const token = yield select(getCommunity, tokenAddress)
@@ -129,6 +141,7 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
     price,
     slippage
   }
+
   yield put({type: actions.INVERT_QUOTE.SUCCESS,
     address: token.address,
     response: {
@@ -363,6 +376,7 @@ export default function * rootSaga () {
     takeEveryWithCatch(actions.SELL_CC, sellCc),
     takeEveryWithCatch(actions.ESTIMATE_GAS_BUY_CC, estimateGasBuyCc),
     takeEveryWithCatch(actions.ESTIMATE_GAS_SELL_CC, estimateGasSellCc),
-    takeEveryWithCatch(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData)
+    takeEveryWithCatch(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData),
+    takeEveryWithCatch(actions.IS_OPEN_FOR_PUBLIC, isOpenForPublic)
   ])
 }
