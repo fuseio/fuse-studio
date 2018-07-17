@@ -1,4 +1,6 @@
-import { all, call, put, select } from 'redux-saga/effects'
+import { all, call, put, select, takeLatest } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+
 import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
 
@@ -7,7 +9,7 @@ import {BALANCE_OF} from 'actions/basicToken'
 import {fetchGasPrices} from 'actions/web3'
 import {getClnToken, getCommunity} from 'selectors/basicToken'
 import web3 from 'services/web3'
-import {takeEveryWithCatch} from './utils'
+import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 
 export function * getCurrentPrice ({address, tokenAddress}) {
   try {
@@ -236,6 +238,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimati
 }
 
 export function * buyQuote ({tokenAddress, clnAmount}) {
+  yield delay(300)
   const buyQuote = yield call(quote, {
     tokenAddress,
     amount: clnAmount,
@@ -366,20 +369,20 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress}) {
 
 export default function * rootSaga () {
   yield all([
-    takeEveryWithCatch(actions.GET_CURRENT_PRICE, getCurrentPrice),
-    takeEveryWithCatch(actions.CLN_RESERVE, clnReserve),
-    takeEveryWithCatch(actions.CC_RESERVE, ccReserve),
-    takeEveryWithCatch(actions.QUOTE, quote),
-    takeEveryWithCatch(actions.BUY_QUOTE, buyQuote),
-    takeEveryWithCatch(actions.SELL_QUOTE, sellQuote),
-    takeEveryWithCatch(actions.INVERT_BUY_QUOTE, invertBuyQuote),
-    takeEveryWithCatch(actions.INVERT_SELL_QUOTE, invertSellQuote),
-    takeEveryWithCatch(actions.CHANGE, change),
-    takeEveryWithCatch(actions.BUY_CC, buyCc),
-    takeEveryWithCatch(actions.SELL_CC, sellCc),
-    takeEveryWithCatch(actions.ESTIMATE_GAS_BUY_CC, estimateGasBuyCc),
-    takeEveryWithCatch(actions.ESTIMATE_GAS_SELL_CC, estimateGasSellCc),
-    takeEveryWithCatch(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData),
-    takeEveryWithCatch(actions.IS_OPEN_FOR_PUBLIC, isOpenForPublic)
+    tryTakeEvery(actions.GET_CURRENT_PRICE, getCurrentPrice),
+    tryTakeEvery(actions.CLN_RESERVE, clnReserve),
+    tryTakeEvery(actions.CC_RESERVE, ccReserve),
+    tryTakeEvery(actions.QUOTE, quote),
+    tryTakeLatestWithDebounce(actions.BUY_QUOTE, buyQuote),
+    tryTakeLatestWithDebounce(actions.SELL_QUOTE, sellQuote),
+    tryTakeLatestWithDebounce(actions.INVERT_BUY_QUOTE, invertBuyQuote),
+    tryTakeLatestWithDebounce(actions.INVERT_SELL_QUOTE, invertSellQuote),
+    tryTakeEvery(actions.CHANGE, change),
+    tryTakeEvery(actions.BUY_CC, buyCc),
+    tryTakeEvery(actions.SELL_CC, sellCc),
+    tryTakeEvery(actions.ESTIMATE_GAS_BUY_CC, estimateGasBuyCc),
+    tryTakeEvery(actions.ESTIMATE_GAS_SELL_CC, estimateGasSellCc),
+    tryTakeEvery(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData),
+    tryTakeEvery(actions.IS_OPEN_FOR_PUBLIC, isOpenForPublic)
   ])
 }

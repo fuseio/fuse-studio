@@ -1,6 +1,6 @@
 import { all, put, race, call, take, takeEvery, select } from 'redux-saga/effects'
 
-import {createEntityPut, takeEveryWithCatch} from './utils'
+import {createEntityPut, tryTakeEvery} from './utils'
 import * as actions from 'actions/basicToken'
 import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {FETCH_METADATA} from 'actions/api'
@@ -218,18 +218,18 @@ export function * watchAccountChanged ({response}) {
 
 export default function * rootSaga () {
   yield all([
-    takeEveryWithCatch(actions.NAME, name),
-    takeEveryWithCatch(actions.SYMBOL, symbol),
-    takeEveryWithCatch(actions.TOTAL_SUPPLY, totalSupply),
-    takeEveryWithCatch(actions.TOKEN_URI, tokenURI),
-    takeEveryWithCatch(actions.SET_TOKEN_URI, setTokenURI),
-    takeEveryWithCatch(actions.OWNER, owner),
-    takeEveryWithCatch(actions.BALANCE_OF, balanceOf),
-    takeEveryWithCatch(actions.TRANSFER, transfer),
-    takeEveryWithCatch(actions.APPROVE, approve),
-    takeEveryWithCatch(actions.FETCH_CLN_CONTRACT, fetchClnContract),
-    takeEveryWithCatch(actions.FETCH_COMMUNITY, fetchCommunity),
-    takeEveryWithCatch(actions.UPDATE_BALANCES, updateBalances),
+    tryTakeEvery(actions.NAME, name),
+    tryTakeEvery(actions.SYMBOL, symbol),
+    tryTakeEvery(actions.TOTAL_SUPPLY, totalSupply),
+    tryTakeEvery(actions.TOKEN_URI, tokenURI),
+    tryTakeEvery(actions.SET_TOKEN_URI, setTokenURI),
+    tryTakeEvery(actions.OWNER, owner),
+    tryTakeEvery(actions.BALANCE_OF, balanceOf),
+    tryTakeEvery(actions.TRANSFER, transfer),
+    tryTakeEvery(actions.APPROVE, approve),
+    tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
+    tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity),
+    tryTakeEvery(actions.UPDATE_BALANCES, updateBalances),
     takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged)
   ])
 }
