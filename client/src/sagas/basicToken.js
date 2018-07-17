@@ -173,52 +173,6 @@ function * fetchCommunity ({tokenAddress}) {
   yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, tokenAddress})
 }
 
-function * fetchCommunityContract ({tokenAddress}) {
-  const networkType = yield select(getNetworkType)
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
-  const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
-    address: addresses[networkType].CurrencyFactory
-  })
-
-  const calls = {
-    name: call(ColuLocalNetworkContract.methods.name().call),
-    symbol: call(ColuLocalNetworkContract.methods.symbol().call),
-    totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
-    owner: call(ColuLocalNetworkContract.methods.owner().call),
-    tokenURI: call(ColuLocalNetworkContract.methods.tokenURI().call),
-    mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(tokenAddress).call)
-  }
-
-  const response = yield all(calls)
-  response.isLocalCurrency = true
-  response.address = tokenAddress
-  response.path = '/view/community/' + response.name.toLowerCase().replace(/ /g, '')
-
-  if (response.tokenURI) {
-    const [protocol, hash] = response.tokenURI.split('://')
-    yield put({
-      type: FETCH_METADATA.REQUEST,
-      protocol,
-      hash,
-      tokenAddress
-    })
-
-    // wait until timeout to receive the metadata
-    yield race({
-      metadata: take(action =>
-        action.type === FETCH_METADATA.SUCCESS && action.tokenAddress === tokenAddress),
-      timeout: call(delay, CONFIG.api.timeout)
-    })
-  }
-
-  yield fetchMarketMakerData({tokenAddress, mmAddress: response.mmAddress})
-
-  yield entityPut({type: actions.FETCH_COMMUNITY_CONTRACT.SUCCESS,
-    tokenAddress,
-    response
-  })
-}
-
 function * fetchClnContract ({tokenAddress}) {
   const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
 
@@ -273,7 +227,6 @@ export default function * rootSaga () {
     takeEveryWithCatch(actions.BALANCE_OF, balanceOf),
     takeEveryWithCatch(actions.TRANSFER, transfer),
     takeEveryWithCatch(actions.APPROVE, approve),
-    takeEveryWithCatch(actions.FETCH_COMMUNITY_CONTRACT, fetchCommunityContract),
     takeEveryWithCatch(actions.FETCH_CLN_CONTRACT, fetchClnContract),
     takeEveryWithCatch(actions.FETCH_COMMUNITY, fetchCommunity),
     takeEveryWithCatch(actions.UPDATE_BALANCES, updateBalances),
