@@ -18,6 +18,7 @@ import {isOpenForPublic} from 'actions/marketMaker'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import {getEtherscanUrl, getColuWallet} from 'selectors/web3'
 import CoinHeader from './CoinHeader'
+import Loader from 'components/Loader'
 import ReactGA from 'services/ga'
 import withEither from 'containers/withEither'
 
@@ -113,19 +114,17 @@ class CommunitySidebar extends Component {
       </Link>
     </div>
 
-    const totalSupply = selectedCommunity.totalSupply ? formatMoney(formatAmount(selectedCommunity.totalSupply, 18), 0, '.', ',') : 'loading'
-    const circulatingSupply = selectedCommunity.ccReserve ? formatMoney(formatAmount(selectedCommunity.totalSupply - selectedCommunity.ccReserve, 18), 0, '.', ',') : 'loading'
-    const clnReserve = selectedCommunity.clnReserve ? formatMoney(formatAmount(selectedCommunity.clnReserve, 18), 0, '.', ',') : 'loading'
-    const owner = selectedCommunity.owner === this.props.coluWallet ? 'Colu' : selectedCommunity.owner
+    const totalSupply = selectedCommunity.totalSupply ? formatMoney(formatAmount(selectedCommunity.totalSupply, 18), 0, '.', ',') : <Loader class="loader"/>
+    const circulatingSupply = selectedCommunity.ccReserve && formatMoney(formatAmount(selectedCommunity.totalSupply - selectedCommunity.ccReserve, 18), 0, '.', ',')
+    const clnReserve = selectedCommunity.clnReserve && formatMoney(formatAmount(selectedCommunity.clnReserve, 18), 0, '.', ',')
+    const owner = selectedCommunity.owner === this.props.coluWallet ? "Colu" : selectedCommunity.owner
 
     const social = selectedCommunity.metadata && selectedCommunity.metadata.social &&
       map(selectedCommunity.metadata.social, (value, key) => <SocialImage
         link={value} name={key} key={key} onClick={this.handleLinkClick} />)
 
     const sidebarClass = classNames({
-      'community-sidebar': true
-      // 'ios-chrome': isIOS && isChrome
-      // 'tablet': isTablet && !isIOS
+      "community-sidebar": true,
     })
 
     return (
@@ -154,43 +153,43 @@ class CommunitySidebar extends Component {
                 <p>Asset ID</p>
                 <p>Market Maker ID</p>
               </div>
-              <div className='box-data column'>
-                <p>{selectedCommunity.symbol || 'loading'}</p>
+              <div className="box-data column">
+                <p>{selectedCommunity.symbol ? selectedCommunity.symbol : <Loader class="loader"/>}</p>
                 <p>
                   <a href={`${this.props.etherscanUrl}address/${selectedCommunity.owner}`}
                     target='_blank'
                     name='owner'
                     onClick={this.handleLinkClick}>
-                    {owner || 'loading'}
+                    {owner || <Loader class="loader"/>}
                   </a>
                 </p>
-                <p>{totalSupply + ' ' + (selectedCommunity.symbol || 'loading') || 'loading'}</p>
-                <p>{circulatingSupply + ' ' + (selectedCommunity.symbol || 'loading') || 'loading'}</p>
-                <p><img src={clnCurrencyIcon} />{clnReserve || 'loading'}</p>
+                <p>{totalSupply && selectedCommunity.symbol ? totalSupply + ' ' + selectedCommunity.symbol : <Loader class="loader"/>}</p>
+                <p>{circulatingSupply && selectedCommunity.symbol ? circulatingSupply + ' ' + selectedCommunity.symbol : <Loader class="loader"/>}</p>
+                <p>{clnReserve && <img src={clnCurrencyIcon}/>}{clnReserve ? clnReserve : <Loader class="loader"/>}</p>
                 <p>
                   <a href={`${this.props.etherscanUrl}address/${this.props.ui.activeMarker || selectedCommunity.address}`}
                     target='_blank'
                     name='assetId'
                     onClick={this.handleLinkClick}>
-                    {this.props.ui.activeMarker || selectedCommunity.address}
-                  </a>
+                      {this.props.ui.activeMarker || selectedCommunity.address || <Loader class="loader"/>}
+                    </a>
                 </p>
                 <p>
                   <a href={`${this.props.etherscanUrl}address/${selectedCommunity.mmAddress}`}
                     target='_blank'
                     name='marketMakerId'
                     onClick={this.handleLinkClick}>
-                    {selectedCommunity.mmAddress}
+                    {selectedCommunity.mmAddress || <Loader class="loader"/>}
                   </a>
                 </p>
               </div>
             </div>
           </div>
-          <div className='box'>
-            <div className='box-header'>COMMUNITY</div>
-            <div className='box-info column'>
-              <div className='box-data'>
-                <p className='description'>{(selectedCommunity.metadata && selectedCommunity.metadata.description) || 'loading'}</p>
+          <div className="box">
+            <div className="box-header">COMMUNITY</div>
+            <div className="box-info column">
+              <div className="box-data">
+                <p className="description">{selectedCommunity.metadata && selectedCommunity.metadata.description || <Loader class="loader"/>}</p>
               </div>
               <div className='separator' />
             </div>
@@ -207,13 +206,13 @@ class CommunitySidebar extends Component {
                     target='_blank'
                     name='website'
                     onClick={this.handleLinkClick}>
-                    {selectedCommunity.metadata && selectedCommunity.metadata.website}
+                    {(selectedCommunity.metadata && selectedCommunity.metadata.website) || <Loader class="loader"/>}
                   </a>
                 </p>
-                <p>{selectedCommunity.metadata && selectedCommunity.metadata.location.name}</p>
+                <p>{(selectedCommunity.metadata && selectedCommunity.metadata.location.name) || <Loader class="loader"/>}</p>
 
-                <div className='social flex'>
-                  {social}
+                <div className="social flex">
+                  {social || <Loader class="loader"/>}
                 </div>
               </div>
             </div>

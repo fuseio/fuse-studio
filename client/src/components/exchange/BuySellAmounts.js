@@ -59,7 +59,13 @@ class BuySellAmounts extends React.Component {
   handleCLNInput = (event) => {
     const cln = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
     const clnBalance = this.props.balances[this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork])
-    this.setState({cln: event.target.value, toCC: true, loading: true, maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'})
+    this.setState({
+      cln: event.target.value,
+      cc: '',
+      toCC: true,
+      loading: true,
+      maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'
+    })
     if (this.state.buyTab) {
       this.props.buyQuote(this.props.community.address, cln)
     } else {
@@ -70,7 +76,12 @@ class BuySellAmounts extends React.Component {
   handleCCInput = (event) => {
     const cc = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
 
-    this.setState({cc: event.target.value, toCC: false, loading: true})
+    this.setState({
+      cc: event.target.value,
+      cln: '',
+      toCC: false,
+      loading: true
+    })
     if (this.state.buyTab) {
       this.props.invertBuyQuote(this.props.community.address, cc)
     } else {
@@ -89,7 +100,7 @@ class BuySellAmounts extends React.Component {
     if (!isEqual(nextProps.buyQuotePair, this.props.buyQuotePair) || !isEqual(nextProps.sellQuotePair, this.props.sellQuotePair)) {
       if (this.state.buyTab && this.state.toCC) {
         this.setState({
-          cc: new BigNumber(nextProps.buyQuotePair.outAmount).div(1e18).toFormat(5, 1),
+          cc: new BigNumber(nextProps.buyQuotePair.outAmount).div(1e18).toFixed(5, 1),
           loading: false,
           minimum: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18)/priceLimit,
           priceLimit: priceLimit.toString(),
@@ -99,7 +110,7 @@ class BuySellAmounts extends React.Component {
       } else if (this.state.buyTab && !this.state.toCC) {
         //BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 4 }) //round up
         this.setState({
-          cln: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18).toFormat(5, 4),
+          cln: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18).toFixed(5),
           loading: false,
           minimum: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18)/priceLimit,
           priceLimit: priceLimit.toString(),
@@ -109,7 +120,7 @@ class BuySellAmounts extends React.Component {
       } else if (!this.state.buyTab && this.state.toCC) {
         //BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 4 }) //round up
         this.setState({
-          cc: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18).toFormat(5, 4),
+          cc: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18).toFixed(5),
           loading: false,
           minimum: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18)*priceLimit,
           priceLimit: priceLimit.toString(),
@@ -119,7 +130,7 @@ class BuySellAmounts extends React.Component {
       } else if (!this.state.buyTab && !this.state.toCC) {
         //BigNumber.config({ DECIMAL_PLACES: 5, ROUNDING_MODE: 1 }) //round down
         this.setState({
-          cln: new BigNumber(nextProps.sellQuotePair.outAmount).div(1e18).toFormat(5, 1),
+          cln: new BigNumber(nextProps.sellQuotePair.outAmount).div(1e18).toFixed(5, 1),
           loading: false,
           minimum: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18)*priceLimit,
           priceLimit: priceLimit.toString(),
@@ -258,7 +269,7 @@ class BuySellAmounts extends React.Component {
             <div className={sellTabClass} onClick={this.handleChangeTab.bind(this, 'sell')}>SELL</div>
           </div>
           <TextInput id="in-amount"
-            type="number"
+            
             className={buySellInputClass}
             placeholder={'Enter amount in ' + (this.state.buyTab ? 'CLN' : ccSymbol)}
             value={this.state.buyTab ? this.state.cln : this.state.cc}
@@ -275,7 +286,7 @@ class BuySellAmounts extends React.Component {
             {this.state.slippage ? <div>PRICE SLIPPAGE<img src={Info} />{this.state.slippage+'%'}</div> : null}
           </div>
           <TextInput id="out-amount"
-            type="number"
+            
             className="buy-sell-input"
             placeholder={'Enter amount in ' + (this.state.buyTab ? ccSymbol : 'CLN')}
             value={this.state.buyTab ? this.state.cc : this.state.cln}

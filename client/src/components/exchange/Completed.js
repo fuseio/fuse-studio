@@ -19,6 +19,10 @@ class Completed extends React.Component {
   render() {
     const { account, pendingTx } = this.props
     const status = (account && account.transactions && account.transactions[pendingTx] && !account.transactions[pendingTx].isFailed) ? 'SUCCESS' : 'FAILURE'
+    const statusClass = classNames({
+      status: true,
+      failure: status === 'FAILURE'
+    })
     return (
       <div className="transaction-in-progress">
         <h4>TRANSACTION COMPLETED</h4>
@@ -27,7 +31,7 @@ class Completed extends React.Component {
           <p>Your transaction is completed.</p>
           <div className="line"/>
           <h5>STATUS:</h5>
-          <p className="tx-link">{status}</p>
+          <p className={statusClass}>{status}</p>
           <h5>TRANSACTION HASH:</h5>
           <a href={`${this.props.etherscanUrl}tx/${pendingTx}`} target="_blank" className="tx-link">{pendingTx}</a>
         </div>
