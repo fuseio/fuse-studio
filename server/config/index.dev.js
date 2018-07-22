@@ -1,5 +1,5 @@
 module.exports = {
-  secret: process.env.COMMUNITY_API_SECRET,
+  secret: process.env.COMMUNITY_API_SECRET || 'secret',
   ipfs: {
     host: process.env.COMMUNITY_IPFS_HOST || 'qa-ipfs.colu.com',
     port: 443,
@@ -7,7 +7,7 @@ module.exports = {
     timeout: process.env.COMMUNITY_IPFS_TIMEOUT || 3000
   },
   mongo: {
-    uri: process.env.COMMUNITY_MONGO_URI,
+    uri: process.env.COMMUNITY_MONGO_URI || 'mongodb://localhost/CLN-community-app',
     options: {
       user: process.env.COMMUNITY_MONGO_USER,
       pass: process.env.COMMUNITY_MONGO_PASS,
