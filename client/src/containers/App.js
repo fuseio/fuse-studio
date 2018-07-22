@@ -47,9 +47,9 @@ class App extends Component {
       setInterval(() => {
         this.props.communityTokens.forEach((token) => token.mmAddress &&
           this.props.fetchMarketMakerData(token.address, token.mmAddress))
-        if (web3.eth.defaultAccount) {
-          this.props.updateBalances(web3.eth.defaultAccount)
-        }
+        // if (web3.eth.defaultAccount) {
+        //   this.props.updateBalances(web3.eth.defaultAccount)
+        // }
       }, CONFIG.api.marketsPolling)
     })
     this.setState({

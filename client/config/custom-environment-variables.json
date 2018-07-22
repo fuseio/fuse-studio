@@ -1,6 +1,7 @@
 {
   "web3": {
-    "provider": "COMMUNITY_WEB3_PROVIDER"
+    "provider": "COMMUNITY_WEB3_PROVIDER",
+    "websocketProvider": "COMMUNITY_WEB3_WEBSOCKET_PROVIDER"
   },
   "api": {
     "marketsPolling": "COMMUNITY_API_MARKETS_POLLING"

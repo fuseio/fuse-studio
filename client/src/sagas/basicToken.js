@@ -83,9 +83,9 @@ function * owner ({tokenAddress}) {
     }})
 }
 
-function * balanceOf ({tokenAddress, accountAddress}) {
+function * balanceOf ({tokenAddress, accountAddress, blockNumber}) {
   const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
-  const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(accountAddress).call)
+  const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(accountAddress).call, null, blockNumber)
 
   yield put({type: actions.BALANCE_OF.SUCCESS,
     tokenAddress,
