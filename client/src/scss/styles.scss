@@ -1853,6 +1853,11 @@ input[type="checkbox" i] {
 		height: 70px;
 		width: 70px;
 	}
+	&.input {
+		position: absolute;
+    	margin-top: -45px;
+    	left: 30px;
+	}
 }
 
 @keyframes appear {
