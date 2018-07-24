@@ -17,6 +17,15 @@ export const getCommunityAddresses = createSelector(
   ] : []
 )
 
+export const getTokenAddresses = createSelector(
+  getAddresses,
+  getCommunityAddresses,
+  (addresses, communityAddresses) => addresses ? [
+    ...communityAddresses,
+    addresses.ColuLocalNetwork
+  ] : []
+)
+
 export const getEtherscanUrl = createSelector(
   getNetworkType,
   networkType => networkType === 'main'

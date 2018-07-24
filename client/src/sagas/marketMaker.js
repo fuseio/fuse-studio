@@ -208,23 +208,6 @@ export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimati
     })
     return receipt
   }
-  yield put({
-    type: BALANCE_OF.REQUEST,
-    tokenAddress: clnToken.address,
-    address: web3.eth.defaultAccount
-  })
-
-  yield put({
-    type: BALANCE_OF.REQUEST,
-    tokenAddress: token.address,
-    address: web3.eth.defaultAccount
-  })
-
-  yield put({
-    type: actions.FETCH_MARKET_MAKER_DATA.REQUEST,
-    tokenAddress: token.address,
-    mmAddress: token.mmAddress
-  })
 
   yield put({type: actions.CHANGE.SUCCESS,
     tokenAddress: token.address,
@@ -349,13 +332,13 @@ function * estimateGasSellCc ({amount, tokenAddress, minReturn}) {
     }})
 }
 
-export function * fetchMarketMakerData ({tokenAddress, mmAddress}) {
+export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) {
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
 
   const calls = {
-    currentPrice: call(EllipseMarketMakerContract.methods.getCurrentPrice().call),
-    clnReserve: call(EllipseMarketMakerContract.methods.R1().call),
-    ccReserve: call(EllipseMarketMakerContract.methods.R2().call)
+    currentPrice: call(EllipseMarketMakerContract.methods.getCurrentPrice().call, null, blockNumber),
+    clnReserve: call(EllipseMarketMakerContract.methods.R1().call, null, blockNumber),
+    ccReserve: call(EllipseMarketMakerContract.methods.R2().call, null, blockNumber)
   }
 
   const response = yield all(calls)
@@ -367,7 +350,7 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress}) {
   })
 }
 
-export default function * rootSaga () {
+export default function * marketMakerSaga () {
   yield all([
     tryTakeEvery(actions.GET_CURRENT_PRICE, getCurrentPrice),
     tryTakeEvery(actions.CLN_RESERVE, clnReserve),

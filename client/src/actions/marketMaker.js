@@ -27,7 +27,7 @@ export const ESTIMATE_GAS_SELL_CC = createRequestTypes('ESTIMATE_GAS_SELL_CC')
 export const getCurrentPrice = (address, tokenAddress) => action(GET_CURRENT_PRICE.REQUEST, {address, tokenAddress})
 export const clnReserve = (address, tokenAddress) => action(CLN_RESERVE.REQUEST, {address, tokenAddress})
 export const ccReserve = (address, tokenAddress) => action(CC_RESERVE.REQUEST, {address, tokenAddress})
-export const fetchMarketMakerData = (tokenAddress, mmAddress) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {tokenAddress, mmAddress})
+export const fetchMarketMakerData = (tokenAddress, mmAddress, blockNumber) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {tokenAddress, mmAddress, blockNumber})
 
 export const quote = (fromToken, inAmount, toToken, isBuying) => action(QUOTE.REQUEST, {fromToken, inAmount, toToken, isBuying})
 export const invertQuote = (fromToken, inAmount, toToken) => action(INVERT_QUOTE.REQUEST, {fromToken, inAmount, toToken})

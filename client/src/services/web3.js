@@ -9,9 +9,8 @@ const config = {
   }
 }
 
-export const web3Socket = new Web3(
-  new Web3.providers.WebsocketProvider(CONFIG.web3.websocketProvider)
-)
+export const websocketProvider = new Web3.providers.WebsocketProvider('ws://localhost:8546')
+export const web3Socket = new Web3(websocketProvider)
 
 export const onWeb3Ready = init({config})
 

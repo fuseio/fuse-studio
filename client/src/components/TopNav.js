@@ -27,7 +27,7 @@ class TopNav extends Component {
   }
 
   showConnectMetamask = () => {
-    if (!this.props.web3.isMetaMask || !this.props.web3.account) {
+    if (!this.props.web3.isMetaMask || !this.props.web3.accountAddress) {
       this.props.uiActions.loadModal(LOGIN_MODAL)
       ReactGA.event({
         category: 'Top Bar',

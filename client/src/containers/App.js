@@ -8,13 +8,11 @@ import ModalContainer from 'containers/ModalContainer'
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 import { ERROR_MODAL } from 'constants/uiConstants'
-import {fetchClnContract, fetchCommunity, updateBalances} from 'actions/basicToken'
-import {fetchMarketMakerData} from 'actions/marketMaker'
+import {fetchClnContract, initializeCommunity} from 'actions/basicToken'
 import {getNetworkType, checkAccountChanged} from 'actions/web3'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
 import {getAddresses, getCommunityAddresses} from 'selectors/web3'
-import {getCommunityTokens} from 'selectors/basicToken'
 import {isNetworkSupported, isNetworkDesired} from 'utils/web3'
 import ReactGA from 'services/ga'
 import 'scss/styles.scss'
@@ -30,7 +28,7 @@ class App extends Component {
     if (nextProps.addresses !== this.props.addresses &&
         isNetworkSupported(nextProps.networkType)) {
       this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
-      nextProps.communityAddresses.forEach(this.props.fetchCommunity)
+      nextProps.communityAddresses.forEach(this.props.initializeCommunity)
     }
     if (nextProps.networkType !== this.props.networkType && !isNetworkDesired(nextProps.networkType)) {
       this.props.loadModal(ERROR_MODAL)
@@ -43,14 +41,6 @@ class App extends Component {
       if (web3.currentProvider.isMetaMask) {
         web3.currentProvider.publicConfigStore.on('update', this.props.checkAccountChanged)
       }
-
-      setInterval(() => {
-        this.props.communityTokens.forEach((token) => token.mmAddress &&
-          this.props.fetchMarketMakerData(token.address, token.mmAddress))
-        // if (web3.eth.defaultAccount) {
-        //   this.props.updateBalances(web3.eth.defaultAccount)
-        // }
-      }, CONFIG.api.marketsPolling)
     })
     this.setState({
       welcomeDone: window.localStorage.getItem('welcome'),
@@ -122,20 +112,16 @@ class App extends Component {
 const mapStateToProps = state => ({
   addresses: getAddresses(state),
   communityAddresses: getCommunityAddresses(state),
-  communityTokens: getCommunityTokens(state),
   networkType: state.web3.networkType,
-  web3: state.web3,
   ui: state.ui
 })
 
 export default connect(
   mapStateToProps, {
-    fetchMarketMakerData,
     fetchClnContract,
-    fetchCommunity,
+    initializeCommunity,
     getNetworkType,
     checkAccountChanged,
-    loadModal,
-    updateBalances
+    loadModal
   }
 )(App)

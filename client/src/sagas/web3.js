@@ -58,7 +58,7 @@ function * checkAccountChanged ({selectedAddress, networkVersion}) {
   }
 }
 
-export default function * rootSaga () {
+export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
     takeEvery(actions.CHECK_ACCOUNT_CHANGED.REQUEST, checkAccountChanged),

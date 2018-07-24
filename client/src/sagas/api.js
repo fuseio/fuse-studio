@@ -17,7 +17,7 @@ function * fetchMetadata ({protocol, hash, tokenAddress}) {
   })
 }
 
-export default function * rootSaga () {
+export default function * apiSaga () {
   yield all([
     takeEvery(actions.FETCH_METADATA.REQUEST, fetchMetadata)
   ])

@@ -4,7 +4,7 @@ import basicTokenSaga from './basicToken'
 import web3Saga from './web3'
 import apiSaga from './api'
 import marketMakerSaga from './marketMaker'
-import websocketSaga from './websocket'
+import subscriptionsSaga from './subscriptions'
 
 export default function * rootSaga () {
   yield all([
@@ -12,6 +12,6 @@ export default function * rootSaga () {
     fork(apiSaga),
     fork(web3Saga),
     fork(marketMakerSaga),
-    fork(websocketSaga)
+    fork(subscriptionsSaga)
   ])
 }

@@ -17,13 +17,11 @@ export const APPROVE = createRequestTypes('APPROVE')
 
 export const UPDATE_BALANCES = createRequestTypes('UPDATE_BALANCES')
 
-export const FETCH_COMMUNITY = createRequestTypes('FETCH_COMMUNITY')
 export const FETCH_COMMUNITY_TOKEN = createRequestTypes('FETCH_COMMUNITY_TOKEN')
+export const FETCH_COMMUNITY = createRequestTypes('FETCH_COMMUNITY')
+export const INITIALIZE_COMMUNITY = createRequestTypes('INITIALIZE_COMMUNITY')
 
-export const FETCH_COMMUNITY_CONTRACT = createRequestTypes('FETCH_COMMUNITY_CONTRACT')
 export const FETCH_CLN_CONTRACT = createRequestTypes('FETCH_CLN_CONTRACT')
-
-export const TRANSFER_EVENT = 'TRANSFER_EVENT'
 
 export const name = (tokenAddress) => basicTokenAction(NAME.REQUEST, {tokenAddress})
 export const symbol = (tokenAddress) => basicTokenAction(SYMBOL.REQUEST, {tokenAddress})
@@ -39,4 +37,7 @@ export const approve = (tokenAddress, spender, value) => basicTokenAction(APPROV
 export const updateBalances = (accountAddress) => action(UPDATE_BALANCES.REQUEST, {accountAddress})
 
 export const fetchCommunity = (tokenAddress) => basicTokenAction(FETCH_COMMUNITY.REQUEST, {tokenAddress})
+export const initializeCommunity = (tokenAddress) => action(INITIALIZE_COMMUNITY.REQUEST,
+  {tokenAddress})
+
 export const fetchClnContract = (tokenAddress) => basicTokenAction(FETCH_CLN_CONTRACT.REQUEST, {tokenAddress})

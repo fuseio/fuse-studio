@@ -1,10 +1,12 @@
-import { all, put, race, call, take, takeEvery, select } from 'redux-saga/effects'
+import { all, put, race, call, take, takeEvery, select, fork } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery} from './utils'
 import * as actions from 'actions/basicToken'
 import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {FETCH_METADATA} from 'actions/api'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/web3'
+import {subscribeToChange} from 'actions/subscriptions'
+
 import web3 from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
@@ -130,9 +132,6 @@ function * fetchCommunityToken ({tokenAddress}) {
       mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(tokenAddress).call)
     }
 
-    // wait untill web3 is ready
-    // yield onWeb3Ready
-
     const response = yield all(calls)
     response.isLocalCurrency = true
     response.address = tokenAddress
@@ -169,8 +168,15 @@ function * fetchCommunityToken ({tokenAddress}) {
 
 function * fetchCommunity ({tokenAddress}) {
   const tokenResponse = yield call(fetchCommunityToken, {tokenAddress})
-  yield call(fetchMarketMakerData, {tokenAddress, mmAddress: tokenResponse.mmAddress})
+  yield fork(fetchMarketMakerData, {tokenAddress, mmAddress: tokenResponse.mmAddress})
   yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, tokenAddress})
+  return tokenResponse
+}
+
+function * initializeCommunity ({tokenAddress}) {
+  const tokenResponse = yield call(fetchCommunity, {tokenAddress})
+  yield put(subscribeToChange(tokenResponse.address, tokenResponse.mmAddress))
+  yield entityPut({type: actions.INITIALIZE_COMMUNITY.SUCCESS, tokenAddress})
 }
 
 function * fetchClnContract ({tokenAddress}) {
@@ -216,7 +222,7 @@ export function * watchAccountChanged ({response}) {
   })
 }
 
-export default function * rootSaga () {
+export default function * basicTokenSaga () {
   yield all([
     tryTakeEvery(actions.NAME, name),
     tryTakeEvery(actions.SYMBOL, symbol),
@@ -230,6 +236,7 @@ export default function * rootSaga () {
     tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
     tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity),
     tryTakeEvery(actions.UPDATE_BALANCES, updateBalances),
+    tryTakeEvery(actions.INITIALIZE_COMMUNITY, initializeCommunity),
     takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged)
   ])
 }
