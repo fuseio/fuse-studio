@@ -14,10 +14,7 @@ let accountChannels = []
 
 function createSubscriptionChannel (subscription) {
   return eventChannel(emit => {
-    const dataHandler = (event) => {
-      debugger
-      emit(event)
-    }
+    const dataHandler = emit
 
     subscription.on('data', dataHandler)
 

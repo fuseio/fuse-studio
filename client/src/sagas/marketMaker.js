@@ -1,11 +1,10 @@
-import { all, call, put, select, takeLatest } from 'redux-saga/effects'
+import { all, call, put, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
 import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/marketMaker'
-import {BALANCE_OF} from 'actions/basicToken'
 import {fetchGasPrices} from 'actions/web3'
 import {getClnToken, getCommunity} from 'selectors/basicToken'
 import web3 from 'services/web3'

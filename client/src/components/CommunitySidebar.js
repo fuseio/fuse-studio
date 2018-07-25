@@ -46,6 +46,12 @@ class CommunitySidebar extends Component {
     this.props.isOpenForPublic(this.props.selectedCommunity.address)
   }
 
+  componentDidUpdate (prevProps) {
+    if (this.props.selectedCommunity.address !== prevProps.selectedCommunity.address) {
+      this.props.isOpenForPublic(this.props.selectedCommunity.address)
+    }
+  }
+
   onClickBuy = () => {
     if (this.props.selectedCommunity.isOpenForPublic) {
       ReactGA.event({
