@@ -17,5 +17,6 @@
   },
   "ui": {
     "debounce": 300
-  }
+  },
+  "debugTrace": true
 }

@@ -8,5 +8,6 @@
   },
   "ui": {
     "debounce": "COMMUNITY_UI_DEBOUNCE"
-  }
+  },
+  "debugTrace": "COMMUNITY_DEBUG_TRACE"
 }

@@ -10,5 +10,6 @@
     "gaOptions": {
       "testMode": false
     }
-  }
+  },
+  "debugTrace": false
 }
