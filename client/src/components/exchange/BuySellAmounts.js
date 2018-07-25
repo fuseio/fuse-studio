@@ -40,9 +40,9 @@ class BuySellAmounts extends React.Component {
   }
 
   next = () => {
-    const { buyTab, cln, cc, minimum, priceLimit, priceChange, marketMakerActions, uiActions } = this.state
-    const { community } = this.props
-    
+    const { buyTab, cln, cc, minimum, priceLimit, priceChange } = this.state
+    const { community, marketMakerActions, uiActions } = this.props
+
     if (buyTab) {
       marketMakerActions.estimateGasBuyCc(community.address, new BigNumber(cln).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
     } else {
