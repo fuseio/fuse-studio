@@ -4,7 +4,7 @@ import utils from 'web3-utils'
 
 import * as actions from 'actions/subscriptions'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/web3'
-import {BALANCE_OF} from 'actions/basicToken'
+import {BALANCE_OF} from 'actions/accounts'
 import {fetchMarketMakerData} from 'actions/marketMaker'
 import {web3Socket, websocketProvider} from 'services/web3'
 import {getTokenAddresses} from 'selectors/web3'

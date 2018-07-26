@@ -4,7 +4,9 @@
     "websocketProvider": "COMMUNITY_WEB3_WEBSOCKET_PROVIDER"
   },
   "api": {
-    "marketsPolling": "COMMUNITY_API_MARKETS_POLLING"
+    "marketsPolling": "COMMUNITY_API_MARKETS_POLLING",
+    "retryTimeout": "COMMUNITY_API_RETRY_TIMEOUT",
+    "retryCount": "COMMUNITY_API_RETRY_COUNT"
   },
   "ui": {
     "debounce": "COMMUNITY_UI_DEBOUNCE"
