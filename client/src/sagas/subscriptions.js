@@ -19,7 +19,6 @@ function createSubscriptionChannel (subscription) {
     subscription.on('data', dataHandler)
 
     subscription.on('error', (error) => {
-      debugger
       emit(error)
     })
     const unsubscribe = () => {

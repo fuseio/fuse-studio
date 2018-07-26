@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux'
 
 import basicToken from './basicToken'
-import currencyFactory from './currencyFactory'
 import marketMaker from './marketMaker'
 import accounts from './accounts'
 import ui from './uiReducer'
@@ -12,7 +11,6 @@ import errors from './errors'
 const rootReducer = combineReducers({
   ui,
   tokens: basicToken,
-  currencyFactory,
   marketMaker,
   web3,
   errors,
