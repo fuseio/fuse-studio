@@ -1,18 +1,16 @@
-import { all, put, race, call, take, takeEvery, select, fork } from 'redux-saga/effects'
+import { all, put, race, call, take, select, fork } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery} from './utils'
 import * as actions from 'actions/basicToken'
 import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {FETCH_METADATA} from 'actions/api'
-import {CHECK_ACCOUNT_CHANGED} from 'actions/web3'
 import {subscribeToChange} from 'actions/subscriptions'
 
 import web3 from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
-import {getNetworkType, getAddresses, getCommunityAddresses} from 'selectors/web3'
+import {getNetworkType} from 'selectors/web3'
 import { delay } from 'redux-saga'
-import ReactGA from 'services/ga'
 
 const entityPut = createEntityPut('basicToken')
 
@@ -83,36 +81,6 @@ function * owner ({tokenAddress}) {
     response: {
       owner
     }})
-}
-
-function * balanceOf ({tokenAddress, accountAddress, blockNumber}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
-  const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(accountAddress).call, null, blockNumber)
-
-  yield put({type: actions.BALANCE_OF.SUCCESS,
-    tokenAddress,
-    accountAddress,
-    response: {
-      balanceOf
-    }})
-}
-
-function * transfer ({tokenAddress, to, value}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
-  const receipt = yield ColuLocalNetworkContract.methods.transfer(to, value).send({
-    from: web3.eth.defaultAccount
-  })
-  yield entityPut({type: actions.BALANCE_OF.REQUEST, accountAddress: receipt.from, tokenAddress})
-  yield entityPut({type: actions.TRANSFER.SUCCESS, receipt})
-}
-
-function * approve ({tokenAddress, spender, value}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
-  const receipt = yield ColuLocalNetworkContract.methods.approve(spender, value).send({
-    from: web3.eth.defaultAccount
-  })
-
-  yield entityPut({type: actions.APPROVE.REQUEST, address: receipt.from})
 }
 
 function * fetchCommunityToken ({tokenAddress}) {
@@ -192,33 +160,10 @@ function * fetchClnContract ({tokenAddress}) {
   const response = yield all(calls)
   response.isLocalCurrency = false
   response.address = tokenAddress
-  ReactGA.event({
-    category: 'Metamask',
-    action: 'CLN balance',
-    label: response.balanceOf > 0 ? 'Yes' : 'No'
-  })
 
   yield entityPut({type: actions.FETCH_CLN_CONTRACT.SUCCESS,
     tokenAddress,
     response
-  })
-}
-
-function * updateBalances ({accountAddress}) {
-  const addresses = yield select(getAddresses)
-  const communityAddresses = yield select(getCommunityAddresses)
-  if (addresses) {
-    yield put({type: actions.BALANCE_OF.REQUEST, tokenAddress: addresses.ColuLocalNetwork, accountAddress})
-    for (let communityAddress of communityAddresses) {
-      yield put({type: actions.BALANCE_OF.REQUEST, tokenAddress: communityAddress, accountAddress})
-    }
-  }
-}
-
-export function * watchAccountChanged ({response}) {
-  yield put({
-    type: actions.UPDATE_BALANCES.REQUEST,
-    accountAddress: response.accountAddress
   })
 }
 
@@ -230,13 +175,8 @@ export default function * basicTokenSaga () {
     tryTakeEvery(actions.TOKEN_URI, tokenURI),
     tryTakeEvery(actions.SET_TOKEN_URI, setTokenURI),
     tryTakeEvery(actions.OWNER, owner),
-    tryTakeEvery(actions.BALANCE_OF, balanceOf),
-    tryTakeEvery(actions.TRANSFER, transfer),
-    tryTakeEvery(actions.APPROVE, approve),
     tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
     tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity),
-    tryTakeEvery(actions.UPDATE_BALANCES, updateBalances),
-    tryTakeEvery(actions.INITIALIZE_COMMUNITY, initializeCommunity),
-    takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged)
+    tryTakeEvery(actions.INITIALIZE_COMMUNITY, initializeCommunity)
   ])
 }

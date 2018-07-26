@@ -1,5 +1,5 @@
-import * as actions from 'actions/marketMaker'
-import {BALANCE_OF} from 'actions/basicToken'
+import {CHANGE} from 'actions/marketMaker'
+import * as actions from 'actions/accounts'
 
 const initialAccount = {
   balances: {},
@@ -8,7 +8,7 @@ const initialAccount = {
 }
 
 const handlers = {
-  [actions.CHANGE.PENDING]: (state, action) => {
+  [CHANGE.PENDING]: (state, action) => {
     const transactionHash = action.response.transactionHash
     const transactions = {...state.transactions,
       [transactionHash]: {
@@ -17,7 +17,7 @@ const handlers = {
       }}
     return {...state, transactions}
   },
-  [actions.CHANGE.SUCCESS]: (state, action) => {
+  [CHANGE.SUCCESS]: (state, action) => {
     const receipt = action.response.receipt
     const transactionHash = receipt.transactionHash
     const transactions = {...state.transactions,
@@ -28,7 +28,7 @@ const handlers = {
     }
     return {...state, transactions}
   },
-  [actions.CHANGE.FAILURE]: (state, action) => {
+  [CHANGE.FAILURE]: (state, action) => {
     if (!action.response) {
       return state
     }
@@ -43,7 +43,7 @@ const handlers = {
     }
     return {...state, transactions}
   },
-  [BALANCE_OF.SUCCESS]: (state, action) => {
+  [actions.BALANCE_OF.SUCCESS]: (state, action) => {
     const balances = {...state.balances, [action.tokenAddress]: action.response.balanceOf}
     return {...state, balances}
   }

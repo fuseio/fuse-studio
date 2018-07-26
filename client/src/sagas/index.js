@@ -5,6 +5,7 @@ import web3Saga from './web3'
 import apiSaga from './api'
 import marketMakerSaga from './marketMaker'
 import subscriptionsSaga from './subscriptions'
+import accountsSaga from './accounts'
 
 export default function * rootSaga () {
   yield all([
@@ -12,6 +13,7 @@ export default function * rootSaga () {
     fork(apiSaga),
     fork(web3Saga),
     fork(marketMakerSaga),
-    fork(subscriptionsSaga)
+    fork(subscriptionsSaga),
+    fork(accountsSaga)
   ])
 }

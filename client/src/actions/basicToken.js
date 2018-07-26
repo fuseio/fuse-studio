@@ -11,12 +11,6 @@ export const TOKEN_URI = createRequestTypes('TOKEN_URI')
 export const SET_TOKEN_URI = createRequestTypes('SET_TOKEN_URI')
 export const OWNER = createRequestTypes('OWNER')
 
-export const BALANCE_OF = createRequestTypes('BALANCE_OF')
-export const TRANSFER = createRequestTypes('TRANSFER')
-export const APPROVE = createRequestTypes('APPROVE')
-
-export const UPDATE_BALANCES = createRequestTypes('UPDATE_BALANCES')
-
 export const FETCH_COMMUNITY_TOKEN = createRequestTypes('FETCH_COMMUNITY_TOKEN')
 export const FETCH_COMMUNITY = createRequestTypes('FETCH_COMMUNITY')
 export const INITIALIZE_COMMUNITY = createRequestTypes('INITIALIZE_COMMUNITY')
@@ -29,12 +23,6 @@ export const totalSupply = (tokenAddress) => basicTokenAction(TOTAL_SUPPLY.REQUE
 export const tokenURI = (tokenAddress) => basicTokenAction(TOKEN_URI.REQUEST, {tokenAddress})
 export const setTokenURI = (tokenAddress, tokenURI) => basicTokenAction(SET_TOKEN_URI.REQUEST, {tokenAddress, tokenURI})
 export const owner = (tokenAddress) => basicTokenAction(OWNER.REQUEST, {tokenAddress})
-
-export const balanceOf = (tokenAddress, accountAddress) => basicTokenAction(BALANCE_OF.REQUEST, {tokenAddress, accountAddress})
-export const transfer = (tokenAddress, to, value) => basicTokenAction(TRANSFER.REQUEST, {tokenAddress, to, value})
-export const approve = (tokenAddress, spender, value) => basicTokenAction(APPROVE.REQUEST, {tokenAddress, spender, value})
-
-export const updateBalances = (accountAddress) => action(UPDATE_BALANCES.REQUEST, {accountAddress})
 
 export const fetchCommunity = (tokenAddress) => basicTokenAction(FETCH_COMMUNITY.REQUEST, {tokenAddress})
 export const initializeCommunity = (tokenAddress) => action(INITIALIZE_COMMUNITY.REQUEST,
