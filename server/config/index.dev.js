@@ -2,8 +2,8 @@ module.exports = {
   secret: process.env.COMMUNITY_API_SECRET || 'secret',
   ipfs: {
     host: process.env.COMMUNITY_IPFS_HOST || 'qa-ipfs.colu.com',
-    port: 443,
-    protocol: 'https',
+    port: process.env.COMMUNITY_IPFS_PORT || 443,
+    protocol: process.env.COMMUNITY_IPFS_PROTOCOL || 'https',
     timeout: process.env.COMMUNITY_IPFS_TIMEOUT || 3000
   },
   mongo: {
