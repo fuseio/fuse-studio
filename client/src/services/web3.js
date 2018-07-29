@@ -10,6 +10,7 @@ const config = {
 }
 
 export const websocketProvider = new Web3.providers.WebsocketProvider(CONFIG.web3.websocketProvider)
+
 export const web3Socket = new Web3(websocketProvider)
 
 export const onWeb3Ready = init({config})
