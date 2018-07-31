@@ -26,7 +26,7 @@ class BuySellAmounts extends React.Component {
   }
 
   componentWillMount () {
-    const currentPrice = this.props.community && this.props.community.currentPrice && new BigNumber(this.props.community.currentPrice.toString()).multipliedBy(1e18)
+    const currentPrice = this.props.community.currentPrice && new BigNumber(this.props.community.currentPrice.toString()).multipliedBy(1e18)
 
     this.setState({
       priceLimit: this.props.priceLimit || currentPrice.multipliedBy(1 + this.state.priceChange / 100).toString(),
@@ -45,8 +45,8 @@ class BuySellAmounts extends React.Component {
       marketMakerActions.estimateGasSellCc(community.address, new BigNumber(cc).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
     }
 
-    uiActions.setBuyStage(2)
     uiActions.setBuySellAmounts({
+      buyStage: 2,
       ccAddress: community.address,
       cln: cln.toString(),
       cc: cc.toString(),
@@ -59,99 +59,98 @@ class BuySellAmounts extends React.Component {
 
   handleCLNInput = (event) => {
     const { isBuy, community, balances, addresses, marketMakerActions } = this.props
-    const cln = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
+    const cln = new BigNumber(event.target.value).multipliedBy(1e18)
     const clnBalance = balances[addresses.ColuLocalNetwork] && new BigNumber(balances[addresses.ColuLocalNetwork])
-    const currentPrice = new BigNumber(community.currentPrice.toString()).multipliedBy(1e18).toFixed(5)
 
-    if (event.target.value !== this.state.cln) {
-      this.setState({
-        cln: event.target.value,
-        cc: '',
-        toCC: true,
-        price: event.target.value === 0 ? currentPrice : this.state.price,
-        slippage: 0,
-        loading: event.target.value !== 0,
-        maxAmountError: cln && cln.isGreaterThan(clnBalance) && 'Insufficient Funds'
-      })
-      if (isBuy && event.target.value !== 0) {
-        marketMakerActions.buyQuote(community.address, cln)
-      } else if (event.target.value !== 0) {
-        marketMakerActions.invertSellQuote(community.address, cln)
-      }
+    this.setState({
+      cln: event.target.value,
+      cc: '',
+      toCC: true,
+      loading: true,
+      maxAmountError: cln.isGreaterThan(clnBalance) ? 'Insufficient Funds' : undefined
+    })
+    if (isBuy) {
+      marketMakerActions.buyQuote(community.address, cln)
+    } else {
+      marketMakerActions.invertSellQuote(community.address, cln)
     }
   }
 
   handleCCInput = (event) => {
     const { isBuy, community, marketMakerActions } = this.props
-    const cc = event.target.value ? new BigNumber(event.target.value).multipliedBy(1e18) : 0
-    const currentPrice = new BigNumber(community.currentPrice.toString()).multipliedBy(1e18).toFixed(5)
+    const cc = new BigNumber(event.target.value).multipliedBy(1e18)
 
-    if (event.target.value !== this.state.cc) {
-      this.setState({
-        cc: event.target.value,
-        cln: '',
-        toCC: false,
-        price: event.target.value === 0 ? currentPrice : this.state.price,
-        slippage: 0,
-        loading: event.target.value !== 0
-      })
-      if (isBuy && event.target.value !== 0) {
-        marketMakerActions.invertBuyQuote(community.address, cc)
-      } else if (event.target.value !== 0) {
-        marketMakerActions.sellQuote(community.address, cc)
-      }
+    this.setState({
+      cc: event.target.value,
+      cln: '',
+      toCC: false,
+      loading: true
+    })
+
+    if (isBuy) {
+      marketMakerActions.invertBuyQuote(community.address, cc)
+    } else {
+      marketMakerActions.sellQuote(community.address, cc)
     }
   }
 
+  price = () => {
+    return new BigNumber(this.props.quotePair.price ? this.props.quotePair.price.toString()
+      : this.props.community.currentPrice.toString())
+  }
+
   componentWillReceiveProps = (nextProps, nextState) => {
-    const { isBuy, community, quotePair, balances, addresses, buyQuotePair, sellQuotePair } = this.props
+    if (isEqual(nextProps.quotePair, this.props.quotePair)) {
+      return
+    }
+
+    const { isBuy, community, balances, addresses } = this.props
     const { toCC, priceChange } = this.state
-    const price = quotePair.price ? quotePair.price : new BigNumber(community && community.currentPrice && community.currentPrice.toString()).multipliedBy(1e18)
-    const priceLimit = quotePair.price ? price * (1 + priceChange / 100) : price.multipliedBy(1 + priceChange / 100)
+    const priceLimit = this.price().multipliedBy(1 + priceChange / 100)
     const clnBalance = balances[addresses.ColuLocalNetwork] && new BigNumber(balances[addresses.ColuLocalNetwork])
-    const ccBalance = community && balances[community.address] && new BigNumber(balances[community.address])
-    if (!isEqual(nextProps.buyQuotePair, buyQuotePair) || !isEqual(nextProps.sellQuotePair, sellQuotePair)) {
-      if (isBuy && toCC) {
-        this.setState({
-          cc: new BigNumber(nextProps.buyQuotePair.outAmount).div(1e18).toFixed(5, 1), // round down
-          loading: false,
-          price: nextProps.buyQuotePair.price,
-          minimum: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18) / priceLimit,
-          priceLimit: priceLimit.toString(),
-          slippage: nextProps.buyQuotePair.slippage && new BigNumber(nextProps.buyQuotePair.slippage).multipliedBy(100).toFixed(5),
-          maxAmountError: nextProps.buyQuotePair.inAmount && new BigNumber(nextProps.buyQuotePair.inAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
-        })
-      } else if (isBuy && !toCC) {
-        this.setState({
-          cln: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18).toFixed(5), // round up
-          price: nextProps.buyQuotePair.price,
-          loading: false,
-          minimum: new BigNumber(nextProps.buyQuotePair.inAmount).div(1e18) / priceLimit,
-          priceLimit: priceLimit.toString(),
-          slippage: nextProps.buyQuotePair.slippage && new BigNumber(nextProps.buyQuotePair.slippage).multipliedBy(100).toFixed(5),
-          maxAmountError: nextProps.buyQuotePair.inAmount && new BigNumber(nextProps.buyQuotePair.inAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
-        })
-      } else if (!isBuy && toCC) {
-        this.setState({
-          cc: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18).toFixed(5), // round up
-          price: nextProps.sellQuotePair.price,
-          loading: false,
-          minimum: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18) * priceLimit,
-          priceLimit: priceLimit.toString(),
-          slippage: nextProps.sellQuotePair.slippage && new BigNumber(nextProps.sellQuotePair.slippage).multipliedBy(100).toFixed(5),
-          maxAmountError: nextProps.sellQuotePair.inAmount && new BigNumber(nextProps.sellQuotePair.inAmount).isGreaterThan(ccBalance) && 'Insufficient Funds'
-        })
-      } else if (!isBuy && !toCC) {
-        this.setState({
-          cln: new BigNumber(nextProps.sellQuotePair.outAmount).div(1e18).toFixed(5, 1), // round down
-          price: nextProps.sellQuotePair.price,
-          loading: false,
-          minimum: new BigNumber(nextProps.sellQuotePair.inAmount).div(1e18) * priceLimit,
-          priceLimit: priceLimit.toString(),
-          slippage: nextProps.sellQuotePair.slippage && new BigNumber(nextProps.sellQuotePair.slippage).multipliedBy(100).toFixed(5),
-          maxAmountError: nextProps.sellQuotePair.inAmount && new BigNumber(nextProps.sellQuotePair.inAmount).isGreaterThan(ccBalance) && 'Insufficient Funds'
-        })
-      }
+    const ccBalance = balances[community.address] && new BigNumber(balances[community.address])
+    const slippage = new BigNumber(nextProps.quotePair.slippage).multipliedBy(100).toFixed(5)
+
+    if (isBuy && toCC) {
+      this.setState({
+        cc: new BigNumber(nextProps.quotePair.outAmount).div(1e18).toFixed(5, 1), // round down
+        loading: false,
+        price: this.price(),
+        minimum: new BigNumber(nextProps.quotePair.inAmount).div(1e18) / priceLimit,
+        priceLimit: priceLimit.toString(),
+        slippage,
+        maxAmountError: nextProps.quotePair.inAmount && new BigNumber(nextProps.quotePair.inAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
+      })
+    } else if (isBuy && !toCC) {
+      this.setState({
+        cln: new BigNumber(nextProps.quotePair.inAmount).div(1e18).toFixed(5), // round up
+        price: this.price(),
+        loading: false,
+        minimum: new BigNumber(nextProps.quotePair.inAmount).div(1e18) / priceLimit,
+        priceLimit: priceLimit.toString(),
+        slippage,
+        maxAmountError: nextProps.quotePair.inAmount && new BigNumber(nextProps.quotePair.inAmount).isGreaterThan(clnBalance) && 'Insufficient Funds'
+      })
+    } else if (!isBuy && toCC) {
+      this.setState({
+        cc: new BigNumber(nextProps.quotePair.inAmount).div(1e18).toFixed(5), // round up
+        price: this.price(),
+        loading: false,
+        minimum: new BigNumber(nextProps.quotePair.inAmount).div(1e18) * priceLimit,
+        priceLimit: priceLimit.toString(),
+        slippage,
+        maxAmountError: nextProps.quotePair.inAmount && new BigNumber(nextProps.quotePair.inAmount).isGreaterThan(ccBalance) && 'Insufficient Funds'
+      })
+    } else if (!isBuy && !toCC) {
+      this.setState({
+        cln: new BigNumber(nextProps.quotePair.outAmount).div(1e18).toFixed(5, 1), // round down
+        price: this.price(),
+        loading: false,
+        minimum: new BigNumber(nextProps.quotePair.inAmount).div(1e18) * priceLimit,
+        priceLimit: priceLimit.toString(),
+        slippage,
+        maxAmountError: nextProps.quotePair.inAmount && new BigNumber(nextProps.quotePair.inAmount).isGreaterThan(ccBalance) && 'Insufficient Funds'
+      })
     }
   }
 
@@ -207,6 +206,7 @@ class BuySellAmounts extends React.Component {
       priceLimit
     })
   }
+
   handlePriceChange = (event) => {
     const { cln, cc } = this.state
     const { isBuy, community, quotePair } = this.props
@@ -225,6 +225,7 @@ class BuySellAmounts extends React.Component {
       priceLimit: priceLimit.toString()
     })
   }
+
   handlePriceLimit = (event) => {
     const { cln, cc } = this.state
     const { isBuy, community, quotePair } = this.props
@@ -269,11 +270,11 @@ class BuySellAmounts extends React.Component {
   render () {
     const { isBuy, community, balances, addresses } = this.props
     const { advanced, maxAmountError, cln, cc, price, slippage, minimum, priceChange, priceLimit, loading, toCC } = this.state
-    const ccSymbol = community && community.symbol
-    const ccPrice = community && community.currentPrice
-    const formattedPrice = price
+    const ccSymbol = community.symbol
+    const ccPrice = community.currentPrice
     const clnBalance = balances[addresses.ColuLocalNetwork] && new BigNumber(balances[addresses.ColuLocalNetwork]).div(1e18).toFormat(5, 1)
     const ccBalance = community && balances[community.address] && new BigNumber(balances[community.address]).div(1e18).toFormat(5, 1)
+
     const buyTabClass = classNames({
       'buy-tab': true,
       'active': isBuy
@@ -294,6 +295,7 @@ class BuySellAmounts extends React.Component {
       'buy-sell-input': true,
       'error': maxAmountError
     })
+
     return (
       <div>
         <div className='buy-sell-top'>
@@ -315,7 +317,7 @@ class BuySellAmounts extends React.Component {
         <div className='arrows'><img src={Arrows} /></div>
         <div className='buy-sell-bottom'>
           <div className='info-price'>
-            <div className='cc-to-cln'>{`1 ${ccSymbol} = ${formattedPrice} CLN`}</div>
+            <div className='cc-to-cln'>{`1 ${ccSymbol} = ${price} CLN`}</div>
             {slippage ? <div>PRICE SLIPPAGE<img src={Info} />{`${slippage}%`}</div> : null}
           </div>
           <TextInput id='out-amount'
@@ -373,8 +375,6 @@ const mapStateToProps = (state, props) => ({
   addresses: getAddresses(state),
   balances: getBalances(state),
   quotePair: state.marketMaker.quotePair || {},
-  buyQuotePair: state.marketMaker.buyQuote || {},
-  sellQuotePair: state.marketMaker.sellQuote || {},
   ...props
 })
 

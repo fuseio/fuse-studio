@@ -39,10 +39,10 @@ export const closeSignup = (close) => {
   }
 }
 
-export const setBuyStage = (stage) => {
+export const setBuyStage = (buyStage) => {
   return {
     type: BUY_STAGE,
-    stage
+    buyStage
   }
 }
 

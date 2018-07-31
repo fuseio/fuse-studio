@@ -19,7 +19,7 @@ export default (state = {
     case ui.SIGNUP_CLOSE:
       return {...state, signupClose: action.close}
     case ui.BUY_STAGE:
-      return {...state, buyStage: action.stage}
+      return {...state, modalProps: {...state.modalProps, buyStage: action.buyStage}}
     case ui.BUY_SELL_AMOUNTS:
       return { ...state, modalProps: {...state.modalProps, ...action.payload} }
     case ui.RESET_EXCHANGE:
