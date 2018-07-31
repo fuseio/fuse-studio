@@ -6,8 +6,6 @@ import * as uiActions from 'actions/ui'
 import * as marketMakerActions from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
 import { buySell } from 'constants/uiConstants'
-import {getBalances} from 'selectors/accounts'
-import {getAddresses} from 'selectors/web3'
 
 import TextInput from 'components/TextInput'
 import Loader from 'components/Loader'
@@ -17,12 +15,15 @@ import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
 
 class BuySellAmounts extends React.Component {
-  state = {
-    toCC: true,
-    cln: this.props.cln || '',
-    cc: this.props.cc || '',
-    advanced: false,
-    priceChange: this.props.priceChange || (this.props.isBuy === true || this.props.isBuy !== false) ? buySell.DEFAULT_PRICE_CHANGE : buySell.DEFAULT_PRICE_CHANGE * (-1) // in percent
+  constructor (props) {
+    super(props)
+    this.state = {
+      toCC: true,
+      advanced: false,
+      cln: this.props.cln || '',
+      cc: this.props.cc || '',
+      priceChange: this.props.priceChange || (this.props.isBuy === true ? buySell.DEFAULT_PRICE_CHANGE : buySell.DEFAULT_PRICE_CHANGE * (-1)) // in percent
+    }
   }
 
   componentWillMount () {
@@ -58,9 +59,8 @@ class BuySellAmounts extends React.Component {
   }
 
   handleCLNInput = (event) => {
-    const { isBuy, community, balances, addresses, marketMakerActions } = this.props
+    const { isBuy, community, marketMakerActions, clnBalance } = this.props
     const cln = new BigNumber(event.target.value).multipliedBy(1e18)
-    const clnBalance = balances[addresses.ColuLocalNetwork] && new BigNumber(balances[addresses.ColuLocalNetwork])
 
     this.setState({
       cln: event.target.value,
@@ -104,11 +104,9 @@ class BuySellAmounts extends React.Component {
       return
     }
 
-    const { isBuy, community, balances, addresses } = this.props
+    const { isBuy, clnBalance, ccBalance } = this.props
     const { toCC, priceChange } = this.state
     const priceLimit = this.price().multipliedBy(1 + priceChange / 100)
-    const clnBalance = balances[addresses.ColuLocalNetwork] && new BigNumber(balances[addresses.ColuLocalNetwork])
-    const ccBalance = balances[community.address] && new BigNumber(balances[community.address])
     const slippage = new BigNumber(nextProps.quotePair.slippage).multipliedBy(100).toFixed(5)
 
     if (isBuy && toCC) {
@@ -244,10 +242,11 @@ class BuySellAmounts extends React.Component {
     })
   }
   handleClickMax = () => {
-    const { isBuy, community, balances, addresses, marketMakerActions } = this.props
+    const { isBuy, community, marketMakerActions } = this.props
     const { cln, cc } = this.state
-    const clnBalance = balances[addresses.ColuLocalNetwork] && new BigNumber(balances[addresses.ColuLocalNetwork])
-    const ccBalance = community && balances[community.address] && new BigNumber(balances[community.address])
+    const clnBalance = new BigNumber(this.props.clnBalance)
+    const ccBalance = new BigNumber(this.props.ccBalance)
+
     if (isBuy && cln.toString() !== clnBalance.div(1e18).toString()) {
       this.setState({
         cln: clnBalance.div(1e18),
@@ -286,12 +285,12 @@ class BuySellAmounts extends React.Component {
   )
 
   render () {
-    const { isBuy, community, balances, addresses } = this.props
+    const { isBuy, community } = this.props
     const { advanced, maxAmountError, cln, cc, price, slippage, minimum, priceChange, priceLimit, loading, toCC } = this.state
     const ccSymbol = community.symbol
     const ccPrice = community.currentPrice
-    const clnBalance = balances[addresses.ColuLocalNetwork] && new BigNumber(balances[addresses.ColuLocalNetwork]).div(1e18).toFormat(5, 1)
-    const ccBalance = community && balances[community.address] && new BigNumber(balances[community.address]).div(1e18).toFormat(5, 1)
+    const clnBalance = new BigNumber(this.props.clnBalance).div(1e18).toFormat(5, 1)
+    const ccBalance = new BigNumber(this.props.ccBalance).div(1e18).toFormat(5, 1)
 
     const buyTabClass = classNames({
       'buy-tab': true,
@@ -388,8 +387,6 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  addresses: getAddresses(state),
-  balances: getBalances(state),
   quotePair: state.marketMaker.quotePair || {},
   ...props
 })

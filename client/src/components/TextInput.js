@@ -89,11 +89,11 @@ const TextInput = ({
   }
   return (
     <div className={classes}>
-      <Label htmlFor={id} error={error}>
+      <Label htmlFor={id} error={error || ''}>
         {label}
       </Label>
       {field}
-      <InputFeedback error={error} />
+      <InputFeedback error={error || ''} />
     </div>
   )
 }

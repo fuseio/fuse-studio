@@ -10,6 +10,7 @@ import OpenMetamask from 'components/exchange/OpenMetamask'
 import Pending from 'components/exchange/Pending'
 import Completed from 'components/exchange/Completed'
 import {getSelectedCommunity} from 'selectors/basicToken'
+import {getSelectedCommunityBalance, getClnBalance} from 'selectors/accounts'
 import withEither from 'containers/withEither'
 
 const EXCHANGE_COMPONENTS = {
@@ -44,7 +45,9 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  community: getSelectedCommunity(state)
+  community: getSelectedCommunity(state),
+  ccBalance: getSelectedCommunityBalance(state),
+  clnBalance: getClnBalance(state)
 })
 
 const withCommunity = withEither(props => !(props.community && props.community.isMarketMakerLoaded),
