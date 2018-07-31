@@ -25,7 +25,7 @@ class BuySellAmounts extends React.Component {
     cln: this.props.cln || '',
     cc: this.props.cc || '',
     advanced: false,
-    priceChange: this.props.priceChange || (this.props.isBuy === true || this.props.isBuy !== false) ? buySell.DEFAULT_PRICE_CHANGE : buySell.DEFAULT_PRICE_CHANGE*(-1), //in percent
+    priceChange: this.props.priceChange || (this.props.isBuy === true || this.props.isBuy !== false) ? buySell.DEFAULT_PRICE_CHANGE : buySell.DEFAULT_PRICE_CHANGE * (-1) // in percent
   }
 
   componentWillMount () {
@@ -35,7 +35,7 @@ class BuySellAmounts extends React.Component {
       buyTab: this.props.isBuy,
       priceLimit: this.props.priceLimit || currentPrice.multipliedBy(1 + this.state.priceChange/100).toString(),
       minimum: this.props.minimum || '',
-      price: currentPrice.toFixed(5),
+      price: currentPrice.toFixed(5)
     })
   }
 
@@ -368,14 +368,13 @@ const mapStateToProps = (state, props) => ({
   quotePair: state.marketMaker.quotePair || {},
   buyQuotePair: state.marketMaker.buyQuote || {},
   sellQuotePair: state.marketMaker.sellQuote || {},
-  web3: state.web3,
-  isBuy: state.ui.modalProps.isBuy,
   cln: state.ui.cln,
   cc: state.ui.cc,
   priceChange: state.ui.priceChange,
   priceLimit: state.ui.priceLimit,
   minimum: state.ui.minimum,
-  clnToken: getClnToken(state)
+  clnToken: getClnToken(state),
+  ...props
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuySellAmounts)
