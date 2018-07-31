@@ -8,15 +8,15 @@ import {getAccount} from 'selectors/accounts'
 import Vimage from 'images/v.png'
 
 class Completed extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    
+  componentWillReceiveProps (nextProps) {
+
   }
 
   done = () => {
     this.props.uiActions.hideModal()
   }
 
-  render() {
+  render () {
     const { account, pendingTx } = this.props
     const status = (account && account.transactions && account.transactions[pendingTx] && !account.transactions[pendingTx].isFailed) ? 'SUCCESS' : 'FAILURE'
     const statusClass = classNames({
@@ -24,16 +24,16 @@ class Completed extends React.Component {
       failure: status === 'FAILURE'
     })
     return (
-      <div className="transaction-in-progress">
+      <div className='transaction-in-progress'>
         <h4>TRANSACTION COMPLETED</h4>
-        <div className="summary-prices-wrapper">
-          <img className="metamask-icon" src={Vimage} />
+        <div className='summary-prices-wrapper'>
+          <img className='metamask-icon' src={Vimage} />
           <p>Your transaction is completed.</p>
-          <div className="line"/>
+          <div className='line' />
           <h5>STATUS:</h5>
           <p className={statusClass}>{status}</p>
           <h5>TRANSACTION HASH:</h5>
-          <a href={`${this.props.etherscanUrl}tx/${pendingTx}`} target="_blank" className="tx-link">{pendingTx}</a>
+          <a href={`${this.props.etherscanUrl}tx/${pendingTx}`} target='_blank' className='tx-link'>{pendingTx}</a>
         </div>
         <button onClick={this.done}>DONE</button>
       </div>

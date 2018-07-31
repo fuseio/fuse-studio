@@ -5,7 +5,6 @@ import {BigNumber} from 'bignumber.js'
 import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 import { change, buyCc, sellCc } from 'actions/marketMaker'
-import { getSelectedCommunity } from 'selectors/basicToken'
 import Loader from 'components/Loader'
 
 import RightArrow from 'images/right-arrow.png'
@@ -34,12 +33,11 @@ class SummaryBuy extends React.Component {
 
   render () {
     const { community, isBuy, cln, cc, gas, estimatedGas } = this.props
-    const ccSymbol = community && community.symbol
     const formattedPrice = this.props.quotePair.price.toFixed(5)
     const fromCoin = isBuy ? cln : cc
     const toCoin = isBuy ? cc : cln
-    const fromSymbol = isBuy ? 'CLN' : ccSymbol
-    const toSymbol = isBuy ? ccSymbol : 'CLN'
+    const fromSymbol = isBuy ? 'CLN' : community.symbol
+    const toSymbol = isBuy ? community.symbol : 'CLN'
     const gasPrice = (gas && estimatedGas) && new BigNumber(estimatedGas).multipliedBy(gas.average).div(10).div(1e9)
     return (
       <div className='summary'>
@@ -66,7 +64,7 @@ class SummaryBuy extends React.Component {
         </div>
         <div className='info-price'>
           <div>RATE</div>
-          <div>{'1 ' + ccSymbol + ' = ' + formattedPrice + ' CLN'}</div>
+          <div>{'1 ' + community.symbol + ' = ' + formattedPrice + ' CLN'}</div>
         </div>
         <div className='line' />
         <h5>GAS PRICE NOTICE:</h5>
@@ -85,7 +83,6 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  community: getSelectedCommunity(state),
   quotePair: state.marketMaker.quotePair || {},
   estimatedGas: state.marketMaker.estimatedGas,
   gas: state.web3.gas,

@@ -267,6 +267,24 @@ class BuySellAmounts extends React.Component {
     }
   }
 
+  inAmountTextInputProps = () => (
+    this.textInputProps(this.props.isBuy)
+  )
+
+  outAmountTextInputProps = () => (
+    this.textInputProps(!this.props.isBuy)
+  )
+
+  textInputProps = (isBuy) => (
+    isBuy ? {
+      value: this.state.cln,
+      onChange: this.handleCLNInput
+    } : {
+      value: this.state.cc,
+      onChange: this.handleCCInput
+    }
+  )
+
   render () {
     const { isBuy, community, balances, addresses } = this.props
     const { advanced, maxAmountError, cln, cc, price, slippage, minimum, priceChange, priceLimit, loading, toCC } = this.state
@@ -306,9 +324,8 @@ class BuySellAmounts extends React.Component {
           <TextInput id='in-amount'
             className={buySellInputClass}
             placeholder={(isBuy && loading && !toCC) || (!isBuy && loading && toCC) ? '' : `Enter amount in ${isBuy ? 'CLN' : ccSymbol}`}
-            value={isBuy ? cln : cc}
-            onChange={isBuy ? this.handleCLNInput : this.handleCCInput}
             error={maxAmountError}
+            {...this.inAmountTextInputProps()}
           />
           {(isBuy && loading && !toCC) || (!isBuy && loading && toCC) ? <Loader className='loader input' /> : null}
           <div className='input-coin-symbol'>{isBuy ? 'CLN' : ccSymbol}</div>
@@ -323,8 +340,7 @@ class BuySellAmounts extends React.Component {
           <TextInput id='out-amount'
             className='buy-sell-input'
             placeholder={(isBuy && loading && toCC) || (!isBuy && loading && !toCC) ? '' : `Enter amount in ${isBuy ? ccSymbol : 'CLN'}`}
-            value={isBuy ? cc : cln}
-            onChange={isBuy ? this.handleCCInput : this.handleCLNInput}
+            {...this.outAmountTextInputProps()}
           />
           {(isBuy && loading && toCC) || (!isBuy && loading && !toCC) ? <Loader className='loader input' /> : null}
           <div className='input-coin-symbol'>{isBuy ? ccSymbol : 'CLN'}</div>
