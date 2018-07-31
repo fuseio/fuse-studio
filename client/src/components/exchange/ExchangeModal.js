@@ -23,13 +23,9 @@ const EXCHANGE_COMPONENTS = {
 class ExchangeModal extends React.Component {
   onClose = () => this.props.uiActions.hideModal()
 
-  componentWillMount () {
-    this.props.uiActions.resetExchange()
-  }
-
   render () {
     const { buyStage } = this.props
-    const ExchangeComponent = EXCHANGE_COMPONENTS[buyStage] || <BuySellAmounts {...this.props} />
+    const ExchangeComponent = EXCHANGE_COMPONENTS[buyStage]
 
     return (
       <Modal className='fullscreen' onClose={this.onClose} width='500px'>
@@ -39,13 +35,16 @@ class ExchangeModal extends React.Component {
   }
 }
 
+ExchangeModal.defaultProps = {
+  buyStage: 1
+}
+
 const mapDispatchToProps = dispatch => ({
   uiActions: bindActionCreators(uiActions, dispatch)
 })
 
 const mapStateToProps = (state, props) => ({
-  community: getSelectedCommunity(state),
-  buyStage: state.ui.buyStage
+  community: getSelectedCommunity(state)
 })
 
 const withCommunity = withEither(props => !(props.community && props.community.isMarketMakerLoaded),

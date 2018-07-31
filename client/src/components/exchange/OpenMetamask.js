@@ -1,24 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 
 import Metamask from 'images/metamask-dark.png'
 
 class OpenMetamask extends React.Component {
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (this.props.pending !== nextProps.pending) {
       this.props.uiActions.setBuyStage(4)
     }
   }
 
-  render() {
+  render () {
     return (
-      <div className="metamask-sign">
+      <div className='metamask-sign'>
         <h4>METAMASK EXTENSION</h4>
-        <div className="summary-prices-wrapper">
-          <img className="metamask-icon" src={Metamask} />
+        <div className='summary-prices-wrapper'>
+          <img className='metamask-icon' src={Metamask} />
           <p>Sign the transaction in your MetaMask extension</p>
         </div>
       </div>

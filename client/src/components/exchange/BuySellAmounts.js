@@ -5,7 +5,6 @@ import isEqual from 'lodash/isEqual'
 import * as uiActions from 'actions/ui'
 import * as marketMakerActions from 'actions/marketMaker'
 import { bindActionCreators } from 'redux'
-import { getSelectedCommunity, getClnToken } from 'selectors/basicToken'
 import { buySell } from 'constants/uiConstants'
 import {getBalances} from 'selectors/accounts'
 import {getAddresses} from 'selectors/web3'
@@ -156,13 +155,25 @@ class BuySellAmounts extends React.Component {
     }
   }
 
-  handleChangeTab = (type) => {
+  handleChangeToSellTab = () => {
+    if (this.props.isBuy) {
+      this.handleChangeTab()
+    }
+  }
+
+  handleChangeToBuyTab = () => {
+    if (!this.props.isBuy) {
+      this.handleChangeTab()
+    }
+  }
+
+  handleChangeTab = () => {
     const currentPrice = this.props.community && this.props.community.currentPrice && new BigNumber(this.props.community.currentPrice.toString()).multipliedBy(1e18)
-    const priceChange = type === 'buy' ? buySell.DEFAULT_PRICE_CHANGE : buySell.DEFAULT_PRICE_CHANGE * (-1)
-    this.setState({
+    const priceChange = this.props.isBuy ? buySell.DEFAULT_PRICE_CHANGE : buySell.DEFAULT_PRICE_CHANGE * (-1)
+    this.props.uiActions.setBuySellAmounts({
       cc: '',
       cln: '',
-      buyTab: type === 'buy',
+      isBuy: !this.props.isBuy,
       loading: false,
       maxAmountError: '',
       minimum: '',
@@ -287,8 +298,8 @@ class BuySellAmounts extends React.Component {
       <div>
         <div className='buy-sell-top'>
           <div className='buy-sell-tab'>
-            <div className={buyTabClass} onClick={this.handleChangeTab.bind(this, 'buy')}>BUY</div>
-            <div className={sellTabClass} onClick={this.handleChangeTab.bind(this, 'sell')}>SELL</div>
+            <div className={buyTabClass} onClick={this.handleChangeToBuyTab}>BUY</div>
+            <div className={sellTabClass} onClick={this.handleChangeToSellTab}>SELL</div>
           </div>
           <TextInput id='in-amount'
             className={buySellInputClass}
@@ -361,16 +372,9 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = (state, props) => ({
   addresses: getAddresses(state),
   balances: getBalances(state),
-  community: getSelectedCommunity(state),
   quotePair: state.marketMaker.quotePair || {},
   buyQuotePair: state.marketMaker.buyQuote || {},
   sellQuotePair: state.marketMaker.sellQuote || {},
-  cln: state.ui.cln,
-  cc: state.ui.cc,
-  priceChange: state.ui.priceChange,
-  priceLimit: state.ui.priceLimit,
-  minimum: state.ui.minimum,
-  clnToken: getClnToken(state),
   ...props
 })
 
