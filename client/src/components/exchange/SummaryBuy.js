@@ -65,7 +65,7 @@ class SummaryBuy extends React.Component {
         </div>
         <div className="info-price">
           <div>ESTIMATED TRANSACTION FEE<img src={Info} /></div>
-          <div>{gasPrice ? gasPrice + ' ETH' : <Loader class="loader" />}</div>
+          <div>{gasPrice ? gasPrice + ' ETH' : <Loader className="loader" />}</div>
         </div>
         <div className="info-price">
           <div>RATE</div>

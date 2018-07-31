@@ -1,21 +1,12 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import Link from 'react-router-dom/Link'
-import { isMobile } from "react-device-detect"
+import React from 'react'
 
-import { render } from 'react-dom'
 import { withFormik } from 'formik'
 import Yup from 'yup'
-import classnames from 'classnames'
-
-import * as uiActions from '../actions/ui'
 
 import TextInput from './TextInput'
 import {sendContactUs, subcribeToMailingList} from 'services/api'
 import CloseButton from 'images/x.png'
 import ReactGA from 'services/ga'
-
 
 // Our inner form component. Will be wrapped with Formik({..})
 const MyInnerForm = props => {
@@ -23,128 +14,123 @@ const MyInnerForm = props => {
     values,
     touched,
     errors,
-    dirty,
-    isSubmitting,
     isValid,
     setFieldValue,
     handleChange,
     handleBlur,
     handleSubmit,
-    close,
     history,
-    status,
-    handleReset,
-  } = props;
+    status
+  } = props
 
   const handleClose = () => {
-  ReactGA.event({
-    category: 'Contact us',
-    action: 'Click',
-    label: 'Close'
-  })
-  history.goBack()
+    ReactGA.event({
+      category: 'Contact us',
+      action: 'Click',
+      label: 'Close'
+    })
+    history.goBack()
   }
 
   return (
-    <div className="contact-form">
+    <div className='contact-form'>
       <h4>CONTACT US</h4>
-      <div className="sidebar-close" onClick={handleClose}>
-        <img src={CloseButton}/>
+      <div className='sidebar-close' onClick={handleClose}>
+        <img src={CloseButton} />
       </div>
-      <div className="contact-container">
+      <div className='contact-container'>
         <form onSubmit={handleSubmit}>
-          <div className="contact-horizontal">
-          <TextInput
-            id="fullName"
-            type="text"
-            label="FULL NAME *"
-            placeholder="Enter your full name"
-            error={touched.fullName && errors.fullName}
-            value={values.fullName}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          <TextInput
-            id="email"
-            type="email"
-            label="EMAIL *"
-            placeholder="Enter your email"
-            error={touched.email && errors.email}
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          <TextInput
-            id="phone"
-            type="phone"
-            label="PHONE NUMBER"
-            placeholder="Enter your phone number"
-            error={touched.phone && errors.phone}
-            value={values.phone}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          <TextInput
-            id="company"
-            type="company"
-            label="COMPANY / ORGANIZATION"
-            placeholder="Enter your company"
-            error={touched.company && errors.company}
-            value={values.company}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
+          <div className='contact-horizontal'>
+            <TextInput
+              id='fullName'
+              type='text'
+              label='FULL NAME *'
+              placeholder='Enter your full name'
+              error={touched.fullName && errors.fullName}
+              value={values.fullName}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <TextInput
+              id='email'
+              type='email'
+              label='EMAIL *'
+              placeholder='Enter your email'
+              error={touched.email && errors.email}
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <TextInput
+              id='phone'
+              type='phone'
+              label='PHONE NUMBER'
+              placeholder='Enter your phone number'
+              error={touched.phone && errors.phone}
+              value={values.phone}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <TextInput
+              id='company'
+              type='company'
+              label='COMPANY / ORGANIZATION'
+              placeholder='Enter your company'
+              error={touched.company && errors.company}
+              value={values.company}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
           </div>
-          <div className="contact-horizontal">
-          <TextInput
-            id="subject"
-            type="subject"
-            label="SUBJECT *"
-            fieldType="select"
-            placeholder="Select"
-            error={touched.subject && errors.subject}
-            value={values.subject}
-            setFieldValue={setFieldValue}
-            onBlur={handleBlur}
-          >
-          </TextInput>
-          <TextInput
-            id="message"
-            type="message"
-            label="MESSAGE *"
-            placeholder="Enter your message"
-            fieldType="textarea"
-            error={touched.message && errors.message}
-            value={values.message}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          <TextInput
-            id="signup"
-            type="checkbox"
-            label="SIGN UP FOR UPDATES"
-            fieldType="checkbox"
-            value={!!values.signup}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
+          <div className='contact-horizontal'>
+            <TextInput
+              id='subject'
+              type='subject'
+              label='SUBJECT *'
+              fieldType='select'
+              placeholder='Select'
+              error={touched.subject && errors.subject}
+              value={values.subject}
+              setFieldValue={setFieldValue}
+              onBlur={handleBlur}
+            />
+            <TextInput
+              id='message'
+              type='message'
+              label='MESSAGE *'
+              placeholder='Enter your message'
+              fieldType='textarea'
+              error={touched.message && errors.message}
+              value={values.message}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <TextInput
+              id='signup'
+              type='checkbox'
+              label='SIGN UP FOR UPDATES'
+              fieldType='checkbox'
+              value={!!values.signup}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
 
-          <button type="submit" disabled={!isValid}>
-            Submit
-          </button>
+            <button type='submit' disabled={!isValid}>
+              Submit
+            </button>
           </div>
         </form>
-        <p className="success-message">{status && status.success ? "Thanks for getting in touch. We'll reach out to you shortly." : null}</p>
+        <p className='success-message'>{status && status.success ? 'Thanks for getting in touch. We\'ll reach out to you shortly.' : null}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const EnhancedForm = withFormik({
   mapPropsToValues: () => ({ fullName: '', email: '', phone: '', company: '', subject: '', message: '' }),
   validationSchema: Yup.object().shape({
     fullName: Yup.string()
-      .min(2, "C'mon, your name is longer than that")
+      .min(2, 'C\'mon, your name is longer than that')
       .matches(/^[a-z ,.'-]+$/i, 'Invalid input')
       .required('Your name is required.'),
     email: Yup.string()
@@ -165,21 +151,21 @@ const EnhancedForm = withFormik({
     sendContactUs(values)
     if (values.signup) {
       subcribeToMailingList({email: values.email})
-    ReactGA.event({
-    category: 'Contact us',
-    action: 'Click',
-    label: 'Sign up (checkbox)'
-    })
+      ReactGA.event({
+        category: 'Contact us',
+        action: 'Click',
+        label: 'Sign up (checkbox)'
+      })
     }
     resetForm()
     setStatus({ success: true })
-  ReactGA.event({
-    category: 'Contact us',
-    action: 'Click',
-    label: 'Submit'
-  })
+    ReactGA.event({
+      category: 'Contact us',
+      action: 'Click',
+      label: 'Submit'
+    })
   },
-  displayName: 'BasicForm', // helps with React DevTools
+  displayName: 'BasicForm' // helps with React DevTools
 })(MyInnerForm)
 
 export default EnhancedForm

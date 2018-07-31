@@ -300,7 +300,7 @@ class BuySellAmounts extends React.Component {
             onChange={buyTab ? this.handleCLNInput : this.handleCCInput}
             error={maxAmountError}
           />
-          {(buyTab && loading && !toCC) || (!buyTab && loading && toCC) ? <Loader class="loader input" /> : null}
+          {(buyTab && loading && !toCC) || (!buyTab && loading && toCC) ? <Loader className="loader input" /> : null}
           <div className='input-coin-symbol'>{buyTab ? 'CLN' : ccSymbol}</div>
           <div className={maxAmountClass} onClick={this.handleClickMax}>{`Max: ${buyTab ? clnBalance + ' CLN' : ccBalance +' ' + ccSymbol}`}</div>
         </div>
@@ -316,7 +316,7 @@ class BuySellAmounts extends React.Component {
             value={buyTab ? cc : cln}
             onChange={buyTab ? this.handleCCInput : this.handleCLNInput}
           />
-          {(buyTab && loading && toCC) || (!buyTab && loading && !toCC) ? <Loader class="loader input" /> : null}
+          {(buyTab && loading && toCC) || (!buyTab && loading && !toCC) ? <Loader className="loader input" /> : null}
           <div className='input-coin-symbol'>{buyTab ? ccSymbol : 'CLN'}</div>
           <div className={advancedClass}>
             <div className="advanced-header">
@@ -369,7 +369,7 @@ const mapStateToProps = (state, props) => ({
   buyQuotePair: state.marketMaker.buyQuote || {},
   sellQuotePair: state.marketMaker.sellQuote || {},
   web3: state.web3,
-  isBuy: state.ui.modalOptions.isBuy,
+  isBuy: state.ui.modalProps.isBuy,
   cln: state.ui.cln,
   cc: state.ui.cc,
   priceChange: state.ui.priceChange,

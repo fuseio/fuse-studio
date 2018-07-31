@@ -3,44 +3,52 @@ import {action} from './utils'
 export const setActiveMarker = (coinAddress) => action('ACTIVE_MARKER', {coinAddress})
 export const zoomToMarker = (zoom) => action('ZOOM', { zoom })
 
-export const loadModal = (modalType, options) => {
+export const SHOW_MODAL = 'SHOW_MODAL'
+export const HIDE_MODAL = 'HIDE_MODAL'
+export const SIGNUP_HIDE = 'SIGNUP_HIDE'
+export const SIGNUP_CLOSE = 'SIGNUP_CLOSE'
+export const BUY_STAGE = 'BUY_STAGE'
+export const BUY_SELL_AMOUNTS = 'BUY_SELL_AMOUNTS'
+export const RESET_EXCHANGE = 'RESET_EXCHANGE'
+
+export const loadModal = (modalType, modalProps) => {
   return {
-    type: 'SHOW_MODAL',
+    type: SHOW_MODAL,
     modalType,
-    options
+    modalProps
   }
 }
 
 export const hideModal = () => {
   return {
-    type: 'HIDE_MODAL'
+    type: HIDE_MODAL
   }
 }
 
 export const hideSignup = (hide) => {
   return {
-    type: 'SIGNUP_HIDE',
+    type: SIGNUP_HIDE,
     hide
   }
 }
 
 export const closeSignup = (close) => {
   return {
-    type: 'SIGNUP_CLOSE',
+    type: SIGNUP_CLOSE,
     close
   }
 }
 
 export const setBuyStage = (stage) => {
   return {
-    type: 'BUY_STAGE',
+    type: BUY_STAGE,
     stage
   }
 }
 
 export const setBuySellAmounts = (obj) => {
   return {
-    type: 'BUY_SELL_AMOUNTS',
+    type: BUY_SELL_AMOUNTS,
     isBuy: obj.isBuy,
     ccAddress: obj.ccAddress,
     cln: obj.cln,
@@ -53,6 +61,6 @@ export const setBuySellAmounts = (obj) => {
 
 export const resetExchange = () => {
   return {
-    type: 'RESET_EXCHANGE'
+    type: RESET_EXCHANGE
   }
 }

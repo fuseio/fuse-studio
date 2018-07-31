@@ -10,49 +10,34 @@ import OpenMetamask from 'components/exchange/OpenMetamask'
 import Pending from 'components/exchange/Pending'
 import Completed from 'components/exchange/Completed'
 import {getSelectedCommunity} from 'selectors/basicToken'
+import withEither from 'containers/withEither'
 
-class InnerExchangeModal extends React.Component {
+const EXCHANGE_COMPONENTS = {
+  1: (props) => <BuySellAmounts {...props} />,
+  2: (props) => <SummaryBuy {...props} />,
+  3: (props) => <OpenMetamask {...props} />,
+  4: (props) => <Pending {...props} />,
+  5: (props) => <Completed {...props} />
+}
+
+class ExchangeModal extends React.Component {
   onClose = () => this.props.uiActions.hideModal()
-  componentWillMount() {
+
+  componentWillMount () {
     this.props.uiActions.resetExchange()
   }
-  renderStage = (buyStage) => {
-    switch (buyStage) {
-      case 1: {
-        return <BuySellAmounts />
-      }
-      case 2: {
-        return <SummaryBuy />
-      }
-      case 3: {
-        return <OpenMetamask />
-      }
-      case 4: {
-        return <Pending />
-      }
-      case 5: {
-        return <Completed />
-      }
-      default: {
-        return <BuySellAmounts />
-      }
-    }
-  }
+
   render () {
     const { buyStage } = this.props
+    const ExchangeComponent = EXCHANGE_COMPONENTS[buyStage] || <BuySellAmounts {...this.props} />
+
     return (
-      <Modal class='fullscreen' onClose={this.onClose} width='500px'>
-        {this.renderStage(buyStage)}
+      <Modal className='fullscreen' onClose={this.onClose} width='500px'>
+        {ExchangeComponent(this.props)}
       </Modal>
     )
   }
 }
-
-const ExchangeModal = (props) => (
-  props.community && props.community.isMarketMakerLoaded
-    ? <InnerExchangeModal {...props} />
-    : null
-)
 
 const mapDispatchToProps = dispatch => ({
   uiActions: bindActionCreators(uiActions, dispatch)
@@ -60,7 +45,10 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, props) => ({
   community: getSelectedCommunity(state),
-  buyStage: state.ui.buyStage,
+  buyStage: state.ui.buyStage
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExchangeModal)
+const withCommunity = withEither(props => !(props.community && props.community.isMarketMakerLoaded),
+  (props) => null)
+
+export default connect(mapStateToProps, mapDispatchToProps)(withCommunity(ExchangeModal))

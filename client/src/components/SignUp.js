@@ -47,17 +47,10 @@ const SignUp = props => {
     values,
     touched,
     errors,
-    dirty,
-    isSubmitting,
     isValid,
-    setFieldValue,
     handleChange,
     handleBlur,
-    handleSubmit,
-    close,
-    status,
-    closed,
-    handleReset,
+    handleSubmit
   } = props
 
   const formContent = <form onSubmit={handleSubmit}>

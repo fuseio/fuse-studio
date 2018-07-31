@@ -24,7 +24,6 @@ import topo110 from 'topojson/110m.json'
 import topo50 from 'topojson/50m.json'
 
 const panByHorizontalOffset = isMobile ? 0 : 5 // because of the community sidebar, so it's a bit off the center
-// const defaultZoom = isMobile ? 3 : 4
 
 const defaultCenter = isMobile ? { lat: 45.10, lng: 18.68 } : { lat: 45.8397, lng: 24.0297 + panByHorizontalOffset }
 const startCenter = isMobile ? { lat: 41.9, lng: 15.49 } : { lat: 48.0507729, lng: -20.75446020000004 + panByHorizontalOffset }

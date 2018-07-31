@@ -9,10 +9,10 @@ import ExchangeModal from 'components/exchange/ExchangeModal'
 import { LOGIN_MODAL, SOON_MODAL, ERROR_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
 
 const MODAL_COMPONENTS = {
-  [LOGIN_MODAL]: <LoginModal />,
-  [SOON_MODAL]: <ComingSoonModal />,
-  [ERROR_MODAL]: <ErrorModal />,
-  [EXCHANGE_MODAL]: <ExchangeModal />
+  [LOGIN_MODAL]: (props) => <LoginModal {...props} />,
+  [SOON_MODAL]: (props) => <ComingSoonModal {...props} />,
+  [ERROR_MODAL]: (props) => <ErrorModal {...props} />,
+  [EXCHANGE_MODAL]: (props) => <ExchangeModal {...props} />
 }
 
 const ModalContainer = (props) => {
@@ -21,12 +21,13 @@ const ModalContainer = (props) => {
   }
 
   const SpecificModal = MODAL_COMPONENTS[props.modalType]
-  return SpecificModal
+  return SpecificModal(props.modalProps)
 }
 
 const mapStateToProps = state => {
   return {
-    modalType: state.ui.modalType
+    modalType: state.ui.modalType,
+    modalProps: state.ui.modalProps
   }
 }
 
