@@ -49,13 +49,7 @@ export const setBuyStage = (stage) => {
 export const setBuySellAmounts = (obj) => {
   return {
     type: BUY_SELL_AMOUNTS,
-    isBuy: obj.isBuy,
-    ccAddress: obj.ccAddress,
-    cln: obj.cln,
-    cc: obj.cc,
-    minimum: obj.minimum,
-    priceChange: obj.priceChange,
-    priceLimit: obj.priceLimit
+    payload: obj
   }
 }
 

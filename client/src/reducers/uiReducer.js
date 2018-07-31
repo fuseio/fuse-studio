@@ -14,7 +14,7 @@ export default (state = {
     case ui.SHOW_MODAL:
       return {...state, modalType: action.modalType, modalProps: action.modalProps}
     case ui.HIDE_MODAL:
-      return {...state, modalType: null}
+      return {...state, modalType: null, modalProps: null}
     case ui.SIGNUP_HIDE:
       return {...state, signupHide: action.hide}
     case ui.SIGNUP_CLOSE:
@@ -22,7 +22,7 @@ export default (state = {
     case ui.BUY_STAGE:
       return {...state, buyStage: action.stage}
     case ui.BUY_SELL_AMOUNTS:
-      return { ...state, isBuy: action.isBuy, ccAddress: action.ccAddress, cln: action.cln, cc: action.cc, minimum: action.minimum, priceChange: action.priceChange, priceLimit: action.priceLimit }
+      return { ...state, modalProps: {...state.modalProps, ...action.payload} }
     case ui.RESET_EXCHANGE:
       return {...state, isBuy: null, ccAddress: null, cln: null, cc: null, minimum: null, priceChange: null, priceLimit: null, buyStage: 1}
     default:
