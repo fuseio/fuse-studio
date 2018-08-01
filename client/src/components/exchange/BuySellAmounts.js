@@ -99,6 +99,10 @@ class BuySellAmounts extends React.Component {
       : this.props.community.currentPrice.toString())
   }
 
+  cln = () => {
+    return this.props.isBuy ? (this.state.toCC ? this.state.cln : this.props.quotePair.inAmount) : this.props.quotePair.outAmount
+  }
+
   componentWillReceiveProps = (nextProps, nextState) => {
     if (isEqual(nextProps.quotePair, this.props.quotePair)) {
       return

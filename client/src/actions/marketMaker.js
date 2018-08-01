@@ -29,9 +29,9 @@ export const clnReserve = (address, tokenAddress) => action(CLN_RESERVE.REQUEST,
 export const ccReserve = (address, tokenAddress) => action(CC_RESERVE.REQUEST, {address, tokenAddress})
 export const fetchMarketMakerData = (tokenAddress, mmAddress, blockNumber) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {tokenAddress, mmAddress, blockNumber})
 
-export const quote = (fromToken, inAmount, toToken, isBuying) => action(QUOTE.REQUEST, {fromToken, inAmount, toToken, isBuying})
+export const quote = (fromToken, inAmount, toToken, isBuy) => action(QUOTE.REQUEST, {fromToken, inAmount, toToken, isBuy})
 export const invertQuote = (fromToken, inAmount, toToken) => action(INVERT_QUOTE.REQUEST, {fromToken, inAmount, toToken})
-export const change = (tokenAddress, amount, minReturn, isBuying) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuying})
+export const change = (tokenAddress, amount, minReturn, isBuy) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuy})
 export const isOpenForPublic = (tokenAddress) => action(IS_OPEN_FOR_PUBLIC.REQUEST, {tokenAddress})
 
 export const buyQuote = (tokenAddress, clnAmount) => action(BUY_QUOTE.REQUEST, {tokenAddress, clnAmount})

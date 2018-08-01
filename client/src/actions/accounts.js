@@ -9,4 +9,4 @@ CHANGE.PENDING = 'CHANGE_PENDING'
 export const balanceOf = (tokenAddress, accountAddress) => action(BALANCE_OF.REQUEST, {tokenAddress, accountAddress})
 export const updateBalances = (accountAddress) => action(UPDATE_BALANCES.REQUEST, {accountAddress})
 
-export const change = (tokenAddress, amount, minReturn, isBuying) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuying})
+export const change = (tokenAddress, amount, minReturn, isBuy) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuy})

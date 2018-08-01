@@ -1,5 +1,4 @@
 import { all, call, put, select } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
 
 import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
@@ -53,7 +52,7 @@ export function * ccReserve ({address, tokenAddress}) {
     }})
 }
 
-const getReservesAndSupplies = (clnToken, ccToken, isBuying) => isBuying
+const getReservesAndSupplies = (clnToken, ccToken, isBuy) => isBuy
   ? {
     r1: ccToken.ccReserve,
     r2: ccToken.clnReserve,
@@ -66,24 +65,24 @@ const getReservesAndSupplies = (clnToken, ccToken, isBuying) => isBuying
     s2: ccToken.totalSupply
   }
 
-const computePrice = (isBuying, inAmount, outAmount) => {
-  if (isBuying) {
+const computePrice = (isBuy, inAmount, outAmount) => {
+  if (isBuy) {
     return inAmount / outAmount
   } else {
     return outAmount / inAmount
   }
 }
 
-export function * quote ({tokenAddress, amount, isBuying}) {
+export function * quote ({tokenAddress, amount, isBuy}) {
   const clnToken = yield select(getClnToken)
   const token = yield select(getCommunity, tokenAddress)
-  const fromTokenAddress = isBuying ? clnToken.address : tokenAddress
-  const toTokenAddress = isBuying ? tokenAddress : clnToken.address
+  const fromTokenAddress = isBuy ? clnToken.address : tokenAddress
+  const toTokenAddress = isBuy ? tokenAddress : clnToken.address
 
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
   let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromTokenAddress, amount, toTokenAddress).call)
 
-  const price = computePrice(isBuying, amount, outAmount)
+  const price = computePrice(isBuy, amount, outAmount)
   const currentPrice = new BigNumber(token.currentPrice.toString()).multipliedBy(1e18)
   const slippage = currentPrice.minus(price.toString()).div(currentPrice).abs()
 
@@ -115,22 +114,22 @@ export function * isOpenForPublic ({tokenAddress}) {
     }})
 }
 
-export function * invertQuote ({tokenAddress, amount, isBuying}) {
+export function * invertQuote ({tokenAddress, amount, isBuy}) {
   const clnToken = yield select(getClnToken)
   const token = yield select(getCommunity, tokenAddress)
-  const fromTokenAddress = isBuying ? clnToken.address : tokenAddress
-  const toTokenAddress = isBuying ? tokenAddress : clnToken.address
+  const fromTokenAddress = isBuy ? clnToken.address : tokenAddress
+  const toTokenAddress = isBuy ? tokenAddress : clnToken.address
 
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
-  const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, token, isBuying)
+  const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, token, isBuy)
 
   const updatedR1 = new BigNumber(r1).minus(amount)
   const updatedR2 = yield call(EllipseMarketMakerContract.methods.calcReserve(
     updatedR1, s1, s2).call)
   const inAmount = new BigNumber(updatedR2).minus(r2)
 
-  const price = computePrice(isBuying, inAmount, amount)
+  const price = computePrice(isBuy, inAmount, amount)
   const currentPrice = new BigNumber(token.currentPrice.toString()).multipliedBy(1e18)
   const slippage = currentPrice.minus(price.toString()).div(currentPrice).abs()
 
@@ -140,7 +139,8 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
     inAmount: inAmount,
     outAmount: amount,
     price,
-    slippage
+    slippage,
+    isBuy
   }
 
   yield put({type: actions.INVERT_QUOTE.SUCCESS,
@@ -152,11 +152,11 @@ export function * invertQuote ({tokenAddress, amount, isBuying}) {
   return quotePair
 }
 
-export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimation, options}) {
+export function * change ({tokenAddress, amount, minReturn, isBuy, isEstimation, options}) {
   const clnToken = yield select(getClnToken)
   let token = yield select(getCommunity, tokenAddress)
-  const fromTokenAddress = isBuying ? clnToken.address : tokenAddress
-  const toTokenAddress = isBuying ? tokenAddress : clnToken.address
+  const fromTokenAddress = isBuy ? clnToken.address : tokenAddress
+  const toTokenAddress = isBuy ? tokenAddress : clnToken.address
 
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
@@ -220,38 +220,26 @@ export function * change ({tokenAddress, amount, minReturn, isBuying, isEstimati
 }
 
 export function * buyQuote ({tokenAddress, clnAmount}) {
-  yield delay(300)
-  const buyQuote = yield call(quote, {
+  yield call(quote, {
     tokenAddress,
     amount: clnAmount,
-    isBuying: true
+    isBuy: true
   })
-  yield put({type: actions.BUY_QUOTE.SUCCESS,
-    address: tokenAddress,
-    response: {
-      buyQuote
-    }})
 }
 
 export function * sellQuote ({tokenAddress, ccAmount}) {
-  const sellQuote = yield call(quote, {
+  yield call(quote, {
     tokenAddress,
     amount: ccAmount,
-    isBuying: false
+    isBuy: false
   })
-
-  yield put({type: actions.SELL_QUOTE.SUCCESS,
-    address: tokenAddress,
-    response: {
-      sellQuote
-    }})
 }
 
 export function * invertBuyQuote ({tokenAddress, ccAmount}) {
   const buyQuote = yield call(invertQuote, {
     tokenAddress,
     amount: ccAmount,
-    isBuying: true
+    isBuy: true
   })
 
   yield put({type: actions.INVERT_BUY_QUOTE.SUCCESS,
@@ -265,7 +253,7 @@ export function * invertSellQuote ({tokenAddress, clnAmount}) {
   const sellQuote = yield call(invertQuote, {
     tokenAddress,
     amount: clnAmount,
-    isBuying: false
+    isBuy: false
   })
 
   yield put({type: actions.INVERT_SELL_QUOTE.SUCCESS,
@@ -279,7 +267,7 @@ export function * buyCc ({amount, tokenAddress, minReturn, options}) {
   yield call(change, {
     tokenAddress,
     amount,
-    isBuying: true,
+    isBuy: true,
     minReturn,
     options
   })
@@ -289,7 +277,7 @@ export function * sellCc ({amount, tokenAddress, minReturn, options}) {
   yield call(change, {
     tokenAddress,
     amount,
-    isBuying: false,
+    isBuy: false,
     minReturn,
     options
   })
@@ -299,7 +287,7 @@ export function * estimateGasBuyCc ({amount, tokenAddress, minReturn}) {
   const estimatedGas = yield call(change, {
     tokenAddress,
     amount,
-    isBuying: true,
+    isBuy: true,
     minReturn,
     isEstimation: true
   })
@@ -317,7 +305,7 @@ function * estimateGasSellCc ({amount, tokenAddress, minReturn}) {
   const estimatedGas = yield call(change, {
     tokenAddress,
     amount,
-    isBuying: false,
+    isBuy: false,
     minReturn,
     isEstimation: true
   })
