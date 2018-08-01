@@ -1,24 +1,25 @@
-import { all, put, takeEvery, select } from 'redux-saga/effects'
+import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
 import web3 from 'services/web3'
 import {isNetworkSupported} from 'utils/web3'
 import * as actions from 'actions/web3'
+import {updateBalances} from 'actions/accounts'
 import {loadModal} from 'actions/ui'
 import { ERROR_MODAL } from 'constants/uiConstants'
 
 function * getNetworkType () {
   try {
     const networkType = yield web3.eth.net.getNetworkType()
-    yield put.resolve({type: actions.GET_NETWORK_TYPE.SUCCESS,
+    yield put({type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
         isMetaMask: web3.currentProvider.isMetaMask || false
       }})
     if (web3.eth.defaultAccount) {
-      yield put({
-        type: actions.CHECK_ACCOUNT_CHANGED.REQUEST,
-        selectedAddress: web3.eth.defaultAccount
-      })
+      const isChanged = yield call(checkAccountChanged, {selectedAddress: web3.eth.defaultAccount})
+      if (!isChanged) {
+        yield put(updateBalances(web3.eth.defaultAccount))
+      }
     }
 
     if (!isNetworkSupported(networkType)) {
@@ -45,7 +46,7 @@ function * fetchGasPrices () {
   })
 }
 
-function * checkAccountChanged ({selectedAddress, networkVersion}) {
+function * checkAccountChanged ({selectedAddress}) {
   const accountAddress = yield select(state => state.web3.accountAddress)
   const checksummedAddress = selectedAddress && web3.utils.toChecksumAddress(selectedAddress)
   if (accountAddress !== checksummedAddress) {
@@ -55,7 +56,9 @@ function * checkAccountChanged ({selectedAddress, networkVersion}) {
         accountAddress: checksummedAddress
       }
     })
+    return true
   }
+  return false
 }
 
 export default function * web3Saga () {
