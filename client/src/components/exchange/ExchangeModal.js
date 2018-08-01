@@ -50,7 +50,8 @@ const mapStateToProps = (state, props) => ({
   clnBalance: getClnBalance(state)
 })
 
-const withCommunity = withEither(props => !(props.community && props.community.isMarketMakerLoaded),
-  (props) => null)
+const withCommunity = withEither(props => !(props.community &&
+   props.community.isMarketMakerLoaded && props.ccBalance && props.clnBalance),
+(props) => null)
 
 export default connect(mapStateToProps, mapDispatchToProps)(withCommunity(ExchangeModal))

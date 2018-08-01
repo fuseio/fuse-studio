@@ -1,5 +1,14 @@
 import {action, createRequestTypes} from './utils'
 
+export const quoteAction = (type, payload) => ({
+  ...action(type, payload),
+  response: {
+    quotePair: {
+      isFetching: true
+    }
+  }
+})
+
 export const GET_CURRENT_PRICE = createRequestTypes('GET_CURRENT_PRICE')
 export const CLN_RESERVE = createRequestTypes('CLN_RESERVE')
 export const CC_RESERVE = createRequestTypes('CC_RESERVE')
@@ -34,11 +43,11 @@ export const invertQuote = (fromToken, inAmount, toToken) => action(INVERT_QUOTE
 export const change = (tokenAddress, amount, minReturn, isBuy) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuy})
 export const isOpenForPublic = (tokenAddress) => action(IS_OPEN_FOR_PUBLIC.REQUEST, {tokenAddress})
 
-export const buyQuote = (tokenAddress, clnAmount) => action(BUY_QUOTE.REQUEST, {tokenAddress, clnAmount})
-export const sellQuote = (tokenAddress, ccAmount) => action(SELL_QUOTE.REQUEST, {tokenAddress, ccAmount})
+export const buyQuote = (tokenAddress, clnAmount) => quoteAction(BUY_QUOTE.REQUEST, {tokenAddress, clnAmount})
+export const sellQuote = (tokenAddress, ccAmount) => quoteAction(SELL_QUOTE.REQUEST, {tokenAddress, ccAmount})
 
-export const invertBuyQuote = (tokenAddress, ccAmount) => action(INVERT_BUY_QUOTE.REQUEST, {tokenAddress, ccAmount})
-export const invertSellQuote = (tokenAddress, clnAmount) => action(INVERT_SELL_QUOTE.REQUEST, {tokenAddress, clnAmount})
+export const invertBuyQuote = (tokenAddress, ccAmount) => quoteAction(INVERT_BUY_QUOTE.REQUEST, {tokenAddress, ccAmount})
+export const invertSellQuote = (tokenAddress, clnAmount) => quoteAction(INVERT_SELL_QUOTE.REQUEST, {tokenAddress, clnAmount})
 
 export const buyCc = (tokenAddress, amount, minReturn, options) => action(BUY_CC.REQUEST, {tokenAddress, amount, minReturn, options})
 export const sellCc = (tokenAddress, amount, minReturn, options) => action(SELL_CC.REQUEST, {tokenAddress, amount, minReturn, options})

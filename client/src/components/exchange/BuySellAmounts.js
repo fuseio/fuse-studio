@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component, Fragment} from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import isEqual from 'lodash/isEqual'
@@ -14,7 +14,7 @@ import DownArrow from 'images/down-arrow.png'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
 
-class BuySellAmounts extends React.Component {
+class BuySellAmounts extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -66,7 +66,6 @@ class BuySellAmounts extends React.Component {
       cln: event.target.value,
       cc: '',
       toCC: true,
-      loading: true,
       maxAmountError: cln.isGreaterThan(clnBalance) ? 'Insufficient Funds' : undefined
     })
     if (isBuy) {
@@ -83,8 +82,7 @@ class BuySellAmounts extends React.Component {
     this.setState({
       cc: event.target.value,
       cln: '',
-      toCC: false,
-      loading: true
+      toCC: false
     })
 
     if (isBuy) {
@@ -108,6 +106,10 @@ class BuySellAmounts extends React.Component {
       return
     }
 
+    if (nextProps.quotePair.isFetching) {
+      return
+    }
+
     const { isBuy, clnBalance, ccBalance } = this.props
     const { toCC, priceChange } = this.state
     const priceLimit = this.price().multipliedBy(1 + priceChange / 100)
@@ -116,7 +118,6 @@ class BuySellAmounts extends React.Component {
     if (isBuy && toCC) {
       this.setState({
         cc: new BigNumber(nextProps.quotePair.outAmount).div(1e18).toFixed(5, 1), // round down
-        loading: false,
         price: this.price(),
         minimum: new BigNumber(nextProps.quotePair.inAmount).div(1e18) / priceLimit,
         priceLimit: priceLimit.toString(),
@@ -127,7 +128,6 @@ class BuySellAmounts extends React.Component {
       this.setState({
         cln: new BigNumber(nextProps.quotePair.inAmount).div(1e18).toFixed(5), // round up
         price: this.price(),
-        loading: false,
         minimum: new BigNumber(nextProps.quotePair.inAmount).div(1e18) / priceLimit,
         priceLimit: priceLimit.toString(),
         slippage,
@@ -137,7 +137,6 @@ class BuySellAmounts extends React.Component {
       this.setState({
         cc: new BigNumber(nextProps.quotePair.inAmount).div(1e18).toFixed(5), // round up
         price: this.price(),
-        loading: false,
         minimum: new BigNumber(nextProps.quotePair.inAmount).div(1e18) * priceLimit,
         priceLimit: priceLimit.toString(),
         slippage,
@@ -147,7 +146,6 @@ class BuySellAmounts extends React.Component {
       this.setState({
         cln: new BigNumber(nextProps.quotePair.outAmount).div(1e18).toFixed(5, 1), // round down
         price: this.price(),
-        loading: false,
         minimum: new BigNumber(nextProps.quotePair.inAmount).div(1e18) * priceLimit,
         priceLimit: priceLimit.toString(),
         slippage,
@@ -255,46 +253,65 @@ class BuySellAmounts extends React.Component {
       this.setState({
         cln: clnBalance.div(1e18),
         cc: '',
-        toCC: true,
-        loading: true
+        toCC: true
       })
       marketMakerActions.buyQuote(community.address, clnBalance)
     } else if (!isBuy && cc.toString() !== ccBalance.div(1e18).toString()) {
       this.setState({
         cc: ccBalance.div(1e18),
         cln: '',
-        toCC: false,
-        loading: true
+        toCC: false
       })
       marketMakerActions.sellQuote(community.address, ccBalance)
     }
   }
 
-  inAmountTextInputProps = () => (
-    this.textInputProps(this.props.isBuy)
-  )
+  renderClnInput = (className, error) => {
+    const {isFetching} = this.props
+    const {toCC, cln} = this.state
 
-  outAmountTextInputProps = () => (
-    this.textInputProps(!this.props.isBuy)
-  )
+    return (
+      <Fragment>
+        <TextInput id='in-amount'
+          className={className}
+          placeholder={(isFetching && !toCC) ? '' : `Enter amount in CLN`}
+          error={error}
+          value={cln}
+          onChange={this.handleCLNInput}
+        />
+        {(isFetching && !toCC) ? <Loader className='loader input' /> : null}
+        <div className='input-coin-symbol'>CLN</div>
+      </Fragment>
+    )
+  }
 
-  textInputProps = (isBuy) => (
-    isBuy ? {
-      value: this.state.cln,
-      onChange: this.handleCLNInput
-    } : {
-      value: this.state.cc,
-      onChange: this.handleCCInput
-    }
-  )
+  renderCcInput = (className, error) => {
+    const {isFetching} = this.props
+    const {toCC, cc} = this.state
+    const ccSymbol = this.props.community.symbol
+
+    return (
+      <Fragment>
+        <TextInput
+          className={className}
+          placeholder={(isFetching && toCC) ? '' : `Enter amount in ${ccSymbol}`}
+          error={error}
+          value={cc}
+          onChange={this.handleCCInput}
+        />
+        {(isFetching && toCC) ? <Loader className='loader input' /> : null}
+        <div className='input-coin-symbol'>{ccSymbol}</div>
+      </Fragment>
+    )
+  }
 
   render () {
-    const { isBuy, community } = this.props
-    const { advanced, maxAmountError, cln, cc, price, slippage, minimum, priceChange, priceLimit, loading, toCC } = this.state
+    const { isBuy, community, isFetching } = this.props
+    const { advanced, maxAmountError, cln, cc, price, slippage, minimum, priceChange, priceLimit } = this.state
     const ccSymbol = community.symbol
     const ccPrice = community.currentPrice
-    const clnBalance = new BigNumber(this.props.clnBalance).div(1e18).toFormat(5, 1)
     const ccBalance = new BigNumber(this.props.ccBalance).div(1e18).toFormat(5, 1)
+    const clnBalance = new BigNumber(this.props.clnBalance).div(1e18).toFormat(5, 1)
 
     const buyTabClass = classNames({
       'buy-tab': true,
@@ -324,14 +341,9 @@ class BuySellAmounts extends React.Component {
             <div className={buyTabClass} onClick={this.handleChangeToBuyTab}>BUY</div>
             <div className={sellTabClass} onClick={this.handleChangeToSellTab}>SELL</div>
           </div>
-          <TextInput id='in-amount'
-            className={buySellInputClass}
-            placeholder={(isBuy && loading && !toCC) || (!isBuy && loading && toCC) ? '' : `Enter amount in ${isBuy ? 'CLN' : ccSymbol}`}
-            error={maxAmountError}
-            {...this.inAmountTextInputProps()}
-          />
-          {(isBuy && loading && !toCC) || (!isBuy && loading && toCC) ? <Loader className='loader input' /> : null}
-          <div className='input-coin-symbol'>{isBuy ? 'CLN' : ccSymbol}</div>
+          {
+            isBuy ? this.renderClnInput(buySellInputClass, maxAmountError) : this.renderCcInput(buySellInputClass, maxAmountError)
+          }
           <div className={maxAmountClass} onClick={this.handleClickMax}>{`Max: ${isBuy ? clnBalance + ' CLN' : ccBalance + ' ' + ccSymbol}`}</div>
         </div>
         <div className='arrows'><img src={Arrows} /></div>
@@ -340,13 +352,9 @@ class BuySellAmounts extends React.Component {
             <div className='cc-to-cln'>{`1 ${ccSymbol} = ${price} CLN`}</div>
             {slippage ? <div>PRICE SLIPPAGE<img src={Info} />{`${slippage}%`}</div> : null}
           </div>
-          <TextInput id='out-amount'
-            className='buy-sell-input'
-            placeholder={(isBuy && loading && toCC) || (!isBuy && loading && !toCC) ? '' : `Enter amount in ${isBuy ? ccSymbol : 'CLN'}`}
-            {...this.outAmountTextInputProps()}
-          />
-          {(isBuy && loading && toCC) || (!isBuy && loading && !toCC) ? <Loader className='loader input' /> : null}
-          <div className='input-coin-symbol'>{isBuy ? ccSymbol : 'CLN'}</div>
+          {
+            isBuy ? this.renderCcInput('buy-sell-input') : this.renderClnInput('buy-sell-input')
+          }
           <div className={advancedClass}>
             <div className='advanced-header'>
               <h5 onClick={this.handleAdvanced}>Advanced settings</h5>
@@ -378,7 +386,7 @@ class BuySellAmounts extends React.Component {
             <div className='price-limit-cln'>CLN</div>
             <p className='annotation'>{`The transaction will fail if the price of 1 ${ccSymbol} is ${(isBuy ? 'higher' : 'lower')} than ${(priceLimit || ccPrice)} CLN`}</p>
           </div>
-          <button disabled={maxAmountError || !cln || cln === 0 || cc === 0 || loading} onClick={this.next}>{isBuy ? `Buy ${ccSymbol}` : `Sell ${ccSymbol}`}</button>
+          <button disabled={maxAmountError || !cln || cln === 0 || cc === 0 || isFetching} onClick={this.next}>{isBuy ? `Buy ${ccSymbol}` : `Sell ${ccSymbol}`}</button>
         </div>
       </div>
     )
@@ -392,6 +400,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, props) => ({
   quotePair: state.marketMaker.quotePair || {},
+  isFetching: state.marketMaker.quotePair && state.marketMaker.quotePair.isFetching,
   ...props
 })
 

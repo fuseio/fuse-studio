@@ -3,9 +3,9 @@ export const FETCH_SUPPORTS_TOKEN_REQUESTED = 'FETCH_SUPPORTS_TOKEN_REQUESTED'
 export const FETCH_TOKEN_NAME_REQUESTED = 'FETCH_TOKEN_NAME_REQUESTED'
 export const GET_NETWORK = 'GET_NETWORK'
 
-export function action (type, payload = {}) {
-  return {type, ...payload}
-}
+export const action = (type, payload = {}) => ({
+  type, ...payload
+})
 
 const REQUEST = 'REQUEST'
 const SUCCESS = 'SUCCESS'

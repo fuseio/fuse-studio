@@ -236,31 +236,19 @@ export function * sellQuote ({tokenAddress, ccAmount}) {
 }
 
 export function * invertBuyQuote ({tokenAddress, ccAmount}) {
-  const buyQuote = yield call(invertQuote, {
+  yield call(invertQuote, {
     tokenAddress,
     amount: ccAmount,
     isBuy: true
   })
-
-  yield put({type: actions.INVERT_BUY_QUOTE.SUCCESS,
-    address: tokenAddress,
-    response: {
-      buyQuote
-    }})
 }
 
 export function * invertSellQuote ({tokenAddress, clnAmount}) {
-  const sellQuote = yield call(invertQuote, {
+  yield call(invertQuote, {
     tokenAddress,
     amount: clnAmount,
     isBuy: false
   })
-
-  yield put({type: actions.INVERT_SELL_QUOTE.SUCCESS,
-    address: tokenAddress,
-    response: {
-      sellQuote
-    }})
 }
 
 export function * buyCc ({amount, tokenAddress, minReturn, options}) {
