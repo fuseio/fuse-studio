@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 
 import Modal from 'components/Modal'
 import BuySellAmounts from 'components/exchange/BuySellAmounts'
-import SummaryBuy from 'components/exchange/SummaryBuy'
+import Summary from 'components/exchange/Summary'
 import OpenMetamask from 'components/exchange/OpenMetamask'
 import Pending from 'components/exchange/Pending'
 import Completed from 'components/exchange/Completed'
@@ -15,7 +15,7 @@ import withEither from 'containers/withEither'
 
 const EXCHANGE_COMPONENTS = {
   1: (props) => <BuySellAmounts {...props} />,
-  2: (props) => <SummaryBuy {...props} />,
+  2: (props) => <Summary {...props} />,
   3: (props) => <OpenMetamask {...props} />,
   4: (props) => <Pending {...props} />,
   5: (props) => <Completed {...props} />

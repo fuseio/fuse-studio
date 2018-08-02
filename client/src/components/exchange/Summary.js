@@ -11,7 +11,7 @@ import RightArrow from 'images/right-arrow.png'
 import Info from 'images/info.png'
 import BackButton from 'images/down-arrow.png'
 
-class SummaryBuy extends React.Component {
+class Summary extends React.Component {
   next = () => {
     this.props.uiActions.setBuyStage(3)
     if (this.props.isBuy) {
@@ -89,4 +89,4 @@ const mapStateToProps = (state, props) => ({
   ...props
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SummaryBuy)
+export default connect(mapStateToProps, mapDispatchToProps)(Summary)
