@@ -33,7 +33,7 @@ class Summary extends Component {
     if (isBuy) {
       marketMakerActions.estimateGasBuyCc(community.address, new BigNumber(this.props.cln).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
     } else {
-      marketMakerActions.estimateGasSellCc(community.address, new BigNumber(this.prosp.cc).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
+      marketMakerActions.estimateGasSellCc(community.address, new BigNumber(this.props.cc).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
     }
   }
 

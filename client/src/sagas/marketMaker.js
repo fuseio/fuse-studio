@@ -1,4 +1,4 @@
-import { all, call, put, select } from 'redux-saga/effects'
+import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 
 import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
@@ -335,9 +335,9 @@ export default function * marketMakerSaga () {
     tryTakeLatestWithDebounce(actions.SELL_QUOTE, sellQuote),
     tryTakeLatestWithDebounce(actions.INVERT_BUY_QUOTE, invertBuyQuote),
     tryTakeLatestWithDebounce(actions.INVERT_SELL_QUOTE, invertSellQuote),
-    tryTakeEvery(actions.CHANGE, change),
-    tryTakeEvery(actions.BUY_CC, buyCc),
-    tryTakeEvery(actions.SELL_CC, sellCc),
+    tryTakeEvery(actions.CHANGE, change, 1),
+    tryTakeEvery(actions.BUY_CC, buyCc, 1),
+    tryTakeEvery(actions.SELL_CC, sellCc, 1),
     tryTakeEvery(actions.ESTIMATE_GAS_BUY_CC, estimateGasBuyCc),
     tryTakeEvery(actions.ESTIMATE_GAS_SELL_CC, estimateGasSellCc),
     tryTakeEvery(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData),

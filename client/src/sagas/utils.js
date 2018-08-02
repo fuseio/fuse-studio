@@ -3,25 +3,25 @@ import { delay } from 'redux-saga'
 
 export const createEntityPut = (entity) => (action) => put({...action, entity})
 
-function * tryClause (args, error, action) {
+function * tryClause (args, error, action, numberOfTries = CONFIG.api.retryCount) {
   yield put({
     ...args,
     error,
     type: action.FAILURE
   })
   args = {...args, numberOfTries: args.numberOfTries ? args.numberOfTries + 1 : 1}
-  if (args.numberOfTries < CONFIG.api.retryCount) {
+  if (args.numberOfTries < numberOfTries) {
     yield delay(CONFIG.api.retryTimeout)
     yield put(args)
   }
 }
 
-export function tryCatch (action, saga) {
+export function tryCatch (action, saga, numberOfTries) {
   return function * wrappedTryCatch (args) {
     try {
       yield saga(args)
     } catch (error) {
-      yield tryClause(args, error, action)
+      yield tryClause(args, error, action, numberOfTries)
     }
   }
 }
@@ -37,6 +37,6 @@ export function tryCatchWithDebounce (action, saga, timeout) {
   }
 }
 
-export const tryTakeEvery = (action, saga) => takeEvery(action.REQUEST, tryCatch(action, saga))
+export const tryTakeEvery = (action, saga, numberOfTries) => takeEvery(action.REQUEST, tryCatch(action, saga, numberOfTries))
 export const tryTakeLatestWithDebounce = (action, saga, timeout = CONFIG.ui.debounce) =>
   takeLatest(action.REQUEST, tryCatchWithDebounce(action, saga, 500))
