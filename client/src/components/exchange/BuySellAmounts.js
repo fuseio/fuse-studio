@@ -1,4 +1,5 @@
 import React, {Component, Fragment} from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
@@ -13,54 +14,44 @@ import DownArrow from 'images/down-arrow.png'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
 
-const CcTextInput = (props) => {
-  const {community, error, isLoading} = props
-  const ccSymbol = community.symbol
+const DEFAULT_PRICE_CHANGE = 2
+
+const AmountTextInput = (props) => {
+  const {symbol, error, isLoading} = props
 
   return (
     <Fragment>
-      <TextInput id='cc-amount'
+      <TextInput
         className={classNames({'buy-sell-input': true, 'error': !!error})}
-        placeholder={isLoading ? '' : `Enter amount in ${ccSymbol}`}
+        placeholder={isLoading ? '' : `Enter amount in ${symbol}`}
         error={error}
         value={isLoading ? '' : props.getValue()}
         onChange={props.handleInput}
       />
       {isLoading ? <Loader className='loader input' /> : null}
-      <div className='input-coin-symbol'>{ccSymbol}</div>
+      <div className='input-coin-symbol'>{symbol}</div>
     </Fragment>
   )
 }
 
-const ClnTextInput = (props) => {
-  const {isLoading, error} = props
-
-  return (
-    <Fragment>
-      <TextInput id='cln-amount'
-        className={classNames({'buy-sell-input': true, 'error': !!error})}
-        placeholder={isLoading ? '' : `Enter amount in CLN`}
-        error={error}
-        value={isLoading ? '' : props.getValue()}
-        onChange={props.handleInput}
-      />
-      {isLoading ? <Loader className='loader input' /> : null}
-      <div className='input-coin-symbol'>CLN</div>
-    </Fragment>
-  )
+AmountTextInput.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  symbol: PropTypes.string.isRequired,
+  handleInput: PropTypes.func.isRequired,
+  getValue: PropTypes.func.isRequired,
+  error: PropTypes.string
 }
 
 class BuySellAmounts extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      toCC: true,
       inputField: 'cln',
       advancedInputField: 'priceChange',
       advanced: false,
       cln: this.props.cln || '',
       cc: this.props.cc || '',
-      priceChange: this.props.priceChange || (this.props.isBuy === true ? buySell.DEFAULT_PRICE_CHANGE : buySell.DEFAULT_PRICE_CHANGE * (-1)) // in percent
+      priceChange: this.props.priceChange || (this.props.isBuy === true ? DEFAULT_PRICE_CHANGE : DEFAULT_PRICE_CHANGE * (-1)) // in percent
     }
   }
 
@@ -93,7 +84,6 @@ class BuySellAmounts extends Component {
     this.setState({
       cln: event.target.value,
       cc: '',
-      toCC: true,
       inputField: 'cln',
       maxAmountError: cln.isGreaterThan(clnBalance) ? 'Insufficient Funds' : undefined
     })
@@ -110,7 +100,6 @@ class BuySellAmounts extends Component {
 
     this.setState({
       cc: event.target.value,
-      toCC: false,
       inputField: 'cc'
     })
 
@@ -239,7 +228,7 @@ class BuySellAmounts extends Component {
 
   render () {
     const { isBuy, community, isFetching } = this.props
-    const { advanced, maxAmountError, toCC } = this.state
+    const { advanced, maxAmountError, inputField } = this.state
     const ccSymbol = community.symbol
     const ccPrice = community.currentPrice
 
@@ -264,14 +253,15 @@ class BuySellAmounts extends Component {
             <div className={sellTabClass} onClick={this.handleChangeToSellTab}>SELL</div>
           </div>
           {
-            isBuy ? <ClnTextInput
-              isLoading={isFetching && !toCC}
+            isBuy ? <AmountTextInput
+              isLoading={isFetching && inputField !== 'cln'}
+              symbol='CLN'
               getValue={this.cln}
               handleInput={this.handleClnInput}
               error={maxAmountError} />
-              : <CcTextInput
-                isLoading={isFetching && toCC}
-                community={community}
+              : <AmountTextInput
+                isLoading={isFetching && inputField !== 'cc'}
+                symbol={community.symbol}
                 getValue={this.cc}
                 handleInput={this.handleCcInput}
                 error={maxAmountError}
@@ -286,13 +276,14 @@ class BuySellAmounts extends Component {
             {this.slippage() ? <div>PRICE SLIPPAGE<img src={Info} />{`${this.slippage()}%`}</div> : null}
           </div>
           {
-            !isBuy ? <ClnTextInput
-              isLoading={isFetching && !toCC}
+            !isBuy ? <AmountTextInput
+              isLoading={isFetching && inputField !== 'cln'}
+              symbol='CLN'
               getValue={this.cln}
               handleInput={this.handleClnInput} />
-              : <CcTextInput
-                isLoading={isFetching && toCC}
-                community={community}
+              : <AmountTextInput
+                isLoading={isFetching && inputField !== 'cc'}
+                symbol={community.symbol}
                 getValue={this.cc}
                 handleInput={this.handleCcInput}
               />
