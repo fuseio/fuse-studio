@@ -14,6 +14,8 @@ export default (state = {
       return {...state, modalType: action.modalType, modalProps: action.modalProps}
     case ui.HIDE_MODAL:
       return {...state, modalType: null, modalProps: null}
+    case ui.SET_MODAL_PROPS:
+      return {...state, modalProps: action.modalProps}
     case ui.SIGNUP_HIDE:
       return {...state, signupHide: action.hide}
     case ui.SIGNUP_CLOSE:
