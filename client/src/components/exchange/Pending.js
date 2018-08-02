@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import * as uiActions from 'actions/ui'
-import { bindActionCreators } from 'redux'
+
 import {getEtherscanUrl} from 'selectors/web3'
 import {getAccount} from 'selectors/accounts'
 import Loader from 'components/Loader'
@@ -35,14 +34,10 @@ class Pending extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch)
-})
-
 const mapStateToProps = (state, props) => ({
   pendingTx: state.marketMaker.transactionHash,
   etherscanUrl: getEtherscanUrl(state),
   account: getAccount(state)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Pending)
+export default connect(mapStateToProps)(Pending)

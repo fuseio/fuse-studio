@@ -1,8 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as uiActions from 'actions/ui'
 import { bindActionCreators } from 'redux'
 
+import * as uiActions from 'actions/ui'
+import * as marketMakerActions from 'actions/marketMaker'
 import Modal from 'components/Modal'
 import BuySellAmounts from 'components/exchange/BuySellAmounts'
 import Summary from 'components/exchange/Summary'
@@ -41,7 +42,8 @@ ExchangeModal.defaultProps = {
 }
 
 const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch)
+  uiActions: bindActionCreators(uiActions, dispatch),
+  marketMakerActions: bindActionCreators(marketMakerActions, dispatch)
 })
 
 const mapStateToProps = (state, props) => ({

@@ -1,7 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as uiActions from 'actions/ui'
-import { bindActionCreators } from 'redux'
 
 import Metamask from 'images/metamask-dark.png'
 
@@ -25,12 +23,8 @@ class OpenMetamask extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch)
-})
-
 const mapStateToProps = (state, props) => ({
   pending: state.marketMaker.transactionHash
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(OpenMetamask)
+export default connect(mapStateToProps)(OpenMetamask)

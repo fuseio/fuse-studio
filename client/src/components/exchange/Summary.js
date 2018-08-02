@@ -1,26 +1,23 @@
-import React from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {BigNumber} from 'bignumber.js'
 
-import * as uiActions from 'actions/ui'
-import { bindActionCreators } from 'redux'
-import { change, buyCc, sellCc } from 'actions/marketMaker'
 import Loader from 'components/Loader'
-
 import RightArrow from 'images/right-arrow.png'
 import Info from 'images/info.png'
 import BackButton from 'images/down-arrow.png'
 
-class Summary extends React.Component {
+class Summary extends Component {
   next = () => {
     this.props.uiActions.setBuyStage(3)
     if (this.props.isBuy) {
-      this.props.buyCc(this.props.ccAddress, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
+      this.props.marketMakerActions.buyCc(this.props.community.address, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
         gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
         gas: this.props.estimatedGas
       })
     } else {
-      this.props.sellCc(this.props.ccAddress, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
+      this.props.marketMakerActions.sellCc(this.props.community.address, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
         gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
         gas: this.props.estimatedGas
       })
@@ -29,6 +26,15 @@ class Summary extends React.Component {
 
   back = () => {
     this.props.uiActions.setBuyStage(1)
+  }
+
+  componentDidMount () {
+    const { isBuy, community, marketMakerActions, minimum } = this.props
+    if (isBuy) {
+      marketMakerActions.estimateGasBuyCc(community.address, new BigNumber(this.props.cln).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
+    } else {
+      marketMakerActions.estimateGasSellCc(community.address, new BigNumber(this.prosp.cc).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
+    }
   }
 
   render () {
@@ -75,12 +81,9 @@ class Summary extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch),
-  change: bindActionCreators(change, dispatch),
-  buyCc: bindActionCreators(buyCc, dispatch),
-  sellCc: bindActionCreators(sellCc, dispatch)
-})
+Summary.propTypes = {
+  community: PropTypes.object.isRequired
+}
 
 const mapStateToProps = (state, props) => ({
   quotePair: state.marketMaker.quotePair || {},
@@ -89,4 +92,4 @@ const mapStateToProps = (state, props) => ({
   ...props
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Summary)
+export default connect(mapStateToProps)(Summary)

@@ -1,17 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import * as uiActions from 'actions/ui'
-import { bindActionCreators } from 'redux'
 import {getEtherscanUrl} from 'selectors/web3'
 import {getAccount} from 'selectors/accounts'
 import Vimage from 'images/v.png'
 
 class Completed extends React.Component {
-  componentWillReceiveProps (nextProps) {
-
-  }
-
   done = () => {
     this.props.uiActions.hideModal()
   }
@@ -41,14 +35,10 @@ class Completed extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch)
-})
-
 const mapStateToProps = (state, props) => ({
   pendingTx: state.marketMaker.transactionHash,
   etherscanUrl: getEtherscanUrl(state),
   account: getAccount(state)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Completed)
+export default connect(mapStateToProps)(Completed)

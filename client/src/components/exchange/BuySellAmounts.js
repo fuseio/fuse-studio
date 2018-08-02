@@ -2,9 +2,6 @@ import React, {Component, Fragment} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import * as uiActions from 'actions/ui'
-import * as marketMakerActions from 'actions/marketMaker'
-import { bindActionCreators } from 'redux'
 
 import TextInput from 'components/TextInput'
 import Loader from 'components/Loader'
@@ -58,20 +55,14 @@ class BuySellAmounts extends Component {
   defaultPriceChange = () => (this.props.isBuy === true ? DEFAULT_PRICE_CHANGE : DEFAULT_PRICE_CHANGE * (-1))
 
   next = () => {
-    const { cln, cc, minimum, priceLimit, priceChange } = this.state
-    const { isBuy, community, marketMakerActions, uiActions } = this.props
-
-    if (isBuy) {
-      marketMakerActions.estimateGasBuyCc(community.address, new BigNumber(cln).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
-    } else {
-      marketMakerActions.estimateGasSellCc(community.address, new BigNumber(cc).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
-    }
+    const { minimum, priceLimit, priceChange } = this.state
+    const { isBuy, community, uiActions } = this.props
 
     uiActions.setBuySellAmounts({
       buyStage: 2,
       ccAddress: community.address,
-      cln: cln.toString(),
-      cc: cc.toString(),
+      cln: this.cln(),
+      cc: this.cc(),
       isBuy,
       minimum,
       priceLimit,
@@ -349,10 +340,9 @@ class BuySellAmounts extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  uiActions: bindActionCreators(uiActions, dispatch),
-  marketMakerActions: bindActionCreators(marketMakerActions, dispatch)
-})
+BuySellAmounts.defaultProps = {
+  isFetching: false
+}
 
 const mapStateToProps = (state, props) => ({
   quotePair: state.marketMaker.quotePair || {},
@@ -360,4 +350,4 @@ const mapStateToProps = (state, props) => ({
   ...props
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuySellAmounts)
+export default connect(mapStateToProps)(BuySellAmounts)
