@@ -9,7 +9,7 @@ class Pending extends Component {
   componentWillReceiveProps (nextProps) {
     const { account, pendingTx } = nextProps
     if (account && account.transactions && account.transactions[pendingTx] && account.transactions[pendingTx].isPending !== this.props.account.transactions[pendingTx].isPending && !account.transactions[pendingTx].isPending) {
-      this.props.uiActions.setBuyStage(5)
+      this.props.setBuyStage(5)
     }
   }
 

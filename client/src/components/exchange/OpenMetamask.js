@@ -6,7 +6,7 @@ import Metamask from 'images/metamask-dark.png'
 class OpenMetamask extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (this.props.pending !== nextProps.pending) {
-      this.props.uiActions.setBuyStage(4)
+      this.props.setBuyStage(4)
     }
   }
 

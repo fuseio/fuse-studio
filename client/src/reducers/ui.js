@@ -16,12 +16,12 @@ export default (state = {
       return {...state, modalType: null, modalProps: null}
     case ui.SET_MODAL_PROPS:
       return {...state, modalProps: action.modalProps}
+    case ui.UPDATE_MODAL_PROPS:
+      return {...state, modalProps: {...state.modalProps, buyStage: action.buyStage}}
     case ui.SIGNUP_HIDE:
       return {...state, signupHide: action.hide}
     case ui.SIGNUP_CLOSE:
       return {...state, signupClose: action.close}
-    case ui.BUY_STAGE:
-      return {...state, modalProps: {...state.modalProps, buyStage: action.buyStage}}
     case ui.RESET_EXCHANGE:
       return {...state, modalProps: {buyStage: 1}}
     default:

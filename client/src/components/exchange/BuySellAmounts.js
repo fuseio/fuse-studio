@@ -143,7 +143,6 @@ AdvancedSettings.propTypes = {
   isBuy: PropTypes.bool.isRequired,
   community: PropTypes.object.isRequired,
   handleToggle: PropTypes.func.isRequired,
-  handleMinimum: PropTypes.func.isRequired,
   minimum: PropTypes.string.isRequired,
   relevantAmount: PropTypes.string.isRequired,
   isFetching: PropTypes.bool.isRequired,

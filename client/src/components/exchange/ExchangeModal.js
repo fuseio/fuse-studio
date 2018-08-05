@@ -25,13 +25,15 @@ const EXCHANGE_COMPONENTS = {
 class ExchangeModal extends React.Component {
   onClose = () => this.props.uiActions.hideModal()
 
+  setBuyStage = (buyStage) => this.props.uiActions.updateModalProps({buyStage})
+
   render () {
     const { buyStage } = this.props
     const ExchangeComponent = EXCHANGE_COMPONENTS[buyStage]
 
     return (
       <Modal className='fullscreen' onClose={this.onClose} width='500px'>
-        {ExchangeComponent(this.props)}
+        {ExchangeComponent({...this.props, setBuyStage: this.setBuyStage})}
       </Modal>
     )
   }

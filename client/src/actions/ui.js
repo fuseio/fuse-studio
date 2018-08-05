@@ -6,6 +6,7 @@ export const zoomToMarker = (zoom) => action('ZOOM', { zoom })
 export const SHOW_MODAL = 'SHOW_MODAL'
 export const HIDE_MODAL = 'HIDE_MODAL'
 export const SET_MODAL_PROPS = 'SET_MODAL_PROPS'
+export const UPDATE_MODAL_PROPS = 'UPDATE_MODAL_PROPS'
 
 export const SIGNUP_HIDE = 'SIGNUP_HIDE'
 export const SIGNUP_CLOSE = 'SIGNUP_CLOSE'
@@ -29,6 +30,13 @@ export const hideModal = () => {
 export const setModalProps = (modalProps) => {
   return {
     type: SET_MODAL_PROPS,
+    modalProps
+  }
+}
+
+export const updateModalProps = (modalProps) => {
+  return {
+    type: UPDATE_MODAL_PROPS,
     modalProps
   }
 }

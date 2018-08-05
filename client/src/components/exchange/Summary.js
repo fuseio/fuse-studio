@@ -10,7 +10,7 @@ import BackButton from 'images/down-arrow.png'
 
 class Summary extends Component {
   next = () => {
-    this.props.uiActions.setBuyStage(3)
+    this.props.setBuyStage(3)
     if (this.props.isBuy) {
       this.props.marketMakerActions.buyCc(this.props.community.address, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
         gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
@@ -25,7 +25,7 @@ class Summary extends Component {
   }
 
   back = () => {
-    this.props.uiActions.setBuyStage(1)
+    this.props.setBuyStage(1)
   }
 
   componentDidMount () {
