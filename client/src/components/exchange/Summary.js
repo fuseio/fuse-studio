@@ -7,6 +7,7 @@ import Loader from 'components/Loader'
 import RightArrow from 'images/right-arrow.png'
 import Info from 'images/info.png'
 import BackButton from 'images/down-arrow.png'
+import {clnFormatter, ccFormatter} from './BuySellAmounts'
 
 class Summary extends Component {
   next = () => {
@@ -37,13 +38,23 @@ class Summary extends Component {
     }
   }
 
+  getCoinVariables = () => this.props.isBuy ? {
+    fromCoin: clnFormatter(this.props.cln, this.props.isBuy),
+    toCoin: ccFormatter(this.props.cc, this.props.isBuy),
+    fromSymbol: 'CLN',
+    toSymbol: this.props.community.symbol
+  } : {
+    fromCoin: ccFormatter(this.props.cc, this.props.isBuy),
+    toCoin: clnFormatter(this.props.cln, this.props.isBuy),
+    fromSymbol: this.props.community.symbol,
+    toSymbol: 'CLN'
+  }
+
   render () {
-    const { community, isBuy, cln, cc, gas, estimatedGas } = this.props
+    const { community, gas, estimatedGas } = this.props
     const formattedPrice = this.props.quotePair.price.toFixed(5)
-    const fromCoin = isBuy ? cln : cc
-    const toCoin = isBuy ? cc : cln
-    const fromSymbol = isBuy ? 'CLN' : community.symbol
-    const toSymbol = isBuy ? community.symbol : 'CLN'
+    const {fromCoin, toCoin, fromSymbol, toSymbol} = this.getCoinVariables()
+
     const gasPrice = (gas && estimatedGas) && new BigNumber(estimatedGas).multipliedBy(gas.average).div(10).div(1e9)
     return (
       <div className='summary'>

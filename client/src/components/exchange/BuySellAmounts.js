@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import trim from 'lodash/trim'
+import identity from 'lodash/identity'
 import web3Utils from 'web3-utils'
 
 import TextInput from 'components/TextInput'
@@ -15,9 +16,20 @@ import Info from 'images/info.png'
 const DEFAULT_PRICE_CHANGE = 0.02
 const ROUND_PRECISION = 5
 
+const roundUp = (value) => new BigNumber(value).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
+const roundDown = (value) => new BigNumber(value).toFixed(ROUND_PRECISION, BigNumber.ROUND_DOWN)
+
+export const clnFormatter = (value, isBuy) => inputFormatter(value, isBuy)
+export const ccFormatter = (value, isBuy) => inputFormatter(value, !isBuy)
+
+const inputFormatter = (value, isBuy) => (
+  isBuy
+    ? roundUp(value)
+    : roundDown(value)
+)
+
 const AmountTextInput = (props) => {
   const {symbol, error, isLoading} = props
-
   return (
     <Fragment>
       <TextInput
@@ -37,7 +49,6 @@ AmountTextInput.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   symbol: PropTypes.string.isRequired,
   handleInput: PropTypes.func.isRequired,
-  getValue: PropTypes.func.isRequired,
   error: PropTypes.string
 }
 
@@ -83,7 +94,7 @@ class AdvancedSettings extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (!nextProps.isFetching && this.props.relevantAmount !== nextProps.relevantAmount) {
+    if (!this.props.relevantAmount.isEqualTo(nextProps.relevantAmount)) {
       const minimum = calculateMinimum(this.props.pricePercentage, nextProps.relevantAmount)
       const priceLimit = calculatePriceLimit(this.props.pricePercentage, this.props.price())
 
@@ -146,7 +157,7 @@ AdvancedSettings.propTypes = {
   community: PropTypes.object.isRequired,
   handleToggle: PropTypes.func.isRequired,
   minimum: PropTypes.string.isRequired,
-  relevantAmount: PropTypes.string.isRequired,
+  relevantAmount: PropTypes.object.isRequired,
   isFetching: PropTypes.bool.isRequired,
   price: PropTypes.func.isRequired
 }
@@ -155,7 +166,7 @@ class BuySellAmounts extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      inputField: '',
+      inputField: props.inputField || '',
       advanced: false,
       cln: props.cln || '',
       cc: props.cc || '',
@@ -168,13 +179,14 @@ class BuySellAmounts extends Component {
   defaultPricePercentage = () => (this.props.isBuy === true ? DEFAULT_PRICE_CHANGE : DEFAULT_PRICE_CHANGE * (-1))
 
   next = () => {
-    const { minimum, priceLimit, pricePercentage } = this.state
+    const { minimum, priceLimit, pricePercentage, inputField } = this.state
     const { isBuy, uiActions } = this.props
 
     uiActions.setModalProps({
       buyStage: 2,
       cln: this.cln(),
       cc: this.cc(),
+      inputField,
       isBuy,
       minimum,
       priceLimit,
@@ -269,23 +281,26 @@ class BuySellAmounts extends Component {
       : new BigNumber(this.props.community.currentPrice.toString()).multipliedBy(1e18)
   }
 
-  cln = () => {
-    return this.state.inputField !== 'cc' ? this.state.cln : (
-      this.props.isBuy ? new BigNumber(this.props.quotePair.inAmount).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
-        : new BigNumber(this.props.quotePair.outAmount || 0).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_DOWN)
-    )
-  }
+  cln = (formatter = identity) => this.state.inputField !== 'cc' ? this.state.cln : (
+    this.props.isBuy ? formatter(web3Utils.fromWei(this.props.quotePair.inAmount.toString()), this.props.isBuy)
+      : formatter(web3Utils.fromWei(this.props.quotePair.outAmount.toString()), this.props.isBuy)
+  )
 
-  cc = () => {
-    return this.state.inputField !== 'cln' ? this.state.cc : (
-      this.props.isBuy ? new BigNumber(this.props.quotePair.outAmount).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
-        : new BigNumber(this.props.quotePair.inAmount).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_DOWN)
-    )
-  }
+  cc = (formatter = identity) => this.state.inputField !== 'cln' ? this.state.cc : (
+    this.props.isBuy ? formatter(web3Utils.fromWei(this.props.quotePair.outAmount.toString()), this.props.isBuy)
+      : formatter(web3Utils.fromWei(this.props.quotePair.inAmount.toString()), this.props.isBuy)
+  )
 
   slippage = () => new BigNumber(this.props.quotePair.slippage).multipliedBy(100).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
 
-  getRelevantAmount = () => this.props.isBuy ? this.cc() : this.cln()
+  getRelevantAmount = () => {
+    const value = this.props.isBuy ? this.cc() : this.cln()
+    if (trim(value) === '') {
+      return BigNumber(0)
+    } else {
+      return BigNumber(value)
+    }
+  }
 
   handleChangeToSellTab = () => {
     if (this.props.isBuy) {
@@ -361,13 +376,13 @@ class BuySellAmounts extends Component {
             isBuy ? <AmountTextInput
               isLoading={isFetching && inputField !== 'cln'}
               symbol='CLN'
-              getValue={this.cln}
+              getValue={this.cln.bind(null, clnFormatter)}
               handleInput={this.handleClnInput}
               error={maxAmountError} />
               : <AmountTextInput
                 isLoading={isFetching && inputField !== 'cc'}
                 symbol={community.symbol}
-                getValue={this.cc}
+                getValue={this.cc.bind(null, ccFormatter)}
                 handleInput={this.handleCcInput}
                 error={maxAmountError}
               />
@@ -384,12 +399,12 @@ class BuySellAmounts extends Component {
             !isBuy ? <AmountTextInput
               isLoading={isFetching && inputField !== 'cln'}
               symbol='CLN'
-              getValue={this.cln}
+              getValue={this.cln.bind(null, clnFormatter, isBuy)}
               handleInput={this.handleClnInput} />
               : <AmountTextInput
                 isLoading={isFetching && inputField !== 'cc'}
                 symbol={community.symbol}
-                getValue={this.cc}
+                getValue={this.cc.bind(null, ccFormatter, isBuy)}
                 handleInput={this.handleCcInput}
               />
           }
@@ -413,10 +428,7 @@ class BuySellAmounts extends Component {
 }
 
 BuySellAmounts.defaultProps = {
-  isFetching: false
-}
-
-BuySellAmounts.defaultProps = {
+  isFetching: false,
   quotePair: {
     slippage: 0,
     inAmount: 0,
