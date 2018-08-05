@@ -2,6 +2,8 @@ import React, {Component, Fragment} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
+import trim from 'lodash/trim'
+import web3Utils from 'web3-utils'
 
 import TextInput from 'components/TextInput'
 import Loader from 'components/Loader'
@@ -182,45 +184,55 @@ class BuySellAmounts extends Component {
 
   askForClnQuote = (amount) => {
     const {isBuy, community, marketMakerActions} = this.props
+    const amountInWei = web3Utils.toWei(amount)
     if (isBuy) {
-      marketMakerActions.buyQuote(community.address, amount)
+      marketMakerActions.buyQuote(community.address, amountInWei)
     } else {
-      marketMakerActions.invertSellQuote(community.address, amount)
+      marketMakerActions.invertSellQuote(community.address, amountInWei)
     }
   }
 
   askForCcQuote = (amount) => {
+    const amountInWei = web3Utils.toWei(amount)
     const {isBuy, community, marketMakerActions} = this.props
     if (isBuy) {
-      marketMakerActions.invertBuyQuote(community.address, amount)
+      marketMakerActions.invertBuyQuote(community.address, amountInWei)
     } else {
-      marketMakerActions.sellQuote(community.address, amount)
+      marketMakerActions.sellQuote(community.address, amountInWei)
     }
+  }
+
+  validateInput = (amount, balance) => {
+    if (trim(amount) === '') {
+      return ''
+    }
+    const amountInWei = new BigNumber(web3Utils.toWei(amount))
+
+    if (amountInWei.decimalPlaces() > 0) {
+      return 'Precision too hight'
+    }
+
+    return amountInWei.isGreaterThan(balance) ? 'Insufficient Funds' : undefined
   }
 
   handleClnInput = (event) => {
-    const { clnBalance } = this.props
-
-    const cln = new BigNumber(event.target.value).multipliedBy(1e18)
-
-    if (cln.decimalPlaces() > 0) {
-      this.setState({
-        maxAmountError: 'Precision too hight'
-      })
-      return
-    }
+    const amount = event.target.value
 
     this.setState({
-      cln: event.target.value,
+      cln: amount,
       cc: '',
       inputField: 'cln',
-      maxAmountError: cln.isGreaterThan(clnBalance) ? 'Insufficient Funds' : undefined
+      maxAmountError: this.validateInput(amount, this.props.clnBalance)
     })
-    this.askForClnQuote(cln)
+    if (trim(amount)) {
+      this.askForClnQuote(amount)
+    }
   }
 
   handleCcInput = (event) => {
-    const cc = new BigNumber(event.target.value).multipliedBy(1e18)
+    const amount = event.target.value
+
+    const cc = new BigNumber(web3Utils.toWei(amount))
 
     if (cc.decimalPlaces() > 0) {
       this.setState({
@@ -230,11 +242,13 @@ class BuySellAmounts extends Component {
     }
 
     this.setState({
-      cc: event.target.value,
+      cc: amount,
       inputField: 'cc'
     })
 
-    this.askForCcQuote(cc)
+    if (trim(amount)) {
+      this.askForCcQuote(amount)
+    }
   }
 
   handleClickMax = (handle, balance) => {
@@ -257,19 +271,19 @@ class BuySellAmounts extends Component {
 
   cln = () => {
     return this.state.inputField !== 'cc' ? this.state.cln : (
-      this.props.isBuy ? new BigNumber(this.props.quotePair.inAmount || 0).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
+      this.props.isBuy ? new BigNumber(this.props.quotePair.inAmount).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
         : new BigNumber(this.props.quotePair.outAmount || 0).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_DOWN)
     )
   }
 
   cc = () => {
     return this.state.inputField !== 'cln' ? this.state.cc : (
-      this.props.isBuy ? new BigNumber(this.props.quotePair.outAmount || 0).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
-        : new BigNumber(this.props.quotePair.inAmount || 0).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_DOWN)
+      this.props.isBuy ? new BigNumber(this.props.quotePair.outAmount).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
+        : new BigNumber(this.props.quotePair.inAmount).div(1e18).toFixed(ROUND_PRECISION, BigNumber.ROUND_DOWN)
     )
   }
 
-  slippage = () => new BigNumber(this.props.quotePair.slippage || 0).multipliedBy(100).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
+  slippage = () => new BigNumber(this.props.quotePair.slippage).multipliedBy(100).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
 
   getRelevantAmount = () => this.props.isBuy ? this.cc() : this.cln()
 
@@ -402,8 +416,16 @@ BuySellAmounts.defaultProps = {
   isFetching: false
 }
 
+BuySellAmounts.defaultProps = {
+  quotePair: {
+    slippage: 0,
+    inAmount: 0,
+    outAmount: 0
+  }
+}
+
 const mapStateToProps = (state, props) => ({
-  quotePair: state.marketMaker.quotePair || {},
+  quotePair: state.marketMaker.quotePair,
   isFetching: state.marketMaker.isFetchingQuotePair,
   ...props
 })
