@@ -10,7 +10,7 @@ import DownArrow from 'images/down-arrow.png'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
 
-const DEFAULT_PRICE_CHANGE = 2
+const DEFAULT_PRICE_CHANGE = 0.02
 const ROUND_PRECISION = 5
 
 const AmountTextInput = (props) => {
@@ -39,34 +39,145 @@ AmountTextInput.propTypes = {
   error: PropTypes.string
 }
 
+const calculatePriceLimit = (pricePercentage, price) => (1 + pricePercentage) * price
+const calculateMinimum = (pricePercentage, relevantAmount) => relevantAmount / (1 + pricePercentage)
+
+class AdvancedSettings extends Component {
+  handlePricePercentage = (event) => {
+    const pricePercentage = event.target.value / 100
+    const minimum = calculateMinimum(pricePercentage, this.props.relevantAmount)
+    const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
+
+    this.props.setAdvanced({
+      minimum,
+      pricePercentage,
+      priceLimit
+    })
+  }
+
+  handlePriceLimit = (event) => {
+    const priceLimit = event.target.value
+    const pricePercentage = priceLimit / this.props.price() - 1
+
+    const minimum = calculateMinimum(pricePercentage, this.props.relevantAmount)
+
+    this.props.setAdvanced({
+      minimum,
+      pricePercentage,
+      priceLimit
+    })
+  }
+
+  handleMinimum = (event) => {
+    const minimum = event.target.value
+    const pricePercentage = 100 * (this.props.relevantAmount / minimum - 1)
+    const priceLimit = calculatePriceLimit(minimum, this.props.price())
+
+    this.props.setAdvanced({
+      minimum,
+      pricePercentage,
+      priceLimit
+    })
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (!nextProps.isFetching && this.props.relevantAmount !== nextProps.relevantAmount) {
+      const minimum = calculateMinimum(this.props.pricePercentage, nextProps.relevantAmount)
+      const priceLimit = calculatePriceLimit(this.props.pricePercentage, this.props.price())
+
+      this.props.setAdvanced({
+        minimum,
+        priceLimit
+      })
+    }
+  }
+
+  render = () => {
+    const {isBuy} = this.props
+    const {symbol} = this.props.community
+
+    const advancedClass = classNames({
+      'advanced-settings': true,
+      'open': this.props.isOpen
+    })
+
+    return (
+      <div className={advancedClass}>
+        <div className='advanced-header'>
+          <h5 onClick={this.props.handleToggle}>Advanced settings</h5>
+          <img onClick={this.props.handleToggle} src={DownArrow} />
+        </div>
+        <TextInput id='minimum'
+          type='number'
+          label='MINIMAL ACCEPTABLE AMOUNT'
+          placeholder={`Enter minimal amount of ${isBuy ? symbol : 'cln'}`}
+          onChange={this.handleMinimum}
+          value={this.props.minimum}
+        />
+        <div className='minimum-coin-symbol'>{isBuy ? symbol : 'CLN'}</div>
+        <TextInput id='price-change'
+          type='number'
+          label={`${symbol} PRICE CHANGE`}
+          placeholder='Enter price change in %'
+          value={this.props.pricePercentage * 100}
+          onChange={this.handlePricePercentage}
+        />
+        <div className='price-change-percent'>%</div>
+        <TextInput id='price-limit'
+          type='number'
+          label={`${symbol} PRICE LIMIT`}
+          placeholder={`Enter price limit for ${symbol}`}
+          value={this.props.priceLimit}
+          onChange={this.handlePriceLimit}
+        />
+
+        <div className='price-limit-cln'>CLN</div>
+        <p className='annotation'>{`The transaction will fail if the price of 1 ${symbol} is ${(isBuy ? 'higher' : 'lower')} than ${(this.props.priceLimit)} CLN`}</p>
+      </div>
+    )
+  }
+}
+
+AdvancedSettings.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  isBuy: PropTypes.bool.isRequired,
+  community: PropTypes.object.isRequired,
+  handleToggle: PropTypes.func.isRequired,
+  handleMinimum: PropTypes.func.isRequired,
+  minimum: PropTypes.string.isRequired,
+  relevantAmount: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  price: PropTypes.func.isRequired
+}
+
 class BuySellAmounts extends Component {
   constructor (props) {
     super(props)
     this.state = {
       inputField: '',
-      advancedInputField: 'priceChange',
       advanced: false,
       cln: props.cln || '',
       cc: props.cc || '',
-      priceChange: props.priceChange || this.defaultPriceChange()
+      minimum: props.minimum || '',
+      priceLimit: props.priceLimit || '',
+      pricePercentage: props.pricePercentage || this.defaultPricePercentage()
     }
   }
 
-  defaultPriceChange = () => (this.props.isBuy === true ? DEFAULT_PRICE_CHANGE : DEFAULT_PRICE_CHANGE * (-1))
+  defaultPricePercentage = () => (this.props.isBuy === true ? DEFAULT_PRICE_CHANGE : DEFAULT_PRICE_CHANGE * (-1))
 
   next = () => {
-    const { minimum, priceLimit, priceChange } = this.state
-    const { isBuy, community, uiActions } = this.props
+    const { minimum, priceLimit, pricePercentage } = this.state
+    const { isBuy, uiActions } = this.props
 
-    uiActions.setBuySellAmounts({
+    uiActions.setModalProps({
       buyStage: 2,
-      ccAddress: community.address,
       cln: this.cln(),
       cc: this.cc(),
       isBuy,
       minimum,
       priceLimit,
-      priceChange
+      pricePercentage
     })
   }
 
@@ -161,19 +272,8 @@ class BuySellAmounts extends Component {
 
   slippage = () => new BigNumber(this.props.quotePair.slippage || 0).multipliedBy(100).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
 
-  priceLimit = () => this.state.advancedInputField === 'priceLimit' ? this.state.priceLimit
-    : (1 + this.priceChange() / 100) * this.price()
-
-  minimum = () => this.state.advancedInputField === 'minimum'
-    ? this.state.minimum
-    : this.getRelevantAmount() / (1 + this.priceChange() / 100)
-
-  priceChange = () => this.state.advancedInputField === 'priceChange'
-    ? this.state.priceChange
-    : this.getRelevantAmount() / this.minimum()
-
   getRelevantAmount = () => this.props.isBuy ? this.cc() : this.cln()
-  // maxAmountError = () => this.props.isBuy ?
+
   handleChangeToSellTab = () => {
     if (this.props.isBuy) {
       this.handleChangeTab()
@@ -202,27 +302,10 @@ class BuySellAmounts extends Component {
     this.setState({ advanced: !this.state.advanced })
   }
 
-  handleMinimum = (event) => {
-    const minimum = event.target.value
-    this.setState({
-      advancedInputField: 'minimum',
-      minimum
-    })
-  }
+  setMinimum = (minimum) => this.setState({minimum})
 
-  handlePriceChange = (event) => {
-    this.setState({
-      advancedInputField: 'priceChange',
-      priceChange: event.target.value
-    })
-  }
-
-  handlePriceLimit = (event) => {
-    this.setState({
-      advancedInputField: 'priceLimit',
-      priceLimit: event.target.value
-    })
-  }
+  setAdvanced = (props) =>
+    this.setState(props)
 
   renderClickMax = () => {
     const maxAmountClass = classNames({
@@ -242,9 +325,8 @@ class BuySellAmounts extends Component {
 
   render () {
     const { isBuy, community, isFetching } = this.props
-    const { advanced, maxAmountError, inputField } = this.state
+    const { maxAmountError, inputField } = this.state
     const ccSymbol = community.symbol
-    const ccPrice = community.currentPrice
 
     const buyTabClass = classNames({
       'buy-tab': true,
@@ -253,10 +335,6 @@ class BuySellAmounts extends Component {
     const sellTabClass = classNames({
       'buy-tab': true,
       'active': !isBuy
-    })
-    const advancedClass = classNames({
-      'advanced-settings': true,
-      'open': advanced
     })
 
     return (
@@ -302,37 +380,18 @@ class BuySellAmounts extends Component {
                 handleInput={this.handleCcInput}
               />
           }
-          <div className={advancedClass}>
-            <div className='advanced-header'>
-              <h5 onClick={this.handleAdvanced}>Advanced settings</h5>
-              <img onClick={this.handleAdvanced} src={DownArrow} />
-            </div>
-            <TextInput id='minimum'
-              type='number'
-              label='MINIMAL ACCEPTABLE AMOUNT'
-              placeholder={`Enter minimal amount of ${isBuy ? ccSymbol : 'cln'}`}
-              onChange={this.handleMinimum}
-              value={this.minimum()}
-            />
-            <div className='minimum-coin-symbol'>{isBuy ? ccSymbol : 'CLN'}</div>
-            <TextInput id='price-change'
-              type='number'
-              label={`${ccSymbol} PRICE CHANGE`}
-              placeholder='Enter price change in %'
-              value={this.priceChange()}
-              onChange={this.handlePriceChange}
-            />
-            <div className='price-change-percent'>%</div>
-            <TextInput id='price-limit'
-              type='number'
-              label={`${ccSymbol} PRICE LIMIT`}
-              placeholder={`Enter price limit for ${ccSymbol}`}
-              value={this.priceLimit()}
-              onChange={this.handlePriceLimit}
-            />
-            <div className='price-limit-cln'>CLN</div>
-            <p className='annotation'>{`The transaction will fail if the price of 1 ${ccSymbol} is ${(isBuy ? 'higher' : 'lower')} than ${(this.priceLimit() || ccPrice)} CLN`}</p>
-          </div>
+          <AdvancedSettings
+            isOpen={this.state.advanced}
+            handleToggle={this.handleAdvanced}
+            isBuy={this.props.isBuy}
+            community={this.props.community}
+            minimum={this.state.minimum}
+            priceLimit={this.state.priceLimit}
+            pricePercentage={this.state.pricePercentage}
+            setAdvanced={this.setAdvanced}
+            price={this.price}
+            relevantAmount={this.getRelevantAmount()}
+            isFetching={this.props.isFetching} />
           <button disabled={maxAmountError || isFetching || !this.cc() || !this.cln()} onClick={this.next}>{isBuy ? `Buy ${ccSymbol}` : `Sell ${ccSymbol}`}</button>
         </div>
       </div>

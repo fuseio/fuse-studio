@@ -10,7 +10,6 @@ export const SET_MODAL_PROPS = 'SET_MODAL_PROPS'
 export const SIGNUP_HIDE = 'SIGNUP_HIDE'
 export const SIGNUP_CLOSE = 'SIGNUP_CLOSE'
 export const BUY_STAGE = 'BUY_STAGE'
-export const BUY_SELL_AMOUNTS = 'BUY_SELL_AMOUNTS'
 export const RESET_EXCHANGE = 'RESET_EXCHANGE'
 
 export const loadModal = (modalType, modalProps) => {
@@ -52,13 +51,6 @@ export const setBuyStage = (buyStage) => {
   return {
     type: BUY_STAGE,
     buyStage
-  }
-}
-
-export const setBuySellAmounts = (obj) => {
-  return {
-    type: BUY_SELL_AMOUNTS,
-    payload: obj
   }
 }
 
