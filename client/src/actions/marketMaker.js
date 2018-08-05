@@ -3,9 +3,7 @@ import {action, createRequestTypes} from './utils'
 export const quoteAction = (type, payload) => ({
   ...action(type, payload),
   response: {
-    quotePair: {
-      isFetching: true
-    }
+    isFetchingQuotePair: true
   }
 })
 

@@ -404,7 +404,7 @@ BuySellAmounts.defaultProps = {
 
 const mapStateToProps = (state, props) => ({
   quotePair: state.marketMaker.quotePair || {},
-  isFetching: state.marketMaker.quotePair && state.marketMaker.quotePair.isFetching,
+  isFetching: state.marketMaker.isFetchingQuotePair,
   ...props
 })
 

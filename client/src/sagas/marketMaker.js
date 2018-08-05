@@ -52,6 +52,18 @@ export function * ccReserve ({address, tokenAddress}) {
     }})
 }
 
+export function * isOpenForPublic ({tokenAddress}) {
+  const token = yield select(getCommunity, tokenAddress)
+  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
+  const isOpenForPublic = yield call(EllipseMarketMakerContract.methods.openForPublic().call)
+
+  yield put({type: actions.IS_OPEN_FOR_PUBLIC.SUCCESS,
+    tokenAddress,
+    response: {
+      isOpenForPublic
+    }})
+}
+
 const getReservesAndSupplies = (clnToken, ccToken, isBuy) => isBuy
   ? {
     r1: ccToken.ccReserve,
@@ -97,21 +109,10 @@ export function * quote ({tokenAddress, amount, isBuy}) {
   yield put({type: actions.QUOTE.SUCCESS,
     address: token.address,
     response: {
+      isFetchingQuotePair: false,
       quotePair
     }})
   return quotePair
-}
-
-export function * isOpenForPublic ({tokenAddress}) {
-  const token = yield select(getCommunity, tokenAddress)
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
-  const isOpenForPublic = yield call(EllipseMarketMakerContract.methods.openForPublic().call)
-
-  yield put({type: actions.IS_OPEN_FOR_PUBLIC.SUCCESS,
-    tokenAddress,
-    response: {
-      isOpenForPublic
-    }})
 }
 
 export function * invertQuote ({tokenAddress, amount, isBuy}) {
@@ -146,6 +147,7 @@ export function * invertQuote ({tokenAddress, amount, isBuy}) {
   yield put({type: actions.INVERT_QUOTE.SUCCESS,
     address: token.address,
     response: {
+      isFetchingQuotePair: false,
       quotePair
     }})
 
