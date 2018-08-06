@@ -7,7 +7,7 @@ import Loader from 'components/Loader'
 import RightArrow from 'images/right-arrow.png'
 import Info from 'images/info.png'
 import BackButton from 'images/down-arrow.png'
-import {clnFormatter, ccFormatter} from './BuySellAmounts'
+import {clnFormatter, ccFormatter} from './utils'
 
 class Summary extends Component {
   next = () => {

@@ -12,21 +12,9 @@ import { BigNumber } from 'bignumber.js'
 import DownArrow from 'images/down-arrow.png'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
+import * as utils from './utils.js'
 
 const DEFAULT_PRICE_CHANGE = 0.02
-const ROUND_PRECISION = 5
-
-const roundUp = (value) => new BigNumber(value).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
-const roundDown = (value) => new BigNumber(value).toFixed(ROUND_PRECISION, BigNumber.ROUND_DOWN)
-
-export const clnFormatter = (value, isBuy) => inputFormatter(value, isBuy)
-export const ccFormatter = (value, isBuy) => inputFormatter(value, !isBuy)
-
-const inputFormatter = (value, isBuy) => (
-  isBuy
-    ? roundUp(value)
-    : roundDown(value)
-)
 
 const AmountTextInput = (props) => {
   const {symbol, error, isLoading} = props
@@ -291,7 +279,7 @@ class BuySellAmounts extends Component {
       : formatter(web3Utils.fromWei(this.props.quotePair.inAmount.toString()), this.props.isBuy)
   )
 
-  slippage = () => new BigNumber(this.props.quotePair.slippage).multipliedBy(100).toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)
+  slippage = () => utils.roundUp(new BigNumber(this.props.quotePair.slippage).multipliedBy(100))
 
   getRelevantAmount = () => {
     const value = this.props.isBuy ? this.cc() : this.cln()
@@ -342,10 +330,10 @@ class BuySellAmounts extends Component {
     })
 
     if (this.props.isBuy) {
-      const clnBalance = new BigNumber(web3Utils.fromWei(this.props.clnBalance)).toFormat(ROUND_PRECISION, BigNumber.ROUND_DOWN)
+      const clnBalance = new BigNumber(web3Utils.fromWei(this.props.clnBalance)).toFormat(utils.ROUND_PRECISION, BigNumber.ROUND_DOWN)
       return <div className={maxAmountClass} onClick={this.handleClnClickMax}>{`Max: ${clnBalance} CLN`}</div>
     } else {
-      const ccBalance = new BigNumber(web3Utils.fromWei(this.props.ccBalance)).toFormat(ROUND_PRECISION, BigNumber.ROUND_DOWN)
+      const ccBalance = new BigNumber(web3Utils.fromWei(this.props.ccBalance)).toFormat(utils.ROUND_PRECISION, BigNumber.ROUND_DOWN)
       const ccSymbol = this.props.community.symbol
       return <div className={maxAmountClass} onClick={this.handleCcClickMax}>{`Max: ${ccBalance} ${ccSymbol}`}</div>
     }
@@ -376,13 +364,13 @@ class BuySellAmounts extends Component {
             isBuy ? <AmountTextInput
               isLoading={isFetching && inputField !== 'cln'}
               symbol='CLN'
-              getValue={this.cln.bind(null, clnFormatter)}
+              getValue={this.cln.bind(null, utils.clnFormatter)}
               handleInput={this.handleClnInput}
               error={maxAmountError} />
               : <AmountTextInput
                 isLoading={isFetching && inputField !== 'cc'}
                 symbol={community.symbol}
-                getValue={this.cc.bind(null, ccFormatter)}
+                getValue={this.cc.bind(null, utils.ccFormatter)}
                 handleInput={this.handleCcInput}
                 error={maxAmountError}
               />
@@ -392,19 +380,19 @@ class BuySellAmounts extends Component {
         <div className='arrows'><img src={Arrows} /></div>
         <div className='buy-sell-bottom'>
           <div className='info-price'>
-            <div className='cc-to-cln'>{`1 ${ccSymbol} = ${this.price().toFixed(ROUND_PRECISION, BigNumber.ROUND_UP)} CLN`}</div>
+            <div className='cc-to-cln'>{`1 ${ccSymbol} = ${utils.roundUp(this.price())} CLN`}</div>
             {this.slippage() ? <div>PRICE SLIPPAGE<img src={Info} />{`${this.slippage()}%`}</div> : null}
           </div>
           {
             !isBuy ? <AmountTextInput
               isLoading={isFetching && inputField !== 'cln'}
               symbol='CLN'
-              getValue={this.cln.bind(null, clnFormatter, isBuy)}
+              getValue={this.cln.bind(null, utils.clnFormatter, isBuy)}
               handleInput={this.handleClnInput} />
               : <AmountTextInput
                 isLoading={isFetching && inputField !== 'cc'}
                 symbol={community.symbol}
-                getValue={this.cc.bind(null, ccFormatter, isBuy)}
+                getValue={this.cc.bind(null, utils.ccFormatter, isBuy)}
                 handleInput={this.handleCcInput}
               />
           }
