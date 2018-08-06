@@ -103,10 +103,9 @@ function clearAccountChannels () {
 
 export function * watchAccountChanged ({response}) {
   const {accountAddress} = response
-  const addresses = yield select(getTokenAddresses)
-
   clearAccountChannels()
 
+  const addresses = yield select(getTokenAddresses)
   for (let tokenAddress of addresses) {
     yield put(actions.subscribeToTransfer(tokenAddress, accountAddress))
   }

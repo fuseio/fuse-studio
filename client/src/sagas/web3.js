@@ -51,7 +51,7 @@ function * checkAccountChanged ({selectedAddress}) {
   const checksummedAddress = selectedAddress && web3.utils.toChecksumAddress(selectedAddress)
   if (accountAddress !== checksummedAddress) {
     yield put({
-      type: actions.CHECK_ACCOUNT_CHANGED.SUCCESS,
+      type: checksummedAddress ? actions.CHECK_ACCOUNT_CHANGED.SUCCESS : actions.ACCOUNT_LOGGED_OUT,
       response: {
         accountAddress: checksummedAddress
       }
