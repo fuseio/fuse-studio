@@ -196,7 +196,7 @@ class BuySellAmounts extends Component {
 
   askForClnQuote = (amount) => {
     const {isBuy, community, marketMakerActions} = this.props
-    const amountInWei = web3Utils.toWei(amount)
+    const amountInWei = web3Utils.toWei(amount.toString())
     if (isBuy) {
       marketMakerActions.buyQuote(community.address, amountInWei)
     } else {
@@ -205,7 +205,7 @@ class BuySellAmounts extends Component {
   }
 
   askForCcQuote = (amount) => {
-    const amountInWei = web3Utils.toWei(amount)
+    const amountInWei = web3Utils.toWei(amount.toString())
     const {isBuy, community, marketMakerActions} = this.props
     if (isBuy) {
       marketMakerActions.invertBuyQuote(community.address, amountInWei)
@@ -218,7 +218,7 @@ class BuySellAmounts extends Component {
     if (trim(amount) === '') {
       return ''
     }
-    const amountInWei = new BigNumber(web3Utils.toWei(amount))
+    const amountInWei = new BigNumber(web3Utils.toWei(amount.toString()))
 
     if (amountInWei.decimalPlaces() > 0) {
       return 'Precision too hight'
@@ -266,7 +266,7 @@ class BuySellAmounts extends Component {
   handleClickMax = (handle, balance) => {
     handle({
       target: {
-        value: new BigNumber(balance).div(1e18)
+        value: new BigNumber(web3Utils.fromWei(balance.toString()))
       }
     })
   }
@@ -342,10 +342,10 @@ class BuySellAmounts extends Component {
     })
 
     if (this.props.isBuy) {
-      const clnBalance = new BigNumber(this.props.clnBalance).div(1e18).toFormat(ROUND_PRECISION, 1)
+      const clnBalance = new BigNumber(web3Utils.fromWei(this.props.clnBalance)).toFormat(ROUND_PRECISION, BigNumber.ROUND_DOWN)
       return <div className={maxAmountClass} onClick={this.handleClnClickMax}>{`Max: ${clnBalance} CLN`}</div>
     } else {
-      const ccBalance = new BigNumber(this.props.ccBalance).div(1e18).toFormat(ROUND_PRECISION, 1)
+      const ccBalance = new BigNumber(web3Utils.fromWei(this.props.ccBalance)).toFormat(ROUND_PRECISION, BigNumber.ROUND_DOWN)
       const ccSymbol = this.props.community.symbol
       return <div className={maxAmountClass} onClick={this.handleCcClickMax}>{`Max: ${ccBalance} ${ccSymbol}`}</div>
     }
