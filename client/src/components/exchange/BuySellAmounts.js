@@ -6,10 +6,10 @@ import trim from 'lodash/trim'
 import identity from 'lodash/identity'
 import web3Utils from 'web3-utils'
 
+import AdvancedSettings from './AdvancedSettings'
 import TextInput from 'components/TextInput'
 import Loader from 'components/Loader'
 import { BigNumber } from 'bignumber.js'
-import DownArrow from 'images/down-arrow.png'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
 import * as utils from './utils.js'
@@ -40,116 +40,6 @@ AmountTextInput.propTypes = {
   error: PropTypes.string
 }
 
-const calculatePriceLimit = (pricePercentage, price) => (1 + pricePercentage) * price
-const calculateMinimum = (pricePercentage, relevantAmount) => relevantAmount / (1 + pricePercentage)
-
-class AdvancedSettings extends Component {
-  handlePricePercentage = (event) => {
-    const pricePercentage = event.target.value / 100
-    const minimum = calculateMinimum(pricePercentage, this.props.relevantAmount)
-    const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
-
-    this.props.setAdvanced({
-      minimum,
-      pricePercentage,
-      priceLimit
-    })
-  }
-
-  handlePriceLimit = (event) => {
-    const priceLimit = event.target.value
-    const pricePercentage = priceLimit / this.props.price() - 1
-
-    const minimum = calculateMinimum(pricePercentage, this.props.relevantAmount)
-
-    this.props.setAdvanced({
-      minimum,
-      pricePercentage,
-      priceLimit
-    })
-  }
-
-  handleMinimum = (event) => {
-    const minimum = event.target.value
-    const pricePercentage = 100 * (this.props.relevantAmount / minimum - 1)
-    const priceLimit = calculatePriceLimit(minimum, this.props.price())
-
-    this.props.setAdvanced({
-      minimum,
-      pricePercentage,
-      priceLimit
-    })
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (!this.props.relevantAmount.isEqualTo(nextProps.relevantAmount)) {
-      const minimum = calculateMinimum(this.props.pricePercentage, nextProps.relevantAmount)
-      const priceLimit = calculatePriceLimit(this.props.pricePercentage, this.props.price())
-
-      this.props.setAdvanced({
-        minimum,
-        priceLimit
-      })
-    }
-  }
-
-  render = () => {
-    const {isBuy} = this.props
-    const {symbol} = this.props.community
-
-    const advancedClass = classNames({
-      'advanced-settings': true,
-      'open': this.props.isOpen
-    })
-
-    return (
-      <div className={advancedClass}>
-        <div className='advanced-header'>
-          <h5 onClick={this.props.handleToggle}>Advanced settings</h5>
-          <img onClick={this.props.handleToggle} src={DownArrow} />
-        </div>
-        <TextInput id='minimum'
-          type='number'
-          label='MINIMAL ACCEPTABLE AMOUNT'
-          placeholder={`Enter minimal amount of ${isBuy ? symbol : 'cln'}`}
-          onChange={this.handleMinimum}
-          value={this.props.minimum}
-        />
-        <div className='minimum-coin-symbol'>{isBuy ? symbol : 'CLN'}</div>
-        <TextInput id='price-change'
-          type='number'
-          label={`${symbol} PRICE CHANGE`}
-          placeholder='Enter price change in %'
-          value={this.props.pricePercentage * 100}
-          onChange={this.handlePricePercentage}
-        />
-        <div className='price-change-percent'>%</div>
-        <TextInput id='price-limit'
-          type='number'
-          label={`${symbol} PRICE LIMIT`}
-          placeholder={`Enter price limit for ${symbol}`}
-          value={this.props.priceLimit}
-          onChange={this.handlePriceLimit}
-        />
-
-        <div className='price-limit-cln'>CLN</div>
-        <p className='annotation'>{`The transaction will fail if the price of 1 ${symbol} is ${(isBuy ? 'higher' : 'lower')} than ${(this.props.priceLimit)} CLN`}</p>
-      </div>
-    )
-  }
-}
-
-AdvancedSettings.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  isBuy: PropTypes.bool.isRequired,
-  community: PropTypes.object.isRequired,
-  handleToggle: PropTypes.func.isRequired,
-  minimum: PropTypes.string.isRequired,
-  relevantAmount: PropTypes.object.isRequired,
-  isFetching: PropTypes.bool.isRequired,
-  price: PropTypes.func.isRequired
-}
-
 class BuySellAmounts extends Component {
   constructor (props) {
     super(props)
@@ -164,7 +54,7 @@ class BuySellAmounts extends Component {
     }
   }
 
-  defaultPricePercentage = () => (this.props.isBuy === true ? DEFAULT_PRICE_CHANGE : DEFAULT_PRICE_CHANGE * (-1))
+  defaultPricePercentage = () => (this.props.isBuy === true ? DEFAULT_PRICE_CHANGE : DEFAULT_PRICE_CHANGE * (-1)).toString()
 
   next = () => {
     const { minimum, priceLimit, pricePercentage, inputField } = this.state
@@ -218,6 +108,15 @@ class BuySellAmounts extends Component {
   handleClnInput = (event) => {
     const amount = event.target.value
 
+    if (trim(amount) === '') {
+      this.setState({
+        cc: amount,
+        cln: '',
+        inputField: ''
+      })
+      return
+    }
+
     this.setState({
       cln: amount,
       cc: '',
@@ -232,9 +131,18 @@ class BuySellAmounts extends Component {
   handleCcInput = (event) => {
     const amount = event.target.value
 
-    const cc = new BigNumber(web3Utils.toWei(amount))
+    if (trim(amount) === '') {
+      this.setState({
+        cc: amount,
+        cln: '',
+        inputField: ''
+      })
+      return
+    }
 
-    if (cc.decimalPlaces() > 0) {
+    const amountInWei = new BigNumber(web3Utils.toWei(amount))
+
+    if (amountInWei.decimalPlaces() > 0) {
       this.setState({
         maxAmountError: 'Precision too hight'
       })
@@ -246,9 +154,7 @@ class BuySellAmounts extends Component {
       inputField: 'cc'
     })
 
-    if (trim(amount)) {
-      this.askForCcQuote(amount)
-    }
+    this.askForCcQuote(amount)
   }
 
   handleClickMax = (handle, balance) => {
@@ -320,8 +226,7 @@ class BuySellAmounts extends Component {
 
   setMinimum = (minimum) => this.setState({minimum})
 
-  setAdvanced = (props) =>
-    this.setState(props)
+  setAdvancedSettings = (props) => this.setState(props)
 
   renderClickMax = () => {
     const maxAmountClass = classNames({
@@ -404,7 +309,7 @@ class BuySellAmounts extends Component {
             minimum={this.state.minimum}
             priceLimit={this.state.priceLimit}
             pricePercentage={this.state.pricePercentage}
-            setAdvanced={this.setAdvanced}
+            setSettings={this.setAdvancedSettings}
             price={this.price}
             relevantAmount={this.getRelevantAmount()}
             isFetching={this.props.isFetching} />
