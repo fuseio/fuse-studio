@@ -1,7 +1,7 @@
 import {action} from './utils'
 
-export const setActiveMarker = (coinAddress) => action('ACTIVE_MARKER', {coinAddress})
-export const zoomToMarker = (zoom) => action('ZOOM', { zoom })
+export const ACTIVE_MARKER = 'ACTIVE_MARKER'
+export const ZOOM = 'ZOOM'
 
 export const SHOW_MODAL = 'SHOW_MODAL'
 export const HIDE_MODAL = 'HIDE_MODAL'
@@ -12,6 +12,9 @@ export const SIGNUP_HIDE = 'SIGNUP_HIDE'
 export const SIGNUP_CLOSE = 'SIGNUP_CLOSE'
 export const BUY_STAGE = 'BUY_STAGE'
 export const RESET_EXCHANGE = 'RESET_EXCHANGE'
+
+export const setActiveMarker = (coinAddress) => action(ACTIVE_MARKER, {coinAddress})
+export const zoomToMarker = (zoom) => action(ZOOM, { zoom })
 
 export const loadModal = (modalType, modalProps) => {
   return {
@@ -52,18 +55,5 @@ export const closeSignup = (close) => {
   return {
     type: SIGNUP_CLOSE,
     close
-  }
-}
-
-export const setBuyStage = (buyStage) => {
-  return {
-    type: BUY_STAGE,
-    buyStage
-  }
-}
-
-export const resetExchange = () => {
-  return {
-    type: RESET_EXCHANGE
   }
 }

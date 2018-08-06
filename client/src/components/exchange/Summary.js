@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {BigNumber} from 'bignumber.js'
+import web3Utils from 'web3-utils'
 
 import Loader from 'components/Loader'
 import RightArrow from 'images/right-arrow.png'
@@ -13,12 +14,12 @@ class Summary extends Component {
   next = () => {
     this.props.setBuyStage(3)
     if (this.props.isBuy) {
-      this.props.marketMakerActions.buyCc(this.props.community.address, new BigNumber(this.props.cln).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
+      this.props.marketMakerActions.buyCc(this.props.community.address, web3Utils.toWei(this.props.cln), this.minimumInWei(), {
         gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
         gas: this.props.estimatedGas
       })
     } else {
-      this.props.marketMakerActions.sellCc(this.props.community.address, new BigNumber(this.props.cc).multipliedBy(1e18), this.props.minimum && new BigNumber(this.props.minimum.toString()).multipliedBy(1e18), {
+      this.props.marketMakerActions.sellCc(this.props.community.address, web3Utils.toWei(this.props.cc), this.minimumInWei(), {
         gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
         gas: this.props.estimatedGas
       })
@@ -29,13 +30,13 @@ class Summary extends Component {
     this.props.setBuyStage(1)
   }
 
+  minimumInWei = () => this.props.minimum && web3Utils.toWei(this.props.minimum.toString())
+
   componentDidMount () {
-    const { isBuy, community, marketMakerActions, minimum } = this.props
-    if (isBuy) {
-      marketMakerActions.estimateGasBuyCc(community.address, new BigNumber(this.props.cln).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
-    } else {
-      marketMakerActions.estimateGasSellCc(community.address, new BigNumber(this.props.cc).multipliedBy(1e18), minimum && new BigNumber(minimum.toString()).multipliedBy(1e18))
-    }
+    const { isBuy, community, marketMakerActions } = this.props
+    const estimageGas = isBuy ? marketMakerActions.estimateGasBuyCc : marketMakerActions.estimateGasSellCc
+
+    estimageGas(community.address, web3Utils.toWei(this.props.cln), this.minimumInWei())
   }
 
   getCoinVariables = () => this.props.isBuy ? {

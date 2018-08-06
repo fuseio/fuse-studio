@@ -4,64 +4,68 @@ import classNames from 'classnames'
 import { BigNumber } from 'bignumber.js'
 import trim from 'lodash/trim'
 
+import {roundToWei} from './utils'
 import DownArrow from 'images/down-arrow.png'
 import TextInput from 'components/TextInput'
 
 const calculatePriceLimit = (pricePercentage, price) => (pricePercentage.plus(1)).multipliedBy(price)
 const calculateMinimum = (pricePercentage, relevantAmount) => relevantAmount.div((pricePercentage.plus(1)))
 
-const toPercentage = (value) => trim(value) === '' ? value : value * 100
+const toPercentage = (value) => trim(value) === '' ? value : new BigNumber(value).multipliedBy(100).toString()
 
 class AdvancedSettings extends Component {
   handlePricePercentage = (event) => {
-    if (trim(event.target.value) === '') {
+    const value = event.target.value
+    if (trim(value) === '') {
       this.nulliFySettings()
       return
     }
 
-    const pricePercentage = new BigNumber(event.target.value).div(100)
+    const pricePercentage = new BigNumber(value).div(100)
     const minimum = calculateMinimum(pricePercentage, this.props.relevantAmount)
     const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
 
     this.props.setSettings({
-      minimum: minimum.toString(),
+      minimum: roundToWei(minimum).toString(),
       pricePercentage: pricePercentage.toString(),
-      priceLimit: priceLimit.toString()
+      priceLimit: roundToWei(priceLimit).toString()
     })
   }
 
   handlePriceLimit = (event) => {
-    if (trim(event.target.value) === '') {
+    const value = event.target.value
+    if (trim(value) === '') {
       this.nulliFySettings()
       return
     }
 
-    const priceLimit = new BigNumber(event.target.value)
+    const priceLimit = new BigNumber(value)
     const pricePercentage = priceLimit.div(this.props.price()).minus(1)
 
     const minimum = calculateMinimum(pricePercentage, this.props.relevantAmount)
 
     this.props.setSettings({
-      minimum: minimum.toString(),
-      pricePercentage: pricePercentage.toString(),
-      priceLimit: priceLimit.toString()
+      minimum: roundToWei(minimum).toString(),
+      pricePercentage: roundToWei(pricePercentage).toString(),
+      priceLimit: value
     })
   }
 
   handleMinimum = (event) => {
-    if (trim(event.target.value) === '') {
+    const value = event.target.value
+    if (trim(value) === '') {
       this.nulliFySettings()
       return
     }
 
-    const minimum = new BigNumber(event.target.value)
+    const minimum = new BigNumber(value)
     const pricePercentage = this.props.relevantAmount.div(minimum).minus(1)
     const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
 
     this.props.setSettings({
-      minimum: minimum.toString(),
-      pricePercentage: pricePercentage.toString(),
-      priceLimit: priceLimit.toString()
+      minimum: value,
+      pricePercentage: roundToWei(pricePercentage).toString(),
+      priceLimit: roundToWei(priceLimit).toString()
     })
   }
 
@@ -89,8 +93,8 @@ class AdvancedSettings extends Component {
       const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
 
       this.props.setSettings({
-        minimum: minimum.toString(),
-        priceLimit: priceLimit.toString()
+        minimum: roundToWei(minimum).toString(),
+        priceLimit: roundToWei(priceLimit).toString()
       })
     }
   }
