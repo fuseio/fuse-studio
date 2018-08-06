@@ -32,7 +32,7 @@ export function tryCatchWithDebounce (action, saga, timeout) {
       yield delay(timeout)
       yield saga(args)
     } catch (error) {
-      tryClause(args, error, action)
+      yield tryClause(args, error, action)
     }
   }
 }
