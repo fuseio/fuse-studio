@@ -76,6 +76,14 @@ class AdvancedSettings extends Component {
       if (trim(nextProps.pricePercentage) === '') {
         return
       }
+
+      if (nextProps.relevantAmount.isEqualTo(0)) {
+        this.props.setSettings({
+          minimum: '',
+          priceLimit: ''
+        })
+        return
+      }
       const pricePercentage = new BigNumber(nextProps.pricePercentage)
       const minimum = calculateMinimum(pricePercentage, nextProps.relevantAmount)
       const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
