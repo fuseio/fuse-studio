@@ -11,6 +11,7 @@ services:
         volumes:
             - ./docker/mongo/db:/data/db
             - ./docker/mongo/config:/data/configdb
+        networks:
             backend-network:
             outside-network:
                 aliases:
