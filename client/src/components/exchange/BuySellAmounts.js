@@ -93,26 +93,34 @@ class BuySellAmounts extends Component {
   }
 
   validateInput = (amount, balance) => {
-    if (trim(amount) === '') {
-      return ''
-    }
-    const amountInWei = new BigNumber(web3Utils.toWei(amount.toString()))
+    const amountInWei = new BigNumber(amount.toString()).multipliedBy(1e18)
 
-    if (amountInWei.decimalPlaces() > 0) {
-      return 'Precision too hight'
-    }
 
     return amountInWei.isGreaterThan(balance) ? 'Insufficient Funds' : undefined
   }
+
+  resetForm = () => this.setState({
+    cc: '',
+    cln: '',
+    inputField: '',
+    error: ''
+  })
 
   handleClnInput = (event) => {
     const amount = event.target.value
 
     if (trim(amount) === '') {
+      return this.resetForm()
+    }
+
+    const amountInWei = new BigNumber(amount.toString()).multipliedBy(1e18)
+    if (amountInWei.isNaN()) {
+      return
+    }
+
+    if (amountInWei.decimalPlaces() > 0) {
       this.setState({
-        cc: amount,
-        cln: '',
-        inputField: ''
+        error: 'Precision too hight'
       })
       return
     }
@@ -121,7 +129,7 @@ class BuySellAmounts extends Component {
       cln: amount,
       cc: '',
       inputField: 'cln',
-      maxAmountError: this.validateInput(amount, this.props.clnBalance)
+      error: (this.props.isBuy && amountInWei.isGreaterThan(this.props.clnBalance)) ? 'Insufficient Funds' : ''
     })
     if (trim(amount)) {
       this.askForClnQuote(amount)
@@ -132,26 +140,25 @@ class BuySellAmounts extends Component {
     const amount = event.target.value
 
     if (trim(amount) === '') {
-      this.setState({
-        cc: amount,
-        cln: '',
-        inputField: ''
-      })
+      return this.resetForm()
+    }
+
+    const amountInWei = new BigNumber(amount.toString()).multipliedBy(1e18)
+    if (amountInWei.isNaN()) {
       return
     }
 
-    const amountInWei = new BigNumber(web3Utils.toWei(amount))
-
     if (amountInWei.decimalPlaces() > 0) {
       this.setState({
-        maxAmountError: 'Precision too hight'
+        error: 'Precision too hight'
       })
       return
     }
 
     this.setState({
       cc: amount,
-      inputField: 'cc'
+      inputField: 'cc',
+      error: (!this.props.isBuy && amountInWei.isGreaterThan(this.props.ccBalance)) ? 'Insufficient Funds' : ''
     })
 
     this.askForCcQuote(amount)
@@ -160,7 +167,7 @@ class BuySellAmounts extends Component {
   handleClickMax = (handle, balance) => {
     handle({
       target: {
-        value: new BigNumber(web3Utils.fromWei(balance.toString()))
+        value: web3Utils.fromWei(balance.toString())
       }
     })
   }
@@ -176,13 +183,13 @@ class BuySellAmounts extends Component {
   }
 
   cln = (formatter = identity) => this.state.inputField !== 'cc' ? this.state.cln : (
-    this.props.isBuy ? formatter(web3Utils.fromWei(this.props.quotePair.inAmount.toString()), this.props.isBuy)
-      : formatter(web3Utils.fromWei(this.props.quotePair.outAmount.toString()), this.props.isBuy)
+    this.props.isBuy ? formatter(new BigNumber(this.props.quotePair.inAmount.toString()).div(1e18), this.props.isBuy)
+      : formatter(new BigNumber(this.props.quotePair.outAmount.toString()).div(1e18), this.props.isBuy)
   )
 
   cc = (formatter = identity) => this.state.inputField !== 'cln' ? this.state.cc : (
-    this.props.isBuy ? formatter(web3Utils.fromWei(this.props.quotePair.outAmount.toString()), this.props.isBuy)
-      : formatter(web3Utils.fromWei(this.props.quotePair.inAmount.toString()), this.props.isBuy)
+    this.props.isBuy ? formatter(new BigNumber(this.props.quotePair.outAmount.toString()).div(1e18), this.props.isBuy)
+      : formatter(new BigNumber(this.props.quotePair.inAmount.toString()).div(1e18), this.props.isBuy)
   )
 
   slippage = () => utils.roundUp(new BigNumber(this.props.quotePair.slippage).multipliedBy(100))
@@ -231,7 +238,7 @@ class BuySellAmounts extends Component {
   renderClickMax = () => {
     const maxAmountClass = classNames({
       'max-amount': true,
-      'error': this.state.maxAmountError
+      'error': this.state.error
     })
 
     if (this.props.isBuy) {
@@ -246,7 +253,7 @@ class BuySellAmounts extends Component {
 
   render () {
     const { isBuy, community, isFetching } = this.props
-    const { maxAmountError, inputField } = this.state
+    const { error, inputField } = this.state
     const ccSymbol = community.symbol
 
     const buyTabClass = classNames({
@@ -271,13 +278,13 @@ class BuySellAmounts extends Component {
               symbol='CLN'
               getValue={this.cln.bind(null, utils.clnFormatter)}
               handleInput={this.handleClnInput}
-              error={maxAmountError} />
+              error={error} />
               : <AmountTextInput
                 isLoading={isFetching && inputField !== 'cc'}
                 symbol={community.symbol}
                 getValue={this.cc.bind(null, utils.ccFormatter)}
                 handleInput={this.handleCcInput}
-                error={maxAmountError}
+                error={error}
               />
           }
           {this.renderClickMax()}
@@ -313,7 +320,7 @@ class BuySellAmounts extends Component {
             price={this.price}
             relevantAmount={this.getRelevantAmount()}
             isFetching={this.props.isFetching} />
-          <button disabled={maxAmountError || isFetching || !this.cc() || !this.cln()} onClick={this.next}>{isBuy ? `Buy ${ccSymbol}` : `Sell ${ccSymbol}`}</button>
+          <button disabled={error || isFetching || !this.cc() || !this.cln()} onClick={this.next}>{isBuy ? `Buy ${ccSymbol}` : `Sell ${ccSymbol}`}</button>
         </div>
       </div>
     )
