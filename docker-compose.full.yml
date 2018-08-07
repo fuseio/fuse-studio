@@ -1,0 +1,36 @@
+version: '2'
+services:
+    mongo:
+        container-name: $PROJECT_NAME-mongo
+        image: mongo
+        retart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+        volumes:
+            - ./docker/mongo/db:/data/db
+    ipfs:
+        container-name: $PROJECT_NAME-ipfs
+    geth:
+        container-name: $PROJECT_NAME-geth
+    server:
+        container-name: $PROJECT_NAME-server
+        environment:
+            NODE_ENV: ${APP_ENV}
+            COMMUNITY_API_SECRET: ${SERVER_SECRET}
+            COMMUNITY_IPFS_HOST: 
+            COMMUNITY_IPFS_PORT:
+            COMMUNITY_IPFS_PROTOCOL:
+            COMMUNITY_IPFS_TIMEOUT:
+            COMMUNITY_MONGO_URI:
+            COMMUNITY_MONGO_USER: ${MONGO_USER}
+            COMMUNITY_MONGO_PASS: ${MONGO_PASS}
+            COMMUNITY_MONGO_AUTH_SOURCE:
+            COMMUNITY_MANDRILL_API_KEY: ${MANDRILL_API}
+            COMMUNITY_MANDRILL_SEND_TO: ${MANDRILL_SEND_TO}
+            COMMUNITY_MAILCHIMP_API_BASE: ${MAILCHIMP_API_BASE}
+            COMMUNITY_MAILCHIMP_LIST: ${MAILCHIMP_LIST_NAME}
+            COMMUNITY_AMAZON_BUCKET_API: ${AMAZON_BUCKET_API}
+    client:
+        container-name: $PROJECT_NAME-client
+
