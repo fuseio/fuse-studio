@@ -9,7 +9,7 @@ import DownArrow from 'images/down-arrow.png'
 import TextInput from 'components/TextInput'
 
 const calculatePriceLimit = (pricePercentage, price) => (pricePercentage.plus(1)).multipliedBy(price)
-const calculateMinimum = (pricePercentage, relevantAmount) => relevantAmount.div((pricePercentage.plus(1)))
+const calculateMinimum = (pricePercentage, amountToReceive) => amountToReceive.div((pricePercentage.plus(1)))
 
 const toPercentage = (value) => trim(value) === '' ? value : new BigNumber(value).multipliedBy(100).toString()
 
@@ -22,7 +22,7 @@ class AdvancedSettings extends Component {
     }
 
     const pricePercentage = new BigNumber(value).div(100)
-    const minimum = calculateMinimum(pricePercentage, this.props.relevantAmount)
+    const minimum = calculateMinimum(pricePercentage, this.props.amountToReceive)
     const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
 
     this.props.setSettings({
@@ -42,7 +42,7 @@ class AdvancedSettings extends Component {
     const priceLimit = new BigNumber(value)
     const pricePercentage = priceLimit.div(this.props.price()).minus(1)
 
-    const minimum = calculateMinimum(pricePercentage, this.props.relevantAmount)
+    const minimum = calculateMinimum(pricePercentage, this.props.amountToReceive)
 
     this.props.setSettings({
       minimum: roundToWei(minimum).toString(),
@@ -59,7 +59,7 @@ class AdvancedSettings extends Component {
     }
 
     const minimum = new BigNumber(value)
-    const pricePercentage = this.props.relevantAmount.div(minimum).minus(1)
+    const pricePercentage = this.props.amountToReceive.div(minimum).minus(1)
     const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
 
     this.props.setSettings({
@@ -76,12 +76,12 @@ class AdvancedSettings extends Component {
   })
 
   componentWillReceiveProps (nextProps) {
-    if (!this.props.relevantAmount.isEqualTo(nextProps.relevantAmount)) {
+    if (!this.props.amountToReceive.isEqualTo(nextProps.amountToReceive)) {
       if (trim(nextProps.pricePercentage) === '') {
         return
       }
 
-      if (nextProps.relevantAmount.isEqualTo(0)) {
+      if (nextProps.amountToReceive.isEqualTo(0)) {
         this.props.setSettings({
           minimum: '',
           priceLimit: ''
@@ -89,7 +89,7 @@ class AdvancedSettings extends Component {
         return
       }
       const pricePercentage = new BigNumber(nextProps.pricePercentage)
-      const minimum = calculateMinimum(pricePercentage, nextProps.relevantAmount)
+      const minimum = calculateMinimum(pricePercentage, nextProps.amountToReceive)
       const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
 
       this.props.setSettings({
@@ -153,7 +153,7 @@ AdvancedSettings.propTypes = {
   minimum: PropTypes.string.isRequired,
   pricePercentage: PropTypes.string.isRequired,
   priceLimit: PropTypes.string.isRequired,
-  relevantAmount: PropTypes.object.isRequired,
+  amountToReceive: PropTypes.object.isRequired,
   isFetching: PropTypes.bool.isRequired,
   price: PropTypes.func.isRequired,
   setSettings: PropTypes.func.isRequired

@@ -187,7 +187,10 @@ class BuySellAmounts extends Component {
 
   slippage = () => utils.roundUp(new BigNumber(this.props.quotePair.slippage).multipliedBy(100))
 
-  getRelevantAmount = () => {
+  amountToReceive = () => {
+    if (this.props.isFetching) {
+      return BigNumber(0)
+    }
     const value = this.props.isBuy ? this.cc() : this.cln()
     if (trim(value) === '') {
       return BigNumber(0)
@@ -311,7 +314,7 @@ class BuySellAmounts extends Component {
             pricePercentage={this.state.pricePercentage}
             setSettings={this.setAdvancedSettings}
             price={this.price}
-            relevantAmount={this.getRelevantAmount()}
+            amountToReceive={this.amountToReceive()}
             isFetching={this.props.isFetching} />
           <button disabled={error || isFetching || !this.cc() || !this.cln()} onClick={this.next}>{isBuy ? `Buy ${ccSymbol}` : `Sell ${ccSymbol}`}</button>
         </div>
