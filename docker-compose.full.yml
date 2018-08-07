@@ -10,9 +10,9 @@ services:
         restart: always
         env_file: .env
         environment:
-            MONGO_INITDB_ROOT_USERNAME: $MONGO_USER
-            MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASS
-            MONGO_INITDB_DATABASE: $MONGO_DBNAME
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS}
+            - MONGO_INITDB_DATABASE=${MONGO_DBNAME}
         volumes:
             - ./docker/mongo/db:/data/db
             - ./docker/mongo/config:/data/configdb
@@ -21,6 +21,8 @@ services:
             external-network:
                 aliases:
                     - $PROJECT_NAME-mongo
+        ports:
+            - 27017
     ipfs:
         container_name: $PROJECT_NAME-ipfs
         image: ipfs/go-ipfs:latest
@@ -38,56 +40,54 @@ services:
         user: "${UID}:${GID}"
         restart: always
         env_file: .env
-        command: geth --testnet --rpc --rpcaddr 0.0.0.0 --rpcapi="db,eth,net,web3,personal,web3"
+        command: geth --datadir=/geth --testnet --rpc --rpcaddr 0.0.0.0 --rpcapi="db,eth,net,web3,personal,web3"
         networks:
             internal-network:
             external-network:
                 aliases:
                     - $PROJECT_NAME-geth
-        expose:
+        ports:
             - 8545
         depends_on:
             - ipfs
         volumes:
-            - ./docker/geth/:/root/.ethereum
+            - ./docker/geth/:/geth
     server:
         container_name: $PROJECT_NAME-server
         build: ./server
         user: "${UID}:${GID}"
         restart: always
-        env_file: .env
         depends_on:
             - mongo
             - geth
         volumes:
             - ./server/:/project
-        command: "npm run dev"
+        command: "echo $MONGO_USER && echo $MONGO_PASS && echo $COMMUNITY_MONGO_USER && echo $COMMUNITY_MONGO_PASS && npm run dev"
         networks:
             internal-network:
             external-network:
                 aliases:
                     - $PROJECT_NAME-server
-        expose:
+        ports:
             - $APP_PORT
-            - 9000
         environment:
-            NODE_ENV: $APP_ENV
-            PORT: $APP_PORT
-            COMMUNITY_MONGO_URI: "mongo://${PROJECT_NAME}-mongo/${MONGO_DBNAME}"
-            COMMUNITY_MONGO_USER: $MONGO_USER
-            COMMUNITY_MONGO_PASS: $MONGO_PASS
-            COMMUNITY_MONGO_AUTH_SOURCE: $MONGO_AUTH_SOURCE
-            COMMUNITY_IPFS_HOST:  ${PROJECT_NAME}-ipfs
-            COMMUNITY_IPFS_PORT: $IPFS_PORT
-            COMMUNITY_IPFS_PROTOCOL: $IPFS_PROTO
-            COMMUNITY_IPFS_TIMEOUT: $IPFS_READ_TIMEOUT
-            COMMUNITY_API_SECRET: $SERVER_SECRET
-            COMMUNITY_MANDRILL_API_KEY: $MANDRILL_API
-            COMMUNITY_MANDRILL_SEND_TO: $MANDRILL_SEND_TO
-            COMMUNITY_MAILCHIMP_API_BASE: $MAILCHIMP_API_BASE
-            COMMUNITY_MAILCHIMP_LIST: $MAILCHIMP_LIST_NAME
-            COMMUNITY_AMAZON_BUCKET_API: $AMAZON_BUCKET_API
-            COMMUNITY_WEB3_PROVIDER: http://${PROJECT_NAME}-geth:8545
+            - NODE_ENV=${APP_ENV}
+            - PORT=${APP_PORT}
+            - COMMUNITY_MONGO_URI="mongodb://mongo/${MONGO_DBNAME}"
+            - COMMUNITY_MONGO_USER=${MONGO_USER}
+            - COMMUNITY_MONGO_PASS=${MONGO_PASS}
+            - COMMUNITY_MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}
+            - COMMUNITY_IPFS_HOST=ipfs
+            - COMMUNITY_IPFS_PORT=${IPFS_PORT}
+            - COMMUNITY_IPFS_PROTOCOL=${IPFS_PROTO}
+            - COMMUNITY_IPFS_TIMEOUT=${IPFS_READ_TIMEOUT}
+            - COMMUNITY_API_SECRET=${SERVER_SECRET}
+            - COMMUNITY_MANDRILL_API_KEY=${MANDRILL_API}
+            - COMMUNITY_MANDRILL_SEND_TO=${MANDRILL_SEND_TO}
+            - COMMUNITY_MAILCHIMP_API_BASE=${MAILCHIMP_API_BASE}
+            - COMMUNITY_MAILCHIMP_LIST=${MAILCHIMP_LIST_NAME}
+            - COMMUNITY_AMAZON_BUCKET_API=${AMAZON_BUCKET_API}
+            - COMMUNITY_WEB3_PROVIDER="http://geth:8545"
     client:
         container_name: $PROJECT_NAME-client
         build: ./client
@@ -104,13 +104,13 @@ services:
             external-network:
                 aliases:
                     - $PROJECT_NAME-client
-        expose:
+        ports:
             - $APP_PORT
         environment:
-            NODE_ENV: $APP_ENV
-            PORT: $APP_PORT
-            COMMUNITY_COLU_HOST: $COLU_HOST
-
+            - NODE_ENV=${APP_ENV}
+            - PORT=${APP_PORT}
+            - COMMUNITY_COLU_HOST=server
+            - COMMUNITY_COLU_PORT=${APP_PORT}
 networks:
   internal-network:
   external-network:
