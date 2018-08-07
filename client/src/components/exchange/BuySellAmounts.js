@@ -92,13 +92,6 @@ class BuySellAmounts extends Component {
     }
   }
 
-  validateInput = (amount, balance) => {
-    const amountInWei = new BigNumber(amount.toString()).multipliedBy(1e18)
-
-
-    return amountInWei.isGreaterThan(balance) ? 'Insufficient Funds' : undefined
-  }
-
   resetForm = () => this.setState({
     cc: '',
     cln: '',
