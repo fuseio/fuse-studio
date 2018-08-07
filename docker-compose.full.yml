@@ -12,7 +12,7 @@ services:
             - ./docker/mongo/db:/data/db
             - ./docker/mongo/config:/data/configdb
         networks:
-            backend-network:
+            internal-network:
             outside-network:
                 aliases:
                     - $PROJECT_NAME-mongo
@@ -25,7 +25,7 @@ services:
         image: kunstmaan/ethereum-geth:latest
         restart: always
         networks:
-            backend-network:
+            internal-network:
             outside-network:
                 aliases:
                     - $PROJECT_NAME-geth
@@ -41,7 +41,7 @@ services:
         volumes:
             - ./server
         networks:
-            backend-network:
+            internal-network:
             outside-network:
                 aliases:
                     - $PROJECT_NAME-server
@@ -70,7 +70,7 @@ services:
         volumes:
             - ./client
         networks:
-            backend-network:
+            internal-network:
             outside-network:
                 aliases:
                     - $PROJECT_NAME-client
