@@ -39,7 +39,6 @@ services:
         build: ./docker/server/
         restart: always
         env_file: .env
-        command: ls
         depends_on:
             - mongo
             - geth
@@ -73,7 +72,6 @@ services:
         build: ./docker/client/
         restart: always
         env_file: .env
-        command: ls1
         depends_on:
             - server
         volumes:
