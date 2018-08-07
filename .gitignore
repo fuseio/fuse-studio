@@ -63,3 +63,13 @@ typings/
 dist
 
 .DS_Store
+
+# Docker local data
+docker-compose.yml
+.env
+
+# Docker volumes data - depends on user, dont want these in repo.
+docker/mongo/config/
+docker/mongo/db/
+docker/ipfs/data/
+docker/ipfs/export/
