@@ -73,5 +73,6 @@ docker/mongo/config/
 docker/mongo/db/
 docker/ipfs/data/
 docker/ipfs/export/
+docker/geth/
 server/node_modules/
 client/node_modules/

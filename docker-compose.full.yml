@@ -6,6 +6,7 @@ services:
     mongo:
         container_name: $PROJECT_NAME-mongo
         image: mongo:latest
+        user: "${UID}:${GID}"
         restart: always
         env_file: .env
         environment:
@@ -23,23 +24,36 @@ services:
     ipfs:
         container_name: $PROJECT_NAME-ipfs
         image: ipfs/go-ipfs:latest
-        restart: always
-        env_file: .env
-    geth:
-        container_name: $PROJECT_NAME-geth
-        image: kunstmaan/ethereum-geth:latest
+        user: "${UID}:${GID}"
         restart: always
         env_file: .env
         networks:
             internal-network:
             external-network:
                 aliases:
+                    - $PROJECT_NAME-ipfs
+    geth:
+        container_name: $PROJECT_NAME-geth
+        image: kunstmaan/ethereum-geth:latest
+        user: "${UID}:${GID}"
+        restart: always
+        env_file: .env
+        command: geth --testnet --rpc --rpcaddr 0.0.0.0 --rpcapi="db,eth,net,web3,personal,web3"
+        networks:
+            internal-network:
+            external-network:
+                aliases:
                     - $PROJECT_NAME-geth
+        expose:
+            - 8545
         depends_on:
             - ipfs
+        volumes:
+            - ./docker/geth/:/root/.ethereum
     server:
         container_name: $PROJECT_NAME-server
         build: ./server
+        user: "${UID}:${GID}"
         restart: always
         env_file: .env
         depends_on:
@@ -53,26 +67,31 @@ services:
             external-network:
                 aliases:
                     - $PROJECT_NAME-server
+        expose:
+            - $APP_PORT
+            - 9000
         environment:
             NODE_ENV: $APP_ENV
             PORT: $APP_PORT
-            COMMUNITY_API_SECRET: $SERVER_SECRET
-            COMMUNITY_IPFS_HOST:  ${PROJECT_NAME}-ipfs
-            COMMUNITY_IPFS_PORT: $IPFS_PORT
-            COMMUNITY_IPFS_PROTOCOL: $IPFS_PROTO
-            COMMUNITY_IPFS_TIMEOUT: $IPFS_READ_TIMEOUT
             COMMUNITY_MONGO_URI: "mongo://${PROJECT_NAME}-mongo/${MONGO_DBNAME}"
             COMMUNITY_MONGO_USER: $MONGO_USER
             COMMUNITY_MONGO_PASS: $MONGO_PASS
             COMMUNITY_MONGO_AUTH_SOURCE: $MONGO_AUTH_SOURCE
+            COMMUNITY_IPFS_HOST:  ${PROJECT_NAME}-ipfs
+            COMMUNITY_IPFS_PORT: $IPFS_PORT
+            COMMUNITY_IPFS_PROTOCOL: $IPFS_PROTO
+            COMMUNITY_IPFS_TIMEOUT: $IPFS_READ_TIMEOUT
+            COMMUNITY_API_SECRET: $SERVER_SECRET
             COMMUNITY_MANDRILL_API_KEY: $MANDRILL_API
             COMMUNITY_MANDRILL_SEND_TO: $MANDRILL_SEND_TO
             COMMUNITY_MAILCHIMP_API_BASE: $MAILCHIMP_API_BASE
             COMMUNITY_MAILCHIMP_LIST: $MAILCHIMP_LIST_NAME
             COMMUNITY_AMAZON_BUCKET_API: $AMAZON_BUCKET_API
+            COMMUNITY_WEB3_PROVIDER: http://${PROJECT_NAME}-geth:8545
     client:
         container_name: $PROJECT_NAME-client
         build: ./client
+        user: "${UID}:${GID}"
         restart: always
         env_file: .env
         depends_on:
@@ -85,6 +104,8 @@ services:
             external-network:
                 aliases:
                     - $PROJECT_NAME-client
+        expose:
+            - $APP_PORT
         environment:
             NODE_ENV: $APP_ENV
             PORT: $APP_PORT
