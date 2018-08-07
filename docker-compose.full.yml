@@ -13,7 +13,7 @@ services:
             - ./docker/mongo/config:/data/configdb
         networks:
             internal-network:
-            outside-network:
+            external-network:
                 aliases:
                     - $PROJECT_NAME-mongo
     ipfs:
@@ -26,7 +26,7 @@ services:
         restart: always
         networks:
             internal-network:
-            outside-network:
+            external-network:
                 aliases:
                     - $PROJECT_NAME-geth
         depends_on:
@@ -42,7 +42,7 @@ services:
             - ./server
         networks:
             internal-network:
-            outside-network:
+            external-network:
                 aliases:
                     - $PROJECT_NAME-server
         environment:
@@ -71,7 +71,7 @@ services:
             - ./client
         networks:
             internal-network:
-            outside-network:
+            external-network:
                 aliases:
                     - $PROJECT_NAME-client
 
