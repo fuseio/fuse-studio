@@ -1,4 +1,7 @@
 version: '2'
+volumes:
+  server_node_modules:
+  client_node_modules:
 services:
     mongo:
         container_name: $PROJECT_NAME-mongo
@@ -36,15 +39,15 @@ services:
             - ipfs
     server:
         container_name: $PROJECT_NAME-server
-        build: ./docker/server/
+        build: ./server
         restart: always
         env_file: .env
         depends_on:
             - mongo
             - geth
         volumes:
-            - ./server:/project
-        working_dir: /project
+            - ./server/:/project
+        command: "npm run dev"
         networks:
             internal-network:
             external-network:
@@ -69,19 +72,23 @@ services:
             COMMUNITY_AMAZON_BUCKET_API: $AMAZON_BUCKET_API
     client:
         container_name: $PROJECT_NAME-client
-        build: ./docker/client/
+        build: ./client
         restart: always
         env_file: .env
         depends_on:
             - server
         volumes:
-            - ./client:/project
-        working_dir: /project
+            - ./client/:/project
+        command: "npm start"
         networks:
             internal-network:
             external-network:
                 aliases:
                     - $PROJECT_NAME-client
+        environment:
+            NODE_ENV: $APP_ENV
+            PORT: $APP_PORT
+            COMMUNITY_COLU_HOST: $COLU_HOST
 
 networks:
   internal-network:
