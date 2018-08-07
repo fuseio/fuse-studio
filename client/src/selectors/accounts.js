@@ -24,5 +24,5 @@ export const getSelectedCommunityBalance = createSelector(
 export const getClnBalance = createSelector(
   getAddresses,
   getBalances,
-  (addressess, balances) => balances[addressess.ColuLocalNetwork]
+  (addressess, balances) => addressess ? balances[addressess.ColuLocalNetwork] : undefined
 )

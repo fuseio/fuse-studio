@@ -102,10 +102,10 @@ input:focus, textarea:focus {
 	outline: none !important;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -166,7 +166,7 @@ h5 {
 }
 .hide {
 	display: none;
-	//opacity:0 !important; 
+	//opacity:0 !important;
 }
 
 .map-element {
@@ -497,7 +497,7 @@ button:disabled, button[disabled] {
     background-color: #fafafa;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 	//padding: 35px;
-	
+
 	p {
 		font-weight: lighter;
     	font-size: 16px;
@@ -592,9 +592,9 @@ button:disabled, button[disabled] {
 			font-weight: bold;
 		}
 		h2 {
-		
+
 		}
-		
+
 		.price-wrapper {
 			font-size: 14px;
 			@include flex-box();
@@ -631,12 +631,12 @@ button:disabled, button[disabled] {
 }
 
 .sidebar {
-	position: absolute;	
+	position: absolute;
 	top: $nav-height;
 	bottom: 0;
 	right: 0;
 	z-index: 100;
-	
+
 	@media (max-width: 1024px) {
 		top: 50px;
 		-webkit-overflow-scrolling: touch;
@@ -725,7 +725,7 @@ button:disabled, button[disabled] {
 						p {
 							margin: 20px 0;
 						}
-						
+
 					}
 					.box-data {
 						overflow: hidden;
@@ -760,7 +760,7 @@ button:disabled, button[disabled] {
 						}
 					}
 				}
-	
+
 				&:nth-child(2) {
 					margin-top: 22px;
 					animation: load-box 300ms ease-in;
@@ -785,13 +785,13 @@ button:disabled, button[disabled] {
 				top: calc(50px) !important;
 			}
 			.header {
-				
+
 				.header-buttons {
 					@include flex-box();
 					justify-content: space-between;
 					padding: 0;
 					.header-button {
-						@include button(#cbd1d3);
+            @include button($colu-green);
 						width: 100%;
 						height: 40px;
 					}
@@ -809,7 +809,7 @@ button:disabled, button[disabled] {
 					h1 {
 						font-size: 16px;
 					}
-					
+
 					.price-wrapper {
 						h2, p {
 							font-size: 14px;
@@ -1280,7 +1280,7 @@ input[type="checkbox" i] {
 		background-color: #f2f6f6;
 		border: solid 1px #cdcdcd;
 		margin: 30px 0;
-		
+
 		.summary-price {
 			flex:1;
 			padding: 23px 23px 33px;
@@ -1527,7 +1527,7 @@ input[type="checkbox" i] {
 	}
 	@media (max-width: 1024px) {
 		top:50px;
-		
+
 		right: 0;
 		.contact-form {
 			width: 100vw;
@@ -1643,7 +1643,7 @@ input[type="checkbox" i] {
 			background: rgba(255,255,255,1);
 			box-shadow: inset 0px 0px 10px 8px rgba(77,217,180,0.9),
 						0px 0px 40px 6px rgba(77,217,180,1);
-			
+
 
 		}
 	}
@@ -1701,7 +1701,7 @@ input[type="checkbox" i] {
     width: 450px;
 	top: $nav-height;
 	overflow: hidden;
-	
+
 	.list-item {
 		height: auto;
 		.coin-wrapper {
@@ -1718,7 +1718,7 @@ input[type="checkbox" i] {
 			.coin-header {
 				margin-top:20px;
 				padding: 20px 24px;
-				
+
 				h1 {
 					font-size: 18px;
 					margin-bottom: 2px;
@@ -1726,7 +1726,7 @@ input[type="checkbox" i] {
 					font-weight: bold;
 				}
 				h2 {
-		
+
 				}
 				img {
 					width: 70px;
@@ -1789,7 +1789,7 @@ input[type="checkbox" i] {
 						h1 {
 							font-size: 12px;
 						}
-						
+
 						.price-wrapper {
 							h2, p {
 								font-size: 10px;
@@ -1824,7 +1824,7 @@ input[type="checkbox" i] {
 							h1 {
 								font-size: 16px;
 							}
-							
+
 							.price-wrapper {
 								h2, p {
 									font-size: 14px;
@@ -1918,6 +1918,3 @@ input[type="checkbox" i] {
 		transform:translate(0, 2px); //Big bubbles move faster
 	 }
 }
-
-
-

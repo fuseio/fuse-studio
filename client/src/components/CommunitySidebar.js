@@ -229,16 +229,14 @@ class CommunitySidebar extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    tokens: state.tokens,
-    ui: state.ui,
-    selectedCommunity: getSelectedCommunity(state),
-    etherscanUrl: getEtherscanUrl(state),
-    coluWallet: getColuWallet(state),
-    accountAddress: state.web3.accountAddress
-  }
-}
+const mapStateToProps = state => ({
+  tokens: state.tokens,
+  ui: state.ui,
+  selectedCommunity: getSelectedCommunity(state),
+  etherscanUrl: getEtherscanUrl(state),
+  coluWallet: getColuWallet(state),
+  accountAddress: state.web3.accountAddress
+})
 
 const mapDispatchToProps = dispatch => {
   return {

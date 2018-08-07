@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import classNames from 'classnames'
 import { isMobile, MobileView } from 'react-device-detect'
-import { BigNumber } from 'bignumber.js'
+import {BigNumber} from 'bignumber.js'
 
 import * as uiActions from 'actions/ui'
-import {getBalances} from 'selectors/accounts'
-import {getAddresses} from 'selectors/web3'
+import {getClnBalance} from 'selectors/accounts'
 import { LOGIN_MODAL } from 'constants/uiConstants'
 
 import ClnIcon from 'images/cln.png'
@@ -70,8 +69,6 @@ class TopNav extends Component {
       'top-nav-links': true
     })
 
-    const clnBalance = this.props.balances[this.props.addresses && this.props.addresses.ColuLocalNetwork] && new BigNumber(this.props.balances[this.props.addresses.ColuLocalNetwork]).div(1e18).toFormat(2, 1)
-
     return <div className={topNavClass}>
       <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>
 
@@ -98,11 +95,13 @@ class TopNav extends Component {
           <img src={ProfileIcon} />
           <span>{this.props.web3.accountAddress || 'Connect Metamask'}</span>
         </div>
-        {(this.props.addresses && this.props.balances[this.props.addresses.ColuLocalNetwork]) ? <div className='top-nav-balance'>
-          <span>Balance:</span>
-          <img src={ClnCoinIcon} />
-          <span className='balance-text'>{clnBalance}</span>
-        </div> : null}
+        {(this.props.clnBalance)
+          ? <div className='top-nav-balance'>
+            <span>Balance:</span>
+            <img src={ClnCoinIcon} />
+            <span className='balance-text'>{new BigNumber(this.props.clnBalance).div(1e18).toFormat(2, 1)}</span>
+          </div>
+          : null}
         <div className='separator' />
       </div>
 
@@ -116,8 +115,7 @@ class TopNav extends Component {
 const mapStateToProps = state => {
   return {
     web3: state.web3,
-    addresses: getAddresses(state),
-    balances: getBalances(state)
+    clnBalance: getClnBalance(state)
   }
 }
 
