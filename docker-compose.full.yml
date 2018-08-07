@@ -22,6 +22,7 @@ services:
         restart: always
     geth:
         container_name: $PROJECT_NAME-geth
+        image: kunstmaan/ethereum-geth:latest
         restart: always
         networks:
             backend-network:
