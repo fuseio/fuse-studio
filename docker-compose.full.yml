@@ -23,6 +23,7 @@ services:
     geth:
         container_name: $PROJECT_NAME-geth
         restart: always
+        networks:
             backend-network:
             outside-network:
                 aliases:
