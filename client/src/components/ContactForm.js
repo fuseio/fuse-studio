@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { withFormik } from 'formik'
 import Yup from 'yup'
 
@@ -8,7 +7,6 @@ import {sendContactUs, subcribeToMailingList} from 'services/api'
 import CloseButton from 'images/x.png'
 import ReactGA from 'services/ga'
 
-// Our inner form component. Will be wrapped with Formik({..})
 const MyInnerForm = props => {
   const {
     values,

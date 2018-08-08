@@ -219,7 +219,8 @@ class BuySellAmounts extends Component {
     this.setState({
       cc: '',
       cln: '',
-      inputField: ''
+      inputField: '',
+      pricePercentage: -1 * this.defaultPricePercentage()
     })
   }
 
