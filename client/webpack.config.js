@@ -19,9 +19,10 @@ module.exports = {
     ]
   },
   devServer: {
-    host: process.env.COMMUNITY_COLU_HOST || 'local.colu.com',
+    host: '0.0.0.0',
     port: process.env.COMMUNITY_COLU_PORT || 9000,
-    historyApiFallback: true
+    historyApiFallback: true,
+    disableHostCheck: true
   },
   plugins: [
     new HtmlWebPackPlugin({
