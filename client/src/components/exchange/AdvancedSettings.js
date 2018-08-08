@@ -117,7 +117,7 @@ class AdvancedSettings extends Component {
         <TextInput id='minimum'
           type='number'
           label='MINIMAL ACCEPTABLE AMOUNT'
-          placeholder={`Enter minimal amount of ${isBuy ? symbol : 'cln'}`}
+          placeholder={`Enter minimal amount of ${isBuy ? symbol : 'CLN'}`}
           onChange={this.handleMinimum}
           value={this.props.minimum}
         />
