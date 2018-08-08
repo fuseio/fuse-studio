@@ -5,11 +5,12 @@ import classNames from 'classnames'
 import trim from 'lodash/trim'
 import identity from 'lodash/identity'
 import web3Utils from 'web3-utils'
+import { BigNumber } from 'bignumber.js'
 
+import {getQuotePair} from 'selectors/marketMaker'
 import AdvancedSettings from './AdvancedSettings'
 import TextInput from 'components/TextInput'
 import Loader from 'components/Loader'
-import { BigNumber } from 'bignumber.js'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'
 import * as utils from './utils.js'
@@ -333,8 +334,9 @@ BuySellAmounts.defaultProps = {
   }
 }
 
+
 const mapStateToProps = (state, props) => ({
-  quotePair: state.marketMaker.quotePair,
+  quotePair: getQuotePair(state, props),
   isFetching: state.marketMaker.isFetchingQuotePair,
   ...props
 })

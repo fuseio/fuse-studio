@@ -1,4 +1,4 @@
-import { all, call, put, select, takeEvery } from 'redux-saga/effects'
+import { all, call, put, select } from 'redux-saga/effects'
 
 import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
@@ -99,13 +99,14 @@ export function * quote ({tokenAddress, amount, isBuy}) {
   const slippage = currentPrice.minus(price.toString()).div(currentPrice).abs()
 
   const quotePair = {
-    fromTokenAddress,
-    toTokenAddress,
+    tokenAddress,
     inAmount: amount,
     outAmount,
     price,
-    slippage
+    slippage,
+    isBuy
   }
+
   yield put({type: actions.QUOTE.SUCCESS,
     address: token.address,
     response: {
@@ -118,8 +119,6 @@ export function * quote ({tokenAddress, amount, isBuy}) {
 export function * invertQuote ({tokenAddress, amount, isBuy}) {
   const clnToken = yield select(getClnToken)
   const token = yield select(getCommunity, tokenAddress)
-  const fromTokenAddress = isBuy ? clnToken.address : tokenAddress
-  const toTokenAddress = isBuy ? tokenAddress : clnToken.address
 
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
@@ -135,8 +134,7 @@ export function * invertQuote ({tokenAddress, amount, isBuy}) {
   const slippage = currentPrice.minus(price.toString()).div(currentPrice).abs()
 
   const quotePair = {
-    fromToken: fromTokenAddress,
-    toToken: toTokenAddress,
+    tokenAddress,
     inAmount: inAmount,
     outAmount: amount,
     price,
