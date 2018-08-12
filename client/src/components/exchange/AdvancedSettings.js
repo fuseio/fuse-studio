@@ -16,12 +16,22 @@ const toPercentage = (value) => trim(value) === '' ? value : new BigNumber(value
 class AdvancedSettings extends Component {
   handlePricePercentage = (event) => {
     const value = event.target.value
+
     if (trim(value) === '') {
       this.nulliFySettings()
       return
     }
 
     const pricePercentage = new BigNumber(value).div(100)
+
+    if (pricePercentage.isNaN()) {
+      return
+    }
+
+    if (pricePercentage.isNegative()) {
+      return
+    }
+
     const minimum = calculateMinimum(pricePercentage, this.props.amountToReceive)
     const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
 
@@ -40,8 +50,16 @@ class AdvancedSettings extends Component {
     }
 
     const priceLimit = new BigNumber(value)
-    const pricePercentage = priceLimit.div(this.props.price()).minus(1)
 
+    if (priceLimit.isNaN()) {
+      return
+    }
+
+    if (priceLimit.isNegative()) {
+      return
+    }
+
+    const pricePercentage = priceLimit.div(this.props.price()).minus(1)
     const minimum = calculateMinimum(pricePercentage, this.props.amountToReceive)
 
     this.props.setSettings({
@@ -59,6 +77,15 @@ class AdvancedSettings extends Component {
     }
 
     const minimum = new BigNumber(value)
+
+    if (minimum.isNaN()) {
+      return
+    }
+
+    if (minimum.isNegative()) {
+      return
+    }
+
     const pricePercentage = this.props.amountToReceive.div(minimum).minus(1)
     const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
 
@@ -115,7 +142,7 @@ class AdvancedSettings extends Component {
           <img onClick={this.props.handleToggle} src={DownArrow} />
         </div>
         <TextInput id='minimum'
-          type='number'
+          type='string'
           label='MINIMAL ACCEPTABLE AMOUNT'
           placeholder={`Enter minimal amount of ${isBuy ? symbol : 'CLN'}`}
           onChange={this.handleMinimum}
@@ -123,7 +150,7 @@ class AdvancedSettings extends Component {
         />
         <div className='minimum-coin-symbol'>{isBuy ? symbol : 'CLN'}</div>
         <TextInput id='price-change'
-          type='number'
+          type='string'
           label={`${symbol} PRICE CHANGE`}
           placeholder='Enter price change in %'
           value={toPercentage(this.props.pricePercentage)}
@@ -131,13 +158,12 @@ class AdvancedSettings extends Component {
         />
         <div className='price-change-percent'>%</div>
         <TextInput id='price-limit'
-          type='number'
+          type='string'
           label={`${symbol} PRICE LIMIT`}
           placeholder={`Enter price limit for ${symbol}`}
           value={this.props.priceLimit}
           onChange={this.handlePriceLimit}
         />
-
         <div className='price-limit-cln'>CLN</div>
         <p className='annotation'>{`The transaction will fail if the price of 1 ${symbol} is ${(isBuy ? 'higher' : 'lower')} than ${(this.props.priceLimit)} CLN`}</p>
       </div>

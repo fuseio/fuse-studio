@@ -51,11 +51,9 @@ class BuySellAmounts extends Component {
       cc: props.cc || '',
       minimum: props.minimum || '',
       priceLimit: props.priceLimit || '',
-      pricePercentage: props.pricePercentage || this.defaultPricePercentage()
+      pricePercentage: props.pricePercentage || DEFAULT_PRICE_CHANGE
     }
   }
-
-  defaultPricePercentage = () => (this.props.isBuy === true ? DEFAULT_PRICE_CHANGE : DEFAULT_PRICE_CHANGE * (-1)).toString()
 
   next = () => {
     const { minimum, priceLimit, pricePercentage, inputField } = this.state
@@ -100,6 +98,10 @@ class BuySellAmounts extends Component {
     error: ''
   })
 
+  resetAdvancedSettingsForm = () => this.setState({
+    pricePercentage: DEFAULT_PRICE_CHANGE
+  })
+
   handleClnInput = (event) => {
     const amount = event.target.value
 
@@ -109,6 +111,10 @@ class BuySellAmounts extends Component {
 
     const amountInWei = new BigNumber(amount.toString()).multipliedBy(1e18)
     if (amountInWei.isNaN()) {
+      return
+    }
+
+    if (amountInWei.isNegative()) {
       return
     }
 
@@ -139,6 +145,10 @@ class BuySellAmounts extends Component {
 
     const amountInWei = new BigNumber(amount.toString()).multipliedBy(1e18)
     if (amountInWei.isNaN()) {
+      return
+    }
+
+    if (amountInWei.isNegative()) {
       return
     }
 
@@ -217,12 +227,8 @@ class BuySellAmounts extends Component {
       isBuy: !this.props.isBuy
     })
 
-    this.setState({
-      cc: '',
-      cln: '',
-      inputField: '',
-      pricePercentage: -1 * this.defaultPricePercentage()
-    })
+    this.resetForm()
+    this.resetAdvancedSettingsForm()
   }
 
   handleAdvanced = () => {
@@ -333,7 +339,6 @@ BuySellAmounts.defaultProps = {
     outAmount: 0
   }
 }
-
 
 const mapStateToProps = (state, props) => ({
   quotePair: getQuotePair(state, props),
