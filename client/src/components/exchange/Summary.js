@@ -85,8 +85,8 @@ class Summary extends Component {
           <div>{'1 ' + community.symbol + ' = ' + formattedPrice + ' CLN'}</div>
         </div>
         <div className='line' />
-        <h5>GAS PRICE NOTICE:</h5>
-        <p>Increasing gas above the present value will result in failed transaction</p>
+        <h5>GAS FEE NOTICE:</h5>
+        <p>Decreasing gas fee below the present value may result in failed transaction</p>
         <button disabled={!gasPrice} onClick={this.next}>PROCEED</button>
       </div>
     )
