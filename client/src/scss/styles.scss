@@ -1254,6 +1254,10 @@ input[type="checkbox" i] {
 
 .summary {
 	padding: 45px 30px;
+  @media (max-width: $breakpoint-tablet) {
+    padding: 10px 30px;
+    height: 100%;
+  }
 	h4 {
 		color: #5a5959;
 	}
