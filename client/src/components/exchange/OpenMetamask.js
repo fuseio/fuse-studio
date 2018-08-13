@@ -1,12 +1,11 @@
 import React from 'react'
-import { connect } from 'react-redux'
 
 import Metamask from 'images/metamask-dark.png'
 
 class OpenMetamask extends React.Component {
-  componentWillReceiveProps (nextProps) {
-    if (this.props.pending !== nextProps.pending) {
-      this.props.setBuyStage(4)
+  componentDidUpdate () {
+    if (this.props.transactionHash) {
+      this.props.next()
     }
   }
 
@@ -23,8 +22,4 @@ class OpenMetamask extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => ({
-  pending: state.marketMaker.transactionHash
-})
-
-export default connect(mapStateToProps)(OpenMetamask)
+export default OpenMetamask

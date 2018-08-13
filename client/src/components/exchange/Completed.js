@@ -11,8 +11,8 @@ class Completed extends React.Component {
   }
 
   render () {
-    const { account, pendingTx } = this.props
-    const status = (account && account.transactions && account.transactions[pendingTx] && !account.transactions[pendingTx].isFailed) ? 'SUCCESS' : 'FAILURE'
+    const { account, transactionHash } = this.props
+    const status = (account.transactions[transactionHash] && !account.transactions[transactionHash].isFailed) ? 'SUCCESS' : 'FAILURE'
     const statusClass = classNames({
       status: true,
       failure: status === 'FAILURE'
@@ -27,7 +27,7 @@ class Completed extends React.Component {
           <h5>STATUS:</h5>
           <p className={statusClass}>{status}</p>
           <h5>TRANSACTION HASH:</h5>
-          <a href={`${this.props.etherscanUrl}tx/${pendingTx}`} target='_blank' className='tx-link'>{pendingTx}</a>
+          <a href={`${this.props.etherscanUrl}tx/${transactionHash}`} target='_blank' className='tx-link'>{transactionHash}</a>
         </div>
         <button onClick={this.done}>DONE</button>
       </div>
@@ -36,7 +36,6 @@ class Completed extends React.Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  pendingTx: state.marketMaker.transactionHash,
   etherscanUrl: getEtherscanUrl(state),
   account: getAccount(state)
 })

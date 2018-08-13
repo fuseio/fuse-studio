@@ -107,10 +107,10 @@ export function * quote ({tokenAddress, amount, isBuy}) {
     isBuy
   }
 
-  yield put({type: actions.QUOTE.SUCCESS,
+  yield put({type: isBuy ? actions.BUY_QUOTE.SUCCESS : actions.SELL_QUOTE.SUCCESS,
     address: token.address,
     response: {
-      isFetchingQuotePair: false,
+      isFetching: false,
       quotePair
     }})
   return quotePair
@@ -142,10 +142,10 @@ export function * invertQuote ({tokenAddress, amount, isBuy}) {
     isBuy
   }
 
-  yield put({type: actions.INVERT_QUOTE.SUCCESS,
+  yield put({type: isBuy ? actions.INVERT_BUY_QUOTE.SUCCESS : actions.INVERT_SELL_QUOTE.SUCCESS,
     address: token.address,
     response: {
-      isFetchingQuotePair: false,
+      isFetching: false,
       quotePair
     }})
 

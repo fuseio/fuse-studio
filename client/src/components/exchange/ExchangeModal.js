@@ -27,13 +27,18 @@ class ExchangeModal extends React.Component {
 
   setBuyStage = (buyStage) => this.props.uiActions.updateModalProps({buyStage})
 
+  next = () => this.setBuyStage(this.props.buyStage + 1)
+  back = () => this.setBuyStage(this.props.buyStage - 1)
+
   render () {
     const { buyStage } = this.props
     const ExchangeComponent = EXCHANGE_COMPONENTS[buyStage]
 
     return (
       <Modal className='fullscreen' onClose={this.onClose} width='500px'>
-        {ExchangeComponent({...this.props, setBuyStage: this.setBuyStage})}
+        {ExchangeComponent({...this.props,
+          next: this.next,
+          back: this.back})}
       </Modal>
     )
   }

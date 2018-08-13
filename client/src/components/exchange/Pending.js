@@ -6,11 +6,15 @@ import {getAccount} from 'selectors/accounts'
 import Loader from 'components/Loader'
 
 class Pending extends Component {
-  componentWillReceiveProps (nextProps) {
-    const { account, pendingTx } = nextProps
-    if (account && account.transactions && account.transactions[pendingTx] && account.transactions[pendingTx].isPending !== this.props.account.transactions[pendingTx].isPending && !account.transactions[pendingTx].isPending) {
-      this.props.setBuyStage(5)
+  componentDidUpdate () {
+    if (this.isDone()) {
+      this.props.next()
     }
+  }
+
+  isDone = () => {
+    const { account, transactionHash } = this.props
+    return account.transactions[transactionHash] && !account.transactions[transactionHash].isPending
   }
 
   done = () => {
@@ -26,16 +30,14 @@ class Pending extends Component {
           <p>Your transaction is pending blockchain confirmation, please check your wallet again in a few minutes.</p>
           <div className='line' />
           <h5>TRANSACTION HASH:</h5>
-          <a href={`${this.props.etherscanUrl}tx/${this.props.pendingTx}`} target='_blank' className='tx-link'>{this.props.pendingTx}</a>
+          <a href={`${this.props.etherscanUrl}tx/${this.props.transactionHash}`} target='_blank' className='tx-link'>{this.props.transactionHash}</a>
         </div>
-        <button onClick={this.done}>DONE</button>
       </div>
     )
   }
 }
 
 const mapStateToProps = (state, props) => ({
-  pendingTx: state.marketMaker.transactionHash,
   etherscanUrl: getEtherscanUrl(state),
   account: getAccount(state)
 })

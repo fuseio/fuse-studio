@@ -1,10 +1,19 @@
 import * as ui from 'actions/ui'
+import {quoteActions, CHANGE} from 'actions/marketMaker'
+import {filterSuccessActions, filterRequestActions} from 'utils/actions'
+
+const relevantQuoteActions = {...filterRequestActions(quoteActions),
+  ...filterSuccessActions(quoteActions)}
+relevantQuoteActions[CHANGE.PENDING] = CHANGE
 
 export default (state = {
   activeMarker: null,
   modalType: null,
   signupHide: false
 }, action) => {
+  if (relevantQuoteActions.hasOwnProperty(action.type)) {
+    return {...state, modalProps: {...state.modalProps, ...action.response}}
+  }
   switch (action.type) {
     case ui.ACTIVE_MARKER:
       return {...state, activeMarker: action.coinAddress}

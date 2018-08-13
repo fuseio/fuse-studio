@@ -12,7 +12,6 @@ import {clnFormatter, ccFormatter} from './utils'
 
 class Summary extends Component {
   next = () => {
-    this.props.setBuyStage(3)
     if (this.props.isBuy) {
       this.props.marketMakerActions.buyCc(this.props.community.address, web3Utils.toWei(this.props.cln), this.minimumInWei(), {
         gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
@@ -24,10 +23,7 @@ class Summary extends Component {
         gas: this.props.estimatedGas
       })
     }
-  }
-
-  back = () => {
-    this.props.setBuyStage(1)
+    this.props.next()
   }
 
   minimumInWei = () => this.props.minimum && web3Utils.toWei(this.props.minimum.toString())
@@ -59,7 +55,7 @@ class Summary extends Component {
     const gasPrice = (gas && estimatedGas) && new BigNumber(estimatedGas).multipliedBy(gas.average).div(10).div(1e9)
     return (
       <div className='summary'>
-        <div className='modal-back' onClick={this.back}>
+        <div className='modal-back' onClick={this.props.back}>
           <img src={BackButton} />
         </div>
         <h4>SUMMARY</h4>
@@ -98,8 +94,6 @@ Summary.propTypes = {
 }
 
 const mapStateToProps = (state, props) => ({
-  quotePair: state.marketMaker.quotePair || {},
-  estimatedGas: state.marketMaker.estimatedGas,
   gas: state.web3.gas,
   ...props
 })

@@ -3,7 +3,7 @@ import {action, createRequestTypes} from './utils'
 export const quoteAction = (type, payload) => ({
   ...action(type, payload),
   response: {
-    isFetchingQuotePair: true
+    isFetching: true
   }
 })
 
@@ -30,6 +30,8 @@ export const SELL_CC = createRequestTypes('SELL_CC')
 
 export const ESTIMATE_GAS_BUY_CC = createRequestTypes('ESTIMATE_GAS_BUY_CC')
 export const ESTIMATE_GAS_SELL_CC = createRequestTypes('ESTIMATE_GAS_SELL_CC')
+
+export const quoteActions = [CHANGE, BUY_QUOTE, SELL_QUOTE, INVERT_BUY_QUOTE, INVERT_SELL_QUOTE, ESTIMATE_GAS_BUY_CC, ESTIMATE_GAS_SELL_CC]
 
 export const getCurrentPrice = (address, tokenAddress) => action(GET_CURRENT_PRICE.REQUEST, {address, tokenAddress})
 export const clnReserve = (address, tokenAddress) => action(CLN_RESERVE.REQUEST, {address, tokenAddress})

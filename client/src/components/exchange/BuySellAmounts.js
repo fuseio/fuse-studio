@@ -7,7 +7,6 @@ import identity from 'lodash/identity'
 import web3Utils from 'web3-utils'
 import { BigNumber } from 'bignumber.js'
 
-import {getQuotePair} from 'selectors/marketMaker'
 import AdvancedSettings from './AdvancedSettings'
 import TextInput from 'components/TextInput'
 import Loader from 'components/Loader'
@@ -67,7 +66,8 @@ class BuySellAmounts extends Component {
       isBuy,
       minimum,
       priceLimit,
-      pricePercentage
+      pricePercentage,
+      quotePair: this.props.quotePair
     })
   }
 
@@ -340,10 +340,4 @@ BuySellAmounts.defaultProps = {
   }
 }
 
-const mapStateToProps = (state, props) => ({
-  quotePair: getQuotePair(state, props),
-  isFetching: state.marketMaker.isFetchingQuotePair,
-  ...props
-})
-
-export default connect(mapStateToProps)(BuySellAmounts)
+export default BuySellAmounts
