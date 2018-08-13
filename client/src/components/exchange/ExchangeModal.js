@@ -13,6 +13,7 @@ import Completed from 'components/exchange/Completed'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import {getSelectedCommunityBalance, getClnBalance} from 'selectors/accounts'
 import withEither from 'containers/withEither'
+import { isBrowser } from 'react-device-detect'
 
 const EXCHANGE_COMPONENTS = {
   1: (props) => <BuySellAmounts {...props} />,
@@ -35,7 +36,7 @@ class ExchangeModal extends React.Component {
     const ExchangeComponent = EXCHANGE_COMPONENTS[buyStage]
 
     return (
-      <Modal className='fullscreen' onClose={this.onClose} width='500px'>
+      <Modal className='fullscreen' onClose={this.onClose} width={isBrowser ? 500 : undefined}>
         {ExchangeComponent({...this.props,
           next: this.next,
           back: this.back})}

@@ -1368,6 +1368,9 @@ input[type="checkbox" i] {
 		border: solid 1px #cdcdcd;
 		margin: 30px 0;
 		padding: 50px 96px 40px;
+    @media (max-width: $breakpoint-tablet) {
+      padding: 50px 46px 40px;
+    }
 		.line {
 			width:100%;
 			height: 2px;
