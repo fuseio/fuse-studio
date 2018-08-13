@@ -13,12 +13,12 @@ import {clnFormatter, ccFormatter} from './utils'
 class Summary extends Component {
   next = () => {
     if (this.props.isBuy) {
-      this.props.marketMakerActions.buyCc(this.props.community.address, web3Utils.toWei(this.props.cln), this.minimumInWei(), {
+      this.props.marketMakerActions.buyCc(this.props.community.address, web3Utils.toWei(this.props.cln.toString()), this.minimumInWei(), {
         gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
         gas: this.props.estimatedGas
       })
     } else {
-      this.props.marketMakerActions.sellCc(this.props.community.address, web3Utils.toWei(this.props.cc), this.minimumInWei(), {
+      this.props.marketMakerActions.sellCc(this.props.community.address, web3Utils.toWei(this.props.cc.toString()), this.minimumInWei(), {
         gasPrice: new BigNumber(this.props.gas.average).div(10).multipliedBy(1e9),
         gas: this.props.estimatedGas
       })
@@ -31,8 +31,8 @@ class Summary extends Component {
   componentDidMount () {
     const { isBuy, community, marketMakerActions } = this.props
     const estimageGas = isBuy ? marketMakerActions.estimateGasBuyCc : marketMakerActions.estimateGasSellCc
-
-    estimageGas(community.address, web3Utils.toWei(this.props.cln), this.minimumInWei())
+    const inputValue = isBuy ? this.props.cln : this.props.cc
+    estimageGas(community.address, web3Utils.toWei(inputValue.toString()), this.minimumInWei())
   }
 
   getCoinVariables = () => this.props.isBuy ? {

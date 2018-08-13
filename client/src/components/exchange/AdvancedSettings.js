@@ -8,7 +8,8 @@ import {roundToWei} from './utils'
 import DownArrow from 'images/down-arrow.png'
 import TextInput from 'components/TextInput'
 
-const calculatePriceLimit = (pricePercentage, price) => (pricePercentage.plus(1)).multipliedBy(price)
+const calculatePriceLimit = (pricePercentage, price, isBuy) => pricePercentage.plus(isBuy ? 1 : -1).absoluteValue()
+  .multipliedBy(price)
 const calculateMinimum = (pricePercentage, amountToReceive) => amountToReceive.div((pricePercentage.plus(1)))
 
 const toPercentage = (value) => trim(value) === '' ? value : new BigNumber(value).multipliedBy(100).toString()
@@ -33,7 +34,7 @@ class AdvancedSettings extends Component {
     }
 
     const minimum = calculateMinimum(pricePercentage, this.props.amountToReceive)
-    const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
+    const priceLimit = calculatePriceLimit(pricePercentage, this.props.price(), this.props.isBuy)
 
     this.props.setSettings({
       minimum: roundToWei(minimum).toString(),
@@ -117,7 +118,7 @@ class AdvancedSettings extends Component {
       }
       const pricePercentage = new BigNumber(nextProps.pricePercentage)
       const minimum = calculateMinimum(pricePercentage, nextProps.amountToReceive)
-      const priceLimit = calculatePriceLimit(pricePercentage, this.props.price())
+      const priceLimit = calculatePriceLimit(pricePercentage, this.props.price(), nextProps.isBuy)
 
       this.props.setSettings({
         minimum: roundToWei(minimum).toString(),
