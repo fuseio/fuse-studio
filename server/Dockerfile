@@ -1,6 +1,8 @@
 FROM node:latest
+USER $UID:$GID
+WORKDIR /app
 RUN apt install git
-COPY package.json .
-COPY package-lock.json .
+COPY package*.json ./
 RUN npm install
 COPY . .
+CMD ["npm", "run", "dev"]
