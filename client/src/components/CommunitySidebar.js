@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import map from 'lodash/map'
-import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
 import { formatWei } from 'utils/format'
 
@@ -37,10 +36,6 @@ const SocialImage = ({link, name, onClick}) => (
 )
 
 class CommunitySidebar extends Component {
-  state = {
-    rel: null
-  }
-
   onClickBuy = () => this.onClick(true)
 
   onClickSell = () => this.onClick(false)
@@ -60,13 +55,6 @@ class CommunitySidebar extends Component {
     } else {
       this.props.uiActions.loadModal(SOON_MODAL)
     }
-  }
-
-  onBackMobile () {
-    this.setState({
-      closed: true,
-      open: false
-    })
   }
 
   onClose = () => {
@@ -105,15 +93,8 @@ class CommunitySidebar extends Component {
       map(selectedCommunity.metadata.social, (value, key) => <SocialImage
         link={value} name={key} key={key} onClick={this.handleLinkClick} />)
 
-    const sidebarClass = classNames({
-      'community-sidebar': true
-    })
-
     return (
-      <div className={sidebarClass} ref='bar'
-        style={{
-          transition: this.state.open || this.state.closed ? 'all 350ms ease-in' : 'none'
-        }}>
+      <div className='community-sidebar'>
         <div className='header'>
           <CoinHeader coinImage={selectedCommunity.metadata && selectedCommunity.metadata.imageLink} name={selectedCommunity.name} price={selectedCommunity.currentPrice} />
           {control}
