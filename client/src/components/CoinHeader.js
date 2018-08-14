@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { formatAmountReal, formatMoney } from 'services/global'
+import {formatEther} from 'utils/format'
 import Loader from 'components/Loader'
 
 export default class CoinHeader extends Component {
   render () {
     const { price, coinImage, name } = this.props
-    const formattedPrice = (price || price === 0) && formatMoney(formatAmountReal(price, 18), 4, '.', ',')
+    const formattedPrice = (price || price === 0) && formatEther(price)
     return (
       <div className='coin-header'>
         {coinImage ? <img src={coinImage} /> : <Loader className='loader image' />}

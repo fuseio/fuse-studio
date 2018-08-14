@@ -12,11 +12,11 @@ import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 export function * getCurrentPrice ({address, tokenAddress}) {
   try {
     const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
-    const currentPrice = yield call(EllipseMarketMakerContract.methods.getCurrentPrice().call)
+    const currentPriceOfCln = yield call(EllipseMarketMakerContract.methods.getCurrentPrice().call)
     yield put({type: actions.GET_CURRENT_PRICE.SUCCESS,
       tokenAddress,
       response: {
-        currentPrice: 1 / currentPrice
+        currentPrice: reversePrice(currentPriceOfCln)
       }})
   } catch (error) {
     // no CLN inserted to the contract, so the CC has to value at all
@@ -31,6 +31,8 @@ export function * getCurrentPrice ({address, tokenAddress}) {
     }
   }
 }
+
+const reversePrice = (price) => new BigNumber(1e18).div(price)
 
 export function * clnReserve ({address, tokenAddress}) {
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
@@ -79,9 +81,9 @@ const getReservesAndSupplies = (clnToken, ccToken, isBuy) => isBuy
 
 const computePrice = (isBuy, inAmount, outAmount) => {
   if (isBuy) {
-    return inAmount / outAmount
+    return inAmount.div(outAmount)
   } else {
-    return outAmount / inAmount
+    return outAmount.div(inAmount)
   }
 }
 
@@ -94,9 +96,8 @@ export function * quote ({tokenAddress, amount, isBuy}) {
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
   let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromTokenAddress, amount, toTokenAddress).call)
 
-  const price = computePrice(isBuy, amount, outAmount)
-  const currentPrice = new BigNumber(token.currentPrice.toString()).multipliedBy(1e18)
-  const slippage = currentPrice.minus(price.toString()).div(currentPrice).abs()
+  const price = computePrice(isBuy, new BigNumber(amount), new BigNumber(outAmount))
+  const slippage = calcSlippage(token.currentPrice, price)
 
   const quotePair = {
     tokenAddress,
@@ -129,9 +130,8 @@ export function * invertQuote ({tokenAddress, amount, isBuy}) {
     updatedR1, s1, s2).call)
   const inAmount = new BigNumber(updatedR2).minus(r2)
 
-  const price = computePrice(isBuy, inAmount, amount)
-  const currentPrice = new BigNumber(token.currentPrice.toString()).multipliedBy(1e18)
-  const slippage = currentPrice.minus(price.toString()).div(currentPrice).abs()
+  const price = computePrice(isBuy, inAmount, new BigNumber(amount))
+  const slippage = calcSlippage(token.currentPrice, price)
 
   const quotePair = {
     tokenAddress,
@@ -151,6 +151,9 @@ export function * invertQuote ({tokenAddress, amount, isBuy}) {
 
   return quotePair
 }
+
+const calcSlippage = (expectedPrice, actualPrice) =>
+  expectedPrice.minus(actualPrice).div(expectedPrice).abs()
 
 export function * change ({tokenAddress, amount, minReturn, isBuy, isEstimation, options}) {
   const clnToken = yield select(getClnToken)
@@ -317,7 +320,7 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) 
   }
 
   const response = yield all(calls)
-  response.currentPrice = 1 / response.currentPrice
+  response.currentPrice = reversePrice(response.currentPrice)
   response.isMarketMakerLoaded = true
   yield put({type: actions.FETCH_MARKET_MAKER_DATA.SUCCESS,
     tokenAddress,

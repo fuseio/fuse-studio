@@ -182,7 +182,7 @@ class BuySellAmounts extends Component {
   price = () => {
     return this.props.quotePair.price
       ? new BigNumber(this.props.quotePair.price.toString())
-      : new BigNumber(this.props.community.currentPrice.toString()).multipliedBy(1e18)
+      : new BigNumber(this.props.community.currentPrice.toString())
   }
 
   cln = (formatter = identity) => this.state.inputField !== 'cc' ? this.state.cln : (

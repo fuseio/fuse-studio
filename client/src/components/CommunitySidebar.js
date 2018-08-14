@@ -5,7 +5,7 @@ import Link from 'react-router-dom/Link'
 import map from 'lodash/map'
 import classNames from 'classnames'
 import * as uiActions from 'actions/ui'
-import { formatAmount, formatMoney } from 'services/global'
+import { formatWei } from 'utils/format'
 
 import { LOGIN_MODAL, SOON_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
 
@@ -120,9 +120,9 @@ class CommunitySidebar extends Component {
       </Link>
     </div>
 
-    const totalSupply = selectedCommunity.totalSupply ? formatMoney(formatAmount(selectedCommunity.totalSupply, 18), 0, '.', ',') : <Loader className='loader' />
-    const circulatingSupply = selectedCommunity.ccReserve && formatMoney(formatAmount(selectedCommunity.totalSupply - selectedCommunity.ccReserve, 18), 0, '.', ',')
-    const clnReserve = selectedCommunity.clnReserve && formatMoney(formatAmount(selectedCommunity.clnReserve, 18), 0, '.', ',')
+    const totalSupply = selectedCommunity.totalSupply ? formatWei(selectedCommunity.totalSupply) : <Loader className='loader' />
+    const circulatingSupply = selectedCommunity.ccReserve && formatWei(selectedCommunity.totalSupply - selectedCommunity.ccReserve)
+    const clnReserve = selectedCommunity.clnReserve && formatWei(selectedCommunity.clnReserve)
     const owner = selectedCommunity.owner === this.props.coluWallet ? 'Colu' : selectedCommunity.owner
 
     const social = selectedCommunity.metadata && selectedCommunity.metadata.social &&

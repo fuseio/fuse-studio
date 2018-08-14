@@ -76,7 +76,6 @@ export function * subscribeToTransfer ({tokenAddress, accountAddress}) {
 }
 
 export function * subscribeToChange ({tokenAddress, marketMakerAddress}) {
-
   const subscription = web3Socket.eth.subscribe('logs', {
     address: marketMakerAddress,
     topics: [CHANGE_EVENT]
