@@ -10,7 +10,6 @@ import ReactGA from 'services/ga'
 class ComingSoonModal extends React.Component {
   constructor (props) {
     super(props)
-    this.onClose = this.onClose.bind(this)
     ReactGA.event({
       category: 'Coming Soon',
       action: 'View',
@@ -18,7 +17,7 @@ class ComingSoonModal extends React.Component {
     })
   }
 
-  onClose () {
+  onClose = () => {
     this.props.uiActions.hideModal()
     ReactGA.event({
       category: 'Coming Soon',
