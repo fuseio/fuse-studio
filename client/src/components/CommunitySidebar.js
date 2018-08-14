@@ -41,33 +41,19 @@ class CommunitySidebar extends Component {
     rel: null
   }
 
+  onClickBuy = () => this.onClick(true)
 
-  onClickBuy = () => {
+  onClickSell = () => this.onClick(false)
+
+  onClick = (isBuy) => {
     if (this.props.selectedCommunity.isOpenForPublic) {
       ReactGA.event({
         category: this.props.selectedCommunity.name,
         action: 'Click',
-        label: 'Buy'
+        label: isBuy ? 'Buy' : 'Sell'
       })
       if (this.props.accountAddress) {
-        this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy: true})
-      } else {
-        this.props.uiActions.loadModal(LOGIN_MODAL)
-      }
-    } else {
-      this.props.uiActions.loadModal(SOON_MODAL)
-    }
-  }
-
-  onClickSell = () => {
-    if (this.props.selectedCommunity.isOpenForPublic) {
-      ReactGA.event({
-        category: this.props.selectedCommunity.name,
-        action: 'Click',
-        label: 'Sell'
-      })
-      if (this.props.accountAddress) {
-        this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy: false})
+        this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy})
       } else {
         this.props.uiActions.loadModal(LOGIN_MODAL)
       }
