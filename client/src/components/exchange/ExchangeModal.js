@@ -12,8 +12,11 @@ import Pending from 'components/exchange/Pending'
 import Completed from 'components/exchange/Completed'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import {getSelectedCommunityBalance, getClnBalance} from 'selectors/accounts'
-import {withMaybe} from 'utils/components'
+import {withNeither} from 'utils/components'
 import { isBrowser } from 'react-device-detect'
+import LoadingModal from 'components/LoadingModal'
+import ComingSoonModal from 'components/ComingSoonModal'
+import compose from 'lodash/flowRight'
 
 const EXCHANGE_COMPONENTS = {
   1: (props) => <BuySellAmounts {...props} />,
@@ -24,8 +27,6 @@ const EXCHANGE_COMPONENTS = {
 }
 
 class ExchangeModal extends React.Component {
-  onClose = () => this.props.uiActions.hideModal()
-
   setBuyStage = (buyStage) => this.props.uiActions.updateModalProps({buyStage})
 
   next = () => this.setBuyStage(this.props.buyStage + 1)
@@ -36,7 +37,7 @@ class ExchangeModal extends React.Component {
     const ExchangeComponent = EXCHANGE_COMPONENTS[buyStage]
 
     return (
-      <Modal className='fullscreen' onClose={this.onClose} width={isBrowser ? 500 : undefined}>
+      <Modal className='fullscreen' onClose={this.props.hideModal} width={isBrowser ? 500 : undefined}>
         {ExchangeComponent({...this.props,
           next: this.next,
           back: this.back})}
@@ -60,7 +61,15 @@ const mapStateToProps = (state, props) => ({
   clnBalance: getClnBalance(state)
 })
 
-const withData = withMaybe(props => !(props.community &&
-   props.community.isMarketMakerLoaded && props.ccBalance && props.clnBalance))
+const isLoadedConditionFn = props => props.community &&
+   props.community.isMarketMakerLoaded && props.ccBalance && props.clnBalance
 
-export default connect(mapStateToProps, mapDispatchToProps)(withData(ExchangeModal))
+const isOpenForPublicConditionFn = props => props.community.isOpenForPublic
+
+const withConditionalRenderings = compose(
+  withNeither(isLoadedConditionFn, LoadingModal),
+  withNeither(isOpenForPublicConditionFn, ComingSoonModal)
+)
+
+const ExchangeModalWithConditionalRenderings = withConditionalRenderings(ExchangeModal)
+export default connect(mapStateToProps, mapDispatchToProps)(ExchangeModalWithConditionalRenderings)

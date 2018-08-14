@@ -6,7 +6,7 @@ import map from 'lodash/map'
 import * as uiActions from 'actions/ui'
 import { formatWei } from 'utils/format'
 
-import { LOGIN_MODAL, SOON_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
+import { LOGIN_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
 
 import Facebook from 'images/fb.png'
 import Twitter from 'images/twitter.png'
@@ -40,19 +40,15 @@ class CommunitySidebar extends Component {
   onClickSell = () => this.onClick(false)
 
   onClick = (isBuy) => {
-    if (this.props.selectedCommunity.isOpenForPublic) {
-      ReactGA.event({
-        category: this.props.selectedCommunity.name,
-        action: 'Click',
-        label: isBuy ? 'Buy' : 'Sell'
-      })
-      if (this.props.accountAddress) {
-        this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy})
-      } else {
-        this.props.uiActions.loadModal(LOGIN_MODAL)
-      }
+    ReactGA.event({
+      category: this.props.selectedCommunity.name,
+      action: 'Click',
+      label: isBuy ? 'Buy' : 'Sell'
+    })
+    if (this.props.accountAddress) {
+      this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy})
     } else {
-      this.props.uiActions.loadModal(SOON_MODAL)
+      this.props.uiActions.loadModal(LOGIN_MODAL)
     }
   }
 

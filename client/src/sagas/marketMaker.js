@@ -1,5 +1,4 @@
 import { all, call, put, select } from 'redux-saga/effects'
-
 import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
 
@@ -321,6 +320,7 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) 
   }
 
   const response = yield all(calls)
+
   response.currentPrice = reversePrice(response.currentPrice)
   response.isMarketMakerLoaded = true
   yield put({type: actions.FETCH_MARKET_MAKER_DATA.SUCCESS,

@@ -1,24 +1,11 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import * as uiActions from 'actions/ui'
-import { bindActionCreators } from 'redux'
 
 import Modal from 'components/Modal'
 import ReactGA from 'services/ga'
 
 class ErrorModal extends React.Component {
-  constructor (props) {
-    super(props)
-    this.onClose = this.onClose.bind(this)
-    ReactGA.event({
-      category: 'Network',
-      action: 'View',
-      label: 'Wrong network message'
-    })
-  }
-
-  onClose () {
-    this.props.uiActions.hideModal()
+  onClose = () => {
+    this.props.hideModal()
     ReactGA.event({
       category: 'Network',
       action: 'Close',
@@ -36,9 +23,4 @@ class ErrorModal extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-export default connect(null, mapDispatchToProps)(ErrorModal)
+export default ErrorModal

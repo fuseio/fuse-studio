@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import CloseButton from 'images/x.png'
 
@@ -21,10 +22,6 @@ export default class Modal extends Component {
     }
   }
 
-  onOverlayClick () {
-    this.props.onClose()
-  }
-
   onDialogClick (event) {
     event.stopPropagation()
   }
@@ -33,9 +30,9 @@ export default class Modal extends Component {
     return (
       <div>
         <div className={'modal-overlay-div'} />
-        <div className={classNames('modal-content-div', this.props.className)} onClick={this.onOverlayClick.bind(this)}>
+        <div className={classNames('modal-content-div', this.props.className)} onClick={this.props.onClose}>
           <div className={classNames('modal-dialog-div', this.props.className)} style={{ width: this.props.width || '432px' }} onClick={this.onDialogClick}>
-            <div className='sidebar-close' onClick={this.onOverlayClick.bind(this)}>
+            <div className='sidebar-close' onClick={this.props.onClose}>
               <img src={CloseButton} />
             </div>
             {this.props.children}
@@ -44,4 +41,8 @@ export default class Modal extends Component {
       </div>
     )
   }
+}
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired
 }

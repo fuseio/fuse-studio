@@ -1,15 +1,11 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import * as uiActions from 'actions/ui'
-import { bindActionCreators } from 'redux'
 
 import Modal from 'components/Modal'
 import Mail from 'images/mail.png'
 import ReactGA from 'services/ga'
 
 class ComingSoonModal extends React.Component {
-  constructor (props) {
-    super(props)
+  componentDidMount () {
     ReactGA.event({
       category: 'Coming Soon',
       action: 'View',
@@ -18,7 +14,7 @@ class ComingSoonModal extends React.Component {
   }
 
   onClose = () => {
-    this.props.uiActions.hideModal()
+    this.props.hideModal()
     ReactGA.event({
       category: 'Coming Soon',
       action: 'Close',
@@ -37,9 +33,4 @@ class ComingSoonModal extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-export default connect(null, mapDispatchToProps)(ComingSoonModal)
+export default ComingSoonModal

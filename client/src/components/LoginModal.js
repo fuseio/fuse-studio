@@ -1,7 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as uiActions from 'actions/ui'
-import { bindActionCreators } from 'redux'
 import Modal from 'components/Modal'
 
 import ClnIcon from 'images/cln.png'
@@ -18,7 +16,7 @@ class LoginModal extends React.Component {
   }
 
   onClose = () => {
-    this.props.uiActions.hideModal()
+    this.props.hideModal()
     if (this.state.finishInstall) {
       ReactGA.event({
         category: 'Metamask',
@@ -63,7 +61,7 @@ class LoginModal extends React.Component {
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.web3.isMetaMask && nextProps.web3.accountAddress) {
-      this.props.uiActions.hideModal()
+      this.props.hideModal()
     }
   }
 
@@ -120,9 +118,4 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(LoginModal)
+export default connect(mapStateToProps)(LoginModal)
