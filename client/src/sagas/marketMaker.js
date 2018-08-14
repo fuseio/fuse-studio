@@ -316,7 +316,8 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) 
   const calls = {
     currentPrice: call(EllipseMarketMakerContract.methods.getCurrentPrice().call, null, blockNumber),
     clnReserve: call(EllipseMarketMakerContract.methods.R1().call, null, blockNumber),
-    ccReserve: call(EllipseMarketMakerContract.methods.R2().call, null, blockNumber)
+    ccReserve: call(EllipseMarketMakerContract.methods.R2().call, null, blockNumber),
+    isOpenForPublic: call(EllipseMarketMakerContract.methods.openForPublic().call, null, blockNumber)
   }
 
   const response = yield all(calls)

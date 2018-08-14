@@ -14,7 +14,6 @@ import Twitter from 'images/twitter.png'
 import Instagram from 'images/ig.png'
 import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
-import {isOpenForPublic} from 'actions/marketMaker'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import {getEtherscanUrl, getColuWallet} from 'selectors/web3'
 import CoinHeader from './CoinHeader'
@@ -42,15 +41,6 @@ class CommunitySidebar extends Component {
     rel: null
   }
 
-  componentDidMount = () => {
-    this.props.isOpenForPublic(this.props.selectedCommunity.address)
-  }
-
-  componentDidUpdate (prevProps) {
-    if (this.props.selectedCommunity.address !== prevProps.selectedCommunity.address) {
-      this.props.isOpenForPublic(this.props.selectedCommunity.address)
-    }
-  }
 
   onClickBuy = () => {
     if (this.props.selectedCommunity.isOpenForPublic) {
@@ -240,8 +230,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    uiActions: bindActionCreators(uiActions, dispatch),
-    isOpenForPublic: bindActionCreators(isOpenForPublic, dispatch)
+    uiActions: bindActionCreators(uiActions, dispatch)
   }
 }
 
