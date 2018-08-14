@@ -12,7 +12,7 @@ import Pending from 'components/exchange/Pending'
 import Completed from 'components/exchange/Completed'
 import {getSelectedCommunity} from 'selectors/basicToken'
 import {getSelectedCommunityBalance, getClnBalance} from 'selectors/accounts'
-import withEither from 'containers/withEither'
+import {withMaybe} from 'utils/components'
 import { isBrowser } from 'react-device-detect'
 
 const EXCHANGE_COMPONENTS = {
@@ -60,8 +60,7 @@ const mapStateToProps = (state, props) => ({
   clnBalance: getClnBalance(state)
 })
 
-const withCommunity = withEither(props => !(props.community &&
-   props.community.isMarketMakerLoaded && props.ccBalance && props.clnBalance),
-(props) => null)
+const withData = withMaybe(props => !(props.community &&
+   props.community.isMarketMakerLoaded && props.ccBalance && props.clnBalance))
 
-export default connect(mapStateToProps, mapDispatchToProps)(withCommunity(ExchangeModal))
+export default connect(mapStateToProps, mapDispatchToProps)(withData(ExchangeModal))

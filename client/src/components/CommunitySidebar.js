@@ -18,10 +18,9 @@ import {getEtherscanUrl, getColuWallet} from 'selectors/web3'
 import CoinHeader from './CoinHeader'
 import Loader from 'components/Loader'
 import ReactGA from 'services/ga'
-import withEither from 'containers/withEither'
+import {withMaybe} from 'utils/components'
 
-const withCommunity = withEither(props => !props.selectedCommunity,
-  (props) => null)
+const withCommunity = withMaybe(props => !props.selectedCommunity)
 
 const keyToImage = {
   facebook: Facebook,
