@@ -75,7 +75,7 @@ class LoginModal extends React.Component {
       })
       modalContent = <div className='modal-content-wrapper'>
         <img src={MetamaskIcon} />
-        <h4>Finish installing MetaMask  to continue</h4>
+        <h4>Finish installing MetaMask to continue</h4>
         <p>Make sure you follow the instruction on MetaMask to finish the installation.</p>
         <div className='button' onClick={this.finishInstalling}>I INSTALLED METAMASK</div>
       </div>
@@ -86,7 +86,11 @@ class LoginModal extends React.Component {
         label: 'Install Metamask'
       })
       modalContent = <div className='modal-content-wrapper'>
-        <div className='images flex center'><img src={ClnIcon}/><span>+</span><img src={MetamaskIcon}/></div>
+        <div className='images flex center'>
+          <img src={ClnIcon} />
+          <span>+</span>
+          <img src={MetamaskIcon} />
+        </div>
         <h4>Want to connect?</h4>
         <p>You’ll need a safe place to store your coins, in order to do that you need to download the MetaMask wallet. The wallet will also act as your login to the dashboard.</p>
         <div className='button' onClick={this.installMetamask}>INSTALL METAMASK</div>
@@ -98,7 +102,7 @@ class LoginModal extends React.Component {
         label: 'Metamask locked'
       })
       modalContent = <div className='modal-content-wrapper'>
-        <img className='lock-icon' src={LockIcon}/>
+        <img className='lock-icon' src={LockIcon} />
         <h4>Your MetaMask is locked</h4>
         <p>Please unlock your MetaMask extension in order to use the dashboard.</p>
       </div>
