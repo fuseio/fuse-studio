@@ -11,7 +11,7 @@ class LoadingModal extends Component {
           <div className='summary-prices-wrapper'>
             <Loader color='#fff' className='metamask-icon' />
             <p>We are syncing the data for you</p>
-            <p>so you can move to the next step</p>
+            <p>so you can progress to the next step</p>
           </div>
         </div>
       </Modal>
