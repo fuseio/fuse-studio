@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import {getEtherscanUrl} from 'selectors/web3'
 import {getAccount} from 'selectors/accounts'
 import Loader from 'components/Loader'
+import ModalBody from 'components/ModalBody'
 
 class Pending extends Component {
   componentDidUpdate () {
@@ -17,24 +18,32 @@ class Pending extends Component {
     return account.transactions[transactionHash] && !account.transactions[transactionHash].isPending
   }
 
-  done = () => {
-    this.props.uiActions.hideModal()
-  }
+  render = () =>
+    <ModalBody
+      title={'TRANSACTION IN PROGRESS'}
+      image={<Loader color='#fff' className='modal-icon' />}
+      body={<div>
+        <p>Your transaction is pending blockchain confirmation, please check your wallet again in a few minutes.</p>
+        <div className='line' />
+        <h5>TRANSACTION HASH:</h5>
+        <a href={`${this.props.etherscanUrl}tx/${this.props.transactionHash}`} target='_blank' className='tx-link'>{this.props.transactionHash}</a>
+      </div>}
+    />
 
-  render () {
-    return (
-      <div className='transaction-in-progress'>
-        <h4>TRANSACTION IN PROGRESS</h4>
-        <div className='summary-prices-wrapper'>
-          <Loader color='#fff' className='metamask-icon' />
-          <p>Your transaction is pending blockchain confirmation, please check your wallet again in a few minutes.</p>
-          <div className='line' />
-          <h5>TRANSACTION HASH:</h5>
-          <a href={`${this.props.etherscanUrl}tx/${this.props.transactionHash}`} target='_blank' className='tx-link'>{this.props.transactionHash}</a>
-        </div>
-      </div>
-    )
-  }
+  // render () {
+  //   return (
+  //     <div className='transaction-in-progress'>
+  //       <h4>TRANSACTION IN PROGRESS</h4>
+  //       <div className='summary-prices-wrapper'>
+  //         <Loader color='#fff' className='metamask-icon' />
+  //         <p>Your transaction is pending blockchain confirmation, please check your wallet again in a few minutes.</p>
+  //         <div className='line' />
+  //         <h5>TRANSACTION HASH:</h5>
+  //         <a href={`${this.props.etherscanUrl}tx/${this.props.transactionHash}`} target='_blank' className='tx-link'>{this.props.transactionHash}</a>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 }
 
 const mapStateToProps = (state, props) => ({

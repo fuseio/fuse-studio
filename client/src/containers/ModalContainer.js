@@ -4,18 +4,24 @@ import { connect } from 'react-redux'
 import {hideModal} from 'actions/ui'
 import LoginModal from 'components/LoginModal'
 import ComingSoonModal from 'components/ComingSoonModal'
-import ErrorModal from 'components/ErrorModal'
+import WrongNetworkModal from 'components/WrongNetworkModal'
 import LoadingModal from 'components/LoadingModal'
 import ExchangeModal from 'components/exchange/ExchangeModal'
+import ErrorBoundary from 'components/ErrorBoundary'
 
-import { LOGIN_MODAL, SOON_MODAL, ERROR_MODAL, EXCHANGE_MODAL, LOADING_MODAL } from 'constants/uiConstants'
+import { LOGIN_MODAL, SOON_MODAL, WRONG_NETWORK_MODAL, EXCHANGE_MODAL, LOADING_MODAL } from 'constants/uiConstants'
+
+const renderModal = (modalComponent, props) =>
+  <ErrorBoundary hideModal={props.hideModal}>
+    {React.createElement(modalComponent, props)}
+  </ErrorBoundary>
 
 const MODAL_COMPONENTS = {
-  [LOGIN_MODAL]: (props) => <LoginModal {...props} />,
-  [SOON_MODAL]: (props) => <ComingSoonModal {...props} />,
-  [ERROR_MODAL]: (props) => <ErrorModal {...props} />,
-  [EXCHANGE_MODAL]: (props) => <ExchangeModal {...props} />,
-  [LOADING_MODAL]: (props) => <LoadingModal {...props} />
+  [LOGIN_MODAL]: (props) => renderModal(LoginModal, props),
+  [SOON_MODAL]: (props) => renderModal(ComingSoonModal, props),
+  [EXCHANGE_MODAL]: (props) => renderModal(ExchangeModal, props),
+  [WRONG_NETWORK_MODAL]: (props) => renderModal(WrongNetworkModal, props),
+  [LOADING_MODAL]: (props) => renderModal(LoadingModal, props)
 }
 
 const ModalContainer = (props) => {

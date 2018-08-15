@@ -5,7 +5,7 @@ import {isNetworkSupported} from 'utils/web3'
 import * as actions from 'actions/web3'
 import {updateBalances} from 'actions/accounts'
 import {loadModal} from 'actions/ui'
-import { ERROR_MODAL } from 'constants/uiConstants'
+import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
 function * getNetworkType () {
   try {
@@ -31,7 +31,7 @@ function * getNetworkType () {
       })
     }
   } catch (error) {
-    yield put(loadModal(ERROR_MODAL))
+    yield put(loadModal(WRONG_NETWORK_MODAL))
     yield put({type: actions.GET_NETWORK_TYPE.FAILURE, error})
   }
 }

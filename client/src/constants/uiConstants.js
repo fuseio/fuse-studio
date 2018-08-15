@@ -1,5 +1,5 @@
 export const LOGIN_MODAL = 'LOGIN_MODAL'
-export const ERROR_MODAL = 'ERROR_MODAL'
+export const WRONG_NETWORK_MODAL = 'WRONG_NETWORK_MODAL'
 export const SOON_MODAL = 'SOON_MODAL'
 export const EXCHANGE_MODAL = 'EXCHANGE_MODAL'
 export const LOADING_MODAL = 'LOADING_MODAL'

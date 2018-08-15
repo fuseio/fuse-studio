@@ -7,7 +7,7 @@ import CommunitiesList from 'components/CommunitiesList'
 import ModalContainer from 'containers/ModalContainer'
 import SignUp from 'components/SignUp'
 import classNames from 'classnames'
-import { ERROR_MODAL } from 'constants/uiConstants'
+import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import {fetchClnContract, initializeCommunity} from 'actions/basicToken'
 import {getNetworkType, checkAccountChanged} from 'actions/web3'
 import {onWeb3Ready} from 'services/web3'
@@ -31,7 +31,7 @@ class App extends Component {
       nextProps.communityAddresses.forEach(this.props.initializeCommunity)
     }
     if (nextProps.networkType !== this.props.networkType && !isNetworkDesired(nextProps.networkType)) {
-      this.props.loadModal(ERROR_MODAL)
+      this.props.loadModal(WRONG_NETWORK_MODAL)
     }
   }
 

@@ -3,7 +3,7 @@ import React from 'react'
 import Modal from 'components/Modal'
 import ReactGA from 'services/ga'
 
-class ErrorModal extends React.Component {
+class WrongNetworkModal extends React.Component {
   onClose = () => {
     this.props.hideModal()
     ReactGA.event({
@@ -23,4 +23,4 @@ class ErrorModal extends React.Component {
   }
 }
 
-export default ErrorModal
+export default WrongNetworkModal
