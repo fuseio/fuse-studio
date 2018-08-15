@@ -466,6 +466,12 @@ button:disabled, button[disabled] {
     text-align: center;
     padding: 4px;
     cursor: pointer;
+
+    @media (max-width: $breakpoint-tablet) {
+      &.fullscreen {
+        padding: 0px;
+      }
+    }
 }
 
 .modal-back {
