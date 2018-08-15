@@ -19,8 +19,8 @@ module.exports = {
     ]
   },
   devServer: {
-    port: 9000,
-    historyApiFallback: true
+    port: process.env.COMMUNITY_COLU_PORT || 9000,
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebPackPlugin({

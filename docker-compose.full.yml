@@ -1,0 +1,108 @@
+version: '3.2'
+services:
+    mongo:
+        container_name: $PROJECT_NAME-mongo
+        build: ./docker/mongo
+        restart: always
+        env_file: .env
+        environment:
+            - AUTH=yes
+            - MONGODB_ADMIN_USER=mongo
+            - MONGODB_ADMIN_PASS=mongo
+            - MONGODB_APPLICATION_DATABASE=${MONGO_DBNAME}
+            - MONGODB_APPLICATION_USER=${MONGO_USER}
+            - MONGODB_APPLICATION_PASS=${MONGO_PASS}
+        volumes:
+            - ./docker/mongo/db:/data/db
+            - ./docker/mongo/config:/data/configdb
+        networks:
+            internal-network:
+            external-network:
+                aliases:
+                    - $PROJECT_NAME-mongo
+        ports:
+            - "27017"
+    ipfs:
+        container_name: $PROJECT_NAME-ipfs
+        image: ipfs/go-ipfs:latest
+        user: "${UID}:${GID}"
+        restart: always
+        env_file: .env
+        ports:
+            - "4001"
+            - "5001"
+        networks:
+            internal-network:
+            external-network:
+                aliases:
+                    - $PROJECT_NAME-ipfs
+    server:
+        container_name: $PROJECT_NAME-server
+        build: 
+            context: ./server/
+        user: "${UID}:${GID}"
+        restart: always
+        env_file: .env
+        depends_on:
+            - mongo
+            - ipfs
+        volumes:
+            - ./server/:/app
+            - /app/node_modules
+        working_dir: /app
+        command: "npm run dev"
+        networks:
+            internal-network:
+            external-network:
+                aliases:
+                    - $PROJECT_NAME-server
+        ports:
+            - "8081:$COMMUNITY_APP_PORT"
+        environment:
+            - NODE_ENV=${COMMUNITY_APP_ENV}
+            - PORT=${COMMUNITY_APP_PORT}
+            - COMMUNITY_MONGO_URI=mongodb://mongo/${MONGO_DBNAME}
+            - COMMUNITY_MONGO_USER=${MONGO_USER}
+            - COMMUNITY_MONGO_PASS=${MONGO_PASS}
+            - COMMUNITY_MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}
+            - COMMUNITY_IPFS_HOST=${IPFS_HOST}
+            - COMMUNITY_IPFS_PORT=${IPFS_PORT}
+            - COMMUNITY_IPFS_PROTOCOL=${IPFS_PROTO}
+            - COMMUNITY_IPFS_TIMEOUT=${IPFS_READ_TIMEOUT}
+            - COMMUNITY_API_SECRET=${COMMUNITY_SERVER_SECRET}
+            - COMMUNITY_MANDRILL_API_KEY=${MANDRILL_API}
+            - COMMUNITY_MANDRILL_SEND_TO=${MANDRILL_SEND_TO}
+            - COMMUNITY_MAILCHIMP_API_BASE=${MAILCHIMP_API_BASE}
+            - COMMUNITY_MAILCHIMP_LIST=${MAILCHIMP_LIST_NAME}
+            - COMMUNITY_AMAZON_BUCKET_API=${AMAZON_BUCKET_API}
+    client:
+        container_name: $PROJECT_NAME-client
+        build: 
+            context: ./client/
+        user: "${UID}:${GID}"
+        restart: always
+        env_file: .env
+        depends_on:
+            - server
+        volumes:
+            - ./client/:/app
+            - /app/node_modules
+        working_dir: /app
+        command: "npm start"
+        networks:
+            internal-network:
+            external-network:
+                aliases:
+                    - $PROJECT_NAME-client
+        ports:
+            - "8080:$COMMUNITY_APP_PORT"
+        environment:
+            - NODE_ENV=${COMMUNITY_APP_ENV}
+            - PORT=${COMMUNITY_APP_PORT}
+            - COMMUNITY_COLU_HOST=server
+            - COMMUNITY_COLU_PORT=${COMMUNITY_APP_PORT}
+networks:
+  internal-network:
+  external-network:
+    external:
+      name: $PROJECT_NAME
