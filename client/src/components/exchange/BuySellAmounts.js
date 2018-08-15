@@ -90,12 +90,17 @@ class BuySellAmounts extends Component {
     }
   }
 
-  resetForm = () => this.setState({
-    cc: '',
-    cln: '',
-    inputField: '',
-    error: ''
-  })
+  resetForm = () => {
+    this.setState({
+      cc: '',
+      cln: '',
+      inputField: '',
+      error: ''
+    })
+    this.props.uiActions.updateModalProps({
+      quotePair: undefined
+    })
+  }
 
   resetAdvancedSettingsForm = () => this.setState({
     pricePercentage: DEFAULT_PRICE_CHANGE
