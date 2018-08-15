@@ -2,7 +2,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
-const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 const path = require('path')
 const compression = require('compression')
@@ -21,8 +20,6 @@ app.use(cors())
 app.use(morgan('common'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
-app.use(methodOverride())
 
 if (isProduction) {
   app.use(compression())
@@ -56,7 +53,6 @@ app.use(function (req, res, next) {
 /// error handlers
 if (!isProduction) {
   app.use(function (err, req, res, next) {
-
     console.log(err.stack)
 
     res.status(err.status || 500)
