@@ -99,14 +99,6 @@ export default class Root extends Component {
                 />
               </div>
             </div>
-            <div className='contact-form-wrapper'>
-              <AnimatedRoute
-                path='/view/contact-us'
-                component={withTracker(ContactForm)}
-                mapStyles={mapStylesContact}
-                {...contactFormTransition}
-              />
-            </div>
           </div>
         </ConnectedRouter>
       </Provider>)

@@ -52,6 +52,10 @@ class CommunitySidebar extends Component {
     }
   }
 
+  componentWillUnmount () {
+    this.props.uiActions.hideModal()
+  }
+
   onClose = () => {
     this.props.uiActions.hideSignup()
     this.props.uiActions.setActiveMarker()

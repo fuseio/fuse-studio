@@ -28,7 +28,7 @@ export const getTokensWithMetadata = createSelector(state => state.tokens, (toke
 export const getSelectedCommunity = createSelector(
   getCommunities,
   state => state.router.location.pathname,
-  (communities, pathname) => find(communities, {path: pathname})
+  (communities, pathname) => find(communities, {path: pathname}) || {}
 )
 
 export const getSelectedToken = createSelector(

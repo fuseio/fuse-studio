@@ -84,7 +84,7 @@ class App extends Component {
       'mobile-screen': isMobile
     })
 
-    const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' ? <CommunitiesList history={this.props.history} /> : null
+    const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/contact-us' && !currentRoute.includes('community') ? <CommunitiesList history={this.props.history} /> : null
 
     const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
       <div className='welcome-container'>
