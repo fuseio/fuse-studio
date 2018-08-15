@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import Modal from 'components/Modal'
+import ModalBody from 'components/ModalBody'
+import CloseButton from 'images/x.png'
 
 class ErrorBoundary extends Component {
   state = {
@@ -13,10 +15,14 @@ class ErrorBoundary extends Component {
 
   render () {
     if (this.state.hasError) {
-      return (<Modal onClose={this.props.hideModal}>
-        <h4>{'Oops, something went wrong'}</h4>
-          <p>Please open Metamask and switch to the <strong>Main Ethereum Network</strong> to view correct CLN and CC information</p>
-        </Modal>)
+      return (
+        <Modal onClose={this.props.hideModal}>
+          <ModalBody
+            title={'Oops, something went wrong'}
+            text={'Don\'t worry, please try again or contact the support'}
+            image={CloseButton} />
+        </Modal>
+      )
     }
     return this.props.children
   }
