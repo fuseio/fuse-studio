@@ -5,9 +5,21 @@ Welcome to the CLN community app repo. We're building a dApp that will interact 
 
 # Develop
 
-## Running locally
 
-### Setup databse
+## With Docker
+
+copy the confige file and start the docker compose:
+
+```
+cp .env.dist .env
+docker-compose up -d
+```
+
+the `.env.dist` is the config template while `.env` is the actual file used for environment variables. The `.env` is gitignored so fill free to tweak it.
+
+## Without Docker
+
+### Setup database
 
 Start a mongodb daemon with default settings.
 
