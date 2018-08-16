@@ -12,6 +12,10 @@ import {clnFormatter, ccFormatter} from './utils'
 import Metamask from 'images/metamask-clean.svg'
 
 class Summary extends Component {
+  state = {
+    waitingForSign: false
+  }
+
   sendTransaction = () => {
     if (this.props.isBuy) {
       this.props.marketMakerActions.buyCc(this.props.community.address, web3Utils.toWei(this.props.cln.toString()), this.minimumInWei(), {
@@ -24,6 +28,9 @@ class Summary extends Component {
         gas: this.props.estimatedGas
       })
     }
+    this.setState({
+      waitingForSign: true
+    })
   }
 
   minimumInWei = () => this.props.minimum && web3Utils.toWei(this.props.minimum.toString())
@@ -92,7 +99,7 @@ class Summary extends Component {
           <div><img className='icon' src={Metamask} /></div>
         </div>
         <p>Decreasing gas fee below the present value may result in failed transaction</p>
-        <button disabled={!gasPrice} onClick={this.sendTransaction}>PROCEED</button>
+        <button disabled={!gasPrice || this.state.waitingForSign} onClick={this.sendTransaction}>PROCEED</button>
       </div>
     )
   }
