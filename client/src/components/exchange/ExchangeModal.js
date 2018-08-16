@@ -7,7 +7,6 @@ import * as marketMakerActions from 'actions/marketMaker'
 import Modal from 'components/Modal'
 import BuySellAmounts from 'components/exchange/BuySellAmounts'
 import Summary from 'components/exchange/Summary'
-import OpenMetamask from 'components/exchange/OpenMetamask'
 import Pending from 'components/exchange/Pending'
 import Completed from 'components/exchange/Completed'
 import {getSelectedCommunity} from 'selectors/basicToken'
@@ -21,9 +20,8 @@ import compose from 'lodash/flowRight'
 const EXCHANGE_COMPONENTS = {
   1: (props) => <BuySellAmounts {...props} />,
   2: (props) => <Summary {...props} />,
-  3: (props) => <OpenMetamask {...props} />,
-  4: (props) => <Pending {...props} />,
-  5: (props) => <Completed {...props} />
+  3: (props) => <Pending {...props} />,
+  4: (props) => <Completed {...props} />
 }
 
 class ExchangeModal extends React.Component {

@@ -1396,6 +1396,12 @@ input[type="checkbox" i] {
 		color: $dark-grey;
 		text-align: left;
 	}
+
+  .icon {
+    width: 30px;
+    height: 30px
+  }
+
 	.summary-prices-wrapper {
 		@include flex-box();
 		flex-direction: column;
