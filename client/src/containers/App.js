@@ -9,11 +9,11 @@ import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import {fetchClnContract, initializeCommunity} from 'actions/basicToken'
-import {getNetworkType, checkAccountChanged} from 'actions/web3'
+import {getNetworkType, checkAccountChanged} from 'actions/network'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
-import {getAddresses, getCommunityAddresses} from 'selectors/web3'
-import {isNetworkSupported, isNetworkDesired} from 'utils/web3'
+import {getAddresses, getCommunityAddresses} from 'selectors/network'
+import {isNetworkSupported, isNetworkDesired} from 'utils/network'
 import ReactGA from 'services/ga'
 import 'scss/styles.scss'
 
@@ -112,7 +112,7 @@ class App extends Component {
 const mapStateToProps = state => ({
   addresses: getAddresses(state),
   communityAddresses: getCommunityAddresses(state),
-  networkType: state.web3.networkType,
+  networkType: state.network.networkType,
   ui: state.ui
 })
 

@@ -1,10 +1,10 @@
 import { createSelector } from 'reselect'
 
-export const getNetworkType = state => state.web3.networkType
+export const getNetworkType = state => state.network.networkType
 
 export const getAddresses = createSelector(
   getNetworkType,
-  state => state.web3.addresses,
+  state => state.network.addresses,
   (networkType, addresses) => addresses[networkType]
 )
 

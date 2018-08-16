@@ -26,7 +26,7 @@ class TopNav extends Component {
   }
 
   showConnectMetamask = () => {
-    if (!this.props.web3.isMetaMask || !this.props.web3.accountAddress) {
+    if (!this.props.network.isMetaMask || !this.props.network.accountAddress) {
       this.props.uiActions.loadModal(LOGIN_MODAL)
       ReactGA.event({
         category: 'Top Bar',
@@ -93,7 +93,7 @@ class TopNav extends Component {
         <div className='separator-vertical' />
         <div className='top-nav-text profile' onClick={this.showConnectMetamask}>
           <img src={ProfileIcon} />
-          <span>{this.props.web3.accountAddress || 'Connect Metamask'}</span>
+          <span>{this.props.network.accountAddress || 'Connect Metamask'}</span>
         </div>
         {(this.props.clnBalance)
           ? <div className='top-nav-balance'>
@@ -114,7 +114,7 @@ class TopNav extends Component {
 
 const mapStateToProps = state => {
   return {
-    web3: state.web3,
+    network: state.network,
     clnBalance: getClnBalance(state)
   }
 }

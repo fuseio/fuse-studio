@@ -6,10 +6,10 @@ import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {FETCH_METADATA} from 'actions/api'
 import {subscribeToChange} from 'actions/subscriptions'
 
-import web3 from 'services/web3'
+import network from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
-import {getNetworkType} from 'selectors/web3'
+import {getNetworkType} from 'selectors/network'
 import { delay } from 'redux-saga'
 
 const entityPut = createEntityPut('basicToken')
@@ -62,7 +62,7 @@ function * tokenURI ({tokenAddress}) {
 function * setTokenURI ({tokenAddress, tokenURI}) {
   const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
   yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
-    from: web3.eth.defaultAccount
+    from: network.eth.defaultAccount
   })
 
   yield entityPut({type: actions.SET_TOKEN_URI.SUCCESS,

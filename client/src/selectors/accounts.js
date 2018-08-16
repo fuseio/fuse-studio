@@ -1,8 +1,8 @@
 import { createSelector } from 'reselect'
 import {getSelectedCommunity} from 'selectors/basicToken'
-import {getAddresses} from 'selectors/web3'
+import {getAddresses} from 'selectors/network'
 
-export const getAccountAddress = state => state.web3.accountAddress
+export const getAccountAddress = state => state.network.accountAddress
 
 export const getAccount = createSelector(
   getAccountAddress,

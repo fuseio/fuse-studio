@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import {getEtherscanUrl} from 'selectors/web3'
+import {getEtherscanUrl} from 'selectors/network'
 import {getAccount} from 'selectors/accounts'
 import Vimage from 'images/v.png'
 

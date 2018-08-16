@@ -1,7 +1,7 @@
 import { all, fork } from 'redux-saga/effects'
 
 import basicTokenSaga from './basicToken'
-import web3Saga from './web3'
+import web3Saga from './network'
 import apiSaga from './api'
 import marketMakerSaga from './marketMaker'
 import subscriptionsSaga from './subscriptions'

@@ -14,7 +14,7 @@ import Instagram from 'images/ig.png'
 import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
 import {getSelectedCommunity} from 'selectors/basicToken'
-import {getEtherscanUrl, getColuWallet} from 'selectors/web3'
+import {getEtherscanUrl, getColuWallet} from 'selectors/network'
 import CoinHeader from './CoinHeader'
 import Loader from 'components/Loader'
 import ReactGA from 'services/ga'
@@ -191,7 +191,7 @@ const mapStateToProps = state => ({
   selectedCommunity: getSelectedCommunity(state),
   etherscanUrl: getEtherscanUrl(state),
   coluWallet: getColuWallet(state),
-  accountAddress: state.web3.accountAddress
+  accountAddress: state.network.accountAddress
 })
 
 const mapDispatchToProps = dispatch => {

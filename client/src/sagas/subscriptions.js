@@ -1,15 +1,15 @@
 import { all, call, put, select, take, takeEvery, race, fork } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import utils from 'web3-utils'
+import web3Utils from 'web3-utils'
 import identity from 'lodash/identity'
 
 import {tryTakeEvery} from './utils'
 import * as actions from 'actions/subscriptions'
-import {CHECK_ACCOUNT_CHANGED} from 'actions/web3'
+import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 import {BALANCE_OF} from 'actions/accounts'
 import {fetchMarketMakerData} from 'actions/marketMaker'
 import {web3Socket, websocketProvider} from 'services/web3'
-import {getTokenAddresses} from 'selectors/web3'
+import {getTokenAddresses} from 'selectors/network'
 import {TRANSFER_EVENT, CHANGE_EVENT} from 'constants/events'
 import ReactGA from 'services/ga'
 
@@ -43,12 +43,12 @@ function createSubscriptionChannel (subscription) {
 export function * subscribeToTransfer ({tokenAddress, accountAddress}) {
   const receiveTokenSubscription = web3Socket.eth.subscribe('logs', {
     address: tokenAddress,
-    topics: [TRANSFER_EVENT, utils.padLeft(accountAddress.toLowerCase(), 64)]
+    topics: [TRANSFER_EVENT, web3Utils.padLeft(accountAddress.toLowerCase(), 64)]
   }, identity)
 
   const sendTokenSubscription = web3Socket.eth.subscribe('logs', {
     address: tokenAddress,
-    topics: [TRANSFER_EVENT, null, utils.padLeft(accountAddress.toLowerCase(), 64)]
+    topics: [TRANSFER_EVENT, null, web3Utils.padLeft(accountAddress.toLowerCase(), 64)]
   }, identity)
 
   const receiveTokenChannel = yield call(createSubscriptionChannel, receiveTokenSubscription)

@@ -110,7 +110,7 @@ Summary.propTypes = {
 }
 
 const mapStateToProps = (state, props) => ({
-  gas: state.web3.gas,
+  gas: state.network.gas,
   ...props
 })
 

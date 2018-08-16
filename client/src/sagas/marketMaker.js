@@ -3,9 +3,9 @@ import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/marketMaker'
-import {fetchGasPrices} from 'actions/web3'
+import {fetchGasPrices} from 'actions/network'
 import {getClnToken, getCommunity} from 'selectors/basicToken'
-import web3 from 'services/web3'
+import network from 'services/web3'
 import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 
 export function * getCurrentPrice ({address, tokenAddress}) {
@@ -174,11 +174,11 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, isEstimation,
 
   if (isEstimation) {
     return yield ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).estimateGas(
-      {from: web3.eth.defaultAccount})
+      {from: network.eth.defaultAccount})
   }
 
   const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
-    from: web3.eth.defaultAccount,
+    from: network.eth.defaultAccount,
     ...options
   })
 
@@ -193,7 +193,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, isEstimation,
 
   yield put({type: actions.CHANGE.PENDING,
     tokenAddress: token.address,
-    accountAddress: web3.eth.defaultAccount,
+    accountAddress: network.eth.defaultAccount,
     response: {
       transactionHash
     }
@@ -204,7 +204,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, isEstimation,
     yield put({
       type: actions.CHANGE.FAILURE,
       tokenAddress: token.address,
-      accountAddress: web3.eth.defaultAccount,
+      accountAddress: network.eth.defaultAccount,
       response: {receipt}
     })
     return receipt
@@ -212,7 +212,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, isEstimation,
 
   yield put({type: actions.CHANGE.SUCCESS,
     tokenAddress: token.address,
-    accountAddress: web3.eth.defaultAccount,
+    accountAddress: network.eth.defaultAccount,
     response: {
       receipt
     }

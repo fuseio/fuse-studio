@@ -23,13 +23,13 @@ class LoginModal extends React.Component {
         action: 'Close',
         label: 'Finish Metamask Install'
       })
-    } else if (!this.props.web3.isMetaMask) {
+    } else if (!this.props.network.isMetaMask) {
       ReactGA.event({
         category: 'Metamask',
         action: 'Close',
         label: 'Install Metamask'
       })
-    } else if (!this.props.web3.accountAddress) {
+    } else if (!this.props.network.accountAddress) {
       ReactGA.event({
         category: 'Metamask',
         action: 'Close',
@@ -60,7 +60,7 @@ class LoginModal extends React.Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.web3.isMetaMask && nextProps.web3.accountAddress) {
+    if (nextProps.network.isMetaMask && nextProps.network.accountAddress) {
       this.props.hideModal()
     }
   }
@@ -79,7 +79,7 @@ class LoginModal extends React.Component {
         <p>Make sure you follow the instruction on MetaMask to finish the installation.</p>
         <div className='button' onClick={this.finishInstalling}>I INSTALLED METAMASK</div>
       </div>
-    } else if (!this.props.web3.isMetaMask) {
+    } else if (!this.props.network.isMetaMask) {
       ReactGA.event({
         category: 'Metamask',
         action: 'View',
@@ -95,7 +95,7 @@ class LoginModal extends React.Component {
         <p>You’ll need a safe place to store your coins, in order to do that you need to download the MetaMask wallet. The wallet will also act as your login to the dashboard.</p>
         <div className='button' onClick={this.installMetamask}>INSTALL METAMASK</div>
       </div>
-    } else if (!this.props.web3.accountAddress) {
+    } else if (!this.props.network.accountAddress) {
       ReactGA.event({
         category: 'Metamask',
         action: 'View',
@@ -118,7 +118,7 @@ class LoginModal extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    web3: state.web3
+    network: state.network
   }
 }
 

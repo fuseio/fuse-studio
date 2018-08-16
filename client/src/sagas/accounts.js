@@ -3,8 +3,8 @@ import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/accounts'
 import {tryTakeEvery} from './utils'
-import {getAddresses, getCommunityAddresses} from 'selectors/web3'
-import {CHECK_ACCOUNT_CHANGED} from 'actions/web3'
+import {getAddresses, getCommunityAddresses} from 'selectors/network'
+import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 
 function * balanceOf ({tokenAddress, accountAddress, blockNumber}) {
   const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})

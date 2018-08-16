@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 
-import {getEtherscanUrl} from 'selectors/web3'
+import {getEtherscanUrl} from 'selectors/network'
 import {getAccount} from 'selectors/accounts'
 import Loader from 'components/Loader'
 
