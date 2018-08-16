@@ -25,10 +25,15 @@ const EXCHANGE_COMPONENTS = {
 }
 
 class ExchangeModal extends React.Component {
-  setBuyStage = (buyStage) => this.props.uiActions.updateModalProps({buyStage})
+  next = (props) => this.props.uiActions.updateModalProps({
+    ...props,
+    buyStage: this.props.buyStage + 1
+  })
 
-  next = () => this.setBuyStage(this.props.buyStage + 1)
-  back = () => this.setBuyStage(this.props.buyStage - 1)
+  back = (props) => this.props.uiActions.updateModalProps({
+    ...props,
+    buyStage: this.props.buyStage - 1
+  })
 
   render () {
     const { buyStage } = this.props
