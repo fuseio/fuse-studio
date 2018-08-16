@@ -88,7 +88,7 @@ class Summary extends Component {
         </div>
         <div className='line' />
         <div className='info-price'>
-          <div>        <h5>GAS FEE NOTICE:</h5></div>
+          <div><h5>GAS FEE NOTICE:</h5></div>
           <div><img className='icon' src={Metamask} /></div>
         </div>
         <p>Decreasing gas fee below the present value may result in failed transaction</p>
