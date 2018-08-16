@@ -38,7 +38,7 @@ services:
                     - $PROJECT_NAME-ipfs
     server:
         container_name: $PROJECT_NAME-server
-        build: 
+        build:
             context: ./server/
         user: "${UID}:${GID}"
         restart: always
@@ -57,7 +57,7 @@ services:
                 aliases:
                     - $PROJECT_NAME-server
         ports:
-            - "8081:$COMMUNITY_APP_PORT"
+            - "3000:$COMMUNITY_APP_PORT"
         environment:
             - NODE_ENV=${COMMUNITY_APP_ENV}
             - PORT=${COMMUNITY_APP_PORT}
@@ -65,10 +65,10 @@ services:
             - COMMUNITY_MONGO_USER=${MONGO_USER}
             - COMMUNITY_MONGO_PASS=${MONGO_PASS}
             - COMMUNITY_MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}
-            - COMMUNITY_IPFS_HOST=${IPFS_HOST}
-            - COMMUNITY_IPFS_PORT=${IPFS_PORT}
-            - COMMUNITY_IPFS_PROTOCOL=${IPFS_PROTO}
-            - COMMUNITY_IPFS_TIMEOUT=${IPFS_READ_TIMEOUT}
+            - COMMUNITY_IPFS_HOST=${COMMUNITY_IPFS_HOST}
+            - COMMUNITY_IPFS_PORT=${COMMUNITY_IPFS_PORT}
+            - COMMUNITY_IPFS_PROTOCOL=${COMMUNITY_IPFS_PROTOCOL}
+            - COMMUNITY_IPFS_TIMEOUT=${COMMUNITY_IPFS_TIMEOUT}
             - COMMUNITY_API_SECRET=${COMMUNITY_SERVER_SECRET}
             - COMMUNITY_MANDRILL_API_KEY=${MANDRILL_API}
             - COMMUNITY_MANDRILL_SEND_TO=${MANDRILL_SEND_TO}
@@ -77,7 +77,7 @@ services:
             - COMMUNITY_AMAZON_BUCKET_API=${AMAZON_BUCKET_API}
     client:
         container_name: $PROJECT_NAME-client
-        build: 
+        build:
             context: ./client/
         user: "${UID}:${GID}"
         restart: always
