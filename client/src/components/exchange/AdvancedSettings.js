@@ -138,9 +138,9 @@ class AdvancedSettings extends Component {
 
     return (
       <div className={advancedClass}>
-        <div className='advanced-header'>
-          <h5 onClick={this.props.handleToggle}>Advanced settings</h5>
-          <img onClick={this.props.handleToggle} src={DownArrow} />
+        <div className='advanced-header' onClick={this.props.handleToggle}>
+          <h5>Advanced settings</h5>
+          <img src={DownArrow} />
         </div>
         <TextInput id='minimum'
           type='string'
