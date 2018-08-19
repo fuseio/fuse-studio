@@ -18,7 +18,7 @@ import map from 'lodash/map'
 import MarkerSVG from 'components/Marker'
 import * as uiActions from 'actions/ui'
 import { mapStyle, mapSettings } from 'constants/uiConstants'
-import {getSelectedToken, getTokensWithMetadata} from 'selectors/basicToken'
+import {getSelectedToken, getTokensWithMetadata} from 'selectors/communities'
 
 import topo110 from 'topojson/110m.json'
 import topo50 from 'topojson/50m.json'

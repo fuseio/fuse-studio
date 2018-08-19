@@ -1,7 +1,7 @@
 import { all, put, race, call, take, select, fork } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery} from './utils'
-import * as actions from 'actions/basicToken'
+import * as actions from 'actions/communities'
 import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {FETCH_METADATA} from 'actions/api'
 import {subscribeToChange} from 'actions/subscriptions'
@@ -11,7 +11,7 @@ import addresses from 'constants/addresses'
 import {getNetworkType} from 'selectors/network'
 import { delay } from 'redux-saga'
 
-const entityPut = createEntityPut('basicToken')
+const entityPut = createEntityPut(actions.entityName)
 
 function * initializeCommunity ({tokenAddress}) {
   const tokenResponse = yield call(fetchCommunity, {tokenAddress})
@@ -97,7 +97,7 @@ function * fetchClnContract ({tokenAddress}) {
   })
 }
 
-export default function * basicTokenSaga () {
+export default function * communitiesSaga () {
   yield all([
     tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
     tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity),

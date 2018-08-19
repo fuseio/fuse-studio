@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import {getSelectedCommunity} from 'selectors/basicToken'
+import {getSelectedCommunity} from 'selectors/communities'
 import {getAddresses} from 'selectors/network'
 
 export const getAccountAddress = state => state.network.accountAddress

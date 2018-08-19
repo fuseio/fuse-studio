@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import basicToken from './basicToken'
+import communities from './communities'
 import marketMaker from './marketMaker'
 import accounts from './accounts'
 import ui from './ui'
@@ -10,7 +10,7 @@ import errors from './errors'
 
 const rootReducer = combineReducers({
   ui,
-  tokens: basicToken,
+  tokens: communities,
   marketMaker,
   network,
   errors,

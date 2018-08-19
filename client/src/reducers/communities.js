@@ -1,7 +1,8 @@
 import {FETCH_METADATA} from 'actions/api'
+import {entityName} from 'actions/communities'
 
 export default (state = {}, action) => {
-  if (action.entity === 'basicToken' && action.response) {
+  if (action.entity === entityName && action.response) {
     return {...state, [action.tokenAddress]: {...state[action.tokenAddress], ...action.response}}
   }
   switch (action.type) {

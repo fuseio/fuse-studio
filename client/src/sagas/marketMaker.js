@@ -4,7 +4,7 @@ import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/marketMaker'
 import {fetchGasPrices} from 'actions/network'
-import {getClnToken, getCommunity} from 'selectors/basicToken'
+import {getClnToken, getCommunity} from 'selectors/communities'
 import network from 'services/web3'
 import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 
