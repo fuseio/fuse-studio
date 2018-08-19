@@ -80,8 +80,8 @@ class BuySellAmounts extends Component {
   }
 
   askForCcQuote = (amount) => {
-    const amountInWei = web3Utils.toWei(amount.toString())
     const {isBuy, community, marketMakerActions} = this.props
+    const amountInWei = web3Utils.toWei(amount.toString())
     if (isBuy) {
       marketMakerActions.invertBuyQuote(community.address, amountInWei)
     } else {
@@ -184,10 +184,14 @@ class BuySellAmounts extends Component {
   handleCcClickMax = () => this.handleClickMax(this.handleCcInput, this.props.ccBalance)
 
   price = () => {
-    return this.props.quotePair.price
+    return this.props.quotePair.price && this.state.inputField
       ? new BigNumber(this.props.quotePair.price.toString())
       : new BigNumber(this.props.community.currentPrice.toString())
   }
+
+  slippage = () => this.props.quotePair.slippage && this.state.inputField
+    ? utils.roundUp(new BigNumber(this.props.quotePair.slippage).multipliedBy(100))
+    : undefined
 
   cln = (formatter = identity) => this.state.inputField !== 'cc' ? this.state.cln : (
     this.props.isBuy ? formatter(new BigNumber(this.props.quotePair.inAmount.toString()).div(1e18), this.props.isBuy)
@@ -198,8 +202,6 @@ class BuySellAmounts extends Component {
     this.props.isBuy ? formatter(new BigNumber(this.props.quotePair.outAmount.toString()).div(1e18), this.props.isBuy)
       : formatter(new BigNumber(this.props.quotePair.inAmount.toString()).div(1e18), this.props.isBuy)
   )
-
-  slippage = () => utils.roundUp(new BigNumber(this.props.quotePair.slippage).multipliedBy(100))
 
   amountToReceive = () => {
     if (this.props.isFetching) {
@@ -342,5 +344,10 @@ BuySellAmounts.defaultProps = {
     outAmount: 0
   }
 }
+
+// const BuySellAmountsWrapper = (props) => {
+//
+//
+// }
 
 export default BuySellAmounts
