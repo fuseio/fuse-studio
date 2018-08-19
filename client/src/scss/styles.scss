@@ -588,7 +588,7 @@ button:disabled, button[disabled] {
 			margin: 12px 0;
 			width: 100%;
 			font-weight: bold;
-			@media (max-width: 1024px) {
+			@media (max-width: $breakpoint-tablet) {
 				font-size: 20px;
 				margin: 0;
 			}
@@ -628,7 +628,7 @@ button:disabled, button[disabled] {
 				overflow:hidden !important;
 				text-overflow: ellipsis;
 			}
-			@media (max-width: 1024px) {
+			@media (max-width: $breakpoint-tablet) {
 				font-size: 12px;
 				margin: 0;
 			}
@@ -646,7 +646,7 @@ button:disabled, button[disabled] {
 	right: 0;
 	z-index: 100;
 
-	@media (max-width: 1024px) {
+	@media (max-width: $breakpoint-tablet) {
 		top: 50px;
 		-webkit-overflow-scrolling: touch;
 	}
@@ -657,7 +657,7 @@ button:disabled, button[disabled] {
 		height: calc(100vh - 60px);
 		width: 450px;
 		box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.37);
-		@media (max-width: 1024px) {
+		@media (max-width: $breakpoint-tablet) {
 			border-left: none;
 			 -webkit-overflow-scrolling: touch;
 		}
@@ -669,7 +669,7 @@ button:disabled, button[disabled] {
 		.header {
 			background-color: $light-grey;
 			border-bottom: solid 1px #e1dedc;
-			@media (max-width: 1024px) {
+			@media (max-width: $breakpoint-tablet) {
 				padding: 0 20px 20px;
 				border-bottom: 1px solid #e1dedc;
 				box-shadow: none;
@@ -844,7 +844,7 @@ button:disabled, button[disabled] {
 	position: absolute;
 	z-index: 200;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-	@media (max-width: 1024px) {
+	@media (max-width: $breakpoint-tablet) {
 		height: $nav-height-mobile;
 		padding: 10px 28px;
 		position: fixed;
@@ -923,7 +923,7 @@ button:disabled, button[disabled] {
 				font-weight: 500;
 			}
 		}
-		@media (max-width: 1024px) {
+		@media (max-width: $breakpoint-tablet) {
 			@include flex-direction(column);
 			position: absolute;
 			top: $nav-height-mobile;
@@ -1658,7 +1658,7 @@ input[type="checkbox" i] {
 			}
 		}
 	}
-	@media (max-width: 1024px) {
+	@media (max-width: $breakpoint-tablet) {
 		top:50px;
 
 		right: 0;
@@ -1882,7 +1882,7 @@ input[type="checkbox" i] {
 			}
 		}
 	}
-	@media (max-width: 1024px) {
+	@media (max-width: $breakpoint-tablet) {
 		flex-direction: row;
 		bottom: 30px;
 		top: auto;
