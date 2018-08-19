@@ -8,62 +8,7 @@ import {getClnToken, getCommunity} from 'selectors/basicToken'
 import network from 'services/web3'
 import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 
-export function * getCurrentPrice ({address, tokenAddress}) {
-  try {
-    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
-    const currentPriceOfCln = yield call(EllipseMarketMakerContract.methods.getCurrentPrice().call)
-    yield put({type: actions.GET_CURRENT_PRICE.SUCCESS,
-      tokenAddress,
-      response: {
-        currentPrice: reversePrice(currentPriceOfCln)
-      }})
-  } catch (error) {
-    // no CLN inserted to the contract, so the CC has to value at all
-    if (error.message === 'Couldn\'t decode uint256 from ABI: 0x') {
-      yield put({type: actions.GET_CURRENT_PRICE.SUCCESS,
-        tokenAddress,
-        response: {
-          currentPrice: 0
-        }})
-    } else {
-      yield put({type: actions.GET_CURRENT_PRICE.FAILURE, error})
-    }
-  }
-}
-
 const reversePrice = (price) => new BigNumber(1e18).div(price)
-
-export function * clnReserve ({address, tokenAddress}) {
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
-  const clnReserve = yield call(EllipseMarketMakerContract.methods.R1().call)
-  yield put({type: actions.CLN_RESERVE.SUCCESS,
-    tokenAddress,
-    response: {
-      clnReserve
-    }})
-}
-
-export function * ccReserve ({address, tokenAddress}) {
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address})
-  const ccReserve = yield call(EllipseMarketMakerContract.methods.R2().call)
-  yield put({type: actions.CC_RESERVE.SUCCESS,
-    tokenAddress,
-    response: {
-      ccReserve
-    }})
-}
-
-export function * isOpenForPublic ({tokenAddress}) {
-  const token = yield select(getCommunity, tokenAddress)
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
-  const isOpenForPublic = yield call(EllipseMarketMakerContract.methods.openForPublic().call)
-
-  yield put({type: actions.IS_OPEN_FOR_PUBLIC.SUCCESS,
-    tokenAddress,
-    response: {
-      isOpenForPublic
-    }})
-}
 
 const getReservesAndSupplies = (clnToken, ccToken, isBuy) => isBuy
   ? {
@@ -331,9 +276,6 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) 
 
 export default function * marketMakerSaga () {
   yield all([
-    tryTakeEvery(actions.GET_CURRENT_PRICE, getCurrentPrice),
-    tryTakeEvery(actions.CLN_RESERVE, clnReserve),
-    tryTakeEvery(actions.CC_RESERVE, ccReserve),
     tryTakeEvery(actions.QUOTE, quote),
     tryTakeLatestWithDebounce(actions.BUY_QUOTE, buyQuote),
     tryTakeLatestWithDebounce(actions.SELL_QUOTE, sellQuote),
@@ -344,7 +286,6 @@ export default function * marketMakerSaga () {
     tryTakeEvery(actions.SELL_CC, sellCc, 1),
     tryTakeEvery(actions.ESTIMATE_GAS_BUY_CC, estimateGasBuyCc),
     tryTakeEvery(actions.ESTIMATE_GAS_SELL_CC, estimateGasSellCc),
-    tryTakeEvery(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData),
-    tryTakeEvery(actions.IS_OPEN_FOR_PUBLIC, isOpenForPublic)
+    tryTakeEvery(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData)
   ])
 }

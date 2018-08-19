@@ -7,11 +7,6 @@ export const quoteAction = (type, payload) => ({
   }
 })
 
-export const GET_CURRENT_PRICE = createRequestTypes('GET_CURRENT_PRICE')
-export const CLN_RESERVE = createRequestTypes('CLN_RESERVE')
-export const CC_RESERVE = createRequestTypes('CC_RESERVE')
-export const IS_OPEN_FOR_PUBLIC = createRequestTypes('IS_OPEN_FOR_PUBLIC')
-
 export const FETCH_MARKET_MAKER_DATA = createRequestTypes('FETCH_MARKET_MAKER_DATA')
 
 export const QUOTE = createRequestTypes('QUOTE')
@@ -33,15 +28,11 @@ export const ESTIMATE_GAS_SELL_CC = createRequestTypes('ESTIMATE_GAS_SELL_CC')
 
 export const quoteActions = [CHANGE, BUY_QUOTE, SELL_QUOTE, INVERT_BUY_QUOTE, INVERT_SELL_QUOTE, ESTIMATE_GAS_BUY_CC, ESTIMATE_GAS_SELL_CC]
 
-export const getCurrentPrice = (address, tokenAddress) => action(GET_CURRENT_PRICE.REQUEST, {address, tokenAddress})
-export const clnReserve = (address, tokenAddress) => action(CLN_RESERVE.REQUEST, {address, tokenAddress})
-export const ccReserve = (address, tokenAddress) => action(CC_RESERVE.REQUEST, {address, tokenAddress})
 export const fetchMarketMakerData = (tokenAddress, mmAddress, blockNumber) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {tokenAddress, mmAddress, blockNumber})
 
 export const quote = (fromToken, inAmount, toToken, isBuy) => action(QUOTE.REQUEST, {fromToken, inAmount, toToken, isBuy})
 export const invertQuote = (fromToken, inAmount, toToken) => action(INVERT_QUOTE.REQUEST, {fromToken, inAmount, toToken})
 export const change = (tokenAddress, amount, minReturn, isBuy) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuy})
-export const isOpenForPublic = (tokenAddress) => action(IS_OPEN_FOR_PUBLIC.REQUEST, {tokenAddress})
 
 export const buyQuote = (tokenAddress, clnAmount) => quoteAction(BUY_QUOTE.REQUEST, {tokenAddress, clnAmount})
 export const sellQuote = (tokenAddress, ccAmount) => quoteAction(SELL_QUOTE.REQUEST, {tokenAddress, ccAmount})

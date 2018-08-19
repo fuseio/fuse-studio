@@ -1,10 +1,6 @@
 import * as actions from 'actions/marketMaker'
 
 const tokenActions = new Set([
-  actions.GET_CURRENT_PRICE.SUCCESS,
-  actions.CLN_RESERVE.SUCCESS,
-  actions.CC_RESERVE.SUCCESS,
-  actions.IS_OPEN_FOR_PUBLIC.SUCCESS,
   actions.FETCH_MARKET_MAKER_DATA.SUCCESS
 ])
 

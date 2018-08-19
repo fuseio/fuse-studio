@@ -6,82 +6,12 @@ import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {FETCH_METADATA} from 'actions/api'
 import {subscribeToChange} from 'actions/subscriptions'
 
-import network from 'services/web3'
 import { contract } from 'osseus-wallet'
 import addresses from 'constants/addresses'
 import {getNetworkType} from 'selectors/network'
 import { delay } from 'redux-saga'
 
 const entityPut = createEntityPut('basicToken')
-
-function * name ({tokenAddress}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
-  const name = yield call(ColuLocalNetworkContract.methods.name().call)
-
-  yield entityPut({type: actions.NAME.SUCCESS,
-    tokenAddress,
-    response: {
-      name
-    }})
-}
-
-function * symbol ({tokenAddress}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
-  const symbol = yield call(ColuLocalNetworkContract.methods.symbol().call)
-
-  yield entityPut({type: actions.SYMBOL.SUCCESS,
-    tokenAddress,
-    response: {
-      symbol
-    }})
-}
-
-function * totalSupply ({tokenAddress}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
-  const totalSupply = yield call(ColuLocalNetworkContract.methods.totalSupply().call)
-
-  yield entityPut({type: actions.TOTAL_SUPPLY.SUCCESS,
-    tokenAddress,
-    response: {
-      totalSupply
-    }})
-}
-
-function * tokenURI ({tokenAddress}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
-  const tokenURI = yield call(ColuLocalNetworkContract.methods.tokenURI().call)
-
-  yield entityPut({type: actions.TOKEN_URI.SUCCESS,
-    tokenAddress,
-    response: {
-      tokenURI
-    }}
-  )
-}
-
-function * setTokenURI ({tokenAddress, tokenURI}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
-  yield ColuLocalNetworkContract.methods.setTokenURI(tokenURI).send({
-    from: network.eth.defaultAccount
-  })
-
-  yield entityPut({type: actions.SET_TOKEN_URI.SUCCESS,
-    tokenAddress,
-    response: {
-      tokenURI
-    }})
-}
-
-function * owner ({tokenAddress}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
-  const owner = yield call(ColuLocalNetworkContract.methods.owner().call)
-
-  yield entityPut({type: actions.OWNER.SUCCESS,
-    tokenAddress,
-    response: {
-      owner
-    }})
-}
 
 function * fetchCommunityToken ({tokenAddress}) {
   try {
@@ -169,12 +99,6 @@ function * fetchClnContract ({tokenAddress}) {
 
 export default function * basicTokenSaga () {
   yield all([
-    tryTakeEvery(actions.NAME, name),
-    tryTakeEvery(actions.SYMBOL, symbol),
-    tryTakeEvery(actions.TOTAL_SUPPLY, totalSupply),
-    tryTakeEvery(actions.TOKEN_URI, tokenURI),
-    tryTakeEvery(actions.SET_TOKEN_URI, setTokenURI),
-    tryTakeEvery(actions.OWNER, owner),
     tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
     tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity),
     tryTakeEvery(actions.INITIALIZE_COMMUNITY, initializeCommunity)
