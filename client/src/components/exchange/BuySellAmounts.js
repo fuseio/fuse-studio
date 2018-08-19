@@ -345,9 +345,4 @@ BuySellAmounts.defaultProps = {
   }
 }
 
-// const BuySellAmountsWrapper = (props) => {
-//
-//
-// }
-
 export default BuySellAmounts
