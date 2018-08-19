@@ -102,7 +102,8 @@ class BuySellAmounts extends Component {
   }
 
   resetAdvancedSettingsForm = () => this.setState({
-    pricePercentage: DEFAULT_PRICE_CHANGE
+    pricePercentage: DEFAULT_PRICE_CHANGE,
+    advanced: false
   })
 
   handleClnInput = (event) => {
