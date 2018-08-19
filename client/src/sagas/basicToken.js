@@ -13,6 +13,19 @@ import { delay } from 'redux-saga'
 
 const entityPut = createEntityPut('basicToken')
 
+function * initializeCommunity ({tokenAddress}) {
+  const tokenResponse = yield call(fetchCommunity, {tokenAddress})
+  yield put(subscribeToChange(tokenResponse.address, tokenResponse.mmAddress))
+  yield entityPut({type: actions.INITIALIZE_COMMUNITY.SUCCESS, tokenAddress})
+}
+
+function * fetchCommunity ({tokenAddress}) {
+  const tokenResponse = yield call(fetchCommunityToken, {tokenAddress})
+  yield fork(fetchMarketMakerData, {tokenAddress, mmAddress: tokenResponse.mmAddress})
+  yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, tokenAddress})
+  return tokenResponse
+}
+
 function * fetchCommunityToken ({tokenAddress}) {
   try {
     const networkType = yield select(getNetworkType)
@@ -62,19 +75,6 @@ function * fetchCommunityToken ({tokenAddress}) {
     console.error(error)
     yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.FAILURE, tokenAddress, error})
   }
-}
-
-function * fetchCommunity ({tokenAddress}) {
-  const tokenResponse = yield call(fetchCommunityToken, {tokenAddress})
-  yield fork(fetchMarketMakerData, {tokenAddress, mmAddress: tokenResponse.mmAddress})
-  yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, tokenAddress})
-  return tokenResponse
-}
-
-function * initializeCommunity ({tokenAddress}) {
-  const tokenResponse = yield call(fetchCommunity, {tokenAddress})
-  yield put(subscribeToChange(tokenResponse.address, tokenResponse.mmAddress))
-  yield entityPut({type: actions.INITIALIZE_COMMUNITY.SUCCESS, tokenAddress})
 }
 
 function * fetchClnContract ({tokenAddress}) {
