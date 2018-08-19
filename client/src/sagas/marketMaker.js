@@ -23,6 +23,19 @@ const getReservesAndSupplies = (clnToken, ccToken, isBuy) => isBuy
     s2: ccToken.totalSupply
   }
 
+function * getChangeParameters (tokenAddress, isBuy) {
+  const clnToken = yield select(getClnToken)
+  const token = yield select(getCommunity, tokenAddress)
+  const fromTokenAddress = isBuy ? clnToken.address : tokenAddress
+  const toTokenAddress = isBuy ? tokenAddress : clnToken.address
+
+  return {
+    token,
+    fromTokenAddress,
+    toTokenAddress
+  }
+}
+
 const computePrice = (isBuy, inAmount, outAmount) => {
   if (isBuy) {
     return inAmount.div(outAmount)
@@ -32,10 +45,7 @@ const computePrice = (isBuy, inAmount, outAmount) => {
 }
 
 export function * quote ({tokenAddress, amount, isBuy}) {
-  const clnToken = yield select(getClnToken)
-  const token = yield select(getCommunity, tokenAddress)
-  const fromTokenAddress = isBuy ? clnToken.address : tokenAddress
-  const toTokenAddress = isBuy ? tokenAddress : clnToken.address
+  const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
 
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
   let outAmount = yield call(EllipseMarketMakerContract.methods.quote(fromTokenAddress, amount, toTokenAddress).call)
@@ -99,28 +109,23 @@ export function * invertQuote ({tokenAddress, amount, isBuy}) {
 const calcSlippage = (expectedPrice, actualPrice) =>
   expectedPrice.minus(actualPrice).div(expectedPrice).abs()
 
-export function * change ({tokenAddress, amount, minReturn, isBuy, isEstimation, options}) {
-  const clnToken = yield select(getClnToken)
-  let token = yield select(getCommunity, tokenAddress)
-  const fromTokenAddress = isBuy ? clnToken.address : tokenAddress
-  const toTokenAddress = isBuy ? tokenAddress : clnToken.address
+function * createChangeData ({toTokenAddress, amount, minReturn, isBuy, mmAddress}) {
+  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
 
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
+  if (minReturn) {
+    return EllipseMarketMakerContract.methods.change(toTokenAddress, minReturn).encodeABI()
+  } else {
+    return EllipseMarketMakerContract.methods.change(toTokenAddress).encodeABI()
+  }
+}
+
+export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
+  const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
+
+  const data = yield createChangeData({toTokenAddress, amount, minReturn, isBuy, mmAddress: token.mmAddress})
 
   const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency',
     address: fromTokenAddress})
-
-  let data
-  if (minReturn) {
-    data = EllipseMarketMakerContract.methods.change(toTokenAddress, minReturn).encodeABI()
-  } else {
-    data = EllipseMarketMakerContract.methods.change(toTokenAddress).encodeABI()
-  }
-
-  if (isEstimation) {
-    return yield ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).estimateGas(
-      {from: network.eth.defaultAccount})
-  }
 
   const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
     from: network.eth.defaultAccount,
@@ -164,6 +169,18 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, isEstimation,
   })
 
   return receipt
+}
+
+export function * estimageChange ({tokenAddress, amount, minReturn, isBuy}) {
+  const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
+
+  const data = yield createChangeData({toTokenAddress, amount, minReturn, isBuy, mmAddress: token.mmAddress})
+
+  const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency',
+    address: fromTokenAddress})
+
+  return yield ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).estimateGas(
+    {from: network.eth.defaultAccount})
 }
 
 export function * buyQuote ({tokenAddress, clnAmount}) {
@@ -219,12 +236,11 @@ export function * sellCc ({amount, tokenAddress, minReturn, options}) {
 }
 
 export function * estimateGasBuyCc ({amount, tokenAddress, minReturn}) {
-  const estimatedGas = yield call(change, {
+  const estimatedGas = yield call(estimageChange, {
     tokenAddress,
     amount,
     isBuy: true,
-    minReturn,
-    isEstimation: true
+    minReturn
   })
 
   yield put(fetchGasPrices())
@@ -237,12 +253,11 @@ export function * estimateGasBuyCc ({amount, tokenAddress, minReturn}) {
 }
 
 function * estimateGasSellCc ({amount, tokenAddress, minReturn}) {
-  const estimatedGas = yield call(change, {
+  const estimatedGas = yield call(estimageChange, {
     tokenAddress,
     amount,
     isBuy: false,
-    minReturn,
-    isEstimation: true
+    minReturn
   })
 
   yield put(fetchGasPrices())
