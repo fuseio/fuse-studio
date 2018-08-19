@@ -5,6 +5,8 @@
   },
   "ipfs": {
     "host": "COMMUNITY_IPFS_HOST",
+    "port": "COMMUNITY_IPFS_PORT",
+    "protocol": "COMMUNITY_IPFS_PROTOCOL",
     "timeout": "COMMUNITY_IPFS_TIMEOUT"
   },
   "mongo": {
