@@ -69,9 +69,8 @@ class BuySellAmounts extends Component {
     })
   }
 
-  askForClnQuote = (amount) => {
+  askForClnQuote = (amountInWei) => {
     const {isBuy, community, marketMakerActions} = this.props
-    const amountInWei = web3Utils.toWei(amount.toString())
     if (isBuy) {
       marketMakerActions.buyQuote(community.address, amountInWei)
     } else {
@@ -79,9 +78,8 @@ class BuySellAmounts extends Component {
     }
   }
 
-  askForCcQuote = (amount) => {
+  askForCcQuote = (amountInWei) => {
     const {isBuy, community, marketMakerActions} = this.props
-    const amountInWei = web3Utils.toWei(amount.toString())
     if (isBuy) {
       marketMakerActions.invertBuyQuote(community.address, amountInWei)
     } else {
@@ -135,9 +133,7 @@ class BuySellAmounts extends Component {
       inputField: 'cln',
       error: (this.props.isBuy && amountInWei.isGreaterThan(this.props.clnBalance)) ? 'Insufficient Funds' : ''
     })
-    if (trim(amount)) {
-      this.askForClnQuote(amount)
-    }
+    this.askForClnQuote(amountInWei)
   }
 
   handleCcInput = (event) => {
@@ -169,7 +165,7 @@ class BuySellAmounts extends Component {
       error: (!this.props.isBuy && amountInWei.isGreaterThan(this.props.ccBalance)) ? 'Insufficient Funds' : ''
     })
 
-    this.askForCcQuote(amount)
+    this.askForCcQuote(amountInWei)
   }
 
   handleClickMax = (handle, balance) => {
@@ -184,24 +180,22 @@ class BuySellAmounts extends Component {
 
   handleCcClickMax = () => this.handleClickMax(this.handleCcInput, this.props.ccBalance)
 
-  price = () => {
-    return this.props.quotePair.price && this.state.inputField
-      ? new BigNumber(this.props.quotePair.price.toString())
-      : new BigNumber(this.props.community.currentPrice.toString())
-  }
+  price = () => this.props.quotePair.price.isFinite() && !this.props.quotePair.price.isZero() && this.state.inputField
+    ? this.props.quotePair.price
+    : this.props.community.currentPrice
 
-  slippage = () => this.props.quotePair.slippage && this.state.inputField
-    ? utils.roundUp(new BigNumber(this.props.quotePair.slippage).multipliedBy(100))
+  slippage = () => this.props.quotePair.slippage.isFinite() && !this.props.quotePair.slippage.isZero() && this.state.inputField
+    ? utils.roundUp(this.props.quotePair.slippage.multipliedBy(100))
     : undefined
 
   cln = (formatter = identity) => this.state.inputField !== 'cc' ? this.state.cln : (
-    this.props.isBuy ? formatter(new BigNumber(this.props.quotePair.inAmount.toString()).div(1e18), this.props.isBuy)
-      : formatter(new BigNumber(this.props.quotePair.outAmount.toString()).div(1e18), this.props.isBuy)
+    this.props.isBuy ? formatter(this.props.quotePair.inAmount.div(1e18), this.props.isBuy)
+      : formatter(this.props.quotePair.outAmount.div(1e18), this.props.isBuy)
   )
 
   cc = (formatter = identity) => this.state.inputField !== 'cln' ? this.state.cc : (
-    this.props.isBuy ? formatter(new BigNumber(this.props.quotePair.outAmount.toString()).div(1e18), this.props.isBuy)
-      : formatter(new BigNumber(this.props.quotePair.inAmount.toString()).div(1e18), this.props.isBuy)
+    this.props.isBuy ? formatter(this.props.quotePair.outAmount.div(1e18), this.props.isBuy)
+      : formatter(this.props.quotePair.inAmount.div(1e18), this.props.isBuy)
   )
 
   amountToReceive = () => {
@@ -330,7 +324,7 @@ class BuySellAmounts extends Component {
             price={this.price}
             amountToReceive={this.amountToReceive()}
             isFetching={this.props.isFetching} />
-          <button disabled={error || isFetching || !this.cc() || !this.cln()} onClick={this.next}>{isBuy ? `Buy ${ccSymbol}` : `Sell ${ccSymbol}`}</button>
+          <button disabled={error || isFetching || this.amountToReceive().isZero()} onClick={this.next}>{isBuy ? `Buy ${ccSymbol}` : `Sell ${ccSymbol}`}</button>
         </div>
       </div>
     )
@@ -340,9 +334,10 @@ class BuySellAmounts extends Component {
 BuySellAmounts.defaultProps = {
   isFetching: false,
   quotePair: {
-    slippage: 0,
-    inAmount: 0,
-    outAmount: 0
+    slippage: new BigNumber(0),
+    inAmount: new BigNumber(0),
+    outAmount: new BigNumber(0),
+    price: new BigNumber(0)
   }
 }
 
