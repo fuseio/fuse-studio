@@ -81,7 +81,7 @@ npm install
 npm start
 ```
 
-If your browser has an MetMask extension, that should be enought.
+If your browser has an MetaMask extension, that should be enought.
 
 
 ### Other configs
