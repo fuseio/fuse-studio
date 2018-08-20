@@ -72,6 +72,8 @@ npm run dev
 
 ### Setup client
 
+Load the relevant environment variables from the [.env](.env.dist) file.
+
 `cd` to project's directory, then:
 ```
 cd client
