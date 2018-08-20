@@ -180,11 +180,13 @@ class BuySellAmounts extends Component {
 
   handleCcClickMax = () => this.handleClickMax(this.handleCcInput, this.props.ccBalance)
 
-  price = () => this.props.quotePair.price.isFinite() && !this.props.quotePair.price.isZero() && this.state.inputField
+  isValueReady = (value) => value.isFinite() && !value.isZero() && this.state.inputField
+
+  price = () => this.isValueReady(this.props.quotePair.price)
     ? this.props.quotePair.price
     : this.props.community.currentPrice
 
-  slippage = () => this.props.quotePair.slippage.isFinite() && !this.props.quotePair.slippage.isZero() && this.state.inputField
+  slippage = () => this.isValueReady(this.props.quotePair.slippage)
     ? utils.roundUp(this.props.quotePair.slippage.multipliedBy(100))
     : undefined
 
