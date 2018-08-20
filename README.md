@@ -17,6 +17,12 @@ docker-compose up -d
 
 the `.env.dist` is the config template while `.env` is the actual file used for environment variables. The `.env` is gitignored so fill free to tweak it.
 
+Then open [localhost:9000](localhost:9000) in your browser. The IPFS node needs time to sync, so for the first time part of the data may not be fetched on time. Refresh the browser if this is the case.
+
+### Frontend Development
+
+For the best experience, stop the client docker container and start it natively as described [here](#setup-client).
+
 ## Without Docker
 
 ### Setup database
