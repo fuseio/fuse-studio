@@ -1378,6 +1378,7 @@ input[type="checkbox" i] {
   @media (max-width: $breakpoint-tablet) {
     padding: 10px 30px;
     height: 100%;
+    overflow-y: scroll;
   }
 	h4 {
 		color: #5a5959;
