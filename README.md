@@ -12,6 +12,7 @@ copy the confige file and start the docker compose:
 
 ```
 cp .env.dist .env
+docker network create cln-community
 docker-compose up -d
 ```
 
