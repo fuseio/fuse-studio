@@ -506,6 +506,14 @@ button:disabled, button[disabled] {
       padding:0;
     }
 
+    @media (max-width: $breakpoint-tablet) {
+      &.fullscreen {
+        height: 100%;
+        width: 100%;
+        padding: 0px;
+      }
+    }
+
 	p {
 		font-weight: lighter;
     	font-size: 16px;
@@ -551,13 +559,6 @@ button:disabled, button[disabled] {
 				height: 75px;
 				min-width: 75px;
 			}
-		}
-	}
-	@media (max-width: $breakpoint-tablet) {
-		&.fullscreen {
-			height: 100%;
-			width: 100%;
-      padding: 0px;
 		}
 	}
 }
