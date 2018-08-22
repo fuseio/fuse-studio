@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import {
   ComposableMap,
   ZoomableGlobe,
@@ -16,7 +15,7 @@ import { isMobile } from 'react-device-detect'
 import map from 'lodash/map'
 
 import MarkerSVG from 'components/Marker'
-import * as uiActions from 'actions/ui'
+import * as actions from 'actions/ui'
 import { mapStyle, mapSettings } from 'constants/uiConstants'
 import {getSelectedToken, getTokensWithMetadata} from 'selectors/communities'
 
@@ -51,7 +50,7 @@ class MapComponent extends Component {
         zoom: mapSettings.MAX_ZOOM,
         movingCenter: null
       })
-      this.props.uiActions.setActiveMarker(selectedTokenAddress, nextProps.tokens[selectedTokenAddress].metadata.location.geo)
+      this.props.setActiveMarker(selectedTokenAddress, nextProps.tokens[selectedTokenAddress].metadata.location.geo)
     }
 
     // Default clean main start
@@ -309,13 +308,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  actions
 )(MapComponent)

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import Link from 'react-router-dom/Link'
 import map from 'lodash/map'
-import * as uiActions from 'actions/ui'
+import * as actions from 'actions/ui'
 import { formatWei } from 'utils/format'
 
 import { LOGIN_MODAL, EXCHANGE_MODAL } from 'constants/uiConstants'
@@ -46,19 +45,19 @@ class CommunitySidebar extends Component {
       label: isBuy ? 'Buy' : 'Sell'
     })
     if (this.props.accountAddress) {
-      this.props.uiActions.loadModal(EXCHANGE_MODAL, {isBuy})
+      this.props.loadModal(EXCHANGE_MODAL, {isBuy})
     } else {
-      this.props.uiActions.loadModal(LOGIN_MODAL)
+      this.props.loadModal(LOGIN_MODAL)
     }
   }
 
   componentWillUnmount () {
-    this.props.uiActions.hideModal()
+    this.props.hideModal()
   }
 
   onClose = () => {
-    this.props.uiActions.hideSignup()
-    this.props.uiActions.setActiveMarker()
+    this.props.hideSignup()
+    this.props.setActiveMarker()
 
     ReactGA.event({
       category: this.props.selectedCommunity.name,
@@ -194,13 +193,7 @@ const mapStateToProps = state => ({
   accountAddress: state.network.accountAddress
 })
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  actions
 )(withCommunity(CommunitySidebar))

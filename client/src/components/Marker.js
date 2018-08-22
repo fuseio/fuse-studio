@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { isMobile } from 'react-device-detect'
-import { bindActionCreators } from 'redux'
-import * as uiActions from '../actions/ui'
+import * as actions from '../actions/ui'
 import ReactGA from 'services/ga'
 
 function rnd (m, n) {
@@ -46,7 +45,7 @@ class MarkerSVG extends Component {
   onClick () {
     const token = this.props.token
 
-    this.props.uiActions.setActiveMarker(this.props.token.address, token.metadata.location.geo)
+    this.props.setActiveMarker(this.props.token.address, token.metadata.location.geo)
     this.props.history.push(token.path)
 
     ReactGA.event({
@@ -147,13 +146,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  actions
 )(MarkerSVG)

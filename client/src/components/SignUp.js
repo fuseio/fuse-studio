@@ -3,9 +3,8 @@ import classNames from 'classnames'
 import { withFormik } from 'formik'
 import { isMobile } from 'react-device-detect'
 import Yup from 'yup'
-import * as uiActions from 'actions/ui'
+import * as actions from 'actions/ui'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import {subcribeToMailingList} from 'services/api'
 import CloseButton from 'images/x.png'
 import MobileSubmit from 'images/mobile-submit.png'
@@ -105,7 +104,7 @@ class SignUpFormBar extends Component {
   }
   close = () => {
     this.setState({ closed: true })
-    this.props.uiActions.closeSignup(true)
+    this.props.closeSignup(true)
     ReactGA.event({
       category: 'Subscription',
       action: 'Click',
@@ -132,9 +131,4 @@ class SignUpFormBar extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-export default connect(null, mapDispatchToProps)(SignUpFormBar)
+export default connect(null, actions)(SignUpFormBar)

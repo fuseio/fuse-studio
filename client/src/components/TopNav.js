@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import classNames from 'classnames'
 import { isMobile, MobileView } from 'react-device-detect'
 import {BigNumber} from 'bignumber.js'
 
-import * as uiActions from 'actions/ui'
+import * as actions from 'actions/ui'
 import {getClnBalance} from 'selectors/accounts'
 import { LOGIN_MODAL } from 'constants/uiConstants'
 
@@ -27,7 +26,7 @@ class TopNav extends Component {
 
   showConnectMetamask = () => {
     if (!this.props.network.isMetaMask || !this.props.network.accountAddress) {
-      this.props.uiActions.loadModal(LOGIN_MODAL)
+      this.props.loadModal(LOGIN_MODAL)
       ReactGA.event({
         category: 'Top Bar',
         action: 'Click',
@@ -119,9 +118,4 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(TopNav)
+export default connect(mapStateToProps, actions)(TopNav)

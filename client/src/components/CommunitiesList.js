@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import posed from 'react-pose'
 import { isMobile } from 'react-device-detect'
 import classNames from 'classnames'
-import * as uiActions from 'actions/ui'
+import * as actions from 'actions/ui'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import CoinHeader from './CoinHeader'
 import {getSelectedCommunity, getCommunities} from 'selectors/communities'
 import find from 'lodash/find'
@@ -101,9 +100,9 @@ class CommunitiesList extends Component {
       scrollOffset: (key * 288) - this.state.scrollLeft
     })
 
-    this.props.uiActions.hideSignup(true)
+    this.props.hideSignup(true)
 
-    this.props.uiActions.setActiveMarker(item)
+    this.props.setActiveMarker(item)
 
     const selectedCommunity = find(this.props.tokens, {address: item})
     setTimeout(() => {
@@ -155,13 +154,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  actions
 )(CommunitiesList)
