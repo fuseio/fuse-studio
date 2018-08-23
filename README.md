@@ -12,10 +12,17 @@ copy the confige file and start the docker compose:
 
 ```
 cp .env.dist .env
+docker network create cln-community
 docker-compose up -d
 ```
 
 the `.env.dist` is the config template while `.env` is the actual file used for environment variables. The `.env` is gitignored so fill free to tweak it.
+
+Then open [localhost:9000](localhost:9000) in your browser. The IPFS node needs time to sync, so for the first time part of the data may not be fetched on time. Refresh the browser if this is the case.
+
+### Frontend Development
+
+For the best experience, stop the client docker container and start it natively as described [here](#setup-client).
 
 ## Without Docker
 
@@ -66,6 +73,8 @@ npm run dev
 
 ### Setup client
 
+Load the relevant environment variables from the [.env](.env.dist) file.
+
 `cd` to project's directory, then:
 ```
 cd client
@@ -73,7 +82,7 @@ npm install
 npm start
 ```
 
-If your browser has an MetMask extension, that should be enought.
+If your browser has an MetaMask extension, that should be enought.
 
 
 ### Other configs

@@ -1,8 +1,15 @@
 {
   "web3": {
-    "provider": "COMMUNITY_WEB3_PROVIDER"
+    "provider": "COMMUNITY_WEB3_PROVIDER",
+    "websocketProvider": "COMMUNITY_WEB3_WEBSOCKET_PROVIDER"
   },
-  "metaMask": {
-    "accountPolling": "COMMUNITY_METAMASK_ACCOUNT_POLLING"
-  }
+  "api": {
+    "marketsPolling": "COMMUNITY_API_MARKETS_POLLING",
+    "retryTimeout": "COMMUNITY_API_RETRY_TIMEOUT",
+    "retryCount": "COMMUNITY_API_RETRY_COUNT"
+  },
+  "ui": {
+    "debounce": "COMMUNITY_UI_DEBOUNCE"
+  },
+  "debugTrace": "COMMUNITY_DEBUG_TRACE"
 }

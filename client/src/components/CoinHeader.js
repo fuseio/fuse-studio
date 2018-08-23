@@ -1,22 +1,23 @@
 import React, { Component } from 'react'
-import classNames from 'classnames'
-import { formatAmountReal, formatMoney } from 'services/global'
+import {formatEther} from 'utils/format'
+import Loader from 'components/Loader'
 
 export default class CoinHeader extends Component {
-	render() {
-		const formattedPrice = this.props.price || this.props.price === 0 ? formatMoney(formatAmountReal(this.props.price, 18), 4, '.', ',') : 'loading'
-		return (
-			<div className="coin-header">
-				<img src={this.props.coinImage} />
-				<div className="coin-details">
-					<h1>{this.props.name}</h1>
-					<div className="separator"/>
-					<div className="price-wrapper">
-						<h2>Current price:</h2>
-						<p>{formattedPrice + ' CLN'}</p>
-					</div>
-				</div>
-			</div>
-		)
-	}
+  render () {
+    const { price, coinImage, name } = this.props
+    const formattedPrice = (price || price === 0) && formatEther(price)
+    return (
+      <div className='coin-header'>
+        {coinImage ? <img src={coinImage} /> : <Loader className='loader image' />}
+        <div className='coin-details'>
+          <h1>{name || <Loader className='loader' />}</h1>
+          <div className='separator' />
+          <div className='price-wrapper'>
+            <h2>Current price:</h2>
+            <p>{formattedPrice ? formattedPrice + ' CLN' : <Loader className='loader' />}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }

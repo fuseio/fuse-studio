@@ -5,18 +5,15 @@ const morgan = require('morgan')
 const mongoose = require('mongoose')
 const path = require('path')
 const compression = require('compression')
-require('dotenv').config()
-const config = require('./config')
+const config = require('config')
 require('express-async-errors')
 
 var isProduction = process.env.NODE_ENV === 'production'
 
-// Create global app object
 var app = express()
 
 app.use(cors())
 
-// Normal express config defaults
 app.use(morgan('common'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -33,7 +30,7 @@ app.get('/view/*', function (request, response) {
 })
 
 // cloning options object cause mongoose is filling it with unneeded data about the connection
-mongoose.connect(config.mongo.uri, {...config.mongo.options})
+mongoose.connect(config.get('mongo.uri'), config.get('mongo.options'))
 
 if (!isProduction) {
   mongoose.set('debug', true)
@@ -73,6 +70,6 @@ if (!isProduction) {
 }
 
 // finally, let's start our server...
-var server = app.listen(process.env.PORT || 8080, function () {
+var server = app.listen(config.get('api.port') || 8080, function () {
   console.log('Listening on port ' + server.address().port)
 })

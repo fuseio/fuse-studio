@@ -2,9 +2,10 @@ const router = require('express').Router()
 const mongoose = require('mongoose')
 const IpfsAPI = require('ipfs-api')
 const race = require('async/race')
+const config = require('config')
 
 const auth = require('../auth')
-const ipfsConfig = require('../../config').ipfs
+const ipfsConfig = config.get('ipfs')
 
 const Metadata = mongoose.model('Metadata')
 

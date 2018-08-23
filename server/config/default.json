@@ -1,0 +1,24 @@
+{
+  "api": {
+    "secret": "secret",
+    "port": 3000
+  },
+  "ipfs": {
+    "host": "qa-ipfs.colu.com",
+    "port": 443,
+    "protocol": "https",
+    "timeout": 3000
+  },
+  "mongo": {
+    "uri": "mongodb://localhost/CLN-community-app",
+    "options": {}
+  },
+  "mandrill": {
+  },
+  "mailchimp": {
+
+  },
+  "amazon": {
+    "apiBase": "https://s3-eu-west-1.amazonaws.com/cln-dapp-images-qa/"
+  }
+}

@@ -1,18 +1,20 @@
 import { combineReducers } from 'redux'
 
-import basicToken from './basicToken'
-import currencyFactory from './currencyFactory'
-import ui from './uiReducer'
+import communities from './communities'
+import marketMaker from './marketMaker'
+import accounts from './accounts'
+import ui from './ui'
 import { routerReducer } from 'react-router-redux'
-import web3 from './web3'
+import network from './network'
 import errors from './errors'
 
 const rootReducer = combineReducers({
   ui,
-  tokens: basicToken,
-  currencyFactory,
-  web3,
+  tokens: communities,
+  marketMaker,
+  network,
   errors,
+  accounts,
   router: routerReducer
 })
 

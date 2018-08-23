@@ -1,20 +1,25 @@
 {
   "web3": {
     "provider": "http://localhost:8545",
+    "websocketProvider": "ws://127.0.0.1:8546",
     "supportedNetworks": ["main", "ropsten"],
     "desiredNetworks": ["main", "ropsten"]
   },
-  "metaMask": {
-    "accountPolling": 200
-  },
   "api": {
     "url": "http://localhost:3000/api/v1",
-    "timeout": 3000
+    "timeout": 3000,
+    "marketsPolling": 30000,
+    "retryTimeout": 500,
+    "retryCount": 5
   },
   "reactGA": {
     "trackingId": "UA-108913015-5",
     "gaOptions": {
       "testMode": true
     }
-  }
+  },
+  "ui": {
+    "debounce": 300
+  },
+  "debugTrace": true
 }

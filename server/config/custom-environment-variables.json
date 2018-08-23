@@ -1,0 +1,31 @@
+{
+  "api": {
+    "secret": "COMMUNITY_API_SECRET",
+    "port": "PORT"
+  },
+  "ipfs": {
+    "host": "COMMUNITY_IPFS_HOST",
+    "port": "COMMUNITY_IPFS_PORT",
+    "protocol": "COMMUNITY_IPFS_PROTOCOL",
+    "timeout": "COMMUNITY_IPFS_TIMEOUT"
+  },
+  "mongo": {
+    "uri": "COMMUNITY_MONGO_URI",
+    "options": {
+      "user": "COMMUNITY_MONGO_USER",
+      "pass": "COMMUNITY_MONGO_PASS",
+      "authSource": "COMMUNITY_MONGO_AUTH_SOURCE"
+    }
+  },
+  "mandrill": {
+    "apiKey": "COMMUNITY_MANDRILL_API_KEY",
+    "sendTo": "COMMUNITY_MANDRILL_SEND_TO"
+  },
+  "mailchimp": {
+    "apiBase": "COMMUNITY_MAILCHIMP_API_BASE",
+    "list": "COMMUNITY_MAILCHIMP_LIST"
+  },
+  "amazon": {
+    "apiBase": "COMMUNITY_AMAZON_BUCKET_API"
+  }
+}

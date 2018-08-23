@@ -5,4 +5,4 @@ RUN apt install git
 COPY package*.json ./
 RUN npm install
 COPY . .
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

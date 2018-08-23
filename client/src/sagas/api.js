@@ -3,20 +3,21 @@ import { all, takeEvery, put } from 'redux-saga/effects'
 import * as api from 'services/api'
 import * as actions from 'actions/api'
 
-export function * fetchMetadata ({protocol, hash, contractAddress}) {
+function * fetchMetadata ({protocol, hash, tokenAddress}) {
   const {data} = yield api.fetchMetadata(protocol, hash)
   data.metadata.imageLink = api.API_ROOT + '/images/' + data.metadata.image.split('//')[1]
 
   yield put({
     type: actions.FETCH_METADATA.SUCCESS,
-    contractAddress,
+    tokenAddress,
     response: {
-      metadata: data.metadata
+      metadata: data.metadata,
+      address: tokenAddress
     }
   })
 }
 
-export default function * rootSaga () {
+export default function * apiSaga () {
   yield all([
     takeEvery(actions.FETCH_METADATA.REQUEST, fetchMetadata)
   ])

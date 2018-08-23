@@ -1,7 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as uiActions from 'actions/ui'
-import { bindActionCreators } from 'redux'
 import Modal from 'components/Modal'
 
 import ClnIcon from 'images/cln.png'
@@ -18,22 +16,20 @@ class LoginModal extends React.Component {
   }
 
   onClose = () => {
-    this.props.uiActions.hideModal()
+    this.props.hideModal()
     if (this.state.finishInstall) {
       ReactGA.event({
         category: 'Metamask',
         action: 'Close',
         label: 'Finish Metamask Install'
       })
-    }
-    else if (!this.props.web3.isMetaMask) {
+    } else if (!this.props.network.isMetaMask) {
       ReactGA.event({
         category: 'Metamask',
         action: 'Close',
         label: 'Install Metamask'
       })
-    }
-    else if (!this.props.web3.isAccountUnlocked) {
+    } else if (!this.props.network.accountAddress) {
       ReactGA.event({
         category: 'Metamask',
         action: 'Close',
@@ -64,8 +60,8 @@ class LoginModal extends React.Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.web3.isMetaMask && nextProps.web3.isAccountUnlocked) {
-      this.props.uiActions.hideModal()
+    if (nextProps.network.isMetaMask && nextProps.network.accountAddress) {
+      this.props.hideModal()
     }
   }
 
@@ -77,35 +73,39 @@ class LoginModal extends React.Component {
         action: 'View',
         label: 'Finish Metamask Install'
       })
-      modalContent = <div className="modal-content-wrapper">
-            <img src={MetamaskIcon}/>
-            <h4>Finish installing MetaMask  to continue</h4>
-            <p>Make sure you follow the instruction on MetaMask to finish the installation.</p>
-            <div className="button" onClick={this.finishInstalling}>I INSTALLED METAMASK</div>
-          </div>
-    } else if (!this.props.web3.isMetaMask) {
+      modalContent = <div className='modal-content-wrapper'>
+        <img src={MetamaskIcon} />
+        <h4>Finish installing MetaMask to continue</h4>
+        <p>Make sure you follow the instruction on MetaMask to finish the installation.</p>
+        <div className='button' onClick={this.finishInstalling}>I INSTALLED METAMASK</div>
+      </div>
+    } else if (!this.props.network.isMetaMask) {
       ReactGA.event({
         category: 'Metamask',
         action: 'View',
         label: 'Install Metamask'
       })
-      modalContent = <div className="modal-content-wrapper">
-            <div className="images flex center"><img src={ClnIcon}/><span>+</span><img src={MetamaskIcon}/></div>
-            <h4>Want to connect?</h4>
-            <p>You’ll need a safe place to store your coins, in order to do that you need to download the MetaMask wallet. The wallet will also act as your login to the dashboard.</p>
-            <div className="button" onClick={this.installMetamask}>INSTALL METAMASK</div>
-          </div>
-    } else if (!this.props.web3.isAccountUnlocked) {
+      modalContent = <div className='modal-content-wrapper'>
+        <div className='images flex center'>
+          <img src={ClnIcon} />
+          <span>+</span>
+          <img src={MetamaskIcon} />
+        </div>
+        <h4>Want to connect?</h4>
+        <p>You’ll need a safe place to store your coins, in order to do that you need to download the MetaMask wallet. The wallet will also act as your login to the dashboard.</p>
+        <div className='button' onClick={this.installMetamask}>INSTALL METAMASK</div>
+      </div>
+    } else if (!this.props.network.accountAddress) {
       ReactGA.event({
         category: 'Metamask',
         action: 'View',
         label: 'Metamask locked'
       })
-      modalContent = <div className="modal-content-wrapper">
-            <img className="lock-icon" src={LockIcon}/>
-            <h4>Your MetaMask is locked</h4>
-            <p>Please unlock your MetaMask extension in order to use the dashboard.</p>
-          </div>
+      modalContent = <div className='modal-content-wrapper'>
+        <img className='lock-icon' src={LockIcon} />
+        <h4>Your MetaMask is locked</h4>
+        <p>Please unlock your MetaMask extension in order to use the dashboard.</p>
+      </div>
     }
 
     return (
@@ -118,13 +118,8 @@ class LoginModal extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    web3: state.web3
+    network: state.network
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    uiActions: bindActionCreators(uiActions, dispatch)
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(LoginModal)
+export default connect(mapStateToProps)(LoginModal)
