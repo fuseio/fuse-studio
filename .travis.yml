@@ -1,0 +1,12 @@
+language: node_js
+
+node_js:
+  - "8"
+
+install:
+  - cd $TRAVIS_BUILD_DIR/server && npm install
+  - cd $TRAVIS_BUILD_DIR/client && npm install
+
+script:
+  - cd $TRAVIS_BUILD_DIR/server && npm run lint
+  - cd $TRAVIS_BUILD_DIR/client && npm run build

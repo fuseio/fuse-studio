@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
-    "test": "echo \"no tests for now:(\""
+    "test": "echo \"no tests for now:(\"",
+    "lint": "./node_modules/.bin/standard"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "debug": "2.6.9"
   },
   "devDependencies": {
-    "nodemon": "^1.18.3"
+    "nodemon": "^1.18.3",
+    "standard": "^11.0.1"
   }
 }
