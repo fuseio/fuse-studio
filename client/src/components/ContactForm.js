@@ -135,7 +135,7 @@ const EnhancedForm = withFormik({
       .email('Invalid email address')
       .required('Email is required.'),
     phone: Yup.string()
-      .matches(/^(?:\+\d{1,3}|0\d{1,3}|00\d{1,2})?(?:\s?\(\d+\))?(?:[-\/\s.]|\d)+$/i, 'Invalid phone number'),
+      .matches(/^(?:\+\d{1,3}|0\d{1,3}|00\d{1,2})?(?:\s?\(\d+\))?(?:[-\/\s.]|\d)+$/i, 'Invalid phone number'), /* eslint-disable-line no-useless-escape */
     company: Yup.string()
       .matches(/^[a-z 0-9,.'-]+$/i, 'Invalid input'),
     subject: Yup.string()
