@@ -9,6 +9,7 @@ import { isMobile } from 'react-device-detect'
 
 import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'
+import Issuance from 'components/issuance/Issuance'
 import ContactForm from 'components/ContactForm'
 import withTracker from 'containers/withTracker'
 
@@ -88,6 +89,10 @@ export default class Root extends Component {
                   component={withTracker(CommunitySidebar)}
                   mapStyles={isMobile ? mapStylesMobile : mapStyles}
                   {...sidebarAnimation}
+                />
+                <Route
+                  path='/view/issuance'
+                  component={withTracker(Issuance)}
                 />
               </div>
               <div className='contact-form-wrapper'>

@@ -3,12 +3,13 @@ import { all, put, race, call, take, select, fork } from 'redux-saga/effects'
 import {createEntityPut, tryTakeEvery} from './utils'
 import * as actions from 'actions/communities'
 import {fetchMarketMakerData} from 'sagas/marketMaker'
-import {FETCH_METADATA} from 'actions/api'
+import {fetchMetadata, FETCH_METADATA} from 'actions/metadata'
+import {createMetadata} from 'sagas/metadata'
 import {subscribeToChange} from 'actions/subscriptions'
+import {createCurrency} from 'actions/issuance'
 
 import { contract } from 'osseus-wallet'
-import addresses from 'constants/addresses'
-import {getNetworkType} from 'selectors/network'
+import {getAddresses} from 'selectors/network'
 import { delay } from 'redux-saga'
 
 const entityPut = createEntityPut(actions.entityName)
@@ -28,10 +29,10 @@ function * fetchCommunity ({tokenAddress}) {
 
 function * fetchCommunityToken ({tokenAddress}) {
   try {
-    const networkType = yield select(getNetworkType)
+    const addresses = yield select(getAddresses)
     const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
     const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
-      address: addresses[networkType].CurrencyFactory
+      address: addresses.CurrencyFactory
     })
 
     const calls = {
@@ -50,14 +51,10 @@ function * fetchCommunityToken ({tokenAddress}) {
 
     if (response.tokenURI) {
       const [protocol, hash] = response.tokenURI.split('://')
-      yield put({
-        type: FETCH_METADATA.REQUEST,
-        protocol,
-        hash,
-        tokenAddress
-      })
+      yield put(fetchMetadata(protocol, hash, tokenAddress))
 
-      // wait until timeout to receive the metadata
+      // wait untill timeout for the metadata to finish.
+      // It's only needed for more smooth rendering of communities
       yield race({
         metadata: take(action =>
           action.type === FETCH_METADATA.SUCCESS && action.tokenAddress === tokenAddress),
@@ -97,10 +94,17 @@ function * fetchClnContract ({tokenAddress}) {
   })
 }
 
+function * issueCommunity ({communityMetadata, currencyData}) {
+  const {hash, protocol} = yield call(createMetadata, {metadata: communityMetadata})
+  const tokenURI = `${protocol}://${hash}`
+  yield put(createCurrency({...currencyData, tokenURI}))
+}
+
 export default function * communitiesSaga () {
   yield all([
     tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
     tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity),
-    tryTakeEvery(actions.INITIALIZE_COMMUNITY, initializeCommunity)
+    tryTakeEvery(actions.INITIALIZE_COMMUNITY, initializeCommunity),
+    tryTakeEvery(actions.ISSUE_COMMUNITY, issueCommunity, 1)
   ])
 }

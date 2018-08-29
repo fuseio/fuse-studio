@@ -5,7 +5,7 @@ import { contract } from 'osseus-wallet'
 import * as actions from 'actions/marketMaker'
 import {fetchGasPrices} from 'actions/network'
 import {getClnToken, getCommunity} from 'selectors/communities'
-import network from 'services/web3'
+import web3 from 'services/web3'
 import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 
 const reversePrice = (price) => new BigNumber(1e18).div(price)
@@ -137,7 +137,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
     address: fromTokenAddress})
 
   const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
-    from: network.eth.defaultAccount,
+    from: web3.eth.defaultAccount,
     ...options
   })
 
@@ -152,7 +152,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
 
   yield put({type: actions.CHANGE.PENDING,
     tokenAddress: token.address,
-    accountAddress: network.eth.defaultAccount,
+    accountAddress: web3.eth.defaultAccount,
     response: {
       transactionHash
     }
@@ -163,7 +163,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
     yield put({
       type: actions.CHANGE.FAILURE,
       tokenAddress: token.address,
-      accountAddress: network.eth.defaultAccount,
+      accountAddress: web3.eth.defaultAccount,
       response: {receipt}
     })
     return receipt
@@ -171,7 +171,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
 
   yield put({type: actions.CHANGE.SUCCESS,
     tokenAddress: token.address,
-    accountAddress: network.eth.defaultAccount,
+    accountAddress: web3.eth.defaultAccount,
     response: {
       receipt
     }
@@ -189,7 +189,7 @@ export function * estimageChange ({tokenAddress, amount, minReturn, isBuy}) {
     address: fromTokenAddress})
 
   return yield ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).estimateGas(
-    {from: network.eth.defaultAccount})
+    {from: web3.eth.defaultAccount})
 }
 
 export function * buyQuote ({tokenAddress, clnAmount}) {

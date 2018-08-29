@@ -1,4 +1,4 @@
-import {FETCH_METADATA} from 'actions/api'
+import {FETCH_METADATA} from 'actions/metadata'
 import {entityName} from 'actions/communities'
 
 export default (state = {}, action) => {
