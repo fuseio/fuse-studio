@@ -7,6 +7,7 @@ import marketMakerSaga from './marketMaker'
 import subscriptionsSaga from './subscriptions'
 import accountsSaga from './accounts'
 import issuanceSaga from './issuance'
+import fiatSaga from './fiat'
 
 export default function * rootSaga () {
   yield all([
@@ -16,6 +17,7 @@ export default function * rootSaga () {
     fork(marketMakerSaga),
     fork(subscriptionsSaga),
     fork(accountsSaga),
-    fork(issuanceSaga)
+    fork(issuanceSaga),
+    fork(fiatSaga)
   ])
 }

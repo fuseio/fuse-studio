@@ -26,7 +26,7 @@ const CoinWrapper = posed.div({
   closedCoinInfo: {damping: 0, staggerChildren: 0, height: 'auto', duration: 300}
 })
 
-const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyProp, setRef }) => {
+const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyProp, setRef, fiat, loadModal }) => {
   let poseValue = isOpen ? 'open' : 'closed'
   let top = (keyProp) * 110 + (keyProp + 1) * 20
   let communityCoins = coins && coins.filter((coin) => {
@@ -43,7 +43,7 @@ const Nav = ({ isOpen, coins, currentCoin, onClick, openCoinInfo, keyProp, setRe
         })
         return <NavItem className='list-item' key={i} pose={isOpen ? 'open' : 'closed'} onClick={onClick.bind(this, coin.address, i)}>
           <CoinWrapper className={coinWrapperStyle} >
-            <CoinHeader coinImage={coin.metadata && coin.metadata.imageLink} name={coin.name} price={coin.currentPrice} />
+            <CoinHeader token={coin} fiat={fiat} loadModal={loadModal} />
           </CoinWrapper>
         </NavItem>
       }
@@ -123,7 +123,7 @@ class CommunitiesList extends Component {
       return null
     }
     if (!isMobile) {
-      return <Nav isOpen={this.state.active} coins={communityCoins} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyProp={this.state.key} />
+      return <Nav isOpen={this.state.active} coins={communityCoins} onClick={this.onClick.bind(this)} openCoinInfo={currentCoin} keyProp={this.state.key} fiat={this.props.fiat} loadModal={this.props.loadModal} />
     } else {
       const communitiesListStyle = classNames({
         'communities-list': true,
@@ -137,7 +137,7 @@ class CommunitiesList extends Component {
           })
           return <div className='list-item' key={i} onClick={this.onClick.bind(this, coin.address, i)}>
             <div className={coinWrapperStyle} style={{transform: 'translateX(-' + (currentCoin ? this.state.scrollOffset : 0) + 'px)'}}>
-              <CoinHeader coinImage={coin.metadata && coin.metadata.imageLink} name={coin.name} price={coin.currentPrice} />
+              <CoinHeader token={coin} fiat={this.props.fiat} loadModal={this.props.loadModal} />
             </div>
           </div>
         })}
@@ -150,7 +150,8 @@ const mapStateToProps = state => {
   return {
     tokens: getCommunities(state),
     ui: state.ui,
-    selectedCommunity: getSelectedCommunity(state)
+    selectedCommunity: getSelectedCommunity(state),
+    fiat: state.fiat
   }
 }
 

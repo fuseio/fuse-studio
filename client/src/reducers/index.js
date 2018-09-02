@@ -4,9 +4,10 @@ import communities from './communities'
 import marketMaker from './marketMaker'
 import accounts from './accounts'
 import ui from './ui'
-import { routerReducer } from 'react-router-redux'
+import { routerReducer as router } from 'react-router-redux'
 import network from './network'
 import errors from './errors'
+import fiat from './fiat'
 
 const rootReducer = combineReducers({
   ui,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   network,
   errors,
   accounts,
-  router: routerReducer
+  router,
+  fiat
 })
 
 export default rootReducer

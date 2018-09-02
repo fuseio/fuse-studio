@@ -74,7 +74,7 @@ class CommunitySidebar extends Component {
     })
 
   render () {
-    const {selectedCommunity} = this.props
+    const {selectedCommunity, fiat} = this.props
 
     const control = <div className='sidebar-close' onClick={this.onClose}>
       <Link to='/'>
@@ -94,7 +94,7 @@ class CommunitySidebar extends Component {
     return (
       <div className='community-sidebar'>
         <div className='header'>
-          <CoinHeader coinImage={selectedCommunity.metadata && selectedCommunity.metadata.imageLink} name={selectedCommunity.name} price={selectedCommunity.currentPrice} />
+          <CoinHeader token={selectedCommunity} fiat={fiat} loadModal={this.props.loadModal} />
           {control}
           <div className='header-buttons'>
             <div className='header-button' onClick={this.onClickBuy}>BUY</div>
@@ -190,7 +190,8 @@ const mapStateToProps = state => ({
   selectedCommunity: getSelectedCommunity(state),
   etherscanUrl: getEtherscanUrl(state),
   coluWallet: getColuWallet(state),
-  accountAddress: state.network.accountAddress
+  accountAddress: state.network.accountAddress,
+  fiat: state.fiat
 })
 
 export default connect(

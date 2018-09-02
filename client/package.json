@@ -15,7 +15,9 @@
   "standard": {
     "parser": "babel-eslint",
     "ignore": "src/constants/abi",
-    "env": ["mocha"],
+    "env": [
+      "mocha"
+    ],
     "globals": [
       "CONFIG"
     ]

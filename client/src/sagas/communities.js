@@ -7,7 +7,7 @@ import {fetchMetadata, FETCH_METADATA} from 'actions/metadata'
 import {createMetadata} from 'sagas/metadata'
 import {subscribeToChange} from 'actions/subscriptions'
 import {createCurrency} from 'actions/issuance'
-
+import {fetchTokenQuote} from 'actions/fiat'
 import { contract } from 'osseus-wallet'
 import {getAddresses} from 'selectors/network'
 import { delay } from 'redux-saga'
@@ -87,6 +87,8 @@ function * fetchClnContract ({tokenAddress}) {
   const response = yield all(calls)
   response.isLocalCurrency = false
   response.address = tokenAddress
+
+  yield put(fetchTokenQuote(response.symbol, 'USD'))
 
   yield entityPut({type: actions.FETCH_CLN_CONTRACT.SUCCESS,
     tokenAddress,

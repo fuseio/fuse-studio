@@ -3,6 +3,7 @@ export const WRONG_NETWORK_MODAL = 'WRONG_NETWORK_MODAL'
 export const SOON_MODAL = 'SOON_MODAL'
 export const EXCHANGE_MODAL = 'EXCHANGE_MODAL'
 export const LOADING_MODAL = 'LOADING_MODAL'
+export const PRICE_EXPLANATION_MODAL = 'PRICE_EXPLANATION_MODAL'
 
 export const mapStyle = {
   WATER_COLOR: '#241c4a',

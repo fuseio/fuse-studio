@@ -573,7 +573,7 @@ button:disabled, button[disabled] {
 	@include flex-box();
 	//padding: 20px 24px;
 	padding:32px;
-	img {
+	.logo {
 		width: 70px;
 		height: 70px;
 		min-width: 70px;
@@ -606,6 +606,7 @@ button:disabled, button[disabled] {
 		}
 
 		.price-wrapper {
+      padding: 3px 0px;
 			font-size: 14px;
 			@include flex-box();
 			align-items: center;
@@ -619,6 +620,12 @@ button:disabled, button[disabled] {
 				font-weight: lighter;
 			}
 
+      .info {
+        width: 14px;
+        height: 14px;
+        min-width: 14px;
+        margin: 0 10px 0 3px;
+      }
 
 			p {
 				color: $colu-green;
@@ -630,6 +637,7 @@ button:disabled, button[disabled] {
 				text-overflow: ellipsis;
 			}
 			@media (max-width: $breakpoint-tablet) {
+        padding: 1px 0px;
 				font-size: 12px;
 				margin: 0;
 			}
@@ -809,7 +817,7 @@ button:disabled, button[disabled] {
 			}
 			.coin-header {
 				padding: 20px 0px;
-				img {
+				.logo {
 					width: 55px;
 					min-width: 55px;
 					height: 55px;
@@ -821,6 +829,7 @@ button:disabled, button[disabled] {
 					}
 
 					.price-wrapper {
+            padding: 3px 0px;
 						h2, p {
 							font-size: 14px;
 							margin: 0;
@@ -1571,6 +1580,12 @@ input[type="checkbox" i] {
 		background-color: #301ea9;
 	}
 }
+
+.legal-explanation {
+  p {
+    font-size: 10px
+  }
+}
 .contact-form-wrapper {
 	border-radius: 2px;
 	position: absolute;
@@ -1863,7 +1878,7 @@ input[type="checkbox" i] {
 				h2 {
 
 				}
-				img {
+				.logo {
 					width: 70px;
 					height: 70px;
 				}
@@ -1914,7 +1929,7 @@ input[type="checkbox" i] {
 				.coin-header {
 					margin-top:0px;
 					padding: 20px 6px;
-					img {
+					.logo {
 						width: 45px;
 						min-width: 45px;
 						height: 45px;
@@ -1949,7 +1964,7 @@ input[type="checkbox" i] {
 					}
 					.coin-header {
 						padding: 20px;
-						img {
+						.logo {
 							width: 55px;
 							min-width: 55px;
 							height: 55px;
