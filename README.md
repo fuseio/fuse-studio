@@ -26,6 +26,14 @@ For the best experience, stop the client docker container and start it natively 
 
 ## Without Docker
 
+### dependencies
+
+- [mongoDB](https://www.mongodb.com/)
+- [ipfs](https://ipfs.io/docs/install/)
+
+Optional:
+- [geth](https://ethereum.gitbooks.io/frontier-guide/content/getting_a_client.html)
+
 ### Setup database
 
 Start a mongodb daemon with default settings.
@@ -40,26 +48,19 @@ ipfs daemon
 
 Then define following environment variables for the server's shell
 ```
-export COMMUNITY_IPFS_HOST=127.0.0.1
-export COMMUNITY_IPFS_PORT=5001
-export COMMUNITY_IPFS_PROTOCOL=http
+cp ./server/config/defaults.json ./server/config/local.json
 ```
+You can edit the `./server/config/local.json` file as you like.
 
 ### Setup Ethereum node
 
-You can skip this step if you will use MeteMask or Mist to browser the DApp.
-
-Otherwise, run an ethereum node, for example:
+You can start your own Ethereum node:
 
 ```
 geth --testnet  --rpc --rpcapi="db,eth,net,web3,personal,web3"
 ```
 
-Then export its HTTP enpoint as `COMMUNITY_WEB3_PROVIDER` variable:
-
-```
-export COMMUNITY_WEB3_PROVIDER=http://127.0.0.1:8545
-```
+Or use Infura (or other provider) as your provider, just change it in the config file (`./server/config/local.json`)
 
 ### Setup Server
 
@@ -68,7 +69,7 @@ export COMMUNITY_WEB3_PROVIDER=http://127.0.0.1:8545
 ```
 cd server
 npm install
-npm run dev
+npm run dev --NODE_ENV=local
 ```
 
 ### Setup client
