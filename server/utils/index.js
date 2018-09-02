@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const config = require('config')
 const IpfsAPI = require('ipfs-api')
 const Web3 = require('web3')
-const contract = require('truffle-contract')
+const Contract = require('truffle-contract')
 
 const DEFAULT_FACTORY_TYPE = 'CurrencyFactory'
 const DEFAULT_FACTORY_VERSION = 0
@@ -23,7 +23,7 @@ const metadata = mongoose.metadata
 const community = mongoose.community
 
 const createContract = (abi) => {
-  let cntrct = contract({abi: abi})
+  let cntrct = Contract({abi: abi})
   cntrct.setProvider(provider)
   return cntrct
 }

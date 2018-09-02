@@ -10,7 +10,7 @@
     "timeout": 3000
   },
   "web3": {
-    "provider": "http://127.0.0.1:7545/"
+    "provider": "http://127.0.0.1:7545"
   },
   "mongo": {
     "uri": "mongodb://localhost/CLN-community-app",

@@ -18,7 +18,9 @@
       "constants/abi",
       "migrations"
     ],
-    "env": ["mocha"],
+    "env": [
+      "mocha"
+    ],
     "globals": [
       "artifacts",
       "assert",

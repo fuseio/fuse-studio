@@ -44,8 +44,6 @@ const assertCommunityData = (comm1, comm2) => {
 
 contract('COMMUNITY', async (accounts) => {
   before(async () => {
-    this.timeout(60000)
-
     await mongoose.connect(config.get('mongo.uri'), config.get('mongo.options'))
     await clearCollections()
 
