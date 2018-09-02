@@ -36,7 +36,7 @@ if (!isProduction) {
   mongoose.set('debug', true)
 }
 
-require('./models')
+require('./models')(mongoose)
 
 app.use(require('./routes'))
 

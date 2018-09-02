@@ -9,6 +9,9 @@
     "protocol": "COMMUNITY_IPFS_PROTOCOL",
     "timeout": "COMMUNITY_IPFS_TIMEOUT"
   },
+  "web3": {
+    "provider": "COMMUNITY_WEB3_PROVIDER"
+  },
   "mongo": {
     "uri": "COMMUNITY_MONGO_URI",
     "options": {

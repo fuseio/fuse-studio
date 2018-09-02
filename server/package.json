@@ -6,32 +6,51 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
-    "test": "echo \"no tests for now:(\"",
+    "test": "node ./node_modules/truffle/build/cli.bundled.js test",
     "lint": "./node_modules/.bin/standard"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/colucom/CLN-community-server.git"
   },
+  "standard": {
+    "ignore": [
+      "constants/abi",
+      "migrations"
+    ],
+    "env": ["mocha"],
+    "globals": [
+      "artifacts",
+      "assert",
+      "contract"
+    ]
+  },
   "license": "MIT",
   "dependencies": {
     "async": "^2.6.1",
+    "await-to-js": "^2.0.1",
     "body-parser": "1.15.0",
+    "cln-solidity": "^1.0.0",
     "compression": "^1.7.3",
-    "cors": "2.7.1",
     "config": "^1.30.0",
+    "cors": "2.7.1",
+    "debug": "2.6.9",
     "express": "4.16.3",
     "express-async-errors": "^2.1.2",
     "express-jwt": "^5.3.1",
+    "ganache-cli": "^6.1.8",
     "ipfs-api": "^20.2.1",
     "mandrill-api": "^1.0.45",
     "methods": "1.1.2",
     "mongoose": "^5.2.7",
+    "mongoose-time": "^0.1.0",
     "mongoose-unique-validator": "1.0.2",
     "morgan": "1.7.0",
     "multer": "^1.3.1",
     "request": "^2.88.0",
-    "debug": "2.6.9"
+    "truffle": "^4.1.14",
+    "truffle-contract": "^3.0.6",
+    "web3": "^1.0.0-beta.35"
   },
   "devDependencies": {
     "nodemon": "^1.18.3",
