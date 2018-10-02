@@ -12,10 +12,8 @@ const ipfs = new IpfsAPI(ipfsConfig)
 
 router.get('/:hash', async (req, res) => {
   const hash = req.params.hash
-
-  let data
   try {
-    data = await ipfs.files.cat(hash)
+    const data = await ipfs.files.cat(hash)
     res.set('Content-Type', 'image/png')
     return res.send(data)
   } catch (e) {

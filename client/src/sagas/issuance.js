@@ -6,7 +6,7 @@ import * as actions from 'actions/issuance'
 import {tryTakeEvery} from './utils'
 import web3 from 'services/web3'
 
-function * createCurrency ({name, symbol, decimals, totalSupply, tokenURI}) {
+export function * createCurrency ({name, symbol, decimals, totalSupply, tokenURI}) {
   const addresses = yield select(getAddresses)
   const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
     address: addresses.CurrencyFactory

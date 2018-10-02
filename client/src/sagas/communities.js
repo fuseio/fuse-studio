@@ -2,11 +2,12 @@ import { all, put, race, call, take, select, fork } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery} from './utils'
 import * as actions from 'actions/communities'
+import {addCommunity} from 'services/api'
 import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {fetchMetadata, FETCH_METADATA} from 'actions/metadata'
 import {createMetadata} from 'sagas/metadata'
 import {subscribeToChange} from 'actions/subscriptions'
-import {createCurrency} from 'actions/issuance'
+import {createCurrency} from 'sagas/issuance'
 import {fetchTokenQuote} from 'actions/fiat'
 import { contract } from 'osseus-wallet'
 import {getAddresses} from 'selectors/network'
@@ -99,7 +100,28 @@ function * fetchClnContract ({tokenAddress}) {
 function * issueCommunity ({communityMetadata, currencyData}) {
   const {hash, protocol} = yield call(createMetadata, {metadata: communityMetadata})
   const tokenURI = `${protocol}://${hash}`
-  yield put(createCurrency({...currencyData, tokenURI}))
+  const receipt = yield call(createCurrency, {...currencyData, tokenURI})
+  const tokenAddress = receipt.address
+
+  const addresses = yield select(getAddresses)
+
+  const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
+    address: addresses.CurrencyFactory
+  })
+  const mmAddress = call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(tokenAddress).call)
+
+  yield addCommunity({
+    ccAddress: tokenAddress,
+    mmAddress,
+    factoryAddress: addresses.CurrencyFactory,
+    factoryType: 'CurrencyFactory',
+    factoryVersion: 0
+  })
+
+  yield entityPut({
+    type: actions.ISSUE_COMMUNITY.SUCCESS,
+    tokenAddress
+  })
 }
 
 export default function * communitiesSaga () {
