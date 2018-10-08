@@ -90,10 +90,6 @@ export default class Root extends Component {
                   mapStyles={isMobile ? mapStylesMobile : mapStyles}
                   {...sidebarAnimation}
                 />
-                <Route
-                  path='/view/issuance'
-                  component={withTracker(Issuance)}
-                />
               </div>
               <div className='contact-form-wrapper'>
                 <AnimatedRoute
@@ -103,6 +99,12 @@ export default class Root extends Component {
                   {...contactFormTransition}
                 />
               </div>
+              <Route
+                path='/view/issuance'
+                component={withTracker(Issuance)}
+                mapStyles={mapStylesContact}
+                {...contactFormTransition}
+              />
             </div>
           </div>
         </ConnectedRouter>

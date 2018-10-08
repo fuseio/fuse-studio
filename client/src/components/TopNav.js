@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import classNames from 'classnames'
 import { isMobile, MobileView } from 'react-device-detect'
 import {BigNumber} from 'bignumber.js'
+import FontAwesome from 'react-fontawesome'
 
 import * as actions from 'actions/ui'
 import {getClnBalance} from 'selectors/accounts'
@@ -51,6 +52,22 @@ class TopNav extends Component {
     })
   }
 
+  showIssuance = () => {
+    if (this.props.history.location.pathname === '/view/issuance') {
+      this.props.history.replace('/view/issuance')
+    } else {
+      this.props.history.push('/view/issuance')
+    }
+    this.setState({
+      openMenu: !this.state.openMenu
+    })
+    ReactGA.event({
+      category: 'Top Bar',
+      action: 'Click',
+      label: 'issuance'
+    })
+  }
+
   handleLinkClick = (event) =>
     ReactGA.event({
       category: 'Top Bar',
@@ -65,13 +82,18 @@ class TopNav extends Component {
     })
     const navLinksClass = classNames({
       'hide': !this.state.openMenu && isMobile,
-      'top-nav-links': true
+      'top-nav-links': true,
+      'show-top-nav-links': true,
+      'hide-nav-links': !isMobile
     })
 
     return <div className={topNavClass}>
       <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>
-
+      {!isMobile && <FontAwesome name='align-justify' className='burger-menu' onClick={this.props.setToggleMenu} />}
       <div className={navLinksClass}>
+        <div onClick={this.showIssuance} >
+          <div className='top-nav-text'>Issuance</div>
+        </div>
         <a className='top-nav-text'
           href='https://cln.network/pdf/cln_whitepaper.pdf'
           target='_blank'
