@@ -13,6 +13,7 @@ const abis = require('../constants/abi')
 // const addresses = require('../constants/addresses')
 
 const ipfsConfig = config.get('ipfs')
+console.log(`starting IPFS with the following config: ${JSON.stringify(ipfsConfig)}`)
 const ipfs = new IpfsAPI(ipfsConfig)
 
 const web3Config = config.get('web3')
@@ -68,6 +69,7 @@ utils.getMetadata = async (protocol, hash) => {
       utils.later(ipfsConfig.timeout)
     ])
     if (!data) {
+      console.log(`no data found in IPFS for hash ${hash}`)
       const metadataObj = await metadata.getByProtocolAndHash(protocol, hash)
       return {source: 'mongo', data: metadataObj.toJSON()}
     }

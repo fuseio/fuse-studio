@@ -40,6 +40,7 @@
     "express": "4.16.3",
     "express-async-errors": "^2.1.2",
     "express-jwt": "^5.3.1",
+    "express-paginate": "^1.0.0",
     "ganache-cli": "^6.1.8",
     "ipfs-api": "^20.2.1",
     "mandrill-api": "^1.0.45",
