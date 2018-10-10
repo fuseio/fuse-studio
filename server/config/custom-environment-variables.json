@@ -10,7 +10,9 @@
     "timeout": "COMMUNITY_IPFS_TIMEOUT"
   },
   "web3": {
-    "provider": "COMMUNITY_WEB3_PROVIDER"
+    "provider": "COMMUNITY_WEB3_PROVIDER",
+    "websocketProvider": "COMMUNITY_WEB3_WEBSOCKET_PROVIDER",
+    "pageSize": "COMMUNITY_WEB3_PAGE_SIZE"
   },
   "mongo": {
     "uri": "COMMUNITY_MONGO_URI",

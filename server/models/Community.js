@@ -6,15 +6,18 @@ module.exports = (mongoose) => {
 
   const CommunitySchema = new Schema({
     ccAddress: {type: String, required: [true, "can't be blank"]},
+    owner: {type: String, required: [true, "can't be blank"]},
     mmAddress: {type: String, required: [true, "can't be blank"]},
     factoryAddress: {type: String, required: [true, "can't be blank"]},
     factoryType: {type: String, enum: ['CurrencyFactory', 'IssuanceFactory'], default: 'CurrencyFactory'},
     factoryVersion: {type: Number, default: 0},
-    verified: {type: Boolean, default: false}
+    verified: {type: Boolean, default: false},
+    blockNumber: {type: Number}
   }).plugin(timestamps())
 
   CommunitySchema.index({ccAddress: 1}, {unique: true})
   CommunitySchema.index({mmAddress: 1}, {unique: true})
+  CommunitySchema.index({owner: 1})
   CommunitySchema.index({factoryAddress: 1})
   CommunitySchema.index({factoryAddress: 1, factoryType: 1, factoryVersion: 1})
 
@@ -28,6 +31,7 @@ module.exports = (mongoose) => {
         updatedAt: ret.updated_at,
         ccAddress: ret.ccAddress,
         mmAddress: ret.mmAddress,
+        owner: ret.owner,
         factoryAddress: ret.factoryAddress,
         factoryType: ret.factoryType,
         factoryVersion: ret.factoryVersion,
@@ -55,6 +59,11 @@ module.exports = (mongoose) => {
         resolve(newObj)
       })
     })
+  }
+
+  community.upsertByccAddress = (data) => {
+    const {ccAddress} = data
+    return community.getModel().updateOne({ccAddress}, data, {upsert: true})
   }
 
   community.getById = (id) => {

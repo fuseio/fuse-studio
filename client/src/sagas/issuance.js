@@ -38,6 +38,7 @@ export function * createCurrency ({name, symbol, decimals, totalSupply, tokenURI
       receipt
     }
   })
+  return receipt
 }
 
 export default function * marketMakerSaga () {

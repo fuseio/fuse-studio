@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-const utils = require('../../utils')
+const utils = require('../../utils/metadata')
 
 router.get('/:protocol/:hash', async (req, res, next) => {
   const protocol = req.params.protocol

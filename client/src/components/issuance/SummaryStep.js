@@ -41,7 +41,7 @@ const SummaryStep = ({ communityName, communityLogo, communitySymbol, totalSuppl
       </a>
     </div>,
     <div key={4} className='text-center'>
-      <button className='symbol-btn'>
+      <button onClick={setIssuanceTransaction} className='symbol-btn'>
         Done
       </button>
     </div>

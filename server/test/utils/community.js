@@ -2,7 +2,7 @@ process.env.NODE_ENV = 'test'
 
 const mongoose = require('mongoose')
 const config = require('config')
-const utils = require('../utils')
+const utils = require('../../utils/community')
 
 const ColuLocalNetwork = artifacts.require('cln-solidity/contracts/ColuLocalNetwork.sol')
 const CurrencyFactory = artifacts.require('cln-solidity/contracts/CurrencyFactory.sol')
@@ -12,26 +12,13 @@ const TOKEN_DECIMALS = 10 ** 18
 const CLN_MAX_TOKENS = 15 * 10 ** 8 * TOKEN_DECIMALS
 const CC_MAX_TOKENS = 15 * 10 ** 6 * TOKEN_DECIMALS
 
-const testMetada = {
-  some: 'value',
-  num: 3
-}
-
-let currencyFactory, cln, metadataAns, metadataHash, ccAddress, communityData
+let currencyFactory, cln, metadataHash, ccAddress, communityData
 
 const clearCollections = async () => {
   for (let collection in mongoose.connection.collections) {
     console.log('clear collection', collection)
     await mongoose.connection.collections[collection].remove({})
   }
-}
-
-const assertEqualMetadata = (meta1, meta2) => {
-  assert.equal(meta1.hash, meta2.hash)
-  assert.equal(meta1.protocol, meta2.protocol)
-  Object.entries(meta1, async key => {
-    assert.equal(meta1[key], meta2[key])
-  })
 }
 
 const assertCommunityData = (comm1, comm2) => {
@@ -42,7 +29,7 @@ const assertCommunityData = (comm1, comm2) => {
   assert.equal(comm1.mmAddress, comm2.mmAddress)
 }
 
-contract('COMMUNITY', async (accounts) => {
+contract('Community', async (accounts) => {
   before(async () => {
     await mongoose.connect(config.get('mongo.uri'), config.get('mongo.options'))
     await clearCollections()
@@ -55,31 +42,15 @@ contract('COMMUNITY', async (accounts) => {
     currencyFactory = await CurrencyFactory.new(mmLib.address, cln.address, {from: accounts[0]})
   })
 
-  it('should add metadata', async () => {
-    metadataAns = await utils.addMetadata(testMetada)
-    metadataHash = metadataAns.data.hash
-    let dbAns = (await mongoose.metadata.getByHash(metadataHash)).toJSON()
-    assertEqualMetadata(metadataAns.data, dbAns)
-  })
-
-  it('should add same metadata twice', async () => {
-    metadataAns = await utils.addMetadata(testMetada)
-    metadataHash = metadataAns.data.hash
-    let dbAns = (await mongoose.metadata.getByHash(metadataHash)).toJSON()
-    assertEqualMetadata(metadataAns.data, dbAns)
-  })
-
-  it('should get the metadadata from db/ipfs', async () => {
-    let dbAns = await utils.getMetadata('ipfs', metadataHash)
-    assertEqualMetadata(metadataAns.data, dbAns.data)
-  })
-
   it('should get community data', async () => {
     let tokenURI = 'ipfs://' + metadataHash
     const result = await currencyFactory.createCurrency('TestLocalCurrency', 'TLC', 18, CC_MAX_TOKENS, tokenURI, {from: accounts[0]})
     ccAddress = result.logs[0].args.token
+    const owner = result.logs[0].args.owner
     let mmAddress = await currencyFactory.getMarketMakerAddressFromToken(ccAddress)
     communityData = await utils.getCommunityData(currencyFactory.address, ccAddress)
+    communityData = {...communityData, owner}
+    console.log(communityData)
     assertCommunityData(communityData, {
       ccAddress: ccAddress,
       factoryAddress: currencyFactory.address,

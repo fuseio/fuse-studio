@@ -60,7 +60,7 @@ class Issuance extends Component {
       name: communityName,
       symbol: symbol,
       decimals: 18,
-      totalSupply: new BigNumber(totalSupply).mul(1e18)
+      totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
     }
     const communityMetadata = {'communityType': communityType.text, 'communityLogo': communityLogo.name}
     this.props.issueCommunity(communityMetadata, currencyData)
