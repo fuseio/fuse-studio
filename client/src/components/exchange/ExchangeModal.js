@@ -26,12 +26,10 @@ const EXCHANGE_COMPONENTS = {
 
 class ExchangeModal extends React.Component {
   next = (props) => this.props.uiActions.updateModalProps({
-    ...props,
     buyStage: this.props.buyStage + 1
   })
 
-  back = (props) => this.props.uiActions.updateModalProps({
-    ...props,
+  back = () => this.props.uiActions.updateModalProps({
     buyStage: this.props.buyStage - 1
   })
 

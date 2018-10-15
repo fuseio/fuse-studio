@@ -53,11 +53,24 @@ class BuySellAmounts extends Component {
     }
   }
 
+  error = () => this.state.error || this.maxError()
+
+  maxError = () => {
+    const {isBuy} = this.props
+    if (isBuy) {
+      return this.getClnInWei().isGreaterThan(this.props.clnBalance) ? 'Insufficient Funds' : ''
+    } else {
+      return this.getCcInWei().isGreaterThan(this.props.ccBalance) ? 'Insufficient Funds' : ''
+    }
+  }
+
   next = () => {
     const { minimum, priceLimit, pricePercentage, inputField } = this.state
     const { isBuy } = this.props
 
-    this.props.next({
+    this.props.next()
+
+    this.props.uiActions.updateModalProps({
       cln: this.cln(),
       cc: this.cc(),
       inputField,
@@ -130,8 +143,7 @@ class BuySellAmounts extends Component {
     this.setState({
       cln: amount,
       cc: '',
-      inputField: 'cln',
-      error: (this.props.isBuy && amountInWei.isGreaterThan(this.props.clnBalance)) ? 'Insufficient Funds' : ''
+      inputField: 'cln'
     })
     this.askForClnQuote(amountInWei)
   }
@@ -161,8 +173,7 @@ class BuySellAmounts extends Component {
 
     this.setState({
       cc: amount,
-      inputField: 'cc',
-      error: (!this.props.isBuy && amountInWei.isGreaterThan(this.props.ccBalance)) ? 'Insufficient Funds' : ''
+      inputField: 'cc'
     })
 
     this.askForCcQuote(amountInWei)
@@ -191,14 +202,16 @@ class BuySellAmounts extends Component {
     : undefined
 
   cln = (formatter = identity) => this.state.inputField !== 'cc' ? this.state.cln : (
-    this.props.isBuy ? formatter(this.props.quotePair.inAmount.div(1e18), this.props.isBuy)
-      : formatter(this.props.quotePair.outAmount.div(1e18), this.props.isBuy)
+    formatter(this.getClnInWei().div(1e18), this.props.isBuy)
   )
 
   cc = (formatter = identity) => this.state.inputField !== 'cln' ? this.state.cc : (
-    this.props.isBuy ? formatter(this.props.quotePair.outAmount.div(1e18), this.props.isBuy)
-      : formatter(this.props.quotePair.inAmount.div(1e18), this.props.isBuy)
+    formatter(this.getCcInWei().div(1e18), this.props.isBuy)
   )
+
+  getClnInWei = () => this.props.isBuy ? this.props.quotePair.inAmount : this.props.quotePair.outAmount
+
+  getCcInWei = () => this.props.isBuy ? this.props.quotePair.outAmount : this.props.quotePair.inAmount
 
   amountToReceive = () => {
     if (this.props.isFetching) {
@@ -244,7 +257,7 @@ class BuySellAmounts extends Component {
   renderClickMax = () => {
     const maxAmountClass = classNames({
       'max-amount': true,
-      'error': this.state.error
+      'error': this.error()
     })
 
     if (this.props.isBuy) {
@@ -259,7 +272,7 @@ class BuySellAmounts extends Component {
 
   render () {
     const { isBuy, community, isFetching } = this.props
-    const { error, inputField } = this.state
+    const { inputField } = this.state
     const ccSymbol = community.symbol
 
     const buyTabClass = classNames({
@@ -270,6 +283,7 @@ class BuySellAmounts extends Component {
       'buy-tab': true,
       'active': !isBuy
     })
+    const error = this.error()
 
     return (
       <div>

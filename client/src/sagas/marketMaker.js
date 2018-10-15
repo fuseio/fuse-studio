@@ -5,8 +5,8 @@ import { contract } from 'osseus-wallet'
 import * as actions from 'actions/marketMaker'
 import {fetchGasPrices} from 'actions/network'
 import {getClnToken, getCommunity} from 'selectors/communities'
-import web3 from 'services/web3'
 import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
+import {getAccountAddress} from 'selectors/accounts'
 
 const reversePrice = (price) => new BigNumber(1e18).div(price)
 
@@ -130,14 +130,15 @@ function * createChangeData ({toTokenAddress, amount, minReturn, isBuy, mmAddres
 
 export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
   const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
-
   const data = yield createChangeData({toTokenAddress, amount, minReturn, isBuy, mmAddress: token.mmAddress})
 
   const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency',
     address: fromTokenAddress})
 
+  const accountAddress = yield select(getAccountAddress)
+
   const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
-    from: web3.eth.defaultAccount,
+    from: accountAddress,
     ...options
   })
 
@@ -152,7 +153,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
 
   yield put({type: actions.CHANGE.PENDING,
     tokenAddress: token.address,
-    accountAddress: web3.eth.defaultAccount,
+    accountAddress,
     response: {
       transactionHash
     }
@@ -163,7 +164,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
     yield put({
       type: actions.CHANGE.FAILURE,
       tokenAddress: token.address,
-      accountAddress: web3.eth.defaultAccount,
+      accountAddress,
       response: {receipt}
     })
     return receipt
@@ -171,7 +172,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
 
   yield put({type: actions.CHANGE.SUCCESS,
     tokenAddress: token.address,
-    accountAddress: web3.eth.defaultAccount,
+    accountAddress: accountAddress,
     response: {
       receipt
     }
@@ -188,8 +189,10 @@ export function * estimageChange ({tokenAddress, amount, minReturn, isBuy}) {
   const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency',
     address: fromTokenAddress})
 
+  const accountAddress = yield select(getAccountAddress)
+
   return yield ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).estimateGas(
-    {from: web3.eth.defaultAccount})
+    {from: accountAddress})
 }
 
 export function * buyQuote ({tokenAddress, clnAmount}) {

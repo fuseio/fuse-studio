@@ -20,8 +20,8 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:address', async (req, res, next) => {
-  const address = req.params.address
-  const community = await Community.findOne({ address })
+  const ccAddress = req.params.address
+  const community = await Community.findOne({ ccAddress })
   return res.json({ data: community })
 })
 

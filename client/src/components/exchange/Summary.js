@@ -48,6 +48,12 @@ class Summary extends Component {
     }
   }
 
+  componentWillUnmount () {
+    this.props.uiActions.updateModalProps({
+      estimatedGas: null
+    })
+  }
+
   getCoinVariables = () => this.props.isBuy ? {
     fromCoin: clnFormatter(this.props.cln, this.props.isBuy),
     toCoin: ccFormatter(this.props.cc, this.props.isBuy),
