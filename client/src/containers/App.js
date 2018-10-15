@@ -21,8 +21,7 @@ class App extends Component {
   state = {
     isWelcome: true,
     out: false,
-    welcomeDone: false,
-    toggleMenu: false
+    welcomeDone: false
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -83,8 +82,7 @@ class App extends Component {
       'center': true,
       'fullscreen': !isMobile,
       'mobile-screen': isMobile,
-      'issuance-screen': currentRoute === '/view/issuance',
-      'open-mobile-nav': this.state.toggleMenu
+      'issuance-screen': currentRoute === '/view/issuance'
     })
 
     const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/issuance' && currentRoute !== '/view/contact-us' && !currentRoute.includes('community') ? <CommunitiesList history={this.props.history} /> : null
@@ -106,8 +104,6 @@ class App extends Component {
         {currentRoute !== '/view/issuance' ? <TopNav
           active={!this.state.isWelcome}
           history={this.props.history}
-          toggleMenu={this.state.toggleMenu}
-          setToggleMenu={() => this.setState({toggleMenu: !this.state.toggleMenu})}
         /> : null }
         <Map key='map' active={this.state.welcomeDone} currentRoute={currentRoute} history={this.props.history} />
         {communityNav}
