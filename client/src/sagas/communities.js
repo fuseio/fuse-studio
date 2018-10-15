@@ -37,21 +37,28 @@ function * fetchCommunityToken ({tokenAddress}) {
     })
 
     const calls = {
-      name: call(ColuLocalNetworkContract.methods.name().call),
       symbol: call(ColuLocalNetworkContract.methods.symbol().call),
-      totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
-      owner: call(ColuLocalNetworkContract.methods.owner().call),
       tokenURI: call(ColuLocalNetworkContract.methods.tokenURI().call),
-      mmAddress: call(CurrencyFactoryContract.methods.getMarketMakerAddressFromToken(tokenAddress).call)
+      currencyMap: call(CurrencyFactoryContract.methods.currencyMap(tokenAddress).call)
     }
 
     const response = yield all(calls)
-    response.isLocalCurrency = true
-    response.address = tokenAddress
-    response.path = '/view/community/' + response.name.toLowerCase().replace(/ /g, '')
 
-    if (response.tokenURI) {
-      const [protocol, hash] = response.tokenURI.split('://')
+    const {name, totalSupply, owner, mmAddress} = response.currencyMap
+
+    const community = {
+      symbol: response.symbol,
+      tokenURI: response.tokenURI,
+      totalSupply,
+      name,
+      mmAddress,
+      owner,
+      isLocalCurrency: true,
+      path: '/view/community/' + name.toLowerCase().replace(/ /g, '')
+    }
+
+    if (community.tokenURI) {
+      const [protocol, hash] = community.tokenURI.split('://')
       yield put(fetchMetadata(protocol, hash, tokenAddress))
 
       // wait untill timeout for the metadata to finish.
@@ -65,10 +72,10 @@ function * fetchCommunityToken ({tokenAddress}) {
 
     yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.SUCCESS,
       tokenAddress,
-      response
+      response: community
     })
 
-    return response
+    return community
   } catch (error) {
     console.error(error)
     yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.FAILURE, tokenAddress, error})
