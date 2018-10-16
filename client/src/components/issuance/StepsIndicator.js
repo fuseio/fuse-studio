@@ -2,22 +2,20 @@ import React from 'react'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 
-const StepsIndicator = ({steps, activeStep, doneStep}) => {
-  let stepArr = []
-  steps.forEach((item, key) => {
+const StepsIndicator = ({steps, activeStep}) => {
+  return steps.map((item, key) => {
     const stepsClassStyle = classNames({
       'step': true,
       'active-step': key === activeStep,
-      'done-step': key === doneStep || key < doneStep
+      'done-step': key < activeStep
     })
-    stepArr.push(
+    return (
       <div key={key} className={stepsClassStyle}>
-        {(key === doneStep || key < doneStep) && <FontAwesome className='done-check' name='check' />}
+        {(key < activeStep) && <FontAwesome className='done-check' name='check' />}
         {item}
       </div>
     )
   })
-  return stepArr
 }
 
 export default StepsIndicator

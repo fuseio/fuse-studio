@@ -12,23 +12,16 @@ import { nameToSymbol } from 'utils/format'
 import * as actions from 'actions/communities'
 
 class Issuance extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      activeStep: 0,
-      doneStep: null,
-      communityName: '',
-      communitySymbol: '',
-      customSupply: '',
-      communityType: {},
-      totalSupply: '',
-      communityLogo: {},
-      stepPosition: {},
-      scrollPosition: 0
-    }
-    this.handleChangeCommunityName = this.handleChangeCommunityName.bind(this)
-    this.handleChangeCommunitySymbol = this.handleChangeCommunitySymbol.bind(this)
-    this.handleScroll = this.handleScroll.bind(this)
+  state = {
+    activeStep: 0,
+    communityName: '',
+    communitySymbol: '',
+    customSupply: '',
+    communityType: {},
+    totalSupply: '',
+    communityLogo: {},
+    stepPosition: {},
+    scrollPosition: 0
   }
 
   componentDidMount () {
@@ -74,7 +67,7 @@ class Issuance extends Component {
     this.props.history.goBack()
   }
 
-  handleChangeCommunityName (event) {
+  handleChangeCommunityName = (event) => {
     this.setState({communityName: event.target.value})
     this.setState({communitySymbol: nameToSymbol(event.target.value)})
   }
@@ -87,13 +80,12 @@ class Issuance extends Component {
 
   setNextStep () {
     this.setState({
-      doneStep: this.state.activeStep,
       activeStep: this.state.activeStep + 1
     })
   }
 
-  handleChangeCommunitySymbol (event) {
-    this.setState({communitySymbol: event.target.value})
+  handleChangeCommunitySymbol = (communitySymbol) => {
+    this.setState({communitySymbol})
   }
 
   setCommunityType = type =>
@@ -185,7 +177,6 @@ class Issuance extends Component {
               <StepsIndicator
                 steps={steps}
                 activeStep={this.state.activeStep}
-                doneStep={this.state.doneStep}
               />
             </div>
           </div>

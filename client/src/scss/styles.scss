@@ -2613,12 +2613,14 @@ input[type="checkbox" i] {
 		outline: none;
 	}
 
-	&:hover {
-		cursor: pointer;
-		.ctrl-icon {
-			color: $color-step-field;
-		}
-	}
+  @media (min-width: $breakpoint-mobile) {
+  	&:hover {
+  		cursor: pointer;
+  		.ctrl-icon {
+  			color: $color-step-field;
+  		}
+  	}
+  }
 
 	@media (max-width: $breakpoint-mobile) {
 		top: 40px;

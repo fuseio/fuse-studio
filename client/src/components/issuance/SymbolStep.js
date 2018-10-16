@@ -7,37 +7,44 @@ export default class SymbolStep extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      showCustomSymbol: false
-    }
-  }
-
-  componentWillUnmount () {
-    if (this.state.showCustomSymbol) {
-      this.setState({showCustomSymbol: false})
+      showCustomSymbol: false,
+      customSymbol: props.communitySymbol
     }
   }
 
   toggleCustomSymbol = () => {
     this.setState({showCustomSymbol: !this.state.showCustomSymbol})
   }
+
+  handleChangeCommunitySymbol = (event) => {
+    this.setState({customSymbol: event.target.value})
+  }
+
+  setNextStep = () => {
+    if (this.state.showCustomSymbol) {
+      this.props.handleChangeCommunitySymbol(this.state.customSymbol)
+    }
+    this.props.setNextStep()
+  }
+
   render () {
     return (
       <div className='step-content-symbol'>
         <h2 className='step-symbol-title'>{'\'' + this.props.communityName + '\''}</h2>
         <h2 className='step-content-title'>Currency Symbol</h2>
         <div className='step-content-symbol-field'>
-          {!this.state.showCustomSymbol
-            ? this.props.communitySymbol
-            : <TextInput
+          {this.state.showCustomSymbol
+            ? <TextInput
               className='step-community-symbol'
               id='communitySymbol'
               type='text'
               maxLength='3'
               autoFocus
               placeholder='Type your community symbol...'
-              value={this.props.communitySymbol}
-              onChange={this.props.handleChangeCommunitySymbol}
+              value={this.state.customSymbol}
+              onChange={this.handleChangeCommunitySymbol}
             />
+            : this.props.communitySymbol
           }
         </div>
         <div className='text-center'>
@@ -47,7 +54,8 @@ export default class SymbolStep extends Component {
         </div>
         <button
           className='symbol-btn'
-          onClick={this.props.setNextStep}
+          disabled={this.state.customSymbol.length < 3}
+          onClick={this.setNextStep}
         >
           Approve symbol <FontAwesome name='angle-right' className='symbol-icon' />
         </button>

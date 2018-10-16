@@ -136,7 +136,7 @@ export default class DetailsStep extends Component {
           <button
             className='symbol-btn'
             disabled={
-              Object.keys(this.props.communityType).length === 0 || !this.props.totalSupply || !this.props.communityLogo
+              Object.keys(this.props.communityType).length === 0 || !this.props.totalSupply || !this.props.communityLogo.name
             }
             onClick={this.props.setNextStep}
           >
