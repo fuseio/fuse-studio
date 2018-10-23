@@ -5,7 +5,6 @@ import Map from 'components/Map'
 import TopNav from 'components/TopNav'
 import CommunitiesList from 'components/CommunitiesList'
 import ModalContainer from 'containers/ModalContainer'
-import SignUp from 'components/SignUp'
 import classNames from 'classnames'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import {fetchClnContract, initializeCommunity} from 'actions/communities'
@@ -95,11 +94,8 @@ class App extends Component {
       </div>
     </div> : null
 
-    const signUpEmail = (currentRoute === '/' && !this.props.ui.signupHide && !this.props.ui.signupClose) ? <SignUp /> : null
-
     return <div className={mainWrapperClass}>
       {welcome}
-      {signUpEmail}
       <div className={mainContainerClass}>
         {currentRoute !== '/view/issuance' ? <TopNav
           active={!this.state.isWelcome}

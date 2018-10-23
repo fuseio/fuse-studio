@@ -17,6 +17,18 @@ export const getCommunities = createSelector(
     tokens.map(token => ({...token, ...marketMaker[token.address]}))
 )
 
+export const getMarketMaker = createSelector(
+  state => state.tokens,
+  state => state.marketMaker,
+  (tokens, marketMaker) => {
+    const marketToken = Object.keys(tokens).map(token => ({
+      ...marketMaker[token],
+      'tokenName': tokens[token].symbol
+    }))
+    return marketToken.filter(token => token.isMarketMakerLoaded: true)
+  }
+)
+
 export const getCommunitiesWithMetadata = createSelector(getCommunities, (communities) =>
   filter(communities, community => community.metadata)
 )

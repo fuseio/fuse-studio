@@ -14,7 +14,7 @@ import CloseButton from 'images/x.png'
 import clnCurrencyIcon from 'images/cln-coin.png'
 import {getSelectedCommunity} from 'selectors/communities'
 import {getEtherscanUrl, getColuWallet} from 'selectors/network'
-import CoinHeader from './CoinHeader'
+import Community from './Community'
 import Loader from 'components/Loader'
 import ReactGA from 'services/ga'
 import {withMaybe} from 'utils/components'
@@ -94,7 +94,7 @@ class CommunitySidebar extends Component {
     return (
       <div className='community-sidebar'>
         <div className='header'>
-          <CoinHeader token={selectedCommunity} fiat={fiat} loadModal={this.props.loadModal} />
+          <Community token={selectedCommunity} fiat={fiat} loadModal={this.props.loadModal} />
           {control}
           <div className='header-buttons'>
             <div className='header-button' onClick={this.onClickBuy}>BUY</div>
