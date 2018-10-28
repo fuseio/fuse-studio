@@ -13,14 +13,14 @@ import Issuance from 'components/issuance/Issuance'
 import ContactForm from 'components/ContactForm'
 import withTracker from 'containers/withTracker'
 
+import Oven from 'components/Oven'
+
 const history = createHistory()
 
 const sidebarTransition = {
   atEnter: {
-  //  offset: 100
   },
   atLeave: {
-  //  offset: 100
   },
   atActive: {
     offset: 0
@@ -102,6 +102,12 @@ export default class Root extends Component {
               <Route
                 path='/view/issuance'
                 component={withTracker(Issuance)}
+                mapStyles={mapStylesContact}
+                {...contactFormTransition}
+              />
+              <Route
+                path='/view/oven'
+                component={withTracker(Oven)}
                 mapStyles={mapStylesContact}
                 {...contactFormTransition}
               />

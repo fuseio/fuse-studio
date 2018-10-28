@@ -1,17 +1,17 @@
-import { all, put, race, call, take, select, fork } from 'redux-saga/effects'
+import { all, put, call, select, fork } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery} from './utils'
 import * as actions from 'actions/communities'
-import {addCommunity} from 'services/api'
+import {addCommunity, fetchCommunities as fetchCommunitiesApi} from 'services/api'
 import {fetchMarketMakerData} from 'sagas/marketMaker'
-import {fetchMetadata, FETCH_METADATA} from 'actions/metadata'
+import {fetchMetadata} from 'actions/metadata'
 import {createMetadata} from 'sagas/metadata'
 import {subscribeToChange} from 'actions/subscriptions'
 import {createCurrency} from 'sagas/issuance'
 import {fetchTokenQuote} from 'actions/fiat'
 import { contract } from 'osseus-wallet'
 import {getAddresses} from 'selectors/network'
-import { delay } from 'redux-saga'
+import keyBy from 'lodash/keyBy'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -23,9 +23,47 @@ function * initializeCommunity ({tokenAddress}) {
 
 function * fetchCommunity ({tokenAddress}) {
   const tokenResponse = yield call(fetchCommunityToken, {tokenAddress})
+
+  if (tokenResponse.tokenURI) {
+    const [protocol, hash] = tokenResponse.tokenURI.split('://')
+    yield put(fetchMetadata(protocol, hash, tokenAddress))
+  }
+
   yield fork(fetchMarketMakerData, {tokenAddress, mmAddress: tokenResponse.mmAddress})
+
   yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, tokenAddress})
   return tokenResponse
+}
+
+const manipulateCommunity = (community) => ({
+  address: community.ccAddress,
+  owner: community.owner,
+  mmAddress: community.mmAddress
+})
+
+function * fetchCommunities ({page = 0}) {
+  const response = yield call(fetchCommunitiesApi, page)
+  const {data, ...metadata} = response
+
+  const communities = data.map(manipulateCommunity)
+  const entities = keyBy(communities, 'address')
+  const result = communities.map(community => community.address)
+
+  yield entityPut({type: actions.FETCH_COMMUNITIES.SUCCESS,
+    response: {
+      entities,
+      result,
+      metadata
+    }})
+
+  for (let community of communities) {
+    yield put({
+      type: actions.FETCH_COMMUNITY.REQUEST,
+      tokenAddress: community.address
+    })
+  }
+
+  return communities
 }
 
 function * fetchCommunityToken ({tokenAddress}) {
@@ -47,6 +85,7 @@ function * fetchCommunityToken ({tokenAddress}) {
     const {name, totalSupply, owner, mmAddress} = response.currencyMap
 
     const community = {
+      address: tokenAddress,
       symbol: response.symbol,
       tokenURI: response.tokenURI,
       totalSupply,
@@ -55,19 +94,6 @@ function * fetchCommunityToken ({tokenAddress}) {
       owner,
       isLocalCurrency: true,
       path: '/view/community/' + name.toLowerCase().replace(/ /g, '')
-    }
-
-    if (community.tokenURI) {
-      const [protocol, hash] = community.tokenURI.split('://')
-      yield put(fetchMetadata(protocol, hash, tokenAddress))
-
-      // wait untill timeout for the metadata to finish.
-      // It's only needed for more smooth rendering of communities
-      yield race({
-        metadata: take(action =>
-          action.type === FETCH_METADATA.SUCCESS && action.tokenAddress === tokenAddress),
-        timeout: call(delay, CONFIG.api.timeout)
-      })
     }
 
     yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.SUCCESS,
@@ -125,6 +151,7 @@ export default function * communitiesSaga () {
   yield all([
     tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
     tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity),
+    tryTakeEvery(actions.FETCH_COMMUNITIES, fetchCommunities),
     tryTakeEvery(actions.INITIALIZE_COMMUNITY, initializeCommunity),
     tryTakeEvery(actions.ISSUE_COMMUNITY, issueCommunity, 1)
   ])

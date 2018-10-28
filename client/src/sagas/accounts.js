@@ -7,7 +7,7 @@ import {getAddresses, getCommunityAddresses} from 'selectors/network'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 
 function * balanceOf ({tokenAddress, accountAddress, blockNumber}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
+  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
   const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(accountAddress).call, null, blockNumber)
 
   yield put({type: actions.BALANCE_OF.SUCCESS,

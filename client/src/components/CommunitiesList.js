@@ -1,52 +1,65 @@
 import React, { Component } from 'react'
-import classNames from 'classnames'
-import * as actions from 'actions/ui'
 import { connect } from 'react-redux'
 import Community from './Community'
-import {getCommunities, getMarketMaker} from 'selectors/communities'
-import find from 'lodash/find'
-import sortBy from 'lodash/sortBy'
-import FontAwesome from 'react-fontawesome'
+import {fetchCommunities} from 'actions/communities'
+import InfiniteScroll from 'react-infinite-scroller'
+
+const PAGE_START = 1
+const PAGE_SIZE = 10
 
 class CommunitiesList extends Component {
   state = {
-    toggleFooter: false
+    selectedCommunityAddress: null
   }
 
-  render () {
-    const currentCoin = find(this.props.tokens, {address: this.state.item}) && this.props.ui.activeMarker
-    const communityCoins = sortBy(this.props.tokens, 'name')
-    const currencyTokens = sortBy(this.props.marketMaker, 'tokenName')
-    if (this.props.tokens.length === 0) {
-      return null
-    }
-    const communitiesListStyle = classNames({
-      'communities-list': true,
-      'open-mobile': currentCoin
+  constructor (props) {
+    super(props)
+    this.myRef = React.createRef()
+  }
+
+  handleCommunityClick = (address) => {
+    this.setState({
+      selectedCommunityAddress: address
     })
-    return <div className={communitiesListStyle} ref='CommunitiesList'>
+  }
+
+  loadMore = (nextPage) => {
+    if (this.props.addresses.length < nextPage * PAGE_SIZE) {
+      this.props.fetchCommunities(nextPage)
+    }
+  }
+
+  componentDidMount () {
+    if (this.props.addresses.length < PAGE_SIZE) {
+      this.props.fetchCommunities(PAGE_START)
+    }
+  }
+
+  getScrollParent = () => this.myRef.current
+
+  render () {
+    const {addresses} = this.props
+    return <div className='communities-list' ref={this.myRef}>
       <h2 className='communities-list-title'>Communities</h2>
       <div className='communities-list-container'>
-        {communityCoins.map((coin, i) => {
-          const coinWrapperStyle = classNames({
-            'coin-wrapper': true,
-            'coin-show-footer': this.state.toggleFooter && this.state.activeCoin === i
-          })
-          return <div className='list-item' key={i} >
-            <div className={coinWrapperStyle} onClick={() => this.setState({toggleFooter: true, activeCoin: i})}>
-              { currencyTokens[i] && <Community
-                token={coin}
-                fiat={this.props.fiat}
-                loadModal={this.props.loadModal}
-                marketMaker={currencyTokens[i]}
-              />
-              }
-            </div>
-            <div className='coin-footer-close' onClick={() => this.setState({toggleFooter: false, activeCoin: ''})}>
-              <FontAwesome name='times-circle' /> Close
-            </div>
-          </div>
-        })}
+        <InfiniteScroll
+          initialLoad={false}
+          pageStart={PAGE_START}
+          loadMore={this.loadMore}
+          hasMore={this.props.hasMore}
+          useWindow={false}
+          getScrollParent={this.getScrollParent}
+        >
+          {addresses.map(address => <Community
+            key={address}
+            handleCommunityClick={this.handleCommunityClick}
+            token={this.props.tokens[address]}
+            fiat={this.props.fiat}
+            marketMaker={this.props.marketMaker[address]}
+            selectedCommunityAddress={this.state.selectedCommunityAddress}
+          />
+          )}
+        </InfiniteScroll>
       </div>
     </div>
   }
@@ -54,13 +67,18 @@ class CommunitiesList extends Component {
 
 const mapStateToProps = state => {
   return {
-    tokens: getCommunities(state),
-    marketMaker: getMarketMaker(state),
-    fiat: state.fiat
+    tokens: state.tokens,
+    marketMaker: state.marketMaker,
+    fiat: state.fiat,
+    ...state.screens.oven
   }
+}
+
+const mapDispatchToProps = {
+  fetchCommunities
 }
 
 export default connect(
   mapStateToProps,
-  actions
+  mapDispatchToProps
 )(CommunitiesList)

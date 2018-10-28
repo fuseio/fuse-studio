@@ -266,21 +266,6 @@ class MapComponent extends Component {
                   ))
                 }
               </Geographies>
-              <Markers>
-                {markers.map((marker, i) => (
-                  <Marker
-                    key={i}
-                    marker={marker}
-                    style={{hidden: { display: 'none' }}}
-                  >
-                    <MarkerSVG
-                      selectedTokenAddress={marker.selectedTokenAddress}
-                      path={marker.path}
-                      history={history}
-                      token={marker.token} />
-                  </Marker>
-                ))}
-              </Markers>
             </ZoomableGlobe>
           </ComposableMap>
         )}

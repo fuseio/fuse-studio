@@ -7,11 +7,11 @@ import CommunitiesList from 'components/CommunitiesList'
 import ModalContainer from 'containers/ModalContainer'
 import classNames from 'classnames'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
-import {fetchClnContract, initializeCommunity} from 'actions/communities'
+import {fetchClnContract} from 'actions/communities'
 import {getNetworkType, checkAccountChanged} from 'actions/network'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
-import {getAddresses, getCommunityAddresses} from 'selectors/network'
+import {getAddresses} from 'selectors/network'
 import {isNetworkSupported, isNetworkDesired} from 'utils/network'
 import ReactGA from 'services/ga'
 import 'scss/styles.scss'
@@ -19,7 +19,6 @@ import 'scss/styles.scss'
 class App extends Component {
   state = {
     isWelcome: true,
-    out: false,
     welcomeDone: false
   }
 
@@ -27,7 +26,6 @@ class App extends Component {
     if (nextProps.addresses !== this.props.addresses &&
         isNetworkSupported(nextProps.networkType)) {
       this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
-      nextProps.communityAddresses.forEach(this.props.initializeCommunity)
     }
     if (nextProps.networkType !== this.props.networkType && !isNetworkDesired(nextProps.networkType)) {
       this.props.loadModal(WRONG_NETWORK_MODAL)
@@ -50,7 +48,6 @@ class App extends Component {
   onClickExplore = () => {
     this.setState({
       isWelcome: !this.state.isWelcome,
-      panBy: { x: -100, y: 0 },
       welcomeDone: true
     })
 
@@ -62,8 +59,11 @@ class App extends Component {
       label: 'Explore'
     })
   }
-
   render () {
+    if (!isNetworkSupported(this.props.networkType)) {
+      return null
+    }
+
     let currentRoute = this.props && this.props && this.props.location && this.props.location.pathname
     let mainContainerClass = classNames({
       'main-container': true,
@@ -72,8 +72,7 @@ class App extends Component {
     })
     let welcomeClass = classNames({
       'welcome-wrapper': true,
-      'hide': !this.state.isWelcome,
-      'out': this.state.out
+      'hide': !this.state.isWelcome
     })
     const mainWrapperClass = classNames({
       'flex': true,
@@ -111,17 +110,15 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   addresses: getAddresses(state),
-  communityAddresses: getCommunityAddresses(state),
   networkType: state.network.networkType,
   ui: state.ui
 })
 
-export default connect(
-  mapStateToProps, {
-    fetchClnContract,
-    initializeCommunity,
-    getNetworkType,
-    checkAccountChanged,
-    loadModal
-  }
-)(App)
+const mapDispatchToProps = {
+  fetchClnContract,
+  getNetworkType,
+  checkAccountChanged,
+  loadModal
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
