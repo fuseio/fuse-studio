@@ -3,13 +3,15 @@ import FontAwesome from 'react-fontawesome'
 import classNames from 'classnames'
 import {connect} from 'react-redux'
 import {BigNumber} from 'bignumber.js'
+import {loadModal, hideModal} from 'actions/ui'
+import { nameToSymbol } from 'utils/format'
 import StepsIndicator from './StepsIndicator'
 import NameStep from './NameStep'
 import SymbolStep from './SymbolStep'
 import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
-import { nameToSymbol } from 'utils/format'
-import * as actions from 'actions/communities'
+import {issueCommunity} from 'actions/communities'
+import { METAMASK_ACCOUNT_MODAL } from 'constants/uiConstants'
 
 class Issuance extends Component {
   state = {
@@ -21,7 +23,8 @@ class Issuance extends Component {
     totalSupply: '',
     communityLogo: {},
     stepPosition: {},
-    scrollPosition: 0
+    scrollPosition: 0,
+    disabledSubmitBtn: false
   }
 
   componentDidMount () {
@@ -48,15 +51,17 @@ class Issuance extends Component {
     }
   }
 
-  setIssuanceTransaction = (communityName, symbol, communityType, communityLogo, totalSupply) => {
+  setIssuanceTransaction = () => {
     const currencyData = {
-      name: communityName,
-      symbol: symbol,
+      name: this.state.communityName,
+      symbol: this.state.communitySymbol,
       decimals: 18,
-      totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
+      totalSupply: new BigNumber(this.state.totalSupply).multipliedBy(1e18)
     }
-    const communityMetadata = {'communityType': communityType.text, 'communityLogo': communityLogo.name}
+    const communityMetadata = {'communityType': this.state.communityType.text, 'communityLogo': this.state.communityLogo.name}
+    this.setState({disabledSubmitBtn: true})
     this.props.issueCommunity(communityMetadata, currencyData)
+    this.props.hideModal()
   }
 
   handleScroll = () => {
@@ -136,11 +141,16 @@ class Issuance extends Component {
             communityLogo={this.state.communityLogo.icon}
             totalSupply={this.state.totalSupply}
             communitySymbol={this.state.communitySymbol}
-            setIssuanceTransaction={() => this.setIssuanceTransaction(name, nameToSymbol(name), communityType, communityLogo, this.state.totalSupply)}
+            showPopup={() => this.showMetamaskPopup()}
+            disabledDoneBtn={this.state.disabledSubmitBtn}
           />
         )
     }
   }
+
+  showMetamaskPopup = () => this.props.loadModal(METAMASK_ACCOUNT_MODAL, {
+    setIssuanceTransaction: this.setIssuanceTransaction
+  })
 
   render () {
     const steps = ['Name', 'Symbol', 'Details', 'Summary']
@@ -189,4 +199,10 @@ class Issuance extends Component {
   }
 }
 
-export default connect(null, actions)(Issuance)
+const mapDispatchToProps = {
+  issueCommunity,
+  loadModal,
+  hideModal
+}
+
+export default connect(null, mapDispatchToProps)(Issuance)

@@ -2810,6 +2810,123 @@ input[type="checkbox" i] {
 	}
 }
 
+.modal-dialog-div.metamask-popup {
+	width: 720px !important;
+	padding: 0;
+	margin: 0 auto;
+	border-radius: 5px;
+	box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.49);
+	.sidebar-close {
+		display: none;
+	}
+	@media (max-width: $breakpoint-tablet) {
+		width: 560px !important;
+	}
+
+	@media (max-width: $breakpoint-mobile) {
+		width: 90% !important;
+	}
+}
+
+.modal-dialog-div {
+	.metamask-popup {
+		&-header {
+			padding: 60px 150px 40px;
+			text-align: center;
+			overflow: hidden;
+			background-image: linear-gradient(351deg, #1c1442, #2d235e);
+
+			@media (max-width: $breakpoint-tablet) {
+				padding: 60px 80px 40px;
+			}
+			@media (max-width: $breakpoint-mobile) {
+				padding: 20px;
+			}
+		}
+
+		&-title {
+			font-weight: 500;
+			color: $color-step-text;
+			font-size: 14px;
+			line-height: 1.64;
+			text-transform: uppercase;
+			margin-top: 40px;
+			margin-bottom: 10px;
+		}
+
+		&-text {
+			font-size: 12px;
+			line-height: 1.33;
+			color: $color-step-text;
+		}
+
+		&-close {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			font-size: 19px;
+			color: #b6b5d8;
+			&:hover {
+				color: $color-step-text;
+				cursor: pointer;
+			}
+		}
+
+		&-container {
+			background-color: #3a3269;
+			padding: 40px;
+			text-align: left;
+
+			@media (max-width: $breakpoint-mobile) {
+				padding: 20px;
+			}
+			p:not(:last-child) {
+				margin-bottom: 20px;
+			}
+		}
+
+		&-link {
+			color: $color-hover-details;
+			margin-left: 5px;
+			&:hover {
+				text-decoration: underline !important;
+			}
+		}
+
+		&-btn {
+			border-radius: 3px;
+		  box-shadow: 0 0 6px 0 rgba(254, 129, 0, 0.56);
+		  background-color: #fe8100;
+			margin-top: 40px;
+			border: none;
+			width: 168px;
+			height: 41px;
+			font-size: 13px;
+			font-weight: bold;
+			color: $color-step-text;
+			line-height: 40px;
+			text-align: center;
+			text-transform: uppercase;
+
+			@media (max-width: $breakpoint-mobile) {
+				margin-top: 20px;
+			}
+
+			.fa {
+				margin-left: 10px;
+			}
+
+			&:hover,
+			&:focus,
+			&:focus:active,
+			&:active {
+				cursor: pointer;
+				background-color: darken(#fe8100, 10%);
+			}
+		}
+	}
+}
+
 .communities-list {
 	position: absolute;
 	z-index: 11;
