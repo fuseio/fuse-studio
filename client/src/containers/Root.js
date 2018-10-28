@@ -9,11 +9,9 @@ import { isMobile } from 'react-device-detect'
 
 import App from 'containers/App'
 import CommunitySidebar from 'components/CommunitySidebar'
-import Issuance from 'components/issuance/Issuance'
+import IssuanceWizard from 'components/issuance/IssuanceWizard'
 import ContactForm from 'components/ContactForm'
 import withTracker from 'containers/withTracker'
-
-import Oven from 'components/Oven'
 
 const history = createHistory()
 
@@ -101,13 +99,7 @@ export default class Root extends Component {
               </div>
               <Route
                 path='/view/issuance'
-                component={withTracker(Issuance)}
-                mapStyles={mapStylesContact}
-                {...contactFormTransition}
-              />
-              <Route
-                path='/view/oven'
-                component={withTracker(Oven)}
+                component={withTracker(IssuanceWizard)}
                 mapStyles={mapStylesContact}
                 {...contactFormTransition}
               />

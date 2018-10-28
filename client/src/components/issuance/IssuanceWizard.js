@@ -13,7 +13,7 @@ import SummaryStep from './SummaryStep'
 import {issueCommunity} from 'actions/communities'
 import { METAMASK_ACCOUNT_MODAL } from 'constants/uiConstants'
 
-class Issuance extends Component {
+class IssuanceWizard extends Component {
   state = {
     activeStep: 0,
     communityName: '',
@@ -205,4 +205,4 @@ const mapDispatchToProps = {
   hideModal
 }
 
-export default connect(null, mapDispatchToProps)(Issuance)
+export default connect(null, mapDispatchToProps)(IssuanceWizard)

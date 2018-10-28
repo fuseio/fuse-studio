@@ -1,4 +1,5 @@
 {
+  "network": "COMMUNITY_NETWORK",
   "api": {
     "secret": "COMMUNITY_API_SECRET",
     "port": "PORT"
@@ -12,10 +13,13 @@
   "web3": {
     "provider": "COMMUNITY_WEB3_PROVIDER",
     "websocketProvider": "COMMUNITY_WEB3_WEBSOCKET_PROVIDER",
+    "network": "COMMUNITY_WEB3_NETWORK",
+    "apiKey": "COMMUNITY_WEB3_API_KEY",
     "pageSize": "COMMUNITY_WEB3_PAGE_SIZE"
   },
   "mongo": {
     "uri": "COMMUNITY_MONGO_URI",
+    "debug": "COMMUNITY_MONGO_DEBUG",
     "options": {
       "user": "COMMUNITY_MONGO_USER",
       "pass": "COMMUNITY_MONGO_PASS",

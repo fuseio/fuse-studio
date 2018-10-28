@@ -1,5 +1,7 @@
-import { put, takeEvery, takeLatest } from 'redux-saga/effects'
+import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
+
+import { getApiRoot } from 'selectors/network'
 
 export const createEntityPut = (entity) => (action) => put({...action, entity})
 
@@ -40,3 +42,8 @@ export function tryCatchWithDebounce (action, saga, timeout) {
 export const tryTakeEvery = (action, saga, numberOfTries) => takeEvery(action.REQUEST, tryCatch(action, saga, numberOfTries))
 export const tryTakeLatestWithDebounce = (action, saga, timeout = CONFIG.ui.debounce) =>
   takeLatest(action.REQUEST, tryCatchWithDebounce(action, saga, 500))
+
+export function * apiCall (...args) {
+  const apiRoot = yield select(getApiRoot)
+  return yield call(...args, apiRoot)
+}

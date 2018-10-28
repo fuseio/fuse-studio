@@ -3,7 +3,11 @@
     "desiredNetworks": ["main"]
   },
   "api": {
-    "url": "/api/v1"
+    "url": {
+      "main": "https://communities.cln.network/api/v1",
+      "ropsten": "https://mainnet.cln.network/api/v1",
+      "default": "https://communities.cln.network/api/v1"
+    }
   },
   "reactGA": {
     "trackingId": "UA-108913015-4",

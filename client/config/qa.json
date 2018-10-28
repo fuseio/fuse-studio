@@ -1,6 +1,10 @@
 {
   "api": {
-    "url": "/api/v1"
+    "url": {
+      "main": "https://communities-qa.cln.network/api/v1",
+      "ropsten": "https://ropsten.cln.network/api/v1",
+      "default": "https://communities-qa.cln.network/api/v1"
+    }
   },
   "reactGA": {
     "gaOptions": {

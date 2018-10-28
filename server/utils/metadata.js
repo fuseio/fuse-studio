@@ -48,11 +48,13 @@ utils.addMetadata = async (md) => {
   metadataObj.metadata = JSON.parse(metadataObj.metadata.toString())
   // duplication error, someone already added this hash to db
   if (error) {
+    console.log(error)
     if (error.name === 'MongoError' && error.code === 11000) {
       return {data: metadataObj}
     }
     throw error
   }
+  console.log(`added ${metadataObj}`)
   return {data: metadataObj}
 }
 
