@@ -7,6 +7,7 @@ import {fetchGasPrices} from 'actions/network'
 import {getClnToken, getCommunity} from 'selectors/communities'
 import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
+import {predictClnReserves} from 'utils/calculator'
 
 const reversePrice = (price) => new BigNumber(1e18).div(price)
 
@@ -70,6 +71,47 @@ export function * quote ({tokenAddress, amount, isBuy}) {
       quotePair
     }})
   return quotePair
+}
+
+// function calculateNewReserve =
+
+export function * predictClnPrices ({tokenAddress, initialClnReserve,
+  amountOfTransactions, averageTransactionInUsd, gainRatio}) {
+  const clnPrice = yield select(state => state.fiat.USD.price)
+
+  const clnReserves = predictClnReserves({initialClnReserve,
+    amountOfTransactions,
+    averageTransactionInUsd,
+    clnPrice,
+    gainRatio,
+    iterations: 11})
+
+  const clnReservesInWei = clnReserves.map(reserve => new BigNumber(reserve.toString()).multipliedBy(1e18))
+  console.log(clnReservesInWei)
+
+  const clnToken = yield select(getClnToken)
+  const token = yield select(getCommunity, tokenAddress)
+
+  const s1 = clnToken.totalSupply
+  const s2 = token.totalSupply
+  // const r1 = clnReserves[0]
+  const prices = []
+  for (let r1 of clnReservesInWei) {
+    // const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, tokenAddress, isBuy)
+    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
+    const r2 = yield call(EllipseMarketMakerContract.methods.calcReserve(
+      r1, s1, s2).call)
+
+    const price = yield call(EllipseMarketMakerContract.methods.getPrice(r1, r2, s1, s2).call)
+    prices.push(price)
+  }
+
+  yield put({type: actions.PREDICT_CLN_PRICES.SUCCESS,
+    tokenAddress,
+    response: {
+      prices
+    }
+  })
 }
 
 export function * invertQuote ({tokenAddress, amount, isBuy}) {
@@ -322,6 +364,7 @@ export default function * marketMakerSaga () {
     tryTakeEvery(actions.SELL_CC, sellCc, 1),
     tryTakeEvery(actions.ESTIMATE_GAS_BUY_CC, estimateGasBuyCc),
     tryTakeEvery(actions.ESTIMATE_GAS_SELL_CC, estimateGasSellCc),
-    tryTakeEvery(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData)
+    tryTakeEvery(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData),
+    tryTakeEvery(actions.PREDICT_CLN_PRICES, predictClnPrices, 1)
   ])
 }
