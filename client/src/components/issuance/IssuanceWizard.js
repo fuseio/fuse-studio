@@ -155,6 +155,10 @@ class IssuanceWizard extends Component {
   render () {
     const steps = ['Name', 'Symbol', 'Details', 'Summary']
     const stepIndicatorInset = 35
+    const issuanceControlClassStyle = classNames({
+      'issuance-control': true,
+      'issuance-control-sticky': (this.state.scrollPosition > this.state.stepPosition - stepIndicatorInset)
+    })
     const stepsIndicatorClassStyle = classNames({
       'steps-indicator': true,
       'step-sticky': (this.state.scrollPosition > this.state.stepPosition - stepIndicatorInset)
@@ -166,7 +170,7 @@ class IssuanceWizard extends Component {
     return (
       <div className='issuance-form-wrapper' ref={wrapper => (this.wrapper = wrapper)}>
         <div className='issuance-container'>
-          <div className='issuance-control'>
+          <div className={issuanceControlClassStyle}>
             {this.state.activeStep > 0 && <button
               className='prev-button ctrl-btn'
               onClick={this.setPreviousStep}

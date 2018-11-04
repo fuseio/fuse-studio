@@ -907,7 +907,7 @@ button:disabled, button[disabled] {
 		}
 	}
 	.top-nav-issuance {
-		width: 164px;
+		width: 180px;
 	  height: 40px;
 	  border-radius: 3px;
 	  box-shadow: 0 0 14px 0 rgba(89, 174, 255, 0.24);
@@ -1054,6 +1054,7 @@ button:disabled, button[disabled] {
 				display: block;
 				@media (max-width: $breakpoint-tablet) {
 					width: auto;
+					text-align: center;
 				}
 				@media (max-width: $breakpoint-mobile) {
 					width: 325px;
@@ -1873,6 +1874,15 @@ input[type="checkbox" i] {
 	&-container {
 		background-image: $color-issuance-bg;
 	}
+	&-control {
+		&.issuance-control-sticky {
+			.ctrl-btn {
+				top: 18px;
+    		z-index: 51;
+				position: fixed;
+			}
+		}
+	}
 }
 
 .step {
@@ -2064,6 +2074,7 @@ input[type="checkbox" i] {
 				padding: 10px;
 				margin-bottom: 40px;
 				text-transform: uppercase;
+				position: relative;
 				background: linear-gradient(to right, $color-symbol-field-brdr 50%, rgba(255, 255, 255, 0) 0%),
 										linear-gradient($color-symbol-field-brdr 50%, rgba(255, 255, 255, 0) 0%),
 										linear-gradient(to right, $color-symbol-field-brdr 50%, rgba(255, 255, 255, 0) 0%),
@@ -2071,6 +2082,16 @@ input[type="checkbox" i] {
 			  background-position: top, right, bottom, left;
 			  background-repeat: repeat-x, repeat-y;
 			  background-size: 15px 1px, 1px 15px;
+				&-label {
+					font-size: 13px;
+					color: #BCB9C8;
+					position: absolute;
+					top: 50%;
+					margin-top: -7px;
+					left: 0;
+					right: 0;
+					text-transform: none;
+				}
 				@media (max-width: $breakpoint-mobile) {
 					width: 270px;
 					margin-left: auto;
@@ -2193,6 +2214,8 @@ input[type="checkbox" i] {
 					position: absolute;
 					top: 50%;
 					margin-top: -10px;
+					left: 0;
+    			right: 0;
 					@media (max-width: $breakpoint-mobile) {
 						font-size: 10px;
 						margin-top: -6px;
@@ -2254,6 +2277,7 @@ input[type="checkbox" i] {
 			margin-top: 30px;
 			@media (max-width: $breakpoint-mobile) {
 				width: 90%;
+				margin-bottom: 40px;
 			}
 			&-header {
 				padding: 18px 20px;
@@ -2374,6 +2398,12 @@ input[type="checkbox" i] {
 		}
 	}
 	&-community-symbol {
+		label {
+			font-size: 13px;
+			line-height: normal;
+			text-transform: none;
+			font-style: italic;
+		}
 		input {
 			background-color: transparent;
 			font-size: 106px;
@@ -2391,6 +2421,17 @@ input[type="checkbox" i] {
 				outline: none;
 				border: none;
 			}
+
+			&::-webkit-input-placeholder {
+				line-height: normal;
+			}
+			&::placeholder {
+				color: transparent;
+    		font-size: 13px;
+				line-height: normal;
+				text-transform: none;
+				font-style: italic;
+    	}
 			@media (max-width: $breakpoint-mobile) {
 				font-size: 80px;
 				height: 92px;
@@ -2432,6 +2473,10 @@ input[type="checkbox" i] {
 .wallet-container {
 	padding-top: 40px;
 	padding-bottom: 40px;
+
+	@media (max-width: $breakpoint-tablet) {
+		display: none;
+	}
 }
 .edit-symbol {
 	margin-bottom: 30px;
@@ -2590,7 +2635,7 @@ input[type="checkbox" i] {
 }
 
 .ctrl-btn {
-	position: absolute;
+	position: fixed;
 	top: 40px;
 	background: none;
 	color: $color-symbol-field-brdr;

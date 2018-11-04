@@ -12,6 +12,7 @@ const NameStep = ({communityName, handleChangeCommunityName, setNextStep}) => {
         type='text'
         placeholder='Type your community name...'
         value={communityName}
+        maxLength='30'
         onChange={handleChangeCommunityName}
       />
       <button

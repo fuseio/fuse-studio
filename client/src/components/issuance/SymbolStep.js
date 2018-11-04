@@ -33,6 +33,7 @@ export default class SymbolStep extends Component {
         <h2 className='step-symbol-title'>{'\'' + this.props.communityName + '\''}</h2>
         <h2 className='step-content-title'>Currency Symbol</h2>
         <div className='step-content-symbol-field'>
+          {this.state.customSymbol.length < 1 && this.state.showCustomSymbol && <label className='step-content-symbol-field-label'>Type your community symbol...</label>}
           {this.state.showCustomSymbol
             ? <TextInput
               className='step-community-symbol'
@@ -40,7 +41,6 @@ export default class SymbolStep extends Component {
               type='text'
               maxLength='3'
               autoFocus
-              placeholder='Type your community symbol...'
               value={this.state.customSymbol}
               onChange={this.handleChangeCommunitySymbol}
             />
