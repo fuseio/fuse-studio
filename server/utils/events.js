@@ -1,4 +1,4 @@
-const utils = require('./community')
+const communityUtils = require('./community')
 
 const processTokenCreatedEvent = async (event) => {
   const blockNumber = event.blockNumber
@@ -7,9 +7,9 @@ const processTokenCreatedEvent = async (event) => {
   const ccAddress = eventArgs.token
   const owner = eventArgs.owner
   const factoryAddress = event.address
-  const communityData = await utils.getCommunityData(factoryAddress, ccAddress)
+  const communityData = await communityUtils.getCommunityData(factoryAddress, ccAddress)
 
-  return utils.upsertCommunity({ccAddress, owner, blockNumber, ...communityData})
+  return communityUtils.upsertCommunity({ccAddress, owner, blockNumber, ...communityData})
 }
 
 module.exports = {

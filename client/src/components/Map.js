@@ -4,17 +4,12 @@ import {
   ComposableMap,
   ZoomableGlobe,
   Geographies,
-  Markers,
-  Marker,
   Geography
 } from 'react-simple-maps'
 import Hammer from 'react-hammerjs'
 import { Motion, spring } from 'react-motion'
 import classNames from 'classnames'
 import { isMobile } from 'react-device-detect'
-import map from 'lodash/map'
-
-import MarkerSVG from 'components/Marker'
 import * as actions from 'actions/ui'
 import { mapStyle, mapSettings } from 'constants/uiConstants'
 import {getSelectedToken, getTokensWithMetadata} from 'selectors/communities'
@@ -186,11 +181,6 @@ class MapComponent extends Component {
       'active': this.props.active,
       'map-wrapper': true
     })
-    const {
-      tokens,
-      selectedToken,
-      history
-    } = this.props
 
     const {
       center,
@@ -199,16 +189,6 @@ class MapComponent extends Component {
       strokeWidth,
       geography
     } = this.state
-
-    const markers = map(tokens, token => ({
-      coordinates: [
-        token.metadata && token.metadata.location && token.metadata.location.geo && token.metadata.location.geo.lng,
-        token.metadata && token.metadata.location && token.metadata.location.geo && token.metadata.location.geo.lat
-      ],
-      selectedTokenAddress: selectedToken && selectedToken.address,
-      path: token.path,
-      token
-    }))
 
     const SvgMap = <div className={mapWrapperClass} ref='mapWrapper'>
       <Motion

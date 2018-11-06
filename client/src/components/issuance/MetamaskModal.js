@@ -26,8 +26,8 @@ const MetamaskModal = (props) => {
         </p>
         <p className='metamask-popup-text'>
           2. Ropsten Test Network- Add ETH Test to your wallet, pay for your currency and spread your word to the test world (*you can visit this Faucet website to get ETH Test coins
-          <a href='https://faucet.metamask.io/' className='metamask-popup-link'>
-            https://faucet.metamask.io/
+          <a href='https://faucet.metamask.io/' className='metamask-popup-link' target='_blank'>
+            <FontAwesome name='arrow-right' />
           </a>
         )
         </p>

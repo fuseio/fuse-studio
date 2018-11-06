@@ -345,7 +345,10 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) 
 
   const response = yield all(calls)
 
+  response.clnReserve = new BigNumber(response.clnReserve)
+  response.ccReserve = new BigNumber(response.ccReserve)
   response.isMarketMakerLoaded = true
+
   yield put({type: actions.FETCH_MARKET_MAKER_DATA.SUCCESS,
     tokenAddress,
     response

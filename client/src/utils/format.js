@@ -3,8 +3,8 @@ import {BigNumber} from 'bignumber.js'
 export const ROUND_PRECISION = 4
 export const MAX_PRECISION = 18
 
-export const formatWei = (value) => new BigNumber(value).div(1e18).toFormat(ROUND_PRECISION, BigNumber.ROUND_HALF_UP)
-export const formatEther = (value) => new BigNumber(value).toFormat(ROUND_PRECISION, BigNumber.ROUND_HALF_UP)
+export const formatWei = (value, round = ROUND_PRECISION) => new BigNumber(value).div(1e18).toFormat(round, BigNumber.ROUND_HALF_UP)
+export const formatEther = (value, round = ROUND_PRECISION) => new BigNumber(value).toFormat(round, BigNumber.ROUND_HALF_UP)
 
 const pickLetters = (word, numOfLetters) => word.substr(0, numOfLetters).toUpperCase()
 

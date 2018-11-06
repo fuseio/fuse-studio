@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import Community from './Community'
-import {fetchCommunities} from 'actions/communities'
+import ExpandableCommunity from 'components/oven/ExpandableCommunity'
 import InfiniteScroll from 'react-infinite-scroller'
 
 const PAGE_START = 1
@@ -24,9 +22,7 @@ class CommunitiesList extends Component {
   }
 
   loadMore = (nextPage) => {
-    if (this.props.addresses.length < nextPage * PAGE_SIZE) {
-      this.props.fetchCommunities(nextPage)
-    }
+    this.props.fetchCommunities(nextPage)
   }
 
   componentDidMount () {
@@ -50,11 +46,11 @@ class CommunitiesList extends Component {
           useWindow={false}
           getScrollParent={this.getScrollParent}
         >
-          {addresses.map(address => <Community
+          {addresses.map(address => <ExpandableCommunity
             key={address}
             handleCommunityClick={this.handleCommunityClick}
             token={this.props.tokens[address]}
-            fiat={this.props.fiat}
+            usdPrice={this.props.fiat.USD && this.props.fiat.USD.price}
             marketMaker={this.props.marketMaker[address]}
             selectedCommunityAddress={this.state.selectedCommunityAddress}
           />
@@ -65,20 +61,4 @@ class CommunitiesList extends Component {
   }
 };
 
-const mapStateToProps = state => {
-  return {
-    tokens: state.tokens,
-    marketMaker: state.marketMaker,
-    fiat: state.fiat,
-    ...state.screens.oven
-  }
-}
-
-const mapDispatchToProps = {
-  fetchCommunities
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CommunitiesList)
+export default CommunitiesList

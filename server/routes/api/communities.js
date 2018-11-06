@@ -19,6 +19,16 @@ router.get('/', async (req, res, next) => {
   })
 })
 
+router.get('/owner/:address', async (req, res) => {
+  const owner = req.params.address
+  const results = await Community.find({owner})
+
+  res.json({
+    object: 'list',
+    data: results
+  })
+})
+
 router.get('/:address', async (req, res, next) => {
   const ccAddress = req.params.address
   const community = await Community.findOne({ ccAddress })

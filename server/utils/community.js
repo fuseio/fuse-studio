@@ -6,6 +6,8 @@ const Contract = require('truffle-contract')
 const DEFAULT_FACTORY_TYPE = 'CurrencyFactory'
 const DEFAULT_FACTORY_VERSION = 0
 
+const COLU_LOCAL_CURRENCY = 'ColuLocalCurrency'
+
 require('../models')(mongoose)
 const abis = require('../constants/abi')
 
@@ -29,9 +31,9 @@ utils.later = (delay, value) => {
   return new Promise(resolve => setTimeout(resolve, delay, value))
 }
 
-utils.getCommunityData = async (factory, currencyAddress) => {
+utils.getCommunityData = async (factory, tokenAddress) => {
   const communityData = {
-    ccAddress: currencyAddress
+    ccAddress: tokenAddress
   }
   if (typeof factory === 'string') {
     communityData.factoryAddress = factory
@@ -45,9 +47,17 @@ utils.getCommunityData = async (factory, currencyAddress) => {
     communityData.factoryType = factory.factoryType || DEFAULT_FACTORY_TYPE
     communityData.factoryVersion = factory.factoryVersion || DEFAULT_FACTORY_VERSION
   }
-  const factoryInstance = await contracts[communityData.factoryType].at(communityData.factoryAddress)
-  communityData.mmAddress = await factoryInstance.getMarketMakerAddressFromToken(currencyAddress)
-  return communityData
+  const factoryContractInstance = await contracts[communityData.factoryType].at(communityData.factoryAddress)
+  const tokenContractInstance = await contracts[COLU_LOCAL_CURRENCY].at(tokenAddress)
+
+  const [currencyMap, symbol, tokenURI] = await Promise.all([
+    factoryContractInstance.currencyMap(tokenAddress),
+    tokenContractInstance.symbol(),
+    tokenContractInstance.tokenURI()
+  ])
+  const [name, decimals, totalSupply, , mmAddress] = currencyMap
+
+  return {...communityData, name, totalSupply, decimals, mmAddress, symbol, tokenURI}
 }
 
 utils.addNewCommunity = async (data) => {

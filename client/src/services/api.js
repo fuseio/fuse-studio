@@ -17,6 +17,9 @@ export const addCommunity = (community, apiRoot) =>
 export const fetchCommunities = (page, apiRoot) =>
   request.get(`${apiRoot}/communities?page=${page}`).then(response => response.body)
 
+export const fetchCommunitiesByOwner = (owner, apiRoot) =>
+  request.get(`${apiRoot}/communities/owner/${owner}`).then(response => response.body)
+
 export const sendContactUs = (formData) => request.post(`${API_ROOT}/mails`)
   .send({formData})
   .then(response => response.body)

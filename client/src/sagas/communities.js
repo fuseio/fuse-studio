@@ -2,43 +2,39 @@ import { all, put, call, select, fork } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery, apiCall} from './utils'
 import * as actions from 'actions/communities'
-import {addCommunity, fetchCommunities as fetchCommunitiesApi} from 'services/api'
+import {addCommunity, fetchCommunities as fetchCommunitiesApi,
+  fetchCommunitiesByOwner as fetchCommunitiesByOwnerApi} from 'services/api'
 import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {fetchMetadata} from 'actions/metadata'
 import {createMetadata} from 'sagas/metadata'
-import {subscribeToChange} from 'actions/subscriptions'
 import {createCurrency} from 'sagas/issuance'
 import {fetchTokenQuote} from 'actions/fiat'
 import { contract } from 'osseus-wallet'
-import {getAddresses} from 'selectors/network'
 import keyBy from 'lodash/keyBy'
 
 const entityPut = createEntityPut(actions.entityName)
 
-function * initializeCommunity ({tokenAddress}) {
-  const tokenResponse = yield call(fetchCommunity, {tokenAddress})
-  yield put(subscribeToChange(tokenResponse.address, tokenResponse.mmAddress))
-  yield entityPut({type: actions.INITIALIZE_COMMUNITY.SUCCESS, tokenAddress})
-}
-
 function * fetchCommunity ({tokenAddress}) {
-  const tokenResponse = yield call(fetchCommunityToken, {tokenAddress})
-
-  if (tokenResponse.tokenURI) {
-    const [protocol, hash] = tokenResponse.tokenURI.split('://')
+  const token = yield select(state => state.tokens[tokenAddress])
+  if (token.tokenURI) {
+    const [protocol, hash] = token.tokenURI.split('://')
     yield put(fetchMetadata(protocol, hash, tokenAddress))
   }
 
-  yield fork(fetchMarketMakerData, {tokenAddress, mmAddress: tokenResponse.mmAddress})
+  yield fork(fetchMarketMakerData, {tokenAddress, mmAddress: token.mmAddress})
 
   yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, tokenAddress})
-  return tokenResponse
+  return token
 }
 
 const manipulateCommunity = (community) => ({
   address: community.ccAddress,
+  name: community.name,
+  symbol: community.symbol,
+  tokenURI: community.tokenURI,
   owner: community.owner,
-  mmAddress: community.mmAddress
+  mmAddress: community.mmAddress,
+  totalSupply: community.totalSupply
 })
 
 function * fetchCommunities ({page = 1}) {
@@ -66,46 +62,29 @@ function * fetchCommunities ({page = 1}) {
   return communities
 }
 
-function * fetchCommunityToken ({tokenAddress}) {
-  try {
-    const addresses = yield select(getAddresses)
-    const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
-    const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
-      address: addresses.CurrencyFactory
+function * fetchCommunitiesByOwner ({owner}) {
+  const response = yield apiCall(fetchCommunitiesByOwnerApi, owner)
+  const {data, ...metadata} = response
+
+  const communities = data.map(manipulateCommunity)
+  const entities = keyBy(communities, 'address')
+  const result = communities.map(community => community.address)
+
+  yield entityPut({type: actions.FETCH_COMMUNITIES_BY_OWNER.SUCCESS,
+    response: {
+      entities,
+      result,
+      metadata
+    }})
+
+  for (let community of communities) {
+    yield put({
+      type: actions.FETCH_COMMUNITY.REQUEST,
+      tokenAddress: community.address
     })
-
-    const calls = {
-      symbol: call(ColuLocalNetworkContract.methods.symbol().call),
-      tokenURI: call(ColuLocalNetworkContract.methods.tokenURI().call),
-      currencyMap: call(CurrencyFactoryContract.methods.currencyMap(tokenAddress).call)
-    }
-
-    const response = yield all(calls)
-
-    const {name, totalSupply, owner, mmAddress} = response.currencyMap
-
-    const community = {
-      address: tokenAddress,
-      symbol: response.symbol,
-      tokenURI: response.tokenURI,
-      totalSupply,
-      name,
-      mmAddress,
-      owner,
-      isLocalCurrency: true,
-      path: '/view/community/' + name.toLowerCase().replace(/ /g, '')
-    }
-
-    yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.SUCCESS,
-      tokenAddress,
-      response: community
-    })
-
-    return community
-  } catch (error) {
-    console.error(error)
-    yield entityPut({type: actions.FETCH_COMMUNITY_TOKEN.FAILURE, tokenAddress, error})
   }
+
+  return communities
 }
 
 function * fetchClnContract ({tokenAddress}) {
@@ -152,7 +131,7 @@ export default function * communitiesSaga () {
     tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
     tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity),
     tryTakeEvery(actions.FETCH_COMMUNITIES, fetchCommunities),
-    tryTakeEvery(actions.INITIALIZE_COMMUNITY, initializeCommunity),
+    tryTakeEvery(actions.FETCH_COMMUNITIES_BY_OWNER, fetchCommunitiesByOwner),
     tryTakeEvery(actions.ISSUE_COMMUNITY, issueCommunity, 1)
   ])
 }

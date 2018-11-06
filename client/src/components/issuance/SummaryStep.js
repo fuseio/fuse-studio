@@ -1,51 +1,30 @@
-import React from 'react'
-import CalculatorIcon from 'images/calculator-Icon.svg'
+import React, {Component} from 'react'
 import FontAwesome from 'react-fontawesome'
+import Community from 'components/Community'
 
-const SummaryStep = ({ communityName, communityLogo, communitySymbol, totalSupply, showPopup, disabledDoneBtn }) => {
-  return [
-    <h2 key={0} className='step-content-title text-center'>Your community currency is ready to use!</h2>,
-    <div key={1} className='step-content-summary'>
-      <div className='step-content-summary-header'>
-        <div className='step-content-summary-status'>
-          <span className='step-content-summary-status-point' />
-          not active
+export default class SummaryStep extends Component {
+  render () {
+    return <div>
+      <h2 className='step-content-title text-center'>Your community currency is ready to be born!</h2>,
+      <div className='step-content-summary'>
+        <div className='list-item'>
+          <Community token={{
+            symbol: this.props.communitySymbol,
+            name: this.props.communityName,
+            totalSupply: this.props.totalSupply
+          }} usdPrice={0} />
         </div>
-        <button className='btn-reload'>
-          <img src={CalculatorIcon} alt='calculator' />
+      </div>,
+      <div className='text-center wallet-container'>
+        <a href='https://metamask.io/' target='_blank' className='btn-download'>
+          <FontAwesome name='download' /> Metamask wallet
+        </a>
+      </div>,
+      <div className='text-center'>
+        <button onClick={this.props.showPopup} className='symbol-btn' disabled={this.props.disabledDoneBtn}>
+          Issue
         </button>
       </div>
-      <div className='step-content-summary-container'>
-        <div className='step-content-summary-logo'>
-          <img src={communityLogo} className='logo-img' />
-          <span className='symbol-text'>{communitySymbol}</span>
-        </div>
-        <div className='step-content-summary-title'>{communityName}</div>
-        <div className='step-content-summary-footer'>
-          <div className='step-content-summary-total-title'>Total cc supply</div>
-          <div className='footer-supply'>
-            <div className='step-content-summary-total'>
-              {new Intl.NumberFormat('en-US', {
-                style: 'decimal',
-                minimumFractionDigits: 0
-              }).format(totalSupply)}
-            </div>
-            <div className='add-btn'>add cln <span className='add-icon'><FontAwesome name='plus' /></span></div>
-          </div>
-        </div>
-      </div>
-    </div>,
-    <div key={3} className='text-center wallet-container'>
-      <a href='https://metamask.io/' target='_blank' className='btn-download'>
-        <FontAwesome name='download' /> Metamask wallet
-      </a>
-    </div>,
-    <div key={4} className='text-center'>
-      <button onClick={showPopup} className='symbol-btn' disabled={disabledDoneBtn}>
-        Done
-      </button>
     </div>
-  ]
+  }
 }
-
-export default SummaryStep

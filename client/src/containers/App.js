@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { isMobile } from 'react-device-detect'
 import Map from 'components/Map'
 import TopNav from 'components/TopNav'
-import CommunitiesList from 'components/CommunitiesList'
+import Oven from 'components/oven/Oven'
 import ModalContainer from 'containers/ModalContainer'
 import classNames from 'classnames'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
@@ -83,7 +83,7 @@ class App extends Component {
       'issuance-screen': currentRoute === '/view/issuance'
     })
 
-    const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/issuance' && currentRoute !== '/view/contact-us' && !currentRoute.includes('community') ? <CommunitiesList history={this.props.history} /> : null
+    const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/issuance' && currentRoute !== '/view/contact-us' && !currentRoute.includes('community') ? <Oven history={this.props.history} /> : null
 
     const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
       <div className='welcome-container'>

@@ -6,6 +6,11 @@ module.exports = (mongoose) => {
 
   const CommunitySchema = new Schema({
     ccAddress: {type: String, required: [true, "can't be blank"]},
+    name: {type: String, required: [true, "can't be blank"]},
+    symbol: {type: String, required: [true, "can't be blank"]},
+    tokenURI: {type: String},
+    totalSupply: {type: String, required: [true, "can't be blank"]},
+    decimals: {type: String, required: [true, "can't be blank"]},
     owner: {type: String, required: [true, "can't be blank"]},
     mmAddress: {type: String, required: [true, "can't be blank"]},
     factoryAddress: {type: String, required: [true, "can't be blank"]},
@@ -22,23 +27,7 @@ module.exports = (mongoose) => {
   CommunitySchema.index({factoryAddress: 1, factoryType: 1, factoryVersion: 1})
 
   CommunitySchema.set('toJSON', {
-    getters: true,
-    virtuals: true,
-    transform: (doc, ret, options) => {
-      const safeRet = {
-        id: ret._id.toString(),
-        createdAt: ret.created_at,
-        updatedAt: ret.updated_at,
-        ccAddress: ret.ccAddress,
-        mmAddress: ret.mmAddress,
-        owner: ret.owner,
-        factoryAddress: ret.factoryAddress,
-        factoryType: ret.factoryType,
-        factoryVersion: ret.factoryVersion,
-        verified: ret.verified
-      }
-      return safeRet
-    }
+    versionKey: false
   })
 
   const Community = mongoose.model('Community', CommunitySchema)
