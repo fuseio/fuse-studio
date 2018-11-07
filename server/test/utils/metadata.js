@@ -2,7 +2,7 @@ process.env.NODE_ENV = 'test'
 
 const mongoose = require('mongoose')
 const config = require('config')
-const utils = require('../../utils/metadata')
+const utils = require('@utils/metadata')
 
 const testMetada = {
   some: 'value',

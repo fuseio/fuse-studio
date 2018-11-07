@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const config = require('config')
-const Web3 = require('web3')
 const Contract = require('truffle-contract')
+const web3 = require('../services/web3')
 
 const DEFAULT_FACTORY_TYPE = 'CurrencyFactory'
 const DEFAULT_FACTORY_VERSION = 0
@@ -11,15 +10,11 @@ const COLU_LOCAL_CURRENCY = 'ColuLocalCurrency'
 require('../models')(mongoose)
 const abis = require('../constants/abi')
 
-const web3Config = config.get('web3')
-Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send
-const provider = new Web3.providers.HttpProvider(web3Config.provider)
-
 const community = mongoose.community
 
 const createContract = (abi) => {
   let cntrct = Contract({ abi: abi })
-  cntrct.setProvider(provider)
+  cntrct.setProvider(web3.currentProvider)
   return cntrct
 }
 
@@ -55,7 +50,8 @@ utils.getCommunityData = async (factory, tokenAddress) => {
     tokenContractInstance.symbol(),
     tokenContractInstance.tokenURI()
   ])
-  const [name, decimals, totalSupply, , mmAddress] = currencyMap
+
+  const {name, decimals, totalSupply, mmAddress} = currencyMap
 
   return {...communityData, name, totalSupply, decimals, mmAddress, symbol, tokenURI}
 }
@@ -70,7 +66,7 @@ utils.upsertCommunity = async (data) => {
 
 utils.getLastBlockNumber = async () => {
   const communityObj = await community.getModel().find().sort({ blockNumber: -1 }).limit(1)
-  return communityObj.length ? communityObj[0].blockNumber : 0
+  return communityObj.length ? communityObj[0].blockNumber + 1 : 0
 }
 
 module.exports = utils

@@ -1,4 +1,4 @@
-const communityUtils = require('./community')
+const communityUtils = require('../community')
 
 const processTokenCreatedEvent = async (event) => {
   const blockNumber = event.blockNumber

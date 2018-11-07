@@ -2,7 +2,7 @@ process.env.NODE_ENV = 'test'
 
 const mongoose = require('mongoose')
 const config = require('config')
-const utils = require('../../utils/community')
+const utils = require('@utils/community')
 
 const ColuLocalNetwork = artifacts.require('cln-solidity/contracts/ColuLocalNetwork.sol')
 const CurrencyFactory = artifacts.require('cln-solidity/contracts/CurrencyFactory.sol')

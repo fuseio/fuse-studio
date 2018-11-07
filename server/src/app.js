@@ -1,3 +1,4 @@
+require('module-alias/register')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -7,6 +8,7 @@ const path = require('path')
 const config = require('config')
 const paginate = require('express-paginate')
 const process = require('process')
+const agenda = require('./services/agenda')
 require('express-async-errors')
 
 console.log('The server configurations are:')
@@ -25,11 +27,11 @@ app.use(bodyParser.json())
 
 app.use(paginate.middleware(10, 50))
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, '../public')))
 
 // react-router routing
 app.get('/view/*', function (request, response) {
-  response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+  response.sendFile(path.resolve(__dirname, '../public', 'index.html'))
 })
 
 mongoose.set('debug', config.get('mongo.debug'))
@@ -44,7 +46,8 @@ require('./models')(mongoose)
 
 app.use(require('./routes'))
 
-require('./services/events')
+// require('./services/events')
+agenda.start()
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {

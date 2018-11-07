@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
-const utils = require('../../utils/events')
+const processTokenCreatedEvent = require('@utils/events/db').processTokenCreatedEvent
 const paginate = require('express-paginate')
 
 router.get('/', async (req, res, next) => {
@@ -37,7 +37,7 @@ router.get('/:address', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   const { receipt } = req.body.community
-  await utils.processTokenCreatedEvent(receipt.events.TokenCreated)
+  await processTokenCreatedEvent(receipt.events.TokenCreated)
   return res.json({})
 })
 
