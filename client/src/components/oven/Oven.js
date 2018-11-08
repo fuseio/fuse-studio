@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import CommunitiesList from 'components/oven/CommunitiesList'
 import { connect } from 'react-redux'
 import {fetchCommunities, fetchCommunitiesByOwner} from 'actions/communities'
+import {openMarket} from 'actions/marketMaker'
 import {getAccountAddress} from 'selectors/accounts'
 
 class Oven extends Component {
@@ -24,7 +25,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchCommunities,
-  fetchCommunitiesByOwner
+  fetchCommunitiesByOwner,
+  openMarket
 }
 
 export default connect(

@@ -9,6 +9,18 @@ import { BigNumber } from 'bignumber.js'
 import identity from 'lodash/identity'
 
 export default class Community extends Component {
+  canInsertCLN = () =>
+    this.props.marketMaker.isOpenForPublic || this.props.account === this.props.token.owner
+
+  canOpenMarket = () => !this.props.marketMaker.isOpenForPublic && this.props.account === this.props.token.owner
+
+  openMarket = () => {
+    if (this.canOpenMarket()) {
+      console.log('open marketMaker')
+      this.props.openMarket(this.props.token.address)
+    }
+  }
+
   render () {
     const {currentPrice} = this.props.marketMaker
 
@@ -19,12 +31,7 @@ export default class Community extends Component {
       'coin-status-close': !this.props.marketMaker.isOpenForPublic
     })
 
-    const coinWrapperStyle = classNames({
-      'coin-wrapper': true,
-      'coin-show-footer': this.props.selectedCommunityAddress === this.props.token.address
-    })
-
-    return <div className={coinWrapperStyle}>
+    return <div className={this.props.coinWrapperClassName}>
       <div className='coin-header' onClick={this.props.handleOpen}>
         <div className='coin-logo'>
           <img src={CoinImage} className='logo-img' />
@@ -32,12 +39,15 @@ export default class Community extends Component {
         </div>
         <div className='coin-details'>
           <h3 className='coin-name'>{this.props.token.name}</h3>
-          <p className='coin-total'>Total CC supply <span className='total-text'>{formatEther(this.props.token.totalSupply)}</span></p>
+          <p className='coin-total'>Total CC supply <span className='total-text'>{formatWei(this.props.token.totalSupply, 0)}</span></p>
           <button className='btn-calculator'>
             <img src={Calculator} />
           </button>
           <div className={coinStatusClassStyle}>
-            <span className='coin-status-indicator' /> <span className='coin-status-text'>{this.props.marketMaker.isOpenForPublic ? 'open to public' : 'close to public'}</span>
+            <span className='coin-status-indicator' />
+            <span className='coin-status-text' onClick={this.openMarket}>
+              {this.props.marketMaker.isOpenForPublic ? 'open to public' : 'close to public'}
+            </span>
           </div>
         </div>
       </div>
@@ -48,7 +58,7 @@ export default class Community extends Component {
             ? <div className='coin-reverse'>
               {clnReserve}
             </div>
-            : <button className='btn-adding'>
+            : <button disabled={!this.canInsertCLN()} className='btn-adding'>
               <FontAwesome name='plus' className='top-nav-issuance-plus' /> Add CLN
             </button>
           }
@@ -69,6 +79,7 @@ export default class Community extends Component {
 }
 
 Community.defaultProps = {
+  coinWrapperClassName: 'coin-wrapper',
   token: {
   },
   marketMaker: {
@@ -80,7 +91,9 @@ Community.defaultProps = {
 }
 
 Community.propTypes = {
+  coinWrapperClassName: PropTypes.string,
   handleOpen: PropTypes.func,
+  openMarket: PropTypes.func.isRequired,
   token: PropTypes.object,
   usdPrice: PropTypes.number,
   marketMaker: PropTypes.object

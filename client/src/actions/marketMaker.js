@@ -28,6 +28,8 @@ export const ESTIMATE_GAS_SELL_CC = createRequestTypes('ESTIMATE_GAS_SELL_CC')
 
 export const PREDICT_CLN_PRICES = createRequestTypes('PREDICT_CLN_PRICES')
 
+export const OPEN_MARKET = createRequestTypes('OPEN_MARKET')
+
 export const quoteActions = [CHANGE, BUY_QUOTE, SELL_QUOTE, INVERT_BUY_QUOTE, INVERT_SELL_QUOTE, ESTIMATE_GAS_BUY_CC, ESTIMATE_GAS_SELL_CC]
 
 export const fetchMarketMakerData = (tokenAddress, mmAddress, blockNumber) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {tokenAddress, mmAddress, blockNumber})
@@ -51,3 +53,5 @@ export const estimateGasSellCc = (tokenAddress, amount, minReturn) => action(EST
 export const predictClnPrices = (tokenAddress, {initialClnReserve,
   amountOfTransactions, averageTransactionInUsd, gainRatio}) => action(PREDICT_CLN_PRICES.REQUEST,
   {tokenAddress, initialClnReserve, amountOfTransactions, averageTransactionInUsd, gainRatio})
+
+export const openMarket = (tokenAddress) => action(OPEN_MARKET.REQUEST, {tokenAddress})
