@@ -7,6 +7,14 @@ import {updateBalances} from 'actions/accounts'
 import {loadModal} from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
+function * getAccountAddress () {
+  if (window.ethereum && window.ethereum.enable) {
+    return (yield window.ethereum.enable())[0]
+  } else {
+    return web3.eth.defaultAccount
+  }
+}
+
 function * getNetworkType () {
   try {
     const networkType = yield web3.eth.net.getNetworkType()
@@ -15,10 +23,12 @@ function * getNetworkType () {
         networkType,
         isMetaMask: web3.currentProvider.isMetaMask || false
       }})
-    if (web3.eth.defaultAccount) {
-      const isChanged = yield call(checkAccountChanged, {selectedAddress: web3.eth.defaultAccount})
+    const accountAddress = yield getAccountAddress()
+
+    if (accountAddress) {
+      const isChanged = yield call(checkAccountChanged, {selectedAddress: accountAddress})
       if (!isChanged) {
-        yield put(updateBalances(web3.eth.defaultAccount))
+        yield put(updateBalances(accountAddress))
       }
     }
 
