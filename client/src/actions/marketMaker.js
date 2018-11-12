@@ -34,8 +34,6 @@ export const quoteActions = [CHANGE, BUY_QUOTE, SELL_QUOTE, INVERT_BUY_QUOTE, IN
 
 export const fetchMarketMakerData = (tokenAddress, mmAddress, blockNumber) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {tokenAddress, mmAddress, blockNumber})
 
-export const quote = (fromToken, inAmount, toToken, isBuy) => action(QUOTE.REQUEST, {fromToken, inAmount, toToken, isBuy})
-export const invertQuote = (fromToken, inAmount, toToken) => action(INVERT_QUOTE.REQUEST, {fromToken, inAmount, toToken})
 export const change = (tokenAddress, amount, minReturn, isBuy) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuy})
 
 export const buyQuote = (tokenAddress, clnAmount) => quoteAction(BUY_QUOTE.REQUEST, {tokenAddress, clnAmount})

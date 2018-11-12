@@ -1,0 +1,45 @@
+.hide {
+	display: none;
+	//opacity:0 !important;
+}
+
+
+.flex {
+	@include flex-box();
+}
+
+.column {
+	@include flex-direction(column);
+}
+
+.center {
+	justify-content: center;
+	align-items: center;
+}
+
+.fullscreen {
+	height: 100vh;
+	&.open-mobile-nav {
+		z-index: 2;
+		@media (max-width: $breakpoint-tablet) {
+			.top-nav-links.hide-nav-links {
+				display: block;
+			}
+		}
+	}
+}
+
+.mobile-screen {
+	height: 100%;
+	-webkit-overflow-scrolling: touch;
+}
+
+.tablet {
+	height: calc(100vh - 90px);
+}
+
+.positive-number {
+  color: $color-step-field;
+  font-size: 11px;
+  font-weight: bold;
+}

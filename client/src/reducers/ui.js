@@ -8,8 +8,7 @@ relevantQuoteActions[CHANGE.PENDING] = CHANGE
 
 export default (state = {
   activeMarker: null,
-  modalType: null,
-  signupHide: false
+  modalType: null
 }, action) => {
   if (relevantQuoteActions.hasOwnProperty(action.type)) {
     return {...state, modalProps: {...state.modalProps, ...action.response}}
@@ -27,10 +26,6 @@ export default (state = {
       return {...state, modalProps: action.modalProps}
     case ui.UPDATE_MODAL_PROPS:
       return {...state, modalProps: {...state.modalProps, ...action.modalProps}}
-    case ui.SIGNUP_HIDE:
-      return {...state, signupHide: action.hide}
-    case ui.SIGNUP_CLOSE:
-      return {...state, signupClose: action.close}
     default:
       return state
   }

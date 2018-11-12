@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ExpandableCommunity from 'components/oven/ExpandableCommunity'
 import InfiniteScroll from 'react-infinite-scroller'
+import {SIMPLE_EXCHANGE_MODAL} from 'constants/uiConstants'
 
 const PAGE_START = 1
 const PAGE_SIZE = 10
@@ -19,6 +20,10 @@ class CommunitiesList extends Component {
     this.setState({
       selectedCommunityAddress: address
     })
+  }
+
+  handleAddCln = (token, marketMaker) => {
+    this.props.loadModal(SIMPLE_EXCHANGE_MODAL, {token, marketMaker})
   }
 
   loadMore = (nextPage) => {
@@ -55,6 +60,7 @@ class CommunitiesList extends Component {
             selectedCommunityAddress={this.state.selectedCommunityAddress}
             account={this.props.account}
             openMarket={this.props.openMarket}
+            handleAddCln={this.handleAddCln}
           />
           )}
         </InfiniteScroll>

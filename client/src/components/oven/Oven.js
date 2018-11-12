@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import CommunitiesList from 'components/oven/CommunitiesList'
 import { connect } from 'react-redux'
 import {fetchCommunities, fetchCommunitiesByOwner} from 'actions/communities'
+import {loadModal} from 'actions/ui'
 import {openMarket} from 'actions/marketMaker'
 import {getAccountAddress} from 'selectors/accounts'
 
@@ -26,7 +27,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   fetchCommunities,
   fetchCommunitiesByOwner,
-  openMarket
+  openMarket,
+  loadModal
 }
 
 export default connect(

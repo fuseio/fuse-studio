@@ -35,7 +35,7 @@ class Completed extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = (state) => ({
   etherscanUrl: getEtherscanUrl(state),
   account: getAccount(state)
 })

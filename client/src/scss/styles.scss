@@ -32,18 +32,6 @@ $color-top-nav-bg: #2a2057;
 $breakpoint-mobile: 576px;
 $breakpoint-tablet: 1024px;
 
-body > * {
-	box-sizing: border-box;
-	-webkit-overflow-scrolling: touch;
-}
-
-@mixin border-radius($radius) {
-	-webkit-border-radius: $radius;
-	-moz-border-radius: $radius;
-	-ms-border-radius: $radius;
-	border-radius: $radius;
-}
-
 @mixin flex-box() {
 	display: -ms-flexbox;
 	display: -webkit-flex;
@@ -93,214 +81,6 @@ body > * {
 	bottom: -20px;
 }
 
-@font-face {
-  font-family: "Lucida Grande";
-  src: url("/assets/fonts/lucidagrande.ttf") format("opentype")
-}
-
-html, body {
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
-	-webkit-font-smoothing: antialiased;
-  	-moz-osx-font-smoothing: grayscale;
-  	-webkit-overflow-scrolling: touch;
-}
-path:focus, g:focus {
-	outline: 0 !important;
-}
-p {
-	-webkit-margin-before: 0;
-    -webkit-margin-after: 0;
-    font-size: 14px;
-}
-input {
-	font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
-	border-radius: 0;
-}
-button {
-	font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
-}
-
-input:focus, textarea:focus {
-	outline: none !important;
-}
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: #a4a9b2;
-  font-weight: lighter;
-}
-::-moz-placeholder { /* Firefox 19+ */
-  color: #a4a9b2;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: #a4a9b2;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: #a4a9b2;
-}
-
-div {
-	box-sizing: border-box;
-}
-
-a {
-	text-decoration: none !important;
-	cursor: pointer;
-}
-h1 {
-	font-size: 32px;
-	line-height: 1.06;
-	letter-spacing: 0;
-	text-align: left;
-	margin: 0;
-	font-weight:normal;
-}
-
-h2 {
-	font-size: 16px;
-	font-weight: 500;
-	margin: 0;
-	line-height: 1.25;
-	letter-spacing: 0;
-}
-
-h3 {
-	font-size: 40px;
-	line-height: 1.06;
-	letter-spacing: 0;
-	margin: 0;
-}
-
-h4 {
-	margin: 0;
-	font-size: 20px;
-}
-
-h5 {
-	margin: 0;
-	font-size: 12px;
-	font-weight:lighter;
-}
-.hide {
-	display: none;
-	//opacity:0 !important;
-}
-
-.map-element {
-
-}
-
-.flex {
-	@include flex-box();
-}
-
-.column {
-	@include flex-direction(column);
-}
-.center {
-	justify-content: center;
-	align-items: center;
-}
-.hide-nav-links {
-	@media (max-width: $breakpoint-tablet) {
-		display: none;
-	}
-}
-.fullscreen {
-	height: 100vh;
-	&.open-mobile-nav {
-		z-index: 2;
-		@media (max-width: $breakpoint-tablet) {
-			.top-nav-links.hide-nav-links {
-				display: block;
-			}
-		}
-	}
-}
-
-.mobile-screen {
-	//height: calc(200% - 100vh);
-	height: 100%;
-	-webkit-overflow-scrolling: touch;
-}
-
-.issuance-screen {
-	height: 327px;
-	z-index: 0;
-	min-height: 310px;
-	justify-content: start;
-}
-
-.tablet {
-	height: calc(100vh - 90px);
-}
-
-.switch-wrapper {
-	position: relative;
-}
-
-.switch-wrapper > div {
-	position: absolute;
-}
-
-button:disabled, button[disabled] {
-	background-color: rgb(151, 151, 151) !important;
-}
-
-#root {
-	height: 100%;
-	&>div {
-		height: 100%;
-	}
-}
-
-.main-container {
-	height: 100%;
-	width: 100%;
-	position:relative;
-	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
-	.map-wrapper {
-		height: 100%;
-		width: 100%;
-		background-color: #1d1737;
-		overflow: hidden;
-		//transition: all 1s cubic-bezier(0,.52,.28,.94);
-		//transform: scale(1);
-		.map-element > div {
-			background-color: rgb(36, 35, 52) !important;
-			a {
-				text-decoration: none !important;
-				color: white !important;
-			}
-		}
-		&.active {
-			filter: none;
-			transform: scale(1);
-		}
-	}
-}
-
-.sidebar-close {
-	position: absolute;
-	right: 16px;
-	top: 16px;
-	color: $dark-grey !important;
-	cursor: pointer;
-	img {
-		height: 13px !important;
-		width:13px !important;
-		min-width: 13px !important;
-	}
-}
-
 @mixin button($background) {
 	@include flex-box();
 	border-radius: 2px;
@@ -320,169 +100,35 @@ button:disabled, button[disabled] {
 	}
 }
 
-.welcome-wrapper {
-	position: absolute;
-	@include flex-box();
-	justify-content: center;
-	align-items: center;
-	top:0;
-	z-index: 300;
-	width:100%;
-	height:100%;
-	opacity: 1;
-	background-color: rgba(9, 9, 9, 0.6);
-	transition: all 0.4s ease-in-out;
-	//animation: appear 3s linear;
-	&.hide {
-		opacity: 0;
-	}
-	&.out {
+@font-face {
+  font-family: "Lucida Grande";
+  src: url("/assets/fonts/lucidagrande.ttf") format("opentype")
+}
+
+@import 'elements';
+@import 'common';
+@import 'components/App';
+@import 'components/oven/SimpleExchangeModal';
+
+.hide-nav-links {
+	@media (max-width: $breakpoint-tablet) {
 		display: none;
 	}
-	.welcome-container {
-		max-width: 580px;
-		@include flex-box();
-		@include flex-direction(column);
-		justify-content: center;
-		align-items: center;
-		transition: all 0.4s ease-in-out;
-		animation: appear 3s linear;
-		h3 {
-			font-size: 36px;
-    		font-weight: 300;
-    		line-height: 1.2;
-			letter-spacing: 0.7px;
-			text-align: center;
-			color: #ffffff;
-			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-		}
-		h4 {
-			color: white;
-			text-align: center;
-			margin: 20px;
-			font-size: 16px;
-			line-height: 1.4;
-			font-weight: 300;
-		}
-		.button {
-			@include button($colu-green);
-			text-align: center;
-			width: 160px;
-			height: 36px;
-			color: white;
-			margin-top: 10px;
-		}
+}
+
+.sidebar-close {
+	position: absolute;
+	right: 16px;
+	top: 16px;
+	color: $dark-grey !important;
+	cursor: pointer;
+	img {
+		height: 13px !important;
+		width:13px !important;
+		min-width: 13px !important;
 	}
 }
 
-.sign-up-wrapper {
-	display: flex;
-    height: 60px;
-    bottom: 3px;
-    background-color: #e0e0e0;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 30px;
-    position: absolute;
-    z-index: 20;
-    transition: all 0.4s ease-in-out;
-    .sign-up-container {
-    	display: flex;
-    	justify-content: space-between;
-    	width: 100%;
-    	align-items: center;
-    	max-width: 500px;
-    }
-    &.closed {
-    	display: none;
-    }
-    .success-message {
-    	color: $dark-grey;
-    	margin-right: 20px;
-    }
-    form {
-    	@include flex-box();
-    	align-items: center;
-    	justify-content: center;
-    	margin-right:10px;
-    	@media (max-width: $breakpoint-tablet) {
-    		width: 100%;
-    	}
-    	.contact-field-wrapper {
-			@include flex-box();
-    		margin-bottom: 15px;
-    		position: relative;
-    		input {
-    			font-size: 14px;
-				font-weight: 500;
-				letter-spacing: 0;
-				color: $dark-grey;
-				border: none;
-				border-bottom: solid 1px $disabled;
-				margin-top: 16px;
-				margin-right: 15px;
-				line-height: 2.3;
-				background-color: transparent;
-				@media (max-width: $breakpoint-tablet) {
-    				width: 100%;
-    				font-size: 16px;
-    				&::placeholder {
-    					font-size: 14px;
-    				}
-    			}
-    		}
-
-    		.input-feedback {
-    			font-size: 14px;
-				color: #ff5705;
-				position: absolute;
-    			bottom: 14px;
-    			left: -180px;
-    		}
-    		@media (max-width: $breakpoint-tablet) {
-    			width: 100%;
-    		}
-    	}
-    	.mobile-submit {
-    		height: 34px;
-    		width:34px;
-    		min-width: 34px;
-    	}
-    }
-    p {
-    	font-weight: 500;
-    	color: $dark-grey;
-    	text-transform: uppercase;
-    }
-
-	button {
-		@include button($colu-green);
-		color: white;
-		width:122px;
-		height: 34px;
-		@media (max-width:$breakpoint-tablet) {
-			width:34px;
-			min-width: 34px;
-			border-radius: 50%;
-			padding: 0px;
-			&:disabled {
-				background-color: rgb(224, 224, 224) !important;
-			}
-		}
-	}
-
-	.sidebar-close {
-		top: 21px;
-	}
-	@media (max-width: $breakpoint-tablet) {
-		top: 50px;
-		.sidebar-close {
-			top: 22px;
-		}
-	}
-
-}
 .modal-overlay-div {
     position: fixed;
     top: 0;
@@ -1078,7 +724,7 @@ button:disabled, button[disabled] {
 			}
 			.balance-number {
 				font-size: 12px;
-				color: #5fddbb;
+				color: $color-step-field;
 				margin-left: 10px;
 				font-weight: bold;
 			}
@@ -1220,9 +866,6 @@ input[type="checkbox" i] {
 	}
 }
 
-.buy-sell-wrapper {
-	background-color: #f2f6f6;
-}
 .info-price {
 	@include flex-box();
 	flex-direction: row;
@@ -1648,49 +1291,6 @@ input[type="checkbox" i] {
 		width: 100%;
 		height:40px;
 	}
-}
-
-.metamask-sign {
-	padding: 45px 30px;
-	h4 {
-		color: #5a5959;
-	}
-	p {
-		font-size: 14px;
-		font-weight: 300;
-		line-height: 1.86;
-		letter-spacing: 0;
-		color: $dark-grey;
-		text-align: center;
-	}
-	.summary-prices-wrapper {
-		@include flex-box();
-		flex-direction: row;
-		border-radius: 4px;
-		background-color: #f2f6f6;
-		border: solid 1px #cdcdcd;
-		margin: 30px 0;
-		padding: 50px 96px 40px;
-    @media (max-width: $breakpoint-tablet) {
-      padding: 50px 46px 40px;
-    }
-		.line {
-			width:100%;
-			height: 2px;
-			border: solid 1px #cdcdcd;
-			margin: 15px 0 18px;
-		}
-	}
-	.metamask-icon {
-		border-radius: 50%;
-		height: 60px;
-		width: 60px;
-		min-width: 60px;
-		position:absolute;
-		left: calc(50% - 30px);
-		margin-top: -84px;
-	}
-
 }
 
 .transaction-in-progress {
@@ -2406,7 +2006,7 @@ input[type="checkbox" i] {
 			background-color: transparent;
 			font-size: 106px;
 			font-weight: bold;
-			color: #5fddbb;
+			color: $color-step-field;
 			text-transform: uppercase;
 			box-shadow: none;
 			outline: none;
@@ -2670,148 +2270,6 @@ input[type="checkbox" i] {
 	}
 }
 
-.marker {
-	width: 120px;
-	height: 124px;
-	overflow: visible;
-	cursor: pointer;
-	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-	transform-origin: bottom center;
-
-	@include flex-box();
-	.e-marker__circle {
-		fill: none;
-	}
-	.e-marker__marker {
-		fill: #50E3C2;
-		&.purple {
-			fill: $colu-purple;
-		}
-	}
-
-	.e-marker__icon {
-		//margin-top: -30px;
-	}
-
-	.community-label {
-		font-color: white;
-		@include flex-box();
-		flex-direction: column;
-		opacity: 0;
-		transition: all 0.3s ease-in;
-		font-size: 16px;
-		font-weight: 500;
-		text-decoration: none;
-		//margin-left: 50px;
-		&.community-label-active {
-			opacity: 1;
-		}
-
-		.coin-label-name {
-			color: $colu-green;
-			text-transform: uppercase;
-			font-weight: lighter;
-			margin-left: 20px;
-		}
-
-		.coin-label-price {
-			margin-left: 10px;
-		}
-	}
-}
-
-.particles {
-	position: relative;
-	//width:30px;
-	//height:30px;
-	//margin-left: -15px;
-	//margin-top: -15px;
-	z-index: 3;
-	//transition: all 2s ease-in 1s;
-	cursor: pointer;
-	&.bubbles {
-		//&:before {
-		//	content: ' ';
-		//	top: 15px;
-		//	left:15px;
-		//	position: absolute;
-		//	z-index: 2;
-		//	width: 7px;
-		//	height: 7px;
-		//	//transition: all 0.3s ease-in;
-		//	border-radius: 50%;
-		//	background: rgba(255,255,255,1);
-		//	box-shadow: inset 0px 0px 10px 8px rgba(77,217,180,0.9),
-		//				0px 0px 40px 6px rgba(77,217,180,1);
-		//}
-		>.particle {
-			transition: 0.3s ease-in;
-			transition-property: all;
-			opacity:0.3;
-			position: absolute;
-			background-color:rgba(77,217,180,0.5);
-			animation: bubbles 2s ease-in infinite;
-			border-radius:100%;
-			box-shadow: 5px 4px 17px 0px rgba(77,217,180, 0.1);
-		 }
-		>.particle2 {
-			transition: 0.3s ease-in;
-			transition-property: all;
-			opacity:0.3;
-			position: absolute;
-			background-color:rgba(154, 139, 255,0.5);
-			animation: bubbles2 2s ease-in infinite;
-			border-radius:100%;
-			box-shadow: 5px 4px 17px 0px rgba(154, 139, 255, 0.1);
-		}
-		>.central {
-			position: absolute;
-			z-index: 2;
-			width: 7px;
-			height: 7px;
-			border-radius: 50%;
-			background: rgba(255,255,255,1);
-			box-shadow: inset 0px 0px 10px 8px rgba(77,217,180,0.9),
-						0px 0px 40px 6px rgba(77,217,180,1);
-
-
-		}
-	}
-	&.grow {
-		width:120px;
-		height:120px;
-		margin-left: -60px;
-		margin-top: -60px;
-		transform: scale(1.1);
-		&.bubbles {
-			>.particle {
-				background-color:rgba(77,217,180,0.8);
-				box-shadow: 5px 4px 17px 2px rgba(77,217,180, 0.3);
-			}
-			>.particle2 {
-				background-color:rgba(154, 139, 255,0.5);
-				box-shadow: 5px 4px 17px 0px rgba(154, 139, 255, 0.1);
-			}
-		}
-		&:before {
-			top: 60px;
-			left:60px;
-		}
-	}
-	&.grow-center {
-		&.bubbles {
-			&:before {
-				width: 20px;
-				height: 20px;
-				top: 50px;
-				left:50px;
-				box-shadow: inset 0px 0px 10px 12px rgba(77,217,180,0.5),
-						0px 0px 20px 2px rgba(77,217,180,1);
-			}
-		}
-	}
-}
-
 .btn-calculator {
 	position: absolute;
 	top: 0;
@@ -2845,7 +2303,7 @@ input[type="checkbox" i] {
 	font-size: 12px;
 	border-radius: 3px;
 	padding: 6px 12px;
-	background: #5fddbb;
+	background: $color-step-field;
 	border: none;
 	&:hover {
 		cursor: pointer;
@@ -2990,7 +2448,7 @@ input[type="checkbox" i] {
 			}
 			&:hover {
 				cursor: pointer;
-				color: #5fddbb;
+				color: $color-step-field;
 			}
 		}
 	}
@@ -3005,37 +2463,7 @@ input[type="checkbox" i] {
 			height: auto !important;
 		}
 
-		.coin-logo {
-			position: relative;
-			height: 80px;
-			.logo-img {
-				width: 80px;
-				height: 80px;
-				border-radius: 50%;
-				box-shadow: 0 0px 12px 0 rgba(0, 131, 255, 0.46);
-				@media (max-width: $breakpoint-mobile) {
-					width: 43px;
-					height: 43px;
-				}
-			}
-			.symbol-text {
-				font-size: 14px;
-				font-weight: bold;
-				text-align: center;
-				color: $color-step-text;
-				position: absolute;
-				top: 50%;
-				margin-top: -7px;
-				left: 0;
-				right: 0;
-				@media (max-width: $breakpoint-mobile) {
-					font-size: 9px;
-				}
-			}
-			@media (max-width: $breakpoint-mobile) {
-				height: 43px;
-			}
-		}
+
 
 		.coin-details {
 			position: relative;
@@ -3126,8 +2554,6 @@ input[type="checkbox" i] {
 			padding-bottom: 15px;
 			border-bottom: 1px solid rgba(255, 255, 255, 0.19);
 			.total-text {
-				font-size: 10px;
-				color: #5fddbb;
 				margin-left: 10px;
 				font-weight: bold;
 				width: 80px;
@@ -3332,326 +2758,7 @@ input[type="checkbox" i] {
 		}
 	}
 
-	/*.list-item {
-		height: auto;
-		width: 400px;
-    display: inline-block;
-		margin-bottom: 15px;
-		margin-right: 7px;
-		margin-left: 7px;
 
-		.coin-footer-close {
-			display: none;
-			@media (max-width: $breakpoint-mobile) {
-				padding-top: 15px;
-				text-align: center;
-				color: #b6b5d8;
-				font-size: 13px;
-				.fa {
-					margin-right: 5px;
-				}
-				&:hover {
-					cursor: pointer;
-					color: #5fddbb;
-				}
-			}
-		}
-
-		.coin-wrapper {
-			box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2);
-			border-radius: 10px;
-			box-sizing: content-box;
-			cursor: pointer;
-			overflow: hidden;
-			@media (max-width: $breakpoint-tablet) {
-				height: auto !important;
-			}
-
-			.coin-logo {
-				position: relative;
-				height: 80px;
-				.logo-img {
-					width: 80px;
-					height: 80px;
-					border-radius: 50%;
-					box-shadow: 0 0px 12px 0 rgba(0, 131, 255, 0.46);
-					@media (max-width: $breakpoint-mobile) {
-						width: 43px;
-						height: 43px;
-					}
-				}
-				.symbol-text {
-					font-size: 14px;
-					font-weight: bold;
-					text-align: center;
-					color: $color-step-text;
-					position: absolute;
-					top: 50%;
-					margin-top: -7px;
-					left: 0;
-    			right: 0;
-					@media (max-width: $breakpoint-mobile) {
-						font-size: 9px;
-					}
-				}
-				@media (max-width: $breakpoint-mobile) {
-					height: 43px;
-				}
-			}
-
-			.coin-details {
-				position: relative;
-			}
-
-			.coin-status {
-				font-size: 10px;
-				color: $color-step-text;
-				text-transform: uppercase;
-				padding-left: 20px;
-				position: relative;
-				margin-top: 15px;
-				text-align: left;
-				font-weight: bold;
-				&-indicator {
-					width: 5px;
-					height: 5px;
-					position: absolute;
-					top: 3px;
-					left: 3px;
-					border-radius: 50%;
-					z-index: 5;
-				}
-
-				&-active {
-					.coin-status-indicator {
-						background-color: #82bcff;
-						&:after {
-							animation: scaleIn 4s infinite cubic-bezier(.36, .11, .89, .32);
-							border-radius: 50%;
-						  background-color: deepskyblue;
-						  width: 11px;
-						  height: 11px;
-						  position: absolute;
-						  opacity: 0;
-							top: -3px;
-	    				right: -3px;
-							content: '';
-							z-index: 3;
-						}
-					}
-				}
-				&-close {
-					.coin-status-indicator {
-						background-color: #ff4a7b;
-					}
-				}
-				&-text {
-					@media (max-width: $breakpoint-mobile) {
-						display: none;
-					}
-				}
-				@media (max-width: $breakpoint-mobile) {
-					top: 0;
-    			right: 0;
-					position: absolute;
-					margin-top: 0;
-				}
-			}
-
-			@keyframes scaleIn {
-			  from {
-			    transform: scale(.5, .5);
-			    opacity: .5;
-			  }
-			  to {
-			    transform: scale(2.5, 2.5);
-			    opacity: 0;
-			  }
-			}
-
-			.coin-name {
-				font-size: 15px;
-		    color: #BCB9C8;
-		    text-align: center;
-		    font-family: "Lucida Grande";
-		    text-transform: capitalize;
-		    margin-bottom: 10px;
-				text-align: left;
-			}
-
-			.coin-total {
-				font-size: 10px;
-				font-weight: bold;
-				text-transform: uppercase;
-				color: $color-step;
-				display: flex;
-				padding-bottom: 15px;
-				border-bottom: 1px solid rgba(255, 255, 255, 0.19);
-				.total-text {
-					font-size: 10px;
-					color: #5fddbb;
-					margin-left: 10px;
-					font-weight: bold;
-					width: 80px;
-			    white-space: nowrap;
-			    overflow: hidden;
-			    text-overflow: ellipsis;
-			    display: block;
-				}
-				@media (max-width: $breakpoint-mobile) {
-					border-bottom: none;
-					padding-bottom: 0;
-				}
-			}
-
-			.coin-header {
-				margin-top:20px;
-				padding: 20px 24px;
-				background-image: linear-gradient(to bottom, #262451, #343166);
-				display: flex;
-				padding: 30px 20px;
-				h1 {
-					font-size: 18px;
-					margin-bottom: 2px;
-					text-transform: uppercase;
-					font-weight: bold;
-				}
-				.logo {
-					width: 70px;
-					height: 70px;
-				}
-				.price-wrapper {
-					font-size: 14px;
-					h2 {
-						-webkit-margin-before: 0;
-   						-webkit-margin-after: 0;
-						font-size: 14px;
-					}
-				}
-				@media (max-width: $breakpoint-mobile) {
-					margin-top: 0;
-					padding: 15px;
-				}
-			}
-
-			&.open {
-				height: 100vh !important;
-				.coin-header {
-					padding: 32px;
-				}
-			}
-
-			.coin-footer {
-				background-image: linear-gradient(to bottom, #1a193f, #282654);
-				padding: 16px 20px;
-				display: flex;
-		    flex-direction: row;
-		    justify-content: space-between;
-		    align-items: center;
-				min-height: 90px;
-
-				.total-content {
-					font-size: 10px;
-			    font-weight: bold;
-			    text-transform: uppercase;
-			    color: $color-step;
-			    padding-bottom: 10px;
-				}
-
-				.total-supply {
-					font-size: 19px;
-			    font-weight: 500;
-			    text-align: center;
-			    color: $color-step-field;
-				}
-
-				.coin-content {
-					display: flex;
-					justify-content: space-between;
-    			flex-direction: column;
-					align-items: flex-start;
-				}
-
-				.coin-reverse {
-					font-weight: 500;
-					font-size: 30px;
-					color: $color-step-field;
-				}
-
-				.coin-currency-type {
-					color: $color-step;
-					font-size: 10px;
-					font-weight: bold;
-					text-transform: uppercase;
-					margin-right: 10px;
-				}
-
-				.coin-currency {
-					color: $color-step-text;
-					font-size: 10px;
-					font-weight: bold;
-					text-transform: uppercase;
-				}
-				@media (max-width: $breakpoint-tablet) {
-					min-height: auto;
-				}
-				@media (max-width: $breakpoint-mobile) {
-					display: none;
-				}
-			}
-
-			&.coin-show-footer {
-				@media (max-width: $breakpoint-mobile) {
-					& + .coin-footer-close {
-						display: block;
-					}
-					.coin-header {
-						padding: 15px 15px 25px 15px;
-					}
-					.coin-status {
-						position: relative;
-						margin-top: 15px;
-						&-text {
-							display: inline-block;
-						}
-					}
-					.coin-logo {
-						height: 80px;
-						.logo-img {
-							width: 80px;
-							height: 80px;
-						}
-						.symbol-text {
-						  font-size: 14px;
-						}
-					}
-					.coin-total {
-						border-bottom: 1px solid rgba(255, 255, 255, 0.19);
-						padding-bottom: 15px;
-					}
-					.btn-calculator {
-						display: block;
-						top: auto;
-						bottom: -10px;
-					}
-					.coin-footer {
-						display: flex;
-					}
-				}
-			}
-		}
-		@media (max-width: $breakpoint-tablet) {
-			display: block;
-			margin-right: 0;
-		}
-		@media (max-width: $breakpoint-mobile) {
-			width: 100%;
-			&:not(:nth-child(3n)) {
-				margin-right: 0;
-			}
-		}
-	}
-	*/
 	@media (max-width: $breakpoint-tablet) {
 		height: calc(100% - 70px);
 		bottom: 0;
@@ -3679,6 +2786,40 @@ input[type="checkbox" i] {
     	left: 30px;
 	}
 }
+
+.coin-logo {
+  position: relative;
+  height: 80px;
+  .logo-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 0 0px 12px 0 rgba(0, 131, 255, 0.46);
+    @media (max-width: $breakpoint-mobile) {
+      width: 43px;
+      height: 43px;
+    }
+  }
+  .symbol-text {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    color: $color-step-text;
+    position: absolute;
+    top: 50%;
+    margin-top: -7px;
+    left: 0;
+    right: 0;
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 9px;
+    }
+  }
+  @media (max-width: $breakpoint-mobile) {
+    height: 43px;
+  }
+}
+
+// linear-gradient(to bottom, rgba(28, 20, 66, 0.65), #2a2057)
 
 @keyframes appear {
 	 0% {
@@ -3709,32 +2850,4 @@ input[type="checkbox" i] {
 	box-shadow: inset 0px 0px 10px 2px rgba(117,182,255,0.5),
 						0px 0px 30px 2px rgba(105,135,255,0.3);
 	}
-}
-
-@keyframes bubbles {
-	 0% {
-		opacity: 0.1;
-	 }
-	 20% { //show and hint at moving
-		opacity: 1;
-		transform:translate(0, 0px);
-	 }
-	 100% {
-		opacity: 0.1;
-		transform:translate(0, -2px); //Big bubbles move faster
-	 }
-}
-
-@keyframes bubbles2 {
-	 0% {
-		opacity: 0.1;
-	 }
-	 20% { //show and hint at moving
-		opacity: 1;
-		transform:translate(0, 0px);
-	 }
-	 100% {
-		opacity: 0.1;
-		transform:translate(0, 2px); //Big bubbles move faster
-	 }
 }

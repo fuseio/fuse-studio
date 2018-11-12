@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {formatEther, formatWei} from 'utils/format'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
-import CoinImage from 'images/Coin2.svg'
+import CommunityLogo from 'components/elements/CommunityLogo'
 import Calculator from 'images/Calculator.svg'
 import { BigNumber } from 'bignumber.js'
 import identity from 'lodash/identity'
@@ -16,10 +16,11 @@ export default class Community extends Component {
 
   openMarket = () => {
     if (this.canOpenMarket()) {
-      console.log('open marketMaker')
       this.props.openMarket(this.props.token.address)
     }
   }
+
+  handleAddCln = () => this.props.handleAddCln(this.props.token, this.props.marketMaker)
 
   render () {
     const {currentPrice} = this.props.marketMaker
@@ -33,13 +34,15 @@ export default class Community extends Component {
 
     return <div className={this.props.coinWrapperClassName}>
       <div className='coin-header' onClick={this.props.handleOpen}>
-        <div className='coin-logo'>
-          <img src={CoinImage} className='logo-img' />
-          <span className='symbol-text'>{this.props.token.symbol}</span>
-        </div>
+        <CommunityLogo token={this.props.token} />
         <div className='coin-details'>
           <h3 className='coin-name'>{this.props.token.name}</h3>
-          <p className='coin-total'>Total CC supply <span className='total-text'>{formatWei(this.props.token.totalSupply, 0)}</span></p>
+          <p className='coin-total'>
+            Total CC supply
+            <span className={classNames('total-text', 'positive-number')}>
+              {formatWei(this.props.token.totalSupply, 0)}
+            </span>
+          </p>
           <button className='btn-calculator'>
             <img src={Calculator} />
           </button>
@@ -55,10 +58,10 @@ export default class Community extends Component {
         <div className='coin-content'>
           <div className='total-content'>CLN Reserved</div>
           {this.props.marketMaker.clnReserve && !this.props.marketMaker.clnReserve.isZero()
-            ? <div className='coin-reverse'>
+            ? <div disabled={!this.canInsertCLN()} onClick={this.handleAddCln} className='coin-reverse'>
               {clnReserve}
             </div>
-            : <button disabled={!this.canInsertCLN()} className='btn-adding'>
+            : <button disabled={!this.canInsertCLN()} onClick={this.handleAddCln} className='btn-adding'>
               <FontAwesome name='plus' className='top-nav-issuance-plus' /> Add CLN
             </button>
           }
@@ -87,13 +90,16 @@ Community.defaultProps = {
     currentPrice: new BigNumber(0),
     clnReserve: new BigNumber(0)
   },
-  handleOpen: identity
+  handleOpen: identity,
+  handleAddCln: identity,
+  openMarket: identity
 }
 
 Community.propTypes = {
   coinWrapperClassName: PropTypes.string,
   handleOpen: PropTypes.func,
-  openMarket: PropTypes.func.isRequired,
+  openMarket: PropTypes.func,
+  handleAddCln: PropTypes.func,
   token: PropTypes.object,
   usdPrice: PropTypes.number,
   marketMaker: PropTypes.object

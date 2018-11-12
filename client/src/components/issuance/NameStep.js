@@ -1,6 +1,6 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import TextInput from './../TextInput'
+import TextInput from 'components/elements/TextInput'
 
 const NameStep = ({communityName, handleChangeCommunityName, setNextStep}) => {
   return (

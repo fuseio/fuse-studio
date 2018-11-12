@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import CoinIcon1 from 'images/Coin1.svg'
 import CoinIcon2 from 'images/Coin2.svg'
 import CoinIcon3 from 'images/Coin3.svg'
-import TextInput from './../TextInput'
+import TextInput from 'components/elements/TextInput'
 
 export default class DetailsStep extends Component {
   constructor (props) {

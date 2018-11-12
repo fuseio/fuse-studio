@@ -40,8 +40,7 @@ class App extends Component {
       }
     })
     this.setState({
-      welcomeDone: window.localStorage.getItem('welcome'),
-      signupDone: window.localStorage.getItem('signup')
+      welcomeDone: window.localStorage.getItem('welcome')
     })
   }
 

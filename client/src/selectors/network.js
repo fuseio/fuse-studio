@@ -8,6 +8,11 @@ export const getAddresses = createSelector(
   (networkType, addresses) => addresses[networkType]
 )
 
+export const getCurrencyFactoryAddress = createSelector(
+  getAddresses,
+  (addresses) => addresses.CurrencyFactory
+)
+
 export const getCommunityAddresses = createSelector(
   getAddresses,
   (addresses) => addresses ? [

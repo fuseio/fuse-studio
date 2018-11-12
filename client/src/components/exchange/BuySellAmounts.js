@@ -7,7 +7,7 @@ import web3Utils from 'web3-utils'
 import { BigNumber } from 'bignumber.js'
 
 import AdvancedSettings from './AdvancedSettings'
-import TextInput from 'components/TextInput'
+import TextInput from 'components/elements/TextInput'
 import Loader from 'components/Loader'
 import Arrows from 'images/arrows.png'
 import Info from 'images/info.png'

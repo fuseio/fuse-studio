@@ -2,7 +2,7 @@ import React from 'react'
 import { withFormik } from 'formik'
 import Yup from 'yup'
 
-import TextInput from './TextInput'
+import TextInput from 'components/elements/TextInput'
 import {sendContactUs, subcribeToMailingList} from 'services/api'
 import CloseButton from 'images/x.png'
 import ReactGA from 'services/ga'

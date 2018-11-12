@@ -8,7 +8,7 @@ import {getClnToken, getCommunity} from 'selectors/communities'
 import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
 import {predictClnReserves} from 'utils/calculator'
-import {getAddresses} from 'selectors/network'
+import {getCurrencyFactoryAddress} from 'selectors/network'
 
 const reversePrice = (price) => new BigNumber(1e18).div(price)
 
@@ -161,8 +161,16 @@ export function * invertQuote ({tokenAddress, amount, isBuy}) {
 const calcSlippage = (expectedPrice, actualPrice) =>
   expectedPrice.minus(actualPrice).div(expectedPrice).abs()
 
-function * createChangeData ({toTokenAddress, amount, minReturn, isBuy, mmAddress}) {
-  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
+function * createChangeData ({token, ...rest}) {
+  if (token.isOpenForPublic) {
+    return yield createChangeDataForMarketMaker({token, ...rest})
+  } else {
+    return yield createChangeDataForCurrencyFactory({token, ...rest})
+  }
+}
+
+function * createChangeDataForMarketMaker ({toTokenAddress, amount, minReturn, token}) {
+  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
   if (minReturn) {
     return EllipseMarketMakerContract.methods.change(toTokenAddress, minReturn).encodeABI()
@@ -171,16 +179,29 @@ function * createChangeData ({toTokenAddress, amount, minReturn, isBuy, mmAddres
   }
 }
 
+function * createChangeDataForCurrencyFactory ({toTokenAddress, amount, isBuy}) {
+  const currencyFactoryAddress = yield select(getCurrencyFactoryAddress)
+
+  const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory', address: currencyFactoryAddress})
+
+  if (isBuy) {
+    return CurrencyFactoryContract.methods.insertCLNtoMarketMaker(toTokenAddress).encodeABI()
+  } else {
+    return CurrencyFactoryContract.methods.extractCLNfromMarketMaker(toTokenAddress).encodeABI()
+  }
+}
+
 export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
   const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
-  const data = yield createChangeData({toTokenAddress, amount, minReturn, isBuy, mmAddress: token.mmAddress})
+  const data = yield createChangeData({toTokenAddress, amount, minReturn, isBuy, token})
 
   const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency',
     address: fromTokenAddress})
 
   const accountAddress = yield select(getAccountAddress)
 
-  const sendPromise = ColuLocalCurrency.methods.transferAndCall(token.mmAddress, amount, data).send({
+  const callAddress = token.isOpenForPublic ? token.mmAddress : yield select(getCurrencyFactoryAddress)
+  const sendPromise = ColuLocalCurrency.methods.transferAndCall(callAddress, amount, data).send({
     from: accountAddress,
     ...options
   })
@@ -227,7 +248,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
 export function * estimageChange ({tokenAddress, amount, minReturn, isBuy}) {
   const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
 
-  const data = yield createChangeData({toTokenAddress, amount, minReturn, isBuy, mmAddress: token.mmAddress})
+  const data = yield createChangeDataForMarketMaker({toTokenAddress, amount, minReturn, isBuy, token})
 
   const ColuLocalCurrency = contract.getContract({abiName: 'ColuLocalCurrency',
     address: fromTokenAddress})
@@ -358,10 +379,10 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) 
 
 export function * openMarket ({tokenAddress}) {
   const accountAddress = yield select(getAccountAddress)
-  const addresses = yield select(getAddresses)
+  const currencyFactoryAddress = yield select(getCurrencyFactoryAddress)
 
   const CurrencyFactoryContract = contract.getContract({abiName: 'CurrencyFactory',
-    address: addresses.CurrencyFactory
+    address: currencyFactoryAddress
   })
 
   const receipt = yield CurrencyFactoryContract.methods.openMarket(

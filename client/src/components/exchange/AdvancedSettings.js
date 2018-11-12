@@ -6,7 +6,7 @@ import trim from 'lodash/trim'
 
 import {roundToWei} from './utils'
 import DownArrow from 'images/down-arrow.png'
-import TextInput from 'components/TextInput'
+import TextInput from 'components/elements/TextInput'
 
 const calculatePriceLimit = (pricePercentage, price, isBuy) => pricePercentage.plus(isBuy ? 1 : -1).absoluteValue()
   .multipliedBy(price)

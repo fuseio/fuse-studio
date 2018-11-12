@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import FontAwesome from 'react-fontawesome'
-import TextInput from './../TextInput'
+import TextInput from 'components/elements/TextInput'
 import PropTypes from 'prop-types'
 
 export default class SymbolStep extends Component {

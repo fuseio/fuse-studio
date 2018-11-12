@@ -1,0 +1,82 @@
+
+.modal-dialog-div.exchange-modal {
+	width: 440px !important;
+	padding: 0;
+  margin: 0 auto;
+  border-radius: 5px;
+  .sidebar-close {
+    display: none;
+  }
+}
+
+.modal-dialog-div {
+
+  .exchange-modal {
+
+    &-up {
+      height: 150px;
+      box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+      background-image: linear-gradient(338deg, #262451, #343166);
+      padding: 20px;
+      @include flex-box;
+
+      .token-info {
+        @include flex-box;
+        @include flex-direction(column);
+      }
+
+      .label {
+        font-size: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: $color-step;
+        margin-right: 10px;
+      }
+    }
+
+    &-middle {
+      border-radius: 3px;
+      box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+      background-color: #f6f7fb;
+      height: 180px;
+      margin: 20px;
+      position: relative;
+      bottom: 80px;
+    }
+    &-down {
+      height: 130px;
+      background-color: #eceff6;
+    }
+
+    &-amounts {
+      @include flex-box;
+      padding: 20px;
+    }
+
+    &-cln {
+      @include flex-box;
+      @include flex-direction(column);
+    }
+
+    &-token {
+      @include flex-box;
+      @include flex-direction(column);
+    }
+
+  }
+}
+
+.btn-exchange {
+	text-transform: uppercase;
+	color: $color-step-text;
+	font-size: 11px;
+	border-radius: 3px;
+	padding: 12.5px 52.5px;
+	background: #5fddbb;
+	border: none;
+	&:hover {
+		cursor: pointer;
+		background-image: linear-gradient(to bottom, #5c5895, #39366e);
+	}
+  margin: 50px;
+}
