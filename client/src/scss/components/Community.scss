@@ -1,0 +1,30 @@
+
+
+.btn-calculator {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: $color-step;
+	border-radius: 4px;
+	width: 23px;
+	height: 22px;
+	text-align: center;
+	border: none;
+	line-height: 25px;
+  padding: 1px 7px 2px 5px;
+
+	img {
+		width: 13px;
+		height: 12px;
+	}
+	&:focus, &:active, &:focus:active {
+		outline: none;
+	}
+	&:hover {
+		background-color: rgba(182, 181, 216, 0.7);
+		cursor: poiner;
+	}
+	@media (max-width: $breakpoint-mobile) {
+		display: none;
+	}
+}

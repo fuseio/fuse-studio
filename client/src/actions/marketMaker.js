@@ -48,8 +48,7 @@ export const sellCc = (tokenAddress, amount, minReturn, options) => action(SELL_
 export const estimateGasBuyCc = (tokenAddress, amount, minReturn) => action(ESTIMATE_GAS_BUY_CC.REQUEST, {tokenAddress, amount, minReturn})
 export const estimateGasSellCc = (tokenAddress, amount, minReturn) => action(ESTIMATE_GAS_SELL_CC.REQUEST, {tokenAddress, amount, minReturn})
 
-export const predictClnPrices = (tokenAddress, {initialClnReserve,
-  amountOfTransactions, averageTransactionInUsd, gainRatio}) => action(PREDICT_CLN_PRICES.REQUEST,
-  {tokenAddress, initialClnReserve, amountOfTransactions, averageTransactionInUsd, gainRatio})
+export const predictClnPrices = (tokenAddress, params) => action(PREDICT_CLN_PRICES.REQUEST,
+  {tokenAddress, ...params})
 
 export const openMarket = (tokenAddress) => action(OPEN_MARKET.REQUEST, {tokenAddress})

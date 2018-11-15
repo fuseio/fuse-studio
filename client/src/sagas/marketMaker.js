@@ -74,36 +74,42 @@ export function * quote ({tokenAddress, amount, isBuy}) {
   return quotePair
 }
 
-// function calculateNewReserve =
-
 export function * predictClnPrices ({tokenAddress, initialClnReserve,
-  amountOfTransactions, averageTransactionInUsd, gainRatio}) {
+  amountOfTransactions, averageTransactionInUsd, gainRatio, iterations}) {
   const clnPrice = yield select(state => state.fiat.USD.price)
-
   const clnReserves = predictClnReserves({initialClnReserve,
     amountOfTransactions,
     averageTransactionInUsd,
     clnPrice,
     gainRatio,
-    iterations: 11})
-
+    iterations})
   const clnReservesInWei = clnReserves.map(reserve => new BigNumber(reserve.toString()).multipliedBy(1e18))
-  console.log(clnReservesInWei)
-
   const clnToken = yield select(getClnToken)
   const token = yield select(getCommunity, tokenAddress)
-
   const s1 = clnToken.totalSupply
   const s2 = token.totalSupply
-  // const r1 = clnReserves[0]
   const prices = []
-  for (let r1 of clnReservesInWei) {
-    // const {r1, r2, s1, s2} = getReservesAndSupplies(clnToken, tokenAddress, isBuy)
-    const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
-    const r2 = yield call(EllipseMarketMakerContract.methods.calcReserve(
-      r1, s1, s2).call)
+  const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
-    const price = yield call(EllipseMarketMakerContract.methods.getPrice(r1, r2, s1, s2).call)
+  const tokenReserveRequests = clnReservesInWei.map(r1 => call(EllipseMarketMakerContract.methods.calcReserve(
+    r1, s1, s2).call))
+
+  console.log(tokenReserveRequests)
+  const tokenReserves = yield all(tokenReserveRequests)
+
+  const pricesClnInCcRequests = tokenReserves.map((r2, key) => {
+    const r1 = clnReservesInWei[key]
+    return call(EllipseMarketMakerContract.methods.getPrice(r1, r2, s1, s2).call)
+  })
+  const pricesClnInCc = yield all(pricesClnInCcRequests)
+
+  for (let priceClnInCc of pricesClnInCc) {
+    const priceCcInCln = reversePrice(priceClnInCc)
+    const priceCcInUSD = priceCcInCln.multipliedBy(clnPrice)
+    const price = {
+      cln: priceCcInCln.toString(),
+      usd: priceCcInUSD.toString()
+    }
     prices.push(price)
   }
 

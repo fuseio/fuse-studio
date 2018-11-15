@@ -1,0 +1,310 @@
+.modal-dialog-div.calculator {
+	width: 825px !important;
+	background: #262451;
+	padding: 10px;
+	display: flex;
+	margin: auto;
+ 	@media (max-width: $breakpoint-tablet) {
+		display: block;
+		padding: 0;
+	}
+	@media (max-width: $breakpoint-mobile) {
+		width: 100% !important;
+	}
+	.metamask-popup-close:hover {
+    color: #262451;
+	}
+}
+ .calculator {
+	.sidebar-close {
+		display: none;
+	}
+ 	&-header {
+		@media (max-width: $breakpoint-tablet) {
+			display: flex;
+			justify-content: center;
+		}
+		&-content {
+			@media (max-width: $breakpoint-tablet) {
+				display: flex;
+			}
+
+      .coin-logo {
+        width: 53px;
+        height: 53px;
+        border-radius: 50%;
+        position: relative;
+        margin: 0 auto;
+        box-shadow: 0 0px 12px 0 rgba(0, 131, 255, 0.46);
+        .logo-img {
+          width: 100% !important;
+          height: 100% !important;
+          min-width: auto !important;
+        }
+        @media (max-width: $breakpoint-tablet) {
+          margin-left: 0;
+          margin-right: 15px;
+        }
+
+        .symbol-text {
+          font-size: 9px;
+          font-weight: bold;
+          text-align: center;
+          color: #3a3269;
+          position: absolute;
+          top: 50%;
+          margin-top: -5px;
+          left: 0;
+          right: 0;
+        }
+      }
+		}
+	}
+ 	&-sidebar {
+		width: 230px;
+		padding-top: 15px;
+		border-radius: 5px 5px 0 0;
+		background-color: $color-step-text;
+ 		&-container {
+			box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.49);
+			padding: 15px 20px 10px;
+			margin-top: 15px;
+			background-color: #f8faff;
+			border-radius: 0 0 5px 5px;
+			text-align: left;
+		}
+ 		&-label {
+			font-size: 10px !important;
+			color: #b3b9c8;
+			text-transform: uppercase;
+			margin-bottom: 5px;
+			font-weight: bold !important;
+		}
+ 		&-content {
+			padding-bottom: 15px;
+			border-bottom: solid 1px #e2e2e2;
+			margin-bottom: 15px;
+		}
+ 		&-input {
+			input {
+				font-size: 20px;
+				color: #5fddbb;
+				border: none;
+				background: transparent;
+				font-weight: bold;
+			}
+		}
+		&-btn {
+			color: $color-step-text;
+			width: 100%;
+			background: #ff4a7b;
+			padding: 10px 12px;
+			text-align: center;
+			border-radius: 4px;
+			border: none;
+			&:hover {
+				background: lighten(#ff4a7b, 10%);
+				cursor: pointer;
+			}
+			&[disabled] {
+				background-color: #d4d5eb !important;
+				color: rgba(255, 255, 255, 0.75);
+			}
+		}
+ 		@media (max-width: $breakpoint-tablet) {
+			width: 100%;
+		}
+	}
+
+
+	&-title {
+	  font-size: 15px;
+	  font-weight: normal;
+	  line-height: 1.8;
+	  text-align: center;
+	  color: #6e6d9f;
+		margin-top: 10px;
+    text-transform: capitalize;
+		@media (max-width: $breakpoint-tablet) {
+			text-align: left;
+		}
+	}
+ 	.coin-status {
+		padding-left: 0;
+		text-align: center;
+		margin-top: 0;
+		&-text {
+			color: #b6b5d8;
+			font-size: 10px;
+			padding-left: 5px;
+		}
+		&-indicator {
+			position: relative;
+			display: inline-block;
+			top: -2px;
+		}
+		@media (max-width: $breakpoint-mobile) {
+			width: 100%;
+			position: static;
+			.coin-status-text {
+				display: inline-block
+			}
+		}
+	}
+ 	&-graph {
+		rect {
+			fill: #262451;
+		}
+		text {
+			fill: #b6b5d8;
+			font-family: $font-family !important;
+			font-size: 8px !important;
+		}
+	}
+ 	&-chart {
+		width: 535px;
+		position: relative;
+		@media (max-width: $breakpoint-tablet) {
+			margin: 0 auto 10px;
+ 		}
+		@media (max-width: $breakpoint-mobile) {
+			width: 100%;
+		}
+		&-footer {
+			margin: 15px 0 0px 35px;
+			padding-top: 15px;
+			border-top: 1px solid #6e6d9f;
+			display: flex;
+			justify-content: space-between;
+			@media (max-width: $breakpoint-mobile) {
+				margin: 10px;
+			}
+		}
+		&-link {
+			color: #b6b5d8;
+			font-size: 12px;
+			.fa {
+				color: #5fddbb;
+				margin-right: 7px;
+				font-size: 14px;
+			}
+		}
+		&-content {
+			padding-left: 20px;
+			padding-right: 20px;
+			padding-top: 40px;
+			position: relative;
+			min-height: 390px;
+		}
+		&-loader {
+			height: 350px !important;
+			color: #b6b5d8;
+		}
+		&-point {
+			position: absolute;
+			top: 5px;
+			font-size: 10px;
+			font-weight: bold;
+			&.point-usd {
+				color: #c095ff;
+				right: 0;
+			}
+			&.point-cc {
+				color: #5fddbb;
+				left: 35px;
+			}
+		}
+ 		&-legend {
+			text-align: center;
+			padding-top: 10px;
+			padding-bottom: 15px;
+			&-point {
+				font-size: 12px;
+				color: #b6b5d8;
+				padding-left: 18px;
+				display: inline-block;
+				position: relative;
+				&:not(:last-child) {
+					padding-right: 15px;
+				}
+				&:before {
+					width: 11px;
+					height: 11px;
+					border-radius: 2px;
+					display: block;
+					position: absolute;
+					content: '';
+					top: 2px;
+					left: 0;
+				}
+				&.point-usd {
+					&:before {
+	  				background-color: #c095ff;
+					}
+				}
+				&.point-cc {
+					&:before {
+	  				background-color: #5fddbb;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+.coin-status {
+  font-size: 10px;
+  color: $color-step-text;
+  text-transform: uppercase;
+  padding-left: 20px;
+  position: relative;
+  margin-top: 15px;
+  text-align: left;
+  font-weight: bold;
+  &-indicator {
+    width: 5px;
+    height: 5px;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    border-radius: 50%;
+    z-index: 5;
+  }
+  &-active {
+    .coin-status-indicator {
+      background-color: #82bcff;
+      &:after {
+        animation: scaleIn 4s infinite cubic-bezier(.36, .11, .89, .32);
+        border-radius: 50%;
+        background-color: deepskyblue;
+        width: 11px;
+        height: 11px;
+        position: absolute;
+        opacity: 0;
+        top: -3px;
+        right: -3px;
+        content: '';
+        z-index: 3;
+      }
+    }
+  }
+  &-close {
+    .coin-status-indicator {
+      background-color: #ff4a7b;
+    }
+  }
+  &-text {
+    @media (max-width: $breakpoint-mobile) {
+      display: none;
+    }
+  }
+  @media (max-width: $breakpoint-mobile) {
+    top: 0;
+    right: 0;
+    position: absolute;
+    margin-top: 0;
+  }
+}

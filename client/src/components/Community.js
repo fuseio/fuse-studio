@@ -22,6 +22,8 @@ export default class Community extends Component {
 
   handleAddCln = () => this.props.handleAddCln(this.props.token, this.props.marketMaker)
 
+  handleLoadCalculator = () => this.props.loadCalculator(this.props.token, this.props.marketMaker)
+
   render () {
     const {currentPrice} = this.props.marketMaker
 
@@ -43,7 +45,7 @@ export default class Community extends Component {
               {formatWei(this.props.token.totalSupply, 0)}
             </span>
           </p>
-          <button className='btn-calculator'>
+          <button onClick={this.handleLoadCalculator} className='btn-calculator'>
             <img src={Calculator} />
           </button>
           <div className={coinStatusClassStyle}>

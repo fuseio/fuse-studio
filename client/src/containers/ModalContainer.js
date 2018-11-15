@@ -11,6 +11,7 @@ import ExchangeModal from 'components/exchange/ExchangeModal'
 import ErrorBoundary from 'components/ErrorBoundary'
 import MetamaskModal from 'components/issuance/MetamaskModal'
 import SimpleExchangeModal from 'components/oven/SimpleExchangeModal'
+import CalculatorModal from 'components/CalculatorModal'
 
 import {
   LOGIN_MODAL,
@@ -20,7 +21,8 @@ import {
   LOADING_MODAL,
   PRICE_EXPLANATION_MODAL,
   METAMASK_ACCOUNT_MODAL,
-  SIMPLE_EXCHANGE_MODAL
+  SIMPLE_EXCHANGE_MODAL,
+  CALCULATOR_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -36,7 +38,8 @@ const MODAL_COMPONENTS = {
   [LOADING_MODAL]: (props) => renderModal(LoadingModal, props),
   [PRICE_EXPLANATION_MODAL]: (props) => renderModal(PriceExplanationModal, props),
   [METAMASK_ACCOUNT_MODAL]: (props) => renderModal(MetamaskModal, props),
-  [SIMPLE_EXCHANGE_MODAL]: (props) => renderModal(SimpleExchangeModal, props)
+  [SIMPLE_EXCHANGE_MODAL]: (props) => renderModal(SimpleExchangeModal, props),
+  [CALCULATOR_MODAL]: (props) => renderModal(CalculatorModal, props)
 }
 
 const ModalContainer = (props) => {

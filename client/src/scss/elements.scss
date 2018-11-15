@@ -3,11 +3,11 @@ body > * {
 	-webkit-overflow-scrolling: touch;
 }
 
-html, body {
+body {
 	height: 100%;
 	width: 100%;
 	margin: 0;
-	font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
+	font-family: $font-family;
 	-webkit-font-smoothing: antialiased;
   	-moz-osx-font-smoothing: grayscale;
   	-webkit-overflow-scrolling: touch;
@@ -24,7 +24,7 @@ p {
 }
 
 input {
-	font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
+	font-family: $font-family;
 	border-radius: 0;
 }
 
@@ -33,7 +33,7 @@ input:focus, textarea:focus {
 }
 
 button {
-	font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
+	font-family: $font-family;
 }
 
 button:disabled, button[disabled] {
@@ -44,6 +44,12 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+input[type="checkbox" i] {
+	margin: 0;
+	padding: 0;
+	display: block;
 }
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */

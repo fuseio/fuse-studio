@@ -1,0 +1,56 @@
+.communities-list {
+	position: absolute;
+	z-index: 11;
+	display: flex;
+  flex-direction: column;
+  right: 0px;
+  width: 100%;
+	top: $nav-height;
+  height: calc(100% - 100px);
+  overflow: auto;
+	padding: 50px 0 100px 0;
+  background-color: rgba(17,13,37, 0.7);
+
+	&-title {
+		font-size: 35px;
+		text-align: center;
+		color: $color-step-text;
+		font-weight: 300;
+		margin-bottom: 30px;
+
+		@media (max-width: $breakpoint-tablet) {
+			font-size: 20px;
+			margin-bottom: 20px;
+		}
+
+		@media (max-width: $breakpoint-mobile) {
+			font-size: 20px;
+			margin-bottom: 20px;
+		}
+	}
+
+	&-container {
+		width: 1250px;
+		margin: 0 auto;
+		@media (max-width: 1250px) {
+			width: 840px;
+		}
+		@media (max-width: $breakpoint-tablet) {
+			width: auto;
+		}
+	}
+
+
+	@media (max-width: $breakpoint-tablet) {
+		height: calc(100% - 70px);
+		bottom: 0;
+		top: auto;
+		justify-content: flex-start;
+    align-items: center;
+		padding: 40px 20px 0 20px
+	}
+	@media (max-width: $breakpoint-mobile) {
+		padding-top: 20px;
+		align-items: normal;
+	}
+}

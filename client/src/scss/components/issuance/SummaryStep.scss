@@ -1,0 +1,116 @@
+.summary {
+	padding: 45px 30px;
+  @media (max-width: $breakpoint-tablet) {
+    padding: 10px 30px;
+    height: 100%;
+    overflow-y: scroll;
+  }
+	h4 {
+		color: #5a5959;
+	}
+	h5 {
+		font-size: 12px;
+		font-weight: 500;
+		line-height: 2.17;
+		letter-spacing: 0;
+		text-align: left;
+		color: #5a5959;
+	}
+	p {
+		font-size: 14px;
+		font-weight: 300;
+		line-height: 1.86;
+		letter-spacing: 0;
+		color: $dark-grey;
+		text-align: left;
+	}
+
+  .icon {
+    width: 30px;
+    height: 30px
+  }
+
+	.summary-prices-wrapper {
+		@include flex-box();
+		flex-direction: column;
+		border-radius: 4px;
+		background-color: #f2f6f6;
+		border: solid 1px #cdcdcd;
+		margin: 30px 0;
+
+		.summary-price {
+			flex:1;
+			padding: 23px 23px 33px;
+			@include flex-box();
+			flex-direction: column;
+    		align-items: center;
+    		justify-content: center;
+			&:nth-child(3) {
+				border-top: solid 1px #cbd1d3;
+				padding: 33px 23px 23px;
+			}
+			.price {
+				font-size: 30px;
+				font-weight: 300;
+				line-height: 1.33;
+				letter-spacing: -0.2px;
+				text-align: center;
+				color: #251783;
+				span {
+					font-size: 14px;
+    				font-weight: 500;
+    				margin-left: 5px;
+				}
+			}
+		}
+
+		.right-arrow {
+			border-radius: 50%;
+			background-color: #ffffff;
+			box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.1);
+			width: 50px;
+			height: 50px;
+			position: absolute;
+			@include flex-box();
+    		justify-content: center;
+    		align-items: center;
+    		left: calc(50% - 25px);
+    		margin-top: 94px;
+
+			img {
+				width:24px;
+				min-width: 22px;
+				height: 12px;
+				transform: rotate(90deg);
+			}
+		}
+	}
+	.line {
+		width:100%;
+		height: 2px;
+		border: solid 1px #cdcdcd;
+		margin: 15px 0 18px;
+	}
+	button {
+		margin-top: 40px;
+		@include button($colu-green);
+		color: white;
+		width: 100%;
+		height:40px;
+	}
+}
+
+.legal-explanation {
+  p {
+    font-size: 10px
+  }
+}
+
+.wallet-container {
+	padding-top: 40px;
+	padding-bottom: 40px;
+
+	@media (max-width: $breakpoint-tablet) {
+		display: none;
+	}
+}

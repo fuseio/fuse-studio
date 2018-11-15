@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ExpandableCommunity from 'components/oven/ExpandableCommunity'
 import InfiniteScroll from 'react-infinite-scroller'
-import {SIMPLE_EXCHANGE_MODAL} from 'constants/uiConstants'
+import {SIMPLE_EXCHANGE_MODAL, CALCULATOR_MODAL} from 'constants/uiConstants'
 
 const PAGE_START = 1
 const PAGE_SIZE = 10
@@ -38,6 +38,11 @@ class CommunitiesList extends Component {
 
   getScrollParent = () => this.myRef.current
 
+  loadCalculator = (token, marketMaker) => this.props.loadModal(
+    CALCULATOR_MODAL,
+    {token: token, marketMaker: marketMaker}
+  )
+
   render () {
     const {addresses} = this.props
     return <div className='communities-list' ref={this.myRef}>
@@ -61,6 +66,7 @@ class CommunitiesList extends Component {
             account={this.props.account}
             openMarket={this.props.openMarket}
             handleAddCln={this.handleAddCln}
+            loadCalculator={this.loadCalculator}
           />
           )}
         </InfiniteScroll>

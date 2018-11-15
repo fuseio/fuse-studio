@@ -1,0 +1,100 @@
+.contact-form-wrapper {
+	border-radius: 2px;
+	position: absolute;
+	//overflow: scroll;
+    top: 130px;
+    width: auto;
+    bottom: 0;
+    right: calc((100vw - 842px)/2);
+    @media (max-width: $breakpoint-tablet) {
+    	right: calc((100vw - 450px)/2);
+    	overflow: scroll;
+    }
+	.contact-form {
+		width: 820px;
+		background-color: white;
+		box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.17);
+		padding: 40px;
+		h4 {
+			text-align: center;
+			font-weight: 500;
+			margin-bottom: 33px;
+		}
+		.success-message {
+    		color: $colu-green;
+    		text-align: center;
+    		@media (max-width: $breakpoint-tablet) {
+    			padding-top: 20px;
+    		}
+    	}
+		form {
+			@include flex-box();
+			@media (max-width: $breakpoint-tablet) {
+				display: block;
+			}
+			.contact-horizontal {
+				width: 100%;
+				padding: 10px 20px 0;
+				@media (max-width: $breakpoint-tablet) {
+					width: auto;
+					padding: 0;
+				}
+				.contact-field-wrapper {
+					@include flex-box();
+    				flex-direction: column;
+    				margin-bottom: 45px;
+    				position: relative;
+    				font-size: 14px;
+    				@media (max-width: $breakpoint-tablet) {
+						font-size: 16px;
+					}
+    				label {
+    					@include label();
+    				}
+    				input, textarea, select {
+    					@include input();
+    				}
+
+    				.input-feedback {
+    					@include input-feedback();
+    				}
+
+    				&.checkbox {
+    					flex-direction: row-reverse;
+    					align-items: center;
+    					justify-content: flex-end;
+    					margin-bottom: 38px;
+    					label {
+    						padding: 10px 0 0 10px;
+    					}
+    				}
+    				&.error {
+						input, textarea, select {
+							border-bottom: solid 1px #ff5705;
+						}
+					}
+
+				}
+				button {
+					@include button($colu-green);
+					color: white;
+					width: 100%;
+					height:36px;
+				}
+				button:disabled, button[disabled] {
+					background-color: rgb(224, 224, 224) !important;
+				}
+			}
+		}
+	}
+	@media (max-width: $breakpoint-tablet) {
+		top:50px;
+
+		right: 0;
+		.contact-form {
+			width: 100vw;
+			min-height: calc(100vh - 50px);
+			padding: 40px 17px;
+		}
+	}
+}
