@@ -5,7 +5,7 @@
   "api": {
     "url": {
       "main": "https://communities.cln.network/api/v1",
-      "ropsten": "https://mainnet.cln.network/api/v1",
+      "ropsten": "https://ropsten.cln.network/api/v1",
       "default": "https://communities.cln.network/api/v1"
     }
   },
