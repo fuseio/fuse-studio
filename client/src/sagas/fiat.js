@@ -1,5 +1,5 @@
-import { all, put, takeEvery } from 'redux-saga/effects'
-
+import { all, put } from 'redux-saga/effects'
+import {tryTakeEvery} from './utils'
 import * as actions from 'actions/fiat'
 import * as api from 'services/api'
 
@@ -15,6 +15,6 @@ function * fetchTokenQuote ({symbol, currency}) {
 
 export default function * pricesSaga () {
   yield all([
-    takeEvery(actions.FETCH_TOKEN_QUOTE.REQUEST, fetchTokenQuote)
+    tryTakeEvery(actions.FETCH_TOKEN_QUOTE, fetchTokenQuote)
   ])
 }

@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import classNames from 'classnames'
 import {connect} from 'react-redux'
@@ -11,7 +12,7 @@ import CommunityLogo from 'components/elements/CommunityLogo'
 
 const MONTHS_IN_YEAR = 12
 
-class CalculatorModal extends Component {
+class EconomicCalculatorModal extends Component {
   state = {
     initialClnReserve: 100,
     amountOfTransactions: 100,
@@ -24,7 +25,6 @@ class CalculatorModal extends Component {
   }
 
   renderChartData (prices) {
-    debugger
     const hAxis = ['Time', '', '', '3 Months', '', '', '6 Months', '', '', '9 Months', '', '', '1 Year']
     const data = prices.map((price, key) => ([
       hAxis[key], parseFloat(price.cln), parseFloat(price.usd)
@@ -56,6 +56,8 @@ class CalculatorModal extends Component {
   handleChangeGainRatio = (event) => {
     this.setState({gainPercentage: event.target.value})
   }
+
+  isChartReady = () => this.props.predictedPrices.length && this.props.tokenAddress === this.props.token.address
 
   render () {
     const coinStatusClassStyle = classNames({
@@ -163,7 +165,7 @@ class CalculatorModal extends Component {
             </div>
           </div>
           <div className='calculator-chart-content'>
-            {this.props.predictedPrices.length ? [
+            {this.isChartReady() ? <div>
               <div className='calculator-chart-point point-usd'>
                 USD
               </div>,
@@ -175,7 +177,8 @@ class CalculatorModal extends Component {
                 chartType='Line'
                 data={this.renderChartData(this.props.predictedPrices)}
                 options={options}
-              />]
+              />
+            </div>
               : <Loader color='#3a3269' className='calculator-logo-img calculator-chart-loader' />
             }
           </div>
@@ -193,12 +196,18 @@ class CalculatorModal extends Component {
   }
 }
 
+EconomicCalculatorModal.propTypes = {
+  token: PropTypes.object.isRequired,
+  marketMaker: PropTypes.object.isRequired
+}
+
 const mapStateToProps = state => ({
-  predictedPrices: state.screens.calculator.prices
+  predictedPrices: state.screens.calculator.prices,
+  tokenAddress: state.screens.calculator.tokenAddress
 })
 
 const mapDispatchToProps = {
   predictClnPrices
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CalculatorModal)
+export default connect(mapStateToProps, mapDispatchToProps)(EconomicCalculatorModal)

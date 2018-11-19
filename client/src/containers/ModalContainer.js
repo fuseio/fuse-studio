@@ -11,7 +11,7 @@ import ExchangeModal from 'components/exchange/ExchangeModal'
 import ErrorBoundary from 'components/ErrorBoundary'
 import MetamaskModal from 'components/issuance/MetamaskModal'
 import SimpleExchangeModal from 'components/oven/SimpleExchangeModal'
-import CalculatorModal from 'components/CalculatorModal'
+import EconomicCalculatorModal from 'components/EconomicCalculatorModal'
 
 import {
   LOGIN_MODAL,
@@ -22,7 +22,7 @@ import {
   PRICE_EXPLANATION_MODAL,
   METAMASK_ACCOUNT_MODAL,
   SIMPLE_EXCHANGE_MODAL,
-  CALCULATOR_MODAL
+  ECONOMIC_CALCULATOR_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -31,15 +31,15 @@ const renderModal = (modalComponent, props) =>
   </ErrorBoundary>
 
 const MODAL_COMPONENTS = {
-  [LOGIN_MODAL]: (props) => renderModal(LoginModal, props),
-  [SOON_MODAL]: (props) => renderModal(ComingSoonModal, props),
-  [EXCHANGE_MODAL]: (props) => renderModal(ExchangeModal, props),
-  [WRONG_NETWORK_MODAL]: (props) => renderModal(WrongNetworkModal, props),
-  [LOADING_MODAL]: (props) => renderModal(LoadingModal, props),
-  [PRICE_EXPLANATION_MODAL]: (props) => renderModal(PriceExplanationModal, props),
-  [METAMASK_ACCOUNT_MODAL]: (props) => renderModal(MetamaskModal, props),
-  [SIMPLE_EXCHANGE_MODAL]: (props) => renderModal(SimpleExchangeModal, props),
-  [CALCULATOR_MODAL]: (props) => renderModal(CalculatorModal, props)
+  [LOGIN_MODAL]: LoginModal,
+  [SOON_MODAL]: ComingSoonModal,
+  [EXCHANGE_MODAL]: ExchangeModal,
+  [WRONG_NETWORK_MODAL]: WrongNetworkModal,
+  [LOADING_MODAL]: LoadingModal,
+  [PRICE_EXPLANATION_MODAL]: PriceExplanationModal,
+  [METAMASK_ACCOUNT_MODAL]: MetamaskModal,
+  [SIMPLE_EXCHANGE_MODAL]: SimpleExchangeModal,
+  [ECONOMIC_CALCULATOR_MODAL]: EconomicCalculatorModal
 }
 
 const ModalContainer = (props) => {
@@ -47,8 +47,8 @@ const ModalContainer = (props) => {
     return null
   }
 
-  const SpecificModal = MODAL_COMPONENTS[props.modalType]
-  return SpecificModal({...props.modalProps, hideModal: props.hideModal})
+  const ModalType = MODAL_COMPONENTS[props.modalType]
+  return renderModal(ModalType, {...props.modalProps, hideModal: props.hideModal})
 }
 
 const mapStateToProps = state => {

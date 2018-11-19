@@ -94,7 +94,6 @@ export function * predictClnPrices ({tokenAddress, initialClnReserve,
   const tokenReserveRequests = clnReservesInWei.map(r1 => call(EllipseMarketMakerContract.methods.calcReserve(
     r1, s1, s2).call))
 
-  console.log(tokenReserveRequests)
   const tokenReserves = yield all(tokenReserveRequests)
 
   const pricesClnInCcRequests = tokenReserves.map((r2, key) => {

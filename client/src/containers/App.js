@@ -9,6 +9,7 @@ import classNames from 'classnames'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import {fetchClnContract} from 'actions/communities'
 import {getNetworkType, checkAccountChanged} from 'actions/network'
+import {fetchTokenQuote} from 'actions/fiat'
 import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
 import {getAddresses} from 'selectors/network'
@@ -33,6 +34,7 @@ class App extends Component {
   }
 
   componentDidMount () {
+    this.props.fetchTokenQuote('CLN', 'USD')
     this.props.getNetworkType()
     onWeb3Ready.then(({web3}) => {
       if (web3.currentProvider.isMetaMask) {
@@ -114,6 +116,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
+  fetchTokenQuote,
   fetchClnContract,
   getNetworkType,
   checkAccountChanged,

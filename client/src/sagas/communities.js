@@ -8,7 +8,6 @@ import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {fetchMetadata} from 'actions/metadata'
 import {createMetadata} from 'sagas/metadata'
 import {createCurrency} from 'sagas/issuance'
-import {fetchTokenQuote} from 'actions/fiat'
 import { contract } from 'osseus-wallet'
 import keyBy from 'lodash/keyBy'
 
@@ -100,8 +99,6 @@ function * fetchClnContract ({tokenAddress}) {
   const response = yield all(calls)
   response.isLocalCurrency = false
   response.address = tokenAddress
-
-  yield put(fetchTokenQuote(response.symbol, 'USD'))
 
   yield entityPut({type: actions.FETCH_CLN_CONTRACT.SUCCESS,
     tokenAddress,
