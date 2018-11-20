@@ -4,6 +4,7 @@ import {BigNumber} from 'bignumber.js'
 
 import Modal from 'components/Modal'
 import {formatWei} from 'utils/format'
+import FontAwesome from 'react-fontawesome'
 import CommunityLogo from 'components/elements/CommunityLogo'
 import TextInput from 'components/elements/TextInput'
 import {connect} from 'react-redux'
@@ -59,17 +60,18 @@ class SimpleExchangeModal extends Component {
           <div className='exchange-modal-amounts'>
             <TextInput id='cln'
               className='exchange-modal-cln'
-              type='string'
+              type='number'
               label='CLN'
               placeholder='CLN amount'
               onChange={this.handleClnChange}
             />
+            <FontAwesome name='exchange-alt' className='exchange-modal-icon' />
             <TextInput id='token'
               className='exchange-modal-token'
-              type='string'
+              type='number'
               label={this.props.token.symbol}
               placeholder={`${this.props.token.symbol} amount`}
-              value={this.getTokenAmount()}
+              value={this.state.clnAmount.length ? this.getTokenAmount() : ''}
               disabled
             />
           </div>

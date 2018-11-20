@@ -61,7 +61,7 @@ services:
         environment:
             - NODE_ENV=${COMMUNITY_APP_ENV}
             - PORT=${COMMUNITY_APP_PORT}
-            - COMMUNITY_MONGO_URI=mongodb://mongo/${MONGO_DBNAME}
+            - COMMUNITY_MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongo/${MONGO_DBNAME}
             - COMMUNITY_MONGO_USER=${MONGO_USER}
             - COMMUNITY_MONGO_PASS=${MONGO_PASS}
             - COMMUNITY_MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}

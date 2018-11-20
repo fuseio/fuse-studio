@@ -21,6 +21,8 @@
       @include flex-box;
 
       .token-info {
+				text-align: left;
+				margin-left: 10px;
         @include flex-box;
         @include flex-direction(column);
       }
@@ -32,35 +34,99 @@
         color: $color-step;
         margin-right: 10px;
       }
+
+			.coin-logo {
+				height: 50px;
+				.logo-img {
+					width: 50px;
+				 	height: 50px;
+				}
+				.symbol-text {
+					font-size: 10px;
+				}
+			}
     }
 
     &-middle {
       border-radius: 3px;
       box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
       background-color: #f6f7fb;
-      height: 180px;
+      height: 150px;
       margin: 20px;
       position: relative;
       bottom: 80px;
+			.contact-field-wrapper {
+				width: 170px;
+				@media (max-width: $breakpoint-mobile) {
+					width: 100px;
+				}
+			}
     }
     &-down {
-      height: 130px;
+      height: 95px;
       background-color: #eceff6;
+			.label {
+				color: #6e6d9f;
+				font-size: 11px;
+				height: 13px;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
     }
 
     &-amounts {
       @include flex-box;
       padding: 20px;
+			justify-content: center;
+    	align-items: center;
     }
+
+		&-icon {
+			color:  #b6b5d8;
+			margin-left: 10px;
+			margin-right: 15px;
+		}
 
     &-cln {
       @include flex-box;
       @include flex-direction(column);
+			input {
+				color: #5fddbb;
+				font-size: 16px;
+				border: none;
+				outline: none;
+				background: none;
+				text-align: center;
+				font-weight: bold;
+				&::placeholder {
+					font-size: 20px;
+					color: #d4d5eb;
+				}
+				@media (max-width: $breakpoint-mobile) {
+					font-size: 14px;
+				}
+			}
     }
 
     &-token {
       @include flex-box;
       @include flex-direction(column);
+			input {
+				color: #6e6d9f;
+				font-size: 16px;
+				border: none;
+				outline: none;
+				background: none;
+				text-align: center;
+				font-weight: bold;
+				&::placeholder {
+					font-size: 16px;
+					color: #d4d5eb;
+				}
+				@media (max-width: $breakpoint-mobile) {
+					font-size: 14px;
+				}
+			}
     }
 
   }
@@ -78,5 +144,9 @@
 		cursor: pointer;
 		background-image: linear-gradient(to bottom, #5c5895, #39366e);
 	}
-  margin: 50px;
+	&[disabled] {
+		&:hover {
+			background: #979797 !important;
+		}
+	}
 }
