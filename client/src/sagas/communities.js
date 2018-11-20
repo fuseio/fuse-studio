@@ -8,6 +8,7 @@ import {fetchMarketMakerData} from 'sagas/marketMaker'
 import {fetchMetadata} from 'actions/metadata'
 import {createMetadata} from 'sagas/metadata'
 import {createCurrency} from 'sagas/issuance'
+import {getAccountAddress} from 'selectors/accounts'
 import { contract } from 'osseus-wallet'
 import keyBy from 'lodash/keyBy'
 
@@ -15,10 +16,7 @@ const entityPut = createEntityPut(actions.entityName)
 
 function * fetchCommunity ({tokenAddress}) {
   const token = yield select(state => state.tokens[tokenAddress])
-  if (token.tokenURI) {
-    const [protocol, hash] = token.tokenURI.split('://')
-    yield put(fetchMetadata(protocol, hash, tokenAddress))
-  }
+  yield put(fetchMetadata(token.tokenURI, tokenAddress))
 
   yield fork(fetchMarketMakerData, {tokenAddress, mmAddress: token.mmAddress})
 
@@ -113,6 +111,12 @@ function * issueCommunity ({communityMetadata, currencyData}) {
 
   yield apiCall(addCommunity, {
     receipt
+  })
+
+  const owner = yield select(getAccountAddress)
+  yield put({
+    type: actions.FETCH_COMMUNITIES_BY_OWNER.REQUEST,
+    owner
   })
 
   const tokenAddress = receipt.events.TokenCreated.returnValues.token

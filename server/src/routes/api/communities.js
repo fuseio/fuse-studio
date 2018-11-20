@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/owner/:address', async (req, res) => {
   const owner = req.params.address
-  const results = await Community.find({owner})
+  const results = await Community.find({ owner }).sort({ blockNumber: -1 })
 
   res.json({
     object: 'list',

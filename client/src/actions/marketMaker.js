@@ -1,4 +1,4 @@
-import {action, createRequestTypes} from './utils'
+import {action, createRequestTypes, createTransactionRequestTypes} from './utils'
 
 export const quoteAction = (type, payload) => ({
   ...action(type, payload),
@@ -11,8 +11,7 @@ export const FETCH_MARKET_MAKER_DATA = createRequestTypes('FETCH_MARKET_MAKER_DA
 
 export const QUOTE = createRequestTypes('QUOTE')
 export const INVERT_QUOTE = createRequestTypes('INVERT_QUOTE')
-export const CHANGE = createRequestTypes('CHANGE')
-CHANGE.PENDING = 'CHANGE_PENDING'
+export const CHANGE = createTransactionRequestTypes('CHANGE')
 
 export const BUY_QUOTE = createRequestTypes('BUY_QUOTE')
 export const SELL_QUOTE = createRequestTypes('SELL_QUOTE')

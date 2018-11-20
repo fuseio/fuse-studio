@@ -6,7 +6,6 @@ import LoginModal from 'components/LoginModal'
 import ComingSoonModal from 'components/ComingSoonModal'
 import WrongNetworkModal from 'components/WrongNetworkModal'
 import LoadingModal from 'components/LoadingModal'
-import PriceExplanationModal from 'components/PriceExplanationModal'
 import ExchangeModal from 'components/exchange/ExchangeModal'
 import ErrorBoundary from 'components/ErrorBoundary'
 import MetamaskModal from 'components/issuance/MetamaskModal'
@@ -19,7 +18,6 @@ import {
   WRONG_NETWORK_MODAL,
   EXCHANGE_MODAL,
   LOADING_MODAL,
-  PRICE_EXPLANATION_MODAL,
   METAMASK_ACCOUNT_MODAL,
   SIMPLE_EXCHANGE_MODAL,
   ECONOMIC_CALCULATOR_MODAL
@@ -36,7 +34,6 @@ const MODAL_COMPONENTS = {
   [EXCHANGE_MODAL]: ExchangeModal,
   [WRONG_NETWORK_MODAL]: WrongNetworkModal,
   [LOADING_MODAL]: LoadingModal,
-  [PRICE_EXPLANATION_MODAL]: PriceExplanationModal,
   [METAMASK_ACCOUNT_MODAL]: MetamaskModal,
   [SIMPLE_EXCHANGE_MODAL]: SimpleExchangeModal,
   [ECONOMIC_CALCULATOR_MODAL]: EconomicCalculatorModal

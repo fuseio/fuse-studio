@@ -13,7 +13,7 @@ export function * createCurrency ({name, symbol, decimals, totalSupply, tokenURI
   })
   const accountAddress = yield select(getAccountAddress)
 
-  const receipt = yield CurrencyFactoryContract.methods.createCurrency(
+  const createCurrencyPromise = CurrencyFactoryContract.methods.createCurrency(
     name,
     symbol,
     decimals,
@@ -23,10 +23,26 @@ export function * createCurrency ({name, symbol, decimals, totalSupply, tokenURI
     from: accountAddress
   })
 
+  const transactionHash = yield new Promise((resolve, reject) => {
+    createCurrencyPromise.on('transactionHash', (transactionHash) =>
+      resolve(transactionHash)
+    )
+    createCurrencyPromise.on('error', (error) =>
+      reject(error)
+    )
+  })
+
+  yield put({type: actions.CREATE_CURRENCY.PENDING,
+    response: {
+      transactionHash
+    }
+  })
+
+  const receipt = yield createCurrencyPromise
+
   if (!Number(receipt.status)) {
     yield put({
       type: actions.CREATE_CURRENCY.FAILURE,
-      tokenAddress: receipt.address,
       accountAddress,
       response: {receipt}
     })

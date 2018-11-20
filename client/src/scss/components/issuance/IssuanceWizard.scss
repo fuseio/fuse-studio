@@ -228,6 +228,12 @@
 		}
 	}
 	&-content {
+
+    .loader {
+      height: 60px;
+      width: 180px;
+    }
+    
 		background-image: linear-gradient(352deg, $color-issuance, #2d235e);
   	box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.49);
 		min-height: calc(100vh - 310px);

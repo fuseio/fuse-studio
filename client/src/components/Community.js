@@ -8,9 +8,10 @@ import Calculator from 'images/Calculator.svg'
 import { BigNumber } from 'bignumber.js'
 import identity from 'lodash/identity'
 
+const canInsertCLN = (props) => props.marketMaker.isOpenForPublic || props.account === props.token.owner
+
 export default class Community extends Component {
-  canInsertCLN = () =>
-    this.props.marketMaker.isOpenForPublic || this.props.account === this.props.token.owner
+  canInsertCLN = () => this.props.canInsertCLN(this.props)
 
   canOpenMarket = () => !this.props.marketMaker.isOpenForPublic && this.props.account === this.props.token.owner
 
@@ -84,6 +85,7 @@ export default class Community extends Component {
 }
 
 Community.defaultProps = {
+  canInsertCLN,
   coinWrapperClassName: 'coin-wrapper',
   token: {
   },
@@ -94,11 +96,13 @@ Community.defaultProps = {
   },
   handleOpen: identity,
   handleAddCln: identity,
-  openMarket: identity
+  openMarket: identity,
+  loadCalculator: identity
 }
 
 Community.propTypes = {
   coinWrapperClassName: PropTypes.string,
+  canInsertCLN: PropTypes.func,
   handleOpen: PropTypes.func,
   openMarket: PropTypes.func,
   handleAddCln: PropTypes.func,

@@ -1,13 +1,22 @@
+import {REQUEST, PENDING, SUCCESS, FAILURE} from 'actions/constants'
+
 export const action = (type, payload = {}) => ({
   type, ...payload
 })
 
-export const REQUEST = 'REQUEST'
-export const SUCCESS = 'SUCCESS'
-export const FAILURE = 'FAILURE'
+const requestTypes = [REQUEST, SUCCESS, FAILURE]
 
 export function createRequestTypes (base) {
-  return [REQUEST, SUCCESS, FAILURE].reduce((acc, type) => {
+  return requestTypes.reduce((acc, type) => {
+    acc[type] = `${base}_${type}`
+    return acc
+  }, {})
+}
+
+const transactionRequestTypes = [REQUEST, PENDING, SUCCESS, FAILURE]
+
+export function createTransactionRequestTypes (base) {
+  return transactionRequestTypes.reduce((acc, type) => {
     acc[type] = `${base}_${type}`
     return acc
   }, {})

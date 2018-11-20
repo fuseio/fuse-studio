@@ -21,10 +21,8 @@ module.exports = (mongoose) => {
   }).plugin(timestamps())
 
   CommunitySchema.index({ccAddress: 1}, {unique: true})
-  CommunitySchema.index({mmAddress: 1}, {unique: true})
   CommunitySchema.index({owner: 1})
-  CommunitySchema.index({factoryAddress: 1})
-  CommunitySchema.index({factoryAddress: 1, factoryType: 1, factoryVersion: 1})
+  CommunitySchema.index({blockNumber: -1})
 
   CommunitySchema.set('toJSON', {
     versionKey: false

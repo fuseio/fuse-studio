@@ -3,12 +3,19 @@ import { all, put } from 'redux-saga/effects'
 import {tryTakeEvery, apiCall} from './utils'
 import * as api from 'services/api'
 import * as actions from 'actions/metadata'
+import {DEFAULT_COMMUNITY_METADATA_LOGO} from 'constants/uiConstants'
 
-function * fetchMetadata ({protocol, hash, tokenAddress}) {
+function * fetchMetadata ({tokenURI, tokenAddress}) {
+  if (!tokenURI) {
+    throw new Error(`No tokenURI for token ${tokenAddress}`)
+  }
+
+  const [protocol, hash] = tokenURI.split('://')
+
   const {data} = yield apiCall(api.fetchMetadata, protocol, hash)
 
   if (data.metadata.image) {
-    data.metadata.imageLink = api.API_ROOT + '/images/' + data.metadata.image.split('//')[1]
+    data.metadata.communityLogo = DEFAULT_COMMUNITY_METADATA_LOGO
   }
 
   yield put({

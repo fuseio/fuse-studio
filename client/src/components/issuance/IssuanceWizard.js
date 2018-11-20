@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import classNames from 'classnames'
 import {connect} from 'react-redux'
@@ -23,8 +24,7 @@ class IssuanceWizard extends Component {
     totalSupply: '',
     communityLogo: {},
     stepPosition: {},
-    scrollPosition: 0,
-    disabledSubmitBtn: false
+    scrollPosition: 0
   }
 
   componentDidMount () {
@@ -59,35 +59,28 @@ class IssuanceWizard extends Component {
       totalSupply: new BigNumber(this.state.totalSupply).multipliedBy(1e18)
     }
     const communityMetadata = {'communityType': this.state.communityType.text, 'communityLogo': this.state.communityLogo.name}
-    this.setState({disabledSubmitBtn: true})
     this.props.issueCommunity(communityMetadata, currencyData)
     this.props.hideModal()
   }
 
-  handleScroll = () => {
-    this.setState({scrollPosition: window.scrollY})
-  }
+  handleScroll = () => this.setState({scrollPosition: window.scrollY})
 
-  setQuitIssuance () {
-    this.props.history.goBack()
-  }
+  setQuitIssuance = () => this.props.history.goBack()
 
   handleChangeCommunityName = (event) => {
     this.setState({communityName: event.target.value})
     this.setState({communitySymbol: nameToSymbol(event.target.value)})
   }
 
-  setPreviousStep = () => {
+  setPreviousStep = () =>
     this.setState({
       activeStep: this.state.activeStep - 1
     })
-  }
 
-  setNextStep () {
+  setNextStep = () =>
     this.setState({
       activeStep: this.state.activeStep + 1
     })
-  }
 
   handleChangeCommunitySymbol = (communitySymbol) => {
     this.setState({communitySymbol})
@@ -109,14 +102,14 @@ class IssuanceWizard extends Component {
           <NameStep
             communityName={name}
             handleChangeCommunityName={this.handleChangeCommunityName}
-            setNextStep={() => this.setNextStep()}
+            setNextStep={this.setNextStep}
           />
         )
       case 1:
         return (
           <SymbolStep
             communityName={name}
-            setNextStep={() => this.setNextStep()}
+            setNextStep={this.setNextStep}
             handleChangeCommunitySymbol={this.handleChangeCommunitySymbol}
             communitySymbol={this.state.communitySymbol}
           />
@@ -131,18 +124,18 @@ class IssuanceWizard extends Component {
             communitySymbol={this.state.communitySymbol}
             communityLogo={this.state.communityLogo}
             setCommunityLogo={this.setCommunityLogo}
-            setNextStep={() => this.setNextStep()}
+            setNextStep={this.setNextStep}
           />
         )
       case 3:
         return (
           <SummaryStep
             communityName={name}
-            communityLogo={this.state.communityLogo.icon}
+            communityLogo={this.state.communityLogo.name}
             totalSupply={this.state.totalSupply}
             communitySymbol={this.state.communitySymbol}
-            showPopup={() => this.showMetamaskPopup()}
-            disabledDoneBtn={this.state.disabledSubmitBtn}
+            showPopup={this.showMetamaskPopup}
+            transactionStatus={this.props.transactionStatus}
           />
         )
     }
@@ -180,7 +173,7 @@ class IssuanceWizard extends Component {
             </button>}
             <button
               className='quit-button ctrl-btn'
-              onClick={() => this.setQuitIssuance()}
+              onClick={this.setQuitIssuance}
             >
               <FontAwesome className='ctrl-icon' name='times' />
               <span className='btn-text'>Quit</span>
@@ -203,10 +196,20 @@ class IssuanceWizard extends Component {
   }
 }
 
+IssuanceWizard.propTypes = {
+  transactionHash: PropTypes.string,
+  receipt: PropTypes.object,
+  transactionStatus: PropTypes.string
+}
+
+const mapStateToProps = (state) => ({
+  ...state.screens.issuance
+})
+
 const mapDispatchToProps = {
   issueCommunity,
   loadModal,
   hideModal
 }
 
-export default connect(null, mapDispatchToProps)(IssuanceWizard)
+export default connect(mapStateToProps, mapDispatchToProps)(IssuanceWizard)
