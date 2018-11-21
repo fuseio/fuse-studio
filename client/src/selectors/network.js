@@ -13,6 +13,11 @@ export const getCurrencyFactoryAddress = createSelector(
   (addresses) => addresses.CurrencyFactory
 )
 
+export const getClnAddress = createSelector(
+  getAddresses,
+  (addresses) => addresses.ColuLocalNetwork
+)
+
 export const getCommunityAddresses = createSelector(
   getAddresses,
   (addresses) => addresses ? [
@@ -26,7 +31,6 @@ export const getTokenAddresses = createSelector(
   getAddresses,
   getCommunityAddresses,
   (addresses, communityAddresses) => addresses ? [
-    ...communityAddresses,
     addresses.ColuLocalNetwork
   ] : []
 )

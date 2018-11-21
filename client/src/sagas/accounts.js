@@ -3,7 +3,7 @@ import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/accounts'
 import {tryTakeEvery} from './utils'
-import {getAddresses, getCommunityAddresses} from 'selectors/network'
+import {getClnAddress} from 'selectors/network'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 
 function * balanceOf ({tokenAddress, accountAddress, blockNumber}) {
@@ -18,28 +18,19 @@ function * balanceOf ({tokenAddress, accountAddress, blockNumber}) {
     }})
 }
 
-function * updateBalances ({accountAddress}) {
-  const addresses = yield select(getAddresses)
-  const communityAddresses = yield select(getCommunityAddresses)
-  if (addresses) {
-    yield put({type: actions.BALANCE_OF.REQUEST, tokenAddress: addresses.ColuLocalNetwork, accountAddress})
-    for (let communityAddress of communityAddresses) {
-      yield put({type: actions.BALANCE_OF.REQUEST, tokenAddress: communityAddress, accountAddress})
-    }
-  }
+export function * balanceOfCln ({accountAddress}) {
+  const tokenAddress = yield select(getClnAddress)
+  yield call(balanceOf, {tokenAddress, accountAddress})
 }
 
 export function * watchAccountChanged ({response}) {
-  yield put({
-    type: actions.UPDATE_BALANCES.REQUEST,
-    accountAddress: response.accountAddress
-  })
+  yield put(actions.balanceOfCln(response.accountAddress))
 }
 
 export default function * accountsSaga () {
   yield all([
     tryTakeEvery(actions.BALANCE_OF, balanceOf),
-    tryTakeEvery(actions.UPDATE_BALANCES, updateBalances),
+    tryTakeEvery(actions.BALANCE_OF_CLN, balanceOfCln),
     takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged)
   ])
 }

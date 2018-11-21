@@ -1,9 +1,10 @@
-import { all, call, put, select } from 'redux-saga/effects'
+import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 import {BigNumber} from 'bignumber.js'
 import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/marketMaker'
 import {fetchGasPrices} from 'actions/network'
+import {balanceOfCln} from 'actions/accounts'
 import {getClnToken, getCommunity} from 'selectors/communities'
 import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
@@ -46,7 +47,7 @@ const computePrice = (isBuy, inAmount, outAmount) => {
   }
 }
 
-export function * quote ({tokenAddress, amount, isBuy}) {
+function * quote ({tokenAddress, amount, isBuy}) {
   const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
 
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
@@ -74,7 +75,7 @@ export function * quote ({tokenAddress, amount, isBuy}) {
   return quotePair
 }
 
-export function * predictClnPrices ({tokenAddress, initialClnReserve,
+function * predictClnPrices ({tokenAddress, initialClnReserve,
   amountOfTransactions, averageTransactionInUsd, gainRatio, iterations}) {
   const clnPrice = yield select(state => state.fiat.USD.price)
   const clnReserves = predictClnReserves({initialClnReserve,
@@ -120,7 +121,7 @@ export function * predictClnPrices ({tokenAddress, initialClnReserve,
   })
 }
 
-export function * invertQuote ({tokenAddress, amount, isBuy}) {
+function * invertQuote ({tokenAddress, amount, isBuy}) {
   const clnToken = yield select(getClnToken)
   const token = yield select(getCommunity, tokenAddress)
 
@@ -196,7 +197,7 @@ function * createChangeDataForCurrencyFactory ({toTokenAddress, amount, isBuy}) 
   }
 }
 
-export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
+function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
   const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
   const data = yield createChangeData({toTokenAddress, amount, minReturn, isBuy, token})
 
@@ -250,7 +251,7 @@ export function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
   return receipt
 }
 
-export function * estimageChange ({tokenAddress, amount, minReturn, isBuy}) {
+function * estimageChange ({tokenAddress, amount, minReturn, isBuy}) {
   const {token, fromTokenAddress, toTokenAddress} = yield getChangeParameters(tokenAddress, isBuy)
 
   const data = yield createChangeDataForMarketMaker({toTokenAddress, amount, minReturn, isBuy, token})
@@ -264,7 +265,7 @@ export function * estimageChange ({tokenAddress, amount, minReturn, isBuy}) {
     {from: accountAddress})
 }
 
-export function * buyQuote ({tokenAddress, clnAmount}) {
+function * buyQuote ({tokenAddress, clnAmount}) {
   yield call(quote, {
     tokenAddress,
     amount: clnAmount,
@@ -272,7 +273,7 @@ export function * buyQuote ({tokenAddress, clnAmount}) {
   })
 }
 
-export function * sellQuote ({tokenAddress, ccAmount}) {
+function * sellQuote ({tokenAddress, ccAmount}) {
   yield call(quote, {
     tokenAddress,
     amount: ccAmount,
@@ -280,7 +281,7 @@ export function * sellQuote ({tokenAddress, ccAmount}) {
   })
 }
 
-export function * invertBuyQuote ({tokenAddress, ccAmount}) {
+function * invertBuyQuote ({tokenAddress, ccAmount}) {
   yield call(invertQuote, {
     tokenAddress,
     amount: ccAmount,
@@ -288,7 +289,7 @@ export function * invertBuyQuote ({tokenAddress, ccAmount}) {
   })
 }
 
-export function * invertSellQuote ({tokenAddress, clnAmount}) {
+function * invertSellQuote ({tokenAddress, clnAmount}) {
   yield call(invertQuote, {
     tokenAddress,
     amount: clnAmount,
@@ -296,7 +297,7 @@ export function * invertSellQuote ({tokenAddress, clnAmount}) {
   })
 }
 
-export function * buyCc ({amount, tokenAddress, minReturn, options}) {
+function * buyCc ({amount, tokenAddress, minReturn, options}) {
   yield call(change, {
     tokenAddress,
     amount,
@@ -306,7 +307,7 @@ export function * buyCc ({amount, tokenAddress, minReturn, options}) {
   })
 }
 
-export function * sellCc ({amount, tokenAddress, minReturn, options}) {
+function * sellCc ({amount, tokenAddress, minReturn, options}) {
   yield call(change, {
     tokenAddress,
     amount,
@@ -316,7 +317,7 @@ export function * sellCc ({amount, tokenAddress, minReturn, options}) {
   })
 }
 
-export function * estimateGasBuyCc ({amount, tokenAddress, minReturn}) {
+function * estimateGasBuyCc ({amount, tokenAddress, minReturn}) {
   const estimatedGas = yield call(estimageChange, {
     tokenAddress,
     amount,
@@ -360,7 +361,7 @@ function * getCurrentPrice (contract, blockNumber) {
   }
 }
 
-export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) {
+function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) {
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: mmAddress})
 
   const calls = {
@@ -382,7 +383,7 @@ export function * fetchMarketMakerData ({tokenAddress, mmAddress, blockNumber}) 
   })
 }
 
-export function * openMarket ({tokenAddress}) {
+function * openMarket ({tokenAddress}) {
   const accountAddress = yield select(getAccountAddress)
   const currencyFactoryAddress = yield select(getCurrencyFactoryAddress)
 
@@ -416,6 +417,12 @@ export function * openMarket ({tokenAddress}) {
   return receipt
 }
 
+function * handleSuccessfulChange ({tokenAddress, accountAddress}) {
+  const token = yield select(getCommunity, tokenAddress)
+  yield put(actions.fetchMarketMakerData(tokenAddress, token.mmAddress))
+  yield put(balanceOfCln(accountAddress))
+}
+
 export default function * marketMakerSaga () {
   yield all([
     tryTakeEvery(actions.QUOTE, quote),
@@ -430,6 +437,7 @@ export default function * marketMakerSaga () {
     tryTakeEvery(actions.ESTIMATE_GAS_SELL_CC, estimateGasSellCc),
     tryTakeEvery(actions.FETCH_MARKET_MAKER_DATA, fetchMarketMakerData),
     tryTakeEvery(actions.PREDICT_CLN_PRICES, predictClnPrices, 1),
-    tryTakeEvery(actions.OPEN_MARKET, openMarket, 1)
+    tryTakeEvery(actions.OPEN_MARKET, openMarket, 1),
+    takeEvery(actions.CHANGE.SUCCESS, handleSuccessfulChange)
   ])
 }

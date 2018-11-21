@@ -52,7 +52,7 @@ export default class Community extends Component {
           <div className={coinStatusClassStyle}>
             <span className='coin-status-indicator' />
             <span className='coin-status-text' onClick={this.openMarket}>
-              {this.props.marketMaker.isOpenForPublic ? 'open to public' : 'close to public'}
+              {this.props.marketMaker.isOpenForPublic ? 'open to public' : 'closed to public'}
             </span>
           </div>
         </div>

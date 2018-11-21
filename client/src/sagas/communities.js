@@ -1,10 +1,10 @@
-import { all, put, call, select, fork } from 'redux-saga/effects'
+import { all, put, call, select } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery, apiCall} from './utils'
 import * as actions from 'actions/communities'
 import {addCommunity, fetchCommunities as fetchCommunitiesApi,
   fetchCommunitiesByOwner as fetchCommunitiesByOwnerApi} from 'services/api'
-import {fetchMarketMakerData} from 'sagas/marketMaker'
+import {fetchMarketMakerData} from 'actions/marketMaker'
 import {fetchMetadata} from 'actions/metadata'
 import {createMetadata} from 'sagas/metadata'
 import {createCurrency} from 'sagas/issuance'
@@ -16,9 +16,9 @@ const entityPut = createEntityPut(actions.entityName)
 
 function * fetchCommunity ({tokenAddress}) {
   const token = yield select(state => state.tokens[tokenAddress])
-  yield put(fetchMetadata(token.tokenURI, tokenAddress))
 
-  yield fork(fetchMarketMakerData, {tokenAddress, mmAddress: token.mmAddress})
+  yield put(fetchMetadata(token.tokenURI, tokenAddress))
+  yield put(fetchMarketMakerData(tokenAddress, token.mmAddress))
 
   yield entityPut({type: actions.FETCH_COMMUNITY.SUCCESS, tokenAddress})
   return token

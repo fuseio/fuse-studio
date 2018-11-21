@@ -68,7 +68,7 @@ class SimpleExchangeModal extends Component {
             <FontAwesome name='exchange-alt' className='exchange-modal-icon' />
             <TextInput id='token'
               className='exchange-modal-token'
-              type='number'
+              type='string'
               label={this.props.token.symbol}
               placeholder={`${this.props.token.symbol} amount`}
               value={this.state.clnAmount.length ? this.getTokenAmount() : ''}
