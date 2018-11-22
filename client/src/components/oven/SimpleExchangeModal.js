@@ -89,9 +89,14 @@ SimpleExchangeModal.propTypes = {
   marketMaker: PropTypes.object.isRequired
 }
 
+const mapStateToProps = (state, {tokenAddress}) => ({
+  token: state.tokens[tokenAddress],
+  marketMaker: state.marketMaker[tokenAddress]
+})
+
 const mapDispatchToProps = {
   buyQuote,
   buyCc
 }
 
-export default connect(null, mapDispatchToProps)(SimpleExchangeModal)
+export default connect(mapStateToProps, mapDispatchToProps)(SimpleExchangeModal)

@@ -23,7 +23,7 @@ class CommunitiesList extends Component {
   }
 
   handleAddCln = (token, marketMaker) => {
-    this.props.loadModal(SIMPLE_EXCHANGE_MODAL, {token, marketMaker})
+    this.props.loadModal(SIMPLE_EXCHANGE_MODAL, {tokenAddress: token.address})
   }
 
   loadMore = (nextPage) => {
