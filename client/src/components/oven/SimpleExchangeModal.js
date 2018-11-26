@@ -9,10 +9,27 @@ import CommunityLogo from 'components/elements/CommunityLogo'
 import TextInput from 'components/elements/TextInput'
 import {connect} from 'react-redux'
 import {buyQuote, buyCc} from 'actions/marketMaker'
+import {PENDING, SUCCESS} from 'actions/constants'
+import Loader from 'components/Loader'
 
 class SimpleExchangeModal extends Component {
   state = {
     clnAmount: 0
+  }
+
+  renderTransactionStatus = (transactionStatus) => {
+    switch (transactionStatus) {
+      case PENDING:
+        return <Loader color='#3a3269' className='loader' />
+      case SUCCESS:
+        return (<button className='btn-exchange' disabled>
+          SUCCESS
+        </button>)
+      default:
+        return (<button className='btn-exchange' onClick={this.handleExchange} disabled={this.isExchangeDisabled()}>
+          ADD CLN
+        </button>)
+    }
   }
 
   handleClnChange = (event) => {
@@ -38,7 +55,7 @@ class SimpleExchangeModal extends Component {
   isExchangeDisabled = () => !this.state.clnAmount || this.props.transactionHash
 
   getStatus = () => this.props.receipt ? 'SUCCESS'
-    : (this.props.transactionHash ? 'PENDING' : 'EXCHANGE')
+    : (this.props.transactionHash ? 'PENDING' : 'ADD CLN')
 
   render = () => (
     <Modal className='exchange-modal' onClose={this.props.hideModal}>
@@ -75,9 +92,7 @@ class SimpleExchangeModal extends Component {
               disabled
             />
           </div>
-          <button className='btn-exchange' onClick={this.handleExchange} disabled={this.isExchangeDisabled()}>
-            {this.getStatus()}
-          </button>
+          {this.renderTransactionStatus(this.props.transactionStatus)}
         </div>
       </div>
     </Modal>

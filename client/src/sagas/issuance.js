@@ -3,6 +3,7 @@ import { contract } from 'osseus-wallet'
 import {getAddresses} from 'selectors/network'
 
 import * as actions from 'actions/issuance'
+import {transactionPending, transactionFailed, transactionSucceeded} from 'actions/utils'
 import {tryTakeEvery} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
 
@@ -32,30 +33,17 @@ export function * createCurrency ({name, symbol, decimals, totalSupply, tokenURI
     )
   })
 
-  yield put({type: actions.CREATE_CURRENCY.PENDING,
-    response: {
-      transactionHash
-    }
-  })
+  yield put(transactionPending(actions.CREATE_CURRENCY, transactionHash))
 
   const receipt = yield createCurrencyPromise
 
   if (!Number(receipt.status)) {
-    yield put({
-      type: actions.CREATE_CURRENCY.FAILURE,
-      accountAddress,
-      response: {receipt}
-    })
+    yield put(transactionFailed(actions.CREATE_CURRENCY, receipt))
     return receipt
   }
 
-  yield put({type: actions.CREATE_CURRENCY.SUCCESS,
-    tokenAddress: receipt.address,
-    accountAddress,
-    response: {
-      receipt
-    }
-  })
+  yield put(transactionSucceeded(actions.CREATE_CURRENCY, receipt))
+
   return receipt
 }
 

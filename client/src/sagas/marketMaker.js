@@ -10,6 +10,7 @@ import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
 import {predictClnReserves} from 'utils/calculator'
 import {getCurrencyFactoryAddress} from 'selectors/network'
+import {transactionPending, transactionFailed, transactionSucceeded} from 'actions/utils'
 
 const reversePrice = (price) => new BigNumber(1e18).div(price)
 
@@ -221,32 +222,16 @@ function * change ({tokenAddress, amount, minReturn, isBuy, options}) {
     )
   })
 
-  yield put({type: actions.CHANGE.PENDING,
-    tokenAddress: token.address,
-    accountAddress,
-    response: {
-      transactionHash
-    }
-  })
+  yield put(transactionPending(actions.CHANGE, transactionHash))
 
   const receipt = yield sendPromise
+
   if (!Number(receipt.status)) {
-    yield put({
-      type: actions.CHANGE.FAILURE,
-      tokenAddress: token.address,
-      accountAddress,
-      response: {receipt}
-    })
+    yield put(transactionFailed(actions.CHANGE, receipt))
     return receipt
   }
 
-  yield put({type: actions.CHANGE.SUCCESS,
-    tokenAddress: token.address,
-    accountAddress: accountAddress,
-    response: {
-      receipt
-    }
-  })
+  yield put({...transactionSucceeded(actions.CHANGE, receipt), tokenAddress, accountAddress})
 
   return receipt
 }
@@ -398,22 +383,12 @@ function * openMarket ({tokenAddress}) {
   })
 
   if (!Number(receipt.status)) {
-    yield put({
-      type: actions.OPEN_MARKET.FAILURE,
-      tokenAddress: receipt.address,
-      accountAddress,
-      response: {receipt}
-    })
+    yield put(transactionFailed(actions.OPEN_MARKET, receipt))
     return receipt
   }
 
-  yield put({type: actions.OPEN_MARKET.SUCCESS,
-    tokenAddress: receipt.address,
-    accountAddress,
-    response: {
-      receipt
-    }
-  })
+  yield put({...transactionSucceeded(actions.OPEN_MARKET, receipt), tokenAddress})
+
   return receipt
 }
 

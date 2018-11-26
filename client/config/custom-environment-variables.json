@@ -1,7 +1,6 @@
 {
   "web3": {
-    "provider": "COMMUNITY_WEB3_PROVIDER",
-    "websocketProvider": "COMMUNITY_WEB3_WEBSOCKET_PROVIDER"
+    "provider": "COMMUNITY_WEB3_PROVIDER"
   },
   "api": {
     "url": {
@@ -9,7 +8,6 @@
       "ropsten": "COMMUNITY_API_URL_ROPSTEN",
       "default": "COMMUNITY_API_URL_DEFAULT"
     },
-    "marketsPolling": "COMMUNITY_API_MARKETS_POLLING",
     "retryTimeout": "COMMUNITY_API_RETRY_TIMEOUT",
     "retryCount": "COMMUNITY_API_RETRY_COUNT"
   },

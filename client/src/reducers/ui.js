@@ -14,8 +14,6 @@ export default (state = {
     return {...state, modalProps: {...state.modalProps, ...action.response}}
   }
   switch (action.type) {
-    case ui.ACTIVE_MARKER:
-      return {...state, activeMarker: action.coinAddress}
     case ui.ZOOM:
       return {...state, zoom: action.zoom}
     case ui.SHOW_MODAL:

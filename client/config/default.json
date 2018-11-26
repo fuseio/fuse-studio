@@ -1,9 +1,7 @@
 {
   "web3": {
     "provider": "http://localhost:8545",
-    "websocketProvider": "ws://127.0.0.1:8546",
-    "supportedNetworks": ["main", "ropsten"],
-    "desiredNetworks": ["main", "ropsten"]
+    "supportedNetworks": ["main", "ropsten"]
   },
   "api": {
     "url": {
@@ -12,7 +10,6 @@
       "default": "http://localhost:3000/api/v1"
     },
     "timeout": 3000,
-    "marketsPolling": 30000,
     "retryTimeout": 500,
     "retryCount": 5
   },

@@ -22,5 +22,32 @@ export function createTransactionRequestTypes (base) {
   }, {})
 }
 
+export const transactionPending = (action, transactionHash, response = {}) => ({
+  type: action.PENDING,
+  response: {
+    ...response,
+    transactionStatus: PENDING,
+    transactionHash
+  }
+})
+
+export const transactionFailed = (action, receipt, response = {}) => ({
+  type: action.FAILURE,
+  response: {
+    ...response,
+    transactionStatus: FAILURE,
+    receipt
+  }
+})
+
+export const transactionSucceeded = (action, receipt, response = {}) => ({
+  type: action.SUCCESS,
+  response: {
+    ...response,
+    transactionStatus: SUCCESS,
+    receipt
+  }
+})
+
 export const createEntityAction = (entity) => (...args) =>
   ({...action.apply(null, args), entity})

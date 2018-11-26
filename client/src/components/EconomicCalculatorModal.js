@@ -168,10 +168,10 @@ class EconomicCalculatorModal extends Component {
             {this.isChartReady() ? <div>
               <div className='calculator-chart-point point-usd'>
                 USD
-              </div>,
+              </div>
               <div className='calculator-chart-point point-cc'>
                 CLN
-              </div>,
+              </div>
               <Chart
                 className='calculator-graph'
                 chartType='Line'

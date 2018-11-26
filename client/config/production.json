@@ -1,7 +1,4 @@
 {
-  "web3": {
-    "desiredNetworks": ["main"]
-  },
   "api": {
     "url": {
       "main": "https://communities.cln.network/api/v1",
