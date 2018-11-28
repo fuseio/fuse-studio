@@ -61,10 +61,6 @@ class App extends Component {
     })
   }
   render () {
-    if (!isNetworkSupported(this.props.networkType)) {
-      return null
-    }
-
     let currentRoute = this.props && this.props && this.props.location && this.props.location.pathname
     let mainContainerClass = classNames({
       'main-container': true,
