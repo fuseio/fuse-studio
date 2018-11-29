@@ -11,14 +11,14 @@ export const createMetadata = (metadata, apiRoot) =>
     .send({metadata})
     .then(response => response.body)
 
-export const addCommunity = (community, apiRoot) =>
-  request.post(`${apiRoot}/communities`).send({community}).then(response => response.body)
-
 export const fetchCommunities = (page, apiRoot) =>
   request.get(`${apiRoot}/communities?page=${page}`).then(response => response.body)
 
 export const fetchCommunitiesByOwner = (owner, apiRoot) =>
   request.get(`${apiRoot}/communities/owner/${owner}`).then(response => response.body)
+
+export const processReceipt = (receipt, apiRoot) =>
+  request.post(`${apiRoot}/receipts/`).send({receipt}).then(response => response.body)
 
 export const sendContactUs = (formData) => request.post(`${API_ROOT}/mails`)
   .send({formData})

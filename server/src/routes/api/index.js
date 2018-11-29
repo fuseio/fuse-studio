@@ -5,6 +5,7 @@ router.use('/metadata', require('./metadata'))
 router.use('/images', require('./images'))
 router.use('/mails', require('./mails'))
 router.use('/subscriptions', require('./subscriptions'))
+router.use('/receipts', require('./receipts'))
 
 router.use(function (err, req, res, next) {
   if (err.name === 'ValidationError') {

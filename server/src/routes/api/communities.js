@@ -1,12 +1,11 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
-const processTokenCreatedEvent = require('@utils/events/db').processTokenCreatedEvent
 const paginate = require('express-paginate')
 
 router.get('/', async (req, res, next) => {
   const [ results, itemCount ] = await Promise.all([
-    Community.find({}).limit(req.query.limit).skip(req.skip),
+    Community.find({}).sort({openMarket: -1, blockNumber: -1}).limit(req.query.limit).skip(req.skip),
     Community.count({})
   ])
 
@@ -33,12 +32,6 @@ router.get('/:address', async (req, res, next) => {
   const ccAddress = req.params.address
   const community = await Community.findOne({ ccAddress })
   return res.json({ data: community })
-})
-
-router.post('/', async (req, res, next) => {
-  const { receipt } = req.body.community
-  await processTokenCreatedEvent(receipt.events.TokenCreated)
-  return res.json({})
 })
 
 module.exports = router

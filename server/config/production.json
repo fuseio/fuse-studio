@@ -1,5 +1,5 @@
 {
   "mongo": {
-    "debug": true
+    "debug": false
   }
 }

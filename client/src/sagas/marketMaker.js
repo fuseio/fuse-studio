@@ -6,11 +6,12 @@ import * as actions from 'actions/marketMaker'
 import {fetchGasPrices} from 'actions/network'
 import {balanceOfCln} from 'actions/accounts'
 import {getClnToken, getCommunity} from 'selectors/communities'
-import {tryTakeEvery, tryTakeLatestWithDebounce} from './utils'
+import {tryTakeEvery, tryTakeLatestWithDebounce, apiCall} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
 import {predictClnReserves} from 'utils/calculator'
 import {getCurrencyFactoryAddress} from 'selectors/network'
 import {transactionPending, transactionFailed, transactionSucceeded} from 'actions/utils'
+import {processReceipt} from 'services/api'
 
 const reversePrice = (price) => new BigNumber(1e18).div(price)
 
@@ -388,6 +389,8 @@ function * openMarket ({tokenAddress}) {
   }
 
   yield put({...transactionSucceeded(actions.OPEN_MARKET, receipt), tokenAddress})
+
+  yield apiCall(processReceipt, receipt)
 
   return receipt
 }

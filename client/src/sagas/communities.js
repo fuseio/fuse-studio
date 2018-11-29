@@ -2,7 +2,7 @@ import { all, put, call, select } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery, apiCall} from './utils'
 import * as actions from 'actions/communities'
-import {addCommunity, fetchCommunities as fetchCommunitiesApi,
+import {processReceipt, fetchCommunities as fetchCommunitiesApi,
   fetchCommunitiesByOwner as fetchCommunitiesByOwnerApi} from 'services/api'
 import {fetchMarketMakerData} from 'actions/marketMaker'
 import {fetchMetadata} from 'actions/metadata'
@@ -109,9 +109,7 @@ function * issueCommunity ({communityMetadata, currencyData}) {
   const tokenURI = `${protocol}://${hash}`
   const receipt = yield call(createCurrency, {...currencyData, tokenURI})
 
-  yield apiCall(addCommunity, {
-    receipt
-  })
+  yield apiCall(processReceipt, receipt)
 
   const owner = yield select(getAccountAddress)
   yield put({

@@ -1,4 +1,3 @@
-const timestamps = require('mongoose-time')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
@@ -17,12 +16,14 @@ module.exports = (mongoose) => {
     factoryType: {type: String, enum: ['CurrencyFactory', 'IssuanceFactory'], default: 'CurrencyFactory'},
     factoryVersion: {type: Number, default: 0},
     verified: {type: Boolean, default: false},
-    blockNumber: {type: Number}
-  }).plugin(timestamps())
+    blockNumber: {type: Number},
+    openMarket: {type: Boolean, default: false}
+  }, {timestamps: true})
 
   CommunitySchema.index({ccAddress: 1}, {unique: true})
   CommunitySchema.index({owner: 1})
   CommunitySchema.index({blockNumber: -1})
+  CommunitySchema.index({openMarket: -1, blockNumber: -1})
 
   CommunitySchema.set('toJSON', {
     versionKey: false
@@ -51,6 +52,11 @@ module.exports = (mongoose) => {
   community.upsertByccAddress = (data) => {
     const {ccAddress} = data
     return community.getModel().updateOne({ccAddress}, data, {upsert: true})
+  }
+
+  community.updateBymmAddress = (data) => {
+    const {mmAddress} = data
+    return community.getModel().updateOne({mmAddress}, data)
   }
 
   community.getById = (id) => {
