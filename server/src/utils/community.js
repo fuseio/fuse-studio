@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Contract = require('truffle-contract')
-const web3 = require('../services/web3')
+const web3 = require('@services/web3')
 
 const DEFAULT_FACTORY_TYPE = 'CurrencyFactory'
 const DEFAULT_FACTORY_VERSION = 0

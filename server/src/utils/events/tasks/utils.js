@@ -11,8 +11,12 @@ const eventsCallback = function (handleEvent, error, events) {
   events.forEach(handleEvent)
 }
 
-const processPastEvents = async (eventName, contract) => {
-  const lastBlockNumber = await getLastBlockNumber(eventName)
+const defaultOptions = {
+  conditions: {}
+}
+
+const processPastEvents = async (eventName, contract, {conditions} = defaultOptions) => {
+  const lastBlockNumber = await getLastBlockNumber({eventName, ...conditions})
   const handleActualEvent = handleEvent.bind(null, eventName)
   const actualEventsCallback = eventsCallback.bind(null, handleActualEvent)
   try {

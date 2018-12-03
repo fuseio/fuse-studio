@@ -1,12 +1,21 @@
+const pickBy = require('lodash').pickBy
+const mongoose = require('mongoose')
 
-module.exports = (mongoose) => {
-  mongoose = mongoose || require('mongoose')
+const manipulate = (data) => {
+  // delete double entries in returnValues
+  const returnValues = pickBy(data.returnValues, (value, key) => isNaN(key))
+  return {...data, returnValues}
+}
+
+module.exports = () => {
   const EventSchema = new mongoose.Schema({
     eventName: {type: String, required: [true, "can't be blank"]},
     blockNumber: {type: Number, required: [true, "can't be blank"]},
+    timestamp: {type: Date, required: [true, "can't be blank"]},
     address: {type: String, required: [true, "can't be blank"]},
     transactionHash: {type: String, required: [true, "can't be blank"]},
-    logIndex: {type: Number, required: [true, "can't be blank"]}
+    logIndex: {type: Number, required: [true, "can't be blank"]},
+    returnValues: {type: Object}
   }, {timestamps: true})
 
   EventSchema.index({transactionHash: 1, logIndex: 1}, { unique: true })
@@ -22,7 +31,7 @@ module.exports = (mongoose) => {
 
   event.create = (data) => {
     return new Promise((resolve, reject) => {
-      const event = new Event(data)
+      const event = new Event(manipulate(data))
       event.save((err, newObj) => {
         if (err) {
           return reject(err)
@@ -51,9 +60,9 @@ module.exports = (mongoose) => {
     })
   }
 
-  event.getLastEvent = (eventName) => {
+  event.getLastEvent = (conditions) => {
     return new Promise((resolve, reject) => {
-      Event.findOne({eventName}).sort({blockNumber: -1}).exec((err, doc) => {
+      Event.findOne(conditions).sort({blockNumber: -1}).exec((err, doc) => {
         if (err) {
           console.log(err)
           return reject(err)

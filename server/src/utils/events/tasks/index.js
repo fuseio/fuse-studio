@@ -1,6 +1,6 @@
 const processPastEvents = require('./utils').processPastEvents
 const CurrencyFactoryAbi = require('@constants/abi/CurrencyFactory')
-
+const processPastTransferEvents = require('./transfer').processPastTransferEvents
 const web3 = require('@services/web3')
 const getAddresses = require('@utils/network').getAddresses
 
@@ -13,5 +13,6 @@ const processPastMarketOpenEvents = processPastEvents.bind(null, 'MarketOpen', C
 
 module.exports = {
   processPastTokenCreatedEvents,
-  processPastMarketOpenEvents
+  processPastMarketOpenEvents,
+  processPastTransferEvents
 }

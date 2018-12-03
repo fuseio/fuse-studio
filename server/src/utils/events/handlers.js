@@ -13,7 +13,7 @@ const handleTokenCreatedEvent = async (event) => {
   return communityUtils.upsertCommunity({ccAddress, owner, blockNumber, ...communityData})
 }
 
-const handleMarketOpenEvent = async (event) => {
+const handleMarketOpenEvent = (event) => {
   const blockNumber = event.blockNumber
   console.log(`recieved MarketOpen event at ${blockNumber} blockNumber`)
   const eventArgs = event.returnValues
@@ -22,9 +22,16 @@ const handleMarketOpenEvent = async (event) => {
   return communityUtils.openMarket(mmAddress)
 }
 
+const handleTransferEvent = (event) => {
+  const blockNumber = event.blockNumber
+  console.log(`recieved Transfer event at ${blockNumber} blockNumber`)
+  return Promise.resolve()
+}
+
 const eventsHandlers = {
   TokenCreated: handleTokenCreatedEvent,
-  MarketOpen: handleMarketOpenEvent
+  MarketOpen: handleMarketOpenEvent,
+  Transfer: handleTransferEvent
 }
 
 const handleEvent = function (eventName, event) {
