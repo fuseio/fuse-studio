@@ -12,7 +12,8 @@ import SymbolStep from './SymbolStep'
 import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
 import {issueCommunity} from 'actions/communities'
-import { METAMASK_ACCOUNT_MODAL } from 'constants/uiConstants'
+import {getAddresses} from 'selectors/network'
+import { METAMASK_ACCOUNT_MODAL, ECONOMIC_CALCULATOR_MODAL } from 'constants/uiConstants'
 
 class IssuanceWizard extends Component {
   state = {
@@ -86,6 +87,8 @@ class IssuanceWizard extends Component {
     this.setState({communitySymbol})
   }
 
+  loadCalculator = (token, marketMaker) => this.props.loadModal(ECONOMIC_CALCULATOR_MODAL, {token, marketMaker})
+
   setCommunityType = type =>
     this.setState({communityType: type})
 
@@ -136,6 +139,8 @@ class IssuanceWizard extends Component {
             communitySymbol={this.state.communitySymbol}
             showPopup={this.showMetamaskPopup}
             transactionStatus={this.props.transactionStatus}
+            loadCalculator={this.loadCalculator}
+            EllipseMarketMakerLibAddress={this.props.addresses.EllipseMarketMakerLib}
           />
         )
     }
@@ -203,7 +208,8 @@ IssuanceWizard.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  ...state.screens.issuance
+  ...state.screens.issuance,
+  addresses: getAddresses(state)
 })
 
 const mapDispatchToProps = {

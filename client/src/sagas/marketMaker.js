@@ -78,7 +78,7 @@ function * quote ({tokenAddress, amount, isBuy}) {
 }
 
 function * predictClnPrices ({tokenAddress, initialClnReserve,
-  amountOfTransactions, averageTransactionInUsd, gainRatio, iterations}) {
+  amountOfTransactions, averageTransactionInUsd, gainRatio, iterations, ...props}) {
   const clnPrice = yield select(state => state.fiat.USD.price)
   const clnReserves = predictClnReserves({initialClnReserve,
     amountOfTransactions,
@@ -86,14 +86,16 @@ function * predictClnPrices ({tokenAddress, initialClnReserve,
     clnPrice,
     gainRatio,
     iterations})
-  const clnReservesInWei = clnReserves.map(reserve => new BigNumber(reserve.toString()).multipliedBy(1e18))
+
   const clnToken = yield select(getClnToken)
-  const token = yield select(getCommunity, tokenAddress)
+  const token = tokenAddress ? yield select(getCommunity, tokenAddress) : props.token
+
   const s1 = clnToken.totalSupply
   const s2 = token.totalSupply
   const prices = []
   const EllipseMarketMakerContract = contract.getContract({abiName: 'EllipseMarketMaker', address: token.mmAddress})
 
+  const clnReservesInWei = clnReserves.map(reserve => new BigNumber(reserve.toString()).multipliedBy(1e18))
   const tokenReserveRequests = clnReservesInWei.map(r1 => call(EllipseMarketMakerContract.methods.calcReserve(
     r1, s1, s2).call))
 

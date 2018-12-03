@@ -38,7 +38,8 @@ class EconomicCalculatorModal extends Component {
     amountOfTransactions: parseInt(this.state.amountOfTransactions),
     averageTransactionInUsd: parseInt(this.state.averageTransactionInUsd),
     gainRatio: parseInt(this.state.gainPercentage) / 100,
-    iterations: MONTHS_IN_YEAR
+    iterations: MONTHS_IN_YEAR,
+    token: this.props.token
   })
 
   handleChangeInitialClnReserve = (event) => {
