@@ -1,6 +1,7 @@
 import {Component} from 'react'
 import { connect } from 'react-redux'
 import {getNetworkType, checkAccountChanged} from 'actions/network'
+import {loadModal} from 'actions/ui'
 import {onWeb3Ready} from 'services/web3'
 import {isNetworkSupported} from 'utils/network'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
@@ -33,7 +34,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getNetworkType,
-  checkAccountChanged
+  checkAccountChanged,
+  loadModal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Web3)

@@ -7,9 +7,7 @@ import Oven from 'components/oven/Oven'
 import ModalContainer from 'containers/ModalContainer'
 import classNames from 'classnames'
 import {fetchClnContract} from 'actions/communities'
-import {checkAccountChanged} from 'actions/network'
 import {fetchTokenQuote} from 'actions/fiat'
-import {loadModal} from 'actions/ui'
 import {getAddresses} from 'selectors/network'
 import ReactGA from 'services/ga'
 import 'scss/styles.scss'
@@ -88,15 +86,12 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  addresses: getAddresses(state),
-  ui: state.ui
+  addresses: getAddresses(state)
 })
 
 const mapDispatchToProps = {
   fetchTokenQuote,
-  fetchClnContract,
-  checkAccountChanged,
-  loadModal
+  fetchClnContract
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
