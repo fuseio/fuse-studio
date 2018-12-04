@@ -10,7 +10,7 @@ const withTracker = (WrappedComponent, options = {}) => {
     ReactGA.pageview(page)
   }
 
-  const HOC = class extends Component {
+  const Tracker = class extends Component {
     componentDidMount () {
       const page = this.props.location.pathname
       trackPage(page)
@@ -30,7 +30,7 @@ const withTracker = (WrappedComponent, options = {}) => {
     }
   }
 
-  return HOC
+  return Tracker
 }
 
 export default withTracker

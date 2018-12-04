@@ -65,7 +65,10 @@ utils.upsertCommunity = async (data) => {
 }
 
 utils.openMarket = async (mmAddress) => {
-  return community.updateBymmAddress({mmAddress, openMarket: true})
+  const result = await community.updateBymmAddress({mmAddress, openMarket: true})
+  if (result.n === 0) {
+    throw new Error('The community is not exist yet')
+  }
 }
 
 utils.getLastBlockNumber = async () => {

@@ -6,14 +6,11 @@ import TopNav from 'components/TopNav'
 import Oven from 'components/oven/Oven'
 import ModalContainer from 'containers/ModalContainer'
 import classNames from 'classnames'
-import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import {fetchClnContract} from 'actions/communities'
-import {getNetworkType, checkAccountChanged} from 'actions/network'
+import {checkAccountChanged} from 'actions/network'
 import {fetchTokenQuote} from 'actions/fiat'
-import {onWeb3Ready} from 'services/web3'
 import {loadModal} from 'actions/ui'
 import {getAddresses} from 'selectors/network'
-import {isNetworkSupported} from 'utils/network'
 import ReactGA from 'services/ga'
 import 'scss/styles.scss'
 
@@ -23,24 +20,9 @@ class App extends Component {
     welcomeDone: false
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.addresses !== this.props.addresses &&
-        isNetworkSupported(nextProps.networkType)) {
-      this.props.fetchClnContract(nextProps.addresses.ColuLocalNetwork)
-    }
-    if (nextProps.networkType !== this.props.networkType && !isNetworkSupported(nextProps.networkType)) {
-      this.props.loadModal(WRONG_NETWORK_MODAL)
-    }
-  }
-
   componentDidMount () {
+    this.props.fetchClnContract(this.props.addresses.ColuLocalNetwork)
     this.props.fetchTokenQuote('CLN', 'USD')
-    this.props.getNetworkType()
-    onWeb3Ready.then(({web3}) => {
-      if (web3.currentProvider.isMetaMask) {
-        web3.currentProvider.publicConfigStore.on('update', this.props.checkAccountChanged)
-      }
-    })
     this.setState({
       welcomeDone: window.localStorage.getItem('welcome')
     })
@@ -107,14 +89,12 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   addresses: getAddresses(state),
-  networkType: state.network.networkType,
   ui: state.ui
 })
 
 const mapDispatchToProps = {
   fetchTokenQuote,
   fetchClnContract,
-  getNetworkType,
   checkAccountChanged,
   loadModal
 }
