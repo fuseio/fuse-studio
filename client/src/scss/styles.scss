@@ -29,8 +29,11 @@ $color-hover-details: #7effdc;
 $color-shadow-btn: rgba(22, 14, 58, 0.34);
 $color-top-nav-bg: #2a2057;
 
+$color-pink: #ff4a7b;
+
 $breakpoint-mobile: 576px;
 $breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1200px;
 
 @mixin flex-box() {
 	display: -ms-flexbox;
@@ -112,6 +115,7 @@ $breakpoint-tablet: 1024px;
 @import 'components/Modal';
 @import 'components/Root';
 @import 'components/TopNav';
+@import 'components/Dashboard';
 
 @import 'components/oven/SimpleExchangeModal';
 
@@ -160,7 +164,6 @@ $breakpoint-tablet: 1024px;
 		box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2);
 		border-radius: 10px;
 		box-sizing: content-box;
-		cursor: pointer;
 		overflow: hidden;
 		@media (max-width: $breakpoint-tablet) {
 			height: auto !important;

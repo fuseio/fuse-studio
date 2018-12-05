@@ -40,6 +40,7 @@ class App extends Component {
       label: 'Explore'
     })
   }
+
   render () {
     let currentRoute = this.props && this.props && this.props.location && this.props.location.pathname
     let mainContainerClass = classNames({
@@ -60,7 +61,7 @@ class App extends Component {
       'issuance-screen': currentRoute === '/view/issuance'
     })
 
-    const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/issuance' && currentRoute !== '/view/contact-us' && !currentRoute.includes('community') ? <Oven history={this.props.history} /> : null
+    const communityNav = (!this.state.isWelcome || this.state.welcomeDone || isMobile) && currentRoute !== '/view/issuance' && !currentRoute.includes('dashboard') && currentRoute !== '/view/contact-us' && !currentRoute.includes('community') ? <Oven history={this.props.history} /> : null
 
     const welcome = currentRoute === '/' && !this.state.welcomeDone ? <div className={welcomeClass}>
       <div className='welcome-container'>
@@ -73,7 +74,7 @@ class App extends Component {
     return <div className={mainWrapperClass}>
       {welcome}
       <div className={mainContainerClass}>
-        {currentRoute !== '/view/issuance' ? <TopNav
+        {currentRoute !== '/view/issuance' && !currentRoute.includes('dashboard') ? <TopNav
           active={!this.state.isWelcome}
           history={this.props.history}
         /> : null }

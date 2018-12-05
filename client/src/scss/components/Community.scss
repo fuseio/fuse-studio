@@ -1,4 +1,26 @@
+.btn-dashboard {
+	position: absolute;
+	top: 0;
+	right: 30px;
+	background-color: $color-pink;
+	border-radius: 4px;
+	width: 23px;
+	height: 22px;
+	text-align: center;
+	border: none;
+	font-size: 11px;
+	line-height: 20px;
+  padding: 1px 7px 2px 5px;
+	color: $color-step-text;
 
+	&:focus, &:active, &:focus:active {
+		outline: none;
+	}
+	&:hover {
+		background-color: lighten($color-pink, 10%);
+		cursor: pointer;
+	}
+}
 
 .btn-calculator {
 	position: absolute;
@@ -22,7 +44,7 @@
 	}
 	&:hover {
 		background-color: rgba(182, 181, 216, 0.7);
-		cursor: poiner;
+		cursor: pointer;
 	}
 	@media (max-width: $breakpoint-mobile) {
 		display: none;

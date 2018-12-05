@@ -57,46 +57,49 @@ class SimpleExchangeModal extends Component {
   getStatus = () => this.props.receipt ? 'SUCCESS'
     : (this.props.transactionHash ? 'PENDING' : 'ADD CLN')
 
-  render = () => (
-    <Modal className='exchange-modal' onClose={this.props.hideModal}>
-      <div className='exchange-modal-up'>
-        <div>
-          <CommunityLogo token={this.props.token} />
-        </div>
-        <div className='token-info'>
+  render () {
+    console.log(this.props)
+    return (
+      <Modal className='exchange-modal' onClose={this.props.hideModal}>
+        <div className='exchange-modal-up'>
           <div>
-            <span className='label'>Total Supply</span>
-            <span className='positive-number'>{formatWei(this.props.token.totalSupply, 0)}</span></div>
-          <div>
-            <span className='label'>CLN reserve</span>
-            <span className='positive-number'>{formatWei(this.props.marketMaker.clnReserve, 0)}</span></div>
-        </div>
-      </div>
-      <div className='exchange-modal-down'>
-        <div className='exchange-modal-middle'>
-          <div className='exchange-modal-amounts'>
-            <TextInput id='cln'
-              className='exchange-modal-cln'
-              type='number'
-              label='CLN'
-              placeholder='CLN amount'
-              onChange={this.handleClnChange}
-            />
-            <FontAwesome name='exchange-alt' className='exchange-modal-icon' />
-            <TextInput id='token'
-              className='exchange-modal-token'
-              type='string'
-              label={this.props.token.symbol}
-              placeholder={`${this.props.token.symbol} amount`}
-              value={this.state.clnAmount.length ? this.getTokenAmount() : ''}
-              disabled
-            />
+            <CommunityLogo token={this.props.token} />
           </div>
-          {this.renderTransactionStatus(this.props.transactionStatus)}
+          <div className='token-info'>
+            <div>
+              <span className='label'>Total Supply</span>
+              <span className='positive-number'>{formatWei(this.props.token.totalSupply, 0)}</span></div>
+            <div>
+              <span className='label'>CLN reserve</span>
+              <span className='positive-number'>{formatWei(this.props.marketMaker.clnReserve, 0)}</span></div>
+          </div>
         </div>
-      </div>
-    </Modal>
-  )
+        <div className='exchange-modal-down'>
+          <div className='exchange-modal-middle'>
+            <div className='exchange-modal-amounts'>
+              <TextInput id='cln'
+                className='exchange-modal-cln'
+                type='number'
+                label='CLN'
+                placeholder='CLN amount'
+                onChange={this.handleClnChange}
+              />
+              <FontAwesome name='exchange-alt' className='exchange-modal-icon' />
+              <TextInput id='token'
+                className='exchange-modal-token'
+                type='string'
+                label={this.props.token.symbol}
+                placeholder={`${this.props.token.symbol} amount`}
+                value={this.state.clnAmount.length ? this.getTokenAmount() : ''}
+                disabled
+              />
+            </div>
+            {this.renderTransactionStatus(this.props.transactionStatus)}
+          </div>
+        </div>
+      </Modal>
+    )
+  }
 }
 
 SimpleExchangeModal.propTypes = {

@@ -11,6 +11,18 @@ export const createMetadata = (metadata, apiRoot) =>
     .send({metadata})
     .then(response => response.body)
 
+export const addCommunity = (community, apiRoot) =>
+  request.post(`${apiRoot}/communities`).send({community}).then(response => response.body)
+
+export const fetchCommunity = (address, apiRoot) =>
+  request.get(`${apiRoot}/communities/${address}`).then(response => response.body)
+
+export const fetchDashboardStatisticsUser = (address, apiRoot) =>
+  request.get(`${apiRoot}/stats/user/${address}`).then(response => response.body)
+
+export const fetchDashboardStatisticsAdmin = (address, apiRoot) =>
+  request.get(`${apiRoot}/stats/admin/${address}`).then(response => response.body)
+
 export const fetchCommunities = (page, apiRoot) =>
   request.get(`${apiRoot}/communities?page=${page}`).then(response => response.body)
 

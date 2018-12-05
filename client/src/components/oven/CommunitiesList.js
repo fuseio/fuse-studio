@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ExpandableCommunity from 'components/oven/ExpandableCommunity'
 import InfiniteScroll from 'react-infinite-scroller'
 import {SIMPLE_EXCHANGE_MODAL, ECONOMIC_CALCULATOR_MODAL} from 'constants/uiConstants'
+import ReactGA from 'services/ga'
 
 const PAGE_START = 1
 const PAGE_SIZE = 10
@@ -43,6 +44,19 @@ class CommunitiesList extends Component {
     {token: token, marketMaker: marketMaker}
   )
 
+  showDashboard = (address) => {
+    if (this.props.history.location.pathname === `/view/dashboard/${address}`) {
+      this.props.history.replace(`/view/dashboard/${address}`)
+    } else {
+      this.props.history.push(`/view/dashboard/${address}`)
+    }
+    ReactGA.event({
+      category: 'Dashboard',
+      action: 'Click',
+      label: 'dashboard'
+    })
+  }
+
   render () {
     const {addresses} = this.props
     return <div className='communities-list' ref={this.myRef}>
@@ -67,6 +81,7 @@ class CommunitiesList extends Component {
             openMarket={this.props.openMarket}
             handleAddCln={this.handleAddCln}
             loadCalculator={this.loadCalculator}
+            showDashboard={this.showDashboard}
           />
           )}
         </InfiniteScroll>

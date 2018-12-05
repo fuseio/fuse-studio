@@ -47,6 +47,11 @@ export default class Community extends Component {
               {formatWei(this.props.token.totalSupply, 0)}
             </span>
           </p>
+          {(this.props.account === this.props.token.owner) &&
+            <button onClick={() => this.props.showDashboard(this.props.token.address)} className='btn-dashboard'>
+              <FontAwesome name='signal' />
+            </button>
+          }
           <button onClick={this.handleLoadCalculator} className='btn-calculator'>
             <img src={Calculator} />
           </button>
