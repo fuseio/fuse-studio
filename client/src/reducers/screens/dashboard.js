@@ -1,8 +1,8 @@
-import * as actions from 'actions/communities'
+import {FETCH_COMMUNITY_STATISTICS} from 'actions/communities'
 
 export default (state = {}, action) => {
   switch (action.type) {
-    case actions.FETCH_COMMUNITY_DASHBOARD_STATISTICS.SUCCESS:
+    case FETCH_COMMUNITY_STATISTICS.SUCCESS:
       return {...state, ...action.response}
     default:
       return state

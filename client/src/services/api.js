@@ -17,11 +17,8 @@ export const addCommunity = (community, apiRoot) =>
 export const fetchCommunity = (address, apiRoot) =>
   request.get(`${apiRoot}/communities/${address}`).then(response => response.body)
 
-export const fetchDashboardStatisticsUser = (address, apiRoot) =>
-  request.get(`${apiRoot}/stats/user/${address}`).then(response => response.body)
-
-export const fetchDashboardStatisticsAdmin = (address, apiRoot) =>
-  request.get(`${apiRoot}/stats/admin/${address}`).then(response => response.body)
+export const fetchCommunityStatistics = (address, activityType, interval, apiRoot) =>
+  request.get(`${apiRoot}/stats/${activityType}/${address}?interval=${interval}`).then(response => response.body)
 
 export const fetchCommunities = (page, apiRoot) =>
   request.get(`${apiRoot}/communities?page=${page}`).then(response => response.body)

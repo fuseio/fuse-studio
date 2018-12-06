@@ -30,8 +30,8 @@ class IssuanceWizard extends Component {
 
   componentDidMount () {
     window.addEventListener('scroll', this.handleScroll)
-    this.setState({ stepPosition: this.stepIndicator.getBoundingClientRect().top })
     window.addEventListener('keypress', this.handleKeyPress)
+    this.setState({ stepPosition: this.stepIndicator.getBoundingClientRect().top })
   }
 
   handleKeyPress = (event) => {
@@ -47,9 +47,8 @@ class IssuanceWizard extends Component {
   }
 
   componentWillUnmount () {
-    if (this.state.scrollPosition) {
-      window.removeEventListener('scroll', this.handleScroll, false)
-    }
+    window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('keypress', this.handleKeyPress)
   }
 
   setIssuanceTransaction = () => {

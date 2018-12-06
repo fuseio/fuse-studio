@@ -8,8 +8,8 @@ router.get('/:activityType/:address', async (req, res, next) => {
   const tokenAddress = req.params.address
 
   const interval = req.query.interval || 'month'
-  if (interval !== 'month' && interval !== 'week') {
-    throw Error('Bad interval parameter, correct values for interval is "month" or "week"')
+  if (interval !== 'month' && interval !== 'week' && interval !== 'dayOfMonth') {
+    throw Error('Bad interval parameter, correct values for interval is "month", "week" or "dayOfMonth"')
   }
 
   if (activityType !== 'user' && activityType !== 'admin') {
@@ -25,16 +25,20 @@ router.get('/:activityType/:address', async (req, res, next) => {
   }
 
   if (activityType === 'user') {
-    $match['user'] = {
-      $ne: [
-        {'returnValues.to': owner},
-        {'returnValues.from': owner}
-      ]
-    }
+    $match.$and = [
+      {'returnValues.from': {$ne: community.factoryAddress}},
+      {'returnValues.from': {$ne: owner}}
+    ]
+    $match['returnValues.to'] = {$ne: community.factoryAddress}
   } else {
-    $match['$or'] = [
-      {'returnValues.to': owner},
-      {'returnValues.from': owner}
+    $match.$or = [
+      {
+        'returnValues.from': owner
+      },
+      {
+        'returnValues.from': community.factoryAddress,
+        'returnValues.to': owner
+      }
     ]
   }
 

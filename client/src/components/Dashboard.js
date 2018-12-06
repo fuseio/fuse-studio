@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ClnIcon from 'images/cln.png'
 import Calculator from 'images/calculator-Icon.svg'
 import { connect } from 'react-redux'
-import {fetchCommunityWithAdditionalData, fetchDashboardStatistics} from 'actions/communities'
+import {fetchCommunityWithData, fetchCommunityStatistics} from 'actions/communities'
 import { BigNumber } from 'bignumber.js'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
@@ -12,27 +12,30 @@ import {loadModal} from 'actions/ui'
 import {SIMPLE_EXCHANGE_MODAL} from 'constants/uiConstants'
 
 class Dashboard extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      dropdownOpen: '',
-      dropdown: {}
-    }
-
-    this.handleClickOutside = this.handleClickOutside.bind(this)
+  state = {
+    dropdownOpen: '',
+    dropdown: {}
   }
+
   componentDidMount () {
-    this.props.fetchCommunityWithAdditionalData(this.props.match.params.address)
-    this.props.fetchDashboardStatistics(this.props.match.params.address)
+    if (!this.props.token) {
+      this.props.fetchCommunityWithData(this.props.match.params.address)
+    }
+    this.props.fetchCommunityStatistics(this.props.match.params.address, 'user', 'month')
+    this.props.fetchCommunityStatistics(this.props.match.params.address, 'admin', 'month')
+
     document.addEventListener('mousedown', this.handleClickOutside)
   }
 
-  handleAddCln = (token, marketMaker) => {
+  componentWillUnmount () {
+    window.removeEventListener('mousedown', this.handleClickOutside)
+  }
+
+  handleAddCln = () => {
     this.props.loadModal(SIMPLE_EXCHANGE_MODAL, {tokenAddress: this.props.match.params.address})
   }
 
-  handleClickOutside (event) {
+  handleClickOutside = (event) => {
     if (this.content && !this.content.contains(event.target)) {
       this.setState({dropdownOpen: ''})
     }
@@ -50,32 +53,49 @@ class Dashboard extends Component {
     this.setState(prevState => ({
       dropdown: {
         ...prevState.dropdown,
-        [type]: {text: text}
+        [type]: {text}
       }
     }))
     this.setState({dropdownOpen: ''})
   }
 
+  handleDropdownClick = (activityType, item) => {
+    this.setActivePointDropdown(activityType, item.text)
+    this.props.fetchCommunityStatistics(this.props.match.params.address, activityType, item.value)
+  }
+
   activityDropdown (type) {
-    const dropdownContent = ['Monthly', 'Weekly', 'Daily']
+    const dropdownOptions = [
+      {
+        text: 'Monthly',
+        value: 'month'
+      },
+      {
+        text: 'Weekly',
+        value: 'week'
+      },
+      {
+        text: 'Daily',
+        value: 'dayOfMonth'
+      }]
     return (
       <div className='dashboard-information-period' ref={type => (this.type = type)}>
         <span className='dashboard-information-period-text' onClick={() => this.setOpenDropdown(type)}>
           {this.state.dropdown && this.state.dropdown[type] && this.state.dropdown[type].text
-            ? this.state.dropdown[type].text : dropdownContent[0]} <FontAwesome name='caret-down' />
+            ? this.state.dropdown[type].text : dropdownOptions[0].text} <FontAwesome name='caret-down' />
         </span>
         {(type === this.state.dropdownOpen) &&
           <div className='dashboard-information-period-additional'>
-            {dropdownContent.map((item, index) =>
+            {dropdownOptions.map((item, index) =>
               <div
                 className={classNames(
                   'dashboard-information-period-point',
-                  this.state.dropdown[type] && this.state.dropdown[type].text && this.state.dropdown[type].text === item ? 'active-point' : null
+                  this.state.dropdown[type] && this.state.dropdown[type].text && this.state.dropdown[type].text === item.text ? 'active-point' : null
                 )}
                 key={index}
-                onClick={() => this.setActivePointDropdown(type, item)}
+                onClick={() => this.handleDropdownClick(type, item)}
               >
-                {item}
+                {item.text}
               </div>
             )}
           </div>
@@ -120,18 +140,19 @@ class Dashboard extends Component {
   };
 
   render () {
-    const token = {...this.props.tokens[this.props.match.params.address], address: this.props.match.params.address}
-    const marketMaker = {
-      isOpenForPublic: this.props.marketMaker && this.props.marketMaker[this.props.match.params.address] && this.props.marketMaker[this.props.match.params.address].isOpenForPublic ? this.props.marketMaker[this.props.match.params.address].isOpenForPublic : false,
-      currentPrice: this.props.marketMaker && this.props.marketMaker[this.props.match.params.address] && this.props.marketMaker[this.props.match.params.address].currentPrice ? this.props.marketMaker[this.props.match.params.address].currentPrice : new BigNumber(0),
-      clnReserve: this.props.marketMaker && this.props.marketMaker[this.props.match.params.address] && this.props.marketMaker[this.props.match.params.address].clnReserve ? this.props.marketMaker[this.props.match.params.address].clnReserve : new BigNumber(0)
+    if (!this.props.token) {
+      return null
     }
+
+    const {token, marketMaker} = this.props
+    const { admin, user } = this.props.dashboard
     const coinStatusClassStyle = classNames({
       'coin-status': true,
       'coin-status-active': marketMaker.isOpenForPublic,
       'coin-status-close': !marketMaker.isOpenForPublic
     })
-    const { admin, user } = this.props.dashboard
+
+    const circulatingSupply = new BigNumber(token.totalSupply).minus(marketMaker.ccReserve)
     return (
       <div className='dashboard-content'>
         <div className='dashboard-header'>
@@ -151,7 +172,7 @@ class Dashboard extends Component {
                 {marketMaker.isOpenForPublic ? 'open' : 'closed'}
               </span>
             </div>
-            <button onClick={() => this.handleAddCln(token, marketMaker)} className='btn-adding big-adding-btn'>
+            <button onClick={this.handleAddCln} className='btn-adding big-adding-btn'>
               <FontAwesome name='plus' className='top-nav-issuance-plus' /> Add CLN
             </button>
             <div className='coin-content'>
@@ -183,7 +204,7 @@ class Dashboard extends Component {
                   <span className='dashboard-information-text'>Circulation</span>
                 </p>
                 <p className='dashboard-information-big-count'>
-                  315,00
+                  {formatWei(circulatingSupply, 0)}
                   <span>{token.symbol}</span>
                 </p>
               </div>
@@ -224,16 +245,24 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  tokens: state.tokens,
+Dashboard.defaultProps = {
+  marketMaker: {
+    isOpenForPublic: false,
+    currentPrice: new BigNumber(0),
+    clnReserve: new BigNumber(0)
+  }
+}
+
+const mapStateToProps = (state, {match}) => ({
+  token: state.tokens[match.params.address],
+  marketMaker: state.marketMaker[match.params.address],
   fiat: state.fiat,
-  marketMaker: state.marketMaker,
   dashboard: state.screens.dashboard
 })
 
 const mapDispatchToProps = {
-  fetchDashboardStatistics,
-  fetchCommunityWithAdditionalData,
+  fetchCommunityStatistics,
+  fetchCommunityWithData,
   loadModal
 }
 

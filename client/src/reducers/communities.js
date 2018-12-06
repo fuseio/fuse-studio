@@ -1,5 +1,5 @@
 import {FETCH_METADATA} from 'actions/metadata'
-import {entityName, FETCH_COMMUNITY_DASHBOARD} from 'actions/communities'
+import {entityName} from 'actions/communities'
 import merge from 'lodash/merge'
 import {DEFAULT_COMMUNITY_METADATA_LOGO} from 'constants/uiConstants'
 
@@ -14,8 +14,6 @@ export default (state = {}, action) => {
     return merge({}, state, obj)
   }
   switch (action.type) {
-    case FETCH_COMMUNITY_DASHBOARD.SUCCESS:
-      return {...state, [action.response.tokenAddress]: {...state[action.tokenAddress], ...action.response.community}}
     case FETCH_METADATA.SUCCESS:
       return {...state, [action.tokenAddress]: {...state[action.tokenAddress], ...action.response}}
     case FETCH_METADATA.FAILURE:
