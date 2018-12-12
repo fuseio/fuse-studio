@@ -86,7 +86,6 @@
 		@include flex-box();
 		justify-content: space-between;
 		align-items: center;
-		cursor: pointer;
 		height: 100%;
 		flex: 1;
 		&.hide-nav-links {
@@ -112,7 +111,6 @@
 			line-height: 25px;
 			margin: 0 12px;
 			position:relative;
-			min-width: 80px;
 			justify-content: center;
 			&:after {
 				content: "";

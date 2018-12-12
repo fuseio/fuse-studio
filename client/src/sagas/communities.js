@@ -14,6 +14,7 @@ import {fetchMetadata} from 'actions/metadata'
 import {createMetadata} from 'sagas/metadata'
 import {createCurrency} from 'sagas/issuance'
 import {getAccountAddress} from 'selectors/accounts'
+import {getClnAddress} from 'selectors/network'
 import { contract } from 'osseus-wallet'
 import keyBy from 'lodash/keyBy'
 
@@ -110,7 +111,8 @@ function * fetchCommunitiesByOwner ({owner}) {
   return communities
 }
 
-function * fetchClnContract ({tokenAddress}) {
+function * fetchClnToken () {
+  const tokenAddress = yield select(getClnAddress)
   const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
 
   const calls = {
@@ -124,7 +126,7 @@ function * fetchClnContract ({tokenAddress}) {
   response.isLocalCurrency = false
   response.address = tokenAddress
 
-  yield entityPut({type: actions.FETCH_CLN_CONTRACT.SUCCESS,
+  yield entityPut({type: actions.FETCH_CLN_TOKEN.SUCCESS,
     tokenAddress,
     response
   })
@@ -153,7 +155,7 @@ function * issueCommunity ({communityMetadata, currencyData}) {
 
 export default function * communitiesSaga () {
   yield all([
-    tryTakeEvery(actions.FETCH_CLN_CONTRACT, fetchClnContract),
+    tryTakeEvery(actions.FETCH_CLN_TOKEN, fetchClnToken),
     tryTakeEvery(actions.FETCH_COMMUNITY_WITH_DATA, fetchCommunityWithData, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_STATISTICS, fetchCommunityStatistics, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunityData),

@@ -15,7 +15,7 @@ export const INITIALIZE_COMMUNITY = createRequestTypes('INITIALIZE_COMMUNITY')
 export const FETCH_COMMUNITIES = createRequestTypes('FETCH_COMMUNITIES')
 export const FETCH_COMMUNITIES_BY_OWNER = createRequestTypes('FETCH_COMMUNITIES_BY_OWNER')
 
-export const FETCH_CLN_CONTRACT = createRequestTypes('FETCH_CLN_CONTRACT')
+export const FETCH_CLN_TOKEN = createRequestTypes('FETCH_CLN_TOKEN')
 
 export const ISSUE_COMMUNITY = createRequestTypes('ISSUE_COMMUNITY')
 
@@ -32,7 +32,7 @@ export const fetchCommunityStatistics = (tokenAddress, activityType, interval) =
 export const initializeCommunity = (tokenAddress) => action(INITIALIZE_COMMUNITY.REQUEST,
   {tokenAddress})
 
-export const fetchClnContract = (tokenAddress) => communityAction(FETCH_CLN_CONTRACT.REQUEST, {tokenAddress})
+export const fetchClnToken = (tokenAddress) => communityAction(FETCH_CLN_TOKEN.REQUEST, {tokenAddress})
 
 export const issueCommunity = (communityMetadata, currencyData) => communityAction(ISSUE_COMMUNITY.REQUEST, {
   communityMetadata,

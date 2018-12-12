@@ -1,0 +1,214 @@
+.personal {
+  &-sidebar {
+    position: fixed;
+    top: 100px;
+    width: 350px;
+    right: 0;
+    bottom:0;
+    box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.15);
+    background: #343166;
+
+    @media (max-width: $breakpoint-mobile) {
+      top: 0;
+      width: 100%;
+  	}
+
+    &-shadow {
+       background-color: rgba(0, 0, 0, 0.54);
+       position: fixed;
+       left: 0;
+       top: 100px;
+       right: 350px;
+       bottom: 0;
+       @media (max-width: $breakpoint-mobile) {
+         display: none;
+     	}
+    }
+
+    &-close {
+      background-color: transparent;
+      outline: none;
+      border: none;
+      color: #BCB9C8;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 16px;
+
+      &:hover,
+      &:active,
+      &:focus:active {
+        color: $color-step-text;
+        cursor: pointer;
+      }
+    }
+
+    &-top {
+      padding: 20px 40px;
+      box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.15);
+      background-image: linear-gradient(33deg, #1c1442, #2a2057);
+      text-align: center;
+      @media (max-width: $breakpoint-mobile) {
+        padding: 15px 40px;
+     }
+    }
+
+    .balance-address {
+      width: 190px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      color: $color-step-text;
+      margin: 0 auto;
+      font-size: 14px;
+    }
+    .balance-text {
+      font-size: 11px;
+      font-weight: bold;
+      color: #9390a6;
+      text-transform: uppercase;
+    }
+    .balance-number {
+      font-size: 12px;
+      color: #5fddbb;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+    &-search {
+      display: flex;
+      input {
+        padding: 15px 20px;
+        background-color: #261c51;
+        color: $color-symbol-field-brdr;
+        flex: 1.7;
+        border: none;
+        &::placeholder {
+  				color: $color-symbol-field-brdr;
+  			}
+      }
+      .search-btn {
+        background-color: #261c51;
+        border:none;
+        padding: 6px 12px;
+        color: $color-symbol-field-brdr;
+        outline: none;
+        border: none;
+        flex: 0.3;
+      }
+    }
+    &-content {
+      padding: 20px 0 20px 20px;
+      &-community {
+        max-height: 270px;
+        overflow: auto;
+        margin-bottom: 20px;
+        padding-right: 20px;
+        @media (max-width: $breakpoint-mobile) {
+          max-height: 220px;
+        }
+      }
+    }
+    &-title {
+      font-size: 10px;
+      font-weight: bold;
+      color: #b6b5d8;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+    .coin-content {
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid rgba(110, 109, 159, 0.45);
+      padding-top: 10px;
+      margin-top: 10px;
+      span {
+        font-size: 10px;
+        &:not(:last-child) {
+          margin-right: 7px;
+        }
+      }
+      .coin-currency {
+        color: $color-step-text;
+        font-weight: 500;
+        &-type {
+          color: #6e6d9f;
+          font-weight: bold;
+        }
+      }
+      &-type {
+        &:not(:last-child) {
+          margin-right: 25px;
+          position: relative;
+          &::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 4px;
+            width: 4px;
+            height: 4px;
+            background-color: #5fddbb;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+  &-community {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-radius: 5px;
+    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.36);
+    background-image: linear-gradient(335deg, #262451, #343166);
+
+    &-content {
+      &-balance {
+        color: #6e6d9f;
+        font-size: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        span {
+          font-size: 11px;
+          color: #5fddbb;
+        }
+      }
+    }
+
+    .coin-logo {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+
+      .logo-img {
+        width: 50px;
+        height: 50px;
+        margin-top: 0;
+      }
+      .symbol-text {
+        font-size: 9px;
+        margin-top: -6px;
+      }
+    }
+    &:not(:last-child) {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.profile-icon-big {
+  width: 70px;
+  height: 70px;
+  box-shadow: 0 -4px 18px 0 rgba(0, 0, 0, 0.12);
+  background-image: linear-gradient(352deg, #262451, #343166);
+  margin: 0 auto;
+  border-radius: 50%;
+  line-height: 85px;
+  text-align: center;
+  margin-bottom: 20px;
+  img {
+    width: 23px;
+    height: 30px;
+  }
+}
