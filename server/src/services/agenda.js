@@ -35,8 +35,8 @@ async function start () {
   await agenda.schedule('in 1 minute', 'processPastMarketOpenEvents')
   await agenda.every('10 minutes', 'processPastMarketOpenEvents', null, {skipImmediate: true})
 
-  // // run the task every day in 09:00 UTC (11:00 Israel)
-  await agenda.every('00 9 * * *', 'processPastTransferEvents')
+  // run the task every hour
+  await agenda.every('00 00 * * *', 'processPastTransferEvents')
   await agenda.schedule('in 3 minute', 'processPastTransferEvents')
 
   console.log('Agenda job scheduling is successfully defined')
