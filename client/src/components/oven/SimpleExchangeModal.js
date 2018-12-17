@@ -58,7 +58,6 @@ class SimpleExchangeModal extends Component {
     : (this.props.transactionHash ? 'PENDING' : 'ADD CLN')
 
   render () {
-    console.log(this.props)
     return (
       <Modal className='exchange-modal' onClose={this.props.hideModal}>
         <div className='exchange-modal-up'>

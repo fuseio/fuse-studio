@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import trim from 'lodash/trim'
 import identity from 'lodash/identity'
-import web3Utils from 'web3-utils'
+import web3 from 'web3'
 import { BigNumber } from 'bignumber.js'
 
 import AdvancedSettings from './AdvancedSettings'
@@ -182,7 +182,7 @@ class BuySellAmounts extends Component {
   handleClickMax = (handle, balance) => {
     handle({
       target: {
-        value: web3Utils.fromWei(balance.toString())
+        value: web3.utils.fromWei(balance.toString())
       }
     })
   }
@@ -261,10 +261,10 @@ class BuySellAmounts extends Component {
     })
 
     if (this.props.isBuy) {
-      const clnBalance = new BigNumber(web3Utils.fromWei(this.props.clnBalance)).toFormat(utils.ROUND_PRECISION, BigNumber.ROUND_DOWN)
+      const clnBalance = new BigNumber(web3.utils.fromWei(this.props.clnBalance)).toFormat(utils.ROUND_PRECISION, BigNumber.ROUND_DOWN)
       return <div className={maxAmountClass} onClick={this.handleClnClickMax}>{`Max: ${clnBalance} CLN`}</div>
     } else {
-      const ccBalance = new BigNumber(web3Utils.fromWei(this.props.ccBalance)).toFormat(utils.ROUND_PRECISION, BigNumber.ROUND_DOWN)
+      const ccBalance = new BigNumber(web3.utils.fromWei(this.props.ccBalance)).toFormat(utils.ROUND_PRECISION, BigNumber.ROUND_DOWN)
       const ccSymbol = this.props.community.symbol
       return <div className={maxAmountClass} onClick={this.handleCcClickMax}>{`Max: ${ccBalance} ${ccSymbol}`}</div>
     }

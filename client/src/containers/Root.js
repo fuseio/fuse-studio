@@ -39,7 +39,6 @@ function mapStylesContact (styles) {
 export default class Root extends Component {
   render () {
     const { store } = this.props
-    console.log(this.props)
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
