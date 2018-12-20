@@ -54,6 +54,7 @@
     "mandrill-api": "^1.0.45",
     "methods": "1.1.2",
     "module-alias": "^2.1.0",
+    "moment": "^2.23.0",
     "mongoose": "^5.2.7",
     "mongoose-unique-validator": "1.0.2",
     "morgan": "^1.9.1",

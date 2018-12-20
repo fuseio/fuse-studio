@@ -62,7 +62,7 @@ export default class Root extends Component {
               />
               <Route
                 path='/view/dashboard/:address'
-                component={withTracker(Dashboard)}
+                component={withTracker(withNetwork(Dashboard))}
                 mapStyles={mapStylesContact}
                 {...contactFormTransition}
               />

@@ -9,20 +9,31 @@ import FontAwesome from 'react-fontawesome'
 import CommunityLogo from 'components/elements/CommunityLogo'
 import {formatEther, formatWei} from 'utils/format'
 import {loadModal} from 'actions/ui'
+import Moment from 'moment'
 import {SIMPLE_EXCHANGE_MODAL} from 'constants/uiConstants'
+
+const intervals = {
+  MONTH: 'month',
+  WEEK: 'week',
+  DAY: 'day'
+}
 
 class Dashboard extends Component {
   state = {
     dropdownOpen: '',
-    dropdown: {}
+    dropdown: {},
+    activityType: {
+      admin: intervals.MONTH,
+      user: intervals.MONTH
+    }
   }
 
   componentDidMount () {
     if (!this.props.token) {
       this.props.fetchCommunityWithData(this.props.match.params.address)
     }
-    this.props.fetchCommunityStatistics(this.props.match.params.address, 'user', 'month')
-    this.props.fetchCommunityStatistics(this.props.match.params.address, 'admin', 'month')
+    this.props.fetchCommunityStatistics(this.props.match.params.address, 'user', this.state.activityType.user)
+    this.props.fetchCommunityStatistics(this.props.match.params.address, 'admin', this.state.activityType.admin)
 
     document.addEventListener('mousedown', this.handleClickOutside)
   }
@@ -60,6 +71,12 @@ class Dashboard extends Component {
   }
 
   handleDropdownClick = (activityType, item) => {
+    this.setState(prevState => ({
+      activityType: {
+        ...prevState.activityType,
+        [activityType]: item.value
+      }
+    }))
     this.setActivePointDropdown(activityType, item.text)
     this.props.fetchCommunityStatistics(this.props.match.params.address, activityType, item.value)
   }
@@ -68,15 +85,15 @@ class Dashboard extends Component {
     const dropdownOptions = [
       {
         text: 'Monthly',
-        value: 'month'
+        value: intervals.MONTH
       },
       {
         text: 'Weekly',
-        value: 'week'
+        value: intervals.WEEK
       },
       {
         text: 'Daily',
-        value: 'dayOfMonth'
+        value: intervals.DAY
       }]
     return (
       <div className='dashboard-information-period' ref={type => (this.type = type)}>
@@ -104,30 +121,51 @@ class Dashboard extends Component {
     )
   }
 
-  renderActivityContent = (type, data) => [
-    <div className='dashboard-information-content-activity' key='0'>
-      <p className='dashboard-information-small-text'>
-        <span>{type}</span> Activity
-      </p>
-      {this.activityDropdown(type)}
-    </div>,
-    <div className='dashboard-information-content-number' key='1'>
-      <p className='dashboard-information-small-text'>
-        Number of transactions
-      </p>
-      <p className='dashboard-information-number'>
-        {data && data.length ? data[0].totalCount : '0'}
-      </p>
-    </div>,
-    <div className='dashboard-information-content-number' key='2'>
-      <p className='dashboard-information-small-text'>
-        Transactions volume
-      </p>
-      <p className='dashboard-information-number'>
-        {data && data.length ? formatWei(data[0].volume, 0) : '0'}
-      </p>
-    </div>
-  ]
+  getLatestDataEntry (type, data) {
+    const date = new Date()
+    const dataPeriod = data[0].interval
+
+    switch (this.state.activityType[type]) {
+      case intervals.DAY:
+        const existingDay = Moment(date).date()
+        return dataPeriod === existingDay ? data[0] : null
+      case intervals.WEEK:
+        const existingWeek = Moment(date).week()
+        return dataPeriod === existingWeek ? data[0] : null
+      case intervals.MONTH:
+        // mongodb numbers month from 1 to 12 while moment from 0 to 11
+        const existingMonth = Moment(date).month() + 1
+        return dataPeriod === existingMonth ? data[0] : null
+      default: return 0
+    }
+  }
+
+  renderActivityContent = (type, data) => {
+    return [
+      <div className='dashboard-information-content-activity' key='0'>
+        <p className='dashboard-information-small-text'>
+          <span>{type === 'user' ? 'users' : type}</span> Activity
+        </p>
+        {this.activityDropdown(type)}
+      </div>,
+      <div className='dashboard-information-content-number' key='1'>
+        <p className='dashboard-information-small-text'>
+          Number of transactions
+        </p>
+        <p className='dashboard-information-number'>
+          {data && data.length && this.getLatestDataEntry(type, data) ? this.getLatestDataEntry(type, data).totalCount : '0'}
+        </p>
+      </div>,
+      <div className='dashboard-information-content-number' key='2'>
+        <p className='dashboard-information-small-text'>
+          Transactions volume
+        </p>
+        <p className='dashboard-information-number'>
+          {data && data.length && this.getLatestDataEntry(type, data) ? formatWei(this.getLatestDataEntry(type, data).volume, 0) : '0'}
+        </p>
+      </div>
+    ]
+  }
 
   copyToClipboard = (e) => {
     this.textArea.select()
@@ -137,6 +175,8 @@ class Dashboard extends Component {
     setTimeout(() => {
       this.setState({copyStatus: ''})
     }, 2000)
+    this.textArea.value = ''
+    this.textArea.value = this.props.match.params.address
   };
 
   render () {
@@ -163,9 +203,7 @@ class Dashboard extends Component {
         <div className='dashboard-container'>
           <div className='dashboard-sidebar'>
             <CommunityLogo token={token} />
-            {this.props.dashboard.community && this.props.dashboard.community.name
-              ? <h3 className='dashboard-title'>{this.props.dashboard.community.name}</h3>
-              : null}
+            <h3 className='dashboard-title'>{token.name}</h3>
             <div className={coinStatusClassStyle}>
               <span className='coin-status-indicator' />
               <span className='coin-status-text' onClick={this.openMarket}>
@@ -188,7 +226,7 @@ class Dashboard extends Component {
           </div>
           <div className='dashboard-information'>
             <div className='dashboard-information-header'>
-              <div>
+              <div className='dashboard-information-header-content'>
                 <p className='dashboard-information-top'>
                   <span className='dashboard-information-logo'><img src={ClnIcon} /></span>
                   <span className='dashboard-information-text'>Total supply</span>
@@ -198,7 +236,7 @@ class Dashboard extends Component {
                   <span>{token.symbol}</span>
                 </p>
               </div>
-              <div>
+              <div className='dashboard-information-header-content'>
                 <p className='dashboard-information-top'>
                   <span className='dashboard-information-logo logo-inverse'><img src={Calculator} /></span>
                   <span className='dashboard-information-text'>Circulation</span>
