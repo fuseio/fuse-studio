@@ -228,12 +228,6 @@
 		}
 	}
 	&-content {
-
-    .loader {
-      height: 60px;
-      width: 180px;
-    }
-    
 		background-image: linear-gradient(352deg, $color-issuance, #2d235e);
   	box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.49);
 		min-height: calc(100vh - 310px);
@@ -243,6 +237,10 @@
 			min-height: calc(100vh - 269px);
 			padding-top: 35px;
 			padding-bottom: 30px;
+		}
+		.loader {
+			height: 60px;
+			width: 180px;
 		}
 		&-community {
 			width: 300px;
@@ -260,9 +258,6 @@
 			text-transform: capitalize;
 			color: $color-step-text;
 			margin-bottom: 20px;
-			&.community-title {
-
-			}
 			@media (max-width: $breakpoint-mobile) {
 				width: 90%;
 				font-size: 18px;
@@ -293,6 +288,10 @@
 			  background-position: top, right, bottom, left;
 			  background-repeat: repeat-x, repeat-y;
 			  background-size: 15px 1px, 1px 15px;
+				height: 145px;
+				@media (max-width: $breakpoint-mobile) {
+					height: auto;
+				}
 				&-label {
 					font-size: 13px;
 					color: #BCB9C8;
@@ -482,6 +481,8 @@
 			@media (max-width: $breakpoint-mobile) {
 				width: 90%;
 				margin-bottom: 40px;
+				margin-left: auto;
+				margin-right: auto;
 			}
 			&-header {
 				padding: 18px 20px;
@@ -605,7 +606,6 @@
 	}
 	&-community-symbol {
 		label {
-			font-size: 13px;
 			line-height: normal;
 			text-transform: none;
 			font-style: italic;
@@ -621,7 +621,7 @@
 			border: none;
 			width: 100%;
 			text-align: center;
-			height: 125px;
+			height: 120px;
 			&:focus {
 				box-shadow: none;
 				outline: none;
@@ -640,7 +640,7 @@
     	}
 			@media (max-width: $breakpoint-mobile) {
 				font-size: 80px;
-				height: 92px;
+				height: 88px;
 			}
 		}
 	}

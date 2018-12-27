@@ -81,6 +81,8 @@ class Dashboard extends Component {
     this.props.fetchCommunityStatistics(this.props.match.params.address, activityType, item.value)
   }
 
+  setQuitDashboard = () => this.props.history.goBack()
+
   activityDropdown (type) {
     const dropdownOptions = [
       {
@@ -199,6 +201,12 @@ class Dashboard extends Component {
           <div className='dashboard-logo'>
             <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>
           </div>
+          <button
+            className='quit-button ctrl-btn'
+            onClick={this.setQuitDashboard}
+          >
+            <FontAwesome className='ctrl-icon' name='times' />
+          </button>
         </div>
         <div className='dashboard-container'>
           <div className='dashboard-sidebar'>

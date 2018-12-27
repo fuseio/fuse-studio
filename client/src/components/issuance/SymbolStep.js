@@ -16,15 +16,29 @@ export default class SymbolStep extends Component {
     this.setState({showCustomSymbol: !this.state.showCustomSymbol})
   }
 
-  handleChangeCommunitySymbol = (event) => {
+  handleChangeCustomSymbol = (event) => {
     this.setState({customSymbol: event.target.value})
   }
 
-  setNextStep = () => {
-    if (this.state.showCustomSymbol) {
+  setCommynitySymbol = () => {
+    if (this.state.customSymbol.length > 2) {
       this.props.handleChangeCommunitySymbol(this.state.customSymbol)
+      this.setState({showCustomSymbol: !this.state.showCustomSymbol})
+    } else {
+      this.props.handleChangeCommunitySymbol(this.props.communitySymbol)
+      this.setState({customSymbol: this.props.communitySymbol})
+      this.setState({showCustomSymbol: !this.state.showCustomSymbol})
     }
-    this.props.setNextStep()
+  }
+
+  setNextStep = () => {
+    if (this.state.customSymbol.length > 2) {
+      this.props.handleChangeCommunitySymbol(this.state.customSymbol)
+      this.props.setNextStep()
+    } else {
+      this.props.handleChangeCommunitySymbol(this.props.communitySymbol)
+      this.props.setNextStep()
+    }
   }
 
   render () {
@@ -33,7 +47,9 @@ export default class SymbolStep extends Component {
         <h2 className='step-symbol-title'>{'\'' + this.props.communityName + '\''}</h2>
         <h2 className='step-content-title'>Currency Symbol</h2>
         <div className='step-content-symbol-field'>
-          {this.state.customSymbol.length < 1 && this.state.showCustomSymbol && <label className='step-content-symbol-field-label'>Type your community symbol...</label>}
+          {this.state.customSymbol.length < 1 &&
+            this.state.showCustomSymbol &&
+            <label className='step-content-symbol-field-label'>Type your community symbol...</label>}
           {this.state.showCustomSymbol
             ? <TextInput
               className='step-community-symbol'
@@ -42,19 +58,24 @@ export default class SymbolStep extends Component {
               maxLength='3'
               autoFocus
               value={this.state.customSymbol}
-              onChange={this.handleChangeCommunitySymbol}
+              onChange={this.handleChangeCustomSymbol}
             />
-            : this.props.communitySymbol
+            : (this.state.customSymbol.length > 2 ? this.state.customSymbol : this.props.communitySymbol)
           }
         </div>
         <div className='text-center'>
-          <button className='btn-download edit-symbol' onClick={() => this.setState({showCustomSymbol: !this.state.showCustomSymbol})}>
-            <FontAwesome name={!this.state.showCustomSymbol ? 'edit' : 'times-circle'} /> {!this.state.showCustomSymbol ? 'Edit' : 'Cancel'}
+          <button
+            className='btn-download edit-symbol'
+            onClick={() => this.setCommynitySymbol()}
+          >
+            <FontAwesome
+              name={!this.state.showCustomSymbol ? 'edit' : 'times-circle'}
+            /> {!this.state.showCustomSymbol ? 'Edit' : 'Cancel'}
           </button>
         </div>
         <button
           className='symbol-btn'
-          disabled={this.state.customSymbol.length < 3}
+          disabled={this.props.communitySymbol.length < 3 || this.state.customSymbol.length < 3}
           onClick={this.setNextStep}
         >
           Approve symbol <FontAwesome name='angle-right' className='symbol-icon' />

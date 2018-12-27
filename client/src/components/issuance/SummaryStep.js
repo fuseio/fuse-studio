@@ -47,7 +47,9 @@ export default class SummaryStep extends Component {
             canInsertCLN={canInsertCLN}
             usdPrice={0}
             loadCalculator={this.props.loadCalculator}
-            token={this.getToken()} />
+            token={this.getToken()}
+            wrapper={'summary'}
+          />
         </div>
       </div>
       <div className='text-center wallet-container'>

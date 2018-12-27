@@ -263,6 +263,10 @@
 		cursor: not-allowed;
 		background-color: transparent !important;
 	}
+
+	@media (max-width: $breakpoint-tablet) {
+		margin-top: 20px;
+	}
 }
 
 .modal-dialog-div.metamask-popup {

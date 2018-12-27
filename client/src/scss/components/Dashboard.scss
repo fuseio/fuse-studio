@@ -8,6 +8,24 @@
     right: 0;
     bottom: 0;
     overflow: auto;
+
+    .ctrl-btn {
+      position: absolute;
+      top: 50px;
+      right: 45px;
+      @media (max-width: $breakpoint-tablet) {
+        top: 30px;
+        z-index: 30;
+        .ctrl-icon {
+          font-size: 22px;
+        }
+    	}
+      @media (max-width: $breakpoint-mobile) {
+        top: 40px;
+        right: 35px;
+        z-index: 30;
+    	}
+    }
   }
   &-header {
     height: 170px;

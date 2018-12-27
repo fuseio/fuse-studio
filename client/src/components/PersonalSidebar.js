@@ -60,8 +60,8 @@ class PersonalSidebar extends Component {
   }
 
   renderCoin = (accountAddress, token, marketMaker, balance) => [
-    <CommunityLogo token={token} />,
-    <div className='personal-community-content'>
+    <CommunityLogo token={token} key='0' />,
+    <div className='personal-community-content' key='1'>
       <div className='personal-community-content-balance'>
         CC Balance <span>{balance && formatWei(balance, 0)}</span>
         <div className='coin-content'>

@@ -235,6 +235,9 @@
 					order: -1;
 					flex-direction: column;
 				}
+				&:hover {
+					cursor: pointer;
+				}
 			}
 			.top-nav-balance {
 				margin-top: 10px;

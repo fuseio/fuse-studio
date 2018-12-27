@@ -35,7 +35,6 @@ export default class Community extends Component {
       'coin-status-active': this.props.marketMaker.isOpenForPublic,
       'coin-status-close': !this.props.marketMaker.isOpenForPublic
     })
-
     return <div className={this.props.coinWrapperClassName}>
       <div className='coin-header' onClick={this.props.handleOpen}>
         <CommunityLogo token={this.props.token} />
@@ -60,15 +59,19 @@ export default class Community extends Component {
       </div>
       <div className='coin-footer'>
         <div className='coin-content'>
-          <div className='total-content'>CLN Reserved</div>
-          {this.props.marketMaker.clnReserve && !this.props.marketMaker.clnReserve.isZero()
-            ? <div onClick={this.handleAddCln} className='coin-reverse'>
-              {clnReserve}
+          {this.props.wrapper !== 'summary' && [
+            <div className='total-content'>CLN Reserved</div>,
+            <div>
+              {this.props.marketMaker.clnReserve && !this.props.marketMaker.clnReserve.isZero()
+                ? <div onClick={this.handleAddCln} className='coin-reverse'>
+                  {clnReserve}
+                </div>
+                : <button disabled={!this.canInsertCLN()} onClick={this.handleAddCln} className='btn-adding'>
+                  <FontAwesome name='plus' className='top-nav-issuance-plus' /> Add CLN
+                </button>
+              }
             </div>
-            : <button disabled={!this.canInsertCLN()} onClick={this.handleAddCln} className='btn-adding'>
-              <FontAwesome name='plus' className='top-nav-issuance-plus' /> Add CLN
-            </button>
-          }
+          ]}
         </div>
         <div className='coin-content'>
           <div>
@@ -88,6 +91,7 @@ export default class Community extends Component {
 Community.defaultProps = {
   canInsertCLN,
   coinWrapperClassName: 'coin-wrapper',
+  wrapper: 'wrapper',
   token: {
   },
   marketMaker: {
@@ -109,5 +113,6 @@ Community.propTypes = {
   handleAddCln: PropTypes.func,
   token: PropTypes.object,
   usdPrice: PropTypes.number,
+  wrapper: PropTypes.string,
   marketMaker: PropTypes.object
 }
