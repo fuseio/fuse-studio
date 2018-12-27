@@ -1,21 +1,20 @@
 import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware, { END } from 'redux-saga'
 import createHistory from 'history/createBrowserHistory'
-import { routerMiddleware } from 'react-router-redux'
+import { routerMiddleware } from 'connected-react-router'
 
-import rootReducer from '../reducers'
+import createRootReducer from '../reducers'
 
 const history = createHistory()
 
 export default function configureStore (initialState) {
   const sagaMiddleware = createSagaMiddleware()
-  const routerMd = routerMiddleware(history)
 
   const store = createStore(
-    rootReducer,
+    createRootReducer(history),
     initialState,
     applyMiddleware(
-      routerMd,
+      routerMiddleware(history),
       sagaMiddleware
     )
   )

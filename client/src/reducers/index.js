@@ -1,17 +1,16 @@
 import { combineReducers } from 'redux'
-
 import communities from './communities'
 import marketMaker from './marketMaker'
 import accounts from './accounts'
 import ui from './ui'
-import { routerReducer as router } from 'react-router-redux'
+import { connectRouter } from 'connected-react-router'
 import network from './network'
 import errors from './errors'
 import fiat from './fiat'
 import screens from './screens'
 import entities from './entities'
 
-const rootReducer = combineReducers({
+const createRootReducer = (history) => combineReducers({
   ui,
   screens,
   tokens: communities,
@@ -19,9 +18,9 @@ const rootReducer = combineReducers({
   network,
   errors,
   accounts,
-  router,
+  router: connectRouter(history),
   fiat,
   entities
 })
 
-export default rootReducer
+export default createRootReducer

@@ -1,7 +1,7 @@
 import {CREATE_CURRENCY} from 'actions/issuance'
 import {ISSUE_COMMUNITY} from 'actions/communities'
 import {REQUEST, FAILURE} from 'actions/constants'
-import { LOCATION_CHANGE } from 'react-router-redux'
+import { LOCATION_CHANGE } from 'connected-react-router'
 
 const initialState = {
   receipt: null,

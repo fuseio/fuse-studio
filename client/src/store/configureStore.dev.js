@@ -2,21 +2,20 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware, { END } from 'redux-saga'
 import createHistory from 'history/createBrowserHistory'
-import { routerMiddleware } from 'react-router-redux'
-import rootReducer from '../reducers'
+import { routerMiddleware } from 'connected-react-router'
+import createRootReducer from '../reducers'
 
 const history = createHistory()
 
 export default function configureStore (initialState) {
   const sagaMiddleware = createSagaMiddleware()
-  const routerMd = routerMiddleware(history)
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
   const store = createStore(
-    rootReducer,
+    createRootReducer(history),
     initialState,
     composeEnhancers(
       applyMiddleware(
-        routerMd,
+        routerMiddleware(history),
         sagaMiddleware,
         createLogger({
           collapsed: (getState, action, logEntry) => !action.error,
