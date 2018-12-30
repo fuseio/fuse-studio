@@ -5,6 +5,7 @@ import {fetchCommunities, fetchCommunitiesByOwner} from 'actions/communities'
 import {loadModal} from 'actions/ui'
 import {openMarket} from 'actions/marketMaker'
 import {getAccountAddress} from 'selectors/accounts'
+import TopNav from 'components/TopNav'
 
 class Oven extends Component {
   componentDidUpdate (prevProps) {
@@ -13,7 +14,15 @@ class Oven extends Component {
     }
   }
 
-  render = () => <CommunitiesList {...this.props} />
+  render = () => (
+    <div>
+      <TopNav
+        active
+        history={this.props.history}
+      />
+      <CommunitiesList {...this.props} />
+    </div>
+  )
 }
 
 const mapStateToProps = state => ({

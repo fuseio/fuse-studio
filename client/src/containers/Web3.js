@@ -10,6 +10,7 @@ import {withMaybe} from 'utils/components'
 class Web3 extends Component {
   componentDidMount () {
     this.props.getNetworkType()
+    // TODO: Move this to getNetworkType saga after redux-saga 1.0.0 upgrade
     onWeb3Ready.then(({web3}) => {
       if (web3.currentProvider.isMetaMask) {
         web3.currentProvider.publicConfigStore.on('update', this.props.checkAccountChanged)
@@ -23,9 +24,7 @@ class Web3 extends Component {
     }
   }
 
-  render () {
-    return null
-  }
+  render = () => null
 }
 
 const mapStateToProps = state => ({

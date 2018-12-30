@@ -47,11 +47,7 @@ class PersonalSidebar extends Component {
   }
 
   showDashboard = (address) => {
-    if (this.props.history.location.pathname === `/view/dashboard/${address}`) {
-      this.props.history.replace(`/view/dashboard/${address}`)
-    } else {
-      this.props.history.push(`/view/dashboard/${address}`)
-    }
+    this.props.history.push(`/view/dashboard/${address}`)
     ReactGA.event({
       category: 'Dashboard',
       action: 'Click',

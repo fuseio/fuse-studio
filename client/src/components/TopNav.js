@@ -45,11 +45,7 @@ class TopNav extends Component {
   }
 
   showContactUs = () => {
-    if (this.props.history.location.pathname === '/view/contact-us') {
-      this.props.history.replace('/view/contact-us')
-    } else {
-      this.props.history.push('/view/contact-us')
-    }
+    this.props.history.push('/view/contact-us')
     this.setState({
       openMenu: !this.state.openMenu
     })
@@ -61,11 +57,7 @@ class TopNav extends Component {
   }
 
   showIssuance = () => {
-    if (this.props.history.location.pathname === '/view/issuance') {
-      this.props.history.replace('/view/issuance')
-    } else {
-      this.props.history.push('/view/issuance')
-    }
+    this.props.history.push('/view/issuance')
     this.setState({
       openMenu: !this.state.openMenu
     })
