@@ -61,6 +61,9 @@ class SimpleExchangeModal extends Component {
     return (
       <Modal className='exchange-modal' onClose={this.props.hideModal}>
         <div className='exchange-modal-up'>
+          <button onClick={() => this.props.hideModal()} className='personal-sidebar-close'>
+            <FontAwesome name='times' />
+          </button>
           <div>
             <CommunityLogo token={this.props.token} />
           </div>
