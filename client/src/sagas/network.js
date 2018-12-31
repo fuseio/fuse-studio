@@ -9,10 +9,17 @@ import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
 function * getAccountAddress () {
   if (window.ethereum && window.ethereum.enable) {
-    return web3.utils.toChecksumAddress((yield window.ethereum.enable())[0])
-  } else {
-    return web3.utils.toChecksumAddress(web3.eth.defaultAccount)
+    try {
+      const enableResponse = yield window.ethereum.enable()
+      if (enableResponse) {
+        return web3.utils.toChecksumAddress(enableResponse[0])
+      }
+    } catch (error) {
+      console.log(error)
+      return null
+    }
   }
+  return web3.utils.toChecksumAddress(web3.eth.defaultAccount)
 }
 
 function * getNetworkType () {
@@ -24,6 +31,7 @@ function * getNetworkType () {
         isMetaMask: web3.currentProvider.isMetaMask || false
       }})
     const accountAddress = yield getAccountAddress()
+
     if (accountAddress) {
       const isChanged = yield call(checkAccountChanged, {selectedAddress: accountAddress})
       if (!isChanged) {

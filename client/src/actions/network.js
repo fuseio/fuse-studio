@@ -10,7 +10,7 @@ export const FETCH_GAS_PRICES = createRequestTypes('FETCH_GAS_PRICES')
 
 export const getNetworkType = () => action(GET_NETWORK_TYPE.REQUEST)
 
-export const checkAccountChanged = ({selectedAddress, networkVersion}) => action(CHECK_ACCOUNT_CHANGED.REQUEST,
-  {selectedAddress, networkVersion})
+export const checkAccountChanged = (selectedAddress) => action(CHECK_ACCOUNT_CHANGED.REQUEST,
+  {selectedAddress})
 
 export const fetchGasPrices = () => action(FETCH_GAS_PRICES.REQUEST)

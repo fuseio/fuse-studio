@@ -2,7 +2,6 @@ import {Component} from 'react'
 import { connect } from 'react-redux'
 import {getNetworkType, checkAccountChanged} from 'actions/network'
 import {loadModal} from 'actions/ui'
-import {onWeb3Ready} from 'services/web3'
 import {isNetworkSupported} from 'utils/network'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import {withMaybe} from 'utils/components'
@@ -11,11 +10,13 @@ class Web3 extends Component {
   componentDidMount () {
     this.props.getNetworkType()
     // TODO: Move this to getNetworkType saga after redux-saga 1.0.0 upgrade
-    onWeb3Ready.then(({web3}) => {
-      if (web3.currentProvider.isMetaMask) {
-        web3.currentProvider.publicConfigStore.on('update', this.props.checkAccountChanged)
-      }
-    })
+    if (window.ethereum && window.ethereum.on) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts[0]) {
+          this.props.checkAccountChanged(accounts[0])
+        }
+      })
+    }
   }
 
   componentWillReceiveProps = (nextProps) => {
