@@ -1,10 +1,11 @@
 import React from 'react'
 import { withFormik } from 'formik'
 import Yup from 'yup'
+import FontAwesome from 'react-fontawesome'
 
 import TextInput from 'components/elements/TextInput'
+import Modal from 'components/Modal'
 import {sendContactUs, subcribeToMailingList} from 'services/api'
-import CloseButton from 'images/x.png'
 import ReactGA from 'services/ga'
 
 const MyInnerForm = props => {
@@ -17,7 +18,6 @@ const MyInnerForm = props => {
     handleChange,
     handleBlur,
     handleSubmit,
-    history,
     status
   } = props
 
@@ -27,14 +27,14 @@ const MyInnerForm = props => {
       action: 'Click',
       label: 'Close'
     })
-    history.goBack()
+    props.hideModal()
   }
 
   return (
-    <div className='contact-form'>
+    <Modal className='contact-form' onClose={handleClose}>
       <h4>CONTACT US</h4>
-      <div className='sidebar-close' onClick={handleClose}>
-        <img src={CloseButton} />
+      <div className='metamask-popup-close' onClick={handleClose}>
+        <FontAwesome name='times' />
       </div>
       <div className='contact-container'>
         <form onSubmit={handleSubmit}>
@@ -120,7 +120,7 @@ const MyInnerForm = props => {
         </form>
         <p className='success-message'>{status && status.success ? 'Thanks for getting in touch. We\'ll reach out to you shortly.' : null}</p>
       </div>
-    </div>
+    </Modal>
   )
 }
 

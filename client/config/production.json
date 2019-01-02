@@ -1,9 +1,9 @@
 {
   "api": {
     "url": {
-      "main": "https://communities.cln.network/api/v1",
-      "ropsten": "https://ropsten.cln.network/api/v1",
-      "default": "https://communities.cln.network/api/v1"
+      "main": "https://communities.fuse.io/api/v1",
+      "ropsten": "https://ropsten.fuse.io/api/v1",
+      "default": "https://communities.fuse.io/api/v1"
     }
   },
   "reactGA": {

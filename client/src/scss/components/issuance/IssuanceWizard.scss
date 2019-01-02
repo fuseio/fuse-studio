@@ -67,12 +67,6 @@
 	  z-index: 50;
 		overflow: auto;
 		background-image: $color-issuance-bg;
-		@media (max-width: $breakpoint-mobile) {
-			margin-top: -327px;
-			position: relative;
-			overflow: hidden;
-			top: 0;
-		}
 	}
 	&-container {
 		background-image: $color-issuance-bg;

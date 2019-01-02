@@ -6,7 +6,7 @@ import FontAwesome from 'react-fontawesome'
 
 import * as actions from 'actions/ui'
 import {getClnBalance} from 'selectors/accounts'
-import { LOGIN_MODAL } from 'constants/uiConstants'
+import { LOGIN_MODAL, CONTACT_FORM } from 'constants/uiConstants'
 
 import ClnIcon from 'images/cln.png'
 import ProfileIcon from 'images/user.svg'
@@ -41,7 +41,7 @@ class TopNav extends Component {
   }
 
   showContactUs = () => {
-    this.props.history.push('/view/contact-us')
+    this.props.loadModal(CONTACT_FORM)
     this.setState({
       openMenu: !this.state.openMenu
     })
@@ -103,7 +103,7 @@ class TopNav extends Component {
               onClick={this.handleLinkClick}>
               Whitepaper</a>
             <div style={{width: isMobile ? '100%' : 'auto'}} onClick={this.showContactUs} >
-              <div className='top-nav-text'>Contact us</div>
+              <a className='top-nav-text'>Contact us</a>
             </div>
             <div className='separator-vertical' />
           </div>

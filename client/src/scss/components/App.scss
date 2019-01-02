@@ -4,25 +4,6 @@
 	width: 100%;
 	position:relative;
 	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
-	.map-wrapper {
-		height: 100%;
-		width: 100%;
-		background-color: #1d1737;
-		overflow: hidden;
-		//transition: all 1s cubic-bezier(0,.52,.28,.94);
-		//transform: scale(1);
-		.map-element > div {
-			background-color: rgb(36, 35, 52) !important;
-			a {
-				text-decoration: none !important;
-				color: white !important;
-			}
-		}
-		&.active {
-			filter: none;
-			transform: scale(1);
-		}
-	}
 }
 
 .issuance-screen {
@@ -30,60 +11,4 @@
 	z-index: 0;
 	min-height: 310px;
 	justify-content: start;
-}
-
-
-.welcome-wrapper {
-	position: absolute;
-	@include flex-box();
-	justify-content: center;
-	align-items: center;
-	top:0;
-	z-index: 300;
-	width:100%;
-	height:100%;
-	opacity: 1;
-	background-color: rgba(9, 9, 9, 0.6);
-	transition: all 0.4s ease-in-out;
-	//animation: appear 3s linear;
-	&.hide {
-		opacity: 0;
-	}
-	&.out {
-		display: none;
-	}
-	.welcome-container {
-		max-width: 580px;
-		@include flex-box();
-		@include flex-direction(column);
-		justify-content: center;
-		align-items: center;
-		transition: all 0.4s ease-in-out;
-		animation: appear 3s linear;
-		h3 {
-			font-size: 36px;
-    		font-weight: 300;
-    		line-height: 1.2;
-			letter-spacing: 0.7px;
-			text-align: center;
-			color: #ffffff;
-			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-		}
-		h4 {
-			color: white;
-			text-align: center;
-			margin: 20px;
-			font-size: 16px;
-			line-height: 1.4;
-			font-weight: 300;
-		}
-		.button {
-			@include button($colu-green);
-			text-align: center;
-			width: 160px;
-			height: 36px;
-			color: white;
-			margin-top: 10px;
-		}
-	}
 }
