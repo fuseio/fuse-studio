@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import pickBy from 'lodash/pickBy'
 import {connect} from 'react-redux'
 import {fetchTokens, fetchBalances, fetchTokensWithBalances} from 'actions/accounts'
 import ProfileIcon from 'images/user.svg'
@@ -14,6 +15,7 @@ const PersonalSidebarCoin = ({accountAddress, token, marketMaker, balance, fiat}
   <div className='personal-community-content'>
     <div className='personal-community-content-balance'>
       CC Balance <span>{balance ? formatWei(balance, 0) : 0}</span>
+      <p className='coin-name'>{token.name}</p>
       <div className='coin-content'>
         <div className='coin-content-type'>
           <span className='coin-currency-type'>CLN</span>
@@ -34,6 +36,9 @@ const PersonalSidebarCoin = ({accountAddress, token, marketMaker, balance, fiat}
 ]
 
 class PersonalSidebar extends Component {
+  state = {
+    search: ''
+  }
   componentWillReceiveProps = ({accountAddress, account}) => {
     if (accountAddress && !this.props.accountAddress) {
       this.props.fetchTokensWithBalances(accountAddress)
@@ -55,33 +60,15 @@ class PersonalSidebar extends Component {
     })
   }
 
-  renderCoin = (accountAddress, token, marketMaker, balance) => [
-    <CommunityLogo token={token} key='0' />,
-    <div className='personal-community-content' key='1'>
-      <div className='personal-community-content-balance'>
-        CC Balance <span>{balance && formatWei(balance, 0)}</span>
-        <div className='coin-content'>
-          <div className='coin-content-type'>
-            <span className='coin-currency-type'>CLN</span>
-            <span className='coin-currency'>{marketMaker ? formatEther(marketMaker.currentPrice) : null}</span>
-          </div>
-          <div className='coin-content-type'>
-            <span className='coin-currency-type'>USD</span>
-            <span className='coin-currency'>
-              {
-                marketMaker
-                  ? formatEther(marketMaker.currentPrice.multipliedBy(this.props.fiat.USD && this.props.fiat.USD.price))
-                  : null
-              }</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  ]
+  filterBySearch = (search, tokens) =>
+    search ? pickBy(tokens, (token) =>
+      token.name.toLowerCase().search(
+        this.state.search.toLowerCase()) !== -1
+    ) : tokens
 
   renderIssuedCoins (accountAddress, tokens, marketMaker) {
-    return Object.keys(tokens).length ? Object.keys(tokens).map((key) => {
-      if (tokens[key].owner === accountAddress) {
+    return tokens && Object.keys(tokens).length ? Object.keys(tokens).map((key) => {
+      if ((tokens[key].owner === accountAddress)) {
         return (
           <div className='personal-community'>
             <PersonalSidebarCoin
@@ -96,28 +83,34 @@ class PersonalSidebar extends Component {
           </div>
         )
       }
-    }) : null
+    }) : <p className='no-items'>There is no issued coins</p>
   }
 
-  renderPortfolioCoins (accountAddress, tokens, marketMaker, portfolioTokens) {
-    return portfolioTokens && portfolioTokens.length ? portfolioTokens.map((key) => {
-      if (tokens[key.address] && marketMaker[key.address]) {
+  renderPortfolioCoins (accountAddress, tokens, marketMaker) {
+    return tokens && Object.keys(tokens).length ? Object.keys(tokens).map((key) => {
+      if (marketMaker[key]) {
         return (
           <div className='personal-community'>
             <PersonalSidebarCoin
               fiat={this.props.fiat}
               accountAddress={accountAddress}
-              token={tokens[key.address]}
-              marketMaker={marketMaker[key.address]}
-              balance={this.props.account.balances[key.address]} />
+              token={tokens[key]}
+              marketMaker={marketMaker[key]}
+              balance={this.props.account.balances[key]} />
           </div>
         )
       }
-    }) : null
+    }) : <p className='no-items'>There is no portfolio coins</p>
+  }
+
+  handleSearch = (event) => {
+    this.setState({search: event.target.value})
   }
 
   render () {
-    const portfolioTokens = (this.props.account && this.props.account.tokens) ? this.props.account.tokens : null
+    const { tokens, marketMaker } = this.props
+    const filteredTokens = this.filterBySearch(this.state.search, tokens)
+
     return (
       <div className='personal-sidebar'>
         <div className='personal-sidebar-top'>
@@ -136,17 +129,17 @@ class PersonalSidebar extends Component {
           </span>
         </div>
         <div className='personal-sidebar-search'>
-          <input placeholder='Communities' />
+          <input placeholder='What Currency are you looking for?' onChange={(e) => this.handleSearch(e)} />
           <button className='search-btn'><FontAwesome name='search' /></button>
         </div>
         <div className='personal-sidebar-content'>
           <h3 className='personal-sidebar-title'>Issued Coins</h3>
           <div className='personal-sidebar-content-community'>
-            {this.renderIssuedCoins(this.props.accountAddress, this.props.tokens, this.props.marketMaker)}
+            {this.renderIssuedCoins(this.props.accountAddress, filteredTokens, marketMaker)}
           </div>
           <h3 className='personal-sidebar-title'>Portfolio Coins</h3>
           <div className='personal-sidebar-content-community'>
-            {this.renderPortfolioCoins(this.props.accountAddress, this.props.tokens, this.props.marketMaker, portfolioTokens)}
+            {this.renderPortfolioCoins(this.props.accountAddress, filteredTokens, marketMaker)}
           </div>
         </div>
         <div className='personal-sidebar-shadow' onClick={() => this.props.closeProfile()} />
