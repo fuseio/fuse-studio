@@ -86,7 +86,7 @@ class IssuanceWizard extends Component {
     this.setState({communitySymbol})
   }
 
-  loadCalculator = (token, marketMaker) => this.props.loadModal(ECONOMIC_CALCULATOR_MODAL, {token, marketMaker})
+  loadCalculator = (token, marketMaker) => this.props.loadModal(ECONOMIC_CALCULATOR_MODAL, {token, marketMaker, wrapper: 'summary'})
 
   setCommunityType = type =>
     this.setState({communityType: type})

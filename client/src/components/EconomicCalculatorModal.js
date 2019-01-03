@@ -184,17 +184,18 @@ class EconomicCalculatorModal extends Component {
             }
           </div>
           <div className='calculator-chart-footer'>
-            <a href='' className='calculator-chart-link'>
-              <FontAwesome name='play' /> Learn more about it
-            </a>
-            <button className='btn-adding'>
+            {this.props.wrapper !== 'summary' && <button className='btn-adding'>
               <FontAwesome name='plus' className='top-nav-issuance-plus' /> Add CLN
-            </button>
+            </button>}
           </div>
         </div>
       </Modal>
     )
   }
+}
+
+EconomicCalculatorModal.defaultProps = {
+  wrapper: 'wrapper'
 }
 
 EconomicCalculatorModal.propTypes = {
