@@ -3,5 +3,6 @@ module.exports = (mongoose) => {
   mongoose.community = mongoose.community || require('./Community')(mongoose)
   mongoose.metadata = mongoose.metadata || require('./Metadata')(mongoose)
   mongoose.event = mongoose.event || require('./Event')(mongoose)
+  mongoose.user = mongoose.user || require('./User')(mongoose)
   return mongoose
 }
