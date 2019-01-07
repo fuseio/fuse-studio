@@ -21,11 +21,11 @@ const genInterval = (query) => {
 const getMinimumTimestamp = (interval) => {
   switch (interval) {
     case intervals.month:
-      return new Moment().startOf('year').toDate()
+      return new Moment().subtract(1, 'year').toDate()
     case intervals.week:
-      return new Moment().startOf('year').toDate()
+      return new Moment().subtract(1, 'year').toDate()
     case intervals.day:
-      return new Moment().startOf('month').toDate()
+      return new Moment().subtract(1, 'month').toDate()
   }
 }
 
