@@ -11,6 +11,7 @@ import {formatEther, formatWei} from 'utils/format'
 import {loadModal} from 'actions/ui'
 import Moment from 'moment'
 import {SIMPLE_EXCHANGE_MODAL} from 'constants/uiConstants'
+import find from 'lodash/find'
 
 const intervals = {
   MONTH: 'month',
@@ -18,23 +19,158 @@ const intervals = {
   DAY: 'day'
 }
 
+const dropdownOptions = [
+  {
+    text: 'Monthly',
+    value: intervals.MONTH
+  },
+  {
+    text: 'Weekly',
+    value: intervals.WEEK
+  },
+  {
+    text: 'Daily',
+    value: intervals.DAY
+  }
+]
+
+const getCurrentInterval = (intervalType) => {
+  const date = new Date()
+  switch (intervalType) {
+    case intervals.DAY:
+      return Moment(date).date()
+    case intervals.WEEK:
+      return Moment(date).week()
+    case intervals.MONTH:
+      // mongodb numbers month from 1 to 12 while moment from 0 to 11
+      return Moment(date).month() + 1
+  }
+}
+
+const getLatestDataEntry = (intervalType, stats) => {
+  if (!stats || !stats[0]) {
+    return null
+  }
+  const interval = getCurrentInterval(intervalType)
+  return find(stats, {interval})
+}
+
+class ActivityDropdown extends Component {
+  state = {
+    isOpen: false
+  }
+
+  handleDropdownClick = (item) => {
+    this.setState({
+      isOpen: false
+    })
+    this.props.handleChange(item)
+  }
+
+  handleOpenDropDown = () => this.setState({isOpen: true})
+
+  componentDidMount () {
+    document.addEventListener('mousedown', this.handleClickOutside)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('mousedown', this.handleClickOutside)
+  }
+
+  handleClickOutside = (event) => {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.setState({isOpen: false})
+    }
+  }
+
+  setWrapperRef = (node) => {
+    this.wrapperRef = node
+  }
+
+  render () {
+    return (
+      <div ref={this.setWrapperRef} className='dashboard-information-period'>
+        <span className='dashboard-information-period-text' onClick={this.handleOpenDropDown}>
+          {this.props.interval.text} <FontAwesome name='caret-down' />
+        </span>
+        {this.state.isOpen &&
+          <div className='dashboard-information-period-additional'>
+            {dropdownOptions.map((item, index) =>
+              <div
+                className={classNames(
+                  'dashboard-information-period-point',
+                  this.props.interval.value === item.value ? 'active-point' : null
+                )}
+                key={index}
+                onClick={() => this.handleDropdownClick(item)}
+              >
+                {item.text}
+              </div>
+            )}
+          </div>
+        }
+      </div>
+    )
+  }
+}
+
+class ActivityContent extends Component {
+  state = {
+    interval: dropdownOptions[0]
+  }
+
+  componentDidMount () {
+    this.props.handleChange(this.props.userType, this.state.interval.value)
+  }
+
+  handleIntervalChange = (interval) => {
+    this.setState({interval})
+    this.props.handleChange(this.props.userType, interval.value)
+  }
+
+  render () {
+    const latestDataEntry = getLatestDataEntry(this.state.interval.value, this.props.stats)
+    return (
+      <div className='dashboard-information-content' >
+        <div className='dashboard-information-content-activity' key='0'>
+          <p className='dashboard-information-small-text'>
+            <span>{this.props.title || this.props.userType}</span> Activity
+          </p>
+          <ActivityDropdown interval={this.state.interval} handleChange={this.handleIntervalChange} />
+        </div>,
+        <div className='dashboard-information-content-number' key='1'>
+          <p className='dashboard-information-small-text'>
+            Number of transactions
+          </p>
+          <p className='dashboard-information-number'>
+            {latestDataEntry ? latestDataEntry.totalCount : '0'}
+          </p>
+        </div>,
+        <div className='dashboard-information-content-number' key='2'>
+          <p className='dashboard-information-small-text'>
+            Transactions volume
+          </p>
+          <p className='dashboard-information-number'>
+            {latestDataEntry ? formatWei(latestDataEntry.volume, 0) : '0'}
+          </p>
+        </div>
+      </div>)
+  }
+}
+
 class Dashboard extends Component {
   state = {
-    dropdownOpen: '',
-    dropdown: {},
-    activityType: {
-      admin: intervals.MONTH,
-      user: intervals.MONTH
-    }
+    copyStatus: null
+  }
+
+  handleIntervalChange = (userType, intervalValue) => {
+    this.props.fetchCommunityStatistics(this.props.match.params.address, userType, intervalValue)
   }
 
   componentDidMount () {
     if (!this.props.token) {
       this.props.fetchCommunityWithData(this.props.match.params.address)
     }
-    this.props.fetchCommunityStatistics(this.props.match.params.address, 'user', this.state.activityType.user)
-    this.props.fetchCommunityStatistics(this.props.match.params.address, 'admin', this.state.activityType.admin)
-
     document.addEventListener('mousedown', this.handleClickOutside)
   }
 
@@ -52,122 +188,7 @@ class Dashboard extends Component {
     }
   }
 
-  setOpenDropdown (type) {
-    if (type !== this.state.dropdownOpen) {
-      this.setState({dropdownOpen: type})
-    } else {
-      this.setState({dropdownOpen: ''})
-    }
-  }
-
-  setActivePointDropdown (type, text) {
-    this.setState(prevState => ({
-      dropdown: {
-        ...prevState.dropdown,
-        [type]: {text}
-      }
-    }))
-    this.setState({dropdownOpen: ''})
-  }
-
-  handleDropdownClick = (activityType, item) => {
-    this.setState(prevState => ({
-      activityType: {
-        ...prevState.activityType,
-        [activityType]: item.value
-      }
-    }))
-    this.setActivePointDropdown(activityType, item.text)
-    this.props.fetchCommunityStatistics(this.props.match.params.address, activityType, item.value)
-  }
-
   setQuitDashboard = () => this.props.history.goBack()
-
-  activityDropdown (type) {
-    const dropdownOptions = [
-      {
-        text: 'Monthly',
-        value: intervals.MONTH
-      },
-      {
-        text: 'Weekly',
-        value: intervals.WEEK
-      },
-      {
-        text: 'Daily',
-        value: intervals.DAY
-      }]
-    return (
-      <div className='dashboard-information-period' ref={type => (this.type = type)}>
-        <span className='dashboard-information-period-text' onClick={() => this.setOpenDropdown(type)}>
-          {this.state.dropdown && this.state.dropdown[type] && this.state.dropdown[type].text
-            ? this.state.dropdown[type].text : dropdownOptions[0].text} <FontAwesome name='caret-down' />
-        </span>
-        {(type === this.state.dropdownOpen) &&
-          <div className='dashboard-information-period-additional'>
-            {dropdownOptions.map((item, index) =>
-              <div
-                className={classNames(
-                  'dashboard-information-period-point',
-                  this.state.dropdown[type] && this.state.dropdown[type].text && this.state.dropdown[type].text === item.text ? 'active-point' : null
-                )}
-                key={index}
-                onClick={() => this.handleDropdownClick(type, item)}
-              >
-                {item.text}
-              </div>
-            )}
-          </div>
-        }
-      </div>
-    )
-  }
-
-  getLatestDataEntry (type, data) {
-    const date = new Date()
-    const dataPeriod = data[0].interval
-
-    switch (this.state.activityType[type]) {
-      case intervals.DAY:
-        const existingDay = Moment(date).date()
-        return dataPeriod === existingDay ? data[0] : null
-      case intervals.WEEK:
-        const existingWeek = Moment(date).week()
-        return dataPeriod === existingWeek ? data[0] : null
-      case intervals.MONTH:
-        // mongodb numbers month from 1 to 12 while moment from 0 to 11
-        const existingMonth = Moment(date).month() + 1
-        return dataPeriod === existingMonth ? data[0] : null
-      default: return 0
-    }
-  }
-
-  renderActivityContent = (type, data) => {
-    return [
-      <div className='dashboard-information-content-activity' key='0'>
-        <p className='dashboard-information-small-text'>
-          <span>{type === 'user' ? 'users' : type}</span> Activity
-        </p>
-        {this.activityDropdown(type)}
-      </div>,
-      <div className='dashboard-information-content-number' key='1'>
-        <p className='dashboard-information-small-text'>
-          Number of transactions
-        </p>
-        <p className='dashboard-information-number'>
-          {data && data.length && this.getLatestDataEntry(type, data) ? this.getLatestDataEntry(type, data).totalCount : '0'}
-        </p>
-      </div>,
-      <div className='dashboard-information-content-number' key='2'>
-        <p className='dashboard-information-small-text'>
-          Transactions volume
-        </p>
-        <p className='dashboard-information-number'>
-          {data && data.length && this.getLatestDataEntry(type, data) ? formatWei(this.getLatestDataEntry(type, data).volume, 0) : '0'}
-        </p>
-      </div>
-    ]
-  }
 
   copyToClipboard = (e) => {
     this.textArea.select()
@@ -256,12 +277,8 @@ class Dashboard extends Component {
               </div>
             </div>
             <div className='dashboard-info' ref={content => (this.content = content)}>
-              <div className='dashboard-information-content' >
-                {this.renderActivityContent('user', user)}
-              </div>
-              <div className='dashboard-information-content'>
-                {this.renderActivityContent('admin', admin)}
-              </div>
+              <ActivityContent stats={user} userType='user' title='users' handleChange={this.handleIntervalChange} />
+              <ActivityContent stats={admin} userType='admin' handleChange={this.handleIntervalChange} />
             </div>
             <div className='dashboard-information-footer'>
               <div className='dashboard-information-small-text'>

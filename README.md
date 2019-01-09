@@ -89,6 +89,18 @@ If your browser has an MetaMask extension, that should be enought.
 ### Other configs
 Take a look into [server/config](server/config) directory.
 
+## Fast frontend track
+
+If you plan to work only on the frontend you can use our QA servers as a backend infrastucture. For this setup just run:
+
+```
+cd client
+npm install
+NODE_ENV=QA npm start
+```
+
+Though you still need a web3 provider like [MetaMask](https://metamask.io/).
+
 # Contributing
 
 Please open an issue for requests, ideas or bugs.

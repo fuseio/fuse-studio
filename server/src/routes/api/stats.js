@@ -92,7 +92,7 @@ router.get('/:activityType/:address', async (req, res, next) => {
     },
     {
       $sort: {
-        interval: -1
+        interval: 1
       }
     }
   ])
