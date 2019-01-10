@@ -1,9 +1,11 @@
 import { all, put } from 'redux-saga/effects'
 
-import {tryTakeEvery, apiCall} from './utils'
+import {createEntityPut, tryTakeEvery, apiCall} from './utils'
 import * as api from 'services/api'
 import * as actions from 'actions/metadata'
 import {DEFAULT_COMMUNITY_METADATA_LOGO} from 'constants/uiConstants'
+
+const entityPut = createEntityPut(actions.entityName)
 
 function * fetchMetadata ({tokenURI, tokenAddress}) {
   if (!tokenURI) {
@@ -18,14 +20,25 @@ function * fetchMetadata ({tokenURI, tokenAddress}) {
     data.metadata.communityLogo = DEFAULT_COMMUNITY_METADATA_LOGO
   }
 
-  yield put({
-    type: actions.FETCH_METADATA.SUCCESS,
-    tokenAddress,
-    response: {
-      metadata: data.metadata,
-      address: tokenAddress
-    }
-  })
+  if (tokenAddress) {
+    yield entityPut({
+      type: actions.FETCH_METADATA.SUCCESS,
+      tokenAddress,
+      response: {
+        metadata: data.metadata,
+        address: tokenAddress
+      }
+    })
+  } else {
+    yield entityPut({
+      type: actions.FETCH_METADATA.SUCCESS,
+      response: {
+        entities: {
+          [hash]: data.metadata
+        }
+      }
+    })
+  }
 }
 
 export function * createMetadata ({metadata}) {

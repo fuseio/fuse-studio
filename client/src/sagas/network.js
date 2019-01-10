@@ -6,6 +6,12 @@ import * as actions from 'actions/network'
 import {balanceOfCln} from 'actions/accounts'
 import {loadModal} from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+import {networkIdToName} from 'constants/network'
+
+function * getNetworkTypeInternal () {
+  const networkId = yield web3.eth.net.getId()
+  return networkIdToName[networkId]
+}
 
 function * getAccountAddress () {
   if (window.ethereum && window.ethereum.enable) {
@@ -24,7 +30,7 @@ function * getAccountAddress () {
 
 function * getNetworkType () {
   try {
-    const networkType = yield web3.eth.net.getNetworkType()
+    const networkType = yield getNetworkTypeInternal()
     yield put({type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,

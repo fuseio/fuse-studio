@@ -1,6 +1,11 @@
 import merge from 'lodash/merge'
 
-export default (state = {}, action) => {
+const initialState = {
+  metadata: {},
+  communities: {}
+}
+
+export default (state = initialState, action) => {
   if (action.entity && action.response) {
     if (action.response.entities) {
       return merge({}, state, {[action.entity]: action.response.entities})

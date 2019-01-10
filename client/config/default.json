@@ -1,7 +1,7 @@
 {
   "web3": {
     "provider": "http://localhost:8545",
-    "supportedNetworks": ["main", "ropsten"]
+    "supportedNetworks": ["main", "ropsten", "fuse"]
   },
   "api": {
     "url": {

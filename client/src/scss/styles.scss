@@ -116,7 +116,6 @@ $breakpoint-desktop: 1200px;
 @import 'components/Modal';
 @import 'components/Root';
 @import 'components/TopNav';
-@import 'components/Dashboard';
 @import 'components/PersonalSidebar';
 
 @import 'components/oven/SimpleExchangeModal';
@@ -126,6 +125,9 @@ $breakpoint-desktop: 1200px;
 @import 'components/issuance/NameStep';
 @import 'components/issuance/SummaryStep';
 @import 'components/issuance/SymbolStep';
+
+@import 'components/dashboard/Dashboard';
+@import 'components/dashboard/EntityDirectory';
 
 
 

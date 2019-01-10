@@ -7,15 +7,12 @@ const relevantQuoteActions = {...filterRequestActions(quoteActions),
 relevantQuoteActions[CHANGE.PENDING] = CHANGE
 
 export default (state = {
-  activeMarker: null,
   modalType: null
 }, action) => {
   if (relevantQuoteActions.hasOwnProperty(action.type)) {
     return {...state, modalProps: {...state.modalProps, ...action.response}}
   }
   switch (action.type) {
-    case ui.ZOOM:
-      return {...state, zoom: action.zoom}
     case ui.SHOW_MODAL:
       return {...state, modalType: action.modalType, modalProps: action.modalProps}
     case ui.HIDE_MODAL:
