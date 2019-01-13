@@ -18,7 +18,7 @@ export default class DetailsStep extends Component {
 
   renderDetailsContent (communityType, setCommunityType, onlineImg, geoImg) {
     let detailsContent = []
-    const communityTypes = [{'text': 'Online', 'img': onlineImg}, {'text': 'Geographical', 'img': geoImg}]
+    const communityTypes = [{'text': 'Online Community', 'img': onlineImg}, {'text': 'Local Community', 'img': geoImg}]
     communityTypes.forEach((item, key) => {
       const stepDetailsClass = classNames({
         'step-content-details-type': true,

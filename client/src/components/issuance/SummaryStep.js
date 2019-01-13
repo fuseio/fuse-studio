@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import FontAwesome from 'react-fontawesome'
 import Community from 'components/Community'
 import BigNumber from 'bignumber.js'
 import Loader from 'components/Loader'
@@ -18,9 +17,7 @@ export default class SummaryStep extends Component {
       case PENDING:
         return <Loader color='#3a3269' className='loader' />
       case SUCCESS:
-        return (<button className='symbol-btn' disabled>
-            Success
-        </button>)
+        return null
       default:
         return (<button onClick={this.props.showPopup} className='symbol-btn'>
           Issue
@@ -53,11 +50,6 @@ export default class SummaryStep extends Component {
         </div>
       </div>
       <div className='text-center wallet-container'>
-        <a href='https://metamask.io/' target='_blank' className='btn-download'>
-          <FontAwesome name='download' /> Metamask wallet
-        </a>
-      </div>
-      <div className='text-center'>
         {this.renderTransactionStatus(this.props.transactionStatus)}
       </div>
     </div>

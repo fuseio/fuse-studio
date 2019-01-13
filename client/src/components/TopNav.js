@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import classNames from 'classnames'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
+import {BigNumber} from 'bignumber.js'
 
 import * as actions from 'actions/ui'
 import {getClnBalance} from 'selectors/accounts'
@@ -110,6 +111,15 @@ class TopNav extends Component {
           <div className='top-nav-text profile' onClick={this.showConnectMetamask}>
             <span className='profile-icon' onClick={this.showProfile}>
               <img src={ProfileIcon} />
+            </span>
+            <span className='profile-balance'>
+              <span className='balance-address'>{this.props.network.accountAddress || 'Connect Metamask'}</span>
+              {(this.props.clnBalance)
+                ? <div className='top-nav-balance'>
+                  <span className='balance-text'>Balance:</span>
+                  <span className='balance-number'>{new BigNumber(this.props.clnBalance).div(1e18).toFormat(2, 1)}</span>
+                </div>
+                : null}
             </span>
           </div>
         </div>

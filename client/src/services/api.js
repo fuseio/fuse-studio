@@ -29,8 +29,8 @@ export const fetchCommunitiesByOwner = (owner, apiRoot) =>
 export const fetchTokens = (account, apiRoot) =>
   request.get(`${apiRoot}/balances/${account}`).then(response => response.body)
 
-export const processReceipt = ({transactionHash}, apiRoot) =>
-  request.post(`${apiRoot}/receipts/${transactionHash}`).send().then(response => response.body)
+export const processReceipt = (receipt, apiRoot) =>
+  request.post(`${apiRoot}/receipts/`).send({receipt}).then(response => response.body)
 
 export const sendContactUs = (formData) => request.post(`${API_ROOT}/mails`)
   .send({formData})

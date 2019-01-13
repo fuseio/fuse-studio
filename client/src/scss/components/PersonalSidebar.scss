@@ -7,6 +7,8 @@
     bottom:0;
     box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.15);
     background: #343166;
+    min-height: 493px;
+    overflow: auto;
 
     @media (max-width: $breakpoint-mobile) {
       top: 0;

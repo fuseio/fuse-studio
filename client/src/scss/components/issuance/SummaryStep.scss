@@ -152,8 +152,4 @@
 .wallet-container {
 	padding-top: 40px;
 	padding-bottom: 40px;
-
-	@media (max-width: $breakpoint-tablet) {
-		display: none;
-	}
 }

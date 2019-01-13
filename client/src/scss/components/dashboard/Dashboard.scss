@@ -234,6 +234,9 @@
         margin-bottom: 20px;
     	}
       &-content {
+        @media (max-width: $breakpoint-tablet) {
+          margin-right: 30px;
+      	}
         @media (max-width: $breakpoint-mobile) {
           margin-bottom: 10px;
           text-align: center;

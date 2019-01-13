@@ -20,15 +20,9 @@ export default class SymbolStep extends Component {
     this.setState({customSymbol: event.target.value})
   }
 
-  setCommynitySymbol = () => {
-    if (this.state.customSymbol.length > 2) {
-      this.props.handleChangeCommunitySymbol(this.state.customSymbol)
-      this.setState({showCustomSymbol: !this.state.showCustomSymbol})
-    } else {
-      this.props.handleChangeCommunitySymbol(this.props.communitySymbol)
-      this.setState({customSymbol: this.props.communitySymbol})
-      this.setState({showCustomSymbol: !this.state.showCustomSymbol})
-    }
+  setCancelEditing = () => {
+    this.setState({showCustomSymbol: !this.state.showCustomSymbol})
+    this.setState({customSymbol: this.props.communitySymbol})
   }
 
   setNextStep = () => {
@@ -64,14 +58,20 @@ export default class SymbolStep extends Component {
           }
         </div>
         <div className='text-center'>
-          <button
-            className='btn-download edit-symbol'
-            onClick={() => this.setCommynitySymbol()}
-          >
-            <FontAwesome
-              name={!this.state.showCustomSymbol ? 'edit' : 'times-circle'}
-            /> {!this.state.showCustomSymbol ? 'Edit' : 'Cancel'}
-          </button>
+          {!this.state.showCustomSymbol
+            ? <button
+              className='btn-download edit-symbol'
+              onClick={() => this.setState({showCustomSymbol: !this.state.showCustomSymbol})}
+            >
+              <FontAwesome name='edit' /> Edit
+            </button>
+            : <button
+              className='btn-download edit-symbol'
+              onClick={this.setCancelEditing}
+            >
+              <FontAwesome name='times-circle' /> Cancel
+            </button>
+          }
         </div>
         <button
           className='symbol-btn'
