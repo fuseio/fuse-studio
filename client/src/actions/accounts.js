@@ -12,4 +12,6 @@ export const balanceOfCln = (accountAddress) => action(BALANCE_OF_CLN.REQUEST, {
 
 export const fetchTokens = (accountAddress) => action(FETCH_TOKENS.REQUEST, {accountAddress})
 export const fetchBalances = (tokens, accountAddress) => action(FETCH_BALANCES.REQUEST, {accountAddress, tokens})
+export const fetchTokensWithBalances = (accountAddress) => action(FETCH_TOKENS_WITH_BALANCES.REQUEST, {accountAddress})
+
 export const setUserInformation = (user) => action(SET_USER_INFORMATION.REQUEST, {user})
