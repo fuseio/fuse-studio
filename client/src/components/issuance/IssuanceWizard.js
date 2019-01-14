@@ -13,7 +13,7 @@ import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
 import {issueCommunity} from 'actions/communities'
 import {getAddresses} from 'selectors/network'
-import { METAMASK_ACCOUNT_MODAL, ECONOMIC_CALCULATOR_MODAL } from 'constants/uiConstants'
+import { USER_DATA_MODAL, ECONOMIC_CALCULATOR_MODAL } from 'constants/uiConstants'
 
 class IssuanceWizard extends Component {
   state = {
@@ -33,6 +33,17 @@ class IssuanceWizard extends Component {
     window.addEventListener('keypress', this.handleKeyPress)
     this.setState({ stepPosition: this.stepIndicator.getBoundingClientRect().top })
   }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.receipt !== prevProps.receipt) {
+      this.showUserDataPopup()
+    }
+  }
+
+  showUserDataPopup = () => this.props.loadModal(USER_DATA_MODAL, {
+    setQuitIssuance: this.setQuitIssuance,
+    receipt: this.props.receipt
+  })
 
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
@@ -60,7 +71,6 @@ class IssuanceWizard extends Component {
     }
     const communityMetadata = {'communityType': this.state.communityType.text, 'communityLogo': this.state.communityLogo.name}
     this.props.issueCommunity(communityMetadata, currencyData)
-    this.props.hideModal()
   }
 
   handleScroll = () => this.setState({scrollPosition: window.scrollY})
@@ -145,9 +155,9 @@ class IssuanceWizard extends Component {
     }
   }
 
-  showMetamaskPopup = () => this.props.loadModal(METAMASK_ACCOUNT_MODAL, {
-    setIssuanceTransaction: this.setIssuanceTransaction
-  })
+  showMetamaskPopup = () => {
+    this.setIssuanceTransaction()
+  }
 
   render () {
     const steps = ['Name', 'Symbol', 'Details', 'Summary']

@@ -8,7 +8,7 @@ import WrongNetworkModal from 'components/WrongNetworkModal'
 import LoadingModal from 'components/LoadingModal'
 import ExchangeModal from 'components/exchange/ExchangeModal'
 import ErrorBoundary from 'components/ErrorBoundary'
-import MetamaskModal from 'components/issuance/MetamaskModal'
+import UserDatatModal from 'components/issuance/UserDatatModal'
 import SimpleExchangeModal from 'components/oven/SimpleExchangeModal'
 import EconomicCalculatorModal from 'components/EconomicCalculatorModal'
 import ContractForm from 'components/ContactForm'
@@ -19,7 +19,7 @@ import {
   WRONG_NETWORK_MODAL,
   EXCHANGE_MODAL,
   LOADING_MODAL,
-  METAMASK_ACCOUNT_MODAL,
+  USER_DATA_MODAL,
   SIMPLE_EXCHANGE_MODAL,
   ECONOMIC_CALCULATOR_MODAL,
   CONTACT_FORM
@@ -36,7 +36,7 @@ const MODAL_COMPONENTS = {
   [EXCHANGE_MODAL]: ExchangeModal,
   [WRONG_NETWORK_MODAL]: WrongNetworkModal,
   [LOADING_MODAL]: LoadingModal,
-  [METAMASK_ACCOUNT_MODAL]: MetamaskModal,
+  [USER_DATA_MODAL]: UserDatatModal,
   [SIMPLE_EXCHANGE_MODAL]: SimpleExchangeModal,
   [ECONOMIC_CALCULATOR_MODAL]: EconomicCalculatorModal,
   [CONTACT_FORM]: ContractForm

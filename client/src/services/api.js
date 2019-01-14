@@ -11,6 +11,9 @@ export const createMetadata = (metadata, apiRoot) =>
     .send({metadata})
     .then(response => response.body)
 
+export const addUserInformation = (user, apiRoot) =>
+  request.post(`${apiRoot}/users`).send({user}).then(response => response.body)
+
 export const addCommunity = (community, apiRoot) =>
   request.post(`${apiRoot}/communities`).send({community}).then(response => response.body)
 

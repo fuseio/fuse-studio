@@ -1,7 +1,8 @@
 import {CREATE_CURRENCY} from 'actions/issuance'
+import {SET_USER_INFORMATION} from 'actions/accounts'
 import {ISSUE_COMMUNITY} from 'actions/communities'
 import {REQUEST, FAILURE} from 'actions/constants'
-import { LOCATION_CHANGE } from 'connected-react-router'
+import {LOCATION_CHANGE} from 'connected-react-router'
 
 const initialState = {
   receipt: null,
@@ -21,6 +22,8 @@ export default (state = initialState, action) => {
       return {...state, ...action.response}
     case CREATE_CURRENCY.FAILURE:
       return {...state, ...action.response}
+    case SET_USER_INFORMATION.SUCCESS:
+      return {...state, transactionStatus: null}
     case LOCATION_CHANGE:
       if (action.payload.pathname === '/') {
         return {...initialState}
