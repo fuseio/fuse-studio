@@ -60,8 +60,8 @@ export default class Community extends Component {
       <div className='coin-footer'>
         <div className='coin-content'>
           {this.props.wrapper !== 'summary' && [
-            <div className='total-content'>CLN Reserved</div>,
-            <div>
+            <div className='total-content' key={0}>CLN Reserved</div>,
+            <div key={1}>
               {this.props.marketMaker.clnReserve && !this.props.marketMaker.clnReserve.isZero()
                 ? <div onClick={this.handleAddCln} className='coin-reverse'>
                   {clnReserve}

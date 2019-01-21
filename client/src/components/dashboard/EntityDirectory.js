@@ -1,17 +1,27 @@
 import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-
+import {getClnBalance} from 'selectors/accounts'
+import Loader from 'components/Loader'
+import {REQUEST, SUCCESS} from 'actions/constants'
 import {getEntities} from 'selectors/directory'
 import {createList, getList, addEntity, fetchEntities} from 'actions/directory'
-import ClnIcon from 'images/cln.png'
-import EntityForm from './EntityForm'
+import Header from './Header'
 import Entity from './Entity'
+import {loadModal, hideModal} from 'actions/ui'
+import { ADD_DIRECTORY_ENTITY } from 'constants/uiConstants'
 
 class EntityDirectory extends Component {
   setQuitDashboard = () => this.props.history.goBack()
 
-  handleAddEntity = (data) => this.props.addEntity(this.props.listAddress, data)
+  showHomePage = (address) => {
+    this.props.history.push('/')
+  }
+
+  handleAddEntity = (data) => {
+    this.props.addEntity(this.props.listAddress, data)
+    this.props.hideModal()
+  }
 
   handleCreateList = () => this.props.createList(this.props.tokenAddress)
 
@@ -20,44 +30,91 @@ class EntityDirectory extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.listAddress && this.props.listAddress !== prevProps.listAddress) {
+    if (
+      (this.props.listAddress && this.props.listAddress !== prevProps.listAddress) ||
+      (this.props.transactionStatus !== prevProps.transactionStatus && this.props.transactionStatus === SUCCESS)
+    ) {
       this.props.fetchEntities(this.props.listAddress, 1)
     }
   }
 
+  loadAddingModal = () => this.props.loadModal(ADD_DIRECTORY_ENTITY, {
+    handleAddEntity: this.handleAddEntity
+  })
+
+  renderTransactionStatus = (transactionStatus) => {
+    if (transactionStatus === REQUEST) {
+      return (
+        <div className='dashboard-entity-loader'>
+          <Loader color='#3a3269' className='loader' />
+        </div>
+      )
+    }
+  }
+
   render () {
-    return (
-      <div className='dashboard-content'>
-        <div className='dashboard-header'>
-          <div className='dashboard-logo'>
-            <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>
-          </div>
+    return [
+      <Header
+        network={this.props.network}
+        clnBalance={this.props.clnBalance}
+        match={this.props.match}
+        history={this.props.history}
+        showHomePage={this.showHomePage}
+        key={0}
+      />,
+      <div className='dashboard-content' key={1}>
+        <div className='dashboard-entity-container'>
           <button
             className='quit-button ctrl-btn'
-            onClick={this.setQuitDashboard}
+            onClick={this.showHomePage}
           >
             <FontAwesome className='ctrl-icon' name='times' />
           </button>
-        </div>
-        <div className='dashboard-entity-container'>
-          EntityDirectory
-          {
-            !this.props.listAddress
-              ? <button onClick={this.handleCreateList}>Create List</button>
-              : (<div>
-                <EntityForm addEntity={this.handleAddEntity} />
-                {this.props.entities.map((entity, index) => <Entity key={index} entity={entity} />)}
-              </div>)
-          }
+          {!this.props.listAddress
+            ? <div className='dashboard-entity-content flex-end'>
+              <button
+                className='btn-entity-adding'
+                onClick={() => this.handleCreateList()}
+                disabled={this.props.transactionStatus === REQUEST}
+              >
+                + Create List
+              </button>
+            </div>
+            : (
+              <div>
+                <div className='dashboard-entity-content'>
+                  <div className='dashboard-entity-search'>
+                    All business
+                    <button className='btn-entity-search'>
+                      <FontAwesome name='search' />
+                    </button>
+                  </div>
+                  <button
+                    className='btn-entity-adding'
+                    onClick={() => this.loadAddingModal()}
+                    disabled={this.props.transactionStatus === REQUEST}
+                  >
+                    + New Business
+                  </button>
+                </div>
+                {this.props.entities.length
+                  ? this.props.entities.map((entity, index) => <Entity key={index} entity={entity} />)
+                  : <p className='emptyText'>There is no any entities</p>
+                }
+              </div>
+            )}
+          {this.renderTransactionStatus(this.props.transactionStatus)}
         </div>
       </div>
-    )
+    ]
   }
 }
 
 const mapStateToProps = (state, {match}) => ({
   tokenAddress: match.params.address,
   entities: getEntities(state),
+  network: state.network,
+  clnBalance: getClnBalance(state),
   ...state.screens.directory
 })
 
@@ -65,7 +122,9 @@ const mapDispatchToProps = {
   createList,
   getList,
   addEntity,
-  fetchEntities
+  fetchEntities,
+  loadModal,
+  hideModal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EntityDirectory)

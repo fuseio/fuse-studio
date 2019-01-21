@@ -1,9 +1,15 @@
 import React from 'react'
+import FontAwesome from 'react-fontawesome'
 
 const Entity = ({entity}) => (
-  <div>
-    <div>name: {entity.name}</div>
-    <div>address: {entity.address}</div>
+  <div className='entity'>
+    <div className='entity-logo'>
+      <FontAwesome name='bullseye' />
+    </div>
+    <div className='entity-content'>
+      <div className='entity-name'>{entity.name}</div>
+      <div className='entity-subtitle'>{entity.address}</div>
+    </div>
   </div>
 )
 

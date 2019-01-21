@@ -11,8 +11,8 @@ import {getAccount} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
 
 const PersonalSidebarCoin = ({accountAddress, token, marketMaker, balance, fiat}) => [
-  <CommunityLogo token={token} />,
-  <div className='personal-community-content'>
+  <CommunityLogo token={token} key={0} />,
+  <div className='personal-community-content' key={1}>
     <div className='personal-community-content-balance'>
       CC Balance <span>{balance ? formatWei(balance, 0) : 0}</span>
       <p className='coin-name'>{token.name}</p>
@@ -70,7 +70,7 @@ class PersonalSidebar extends Component {
     return tokens && Object.keys(tokens).length ? Object.keys(tokens).map((key) => {
       if ((tokens[key].owner === accountAddress)) {
         return (
-          <div className='personal-community'>
+          <div className='personal-community' key={key}>
             <PersonalSidebarCoin
               fiat={this.props.fiat}
               accountAddress={accountAddress}
@@ -90,7 +90,7 @@ class PersonalSidebar extends Component {
     return tokens && Object.keys(tokens).length ? Object.keys(tokens).map((key) => {
       if (marketMaker[key]) {
         return (
-          <div className='personal-community'>
+          <div className='personal-community' key={key}>
             <PersonalSidebarCoin
               fiat={this.props.fiat}
               accountAddress={accountAddress}

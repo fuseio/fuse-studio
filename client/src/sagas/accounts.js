@@ -10,8 +10,6 @@ import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 function * setUserInformation ({user}) {
   const response = yield apiCall(addUserInformation, user)
   const data = response.data
-  console.log('----------saga data----------')
-  console.log(data)
   yield put({
     type: actions.SET_USER_INFORMATION.SUCCESS,
     user,

@@ -55,7 +55,7 @@ export function * addEntity ({listAddress, data}) {
     from: accountAddress
   })
 
-  yield put({type: actions.ADD_ENTITY.SUCCESS,
+  yield put({type: actions.ADD_DIRECTORY_ENTITY.SUCCESS,
     response: {
       receipt
     }
@@ -96,7 +96,7 @@ export default function * marketMakerSaga () {
   yield all([
     tryTakeEvery(actions.CREATE_LIST, createList, 1),
     tryTakeEvery(actions.GET_LIST, getList, 1),
-    tryTakeEvery(actions.ADD_ENTITY, addEntity, 1),
+    tryTakeEvery(actions.ADD_DIRECTORY_ENTITY, addEntity, 1),
     tryTakeEvery(actions.FETCH_ENTITIES, fetchEntities, 1)
   ])
 }

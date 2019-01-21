@@ -6,12 +6,14 @@ import {fetchCommunityWithData, fetchCommunityStatistics} from 'actions/communit
 import { BigNumber } from 'bignumber.js'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
+import {getClnBalance} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
 import {formatEther, formatWei} from 'utils/format'
 import {loadModal} from 'actions/ui'
 import Moment from 'moment'
 import {SIMPLE_EXCHANGE_MODAL} from 'constants/uiConstants'
 import find from 'lodash/find'
+import Header from './Header'
 
 const intervals = {
   MONTH: 'month',
@@ -188,7 +190,9 @@ class Dashboard extends Component {
     }
   }
 
-  setQuitDashboard = () => this.props.history.goBack()
+  showHomePage = (address) => {
+    this.props.history.push('/')
+  }
 
   copyToClipboard = (e) => {
     this.textArea.select()
@@ -216,15 +220,23 @@ class Dashboard extends Component {
     })
 
     const circulatingSupply = new BigNumber(token.totalSupply).minus(marketMaker.ccReserve)
-    return (
-      <div className='dashboard-content'>
+    return [
+      <Header
+        network={this.props.network}
+        clnBalance={this.props.clnBalance}
+        match={this.props.match}
+        history={this.props.history}
+        showHomePage={this.showHomePage}
+        key={0}
+      />,
+      <div key={1} className='dashboard-content'>
         <div className='dashboard-header'>
           <div className='dashboard-logo'>
             <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>
           </div>
           <button
             className='quit-button ctrl-btn'
-            onClick={this.setQuitDashboard}
+            onClick={this.showHomePage}
           >
             <FontAwesome className='ctrl-icon' name='times' />
           </button>
@@ -304,7 +316,7 @@ class Dashboard extends Component {
           </div>
         </div>
       </div>
-    )
+    ]
   }
 }
 
@@ -320,7 +332,9 @@ const mapStateToProps = (state, {match}) => ({
   token: state.tokens[match.params.address],
   marketMaker: state.marketMaker[match.params.address],
   fiat: state.fiat,
-  dashboard: state.screens.dashboard
+  dashboard: state.screens.dashboard,
+  network: state.network,
+  clnBalance: getClnBalance(state)
 })
 
 const mapDispatchToProps = {
