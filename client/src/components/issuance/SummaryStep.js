@@ -5,8 +5,6 @@ import BigNumber from 'bignumber.js'
 import Loader from 'components/Loader'
 import {REQUEST, PENDING, SUCCESS} from 'actions/constants'
 
-const canInsertCLN = () => false
-
 export default class SummaryStep extends Component {
   renderTransactionStatus = (transactionStatus) => {
     switch (transactionStatus) {
@@ -28,11 +26,7 @@ export default class SummaryStep extends Component {
   getToken = () => ({
     symbol: this.props.communitySymbol,
     name: this.props.communityName,
-    totalSupply: new BigNumber(this.props.totalSupply.toString()).multipliedBy(1e18),
-    mmAddress: this.props.EllipseMarketMakerLibAddress,
-    metadata: {
-      communityLogo: this.props.communityLogo
-    }
+    totalSupply: new BigNumber(this.props.totalSupply.toString()).multipliedBy(1e18)
   })
 
   render () {
@@ -40,13 +34,7 @@ export default class SummaryStep extends Component {
       <h2 className='step-content-title text-center'>Your community currency is ready to be born!</h2>
       <div className='step-content-summary'>
         <div className='list-item'>
-          <Community
-            canInsertCLN={canInsertCLN}
-            usdPrice={0}
-            loadCalculator={this.props.loadCalculator}
-            token={this.getToken()}
-            wrapper={'summary'}
-          />
+          <Community token={this.getToken()} metadata={{communityLogo: this.props.communityLogo}} />
         </div>
       </div>
       <div className='text-center wallet-container'>
@@ -57,6 +45,5 @@ export default class SummaryStep extends Component {
 }
 
 SummaryStep.propTypes = {
-  transactionStatus: PropTypes.string,
-  EllipseMarketMakerLibAddress: PropTypes.string
+  transactionStatus: PropTypes.string
 }

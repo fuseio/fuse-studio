@@ -118,7 +118,6 @@ $breakpoint-desktop: 1200px;
 @import 'components/BuySell';
 @import 'components/CalculatorModal';
 @import 'components/CommunitiesList';
-@import 'components/Community';
 @import 'components/Modal';
 @import 'components/Root';
 @import 'components/TopNav';
@@ -178,8 +177,6 @@ $breakpoint-desktop: 1200px;
 		@media (max-width: $breakpoint-tablet) {
 			height: auto !important;
 		}
-
-
 
 		.coin-details {
 			position: relative;

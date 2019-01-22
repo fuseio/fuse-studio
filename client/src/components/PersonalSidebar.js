@@ -1,44 +1,31 @@
-import React, {Component} from 'react'
-import pickBy from 'lodash/pickBy'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
-import {fetchTokens, fetchBalances, fetchTokensWithBalances} from 'actions/accounts'
+import {fetchTokensByAccount, fetchBalances, fetchTokensWithBalances} from 'actions/accounts'
 import ProfileIcon from 'images/user.svg'
 import {BigNumber} from 'bignumber.js'
 import FontAwesome from 'react-fontawesome'
 import ReactGA from 'services/ga'
-import {formatEther, formatWei} from 'utils/format'
-import {getAccount} from 'selectors/accounts'
+import {formatWei} from 'utils/format'
+import {getAccount, getAccountTokens} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
 
-const PersonalSidebarCoin = ({accountAddress, token, marketMaker, balance, fiat}) => [
-  <CommunityLogo token={token} key={0} />,
-  <div className='personal-community-content' key={1}>
-    <div className='personal-community-content-balance'>
-      CC Balance <span>{balance ? formatWei(balance, 0) : 0}</span>
-      <p className='coin-name'>{token.name}</p>
-      <div className='coin-content'>
-        <div className='coin-content-type'>
-          <span className='coin-currency-type'>CLN</span>
-          <span className='coin-currency'>{marketMaker ? formatEther(marketMaker.currentPrice) : null}</span>
-        </div>
-        <div className='coin-content-type'>
-          <span className='coin-currency-type'>USD</span>
-          <span className='coin-currency'>
-            {
-              marketMaker
-                ? formatEther(marketMaker.currentPrice.multipliedBy(fiat.USD && fiat.USD.price))
-                : null
-            }</span>
-        </div>
+const PersonalSidebarCoin = ({accountAddress, token, metadata, balance}) => (
+  <Fragment>
+    <CommunityLogo token={token} metadata={metadata} />
+    <div className='personal-community-content'>
+      <div className='personal-community-content-balance'>
+        CC Balance <span>{balance ? formatWei(balance, 0) : 0}</span>
+        <p className='coin-name'>{token.name}</p>
       </div>
     </div>
-  </div>
-]
+  </Fragment>
+)
 
 class PersonalSidebar extends Component {
   state = {
     search: ''
   }
+
   componentWillReceiveProps = ({accountAddress, account}) => {
     if (accountAddress && !this.props.accountAddress) {
       this.props.fetchTokensWithBalances(accountAddress)
@@ -61,23 +48,22 @@ class PersonalSidebar extends Component {
   }
 
   filterBySearch = (search, tokens) =>
-    search ? pickBy(tokens, (token) =>
+    search ? tokens.filter(token =>
       token.name.toLowerCase().search(
         this.state.search.toLowerCase()) !== -1
     ) : tokens
 
-  renderIssuedCoins (accountAddress, tokens, marketMaker) {
-    return tokens && Object.keys(tokens).length ? Object.keys(tokens).map((key) => {
-      if ((tokens[key].owner === accountAddress)) {
+  renderIssuedCoins (accountAddress, tokens) {
+    return tokens.length ? tokens.map(token => {
+      if ((token.owner === accountAddress)) {
         return (
-          <div className='personal-community' key={key}>
+          <div className='personal-community' key={token.address}>
             <PersonalSidebarCoin
-              fiat={this.props.fiat}
               accountAddress={accountAddress}
-              token={tokens[key]}
-              marketMaker={marketMaker[key]}
-              balance={this.props.account.balances[key]} />
-            <button onClick={() => this.showDashboard(tokens[key].address)} className='btn-dashboard'>
+              token={token}
+              metadata={this.props.metadata[token.tokenURI] || {}}
+              balance={this.props.account.balances[token.address]} />
+            <button onClick={() => this.showDashboard(token.address)} className='btn-dashboard'>
               <FontAwesome name='signal' />
             </button>
           </div>
@@ -86,20 +72,17 @@ class PersonalSidebar extends Component {
     }) : <p className='no-items'>There is no issued coins</p>
   }
 
-  renderPortfolioCoins (accountAddress, tokens, marketMaker) {
-    return tokens && Object.keys(tokens).length ? Object.keys(tokens).map((key) => {
-      if (marketMaker[key]) {
-        return (
-          <div className='personal-community' key={key}>
-            <PersonalSidebarCoin
-              fiat={this.props.fiat}
-              accountAddress={accountAddress}
-              token={tokens[key]}
-              marketMaker={marketMaker[key]}
-              balance={this.props.account.balances[key]} />
-          </div>
-        )
-      }
+  renderPortfolioCoins (accountAddress, tokens) {
+    return tokens.length ? tokens.map(token => {
+      return (
+        <div className='personal-community' key={token.address}>
+          <PersonalSidebarCoin
+            accountAddress={accountAddress}
+            token={token}
+            metadata={this.props.metadata[token.tokenURI] || {}}
+            balance={this.props.account.balances[token.address]} />
+        </div>
+      )
     }) : <p className='no-items'>There is no portfolio coins</p>
   }
 
@@ -108,7 +91,7 @@ class PersonalSidebar extends Component {
   }
 
   render () {
-    const { tokens, marketMaker } = this.props
+    const { tokens } = this.props
     const filteredTokens = this.filterBySearch(this.state.search, tokens)
 
     return (
@@ -135,11 +118,11 @@ class PersonalSidebar extends Component {
         <div className='personal-sidebar-content'>
           <h3 className='personal-sidebar-title'>Issued Coins</h3>
           <div className='personal-sidebar-content-community'>
-            {this.renderIssuedCoins(this.props.accountAddress, filteredTokens, marketMaker)}
+            {this.renderIssuedCoins(this.props.accountAddress, filteredTokens)}
           </div>
           <h3 className='personal-sidebar-title'>Portfolio Coins</h3>
           <div className='personal-sidebar-content-community'>
-            {this.renderPortfolioCoins(this.props.accountAddress, filteredTokens, marketMaker)}
+            {this.renderPortfolioCoins(this.props.accountAddress, filteredTokens)}
           </div>
         </div>
         <div className='personal-sidebar-shadow' onClick={() => this.props.closeProfile()} />
@@ -151,13 +134,12 @@ class PersonalSidebar extends Component {
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
   account: getAccount(state),
-  tokens: state.tokens,
-  marketMaker: state.marketMaker,
-  fiat: state.fiat
+  tokens: getAccountTokens(state),
+  metadata: state.entities.metadata
 })
 
 const mapDispatchToProps = {
-  fetchTokens,
+  fetchTokensByAccount,
   fetchBalances,
   fetchTokensWithBalances
 }

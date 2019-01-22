@@ -1,7 +1,7 @@
 const config = require('config')
 const web3 = require('@services/web3')
 const getLastBlockNumber = require('@utils/event').getLastBlockNumber
-const handleEvent = require('@utils/events/handlers').handleEvent
+const handleEvent = require('@events/handlers').handleEvent
 
 const eventsCallback = function (handleEvent, error, events) {
   if (error) {
@@ -20,6 +20,7 @@ const processPastEvents = async (eventName, contract, {conditions} = defaultOpti
   const handleActualEvent = handleEvent.bind(null, eventName)
   const actualEventsCallback = eventsCallback.bind(null, handleActualEvent)
   try {
+    console.log('last block ' + lastBlockNumber)
     return contract.getPastEvents(eventName, {fromBlock: lastBlockNumber, toBlock: 'latest'}, actualEventsCallback)
   } catch (error) {
     const latestBlock = await web3.eth.getBlock('latest')

@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import ClnIcon from 'images/cln.png'
-import Calculator from 'images/calculator-Icon.svg'
 import { connect } from 'react-redux'
-import {fetchCommunityWithData, fetchCommunityStatistics} from 'actions/communities'
-import { BigNumber } from 'bignumber.js'
+import {fetchTokenWithData, fetchTokenStatistics} from 'actions/token'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
-import {getClnBalance} from 'selectors/accounts'
+import {getClnBalance, getAccountAddress} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
-import {formatEther, formatWei} from 'utils/format'
+import {formatWei} from 'utils/format'
 import {loadModal} from 'actions/ui'
 import Moment from 'moment'
 import {SIMPLE_EXCHANGE_MODAL} from 'constants/uiConstants'
@@ -166,12 +164,12 @@ class Dashboard extends Component {
   }
 
   handleIntervalChange = (userType, intervalValue) => {
-    this.props.fetchCommunityStatistics(this.props.match.params.address, userType, intervalValue)
+    this.props.fetchTokenStatistics(this.props.match.params.address, userType, intervalValue)
   }
 
   componentDidMount () {
     if (!this.props.token) {
-      this.props.fetchCommunityWithData(this.props.match.params.address)
+      this.props.fetchTokenWithData(this.props.match.params.address)
     }
     document.addEventListener('mousedown', this.handleClickOutside)
   }
@@ -211,18 +209,12 @@ class Dashboard extends Component {
       return null
     }
 
-    const {token, marketMaker} = this.props
+    const {token} = this.props
     const { admin, user } = this.props.dashboard
-    const coinStatusClassStyle = classNames({
-      'coin-status': true,
-      'coin-status-active': marketMaker.isOpenForPublic,
-      'coin-status-close': !marketMaker.isOpenForPublic
-    })
 
-    const circulatingSupply = new BigNumber(token.totalSupply).minus(marketMaker.ccReserve)
     return [
       <Header
-        network={this.props.network}
+        accountAddress={this.props.accountAddress}
         clnBalance={this.props.clnBalance}
         match={this.props.match}
         history={this.props.history}
@@ -243,27 +235,8 @@ class Dashboard extends Component {
         </div>
         <div className='dashboard-container'>
           <div className='dashboard-sidebar'>
-            <CommunityLogo token={token} />
+            <CommunityLogo token={token} metadata={this.props.metadata[token.tokenURI] || {}} />
             <h3 className='dashboard-title'>{token.name}</h3>
-            <div className={coinStatusClassStyle}>
-              <span className='coin-status-indicator' />
-              <span className='coin-status-text' onClick={this.openMarket}>
-                {marketMaker.isOpenForPublic ? 'open' : 'closed'}
-              </span>
-            </div>
-            <button onClick={this.handleAddCln} className='btn-adding big-adding-btn'>
-              <FontAwesome name='plus' className='top-nav-issuance-plus' /> Add CLN
-            </button>
-            <div className='coin-content'>
-              <div className='coin-content-type'>
-                <span className='coin-currency-type'>CLN</span>
-                <span className='coin-currency'>{formatEther(marketMaker.currentPrice)}</span>
-              </div>
-              <div className='coin-content-type'>
-                <span className='coin-currency-type'>USD</span>
-                <span className='coin-currency'>{formatEther(marketMaker.currentPrice.multipliedBy(this.props.fiat.USD && this.props.fiat.USD.price))}</span>
-              </div>
-            </div>
           </div>
           <div className='dashboard-information'>
             <div className='dashboard-information-header'>
@@ -274,16 +247,6 @@ class Dashboard extends Component {
                 </p>
                 <p className='dashboard-information-big-count'>
                   {formatWei(token.totalSupply, 0)}
-                  <span>{token.symbol}</span>
-                </p>
-              </div>
-              <div className='dashboard-information-header-content'>
-                <p className='dashboard-information-top'>
-                  <span className='dashboard-information-logo logo-inverse'><img src={Calculator} /></span>
-                  <span className='dashboard-information-text'>Circulation</span>
-                </p>
-                <p className='dashboard-information-big-count'>
-                  {formatWei(circulatingSupply, 0)}
                   <span>{token.symbol}</span>
                 </p>
               </div>
@@ -320,26 +283,17 @@ class Dashboard extends Component {
   }
 }
 
-Dashboard.defaultProps = {
-  marketMaker: {
-    isOpenForPublic: false,
-    currentPrice: new BigNumber(0),
-    clnReserve: new BigNumber(0)
-  }
-}
-
 const mapStateToProps = (state, {match}) => ({
-  token: state.tokens[match.params.address],
-  marketMaker: state.marketMaker[match.params.address],
-  fiat: state.fiat,
+  token: state.entities.tokens[match.params.address],
+  metadata: state.entities.metadata,
   dashboard: state.screens.dashboard,
-  network: state.network,
+  accountAddress: getAccountAddress(state),
   clnBalance: getClnBalance(state)
 })
 
 const mapDispatchToProps = {
-  fetchCommunityStatistics,
-  fetchCommunityWithData,
+  fetchTokenStatistics,
+  fetchTokenWithData,
   loadModal
 }
 

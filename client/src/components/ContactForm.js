@@ -5,7 +5,7 @@ import FontAwesome from 'react-fontawesome'
 
 import TextInput from 'components/elements/TextInput'
 import Modal from 'components/Modal'
-import {sendContactUs, subcribeToMailingList} from 'services/api'
+import {sendContactUs, subcribeToMailingList} from 'services/api/misc'
 import ReactGA from 'services/ga'
 
 const MyInnerForm = props => {

@@ -25,11 +25,6 @@ export const getEtherscanUrl = createSelector(
     : 'https://ropsten.etherscan.io/'
 )
 
-export const getColuWallet = createSelector(
-  getAddresses,
-  (addresses) => addresses && addresses.ColuWallet
-)
-
 export const getApiRoot = createSelector(
   getNetworkType,
   networkType => CONFIG.api.url[networkType] || CONFIG.api.url.default

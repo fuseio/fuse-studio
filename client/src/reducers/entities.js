@@ -2,7 +2,7 @@ import merge from 'lodash/merge'
 
 const initialState = {
   metadata: {},
-  communities: {}
+  tokens: {}
 }
 
 export default (state = initialState, action) => {

@@ -22,11 +22,11 @@ class UserDatatModal extends Component {
     return re.test(this.state.userEmail)
   }
 
-  setUserInform () {
+  setUserInformation () {
     this.props.setUserInformation({
       fullName: this.state.userName,
       email: this.state.userEmail,
-      ccAddress: this.props.receipt.events[0].address,
+      tokenAddress: this.props.receipt.events[0].address,
       country: this.state.selectedCountry,
       receiveMail: this.state.gettingEmail
     })
@@ -38,11 +38,11 @@ class UserDatatModal extends Component {
     return (
       <Modal className='issued-popup' onClose={this.props.hideModal}>
         <div className='issued-popup-media'>
-          <h3 className='issued-popup-media-title'>Congratulation, a new crypto was born</h3>
+          <h3 className='issued-popup-media-title'>Congratulations, a new crypto was born</h3>
           <img className='issued-popup-media-img' src={MediaMobile} />
         </div>
         <div className='issued-popup-container'>
-          <p className='issued-popup-text'>Let's continue this wonderful relationship</p>
+          <p className='issued-popup-text'>{"Let's continue this wonderful relationship"}</p>
           <div className='form-control'>
             <label>Full Name</label>
             <input
@@ -97,7 +97,7 @@ class UserDatatModal extends Component {
               !this.state.gettingEmail
             }
             className='issued-popup-btn'
-            onClick={() => this.setUserInform()}
+            onClick={() => this.setUserInformation()}
           >
             Done
           </button>

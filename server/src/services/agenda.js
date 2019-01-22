@@ -1,16 +1,11 @@
 const config = require('config')
 const Agenda = require('agenda')
-const tasks = require('@utils/events/tasks')
+const tasks = require('@events/tasks')
 
 const agenda = new Agenda({db: {address: config.get('mongo.uri')}})
 
 agenda.define('processPastTokenCreatedEvents', async (job, done) => {
   await tasks.processPastTokenCreatedEvents()
-  done()
-})
-
-agenda.define('processPastMarketOpenEvents', async (job, done) => {
-  await tasks.processPastMarketOpenEvents()
   done()
 })
 
@@ -32,12 +27,10 @@ async function start () {
   await agenda.now('processPastTokenCreatedEvents')
   await agenda.every('10 minutes', 'processPastTokenCreatedEvents')
 
-  await agenda.schedule('in 1 minute', 'processPastMarketOpenEvents')
-  await agenda.every('10 minutes', 'processPastMarketOpenEvents', null, {skipImmediate: true})
-
   // run the task every hour
   await agenda.every('00 * * * *', 'processPastTransferEvents')
-  await agenda.schedule('in 3 minute', 'processPastTransferEvents')
+  // await agenda.schedule('in 3 minute', 'processPastTransferEvents')
+  await agenda.now('processPastTransferEvents')
 
   console.log('Agenda job scheduling is successfully defined')
 }

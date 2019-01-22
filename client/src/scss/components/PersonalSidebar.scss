@@ -200,6 +200,31 @@
   }
 }
 
+.btn-dashboard {
+	position: absolute;
+	top: 30px;
+  right: 15px;
+	background-color: $color-pink;
+	border-radius: 4px;
+	width: 23px;
+	height: 22px;
+	text-align: center;
+	border: none;
+	font-size: 11px;
+	line-height: 20px;
+  padding: 1px 7px 2px 5px;
+	color: $color-step-text;
+
+	&:focus, &:active, &:focus:active {
+		outline: none;
+	}
+	&:hover {
+		background-color: lighten($color-pink, 10%);
+		cursor: pointer;
+	}
+}
+
+
 .profile-icon-big {
   width: 70px;
   height: 70px;

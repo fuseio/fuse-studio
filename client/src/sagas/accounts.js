@@ -3,12 +3,14 @@ import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/accounts'
 import {tryTakeEvery, apiCall} from './utils'
-import {getClnAddress} from 'selectors/network'
-import {fetchTokens as fetchTokensApi, addUserInformation} from 'services/api'
+import {getClnAddress, getNetworkType} from 'selectors/network'
+import {fetchTokensByAccount as fetchTokensByAccountApi} from 'services/api/communities'
+import {addUserInformation} from 'services/api/misc'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
+import web3 from 'services/web3'
 
 function * setUserInformation ({user}) {
-  const response = yield apiCall(addUserInformation, user)
+  const response = yield call(addUserInformation, user)
   const data = response.data
   yield put({
     type: actions.SET_USER_INFORMATION.SUCCESS,
@@ -19,11 +21,11 @@ function * setUserInformation ({user}) {
   })
 }
 
-function * balanceOf ({tokenAddress, accountAddress, blockNumber}) {
+function * balanceOfToken ({tokenAddress, accountAddress, blockNumber}) {
   const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
-  const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(accountAddress).call, null, blockNumber)
+  const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(accountAddress).call)
 
-  yield put({type: actions.BALANCE_OF.SUCCESS,
+  yield put({type: actions.BALANCE_OF_TOKEN.SUCCESS,
     tokenAddress,
     accountAddress,
     response: {
@@ -31,16 +33,31 @@ function * balanceOf ({tokenAddress, accountAddress, blockNumber}) {
     }})
 }
 
-function * balanceOfCln ({accountAddress}) {
-  const tokenAddress = yield select(getClnAddress)
-  yield call(balanceOf, {tokenAddress, accountAddress})
+function * balanceOfNative ({accountAddress}) {
+  const balanceOfNative = yield call(web3.eth.getBalance, accountAddress)
+
+  yield put({type: actions.BALANCE_OF_NATIVE.SUCCESS,
+    accountAddress,
+    response: {
+      balanceOfNative
+    }})
 }
 
-function * fetchTokens ({accountAddress}) {
-  const response = yield apiCall(fetchTokensApi, accountAddress)
+function * balanceOfCln ({accountAddress}) {
+  const networkType = yield select(getNetworkType)
+  if (networkType === 'fuse') {
+    yield call(balanceOfNative, {accountAddress})
+  } else {
+    const tokenAddress = yield select(getClnAddress)
+    yield call(balanceOfToken, {tokenAddress, accountAddress})
+  }
+}
+
+function * fetchTokensByAccount ({accountAddress}) {
+  const response = yield apiCall(fetchTokensByAccountApi, accountAddress)
   const tokens = response.data
   yield put({
-    type: actions.FETCH_TOKENS.SUCCESS,
+    type: actions.FETCH_TOKENS_BY_ACCOUNT.SUCCESS,
     accountAddress,
     response: {
       tokens
@@ -51,12 +68,12 @@ function * fetchTokens ({accountAddress}) {
 
 function * fetchBalances ({accountAddress, tokens}) {
   for (let token of tokens) {
-    yield put(actions.balanceOf(token.address, accountAddress))
+    yield put(actions.balanceOfToken(token.address, accountAddress))
   }
 }
 
 function * fetchTokensWithBalances ({accountAddress}) {
-  const tokens = yield call(fetchTokens, {accountAddress})
+  const tokens = yield call(fetchTokensByAccount, {accountAddress})
   yield call(fetchBalances, {accountAddress, tokens})
 }
 
@@ -66,9 +83,10 @@ function * watchAccountChanged ({response}) {
 
 export default function * accountsSaga () {
   yield all([
-    tryTakeEvery(actions.BALANCE_OF, balanceOf),
+    tryTakeEvery(actions.BALANCE_OF_TOKEN, balanceOfToken),
+    tryTakeEvery(actions.BALANCE_OF_NATIVE, balanceOfNative),
     tryTakeEvery(actions.BALANCE_OF_CLN, balanceOfCln),
-    takeEvery(actions.FETCH_TOKENS.REQUEST, fetchTokens),
+    takeEvery(actions.FETCH_TOKENS_BY_ACCOUNT.REQUEST, fetchTokensByAccount),
     takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged),
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
     tryTakeEvery(actions.SET_USER_INFORMATION, setUserInformation, 1),

@@ -50,7 +50,7 @@ class Header extends Component {
             <img src={ProfileIcon} />
           </span>
           <span className='profile-balance'>
-            <span className='balance-address'>{this.props.network.accountAddress || 'Connect Metamask'}</span>
+            <span className='balance-address'>{this.props.accountAddress || 'Connect Metamask'}</span>
             {(this.props.clnBalance)
               ? <div className='top-nav-balance'>
                 <span className='balance-text'>Balance:</span>

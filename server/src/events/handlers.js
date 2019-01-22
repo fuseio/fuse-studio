@@ -1,25 +1,16 @@
-const communityUtils = require('../community')
-const eventUtils = require('../event')
+const tokenUtils = require('@utils/token')
+const eventUtils = require('@utils/event')
 
 const handleTokenCreatedEvent = async (event) => {
   const blockNumber = event.blockNumber
   console.log(`recieved TokenCreated event at ${blockNumber} blockNumber`)
   const eventArgs = event.returnValues
-  const ccAddress = eventArgs.token
-  const owner = eventArgs.owner
+  const address = eventArgs.token
+  const owner = eventArgs.issuer
   const factoryAddress = event.address
-  const communityData = await communityUtils.getCommunityData(factoryAddress, ccAddress)
+  const tokenData = await tokenUtils.fetchTokenData(address)
 
-  return communityUtils.upsertCommunity({ccAddress, owner, blockNumber, ...communityData})
-}
-
-const handleMarketOpenEvent = (event) => {
-  const blockNumber = event.blockNumber
-  console.log(`recieved MarketOpen event at ${blockNumber} blockNumber`)
-  const eventArgs = event.returnValues
-  const mmAddress = eventArgs.marketMaker
-
-  return communityUtils.openMarket(mmAddress)
+  return tokenUtils.createToken({owner, blockNumber, factoryAddress, ...tokenData})
 }
 
 const handleTransferEvent = (event) => {
@@ -30,7 +21,6 @@ const handleTransferEvent = (event) => {
 
 const eventsHandlers = {
   TokenCreated: handleTokenCreatedEvent,
-  MarketOpen: handleMarketOpenEvent,
   Transfer: handleTransferEvent
 }
 

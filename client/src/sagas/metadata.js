@@ -1,15 +1,15 @@
 import { all, put } from 'redux-saga/effects'
 
 import {createEntityPut, tryTakeEvery, apiCall} from './utils'
-import * as api from 'services/api'
+import * as api from 'services/api/metadata'
 import * as actions from 'actions/metadata'
 import {DEFAULT_COMMUNITY_METADATA_LOGO} from 'constants/uiConstants'
 
 const entityPut = createEntityPut(actions.entityName)
 
-function * fetchMetadata ({tokenURI, tokenAddress}) {
+function * fetchMetadata ({tokenURI}) {
   if (!tokenURI) {
-    throw new Error(`No tokenURI for token ${tokenAddress}`)
+    throw new Error(`No tokenURI given`)
   }
 
   const [protocol, hash] = tokenURI.split('://')
@@ -19,26 +19,14 @@ function * fetchMetadata ({tokenURI, tokenAddress}) {
   if (data.metadata.image) {
     data.metadata.communityLogo = DEFAULT_COMMUNITY_METADATA_LOGO
   }
-
-  if (tokenAddress) {
-    yield entityPut({
-      type: actions.FETCH_METADATA.SUCCESS,
-      tokenAddress,
-      response: {
-        metadata: data.metadata,
-        address: tokenAddress
+  yield entityPut({
+    type: actions.FETCH_METADATA.SUCCESS,
+    response: {
+      entities: {
+        [tokenURI]: data.metadata
       }
-    })
-  } else {
-    yield entityPut({
-      type: actions.FETCH_METADATA.SUCCESS,
-      response: {
-        entities: {
-          [hash]: data.metadata
-        }
-      }
-    })
-  }
+    }
+  })
 }
 
 export function * createMetadata ({metadata}) {

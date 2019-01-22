@@ -11,14 +11,8 @@ const communityLogos = {
   'CoinIcon3.svg': CoinIcon3
 }
 
-const getCommunityLogo = (props) => {
-  if (props.token.metadata && props.token.metadata.communityLogo) {
-    return communityLogos[props.token.metadata.communityLogo]
-  }
-}
-
 const CommunityLogo = (props) => {
-  const communityLogo = getCommunityLogo(props)
+  const communityLogo = communityLogos[props.metadata.communityLogo]
   return (
     <div className='coin-logo'>
       {
@@ -32,7 +26,8 @@ const CommunityLogo = (props) => {
 }
 
 CommunityLogo.propTypes = {
-  token: PropTypes.object.isRequired
+  token: PropTypes.object.isRequired,
+  metadata: PropTypes.object
 }
 
 export default CommunityLogo

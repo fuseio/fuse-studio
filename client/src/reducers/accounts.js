@@ -5,7 +5,7 @@ export const initialAccount = {
   balances: {},
   transactions: {
   },
-  tokens: {}
+  tokens: []
 }
 
 const handlers = {
@@ -44,11 +44,14 @@ const handlers = {
     }
     return {...state, transactions}
   },
-  [actions.BALANCE_OF.SUCCESS]: (state, action) => {
+  [actions.BALANCE_OF_TOKEN.SUCCESS]: (state, action) => {
     const balances = {...state.balances, [action.tokenAddress]: action.response.balanceOf}
     return {...state, balances}
   },
-  [actions.FETCH_TOKENS.SUCCESS]: (state, action) => {
+  [actions.BALANCE_OF_NATIVE.SUCCESS]: (state, action) => {
+    return {...state, ...action.response}
+  },
+  [actions.FETCH_TOKENS_BY_ACCOUNT.SUCCESS]: (state, action) => {
     return {...state, ...action.response}
   }
 }

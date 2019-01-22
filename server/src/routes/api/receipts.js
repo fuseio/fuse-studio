@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const handleReceipt = require('@utils/events/handlers').handleReceipt
+const handleReceipt = require('@events/handlers').handleReceipt
 
 router.post('/', async (req, res, next) => {
   const { receipt } = req.body

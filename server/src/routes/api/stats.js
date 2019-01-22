@@ -2,13 +2,15 @@ const router = require('express').Router()
 const mongoose = require('mongoose')
 const Moment = require('moment')
 const Event = mongoose.model('Event')
-const communityModel = mongoose.community
+const tokenModel = mongoose.token
 
 const intervals = {
   month: 'month',
   week: 'isoWeek',
   day: 'dayOfMonth'
 }
+
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 const genInterval = (query) => {
   const interval = query.interval || 'month'
@@ -38,8 +40,8 @@ router.get('/:activityType/:address', async (req, res, next) => {
   }
 
   const interval = genInterval(req.query)
-  const community = await communityModel.getByccAddress(tokenAddress)
-  const {owner} = community
+  const token = await tokenModel.getByAddress(tokenAddress)
+  const {owner} = token
 
   const $match = {
     eventName: 'Transfer',
@@ -51,25 +53,12 @@ router.get('/:activityType/:address', async (req, res, next) => {
 
   if (activityType === 'user') {
     $match.$and = [
-      {'returnValues.from': {$ne: community.factoryAddress}},
+      {'returnValues.from': {$ne: token.factoryAddress}},
       {'returnValues.from': {$ne: owner}},
-      {'returnValues.to': {$ne: community.factoryAddress}},
-      {'returnValues.to': {$ne: owner}}
+      {'returnValues.from': {$ne: ZERO_ADDRESS}}
     ]
   } else {
-    $match.$or = [
-      {
-        'returnValues.from': owner
-      },
-      {
-        'returnValues.from': community.factoryAddress,
-        'returnValues.to': owner
-      },
-      {
-        'returnValues.from': community.mmAddress,
-        'returnValues.to': owner
-      }
-    ]
+    $match['returnValues.from'] = owner
   }
 
   const stats = await Event.aggregate([
