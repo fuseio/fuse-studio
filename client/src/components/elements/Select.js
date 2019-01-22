@@ -16,7 +16,7 @@ export default class SingleSelect extends Component {
           isLoading={false}
           isClearable={false}
           isRtl={false}
-          placeholder={'Choose subject'}
+          placeholder={this.props.placeholder}
           isSearchable={false}
           onChange={this.handleChange.bind(this)}
           styles={{
