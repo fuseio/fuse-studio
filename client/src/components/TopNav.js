@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import {BigNumber} from 'bignumber.js'
 
 import * as actions from 'actions/ui'
 import {getClnBalance} from 'selectors/accounts'
-import { LOGIN_MODAL, CONTACT_FORM } from 'constants/uiConstants'
+import { LOGIN_MODAL } from 'constants/uiConstants'
 
 import ClnIcon from 'images/cln.png'
 import ProfileIcon from 'images/user.svg'
@@ -33,24 +32,7 @@ class TopNav extends Component {
   showConnectMetamask = () => {
     if (!this.props.network.accountAddress) {
       this.props.loadModal(LOGIN_MODAL)
-      ReactGA.event({
-        category: 'Top Bar',
-        action: 'Click',
-        label: 'Connect Metamask'
-      })
     }
-  }
-
-  showContactUs = () => {
-    this.props.loadModal(CONTACT_FORM)
-    this.setState({
-      openMenu: !this.state.openMenu
-    })
-    ReactGA.event({
-      category: 'Top Bar',
-      action: 'Click',
-      label: 'contactUs'
-    })
   }
 
   showIssuance = () => {
@@ -64,13 +46,6 @@ class TopNav extends Component {
       label: 'issuance'
     })
   }
-
-  handleLinkClick = (event) =>
-    ReactGA.event({
-      category: 'Top Bar',
-      action: 'Click',
-      label: event.target.name
-    })
 
   render () {
     const topNavClass = classNames({
@@ -95,17 +70,13 @@ class TopNav extends Component {
             <a className='top-nav-text'
               href='https://intercom.help/colu_cln/community-currencies'
               target='_blank'
-              name='FAQ'
-              onClick={this.handleLinkClick}>FAQ</a>
+              name='FAQ'>
+              FAQ</a>
             <a className='top-nav-text'
               href='https://cln.network/wp-content/uploads/pdf/cln_whitepaper.pdf'
               target='_blank'
-              name='whitepaper'
-              onClick={this.handleLinkClick}>
+              name='whitepaper'>
               Whitepaper</a>
-            <div style={{width: isMobile ? '100%' : 'auto'}} onClick={this.showContactUs} >
-              <a className='top-nav-text'>Contact us</a>
-            </div>
             <div className='separator-vertical' />
           </div>
           <div className='top-nav-text profile' onClick={this.showConnectMetamask}>

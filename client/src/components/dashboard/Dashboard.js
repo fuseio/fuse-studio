@@ -7,9 +7,7 @@ import FontAwesome from 'react-fontawesome'
 import {getClnBalance, getAccountAddress} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
 import {formatWei} from 'utils/format'
-import {loadModal} from 'actions/ui'
 import Moment from 'moment'
-import {SIMPLE_EXCHANGE_MODAL} from 'constants/uiConstants'
 import find from 'lodash/find'
 import Header from './Header'
 
@@ -178,10 +176,6 @@ class Dashboard extends Component {
     window.removeEventListener('mousedown', this.handleClickOutside)
   }
 
-  handleAddCln = () => {
-    this.props.loadModal(SIMPLE_EXCHANGE_MODAL, {tokenAddress: this.props.match.params.address})
-  }
-
   handleClickOutside = (event) => {
     if (this.content && !this.content.contains(event.target)) {
       this.setState({dropdownOpen: ''})
@@ -293,8 +287,7 @@ const mapStateToProps = (state, {match}) => ({
 
 const mapDispatchToProps = {
   fetchTokenStatistics,
-  fetchTokenWithData,
-  loadModal
+  fetchTokenWithData
 }
 
 export default connect(

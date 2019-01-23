@@ -5,7 +5,6 @@ import Modal from 'components/Modal'
 import ClnIcon from 'images/cln.png'
 import LockIcon from 'images/lock.png'
 import MetamaskIcon from 'images/metamask.png'
-import ReactGA from 'services/ga'
 
 class LoginModal extends React.Component {
   constructor (props) {
@@ -17,44 +16,15 @@ class LoginModal extends React.Component {
 
   onClose = () => {
     this.props.hideModal()
-    if (this.state.finishInstall) {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'Close',
-        label: 'Finish Metamask Install'
-      })
-    } else if (!this.props.network.isMetaMask) {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'Close',
-        label: 'Install Metamask'
-      })
-    } else if (!this.props.network.accountAddress) {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'Close',
-        label: 'Metamask locked'
-      })
-    }
   }
 
   finishInstalling = () => {
-    ReactGA.event({
-      category: 'Metamask',
-      action: 'Click',
-      label: 'Finish Metamask Install'
-    })
     window.location.reload(false)
   }
 
   installMetamask = () => {
     this.setState({
       finishInstall: true
-    })
-    ReactGA.event({
-      category: 'Metamask',
-      action: 'Click',
-      label: 'Install Metamask'
     })
     window.open('https://metamask.io/', '_blank')
   }
@@ -68,11 +38,6 @@ class LoginModal extends React.Component {
   render () {
     let modalContent
     if (this.state.finishInstall) {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'View',
-        label: 'Finish Metamask Install'
-      })
       modalContent = <div className='modal-content-wrapper'>
         <img src={MetamaskIcon} />
         <h4>Finish installing MetaMask to continue</h4>
@@ -80,11 +45,6 @@ class LoginModal extends React.Component {
         <div className='button' onClick={this.finishInstalling}>I INSTALLED METAMASK</div>
       </div>
     } else if (!this.props.network.isMetaMask) {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'View',
-        label: 'Install Metamask'
-      })
       modalContent = <div className='modal-content-wrapper'>
         <div className='images flex center'>
           <img src={ClnIcon} />
@@ -96,11 +56,6 @@ class LoginModal extends React.Component {
         <div className='button' onClick={this.installMetamask}>INSTALL METAMASK</div>
       </div>
     } else if (!this.props.network.accountAddress) {
-      ReactGA.event({
-        category: 'Metamask',
-        action: 'View',
-        label: 'Metamask locked'
-      })
       modalContent = <div className='modal-content-wrapper'>
         <img className='lock-icon' src={LockIcon} />
         <h4>Your MetaMask is locked</h4>

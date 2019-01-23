@@ -2,24 +2,10 @@ import React from 'react'
 
 import Modal from 'components/Modal'
 import Mail from 'images/mail.png'
-import ReactGA from 'services/ga'
 
 class ComingSoonModal extends React.Component {
-  componentDidMount () {
-    ReactGA.event({
-      category: 'Coming Soon',
-      action: 'View',
-      label: 'Coming Soon message'
-    })
-  }
-
   onClose = () => {
     this.props.hideModal()
-    ReactGA.event({
-      category: 'Coming Soon',
-      action: 'Close',
-      label: 'Coming Soon message'
-    })
   }
 
   render () {

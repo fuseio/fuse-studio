@@ -1,16 +1,10 @@
 import React from 'react'
 
 import Modal from 'components/Modal'
-import ReactGA from 'services/ga'
 
 class WrongNetworkModal extends React.Component {
   onClose = () => {
     this.props.hideModal()
-    ReactGA.event({
-      category: 'Network',
-      action: 'Close',
-      label: 'Wrong network message'
-    })
   }
 
   render () {

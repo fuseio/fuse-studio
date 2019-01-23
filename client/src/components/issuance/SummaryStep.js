@@ -4,6 +4,7 @@ import Community from 'components/Community'
 import BigNumber from 'bignumber.js'
 import Loader from 'components/Loader'
 import {REQUEST, PENDING, SUCCESS} from 'actions/constants'
+import ReactGA from 'services/ga'
 
 export default class SummaryStep extends Component {
   renderTransactionStatus = (transactionStatus) => {
@@ -28,6 +29,24 @@ export default class SummaryStep extends Component {
     name: this.props.communityName,
     totalSupply: new BigNumber(this.props.totalSupply.toString()).multipliedBy(1e18)
   })
+
+  componentDidMount () {
+    ReactGA.event({
+      category: 'Issuance',
+      action: 'Load',
+      label: 'Finished'
+    })
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.transactionStatus === SUCCESS && prevProps.transactionStatus !== SUCCESS) {
+      ReactGA.event({
+        category: 'Issuance',
+        action: 'Load',
+        label: 'Issued'
+      })
+    }
+  }
 
   render () {
     return <div>

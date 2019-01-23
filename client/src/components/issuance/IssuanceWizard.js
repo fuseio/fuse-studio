@@ -14,6 +14,7 @@ import SummaryStep from './SummaryStep'
 import {createTokenWithMetadata} from 'actions/token'
 import {getAddresses} from 'selectors/network'
 import { USER_DATA_MODAL } from 'constants/uiConstants'
+import ReactGA from 'services/ga'
 
 class IssuanceWizard extends Component {
   state = {
@@ -32,6 +33,12 @@ class IssuanceWizard extends Component {
     window.addEventListener('scroll', this.handleScroll)
     window.addEventListener('keypress', this.handleKeyPress)
     this.setState({ stepPosition: this.stepIndicator.getBoundingClientRect().top })
+
+    ReactGA.event({
+      category: 'Issuance',
+      action: 'Load',
+      label: 'Started'
+    })
   }
 
   componentDidUpdate (prevProps) {
