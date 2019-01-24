@@ -281,6 +281,7 @@
 
 	@media (max-width: $breakpoint-mobile) {
 		width: 100% !important;
+    overflow-y: scroll;
 	}
 }
 

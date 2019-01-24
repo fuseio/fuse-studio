@@ -26,13 +26,15 @@
       "authSource": "COMMUNITY_MONGO_AUTH_SOURCE"
     }
   },
-  "mandrill": {
-    "apiKey": "COMMUNITY_MANDRILL_API_KEY",
-    "sendTo": "COMMUNITY_MANDRILL_SEND_TO"
-  },
-  "mailchimp": {
-    "apiBase": "COMMUNITY_MAILCHIMP_API_BASE",
-    "list": "COMMUNITY_MAILCHIMP_LIST"
+  "mail": {
+    "supportAddress": "COMMUNITY_MAIL_SUPPORT_ADDRESS",
+    "sendgrid": {
+      "apiKey": "COMMUNITY_MAIL_SENDGRID_API_KEY",
+      "listId": "COMMUNITY_MAIL_SENDGRID_LIST_ID",
+      "templates": {
+        "welcome": "COMMUNITY_MAIL_SENDGRID_TEMPLATES_WELCOME"
+      }
+    }
   },
   "amazon": {
     "apiBase": "COMMUNITY_AMAZON_BUCKET_API"

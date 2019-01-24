@@ -29,7 +29,6 @@ async function start () {
 
   // run the task every hour
   await agenda.every('00 * * * *', 'processPastTransferEvents')
-  // await agenda.schedule('in 3 minute', 'processPastTransferEvents')
   await agenda.now('processPastTransferEvents')
 
   console.log('Agenda job scheduling is successfully defined')

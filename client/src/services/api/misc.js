@@ -9,10 +9,6 @@ export const sendContactUs = (formData) => request.post(`${API_ROOT}/mails`)
   .send({formData})
   .then(response => response.body)
 
-export const subcribeToMailingList = (formData) => request.post(`${API_ROOT}/subscriptions`)
-  .send({formData})
-  .then(response => response.body)
-
 export const addUserInformation = (user, apiRoot) =>
   request.post(`${API_ROOT}/users`).send({user}).then(response => response.body)
 

@@ -7,28 +7,33 @@ import CountriesList from './../../constants/countries'
 
 class UserDatatModal extends Component {
   state = {
-    selectedCountry: 'Select Country',
-    userName: '',
-    userEmail: '',
-    gettingEmail: true
+    country: 'Select Country',
+    firstName: '',
+    lastName: '',
+    email: '',
+    subscribe: true
   }
-  setUserName = e => this.setState({userName: e.target.value})
-  setUserEmail = e => this.setState({userEmail: e.target.value})
-  setCountry = e => this.setState({selectedCountry: e.target.value})
-  setGettingEmail = e => this.setState({gettingEmail: e.target.checked})
+
+  setFirstName = e => this.setState({firstName: e.target.value})
+  setLastName = e => this.setState({lastName: e.target.value})
+  setUserEmail = e => this.setState({email: e.target.value})
+  setCountry = e => this.setState({country: e.target.value})
+  setSubscribe = e => this.setState({subscribe: e.target.checked})
 
   validateEmail = () => {
     const re = /[a-z0-9!#$%&'*+\\/=?^_{|}~-]+(?:\.[a-z0-9!#$%&'*+\\/=?^_{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9][a-z0-9-]*[a-z0-9]/
-    return re.test(this.state.userEmail)
+    return re.test(this.state.email)
   }
 
   setUserInformation () {
     this.props.setUserInformation({
-      fullName: this.state.userName,
-      email: this.state.userEmail,
-      tokenAddress: this.props.receipt.events[0].address,
-      country: this.state.selectedCountry,
-      receiveMail: this.state.gettingEmail
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      country: this.state.country,
+      subscribe: this.state.subscribe,
+      accountAddress: this.props.receipt.from,
+      tokenAddress: this.props.receipt.events[0].address
     })
     this.props.hideModal()
     this.props.setQuitIssuance()
@@ -44,23 +49,33 @@ class UserDatatModal extends Component {
         <div className='issued-popup-container'>
           <p className='issued-popup-text'>{"Let's continue this wonderful relationship"}</p>
           <div className='form-control'>
-            <label>Full Name</label>
+            <label>First Name</label>
             <input
-              id='userName'
+              id='firstName'
               type='text'
-              placeholder='Type your name'
-              value={this.state.userName}
-              onChange={this.setUserName}
+              placeholder='Type your first name'
+              value={this.state.firstName}
+              onChange={this.setFirstName}
+            />
+          </div>
+          <div className='form-control'>
+            <label>Last Name</label>
+            <input
+              id='lastName'
+              type='text'
+              placeholder='Type your last name'
+              value={this.state.lastName}
+              onChange={this.setLastName}
             />
           </div>
           <div className='form-control'>
             <label>Email Address</label>
             <input
-              className={((this.state.userEmail === '') || this.validateEmail()) ? 'form-control-input' : 'form-control-error'}
-              id='userEmail'
+              className={((this.state.email === '') || this.validateEmail()) ? 'form-control-input' : 'form-control-error'}
+              id='email'
               type='email'
               placeholder='Type your email'
-              value={this.state.userEmail}
+              value={this.state.email}
               onChange={this.setUserEmail}
             />
           </div>
@@ -68,7 +83,7 @@ class UserDatatModal extends Component {
             <label>Country</label>
             <select
               onChange={this.setCountry}
-              value={this.state.selectedCountry}
+              value={this.state.country}
             >
               <option value='Select Country' disabled>Select Country</option>
               {CountriesList.map((country, key) =>
@@ -82,8 +97,8 @@ class UserDatatModal extends Component {
               type='checkbox'
               id='email'
               name='email'
-              onChange={this.setGettingEmail}
-              checked={this.state.gettingEmail}
+              onChange={this.setSubscribe}
+              checked={this.state.subscribe}
             />
             <label className='checkbox-label' htmlFor='email'>
               I agree to receive fuse emails
@@ -91,10 +106,11 @@ class UserDatatModal extends Component {
           </div>
           <button
             disabled={
-              this.state.selectedCountry === 'Select Country' ||
-              this.state.userName === '' ||
+              this.state.country === 'Select Country' ||
+              this.state.firstName === '' ||
+              this.state.lastName === '' ||
               !this.validateEmail() ||
-              !this.state.gettingEmail
+              !this.state.subscribe
             }
             className='issued-popup-btn'
             onClick={() => this.setUserInformation()}
