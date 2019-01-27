@@ -22,7 +22,7 @@ export function * createList ({tokenAddress}) {
 
   yield put({type: actions.CREATE_LIST.SUCCESS,
     response: {
-      listAddress: receipt.events.SimpleListCreated.address
+      listAddress: receipt.events.SimpleListCreated.returnValues.list
     }})
 
   return receipt
