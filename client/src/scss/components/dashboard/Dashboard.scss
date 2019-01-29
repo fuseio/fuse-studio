@@ -358,6 +358,12 @@
       display: flex;
       justify-content: space-between;
 
+      &.entity-footer {
+        margin-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.19);
+        justify-content: flex-start;
+      }
+
       @media (max-width: $breakpoint-mobile) {
         display: block;
       }

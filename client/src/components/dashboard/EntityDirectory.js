@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-import {getClnBalance} from 'selectors/accounts'
+import ReactGA from 'services/ga'
 import Loader from 'components/Loader'
+import {getClnBalance, getAccountAddress} from 'selectors/accounts'
 import {REQUEST, SUCCESS} from 'actions/constants'
 import {getEntities} from 'selectors/directory'
 import {createList, getList, addEntity, fetchEntities} from 'actions/directory'
@@ -51,11 +52,19 @@ class EntityDirectory extends Component {
       )
     }
   }
+  showProfile = (address, hash) => {
+    this.props.history.push(`/view/directory/${address}/${hash}`)
+    ReactGA.event({
+      category: 'Profile',
+      action: 'Click',
+      label: 'profile'
+    })
+  }
 
   render () {
     return [
       <Header
-        network={this.props.network}
+        accountAddress={this.props.accountAddress}
         clnBalance={this.props.clnBalance}
         match={this.props.match}
         history={this.props.history}
@@ -98,8 +107,14 @@ class EntityDirectory extends Component {
                   </button>
                 </div>
                 {this.props.entities.length
-                  ? this.props.entities.map((entity, index) => <Entity key={index} entity={entity} />)
-                  : <p className='emptyText'>There is no any entities</p>
+                  ? this.props.entities.map((entity, index) =>
+                    <Entity
+                      key={index}
+                      index={index}
+                      entity={entity}
+                      showProfile={() => this.showProfile(this.props.match.params.address, this.props.listHashes[index])}
+                    />
+                  ) : <p className='emptyText'>There is no any entities</p>
                 }
               </div>
             )}
@@ -115,6 +130,7 @@ const mapStateToProps = (state, {match}) => ({
   entities: getEntities(state),
   network: state.network,
   clnBalance: getClnBalance(state),
+  accountAddress: getAccountAddress(state),
   ...state.screens.directory
 })
 

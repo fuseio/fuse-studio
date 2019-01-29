@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ProfileIcon from 'images/user-dashboard.svg'
 import EntityHeader from 'images/entity_logo.png'
+import {getEntities} from 'selectors/directory'
 import {BigNumber} from 'bignumber.js'
 import classNames from 'classnames'
 import ReactGA from 'services/ga'
+import FontAwesome from 'react-fontawesome'
 
 class Header extends Component {
   showDashboard = (address) => {
@@ -24,14 +27,21 @@ class Header extends Component {
   }
 
   render () {
+    const hashes = this.props.history.location.pathname.split('/')
     const link = this.props.match.path.split('/')
+    const keyHash = Object.keys(this.props.listHashes).filter(hash => {
+      if (hashes[hashes.length - 1] === this.props.listHashes[hash]) {
+        return hash
+      }
+    })
+    const entity = Object.keys(this.props.entities).length ? this.props.entities[keyHash[0]] : null
     const activeDashboardLinkClass = classNames({
       'entities-header-nav-link': true,
-      'active-link': link[2] === 'dashboard'
+      'active-link': link[2] === 'dashboard' && (entity === undefined)
     })
     const activeDirectoryLinkClass = classNames({
       'entities-header-nav-link': true,
-      'active-link': link[2] === 'directory'
+      'active-link': link[2] === 'directory' && (entity === undefined)
     })
     return (
       <div className='entities-header'>
@@ -41,8 +51,22 @@ class Header extends Component {
             fuse
           </div>
           <div className='entities-header-nav'>
-            <span onClick={() => this.showDashboard(this.props.match.params.address)} className={activeDashboardLinkClass}>Dashboard</span>
-            <span onClick={() => this.showDirectory(this.props.match.params.address)} className={activeDirectoryLinkClass}>Business</span>
+            <span
+              onClick={() => this.showDashboard(this.props.match.params.address)}
+              className={activeDashboardLinkClass}
+            >
+              Dashboard
+            </span>
+            <span
+              onClick={() => this.showDirectory(this.props.match.params.address)}
+              className={activeDirectoryLinkClass}
+            >
+              Business
+            </span>
+            {entity && entity.name && <span className='entities-header-nav-link-name'>
+              {entity.name}
+              <FontAwesome name='times-circle' onClick={() => this.showDirectory(this.props.match.params.address)} />
+            </span>}
           </div>
         </div>
         <div className='entities-header-profile'>
@@ -64,4 +88,9 @@ class Header extends Component {
   }
 }
 
-export default Header
+const mapStateToProps = (state) => ({
+  entities: getEntities(state),
+  listHashes: state.screens.directory.listHashes
+})
+
+export default connect(mapStateToProps, null)(Header)

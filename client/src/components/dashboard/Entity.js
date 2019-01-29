@@ -1,8 +1,8 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 
-const Entity = ({entity}) => (
-  <div className='entity'>
+const Entity = ({entity, showProfile}) => (
+  <div className='entity' onClick={showProfile}>
     <div className='entity-logo'>
       <FontAwesome name='bullseye' />
     </div>
