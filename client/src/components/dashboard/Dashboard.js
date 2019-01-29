@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ClnIcon from 'images/cln.png'
 import { connect } from 'react-redux'
-import {fetchTokenWithData, fetchTokenStatistics} from 'actions/token'
+import {fetchToken, fetchTokenStatistics} from 'actions/token'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 import {getClnBalance, getAccountAddress} from 'selectors/accounts'
@@ -167,7 +167,7 @@ class Dashboard extends Component {
 
   componentDidMount () {
     if (!this.props.token) {
-      this.props.fetchTokenWithData(this.props.match.params.address)
+      this.props.fetchToken(this.props.match.params.address)
     }
     document.addEventListener('mousedown', this.handleClickOutside)
   }
@@ -287,7 +287,7 @@ const mapStateToProps = (state, {match}) => ({
 
 const mapDispatchToProps = {
   fetchTokenStatistics,
-  fetchTokenWithData
+  fetchToken
 }
 
 export default connect(

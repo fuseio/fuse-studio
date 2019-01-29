@@ -1,11 +1,12 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Event = mongoose.model('Event')
+const Token = mongoose.model('Token')
 
 router.get('/:account', async (req, res, next) => {
   const account = req.params.account
 
-  const tokens = await Event.aggregate([
+  const events = await Event.aggregate([
     {
       $match: {
         eventName: 'Transfer',
@@ -19,14 +20,11 @@ router.get('/:account', async (req, res, next) => {
       $group: {
         _id: '$address'
       }
-    },
-    {
-      $project: {
-        address: '$_id',
-        _id: 0
-      }
     }
   ])
+
+  const addresses = events.map(ev => ev._id)
+  const tokens = await Token.find({address: {$in: addresses}})
 
   res.json({
     object: 'list',

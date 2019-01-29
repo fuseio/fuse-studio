@@ -6,7 +6,7 @@ const tokenAction = createEntityAction(entityName)
 export const FETCH_TOKENS = createRequestTypes('FETCH_TOKENS')
 export const FETCH_TOKENS_BY_OWNER = createRequestTypes('FETCH_TOKENS_BY_OWNER')
 
-export const FETCH_TOKEN_WITH_DATA = createRequestTypes('FETCH_TOKEN_WITH_DATA')
+export const FETCH_TOKEN = createRequestTypes('FETCH_TOKEN')
 
 export const FETCH_CLN_TOKEN = createRequestTypes('FETCH_CLN_TOKEN')
 
@@ -18,7 +18,7 @@ export const FETCH_TOKEN_STATISTICS = createRequestTypes('FETCH_TOKEN_STATISTICS
 export const fetchTokens = (page) => tokenAction(FETCH_TOKENS.REQUEST, {page})
 export const fetchTokensByOwner = (owner) => tokenAction(FETCH_TOKENS_BY_OWNER.REQUEST, {owner})
 
-export const fetchTokenWithData = (tokenAddress) => tokenAction(FETCH_TOKEN_WITH_DATA.REQUEST, {tokenAddress})
+export const fetchToken = (tokenAddress) => tokenAction(FETCH_TOKEN.REQUEST, {tokenAddress})
 
 export const fetchClnToken = () => tokenAction(FETCH_CLN_TOKEN.REQUEST)
 

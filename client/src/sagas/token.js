@@ -1,5 +1,4 @@
 import { all, call, put, select } from 'redux-saga/effects'
-import keyBy from 'lodash/keyBy'
 import { contract } from 'osseus-wallet'
 
 import {getAddresses, getClnAddress} from 'selectors/network'
@@ -10,62 +9,21 @@ import {getAccountAddress} from 'selectors/accounts'
 import * as api from 'services/api/token'
 import {processReceipt} from 'services/api/misc'
 import {transactionPending, transactionFailed, transactionSucceeded} from 'actions/utils'
-import {apiCall, createEntityPut, tryTakeEvery} from './utils'
+import {apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch} from './utils'
 
 const entityPut = createEntityPut(actions.entityName)
 
-function * fetchTokens ({page = 1}) {
-  const response = yield apiCall(api.fetchTokens, page)
-  const {data, ...metadata} = response
-  const tokens = data
+const fetchTokens = createEntitiesFetch(actions.FETCH_TOKENS, api.fetchTokens)
+const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
 
-  const entities = keyBy(tokens, 'address')
-  const result = Object.keys(entities)
-
-  yield entityPut({type: actions.FETCH_TOKENS.SUCCESS,
-    response: {
-      entities,
-      result,
-      metadata
-    }})
-
-  for (let token of tokens) {
-    yield put(fetchMetadata(token.tokenURI, token.address))
-  }
-
-  return tokens
-}
-
-function * fetchTokensByOwner ({owner}) {
-  const response = yield apiCall(api.fetchTokensByOwner, owner)
-  const {data, ...metadata} = response
-  const tokens = data
-
-  const entities = keyBy(tokens, 'address')
-  const result = Object.keys(entities)
-
-  yield entityPut({type: actions.FETCH_TOKENS_BY_OWNER.SUCCESS,
-    response: {
-      entities,
-      result,
-      metadata
-    }})
-
-  for (let token of tokens) {
-    yield put(fetchMetadata(token.tokenURI, token.address))
-  }
-
-  return tokens
-}
-
-function * fetchTokenWithData ({tokenAddress}) {
+function * fetchToken ({tokenAddress}) {
   const response = yield apiCall(api.fetchToken, tokenAddress)
   const token = response.data
 
   yield put(fetchMetadata(token.tokenURI, tokenAddress))
 
   yield entityPut({
-    type: actions.FETCH_TOKEN_WITH_DATA.SUCCESS,
+    type: actions.FETCH_TOKEN.SUCCESS,
     tokenAddress,
     response: token
   })
@@ -135,7 +93,7 @@ function * createTokenWithMetadata ({tokenData, metadata}) {
   const tokenURI = `${protocol}://${hash}`
   const receipt = yield call(createToken, {...tokenData, tokenURI})
 
-  yield apiCall(processReceipt, receipt)
+  yield apiCall(processReceipt, {receipt})
 
   const owner = yield select(getAccountAddress)
   yield put({
@@ -152,7 +110,7 @@ function * createTokenWithMetadata ({tokenData, metadata}) {
 }
 
 function * fetchTokenStatistics ({tokenAddress, activityType, interval}) {
-  const response = yield apiCall(api.fetchTokenStatistics, tokenAddress, activityType, interval)
+  const response = yield apiCall(api.fetchTokenStatistics, {tokenAddress, activityType, interval})
 
   const {data} = response
 
@@ -164,11 +122,11 @@ function * fetchTokenStatistics ({tokenAddress, activityType, interval}) {
   })
 }
 
-export default function * marketMakerSaga () {
+export default function * tokenSaga () {
   yield all([
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
-    tryTakeEvery(actions.FETCH_TOKEN_WITH_DATA, fetchTokenWithData, 1),
+    tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_CLN_TOKEN, fetchClnToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),

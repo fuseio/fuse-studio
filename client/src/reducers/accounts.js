@@ -52,7 +52,7 @@ const handlers = {
     return {...state, ...action.response}
   },
   [actions.FETCH_TOKENS_BY_ACCOUNT.SUCCESS]: (state, action) => {
-    return {...state, ...action.response}
+    return {...state, tokens: action.response.result}
   }
 }
 
