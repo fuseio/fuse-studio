@@ -5,9 +5,8 @@ import createHistory from 'history/createBrowserHistory'
 import { routerMiddleware } from 'connected-react-router'
 import createRootReducer from '../reducers'
 
-const history = createHistory()
-
 export default function configureStore (initialState) {
+  const history = createHistory()
   const sagaMiddleware = createSagaMiddleware()
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
   const store = createStore(
@@ -39,5 +38,5 @@ export default function configureStore (initialState) {
   }
   store.runSaga = sagaMiddleware.run
   store.close = () => store.dispatch(END)
-  return store
+  return {store, history}
 }

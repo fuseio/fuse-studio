@@ -7,10 +7,10 @@ import Root from 'containers/Root'
 import configureStore from 'store/configureStore'
 import rootSaga from 'sagas/index'
 
-const store = configureStore(window.__INITIAL_STATE__)
+const {store, history} = configureStore(window.__INITIAL_STATE__)
 
 store.runSaga(rootSaga)
 
 ReactDOM.render(<Root
-  store={store} />,
+  store={store} history={history} />,
 document.getElementById('root'))

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { Route } from 'react-router'
 import { ConnectedRouter } from 'connected-react-router'
-import createHistory from 'history/createBrowserHistory'
 import CLNFetcher from 'containers/CLNFetcher'
 import Oven from 'components/oven/Oven'
 import IssuanceWizard from 'components/issuance/IssuanceWizard'
@@ -15,11 +14,9 @@ import Web3, {withNetwork} from 'containers/Web3'
 import Layout from 'components/Layout'
 import 'scss/styles.scss'
 
-const history = createHistory()
-
 export default class Root extends Component {
   render () {
-    const { store } = this.props
+    const { store, history } = this.props
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>

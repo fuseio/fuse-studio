@@ -15,6 +15,7 @@ const entityPut = createEntityPut(actions.entityName)
 
 const fetchTokens = createEntitiesFetch(actions.FETCH_TOKENS, api.fetchTokens)
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
+export const fetchTokensByAccount = createEntitiesFetch(actions.FETCH_TOKENS_BY_ACCOUNT, api.fetchTokensByAccount)
 
 function * fetchToken ({tokenAddress}) {
   const response = yield apiCall(api.fetchToken, tokenAddress)
@@ -95,12 +96,6 @@ function * createTokenWithMetadata ({tokenData, metadata}) {
 
   yield apiCall(processReceipt, {receipt})
 
-  const owner = yield select(getAccountAddress)
-  yield put({
-    type: actions.FETCH_TOKENS_BY_OWNER.REQUEST,
-    owner
-  })
-
   const tokenAddress = receipt.events.TokenCreated.returnValues.token
 
   yield entityPut({
@@ -126,6 +121,7 @@ export default function * tokenSaga () {
   yield all([
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
+    tryTakeEvery(actions.FETCH_TOKENS_BY_ACCOUNT, fetchTokensByAccount, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_CLN_TOKEN, fetchClnToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),

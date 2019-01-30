@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import Modal from 'components/Modal'
 import MediaMobile from 'images/issue-popup-mobile.svg'
-import {setUserInformation} from './../../actions/accounts'
-import CountriesList from './../../constants/countries'
+import {setUserInformation} from 'actions/accounts'
+import CountriesList from 'constants/countries'
 
 class UserDatatModal extends Component {
   state = {

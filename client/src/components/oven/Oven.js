@@ -7,6 +7,12 @@ import {getAccountAddress} from 'selectors/accounts'
 import TopNav from 'components/TopNav'
 
 class Oven extends Component {
+  componentDidMount () {
+    if (this.props.account) {
+      this.props.fetchTokensByOwner(this.props.account)
+    }
+  }
+
   componentDidUpdate (prevProps) {
     if (this.props.account && !prevProps.account) {
       this.props.fetchTokensByOwner(this.props.account)

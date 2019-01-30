@@ -2,15 +2,15 @@ import { all, put, call, takeEvery, select } from 'redux-saga/effects'
 import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/accounts'
-import {tryTakeEvery, createEntitiesFetch} from './utils'
+import {apiCall, tryTakeEvery} from './utils'
 import {getClnAddress, getNetworkType} from 'selectors/network'
-import {fetchTokensByAccount as fetchTokensByAccountApi} from 'services/api/token'
 import {addUserInformation} from 'services/api/misc'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
+import {fetchTokensByAccount} from 'sagas/token'
 import web3 from 'services/web3'
 
 function * setUserInformation ({user}) {
-  const response = yield call(addUserInformation, user)
+  const response = yield apiCall(addUserInformation, {user})
   const data = response.data
   yield put({
     type: actions.SET_USER_INFORMATION.SUCCESS,
@@ -53,8 +53,6 @@ function * balanceOfCln ({accountAddress}) {
   }
 }
 
-const fetchTokensByAccount = createEntitiesFetch(actions.FETCH_TOKENS_BY_ACCOUNT, fetchTokensByAccountApi)
-
 function * fetchBalances ({accountAddress, tokens}) {
   for (let token of tokens) {
     yield put(actions.balanceOfToken(token.address, accountAddress))
@@ -62,7 +60,7 @@ function * fetchBalances ({accountAddress, tokens}) {
 }
 
 function * fetchTokensWithBalances ({accountAddress}) {
-  const tokens = yield call(fetchTokensByAccount, {accountAddress})
+  const tokens = yield call(fetchTokensByAccount, {accountAddress, entity: 'tokens'})
   yield call(fetchBalances, {accountAddress, tokens})
 }
 
@@ -75,7 +73,6 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.BALANCE_OF_TOKEN, balanceOfToken),
     tryTakeEvery(actions.BALANCE_OF_NATIVE, balanceOfNative),
     tryTakeEvery(actions.BALANCE_OF_CLN, balanceOfCln),
-    takeEvery(actions.FETCH_TOKENS_BY_ACCOUNT.REQUEST, fetchTokensByAccount),
     takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged),
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
     tryTakeEvery(actions.SET_USER_INFORMATION, setUserInformation, 1),
