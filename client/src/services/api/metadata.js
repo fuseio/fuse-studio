@@ -1,7 +1,7 @@
 import request from 'superagent'
 
-export const fetchMetadata = (apiRoot, {protocol, hash}) =>
-  request.get(`${apiRoot}/metadata/${protocol}/${hash}`)
+export const fetchMetadata = (apiRoot, {hash}) =>
+  request.get(`${apiRoot}/metadata/${hash}`)
     .then(response => response.body)
 
 export const createMetadata = (apiRoot, {metadata}) =>

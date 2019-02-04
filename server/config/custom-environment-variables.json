@@ -10,6 +10,9 @@
     "protocol": "COMMUNITY_IPFS_PROTOCOL",
     "timeout": "COMMUNITY_IPFS_TIMEOUT"
   },
+  "ipfsProxy": {
+    "urlBase": "COMMUNITY_IPFS_PROXY_URL_BASE"
+  },
   "web3": {
     "provider": "COMMUNITY_WEB3_PROVIDER",
     "websocketProvider": "COMMUNITY_WEB3_WEBSOCKET_PROVIDER",

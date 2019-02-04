@@ -11,6 +11,9 @@ module.exports = {
     protocol: 'http',
     timeout: 3000
   },
+  ipfsProxy: {
+    urlBase: 'http://localhost:4000/api'
+  },
   web3: {
     provider: defer(function () {
       return `https://${this.web3.network}.infura.io/v3/${this.web3.apiKey}`

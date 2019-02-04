@@ -1,16 +1,24 @@
 const router = require('express').Router()
+const config = require('config')
+const request = require('request')
 
-const utils = require('../../utils/metadata')
+const urlBase = config.get('ipfsProxy.urlBase')
 
-router.get('/:protocol/:hash', async (req, res, next) => {
-  const protocol = req.params.protocol
+router.get('/:hash', async (req, res, next) => {
   const hash = req.params.hash
-  const metadata = await utils.getMetadata(protocol, hash)
-  res.json(metadata)
+  return res.redirect(`${urlBase}/metadata/${hash}`)
 })
 
 router.post('/', async (req, res, next) => {
-  res.json(await utils.addMetadata(req.body.metadata))
+  return request.post(`${urlBase}/metadata`, {
+    json: true,
+    body: {data: req.body.metadata}
+  }, (error, response, body) => {
+    if (error) {
+      throw error
+    }
+    res.json(body)
+  })
 })
 
 module.exports = router

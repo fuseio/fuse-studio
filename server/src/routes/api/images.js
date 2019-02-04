@@ -1,31 +1,36 @@
 const router = require('express').Router()
-const IpfsAPI = require('ipfs-api')
 const multer = require('multer')
 const config = require('config')
+const request = require('request')
 
-const ipfsConfig = config.get('ipfs')
-const amazonConfig = config.get('amazon')
+const urlBase = config.get('ipfsProxy.urlBase')
 
 const upload = multer()
 
-const ipfs = new IpfsAPI(ipfsConfig)
-
 router.get('/:hash', async (req, res) => {
   const hash = req.params.hash
-  try {
-    const data = await ipfs.files.cat(hash)
-    res.set('Content-Type', 'image/png')
-    return res.send(data)
-  } catch (e) {
-    return res.redirect(`${amazonConfig.apiBase}${hash}.png`)
-  }
+  return res.redirect(`${urlBase}/image/${hash}`)
 })
 
 router.post('/', upload.single('image'), async (req, res) => {
-  const filesAdded = await ipfs.files.add(req.file.buffer)
-  const hash = filesAdded[0].hash
-
-  return res.send({data: {hash}})
+  let formData = {
+    file: {
+      value: req.file.buffer,
+      options: {
+        contentType: req.file.mimetype,
+        filename: req.file.originalname
+      }
+    }
+  }
+  return request.post(`${urlBase}/image`, {
+    formData
+  }, (error, response, body) => {
+    if (error) {
+      throw error
+    }
+    res.set('Content-Type', 'application/json')
+    return res.send(body)
+  })
 })
 
 module.exports = router

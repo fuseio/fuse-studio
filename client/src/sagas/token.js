@@ -90,8 +90,8 @@ export function * createToken ({name, symbol, totalSupply, tokenURI}) {
 }
 
 function * createTokenWithMetadata ({tokenData, metadata}) {
-  const {hash, protocol} = yield call(createMetadata, {metadata})
-  const tokenURI = `${protocol}://${hash}`
+  const {hash} = yield call(createMetadata, {metadata})
+  const tokenURI = `$ipfs://${hash}`
   const receipt = yield call(createToken, {...tokenData, tokenURI})
 
   yield apiCall(processReceipt, {receipt})

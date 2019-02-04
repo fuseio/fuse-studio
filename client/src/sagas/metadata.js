@@ -11,29 +11,30 @@ function * fetchMetadata ({tokenURI}) {
     throw new Error(`No tokenURI given`)
   }
 
-  const [protocol, hash] = tokenURI.split('://')
+  const hash = tokenURI.split('://')[1]
 
-  const {data} = yield apiCall(api.fetchMetadata, {protocol, hash})
+  const {data} = yield apiCall(api.fetchMetadata, {hash})
 
   yield entityPut({
     type: actions.FETCH_METADATA.SUCCESS,
     response: {
       entities: {
-        [tokenURI]: data.metadata
+        [tokenURI]: data
       }
     }
   })
 }
 
 export function * createMetadata ({metadata}) {
-  const {data} = yield apiCall(api.createMetadata, {metadata})
+  const {data, hash} = yield apiCall(api.createMetadata, {metadata})
   yield put({
     type: actions.CREATE_METADATA.SUCCESS,
     response: {
-      data
+      data,
+      hash
     }
   })
-  return data
+  return {data, hash}
 }
 
 export function * watchTokensFetched ({response}) {
