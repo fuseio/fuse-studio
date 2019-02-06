@@ -1,4 +1,4 @@
-import {SET_USER_INFORMATION} from 'actions/accounts'
+import {ADD_USER_INFORMATION} from 'actions/accounts'
 import {CREATE_TOKEN, CREATE_TOKEN_WITH_METADATA} from 'actions/token'
 import {REQUEST, FAILURE} from 'actions/constants'
 import {LOCATION_CHANGE} from 'connected-react-router'
@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
       return {...state, ...action.response}
     case CREATE_TOKEN.FAILURE:
       return {...state, ...action.response}
-    case SET_USER_INFORMATION.SUCCESS:
+    case ADD_USER_INFORMATION.SUCCESS:
       return {...state, transactionStatus: null}
     case LOCATION_CHANGE:
       if (action.payload.pathname === '/') {

@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
-import {fetchTokensByAccount, fetchBalances, fetchTokensWithBalances} from 'actions/accounts'
+import {fetchTokensWithBalances} from 'actions/accounts'
+import {login} from 'actions/auth'
 import ProfileIcon from 'images/user.svg'
 import {BigNumber} from 'bignumber.js'
 import FontAwesome from 'react-fontawesome'
@@ -9,7 +10,7 @@ import {formatWei} from 'utils/format'
 import {getAccount, getAccountTokens} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
 
-const PersonalSidebarCoin = ({accountAddress, token, metadata, balance}) => (
+const MinimizedToken = ({accountAddress, token, metadata, balance}) => (
   <Fragment>
     <CommunityLogo token={token} metadata={metadata} />
     <div className='personal-community-content'>
@@ -58,7 +59,7 @@ class PersonalSidebar extends Component {
       if ((token.owner === accountAddress)) {
         return (
           <div className='personal-community' key={token.address}>
-            <PersonalSidebarCoin
+            <MinimizedToken
               accountAddress={accountAddress}
               token={token}
               metadata={this.props.metadata[token.tokenURI] || {}}
@@ -76,7 +77,7 @@ class PersonalSidebar extends Component {
     return tokens.length ? tokens.map(token => {
       return (
         <div className='personal-community' key={token.address}>
-          <PersonalSidebarCoin
+          <MinimizedToken
             accountAddress={accountAddress}
             token={token}
             metadata={this.props.metadata[token.tokenURI] || {}}
@@ -98,7 +99,7 @@ class PersonalSidebar extends Component {
       <div className='personal-sidebar'>
         <div className='personal-sidebar-top'>
           <button className='personal-sidebar-close' onClick={() => this.props.closeProfile()}><FontAwesome name='times' /></button>
-          <div className='profile-icon-big' onClick={() => this.setState({profile: !this.state.profile})}>
+          <div className='profile-icon-big' onClick={() => this.props.login()}>
             <img src={ProfileIcon} />
           </div>
           <span className='profile-balance'>
@@ -139,9 +140,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  fetchTokensByAccount,
-  fetchBalances,
-  fetchTokensWithBalances
+  fetchTokensWithBalances,
+  login
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonalSidebar)

@@ -2,6 +2,7 @@ import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
 import { getApiRoot } from 'selectors/network'
+import { getAccount } from 'selectors/accounts'
 import keyBy from 'lodash/keyBy'
 
 export const createEntityPut = (entity) => (action) => put({...action, entity})
@@ -44,8 +45,12 @@ export const tryTakeEvery = (action, saga, numberOfTries) => takeEvery(action.RE
 export const tryTakeLatestWithDebounce = (action, saga, timeout = CONFIG.ui.debounce) =>
   takeLatest(action.REQUEST, tryCatchWithDebounce(action, saga, 500))
 
-export function * apiCall (apiFunc, params) {
+export function * apiCall (apiFunc, params, options = {}) {
   const apiRoot = yield select(getApiRoot)
+  if (options.auth) {
+    const {authToken} = yield select(getAccount)
+    return yield call(apiFunc, apiRoot, {...params, authToken})
+  }
   return yield call(apiFunc, apiRoot, params)
 }
 

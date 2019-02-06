@@ -2,13 +2,8 @@
   "network": "COMMUNITY_NETWORK",
   "api": {
     "secret": "COMMUNITY_API_SECRET",
+    "tokenExpiresIn": "COMMUNITY_TOKEN_EXPIRES_IN",
     "port": "PORT"
-  },
-  "ipfs": {
-    "host": "COMMUNITY_IPFS_HOST",
-    "port": "COMMUNITY_IPFS_PORT",
-    "protocol": "COMMUNITY_IPFS_PROTOCOL",
-    "timeout": "COMMUNITY_IPFS_TIMEOUT"
   },
   "ipfsProxy": {
     "urlBase": "COMMUNITY_IPFS_PROXY_URL_BASE"

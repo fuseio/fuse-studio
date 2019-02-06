@@ -6,7 +6,14 @@ const urlBase = config.get('ipfsProxy.urlBase')
 
 router.get('/:hash', async (req, res, next) => {
   const hash = req.params.hash
-  return res.redirect(`${urlBase}/metadata/${hash}`)
+
+  return request.get(`${urlBase}/metadata/${hash}`, {
+  }, (error, response, body) => {
+    if (error) {
+      throw error
+    }
+    res.json(JSON.parse(body))
+  })
 })
 
 router.post('/', async (req, res, next) => {

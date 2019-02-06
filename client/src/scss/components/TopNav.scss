@@ -158,6 +158,11 @@
 						}
 					}
 				}
+
+        &-icon:hover {
+          cursor: pointer;
+        }
+
 				&-balance {
 					margin-left: 15px;
 					@media (max-width: $breakpoint-tablet) {

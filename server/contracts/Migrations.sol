@@ -1,11 +1,5 @@
 pragma solidity ^0.4.23;
 
-import "cln-solidity/contracts/ColuLocalNetworkSale.sol";
-import "cln-solidity/contracts/CurrencyFactory.sol";
-import "cln-solidity/contracts/EllipseMarketMaker.sol";
-import "cln-solidity/contracts/EllipseMarketMakerLib.sol";
-import "cln-solidity/contracts/IssuanceFactory.sol";
-
 contract Migrations {
   address public owner;
   uint public last_completed_migration;

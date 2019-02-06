@@ -4,6 +4,12 @@
     "supportedNetworks": ["main", "ropsten", "fuse"]
   },
   "api": {
+    "auth": {
+        "domain": {
+          "name": "CLN Communities Dev",
+          "version": 1
+        }
+    },
     "url": {
       "main": "http://localhost:3000/api/v1",
       "ropsten": "http://localhost:3000/api/v1",

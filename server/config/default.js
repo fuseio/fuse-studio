@@ -2,14 +2,17 @@ const defer = require('config/defer').deferConfig
 
 module.exports = {
   api: {
+    allowCors: true,
     secret: 'secret',
-    port: 3000
-  },
-  ipfs: {
-    host: '127.0.0.1',
-    port: 5001,
-    protocol: 'http',
-    timeout: 3000
+    tokenExpiresIn: '7d',
+    port: 3000,
+    auth: {
+      domain: {
+        name: 'CLN Communities Dev',
+        chainId: 3,
+        version: 1
+      }
+    }
   },
   ipfsProxy: {
     urlBase: 'http://localhost:4000/api'
@@ -22,6 +25,7 @@ module.exports = {
       return `wss://${this.web3.network}.infura.io/ws/v3/${this.web3.apiKey}`
     }),
     network: 'ropsten',
+    chainId: 3,
     pageSize: 1000
   },
   mongo: {

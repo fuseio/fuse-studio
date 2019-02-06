@@ -7,6 +7,7 @@ import issuanceSaga from './issuance'
 import directorySaga from './directory'
 import tokenSaga from './token'
 import partnerSaga from './partner'
+import authSaga from './auth'
 
 export default function * rootSaga () {
   yield all([
@@ -16,6 +17,7 @@ export default function * rootSaga () {
     fork(issuanceSaga),
     fork(directorySaga),
     fork(tokenSaga),
-    fork(partnerSaga)
+    fork(partnerSaga),
+    fork(authSaga)
   ])
 }

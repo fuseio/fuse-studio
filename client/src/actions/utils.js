@@ -4,6 +4,10 @@ export const action = (type, payload = {}) => ({
   type, ...payload
 })
 
+export const requestAction = (action, payload = {}) => ({
+  type: action.REQUEST, ...payload
+})
+
 const requestTypes = [REQUEST, SUCCESS, FAILURE]
 
 export function createRequestTypes (base) {

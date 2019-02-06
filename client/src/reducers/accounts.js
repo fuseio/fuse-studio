@@ -1,5 +1,6 @@
 import {CHANGE} from 'actions/marketMaker'
 import {FETCH_TOKENS_BY_ACCOUNT} from 'actions/token'
+import {LOGIN} from 'actions/auth'
 import * as actions from 'actions/accounts'
 
 export const initialAccount = {
@@ -50,6 +51,9 @@ const handlers = {
     return {...state, balances}
   },
   [actions.BALANCE_OF_NATIVE.SUCCESS]: (state, action) => {
+    return {...state, ...action.response}
+  },
+  [LOGIN.SUCCESS]: (state, action) => {
     return {...state, ...action.response}
   },
   [FETCH_TOKENS_BY_ACCOUNT.SUCCESS]: (state, action) => {

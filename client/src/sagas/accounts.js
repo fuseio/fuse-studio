@@ -4,16 +4,18 @@ import { contract } from 'osseus-wallet'
 import * as actions from 'actions/accounts'
 import {apiCall, tryTakeEvery} from './utils'
 import {getClnAddress, getNetworkType} from 'selectors/network'
-import {addUserInformation} from 'services/api/misc'
+import {addUserInformation as addUserInformationApi} from 'services/api/misc'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 import {fetchTokensByAccount} from 'sagas/token'
 import web3 from 'services/web3'
+import {getAccountAddress} from 'selectors/accounts'
 
-function * setUserInformation ({user}) {
-  const response = yield apiCall(addUserInformation, {user})
-  const data = response.data
+function * addUserInformation ({user}) {
+  const accountAddress = yield select(getAccountAddress)
+  const response = yield apiCall(addUserInformationApi, {user: {...user, accountAddress}}, {auth: true})
+  const {data} = response
   yield put({
-    type: actions.SET_USER_INFORMATION.SUCCESS,
+    type: actions.ADD_USER_INFORMATION.SUCCESS,
     user,
     response: {
       data
@@ -75,7 +77,7 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.BALANCE_OF_CLN, balanceOfCln),
     takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged),
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
-    tryTakeEvery(actions.SET_USER_INFORMATION, setUserInformation, 1),
+    tryTakeEvery(actions.ADD_USER_INFORMATION, addUserInformation, 1),
     tryTakeEvery(actions.FETCH_TOKENS_WITH_BALANCES, fetchTokensWithBalances, 1)
   ])
 }

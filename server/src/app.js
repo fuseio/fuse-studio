@@ -1,7 +1,6 @@
 require('module-alias/register')
 const express = require('express')
 const bodyParser = require('body-parser')
-const cors = require('cors')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 const path = require('path')
@@ -18,7 +17,10 @@ var isProduction = process.env.NODE_ENV === 'production'
 
 var app = express()
 
-app.use(cors())
+if (config.get('api.allowCors')) {
+  const cors = require('cors')
+  app.use(cors())
+}
 
 app.use(morgan('common'))
 

@@ -6,6 +6,11 @@
       "default": "https://communities.cln.network/api/v1"
     }
   },
+  "auth": {
+      "domain": {
+        "name": "CLN Communities Prod"
+      }
+  },
   "reactGA": {
     "trackingId": "UA-108913015-4",
     "gaOptions": {

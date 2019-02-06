@@ -1,9 +1,6 @@
+const config = require('config')
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-
-export const isZeroAddress = (address) => address === ZERO_ADDRESS
-
-export const generateSignatureData = ({ accountAddress, date, chainId }) => {
+const generateSignatureData = ({ accountAddress, date }) => {
   return { types: {
     EIP712Domain: [
       { name: 'name', type: 'string' }, { name: 'version', type: 'string' }, { name: 'chainId', type: 'uint256' }
@@ -16,7 +13,11 @@ export const generateSignatureData = ({ accountAddress, date, chainId }) => {
     ]
   },
   primaryType: 'Login',
-  domain: { ...CONFIG.api.auth.domain, chainId },
+  domain: config.get('api.auth.domain'),
   message: { account: accountAddress, date, content: 'Login request' }
   }
+}
+
+module.exports = {
+  generateSignatureData
 }

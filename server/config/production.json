@@ -1,4 +1,14 @@
 {
+  "api": {
+    "allowCors": false,
+    "auth": {
+      "domain": {
+        "name": "CLN Communities Prod",
+        "chainId": 3,
+        "version": 1
+      }
+    }
+  },
   "mongo": {
     "debug": false
   }

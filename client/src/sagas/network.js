@@ -10,7 +10,8 @@ import {networkIdToName} from 'constants/network'
 
 function * getNetworkTypeInternal () {
   const networkId = yield web3.eth.net.getId()
-  return networkIdToName[networkId]
+  const networkType = networkIdToName[networkId]
+  return {networkId, networkType}
 }
 
 function * getAccountAddress () {
@@ -30,10 +31,11 @@ function * getAccountAddress () {
 
 function * getNetworkType () {
   try {
-    const networkType = yield getNetworkTypeInternal()
+    const {networkType, networkId} = yield getNetworkTypeInternal()
     yield put({type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
+        networkId,
         isMetaMask: web3.currentProvider.isMetaMask || false
       }})
     const accountAddress = yield getAccountAddress()
