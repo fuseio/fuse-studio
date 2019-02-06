@@ -17,14 +17,24 @@
 		background: $color-top-nav-bg;
 	}
 	.top-nav-logo {
-		display: flex;
-		align-items: center;
-		img {
-			@media (max-width: $breakpoint-tablet) {
-				height: 30px;
-    		width: 30px;
-			}
-		}
+		color: $color-step-text;
+    font-size: 32px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+		position: relative;
+    top: -4px;
+    img {
+      margin-right: 7px;
+      position: relative;
+      top: 2px;
+      height: 30px;
+      width: 30px;
+    }
+    &:hover {
+      cursor: pointer;
+    }
 	}
 	.top-nav-issuance {
 		width: 180px;
@@ -163,6 +173,7 @@
 			}
 			&:hover {
 				color: $color-step-text;
+				cursor: pointer;
 			}
 			.balance-address {
 				width: 150px;
@@ -183,7 +194,7 @@
 			font-size: 14px;
 			color: $dark-grey;
 			img {
-				width:9px;
+				width: 9px;
 				height: 14px;
 				margin-right: 2px;
 				margin-left: 8px;
@@ -273,5 +284,55 @@
 	.mobile-menu-icon {
 		height: 25px;
 		width: auto;
+	}
+
+	&.navigator-appstore {
+		background: transparent;
+		box-shadow: none;
+		position: absolute;
+		& + .appstore-container {
+			padding-top: 100px;
+			@media (max-width: $breakpoint-tablet) {
+				padding-top: 70px;
+			}
+		}
+		.top-nav-issuance {
+			box-shadow: none;
+    	background: none;
+			&:hover {
+				border: 1px solid $color-step-text
+			}
+		}
+		.top-nav-links {
+			.top-nav-text {
+				color: $color-step-text;
+				font-weight: 500;
+				.profile-icon {
+					background: $color-orange-store;
+					box-shadow: none;
+					width: auto;
+					height: auto;
+					line-height: 1;
+					img {
+						width: 25px;
+  					height: 32px;
+					}
+				}
+				&:hover {
+					color: rgba(255, 255, 255, 0.62);
+				}
+			}
+			.top-nav-balance {
+				.balance-text {
+					color: rgba(255, 255, 255, 0.62);
+				}
+				.balance-number {
+					color: $color-step-text;
+				}
+			}
+		}
+		.separator-vertical {
+			background: $color-step-text;
+		}
 	}
 }

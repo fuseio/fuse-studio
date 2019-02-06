@@ -8,12 +8,14 @@ import LoadingModal from 'components/LoadingModal'
 import ErrorBoundary from 'components/ErrorBoundary'
 import UserDatatModal from 'components/issuance/UserDatatModal'
 import AddEntityModal from 'components/dashboard/AddEntityModal'
+import StoreModal from 'components/store/StoreModal'
 import {
   LOGIN_MODAL,
   WRONG_NETWORK_MODAL,
   LOADING_MODAL,
   USER_DATA_MODAL,
-  ADD_DIRECTORY_ENTITY
+  ADD_DIRECTORY_ENTITY,
+  APPSTORE_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -26,7 +28,8 @@ const MODAL_COMPONENTS = {
   [WRONG_NETWORK_MODAL]: WrongNetworkModal,
   [LOADING_MODAL]: LoadingModal,
   [USER_DATA_MODAL]: UserDatatModal,
-  [ADD_DIRECTORY_ENTITY]: AddEntityModal
+  [ADD_DIRECTORY_ENTITY]: AddEntityModal,
+  [APPSTORE_MODAL]: StoreModal
 }
 
 const ModalContainer = (props) => {

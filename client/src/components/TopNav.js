@@ -8,7 +8,7 @@ import * as actions from 'actions/ui'
 import {getClnBalance} from 'selectors/accounts'
 import { LOGIN_MODAL } from 'constants/uiConstants'
 
-import ClnIcon from 'images/cln.png'
+import Logo from 'components/Logo'
 import ProfileIcon from 'images/user.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
@@ -47,10 +47,27 @@ class TopNav extends Component {
     })
   }
 
+  showAppStore = () => {
+    this.props.history.push('/view/appstore')
+    this.setState({
+      openMenu: !this.state.openMenu
+    })
+    ReactGA.event({
+      category: 'Top Bar',
+      action: 'Click',
+      label: 'AppStore'
+    })
+  }
+
+  showHomePage = (address) => {
+    this.props.history.push('/')
+  }
+
   render () {
     const topNavClass = classNames({
       'active': this.props.active,
-      'top-navigator': true
+      'top-navigator': true,
+      'navigator-appstore': this.props.type === 'appstore'
     })
     const navLinksClass = classNames({
       'hide': !this.state.openMenu,
@@ -60,7 +77,7 @@ class TopNav extends Component {
     return (
       <div className={topNavClass}>
         <div className='top-nav-logo'>
-          <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>
+          <Logo showHomePage={() => this.showHomePage()} />
         </div>
         <div className={navLinksClass}>
           <button onClick={this.showIssuance} className='top-nav-issuance'>
@@ -77,6 +94,7 @@ class TopNav extends Component {
               target='_blank'
               name='whitepaper'>
               Whitepaper</a>
+            <span className='top-nav-text' onClick={() => this.showAppStore()}>AppStore</span>
             <div className='separator-vertical' />
           </div>
           <div className='top-nav-text profile' onClick={this.showConnectMetamask}>

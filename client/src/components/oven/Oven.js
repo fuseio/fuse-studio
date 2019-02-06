@@ -18,12 +18,14 @@ class Oven extends Component {
       this.props.fetchTokensByOwner(this.props.account)
     }
   }
+  showHomePage = () => this.props.history.push('/')
 
   render = () => (
     <div>
       <TopNav
         active
         history={this.props.history}
+        showHomePage={this.showHomePage}
       />
       <CommunitiesList {...this.props} />
     </div>

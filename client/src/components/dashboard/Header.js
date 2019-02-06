@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProfileIcon from 'images/user-dashboard.svg'
-import EntityHeader from 'images/entity_logo.png'
+import Logo from 'components/Logo'
 import {getEntities} from 'selectors/directory'
 import {BigNumber} from 'bignumber.js'
 import classNames from 'classnames'
@@ -47,8 +47,7 @@ class Header extends Component {
       <div className='entities-header'>
         <div className='entities-header-content'>
           <div className='entities-logo' onClick={() => this.props.showHomePage()}>
-            <img src={EntityHeader} />
-            fuse
+            <Logo showHomePage={this.props.showHomePage} />
           </div>
           <div className='entities-header-nav'>
             <span
