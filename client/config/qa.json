@@ -1,15 +1,15 @@
 {
   "api": {
+    "auth": {
+        "domain": {
+          "name": "CLN Communities QA"
+        }
+    },
     "url": {
       "main": "https://communities-qa.cln.network/api/v1",
       "ropsten": "https://ropsten-qa.cln.network/api/v1",
       "default": "https://communities-qa.cln.network/api/v1"
     }
-  },
-  "auth": {
-      "domain": {
-        "name": "CLN Communities QA"
-      }
   },
   "reactGA": {
     "gaOptions": {

@@ -1,4 +1,0 @@
-module.exports = {
-  ColuLocalNetwork: '0x4162178B78D6985480A308B2190EE5517460406D',
-  CurrencyFactory: '0xE3e3bed21fC39d0915f66509eD0AAc05dB6d6454'
-}

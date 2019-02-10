@@ -8,10 +8,11 @@ const config = require('config')
 const paginate = require('express-paginate')
 const process = require('process')
 const agenda = require('./services/agenda')
+const util = require('util')
 require('express-async-errors')
 
 console.log('The server configurations are:')
-console.log(config)
+console.log(util.inspect(config, {depth: null}))
 
 var isProduction = process.env.NODE_ENV === 'production'
 

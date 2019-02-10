@@ -1,5 +1,5 @@
 import * as network from 'actions/network'
-import addresses from 'constants/addresses'
+const {addresses} = CONFIG.web3
 
 export default (state = {addresses}, action) => {
   switch (action.type) {

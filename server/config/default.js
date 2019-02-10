@@ -9,7 +9,9 @@ module.exports = {
     auth: {
       domain: {
         name: 'CLN Communities Dev',
-        chainId: 3,
+        chainId: defer(function () {
+          return this.web3.network === 'mainnet' ? 1 : 3
+        }),
         version: 1
       }
     }
@@ -25,8 +27,19 @@ module.exports = {
       return `wss://${this.web3.network}.infura.io/ws/v3/${this.web3.apiKey}`
     }),
     network: 'ropsten',
-    chainId: 3,
-    pageSize: 1000
+    pageSize: 1000,
+    addresses: {
+      ropsten: {
+        ColuLocalNetwork: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
+        CurrencyFactory: '0xA1F05144f9d3298a702c8EEE3ca360bc87d05207',
+        TokenFactory: '0x824E01Cf7013f459Aa010D73627B006a8740b183'
+      },
+      mainnet: {
+        ColuLocalNetwork: '0x4162178B78D6985480A308B2190EE5517460406D',
+        CurrencyFactory: '0xE3e3bed21fC39d0915f66509eD0AAc05dB6d6454',
+        TokenFactory: '0xac051e086FD2046FC75A53D38088B4DD6e00E25b'
+      }
+    }
   },
   mongo: {
     uri: 'mongodb://localhost/CLN-community-app',
