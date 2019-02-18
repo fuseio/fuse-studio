@@ -21,14 +21,14 @@ class Oven extends Component {
   showHomePage = () => this.props.history.push('/')
 
   render = () => (
-    <div>
+    <React.Fragment>
       <TopNav
         active
         history={this.props.history}
         showHomePage={this.showHomePage}
       />
       <CommunitiesList {...this.props} />
-    </div>
+    </React.Fragment>
   )
 }
 

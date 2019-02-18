@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ExpandableCommunity from 'components/oven/ExpandableCommunity'
 import InfiniteScroll from 'react-infinite-scroller'
+import Banner from 'images/home-banner.png'
 
 const PAGE_START = 1
 const PAGE_SIZE = 10
@@ -36,8 +37,26 @@ class CommunitiesList extends Component {
   render () {
     const {addresses, tokens, metadata} = this.props
     return <div className='communities-list' ref={this.myRef}>
-      <h2 className='communities-list-title'>Communities</h2>
+      <div className='communities-banner' style={{backgroundImage: `url(${Banner})`}}>
+        <div className='communities-banner-content' >
+          <h2 className='communities-banner-title'>
+            A cool headline about <span>fuse</span>
+          </h2>
+          <p className='communities-banner-text'>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sodales ut lacus pretium imperdiet. Aenean sit amet dolor et mi lobortis euismod.
+          </p>
+        </div>
+      </div>
       <div className='communities-list-container'>
+        <div className='communities-list-content'>
+          <h2 className='communities-list-title'>All communities</h2>
+          <div className='communities-list-search'>
+            <input placeholder='Search community…' />
+            <button className='search-btn'>
+              <span aria-hidden='true' className='fa fa-search' />
+            </button>
+          </div>
+        </div>
         <InfiniteScroll
           initialLoad={false}
           pageStart={PAGE_START}

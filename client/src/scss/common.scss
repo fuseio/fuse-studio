@@ -236,10 +236,10 @@
 
 .symbol-btn {
 	border-radius: 3px;
-  background-color: #293b5a;
-  box-shadow: 0 0 6px 0 rgba(95, 221, 187, 0.77);
+  background-color: $color-orange;
+  box-shadow: 0 0 4px 0 $color-orange;
 	font-size: 13px;
-	color: $color-step-field;
+	color: $color-step-text;
 	padding: 16px 40px;
 	text-transform: uppercase;
 	border: none;
@@ -254,12 +254,12 @@
 		outline: none;
 	}
 	&:hover {
-		background-color: $color-step-field;
+		background-color: lighten($color-orange, 10%);
 		color: $color-step-text;
 		cursor: pointer;
 	}
 	&[disabled] {
-		color: $color-step-field;
+		color: $color-orange;
 		cursor: not-allowed;
 		background-color: transparent !important;
 	}
@@ -305,11 +305,13 @@
   	box-shadow: 0 0 1px 0 rgba(10, 117, 134, 0.44);
 		flex: 1;
 		padding: 6px 12px;
+		border: 1px solid #92a1ac;
 		&:focus {
 			box-shadow: 0 0 6px 0 rgba(10, 117, 134, 0.44);
 		}
 		&::placeholder {
 			color: #5f677e;
+			font-style: italic;
 		}
 		&.form-control-error {
 			border-color: red;
@@ -322,6 +324,10 @@
 		box-sizing: border-box;
 		flex: 1;
 		padding: 6px 12px;
+		&::placeholder {
+			color: #5f677e;
+			font-style: italic;
+		}
 	}
 	@media (max-width: $breakpoint-mobile) {
 		flex-direction: column;
@@ -329,162 +335,9 @@
 	}
 }
 
-.issued-popup {
-	display: flex;
-	padding: 0;
-	flex-direction: row;
-	overflow: hidden;
-	@media (max-width: $breakpoint-tablet) {
-		flex-direction: column;
-	}
-	&-media {
-		position: relative;
-		padding: 40px 30px;
-		background-color: $color-bg-gray;
-		@media (max-width: $breakpoint-tablet) {
-			padding: 20px 20px 100px;
-		}
-		&-img {
-			position: absolute;
-			bottom: -51px;
-	    left: -74px;
-	    width: 546px !important;
-			min-width: auto;
-			height: auto !important;
-			@media (max-width: $breakpoint-tablet) {
-				width: 300px !important;
-				right: 50%;
-				margin-bottom: -66px;
-				bottom: -38px;
-				margin-top: 20px;
-				left: auto;
-    		margin-right: -150px;
-			}
-			@media (max-width: $breakpoint-mobile) {
-				width: 250px !important;
-				margin-right: -115px;
-				margin-bottom: -22px;
-			}
-		}
-		&-title {
-			background: linear-gradient(to bottom, #ffea14, #ffea14 31%, #85ffbc);
-			font-size: 36px;
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-		}
-	}
-	&-header {
-		padding: 60px 150px 40px;
-		text-align: center;
-		overflow: hidden;
-		background-image: linear-gradient(351deg, #1c1442, #2d235e);
-
-		@media (max-width: $breakpoint-tablet) {
-			padding: 60px 80px 40px;
-		}
-	}
-
-	&-title {
-		font-weight: 500;
-		color: $color-step-text;
-		font-size: 14px;
-		line-height: 1.64;
-		text-transform: uppercase;
-		margin-top: 40px;
-		margin-bottom: 10px;
-	}
-
-	&-text {
-		font-size: 12px;
-		line-height: 1.33;
-		color: $color-text-gray;
-		font-weight: 800 !important;
-		margin-bottom: 40px !important;
-	}
-
-	&-close {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		font-size: 19px;
-		color: #b6b5d8;
-		&:hover {
-			color: $color-step-text;
-			cursor: pointer;
-		}
-	}
-
-	&-container {
-		background-color: $color-step-text;
-		padding: 40px 60px;
-		text-align: left;
-		@media (max-width: $breakpoint-tablet) {
-			padding: 130px 40px 60px;
-		}
-		@media (max-width: $breakpoint-mobile) {
-			padding: 70px 20px 20px;
-		}
-		p:not(:last-child) {
-			margin-bottom: 20px;
-		}
-	}
-
-	&-link {
-		color: $color-hover-details;
-		margin-left: 5px;
-		&:hover {
-			text-decoration: underline !important;
-		}
-	}
-
-	&-btn {
-		border-radius: 3px;
-	  box-shadow: 0 0 6px 0 rgba(254, 129, 0, 0.56);
-	  background-color: $color-orange;
-		border: none;
-		width: 168px;
-		height: 41px;
-		font-size: 13px;
-		font-weight: bold;
-		color: $color-step-text;
-		line-height: 40px;
-		text-align: center;
-		text-transform: uppercase;
-		display: block;
-		margin: 0 auto;
-
-		&:hover,
-		&:focus,
-		&:focus:active,
-		&:active {
-			cursor: pointer;
-			background-color: darken($color-orange, 10%);
-		}
-		&[disabled] {
-			background-color: lighten($color-orange, 10%) !important;
-			&:hover,
-			&:focus,
-			&:focus:active,
-			&:active {
-				background-color: lighten($color-orange, 10%) !important;
-			}
-		}
-	}
-}
-
 .coin-logo {
   position: relative;
-  height: 70px;
-  .logo-img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    box-shadow: 0 0px 12px 0 rgba(0, 131, 255, 0.46);
-    @media (max-width: $breakpoint-mobile) {
-      width: 43px;
-      height: 43px;
-    }
-  }
+  height: 80px;
   .symbol-text {
     font-size: 13px;
     font-weight: bold;
@@ -493,14 +346,16 @@
     position: absolute;
     top: 50%;
     margin-top: -7px;
+		text-transform: uppercase;
     left: 0;
     right: 0;
+		z-index: 3;
     @media (max-width: $breakpoint-mobile) {
       font-size: 9px;
     }
   }
   @media (max-width: $breakpoint-mobile) {
-    height: 43px;
+    height: 50px;
   }
 }
 .coin-status {
@@ -605,25 +460,17 @@
 .btn-download {
 	font-size: 13px;
 	text-align: center;
- 	color: $color-step-text;
+ 	color: $color-text-gray;
+	text-decoration: underline;
 	background: none;
 	border: none;
-	.fa {
-		color: $color-step-field;
-		margin-right: 5px;
-		font-size: 18px;
-		&.fa-times-circle {
-			position: relative;
-			top: 2px;
-		}
-	}
 	&:focus,
 	&:active,
 	&:focus:active {
 		outline: none;
 	}
 	&:hover {
-		color: $color-hover-details;
+		color: $color-orange;
 		cursor: pointer;
 	}
 }

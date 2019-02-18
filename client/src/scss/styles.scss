@@ -1,127 +1,23 @@
 @import url("https://colupub.colu.com/fonts/703935/A96DF20C3066668FD.css");
 @import url('https://use.fontawesome.com/releases/v5.7.1/css/all.css');
 
-$dark-grey: #3d3d3d;
-$light-grey: #f8f8f8;
-$colu-green: #4dd9b4;
-$colu-purple: #301eaa;
-$disabled: #979797;
+/*-------Basic helpers----------*/
 
-$nav-height: 100px;
-$nav-height-mobile: 70px;
-$page-width: 1024px;
+@import 'variables';
+@import 'mixins';
 
-$color-step: #6e6d9f;
-$color-active-step: #c095ff;
-$color-step-line: #271d53;
-$color-step-border: #4b3b80;
-$color-step-text: #fff;
-$color-issuance: #1c1442;
-$color-issuance-bg: linear-gradient(to bottom, rgba(60, 45, 119, 0.5), $color-issuance);
-$color-step-bg: #241c4a;
-$color-symbol-field-brdr: #b6b5d8;
-$color-shadow: rgba(0, 0, 0, 0.3);
-$color-step-field: #5fddbb;
-$color-step-container-logo: #343166;
-$font-family: 'Gotham SSm A', 'Gotham SSm B', 'icomoon';
-$font-family-lato: 'Lato', sans-serif;
-$color-hover-details: #7effdc;
-$color-shadow-btn: rgba(22, 14, 58, 0.34);
-$color-top-nav-bg: #2a2057;
-
-$color-pink: #ff4a7b;
-
-$color-close-gray: #0a7586;
-$color-orange: #fc6e4c;
-$color-orange-store: #ff6753;
-$color-text-gray: #0d2d45;
-$color-bg-gray: #05283e;
-
-$color-filter-text: #25435a;
-$color-filter-genre: #5f677e;
-$color-author: #92a1ac;
-
-$breakpoint-mobile: 576px;
-$breakpoint-tablet: 1024px;
-$breakpoint-desktop: 1200px;
-
-@mixin flex-box() {
-	display: -ms-flexbox;
-	display: -webkit-flex;
-	display: flex;
-}
-
-@mixin flex-direction($direction) {
-	-webkit-flex-direction: $direction;
-	-ms-flex-direction: $direction;
-	flex-direction: $direction;
-}
-
-@mixin  transformTranslate($x,$y){
-	-ms-transform: translate($x,$y); /* IE 9 */
-	-webkit-transform: translate($x,$y); /* Chrome, Safari, Opera */
-	transform: translate($x,$y);
-}
-
-@mixin easeOut {
-	transition: all .2s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-@mixin input() {
-    font-size: 14px;
-	font-weight: 500;
-	letter-spacing: 0;
-	color: $dark-grey;
-	border: none;
-	border-bottom: solid 1px $disabled;
-	margin-top: 12px;
-  background-color: transparent;
-	@media (max-width: $breakpoint-tablet) {
-		font-size: 16px;
-	}
-}
-
-@mixin label() {
-    font-size: 12px;
-	font-weight: 500;
-	letter-spacing: 0;
-	color: #5a5959;
-}
-
-@mixin input-feedback() {
-    font-size: 14px;
-	color: #ff5705;
-	position: absolute;
-	bottom: -20px;
-}
-
-@mixin button($background) {
-	@include flex-box();
-	border-radius: 2px;
-	cursor: pointer;
-	justify-content: center;
-	align-items: center;
-	height: 34px;
-	border-radius: 2px;
-	background-color: $background;
-	font-size: 14px;
-	font-weight: 500;
-	text-transform: uppercase;
-	border: none;
-	transition: all 0.1s ease-in;
-	&:hover {
-		background-color: #6fe4c5;
-	}
-}
+/*-------Helpers----------*/
 
 @import 'elements';
 @import 'common';
 
 
+/*---------Components Styles--------*/
+
 @import 'components/App';
 @import 'components/BuySell';
 @import 'components/CalculatorModal';
-@import 'components/CommunitiesList';
+@import 'components/Communities';
 @import 'components/Modal';
 @import 'components/Root';
 @import 'components/TopNav';
@@ -130,11 +26,13 @@ $breakpoint-desktop: 1200px;
 
 @import 'components/oven/SimpleExchangeModal';
 
+@import 'components/issuance/IssuanceBtn';
 @import 'components/issuance/IssuanceWizard';
 @import 'components/issuance/DetailsStep';
 @import 'components/issuance/NameStep';
 @import 'components/issuance/SummaryStep';
 @import 'components/issuance/SymbolStep';
+@import 'components/issuance/IssuedPopup';
 
 @import 'components/dashboard/Dashboard';
 @import 'components/dashboard/EntityDirectory';
@@ -149,226 +47,6 @@ $breakpoint-desktop: 1200px;
 	display: none;
 }
 
-.list-item {
-	height: auto;
-	width: 400px;
-	display: inline-block;
-	margin-bottom: 15px;
-	margin-right: 7px;
-	margin-left: 7px;
-
-	.coin-footer-close {
-		display: none;
-		@media (max-width: $breakpoint-mobile) {
-			padding-top: 15px;
-			text-align: center;
-			color: #b6b5d8;
-			font-size: 13px;
-			.fa {
-				margin-right: 5px;
-			}
-			&:hover {
-				cursor: pointer;
-				color: $color-step-field;
-			}
-		}
-	}
-
-	.coin-wrapper {
-		box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2);
-		border-radius: 10px;
-		box-sizing: content-box;
-		overflow: hidden;
-		@media (max-width: $breakpoint-tablet) {
-			height: auto !important;
-		}
-
-		.coin-details {
-			position: relative;
-		}
-
-		.coin-name {
-			font-size: 15px;
-			color: $color-step-text;
-			text-align: center;
-      font-weight: 400;
-			text-transform: capitalize;
-			margin-bottom: 7px;
-			text-align: left;
-		}
-
-		.coin-total {
-			font-size: 10px;
-			font-weight: bold;
-			text-transform: uppercase;
-			color: $color-step;
-			display: flex;
-			padding-bottom: 13px;
-			border-bottom: 1px solid rgba(255, 255, 255, 0.19);
-			.total-text {
-				margin-left: 5px;
-				font-weight: bold;
-				width: 80px;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				display: block;
-			}
-			@media (max-width: $breakpoint-mobile) {
-				border-bottom: none;
-				padding-bottom: 0;
-			}
-		}
-
-		.coin-header {
-			margin-top:20px;
-			background-image: linear-gradient(340deg, #262451 , #343165);
-			display: flex;
-			padding: 30px 27px;
-			h1 {
-				font-size: 18px;
-				margin-bottom: 2px;
-				text-transform: uppercase;
-				font-weight: bold;
-			}
-			.logo {
-				width: 70px;
-				height: 70px;
-			}
-			.price-wrapper {
-				font-size: 14px;
-				h2 {
-					-webkit-margin-before: 0;
-						-webkit-margin-after: 0;
-					font-size: 14px;
-				}
-			}
-			@media (max-width: $breakpoint-mobile) {
-				margin-top: 0;
-				padding: 15px;
-			}
-		}
-
-		&.open {
-			height: 100vh !important;
-			.coin-header {
-				padding: 32px;
-			}
-		}
-
-		.coin-footer {
-			background-image: linear-gradient(to bottom, #1a193f, #282654);
-			padding: 16px 20px;
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
-			min-height: 90px;
-
-			.total-content {
-				font-size: 10px;
-				font-weight: bold;
-				text-transform: uppercase;
-				color: $color-step;
-				padding-bottom: 10px;
-			}
-
-			.total-supply {
-				font-size: 19px;
-				font-weight: 500;
-				text-align: center;
-				color: $color-step-field;
-			}
-
-			.coin-content {
-				display: flex;
-				justify-content: space-between;
-				flex-direction: column;
-				align-items: flex-start;
-			}
-
-			.coin-reverse {
-				font-weight: 500;
-				font-size: 30px;
-				color: $color-step-field;
-			}
-
-			.coin-currency-type {
-				color: $color-step;
-				font-size: 10px;
-				font-weight: bold;
-				text-transform: uppercase;
-				margin-right: 10px;
-			}
-
-			.coin-currency {
-				color: $color-step-text;
-				font-size: 10px;
-				font-weight: bold;
-				text-transform: uppercase;
-			}
-			@media (max-width: $breakpoint-tablet) {
-				min-height: auto;
-			}
-			@media (max-width: $breakpoint-mobile) {
-				display: none;
-			}
-		}
-
-		&.coin-show-footer {
-			@media (max-width: $breakpoint-mobile) {
-				& + .coin-footer-close {
-					display: block;
-				}
-				.coin-header {
-					padding: 15px 15px 25px 15px;
-				}
-				.coin-status {
-					position: relative;
-					margin-top: 15px;
-					&-text {
-						display: inline-block;
-					}
-				}
-				.coin-logo {
-					height: 80px;
-					.logo-img {
-						width: 80px;
-						height: 80px;
-					}
-					.symbol-text {
-						font-size: 14px;
-					}
-				}
-				.coin-total {
-					border-bottom: 1px solid rgba(255, 255, 255, 0.19);
-					padding-bottom: 15px;
-				}
-				.btn-calculator {
-					display: block;
-					top: auto;
-					bottom: -10px;
-				}
-				.coin-footer {
-					display: flex;
-				}
-			}
-		}
-	}
-	@media (max-width: $breakpoint-tablet) {
-		display: block;
-		margin-right: 0;
-	}
-	@media (max-width: $breakpoint-mobile) {
-		width: 100%;
-		&:not(:nth-child(3n)) {
-			margin-right: 0;
-		}
-	}
-}
-
-
-
 .loader {
 	height: 10px;
 	width: 30px;
@@ -382,8 +60,6 @@ $breakpoint-desktop: 1200px;
     	left: 30px;
 	}
 }
-
-
 
  @keyframes scaleIn {
 	from {

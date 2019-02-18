@@ -1,71 +1,5 @@
-.prev-button {
-	left: 20px;
-	@media (max-width: $breakpoint-mobile) {
-		left: 15px;
-		.btn-text {
-			display: none;
-		}
-	}
-}
-
-.quit-button {
-	right: 45px;
-	@media (max-width: $breakpoint-mobile) {
-		right: 20px;
-		.btn-text {
-			display: none;
-		}
-	}
-}
-
-.ctrl-btn {
-	position: fixed;
-	top: 40px;
-	background: none;
-	color: $color-symbol-field-brdr;
-	border: none;
-	text-transform: uppercase;
-	font-size: 11px;
-	text-align: center;
-
-	.ctrl-icon {
-		font-size: 28px;
-		display: block;
-		margin-bottom: 3px;
-	}
-	&:focus,
-	&:active,
-	&:focus:active {
-		outline: none;
-	}
-
-  @media (min-width: $breakpoint-mobile) {
-  	&:hover {
-  		cursor: pointer;
-  		.ctrl-icon {
-  			color: $color-step-field;
-  		}
-  	}
-  }
-
-	@media (max-width: $breakpoint-mobile) {
-		top: 40px;
-		.ctrl-icon {
-			font-size: 18px;
-		}
-	}
-}
-
 .issuance {
 	&-form-wrapper {
-		position: absolute;
-	  top: 0;
-	  width: auto;
-	  bottom: 0;
-	  right: 0;
-		left: 0;
-	  z-index: 50;
-		overflow: auto;
 		background-image: $color-issuance-bg;
 	}
 	&-container {
@@ -107,9 +41,8 @@
 			top: -25px;
 			margin-top: -1px;
 			left: 42px;
-			background-color: $color-step-line;
+			background-color: $color-author;
 			box-shadow: 0 0 9px 0 rgba(192, 149, 255, 0.23);
-			border: 1px solid $color-step-border;
 			@media (max-width: $breakpoint-mobile) {
 				top: -19px;
 				width: 70px;
@@ -125,9 +58,8 @@
 		border-radius: 50%;
 		width: 17px;
 	  height: 17px;
-	  box-shadow: 0 0 9px 0 rgba(192, 149, 255, 0.35);
-	  background-color: $color-step-bg;
-	  border: 2px solid $color-step-border;
+	  background-color: $color-issuance-bg;
+	  border: 2px solid $color-author;
 
 		@media (max-width: $breakpoint-mobile) {
 			width: 13px;
@@ -146,10 +78,10 @@
 		  border: solid 2px $color-active-step;
 			background-color: $color-active-step;
 			box-shadow: 0 0 6px 0 $color-active-step,
-	            		inset $color-step-bg 0 0 1px 4px,
+	            		inset $color-issuance-bg 0 0 1px 4px,
 		}
 		&:before {
-			background-color: $color-step-line;
+			background-color: $color-author;
 		}
 		& + .done-step,
 		& + .done-step + .done-step {
@@ -161,7 +93,7 @@
 	&.done-step {
 		.done-check {
 			position: absolute;
-			color: $color-step-bg;
+			color: $color-step-text;
 			top: -30px;
 	    left: 50%;
 	    margin-left: -4px;
@@ -181,24 +113,23 @@
 	}
 	&s-container {
 		text-align: center;
-		background-image: linear-gradient(to bottom, rgba(60, 45, 119, 0.25), $color-issuance);
-		padding-top: 240px;
-		padding-bottom: 50px;
+		background-image: linear-gradient(to top, #162a39, #25435a);
+		padding-top: 110px;
+		height: 180px;
 		@media (max-width: $breakpoint-mobile) {
-			padding-top: 200px;
 			&.step-with-sticky {
 				padding-bottom: 68px;
 			}
 		}
 		.steps-indicator {
 			&.step-sticky {
-				background-image: linear-gradient(to bottom, #342962, #1c1442);
+				background-image: linear-gradient(to top, #162a39, #25435a);
   			box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.37);
 				position: fixed;
 				top: 0;
 				left: 0;
 				right: 0;
-				padding-top: 31px;
+				padding-top: 50px;
 				padding-bottom: 7px;
 				z-index: 50;
 				.step {
@@ -213,7 +144,7 @@
 					}
 					&.active-step {
 						&::after {
-							background-color: #271d53;
+							background-color: $color-home-banner-bg;
 							box-shadow: 0 0 3px 0 #c095ff;
 						}
 					}
@@ -222,9 +153,8 @@
 		}
 	}
 	&-content {
-		background-image: linear-gradient(352deg, $color-issuance, #2d235e);
-  	box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.49);
-		min-height: calc(100vh - 310px);
+		background: $color-step-text;
+		min-height: calc(100vh - 180px);
 		padding-top: 50px;
     padding-bottom: 50px;
 		@media (max-width: $breakpoint-mobile) {
@@ -237,7 +167,7 @@
 			width: 180px;
 		}
 		&-community {
-			width: 300px;
+			width: 380px;
 			margin: 0 auto;
 			text-align: center;
 			padding-top: 90px;
@@ -250,7 +180,7 @@
   		font-weight: bold;
 			line-height: 1.29;
 			text-transform: capitalize;
-			color: $color-step-text;
+			color: $color-step-title;
 			margin-bottom: 20px;
 			@media (max-width: $breakpoint-mobile) {
 				width: 90%;
@@ -270,19 +200,23 @@
 				font-size: 106px;
   			font-weight: bold;
 				text-align: center;
-  			color: $color-step-field;
+  			color: $color-orange;
 				padding: 10px;
 				margin-bottom: 40px;
 				text-transform: uppercase;
 				position: relative;
-				background: linear-gradient(to right, $color-symbol-field-brdr 50%, rgba(255, 255, 255, 0) 0%),
-										linear-gradient($color-symbol-field-brdr 50%, rgba(255, 255, 255, 0) 0%),
-										linear-gradient(to right, $color-symbol-field-brdr 50%, rgba(255, 255, 255, 0) 0%),
-										linear-gradient($color-symbol-field-brdr 50%, rgba(255, 255, 255, 0) 0%);
-			  background-position: top, right, bottom, left;
-			  background-repeat: repeat-x, repeat-y;
-			  background-size: 15px 1px, 1px 15px;
-				height: 145px;
+				height: 160px;
+				border: 1px solid #0a7586;
+				box-shadow: 0 0 6px 0 rgba(10, 117, 134, 0.44);
+				&::after {
+					content: '';
+					position: absolute;
+					top: 15px;
+			    right: 20px;
+			    left: 20px;
+			    bottom: 15px;
+					background-color: rgba(147, 197, 255, 0.11);
+				}
 				@media (max-width: $breakpoint-mobile) {
 					height: auto;
 				}
@@ -334,7 +268,7 @@
 				display: flex;
 				flex-direction: row;
 				align-items: center;
-				border-bottom: solid 2px rgba(255, 255, 255, 0.08);
+				border-bottom: solid 2px $color-brdr-issuance;
 				padding-bottom: 45px;
 				margin-bottom: 45px;
 				&.total-block {
@@ -352,7 +286,7 @@
 			&-title {
 				font-size: 15px;
 				font-weight: bold;
-				color: #d2d0da;
+				color: $color-text-gray;
 				min-width: 230px;
 				@media (max-width: $breakpoint-tablet) {
 					margin-bottom: 20px;
@@ -361,14 +295,13 @@
 					font-weight: bold;
 					line-height: 1.29;
 					text-transform: capitalize;
-					color: $color-step-text;
+					color: $color-text-gray;
 				}
 			}
 			&-type {
 				border-radius: 5px;
-			  box-shadow: 0 0 14px 0 $color-shadow;
-			  background-color: rgba(29, 21, 65, 0.4);
-			  border: solid 2px #42367f;
+			  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+				border: 2px solid rgba(226, 226, 226, 0.49);
 				height: 145px;
 				width: 160px;
 				display: flex;
@@ -378,7 +311,7 @@
 				margin-right: 20px;
 				font-size: 11px;
   			font-weight: 500;
-				color: $color-symbol-field-brdr;
+				color: $color-text-gray;
 				justify-content: center;
 				text-transform: uppercase;
 				position: relative;
@@ -386,13 +319,11 @@
 					margin-right: 5px;
 				}
 				&:hover {
-					box-shadow: 0 0 14px 0 $color-shadow;
-				  background-color: #302559;
-				  border: solid 2px #504391;
+					box-shadow: 0 0 14px 0 $color-orange;
 					cursor: pointer;
 				}
 				&.chosen-type {
-					border: solid 2px $color-step-field;
+					border: solid 2px $color-orange;
 				}
 				.type-img {
 					margin-bottom: 15px;
@@ -401,14 +332,7 @@
 						margin-bottom: 7px;
 					}
 				}
-				.logo-img {
-					width: 100px;
-					height: 100px;
-					@media (max-width: $breakpoint-mobile) {
-						width: 58px;
-						height: 58px;
-					}
-				}
+
 				.symbol-text {
 					font-size: 19px;
   				font-weight: bold;
@@ -419,6 +343,7 @@
 					margin-top: -10px;
 					left: 0;
     			right: 0;
+					z-index: 3;
 					@media (max-width: $breakpoint-mobile) {
 						font-size: 10px;
 						margin-top: -6px;
@@ -430,7 +355,7 @@
 					font-size: 19px;
   				font-weight: 500;
 					text-align: center;
-  				color: $color-step-field;
+  				color: $color-orange;
 				}
 				@media (max-width: $breakpoint-mobile) {
 					height: 97px;
@@ -563,14 +488,6 @@
 					height: 85px;
 					top: -35px;
 				}
-				.logo-img {
-					width: 80px;
-					height: 80px;
-					@media (max-width: $breakpoint-mobile) {
-						width: 65px;
-						height: 65px;
-					}
-				}
 				.symbol-text {
 					font-size: 16px;
   				font-weight: bold;
@@ -589,10 +506,12 @@
 		}
 	}
 	&-symbol-title {
-		font-size: 25px;
-		color: $color-active-step;
+		font-size: 21px;
+		color: $color-step;
 		text-transform: capitalize;
 		margin-bottom: 20px;
+		line-height: 1.29;
+		font-weight: normal;
 		@media (max-width: $breakpoint-mobile) {
 			font-size: 16px;
 			margin-bottom: 5px;
@@ -608,7 +527,7 @@
 			background-color: transparent;
 			font-size: 106px;
 			font-weight: bold;
-			color: $color-step-field;
+			color: $color-orange;
 			text-transform: uppercase;
 			box-shadow: none;
 			outline: none;
@@ -640,13 +559,13 @@
 	}
 	&-community-name {
 		input {
-			box-shadow: 0 0 6px 0 $color-step-field;
-  		background-color: #1e1545;
+			box-shadow: 0 0 6px 0 rgba(10, 117, 134, 0.44);
+  		background-color: $color-step-text;
   		border: solid 1px $color-step-field;
 			border-radius: 10px;
 			padding: 8px 16px;
 			font-size: 13px;
-			color: $color-step-text;
+			color: $color-step-title;
 			line-height: 1.92;
 			width: 220px;
 			&::placeholder {

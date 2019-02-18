@@ -1,27 +1,31 @@
 .next {
 	&-button {
-		background-color: $color-step-field;
- 		box-shadow: 0 0 15px 0 $color-shadow-btn, 0 0 4px 0 rgba(26, 19, 60, 0.92);
+		background-color: $color-orange;
+ 		box-shadow: 0 0 8px 0 $color-orange;
 		padding: 10px 13px;
 		margin-top: 40px;
 		border: none;
-		color: $color-issuance;
+		color: $color-step-text;
 		border: none;
 		border-radius: 50%;
 		font-size: 22px;
 		&:disabled,
 		&[disabled] {
-			background-color: #231b4d !important;
-	    box-shadow: 0 0 15px 0 $color-shadow-btn, 0 0 4px 0 rgba(21, 15, 48, 0.92);
+			background-color: lighten($color-orange, 20%) !important;
+	    box-shadow: 0 0 8px 0 $color-orange;
 	    margin-top: 40px;
 	    padding: 10px 13px;
-	    color: rgba(95, 221, 187, 0.36);
+	    color: $color-step-text;
 			cursor: not-allowed;
 		}
 		&:focus,
 		&:active,
 		&:focus:active {
 			outline: none;
+		}
+		&:hover {
+			background-color: darken($color-orange, 10%);
+			cursor: pointer;
 		}
 	}
 }

@@ -163,7 +163,7 @@ class IssuanceWizard extends Component {
 
   render () {
     const steps = ['Name', 'Symbol', 'Details', 'Summary']
-    const stepIndicatorInset = 35
+    const stepIndicatorInset = 55
     const issuanceControlClassStyle = classNames({
       'issuance-control': true,
       'issuance-control-sticky': (this.state.scrollPosition > this.state.stepPosition - stepIndicatorInset)

@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import classNames from 'classnames'
-import Online from 'images/Online.svg'
-import Geographical from 'images/Geographical.svg'
+import Online from 'images/online.png'
+import Geographical from 'images/geographical.png'
 import PropTypes from 'prop-types'
-import CoinIcon1 from 'images/Coin1.svg'
-import CoinIcon2 from 'images/Coin2.svg'
-import CoinIcon3 from 'images/Coin3.svg'
 import TextInput from 'components/elements/TextInput'
 
 export default class DetailsStep extends Component {
@@ -66,19 +63,15 @@ export default class DetailsStep extends Component {
 
   renderLogo (communityLogo, setCommunityLogo, communitySymbol) {
     let logoArr = []
-    const communityLogos = {
-      CoinIcon1: CoinIcon1,
-      CoinIcon2: CoinIcon2,
-      CoinIcon3: CoinIcon3
-    }
-    Object.keys(communityLogos).forEach((key) => {
+    const communityLogos = ['CoinIcon1.svg', 'CoinIcon2.svg', 'CoinIcon3.svg']
+    communityLogos.forEach((logo, key) => {
       const totalSupplyClass = classNames({
         'step-content-details-type': true,
-        'chosen-type': communityLogo && communityLogo.icon ? communityLogo.icon === communityLogos[key] : false
+        'chosen-type': communityLogo && communityLogo.icon ? communityLogo.icon === logo : false
       })
       logoArr.push(
-        <div className={totalSupplyClass} key={key} onClick={() => setCommunityLogo({ name: key + '.svg', icon: communityLogos[key] })}>
-          <img src={communityLogos[key]} className='logo-img' />
+        <div className={totalSupplyClass} key={key} onClick={() => setCommunityLogo({ name: logo, icon: communityLogos[key] })}>
+          <div className={`logo-img ${logo}`} />
           <span className='symbol-text'>{communitySymbol}</span>
         </div>
       )

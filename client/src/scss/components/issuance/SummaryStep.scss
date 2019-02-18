@@ -103,17 +103,9 @@
 .step-content-summary {
 	.coin-wrapper {
 		.coin-logo {
-			@media (max-width: $breakpoint-mobile) {
-				width: 70px;
-	  		height: 70px;
-				.logo-img {
-					width: 70px;
-		  		height: 70px;
-				}
-			}
 			.symbol-text {
 				@media (max-width: $breakpoint-mobile) {
-					font-size: 13px;
+					font-size: 10px;
 					font-weight: bold;
 					text-align: center;
 					color: $color-step-text;

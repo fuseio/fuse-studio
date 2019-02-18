@@ -99,12 +99,12 @@ class UserDatatModal extends Component {
             <input
               className='checkbox-input'
               type='checkbox'
-              id='email'
-              name='email'
+              id='subscribe'
+              name='subscribe'
               onChange={this.setSubscribe}
               checked={this.state.subscribe}
             />
-            <label className='checkbox-label' htmlFor='email'>
+            <label className='checkbox-label' htmlFor='subscribe'>
               I agree to receive fuse emails
             </label>
           </div>

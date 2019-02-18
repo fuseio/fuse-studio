@@ -63,13 +63,13 @@ export default class SymbolStep extends Component {
               className='btn-download edit-symbol'
               onClick={() => this.setState({showCustomSymbol: !this.state.showCustomSymbol})}
             >
-              <FontAwesome name='edit' /> Edit
+              Edit
             </button>
             : <button
               className='btn-download edit-symbol'
               onClick={this.setCancelEditing}
             >
-              <FontAwesome name='times-circle' /> Cancel
+              Cancel
             </button>
           }
         </div>

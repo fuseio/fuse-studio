@@ -217,9 +217,6 @@ class Dashboard extends Component {
       />,
       <div key={1} className='dashboard-content'>
         <div className='dashboard-header'>
-          <div className='dashboard-logo'>
-            <a href='https://cln.network/' target='_blank'><img src={ClnIcon} /></a>
-          </div>
           <button
             className='quit-button ctrl-btn'
             onClick={this.showHomePage}

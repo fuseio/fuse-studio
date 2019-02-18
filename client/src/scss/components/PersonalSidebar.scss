@@ -6,7 +6,7 @@
     right: 0;
     bottom:0;
     box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.15);
-    background: #343166;
+    background:  #f7f8fc;
     min-height: 493px;
     overflow: auto;
 
@@ -48,7 +48,7 @@
     &-top {
       padding: 20px 40px;
       box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.15);
-      background-image: linear-gradient(33deg, #1c1442, #2a2057);
+      background: $color-home-banner-bg;
       text-align: center;
       @media (max-width: $breakpoint-mobile) {
         padding: 15px 40px;
@@ -79,22 +79,23 @@
     }
     &-search {
       display: flex;
-      background-color: #261c51;
+      background-color: $color-step-text;
+      box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.2);
       input {
-        padding: 15px 20px;
-        background-color: #261c51;
-        color: $color-symbol-field-brdr;
+        padding: 15px 0 15px 20px;
+        background-color: $color-step-text;
+        color: $color-bg-gray;
         flex: 1.7;
         border: none;
         &::placeholder {
-  				color: $color-symbol-field-brdr;
+  				color: $color-bg-gray;
   			}
       }
       .search-btn {
-        background-color: #261c51;
+        background-color: $color-step-text;
         border:none;
         padding: 6px 12px;
-        color: $color-symbol-field-brdr;
+        color: $color-orange;
         outline: none;
         border: none;
         flex: 0.3;
@@ -115,7 +116,7 @@
     &-title {
       font-size: 10px;
       font-weight: bold;
-      color: #b6b5d8;
+      color: $color-filter-text;
       margin-bottom: 15px;
       text-transform: uppercase;
     }
@@ -163,8 +164,9 @@
     align-items: center;
     position: relative;
     border-radius: 5px;
-    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.36);
-    background-image: linear-gradient(335deg, #262451, #343166);
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.2);
+    background: $color-step-text;
+    margin-bottom: 15px;
 
     &-content {
       &-balance {
@@ -188,14 +190,27 @@
         width: 50px;
         height: 50px;
         margin-top: 0;
+        &:before {
+          width: 40px;
+          height: 20px;
+          border-top-left-radius: 40px;
+          border-top-right-radius: 40px;
+          top: 7px;
+          left: -3px;
+        }
+        &:after {
+          width: 40px;
+          height: 20px;
+          bottom: 8px;
+          right: -2px;
+          border-bottom-left-radius: 40px;
+          border-bottom-right-radius: 40px;
+        }
       }
       .symbol-text {
         font-size: 9px;
         margin-top: -6px;
       }
-    }
-    &:not(:last-child) {
-      margin-bottom: 15px;
     }
   }
 }
@@ -204,7 +219,7 @@
 	position: absolute;
 	top: 30px;
   right: 15px;
-	background-color: $color-pink;
+	background-color: $color-orange;
 	border-radius: 4px;
 	width: 23px;
 	height: 22px;
@@ -219,7 +234,7 @@
 		outline: none;
 	}
 	&:hover {
-		background-color: lighten($color-pink, 10%);
+		background-color: darken($color-orange, 10%);
 		cursor: pointer;
 	}
 }
@@ -228,8 +243,6 @@
 .profile-icon-big {
   width: 70px;
   height: 70px;
-  box-shadow: 0 -4px 18px 0 rgba(0, 0, 0, 0.12);
-  background-image: linear-gradient(352deg, #262451, #343166);
   margin: 0 auto;
   border-radius: 50%;
   line-height: 85px;

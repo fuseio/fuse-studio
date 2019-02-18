@@ -1,0 +1,55 @@
+.prev-button {
+	left: 20px;
+	@media (max-width: $breakpoint-mobile) {
+		left: 15px;
+		.btn-text {
+			display: none;
+		}
+	}
+}
+
+.quit-button {
+	right: 45px;
+	@media (max-width: $breakpoint-mobile) {
+		right: 20px;
+		.btn-text {
+			display: none;
+		}
+	}
+}
+
+.ctrl-btn {
+	position: fixed;
+	top: 40px;
+	background: none;
+	color: $color-btn-control;
+	border: none;
+	text-transform: uppercase;
+	font-size: 11px;
+	text-align: center;
+
+	.ctrl-icon {
+		font-size: 28px;
+		display: block;
+		margin-bottom: 3px;
+	}
+	&:focus,
+	&:active,
+	&:focus:active {
+		outline: none;
+	}
+
+	&:hover {
+		cursor: pointer;
+		.ctrl-icon {
+			color: $color-orange;
+		}
+	}
+
+	@media (max-width: $breakpoint-mobile) {
+		top: 40px;
+		.ctrl-icon {
+			font-size: 18px;
+		}
+	}
+}

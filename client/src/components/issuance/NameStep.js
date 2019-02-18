@@ -13,7 +13,6 @@ const NameStep = ({communityName, handleChangeCommunityName, setNextStep}) => {
         placeholder='Type your community name...'
         value={communityName}
         maxLength='30'
-        autoFocus
         onChange={handleChangeCommunityName}
       />
       <button

@@ -59,7 +59,7 @@ class LoginModal extends React.Component {
       modalContent = <div className='modal-content-wrapper'>
         <img className='lock-icon' src={LockIcon} />
         <h4>Your MetaMask is locked</h4>
-        <p>Please unlock your MetaMask extension in order to use the dashboard.</p>
+        <p>Please unlock your MetaMask extension in order to interact with the network.</p>
       </div>
     }
 

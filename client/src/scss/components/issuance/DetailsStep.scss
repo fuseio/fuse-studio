@@ -1,12 +1,12 @@
 .other-details {
 	font-size: 15px;
 	text-align: center;
-	color: $color-step-field;
+	color: $color-orange;
 	line-height: 50px;
 	font-weight: 500;
 	text-decoration: underline;
 	&:hover {
 		cursor: pointer;
-		color: $color-hover-details;
+		color: darken($color-orange, 10%);
 	}
 }

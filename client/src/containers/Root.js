@@ -21,38 +21,36 @@ export default class Root extends Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <div>
+          <React.Fragment>
             <Web3 />
-            <div style={{height: '100%'}}>
-              <Layout>
-                <Route path='/' component={withNetwork(CLNFetcher)} />
-                <Route exact path='/' component={withTracker(withNetwork(Oven))} />
+            <Layout>
+              <Route path='/' component={withNetwork(CLNFetcher)} />
+              <Route exact path='/' component={withTracker(withNetwork(Oven))} />
 
-                <Route
-                  path='/view/issuance'
-                  component={withTracker(withNetwork(IssuanceWizard))}
-                />
-              </Layout>
               <Route
-                path='/view/dashboard/:address'
-                component={withTracker(withNetwork(Dashboard))}
+                path='/view/issuance'
+                component={withTracker(withNetwork(IssuanceWizard))}
               />
-              <Route
-                path='/view/directory/:address'
-                component={withTracker(withNetwork(EntityDirectory))}
-              />
-              <Route
-                exact
-                path='/view/directory/:address/:hash'
-                component={withTracker(withNetwork(EntityProfile))}
-              />
-              <Route
-                exact
-                path='/view/appstore'
-                component={withTracker(withNetwork(AppStore))}
-              />
-            </div>
-          </div>
+            </Layout>
+            <Route
+              path='/view/dashboard/:address'
+              component={withTracker(withNetwork(Dashboard))}
+            />
+            <Route
+              path='/view/directory/:address'
+              component={withTracker(withNetwork(EntityDirectory))}
+            />
+            <Route
+              exact
+              path='/view/directory/:address/:hash'
+              component={withTracker(withNetwork(EntityProfile))}
+            />
+            <Route
+              exact
+              path='/view/appstore'
+              component={withTracker(withNetwork(AppStore))}
+            />
+          </React.Fragment>
         </ConnectedRouter>
       </Provider>)
   }

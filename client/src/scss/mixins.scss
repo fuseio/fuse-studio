@@ -1,0 +1,68 @@
+@mixin flex-box() {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+
+@mixin flex-direction($direction) {
+	-webkit-flex-direction: $direction;
+	-ms-flex-direction: $direction;
+	flex-direction: $direction;
+}
+
+@mixin  transformTranslate($x,$y){
+	-ms-transform: translate($x,$y); /* IE 9 */
+	-webkit-transform: translate($x,$y); /* Chrome, Safari, Opera */
+	transform: translate($x,$y);
+}
+
+@mixin easeOut {
+	transition: all .2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@mixin input() {
+    font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 0;
+	color: $dark-grey;
+	border: none;
+	border-bottom: solid 1px $disabled;
+	margin-top: 12px;
+  background-color: transparent;
+	@media (max-width: $breakpoint-tablet) {
+		font-size: 16px;
+	}
+}
+
+@mixin label() {
+    font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0;
+	color: #5a5959;
+}
+
+@mixin input-feedback() {
+    font-size: 14px;
+	color: #ff5705;
+	position: absolute;
+	bottom: -20px;
+}
+
+@mixin button($background) {
+	@include flex-box();
+	border-radius: 2px;
+	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+	height: 34px;
+	border-radius: 2px;
+	background-color: $background;
+	font-size: 14px;
+	font-weight: 500;
+	text-transform: uppercase;
+	border: none;
+	transition: all 0.1s ease-in;
+	&:hover {
+		background-color: #6fe4c5;
+	}
+}
