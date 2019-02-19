@@ -1,4 +1,5 @@
 const client = require('@services/sendgrid')
+const web3 = require('@services/web3')
 const config = require('config')
 
 const createMailRequest = ({to, from, templateId, templateData}) => {
@@ -24,16 +25,18 @@ const createMailRequest = ({to, from, templateId, templateData}) => {
   }
 }
 
-const sendWelcomeMail = (user) => {
+const sendWelcomeMail = (user, token) => {
   const from = config.get('mail.supportAddress')
   const to = user.email
   const templateData = {
-    name: user.firstName
+    name: token.name,
+    symbol: token.symbol,
+    totalSupply: web3.utils.fromWei(token.totalSupply)
   }
   const templateId = config.get('mail.sendgrid.templates.welcome')
   const request = createMailRequest({to, from, templateId, templateData})
   client.request(request).then(() => {
-    console.log(`Sent welcoming mail to address ${to}`)
+    console.log(`Sent welcoming mail to address ${to}, with template data ${JSON.stringify(templateData)}`)
   })
 }
 
