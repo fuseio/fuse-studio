@@ -16,6 +16,13 @@ module.exports = {
       }
     }
   },
+  aws: {
+    secrets: {
+      manager: {
+        region: 'eu-west-1'
+      }
+    }
+  },
   ipfsProxy: {
     urlBase: 'http://localhost:4000/api'
   },
@@ -26,18 +33,24 @@ module.exports = {
     websocketProvider: defer(function () {
       return `wss://${this.web3.network}.infura.io/ws/v3/${this.web3.apiKey}`
     }),
+    fuseProvider: 'http://rpc.fuse.io',
     network: 'ropsten',
     pageSize: 1000,
     addresses: {
       ropsten: {
         ColuLocalNetwork: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
         CurrencyFactory: '0xA1F05144f9d3298a702c8EEE3ca360bc87d05207',
-        TokenFactory: '0x824E01Cf7013f459Aa010D73627B006a8740b183'
+        TokenFactory: '0x824E01Cf7013f459Aa010D73627B006a8740b183',
+        ForeignBridgeFactory: '0xF0cEB3b89c66c27Fa21Cb66690Ea8933E11d8685'
       },
       mainnet: {
         ColuLocalNetwork: '0x4162178B78D6985480A308B2190EE5517460406D',
         CurrencyFactory: '0xE3e3bed21fC39d0915f66509eD0AAc05dB6d6454',
         TokenFactory: '0xac051e086FD2046FC75A53D38088B4DD6e00E25b'
+      },
+      fuse: {
+        HomeBridgeFactory: '0x2758B3c32f51Fbd9EE4c72cf36e583a3BFaDC396',
+        BridgeMapper: '0x0575cb8485898A79549b6407DEc95d1C77c3eF63'
       }
     }
   },

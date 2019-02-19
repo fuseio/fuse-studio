@@ -37,10 +37,12 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@babel/runtime": "^7.3.1",
     "@sendgrid/client": "^6.3.0",
     "@sendgrid/mail": "^6.3.1",
     "agenda": "^2.0.2",
     "async": "^2.6.1",
+    "aws-sdk": "^2.405.0",
     "body-parser": "^1.18.3",
     "config": "^1.30.0",
     "cors": "2.7.1",
@@ -50,7 +52,6 @@
     "express-async-errors": "^2.1.2",
     "express-jwt": "^5.3.1",
     "express-paginate": "^1.0.0",
-    "ganache-cli": "^6.1.8",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "methods": "1.1.2",
@@ -62,7 +63,7 @@
     "request": "^2.88.0",
     "truffle-contract": "^4.0.0-beta.1",
     "validator": "^10.10.0",
-    "web3": "^1.0.0-beta.35"
+    "web3": "^1.0.0-beta.37"
   },
   "devDependencies": {
     "nodemon": "^1.18.3",

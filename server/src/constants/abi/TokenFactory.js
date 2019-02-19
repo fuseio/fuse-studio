@@ -48,5 +48,32 @@ module.exports = [
     'stateMutability': 'nonpayable',
     'type': 'function',
     'signature': '0x322caed1'
+  },
+  {
+    'constant': false,
+    'inputs': [
+      {
+        'name': 'name',
+        'type': 'string'
+      },
+      {
+        'name': 'symbol',
+        'type': 'string'
+      },
+      {
+        'name': 'initialSupply',
+        'type': 'uint256'
+      },
+      {
+        'name': 'tokenURI',
+        'type': 'string'
+      }
+    ],
+    'name': 'createToken2',
+    'outputs': [],
+    'payable': false,
+    'stateMutability': 'nonpayable',
+    'type': 'function',
+    'signature': '0x0c3f780b'
   }
 ]

@@ -4,6 +4,11 @@
     "tokenExpiresIn": "COMMUNITY_TOKEN_EXPIRES_IN",
     "port": "PORT"
   },
+  "aws": {
+    "secrets": {
+      "secretId": "COMMUNITY_AWS_SECRET_ID"
+    }
+  },
   "ipfsProxy": {
     "urlBase": "COMMUNITY_IPFS_PROXY_URL_BASE"
   },
@@ -35,5 +40,8 @@
   },
   "amazon": {
     "apiBase": "COMMUNITY_AMAZON_BUCKET_API"
+  },
+  "secrets": {
+    "privateKey": "COMMUNITY_SECRETS_PRIVATE_KEY"
   }
 }

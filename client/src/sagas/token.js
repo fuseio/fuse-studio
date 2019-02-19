@@ -52,6 +52,7 @@ function * fetchClnToken () {
 
 export function * createToken ({name, symbol, totalSupply, tokenURI}) {
   const addresses = yield select(getAddresses)
+
   const TokenFactoryContract = contract.getContract({abiName: 'TokenFactory',
     address: addresses.TokenFactory
   })
@@ -60,7 +61,7 @@ export function * createToken ({name, symbol, totalSupply, tokenURI}) {
   const createTokenPromise = TokenFactoryContract.methods.createToken(
     name,
     symbol,
-    totalSupply,
+    totalSupply.toFixed(),
     tokenURI
   ).send({
     from: accountAddress
