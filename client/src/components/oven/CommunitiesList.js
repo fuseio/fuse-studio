@@ -40,10 +40,10 @@ class CommunitiesList extends Component {
       <div className='communities-banner' style={{backgroundImage: `url(${Banner})`}}>
         <div className='communities-banner-content' >
           <h2 className='communities-banner-title'>
-            A cool headline about <span>fuse</span>
+            Launch your community on <span>Fuse</span>
           </h2>
           <p className='communities-banner-text'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sodales ut lacus pretium imperdiet. Aenean sit amet dolor et mi lobortis euismod.
+            Fuse is intended for community currencies operated by companies and entrepreneurs. It streamlines the process of launching your community currency and provide battle-tested and customizable tools to get it off the ground
           </p>
         </div>
       </div>
