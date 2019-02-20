@@ -143,7 +143,6 @@
 
 .wallet-container {
 	padding-top: 40px;
-	padding-bottom: 40px;
 }
 
 .checkbox {
@@ -177,8 +176,8 @@
 
   &-input {
     position: absolute;
-    top: -9999px;
-    left: -9999px;
+    top: 0;
+    left: 0;
     opacity: 0;
     display: none;
     &:checked + .checkbox-label::after {

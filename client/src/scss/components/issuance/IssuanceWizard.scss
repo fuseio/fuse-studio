@@ -158,7 +158,6 @@
 		padding-top: 50px;
     padding-bottom: 50px;
 		@media (max-width: $breakpoint-mobile) {
-			min-height: calc(100vh - 269px);
 			padding-top: 35px;
 			padding-bottom: 30px;
 		}
@@ -243,7 +242,6 @@
 			}
 			@media (max-width: $breakpoint-mobile) {
 				width: 100%;
-				padding-bottom: 40px;
 			}
 		}
 		&-details {

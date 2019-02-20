@@ -18,6 +18,30 @@
 	}
 }
 
+.back-btn {
+	background: none;
+	border: 1px solid transparent;
+	color: $color-orange;
+	margin-top: 20px;
+	text-transform: uppercase;
+	font-weight: bold;
+
+	.fa {
+		margin-right: 10px;
+	}
+
+	&:focus,
+	&:active,
+	&:focus:active {
+		outline: none;
+	}
+
+	&:hover {
+		cursor: pointer;
+		color: darken($color-orange, 10%);
+	}
+}
+
 .ctrl-btn {
 	position: fixed;
 	top: 40px;
@@ -43,6 +67,18 @@
 		cursor: pointer;
 		.ctrl-icon {
 			color: $color-orange;
+		}
+	}
+
+	&[disabled] {
+		background: none !important;
+		cursor: not-allowed;
+		color: darken($color-btn-control, 10%);
+		&:hover {
+			color: darken($color-btn-control, 10%) !important;
+			.ctrl-icon {
+				color: darken($color-btn-control, 10%) !important;
+			}
 		}
 	}
 

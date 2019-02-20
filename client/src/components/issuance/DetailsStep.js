@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import classNames from 'classnames'
+import FontAwesome from 'react-fontawesome'
 import Online from 'images/online.png'
 import Geographical from 'images/geographical.png'
 import PropTypes from 'prop-types'
@@ -79,6 +80,12 @@ export default class DetailsStep extends Component {
     return logoArr
   }
 
+  checkCondition (evt, condition) {
+    if (condition) {
+      evt.preventDefault()
+    }
+  }
+
   render () {
     return (
       <div className='step-content-details'>
@@ -111,6 +118,7 @@ export default class DetailsStep extends Component {
                   type='number'
                   placeholder='Type something...'
                   value={this.props.totalSupply}
+                  onKeyDown={(evt) => this.checkCondition(evt, (evt.key === 'e' || evt.key === '-'))}
                   onChange={(event) => this.props.setTotalSupply(event.target.value)}
                 />
                 <div className='other-details' onClick={() => this.setState({showOtherSupply: false})}>
@@ -134,6 +142,7 @@ export default class DetailsStep extends Component {
             onClick={this.props.setNextStep}
           >
             Continue
+            <FontAwesome className='symbol-icon' name='angle-right' />
           </button>
         </div>
       </div>

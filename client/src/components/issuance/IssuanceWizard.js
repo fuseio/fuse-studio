@@ -12,7 +12,8 @@ import SymbolStep from './SymbolStep'
 import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
 import {createTokenWithMetadata} from 'actions/token'
-import {getAddresses} from 'selectors/network'
+import { getAddresses } from 'selectors/network'
+import { PENDING } from 'actions/constants'
 import { USER_DATA_MODAL } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
 
@@ -190,6 +191,7 @@ class IssuanceWizard extends Component {
             <button
               className='quit-button ctrl-btn'
               onClick={this.setQuitIssuance}
+              disabled={this.props.transactionStatus === PENDING}
             >
               <FontAwesome className='ctrl-icon' name='times' />
               <span className='btn-text'>Quit</span>
@@ -204,7 +206,20 @@ class IssuanceWizard extends Component {
             </div>
           </div>
           <div className='step-content'>
-            {this.renderStepContent(this.state.activeStep, this.state.communityName, this.state.communityType, this.state.communityLogo)}
+            {this.renderStepContent(
+              this.state.activeStep,
+              this.state.communityName,
+              this.state.communityType,
+              this.state.communityLogo
+            )}
+            {this.state.activeStep > 0 && <div className='text-center'>
+              <button
+                className='back-btn'
+                onClick={this.setPreviousStep}
+              >
+                <FontAwesome className='next-icon' name='angle-left' /> Back
+              </button>
+            </div>}
           </div>
         </div>
       </div>

@@ -36,11 +36,11 @@ class EntityForm extends Component {
   })
 
   handleBusinessNameChange = (event) => this.setState({businessName: event.target.value})
-  handleBusinessAddressChange = (event) => this.setState({businessAddress: event.target.value})
+  handleBusinessAddressChange = (event, maxLength) => this.setState({businessAddress: event.target.value.slice(0, maxLength)})
   handleBusinessEmailChange = (event) => this.setState({businessEmail: event.target.value})
   handleBusinessPhoneChange = (event) => this.setState({businessPhone: event.target.value})
   handleBusinessLinkChange = (event) => this.setState({businessLink: event.target.value})
-  handleBusinessDescriptionChange = (event) => this.setState({businessDescription: event.target.value})
+  handleBusinessDescriptionChange = (event, maxLength) => this.setState({businessDescription: event.target.value.slice(0, maxLength)})
 
   setActiveBusinessTypeChange = (type) => this.setState({activeBusinessType: type})
 
@@ -62,6 +62,8 @@ class EntityForm extends Component {
       'entity-modal-content-select': true,
       'active-business-select': this.state.activeBusinessType === this.state.selectedBusinessType.value
     })
+    const MAX_LENGTH_OF_BUSINESS_ADDRESS = 100
+    const MAX_LENGTH_OF_BUSINESS_DESCRIPTION = 490
     return [
       <h4 className='entity-modal-title' key={0}>
         Business name
@@ -119,8 +121,9 @@ class EntityForm extends Component {
               <input
                 className='entity-modal-content-form-control'
                 placeholder='Type...'
+                maxLength={MAX_LENGTH_OF_BUSINESS_ADDRESS}
                 value={this.state.businessAddress}
-                onChange={this.handleBusinessAddressChange}
+                onChange={(e) => this.handleBusinessAddressChange(e, MAX_LENGTH_OF_BUSINESS_ADDRESS)}
               />
             </div>
           </div>
@@ -178,8 +181,9 @@ class EntityForm extends Component {
           <textarea
             className='entity-modal-content-form-control'
             rows='10'
+            maxLength={MAX_LENGTH_OF_BUSINESS_DESCRIPTION}
             value={this.state.businessDescription}
-            onChange={this.handleBusinessDescriptionChange}
+            onChange={(e) => this.handleBusinessDescriptionChange(e, MAX_LENGTH_OF_BUSINESS_DESCRIPTION)}
           />
         </div>
       </div>,

@@ -281,7 +281,7 @@
 
 	@media (max-width: $breakpoint-mobile) {
 		width: 100% !important;
-    overflow-y: scroll;
+    overflow-y: auto;
 	}
 }
 
@@ -332,6 +332,7 @@
 	@media (max-width: $breakpoint-mobile) {
 		flex-direction: column;
 		margin-bottom: 15px;
+		position: relative;
 	}
 }
 

@@ -1,3 +1,64 @@
+.user-modal-select {
+	flex: 1;
+	&-prefix {
+		color: #0a7586 !important;
+		font-size: 12px;
+		&__input {
+			input {
+				box-shadow: none !important;
+			}
+		}
+		&__value-container {
+			padding: 4px 8px !important;
+		}
+		&__control {
+			background: none !important;
+			border: 1px solid #92a1ac !important;
+			min-height: auto !important;
+			box-shadow: 0 0 1px 0 rgba(10, 117, 134, 0.44) !important;
+		}
+		&__placeholder {
+			color: #5f677e !important;
+			font-style: italic;
+			font-size: 12px !important;
+			font-weight: 300 !important;
+		}
+		&__single-value {
+			color: $color-black !important;
+			font-size: 12px !important;
+		}
+		&__indicator-separator {
+			display: none;
+		}
+		&__option {
+			color: $color-black !important;
+			font-size: 12px !important;
+			&--is-focused {
+				background-color: rgba(252, 110, 76, 0.53) !important;
+			}
+			&--is-selected {
+				background-color: rgba(252, 110, 76, 0.08) !important;
+			}
+		}
+		&__dropdown-indicator {
+			&::before {
+				content: '';
+				display: block;
+				position: absolute;
+				right: 10px;
+				width: 0;
+				height: 0;
+				top: 16px;
+				border-style: solid;
+				border-color: $color-orange transparent transparent transparent;
+				border-width: 6px;
+			}
+			[class^='css'] {
+				display: none;
+			}
+		}
+	}
+}
 .issued-popup {
 	display: flex;
 	padding: 0;
@@ -6,28 +67,47 @@
 	@media (max-width: $breakpoint-tablet) {
 		flex-direction: column;
 	}
+	.sidebar-close {
+		display: none;
+	}
+	&-close {
+		position: absolute;
+		right: 16px;
+		top: 16px;
+		color: #3d3d3d;
+		cursor: pointer;
+		z-index: 12;
+		&:hover {
+			color: $color-orange;
+		}
+		@media (max-width: $breakpoint-tablet) {
+			color: $color-step-text;
+		}
+	}
 	&-media {
 		position: relative;
 		padding: 40px 30px;
+		width: 350px;
 		background-color: $color-bg-gray;
 		@media (max-width: $breakpoint-tablet) {
 			padding: 20px 20px 100px;
+			width: auto;
 		}
 		&-img {
 			position: absolute;
 			bottom: -51px;
 	    left: -74px;
-	    width: 546px !important;
+	    width: 500px !important;
 			min-width: auto;
 			height: auto !important;
 			@media (max-width: $breakpoint-tablet) {
 				width: 300px !important;
 				right: 50%;
-				margin-bottom: -66px;
+				margin-bottom: -35px;
 				bottom: -38px;
 				margin-top: 20px;
 				left: auto;
-    		margin-right: -150px;
+    		margin-right: -130px;
 			}
 			@media (max-width: $breakpoint-mobile) {
 				width: 250px !important;
@@ -71,24 +151,13 @@
 		margin-bottom: 40px !important;
 	}
 
-	&-close {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		font-size: 19px;
-		color: #b6b5d8;
-		&:hover {
-			color: $color-step-text;
-			cursor: pointer;
-		}
-	}
-
 	&-container {
 		background-color: $color-step-text;
 		padding: 40px 60px;
 		text-align: left;
+		flex: 1;
 		@media (max-width: $breakpoint-tablet) {
-			padding: 130px 40px 60px;
+			padding: 100px 40px 60px;
 		}
 		@media (max-width: $breakpoint-mobile) {
 			padding: 70px 20px 20px;
