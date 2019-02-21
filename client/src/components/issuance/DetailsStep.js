@@ -6,11 +6,19 @@ import Geographical from 'images/geographical.png'
 import PropTypes from 'prop-types'
 import TextInput from 'components/elements/TextInput'
 
+const totalSupplies = [1000000, 30000000, 65000000]
+
 export default class DetailsStep extends Component {
   constructor (props) {
     super(props)
     this.state = {
       showOtherSupply: false
+    }
+  }
+
+  componentDidMount () {
+    if (this.props.totalSupply !== '' && !totalSupplies.includes(this.props.totalSupply)) {
+      this.setState({showOtherSupply: true})
     }
   }
 
@@ -42,7 +50,6 @@ export default class DetailsStep extends Component {
       style: 'decimal',
       minimumFractionDigits: 0
     })
-    const totalSupplies = [1000000, 30000000, 65000000]
     totalSupplies.forEach((item, key) => {
       const totalSupplyClass = classNames({
         'step-content-details-type': true,
@@ -86,6 +93,11 @@ export default class DetailsStep extends Component {
     }
   }
 
+  clearSupply () {
+    this.props.setTotalSupply('')
+    this.setState({showOtherSupply: false})
+  }
+
   render () {
     return (
       <div className='step-content-details'>
@@ -121,7 +133,7 @@ export default class DetailsStep extends Component {
                   onKeyDown={(evt) => this.checkCondition(evt, (evt.key === 'e' || evt.key === '-'))}
                   onChange={(event) => this.props.setTotalSupply(event.target.value)}
                 />
-                <div className='other-details' onClick={() => this.setState({showOtherSupply: false})}>
+                <div className='other-details' onClick={() => this.clearSupply()}>
                   Cancel
                 </div>
               </div>

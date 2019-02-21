@@ -37,11 +37,11 @@ class Header extends Component {
     const entity = Object.keys(this.props.entities).length ? this.props.entities[keyHash[0]] : null
     const activeDashboardLinkClass = classNames({
       'entities-header-nav-link': true,
-      'active-link': link[2] === 'dashboard' && (entity === undefined)
+      'active-link': link[2] === 'dashboard' && (entity === undefined || entity === null)
     })
     const activeDirectoryLinkClass = classNames({
       'entities-header-nav-link': true,
-      'active-link': link[2] === 'directory' && (entity === undefined)
+      'active-link': link[2] === 'directory' && (entity === undefined || entity === null)
     })
     return (
       <div className='entities-header'>
@@ -60,7 +60,7 @@ class Header extends Component {
               onClick={() => this.showDirectory(this.props.match.params.address)}
               className={activeDirectoryLinkClass}
             >
-              Business
+              Businesses
             </span>
             {entity && entity.name && <span className='entities-header-nav-link-name'>
               {entity.name}

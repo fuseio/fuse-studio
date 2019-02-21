@@ -13,6 +13,10 @@ import {loadModal, hideModal} from 'actions/ui'
 import { ADD_DIRECTORY_ENTITY } from 'constants/uiConstants'
 
 class EntityDirectory extends Component {
+  state = {
+    showSearch: false,
+    search: ''
+  }
   setQuitDashboard = () => this.props.history.goBack()
 
   showHomePage = (address) => {
@@ -61,7 +65,35 @@ class EntityDirectory extends Component {
     })
   }
 
+  setShowingSearch = () => this.setState({ showSearch: !this.state.showSearch })
+
+  setSearchValue = (e) => this.setState({ search: e.target.value })
+
+  filterBySearch = (search, entities) =>
+    search ? entities.filter(entity =>
+      entity.name.toLowerCase().search(
+        this.state.search.toLowerCase()) !== -1
+    ) : entities
+
+  renderBusiness (entities) {
+    if (entities.length) {
+      return (
+        entities.map((entity, index) =>
+          <Entity
+            key={index}
+            index={index}
+            entity={entity}
+            showProfile={() => this.showProfile(this.props.match.params.address, this.props.listHashes[index])}
+          />
+        ))
+    } else {
+      return <p className='emptyText'>There is no any entities</p>
+    }
+  }
+
   render () {
+    const business = this.props.entities
+    const filteredBusiness = this.filterBySearch(this.state.search, business)
     return [
       <Header
         accountAddress={this.props.accountAddress}
@@ -92,30 +124,31 @@ class EntityDirectory extends Component {
             : (
               <div>
                 <div className='dashboard-entity-content'>
-                  <div className='dashboard-entity-search'>
-                    All business
-                    <button className='btn-entity-search'>
-                      <FontAwesome name='search' />
-                    </button>
-                  </div>
-                  <button
-                    className='btn-entity-adding'
-                    onClick={() => this.loadAddingModal()}
-                    disabled={this.props.transactionStatus === REQUEST}
-                  >
-                    + New Business
-                  </button>
+                  {!this.state.showSearch
+                    ? <React.Fragment>
+                      <div className='dashboard-entity-search'>
+                        All business
+                        <button className='btn-entity-search' onClick={() => this.setShowingSearch()}>
+                          <FontAwesome name='search' />
+                        </button>
+                      </div>
+                      <button
+                        className='btn-entity-adding'
+                        onClick={() => this.loadAddingModal()}
+                        disabled={this.props.transactionStatus === REQUEST}
+                      >
+                        + New Business
+                      </button>
+                    </React.Fragment>
+                    : <div className='dashboard-entity-search-content'>
+                      <input value={this.state.search} onChange={this.setSearchValue} />
+                      <button className='btn-entity-search' onClick={() => this.setShowingSearch()}>
+                        <FontAwesome name='times' />
+                      </button>
+                    </div>
+                  }
                 </div>
-                {this.props.entities.length
-                  ? this.props.entities.map((entity, index) =>
-                    <Entity
-                      key={index}
-                      index={index}
-                      entity={entity}
-                      showProfile={() => this.showProfile(this.props.match.params.address, this.props.listHashes[index])}
-                    />
-                  ) : <p className='emptyText'>There is no any entities</p>
-                }
+                {this.renderBusiness(filteredBusiness)}
               </div>
             )}
           {this.renderTransactionStatus(this.props.transactionStatus)}

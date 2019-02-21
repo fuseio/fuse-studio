@@ -25,6 +25,20 @@
       font-size: 16px;
       font-weight: 500;
       display: flex;
+      align-items: flex-start;
+      &-content {
+        display: flex;
+        width: 100%;
+        align-items: flex-start;
+        input {
+          flex: 1;
+          padding: 7px 15px;
+        }
+        .btn-entity-search {
+          font-size: 24px;
+          padding: 7px 15px;
+        }
+      }
     }
   }
 }
@@ -65,6 +79,7 @@
   background: none;
   outline: none;
   padding: 6px 12px;
+  margin-bottom: 16px;
   &:hover,
   &:focus,
   &:focus:active {
@@ -696,4 +711,13 @@ div[class^='col'] {
   @media (max-width: $breakpoint-mobile) {
     display: block;
   }
+}
+
+@keyframes hover-fade {
+    0% {
+      opacity: 0
+    }
+    100% {
+      opacity: 1
+    }
 }
