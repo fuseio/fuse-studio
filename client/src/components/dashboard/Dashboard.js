@@ -1,159 +1,39 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import ClnIcon from 'images/cln.png'
 import { connect } from 'react-redux'
 import {fetchToken, fetchTokenStatistics} from 'actions/token'
-import classNames from 'classnames'
+import {isUserExists} from 'actions/user'
 import FontAwesome from 'react-fontawesome'
 import {getClnBalance, getAccountAddress} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
 import {formatWei} from 'utils/format'
-import Moment from 'moment'
-import find from 'lodash/find'
+import { USER_DATA_MODAL } from 'constants/uiConstants'
+import {loadModal, hideModal} from 'actions/ui'
 import Header from './Header'
+import ActivityContent from './ActivityContent'
 
-const intervals = {
-  MONTH: 'month',
-  WEEK: 'week',
-  DAY: 'day'
-}
+const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
 
-const dropdownOptions = [
-  {
-    text: 'Monthly',
-    value: intervals.MONTH
-  },
-  {
-    text: 'Weekly',
-    value: intervals.WEEK
-  },
-  {
-    text: 'Daily',
-    value: intervals.DAY
-  }
-]
-
-const getCurrentInterval = (intervalType) => {
-  const date = new Date()
-  switch (intervalType) {
-    case intervals.DAY:
-      return Moment(date).date()
-    case intervals.WEEK:
-      return Moment(date).week()
-    case intervals.MONTH:
-      // mongodb numbers month from 1 to 12 while moment from 0 to 11
-      return Moment(date).month() + 1
-  }
-}
-
-const getLatestDataEntry = (intervalType, stats) => {
-  if (!stats || !stats[0]) {
-    return null
-  }
-  const interval = getCurrentInterval(intervalType)
-  return find(stats, {interval})
-}
-
-class ActivityDropdown extends Component {
-  state = {
-    isOpen: false
-  }
-
-  handleDropdownClick = (item) => {
-    this.setState({
-      isOpen: false
-    })
-    this.props.handleChange(item)
-  }
-
-  handleOpenDropDown = () => this.setState({isOpen: true})
-
-  componentDidMount () {
-    document.addEventListener('mousedown', this.handleClickOutside)
-  }
-
-  componentWillUnmount () {
-    window.removeEventListener('mousedown', this.handleClickOutside)
-  }
-
-  handleClickOutside = (event) => {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.setState({isOpen: false})
+class UserDataModal extends React.Component {
+  componentDidMount (prevProps) {
+    if (this.props.token.owner === this.props.accountAddress && !this.props.userExists) {
+      this.timerId = setTimeout(this.props.loadUserDataModal, LOAD_USER_DATA_MODAL_TIMEOUT)
     }
   }
 
-  setWrapperRef = (node) => {
-    this.wrapperRef = node
+  componentWillUnmount () {
+    clearTimeout(this.timerId)
   }
 
-  render () {
-    return (
-      <div ref={this.setWrapperRef} className='dashboard-information-period'>
-        <span className='dashboard-information-period-text' onClick={this.handleOpenDropDown}>
-          {this.props.interval.text} <FontAwesome name='caret-down' />
-        </span>
-        {this.state.isOpen &&
-          <div className='dashboard-information-period-additional'>
-            {dropdownOptions.map((item, index) =>
-              <div
-                className={classNames(
-                  'dashboard-information-period-point',
-                  this.props.interval.value === item.value ? 'active-point' : null
-                )}
-                key={index}
-                onClick={() => this.handleDropdownClick(item)}
-              >
-                {item.text}
-              </div>
-            )}
-          </div>
-        }
-      </div>
-    )
-  }
+  render = () => null
 }
 
-class ActivityContent extends Component {
-  state = {
-    interval: dropdownOptions[0]
-  }
-
-  componentDidMount () {
-    this.props.handleChange(this.props.userType, this.state.interval.value)
-  }
-
-  handleIntervalChange = (interval) => {
-    this.setState({interval})
-    this.props.handleChange(this.props.userType, interval.value)
-  }
-
-  render () {
-    const latestDataEntry = getLatestDataEntry(this.state.interval.value, this.props.stats)
-    return (
-      <div className='dashboard-information-content' >
-        <div className='dashboard-information-content-activity' key='0'>
-          <p className='dashboard-information-small-text'>
-            <span>{this.props.title || this.props.userType}</span> Activity
-          </p>
-          <ActivityDropdown interval={this.state.interval} handleChange={this.handleIntervalChange} />
-        </div>,
-        <div className='dashboard-information-content-number' key='1'>
-          <p className='dashboard-information-small-text'>
-            Number of transactions
-          </p>
-          <p className='dashboard-information-number'>
-            {latestDataEntry ? latestDataEntry.totalCount : '0'}
-          </p>
-        </div>,
-        <div className='dashboard-information-content-number' key='2'>
-          <p className='dashboard-information-small-text'>
-            Transactions volume
-          </p>
-          <p className='dashboard-information-number'>
-            {latestDataEntry ? formatWei(latestDataEntry.volume, 0) : '0'}
-          </p>
-        </div>
-      </div>)
-  }
+UserDataModal.propTypes = {
+  token: PropTypes.object.isRequired,
+  accountAddress: PropTypes.string.isRequired,
+  loadUserDataModal: PropTypes.func.isRequired,
+  userExists: PropTypes.bool
 }
 
 class Dashboard extends Component {
@@ -169,7 +49,20 @@ class Dashboard extends Component {
     if (!this.props.token) {
       this.props.fetchToken(this.props.match.params.address)
     }
+    if (this.props.accountAddress) {
+      this.props.isUserExists(this.props.accountAddress)
+    }
     document.addEventListener('mousedown', this.handleClickOutside)
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.dashboard.informationAdded && !prevProps.dashboard.informationAdded) {
+      this.props.hideModal()
+    }
+
+    if (this.props.accountAddress && !prevProps.accountAddress) {
+      this.props.isUserExists(this.props.accountAddress)
+    }
   }
 
   componentWillUnmount () {
@@ -196,7 +89,11 @@ class Dashboard extends Component {
     }, 2000)
     this.textArea.value = ''
     this.textArea.value = this.props.match.params.address
-  };
+  }
+
+  loadUserDataModal = () => this.props.loadModal(USER_DATA_MODAL, {
+    tokenAddress: this.props.match.params.address
+  })
 
   render () {
     if (!this.props.token) {
@@ -269,6 +166,13 @@ class Dashboard extends Component {
             }
           </div>
         </div>
+        {
+          this.props.token && this.props.accountAddress && this.props.dashboard.hasOwnProperty('userExists') &&
+            <UserDataModal token={this.props.token}
+              accountAddress={this.props.accountAddress}
+              userExists={this.props.dashboard.userExists}
+              loadUserDataModal={this.loadUserDataModal} />
+        }
       </div>
     ]
   }
@@ -284,7 +188,10 @@ const mapStateToProps = (state, {match}) => ({
 
 const mapDispatchToProps = {
   fetchTokenStatistics,
-  fetchToken
+  fetchToken,
+  isUserExists,
+  loadModal,
+  hideModal
 }
 
 export default connect(

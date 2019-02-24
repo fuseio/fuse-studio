@@ -4,7 +4,6 @@ import FontAwesome from 'react-fontawesome'
 import classNames from 'classnames'
 import {connect} from 'react-redux'
 import {BigNumber} from 'bignumber.js'
-import {loadModal, hideModal} from 'actions/ui'
 import { nameToSymbol } from 'utils/format'
 import StepsIndicator from './StepsIndicator'
 import NameStep from './NameStep'
@@ -12,9 +11,7 @@ import SymbolStep from './SymbolStep'
 import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
 import {createTokenWithMetadata} from 'actions/token'
-import { getAddresses } from 'selectors/network'
 import { PENDING } from 'actions/constants'
-import { USER_DATA_MODAL } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
 
 class IssuanceWizard extends Component {
@@ -44,14 +41,10 @@ class IssuanceWizard extends Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.receipt !== prevProps.receipt) {
-      this.showUserDataPopup()
+      const tokenAddress = this.props.receipt.events[0].address
+      this.props.history.push(`/view/dashboard/${tokenAddress}`)
     }
   }
-
-  showUserDataPopup = () => this.props.loadModal(USER_DATA_MODAL, {
-    setQuitIssuance: this.setQuitIssuance,
-    receipt: this.props.receipt
-  })
 
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
@@ -234,14 +227,11 @@ IssuanceWizard.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  ...state.screens.issuance,
-  addresses: getAddresses(state)
+  ...state.screens.issuance
 })
 
 const mapDispatchToProps = {
-  createTokenWithMetadata,
-  loadModal,
-  hideModal
+  createTokenWithMetadata
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(IssuanceWizard)

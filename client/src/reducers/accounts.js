@@ -1,6 +1,6 @@
 import {CHANGE} from 'actions/marketMaker'
 import {FETCH_TOKENS_BY_ACCOUNT} from 'actions/token'
-import {LOGIN} from 'actions/auth'
+import {LOGIN} from 'actions/user'
 import * as actions from 'actions/accounts'
 
 export const initialAccount = {

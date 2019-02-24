@@ -97,12 +97,7 @@ function * createTokenWithMetadata ({tokenData, metadata}) {
 
   yield apiCall(processReceipt, {receipt})
 
-  const tokenAddress = receipt.events.TokenCreated.returnValues.token
-
-  yield entityPut({
-    type: actions.CREATE_TOKEN_WITH_METADATA.SUCCESS,
-    tokenAddress
-  })
+  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt))
 }
 
 function * fetchTokenStatistics ({tokenAddress, activityType, interval}) {

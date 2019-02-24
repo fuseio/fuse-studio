@@ -14,11 +14,7 @@ require('express-async-errors')
 async function initConfig () {
   await initSecrets(config)
 
-  // make the secret part of the config hidden
-  Object.defineProperty(config, 'secrets', {
-    enumerable: false,
-    value: config.secrets
-  })
+  config.util.makeHidden(config, 'secrets')
 }
 
 async function init () {
@@ -63,7 +59,9 @@ async function init () {
 
   app.use(require('./routes'))
 
-  // agenda.start()
+  if (config.get('agenda.start')) {
+    agenda.start()
+  }
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {

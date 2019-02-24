@@ -2,23 +2,18 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import Modal from 'components/Modal'
 import MediaMobile from 'images/issue-popup-mobile.svg'
-import {addUserInformation} from 'actions/accounts'
-import {login} from 'actions/auth'
+import {addUser} from 'actions/user'
 import FontAwesome from 'react-fontawesome'
 import CountriesList from 'constants/countries'
 import Select from 'react-select'
 
 class UserDatatModal extends Component {
   state = {
-    country: '',
+    country: {},
     firstName: '',
     lastName: '',
     email: '',
     subscribe: true
-  }
-
-  componentDidMount () {
-    this.props.login()
   }
 
   setFirstName = e => this.setState({firstName: e.target.value})
@@ -32,17 +27,15 @@ class UserDatatModal extends Component {
     return re.test(this.state.email)
   }
 
-  addUserInformation () {
-    this.props.addUserInformation({
+  addUser () {
+    const user = {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       email: this.state.email,
-      country: this.state.country,
-      subscribe: this.state.subscribe,
-      tokenAddress: this.props.receipt.events[0].address
-    })
-    this.props.hideModal()
-    this.props.setQuitIssuance()
+      country: this.state.country.value,
+      subscribe: this.state.subscribe
+    }
+    this.props.addUser(user, this.props.tokenAddress)
   }
 
   render () {
@@ -114,14 +107,13 @@ class UserDatatModal extends Component {
           </div>
           <button
             disabled={
-              this.state.country === 'Select Country' ||
+              !this.state.country.value ||
               this.state.firstName.trim() === '' ||
               this.state.lastName.trim() === '' ||
-              !this.validateEmail() ||
-              !this.state.subscribe
+              !this.validateEmail()
             }
             className='issued-popup-btn'
-            onClick={() => this.addUserInformation()}
+            onClick={() => this.addUser()}
           >
             Done
           </button>
@@ -132,8 +124,7 @@ class UserDatatModal extends Component {
 }
 
 const mapDispatchToProps = {
-  addUserInformation,
-  login
+  addUser
 }
 
 export default connect(null, mapDispatchToProps)(UserDatatModal)

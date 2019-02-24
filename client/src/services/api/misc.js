@@ -9,11 +9,6 @@ export const sendContactUs = (formData) => request.post(`${API_ROOT}/mails`)
   .send({formData})
   .then(response => response.body)
 
-export const addUserInformation = (apiRoot, {user, authToken}) =>
-  request.post(`${API_ROOT}/users`).send({user})
-    .set('Authorization', `Bearer ${authToken}`)
-    .then(response => response.body)
-
 const symbolToTickerId = {
   'CLN': 2753,
   'ETH': 1027

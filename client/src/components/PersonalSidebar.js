@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {fetchTokensWithBalances} from 'actions/accounts'
-import {login} from 'actions/auth'
 import ProfileIcon from 'images/user.svg'
 import {BigNumber} from 'bignumber.js'
 import FontAwesome from 'react-fontawesome'
@@ -99,7 +98,7 @@ class PersonalSidebar extends Component {
       <div className='personal-sidebar'>
         <div className='personal-sidebar-top'>
           <button className='personal-sidebar-close' onClick={() => this.props.closeProfile()}><FontAwesome name='times' /></button>
-          <div className='profile-icon-big' onClick={() => this.props.login()}>
+          <div className='profile-icon-big'>
             <img src={ProfileIcon} />
           </div>
           <span className='profile-balance'>
@@ -140,8 +139,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  fetchTokensWithBalances,
-  login
+  fetchTokensWithBalances
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonalSidebar)

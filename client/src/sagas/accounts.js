@@ -2,26 +2,11 @@ import { all, put, call, takeEvery, select } from 'redux-saga/effects'
 import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/accounts'
-import {apiCall, tryTakeEvery} from './utils'
+import {tryTakeEvery} from './utils'
 import {getClnAddress, getNetworkType} from 'selectors/network'
-import {addUserInformation as addUserInformationApi} from 'services/api/misc'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 import {fetchTokensByAccount} from 'sagas/token'
 import web3 from 'services/web3'
-import {getAccountAddress} from 'selectors/accounts'
-
-function * addUserInformation ({user}) {
-  const accountAddress = yield select(getAccountAddress)
-  const response = yield apiCall(addUserInformationApi, {user: {...user, accountAddress}}, {auth: true})
-  const {data} = response
-  yield put({
-    type: actions.ADD_USER_INFORMATION.SUCCESS,
-    user,
-    response: {
-      data
-    }
-  })
-}
 
 function * balanceOfToken ({tokenAddress, accountAddress, blockNumber}) {
   const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
@@ -77,7 +62,6 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.BALANCE_OF_CLN, balanceOfCln),
     takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged),
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
-    tryTakeEvery(actions.ADD_USER_INFORMATION, addUserInformation, 1),
     tryTakeEvery(actions.FETCH_TOKENS_WITH_BALANCES, fetchTokensWithBalances, 1)
   ])
 }

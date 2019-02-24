@@ -10,7 +10,6 @@ const pickLetters = (word, numOfLetters) => word.substr(0, numOfLetters).toUpper
 
 export const nameToSymbol = (name) => {
   const words = name.trim(' ').split(/\s+/)
-  console.log(words.length)
   switch (words.length) {
     case 1: return pickLetters(words[0], 4)
     case 2: return pickLetters(words[0], 3) + pickLetters(words[1], 1)

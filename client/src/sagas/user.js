@@ -1,13 +1,13 @@
-import { all, put, select } from 'redux-saga/effects'
+import { all, call, put, select } from 'redux-saga/effects'
 
 import { apiCall, tryTakeEvery } from './utils'
-import * as actions from 'actions/auth'
+import * as actions from 'actions/user'
 import {getAccountAddress} from 'selectors/accounts'
 import web3 from 'services/web3'
-import * as api from 'services/api/auth'
+import * as api from 'services/api/user'
 import {generateSignatureData} from 'utils/web3'
 
-function * login () {
+export function * login () {
   const accountAddress = yield select(getAccountAddress)
   const chainId = yield select(state => state.network.networkId)
 
@@ -42,8 +42,38 @@ function * login () {
   }
 }
 
-export default function * authSaga () {
+function * addUser ({user, tokenAddress}) {
+  yield call(login)
+
+  const accountAddress = yield select(getAccountAddress)
+  const response = yield apiCall(api.addUser,
+    {user: {...user, accountAddress}, tokenAddress}, {auth: true})
+
+  const {data} = response
+  yield put({
+    type: actions.ADD_USER.SUCCESS,
+    user,
+    response: {
+      data
+    }
+  })
+}
+
+function * isUserExists ({accountAddress}) {
+  const response = yield apiCall(api.isUserExists, {accountAddress})
+
+  // const {data} = response
+  yield put({
+    type: actions.IS_USER_EXISTS.SUCCESS,
+    accountAddress,
+    response
+  })
+}
+
+export default function * userSaga () {
   yield all([
-    tryTakeEvery(actions.LOGIN, login, 1)
+    tryTakeEvery(actions.LOGIN, login, 1),
+    tryTakeEvery(actions.ADD_USER, addUser, 1),
+    tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1)
   ])
 }

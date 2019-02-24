@@ -9,13 +9,12 @@ module.exports = (mongoose) => {
     lastName: {type: String, required: [true, "can't be blank"]},
     email: {type: String, required: [true, "can't be blank"], validate: [ validator.isEmail, 'invalid email' ]},
     accountAddress: {type: String, required: [true, "can't be blank"]},
-    tokenAddress: {type: String, required: [true, "can't be blank"]},
     country: {type: String, required: [true, "can't be blank"]},
     subscribe: {type: Boolean, default: false},
     verified: {type: Boolean, default: false}
   }, {timestamps: true})
 
-  UserSchema.index({tokenAddress: 1}, {unique: true})
+  UserSchema.index({accountAddress: 1}, {unique: true})
 
   UserSchema.set('toJSON', {
     versionKey: false
