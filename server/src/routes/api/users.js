@@ -31,7 +31,7 @@ router.post('/', auth.required, async (req, res) => {
 
 router.get('/:accountAddress', async (req, res) => {
   const {accountAddress} = req.params
-  const user = await User.findOne({accountAddress})
+  const user = await User.findOne({accountAddress}).lean()
   return res.json({
     userExists: !!user
   })

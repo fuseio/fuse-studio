@@ -1,3 +1,4 @@
+const tokenIssued = require('@utils/tokenProgress').tokenIssued
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
@@ -20,6 +21,10 @@ module.exports = (mongoose) => {
 
   TokenSchema.set('toJSON', {
     versionKey: false
+  })
+
+  TokenSchema.post('save', token => {
+    tokenIssued(token.address)
   })
 
   const Token = mongoose.model('Token', TokenSchema)

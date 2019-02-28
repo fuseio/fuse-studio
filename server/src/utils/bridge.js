@@ -5,6 +5,7 @@ const HomeBridgeFactoryABI = require('@constants/abi/HomeBridgeFactory.js')
 const BridgeMapperABI = require('@constants/abi/BridgeMapper.js')
 const foreignAddressess = require('@utils/network').addresses
 const homeAddresses = config.get('web3.addresses.fuse')
+const bridgeDeployed = require('@utils/tokenProgress').bridgeDeployed
 
 const TOKEN_DECIMALS = 18
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -150,6 +151,8 @@ async function deployBridge (token) {
     foreignBridgeBlockNumber,
     homeBridgeBlockNumber
   )
+
+  bridgeDeployed(token.address)
 
   return {
     foreignBridgeToken,

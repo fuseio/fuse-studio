@@ -6,7 +6,7 @@ const bridgeUtils = require('@utils/bridge')
 
 router.get('/', async (req, res, next) => {
   const [ results, itemCount ] = await Promise.all([
-    Token.find({}).sort({blockNumber: -1}).limit(req.query.limit).skip(req.skip),
+    Token.find({}).sort({blockNumber: -1}).limit(req.query.limit).skip(req.skip).lean(),
     Token.estimatedDocumentCount()
   ])
 
@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/owner/:owner', async (req, res) => {
   const {owner} = req.params
-  const results = await Token.find({ owner }).sort({ blockNumber: -1 })
+  const results = await Token.find({ owner }).sort({ blockNumber: -1 }).lean()
 
   res.json({
     object: 'list',
@@ -31,7 +31,7 @@ router.get('/owner/:owner', async (req, res) => {
 
 router.get('/:address', async (req, res, next) => {
   const {address} = req.params
-  const token = await Token.findOne({ address })
+  const token = await Token.findOne({ address }).lean()
   return res.json({ data: token })
 })
 

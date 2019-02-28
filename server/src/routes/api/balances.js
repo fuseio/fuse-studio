@@ -24,7 +24,7 @@ router.get('/:account', async (req, res, next) => {
   ])
 
   const addresses = events.map(ev => ev._id)
-  const tokens = await Token.find({address: {$in: addresses}})
+  const tokens = await Token.find({address: {$in: addresses}}).lean()
 
   res.json({
     object: 'list',
