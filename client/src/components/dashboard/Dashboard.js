@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ClnIcon from 'images/cln.png'
 import { connect } from 'react-redux'
-import {fetchToken, fetchTokenStatistics} from 'actions/token'
+import {fetchToken, fetchTokenStatistics, fetchTokenProgress} from 'actions/token'
 import {isUserExists} from 'actions/user'
 import FontAwesome from 'react-fontawesome'
 import {getClnBalance, getAccountAddress} from 'selectors/accounts'
@@ -52,6 +52,7 @@ class Dashboard extends Component {
     if (this.props.accountAddress) {
       this.props.isUserExists(this.props.accountAddress)
     }
+    this.props.fetchTokenProgress(this.props.match.params.address)
     document.addEventListener('mousedown', this.handleClickOutside)
   }
 
@@ -189,6 +190,7 @@ const mapStateToProps = (state, {match}) => ({
 const mapDispatchToProps = {
   fetchTokenStatistics,
   fetchToken,
+  fetchTokenProgress,
   isUserExists,
   loadModal,
   hideModal

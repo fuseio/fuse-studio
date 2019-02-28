@@ -8,6 +8,7 @@ router.use('/stats', require('./stats'))
 router.use('/balances', require('./balances'))
 router.use('/users', require('./users'))
 router.use('/tokens', require('./tokens'))
+router.use('/tokens/progress', require('./tokenProgress'))
 router.use('/partners', require('./partners'))
 
 router.use(function (err, req, res, next) {

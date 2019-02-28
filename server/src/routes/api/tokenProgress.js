@@ -7,3 +7,5 @@ router.get('/:tokenAddress', async (req, res, next) => {
   const tokenProgress = await TokenProgress.findOne({ tokenAddress }).lean()
   return res.json({ data: tokenProgress })
 })
+
+module.exports = router

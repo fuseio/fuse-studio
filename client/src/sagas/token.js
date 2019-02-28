@@ -113,6 +113,18 @@ function * fetchTokenStatistics ({tokenAddress, activityType, interval}) {
   })
 }
 
+function * fetchTokenProgress ({tokenAddress}) {
+  const response = yield apiCall(api.fetchTokenProgress, {tokenAddress})
+
+  yield put({
+    type: actions.FETCH_TOKEN_PROGRESS.SUCCESS,
+    tokenAddress,
+    response: {
+      steps: response.data.steps
+    }
+  })
+}
+
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
@@ -122,6 +134,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_CLN_TOKEN, fetchClnToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),
-    tryTakeEvery(actions.FETCH_TOKEN_STATISTICS, fetchTokenStatistics, 1)
+    tryTakeEvery(actions.FETCH_TOKEN_STATISTICS, fetchTokenStatistics, 1),
+    tryTakeEvery(actions.FETCH_TOKEN_PROGRESS, fetchTokenProgress, 1)
   ])
 }

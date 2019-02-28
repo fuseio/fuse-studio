@@ -11,6 +11,9 @@ export const fetchTokensByOwner = (apiRoot, {owner}) =>
 export const fetchToken = (apiRoot, {tokenAddress}) =>
   request.get(`${apiRoot}/tokens/${tokenAddress}`).then(response => response.body)
 
+export const fetchTokenProgress = (apiRoot, {tokenAddress}) =>
+  request.get(`${apiRoot}/tokens/progress/${tokenAddress}`).then(response => response.body)
+
 export const fetchTokenStatistics = (apiRoot, {tokenAddress, activityType, interval}) =>
   request.get(`${apiRoot}/stats/${activityType}/${tokenAddress}?interval=${interval}`).then(response => response.body)
 
