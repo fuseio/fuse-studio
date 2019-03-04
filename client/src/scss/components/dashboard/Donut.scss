@@ -1,0 +1,64 @@
+$donuts: 0 !global;
+
+@mixin clip-path($clip) {
+  -webkit-clip-path: $clip;
+  -moz-clip-path: $clip;
+  -ms-clip-path: $clip;
+  clip-path: $clip;
+}
+@mixin donut($vars){
+	@include clip-path(polygon(nth($vars,1),nth($vars,2),nth($vars,3),nth($vars,4),0% 0%,50% 50%));
+}
+@function donutVars($per){
+	$v1 : 0% 50%;
+	$v2 : 0% 100%;
+	$v3 : 100% 100%;
+	$v4 : 100% 0%;
+	@if($per >= 75){
+		$v1 : 0% #{((100 - $per) / 25) * 100}#{'%'};
+	}
+	@elseif($per >= 50){
+		$v1 : #{((75 - $per) / 25) * 100}#{'%'} 100%;
+		$v2 : $v1;
+	}
+	@elseif($per >= 25){
+		$v1 : 100% #{((25 - (50 - $per)) / 25) * 100}#{'%'};
+		$v2 : $v1;
+		$v3 : $v1;
+	}
+	@elseif($per >= 0){
+		$v1 : #{((25 - (25 - $per)) / 25) * 100}#{'%'} 0%;
+		$v2 : $v1;
+		$v3 : $v1;
+		$v4 : $v1;
+	}
+	@return ($v1,$v2,$v3,$v4);
+}
+@mixin donutChart($per, $donut-color, $end: false, $ani: 1s ease-in-out forwards 1) {
+	$vars : donutVars($per);
+	$donuts : $donuts + 1 !global;
+	height: 40px;
+	width: 40px;
+	&:before{
+		@include donut($vars);
+		border: 20px solid nth($donut-color, ($donuts % length($donut-color)) + 1);
+		border-radius: 50%;
+		box-sizing: border-box;
+		content: '';
+		height: 100%;
+		left: 50%;
+		position: absolute;
+		top: 50%;
+		transform: translate(-50%, -50%) rotate(45deg);
+		transform-origin: center center;
+		width: 100%;
+	}
+	&:after{
+		animation: donutLabel#{$donuts} $ani;
+		display: block;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+}

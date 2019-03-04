@@ -440,4 +440,10 @@
 			margin-right: 0;
 		}
 	}
+	&:hover {
+		cursor: pointer;
+		.coin-wrapper {
+			box-shadow: 0 2px 16px 0 rgba(252, 110, 76, 0.2);
+		}
+	}
 }

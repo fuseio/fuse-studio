@@ -31,11 +31,12 @@ export default class Root extends Component {
                 path='/view/issuance'
                 component={withTracker(withNetwork(IssuanceWizard))}
               />
+
+              <Route
+                path='/view/dashboard/:address'
+                component={withTracker(withNetwork(Dashboard))}
+              />
             </Layout>
-            <Route
-              path='/view/dashboard/:address'
-              component={withTracker(withNetwork(Dashboard))}
-            />
             <Route
               path='/view/directory/:address'
               component={withTracker(withNetwork(EntityDirectory))}

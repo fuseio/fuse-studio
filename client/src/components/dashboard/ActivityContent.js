@@ -129,7 +129,7 @@ class ActivityContent extends Component {
             <span>{this.props.title || this.props.userType}</span> Activity
           </p>
           <ActivityDropdown interval={this.state.interval} handleChange={this.handleIntervalChange} />
-        </div>,
+        </div>
         <div className='dashboard-information-content-number' key='1'>
           <p className='dashboard-information-small-text'>
             Number of transactions
@@ -137,7 +137,7 @@ class ActivityContent extends Component {
           <p className='dashboard-information-number'>
             {latestDataEntry ? latestDataEntry.totalCount : '0'}
           </p>
-        </div>,
+        </div>
         <div className='dashboard-information-content-number' key='2'>
           <p className='dashboard-information-small-text'>
             Transactions volume

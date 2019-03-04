@@ -3,11 +3,21 @@ import PropTypes from 'prop-types'
 import {formatWei} from 'utils/format'
 import classNames from 'classnames'
 import CommunityLogo from 'components/elements/CommunityLogo'
+import ReactGA from 'services/ga'
 import identity from 'lodash/identity'
 
 export default class Community extends Component {
+  showDashboard = (address) => {
+    this.props.history.push(`/view/dashboard/${address}`)
+    ReactGA.event({
+      category: 'Dashboard',
+      action: 'Click',
+      label: 'dashboard'
+    })
+  }
+
   render () {
-    return <div className={this.props.coinWrapperClassName}>
+    return <div className={this.props.coinWrapperClassName} onClick={() => this.showDashboard(this.props.token.address)}>
       <div className='coin-header' onClick={this.props.handleOpen}>
         <CommunityLogo token={this.props.token} metadata={this.props.metadata} />
         <div className='coin-details'>

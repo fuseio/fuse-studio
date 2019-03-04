@@ -4,7 +4,6 @@ import {fetchTokensWithBalances} from 'actions/accounts'
 import ProfileIcon from 'images/user.svg'
 import {BigNumber} from 'bignumber.js'
 import FontAwesome from 'react-fontawesome'
-import ReactGA from 'services/ga'
 import {formatWei} from 'utils/format'
 import {getAccount, getAccountTokens} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
@@ -36,15 +35,6 @@ class PersonalSidebar extends Component {
     if (this.props.accountAddress) {
       this.props.fetchTokensWithBalances(this.props.accountAddress)
     }
-  }
-
-  showDashboard = (address) => {
-    this.props.history.push(`/view/dashboard/${address}`)
-    ReactGA.event({
-      category: 'Dashboard',
-      action: 'Click',
-      label: 'dashboard'
-    })
   }
 
   filterBySearch = (search, tokens) =>
@@ -116,10 +106,6 @@ class PersonalSidebar extends Component {
           <button className='search-btn'><FontAwesome name='search' /></button>
         </div>
         <div className='personal-sidebar-content'>
-          <h3 className='personal-sidebar-title'>Issued Coins</h3>
-          <div className='personal-sidebar-content-community'>
-            {this.renderIssuedCoins(this.props.accountAddress, filteredTokens)}
-          </div>
           <h3 className='personal-sidebar-title'>Portfolio Coins</h3>
           <div className='personal-sidebar-content-community'>
             {this.renderPortfolioCoins(this.props.accountAddress, filteredTokens)}

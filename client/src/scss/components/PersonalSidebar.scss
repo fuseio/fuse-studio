@@ -104,13 +104,9 @@
     &-content {
       padding: 20px 0 20px 20px;
       &-community {
-        max-height: 205px;
         overflow: auto;
         margin-bottom: 20px;
         padding-right: 20px;
-        @media (max-width: $breakpoint-mobile) {
-          max-height: 95px;
-        }
       }
     }
     &-title {

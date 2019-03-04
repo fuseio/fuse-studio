@@ -71,6 +71,7 @@ class CommunitiesList extends Component {
             token={tokens[address]}
             metadata={metadata[tokens[address].tokenURI]}
             selectedCommunityAddress={this.state.selectedCommunityAddress}
+            history={this.props.history}
             account={this.props.account}
           />
           )}

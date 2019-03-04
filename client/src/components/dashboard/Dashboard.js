@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import ClnIcon from 'images/cln.png'
+import MainNetLogo from 'images/Mainnet.png'
+import RopstenLogo from 'images/Ropsten.png'
+import FuseLogo from 'images/fuseLogo.svg'
 import { connect } from 'react-redux'
 import {fetchToken, fetchTokenStatistics, fetchTokenProgress} from 'actions/token'
 import {isUserExists} from 'actions/user'
@@ -10,7 +12,8 @@ import CommunityLogo from 'components/elements/CommunityLogo'
 import {formatWei} from 'utils/format'
 import { USER_DATA_MODAL } from 'constants/uiConstants'
 import {loadModal, hideModal} from 'actions/ui'
-import Header from './Header'
+import TopNav from './../TopNav'
+import Breadcrumbs from './../elements/Breadcrumbs'
 import ActivityContent from './ActivityContent'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
@@ -38,7 +41,8 @@ UserDataModal.propTypes = {
 
 class Dashboard extends Component {
   state = {
-    copyStatus: null
+    copyStatus: null,
+    transferToFuse: 0
   }
 
   handleIntervalChange = (userType, intervalValue) => {
@@ -96,83 +100,128 @@ class Dashboard extends Component {
     tokenAddress: this.props.match.params.address
   })
 
+  setTransferToFuse = (e) => this.setState({ transferToFuse: e.target.value })
+
   render () {
     if (!this.props.token) {
       return null
     }
 
-    const {token} = this.props
+    const { token } = this.props
     const { admin, user } = this.props.dashboard
-
     return [
-      <Header
-        accountAddress={this.props.accountAddress}
-        clnBalance={this.props.clnBalance}
-        match={this.props.match}
+      <TopNav
+        key={0}
+        active
         history={this.props.history}
         showHomePage={this.showHomePage}
-        key={0}
       />,
       <div key={1} className='dashboard-content'>
-        <div className='dashboard-header'>
-          <button
-            className='quit-button ctrl-btn'
-            onClick={this.showHomePage}
-          >
-            <FontAwesome className='ctrl-icon' name='times' />
-          </button>
-        </div>
+        <Breadcrumbs breadCrumbsText={token.name} setToHomepage={this.showHomePage} />
         <div className='dashboard-container'>
-          <div className='dashboard-sidebar'>
-            <CommunityLogo token={token} metadata={this.props.metadata[token.tokenURI] || {}} />
-            <h3 className='dashboard-title'>{token.name}</h3>
-          </div>
-          <div className='dashboard-information'>
-            <div className='dashboard-information-header'>
-              <div className='dashboard-information-header-content'>
-                <p className='dashboard-information-top'>
-                  <span className='dashboard-information-logo'><img src={ClnIcon} /></span>
-                  <span className='dashboard-information-text'>Total supply</span>
-                </p>
+          <div className='dashboard-section'>
+            <div className='dashboard-sidebar'>
+              <CommunityLogo token={token} metadata={this.props.metadata[token.tokenURI] || {}} />
+              <h3 className='dashboard-title'>{token.name}</h3>
+              <div className='dashboard-progress'>
+                <div className='dashboard-progress-bar-80' />
+                <div className='dashboard-progress-content'>
+                  <div className='dashboard-progress-title'>Overall progress</div>
+                  <div className='dashboard-progress-percent'>80%</div>
+                </div>
+              </div>
+              <div className='dashboard-progress-text text-positive'>
+                <FontAwesome name='check' /> <span className='progress-text-content'>Deploy a token</span>
+              </div>
+              <div className='dashboard-progress-text text-positive'>
+                <FontAwesome name='check' /> <span className='progress-text-content'>Personal details</span>
+              </div>
+              <div className='dashboard-progress-text text-negative'>
+                <FontAwesome name='minus' /> <span className='progress-text-content'>Deploy a bridge to Fuse-chain</span>
+              </div>
+              <div className='dashboard-progress-text text-positive'>
+                <FontAwesome name='check' /> <span className='progress-text-content'>Link to add a business list</span>
+              </div>
+              <div className='dashboard-progress-text text-positive'>
+                <FontAwesome name='check' /> <span className='progress-text-content'>Plug into a white label wallet</span>
+              </div>
+            </div>
+            <div className='dashboard-information'>
+              <div className='dashboard-information-header'>
+                <p className='dashboard-information-text'>Total supply</p>
                 <p className='dashboard-information-big-count'>
                   {formatWei(token.totalSupply, 0)}
                   <span>{token.symbol}</span>
                 </p>
               </div>
-            </div>
-            <div className='dashboard-info' ref={content => (this.content = content)}>
-              <ActivityContent stats={user} userType='user' title='users' handleChange={this.handleIntervalChange} />
-              <ActivityContent stats={admin} userType='admin' handleChange={this.handleIntervalChange} />
-            </div>
-            <div className='dashboard-information-footer'>
-              <div className='dashboard-information-small-text'>
-                <span>Asset ID</span>
-                <form>
-                  <textarea
-                    ref={textarea => (this.textArea = textarea)}
-                    value={this.props.match.params.address}
-                    readOnly
-                  />
-                </form>
+              <div className='dashboard-info' ref={content => (this.content = content)}>
+                <ActivityContent stats={user} userType='user' title='users' handleChange={this.handleIntervalChange} />
+                <ActivityContent stats={admin} userType='admin' handleChange={this.handleIntervalChange} />
               </div>
-              {document.queryCommandSupported('copy') &&
-                <p className='dashboard-information-period' onClick={this.copyToClipboard}>
-                  copy
-                </p>
+              <div className='dashboard-information-footer'>
+                <div className='dashboard-information-small-text'>
+                  <span className='text-asset'>Asset ID</span>
+                  <form>
+                    <textarea
+                      ref={textarea => (this.textArea = textarea)}
+                      value={this.props.match.params.address}
+                      readOnly
+                    />
+                  </form>
+                </div>
+                {document.queryCommandSupported('copy') &&
+                  <p className='dashboard-information-period' onClick={this.copyToClipboard}>
+                    <FontAwesome name='clone' />
+                  </p>
+                }
+              </div>
+              {this.state.copyStatus && <div className='dashboard-notification'>
+                {this.state.copyStatus}
+              </div>
               }
             </div>
-            {this.state.copyStatus && <div className='dashboard-notification'>
-              {this.state.copyStatus}
+          </div>
+          <div className='dashboard-sidebar'>
+            <div className='dashboard-network'>
+              <div className='dashboard-network-content'>
+                <div className='dashboard-network-title'>Ropsten</div>
+                <div className='dashboard-network-logo'>
+                  <img src={RopstenLogo} />
+                </div>
+                <div className='dashboard-network-text'>Balance</div>
+                <div className='dashboard-network-balance'>3,500.00 <span>FSM</span></div>
+                <button className='dashboard-network-btn'>Show more</button>
+              </div>
+              <div className='dashboard-network-content network-arrow'>
+                <FontAwesome name='long-arrow-alt-right' />
+              </div>
+              <div className='dashboard-network-content'>
+                <div className='dashboard-network-title'>Fuse</div>
+                <div className='dashboard-network-logo fuse-logo'>
+                  <img src={FuseLogo} />
+                </div>
+                <div className='dashboard-network-text'>Balance</div>
+                <div className='dashboard-network-balance balance-fuse'>3,500.00 <span>POA</span></div>
+                <button className='dashboard-network-btn'>Show more</button>
+              </div>
             </div>
-            }
+            <div className='dashboard-transfer'>
+              <div className='dashboard-transfer-form'>
+                <input value={this.state.transferToFuse} onChange={(e) => this.setTransferToFuse(e)} />
+                <div className='dashboard-transfer-form-currency'>POA</div>
+              </div>
+              <button className='dashboard-transfer-btn'>Transfer to fuse</button>
+            </div>
           </div>
         </div>
         {
           this.props.token && this.props.accountAddress && this.props.dashboard.hasOwnProperty('userExists') &&
-            <UserDataModal token={this.props.token}
+            <UserDataModal
+              token={this.props.token}
               accountAddress={this.props.accountAddress}
               userExists={this.props.dashboard.userExists}
-              loadUserDataModal={this.loadUserDataModal} />
+              loadUserDataModal={this.loadUserDataModal}
+            />
         }
       </div>
     ]

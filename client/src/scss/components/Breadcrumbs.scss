@@ -1,0 +1,29 @@
+.breadcrumbs {
+  background-color: $color-dashboard-bg;
+  display: flex;
+  width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+
+  &-title {
+    color: $color-filter-text;
+    font-size: 12px;
+    padding-right: 20px;
+    position: relative;
+    &:after {
+      content: '>';
+      position: absolute;
+      right: 6px;
+    }
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+  &-text {
+    color: $color-filter-text;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+}
