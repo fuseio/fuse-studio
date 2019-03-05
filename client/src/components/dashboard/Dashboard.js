@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import MainNetLogo from 'images/Mainnet.png'
+import MainnetLogo from 'images/Mainnet.png'
 import RopstenLogo from 'images/Ropsten.png'
 import FuseLogo from 'images/fuseLogo.svg'
 import { connect } from 'react-redux'
@@ -101,6 +101,14 @@ class Dashboard extends Component {
 
   setTransferToFuse = (e) => this.setState({ transferToFuse: e.target.value })
 
+  renderNetworkLogo (network) {
+    switch (network) {
+      case 'ropsten': return RopstenLogo
+      case 'main': return MainnetLogo
+      default: return MainnetLogo
+    }
+  }
+
   render () {
     if (!this.props.token) {
       return null
@@ -117,7 +125,7 @@ class Dashboard extends Component {
       />,
       <div key={1} className='dashboard-content'>
         <Breadcrumbs breadCrumbsText={token.name} setToHomepage={this.showHomePage} />
-        <div className='dashboard-container'>
+        <div className={`dashboard-container ${this.props.networkType}`}>
           <div className='dashboard-section'>
             <TokenProgress token={token} metadata={this.props.metadata} steps={steps} match={this.props.match} />
             <div className='dashboard-information'>
@@ -158,9 +166,9 @@ class Dashboard extends Component {
           <div className='dashboard-sidebar'>
             <div className='dashboard-network'>
               <div className='dashboard-network-content'>
-                <div className='dashboard-network-title'>Ropsten</div>
+                <div className='dashboard-network-title'>{this.props.networkType}</div>
                 <div className='dashboard-network-logo'>
-                  <img src={RopstenLogo} />
+                  <img src={this.renderNetworkLogo(this.props.networkType)} />
                 </div>
                 <div className='dashboard-network-text'>Balance</div>
                 <div className='dashboard-network-balance'>3,500.00 <span>FSM</span></div>
