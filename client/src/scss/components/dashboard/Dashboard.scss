@@ -425,6 +425,7 @@
       }
     }
     &-title {
+      text-transform: capitalize;
       font-size: 15px;
       color: $color-filter-text;
       text-align: center;

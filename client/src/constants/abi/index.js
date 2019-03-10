@@ -5,5 +5,7 @@ module.exports = {
   EllipseMarketMaker: require('./EllipseMarketMaker'),
   SimpleList: require('./SimpleList'),
   SimpleListFactory: require('./SimpleListFactory'),
-  TokenFactory: require('./TokenFactory')
+  TokenFactory: require('./TokenFactory'),
+  BridgeMapper: require('./BridgeMapper'),
+  BasicToken: require('./BasicToken')
 }

@@ -1,23 +1,24 @@
 import { all, put, call, takeEvery, select } from 'redux-saga/effects'
-import { contract } from 'osseus-wallet'
 
 import * as actions from 'actions/accounts'
 import {tryTakeEvery} from './utils'
-import {getClnAddress, getNetworkType} from 'selectors/network'
+import {getAddress, getNetworkType} from 'selectors/network'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 import {fetchTokensByAccount} from 'sagas/token'
 import web3 from 'services/web3'
+import {getContract} from 'services/contract'
 
-function * balanceOfToken ({tokenAddress, accountAddress, blockNumber}) {
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalCurrency', address: tokenAddress})
-  const balanceOf = yield call(ColuLocalNetworkContract.methods.balanceOf(accountAddress).call)
+function * balanceOfToken ({tokenAddress, accountAddress, options}) {
+  const basicTokenContract = getContract({abiName: 'BasicToken', address: tokenAddress, options})
+  const balanceOf = yield call(basicTokenContract.methods.balanceOf(accountAddress).call)
 
   yield put({type: actions.BALANCE_OF_TOKEN.SUCCESS,
     tokenAddress,
     accountAddress,
     response: {
       balanceOf
-    }})
+    }}
+  )
 }
 
 function * balanceOfNative ({accountAddress}) {
@@ -35,7 +36,7 @@ function * balanceOfCln ({accountAddress}) {
   if (networkType === 'fuse') {
     yield call(balanceOfNative, {accountAddress})
   } else {
-    const tokenAddress = yield select(getClnAddress)
+    const tokenAddress = yield select(getAddress, 'ColuLocalNetwork')
     yield call(balanceOfToken, {tokenAddress, accountAddress})
   }
 }

@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect'
-import {getSelectedCommunity} from 'selectors/communities'
 import {getAddresses, getNetworkType} from 'selectors/network'
 import {initialAccount} from 'reducers/accounts'
 
@@ -14,12 +13,6 @@ export const getAccount = createSelector(
 export const getBalances = createSelector(
   getAccount,
   (account) => account.balances || {}
-)
-
-export const getSelectedCommunityBalance = createSelector(
-  getSelectedCommunity,
-  getBalances,
-  (community, balances) => balances[community.address]
 )
 
 export const getAccountTokens = createSelector(

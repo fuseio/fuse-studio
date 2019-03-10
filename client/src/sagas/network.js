@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
-import web3 from 'services/web3'
+import {givenWeb3 as web3} from 'services/web3'
 import {isNetworkSupported} from 'utils/network'
 import * as actions from 'actions/network'
 import {balanceOfCln} from 'actions/accounts'

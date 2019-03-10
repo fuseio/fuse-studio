@@ -4,16 +4,16 @@ import { contract } from 'osseus-wallet'
 import * as actions from 'actions/directory'
 import {tryTakeEvery} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
-import {getAddresses} from 'selectors/network'
+import {getAddress} from 'selectors/network'
 import {createMetadata} from 'sagas/metadata'
 import {fetchMetadata} from 'actions/metadata'
 import {isZeroAddress} from 'utils/web3'
 
 export function * createList ({tokenAddress}) {
   const accountAddress = yield select(getAccountAddress)
-  const addresses = yield select(getAddresses)
+  const contractAddress = yield select(getAddress, 'SimpleListFactory')
   const SimpleListFactoryContract = contract.getContract({abiName: 'SimpleListFactory',
-    address: addresses.SimpleListFactory
+    address: contractAddress
   })
 
   const receipt = yield SimpleListFactoryContract.methods.createSimpleList(tokenAddress).send({
@@ -29,9 +29,9 @@ export function * createList ({tokenAddress}) {
 }
 
 export function * getList ({tokenAddress}) {
-  const addresses = yield select(getAddresses)
+  const contractAddress = yield select(getAddress, 'SimpleListFactory')
   const SimpleListFactoryContract = contract.getContract({abiName: 'SimpleListFactory',
-    address: addresses.SimpleListFactory
+    address: contractAddress
   })
 
   const listAddress = yield SimpleListFactoryContract.methods.tokenToListMap(tokenAddress).call()

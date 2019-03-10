@@ -13,7 +13,6 @@ import AppStore from 'components/store/AppStore'
 import withTracker from 'containers/withTracker'
 import Web3, {withNetwork} from 'containers/Web3'
 import Layout from 'components/Layout'
-import 'scss/styles.scss'
 
 export default class Root extends Component {
   render () {

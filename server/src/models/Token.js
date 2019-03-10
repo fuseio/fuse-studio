@@ -1,4 +1,5 @@
 const tokenIssued = require('@utils/tokenProgress').tokenIssued
+const detailsGiven = require('@utils/tokenProgress').detailsGiven
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
@@ -25,6 +26,14 @@ module.exports = (mongoose) => {
 
   TokenSchema.post('save', token => {
     tokenIssued(token.address)
+  })
+
+  TokenSchema.post('save', async token => {
+    const User = mongoose.model('User')
+    const user = await User.findOne({accountAddress: token.owner})
+    if (user) {
+      detailsGiven(token.address)
+    }
   })
 
   const Token = mongoose.model('Token', TokenSchema)

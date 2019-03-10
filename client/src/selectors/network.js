@@ -8,16 +8,35 @@ export const getAddresses = createSelector(
   (networkType, addresses) => addresses[networkType] || {}
 )
 
-export const getCurrencyFactoryAddress = createSelector(
-  getAddresses,
-  (addresses) => addresses.CurrencyFactory
-)
+export const getAddress = (state, contractName) => getAddresses(state)[contractName]
 
-export const getClnAddress = createSelector(
-  getAddresses,
-  (addresses) => addresses.ColuLocalNetwork
-)
+export const getNetworkSide = (state) => state.network.networkType === state.network.homeNetwork
+  ? 'home'
+  : 'foreign'
 
+export const getBridgeStatus = createSelector(
+  state => state.network,
+  getNetworkSide,
+  (network, networkSide) => networkSide === 'home' ? {
+    from: {
+      network: network.homeNetwork,
+      bridge: 'home'
+    },
+    to: {
+      network: network.foreignNetwork,
+      bridge: 'foreign'
+    }
+  } : {
+    from: {
+      network: network.foreignNetwork,
+      bridge: 'foreign'
+    },
+    to: {
+      network: network.homeNetwork,
+      bridge: 'home'
+    }
+  }
+)
 export const getEtherscanUrl = createSelector(
   getNetworkType,
   networkType => networkType === 'main'

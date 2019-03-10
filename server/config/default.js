@@ -41,7 +41,7 @@ module.exports = {
         ColuLocalNetwork: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
         CurrencyFactory: '0xA1F05144f9d3298a702c8EEE3ca360bc87d05207',
         TokenFactory: '0x824E01Cf7013f459Aa010D73627B006a8740b183',
-        ForeignBridgeFactory: '0xF0cEB3b89c66c27Fa21Cb66690Ea8933E11d8685'
+        ForeignBridgeFactory: '0x7D913f6F0bA5Cc0660d8F60Df894b01F272550A0'
       },
       mainnet: {
         ColuLocalNetwork: '0x4162178B78D6985480A308B2190EE5517460406D',
@@ -49,8 +49,8 @@ module.exports = {
         TokenFactory: '0xac051e086FD2046FC75A53D38088B4DD6e00E25b'
       },
       fuse: {
-        HomeBridgeFactory: '0x2758B3c32f51Fbd9EE4c72cf36e583a3BFaDC396',
-        BridgeMapper: '0x0575cb8485898A79549b6407DEc95d1C77c3eF63'
+        HomeBridgeFactory: '0xFb5CC1688Ec06c57cbAB6cC34c33413154A666Fa',
+        BridgeMapper: '0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14'
       }
     }
   },

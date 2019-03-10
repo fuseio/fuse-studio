@@ -2,7 +2,6 @@ import filter from 'lodash/filter'
 import pickBy from 'lodash/pickBy'
 import find from 'lodash/find'
 import { createSelector } from 'reselect'
-import {getClnAddress} from 'selectors/network'
 export const getCommunity = (state, address) => ({...state.tokens[address], ...state.marketMaker[address]})
 
 export const getCommunityTokens = createSelector(
@@ -29,10 +28,4 @@ export const getSelectedCommunity = createSelector(
   getCommunities,
   state => state.router.location.pathname,
   (communities, pathname) => find(communities, {path: pathname}) || {}
-)
-
-export const getClnToken = createSelector(
-  getClnAddress,
-  state => state.tokens,
-  (clnAddress, tokens) => tokens[clnAddress]
 )

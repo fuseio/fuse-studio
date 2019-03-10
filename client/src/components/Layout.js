@@ -2,7 +2,7 @@ import React from 'react'
 import { isMobile } from 'react-device-detect'
 import ModalContainer from 'containers/ModalContainer'
 import classNames from 'classnames'
-import 'scss/styles.scss'
+import 'scss/main.scss'
 
 const Layout = (props) => {
   let mainContainerClass = classNames({

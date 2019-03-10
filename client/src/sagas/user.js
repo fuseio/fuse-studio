@@ -53,6 +53,7 @@ function * addUser ({user, tokenAddress}) {
   yield put({
     type: actions.ADD_USER.SUCCESS,
     user,
+    tokenAddress,
     response: {
       data
     }
@@ -62,7 +63,6 @@ function * addUser ({user, tokenAddress}) {
 function * isUserExists ({accountAddress}) {
   const response = yield apiCall(api.isUserExists, {accountAddress})
 
-  // const {data} = response
   yield put({
     type: actions.IS_USER_EXISTS.SUCCESS,
     accountAddress,

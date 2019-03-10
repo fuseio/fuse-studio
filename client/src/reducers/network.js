@@ -1,7 +1,13 @@
 import * as network from 'actions/network'
 const {addresses} = CONFIG.web3
 
-export default (state = {addresses}, action) => {
+const initialState = {
+  addresses,
+  homeNetwork: 'fuse',
+  foreignNetwork: 'ropsten'
+}
+
+export default (state = initialState, action) => {
   switch (action.type) {
     case network.CHECK_ACCOUNT_CHANGED.SUCCESS:
       return {...state, ...action.response}
