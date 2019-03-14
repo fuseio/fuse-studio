@@ -1,9 +1,9 @@
 const tokenUtils = require('@utils/token')
 const eventUtils = require('@utils/event')
+const bridgeDeployed = require('@utils/tokenProgress').bridgeDeployed
 
 const handleTokenCreatedEvent = async (event) => {
   const blockNumber = event.blockNumber
-  console.log(`recieved TokenCreated event at ${blockNumber} blockNumber`)
   const eventArgs = event.returnValues
   const address = eventArgs.token
   const owner = eventArgs.issuer
@@ -14,19 +14,25 @@ const handleTokenCreatedEvent = async (event) => {
 }
 
 const handleTransferEvent = (event) => {
-  const blockNumber = event.blockNumber
-  console.log(`recieved Transfer event at ${blockNumber} blockNumber`)
   return Promise.resolve()
+}
+
+const handleBridgeMappingUpdatedEvent = (event) => {
+  const tokenAddress = event.returnValues.foreignToken
+  return bridgeDeployed(tokenAddress)
 }
 
 const eventsHandlers = {
   TokenCreated: handleTokenCreatedEvent,
-  Transfer: handleTransferEvent
+  Transfer: handleTransferEvent,
+  BridgeMappingUpdated: handleBridgeMappingUpdatedEvent
 }
 
 const handleEvent = function (eventName, event) {
   if (eventsHandlers.hasOwnProperty(eventName)) {
     return eventsHandlers[eventName](event).then(() => {
+      const blockNumber = event.blockNumber
+      console.log(`recieved ${eventName} event at ${blockNumber} blockNumber`)
       eventUtils.addNewEvent({
         eventName,
         ...event

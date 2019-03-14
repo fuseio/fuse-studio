@@ -14,6 +14,11 @@ agenda.define('processPastTransferEvents', async (job, done) => {
   done()
 })
 
+agenda.define('processPastBridgeMappingEvents', async (job, done) => {
+  await tasks.processPastBridgeMappingEvents()
+  done()
+})
+
 async function start () {
   console.log('Starting Agenda job scheduling')
 
@@ -24,6 +29,7 @@ async function start () {
 
   await agenda.start()
 
+  await agenda.now('processPastBridgeMappingEvents')
   await agenda.now('processPastTokenCreatedEvents')
   await agenda.every('10 minutes', 'processPastTokenCreatedEvents')
 

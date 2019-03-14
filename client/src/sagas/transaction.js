@@ -1,9 +1,13 @@
-import { call, put, take } from 'redux-saga/effects'
+import { call, put, fork, take } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 
 import {transactionPending, transactionFailed, transactionSucceeded} from 'actions/utils'
 
-export function * transactionFlow ({transactionPromise, action}) {
+export function * transactionFlow ({transactionPromise, action, confirmationsLimit}) {
+  if (confirmationsLimit) {
+    yield fork(transactionConfirmations, {transactionPromise, action, confirmationsLimit})
+  }
+
   const transactionHash = yield new Promise((resolve, reject) => {
     transactionPromise.on('transactionHash', (transactionHash) =>
       resolve(transactionHash)
@@ -45,13 +49,14 @@ function createConfirmationChannel (transactionPromise) {
 export function * transactionConfirmations ({confirmationsLimit, transactionPromise, action}) {
   const confirmationChannel = yield call(createConfirmationChannel, transactionPromise)
 
-  let isOpen = true
-  while (isOpen) {
-    const response = yield take(confirmationChannel)
+  let isWaiting = true
+  let response
+  while (isWaiting) {
+    response = yield take(confirmationChannel)
     yield put({ type: action.CONFIRMATION, response })
     if (response.confirmationNumber > confirmationsLimit) {
       confirmationChannel.close()
-      isOpen = false
+      isWaiting = false
     }
   }
 }

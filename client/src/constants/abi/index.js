@@ -1,11 +1,10 @@
 module.exports = {
   ColuLocalNetwork: require('./ColuLocalNetwork'),
-  CurrencyFactory: require('./CurrencyFactory'),
-  ColuLocalCurrency: require('./ColuLocalCurrency'),
-  EllipseMarketMaker: require('./EllipseMarketMaker'),
   SimpleList: require('./SimpleList'),
   SimpleListFactory: require('./SimpleListFactory'),
   TokenFactory: require('./TokenFactory'),
   BridgeMapper: require('./BridgeMapper'),
-  BasicToken: require('./BasicToken')
+  BasicToken: require('./BasicToken'),
+  BasicForeignBridge: require('./BasicForeignBridge'),
+  BasicHomeBridge: require('./BasicHomeBridge')
 }

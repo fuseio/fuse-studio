@@ -14,6 +14,9 @@ export const getNetworkSide = (state) => state.network.networkType === state.net
   ? 'home'
   : 'foreign'
 
+export const getBlockNumber = (state, networkType) => state.network[networkType] &&
+  state.network[networkType].blockNumber
+
 export const getBridgeStatus = createSelector(
   state => state.network,
   getNetworkSide,

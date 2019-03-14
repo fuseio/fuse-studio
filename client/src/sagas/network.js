@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
-import {givenWeb3 as web3} from 'services/web3'
+import {givenWeb3 as web3, getWeb3} from 'services/web3'
 import {isNetworkSupported} from 'utils/network'
 import * as actions from 'actions/network'
 import {balanceOfCln} from 'actions/accounts'
@@ -87,10 +87,23 @@ function * checkAccountChanged ({selectedAddress}) {
   return false
 }
 
+function * getBlockNumber ({networkType}) {
+  const web3 = getWeb3({networkType})
+  const blockNumber = yield call(web3.eth.getBlockNumber)
+  yield put({
+    type: actions.GET_BLOCK_NUMBER.SUCCESS,
+    networkType,
+    response: {
+      blockNumber
+    }
+  })
+}
+
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
     takeEvery(actions.CHECK_ACCOUNT_CHANGED.REQUEST, checkAccountChanged),
-    takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices)
+    takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices),
+    takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber)
   ])
 }

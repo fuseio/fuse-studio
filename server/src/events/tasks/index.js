@@ -1,6 +1,7 @@
 const processPastEvents = require('./utils').processPastEvents
-const tokenFactoryAbi = require('@constants/abi/TokenFactory')
 const processPastTransferEvents = require('./transfer').processPastTransferEvents
+const processPastBridgeMappingEvents = require('./bridge').processPastBridgeMappingEvents
+const tokenFactoryAbi = require('@constants/abi/TokenFactory')
 const web3 = require('@services/web3')
 const addresses = require('@utils/network').addresses
 
@@ -9,5 +10,6 @@ const processPastTokenCreatedEvents = processPastEvents.bind(null, 'TokenCreated
 
 module.exports = {
   processPastTokenCreatedEvents,
-  processPastTransferEvents
+  processPastTransferEvents,
+  processPastBridgeMappingEvents
 }

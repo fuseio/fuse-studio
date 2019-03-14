@@ -4,7 +4,9 @@ const {addresses} = CONFIG.web3
 const initialState = {
   addresses,
   homeNetwork: 'fuse',
-  foreignNetwork: 'ropsten'
+  foreignNetwork: 'ropsten',
+  fuse: {},
+  ropsten: {}
 }
 
 export default (state = initialState, action) => {
@@ -17,6 +19,8 @@ export default (state = initialState, action) => {
       return {...state, ...action.response}
     case network.FETCH_GAS_PRICES.SUCCESS:
       return {...state, ...action.response}
+    case network.GET_BLOCK_NUMBER.SUCCESS:
+      return {...state, [action.networkType]: {...state[action.networkType], ...action.response}}
     default:
       return state
   }

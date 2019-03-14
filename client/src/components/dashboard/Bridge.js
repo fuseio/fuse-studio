@@ -6,7 +6,8 @@ import web3 from 'web3'
 import FontAwesome from 'react-fontawesome'
 
 import {balanceOfToken} from 'actions/accounts'
-import {fetchHomeToken, fetchForeignBridge, fetchHomeBridge, deployBridge, transferToHome, transferToForeign} from 'actions/bridge'
+import * as actions from 'actions/bridge'
+import {getBlockNumber} from 'actions/network'
 import {getBalances} from 'selectors/accounts'
 import {getBridgeStatus} from 'selectors/network'
 import RopstenLogo from 'images/Ropsten.png'
@@ -22,7 +23,7 @@ class Balance extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.waitingForConfirmation === false && prevProps.waitingForConfirmation) {
+    if (!this.props.transferStatus && prevProps.transferStatus) {
       this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {networkBridge: this.props.bridgeSide.bridge})
     }
   }
@@ -48,7 +49,7 @@ Balance.propTypes = {
 
 class Bridge extends Component {
   state = {
-    transferToFuse: 0
+    transferAmount: 0
   }
 
   componentDidMount () {
@@ -57,23 +58,34 @@ class Bridge extends Component {
     this.props.fetchForeignBridge(this.props.foreignTokenAddress)
   }
 
+  componentDidUpdate (prevProps) {
+    if (this.props.waitingForConfirmation && !prevProps.waitingForConfirmation) {
+      if (this.props.bridgeStatus.to.bridge === 'home') {
+        this.props.watchHomeBridge(this.props.homeBridgeAddress, this.props.transactionHash)
+      } else {
+        this.props.watchForeignBridge(this.props.foreignBridgeAddress, this.props.transactionHash)
+      }
+    }
+
+    if (!this.props.transferStatus && prevProps.transferStatus) {
+      this.setState({transferAmount: 0})
+    }
+  }
+
   isOwner = () => this.props.accountAddress === this.props.token.owner
 
-  setTransferToFuse = (e) => this.setState({ transferToFuse: e.target.value })
+  setTransferAmount = (e) => this.setState({ transferAmount: e.target.value })
 
   handleTransfer = () => {
-    const value = web3.utils.toWei(this.state.transferToFuse)
+    const value = web3.utils.toWei(this.state.transferAmount)
     if (this.props.bridgeStatus.to.bridge === 'home') {
       this.props.transferToHome(this.props.foreignTokenAddress, this.props.foreignBridgeAddress, value)
     } else {
       this.props.transferToForeign(this.props.homeTokenAddress, this.props.homeBridgeAddress, value)
     }
+    this.props.getBlockNumber(this.props.bridgeStatus.to.network)
+    this.props.getBlockNumber(this.props.bridgeStatus.from.network)
   }
-
-  isConfirmed = () => this.props.confirmationsLimit <= this.props.confirmationNumber
-  isSent = () => this.props.transactionStatus === 'PENDING' || this.props.transactionStatus === 'SUCCESS'
-
-  isWaitingForConfirmation = () => this.isSent() && !this.isConfirmed()
 
   render = () => (<div className='dashboard-sidebar'>
     {(this.props.foreignTokenAddress && this.props.homeTokenAddress) ? <div className='dashboard-network'>
@@ -84,7 +96,7 @@ class Bridge extends Component {
         token={this.props.token}
         balances={this.props.balances}
         bridgeSide={this.props.bridgeStatus.from}
-        waitingForConfirmation={this.isWaitingForConfirmation()}
+        transferStatus={this.props.transferStatus}
       />
       <div className='dashboard-network-content network-arrow'>
         <FontAwesome name='long-arrow-alt-right' />
@@ -96,7 +108,7 @@ class Bridge extends Component {
         token={this.props.token}
         balances={this.props.balances}
         bridgeSide={this.props.bridgeStatus.to}
-        waitingForConfirmation={this.isWaitingForConfirmation()}
+        transferStatus={this.props.transferStatus}
       />
     </div> : null}
     <div className='dashboard-transfer'>
@@ -104,15 +116,15 @@ class Bridge extends Component {
         this.props.foreignBridgeAddress ? (
           <div>
             <div className='dashboard-transfer-form'>
-              <input value={this.state.transferToFuse} onChange={this.setTransferToFuse} />
+              <input type='number' value={this.state.transferAmount} onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
               <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
             </div>
-            <button disabled={this.isWaitingForConfirmation()}
+            <button disabled={this.props.transferStatus || !Number(this.state.transferAmount)}
               className='dashboard-transfer-btn' onClick={this.handleTransfer}>
-              {this.isWaitingForConfirmation() ? 'PENDING' : 'Transfer to fuse'}
+              {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
             </button>
             {
-              this.isWaitingForConfirmation()
+              this.props.waitingForConfirmation
                 ? <div>Confirmations: {this.props.confirmationNumber} / {this.props.confirmationsLimit} </div>
                 : null
             }
@@ -126,7 +138,6 @@ class Bridge extends Component {
         )
       }
     </div>
-
   </div>)
 }
 
@@ -138,10 +149,31 @@ Bridge.propTypes = {
 }
 
 class BridgeContainer extends Component {
+  isConfirmed = () => this.props.confirmationsLimit <= this.props.confirmationNumber
+  isSent = () => this.props.transactionStatus === 'PENDING' || this.props.transactionStatus === 'SUCCESS'
+
+  isWaitingForConfirmation = () => this.isSent() && !this.isConfirmed()
+
+  getTransferStatus = () => {
+    if (this.props.transactionStatus === 'PENDING') {
+      return 'PENDING'
+    }
+
+    if (this.props.transactionStatus === 'SUCCESS') {
+      if (!this.isConfirmed()) {
+        return 'WAITING FOR CONFIRMATION'
+      }
+      if (!this.props.relayEvent) {
+        return 'WAITING FOR BRIDGE'
+      }
+    }
+  }
+
   render = () => {
     if (this.props.accountAddress && this.props.foreignTokenAddress) {
       return <Bridge
-        {...this.props} />
+        {...this.props} waitingForConfirmation={this.isWaitingForConfirmation()}
+        transferStatus={this.getTransferStatus()} />
     } else {
       return null
     }
@@ -157,13 +189,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
+  ...actions,
   balanceOfToken,
-  deployBridge,
-  fetchHomeBridge,
-  fetchHomeToken,
-  fetchForeignBridge,
-  transferToHome,
-  transferToForeign
+  getBlockNumber
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BridgeContainer)

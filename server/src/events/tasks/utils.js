@@ -23,6 +23,7 @@ const processPastEvents = async (eventName, contract, {conditions} = defaultOpti
     console.log('last block ' + lastBlockNumber)
     return contract.getPastEvents(eventName, {fromBlock: lastBlockNumber, toBlock: 'latest'}, actualEventsCallback)
   } catch (error) {
+    console.error(error)
     const latestBlock = await web3.eth.getBlock('latest')
     const pageSize = config.get('web3.pageSize')
     for (let i = lastBlockNumber; i < latestBlock.number; i += pageSize) {
