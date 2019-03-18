@@ -1,48 +1,18 @@
-import {init, get} from 'osseus-wallet'
 import Web3 from 'web3'
-import abi from 'constants/abi'
-import {networkNameToId} from 'constants/network'
 
-const config = {
-  osseus_wallet: {
-    abi,
-    ...CONFIG.web3
-  }
-}
-
-export const getWeb3 = ({networkBridge, networkType} = {}) => {
-  if (networkBridge) {
-    return getWeb3ByBridge({networkBridge})
-  }
-  return getWeb3ByNetwork({networkType})
-}
-
-const getWeb3ByBridge = ({networkBridge} = {}) => {
-  if (!networkBridge) {
+export const getWeb3 = ({bridgeType} = {}) => {
+  if (!bridgeType) {
     return givenWeb3
   }
-  if (networkBridge === 'home' && Web3.givenProvider.networkVersion === '121') {
+  if (bridgeType === 'home' && Web3.givenProvider.networkVersion === '121') {
     return givenWeb3
   }
 
-  if (networkBridge === 'foreign' && Web3.givenProvider.networkVersion !== '121') {
+  if (bridgeType === 'foreign' && Web3.givenProvider.networkVersion !== '121') {
     return givenWeb3
   }
-  const web3 = web3ByBridge[networkBridge]
+  const web3 = web3ByBridge[bridgeType]
   return web3
-}
-
-const getWeb3ByNetwork = ({networkType} = {}) => {
-  if (!networkType) {
-    return givenWeb3
-  }
-  const networkId = networkNameToId[networkType]
-
-  if (Web3.givenProvider.networkVersion === String(networkId)) {
-    return givenWeb3
-  }
-
-  return web3ByNetwork[networkType]
 }
 
 export const givenWeb3 = new Web3(Web3.givenProvider || CONFIG.web3.provider)
@@ -54,11 +24,4 @@ const web3ByBridge = {
   foreign: foreignWeb3
 }
 
-const web3ByNetwork = {
-  fuse: homeWeb3,
-  ropsten: foreignWeb3
-}
-
-init({config})
-
-export default get()
+export default givenWeb3

@@ -11,20 +11,33 @@ import {getBlockNumber} from 'actions/network'
 import {getBalances} from 'selectors/accounts'
 import {getBridgeStatus} from 'selectors/network'
 import RopstenLogo from 'images/Ropsten.png'
+import MainnetLogo from 'images/Mainnet.png'
 import FuseLogo from 'images/fuseLogo.svg'
 
-const NetworkLogo = ({network}) => network === 'fuse'
-  ? <div className='dashboard-network-logo fuse-logo'><img src={FuseLogo} /></div>
-  : <div className='dashboard-network-logo'><img src={RopstenLogo} /></div>
+const NetworkLogo = ({network}) => {
+  switch (network) {
+    case 'fuse':
+      return <div className='dashboard-network-logo fuse-logo'><img src={FuseLogo} /></div>
+    case 'ropsten':
+      return <div className='dashboard-network-logo'><img src={RopstenLogo} /></div>
+    case 'main':
+      return <div className='dashboard-network-logo'><img src={MainnetLogo} /></div>
+  }
+}
 
 class Balance extends Component {
   componentDidMount () {
-    this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {networkBridge: this.props.bridgeSide.bridge})
+    if (this.props.accountAddress) {
+      this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {bridgeType: this.props.bridgeSide.bridge})
+    }
   }
 
   componentDidUpdate (prevProps) {
     if (!this.props.transferStatus && prevProps.transferStatus) {
-      this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {networkBridge: this.props.bridgeSide.bridge})
+      this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {bridgeType: this.props.bridgeSide.bridge})
+    }
+    if (this.props.accountAddress && !prevProps.accountAddress) {
+      this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {bridgeType: this.props.bridgeSide.bridge})
     }
   }
 
@@ -33,7 +46,11 @@ class Balance extends Component {
     <NetworkLogo network={this.props.bridgeSide.network} />
     <div className='dashboard-network-text'>Balance</div>
     <div className='dashboard-network-balance balance-fuse'>
-      <span>{new BigNumber(this.props.balances[this.props.tokenAddress]).div(1e18).toFormat(2, 1)} {this.props.token.symbol}</span>
+      <span>{this.props.balances[this.props.tokenAddress]
+        ? new BigNumber(this.props.balances[this.props.tokenAddress]).div(1e18).toFormat(2, 1)
+        : 0 }
+      </span>
+      <span> {this.props.token.symbol}</span>
     </div>
     <button className='dashboard-network-btn'>Show more</button>
   </div>
@@ -83,8 +100,8 @@ class Bridge extends Component {
     } else {
       this.props.transferToForeign(this.props.homeTokenAddress, this.props.homeBridgeAddress, value)
     }
-    this.props.getBlockNumber(this.props.bridgeStatus.to.network)
-    this.props.getBlockNumber(this.props.bridgeStatus.from.network)
+    this.props.getBlockNumber(this.props.bridgeStatus.to.network, this.props.bridgeStatus.to.bridge)
+    this.props.getBlockNumber(this.props.bridgeStatus.from.network, this.props.bridgeStatus.from.bridge)
   }
 
   render = () => (<div className='dashboard-sidebar'>
@@ -119,7 +136,7 @@ class Bridge extends Component {
               <input type='number' value={this.state.transferAmount} onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
               <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
             </div>
-            <button disabled={this.props.transferStatus || !Number(this.state.transferAmount)}
+            <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}
               className='dashboard-transfer-btn' onClick={this.handleTransfer}>
               {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
             </button>
@@ -170,7 +187,7 @@ class BridgeContainer extends Component {
   }
 
   render = () => {
-    if (this.props.accountAddress && this.props.foreignTokenAddress) {
+    if (this.props.foreignTokenAddress) {
       return <Bridge
         {...this.props} waitingForConfirmation={this.isWaitingForConfirmation()}
         transferStatus={this.getTransferStatus()} />
@@ -183,7 +200,6 @@ class BridgeContainer extends Component {
 const mapStateToProps = (state) => ({
   ...state.screens.bridge,
   homeNetwork: state.network.homeNetwork,
-  foreignNetwork: state.network.foreignNetwork,
   bridgeStatus: getBridgeStatus(state),
   balances: getBalances(state)
 })

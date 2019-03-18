@@ -17,6 +17,10 @@
 	align-items: center;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 .fullscreen {
 	height: 100vh;
 	&.open-mobile-nav {

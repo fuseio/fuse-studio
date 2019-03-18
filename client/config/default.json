@@ -14,8 +14,14 @@
         "TokenFactory": "0xac051e086FD2046FC75A53D38088B4DD6e00E25b"
       },
       "fuse": {
-        "SimpleListFactory": "0x14456a52832891c3dcf4f7529949817cb3048cc0",
-        "BridgeMapper": "0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14"
+        "ropsten": {
+          "SimpleListFactory": "0x14456a52832891c3dcf4f7529949817cb3048cc0",
+          "BridgeMapper": "0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14"
+        },
+        "main": {
+          "SimpleListFactory": "0x14456a52832891c3dcf4f7529949817cb3048cc0",
+          "BridgeMapper": "0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14"
+        }
       }
     },
     "bridge": {
@@ -23,7 +29,11 @@
         "home": 1,
         "foreign": 8
       },
-      "pollingTimeout": 5000
+      "pollingTimeout": 5000,
+      "network": {
+        "homeNetwork": "fuse",
+        "foreignNetwork": "ropsten"
+      }
     }
   },
   "api": {

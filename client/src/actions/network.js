@@ -16,4 +16,4 @@ export const checkAccountChanged = (selectedAddress) => requestAction(CHECK_ACCO
   {selectedAddress})
 
 export const fetchGasPrices = () => requestAction(FETCH_GAS_PRICES)
-export const getBlockNumber = (networkType) => requestAction(GET_BLOCK_NUMBER, {networkType})
+export const getBlockNumber = (networkType, bridgeType) => requestAction(GET_BLOCK_NUMBER, {networkType, bridgeType})

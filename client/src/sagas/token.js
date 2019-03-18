@@ -1,6 +1,6 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects'
-import { contract } from 'osseus-wallet'
 
+import {getContract} from 'services/contract'
 import {getAddress} from 'selectors/network'
 import * as actions from 'actions/token'
 import {fetchMetadata} from 'actions/metadata'
@@ -35,7 +35,7 @@ function * fetchToken ({tokenAddress}) {
 
 function * fetchClnToken () {
   const tokenAddress = yield select(getAddress, 'ColuLocalNetwork')
-  const ColuLocalNetworkContract = contract.getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
+  const ColuLocalNetworkContract = getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
 
   const calls = {
     name: call(ColuLocalNetworkContract.methods.name().call),
@@ -56,7 +56,7 @@ function * fetchClnToken () {
 export function * createToken ({name, symbol, totalSupply, tokenURI}) {
   const tokenFactoryAddress = yield select(getAddress, 'TokenFactory')
 
-  const TokenFactoryContract = contract.getContract({abiName: 'TokenFactory',
+  const TokenFactoryContract = getContract({abiName: 'TokenFactory',
     address: tokenFactoryAddress
   })
   const accountAddress = yield select(getAccountAddress)

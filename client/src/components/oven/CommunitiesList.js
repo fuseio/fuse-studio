@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ExpandableCommunity from 'components/oven/ExpandableCommunity'
+import Community from 'components/Community'
 import InfiniteScroll from 'react-infinite-scroller'
 import Banner from 'images/home-banner.png'
 
@@ -7,19 +7,9 @@ const PAGE_START = 1
 const PAGE_SIZE = 10
 
 class CommunitiesList extends Component {
-  state = {
-    selectedCommunityAddress: null
-  }
-
   constructor (props) {
     super(props)
     this.myRef = React.createRef()
-  }
-
-  handleCommunityClick = (address) => {
-    this.setState({
-      selectedCommunityAddress: address
-    })
   }
 
   loadMore = (nextPage) => {
@@ -65,15 +55,16 @@ class CommunitiesList extends Component {
           useWindow={false}
           getScrollParent={this.getScrollParent}
         >
-          {addresses.map(address => <ExpandableCommunity
-            key={address}
-            handleCommunityClick={this.handleCommunityClick}
-            token={tokens[address]}
-            metadata={metadata[tokens[address].tokenURI]}
-            selectedCommunityAddress={this.state.selectedCommunityAddress}
-            history={this.props.history}
-            account={this.props.account}
-          />
+          {addresses.map(address =>
+            <div className='list-item' key={address}>
+              <Community
+                token={tokens[address]}
+                metadata={metadata[tokens[address].tokenURI]}
+                history={this.props.history}
+                account={this.props.account}
+                showDashboard={this.props.showDashboard}
+              />
+            </div>
           )}
         </InfiniteScroll>
       </div>

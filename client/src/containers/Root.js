@@ -32,7 +32,7 @@ export default class Root extends Component {
               />
 
               <Route
-                path='/view/dashboard/:address'
+                path='/view/dashboard/:networkType/:address'
                 component={withTracker(withNetwork(Dashboard))}
               />
             </Layout>

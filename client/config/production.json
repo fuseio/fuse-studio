@@ -5,6 +5,12 @@
         "ColuLocalNetwork": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
         "TokenFactory": "0xED5B8b15936e13DF0e7B967C5c613fce3fcF1F12"
       }
+    },
+    "bridge": {
+      "network": {
+        "homeNetwork": "fuse",
+        "foreignNetwork": "main"
+      }
     }
   },
   "api": {

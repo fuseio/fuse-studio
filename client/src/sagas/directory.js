@@ -1,6 +1,6 @@
 import { all, call, put, select } from 'redux-saga/effects'
-import { contract } from 'osseus-wallet'
 
+import {getContract} from 'services/contract'
 import * as actions from 'actions/directory'
 import {tryTakeEvery} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
@@ -12,7 +12,7 @@ import {isZeroAddress} from 'utils/web3'
 export function * createList ({tokenAddress}) {
   const accountAddress = yield select(getAccountAddress)
   const contractAddress = yield select(getAddress, 'SimpleListFactory')
-  const SimpleListFactoryContract = contract.getContract({abiName: 'SimpleListFactory',
+  const SimpleListFactoryContract = getContract({abiName: 'SimpleListFactory',
     address: contractAddress
   })
 
@@ -30,7 +30,7 @@ export function * createList ({tokenAddress}) {
 
 export function * getList ({tokenAddress}) {
   const contractAddress = yield select(getAddress, 'SimpleListFactory')
-  const SimpleListFactoryContract = contract.getContract({abiName: 'SimpleListFactory',
+  const SimpleListFactoryContract = getContract({abiName: 'SimpleListFactory',
     address: contractAddress
   })
 
@@ -45,7 +45,7 @@ export function * getList ({tokenAddress}) {
 
 export function * addEntity ({listAddress, data}) {
   const accountAddress = yield select(getAccountAddress)
-  const SimpleListContract = contract.getContract({abiName: 'SimpleList',
+  const SimpleListContract = getContract({abiName: 'SimpleList',
     address: listAddress
   })
 
@@ -66,7 +66,7 @@ export function * addEntity ({listAddress, data}) {
 
 export function * fetchEntities ({listAddress, page = 1}) {
   const pageSize = 10
-  const SimpleListContract = contract.getContract({abiName: 'SimpleList',
+  const SimpleListContract = getContract({abiName: 'SimpleList',
     address: listAddress
   })
 

@@ -4,14 +4,14 @@ import {apiCall, tryTakeEvery} from './utils'
 import {getContract} from 'services/contract'
 import {zeroAddressToNull} from 'utils/web3'
 import {getAccountAddress} from 'selectors/accounts'
-import {getBlockNumber} from 'selectors/network'
+import {getBlockNumber, getAddress} from 'selectors/network'
 import {transactionFlow} from './transaction'
 import * as actions from 'actions/bridge'
 import * as api from 'services/api/token'
 
 export function * fetchHomeToken ({foreignTokenAddress}) {
-  const contractAddress = yield select(state => state.network.addresses.fuse.BridgeMapper)
-  const options = {networkBridge: 'home'}
+  const contractAddress = yield select(getAddress, 'BridgeMapper')
+  const options = {bridgeType: 'home'}
   const bridgeMapperContract = getContract({abiName: 'BridgeMapper', address: contractAddress, options})
   const homeTokenAddress = yield bridgeMapperContract.methods.homeTokenByForeignToken(foreignTokenAddress).call()
 
@@ -24,8 +24,8 @@ export function * fetchHomeToken ({foreignTokenAddress}) {
 }
 
 export function * fetchHomeBridge ({foreignTokenAddress}) {
-  const contractAddress = yield select(state => state.network.addresses.fuse.BridgeMapper)
-  const options = {networkBridge: 'home'}
+  const contractAddress = yield select(getAddress, 'BridgeMapper')
+  const options = {bridgeType: 'home'}
   const bridgeMapperContract = getContract({abiName: 'BridgeMapper', address: contractAddress, options})
   const homeBridgeAddress = yield bridgeMapperContract.methods.homeBridgeByForeignToken(foreignTokenAddress).call()
 
@@ -38,8 +38,8 @@ export function * fetchHomeBridge ({foreignTokenAddress}) {
 }
 
 export function * fetchForeignBridge ({foreignTokenAddress}) {
-  const contractAddress = yield select(state => state.network.addresses.fuse.BridgeMapper)
-  const options = {networkBridge: 'home'}
+  const contractAddress = yield select(getAddress, 'BridgeMapper')
+  const options = {bridgeType: 'home'}
   const bridgeMapperContract = getContract({abiName: 'BridgeMapper', address: contractAddress, options})
   const foreignBridgeAddress = yield bridgeMapperContract.methods.foreignBridgeByForeignToken(foreignTokenAddress).call()
 
@@ -110,7 +110,7 @@ function * pollForBridgeEvent ({bridgeContract, transactionHash, fromBlock, even
 function * watchForeignBridge ({foreignBridgeAddress, transactionHash}) {
   const foreignNetwork = yield select(state => state.network.foreignNetwork)
   const fromBlock = yield select(getBlockNumber, foreignNetwork)
-  const options = {networkBridge: 'foreign'}
+  const options = {bridgeType: 'foreign'}
   const bridgeContract = getContract({abiName: 'BasicForeignBridge', address: foreignBridgeAddress, options})
 
   const relayEvent = yield pollForBridgeEvent({bridgeContract, transactionHash, fromBlock, eventName: 'RelayedMessage'})
@@ -126,7 +126,7 @@ function * watchForeignBridge ({foreignBridgeAddress, transactionHash}) {
 function * watchHomeBridge ({homeBridgeAddress, transactionHash}) {
   const homeNetwork = yield select(state => state.network.homeNetwork)
   const fromBlock = yield select(getBlockNumber, homeNetwork)
-  const options = {networkBridge: 'home'}
+  const options = {bridgeType: 'home'}
   const bridgeContract = getContract({abiName: 'BasicHomeBridge', address: homeBridgeAddress, options})
 
   const relayEvent = yield pollForBridgeEvent({bridgeContract, transactionHash, fromBlock, eventName: 'AffirmationCompleted'})

@@ -7,6 +7,7 @@ import {balanceOfCln} from 'actions/accounts'
 import {loadModal} from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import {networkIdToName} from 'constants/network'
+import {saveState} from 'utils/storage'
 
 function * getNetworkTypeInternal () {
   const networkId = yield web3.eth.net.getId()
@@ -29,14 +30,32 @@ function * getAccountAddress () {
   return web3.utils.toChecksumAddress(web3.eth.defaultAccount)
 }
 
+function * deduceBridgeSides (networkType) {
+  if (networkType === 'fuse') {
+    const foreignNetwork = yield select(state => state.network.foreignNetwork)
+    return {
+      foreignNetwork,
+      homeNetwork: 'fuse'
+    }
+  } else {
+    return {
+      foreignNetwork: networkType,
+      homeNetwork: 'fuse'
+    }
+  }
+}
+
 function * getNetworkType () {
   try {
     const {networkType, networkId} = yield getNetworkTypeInternal()
+    const bridgeSides = yield deduceBridgeSides(networkType)
+
     yield put({type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
         networkId,
-        isMetaMask: web3.currentProvider.isMetaMask || false
+        isMetaMask: web3.currentProvider.isMetaMask || false,
+        ...bridgeSides
       }})
     const accountAddress = yield getAccountAddress()
 
@@ -87,8 +106,8 @@ function * checkAccountChanged ({selectedAddress}) {
   return false
 }
 
-function * getBlockNumber ({networkType}) {
-  const web3 = getWeb3({networkType})
+function * getBlockNumber ({networkType, bridgeType}) {
+  const web3 = getWeb3({bridgeType})
   const blockNumber = yield call(web3.eth.getBlockNumber)
   yield put({
     type: actions.GET_BLOCK_NUMBER.SUCCESS,
@@ -99,11 +118,17 @@ function * getBlockNumber ({networkType}) {
   })
 }
 
+function * watchGetNetworkTypeSuccess ({response}) {
+  const {foreignNetwork, homeNetwork} = response
+  saveState('state.network', {foreignNetwork, homeNetwork})
+}
+
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
     takeEvery(actions.CHECK_ACCOUNT_CHANGED.REQUEST, checkAccountChanged),
     takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices),
-    takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber)
+    takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),
+    takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess)
   ])
 }
