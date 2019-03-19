@@ -40,6 +40,9 @@
 				background-color: rgba(252, 110, 76, 0.08) !important;
 			}
 		}
+		&__menu-list {
+			 max-height: 160px !important;
+		}
 		&__dropdown-indicator {
 			&::before {
 				content: '';

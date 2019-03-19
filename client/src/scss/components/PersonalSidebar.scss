@@ -8,7 +8,7 @@
     box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.15);
     background:  #f7f8fc;
     min-height: 493px;
-    overflow: auto;
+    z-index: 50;
 
     @media (max-width: $breakpoint-mobile) {
       top: 0;
@@ -103,11 +103,16 @@
     }
     &-content {
       padding: 20px 0 20px 20px;
+      max-height: calc(100vh - 100px - 165px - 46px);
+      overflow: auto;
       &-community {
         overflow: auto;
         margin-bottom: 20px;
         padding-right: 20px;
       }
+      @media (max-width: $breakpoint-mobile) {
+        max-height: calc(100vh - 155px - 46px);
+     }
     }
     &-title {
       font-size: 10px;

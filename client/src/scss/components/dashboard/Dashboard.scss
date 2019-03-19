@@ -2,12 +2,16 @@
 
 .dashboard {
   &-content {
-    display: flex;
-    margin-top: 100px;
+    padding-top: 100px;
     overflow: auto;
-    height: calc(100vh - 100px);
+    height: 100vh;
     background-color: $color-dashboard-bg;
     flex-direction: column;
+
+    @media (max-width: $breakpoint-tablet) {
+      padding-top: 70px;
+      padding-bottom: 30px;
+  	}
 
     .ctrl-btn {
       position: absolute;
@@ -54,10 +58,12 @@
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background: $color-step-text;
     @media (max-width: $breakpoint-tablet) {
-      width: 100%;
       margin-bottom: 40px;
       padding: 20px;
   	}
+    @media (max-width: $breakpoint-mobile) {
+      width: 100%;
+    }
     .coin-logo {
       width: 80px;
       margin: 0 auto;
@@ -119,6 +125,17 @@
   &-section {
     display: flex;
     flex: 1;
+    margin-bottom: 20px;
+    @media (max-width: $breakpoint-mobile) {
+      flex-direction: column;
+    }
+  }
+
+  &-bridge {
+    border-radius: 10px;
+    padding: 25px 50px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    background: $color-step-text;
   }
 
   &-progress {
@@ -210,13 +227,12 @@
 
   &-information {
     margin-left: 20px;
-    margin-right: 20px;
     flex: 1;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background: $color-step-text;
     border-radius: 10px;
     padding: 20px;
-    @media (max-width: $breakpoint-tablet) {
+    @media (max-width: $breakpoint-mobile) {
       margin-left: 0;
   	}
     &-text {
@@ -318,7 +334,7 @@
         }
       }
 
-      textarea:hover {
+     textarea:hover {
         cursor: pointer
       }
 
@@ -420,12 +436,11 @@
   &-network {
     display: flex;
     flex: 1;
-    align-items: center;
     &-content {
       text-align: center;
-      flex: 1;
       &.network-arrow {
         flex: 0.5;
+        line-height: 125px;
       }
     }
     &-title {
@@ -479,7 +494,6 @@
       border: none;
       outline: none;
       margin-top: 20px;
-      margin-bottom: 20px;
       padding: 6px 12px;
       border-radius: 3px;
       &:hover,
@@ -492,8 +506,9 @@
     }
   }
   &-transfer {
-    margin-top: 60px;
+    margin-top: 30px;
     text-align: center;
+    line-height: 95px;
     &-form {
       box-shadow: inset -1px 0 4px 0 rgba(0, 0, 0, 0.23);
       border-radius: 3px;
@@ -503,7 +518,6 @@
       padding-right: 10px;
       padding-left: 3px;
       overflow: hidden;
-      margin-bottom: 45px;
       input {
         border: none;
         height: 14px;
@@ -536,21 +550,21 @@
         background-color: lighten($color-orange, 10%);
       }
     }
+
+    &-deploy-btn {
+      display: block;
+    }
   }
   &-container {
     z-index: 20;
-    display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 20px 20px;
     @media (max-width: $breakpoint-tablet) {
-
-  	}
-    @media (max-width: $breakpoint-mobile) {
-
-  	}
+      width: auto;
+    }
     &.ropsten {
       .dashboard {
         &-progress {

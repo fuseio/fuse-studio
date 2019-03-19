@@ -304,6 +304,16 @@
 			font-size: 14px;
 		}
 	}
+	&-with-error {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		.error-text {
+			margin-top: 5px;
+			color: $color-red;
+			font-size: 12px;
+		}
+	}
 	input {
 		border-radius: 5px;
   	box-shadow: 0 0 1px 0 rgba(10, 117, 134, 0.44);
@@ -314,11 +324,11 @@
 			box-shadow: 0 0 6px 0 rgba(10, 117, 134, 0.44);
 		}
 		&::placeholder {
-			color: #5f677e;
+			color: $color-filter-genre;
 			font-style: italic;
 		}
 		&.form-control-error {
-			border-color: red;
+			border-color: $color-red;
 		}
 	}
 	select {
@@ -329,7 +339,7 @@
 		flex: 1;
 		padding: 6px 12px;
 		&::placeholder {
-			color: #5f677e;
+			color: $color-filter-genre;
 			font-style: italic;
 		}
 	}
