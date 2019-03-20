@@ -1,20 +1,61 @@
 .dashboard {
-  &-entity {
-    &-container {
-      width: 650px;
-      margin: 50px auto 0;
+  &-empty {
+    text-align: center;
+    padding: 40px 0;
+    &-list {
+      margin-top: 20px;
+      margin-left: -25px;
+      margin-right: -25px;
+      margin-bottom: -25px;
+      background-color: $color-empty-list;
+      padding-left: 25px;
+      padding-right: 25px;
+      padding-bottom: 25px;
+      img {
+        width: 100%;
+      }
     }
-    &-content {
-      display: flex;
-      justify-content: space-between;
+    &-title {
+      color: $color-filter-text;
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+    &-text {
+      color: $color-author;
+      font-size: 12px;
       margin-bottom: 20px;
-      &.flex-end {
-        justify-content: flex-end;
+    }
+  }
+  &-entities {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    background: $color-step-text;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  &-entity {
+    &-content {
+      &-flex {
+        display: flex;
+        justify-content: space-between;
+      }
+      &-title {
+        color: $color-filter-text;
+        font-size: 12px;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+
+      &-text {
+        color: $color-author;
+        font-size: 12px;
+        margin-bottom: 20px;
       }
     }
     &-loader {
-      text-align: center;
       margin-top: 40px;
+      text-align: center;
       .loader {
         height: 60px;
         width: 180px;
@@ -30,13 +71,20 @@
         display: flex;
         width: 100%;
         align-items: flex-start;
+        border-bottom: 1px solid $color-brdr-issuance;
+        margin-bottom: 20px;
         input {
           flex: 1;
           padding: 7px 15px;
+          border: none;
+          &::placeholder {
+            font-style: italic;
+          }
         }
         .btn-entity-search {
-          font-size: 24px;
-          padding: 7px 15px;
+          font-size: 17px;
+          color: $color-step;
+          padding: 7px;
         }
       }
     }
@@ -44,7 +92,7 @@
 }
 
 .btn-entity-search {
-  color: #ff4a7b;
+  color: $color-step;
   font-size: 13px;
   font-weight: bold;
   border: none;
@@ -57,7 +105,7 @@
   &:focus,
   &:focus:active {
     cursor: pointer;
-    color: darken(#ff4a7b, 10%);
+    color: darken($color-step, 10%);
   }
   &[disabled] {
     cursor: not-allowed !important;
@@ -72,7 +120,6 @@
 }
 
 .btn-entity-adding {
-  color: $color-step-field;
   font-size: 13px;
   font-weight: bold;
   border: none;
@@ -80,11 +127,14 @@
   outline: none;
   padding: 6px 12px;
   margin-bottom: 16px;
+  .fa {
+    color: $color-orange;
+  }
   &:hover,
   &:focus,
   &:focus:active {
     cursor: pointer;
-    color: darken($color-step-field, 10%);
+    color: $color-orange;
   }
   &[disabled] {
     cursor: not-allowed !important;
@@ -237,12 +287,8 @@
   display: flex;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  background-image: linear-gradient(284deg, #262451, #343166);
-  &:hover {
-    cursor: pointer;
-  }
   &-logo {
     width: 50px;
     height: 50px;
@@ -253,16 +299,32 @@
     color: $color-step-field;
     margin-right: 15px;
     text-align: center;
+    &:hover {
+      cursor: pointer;
+    }
   }
   &-name {
-    color: $color-step-text;
-    font-size: 15px;
+    color: $color-filter-text;
+    font-size: 12px;
     margin-bottom: 7px;
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+  &-type {
+    color: $color-author;
+    font-size: 10px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
   }
   &-subtitle {
-    color: #8d8cac;
+    color: $color-filter-text;
     font-size: 11px;
     font-weight: 500;
+    span {
+      color: $color-negative;
+    }
   }
   &-modal {
     width: 1000px !important;
@@ -547,98 +609,122 @@
   }
   &-profile {
     display: flex;
-    background-color: #1f193f;
-    position: absolute;
-    top: 84px;
-    left: 0;
-    right: 0;
-    bottom: 0;
     overflow: auto;
+    background-color: $color-dashboard-bg;
+    padding-top: 140px;
+    min-height: 100vh;
+    align-items: flex-start;
+    @media (max-width: $breakpoint-mobile) {
+      padding-top: 90px;
+    }
     &-container {
-      width: 995px;
-      margin: 50px auto 0;
+      width: 900px;
+      margin: 0 auto;
+      border-radius: 4px;
+      background-color: $color-step-text;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+      align-items: flex-start;
       @media (max-width: $breakpoint-tablet) {
         width: 565px;
-        margin: 80px auto 0;
       }
       @media (max-width: $breakpoint-mobile) {
         width: 100%;
         padding-left: 20px;
         padding-right: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+      }
+    }
+    &-inform {
+      margin-left: 130px;
+      display: flex;
+      justify-content: space-between;
+      @media (max-width: $breakpoint-tablet) {
+        display: block;
       }
     }
     &-content {
       border-radius: 5px;
-      box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2);
-      background-image: linear-gradient(305deg, #262451, #343166);
-      padding: 15px;
-      margin-bottom: 20px;
+      padding: 20px 40px 20px 40px;
       overflow: hidden;
+      flex: 0.5;
+      & + .entity-profile-content {
+        padding: 20px 40px 40px 0;
+        margin-left: -30px;
+        flex: 1;
+        @media (max-width: $breakpoint-tablet) {
+          margin-left: 0;
+          padding: 0 40px 20px 40px;
+        }
+        @media (max-width: $breakpoint-mobile) {
+          padding: 0 0 20px 0;
+        }
+      }
       &-point {
-        color: $color-step-text;
+        color: $color-bg-gray;
         font-size: 12px;
         line-height: 2.25;
+        overflow: hidden;
         a {
-          color: $color-step-text;
+          color: $color-orange;
           &:hover,
           &:focus,
           &:active {
-            color: darken($color-step-text, 3%);
+            text-decoration: underline;
           }
         }
         &:not(:last-child) {
           margin-bottom: 5px;
         }
         .fa {
-          box-shadow: 2px 3px 5px 0 rgba(0, 0, 0, 0.28);
           margin-right: 10px;
-          color: #555280;
+          color: $color-orange;
           font-size: 16px;
           min-width: 18px;
         }
       }
+      @media (max-width: $breakpoint-mobile) {
+        padding: 0 0 20px 0;
+      }
     }
     &-media {
-      border-radius: 5px;
-      box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2);
+      border-radius: 5px 5px 0 0;
       overflow: hidden;
       &-img {
         height: 200px;
         background-size: cover;
         background-color: $color-step-text;
         background-position: center;
+        box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2);
       }
       &-content {
-        background-image: linear-gradient(326deg, #262451, #343166);
-        padding: 70px 20px 20px;
+        padding: 20px 20px 0 20px;
         position: relative;
       }
     }
     &-logo {
       width: 100px;
       height: 100px;
-      box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.21);
       background-color: $color-step-text;
       border-radius: 50%;
-      color: $color-step-field;
-      position: absolute;
-      top: -50px;
+      color: $color-orange;
       text-align: center;
       font-size: 85px;
-      left: 50%;
-      margin-left: -50px;
+      position: absolute;
+      top: -25px;
+      box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.21);
     }
     &-title {
-      color: $color-step-text;
-      line-height: 1.53;
-      font-size: 17px;
-      text-align: center;
-      margin-bottom: 10px;
+      color: $color-filter-text;
+      line-height: 1.3;
+      font-size: 20px;
+      font-weight: normal;
+      font-family: $font-family;
     }
     &-type {
-      color: #8d8cac;
+      color: $color-btn-control;
       line-height: 2.08;
-      text-align: center;
       font-size: 13px;
       font-weight: 500;
       margin-bottom: 20px;
@@ -646,12 +732,31 @@
     }
     &-link {
       font-size: 12px;
-      color: #5fddbb;
+      color: $color-filter-text;
       line-height: 2.17;
-      text-align: center;
-      text-decoration: underline;
+
+      .fa {
+        color: $color-orange;
+        margin-right: 10px;
+      }
+
       &:hover {
         cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+
+    &.ropsten {
+      .entity-profile {
+        &-logo,
+        &-link .fa,
+        &-content-point .fa,
+        &-content-point a {
+          color: $color-ropsten;
+        }
+      }
+      .dashboard-information-period {
+        color: $color-ropsten;
       }
     }
   }

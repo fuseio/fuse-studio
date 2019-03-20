@@ -115,7 +115,8 @@
 		text-align: center;
 		padding-top: 110px;
 		height: 180px;
-    background-image: linear-gradient(to top, #162a39, #25435a);
+		background-repeat: no-repeat;
+		background-size: cover;
 		@media (max-width: $breakpoint-mobile) {
 			&.step-with-sticky {
 				padding-bottom: 68px;

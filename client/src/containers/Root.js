@@ -7,7 +7,6 @@ import CLNFetcher from 'containers/CLNFetcher'
 import Oven from 'components/oven/Oven'
 import IssuanceWizard from 'components/issuance/IssuanceWizard'
 import Dashboard from 'components/dashboard/Dashboard'
-import EntityDirectory from 'components/dashboard/EntityDirectory'
 import EntityProfile from 'components/dashboard/EntityProfile'
 import AppStore from 'components/store/AppStore'
 import withTracker from 'containers/withTracker'
@@ -35,16 +34,12 @@ export default class Root extends Component {
                 path='/view/dashboard/:networkType/:address'
                 component={withTracker(withNetwork(Dashboard))}
               />
+              <Route
+                exact
+                path='/view/directory/:address/:hash'
+                component={withTracker(withNetwork(EntityProfile))}
+              />
             </Layout>
-            <Route
-              path='/view/directory/:address'
-              component={withTracker(withNetwork(EntityDirectory))}
-            />
-            <Route
-              exact
-              path='/view/directory/:address/:hash'
-              component={withTracker(withNetwork(EntityProfile))}
-            />
             <Route
               exact
               path='/view/appstore'

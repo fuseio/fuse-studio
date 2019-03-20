@@ -6,6 +6,11 @@
 
 .flex {
 	@include flex-box();
+	&.between {
+		@media (max-width: $breakpoint-tablet) {
+			display: block;
+		}
+	}
 }
 
 .column {

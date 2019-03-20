@@ -12,7 +12,8 @@ class EntityForm extends Component {
     businessPhone: '',
     businessLink: '',
     businessDescription: '',
-    activeBusinessType: ''
+    activeBusinessType: '',
+    businessAccount: ''
   }
 
   constructor (props) {
@@ -32,7 +33,8 @@ class EntityForm extends Component {
     phone: this.state.businessPhone,
     link: this.state.businessLink,
     description: this.state.businessDescription,
-    businessType: this.state.activeBusinessType
+    businessType: this.state.activeBusinessType,
+    businessAccount: this.state.businessAccount
   })
 
   handleBusinessNameChange = (event) => this.setState({businessName: event.target.value})
@@ -40,6 +42,7 @@ class EntityForm extends Component {
   handleBusinessEmailChange = (event) => this.setState({businessEmail: event.target.value})
   handleBusinessPhoneChange = (event) => this.setState({businessPhone: event.target.value})
   handleBusinessLinkChange = (event) => this.setState({businessLink: event.target.value})
+  handleBusinessAccountChange = (event) => this.setState({businessAccount: event.target.value})
   handleBusinessDescriptionChange = (event, maxLength) => this.setState({businessDescription: event.target.value.slice(0, maxLength)})
 
   setActiveBusinessTypeChange = (type) => this.setState({activeBusinessType: type})
@@ -49,7 +52,7 @@ class EntityForm extends Component {
     const businessTypes = [
       {value: 'food', label: 'Food & Beverages'},
       {value: 'sports', label: 'Sports'},
-      {value: 'tesh', label: 'Tesh'},
+      {value: 'teсh', label: 'Teсh'},
       {value: 'volunteer', label: 'Volunteer'},
       {value: 'design', label: 'Design & Home'}
     ]
@@ -111,6 +114,21 @@ class EntityForm extends Component {
           <p className='entity-modal-content-label'>
             Contact info
           </p>
+          <div className='row'>
+            <div className='col-4'>
+              <p className='entity-modal-content-form-control-label'>
+                Business Account
+              </p>
+            </div>
+            <div className='col-8'>
+              <input
+                className='entity-modal-content-form-control'
+                placeholder='Type...'
+                value={this.state.businessAccount === '' ? this.props.accountAddress : this.state.businessAccount}
+                onChange={(e) => this.handleBusinessAccountChange(e)}
+              />
+            </div>
+          </div>
           <div className='row'>
             <div className='col-4'>
               <p className='entity-modal-content-form-control-label'>
@@ -180,7 +198,7 @@ class EntityForm extends Component {
           </p>
           <textarea
             className='entity-modal-content-form-control'
-            rows='10'
+            rows='14'
             maxLength={MAX_LENGTH_OF_BUSINESS_DESCRIPTION}
             value={this.state.businessDescription}
             onChange={(e) => this.handleBusinessDescriptionChange(e, MAX_LENGTH_OF_BUSINESS_DESCRIPTION)}
@@ -203,7 +221,8 @@ class EntityForm extends Component {
 }
 
 EntityForm.propTypes = {
-  addEntity: PropTypes.func.isRequired
+  addEntity: PropTypes.func.isRequired,
+  accountAddress: PropTypes.string
 }
 
 export default EntityForm

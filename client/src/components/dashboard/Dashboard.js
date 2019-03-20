@@ -13,6 +13,8 @@ import TopNav from './../TopNav'
 import Breadcrumbs from './../elements/Breadcrumbs'
 import ActivityContent from './ActivityContent'
 import Bridge from './Bridge'
+import ReactGA from 'services/ga'
+import EntityDirectory from './EntityDirectory'
 import {getBlockExplorerUrl} from 'utils/network'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
@@ -82,6 +84,15 @@ class Dashboard extends Component {
 
   showHomePage = () => {
     this.props.history.push('/')
+  }
+
+  showProfile = (address, hash) => {
+    this.props.history.push(`/view/directory/${address}/${hash}`)
+    ReactGA.event({
+      category: 'Directory',
+      action: 'Click',
+      label: 'directory'
+    })
   }
 
   copyToClipboard = (e) => {
@@ -160,8 +171,13 @@ class Dashboard extends Component {
               }
             </div>
           </div>
-          <div>
-            <Bridge accountAddress={this.props.accountAddress} token={this.props.token} foreignTokenAddress={this.props.tokenAddress} />
+          <Bridge accountAddress={this.props.accountAddress} token={this.props.token} foreignTokenAddress={this.props.tokenAddress} />
+          <div className='dashboard-entities'>
+            <EntityDirectory
+              showProfile={this.showProfile}
+              tokenAddress={this.props.match.params.address}
+              copyToClipboard={this.copyToClipboard}
+            />
           </div>
         </div>
         {
