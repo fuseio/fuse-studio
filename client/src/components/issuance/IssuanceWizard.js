@@ -10,6 +10,7 @@ import NameStep from './NameStep'
 import SymbolStep from './SymbolStep'
 import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
+import Bg from 'images/background_pattern.jpg'
 import {createTokenWithMetadata} from 'actions/token'
 import { PENDING } from 'actions/constants'
 import ReactGA from 'services/ga'
@@ -190,7 +191,7 @@ class IssuanceWizard extends Component {
               <span className='btn-text'>Quit</span>
             </button>
           </div>
-          <div className={stepsContainerClassStyle} >
+          <div className={stepsContainerClassStyle} style={{backgroundImage: `url(${Bg})`}}>
             <div className={stepsIndicatorClassStyle} ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
               <StepsIndicator
                 steps={steps}
