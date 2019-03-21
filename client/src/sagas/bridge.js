@@ -78,8 +78,7 @@ function * transferToForeign ({homeTokenAddress, homeBridgeAddress, value, confi
   const basicToken = getContract({abiName: 'BasicToken', address: homeTokenAddress})
 
   const transactionPromise = basicToken.methods.transfer(homeBridgeAddress, value).send({
-    from: accountAddress,
-    gasPrice: 1e9
+    from: accountAddress
   })
 
   const action = actions.TRANSFER_TO_FOREIGN

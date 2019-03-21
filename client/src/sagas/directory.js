@@ -2,12 +2,13 @@ import { all, call, put, select } from 'redux-saga/effects'
 
 import {getContract} from 'services/contract'
 import * as actions from 'actions/directory'
-import {tryTakeEvery} from './utils'
+import {apiCall, createEntitiesFetch, tryTakeEvery} from './utils'
 import {getAccountAddress} from 'selectors/accounts'
 import {getAddress} from 'selectors/network'
 import {createMetadata} from 'sagas/metadata'
-import {fetchMetadata} from 'actions/metadata'
 import {isZeroAddress} from 'utils/web3'
+import {processReceipt} from 'services/api/misc'
+import * as api from 'services/api/business'
 
 export function * createList ({tokenAddress}) {
   const accountAddress = yield select(getAccountAddress)
@@ -55,6 +56,8 @@ export function * addEntity ({listAddress, data}) {
     from: accountAddress
   })
 
+  yield apiCall(processReceipt, {receipt})
+
   yield put({type: actions.ADD_DIRECTORY_ENTITY.SUCCESS,
     response: {
       receipt
@@ -64,39 +67,13 @@ export function * addEntity ({listAddress, data}) {
   return receipt
 }
 
-export function * fetchEntities ({listAddress, page = 1}) {
-  const pageSize = 10
-  const SimpleListContract = getContract({abiName: 'SimpleList',
-    address: listAddress
-  })
-
-  const count = yield SimpleListContract.methods.count().call()
-  const start = 0
-  const end = Math.min(page * pageSize, count)
-
-  const promises = []
-  for (let i = start; i < end; i++) {
-    promises.push(SimpleListContract.methods.getEntity(i).call())
-  }
-
-  const listHashes = yield all(promises)
-  yield put({type: actions.FETCH_ENTITIES.SUCCESS,
-    response: {
-      listHashes
-    }
-  })
-
-  for (let hash of listHashes) {
-    const tokenURI = `ipfs://${hash}`
-    yield put(fetchMetadata(tokenURI))
-  }
-}
+const fetchBusinesses = createEntitiesFetch(actions.FETCH_BUSINESSES, api.fetchBusinesses)
 
 export default function * marketMakerSaga () {
   yield all([
     tryTakeEvery(actions.CREATE_LIST, createList, 1),
     tryTakeEvery(actions.GET_LIST, getList, 1),
     tryTakeEvery(actions.ADD_DIRECTORY_ENTITY, addEntity, 1),
-    tryTakeEvery(actions.FETCH_ENTITIES, fetchEntities, 1)
+    tryTakeEvery(actions.FETCH_BUSINESSES, fetchBusinesses, 1)
   ])
 }

@@ -3,13 +3,11 @@ import { connect } from 'react-redux'
 import MediaMobile from 'images/issue-popup-mobile.svg'
 import FontAwesome from 'react-fontawesome'
 import TopNav from './../TopNav'
-import { getList, fetchEntities } from 'actions/directory'
-import { getEntities } from 'selectors/directory'
+import { getList, fetchBusinesses } from 'actions/directory'
 
 class EntityProfile extends Component {
   state = {
-    copyStatus: null,
-    keyHash: ''
+    copyStatus: null
   }
 
   componentDidMount () {
@@ -32,17 +30,12 @@ class EntityProfile extends Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.listAddress && this.props.listAddress !== prevProps.listAddress) {
-      this.props.fetchEntities(this.props.listAddress, 1)
+      this.props.fetchBusinesses(this.props.listAddress, 1)
     }
   }
 
   render () {
-    const keyHash = Object.keys(this.props.listHashes).filter(hash => {
-      if (this.props.match.params.hash === this.props.listHashes[hash]) {
-        return hash
-      }
-    })
-    const entity = Object.keys(this.props.entities).length ? this.props.entities[keyHash[0]] : null
+    const entity = this.props.metadata[`ipfs://${this.props.hash}`]
     return (
       <React.Fragment>
         <TopNav
@@ -139,16 +132,14 @@ class EntityProfile extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  entities: getEntities(state),
-  network: state.network,
-  listHashes: state.screens.directory.listHashes,
-  listAddress: state.screens.directory.listAddress
+const mapStateToProps = (state, {match}) => ({
+  hash: match.params.hash,
+  metadata: state.entities.metadata
 })
 
 const mapDispatchToProps = {
   getList,
-  fetchEntities
+  fetchBusinesses
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EntityProfile)

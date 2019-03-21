@@ -9,8 +9,8 @@ import {formatWei} from 'utils/format'
 import { USER_DATA_MODAL, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import {loadModal, hideModal} from 'actions/ui'
 import TokenProgress from './TokenProgress'
-import TopNav from './../TopNav'
-import Breadcrumbs from './../elements/Breadcrumbs'
+import TopNav from 'components/TopNav'
+import Breadcrumbs from 'components/elements/Breadcrumbs'
 import ActivityContent from './ActivityContent'
 import Bridge from './Bridge'
 import ReactGA from 'services/ga'
@@ -128,7 +128,6 @@ class Dashboard extends Component {
         key={0}
         active
         history={this.props.history}
-        showHomePage={this.showHomePage}
       />,
       <div key={1} className='dashboard-content'>
         <Breadcrumbs breadCrumbsText={token.name} setToHomepage={this.showHomePage} />

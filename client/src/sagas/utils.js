@@ -57,11 +57,15 @@ export function * apiCall (apiFunc, params, options = {}) {
 
 const entityKeys = {
   tokens: 'address',
-  partners: 'name'
+  partners: 'name',
+  businesses: 'hash'
 }
 
 export const createEntitiesFetch = (action, apiFunc) => function * (params) {
   const entity = params.entity
+  if (!entity) {
+    throw Error(`No entity name given for action ${action.REQUEST}`)
+  }
   const response = yield apiCall(apiFunc, params)
   const {data, ...metadata} = response
   const tokens = data

@@ -2,7 +2,7 @@ const config = require('config')
 const Web3 = require('web3')
 
 const processPastEvents = require('./utils').processPastEvents
-const bridgeMapperABI = require('@constants/abi/BridgeMapper.js')
+const bridgeMapperABI = require('@constants/abi/BridgeMapper')
 
 const processPastBridgeMappingEvents = async () => {
   const web3 = new Web3(config.get('web3.fuseProvider'))

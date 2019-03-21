@@ -8,7 +8,6 @@ import Oven from 'components/oven/Oven'
 import IssuanceWizard from 'components/issuance/IssuanceWizard'
 import Dashboard from 'components/dashboard/Dashboard'
 import EntityProfile from 'components/dashboard/EntityProfile'
-import AppStore from 'components/store/AppStore'
 import withTracker from 'containers/withTracker'
 import Web3, {withNetwork} from 'containers/Web3'
 import Layout from 'components/Layout'
@@ -24,12 +23,10 @@ export default class Root extends Component {
             <Layout>
               <Route path='/' component={withNetwork(CLNFetcher)} />
               <Route exact path='/' component={withTracker(withNetwork(Oven))} />
-
               <Route
                 path='/view/issuance'
                 component={withTracker(withNetwork(IssuanceWizard))}
               />
-
               <Route
                 path='/view/dashboard/:networkType/:address'
                 component={withTracker(withNetwork(Dashboard))}
@@ -40,11 +37,6 @@ export default class Root extends Component {
                 component={withTracker(withNetwork(EntityProfile))}
               />
             </Layout>
-            <Route
-              exact
-              path='/view/appstore'
-              component={withTracker(withNetwork(AppStore))}
-            />
           </React.Fragment>
         </ConnectedRouter>
       </Provider>)

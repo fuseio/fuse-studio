@@ -34,6 +34,11 @@
         "homeNetwork": "fuse",
         "foreignNetwork": "ropsten"
       }
+    },
+    "options": {
+      "fuse": {
+        "gasPrice": 1e9
+      }
     }
   },
   "api": {

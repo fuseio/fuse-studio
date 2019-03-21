@@ -5,7 +5,7 @@ import Loader from 'components/Loader'
 import {getClnBalance, getAccountAddress} from 'selectors/accounts'
 import {REQUEST, SUCCESS} from 'actions/constants'
 import {getEntities} from 'selectors/directory'
-import {createList, getList, addEntity, fetchEntities} from 'actions/directory'
+import {createList, getList, addEntity, fetchBusinesses} from 'actions/directory'
 import Entity from './Entity'
 import EmptyBusinessList from 'images/emptyBusinessList.png'
 import {loadModal, hideModal} from 'actions/ui'
@@ -38,7 +38,7 @@ class EntityDirectory extends Component {
       (this.props.listAddress && this.props.listAddress !== prevProps.listAddress) ||
       (this.props.transactionStatus !== prevProps.transactionStatus && this.props.transactionStatus === SUCCESS)
     ) {
-      this.props.fetchEntities(this.props.listAddress, 1)
+      this.props.fetchBusinesses(this.props.listAddress, 1)
     }
   }
 
@@ -168,9 +168,9 @@ const mapDispatchToProps = {
   createList,
   getList,
   addEntity,
-  fetchEntities,
   loadModal,
-  hideModal
+  hideModal,
+  fetchBusinesses
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EntityDirectory)

@@ -20,7 +20,6 @@ class Oven extends Component {
       this.props.fetchTokensByOwner(this.props.account)
     }
   }
-  showHomePage = () => this.props.history.push('/')
 
   showDashboard = (tokenAddress) => {
     this.props.history.push(`/view/dashboard/${this.props.foreignNetwork}/${tokenAddress}`)
@@ -36,7 +35,6 @@ class Oven extends Component {
       <TopNav
         active
         history={this.props.history}
-        showHomePage={this.showHomePage}
       />
       <CommunitiesList {...this.props} showDashboard={this.showDashboard} />
     </React.Fragment>

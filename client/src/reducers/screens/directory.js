@@ -1,5 +1,6 @@
-import {GET_LIST, CREATE_LIST, FETCH_ENTITIES, ADD_DIRECTORY_ENTITY} from 'actions/directory'
+import {GET_LIST, CREATE_LIST, FETCH_BUSINESSES, ADD_DIRECTORY_ENTITY} from 'actions/directory'
 import {REQUEST, SUCCESS, FAILURE} from 'actions/constants'
+import union from 'lodash/union'
 
 const initialState = {
   listHashes: [],
@@ -14,8 +15,10 @@ export default (state = initialState, action) => {
       return {...state, transactionStatus: REQUEST}
     case CREATE_LIST.SUCCESS:
       return {...state, ...action.response, transactionStatus: SUCCESS}
-    case FETCH_ENTITIES.SUCCESS:
-      return {...state, ...action.response}
+    case FETCH_BUSINESSES.SUCCESS:
+      return {...state,
+        listHashes: union(state.listHashes, action.response.result),
+        hasMore: action.response.metadata.has_more}
     case ADD_DIRECTORY_ENTITY.REQUEST:
       return {...state, transactionStatus: REQUEST}
     case ADD_DIRECTORY_ENTITY.FAILURE:

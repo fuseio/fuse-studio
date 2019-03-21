@@ -5,7 +5,6 @@ import metadataSaga from './metadata'
 import accountsSaga from './accounts'
 import directorySaga from './directory'
 import tokenSaga from './token'
-import partnerSaga from './partner'
 import userSaga from './user'
 import bridgeSaga from './bridge'
 
@@ -16,7 +15,6 @@ export default function * rootSaga () {
     fork(accountsSaga),
     fork(directorySaga),
     fork(tokenSaga),
-    fork(partnerSaga),
     fork(userSaga),
     fork(bridgeSaga)
   ])

@@ -1,14 +1,15 @@
 import Web3 from 'web3'
+import {isFuse} from 'utils/network'
 
 export const getWeb3 = ({bridgeType} = {}) => {
   if (!bridgeType) {
     return givenWeb3
   }
-  if (bridgeType === 'home' && Web3.givenProvider.networkVersion === '121') {
+  if (bridgeType === 'home' && isFuse(Web3.givenProvider)) {
     return givenWeb3
   }
 
-  if (bridgeType === 'foreign' && Web3.givenProvider.networkVersion !== '121') {
+  if (bridgeType === 'foreign' && !isFuse(Web3.givenProvider)) {
     return givenWeb3
   }
   const web3 = web3ByBridge[bridgeType]

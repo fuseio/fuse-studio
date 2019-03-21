@@ -59,7 +59,7 @@ class TopNav extends Component {
     })
   }
 
-  showHomePage = (address) => {
+  showHomePage = () => {
     this.props.history.push('/')
   }
 
@@ -77,7 +77,7 @@ class TopNav extends Component {
     return (
       <div className={topNavClass}>
         <div className='top-nav-logo'>
-          <Logo showHomePage={() => this.showHomePage()} />
+          <Logo showHomePage={this.showHomePage} />
         </div>
         <div className={navLinksClass}>
           <button onClick={this.showIssuance} className='top-nav-issuance'>
