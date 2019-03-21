@@ -13,7 +13,6 @@ import TopNav from 'components/TopNav'
 import Breadcrumbs from 'components/elements/Breadcrumbs'
 import ActivityContent from './ActivityContent'
 import Bridge from './Bridge'
-import ReactGA from 'services/ga'
 import EntityDirectory from './EntityDirectory'
 import {getBlockExplorerUrl} from 'utils/network'
 
@@ -86,15 +85,6 @@ class Dashboard extends Component {
     this.props.history.push('/')
   }
 
-  showProfile = (address, hash) => {
-    this.props.history.push(`/view/directory/${address}/${hash}`)
-    ReactGA.event({
-      category: 'Directory',
-      action: 'Click',
-      label: 'directory'
-    })
-  }
-
   copyToClipboard = (e) => {
     this.textArea.select()
     document.execCommand('copy')
@@ -114,6 +104,12 @@ class Dashboard extends Component {
   openBlockExplorer = () => {
     const explorerUrl = `${getBlockExplorerUrl(this.props.tokenNetworkType)}/address/${this.props.tokenAddress}`
     window.open(explorerUrl, '_blank')
+  }
+
+  checkCondition (evt, condition) {
+    if (condition) {
+      evt.preventDefault()
+    }
   }
 
   render () {
@@ -173,8 +169,9 @@ class Dashboard extends Component {
           <Bridge accountAddress={this.props.accountAddress} token={this.props.token} foreignTokenAddress={this.props.tokenAddress} />
           <div className='dashboard-entities'>
             <EntityDirectory
-              showProfile={this.showProfile}
+              history={this.props.history}
               tokenAddress={this.props.match.params.address}
+              token={this.props.token}
               copyToClipboard={this.copyToClipboard}
             />
           </div>

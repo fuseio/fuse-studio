@@ -18,7 +18,8 @@ export function * createList ({tokenAddress}) {
   })
 
   const receipt = yield SimpleListFactoryContract.methods.createSimpleList(tokenAddress).send({
-    from: accountAddress
+    from: accountAddress,
+    gasPrice: 1e9
   })
 
   yield put({type: actions.CREATE_LIST.SUCCESS,
@@ -31,8 +32,11 @@ export function * createList ({tokenAddress}) {
 
 export function * getList ({tokenAddress}) {
   const contractAddress = yield select(getAddress, 'SimpleListFactory')
-  const SimpleListFactoryContract = getContract({abiName: 'SimpleListFactory',
-    address: contractAddress
+  const options = {bridgeType: 'home'}
+  const SimpleListFactoryContract = getContract({
+    abiName: 'SimpleListFactory',
+    address: contractAddress,
+    options
   })
 
   const listAddress = yield SimpleListFactoryContract.methods.tokenToListMap(tokenAddress).call()
