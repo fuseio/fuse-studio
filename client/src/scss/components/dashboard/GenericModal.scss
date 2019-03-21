@@ -1,0 +1,33 @@
+.generic-modal {
+  width: 750px !important;
+  margin: auto;
+  padding: 0;
+  &-header {
+    background-color: $color-generic-header;
+    height: 155px;
+    &-img {
+      min-width: auto !important;
+      height: auto !important;
+      position: relative;
+      top: 24px;
+    }
+  }
+  &-container {
+    padding: 140px 40px 40px 40px;
+    text-align: center;
+    background-color: $color-step-text;
+  }
+  &-title {
+    font-size: 20px;
+    color: $color-text-gray;
+    font-weight: bold;
+    line-height: 1.35;
+    margin-bottom: 20px;
+  }
+  &-text {
+    font-size: 13px;
+    line-height: 1.46;
+    color: $color-text-gray;
+    margin-bottom: 20px;
+  }
+}
