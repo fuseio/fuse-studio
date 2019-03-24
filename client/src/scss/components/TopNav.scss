@@ -9,6 +9,7 @@
 	position: fixed;
 	z-index: 200;
 	background: $color-home-banner-bg;
+	box-shadow: 0 2px 6px 0 rgba(37, 67, 90, 0.67);
 	@media (max-width: $breakpoint-tablet) {
 		height: $nav-height-mobile;
 		padding: 10px 28px;
@@ -27,19 +28,19 @@
     img {
       margin-right: 7px;
       position: relative;
-      top: 2px;
-      height: 30px;
-      width: 30px;
+      top: 4px;
+			width: 102px;
+  		height: 30px;
     }
     &:hover {
       cursor: pointer;
     }
 	}
 	.top-nav-issuance {
-		width: 180px;
-	  height: 40px;
+		width: 170px;
+		height: 33px;
 	  border-radius: 3px;
-	  background: $color-orange;
+	  background: $color-nav-btn-bg;
 	  border: none;
 		font-size: 12px;
 		text-transform: uppercase;
@@ -47,6 +48,8 @@
 		margin-left: 30px;
 		font-weight: 500;
 		text-align: center;
+		border-radius: 16px;
+		box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.31);
 		&-plus {
 			margin-right: 5px
 		}
@@ -57,7 +60,7 @@
 		}
 		&:hover {
 			cursor: pointer;
-			background: darken($color-orange, 10%);
+			background: darken($color-nav-btn-bg, 10%);
 		}
 		@media (max-width: $breakpoint-tablet) {
 			margin-left: 0;
@@ -82,12 +85,12 @@
     justify-content: flex-end;
     align-items: center;
 		@media (max-width: $breakpoint-tablet) {
-			 flex-direction: column;
-			 background: darken($color-home-banner-bg, 5%);
-			 padding: 20px 28px;
-			 align-items: center;
-			 width: 100%;
-			 margin-top: 30px;
+		 flex-direction: column;
+		 background: darken($color-home-banner-bg, 5%);
+		 padding: 20px 28px;
+		 align-items: center;
+		 width: 100%;
+		 margin-top: 30px;
 		}
 	}
 	.top-nav-links {
@@ -113,30 +116,19 @@
 		.top-nav-text {
 			@include flex-box();
 			align-items: center;
-			color: #BCB9C8;
+			color: $color-step-text;
 			font-size: 12px;
 			font-weight: 400;
 			line-height: 25px;
 			margin: 0 12px;
 			position:relative;
 			justify-content: center;
-			&:after {
-				content: "";
-				position: absolute;
-				bottom: -17px;
-				right:0;
-				width: 100%;
-				height: 10px;
-				background-color: $colu-green;
-				opacity: 0;
-				transition: opacity 0.2s ease-in;
-			}
 			.profile {
 				&-icon {
 					line-height: 14px;
 					img {
-						width: 25px;
-						height: 32px;
+						width: 31px;
+						height: 28px;
 					}
 					@media (max-width: $breakpoint-tablet) {
 						width: 75px;
@@ -158,6 +150,7 @@
 
 				&-balance {
 					margin-left: 15px;
+					color: $color-step-text;
 					@media (max-width: $breakpoint-tablet) {
 						margin-left: 0;
 					}
@@ -165,12 +158,19 @@
 			}
 			&.profile {
 				color: $color-step-text;
+				padding: 6px 12px;
+				border-radius: 29px;
+  			border: solid 2px #083a5a;
+				font-weight: bold;
 				&:after {
 					display: none;
 				}
+				&:hover {
+					border: solid 2px #081d2a;
+				}
 			}
 			&:hover {
-				color: $color-step-text;
+				color: darken($color-nav, 10%);
 				cursor: pointer;
 			}
 			.balance-address {
@@ -179,6 +179,7 @@
 			  overflow: hidden;
 			  text-overflow: ellipsis;
 				display: block;
+				line-height: 14px;
 				@media (max-width: $breakpoint-tablet) {
 					width: auto;
 					text-align: center;
@@ -189,8 +190,9 @@
 			}
 		}
 		.top-nav-balance {
-			font-size: 14px;
+			font-size: 12px;
 			color: $dark-grey;
+			line-height: 14px;
 			img {
 				width: 9px;
 				height: 14px;
@@ -199,15 +201,15 @@
 			}
 			.balance-text {
 				font-size: 11px;
-				font-weight: bold;
-				color: #9390a6;
-				text-transform: uppercase;
+				font-weight: normal;
+				color: $color-step-text;
 			}
 			.balance-number {
 				font-size: 12px;
-				color: $color-step-text;
+				color: $color-network;
 				margin-left: 10px;
-				font-weight: bold;
+				font-weight: normal;
+				text-transform: capitalize;
 			}
 		}
 		@media (max-width: $breakpoint-tablet) {

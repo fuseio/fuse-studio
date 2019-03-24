@@ -1,10 +1,9 @@
 import React from 'react'
-import EntityHeader from 'images/entity_logo.png'
+import LogoImg from 'images/fuse-logo.svg'
 
 const Logo = ({showHomePage}) =>
   <div onClick={showHomePage}>
-    <img src={EntityHeader} />
-    fuse
+    <img src={LogoImg} />
   </div>
 
 export default Logo

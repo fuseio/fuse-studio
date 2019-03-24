@@ -2,7 +2,7 @@
 
 .dashboard {
   &-content {
-    padding-top: 100px;
+    padding-top: $nav-height;
     overflow: auto;
     height: 100vh;
     background-color: $color-dashboard-bg;

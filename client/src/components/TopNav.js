@@ -2,16 +2,34 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
-import {BigNumber} from 'bignumber.js'
 
 import * as actions from 'actions/ui'
 import {getClnBalance} from 'selectors/accounts'
 import { LOGIN_MODAL } from 'constants/uiConstants'
 
 import Logo from 'components/Logo'
-import ProfileIcon from 'images/user.svg'
+import WalletIcon from 'images/wallet.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
+
+const NavList = [
+  {
+    'name': 'Blog',
+    'link': 'https://medium.com/colu'
+  },
+  {
+    'name': 'Explore',
+    'link': 'https://explorer.fuse.io/'
+  },
+  {
+    'name': 'Token',
+    'link': 'http://beta.fuse.io/network-token/'
+  },
+  {
+    'name': 'Learn',
+    'link': '/'
+  }
+]
 
 class TopNav extends Component {
   state = {
@@ -63,6 +81,13 @@ class TopNav extends Component {
     this.props.history.push('/')
   }
 
+  renderNetworkName = (name) => {
+    switch (name) {
+      case 'main': return 'Ethereum'
+      default: return name
+    }
+  }
+
   render () {
     const topNavClass = classNames({
       'active': this.props.active,
@@ -84,29 +109,26 @@ class TopNav extends Component {
             <FontAwesome name='plus' className='top-nav-issuance-plus' onClick={this.props.setToggleMenu} /> Currency issuer
           </button>
           <div className='top-nav-currency'>
-            <a className='top-nav-text'
-              href='https://intercom.help/colu_cln/community-currencies'
-              target='_blank'
-              name='FAQ'>
-              FAQ</a>
-            <a className='top-nav-text'
-              href='https://cln.network/wp-content/uploads/pdf/cln_whitepaper.pdf'
-              target='_blank'
-              name='whitepaper'>
-              Whitepaper</a>
-            <span className='top-nav-text' onClick={() => this.showAppStore()}>AppStore</span>
-            <div className='separator-vertical' />
+            {NavList.map(item =>
+              <a className='top-nav-text'
+                href={item.link}
+                target='_blank'
+                name={item.name}
+              >
+                {item.name}
+              </a>
+            )}
           </div>
           <div className='top-nav-text profile' onClick={this.showConnectMetamask}>
             <span className='profile-icon' onClick={this.showProfile}>
-              <img src={ProfileIcon} />
+              <img src={WalletIcon} />
             </span>
             <span className='profile-balance'>
               <span className='balance-address'>{this.props.network.accountAddress || 'Connect Metamask'}</span>
-              {(this.props.clnBalance)
+              {(this.props.network)
                 ? <div className='top-nav-balance'>
-                  <span className='balance-text'>Balance:</span>
-                  <span className='balance-number'>{new BigNumber(this.props.clnBalance).div(1e18).toFormat(2, 1)}</span>
+                  <span className='balance-text'>Network:</span>
+                  <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
                 </div>
                 : null}
             </span>

@@ -1,7 +1,7 @@
 .personal {
   &-sidebar {
     position: fixed;
-    top: 100px;
+    top: $nav-height;
     width: 350px;
     right: 0;
     bottom:0;
@@ -19,7 +19,7 @@
        background-color: rgba(0, 0, 0, 0.54);
        position: fixed;
        left: 0;
-       top: 100px;
+       top: $nav-height;
        right: 350px;
        bottom: 0;
        @media (max-width: $breakpoint-mobile) {
