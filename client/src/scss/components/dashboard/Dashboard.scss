@@ -445,11 +445,25 @@
   &-network {
     display: flex;
     flex: 1;
+    align-items: center;
     &-content {
       text-align: center;
       &.network-arrow {
         flex: 0.5;
         line-height: 125px;
+      }
+      &.balance-ropsten {
+        .dashboard-network-text {
+          span {
+            color: $color-ropsten;
+          }
+        }
+      }
+      &.balance-disabled {
+        opacity: 0.51;
+        .fuse-logo {
+          background: $color-bg-fuse-disabled;
+        }
       }
     }
     &-title {
@@ -458,6 +472,7 @@
       color: $color-filter-text;
       text-align: center;
       text-transform: capitalize;
+      margin-bottom: 10px;
     }
     &-logo {
       width: 50px;
@@ -484,6 +499,9 @@
       font-size: 11px;
       text-align: center;
       margin-bottom: 5px;
+      span {
+        padding-left: 5px;
+      }
     }
     &-balance {
       font-size: 11px;
@@ -502,7 +520,7 @@
       background-color: $color-community-bg;
       border: none;
       outline: none;
-      margin-top: 20px;
+      margin-top: 10px;
       padding: 6px 12px;
       border-radius: 3px;
       &:hover,
@@ -564,6 +582,20 @@
 
     &-deploy-btn {
       display: block;
+    }
+
+    &-title {
+      color: $color-filter-text;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 2.17;
+    }
+    &-text {
+      color: $color-author;
+      font-size: 12px;
+      font-weight: normal;
+      line-height: 2.17;
+      margin-bottom: 10px;
     }
   }
   &-container {
