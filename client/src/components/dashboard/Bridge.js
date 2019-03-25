@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {BigNumber} from 'bignumber.js'
 import web3 from 'web3'
 import FontAwesome from 'react-fontawesome'
-
 import {balanceOfToken} from 'actions/accounts'
 import * as actions from 'actions/bridge'
 import {getBlockNumber} from 'actions/network'
@@ -25,34 +24,25 @@ const NetworkLogo = ({network}) => {
   }
 }
 
-class Balance extends Component {
-  componentDidMount () {
-    if (this.props.accountAddress) {
-      this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {bridgeType: this.props.bridgeSide.bridge})
+const Balance = (props) => {
+  useEffect(() => {
+    if (props.tokenAddress && props.accountAddress && !props.transferStatus) {
+      props.balanceOfToken(props.tokenAddress, props.accountAddress, {bridgeType: props.bridgeSide.bridge})
     }
-  }
+  }, [props.tokenAddress, props.accountAddress, props.transferStatus])
 
-  componentDidUpdate (prevProps) {
-    if (!this.props.transferStatus && prevProps.transferStatus) {
-      this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {bridgeType: this.props.bridgeSide.bridge})
-    }
-    if (this.props.accountAddress && !prevProps.accountAddress) {
-      this.props.balanceOfToken(this.props.tokenAddress, this.props.accountAddress, {bridgeType: this.props.bridgeSide.bridge})
-    }
-  }
-
-  render = () => <div className={`dashboard-network-content ${this.props.className}`}>
-    <NetworkLogo network={this.props.bridgeSide.network} />
-    <div className='dashboard-network-title'>{this.props.bridgeSide.network}</div>
+  return (<div className={`dashboard-network-content ${props.className}`}>
+    <NetworkLogo network={props.bridgeSide.network} />
+    <div className='dashboard-network-title'>{props.bridgeSide.network}</div>
     <div className='dashboard-network-text'>
       Balance
-      <span>{this.props.balances[this.props.tokenAddress]
-        ? new BigNumber(this.props.balances[this.props.tokenAddress]).div(1e18).toFormat(2, 1)
-        : 0 } {this.props.token.symbol}
+      <span>{props.balances[props.tokenAddress]
+        ? new BigNumber(props.balances[props.tokenAddress]).div(1e18).toFormat(2, 1)
+        : 0 } {props.token.symbol}
       </span>
     </div>
     <button className='dashboard-network-btn'>Show more</button>
-  </div>
+  </div>)
 }
 
 Balance.propTypes = {
