@@ -42,6 +42,10 @@
     "apiBase": "COMMUNITY_AMAZON_BUCKET_API"
   },
   "secrets": {
-    "privateKey": "COMMUNITY_SECRETS_PRIVATE_KEY"
+    "fuse": {
+      "bridge": {
+        "privateKey": "COMMUNITY_SECRETS_FUSE_BRIDGE_PRIVATE_KEY"
+      }
+    }
   }
 }

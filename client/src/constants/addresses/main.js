@@ -1,3 +1,0 @@
-export default {
-  ColuLocalNetwork: '0x4162178B78D6985480A308B2190EE5517460406D'
-}

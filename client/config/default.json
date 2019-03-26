@@ -1,13 +1,11 @@
 {
   "web3": {
-    "provider": "http://localhost:8545",
     "fuseProvider": "http://rpc.fuse.io",
     "supportedNetworks": ["main", "ropsten", "fuse"],
     "addresses": {
       "ropsten": {
         "ColuLocalNetwork": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
-        "TokenFactory": "0x824E01Cf7013f459Aa010D73627B006a8740b183",
-        "SimpleListFactory": "0x531C305533fB5C40eb3A445AA49ed02c9C35c83E"
+        "TokenFactory": "0x824E01Cf7013f459Aa010D73627B006a8740b183"
       },
       "main": {
         "ColuLocalNetwork": "0x4162178B78D6985480A308B2190EE5517460406D",
@@ -20,7 +18,7 @@
         },
         "main": {
           "SimpleListFactory": "0x14456a52832891c3dcf4f7529949817cb3048cc0",
-          "BridgeMapper": "0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14"
+          "BridgeMapper": "0x41063a48F46EE7E20E7EbAd0185992724B4Ee56c"
         }
       }
     },

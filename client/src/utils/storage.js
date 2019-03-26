@@ -1,13 +1,13 @@
 
-export const loadState = (key, defaulObj) => {
+export const loadState = (key) => {
   try {
     const serializedState = window.localStorage.getItem(key)
-    if (serializedState === null) {
-      return defaulObj
+    if (!serializedState) {
+      return null
     }
     return JSON.parse(serializedState)
   } catch (err) {
-    return defaulObj
+    return null
   }
 }
 
@@ -17,5 +17,6 @@ export const saveState = (key, state) => {
     window.localStorage.setItem(key, serializedState)
   } catch (err) {
     // ignore write errors
+    console.log(err)
   }
 }

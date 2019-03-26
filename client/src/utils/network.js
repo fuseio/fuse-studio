@@ -13,6 +13,18 @@ export const getApiRoot = (networkType) => CONFIG.api.url[networkType]
 
 export const isFuse = (provider) => provider.networkVersion === '121'
 
+const getInfuraUrl = (networkType) => {
+  const infuraNetworkType = networkType === 'main' ? 'mainnet' : networkType
+  return `https://${infuraNetworkType}.infura.io/v3/${CONFIG.web3.apiKey}`
+}
+
+export const getProviderUrl = (networkType) => {
+  if (networkType === 'fuse') {
+    return CONFIG.web3.fuseProvider
+  } else {
+    return getInfuraUrl(networkType, CONFIG.web3.apiKey)
+  }
+}
 export const getOptions = (provider) => {
   if (isFuse(provider)) {
     return CONFIG.web3.options.fuse

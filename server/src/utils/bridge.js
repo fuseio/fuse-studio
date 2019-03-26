@@ -22,8 +22,16 @@ const HomeBridgeDeployedEventAbi = extractEvent(HomeBridgeFactoryABI, 'HomeBridg
 
 const createWeb3 = (providerUrl) => {
   const web3 = new Web3(providerUrl)
-  const account = web3.eth.accounts.wallet.add(config.get('secrets.privateKey'))
+  const account = web3.eth.accounts.wallet.add(add0xPrefix(config.get('secrets.fuse.bridge.privateKey')))
   return {from: account.address, web3}
+}
+
+function add0xPrefix (str) {
+  if (str.indexOf('0x') === 0) {
+    return str
+  }
+
+  return `0x${str}`
 }
 
 async function deployForeignBridge (token) {

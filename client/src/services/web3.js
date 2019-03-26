@@ -1,5 +1,6 @@
 import Web3 from 'web3'
-import {isFuse} from 'utils/network'
+import {isFuse, getProviderUrl} from 'utils/network'
+import {loadState} from 'utils/storage'
 
 export const getWeb3 = ({bridgeType} = {}) => {
   if (!bridgeType) {
@@ -16,9 +17,13 @@ export const getWeb3 = ({bridgeType} = {}) => {
   return web3
 }
 
-export const givenWeb3 = new Web3(Web3.givenProvider || CONFIG.web3.provider)
+const networkState = loadState('state.network') || CONFIG.web3.bridge.network
+const {foreignNetwork} = networkState
+
+const foreignProviderUrl = getProviderUrl(foreignNetwork)
+export const givenWeb3 = new Web3(Web3.givenProvider || foreignProviderUrl)
 export const homeWeb3 = new Web3(CONFIG.web3.fuseProvider)
-export const foreignWeb3 = new Web3(CONFIG.web3.provider)
+export const foreignWeb3 = new Web3(foreignProviderUrl)
 
 const web3ByBridge = {
   home: homeWeb3,
