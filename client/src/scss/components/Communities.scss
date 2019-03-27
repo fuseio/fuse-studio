@@ -83,13 +83,23 @@
 	&-banner {
     align-items: center;
     justify-content: space-between;
-    padding: 50px 100px;
+    padding: 50px 0 50px 100px;
 		background-position: right;
 		background-repeat: no-repeat;
 		width: 100%;
+		display: flex;
 		background-color: $color-home-banner-bg;
 		&-content {
-			max-width: 665px;
+			max-width: 675px;
+		}
+		&-img {
+			overflow: hidden;
+			height: 300px;
+			text-align: right;
+			img {
+				height: 100%;
+				margin-right: -125px;
+			}
 		}
 		&-text {
 			padding: 20px 0;
@@ -117,7 +127,6 @@
 		}
 	}
 	&-list {
-		display: flex;
 	  flex-direction: column;
 	  right: 0px;
 	  width: 100%;

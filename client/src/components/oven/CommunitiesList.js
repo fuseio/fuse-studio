@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Community from 'components/Community'
 import InfiniteScroll from 'react-infinite-scroller'
-import Banner from 'images/home-banner.png'
+import Banner from 'images/illus.png'
 
 const PAGE_START = 1
 const PAGE_SIZE = 10
@@ -27,7 +27,7 @@ class CommunitiesList extends Component {
   render () {
     const {addresses, tokens, metadata} = this.props
     return <div className='communities-list' ref={this.myRef}>
-      <div className='communities-banner' style={{backgroundImage: `url(${Banner})`}}>
+      <div className='communities-banner' >
         <div className='communities-banner-content' >
           <h2 className='communities-banner-title'>
             Launch your community on <span>Fuse</span>
@@ -35,6 +35,9 @@ class CommunitiesList extends Component {
           <p className='communities-banner-text'>
             Fuse is intended for community currencies operated by companies and entrepreneurs. It streamlines the process of launching your community currency and provide battle-tested and customizable tools to get it off the ground
           </p>
+        </div>
+        <div className='communities-banner-img'>
+          <img src={Banner} />
         </div>
       </div>
       <div className='communities-list-container'>
