@@ -168,7 +168,7 @@
         }
 
 				&-balance {
-					margin-left: 15px;
+					margin-left: 10px;
 					color: $color-step-text;
 					@media (max-width: $breakpoint-tablet) {
 						margin-left: 0;
@@ -177,7 +177,7 @@
 			}
 			&.profile {
 				color: $color-step-text;
-				padding: 6px 12px;
+				padding: 6px 15px;
 				border-radius: 29px;
   			border: solid 2px #083a5a;
 				&:after {
