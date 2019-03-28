@@ -65,18 +65,6 @@ class TopNav extends Component {
     })
   }
 
-  showAppStore = () => {
-    this.props.history.push('/view/appstore')
-    this.setState({
-      openMenu: !this.state.openMenu
-    })
-    ReactGA.event({
-      category: 'Top Bar',
-      action: 'Click',
-      label: 'AppStore'
-    })
-  }
-
   showHomePage = () => {
     this.props.history.push('/')
   }
@@ -88,11 +76,69 @@ class TopNav extends Component {
     }
   }
 
+  copyToClipboard = (str) => {
+    const el = document.createElement('textarea')
+    el.value = str
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+    this.setState({copyStatus: 'Copied!'})
+    setTimeout(() => {
+      this.setState({copyStatus: ''})
+    }, 2000)
+  }
+
+  renderAccountAddress (address) {
+    const firstAddressPart = address.substring(0, 6)
+    const lastAddressPart = address.substring(address.length - 4, address.length + 1)
+    return (
+      <div className='nav-address'>
+        <span>{firstAddressPart + '...' + lastAddressPart}</span>
+        {document.queryCommandSupported('copy') &&
+          <span onClick={() => this.copyToClipboard(address)}>
+            <FontAwesome name='clone' />
+          </span>
+        }
+      </div>
+    )
+  }
+
+  renderAccountSection = () => {
+    if (!this.props.network.accountAddress) {
+      return (
+        <div className='top-nav-text profile' onClick={this.showConnectMetamask}>
+          <span className='profile-icon empty-wallet' >
+            <img src={WalletIcon} />
+          </span>
+          <span className='profile-balance'>
+            <span className='balance-address'>Connect your wallet</span>
+          </span>
+        </div>
+      )
+    } else {
+      return (
+        <div className='top-nav-text profile'>
+          <span className='profile-icon' onClick={this.showProfile}>
+            <img src={WalletIcon} />
+          </span>
+          <span className='profile-balance'>
+            <span className='balance-address'>{this.renderAccountAddress(this.props.network.accountAddress)}</span>
+            {(this.props.network) && <div className='top-nav-balance' onClick={this.showProfile}>
+              <span className='balance-text'>Network:</span>
+              <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
+            </div>}
+          </span>
+        </div>
+      )
+    }
+  }
+
   render () {
     const topNavClass = classNames({
       'active': this.props.active,
       'top-navigator': true,
-      'navigator-appstore': this.props.type === 'appstore'
+      [this.props.network.networkType]: true
     })
     const navLinksClass = classNames({
       'hide': !this.state.openMenu,
@@ -109,30 +155,18 @@ class TopNav extends Component {
             <FontAwesome name='plus' className='top-nav-issuance-plus' onClick={this.props.setToggleMenu} /> Currency issuer
           </button>
           <div className='top-nav-currency'>
-            {NavList.map(item =>
+            {NavList.map((item, key) =>
               <a className='top-nav-text'
                 href={item.link}
                 target='_blank'
                 name={item.name}
+                key={key}
               >
                 {item.name}
               </a>
             )}
           </div>
-          <div className='top-nav-text profile' onClick={this.showConnectMetamask}>
-            <span className='profile-icon' onClick={this.showProfile}>
-              <img src={WalletIcon} />
-            </span>
-            <span className='profile-balance'>
-              <span className='balance-address'>{this.props.network.accountAddress || 'Connect Metamask'}</span>
-              {(this.props.network)
-                ? <div className='top-nav-balance'>
-                  <span className='balance-text'>Network:</span>
-                  <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
-                </div>
-                : null}
-            </span>
-          </div>
+          {this.renderAccountSection()}
         </div>
         <FontAwesome name={this.state.openMenu ? 'times' : 'align-justify'} className='burger-menu' onClick={this.onClickMenu} />
         {this.state.profile &&
@@ -143,6 +177,9 @@ class TopNav extends Component {
             history={this.props.history}
           />
         }
+        {this.state.copyStatus && <div className='dashboard-notification'>
+          {this.state.copyStatus}
+        </div>}
       </div>
     )
   }
