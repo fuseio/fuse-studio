@@ -70,8 +70,8 @@ class UserDatatModal extends Component {
     }, tokenAddress)
   }
 
-  renderForm (form) {
-    const { errors, touched, handleSubmit, setFieldValue } = form
+  renderForm = (form) => {
+    const { errors, touched, handleSubmit, setFieldValue, setFieldTouched } = form
 
     return (
       <form onSubmit={handleSubmit} noValidate className='issued-popup-container'>
@@ -87,6 +87,7 @@ class UserDatatModal extends Component {
               type='text'
               name='firstName'
               placeholder='Type your first name'
+              onFocus={() =>setFieldTouched('firstName', true)}
             />
             <ErrorMessage name='firstName' render={err => <p className='error-text'>{err}</p>} />
           </div>
@@ -99,6 +100,7 @@ class UserDatatModal extends Component {
               type='text'
               name='lastName'
               placeholder='Type your last name'
+              onFocus={() =>setFieldTouched('lastName', true)}
             />
             <ErrorMessage name='lastName' render={err => <p className='error-text' >{err}</p>} />
           </div>
@@ -111,6 +113,7 @@ class UserDatatModal extends Component {
             type='email'
             name='email'
             placeholder='Type your email'
+            onFocus={() =>setFieldTouched('email', true)}
           />
         </div>
         <div className='form-control'>
@@ -132,9 +135,8 @@ class UserDatatModal extends Component {
             onClick={(e) => setFieldValue('subscribe', e.target.checked)}
             name='subscribe'
           />
-          <label className='checkbox-label' htmlFor='subscribe'>
-            I agree to receive fuse emails
-          </label>
+          <label className='checkbox-label' htmlFor='subscribe' />
+          <span>I agree to receive fuse emails</span>
         </div>
         <button className='issued-popup-btn' type='submit'>Done</button>
       </form>
