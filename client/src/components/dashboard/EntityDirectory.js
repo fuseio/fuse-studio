@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import Loader from 'components/Loader'
 import {getClnBalance, getAccountAddress} from 'selectors/accounts'
-import {REQUEST, SUCCESS} from 'actions/constants'
+import { REQUEST, SUCCESS } from 'actions/constants'
 import {getEntities} from 'selectors/directory'
 import {createList, getList, addEntity, fetchBusinesses} from 'actions/directory'
 import Entity from './Entity'
@@ -117,7 +117,7 @@ class EntityDirectory extends Component {
             </p>
             <button
               className='dashboard-transfer-btn'
-              onClick={() => this.handleCreateList()}
+              onClick={this.props.loadBusinessListPopup}
               disabled={this.props.transactionStatus === REQUEST || !isOwner(this.props.token, this.props.accountAddress)}
             >
               Deploy business list

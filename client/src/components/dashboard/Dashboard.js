@@ -6,8 +6,10 @@ import {isUserExists} from 'actions/user'
 import FontAwesome from 'react-fontawesome'
 import {getClnBalance, getAccountAddress} from 'selectors/accounts'
 import {formatWei} from 'utils/format'
-import { USER_DATA_MODAL, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BUSINESS_LIST_MODAL, BRIDGE_MODAL } from 'constants/uiConstants'
 import {loadModal, hideModal} from 'actions/ui'
+import { deployBridge } from 'actions/bridge'
+import { createList } from 'actions/directory'
 import TokenProgress from './TokenProgress'
 import TopNav from 'components/TopNav'
 import Breadcrumbs from 'components/elements/Breadcrumbs'
@@ -112,6 +114,28 @@ class Dashboard extends Component {
     }
   }
 
+  setDeployingBridge = () => {
+    this.props.deployBridge(this.props.tokenAddress)
+    this.props.hideModal()
+  }
+
+  setDeployingList = () => {
+    this.props.createList(this.props.tokenAddress)
+    this.props.hideModal()
+  }
+
+  loadBridgePopup = (accountAddress, token) => this.props.loadModal(BRIDGE_MODAL, {
+    accountAddress: this.props.accountAddress,
+    owner: token.owner,
+    buttonAction: () => this.setDeployingBridge()
+  })
+
+  loadBusinessListPopup = (accountAddress, token) => this.props.loadModal(BUSINESS_LIST_MODAL, {
+    accountAddress: this.props.accountAddress,
+    owner: token.owner,
+    buttonAction: () => this.setDeployingList()
+  })
+
   render () {
     if (!this.props.token) {
       return null
@@ -129,7 +153,15 @@ class Dashboard extends Component {
         <Breadcrumbs breadCrumbsText={token.name} setToHomepage={this.showHomePage} />
         <div className={`dashboard-container ${this.props.networkType}`}>
           <div className='dashboard-section'>
-            <TokenProgress token={token} metadata={this.props.metadata} steps={steps} match={this.props.match} />
+            <TokenProgress
+              token={token}
+              metadata={this.props.metadata}
+              steps={steps}
+              match={this.props.match}
+              loadBridgePopup={() => this.loadBridgePopup(this.props.accountAddress, token)}
+              loadUserDataModal={this.loadUserDataModal}
+              loadBusinessListPopup={() => this.loadBusinessListPopup(this.props.accountAddress, token)}
+            />
             <div className='dashboard-information'>
               <div className='dashboard-information-header'>
                 <p className='dashboard-information-text'>Total supply</p>
@@ -170,6 +202,8 @@ class Dashboard extends Component {
             accountAddress={this.props.accountAddress}
             token={this.props.token}
             foreignTokenAddress={this.props.tokenAddress}
+            loadBridgePopup={() => this.loadBridgePopup(this.props.accountAddress, token)}
+            handleTransfer={this.handleTransfer}
             network={this.props.networkType}
           />
           <div className='dashboard-entities'>
@@ -178,6 +212,7 @@ class Dashboard extends Component {
               tokenAddress={this.props.match.params.address}
               token={this.props.token}
               copyToClipboard={this.copyToClipboard}
+              loadBusinessListPopup={() => this.loadBusinessListPopup(this.props.accountAddress, token)}
             />
           </div>
         </div>
@@ -211,7 +246,9 @@ const mapDispatchToProps = {
   fetchToken,
   isUserExists,
   loadModal,
-  hideModal
+  hideModal,
+  deployBridge,
+  createList
 }
 
 export default connect(

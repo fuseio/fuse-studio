@@ -9,6 +9,16 @@ class TokenProgress extends Component {
   componentDidMount () {
     this.props.fetchTokenProgress(this.props.match.params.address)
   }
+  loadPersonalDetailsModal = (steps) => {
+    if (!steps.detailsGiven) {
+      this.props.loadUserDataModal()
+    }
+  }
+  loadBridgeModal = (steps) => {
+    if (!steps.bridgeDeployed) {
+      this.props.loadBridgePopup()
+    }
+  }
   render () {
     const { token } = this.props
     const steps = this.props.steps !== undefined ? this.props.steps : { tokenIssued: false, bridgeDeployed: false, detailsGiven: false }
@@ -28,13 +38,22 @@ class TokenProgress extends Component {
         <div className={steps.tokenIssued ? 'dashboard-progress-text text-positive' : 'dashboard-progress-text text-negative'}>
           <FontAwesome name={steps.tokenIssued ? 'check' : 'minus'} /> <span className='progress-text-content'>Deploy a token</span>
         </div>
-        <div className={steps.detailsGiven ? 'dashboard-progress-text text-positive' : 'dashboard-progress-text text-negative'}>
+        <div
+          className={steps.detailsGiven ? 'dashboard-progress-text text-positive' : 'dashboard-progress-text text-negative'}
+          onClick={() => this.loadPersonalDetailsModal(steps)}
+        >
           <FontAwesome name={steps.detailsGiven ? 'check' : 'minus'} /> <span className='progress-text-content'>Personal details</span>
         </div>
-        <div className={steps.bridgeDeployed ? 'dashboard-progress-text text-positive' : 'dashboard-progress-text text-negative'}>
+        <div
+          className={steps.bridgeDeployed ? 'dashboard-progress-text text-positive' : 'dashboard-progress-text text-negative'}
+          onClick={() => this.loadBridgeModal(steps)}
+        >
           <FontAwesome name={steps.bridgeDeployed ? 'check' : 'minus'} /> <span className='progress-text-content'>Deploy a bridge to Fuse-chain</span>
         </div>
-        <div className='dashboard-progress-text text-negative'>
+        <div
+          className='dashboard-progress-text text-negative'
+          onClick={this.props.loadBusinessListPopup}
+        >
           <FontAwesome name='minus' /> <span className='progress-text-content'>Link to add a business list</span>
         </div>
         <div className='dashboard-progress-text text-negative'>

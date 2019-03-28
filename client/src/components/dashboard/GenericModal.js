@@ -9,12 +9,12 @@ const GenericModal = (props) =>
     </div>
     <div className='generic-modal-container'>
       <div className='generic-modal-title'>
-        {props.title}
+        {props.content.title}
       </div>
       <div className='generic-modal-text'>
-        {props.body}
+        {props.content.body}
       </div>
-      {props.buttonText && <button className='dashboard-transfer-btn' onClick={props.buttonAction}>{props.buttonText}</button>}
+      {props.content.buttonText && <button className='dashboard-transfer-btn' onClick={props.buttonAction}>{props.content.buttonText}</button>}
     </div>
   </Modal>
 
