@@ -45,7 +45,7 @@ class TopNav extends Component {
 
   closeProfile = () => this.setState({profile: false})
 
-  showProfile = () => this.setState({profile: true})
+  showProfile = () => this.setState({profile: !this.state.profile})
 
   showConnectMetamask = () => {
     if (!this.props.network.accountAddress) {
@@ -76,7 +76,8 @@ class TopNav extends Component {
     }
   }
 
-  copyToClipboard = (str) => {
+  copyToClipboard = (e, str) => {
+    e.stopPropagation()
     const el = document.createElement('textarea')
     el.value = str
     document.body.appendChild(el)
@@ -93,10 +94,10 @@ class TopNav extends Component {
     const firstAddressPart = address.substring(0, 6)
     const lastAddressPart = address.substring(address.length - 4, address.length + 1)
     return (
-      <div className='nav-address'>
+      <div className='nav-address' onClick={(e) => e.stopPropagation()}>
         <span>{firstAddressPart + '...' + lastAddressPart}</span>
         {document.queryCommandSupported('copy') &&
-          <span onClick={() => this.copyToClipboard(address)}>
+          <span onClick={(e) => this.copyToClipboard(e, address)}>
             <FontAwesome name='clone' />
           </span>
         }
@@ -107,28 +108,32 @@ class TopNav extends Component {
   renderAccountSection = () => {
     if (!this.props.network.accountAddress) {
       return (
-        <div className='top-nav-text profile' onClick={this.showConnectMetamask}>
+        <div className='top-nav-text profile empty-wallet' onClick={this.showConnectMetamask}>
           <span className='profile-icon empty-wallet' >
             <img src={WalletIcon} />
           </span>
-          <span className='profile-balance'>
+          <div className='profile-balance'>
             <span className='balance-address'>Connect your wallet</span>
-          </span>
+            {(this.props.network) && <div className='top-nav-balance' onClick={this.showProfile}>
+              <span className='balance-text'>Network:</span>
+              <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
+            </div>}
+          </div>
         </div>
       )
     } else {
       return (
-        <div className='top-nav-text profile'>
-          <span className='profile-icon' onClick={this.showProfile}>
+        <div className='top-nav-text profile' onClick={this.showProfile}>
+          <span className='profile-icon'>
             <img src={WalletIcon} />
           </span>
-          <span className='profile-balance'>
+          <div className='profile-balance'>
             <span className='balance-address'>{this.renderAccountAddress(this.props.network.accountAddress)}</span>
             {(this.props.network) && <div className='top-nav-balance' onClick={this.showProfile}>
               <span className='balance-text'>Network:</span>
               <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
             </div>}
-          </span>
+          </div>
         </div>
       )
     }
