@@ -155,8 +155,8 @@
         background-color: $color-step-text;
       }
       &:after {
-        width: 20px;
-        height: 20px;
+        width: 28px;
+        height: 28px;
         background-color: $color-step-text;
         position: absolute;
         content: '';
@@ -217,7 +217,7 @@
           text-decoration: underline;
         }
         .fa {
-          color: $color-negative;
+          color: $color-minus;
           font-size: 10px;
           margin-right: 10px;
         }
@@ -307,7 +307,7 @@
       text-transform: uppercase;
       margin-bottom: 7px;
       span {
-        text-transform: capitalize;
+        color: $color-negative-text;
         @media (max-width: $breakpoint-mobile) {
           display: block;
         }
@@ -477,6 +477,7 @@
       text-align: center;
       text-transform: capitalize;
       margin-bottom: 10px;
+      font-weight: bold;
     }
     &-logo {
       width: 50px;
@@ -485,6 +486,7 @@
       border-radius: 8px;
       padding: 5px;
       margin: 15px auto;
+      border-radius: 50%;
       box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.15);
       &.fuse-logo {
         background-image: linear-gradient(to bottom, #ffea14, #ffea14 31%, #85ffbc);
@@ -492,6 +494,9 @@
         img {
           width: 28px;
         }
+      }
+      &.ethereum-logo {
+        line-height: 60px;
       }
     }
     .fa-long-arrow-alt-right {
@@ -504,7 +509,7 @@
       text-align: center;
       margin-bottom: 5px;
       span {
-        padding-left: 5px;
+        font-weight: 500;
       }
     }
     &-balance {
@@ -526,7 +531,7 @@
       outline: none;
       margin-top: 10px;
       padding: 6px 12px;
-      border-radius: 3px;
+      border-radius: 11.5px;
       &:hover,
       &:focus:active,
       &:active {
@@ -568,9 +573,9 @@
     &-btn {
       border: none;
       color: $color-step-text;
-      padding: 15px 20px;
+      padding: 9px 20px;
       background-color: $color-orange;
-      border-radius: 3px;
+      border-radius: 16px;
       font-size: 11px;
       text-transform: uppercase;
       display: inline-block;
@@ -678,6 +683,177 @@
         &:focus:active,
         &:active {
           color: $color-ropsten;
+        }
+      }
+    }
+    &.main {
+      .dashboard {
+        &-progress {
+          &-bar-20 {
+            @include donutChart(20, $color-mainnet);
+          }
+          &-bar-40 {
+            @include donutChart(40, $color-mainnet);
+          }
+          &-bar-60 {
+            @include donutChart(60, $color-mainnet);
+          }
+          &-bar-80 {
+            @include donutChart(80, $color-mainnet);
+          }
+          &-bar-100 {
+            @include donutChart(100, $color-mainnet);
+          }
+          &-text {
+            &.text-positive {
+              .fa {
+                color: $color-mainnet;
+              }
+            }
+          }
+        }
+        &-information {
+          &-period {
+            color: $color-mainnet;
+            &-text {
+              color: $color-mainnet;
+            }
+          }
+        }
+        &-transfer {
+          &-btn {
+            background-color: $color-mainnet;
+            &:hover {
+              background-color: darken($color-mainnet, 10%);
+            }
+          }
+        }
+        &-network {
+          &-balance {
+            color: $color-mainnet;
+            &.balance-fuse {
+              color: $color-mainnet;
+            }
+          }
+          &-btn {
+            &:hover,
+            &:focus:active,
+            &:active {
+              background-color: $color-mainnet;
+            }
+            &[disabled] {
+              background: #f8faff !important;
+              &:hover {
+                color: #25435a;
+                cursor: not-allowed;
+                background: #f8faff !important;
+              }
+            }
+          }
+          &-text span {
+            color: $color-mainnet;
+          }
+        }
+      }
+      .btn-entity-adding {
+        .fa {
+          color: $color-mainnet;
+        }
+        &:hover,
+        &:focus:active,
+        &:active {
+          color: $color-mainnet;
+        }
+      }
+    }
+    &.fuse {
+      .dashboard {
+        &-progress {
+          &-bar-20 {
+            @include donutChart(20, $color-fuse);
+          }
+          &-bar-40 {
+            @include donutChart(40, $color-fuse);
+          }
+          &-bar-60 {
+            @include donutChart(60, $color-fuse);
+          }
+          &-bar-80 {
+            @include donutChart(80, $color-fuse);
+          }
+          &-bar-100 {
+            @include donutChart(100, $color-fuse);
+          }
+          &-text {
+            &.text-positive {
+              .fa {
+                color: $color-fuse;
+              }
+            }
+          }
+        }
+        &-information {
+          &-period {
+            color: $color-black;
+            &-text .fa {
+              color: $color-fuse;
+            }
+          }
+        }
+        &-transfer {
+          &-btn {
+            background: linear-gradient(97deg, #98faac, #fae83e);
+            color: $color-home-banner-bg;
+            &:hover {
+              background: linear-gradient(97deg, #fae83e, #98faac)
+            }
+          }
+        }
+        &-network {
+          &-balance {
+            color: $color-fuse;
+            &.balance-fuse {
+              color: $color-close-gray;
+            }
+          }
+          &-text {
+            span {
+              color: #05283e;
+            }
+          }
+          &-btn {
+            &:hover,
+            &:focus:active,
+            &:active {
+              background: linear-gradient(97deg, #98faac, #fae83e);
+              color: $color-home-banner-bg;
+            }
+            &[disabled] {
+              background: #f8faff !important;
+              &:hover {
+                cursor: not-allowed;
+                background: #f8faff !important;
+              }
+            }
+          }
+        }
+      }
+      .btn-entity-adding {
+        color: $color-home-banner-bg;
+        .fa {
+          background: linear-gradient(97deg, #98faac, #fae83e);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        &:hover,
+        &:focus:active,
+        &:active {
+          color: $color-home-banner-bg;
+          .fa {
+            background: linear-gradient(97deg, #fae83e, #98faac);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
         }
       }
     }

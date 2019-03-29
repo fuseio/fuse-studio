@@ -41,7 +41,7 @@ $donuts: 0 !global;
 	width: 40px;
 	&:before{
 		@include donut($vars);
-		border: 20px solid nth($donut-color, ($donuts % length($donut-color)) + 1);
+		border: 20px solid nth($donut-color, ($donuts % length($donut-color)) + 1);    
 		border-radius: 50%;
 		box-sizing: border-box;
 		content: '';
