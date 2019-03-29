@@ -14,12 +14,15 @@ class WrongNetworkModal extends React.Component {
   }
 
   render () {
+    const content = {
+      title: 'Wrong network',
+      text: 'Hi there, seems that you\'re on the wrong network.',
+      body: <p>Please open Metamask and switch to the <Networks networks={this.props.supportedNetworks} /> to view correct CLN and CC information</p>
+    }
     return (
       <GenericModal
         hideModal={this.handleClose}
-        text={'Wrong network'}
-        title={'Hi there, seems that you\'re on the wrong network.'}
-        body={<p>Please open Metamask and switch to the <Networks networks={this.props.supportedNetworks} /> to view correct CLN and CC information</p>}
+        content={content}
       />
     )
   }

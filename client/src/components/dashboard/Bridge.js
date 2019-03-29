@@ -132,7 +132,7 @@ class Bridge extends Component {
                 <div className='dashboard-transfer-text'>Explanation about deploying it</div>
                 <button className='dashboard-transfer-btn dashboard-transfer-deploy-btn'
                   disabled={!this.isOwner() || this.props.bridgeDeploying}
-                  onClick={() => this.props.deployBridge(this.props.foreignTokenAddress)}>
+                  onClick={this.props.loadBridgePopup}>
                   {this.props.bridgeDeploying ? 'Pending' : 'Deploy Bridge'}
                 </button>
               </div>
