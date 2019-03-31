@@ -120,11 +120,6 @@ class Bridge extends Component {
                 className='dashboard-transfer-btn' onClick={this.handleTransfer}>
                 {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
               </button>
-              {
-                this.props.waitingForConfirmation
-                  ? <div>Confirmations: {this.props.confirmationNumber} / {this.props.confirmationsLimit} </div>
-                  : null
-              }
             </div>
             : (
               <div>
@@ -133,7 +128,7 @@ class Bridge extends Component {
                 <button className='dashboard-transfer-btn dashboard-transfer-deploy-btn'
                   disabled={!this.isOwner() || this.props.bridgeDeploying}
                   onClick={this.props.loadBridgePopup}>
-                  {this.props.bridgeDeploying ? 'Pending' : 'Deploy Bridge'}
+                  Deploy Bridge
                 </button>
               </div>
             )
@@ -153,6 +148,14 @@ class Bridge extends Component {
           className={this.props.foreignTokenAddress && this.props.homeTokenAddress ? `balance-${this.props.network}` : 'balance-disabled'}
         />
       </div>
+      {this.props.bridgeDeploying ? <div className='bridge-deploying'>
+        <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+        {this.props.waitingForConfirmation ? <div className='bridge-deploying-confirmation'>
+          Confirmations
+          <div>{this.props.confirmationNumber} \ {this.props.confirmationsLimit}</div>
+        </div> : null
+        }
+      </div> : null}
     </div>
   )
 }
