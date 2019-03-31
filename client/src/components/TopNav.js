@@ -106,11 +106,6 @@ class TopNav extends Component {
   }
 
   renderAccountSection = () => {
-<<<<<<< Updated upstream
-=======
-    const { profile } = this.state
-    
->>>>>>> Stashed changes
     if (!this.props.network.accountAddress) {
       return (
         <div className='top-nav-text profile' onClick={this.showConnectMetamask}>
