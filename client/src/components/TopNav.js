@@ -70,9 +70,10 @@ class TopNav extends Component {
   }
 
   renderNetworkName = (name) => {
-    switch (name) {
-      case 'main': return 'Ethereum'
-      default: return name
+    if (name === 'main') {
+      return 'Ethereum'
+    } else {
+      return name
     }
   }
 
