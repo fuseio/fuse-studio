@@ -10,7 +10,7 @@ import {getBlockNumber} from 'actions/network'
 import {getBalances} from 'selectors/accounts'
 import {getBridgeStatus} from 'selectors/network'
 import RopstenLogo from 'images/Ropsten.png'
-import MainnetLogo from 'images/Mainnet.png'
+import MainnetLogo from 'images/Ethereum.png'
 import FuseLogo from 'images/fuseLogo.svg'
 
 const NetworkLogo = ({network}) => {
@@ -20,7 +20,14 @@ const NetworkLogo = ({network}) => {
     case 'ropsten':
       return <div className='dashboard-network-logo'><img src={RopstenLogo} /></div>
     case 'main':
-      return <div className='dashboard-network-logo'><img src={MainnetLogo} /></div>
+      return <div className='dashboard-network-logo ethereum-logo'><img src={MainnetLogo} /></div>
+  }
+}
+
+const NetworkName = ({name}) => {
+  switch (name) {
+    case 'main': return 'Ethereum'
+    default: return name
   }
 }
 
@@ -30,18 +37,17 @@ const Balance = (props) => {
       props.balanceOfToken(props.tokenAddress, props.accountAddress, {bridgeType: props.bridgeSide.bridge})
     }
   }, [props.tokenAddress, props.accountAddress, props.transferStatus])
-
   return (<div className={`dashboard-network-content ${props.className}`}>
     <NetworkLogo network={props.bridgeSide.network} />
-    <div className='dashboard-network-title'>{props.bridgeSide.network}</div>
+    <div className='dashboard-network-title'><NetworkName name={props.bridgeSide.network} /></div>
     <div className='dashboard-network-text'>
-      Balance
+      <div>Balance</div>
       <span>{props.balances[props.tokenAddress]
         ? new BigNumber(props.balances[props.tokenAddress]).div(1e18).toFormat(2, 1)
         : 0 } {props.token.symbol}
       </span>
     </div>
-    <button className='dashboard-network-btn'>Show more</button>
+    <button className='dashboard-network-btn' disabled={props.disabled}>Show more</button>
   </div>)
 }
 
@@ -145,6 +151,7 @@ class Bridge extends Component {
           balances={this.props.balances}
           bridgeSide={this.props.bridgeStatus.to}
           transferStatus={this.props.transferStatus}
+          disabled={!this.props.foreignTokenAddress || !this.props.homeTokenAddress}
           className={this.props.foreignTokenAddress && this.props.homeTokenAddress ? `balance-${this.props.network}` : 'balance-disabled'}
         />
       </div>
