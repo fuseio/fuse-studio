@@ -12,7 +12,7 @@ const MinimizedToken = ({accountAddress, token, metadata, balance}) => (
     <div className='personal-community-content'>
       <div className='personal-community-content-balance'>
         <p className='coin-name'>{token.name}</p>
-        Balance <span>{balance ? formatWei(balance, 0) : 0}</span>
+        Balance <span>{balance ? formatWei(balance, 0) : 0} {token && token.symbol ? token.symbol : ''}</span>
       </div>
     </div>
   </Fragment>
@@ -71,6 +71,7 @@ class PersonalSidebar extends Component {
             <button className='search-btn'><FontAwesome name='search' /></button>
           </div>
           <div className='personal-sidebar-content-community'>
+            <h3 className='personal-sidebar-title'>Portfolio Coins</h3>
             {this.renderPortfolioCoins(this.props.accountAddress, filteredTokens)}
           </div>
         </div>

@@ -180,6 +180,12 @@
 				border-radius: 29px;
   			border: solid 2px #083a5a;
 				width: 200px;
+				&--open {
+					border-color: $color-step-text;
+					&:hover {
+						border-color: $color-step-text !important;
+					}
+				}
 				&:after {
 					display: none;
 				}
