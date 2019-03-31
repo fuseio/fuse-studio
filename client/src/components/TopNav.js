@@ -31,6 +31,8 @@ const NavList = [
   }
 ]
 
+
+
 class TopNav extends Component {
   state = {
     openMenu: false,
@@ -43,9 +45,7 @@ class TopNav extends Component {
     })
   }
 
-  closeProfile = () => this.setState({profile: false})
-
-  showProfile = () => this.setState({profile: !this.state.profile})
+  handleProfile = (profile) => this.setState({ profile })
 
   showConnectMetamask = () => {
     if (!this.props.network.accountAddress) {
@@ -106,6 +106,7 @@ class TopNav extends Component {
   }
 
   renderAccountSection = () => {
+    const { profile } = this.state
     if (!this.props.network.accountAddress) {
       return (
         <div className='top-nav-text profile empty-wallet' onClick={this.showConnectMetamask}>
@@ -114,7 +115,7 @@ class TopNav extends Component {
           </span>
           <div className='profile-balance'>
             <span className='balance-address'>Connect your wallet</span>
-            {(this.props.network) && <div className='top-nav-balance' onClick={this.showProfile}>
+            {(this.props.network) && <div className='top-nav-balance' onClick={() => this.handleProfile(!profile)}>
               <span className='balance-text'>Network:</span>
               <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
             </div>}
@@ -123,13 +124,13 @@ class TopNav extends Component {
       )
     } else {
       return (
-        <div className='top-nav-text profile' onClick={this.showProfile}>
+        <div className='top-nav-text profile' onClick={() => this.handleProfile(!profile)}>
           <span className='profile-icon'>
             <img src={WalletIcon} />
           </span>
           <div className='profile-balance'>
             <span className='balance-address'>{this.renderAccountAddress(this.props.network.accountAddress)}</span>
-            {(this.props.network) && <div className='top-nav-balance' onClick={this.showProfile}>
+            {(this.props.network) && <div className='top-nav-balance' onClick={() => this.handleProfile(!profile)}>
               <span className='balance-text'>Network:</span>
               <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
             </div>}
@@ -176,7 +177,7 @@ class TopNav extends Component {
         <FontAwesome name={this.state.openMenu ? 'times' : 'align-justify'} className='burger-menu' onClick={this.onClickMenu} />
         {this.state.profile &&
           <PersonalSidebar
-            closeProfile={this.closeProfile}
+            closeProfile={() => this.handleProfile(false)}
             clnBalance={this.props.clnBalance}
             network={this.props.network}
             history={this.props.history}
