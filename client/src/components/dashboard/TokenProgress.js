@@ -36,28 +36,28 @@ class TokenProgress extends Component {
           </div>
         </div>
         <div className={steps.tokenIssued ? 'dashboard-progress-text text-positive' : 'dashboard-progress-text text-negative'}>
-          <FontAwesome name={steps.tokenIssued ? 'check' : 'minus'} /> <span className='progress-text-content'>Deploy a token</span>
+          <FontAwesome name={steps.tokenIssued ? 'check' : 'minus'} /> <span className='progress-text-content'>Community token deployed</span>
         </div>
         <div
           className={steps.detailsGiven ? 'dashboard-progress-text text-positive' : 'dashboard-progress-text text-negative'}
           onClick={() => this.loadPersonalDetailsModal(steps)}
         >
-          <FontAwesome name={steps.detailsGiven ? 'check' : 'minus'} /> <span className='progress-text-content'>Personal details</span>
+          <FontAwesome name={steps.detailsGiven ? 'check' : 'minus'} /> <span className='progress-text-content'>Admin personal name given</span>
         </div>
         <div
           className={steps.bridgeDeployed ? 'dashboard-progress-text text-positive' : 'dashboard-progress-text text-negative'}
           onClick={() => this.loadBridgeModal(steps)}
         >
-          <FontAwesome name={steps.bridgeDeployed ? 'check' : 'minus'} /> <span className='progress-text-content'>Deploy a bridge to Fuse-chain</span>
+          <FontAwesome name={steps.bridgeDeployed ? 'check' : 'minus'} /> <span className='progress-text-content'>Bridge to Fuse - chain deployed</span>
         </div>
         <div
           className='dashboard-progress-text text-negative'
           onClick={this.props.loadBusinessListPopup}
         >
-          <FontAwesome name='minus' /> <span className='progress-text-content'>Link to add a business list</span>
+          <FontAwesome name='minus' /> <span className='progress-text-content'>Business list deployed</span>
         </div>
         <div className='dashboard-progress-text text-negative'>
-          <FontAwesome name='minus' /> <span className='progress-text-content'>Plug into a white label wallet</span>
+          <FontAwesome name='minus' /> <span className='progress-text-content'>White label wallet paired</span>
         </div>
       </div>
     )

@@ -198,9 +198,13 @@
       color: $color-filter-text;
     }
     &-text {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
       margin-bottom: 10px;
       .progress-text-content {
         font-size: 12px;
+        white-space: nowrap;
       }
       &.text-positive {
         .progress-text-content {
