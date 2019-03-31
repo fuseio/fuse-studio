@@ -95,7 +95,7 @@ class TopNav extends Component {
     const firstAddressPart = address.substring(0, 6)
     const lastAddressPart = address.substring(address.length - 4, address.length + 1)
     return (
-      <div className='nav-address' onClick={(e) => e.stopPropagation()}>
+      <div className='nav-address'>
         <span>{firstAddressPart + '...' + lastAddressPart}</span>
         {document.queryCommandSupported('copy') &&
           <span onClick={(e) => this.copyToClipboard(e, address)}>
@@ -117,7 +117,7 @@ class TopNav extends Component {
           <div className='profile-balance'>
             <span className='balance-address'>Connect your wallet</span>
             {(this.props.network) && <div className='top-nav-balance' onClick={() => this.handleProfile(!profile)}>
-              <span className='balance-text'>Network:</span>
+              <span className='balance-text'>Network:&nbsp;</span>
               <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
             </div>}
           </div>
@@ -129,10 +129,10 @@ class TopNav extends Component {
           <span className='profile-icon'>
             <img src={WalletIcon} />
           </span>
-          <div className='profile-balance'>
+          <div className='profile-balance'onClick={() => this.handleProfile(!profile)}>
             <span className='balance-address'>{this.renderAccountAddress(this.props.network.accountAddress)}</span>
-            {(this.props.network) && <div className='top-nav-balance' onClick={() => this.handleProfile(!profile)}>
-              <span className='balance-text'>Network:</span>
+            {(this.props.network) && <div className='top-nav-balance'>
+              <span className='balance-text'>Network:&nbsp;</span>
               <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
             </div>}
           </div>
