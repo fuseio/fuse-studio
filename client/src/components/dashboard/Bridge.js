@@ -61,7 +61,7 @@ Balance.propTypes = {
 
 class Bridge extends Component {
   state = {
-    transferAmount: null
+    transferAmount: ''
   }
 
   componentDidMount () {
@@ -116,18 +116,20 @@ class Bridge extends Component {
           <FontAwesome name='long-arrow-alt-right' />
         </div>
         <div className='dashboard-transfer'>
-          {(this.props.foreignTokenAddress && this.props.homeTokenAddress)
-            ? <div>
-              <div className='dashboard-transfer-form'>
-                <input type='number' value={this.state.transferAmount} placeholder="0" onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
-                <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
+          {
+            (this.props.foreignTokenAddress && this.props.homeTokenAddress)
+            ? (
+              <div>
+                <div className='dashboard-transfer-form'>
+                  <input type='number' value={this.state.transferAmount} placeholder="0" onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
+                  <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
+                </div>
+                <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}
+                  className='dashboard-transfer-btn' onClick={this.handleTransfer}>
+                  {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
+                </button>
               </div>
-              <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}
-                className='dashboard-transfer-btn' onClick={this.handleTransfer}>
-                {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
-              </button>
-            </div>
-            : (
+            ): (
               <div>
                 <div className='dashboard-transfer-title'>Some Headline About the Bridge</div>
                 <div className='dashboard-transfer-text'>Explanation about deploying it</div>
