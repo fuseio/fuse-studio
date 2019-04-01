@@ -11,7 +11,7 @@ import Logo from 'components/Logo'
 import WalletIcon from 'images/wallet.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
-import {renderNetworkName} from 'utils/network'
+import {convertNetworkName} from 'utils/network'
 
 const NavList = [
   {
@@ -111,7 +111,7 @@ class TopNav extends Component {
             <span className='balance-address'>Connect your wallet</span>
             {(this.props.network) && <div className='top-nav-balance' onClick={() => this.handleProfile(!profile)}>
               <span className='balance-text'>Network:&nbsp;</span>
-              <span className='balance-number'>{renderNetworkName(this.props.network.networkType)}</span>
+              <span className='balance-number'>{convertNetworkName(this.props.network.networkType)}</span>
             </div>}
           </div>
         </div>
@@ -126,7 +126,7 @@ class TopNav extends Component {
             <span className='balance-address'>{this.renderAccountAddress(this.props.network.accountAddress)}</span>
             {(this.props.network) && <div className='top-nav-balance'>
               <span className='balance-text'>Network:&nbsp;</span>
-              <span className='balance-number'>{renderNetworkName(this.props.network.networkType)}</span>
+              <span className='balance-number'>{convertNetworkName(this.props.network.networkType)}</span>
             </div>}
           </div>
         </div>

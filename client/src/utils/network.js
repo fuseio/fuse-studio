@@ -31,7 +31,7 @@ export const getOptions = (provider) => {
   }
 }
 
-export const renderNetworkName = (name) => {
+export const convertNetworkName = (name) => {
   if (name === 'main') {
     return 'Ethereum'
   } else {
