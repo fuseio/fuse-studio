@@ -155,14 +155,26 @@ class Bridge extends Component {
           className={this.props.foreignTokenAddress && this.props.homeTokenAddress ? `balance-${this.props.network}` : 'balance-disabled'}
         />
       </div>
-      {this.props.bridgeDeploying ? <div className='bridge-deploying'>
-        <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
-        {this.props.waitingForConfirmation ? <div className='bridge-deploying-confirmation'>
-          Confirmations
-          <div>{this.props.confirmationNumber} \ {this.props.confirmationsLimit}</div>
-        </div> : null
-        }
-      </div> : null}
+      {
+        this.props.bridgeDeploying ?
+        (
+          <div className='bridge-deploying'>
+            <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+          </div>
+        ) :null
+      }
+      {
+        this.props.waitingForConfirmation ?
+          (
+            <div className='bridge-deploying'>
+              <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+              <div className='bridge-deploying-confirmation'>
+                Confirmations
+                <div>{this.props.confirmationNumber || '0'} / {this.props.confirmationsLimit}</div>
+              </div> 
+            </div>
+          ) : null
+      }
     </div>
   )
 }
