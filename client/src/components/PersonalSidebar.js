@@ -5,6 +5,8 @@ import FontAwesome from 'react-fontawesome'
 import {formatWei} from 'utils/format'
 import {getAccount, getAccountTokens} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
+import ReactGA from 'services/ga'
+import {getForeignNetwork} from 'selectors/network'
 
 const MinimizedToken = ({accountAddress, token, metadata, balance}) => (
   <Fragment>
@@ -35,6 +37,17 @@ class PersonalSidebar extends Component {
     }
   }
 
+  showDashboard = (tokenAddress) => {
+    const { foreignNetwork } = this.props
+    this.props.history.push(`/view/dashboard/${foreignNetwork}/${tokenAddress}`)
+    ReactGA.event({
+      category: 'Dashboard',
+      action: 'Click',
+      label: 'dashboard'
+    })
+    this.props.closeProfile()
+  }
+
   filterBySearch = (search, tokens) =>
     search ? tokens.filter(token =>
       token.name.toLowerCase().search(
@@ -44,7 +57,7 @@ class PersonalSidebar extends Component {
   renderPortfolioCoins (accountAddress, tokens) {
     return tokens.length ? tokens.map(token => {
       return (
-        <div className='personal-community' key={token.address}>
+        <div className='personal-community' key={token.address} onClick={() => this.showDashboard(token.address)}>
           <MinimizedToken
             accountAddress={accountAddress}
             token={token}
@@ -85,6 +98,7 @@ const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
   account: getAccount(state),
   tokens: getAccountTokens(state),
+  foreignNetwork: getForeignNetwork(state),
   metadata: state.entities.metadata
 })
 

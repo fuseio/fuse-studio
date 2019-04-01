@@ -2,7 +2,7 @@
   &-sidebar {
     position: fixed;
     top: $nav-height;
-    width: 270px;
+    width: 300px;
     right: 0;
     bottom: 0;
     box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.15);
@@ -35,7 +35,7 @@
        position: fixed;
        left: 0;
        top: $nav-height;
-       right: 270px;
+       right: 300px;
        bottom: 0;
        @media (max-width: $breakpoint-mobile) {
          display: none;
@@ -195,6 +195,10 @@
     background: $color-step-text;
     margin-bottom: 15px;
     overflow: hidden;
+
+    &:hover {
+      cursor: pointer;
+    }
 
     &-content {
       &-balance {
