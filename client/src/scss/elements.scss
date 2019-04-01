@@ -37,7 +37,7 @@ button {
 }
 
 button:disabled, button[disabled] {
-	background-color: rgb(151, 151, 151) !important;
+	background-color: $disabled;
 }
 
 input[type=number]::-webkit-inner-spin-button,

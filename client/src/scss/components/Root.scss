@@ -86,7 +86,7 @@
 				height:36px;
 			}
 			button:disabled, button[disabled] {
-				background-color: rgb(224, 224, 224) !important;
+				background-color: $disabled;
 			}
 		}
 	}

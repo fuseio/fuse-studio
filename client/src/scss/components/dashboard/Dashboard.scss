@@ -662,6 +662,13 @@
             &:hover {
               background-color: darken($color-ropsten, 10%);
             }
+            &[disabled] {
+              background: $disabled !important;
+              &:hover {
+                cursor: not-allowed;
+                background: $disabled !important;
+              }
+            }
           }
         }
         &-network {
@@ -731,6 +738,13 @@
             &:hover {
               background-color: darken($color-mainnet, 10%);
             }
+            &[disabled] {
+              background: $disabled !important;
+              &:hover {
+                cursor: not-allowed;
+                background: $disabled !important;
+              }
+            }
           }
         }
         &-network {
@@ -747,11 +761,11 @@
               background-color: $color-mainnet;
             }
             &[disabled] {
-              background: #f8faff !important;
+              background: $disabled !important;
               &:hover {
-                color: #25435a;
+                color: $color-filter-text;
                 cursor: not-allowed;
-                background: #f8faff !important;
+                background: $disabled !important;
               }
             }
           }
@@ -807,10 +821,18 @@
         }
         &-transfer {
           &-btn {
-            background: $color-fuse;
+            background: linear-gradient(97deg, #fae83e, #98faac);
             color: $color-home-banner-bg;
             &:hover {
-              background-color: darken($color-fuse, 10%);
+              background: $color-fuse;
+            }
+            &[disabled] {
+              background: $disabled !important;
+              color: $color-step-text;
+              &:hover {
+                cursor: not-allowed;
+                background: $disabled !important;
+              }
             }
           }
         }
@@ -823,7 +845,7 @@
           }
           &-text {
             span {
-              color: #05283e;
+              color: $color-home-banner-bg;
             }
           }
           &-btn {
@@ -834,10 +856,10 @@
               color: $color-home-banner-bg;
             }
             &[disabled] {
-              background: #f8faff !important;
+              background: $disabled !important;
               &:hover {
                 cursor: not-allowed;
-                background: #f8faff !important;
+                background: $disabled !important;
               }
             }
           }

@@ -61,7 +61,7 @@ Balance.propTypes = {
 
 class Bridge extends Component {
   state = {
-    transferAmount: 0
+    transferAmount: null
   }
 
   componentDidMount () {
@@ -119,7 +119,7 @@ class Bridge extends Component {
           {(this.props.foreignTokenAddress && this.props.homeTokenAddress)
             ? <div>
               <div className='dashboard-transfer-form'>
-                <input type='number' value={this.state.transferAmount} onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
+                <input type='number' value={this.state.transferAmount} placeholder="0" onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
                 <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
               </div>
               <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}

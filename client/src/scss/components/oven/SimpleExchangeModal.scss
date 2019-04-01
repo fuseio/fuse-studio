@@ -155,7 +155,7 @@
 	}
 	&[disabled] {
 		&:hover {
-			background: #979797 !important;
+			background: $disabled !important;
 		}
 	}
 }
