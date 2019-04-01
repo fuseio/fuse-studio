@@ -12,6 +12,7 @@ import {getBridgeStatus} from 'selectors/network'
 import RopstenLogo from 'images/Ropsten.png'
 import MainnetLogo from 'images/Mainnet.png'
 import FuseLogo from 'images/fuseLogo.svg'
+import {convertNetworkName} from 'utils/network'
 
 const NetworkLogo = ({network}) => {
   switch (network) {
@@ -20,7 +21,7 @@ const NetworkLogo = ({network}) => {
     case 'ropsten':
       return <div className='dashboard-network-logo'><img src={RopstenLogo} /></div>
     case 'main':
-      return <div className='dashboard-network-logo'><img src={MainnetLogo} /></div>
+      return <div className='dashboard-network-logo ethereum-logo'><img src={MainnetLogo} /></div>
   }
 }
 
@@ -30,18 +31,17 @@ const Balance = (props) => {
       props.balanceOfToken(props.tokenAddress, props.accountAddress, {bridgeType: props.bridgeSide.bridge})
     }
   }, [props.tokenAddress, props.accountAddress, props.transferStatus])
-
   return (<div className={`dashboard-network-content ${props.className}`}>
     <NetworkLogo network={props.bridgeSide.network} />
-    <div className='dashboard-network-title'>{props.bridgeSide.network}</div>
+    <div className='dashboard-network-title'>{convertNetworkName(props.bridgeSide.network)}</div>
     <div className='dashboard-network-text'>
-      Balance
+      <div>Balance</div>
       <span>{props.balances[props.tokenAddress]
         ? new BigNumber(props.balances[props.tokenAddress]).div(1e18).toFormat(2, 1)
         : 0 } {props.token.symbol}
       </span>
     </div>
-    <button className='dashboard-network-btn'>Show more</button>
+    <button className='dashboard-network-btn' disabled={props.disabled}>Show more</button>
   </div>)
 }
 
@@ -55,7 +55,7 @@ Balance.propTypes = {
 
 class Bridge extends Component {
   state = {
-    transferAmount: 0
+    transferAmount: ''
   }
 
   componentDidMount () {
@@ -110,18 +110,20 @@ class Bridge extends Component {
           <FontAwesome name='long-arrow-alt-right' />
         </div>
         <div className='dashboard-transfer'>
-          {(this.props.foreignTokenAddress && this.props.homeTokenAddress)
-            ? <div>
-              <div className='dashboard-transfer-form'>
-                <input type='number' value={this.state.transferAmount} onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
-                <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
+          {
+            (this.props.foreignTokenAddress && this.props.homeTokenAddress)
+            ? (
+              <div>
+                <div className='dashboard-transfer-form'>
+                  <input type='number' value={this.state.transferAmount} placeholder="0" onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
+                  <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
+                </div>
+                <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}
+                  className='dashboard-transfer-btn' onClick={this.handleTransfer}>
+                  {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
+                </button>
               </div>
-              <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}
-                className='dashboard-transfer-btn' onClick={this.handleTransfer}>
-                {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
-              </button>
-            </div>
-            : (
+            ): (
               <div>
                 <div className='dashboard-transfer-title'>Some Headline About the Bridge</div>
                 <div className='dashboard-transfer-text'>Explanation about deploying it</div>
@@ -145,17 +147,30 @@ class Bridge extends Component {
           balances={this.props.balances}
           bridgeSide={this.props.bridgeStatus.to}
           transferStatus={this.props.transferStatus}
+          disabled={!this.props.foreignTokenAddress || !this.props.homeTokenAddress}
           className={this.props.foreignTokenAddress && this.props.homeTokenAddress ? `balance-${this.props.network}` : 'balance-disabled'}
         />
       </div>
-      {this.props.bridgeDeploying ? <div className='bridge-deploying'>
-        <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
-        {this.props.waitingForConfirmation ? <div className='bridge-deploying-confirmation'>
-          Confirmations
-          <div>{this.props.confirmationNumber} \ {this.props.confirmationsLimit}</div>
-        </div> : null
-        }
-      </div> : null}
+      {
+        this.props.bridgeDeploying ?
+        (
+          <div className='bridge-deploying'>
+            <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+          </div>
+        ) :null
+      }
+      {
+        this.props.waitingForConfirmation ?
+          (
+            <div className='bridge-deploying'>
+              <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+              <div className='bridge-deploying-confirmation'>
+                Confirmations
+                <div>{this.props.confirmationNumber || '0'} / {this.props.confirmationsLimit}</div>
+              </div> 
+            </div>
+          ) : null
+      }
     </div>
   )
 }

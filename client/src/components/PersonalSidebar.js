@@ -1,20 +1,20 @@
 import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {fetchTokensWithBalances} from 'actions/accounts'
-import ProfileIcon from 'images/user.svg'
-import {BigNumber} from 'bignumber.js'
 import FontAwesome from 'react-fontawesome'
 import {formatWei} from 'utils/format'
 import {getAccount, getAccountTokens} from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
+import ReactGA from 'services/ga'
+import {getForeignNetwork} from 'selectors/network'
 
 const MinimizedToken = ({accountAddress, token, metadata, balance}) => (
   <Fragment>
     <CommunityLogo token={token} metadata={metadata} />
     <div className='personal-community-content'>
       <div className='personal-community-content-balance'>
-        CC Balance <span>{balance ? formatWei(balance, 0) : 0}</span>
         <p className='coin-name'>{token.name}</p>
+        Balance <span>{balance ? formatWei(balance, 0) : 0} {token && token.symbol ? token.symbol : ''}</span>
       </div>
     </div>
   </Fragment>
@@ -37,35 +37,27 @@ class PersonalSidebar extends Component {
     }
   }
 
+  showDashboard = (tokenAddress) => {
+    const { foreignNetwork } = this.props
+    this.props.history.push(`/view/dashboard/${foreignNetwork}/${tokenAddress}`)
+    ReactGA.event({
+      category: 'Dashboard',
+      action: 'Click',
+      label: 'dashboard'
+    })
+    this.props.closeProfile()
+  }
+
   filterBySearch = (search, tokens) =>
     search ? tokens.filter(token =>
       token.name.toLowerCase().search(
         this.state.search.toLowerCase()) !== -1
     ) : tokens
 
-  renderIssuedCoins (accountAddress, tokens) {
-    return tokens.length ? tokens.map(token => {
-      if ((token.owner === accountAddress)) {
-        return (
-          <div className='personal-community' key={token.address}>
-            <MinimizedToken
-              accountAddress={accountAddress}
-              token={token}
-              metadata={this.props.metadata[token.tokenURI] || {}}
-              balance={this.props.account.balances[token.address]} />
-            <button onClick={() => this.showDashboard(token.address)} className='btn-dashboard'>
-              <FontAwesome name='signal' />
-            </button>
-          </div>
-        )
-      }
-    }) : <p className='no-items'>There is no issued coins</p>
-  }
-
   renderPortfolioCoins (accountAddress, tokens) {
     return tokens.length ? tokens.map(token => {
       return (
-        <div className='personal-community' key={token.address}>
+        <div className='personal-community' key={token.address} onClick={() => this.showDashboard(token.address)}>
           <MinimizedToken
             accountAddress={accountAddress}
             token={token}
@@ -86,28 +78,13 @@ class PersonalSidebar extends Component {
 
     return (
       <div className='personal-sidebar'>
-        <div className='personal-sidebar-top'>
-          <button className='personal-sidebar-close' onClick={() => this.props.closeProfile()}><FontAwesome name='times' /></button>
-          <div className='profile-icon-big'>
-            <img src={ProfileIcon} />
-          </div>
-          <span className='profile-balance'>
-            <span className='balance-address'>{this.props.accountAddress || 'Connect Metamask'}</span>
-            {(this.props.clnBalance)
-              ? <div className='nav-balance'>
-                <span className='balance-text'>Balance:</span>
-                <span className='balance-number'>{new BigNumber(this.props.clnBalance).div(1e18).toFormat(2, 1)}</span>
-              </div>
-              : null}
-          </span>
-        </div>
-        <div className='personal-sidebar-search'>
-          <input placeholder='What Currency are you looking for?' onChange={(e) => this.handleSearch(e)} />
-          <button className='search-btn'><FontAwesome name='search' /></button>
-        </div>
         <div className='personal-sidebar-content'>
-          <h3 className='personal-sidebar-title'>Portfolio Coins</h3>
+          <div className='personal-sidebar-search'>
+            <input placeholder='What Currency are you looking for?' onChange={(e) => this.handleSearch(e)} />
+            <button className='search-btn'><FontAwesome name='search' /></button>
+          </div>
           <div className='personal-sidebar-content-community'>
+            <h3 className='personal-sidebar-title'>Portfolio Coins</h3>
             {this.renderPortfolioCoins(this.props.accountAddress, filteredTokens)}
           </div>
         </div>
@@ -121,6 +98,7 @@ const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
   account: getAccount(state),
   tokens: getAccountTokens(state),
+  foreignNetwork: getForeignNetwork(state),
   metadata: state.entities.metadata
 })
 

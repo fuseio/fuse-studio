@@ -26,7 +26,7 @@ class CommunitiesList extends Component {
 
   render () {
     const {addresses, tokens, metadata} = this.props
-    return <div className='communities-list' ref={this.myRef}>
+    return <div className={`communities-list ${this.props.networkType}`} ref={this.myRef}>
       <div className='communities-banner' >
         <div className='communities-banner-content' >
           <h2 className='communities-banner-title'>

@@ -456,3 +456,21 @@
 		}
 	}
 }
+
+.ropsten {
+  .communities-list-search .search-btn {
+    color: $color-ropsten;
+  }
+}
+
+.main {
+  .communities-list-search .search-btn {
+    color: $color-mainnet;
+  }
+}
+
+.fuse {
+  .communities-list-search .search-btn {
+    color: $color-fuse;
+  }
+}

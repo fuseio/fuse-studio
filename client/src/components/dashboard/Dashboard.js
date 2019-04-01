@@ -17,6 +17,7 @@ import ActivityContent from './ActivityContent'
 import Bridge from './Bridge'
 import EntityDirectory from './EntityDirectory'
 import {getBlockExplorerUrl} from 'utils/network'
+import {isOwner} from 'utils/token'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
 
@@ -114,26 +115,16 @@ class Dashboard extends Component {
     }
   }
 
-  setDeployingBridge = () => {
-    this.props.deployBridge(this.props.tokenAddress)
-    this.props.hideModal()
-  }
-
-  setDeployingList = () => {
-    this.props.createList(this.props.tokenAddress)
-    this.props.hideModal()
-  }
-
-  loadBridgePopup = (accountAddress, token) => this.props.loadModal(BRIDGE_MODAL, {
-    accountAddress: this.props.accountAddress,
-    owner: token.owner,
-    buttonAction: () => this.setDeployingBridge()
+  loadBridgePopup = () => this.props.loadModal(BRIDGE_MODAL, {
+    tokenAddress: this.props.tokenAddress,
+    isOwner: isOwner(this.props.token, this.props.accountAddress),
+    buttonAction: this.props.deployBridge
   })
 
-  loadBusinessListPopup = (accountAddress, token) => this.props.loadModal(BUSINESS_LIST_MODAL, {
-    accountAddress: this.props.accountAddress,
-    owner: token.owner,
-    buttonAction: () => this.setDeployingList()
+  loadBusinessListPopup = () => this.props.loadModal(BUSINESS_LIST_MODAL, {
+    tokenAddress: this.props.tokenAddress,
+    isOwner: isOwner(this.props.token, this.props.accountAddress),
+    buttonAction: this.props.createList
   })
 
   render () {
@@ -141,7 +132,7 @@ class Dashboard extends Component {
       return null
     }
 
-    const { token } = this.props
+    const { token, accountAddress } = this.props
     const { admin, user, steps } = this.props.dashboard
     return [
       <TopNav
@@ -158,9 +149,9 @@ class Dashboard extends Component {
               metadata={this.props.metadata}
               steps={steps}
               match={this.props.match}
-              loadBridgePopup={() => this.loadBridgePopup(this.props.accountAddress, token)}
+              loadBridgePopup={() => this.loadBridgePopup(accountAddress, token)}
               loadUserDataModal={this.loadUserDataModal}
-              loadBusinessListPopup={() => this.loadBusinessListPopup(this.props.accountAddress, token)}
+              loadBusinessListPopup={() => this.loadBusinessListPopup(accountAddress, token)}
             />
             <div className='dashboard-information'>
               <div className='dashboard-information-header'>
@@ -199,10 +190,10 @@ class Dashboard extends Component {
             </div>
           </div>
           <Bridge
-            accountAddress={this.props.accountAddress}
+            accountAddress={accountAddress}
             token={this.props.token}
             foreignTokenAddress={this.props.tokenAddress}
-            loadBridgePopup={() => this.loadBridgePopup(this.props.accountAddress, token)}
+            loadBridgePopup={() => this.loadBridgePopup(accountAddress, token)}
             handleTransfer={this.handleTransfer}
             network={this.props.networkType}
           />
@@ -212,15 +203,15 @@ class Dashboard extends Component {
               tokenAddress={this.props.match.params.address}
               token={this.props.token}
               copyToClipboard={this.copyToClipboard}
-              loadBusinessListPopup={() => this.loadBusinessListPopup(this.props.accountAddress, token)}
+              loadBusinessListPopup={() => this.loadBusinessListPopup(accountAddress, token)}
             />
           </div>
         </div>
         {
-          this.props.token && this.props.accountAddress && this.props.dashboard.hasOwnProperty('userExists') &&
+          this.props.token && accountAddress && this.props.dashboard.hasOwnProperty('userExists') &&
             <UserDataModal
               token={this.props.token}
-              accountAddress={this.props.accountAddress}
+              accountAddress={accountAddress}
               userExists={this.props.dashboard.userExists}
               loadUserDataModal={this.loadUserDataModal}
             />
