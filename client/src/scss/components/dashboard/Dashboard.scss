@@ -807,10 +807,10 @@
         }
         &-transfer {
           &-btn {
-            background: linear-gradient(97deg, #98faac, #fae83e);
+            background: $color-fuse;
             color: $color-home-banner-bg;
             &:hover {
-              background: linear-gradient(97deg, #fae83e, #98faac)
+              background-color: darken($color-fuse, 10%);
             }
           }
         }
