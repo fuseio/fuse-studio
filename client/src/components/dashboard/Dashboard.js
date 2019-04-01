@@ -17,6 +17,7 @@ import ActivityContent from './ActivityContent'
 import Bridge from './Bridge'
 import EntityDirectory from './EntityDirectory'
 import {getBlockExplorerUrl} from 'utils/network'
+import {isOwner} from 'utils/token'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
 
@@ -114,44 +115,16 @@ class Dashboard extends Component {
     }
   }
 
-  setDeployingBridge = () => {
-    const {
-      token: { owner },
-      accountAddress,
-      hideModal
-    } = this.props
-    
-    if (accountAddress === owner) {
-      const {tokenAddress, deployBridge} = this.props
-      deployBridge(tokenAddress)
-    }
-    hideModal()
-  }
-
-  setDeployingList = () => {
-    const {
-      token: { owner },
-      accountAddress,
-      hideModal
-    } = this.props
-    
-    if (accountAddress === owner) {
-      const {tokenAddress, createList} = this.props
-      createList(tokenAddress)
-    }
-    hideModal()
-  }
-
-  loadBridgePopup = (accountAddress, {owner}) => this.props.loadModal(BRIDGE_MODAL, {
-    accountAddress,
-    owner,
-    buttonAction: () => this.setDeployingBridge()
+  loadBridgePopup = () => this.props.loadModal(BRIDGE_MODAL, {
+    tokenAddress: this.props.tokenAddress,
+    isOwner: isOwner(this.props.token, this.props.accountAddress),
+    buttonAction: this.props.deployBridge
   })
 
-  loadBusinessListPopup = (accountAddress, {owner}) => this.props.loadModal(BUSINESS_LIST_MODAL, {
-    accountAddress,
-    owner,
-    buttonAction: () => this.setDeployingList()
+  loadBusinessListPopup = () => this.props.loadModal(BUSINESS_LIST_MODAL, {
+    tokenAddress: this.props.tokenAddress,
+    isOwner: isOwner(this.props.token, this.props.accountAddress),
+    buttonAction: this.props.createList
   })
 
   render () {

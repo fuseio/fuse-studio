@@ -10,8 +10,9 @@ import {getBlockNumber} from 'actions/network'
 import {getBalances} from 'selectors/accounts'
 import {getBridgeStatus} from 'selectors/network'
 import RopstenLogo from 'images/Ropsten.png'
-import MainnetLogo from 'images/Ethereum.png'
+import MainnetLogo from 'images/Mainnet.png'
 import FuseLogo from 'images/fuseLogo.svg'
+import {renderNetworkName} from 'utils/network'
 
 const NetworkLogo = ({network}) => {
   switch (network) {
@@ -24,13 +25,6 @@ const NetworkLogo = ({network}) => {
   }
 }
 
-const NetworkName = ({name}) => {
-  switch (name) {
-    case 'main': return 'Ethereum'
-    default: return name
-  }
-}
-
 const Balance = (props) => {
   useEffect(() => {
     if (props.tokenAddress && props.accountAddress && !props.transferStatus) {
@@ -39,7 +33,7 @@ const Balance = (props) => {
   }, [props.tokenAddress, props.accountAddress, props.transferStatus])
   return (<div className={`dashboard-network-content ${props.className}`}>
     <NetworkLogo network={props.bridgeSide.network} />
-    <div className='dashboard-network-title'><NetworkName name={props.bridgeSide.network} /></div>
+    <div className='dashboard-network-title'>{renderNetworkName(props.bridgeSide.network)}</div>
     <div className='dashboard-network-text'>
       <div>Balance</div>
       <span>{props.balances[props.tokenAddress]

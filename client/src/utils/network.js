@@ -30,3 +30,11 @@ export const getOptions = (provider) => {
     return CONFIG.web3.options.fuse
   }
 }
+
+export const renderNetworkName = (name) => {
+  if (name === 'main') {
+    return 'Ethereum'
+  } else {
+    return name
+  }
+}

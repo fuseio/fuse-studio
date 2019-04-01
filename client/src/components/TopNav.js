@@ -11,6 +11,7 @@ import Logo from 'components/Logo'
 import WalletIcon from 'images/wallet.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
+import {renderNetworkName} from 'utils/network'
 
 const NavList = [
   {
@@ -69,14 +70,6 @@ class TopNav extends Component {
     this.props.history.push('/')
   }
 
-  renderNetworkName = (name) => {
-    if (name === 'main') {
-      return 'Ethereum'
-    } else {
-      return name
-    }
-  }
-
   copyToClipboard = (e, str) => {
     e.stopPropagation()
     const el = document.createElement('textarea')
@@ -118,7 +111,7 @@ class TopNav extends Component {
             <span className='balance-address'>Connect your wallet</span>
             {(this.props.network) && <div className='top-nav-balance' onClick={() => this.handleProfile(!profile)}>
               <span className='balance-text'>Network:&nbsp;</span>
-              <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
+              <span className='balance-number'>{renderNetworkName(this.props.network.networkType)}</span>
             </div>}
           </div>
         </div>
@@ -133,7 +126,7 @@ class TopNav extends Component {
             <span className='balance-address'>{this.renderAccountAddress(this.props.network.accountAddress)}</span>
             {(this.props.network) && <div className='top-nav-balance'>
               <span className='balance-text'>Network:&nbsp;</span>
-              <span className='balance-number'>{this.renderNetworkName(this.props.network.networkType)}</span>
+              <span className='balance-number'>{renderNetworkName(this.props.network.networkType)}</span>
             </div>}
           </div>
         </div>
