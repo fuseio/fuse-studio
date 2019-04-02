@@ -1,7 +1,8 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
+import CustomCopyToClipboard from 'components/common/components/CustomCopyToClipboard'
 
-const Entity = ({entity, address, copyToClipboard, showProfile}) =>
+const Entity = ({entity, address, showProfile}) =>
   <div className='entity'>
     <div className='entity-logo' onClick={() => showProfile()}>
       <FontAwesome name='bullseye' />
@@ -11,11 +12,11 @@ const Entity = ({entity, address, copyToClipboard, showProfile}) =>
       <div className='entity-type'>{entity.businessType}</div>
       <div className='entity-subtitle'>
         Asset Id <span>{address}</span>
-        {document.queryCommandSupported('copy') &&
-          <span className='dashboard-information-period' onClick={(e) => copyToClipboard(e)}>
+        <CustomCopyToClipboard text={address}>
+          <p className='dashboard-information-period'>
             <FontAwesome name='clone' />
-          </span>
-        }
+          </p>
+        </CustomCopyToClipboard>
       </div>
     </div>
   </div>

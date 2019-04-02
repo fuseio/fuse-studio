@@ -87,7 +87,6 @@ class EntityDirectory extends Component {
             index={index}
             entity={entity}
             address={this.props.tokenAddress}
-            copyToClipboard={this.props.copyToClipboard}
             showProfile={() => this.showProfile(this.props.tokenAddress, this.props.listHashes[index])}
           />
         ))
