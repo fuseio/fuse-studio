@@ -1,0 +1,101 @@
+$elementSeparator  : '__';
+$modifierSeparator : '--';
+$stateSeparator    : ':';
+
+@function selectorToString($selector) {
+    $selector: inspect($selector);
+    $selector: str-slice($selector, 2, -2);
+
+    @return $selector;
+}
+
+@function containsModifier($selector) {
+    $selector: selectorToString($selector);
+    $modifierIndex: str-index($selector, $modifierSeparator);
+
+    @if not $modifierIndex {
+        @return false;
+    }
+
+    $elementIndex: str-index(str-slice($selector, $modifierIndex), $elementSeparator);
+
+    @if $elementIndex {
+        @return false;
+    }
+
+    @return true;
+}
+
+@function containsState($selector) {
+    $selector: selectorToString($selector);
+    $stateIndex: str-index($selector, $stateSeparator);
+
+    @if not $stateIndex {
+        @return false;
+    }
+
+    $elementIndex: str-index(str-slice($selector, $stateIndex), $elementSeparator);
+
+    @if $elementIndex {
+        @return false;
+    }
+
+    @return true;
+}
+
+@function getBlock($selector, $separator) {
+    $selector: selectorToString($selector);
+    $separatorStart: str-index($selector, $separator) - 1;
+
+    @return str-slice($selector, 0, $separatorStart);
+}
+
+@mixin block($block) {
+    .#{$block} {
+        @content;
+    }
+}
+
+@mixin element($element) {
+    $selector: &;
+
+    @if containsModifier($selector) {
+        $block: getBlock($selector, $modifierSeparator);
+        @at-root {
+            #{$selector} #{$block + $elementSeparator + $element} {
+                @content;
+            }
+        }
+    } @else if containsState($selector) {
+        $block: getBlock($selector, $stateSeparator);
+        @at-root {
+            #{$selector} #{$block + $elementSeparator + $element} {
+                @content;
+            }
+        }
+    } @else {
+        @at-root {
+            #{$selector + $elementSeparator + $element} {
+                @content;
+            }
+        }
+    }
+}
+
+@mixin modifier($modifier) {
+    @at-root {
+        #{&}#{$modifierSeparator + $modifier} {
+            @content;
+        }
+    }
+}
+
+@mixin state($states...) {
+    @each $state in $states {
+        @at-root {
+            #{&}#{$stateSeparator + $state} {
+                @content;
+            }
+        }
+    }
+}

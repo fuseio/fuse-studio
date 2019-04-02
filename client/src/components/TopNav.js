@@ -12,6 +12,7 @@ import WalletIcon from 'images/wallet.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
 import {convertNetworkName} from 'utils/network'
+import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
 
 const NavList = [
   {
@@ -70,31 +71,15 @@ class TopNav extends Component {
     this.props.history.push('/')
   }
 
-  copyToClipboard = (e, str) => {
-    e.stopPropagation()
-    const el = document.createElement('textarea')
-    el.value = str
-    document.body.appendChild(el)
-    el.select()
-    document.execCommand('copy')
-    document.body.removeChild(el)
-    this.setState({copyStatus: 'Copied!'})
-    setTimeout(() => {
-      this.setState({copyStatus: ''})
-    }, 2000)
-  }
-
   renderAccountAddress (address) {
     const firstAddressPart = address.substring(0, 6)
     const lastAddressPart = address.substring(address.length - 4, address.length + 1)
     return (
       <div className='nav-address'>
         <span>{firstAddressPart + '...' + lastAddressPart}</span>
-        {document.queryCommandSupported('copy') &&
-          <span onClick={(e) => this.copyToClipboard(e, address)}>
-            <FontAwesome name='clone' />
-          </span>
-        }
+        <CustomCopyToClipboard text={address}>
+          <FontAwesome name='clone' />
+        </CustomCopyToClipboard>
       </div>
     )
   }
@@ -177,9 +162,6 @@ class TopNav extends Component {
             history={this.props.history}
           />
         }
-        {this.state.copyStatus && <div className='dashboard-notification'>
-          {this.state.copyStatus}
-        </div>}
       </div>
     )
   }

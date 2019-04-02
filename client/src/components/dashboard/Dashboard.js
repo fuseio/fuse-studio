@@ -18,6 +18,7 @@ import Bridge from './Bridge'
 import EntityDirectory from './EntityDirectory'
 import {getBlockExplorerUrl} from 'utils/network'
 import {isOwner} from 'utils/token'
+import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
 
@@ -43,9 +44,6 @@ UserDataModal.propTypes = {
 }
 
 class Dashboard extends Component {
-  state = {
-    copyStatus: null
-  }
 
   handleIntervalChange = (userType, intervalValue) => {
     this.props.fetchTokenStatistics(this.props.tokenAddress, userType, intervalValue)
@@ -86,18 +84,6 @@ class Dashboard extends Component {
 
   showHomePage = () => {
     this.props.history.push('/')
-  }
-
-  copyToClipboard = (e) => {
-    this.textArea.select()
-    document.execCommand('copy')
-    e.target.focus()
-    this.setState({copyStatus: 'Copied!'})
-    setTimeout(() => {
-      this.setState({copyStatus: ''})
-    }, 2000)
-    this.textArea.value = ''
-    this.textArea.value = this.props.tokenAddress
   }
 
   loadUserDataModal = () => this.props.loadModal(USER_DATA_MODAL, {
@@ -177,16 +163,12 @@ class Dashboard extends Component {
                     />
                   </form>
                 </div>
-                {document.queryCommandSupported('copy') &&
-                  <p className='dashboard-information-period' onClick={this.copyToClipboard}>
+                <CustomCopyToClipboard text={this.props.tokenAddress}>
+                  <p className='dashboard-information-period'>
                     <FontAwesome name='clone' />
                   </p>
-                }
+                </CustomCopyToClipboard>
               </div>
-              {this.state.copyStatus && <div className='dashboard-notification'>
-                {this.state.copyStatus}
-              </div>
-              }
             </div>
           </div>
           <Bridge
@@ -202,7 +184,6 @@ class Dashboard extends Component {
               history={this.props.history}
               tokenAddress={this.props.match.params.address}
               token={this.props.token}
-              copyToClipboard={this.copyToClipboard}
               loadBusinessListPopup={() => this.loadBusinessListPopup(accountAddress, token)}
             />
           </div>

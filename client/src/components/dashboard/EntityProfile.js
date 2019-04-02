@@ -4,6 +4,7 @@ import MediaMobile from 'images/issue-popup-mobile.svg'
 import FontAwesome from 'react-fontawesome'
 import TopNav from './../TopNav'
 import { getList, fetchBusinesses } from 'actions/directory'
+import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
 
 class EntityProfile extends Component {
   state = {
@@ -12,18 +13,6 @@ class EntityProfile extends Component {
 
   componentDidMount () {
     this.props.getList(this.props.match.params.address)
-  }
-
-  copyToClipboard = (e) => {
-    this.textArea.select()
-    document.execCommand('copy')
-    e.target.focus()
-    this.setState({copyStatus: 'Copied!'})
-    setTimeout(() => {
-      this.setState({copyStatus: ''})
-    }, 2000)
-    this.textArea.value = ''
-    this.textArea.value = this.props.match.params.hash
   }
 
   showHomePage = (address) => this.props.history.push('/')
@@ -113,20 +102,16 @@ class EntityProfile extends Component {
                       />
                     </form>
                   </div>
-                  {document.queryCommandSupported('copy') &&
-                    <p className='dashboard-information-period' onClick={this.copyToClipboard}>
+                  <CustomCopyToClipboard text={this.props.match.params.hash}>
+                    <p className='dashboard-information-period'>
                       <FontAwesome name='clone' />
                     </p>
-                  }
+                  </CustomCopyToClipboard>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {this.state.copyStatus && <div className='dashboard-notification'>
-          {this.state.copyStatus}
-        </div>
-        }
       </React.Fragment>
     )
   }
