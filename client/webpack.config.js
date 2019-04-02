@@ -12,10 +12,6 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
-    alias: {
-      '~': 'node_modules',
-      '@': path.resolve(__dirname, 'src')
-    },
     modules: [
       path.resolve(__dirname, 'src'),
       path.resolve(__dirname, 'assets'),

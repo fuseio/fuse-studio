@@ -12,7 +12,7 @@ import WalletIcon from 'images/wallet.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
 import {convertNetworkName} from 'utils/network'
-import CustomCopyToClipboard from 'components/common/components/CustomCopyToClipboard'
+import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
 
 const NavList = [
   {
