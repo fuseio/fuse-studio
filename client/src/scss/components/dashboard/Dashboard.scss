@@ -427,20 +427,6 @@
       }
     }
   }
-  &-notification {
-    position: fixed;
-    width: 100px;
-    height: 40px;
-    padding: 11px;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 4px;
-    color: $color-step-text;
-    margin-left: -50px;
-    text-align: center;
-    left: 50%;
-    font-size: 14px;
-    animation: ani1 1s alternate infinite;
-  }
 
   @keyframes ani1{
     from{
