@@ -12,11 +12,16 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
+    alias: {
+      '~': 'node_modules',
+      '@': path.resolve(__dirname, 'src')
+    },
     modules: [
       path.resolve(__dirname, 'src'),
       path.resolve(__dirname, 'assets'),
       'node_modules'
-    ]
+    ],
+    extensions: ['.js', '.jsx', '.json']
   },
   devServer: {
     host: '0.0.0.0',
@@ -37,7 +42,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader'
