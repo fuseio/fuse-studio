@@ -3,7 +3,7 @@ import { all, put, takeEvery } from 'redux-saga/effects'
 import {createEntityPut, tryTakeEvery, apiCall} from './utils'
 import * as api from 'services/api/metadata'
 import * as actions from 'actions/metadata'
-import {FETCH_BUSINESSES} from 'actions/directory'
+import {FETCH_TOKEN} from 'actions/token'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -59,6 +59,7 @@ export default function * apiSaga () {
     tryTakeEvery(actions.FETCH_METADATA, fetchMetadata, 1),
     tryTakeEvery(actions.CREATE_METADATA, createMetadata, 1),
     takeEvery(action => /^FETCH_TOKENS.*SUCCESS/.test(action.type), watchTokensFetched),
-    takeEvery(FETCH_BUSINESSES.SUCCESS, watchBusinessesFetched)
+    takeEvery(action => /^FETCH_BUSINESS.*SUCCESS/.test(action.type), watchBusinessesFetched),
+    takeEvery(FETCH_TOKEN.SUCCESS, watchTokensFetched)
   ])
 }

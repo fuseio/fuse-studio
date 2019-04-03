@@ -3,8 +3,13 @@ import Modal from 'components/Modal'
 import DynamicImg from 'images/dynamicdash.png'
 import EntityForm from './EntityForm'
 
-const AddEntityModal = (props) =>
-  <Modal className='entity-modal' onClose={props.hideModal}>
+const AddEntityModal = (props) => {
+  const handleSubmitEntity = (...args) => {
+    props.submitEntity(...args)
+    props.hideModal()
+  }
+
+  return (<Modal className='entity-modal' onClose={props.hideModal}>
     <div className='entity-modal-media'>
       <h3 className='entity-modal-media-title'>
         Bring Your Business to Fuse
@@ -12,8 +17,9 @@ const AddEntityModal = (props) =>
       <img className='entity-modal-media-img' src={DynamicImg} />
     </div>
     <div className='entity-modal-content'>
-      <EntityForm addEntity={props.handleAddEntity} accountAddress={props.accountAddress} />
+      <EntityForm submitEntity={handleSubmitEntity} entity={props.entity} />
     </div>
-  </Modal>
+  </Modal>)
+}
 
 export default AddEntityModal

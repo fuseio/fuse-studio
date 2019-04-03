@@ -3,7 +3,6 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 import {getContract} from 'services/contract'
 import {getAddress} from 'selectors/network'
 import * as actions from 'actions/token'
-import {fetchMetadata} from 'actions/metadata'
 import {DEPLOY_BRIDGE} from 'actions/bridge'
 import {ADD_USER} from 'actions/user'
 import {createMetadata} from 'sagas/metadata'
@@ -17,21 +16,10 @@ import {transactionFlow} from './transaction'
 const entityPut = createEntityPut(actions.entityName)
 
 const fetchTokens = createEntitiesFetch(actions.FETCH_TOKENS, api.fetchTokens)
+const fetchToken = createEntitiesFetch(actions.FETCH_TOKEN, api.fetchToken)
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
+
 export const fetchTokensByAccount = createEntitiesFetch(actions.FETCH_TOKENS_BY_ACCOUNT, api.fetchTokensByAccount)
-
-function * fetchToken ({tokenAddress}) {
-  const response = yield apiCall(api.fetchToken, {tokenAddress})
-  const token = response.data
-
-  yield put(fetchMetadata(token.tokenURI, tokenAddress))
-
-  yield entityPut({
-    type: actions.FETCH_TOKEN.SUCCESS,
-    tokenAddress,
-    response: token
-  })
-}
 
 function * fetchClnToken () {
   const tokenAddress = yield select(getAddress, 'ColuLocalNetwork')
@@ -45,11 +33,13 @@ function * fetchClnToken () {
   }
 
   const response = yield all(calls)
-  response.address = tokenAddress
 
   yield entityPut({type: actions.FETCH_CLN_TOKEN.SUCCESS,
-    tokenAddress,
-    response
+    address: tokenAddress,
+    response: {
+      ...response,
+      address: tokenAddress
+    }
   })
 }
 

@@ -28,4 +28,11 @@ router.get('/:listAddress', async (req, res, next) => {
   })
 })
 
+router.get('/:listAddress/:hash', async (req, res, next) => {
+  const {listAddress, hash} = req.params
+
+  const business = await Business.findOne({ listAddress, hash }).lean()
+  return res.json({ data: business })
+})
+
 module.exports = router

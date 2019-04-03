@@ -41,11 +41,30 @@ const handleEntityAddedEvent = async (event) => {
   return Promise.resolve()
 }
 
+const handleEntityReplacedEvent = async (event) => {
+  const oldHash = event.returnValues.oldHash
+  await Business.findOneAndDelete({hash: oldHash})
+
+  const hash = event.returnValues.newHash
+  const listAddress = event.address
+  const metadata = await getMetadata(hash)
+  const {name} = metadata.data
+  const {active} = metadata.data
+  new Business({
+    hash,
+    listAddress,
+    name,
+    active
+  }).save()
+
+  return Promise.resolve()
+}
 const eventsHandlers = {
   TokenCreated: handleTokenCreatedEvent,
   Transfer: handleTransferEvent,
   BridgeMappingUpdated: handleBridgeMappingUpdatedEvent,
-  EntityAdded: handleEntityAddedEvent
+  EntityAdded: handleEntityAddedEvent,
+  EntityReplaced: handleEntityReplacedEvent
 }
 
 const handleEvent = function (eventName, event) {

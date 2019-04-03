@@ -47,7 +47,7 @@ const Balance = (props) => {
 
 Balance.propTypes = {
   balanceOfToken: PropTypes.func.isRequired,
-  accountAddress: PropTypes.string.isRequired,
+  accountAddress: PropTypes.string,
   tokenAddress: PropTypes.string,
   token: PropTypes.object,
   bridgeSide: PropTypes.object.isRequired
@@ -214,8 +214,9 @@ class BridgeContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, {foreignTokenAddress}) => ({
   ...state.screens.bridge,
+  ...state.entities.bridges[foreignTokenAddress],
   homeNetwork: state.network.homeNetwork,
   bridgeStatus: getBridgeStatus(state),
   balances: getBalances(state)

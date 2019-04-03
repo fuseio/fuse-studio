@@ -1,5 +1,7 @@
 import {createRequestTypes, createTransactionRequestTypes, requestAction} from './utils'
 
+export const entityName = 'bridges'
+
 export const FETCH_HOME_BRIDGE = createRequestTypes('FETCH_HOME_BRIDGE')
 export const FETCH_FOREIGN_BRIDGE = createRequestTypes('FETCH_FOREIGN_BRIDGE')
 export const FETCH_HOME_TOKEN = createRequestTypes('FETCH_HOME_TOKEN')

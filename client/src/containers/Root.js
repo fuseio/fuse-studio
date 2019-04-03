@@ -33,7 +33,7 @@ export default class Root extends Component {
               />
               <Route
                 exact
-                path='/view/directory/:address/:hash'
+                path='/view/directory/:listAddress/:hash'
                 component={withTracker(withNetwork(EntityProfile))}
               />
             </Layout>

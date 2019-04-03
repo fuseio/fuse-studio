@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MediaMobile from 'images/issue-popup-mobile.svg'
 import FontAwesome from 'react-fontawesome'
-import TopNav from './../TopNav'
-import { getList, fetchBusinesses } from 'actions/directory'
+import TopNav from 'components/TopNav'
+import {loadModal} from 'actions/ui'
+import { getList, fetchBusinesses, fetchBusiness, activateBusiness, deactivateBusiness, editEntity } from 'actions/directory'
 import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
+import { ADD_DIRECTORY_ENTITY, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+import ReactGA from 'services/ga'
 
 class EntityProfile extends Component {
   state = {
@@ -12,19 +15,52 @@ class EntityProfile extends Component {
   }
 
   componentDidMount () {
-    this.props.getList(this.props.match.params.address)
+    if (!this.props.entity) {
+      this.props.fetchBusiness(this.props.listAddress, this.props.hash)
+    }
+  }
+
+  onlyOnFuse = (successFunc) => {
+    if (this.props.networkType === 'fuse') {
+      successFunc()
+    } else {
+      this.props.loadModal(WRONG_NETWORK_MODAL, {supportedNetworks: ['fuse']})
+    }
+  }
+
+  showProfile = (address, hash) => {
+    this.props.history.push(`/view/directory/${address}/${hash}`)
+    ReactGA.event({
+      category: 'Directory',
+      action: 'Click',
+      label: 'directory'
+    })
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.editEntityReceipt && !prevProps.editEntityReceipt) {
+      const {newHash} = this.props.editEntityReceipt.events.EntityReplaced.returnValues
+      this.showProfile(this.props.listAddress, newHash)
+    }
+
+    if (this.props.hash !== prevProps.hash) {
+      this.props.fetchBusiness(this.props.listAddress, this.props.hash)
+    }
   }
 
   showHomePage = (address) => this.props.history.push('/')
 
-  componentDidUpdate (prevProps) {
-    if (this.props.listAddress && this.props.listAddress !== prevProps.listAddress) {
-      this.props.fetchBusinesses(this.props.listAddress, 1)
-    }
-  }
+  handleDeactivate = () => this.onlyOnFuse(() => this.props.deactivateBusiness(this.props.listAddress, this.props.hash))
+
+  handleActivate = () => this.onlyOnFuse(() => this.props.activateBusiness(this.props.listAddress, this.props.hash))
+
+  handleEdit = () =>
+    this.onlyOnFuse(() => this.props.loadModal(ADD_DIRECTORY_ENTITY, {submitEntity: this.editEntity, entity: this.props.entity}))
+
+  editEntity = (data) => this.props.editEntity(this.props.listAddress, this.props.hash, data)
 
   render () {
-    const entity = this.props.metadata[`ipfs://${this.props.hash}`]
+    const {entity} = this.props
     return (
       <React.Fragment>
         <TopNav
@@ -48,12 +84,19 @@ class EntityProfile extends Component {
                       <p className='entity-profile-type'>{entity.businessType}</p>}
                   </div>
                   <div>
-                    <p className='entity-profile-link'>
+                    <p className='entity-profile-link' onClick={this.handleEdit}>
                       <FontAwesome name='edit' /> Edit business profile
                     </p>
-                    <p className='entity-profile-link'>
-                      <FontAwesome name='signature' /> Deactivate
-                    </p>
+                    {entity && entity.active
+                      ? <p className='entity-profile-link' onClick={this.handleDeactivate}>
+                        <FontAwesome name='signature' />
+                        Deactivate
+                      </p>
+                      : <p className='entity-profile-link' onClick={this.handleActivate}>
+                        <FontAwesome name='signature' />
+                        Activate
+                      </p>
+                    }
                   </div>
                 </div>
               </div>
@@ -97,7 +140,7 @@ class EntityProfile extends Component {
                     <form>
                       <textarea
                         ref={textarea => (this.textArea = textarea)}
-                        value={this.props.match.params.hash}
+                        value={this.props.hash}
                         readOnly
                       />
                     </form>
@@ -118,13 +161,20 @@ class EntityProfile extends Component {
 }
 
 const mapStateToProps = (state, {match}) => ({
+  listAddress: match.params.listAddress,
   hash: match.params.hash,
-  metadata: state.entities.metadata
+  entity: state.entities.metadata[`ipfs://${match.params.hash}`],
+  editEntityReceipt: state.screens.directory.editEntityReceipt
 })
 
 const mapDispatchToProps = {
+  loadModal,
   getList,
-  fetchBusinesses
+  fetchBusinesses,
+  fetchBusiness,
+  activateBusiness,
+  deactivateBusiness,
+  editEntity
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EntityProfile)

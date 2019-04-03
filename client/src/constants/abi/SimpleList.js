@@ -109,6 +109,23 @@ module.exports = [
     "inputs": [
       {
         "indexed": false,
+        "name": "oldHash",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "newHash",
+        "type": "string"
+      }
+    ],
+    "name": "EntityReplaced",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "name": "_address",
         "type": "address"
       }
@@ -206,6 +223,29 @@ module.exports = [
       }
     ],
     "name": "deleteEntity",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "oldHash",
+        "type": "string"
+      },
+      {
+        "name": "newHash",
+        "type": "string"
+      }
+    ],
+    "name": "replaceEntity",
     "outputs": [
       {
         "name": "",

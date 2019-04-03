@@ -5,14 +5,6 @@ const initialState = {}
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case actions.FETCH_HOME_TOKEN.SUCCESS:
-      return {...state, ...action.response}
-    case actions.FETCH_HOME_BRIDGE.SUCCESS:
-      return {...state, ...action.response}
-    case actions.FETCH_FOREIGN_BRIDGE.SUCCESS:
-      return {...state, ...action.response}
-    case actions.DEPLOY_BRIDGE.SUCCESS:
-      return {...state, ...action.response, bridgeDeploying: false}
     case actions.WATCH_FOREIGN_BRIDGE.SUCCESS:
       return {...state, ...action.response}
     case actions.WATCH_HOME_BRIDGE.SUCCESS:
@@ -23,6 +15,8 @@ export default (state = initialState, action) => {
       return {...state, ...action.response}
     case actions.DEPLOY_BRIDGE.REQUEST:
       return {...state, bridgeDeploying: true}
+    case actions.DEPLOY_BRIDGE.SUCCESS:
+      return {...state, bridgeDeploying: false}
     case actions.TRANSFER_TO_HOME.CONFIRMATION:
       return {...state, ...action.response}
     case actions.TRANSFER_TO_FOREIGN.CONFIRMATION:

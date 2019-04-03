@@ -1,8 +1,11 @@
 import merge from 'lodash/merge'
+import {entityKeys} from 'sagas/utils'
 
 const initialState = {
   metadata: {},
-  tokens: {}
+  tokens: {},
+  businesses: {},
+  bridges: {}
 }
 
 export default (state = initialState, action) => {
@@ -10,10 +13,16 @@ export default (state = initialState, action) => {
     if (action.response.entities) {
       return merge({}, state, {[action.entity]: action.response.entities})
     }
-    const obj = {
-      [action.tokenAddress]: action.response
+    const keyName = entityKeys[action.entity]
+    const key = action.response[keyName]
+    if (key) {
+      const obj = {
+        [key]: action.response
+      }
+      return merge({}, state, {[action.entity]: obj})
+    } else {
+      console.error(`Bad action ${action.type} receieved`)
     }
-    return merge({}, state, {[action.entity]: obj})
   }
   return state
 }
