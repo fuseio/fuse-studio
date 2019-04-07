@@ -52,7 +52,13 @@ cp ./server/config/defaults.json ./server/config/local.json
 ```
 You can edit the `./server/config/local.json` file as you like.
 
-### Setup Ethereum node
+### Setup IPFS proxy
+
+IPFS lacks permissions so all access to the IPFS node is done through the IPFS proxy.
+
+Learn how to install and configure the proxy in the [fuse-ipfs-proxy](https://github.com/ColuLocalNetwork/fuse-ipfs-proxy) repo.
+
+### Setup Ethereum node (Optional)
 
 You can start your own Ethereum node:
 
