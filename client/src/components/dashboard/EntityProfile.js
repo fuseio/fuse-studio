@@ -3,16 +3,13 @@ import { connect } from 'react-redux'
 import MediaMobile from 'images/issue-popup-mobile.svg'
 import FontAwesome from 'react-fontawesome'
 import TopNav from 'components/TopNav'
+import CopyToClipboard from 'components/common/CopyToClipboard'
 import {loadModal} from 'actions/ui'
 import { getList, fetchBusinesses, fetchBusiness, activateBusiness, deactivateBusiness, editEntity } from 'actions/directory'
-import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
 import { ADD_DIRECTORY_ENTITY, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
 
 class EntityProfile extends Component {
-  state = {
-    copyStatus: null
-  }
 
   componentDidMount () {
     if (!this.props.entity) {
@@ -50,6 +47,14 @@ class EntityProfile extends Component {
 
   showHomePage = (address) => this.props.history.push('/')
 
+  toggleHandler = (isChecked) => {
+    if (isChecked) {
+      this.handleDeactivate()
+    } else {
+      this.handleActivate()
+    }
+  }
+
   handleDeactivate = () => this.onlyOnFuse(() => this.props.deactivateBusiness(this.props.listAddress, this.props.hash))
 
   handleActivate = () => this.onlyOnFuse(() => this.props.activateBusiness(this.props.listAddress, this.props.hash))
@@ -80,23 +85,27 @@ class EntityProfile extends Component {
                   <div>
                     {entity && entity.name &&
                       <h3 className='entity-profile-title'>{entity.name}</h3>}
-                    {entity && entity.businessType &&
-                      <p className='entity-profile-type'>{entity.businessType}</p>}
+                    {entity && entity.type &&
+                      <p className='entity-profile-type'>{entity.type}</p>}
                   </div>
-                  <div>
-                    <p className='entity-profile-link' onClick={this.handleEdit}>
-                      <FontAwesome name='edit' /> Edit business profile
-                    </p>
-                    {entity && entity.active
-                      ? <p className='entity-profile-link' onClick={this.handleDeactivate}>
-                        <FontAwesome name='signature' />
-                        Deactivate
-                      </p>
-                      : <p className='entity-profile-link' onClick={this.handleActivate}>
-                        <FontAwesome name='signature' />
-                        Activate
-                      </p>
+                  <div className='entity-profile-actions'>
+                    <p className='entity-profile-actions-edit' onClick={this.handleEdit}>
+                      Edit page
+                    </p>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <div className='entity-profile-actions-toggle'>
+                      <input type='checkbox' value={entity && entity.active} checked={entity && entity.active} onChange={(e) => this.toggleHandler(e.target.checked)} />
+                      <div className="toggle-wrapper"><span class="toggle"></span></div>
+                    </div>
+                    <div className='entity-profile-actions-status'>
+                    {
+                      entity && entity.active 
+                        ? (
+                          <span>Activate</span>
+                        ): (
+                          <span>Deactivate</span>
+                        )
                     }
+                    </div>
                   </div>
                 </div>
               </div>
@@ -118,9 +127,9 @@ class EntityProfile extends Component {
                     <FontAwesome name='envelope' /><a href={`mailto:${entity.email}`}>{entity.email}</a>
                   </div>
                 }
-                {entity && entity.link &&
+                {entity && entity.websiteUrl &&
                   <div className='entity-profile-content-point'>
-                    <FontAwesome name='home' /><a href={entity.link}>{entity.link}</a>
+                    <FontAwesome name='home' /><a style={{textDecoration: 'underline'}} href={entity.websiteUrl}>{entity.websiteUrl}</a>
                   </div>
                 }
               </div>
@@ -136,20 +145,14 @@ class EntityProfile extends Component {
               <div className='col-12'>
                 <div className='dashboard-information-footer entity-footer'>
                   <div className='dashboard-information-small-text'>
-                    <span>Business Account</span>
-                    <form>
-                      <textarea
-                        ref={textarea => (this.textArea = textarea)}
-                        value={this.props.hash}
-                        readOnly
-                      />
-                    </form>
+                    <span>Account id</span>
+                    <span className='id'>{this.props.hash}</span>
                   </div>
-                  <CustomCopyToClipboard text={this.props.match.params.hash}>
+                  <CopyToClipboard text={this.props.hash}>
                     <p className='dashboard-information-period'>
                       <FontAwesome name='clone' />
                     </p>
-                  </CustomCopyToClipboard>
+                  </CopyToClipboard>
                 </div>
               </div>
             </div>

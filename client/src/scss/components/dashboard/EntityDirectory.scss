@@ -1,3 +1,10 @@
+@mixin dashedBorder {
+  background-image: linear-gradient(to right, #c0c5d2 50%, transparent 50%), linear-gradient(to right, #c0c5d2 50%, transparent 50%), linear-gradient(to bottom, #c0c5d2 50%, transparent 50%), linear-gradient(to bottom, #c0c5d2 50%, transparent 50%);
+  background-position: left top, left bottom, left top, right top;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  background-size: 20px 2px, 20px 2px, 2px 20px, 2px 20px;
+}
+
 .dashboard {
   &-empty {
     text-align: center;
@@ -39,6 +46,7 @@
       &-flex {
         display: flex;
         justify-content: space-between;
+        align-items: center;
       }
       &-title {
         color: $color-filter-text;
@@ -51,6 +59,27 @@
         color: $color-author;
         font-size: 12px;
         margin-bottom: 20px;
+      }
+
+      &-plus-icon {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 5px;
+
+        .fa {
+          font-size: 20px;
+        }
+
+        > a {
+          height: 100%;
+          width: 100%;
+          display: block;
+          background-size: contain;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
       }
     }
     &-loader {
@@ -126,6 +155,8 @@
   background: none;
   outline: none;
   padding: 6px 12px;
+  display: flex;
+  align-items: center;
   margin-bottom: 16px;
   .fa {
     color: $color-orange;
@@ -351,7 +382,7 @@
       border-bottom: 1px solid #e2e2e2;
       padding: 15px 0;
       font-size: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       font-weight: 500;
       color: #1a2b59;
       width: 100%;
@@ -359,6 +390,10 @@
         font-size: 17px;
         color: #b3b9c8;
         font-style: italic;
+      }
+
+      &:focus {
+        border-color: $color-mainnet;
       }
     }
     &-media {
@@ -424,6 +459,7 @@
         background-color: rgba(10, 117, 134, 0.08);
         display: inline-block;
         min-width: 180px;
+        width: 100%;
         &-prefix {
           color: #0a7586 !important;
           font-size: 12px;
@@ -508,7 +544,7 @@
         border-radius: 3px;
         background-color: rgba(10, 117, 134, 0.08);
         display: inline-block;
-        padding: 10px;
+        padding: 7px;
         color: #0a7586;
         font-size: 12px;
         margin-bottom: 5px;
@@ -562,7 +598,7 @@
         letter-spacing: normal !important;
         color: #1a2b59;
         position: relative;
-        span {
+        &-second {
           color: #b3b9c8;
           font-weight: normal;
           &.fa {
@@ -578,6 +614,59 @@
           top: 2px;
           right: 0;
         }
+
+        &-icon {
+          &.fa {
+            font-weight: 900;
+            color: $color-mainnet;
+          }
+        }
+      }
+      
+      &-upload {
+        &-label {
+          font-family: $font-family-lato;
+          color: $color-close-gray;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+
+          > p {
+            padding-top: 25px;
+            img {
+              width: 35px;
+              height: 35px;
+            }
+          }
+
+          .upload-text {
+            border: none;
+            outline: none;
+            font-size: 12px;
+          }
+          input {
+            display: none;
+          }
+        }
+
+      }
+  
+      .logo-rectangle {
+        width: 105px;
+        height: 108px;
+        border-radius: 3px;
+        @include dashedBorder;
+       
+      }
+
+      .picture-rectangle {
+        width: 286px;
+        height: 108px;
+        border-radius: 3px;
+        @include dashedBorder;
+
       }
       &-form-control {
         border-radius: 4px;
@@ -640,6 +729,7 @@
       margin-left: 130px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       @media (max-width: $breakpoint-tablet) {
         display: block;
       }
@@ -667,7 +757,7 @@
         line-height: 2.25;
         overflow: hidden;
         a {
-          color: $color-orange;
+          color: inherit;
           &:hover,
           &:focus,
           &:active {
@@ -675,7 +765,7 @@
           }
         }
         &:not(:last-child) {
-          margin-bottom: 5px;
+          margin-bottom: 10px;
         }
         .fa {
           margin-right: 10px;
@@ -730,6 +820,84 @@
       margin-bottom: 20px;
       text-transform: capitalize;
     }
+    &-actions {
+      color: $color-filter-text;
+      align-self: baseline;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      &-edit {
+      }
+
+      &-status {
+        margin-left: 5px;
+      }
+
+      &-toggle {
+        width: 100%;
+        height: 100%;
+        max-width: 34px;
+        max-height: 18px;
+
+        > input {
+          position:absolute;
+          width:100%;
+          height:100%;
+          cursor:pointer;
+          opacity:0;
+          z-index:999;
+        }
+
+        .toggle{
+
+          &-wrapper {
+            width: 34px;
+            height: 18px;
+            background-color: $disabled;
+            border-radius: 10px; 
+            position:relative;
+            margin-bottom:20px;
+          }
+
+          display:block;
+          position:absolute;
+          z-index:998;
+          width: 12px;
+          border-radius: 50%;
+          height:12px;
+          background: #fff;
+          top: 2px;
+          left: 2px;
+          border: 1px solid $disabled;
+          -webkit-transition: all 0.2s ease;
+          -moz-transition: all 0.2s ease;
+          -ms-transition: all 0.2s ease;
+          -o-transition: all 0.2s ease;
+          transition: all 0.2s ease;
+          text-align:center;
+        }
+
+        .toggle:before{
+          content:"";
+          color: #fff;
+          text-shadow: 1px 1px #000;
+          font-family:tahoma;
+          font-size: 11px;
+        }
+        > input:checked ~ .toggle-wrapper{
+          background-color: $color-mainnet;
+          .toggle {
+            left:18px;
+            border-color: $color-mainnet;
+          }
+        }
+
+        input:checked + .toggle:before{
+          content:"";
+        }
+      }
+
+    }
     &-link {
       font-size: 12px;
       color: $color-filter-text;
@@ -752,27 +920,30 @@
         &-link .fa,
         &-content-point .fa,
         &-content-point a {
-          color: $color-ropsten;
+          // color: $color-ropsten;
+          color: $color-filter-text;
         }
       }
       .dashboard-information-period {
-        color: $color-ropsten;
+        color: $color-community-bg;
       }
     }
   }
 }
 
 .btn-add-entity {
-  border-radius: 4px;
-  background-color: $color-orange;
+  width: 124px;
+  height: 35px;
+  border-radius: 17.5px;
+  background-color: $color-mainnet;
   color: $color-step-text;
   display: block;
-  width: 100%;
+  // width: 100%;
   padding: 6px 12px;
   outline: none;
   border: none;
   margin-top: 20px;
-  width: 150px;
+  // width: 150px;
   margin-left: auto;
   margin-right: auto;
   &:hover,
@@ -781,7 +952,15 @@
   &:active {
     outline: none;
     cursor: pointer;
-    background-color: darken($color-orange, 10%);
+    background-color: darken($color-mainnet, 10%);
+  }
+
+  &[disabled] {
+    background: $disabled;
+    cursor: not-allowed;
+    &:hover {
+			background: $disabled;
+		}
   }
 }
 

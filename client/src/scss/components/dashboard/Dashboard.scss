@@ -323,32 +323,16 @@
         font-size: 12px;
         font-weight: bold;
       }
-      form {
-        display: inline-block;
-      }
-      textarea {
-        white-space: nowrap;
-        width: 100%;
-        min-width: 333px;
+      .id {
+        margin-left: 5px;
+        cursor: pointer;
         color: $color-negative;
-        resize: none;
-        border: none;
-        height: 14px;
-        font-size: 12px;
-        margin-left: 7px;
-        padding: 0;
-        position: relative;
-        top: 3px;
-
-        @media (max-width: $breakpoint-mobile) {
-          margin-left: 0;
-          min-width: 333px;
+        &:hover {
+          cursor: pointer
         }
       }
 
-     textarea:hover {
-        cursor: pointer
-      }
+       
 
       @media (max-width: $breakpoint-mobile) {
         font-size: 10px;
@@ -357,7 +341,7 @@
     &-period {
       font-size: 11px;
       font-weight: bold;
-      color: $color-orange;
+      color: $color-step;
       position: relative;
       &-text {
         text-transform: uppercase;
@@ -853,20 +837,10 @@
       }
       .btn-entity-adding {
         color: $color-home-banner-bg;
-        .fa {
-          background: linear-gradient(97deg, #98faac, #fae83e);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
         &:hover,
         &:focus:active,
         &:active {
           color: $color-home-banner-bg;
-          .fa {
-            background: linear-gradient(97deg, #fae83e, #98faac);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-          }
         }
       }
     }

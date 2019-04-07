@@ -9,17 +9,17 @@ const AddEntityModal = (props) => {
     props.hideModal()
   }
 
-  return (<Modal className='entity-modal' onClose={props.hideModal}>
-    <div className='entity-modal-media'>
-      <h3 className='entity-modal-media-title'>
-        Bring Your Business to Fuse
-      </h3>
-      <img className='entity-modal-media-img' src={DynamicImg} />
-    </div>
-    <div className='entity-modal-content'>
+  return (
+    <Modal className='entity-modal' onClose={props.hideModal}>
+      <div className='entity-modal-media'>
+        <h3 className='entity-modal-media-title'>
+          Bring Your Business to Fuse
+        </h3>
+        <img className='entity-modal-media-img' src={DynamicImg} />
+      </div>
       <EntityForm submitEntity={handleSubmitEntity} entity={props.entity} />
-    </div>
-  </Modal>)
+    </Modal>
+  )
 }
 
 export default AddEntityModal

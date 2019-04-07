@@ -2,17 +2,18 @@ import React, { Component, useEffect } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import Loader from 'components/Loader'
-import {getClnBalance, getAccountAddress} from 'selectors/accounts'
+import { getClnBalance, getAccountAddress } from 'selectors/accounts'
 import { REQUEST, SUCCESS } from 'actions/constants'
 import {getEntities} from 'selectors/directory'
 import {getList, addEntity, fetchBusinesses} from 'actions/directory'
 import Entity from './Entity'
 import EmptyBusinessList from 'images/emptyBusinessList.png'
-import {loadModal, hideModal} from 'actions/ui'
+import { loadModal, hideModal } from 'actions/ui'
 import { ADD_DIRECTORY_ENTITY } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
-import {isOwner} from 'utils/token'
-import {fetchHomeToken} from 'actions/bridge'
+import { isOwner } from 'utils/token'
+import { fetchHomeToken } from 'actions/bridge'
+import plusIcon from 'images/add.svg'
 
 const EntityDirectoryDataFetcher = (props) => {
   useEffect(() => {
@@ -58,12 +59,12 @@ class EntityDirectory extends Component {
     })
   }
 
-  handleAddBusiness =() => {
+  handleAddBusiness = () => {
     this.props.onlyOnFuse(this.loadAddingModal)
   }
 
   loadAddingModal = () => this.props.loadModal(ADD_DIRECTORY_ENTITY, {
-    submitEntity: (data) => this.props.addEntity(this.props.listAddress, {...data, active: true})
+    submitEntity: (data) => this.props.addEntity(this.props.listAddress, { ...data, active: true })
   })
 
   renderTransactionStatus = (transactionStatus) => {
@@ -86,7 +87,7 @@ class EntityDirectory extends Component {
         this.state.search.toLowerCase()) !== -1
     ) : entities
 
-  renderBusiness (entities) {
+  renderBusiness(entities) {
     if (entities.length) {
       return (
         entities.map((entity, index) =>
@@ -107,7 +108,9 @@ class EntityDirectory extends Component {
     isOwner(this.props.token, this.props.accountAddress) &&
     this.props.homeTokenAddress
 
-  render () {
+  render() {
+    const { network: { networkType } } = this.props
+
     const business = this.props.entities
     const filteredBusiness = this.filterBySearch(this.state.search, business)
     return (
@@ -144,7 +147,18 @@ class EntityDirectory extends Component {
                     onClick={this.handleAddBusiness}
                     disabled={this.props.transactionStatus === REQUEST}
                   >
-                    <FontAwesome name='plus-circle' /> New Business
+                    {
+                      networkType === 'fuse'
+                        ? (
+                          <span className='dashboard-entity-content-plus-icon'>
+                            <a style={{ backgroundImage: `url(${plusIcon})` }}></a>
+                          </span>
+                        ) : (
+                          <span className='dashboard-entity-content-plus-icon'>
+                            <FontAwesome name='plus-circle' />
+                          </span>
+                        )
+                    } New Business
                   </button>
                 </div>
                 <div className='dashboard-entity-search-content'>
@@ -186,7 +200,7 @@ class EntityDirectory extends Component {
   }
 }
 
-const mapStateToProps = (state, {match, foreignTokenAddress}) => ({
+const mapStateToProps = (state, { match, foreignTokenAddress }) => ({
   entities: getEntities(state),
   network: state.network,
   clnBalance: getClnBalance(state),

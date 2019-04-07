@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome'
 import CountriesList from 'constants/countries'
 import Select from 'react-select'
 import { Formik, Field, ErrorMessage } from 'formik'
-import * as yup from 'yup'
+import userShape from 'utils/validation/shapes/user'
 
 class UserDatatModal extends Component {
   constructor (props) {
@@ -21,34 +21,7 @@ class UserDatatModal extends Component {
       subscribe: true
     }
 
-    this.validationSchema = yup
-      .object()
-      .noUnknown(false)
-      .shape({
-        firstName: yup
-          .string()
-          .trim()
-          .ensure()
-          .label('First name')
-          .required()
-          .matches(/^[a-zA-Z]+$/, 'Please type only letters'),
-        lastName: yup
-          .string()
-          .trim()
-          .ensure()
-          .label('Last name')
-          .required()
-          .matches(/^[a-zA-Z]+$/, 'Please type only letters'),
-        email: yup
-          .string()
-          .email()
-          .required(),
-        subscribe: yup.boolean().default(true),
-        country: yup.object().shape({
-          label: yup.string(),
-          value: yup.string()
-        })
-      })
+    this.validationSchema = userShape
   }
 
   onSubmit = (values, form) => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
+import CopyToClipboard from 'components/common/CopyToClipboard'
 
 const Entity = ({entity, address, showProfile}) =>
   <div className='entity'>
@@ -12,11 +12,11 @@ const Entity = ({entity, address, showProfile}) =>
       <div className='entity-type'>{entity.businessType}</div>
       <div className='entity-subtitle'>
         Asset Id <span>{address}</span>
-        <CustomCopyToClipboard text={address}>
+        <CopyToClipboard text={address}>
           <p className='dashboard-information-period'>
             <FontAwesome name='clone' />
           </p>
-        </CustomCopyToClipboard>
+        </CopyToClipboard>
       </div>
     </div>
   </div>

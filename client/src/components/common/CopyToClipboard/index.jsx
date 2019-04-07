@@ -19,17 +19,20 @@ const styles = {
 export default ({ text, children }) => {
   const [copyStatus, setState] = useState('')
 
+  const handleClick = (e) => {
+    e.stopPropagation()
+    setState('Copied!')
+    setTimeout(() => {
+      setState('')
+    }, 2000)
+  }
+
   return (
     <Fragment>
       <CopyToClipboard text={text}>
-        <p onClick={(e) => {
-          e.stopPropagation()
-          setState('Copied!')
-          setTimeout(() => {
-            setState('')
-          }, 2000)
-        }}>
-          {children}</p>
+        <div onClick={handleClick} style={{display: 'inline-block'}}>
+          {children}
+        </div>
       </CopyToClipboard>
       {
         copyStatus && <div style={styles}>

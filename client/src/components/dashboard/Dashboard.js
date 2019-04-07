@@ -18,7 +18,7 @@ import Bridge from './Bridge'
 import EntityDirectory from './EntityDirectory'
 import {getBlockExplorerUrl} from 'utils/network'
 import {isOwner} from 'utils/token'
-import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
+import CopyToClipboard from 'components/common/CopyToClipboard'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
 
@@ -165,20 +165,13 @@ class Dashboard extends Component {
               <div className='dashboard-information-footer'>
                 <div className='dashboard-information-small-text'>
                   <span className='text-asset'>Asset ID</span>
-                  <form>
-                    <textarea
-                      onClick={this.openBlockExplorer}
-                      ref={textarea => (this.textArea = textarea)}
-                      value={this.props.tokenAddress}
-                      readOnly
-                    />
-                  </form>
+                  <span className='id'>{this.props.tokenAddress}</span>
                 </div>
-                <CustomCopyToClipboard text={this.props.tokenAddress}>
+                <CopyToClipboard text={this.props.tokenAddress}>
                   <p className='dashboard-information-period'>
                     <FontAwesome name='clone' />
                   </p>
-                </CustomCopyToClipboard>
+                </CopyToClipboard>
               </div>
             </div>
           </div>

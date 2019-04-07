@@ -12,7 +12,7 @@ import WalletIcon from 'images/wallet.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
 import {convertNetworkName} from 'utils/network'
-import CustomCopyToClipboard from 'components/common/CustomCopyToClipboard'
+import CopyToClipboard from 'components/common/CopyToClipboard'
 
 const NavList = [
   {
@@ -77,9 +77,9 @@ class TopNav extends Component {
     return (
       <div className='nav-address'>
         <span>{firstAddressPart + '...' + lastAddressPart}</span>
-        <CustomCopyToClipboard text={address}>
+        <CopyToClipboard text={address}>
           <FontAwesome name='clone' />
-        </CustomCopyToClipboard>
+        </CopyToClipboard>
       </div>
     )
   }
