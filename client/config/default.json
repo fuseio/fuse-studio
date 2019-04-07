@@ -13,11 +13,11 @@
       },
       "fuse": {
         "ropsten": {
-          "SimpleListFactory": "0x93d274626C812EaA5fA93d81b05804bDc12e270e",
+          "SimpleListFactory": "0x9FA04c6fc70B0ae20dAD9D7b36161bf1EdcbA0E2",
           "BridgeMapper": "0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14"
         },
         "main": {
-          "SimpleListFactory": "0x5e853edaee70bd635d02cc0169cf97083de3436d",
+          "SimpleListFactory": "0x91d7c5541a6057790483b007d6aA84674c043A1D",
           "BridgeMapper": "0x41063a48F46EE7E20E7EbAd0185992724B4Ee56c"
         }
       }

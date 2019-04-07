@@ -17,8 +17,7 @@ const defaultOptions = {
 
 const processPastEvents = async (eventName, contract, {conditions} = defaultOptions) => {
   const lastBlockNumber = await getLastBlockNumber({eventName, ...conditions})
-  const handleActualEvent = handleEvent.bind(null, eventName)
-  const actualEventsCallback = eventsCallback.bind(null, handleActualEvent)
+  const actualEventsCallback = eventsCallback.bind(null, handleEvent)
   try {
     console.log('last block ' + lastBlockNumber)
     return contract.getPastEvents(eventName, {fromBlock: lastBlockNumber, toBlock: 'latest'}, actualEventsCallback)

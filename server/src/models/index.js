@@ -5,5 +5,7 @@ module.exports = (mongoose) => {
   mongoose.token = mongoose.token || require('./Token')(mongoose)
   mongoose.user = mongoose.user || require('./User')(mongoose)
   mongoose.business = mongoose.business || require('./Business')(mongoose)
+  mongoose.businessList = mongoose.businessList || require('./BusinessList')(mongoose)
+  mongoose.bridge = mongoose.bridge || require('./Bridge')(mongoose)
   return mongoose
 }

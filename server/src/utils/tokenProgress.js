@@ -8,7 +8,8 @@ const stepDone = async (stepName, tokenAddress) => {
 const steps = {
   tokenIssued: 'tokenIssued',
   bridgeDeployed: 'bridgeDeployed',
-  detailsGiven: 'detailsGiven'
+  detailsGiven: 'detailsGiven',
+  businessListDeployed: 'businessListDeployed'
 }
 
 module.exports = {
@@ -16,5 +17,6 @@ module.exports = {
   steps,
   bridgeDeployed: stepDone.bind(null, steps.bridgeDeployed),
   tokenIssued: stepDone.bind(null, steps.tokenIssued),
-  detailsGiven: stepDone.bind(null, steps.detailsGiven)
+  detailsGiven: stepDone.bind(null, steps.detailsGiven),
+  businessListDeployed: stepDone.bind(null, steps.businessListDeployed)
 }

@@ -1,4 +1,4 @@
-module.exports =  [
+module.exports = [
   {
     "constant": true,
     "inputs": [
@@ -22,8 +22,13 @@ module.exports =  [
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "name": "list",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "token",
         "type": "address"
       },
       {

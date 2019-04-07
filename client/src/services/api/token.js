@@ -21,4 +21,4 @@ export const fetchTokensByAccount = (apiRoot, {accountAddress}) =>
   request.get(`${apiRoot}/balances/${accountAddress}`).then(response => response.body)
 
 export const deployBridge = (apiRoot, {foreignTokenAddress}) =>
-  request.post(`${apiRoot}/tokens/bridge/${foreignTokenAddress}`).then(response => response.body)
+  request.post(`${apiRoot}/bridges/${foreignTokenAddress}`).then(response => response.body)

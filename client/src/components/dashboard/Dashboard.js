@@ -44,7 +44,6 @@ UserDataModal.propTypes = {
 }
 
 class Dashboard extends Component {
-
   handleIntervalChange = (userType, intervalValue) => {
     this.props.fetchTokenStatistics(this.props.tokenAddress, userType, intervalValue)
   }
@@ -118,7 +117,7 @@ class Dashboard extends Component {
   loadBusinessListPopup = () => {
     this.onlyOnFuse(() => {
       this.props.loadModal(BUSINESS_LIST_MODAL, {
-        tokenAddress: this.props.homeTokenAddress,
+        tokenAddress: this.props.tokenAddress,
         isOwner: isOwner(this.props.token, this.props.accountAddress),
         buttonAction: this.props.createList
       })

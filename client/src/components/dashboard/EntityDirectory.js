@@ -5,7 +5,7 @@ import Loader from 'components/Loader'
 import {getClnBalance, getAccountAddress} from 'selectors/accounts'
 import { REQUEST, SUCCESS } from 'actions/constants'
 import {getEntities} from 'selectors/directory'
-import {createList, getList, addEntity, fetchBusinesses} from 'actions/directory'
+import {getList, addEntity, fetchBusinesses} from 'actions/directory'
 import Entity from './Entity'
 import EmptyBusinessList from 'images/emptyBusinessList.png'
 import {loadModal, hideModal} from 'actions/ui'
@@ -196,7 +196,6 @@ const mapStateToProps = (state, {match, foreignTokenAddress}) => ({
 })
 
 const mapDispatchToProps = {
-  createList,
   getList,
   addEntity,
   loadModal,

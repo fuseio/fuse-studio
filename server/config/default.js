@@ -33,6 +33,7 @@ module.exports = {
     websocketProvider: defer(function () {
       return `wss://${this.web3.network}.infura.io/ws/v3/${this.web3.apiKey}`
     }),
+    gasStation: 'https://gasprice.poa.network/',
     fuseProvider: 'http://rpc.fuse.io',
     network: 'ropsten',
     pageSize: 1000,
