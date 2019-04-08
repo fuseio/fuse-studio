@@ -326,13 +326,14 @@
       .id {
         margin-left: 5px;
         cursor: pointer;
+        text-transform: none;
         color: $color-negative;
         &:hover {
           cursor: pointer
         }
       }
 
-       
+
 
       @media (max-width: $breakpoint-mobile) {
         font-size: 10px;

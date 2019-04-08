@@ -89,17 +89,6 @@ class Dashboard extends Component {
     tokenAddress: this.props.tokenAddress
   })
 
-  openBlockExplorer = () => {
-    const explorerUrl = `${getBlockExplorerUrl(this.props.tokenNetworkType)}/address/${this.props.tokenAddress}`
-    window.open(explorerUrl, '_blank')
-  }
-
-  checkCondition (evt, condition) {
-    if (condition) {
-      evt.preventDefault()
-    }
-  }
-
   loadBridgePopup = () => this.props.loadModal(BRIDGE_MODAL, {
     tokenAddress: this.props.tokenAddress,
     isOwner: isOwner(this.props.token, this.props.accountAddress),
@@ -165,7 +154,10 @@ class Dashboard extends Component {
               <div className='dashboard-information-footer'>
                 <div className='dashboard-information-small-text'>
                   <span className='text-asset'>Asset ID</span>
-                  <span className='id'>{this.props.tokenAddress}</span>
+                  <a href={`${getBlockExplorerUrl(this.props.tokenNetworkType)}/address/${this.props.tokenAddress}`}
+                    target='_blank'>
+                    <span className='id'>{this.props.tokenAddress}</span>
+                  </a>
                 </div>
                 <CopyToClipboard text={this.props.tokenAddress}>
                   <p className='dashboard-information-period'>
