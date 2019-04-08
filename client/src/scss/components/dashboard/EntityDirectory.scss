@@ -825,6 +825,7 @@
       align-self: baseline;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 12px;
       &-edit {
       }
@@ -920,7 +921,6 @@
         &-link .fa,
         &-content-point .fa,
         &-content-point a {
-          // color: $color-ropsten;
           color: $color-filter-text;
         }
       }
@@ -938,12 +938,10 @@
   background-color: $color-mainnet;
   color: $color-step-text;
   display: block;
-  // width: 100%;
   padding: 6px 12px;
   outline: none;
   border: none;
   margin-top: 20px;
-  // width: 150px;
   margin-left: auto;
   margin-right: auto;
   &:hover,

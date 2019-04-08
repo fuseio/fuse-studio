@@ -209,10 +209,7 @@ class IssuanceWizard extends Component {
             {this.state.activeStep > 0 && <div className='text-center'>
               <button
                 className='back-btn'
-                onClick={this.setPreviousStep}
-              >
-                <FontAwesome className='next-icon' name='angle-left' /> Back
-              </button>
+                onClick={this.setPreviousStep}>Back</button>
             </div>}
           </div>
         </div>

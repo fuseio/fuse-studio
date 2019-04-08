@@ -215,38 +215,6 @@
       color: $color-home-banner-bg;
       line-height: 2.45;
     }
-
-    .coin-logo {
-      width: 50px;
-      height: 50px;
-      margin-right: 10px;
-
-      .logo-img {
-        width: 50px;
-        height: 50px;
-        margin-top: 0;
-        &:before {
-          width: 40px;
-          height: 20px;
-          border-top-left-radius: 40px;
-          border-top-right-radius: 40px;
-          top: 7px;
-          left: -3px;
-        }
-        &:after {
-          width: 40px;
-          height: 20px;
-          bottom: 8px;
-          right: -2px;
-          border-bottom-left-radius: 40px;
-          border-bottom-right-radius: 40px;
-        }
-      }
-      .symbol-text {
-        font-size: 11px;
-        margin-top: -7px;
-      }
-    }
   }
 }
 

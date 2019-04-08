@@ -36,9 +36,7 @@
     }
 	}
 	.top-nav-issuance {
-		width: 170px;
-		height: 33px;
-	  border-radius: 3px;
+    padding: 10px;
 	  background: $color-nav-btn-bg;
 	  border: none;
 		font-size: 12px;
@@ -48,7 +46,6 @@
 		font-weight: bold;
 		text-align: center;
 		border-radius: 16px;
-		box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.31);
 		&-plus {
 			margin-right: 5px
 		}

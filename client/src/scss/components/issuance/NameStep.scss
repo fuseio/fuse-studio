@@ -1,21 +1,17 @@
 .next {
 	&-button {
-		background-color: $color-orange;
- 		box-shadow: 0 0 8px 0 $color-orange;
-		padding: 10px 13px;
+		background-color: $color-ropsten;
+		padding: 13px 19px;
 		margin-top: 40px;
 		border: none;
 		color: $color-step-text;
 		border: none;
 		border-radius: 50%;
-		font-size: 22px;
+		font-size: 30px;
 		&:disabled,
 		&[disabled] {
-			background-color: lighten($color-orange, 20%) !important;
-	    box-shadow: 0 0 8px 0 $color-orange;
-	    margin-top: 40px;
-	    padding: 10px 13px;
-	    color: $color-step-text;
+			background-color: lighten($color-ropsten, 20%) !important;
+			color: $color-step-text;
 			cursor: not-allowed;
 		}
 		&:focus,
@@ -24,7 +20,7 @@
 			outline: none;
 		}
 		&:hover {
-			background-color: darken($color-orange, 10%);
+			background-color: darken($color-ropsten, 10%);
 			cursor: pointer;
 		}
 	}

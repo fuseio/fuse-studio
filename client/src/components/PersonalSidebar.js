@@ -10,7 +10,7 @@ import {getForeignNetwork} from 'selectors/network'
 
 const MinimizedToken = ({accountAddress, token, metadata, balance}) => (
   <Fragment>
-    <CommunityLogo token={token} metadata={metadata} />
+    <CommunityLogo isSmall token={token} metadata={metadata} />
     <div className='personal-community-content'>
       <div className='personal-community-content-balance'>
         <p className='coin-name'>{token.name}</p>

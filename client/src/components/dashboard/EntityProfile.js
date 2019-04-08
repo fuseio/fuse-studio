@@ -145,14 +145,14 @@ class EntityProfile extends Component {
               <div className='col-12'>
                 <div className='dashboard-information-footer entity-footer'>
                   <div className='dashboard-information-small-text'>
-                    <span>Account id</span>
+                    <span className='text-asset'>Account id</span>
                     <span className='id'>{this.props.hash}</span>
+                    <CopyToClipboard text={this.props.hash}>
+                      <p className='dashboard-information-period'>
+                        <FontAwesome name='clone' />
+                      </p>
+                    </CopyToClipboard>
                   </div>
-                  <CopyToClipboard text={this.props.hash}>
-                    <p className='dashboard-information-period'>
-                      <FontAwesome name='clone' />
-                    </p>
-                  </CopyToClipboard>
                 </div>
               </div>
             </div>

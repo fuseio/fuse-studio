@@ -3,80 +3,6 @@
 	height: 80px;
 	border-radius: 50%;
 	position: relative;
-	&:after {
-		content: '';
-		width: 66px;
-		height: 33px;
-		transform: rotate(-45deg);
-		position: absolute;
-		bottom: 12px;
-		right: -4px;
-		z-index: 1;
-		border-bottom-left-radius: 66px;
-		border-bottom-right-radius: 66px;
-	}
-	&:before {
-		content: '';
-		width: 66px;
-		height: 33px;
-		transform: rotate(-45deg);
-		position: absolute;
-		top: 12px;
-		left: -4px;
-		border-top-left-radius: 66px;
-		border-top-right-radius: 66px;
-	}
-	&.CoinIcon1\.svg {
-		background-image: linear-gradient(to bottom, #496a7f, #05283e);
-		box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.59);
-		&:before {
-			background-color: #05283e;
-		}
-		&:after {
-			background-color: rgba(255, 255, 255, 0.18);
-		}
-	}
-	&.CoinIcon2\.svg {
-		background-image: linear-gradient(to bottom, #ff9a70, #fc6e4c);
-		box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.59);
-		&:before {
-			background-color: #fc6e4c;
-		}
-		&:after {
-			background-color: rgba(255, 255, 255, 0.18);
-		}
-	}
-	&.CoinIcon3\.svg {
-		background-image: linear-gradient(to bottom, #06a1af, #0a7586);
-		box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.59);
-		&:before {
-			background-color: #0a7586;
-		}
-		&:after {
-			background-color: #3d929f;
-		}
-	}
-	@media (max-width: $breakpoint-mobile) {
-		width: 50px;
-		height: 50px;
-
-		&:before {
-			width: 40px;
-			height: 20px;
-			border-top-left-radius: 40px;
-			border-top-right-radius: 40px;
-			top: 7px;
-			left: -3px;
-		}
-		&:after {
-			width: 40px;
-			height: 20px;
-			bottom: 8px;
-			right: -2px;
-			border-bottom-left-radius: 40px;
-			border-bottom-right-radius: 40px;
-		}
-	}
 }
 
 .communities {
@@ -375,67 +301,9 @@
 			}
 		}
 
-		&.coin-show-footer {
-			@media (max-width: $breakpoint-mobile) {
-				& + .coin-footer-close {
-					display: block;
-				}
-				.coin-header {
-					padding: 15px;
-				}
-				.coin-status {
-					position: relative;
-					margin-top: 15px;
-					&-text {
-						display: inline-block;
-					}
-				}
-				.coin-logo {
-					height: 80px;
-					.logo-img {
-						width: 80px;
-						height: 80px;
-						&:after {
-							content: '';
-							width: 66px;
-							height: 33px;
-							transform: rotate(-45deg);
-							position: absolute;
-							bottom: 12px;
-							right: -4px;
-							z-index: 1;
-							border-bottom-left-radius: 66px;
-							border-bottom-right-radius: 66px;
-						}
-						&:before {
-							content: '';
-							width: 66px;
-							height: 33px;
-							transform: rotate(-45deg);
-							position: absolute;
-							top: 12px;
-							left: -4px;
-							border-top-left-radius: 66px;
-							border-top-right-radius: 66px;
-						}
-					}
-					.symbol-text {
-						font-size: 14px;
-					}
-				}
-				.coin-total {
-					border-bottom: 1px solid rgba(255, 255, 255, 0.19);
-					padding-bottom: 15px;
-				}
-				.btn-calculator {
-					display: block;
-					top: auto;
-					bottom: -10px;
-				}
-				.coin-footer {
-					display: flex;
-				}
-			}
+		.coin-total {
+			border-bottom: 1px solid rgba(255, 255, 255, 0.19);
+			padding-bottom: 15px;
 		}
 	}
 	@media (max-width: $breakpoint-tablet) {

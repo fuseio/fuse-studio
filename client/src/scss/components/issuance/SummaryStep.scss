@@ -102,21 +102,6 @@
 
 .step-content-summary {
 	.coin-wrapper {
-		.coin-logo {
-			.symbol-text {
-				@media (max-width: $breakpoint-mobile) {
-					font-size: 10px;
-					font-weight: bold;
-					text-align: center;
-					color: $color-step-text;
-					position: absolute;
-					top: 50%;
-					margin-top: -7px;
-					left: 0;
-					right: 0;
-				}
-			}
-		}
 		.btn-calculator {
 			@media (max-width: $breakpoint-mobile) {
 				display: block;
