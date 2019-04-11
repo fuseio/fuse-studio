@@ -17,7 +17,7 @@ export default class SymbolStep extends Component {
   }
 
   handleChangeCustomSymbol = (event) => {
-    this.setState({customSymbol: event.target.value.slice(0, 3)})
+    this.setState({customSymbol: event.target.value.slice(0, 4)})
   }
 
   setCancelEditing = () => {

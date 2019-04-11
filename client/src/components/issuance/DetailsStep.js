@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
-import Online from 'images/online.png'
-import Geographical from 'images/geographical.png'
+import MintableBurnable from 'images/mintable.svg'
+import OneTimeIssuer from 'images/one_time_issuer_token.svg'
 import PropTypes from 'prop-types'
 import TextInput from 'components/elements/TextInput'
 
 export default class DetailsStep extends Component {
 
-  renderDetailsContent (communityType, setCommunityType, onlineImg, geoImg) {
-    const communityTypes = [{ 'text': 'Mintable burnable token', 'img': onlineImg }, { 'text': 'One time issuer token', 'img': geoImg }]
+  renderDetailsContent (communityType, setCommunityType) {
+    const communityTypes = [{ 'text': 'Mintable burnable token', 'img': MintableBurnable }, { 'text': 'One time issuer token', 'img': OneTimeIssuer }]
 
     const detailsContent = communityTypes.map(({ text, img }, key) => {
       const stepDetailsClass = classNames({
@@ -61,7 +61,7 @@ export default class DetailsStep extends Component {
             Currency Type
           </h3>
           <div className='step-content-details-container'>
-            {this.renderDetailsContent(this.props.communityType, this.props.setCommunityType, Online, Geographical)}
+            {this.renderDetailsContent(this.props.communityType, this.props.setCommunityType)}
           </div>
         </div>
         <div className='step-content-details-block'>
