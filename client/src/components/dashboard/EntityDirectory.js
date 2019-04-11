@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import Loader from 'components/Loader'
 import { getClnBalance, getAccountAddress } from 'selectors/accounts'
-import { REQUEST, SUCCESS } from 'actions/constants'
+import { REQUEST, PENDING, SUCCESS } from 'actions/constants'
 import {getEntities} from 'selectors/directory'
 import {getList, addEntity, fetchBusinesses} from 'actions/directory'
 import Entity from './Entity'
@@ -14,6 +14,7 @@ import ReactGA from 'services/ga'
 import { isOwner } from 'utils/token'
 import { fetchHomeToken } from 'actions/bridge'
 import plusIcon from 'images/add.svg'
+import {getTransaction} from 'selectors/transaction'
 
 const EntityDirectoryDataFetcher = (props) => {
   useEffect(() => {
@@ -67,8 +68,8 @@ class EntityDirectory extends Component {
     submitEntity: (data) => this.props.addEntity(this.props.listAddress, { ...data, active: true })
   })
 
-  renderTransactionStatus = (transactionStatus) => {
-    if (transactionStatus === REQUEST) {
+  renderTransactionStatus = () => {
+    if (this.props.signatureNeeded || this.props.transactionStatus === PENDING) {
       return (
         <div className='dashboard-entity-loader'>
           <Loader color='#3a3269' className='loader' />
@@ -87,7 +88,7 @@ class EntityDirectory extends Component {
         this.state.search.toLowerCase()) !== -1
     ) : entities
 
-  renderBusiness(entities) {
+  renderBusiness (entities) {
     if (entities.length) {
       return (
         entities.map((entity, index) =>
@@ -104,11 +105,11 @@ class EntityDirectory extends Component {
     }
   }
 
-  canDeployBusinessList = () => this.props.transactionStatus !== REQUEST &&
+  canDeployBusinessList = () => !this.props.signatureNeeded &&
     isOwner(this.props.token, this.props.accountAddress) &&
     this.props.homeTokenAddress
 
-  render() {
+  render () {
     const { network: { networkType } } = this.props
 
     const business = this.props.entities
@@ -145,13 +146,13 @@ class EntityDirectory extends Component {
                   <button
                     className='btn-entity-adding'
                     onClick={this.handleAddBusiness}
-                    disabled={this.props.transactionStatus === REQUEST}
+                    disabled={this.props.transactionStatus === REQUEST || this.props.transactionStatus === PENDING}
                   >
                     {
                       networkType === 'fuse'
                         ? (
                           <span className='dashboard-entity-content-plus-icon'>
-                            <a style={{ backgroundImage: `url(${plusIcon})` }}></a>
+                            <a style={{ backgroundImage: `url(${plusIcon})` }} />
                           </span>
                         ) : (
                           <span className='dashboard-entity-content-plus-icon'>
@@ -175,7 +176,7 @@ class EntityDirectory extends Component {
                   <button
                     className='dashboard-transfer-btn'
                     onClick={this.handleAddBusiness}
-                    disabled={this.props.transactionStatus === REQUEST}
+                    disabled={this.props.transactionStatus === REQUEST || this.props.transactionStatus === PENDING}
                   >
                     Add new business
                   </button>
@@ -183,7 +184,7 @@ class EntityDirectory extends Component {
               }
             </React.Fragment>
           )}
-        {this.renderTransactionStatus(this.props.transactionStatus)}
+        {this.renderTransactionStatus()}
         {!this.props.listAddress && <div className='dashboard-empty-list'>
           <img src={EmptyBusinessList} />
         </div>}
@@ -206,7 +207,8 @@ const mapStateToProps = (state, { match, foreignTokenAddress }) => ({
   clnBalance: getClnBalance(state),
   accountAddress: getAccountAddress(state),
   homeTokenAddress: state.entities.bridges[foreignTokenAddress] && state.entities.bridges[foreignTokenAddress].homeTokenAddress,
-  ...state.screens.directory
+  ...state.screens.directory,
+  ...getTransaction(state, state.screens.directory.transactionHash)
 })
 
 const mapDispatchToProps = {

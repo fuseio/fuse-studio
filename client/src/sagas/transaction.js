@@ -1,9 +1,11 @@
 import { call, put, fork, take } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
+import {processReceipt} from 'services/api/misc'
+import {apiCall} from './utils'
 
-import {transactionPending, transactionFailed, transactionSucceeded} from 'actions/utils'
+import {transactionPending, transactionConfirmed, transactionFailed, transactionSucceeded} from 'actions/transactions'
 
-export function * transactionFlow ({transactionPromise, action, confirmationsLimit}) {
+export function * transactionFlow ({transactionPromise, action, confirmationsLimit, sendReceipt}) {
   if (confirmationsLimit) {
     yield fork(transactionConfirmations, {transactionPromise, action, confirmationsLimit})
   }
@@ -24,6 +26,10 @@ export function * transactionFlow ({transactionPromise, action, confirmationsLim
   if (!Number(receipt.status)) {
     yield put(transactionFailed(action, receipt))
     return receipt
+  }
+
+  if (sendReceipt) {
+    yield apiCall(processReceipt, {receipt})
   }
 
   yield put(transactionSucceeded(action, receipt))
@@ -50,11 +56,10 @@ export function * transactionConfirmations ({confirmationsLimit, transactionProm
   const confirmationChannel = yield call(createConfirmationChannel, transactionPromise)
 
   let isWaiting = true
-  let response
   while (isWaiting) {
-    response = yield take(confirmationChannel)
-    yield put({ type: action.CONFIRMATION, response })
-    if (response.confirmationNumber > confirmationsLimit) {
+    const {receipt, confirmationNumber} = yield take(confirmationChannel)
+    yield put(transactionConfirmed(action, receipt, confirmationNumber))
+    if (confirmationNumber > confirmationsLimit) {
       confirmationChannel.close()
       isWaiting = false
     }

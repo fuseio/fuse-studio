@@ -9,26 +9,18 @@ export default (state = initialState, action) => {
       return {...state, ...action.response}
     case actions.WATCH_HOME_BRIDGE.SUCCESS:
       return {...state, ...action.response}
-    case actions.TRANSFER_TO_HOME.SUCCESS:
-      return {...state, ...action.response}
-    case actions.TRANSFER_TO_FOREIGN.SUCCESS:
-      return {...state, ...action.response}
     case actions.DEPLOY_BRIDGE.REQUEST:
       return {...state, bridgeDeploying: true}
     case actions.DEPLOY_BRIDGE.SUCCESS:
       return {...state, bridgeDeploying: false}
-    case actions.TRANSFER_TO_HOME.CONFIRMATION:
-      return {...state, ...action.response}
-    case actions.TRANSFER_TO_FOREIGN.CONFIRMATION:
-      return {...state, ...action.response}
-    case actions.TRANSFER_TO_HOME.PENDING:
-      return {...state, ...action.response}
-    case actions.TRANSFER_TO_FOREIGN.PENDING:
-      return {...state, ...action.response}
     case actions.TRANSFER_TO_HOME.REQUEST:
-      return {...state, confirmationsLimit: action.confirmationsLimit}
+      return {...state, signatureNeeded: true, confirmationsLimit: action.confirmationsLimit}
     case actions.TRANSFER_TO_FOREIGN.REQUEST:
-      return {...state, confirmationsLimit: action.confirmationsLimit}
+      return {...state, signatureNeeded: true, confirmationsLimit: action.confirmationsLimit}
+    case actions.TRANSFER_TO_HOME.PENDING:
+      return {...state, signatureNeeded: false, transactionHash: action.response.transactionHash}
+    case actions.TRANSFER_TO_FOREIGN.PENDING:
+      return {...state, signatureNeeded: false, transactionHash: action.response.transactionHash}
     case LOCATION_CHANGE:
       return initialState
     default:

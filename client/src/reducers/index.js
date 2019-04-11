@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux'
+import { connectRouter } from 'connected-react-router'
 import marketMaker from './marketMaker'
 import accounts from './accounts'
 import ui from './ui'
-import { connectRouter } from 'connected-react-router'
 import network from './network'
 import errors from './errors'
 import screens from './screens'
 import entities from './entities'
+import transactions from './transactions'
 
 const createRootReducer = (history) => combineReducers({
   ui,
@@ -16,6 +17,7 @@ const createRootReducer = (history) => combineReducers({
   errors,
   accounts,
   router: connectRouter(history),
+  transactions,
   entities
 })
 

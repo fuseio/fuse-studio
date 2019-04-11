@@ -13,6 +13,7 @@ import RopstenLogo from 'images/Ropsten.png'
 import MainnetLogo from 'images/Mainnet.png'
 import FuseLogo from 'images/fuseLogo.svg'
 import {convertNetworkName} from 'utils/network'
+import {getTransaction} from 'selectors/transaction'
 
 const NetworkLogo = ({network}) => {
   switch (network) {
@@ -112,28 +113,28 @@ class Bridge extends Component {
         <div className='dashboard-transfer'>
           {
             (this.props.foreignTokenAddress && this.props.homeTokenAddress)
-            ? (
-              <div>
-                <div className='dashboard-transfer-form'>
-                  <input type='number' value={this.state.transferAmount} placeholder="0" onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
-                  <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
+              ? (
+                <div>
+                  <div className='dashboard-transfer-form'>
+                    <input type='number' value={this.state.transferAmount} placeholder='0' onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
+                    <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
+                  </div>
+                  <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}
+                    className='dashboard-transfer-btn' onClick={this.handleTransfer}>
+                    {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
+                  </button>
                 </div>
-                <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}
-                  className='dashboard-transfer-btn' onClick={this.handleTransfer}>
-                  {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
-                </button>
-              </div>
-            ): (
-              <div>
-                <div className='dashboard-transfer-title'>Some Headline About the Bridge</div>
-                <div className='dashboard-transfer-text'>Explanation about deploying it</div>
-                <button className='dashboard-transfer-btn dashboard-transfer-deploy-btn'
-                  disabled={!this.isOwner() || this.props.bridgeDeploying}
-                  onClick={this.props.loadBridgePopup}>
-                  Deploy Bridge
-                </button>
-              </div>
-            )
+              ) : (
+                <div>
+                  <div className='dashboard-transfer-title'>Some Headline About the Bridge</div>
+                  <div className='dashboard-transfer-text'>Explanation about deploying it</div>
+                  <button className='dashboard-transfer-btn dashboard-transfer-deploy-btn'
+                    disabled={!this.isOwner() || this.props.bridgeDeploying}
+                    onClick={this.props.loadBridgePopup}>
+                    Deploy Bridge
+                  </button>
+                </div>
+              )
           }
         </div>
         <div className='dashboard-network-content network-arrow'>
@@ -152,22 +153,22 @@ class Bridge extends Component {
         />
       </div>
       {
-        this.props.bridgeDeploying ?
-        (
-          <div className='bridge-deploying'>
-            <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
-          </div>
-        ) :null
+        this.props.bridgeDeploying
+          ? (
+            <div className='bridge-deploying'>
+              <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+            </div>
+          ) : null
       }
       {
-        this.props.waitingForConfirmation ?
-          (
+        this.props.waitingForConfirmation
+          ? (
             <div className='bridge-deploying'>
               <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
               <div className='bridge-deploying-confirmation'>
                 Confirmations
                 <div>{this.props.confirmationNumber || '0'} / {this.props.confirmationsLimit}</div>
-              </div> 
+              </div>
             </div>
           ) : null
       }
@@ -219,7 +220,8 @@ const mapStateToProps = (state, {foreignTokenAddress}) => ({
   ...state.entities.bridges[foreignTokenAddress],
   homeNetwork: state.network.homeNetwork,
   bridgeStatus: getBridgeStatus(state),
-  balances: getBalances(state)
+  balances: getBalances(state),
+  ...getTransaction(state, state.screens.bridge.transactionHash)
 })
 
 const mapDispatchToProps = {

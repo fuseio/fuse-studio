@@ -1,11 +1,10 @@
 import union from 'lodash/union'
 import {GET_LIST, CREATE_LIST, FETCH_BUSINESSES, ADD_ENTITY, EDIT_ENTITY} from 'actions/directory'
-import {REQUEST, SUCCESS, FAILURE} from 'actions/constants'
+import {REQUEST, SUCCESS} from 'actions/constants'
 import {LOCATION_CHANGE} from 'connected-react-router'
 
 const initialState = {
-  listHashes: [],
-  transactionStatus: null
+  listHashes: []
 }
 
 export default (state = initialState, action) => {
@@ -21,13 +20,11 @@ export default (state = initialState, action) => {
         listHashes: union(state.listHashes, action.response.result),
         hasMore: action.response.metadata.has_more}
     case ADD_ENTITY.REQUEST:
-      return {...state, transactionStatus: REQUEST}
-    case ADD_ENTITY.FAILURE:
-      return {...state, transactionStatus: FAILURE}
-    case ADD_ENTITY.SUCCESS:
-      return {...state, transactionStatus: SUCCESS}
-    case EDIT_ENTITY.SUCCESS:
-      return {...state, editEntityReceipt: action.response.receipt}
+      return {...state, signatureNeeded: true}
+    case ADD_ENTITY.PENDING:
+      return {...state, transactionHash: action.response.transactionHash, signatureNeeded: false}
+    case EDIT_ENTITY.PENDING:
+      return {...state, editTransactionHash: action.response.transactionHash}
     case LOCATION_CHANGE:
       if (action.payload.location.pathname === '/') {
         return initialState

@@ -1,6 +1,7 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import CopyToClipboard from 'components/common/CopyToClipboard'
+import {getBlockExplorerUrl} from 'utils/network'
 
 const Entity = ({entity, address, showProfile}) =>
   <div className='entity'>
@@ -11,7 +12,7 @@ const Entity = ({entity, address, showProfile}) =>
       <div className='entity-name' onClick={() => showProfile()}>{entity.name}</div>
       <div className='entity-type'>{entity.businessType}</div>
       <div className='entity-subtitle'>
-        Asset Id <span>{address}</span>
+        Account ID <a href={`${getBlockExplorerUrl('fuse')}/address/${address}`} target='_blank'>{address}</a>
         <CopyToClipboard text={address}>
           <p className='dashboard-information-period'>
             <FontAwesome name='clone' />

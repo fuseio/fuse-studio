@@ -8,9 +8,10 @@ import {loadModal} from 'actions/ui'
 import { getList, fetchBusinesses, fetchBusiness, activateBusiness, deactivateBusiness, editEntity } from 'actions/directory'
 import { ADD_DIRECTORY_ENTITY, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
+import {getBlockExplorerUrl} from 'utils/network'
+import {getTransaction} from 'selectors/transaction'
 
 class EntityProfile extends Component {
-
   componentDidMount () {
     if (!this.props.entity) {
       this.props.fetchBusiness(this.props.listAddress, this.props.hash)
@@ -35,8 +36,8 @@ class EntityProfile extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.editEntityReceipt && !prevProps.editEntityReceipt) {
-      const {newHash} = this.props.editEntityReceipt.events.EntityReplaced.returnValues
+    if (this.props.receipt && !prevProps.receipt) {
+      const {newHash} = this.props.receipt.events.EntityReplaced.returnValues
       this.showProfile(this.props.listAddress, newHash)
     }
 
@@ -94,17 +95,14 @@ class EntityProfile extends Component {
                     </p>&nbsp;&nbsp;|&nbsp;&nbsp;
                     <div className='entity-profile-actions-toggle'>
                       <input type='checkbox' value={entity && entity.active} checked={entity && entity.active} onChange={(e) => this.toggleHandler(e.target.checked)} />
-                      <div className="toggle-wrapper"><span class="toggle"></span></div>
+                      <div className='toggle-wrapper'><span className='toggle' /></div>
                     </div>
                     <div className='entity-profile-actions-status'>
-                    {
-                      entity && entity.active 
-                        ? (
-                          <span>Activate</span>
-                        ): (
-                          <span>Deactivate</span>
-                        )
-                    }
+                      {
+                        entity && entity.active
+                          ? <span>Activate</span>
+                          : <span>Deactivate</span>
+                      }
                     </div>
                   </div>
                 </div>
@@ -144,15 +142,17 @@ class EntityProfile extends Component {
             <div className='row'>
               <div className='col-12'>
                 <div className='dashboard-information-footer entity-footer'>
-                  <div className='dashboard-information-small-text'>
-                    <span className='text-asset'>Account id</span>
-                    <span className='id'>{this.props.hash}</span>
-                    <CopyToClipboard text={this.props.hash}>
-                      <p className='dashboard-information-period'>
-                        <FontAwesome name='clone' />
-                      </p>
-                    </CopyToClipboard>
-                  </div>
+                  {this.props.entity && this.props.entity.account &&
+                    <div className='dashboard-information-small-text'>
+                      <span className='text-asset'>Account ID</span>
+                      <a href={`${getBlockExplorerUrl('fuse')}/address/${this.props.entity.account}`} target='_blank'>
+                        <span className='id'>{this.props.entity.account}</span></a>
+                      <CopyToClipboard text={this.props.entity.account}>
+                        <p className='dashboard-information-period'>
+                          <FontAwesome name='clone' />
+                        </p>
+                      </CopyToClipboard>
+                    </div>}
                 </div>
               </div>
             </div>
@@ -167,7 +167,8 @@ const mapStateToProps = (state, {match}) => ({
   listAddress: match.params.listAddress,
   hash: match.params.hash,
   entity: state.entities.metadata[`ipfs://${match.params.hash}`],
-  editEntityReceipt: state.screens.directory.editEntityReceipt
+  editEntityReceipt: state.screens.directory.editEntityReceipt,
+  ...getTransaction(state, state.screens.directory.editTransactionHash)
 })
 
 const mapDispatchToProps = {

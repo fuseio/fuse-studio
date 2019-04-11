@@ -10,6 +10,7 @@ import {isZeroAddress} from 'utils/web3'
 import {processReceipt} from 'services/api/misc'
 import {getHomeTokenAddress} from 'selectors/token'
 import * as api from 'services/api/business'
+import {transactionFlow} from './transaction'
 
 function * createList ({tokenAddress}) {
   const accountAddress = yield select(getAccountAddress)
@@ -60,19 +61,12 @@ function * addEntity ({listAddress, data}) {
 
   const {hash} = yield call(createMetadata, {metadata: data})
   const method = SimpleListContract.methods.addEntity(hash)
-  const receipt = yield method.send({
+  const transactionPromise = method.send({
     from: accountAddress
   })
 
-  yield apiCall(processReceipt, {receipt})
-
-  yield put({type: actions.ADD_ENTITY.SUCCESS,
-    response: {
-      receipt
-    }
-  })
-
-  return receipt
+  const action = actions.ADD_ENTITY
+  yield call(transactionFlow, {transactionPromise, action, sendReceipt: true})
 }
 
 function * removeEntity ({listAddress, hash}) {
@@ -81,19 +75,12 @@ function * removeEntity ({listAddress, hash}) {
     address: listAddress
   })
 
-  const receipt = yield SimpleListContract.methods.deleteEntity(hash).send({
+  const transactionPromise = SimpleListContract.methods.deleteEntity(hash).send({
     from: accountAddress
   })
 
-  yield apiCall(processReceipt, {receipt})
-
-  yield put({type: actions.REMOVE_DIRECTORY_ENTITY.SUCCESS,
-    response: {
-      receipt
-    }
-  })
-
-  return receipt
+  const action = actions.REMOVE_DIRECTORY_ENTITY
+  yield call(transactionFlow, {transactionPromise, action, sendReceipt: true})
 }
 
 function * editEntity ({listAddress, hash, data}) {
@@ -106,19 +93,12 @@ function * editEntity ({listAddress, hash, data}) {
   const response = yield call(createMetadata, {metadata: data})
   const newHash = response.hash
 
-  const receipt = yield SimpleListContract.methods.replaceEntity(hash, newHash).send({
+  const transactionPromise = SimpleListContract.methods.replaceEntity(hash, newHash).send({
     from: accountAddress
   })
 
-  yield apiCall(processReceipt, {receipt})
-
-  yield put({type: actions.EDIT_ENTITY.SUCCESS,
-    response: {
-      receipt
-    }
-  })
-
-  return receipt
+  const action = actions.EDIT_ENTITY
+  return yield call(transactionFlow, {transactionPromise, action, sendReceipt: true})
 }
 
 export function * activateBusiness ({listAddress, hash}) {

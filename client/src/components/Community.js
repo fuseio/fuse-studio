@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {formatWei} from 'utils/format'
 import classNames from 'classnames'
+import identity from 'lodash/identity'
+import {formatWei} from 'utils/format'
 import CommunityLogo from 'components/elements/CommunityLogo'
 
 export default class Community extends Component {
@@ -14,7 +15,7 @@ export default class Community extends Component {
         <div className='coin-details'>
           <h3 className='coin-name'>{this.props.token.name}</h3>
           <p className='coin-total'>
-            Total CC supply
+            Total Supply
             <span className={classNames('total-text', 'positive-number')}>
               {formatWei(this.props.token.totalSupply, 0)}
             </span>
@@ -28,7 +29,8 @@ export default class Community extends Component {
 Community.defaultProps = {
   coinWrapperClassName: 'coin-wrapper',
   token: {},
-  metadata: {}
+  metadata: {},
+  showDashboard: identity
 }
 
 Community.propTypes = {
