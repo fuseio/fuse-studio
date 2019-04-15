@@ -353,8 +353,36 @@
     color: $color-filter-text;
     font-size: 11px;
     font-weight: 500;
-    span {
+
+    .fa-clone {
+      margin-left: 10px;
+      font-weight: 400;
+      font-size: 12px;
+      color: $color-arrow;
+      &:hover {
+        font-weight: 900;
+      }
+    }
+
+    .text-asset {
+      color: $color-author;
+      text-transform: capitalize;
+      font-size: 12px;
+      font-weight: bold;
+      font-family: $font-family;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 2.25;
+      letter-spacing: normal;
+    }
+    .id {
+      margin-left: 5px;
+      cursor: pointer;
+      text-transform: none;
       color: $color-negative;
+      &:hover {
+        cursor: pointer
+      }
     }
   }
   &-modal {
@@ -379,7 +407,7 @@
       border-top: none;
       border-left: none;
       border-right: none;
-      border-bottom: 1px solid #e2e2e2;
+      border-bottom: 1px solid $color-brdr-issuance;
       padding: 15px 0;
       font-size: 20px;
       margin-bottom: 10px;
@@ -583,7 +611,7 @@
       }
       hr {
         border: none;
-        border-top: 1px solid #e2e2e2;
+        border-top: 1px solid $color-brdr-issuance;
       }
       &-title {
         font-size: 12px;
@@ -670,7 +698,7 @@
       }
       &-form-control {
         border-radius: 4px;
-        border: 1px solid #e2e2e2;
+        border: 1px solid $color-brdr-issuance;
         font-family: $font-family-lato;
         width: 100%;
         padding: 5px 12px;
@@ -828,6 +856,7 @@
       align-items: center;
       font-size: 12px;
       &-edit {
+        cursor: pointer;
       }
 
       &-status {
@@ -839,6 +868,9 @@
         height: 100%;
         max-width: 34px;
         max-height: 18px;
+        position: relative;
+        width: 100%;
+        height: 100%;
 
         > input {
           position:absolute;
@@ -857,6 +889,10 @@
             border-radius: 10px; 
             position:relative;
             margin-bottom:20px;
+          }
+
+          &:hover {
+            cursor: pointer;
           }
 
           display:block;

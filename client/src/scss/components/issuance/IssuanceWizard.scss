@@ -199,46 +199,55 @@
 			flex-direction: column;
 			align-items: center;
 			&-field {
-				min-width: 300px;
-				max-width: 400px;
-				border-radius: 5px;
-				font-size: 106px;
+				min-width: 287px;
+				max-width: 287px;
+				margin: auto 0;
+				border-radius: 46.5px;
+				font-size: 60px;
   			font-weight: bold;
 				text-align: center;
-  			color: $color-orange;
-				padding: 10px;
+  			color: $color-ropsten;
+				padding: 10px 0;
 				margin-bottom: 40px;
 				text-transform: uppercase;
 				position: relative;
-				height: 160px;
-				border: 1px solid #0a7586;
+				// border: 1px solid #05263d;
 
 				> div:first-child {
-					background-color: rgba(147, 197, 255, 0.11);
 					width: 100%;
 					height: 100%;
 				}
-				@media (max-width: $breakpoint-mobile) {
-					height: auto;
-				}
-				&-label {
-					font-size: 13px;
-					color: #BCB9C8;
-					position: absolute;
-					top: 50%;
-					margin-top: -7px;
-					left: 0;
-					right: 0;
-					text-transform: none;
-				}
-				@media (max-width: $breakpoint-mobile) {
-					width: 270px;
-					margin-left: auto;
-					margin-right: auto;
-					font-size: 80px;
-					margin-bottom: 25px;
-					input {
+
+				input {
+					height: 93px;
+					box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+					border: solid 2px transparent;
+					background-color: #fff;
+					border-radius: 46.5px;
+					color: $color-step-title;
+					font-size: 60px;
+					font-weight: bold;
+					text-transform: uppercase;
+					outline: none;
+					width: 100%;
+					text-align: center;
+
+					&::placeholder {
+						color: rgba(0, 0, 0, 0.3);
+						font-weight: bold;
+					}
+					
+					&:focus {
+						border: solid 2px $color-step-title;
+						box-shadow: none;
+					}
+		
+					&::-webkit-input-placeholder {
+						line-height: normal;
+					}
+					@media (max-width: $breakpoint-mobile) {
 						font-size: 80px;
+						height: 88px;
 					}
 				}
 			}
@@ -289,10 +298,11 @@
 				border-radius: 5px;
 			  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
 				border: 2px solid rgba(226, 226, 226, 0.49);
-				height: 175px;
 				display: flex;
 		    flex-direction: column;
-		    width: 220px;
+				width: 190px;
+				height: 145px;
+		
 		    align-items: center;
 				margin-right: 20px;
 				font-size: 11px;
@@ -315,7 +325,7 @@
 
 				&-text {
 					text-transform: capitalize;
-					font-size: 1.3em;
+					font-size: 12px;
 				}
 			}
 
@@ -324,10 +334,10 @@
 				border-radius: 5px;
 			  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
 				border: 2px solid rgba(226, 226, 226, 0.49);
-				height: 175px;
+				width: 160px;
+				height: 145px;
 				display: flex;
 		    flex-direction: column;
-		    width: 210px;
 		    align-items: center;
 				font-size: 11px;
   			font-weight: 500;
@@ -533,46 +543,6 @@
 			margin-bottom: 5px;
 		}
 	}
-	&-community-symbol {
-		label {
-			line-height: normal;
-			text-transform: none;
-			font-style: italic;
-		}
-		input {
-			background-color: transparent;
-			font-size: 106px;
-			font-weight: bold;
-			color: $color-ropsten;
-			text-transform: uppercase;
-			box-shadow: none;
-			outline: none;
-			border: none;
-			width: 100%;
-			text-align: center;
-			height: 120px;
-			&:focus {
-				box-shadow: none;
-				outline: none;
-				border: none;
-			}
-
-			&::-webkit-input-placeholder {
-				line-height: normal;
-			}
-			&::placeholder {
-				color: $color-step-title;
-    		font-size: 13px;
-				line-height: normal;
-				text-transform: none;
-				font-style: italic;
-    	}
-			@media (max-width: $breakpoint-mobile) {
-				font-size: 80px;
-				height: 88px;
-			}
-		}
-	}
 	&-community-name {
 		input {
   		background-color: $color-step-text;
@@ -583,6 +553,7 @@
 			color: $color-step-title;
 			line-height: 1.92;
 			width: 420px;
+			margin-bottom: 40px;
 			&::placeholder {
 				color: $color-step-title;
 				font-style: italic;
@@ -597,9 +568,9 @@
 				box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
 				border: solid 2px transparent;
 				background-color: #fff;
-				border-radius: 45px;
-				padding: 8px 16px;
+				border-radius: 46.5px;
 				color: $color-step-title;
+				padding: 8px 16px;
 				line-height: 1.92;
 				min-height: 2.5em;
 				font-size: 20px;

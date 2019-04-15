@@ -52,66 +52,84 @@
   }
 
   &-sidebar {
-    width: 270px;
+    width: 290px;
     border-radius: 10px;
     padding: 25px;
+    font-family: $font-family;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background: $color-step-text;
     @media (max-width: $breakpoint-tablet) {
       margin-bottom: 40px;
       padding: 20px;
-  	}
+    }
     @media (max-width: $breakpoint-mobile) {
       width: 100%;
     }
-    .coin-content {
-      display: flex;
-      justify-content: center;
-      margin-top: 25px;
-      span {
-        font-size: 10px;
-        &:not(:last-child) {
-          margin-right: 7px;
-        }
+
+    .logo {
+      .logo-circle__outer {
+        margin: auto;
       }
-      .coin-currency {
-        color: $color-step-text;
-        font-weight: 500;
-        &-type {
-          color: #6e6d9f;
-          font-weight: bold;
-        }
+    }
+
+    .token-info {
+      font-family: $font-family;
+
+      &__title {
+        font-size: 12px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 2.7;
+        letter-spacing: normal;
+        text-align: center;
+        color: $color-home-banner-bg;
       }
-      &-type {
-        &:not(:last-child) {
-          margin-right: 25px;
-          position: relative;
-          &::after {
-            content: '';
-            position: absolute;
-            right: -15px;
-            top: 9px;
-            width: 4px;
-            height: 4px;
-            background-color: #5fddbb;
-            border-radius: 50%;
-          }
+
+      &__total {
+        font-weight: normal;
+        color: $color-home-banner-bg;
+        text-align: center;
+
+        >span:first-child {
+          font-size: 10px;
+        }
+
+        >span:last-child {
+          font-size: 8px;
+          margin-left: 3px;
         }
       }
     }
-  }
 
-  &-title {
-    font-size: 15px;
-    text-align: center;
-    font-weight: 500;
-    margin-top: 25px;
-    text-transform: capitalize;
-    color: $color-bg-gray;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid $color-brdr-issuance;
-    margin-bottom: 5px;
+    .asset-id {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $color-home-banner-bg;
+      font-family: $font-family;
+      .text {
+        font-size: 10px;
+        font-weight: bold;
+      }
+      .id {
+        font-size: 9px;
+        display: inline-block;
+        margin-left: 5px;
+        cursor: pointer;
+        color: #00c1ff;
+        &:hover {
+          cursor: pointer
+        }
+      }
+    }
+
+    .line {
+      width: 234px;
+      height: 2px;
+      background-color: $color-brdr-issuance;
+      border: solid .1px $color-brdr-issuance;
+    }
   }
 
   &-section {
@@ -134,9 +152,8 @@
   &-progress {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    margin-top: 30px;
-    [class^='dashboard-progress-bar'] {
+    margin: 1.2em 0;
+    [class^="dashboard-progress-bar"] {
       width: 40px;
       height: 40px;
       border: 10px solid $color-donut-bg;
@@ -279,9 +296,13 @@
       }
     }
     &-content {
-      padding-top: 30px;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      }
       padding-bottom: 30px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+
+      padding-top: 30px;
       display: flex;
       &-activity {
         flex: 1;
@@ -334,7 +355,6 @@
           cursor: pointer
         }
       }
-      
       @media (max-width: $breakpoint-mobile) {
         font-size: 10px;
       }
@@ -876,10 +896,10 @@
       animation-iteration-count: infinite;
       animation-fill-mode: both;
       &:nth-child(2) {
-        animation-delay: .2s;
+        animation-delay: 0.2s;
       }
       &:nth-child(3) {
-        animation-delay: .4s;
+        animation-delay: 0.4s;
       }
     }
   }
@@ -893,12 +913,228 @@
 
 @keyframes blink {
   0% {
-    opacity: .2;
+    opacity: 0.2;
   }
   20% {
     opacity: 1;
   }
   100% {
-    opacity: .2;
+    opacity: 0.2;
+  }
+}
+
+@include block(status) {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: $color-step-text;
+  z-index: 5;
+  font-family: $font-family;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+
+  @include element(message) {
+    color: $color-filter-text;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.5px;
+  }
+
+  @include element(icon) {
+    margin: 1em auto;
+    font-size: 20px;
+  }
+  .fa-close {
+    color: $color-red;
+  }
+  .fa-check {
+    color: $color-ropsten;
+  }
+}
+
+@include block(transfer-tab) {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  @include element(balance) {
+    @include block(title) {
+      width: 206px;
+      height: 21px;
+      font-family: $font-family;
+      font-size: 18px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: $color-filter-text;
+    }
+
+    @include block(amount) {
+      font-weight: normal;
+      color: rgba(37, 67, 90, 0.8);
+    }
+
+    @include block(symbol) {
+      font-size: 12px;
+      font-weight: normal;
+      margin-left: 3px;
+      color: rgba(37, 67, 90, 0.8);
+    }
+  }
+
+  @include element(line) {
+    height: 1px;
+    background-color: $color-brdr-issuance;
+    border: solid .1px $color-brdr-issuance;
+    width: 100%;
+    margin: 1em 0;
+  }
+
+  @include element(content) {
+    padding: 1em;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    @include element(to-field) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 2.4em 0;
+      height: 35px;
+      @include element(text) {
+        font-family: $font-family;
+        font-size: 14px;
+        min-width: 1em;
+        font-weight: bold;
+        color: $color-home-banner-bg;
+      }
+  
+      @include element(input) {
+        background: transparent;
+        border: none;
+        width: 96%;
+        border-bottom: 1px solid $color-brdr-issuance;
+      }
+    }
+  
+    @include element(amount) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @include element(text) {
+        font-family: $font-family;
+        font-size: 14px;
+        font-weight: bold;
+        min-width: 65px;
+        color: $color-home-banner-bg;
+      }
+  
+      @include element(field) {
+        box-shadow: 0 0 6px 0 #cccccc;
+        border: solid 2px transparent;
+        background-color: #fff;
+        border-radius: 45px;
+        padding: 8px 16px;
+        color: $color-step-title;
+        min-height: 1.5em;
+        font-size: 20px;
+        width: 85%;
+        font-weight: bold;
+        &::placeholder {
+          color: rgba(0, 0, 0, 0.3);
+          font-weight: bold;
+        }
+  
+        &:focus {
+          border: solid 2px $color-step-title;
+          box-shadow: none;
+        }
+      }
+    }
+  
+    @include element(button) {
+      align-self: flex-end;
+      margin: 40px 0 0px;
+  
+      > button {
+        display: inline-block;
+        border-radius: 30px;
+        background-color: $color-ropsten;
+        font-size: .8em;
+        color: $color-step-text;
+        // padding: 10px 30px;
+        width: 84px;
+        height: 32px;
+        text-transform: uppercase;
+        border: none;
+        font-weight: bold;
+        .symbol-icon {
+          margin-left: 5px;
+        }
+        &:focus,
+        &:active,
+        &:focus:active {
+          outline: none;
+        }
+        &:hover {
+          background-color: darken($color-ropsten, 10%);
+          cursor: pointer;
+        }
+        &[disabled] {
+          color: #fff;
+          cursor: not-allowed;
+          background-color: lighten($color-ropsten, 20%) !important;
+        }
+      }
+    }
+  }
+
+
+  @include element(actions) {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    margin: 2.4em 0;
+    width: 140px;
+    height: 35px;
+
+    > button {
+      
+      &:last-child{
+        border-radius: 0 20px 20px 0;
+      }
+      &:first-child{
+        border-right: 0;
+        border-radius: 20px 0 0 20px;
+      }
+    }
+
+    @include element(btn) {
+      background-color: #f4f4f4;
+      border: solid 1px #dadada;
+      flex-basis: 50%;
+      color: rgba(37, 67, 90, 0.6);
+      font-size: 0.8em;
+      height: 100%;
+      outline: none;
+      font-weight: bold;
+      cursor: pointer;
+
+      @include modifier(active) {
+        background-color: $color-ropsten;
+        color: white;
+      }
+    
+    }
+       
   }
 }

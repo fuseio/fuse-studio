@@ -5,6 +5,9 @@ import CommunityLogo from 'components/elements/CommunityLogo'
 import {fetchTokenProgress} from 'actions/token'
 import FontAwesome from 'react-fontawesome'
 import classNames from 'classnames'
+import CopyToClipboard from 'components/common/CopyToClipboard'
+import {formatWei} from 'utils/format'
+import { getBlockExplorerUrl } from 'utils/network'
 
 const Step = ({done, text, handleClick}) => (
   <div
@@ -38,8 +41,24 @@ class TokenProgress extends Component {
     const progressOverall = doneSteps.length * 20
     return (
       <div className='dashboard-sidebar'>
-        <CommunityLogo token={token} metadata={this.props.metadata[token.tokenURI] || {}} />
-        <h3 className='dashboard-title'>{token.name}</h3>
+        <div className='logo'><CommunityLogo token={token} metadata={this.props.metadata[token.tokenURI] || {}} /></div>
+        <div className='token-info'>
+            <h5 className='token-info__title'>{token.name}</h5>
+            <div className='token-info__total'><span>Total supply: {formatWei(token.totalSupply, 0)}</span><span>{token.symbol}</span></div>
+          <div className='asset-id'>
+              <span className='text'>Asset ID</span>
+              <a href={`${getBlockExplorerUrl(this.props.tokenNetworkType)}/address/${this.props.tokenAddress}`}
+                target='_blank'>
+                <span className='id'>{this.props.tokenAddress.substring(0, 6)}...{this.props.tokenAddress.substr(this.props.tokenAddress.length - 4)}</span>
+              </a>
+            <CopyToClipboard text={this.props.tokenAddress}>
+              <p className='dashboard-information-period'>
+                <FontAwesome name='clone' />
+              </p>
+            </CopyToClipboard>
+          </div>
+          <hr className='line' />
+        </div>
         <div className='dashboard-progress'>
           <div className={`dashboard-progress-bar-${progressOverall}`} />
           <div className='dashboard-progress-content'>

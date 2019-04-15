@@ -94,86 +94,112 @@ class Bridge extends Component {
     this.props.getBlockNumber(this.props.bridgeStatus.from.network, this.props.bridgeStatus.from.bridge)
   }
 
-  render = () => (
-    <div className='dashboard-bridge'>
-      <div className='dashboard-network'>
-        <Balance
-          balanceOfToken={this.props.balanceOfToken}
-          tokenAddress={this.props.homeNetwork === this.props.bridgeStatus.from.network ? this.props.homeTokenAddress : this.props.foreignTokenAddress}
-          accountAddress={this.props.accountAddress}
-          token={this.props.token}
-          balances={this.props.balances}
-          bridgeSide={this.props.bridgeStatus.from}
-          transferStatus={this.props.transferStatus}
-          className={`balance-${this.props.network}`}
-        />
-        <div className='dashboard-network-content network-arrow'>
-          <FontAwesome name='long-arrow-alt-right' />
-        </div>
-        <div className='dashboard-transfer'>
-          {
-            (this.props.foreignTokenAddress && this.props.homeTokenAddress)
-              ? (
-                <div>
-                  <div className='dashboard-transfer-form'>
-                    <input type='number' value={this.state.transferAmount} placeholder='0' onChange={this.setTransferAmount} disabled={this.props.transferStatus} />
-                    <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
+  render () {
+    const {
+      balances,
+      balanceOfToken,
+      homeNetwork,
+      bridgeStatus,
+      accountAddress,
+      token,
+      homeTokenAddress,
+      foreignTokenAddress,
+      transferStatus,
+      bridgeDeploying,
+      network,
+      waitingForConfirmation,
+      confirmationNumber,
+      confirmationsLimit
+    } = this.props
+
+    const {
+      transferAmount
+    } = this.state
+
+    const balance = balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]
+    const formatted = new BigNumber(balance).div(1e18).toFormat(2, 1)
+
+    return (
+      <div className='dashboard-bridge'>
+        <div className='dashboard-network'>
+          <Balance
+            balanceOfToken={balanceOfToken}
+            tokenAddress={homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress}
+            accountAddress={accountAddress}
+            token={token}
+            balances={balances}
+            bridgeSide={bridgeStatus.from}
+            transferStatus={transferStatus}
+            className={`balance-${network}`}
+          />
+          <div className='dashboard-network-content network-arrow'>
+            <FontAwesome name='long-arrow-alt-right' />
+          </div>
+          <div className='dashboard-transfer'>
+            {
+              (foreignTokenAddress && homeTokenAddress)
+                ? (
+                  <div>
+                    <div className='dashboard-transfer-form'>
+                      <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={this.setTransferAmount} disabled={transferStatus} />
+                      <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
+                    </div>
+                    <button disabled={transferStatus || !Number(transferAmount) || !accountAddress || new BigNumber(transferAmount).toFormat(2, 1) > formatted}
+                      className='dashboard-transfer-btn' onClick={this.handleTransfer}>
+                      {transferStatus || `Transfer to ${bridgeStatus.to.network}`}
+                    </button>
                   </div>
-                  <button disabled={this.props.transferStatus || !Number(this.state.transferAmount) || !this.props.accountAddress}
-                    className='dashboard-transfer-btn' onClick={this.handleTransfer}>
-                    {this.props.transferStatus || `Transfer to ${this.props.bridgeStatus.to.network}`}
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <div className='dashboard-transfer-title'>Some Headline About the Bridge</div>
-                  <div className='dashboard-transfer-text'>Explanation about deploying it</div>
-                  <button className='dashboard-transfer-btn dashboard-transfer-deploy-btn'
-                    disabled={!this.isOwner() || this.props.bridgeDeploying}
-                    onClick={this.props.loadBridgePopup}>
-                    Deploy Bridge
-                  </button>
-                </div>
-              )
-          }
+                ) : (
+                  <div>
+                    <div className='dashboard-transfer-title'>Some Headline About the Bridge</div>
+                    <div className='dashboard-transfer-text'>Explanation about deploying it</div>
+                    <button className='dashboard-transfer-btn dashboard-transfer-deploy-btn'
+                      disabled={!this.isOwner() || this.props.bridgeDeploying}
+                      onClick={this.props.loadBridgePopup}>
+                      Deploy Bridge
+                    </button>
+                  </div>
+                )
+            }
+          </div>
+          <div className='dashboard-network-content network-arrow'>
+            <FontAwesome name='long-arrow-alt-right' />
+          </div>
+          <Balance
+            balanceOfToken={balanceOfToken}
+            tokenAddress={homeNetwork === bridgeStatus.to.network ? homeTokenAddress : foreignTokenAddress}
+            accountAddress={accountAddress}
+            token={token}
+            balances={balances}
+            bridgeSide={bridgeStatus.to}
+            transferStatus={transferStatus}
+            disabled={!foreignTokenAddress || !homeTokenAddress}
+            className={foreignTokenAddress && homeTokenAddress ? `balance-${network}` : 'balance-disabled'}
+          />
         </div>
-        <div className='dashboard-network-content network-arrow'>
-          <FontAwesome name='long-arrow-alt-right' />
-        </div>
-        <Balance
-          balanceOfToken={this.props.balanceOfToken}
-          tokenAddress={this.props.homeNetwork === this.props.bridgeStatus.to.network ? this.props.homeTokenAddress : this.props.foreignTokenAddress}
-          accountAddress={this.props.accountAddress}
-          token={this.props.token}
-          balances={this.props.balances}
-          bridgeSide={this.props.bridgeStatus.to}
-          transferStatus={this.props.transferStatus}
-          disabled={!this.props.foreignTokenAddress || !this.props.homeTokenAddress}
-          className={this.props.foreignTokenAddress && this.props.homeTokenAddress ? `balance-${this.props.network}` : 'balance-disabled'}
-        />
-      </div>
-      {
-        this.props.bridgeDeploying
-          ? (
-            <div className='bridge-deploying'>
-              <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
-            </div>
-          ) : null
-      }
-      {
-        this.props.waitingForConfirmation
-          ? (
-            <div className='bridge-deploying'>
-              <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
-              <div className='bridge-deploying-confirmation'>
-                Confirmations
-                <div>{this.props.confirmationNumber || '0'} / {this.props.confirmationsLimit}</div>
+        {
+          bridgeDeploying
+            ? (
+              <div className='bridge-deploying'>
+                <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
               </div>
-            </div>
-          ) : null
-      }
-    </div>
-  )
+            ) : null
+        }
+        {
+          waitingForConfirmation
+            ? (
+              <div className='bridge-deploying'>
+                <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+                <div className='bridge-deploying-confirmation'>
+                  Confirmations
+                  <div>{confirmationNumber || '0'} / {confirmationsLimit}</div>
+                </div>
+              </div>
+            ) : null
+        }
+      </div>
+    )
+  }
 }
 
 Bridge.propTypes = {

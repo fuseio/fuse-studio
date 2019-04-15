@@ -13,7 +13,8 @@ module.exports = (mongoose) => {
     totalSupply: {type: String, required: [true, "can't be blank"]},
     owner: {type: String, required: [true, "can't be blank"]},
     factoryAddress: {type: String, required: [true, "can't be blank"]},
-    blockNumber: {type: Number}
+    blockNumber: {type: Number},
+    tokenType: {type: String, required: [true, "can't be blank"]}
   }, {timestamps: true})
 
   TokenSchema.index({address: 1}, {unique: true})

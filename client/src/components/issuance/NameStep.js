@@ -16,11 +16,11 @@ const NameStep = ({communityName, handleChangeCommunityName, setNextStep}) => {
         onChange={handleChangeCommunityName}
       />
       <button
-        className='next-button'
+        className='button button--normal'
         disabled={communityName.length < 3}
         onClick={setNextStep}
       >
-        <FontAwesome className='next-icon' name='arrow-right' />
+        NEXT<FontAwesome className='next-icon' name='arrow-right' />
       </button>
     </div>
   )

@@ -7,6 +7,7 @@
 
 .communities {
 	&-banner {
+		font-family: $font-family;
     align-items: center;
     justify-content: space-between;
     padding: 50px 0 50px 100px;
@@ -31,18 +32,37 @@
 			padding: 20px 0;
 			color: $color-step-text;
 			font-size: 17px;
-			line-height: 1.35;
+			line-height: 1.55;
   		letter-spacing: -0.4px;
 		}
 		&-title {
 			color: $color-step-text;
-			font-size: 63px;
-			line-height: 1.13;
+			font-size: 40px;
+			line-height: 1.25;
   		letter-spacing: -0.5px;
-			span {
-				background: linear-gradient(to bottom, #ffea14, #ffea14 31%, #85ffbc);
-				-webkit-background-clip: text;
-  			-webkit-text-fill-color: transparent;
+		}
+		&-issuance {
+			padding: 10px;
+			background: $color-ropsten;
+			border: none;
+			font-size: 12px;
+			text-transform: uppercase;
+			color: $color-step-text;
+			font-weight: bold;
+			text-align: center;
+			border-radius: 16px;
+			
+			&:focus,
+			&:focus:active,
+			&:active {
+				outline: none;
+			}
+			&:hover {
+				cursor: pointer;
+				background: darken($color-ropsten, 10%);
+			}
+			@media (max-width: $breakpoint-tablet) {
+				margin-left: 0;
 			}
 		}
 		@media (max-width: $breakpoint-tablet) {
@@ -63,9 +83,8 @@
 		background-color:  #f7f8fc;
 
 		&-title {
-			font-size: 20px;
-			line-height: 2.35;
- 			letter-spacing: -0.4px;
+			font-size: 30px;
+ 			letter-spacing: -0.7px;
 			font-weight: bold;
 			color: $color-filter-text;
 
@@ -90,7 +109,7 @@
 
 		&-content {
 			justify-content: space-between;
-			padding: 20px 15px;
+			padding: 30px 10px;
 			margin: 0 auto;
 			display: flex;
 			@media (max-width: $breakpoint-tablet) {
@@ -101,8 +120,10 @@
 
 		&-search {
 			display: flex;
-			border: 1px solid $color-btn-control;
-			border-radius: 8px;
+			border: 1px solid #c0c5d2;
+			max-height: 40px;
+			min-width: 255px;
+			border-radius: 20px;
 			overflow: hidden;
 
 			input {
@@ -112,7 +133,7 @@
 		    flex: 1.7;
 		    border: none;
 				&::placeholder {
-  				color: $color-btn-control;
+  				color: #c0c5d2;
   			}
 			}
 			.search-btn {
@@ -165,7 +186,7 @@
 	}
 
 	.coin-wrapper {
-		box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.2);
+		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   	background-color: $color-step-text;
 		border-radius: 10px;
 		box-sizing: content-box;
@@ -320,7 +341,7 @@
 	&:hover {
 		cursor: pointer;
 		.coin-wrapper {
-			box-shadow: 0 2px 16px 0 rgba(252, 110, 76, 0.2);
+			box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
 		}
 	}
 }

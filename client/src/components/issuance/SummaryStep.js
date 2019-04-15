@@ -10,7 +10,7 @@ export default class SummaryStep extends Component {
   renderTransactionStatus = (transactionStatus) => {
     switch (transactionStatus) {
       case REQUEST:
-        return (<button className='symbol-btn' disabled>
+        return (<button className='button button--normal' disabled>
           Issue
         </button>)
       case PENDING:
@@ -18,7 +18,7 @@ export default class SummaryStep extends Component {
       case SUCCESS:
         return null
       default:
-        return (<button onClick={this.props.showPopup} className='symbol-btn'>
+        return (<button onClick={this.props.showPopup} className='button button--big'>
           Issue
         </button>)
     }

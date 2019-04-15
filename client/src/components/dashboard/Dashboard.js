@@ -1,35 +1,40 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import {fetchToken, fetchTokenStatistics} from 'actions/token'
-import {isUserExists} from 'actions/user'
-import FontAwesome from 'react-fontawesome'
-import {getClnBalance, getAccountAddress} from 'selectors/accounts'
-import {formatWei} from 'utils/format'
-import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BUSINESS_LIST_MODAL, BRIDGE_MODAL } from 'constants/uiConstants'
-import {loadModal, hideModal} from 'actions/ui'
+import { fetchToken, fetchTokenStatistics } from 'actions/token'
+import { isUserExists } from 'actions/user'
+import { getClnBalance, getAccountAddress, getBalances } from 'selectors/accounts'
+import { formatWei } from 'utils/format'
+import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BUSINESS_LIST_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL } from 'constants/uiConstants'
+import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
 import { createList } from 'actions/directory'
+import { transferToken, mintToken, burnToken } from 'actions/token'
 import TokenProgress from './TokenProgress'
 import TopNav from 'components/TopNav'
 import Breadcrumbs from 'components/elements/Breadcrumbs'
 import ActivityContent from './ActivityContent'
 import Bridge from './Bridge'
 import EntityDirectory from './EntityDirectory'
-import {getBlockExplorerUrl} from 'utils/network'
-import {isOwner} from 'utils/token'
-import CopyToClipboard from 'components/common/CopyToClipboard'
+import { isOwner } from 'utils/token'
+import Tabs from 'components/common/Tabs'
+import classNames from 'classnames'
+import upperCase from 'lodash/upperCase'
+import web3 from 'web3'
+import {getTransaction} from 'selectors/transaction'
+import Message from './Message.jsx' 
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
+const ERROR_MESSAGE = 'Oops, something went wrong'
 
 class UserDataModal extends React.Component {
-  componentDidMount (prevProps) {
+  componentDidMount(prevProps) {
     if (this.props.token.owner === this.props.accountAddress && !this.props.userExists) {
       this.timerId = setTimeout(this.props.loadUserDataModal, LOAD_USER_DATA_MODAL_TIMEOUT)
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearTimeout(this.timerId)
   }
 
@@ -44,6 +49,21 @@ UserDataModal.propTypes = {
 }
 
 class Dashboard extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      actionType: null,
+      transfer: {
+        toField: null,
+        amount: null
+      },
+      mintBurnAmount: '',
+      showMessage: null
+    }
+  }
+
   handleIntervalChange = (userType, intervalValue) => {
     this.props.fetchTokenStatistics(this.props.tokenAddress, userType, intervalValue)
   }
@@ -69,8 +89,19 @@ class Dashboard extends Component {
     if (this.props.accountAddress && !prevProps.accountAddress) {
       this.props.isUserExists(this.props.accountAddress)
     }
-  }
 
+    if (this.props.transactionStatus === 'SUCCESS' && (!prevProps.transactionStatus || prevProps.transactionStatus === 'PENDING')) {
+      this.setState({
+        ...this.state,
+        transfer: {
+          toField: null,
+          amount: null
+        },
+        mintBurnAmount: '',
+        actionType: null,
+      })
+    }
+  }
   componentWillUnmount () {
     window.removeEventListener('mousedown', this.handleClickOutside)
   }
@@ -85,9 +116,13 @@ class Dashboard extends Component {
     this.props.history.push('/')
   }
 
-  loadUserDataModal = () => this.props.loadModal(USER_DATA_MODAL, {
-    tokenAddress: this.props.tokenAddress
-  })
+  loadUserDataModal = () => {
+    if (isOwner(this.props.token, this.props.accountAddress)) {
+      this.props.loadModal(USER_DATA_MODAL, { tokenAddress: this.props.tokenAddress })
+    } else {
+      this.props.loadModal(NO_DATA_ABOUT_OWNER_MODAL, { tokenAddress: this.props.tokenAddress })      
+    }
+  }
 
   loadBridgePopup = () => this.props.loadModal(BRIDGE_MODAL, {
     tokenAddress: this.props.tokenAddress,
@@ -99,8 +134,19 @@ class Dashboard extends Component {
     if (this.props.networkType === 'fuse') {
       successFunc()
     } else {
-      this.props.loadModal(WRONG_NETWORK_MODAL, {supportedNetworks: ['fuse']})
+      this.props.loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['fuse'] })
     }
+  }
+
+  handleMintOrBurn = actionType =>
+    this.setState({ actionType })
+
+  onChange = (mintBurnAmount) => {
+    const {actionType} = this.state
+    if (!actionType) {
+      return;
+    }
+    this.setState({ mintBurnAmount })
   }
 
   loadBusinessListPopup = () => {
@@ -113,13 +159,57 @@ class Dashboard extends Component {
     })
   }
 
-  render () {
+  handleToField = toField => {
+    const {transfer: {...data}} = this.state    
+    this.setState({ transfer: { ...data, toField } })
+  }
+
+  handleAmountField = amount => {
+    const {transfer: {...data}} = this.state
+    this.setState({ transfer: { ...data, amount } })
+  }
+
+  handleMintOrBurnClick = () => {
+    const { burnToken, mintToken, tokenAddress } = this.props
+    const {actionType, mintBurnAmount} = this.state
+
+    if (actionType === 'mint') {
+      mintToken(tokenAddress, web3.utils.toWei(String(mintBurnAmount)))
+    } else {
+      burnToken(tokenAddress, web3.utils.toWei(String(mintBurnAmount)))
+    }
+  }
+
+  handleTransper = () => {
+    const { transferToken, tokenAddress } = this.props
+    const { transfer: { toField, amount }} = this.state
+    transferToken(tokenAddress, toField, web3.utils.toWei(String(amount)))
+  }
+
+  onTimeout = () => {
+    this.setState({ showMessage: false })
+  }
+
+  isShow = () => {
+    const { transactionStatus } = this.props
+    return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && this.state.showMessage !== false
+  }
+
+  isError = () => {
+    const { transactionStatus } = this.props
+    return transactionStatus && transactionStatus === 'FAILURE' && this.state.showMessage !== false
+  }
+
+  render() {
     if (!this.props.token) {
       return null
     }
+    const { actionType, mintBurnAmount } = this.state
+    const { token, accountAddress, balances, tokenAddress, dashboard, isTransfer, isMinting, isBurning } = this.props
 
-    const { token, accountAddress } = this.props
-    const { admin, user, steps } = this.props.dashboard
+    const { tokenType } = token
+    const balance = balances[tokenAddress]
+    const { admin, user, steps } = dashboard
     return [
       <TopNav
         key={0}
@@ -134,38 +224,104 @@ class Dashboard extends Component {
               token={token}
               metadata={this.props.metadata}
               steps={steps}
+              tokenAddress={this.props.tokenAddress}
+              tokenNetworkType={this.props.tokenNetworkType}
               match={this.props.match}
               loadBridgePopup={this.loadBridgePopup}
               loadUserDataModal={this.loadUserDataModal}
               loadBusinessListPopup={this.loadBusinessListPopup}
             />
-            <div className='dashboard-information'>
-              <div className='dashboard-information-header'>
-                <p className='dashboard-information-text'>Total supply</p>
-                <p className='dashboard-information-big-count'>
-                  {formatWei(token.totalSupply, 0)}
-                  <span>{token.symbol}</span>
-                </p>
-              </div>
-              <div className='dashboard-info' ref={content => (this.content = content)}>
-                <ActivityContent stats={user} userType='user' title='users' handleChange={this.handleIntervalChange} />
-                <ActivityContent stats={admin} userType='admin' handleChange={this.handleIntervalChange} />
-              </div>
-              <div className='dashboard-information-footer'>
-                <div className='dashboard-information-small-text'>
-                  <span className='text-asset'>Asset ID</span>
-                  <a href={`${getBlockExplorerUrl(this.props.tokenNetworkType)}/address/${this.props.tokenAddress}`}
-                    target='_blank'>
-                    <span className='id'>{this.props.tokenAddress}</span>
-                  </a>
+            <Tabs>
+              <div label='Stats' className='tab__item'>
+                <div className='transfer-tab__balance'>
+                  <span className='title'>Balance: </span>
+                  <span className='amount'>{balance ? formatWei(balance, 0) : 0}</span>
+                  <span className='symbol'>{token.symbol}</span>
                 </div>
-                <CopyToClipboard text={this.props.tokenAddress}>
-                  <p className='dashboard-information-period'>
-                    <FontAwesome name='clone' />
-                  </p>
-                </CopyToClipboard>
+                <hr className='transfer-tab__line' />
+                <div className='transfer-tab__content' ref={content => (this.content = content)}>
+                  <ActivityContent stats={user} userType='user' title='users' handleChange={this.handleIntervalChange} />
+                  <ActivityContent stats={admin} userType='admin' handleChange={this.handleIntervalChange} />
+                </div>
               </div>
-            </div>
+              <div label='Transfer' className='tab__item'>
+                <div className='transfer-tab'>
+                  <div className='transfer-tab__balance'>
+                    <span className='title'>Balance: </span>
+                    <span className='amount'>{balance ? formatWei(balance, 0) : 0}</span>
+                    <span className='symbol'>{token.symbol}</span>
+                  </div>
+                  <hr className='transfer-tab__line' />
+                  <div className='transfer-tab__content'>
+                    
+                    <Message message={'Your money has been sent successfully'} isOpen={this.isShow()} onTimeout={this.onTimeout} timeout={2500} />
+                    <Message message={ERROR_MESSAGE} isOpen={this.isError()} onTimeout={this.onTimeout} timeout={2500} />
+
+                    <div className='transfer-tab__content__to-field'>
+                      <span className='transfer-tab__content__to-field__text'>To</span>
+                      <input className='transfer-tab__content__to-field__input' onChange={(e) => this.handleToField(e.target.value)} />
+                    </div>
+                    <div className='transfer-tab__content__amount'>
+                      <span className='transfer-tab__content__amount__text'>Amount</span>
+                      <input className='transfer-tab__content__amount__field' placeholder='...' onChange={(e) => this.handleAmountField(e.target.value)} />
+
+                    </div>
+
+                    <div className='transfer-tab__content__button'>
+                      <button onClick={this.handleTransper}>SEND</button>
+                    </div>
+                  </div>
+                </div>
+                {
+                  isTransfer ?
+                  (
+                    <div className='bridge-deploying'>
+                      <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+                      <div className='bridge-deploying-confirmation'>{`Your money on it's way`}</div>
+                    </div>
+                  ) :null
+                }
+              </div>
+
+              {
+                token && tokenType && tokenType === 'mintableBurnable' &&
+                <div label='Mint \ Burn' className='tab__item'>
+                  <div className='transfer-tab'>
+                    <div className='transfer-tab__balance'>
+                      <span className='title'>Balance: </span>
+                      <span className='amount'>{balance ? formatWei(balance, 0) : 0}</span>
+                      <span className='symbol'>{token.symbol}</span>
+                    </div>
+                    <hr className='transfer-tab__line' />
+                    <div className='transfer-tab__content'>
+                      <Message message={'Your action has been sent successfully'} isOpen={this.isShow()} onTimeout={this.onTimeout} timeout={5000} />                      
+                      <Message message={ERROR_MESSAGE} isOpen={this.isError()} onTimeout={this.onTimeout} timeout={2500} />                      
+                      <div className='transfer-tab__actions'>
+                        <button disabled={!isOwner(token, accountAddress)} className={classNames('transfer-tab__actions__btn', { 'transfer-tab__actions__btn--active': actionType === 'mint' })} onClick={() => this.handleMintOrBurn('mint')}>Mint</button>
+                        <button disabled={!isOwner(token, accountAddress)} className={classNames('transfer-tab__actions__btn', { 'transfer-tab__actions__btn--active': actionType === 'burn' })} onClick={() => this.handleMintOrBurn('burn')}>Burn</button>
+                      </div>
+                      <div className='transfer-tab__content__amount'>
+                        <span className='transfer-tab__content__amount__text'>Amount</span>
+                        <input className='transfer-tab__content__amount__field' type='number' placeholder='...' value={mintBurnAmount} onChange={(e) => this.onChange(e.target.value)} />
+                      </div>
+                      <div className='transfer-tab__content__button'>
+                        {
+                          actionType && <button onClick={this.handleMintOrBurnClick}>{upperCase(actionType)}</button>
+                        }
+                      </div>
+                    </div>                    
+                  </div>
+                  {
+                    isBurning || isMinting ?
+                    (
+                      <div className='bridge-deploying'>
+                        <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+                      </div>
+                    ) :null
+                  }
+                </div>
+              }
+            </Tabs>
           </div>
           <Bridge
             accountAddress={accountAddress}
@@ -187,19 +343,20 @@ class Dashboard extends Component {
         </div>
         {
           this.props.token && accountAddress && this.props.dashboard.hasOwnProperty('userExists') &&
-            <UserDataModal
-              token={this.props.token}
-              accountAddress={accountAddress}
-              userExists={this.props.dashboard.userExists}
-              loadUserDataModal={this.loadUserDataModal}
-            />
+          <UserDataModal
+            token={this.props.token}
+            accountAddress={accountAddress}
+            userExists={this.props.dashboard.userExists}
+            loadUserDataModal={this.loadUserDataModal}
+          />
         }
       </div>
     ]
   }
 }
 
-const mapStateToProps = (state, {match}) => ({
+const mapStateToProps = (state, { match }) => ({
+  ...state.screens.token,
   networkType: state.network.networkType,
   token: state.entities.tokens[match.params.address],
   tokenAddress: match.params.address,
@@ -208,6 +365,8 @@ const mapStateToProps = (state, {match}) => ({
   dashboard: state.screens.dashboard,
   accountAddress: getAccountAddress(state),
   clnBalance: getClnBalance(state),
+  balances: getBalances(state),
+  ...getTransaction(state, state.screens.token.transactionHash),
   homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress
 })
 
@@ -218,7 +377,10 @@ const mapDispatchToProps = {
   loadModal,
   hideModal,
   deployBridge,
-  createList
+  createList,
+  transferToken,
+  mintToken,
+  burnToken
 }
 
 export default connect(

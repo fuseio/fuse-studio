@@ -1,12 +1,7 @@
-$col-first-coin: rgb(200,219,231);
-$col-first-coin-border: #1b3c50;
-
 @include block(logo-circle) {
 	
 	@include element(outer) {
-		@extend %outer-circle;
-		border: 3px solid $col-first-coin-border;
-
+		position: relative;
 		@include modifier (small) {
 			height: 100%;
 			width: 100%;
@@ -17,7 +12,8 @@ $col-first-coin-border: #1b3c50;
 			margin-right: 10px;
 
 			> span {
-				font-size: 9px !important;
+				font-size: 7px !important;
+				margin-top: -5px;
 			}
 		}
 
@@ -38,35 +34,21 @@ $col-first-coin-border: #1b3c50;
 			min-height: 100px;
 			max-height: 100px;
 			min-width: 100px;
-
-			> span {
-				font-size: 1.8em !important;
-				margin-top: -11px !important;
-			}
 		}
 
 		@include modifier(CoinIcon1\.svg) {
-			background-color: $color-ropsten;
-			
 			> span {
-				color: $col-first-coin-border;
+				color: $color-home-banner-bg;
 			}
 		}
 
 		@include modifier(CoinIcon2\.svg) {
-			background-image: linear-gradient(to bottom, $color-ropsten, $color-ropsten);
 			> span {
-				color: $col-first-coin-border;
+				color: $color-step-text;
 			}
 		}
 
 		@include modifier(CoinIcon3\.svg) {
-			background-color: $col-first-coin-border;
-
-			> div {
-				border-color: $color-ropsten;
-			}
-
 			> span {
 				color: $color-ropsten;
 			}
@@ -74,38 +56,13 @@ $col-first-coin-border: #1b3c50;
 	}
 
 	@include element (inner){
-		@extend %inner-circle;
-		border: 3px solid $col-first-coin-border;
-
-		@include modifier (small) {
-			height: 100%;
-			width: 100%;
-			max-width: 36px;
-			min-width: 36px;
-			min-height: 36px;
-			max-height: 36px;
-			margin: -18px 0px 0px -18px;
-		}
-
-		@include modifier (normal) {
-			margin: -31px 0px 0px -31px;
-			height: 100%;
-			width: 100%;
-			max-width: 62px;
-			min-height: 62px;
-			max-height: 62px;
-			min-width: 62px;
-		}
-
-		@include modifier (big) {
-			margin: -40px 0px 0px -40px;
-			height: 100%;
-			width: 100%;
-			max-width: 80px;
-			min-height: 80px;
-			max-height: 80px;
-			min-width: 80px;
-		}
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 100%;
+		background-position: center;
+		background-size: contain;
+		background-repeat: no-repeat;
 	}
 
 	@include element (name) {
@@ -113,6 +70,123 @@ $col-first-coin-border: #1b3c50;
 	}
 }
 
+@include block (tab){
+
+	@include element(wrapper) {
+		margin-left: 20px;
+		flex: 1;
+		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+		border-radius: 10px;
+	}
+	
+	@include element(list) {
+		overflow: hidden;
+    width: 100%;
+    padding: 0;
+    list-style: none;
+		margin: 0;
+    display: flex;
+    align-items: center;
+		justify-content: space-between;
+		position: relative;
+		
+	}
+
+	@include element(item) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 .5em 0 0;
+		position: relative;
+		cursor: pointer;
+
+		> span {
+			position: relative;
+			background-color: $light-grey;
+			padding: .7em 3.5em;
+			text-decoration: none;
+			color: rgba(37, 67, 90, 0.6);
+			width: 100%;
+			text-align: center;
+			border-radius: 5px 0 0 0;
+			box-shadow: 0 2px 2px rgba(0,0,0,.4);
+		}
+
+		>span:after {
+			content: '';
+			position: absolute;
+			z-index: 1;
+			top: 0;
+			right: -.5em;
+			bottom: 0;
+			width: .7em;
+			background: inherit;
+			box-shadow: 2px 2px 2px rgba(0,0,0,.4);
+			border-radius: 0 5px 0 0;
+		}
+
+		
+		@include modifier(active) {
+			>span {
+				background: $color-step-text;
+				color: $color-filter-text;
+			}
+		}
+	}
+
+	@include element(content) {
+		height: 90%;
+		padding: 25px;
+		background: $color-step-text;
+		border-radius: 10px 10px;
+		box-shadow: 0 0px 0 -2px rgba(0, 0, 0, 0.4);
+    position: relative;
+	}
+
+}
+
+@include block(button) {
+	background-color: $color-ropsten;
+	color: $color-step-text;
+	font-weight: bold;
+	text-align: center;
+	height: 42px;
+	border-radius: 20.5px;
+	border: none;
+
+	.fa {
+		margin-left: 4px;
+	}
+
+	@include modifier(normal){
+		width: 105px;
+		font-size: 13px;
+	}
+
+	@include modifier(big) {
+		width: 160px;
+		font-size: 15px;
+	}
+
+	&:focus,
+	&:active,
+	&:focus:active {
+		outline: none;
+	}
+
+	&:hover {
+		cursor: pointer;
+		background-color: #2eba72;
+	}
+
+	&:disabled,
+		&[disabled] {
+			opacity: 0.3;
+			background-color: #34d080;;
+			color: $color-step-text;
+			cursor: not-allowed;
+		}
+}
 
 .hide {
 	display: none;

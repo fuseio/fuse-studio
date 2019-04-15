@@ -40,7 +40,7 @@ module.exports = {
     addresses: {
       ropsten: {
         ColuLocalNetwork: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
-        TokenFactory: '0x824E01Cf7013f459Aa010D73627B006a8740b183',
+        TokenFactory: '0xE307a14b078030d81801e46F89285dbf5B4aa3F0',
         ForeignBridgeFactory: '0x7D913f6F0bA5Cc0660d8F60Df894b01F272550A0'
       },
       mainnet: {

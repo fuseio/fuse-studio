@@ -7,32 +7,18 @@ export default class SymbolStep extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      showCustomSymbol: false,
       customSymbol: props.communitySymbol
     }
   }
 
-  toggleCustomSymbol = () => {
-    this.setState({showCustomSymbol: !this.state.showCustomSymbol})
-  }
-
   handleChangeCustomSymbol = (event) => {
-    this.setState({customSymbol: event.target.value.slice(0, 4)})
-  }
-
-  setCancelEditing = () => {
-    this.setState({showCustomSymbol: !this.state.showCustomSymbol})
-    this.setState({customSymbol: this.props.communitySymbol})
+    const customSymbol = event.target.value.substr(0, 4)
+    this.setState({customSymbol})
   }
 
   setNextStep = () => {
-    if (this.state.customSymbol.length > 2) {
-      this.props.handleChangeCommunitySymbol(this.state.customSymbol)
-      this.props.setNextStep()
-    } else {
-      this.props.handleChangeCommunitySymbol(this.props.communitySymbol)
-      this.props.setNextStep()
-    }
+    this.props.handleChangeCommunitySymbol(this.state.customSymbol)
+    this.props.setNextStep()
   }
 
   render () {
@@ -41,26 +27,22 @@ export default class SymbolStep extends Component {
         <h2 className='step-symbol-title'>{'\'' + this.props.communityName + '\''}</h2>
         <h2 className='step-content-title'>Currency Symbol</h2>
         <div className='step-content-symbol-field'>
-          {
-            this.state.customSymbol.length < 1 &&
-            this.state.showCustomSymbol &&
-            <label className='step-content-symbol-field-label'>Type your community symbol...</label>
-          }
           <TextInput
             className='step-community-symbol'
             id='communitySymbol'
             type='text'
+            autoFocus
             maxLength='4'
             defaultValue={this.state.customSymbol}
             onChange={this.handleChangeCustomSymbol}
           />
         </div>
         <button
-          className='symbol-btn'
+          className='button button--big'
           disabled={this.props.communitySymbol.length < 3 || this.state.customSymbol.length < 3}
           onClick={this.setNextStep}
         >
-          CONTINUE<FontAwesome name='angle-right' className='symbol-icon' />
+          NEXT<FontAwesome name='angle-right' className='symbol-icon' />
         </button>
       </div>
     )

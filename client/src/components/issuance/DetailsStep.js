@@ -5,11 +5,17 @@ import MintableBurnable from 'images/mintable.svg'
 import OneTimeIssuer from 'images/one_time_issuer_token.svg'
 import PropTypes from 'prop-types'
 import TextInput from 'components/elements/TextInput'
+import CommunityLogo from 'components/elements/CommunityLogo'
 
 export default class DetailsStep extends Component {
 
-  renderDetailsContent (communityType, setCommunityType) {
-    const communityTypes = [{ 'text': 'Mintable burnable token', 'img': MintableBurnable }, { 'text': 'One time issuer token', 'img': OneTimeIssuer }]
+  renderDetailsContent () {
+    const {
+      setCommunityType,
+      communityType
+    } = this.props
+
+    const communityTypes = [{ 'text': 'Mintable burnable token', 'img': MintableBurnable, value: 'mintableBurnable' }, { 'text': 'One time issuer token', 'img': OneTimeIssuer, value: 'basic' }]
 
     const detailsContent = communityTypes.map(({ text, img }, key) => {
       const stepDetailsClass = classNames({
@@ -37,10 +43,7 @@ export default class DetailsStep extends Component {
       })
       return (
         <div className={totalSupplyClass} key={key} onClick={() => setCommunityLogo({ name: logo, icon: communityLogos[key] })}>
-          <div className={`logo-circle__outer logo-circle__outer--big logo-circle__outer--${logo}`}>
-            <div className='logo-circle__inner logo-circle__inner--big' />
-            <span className='logo-circle__name'>{communitySymbol}</span>
-          </div>
+          <CommunityLogo token={{ symbol: communitySymbol }} metadata={{ communityLogo: communityLogos[key] }} />
         </div>
       )
     })
@@ -61,7 +64,7 @@ export default class DetailsStep extends Component {
             Currency Type
           </h3>
           <div className='step-content-details-container'>
-            {this.renderDetailsContent(this.props.communityType, this.props.setCommunityType)}
+            {this.renderDetailsContent()}
           </div>
         </div>
         <div className='step-content-details-block'>
@@ -74,7 +77,7 @@ export default class DetailsStep extends Component {
         </div>
         <div className='step-content-details-block'>
           <h3 className='step-content-details-title'>
-            Initial / Total Supply
+            Initial \ Total Supply
           </h3>
           <div className='step-content-details-container total-container'>
             <TextInput
@@ -90,13 +93,13 @@ export default class DetailsStep extends Component {
         </div>
         <div className='text-center'>
           <button
-            className='symbol-btn'
+            className='button button--big'
             disabled={
               Object.keys(this.props.communityType).length === 0 || this.props.totalSupply < 0 || this.props.totalSupply === '0' || !this.props.totalSupply || !this.props.communityLogo.name
             }
             onClick={this.props.setNextStep}
           >
-            Continue
+            NEXT
             <FontAwesome className='symbol-icon' name='angle-right' />
           </button>
         </div>
