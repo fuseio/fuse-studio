@@ -8,7 +8,6 @@ import TextInput from 'components/elements/TextInput'
 import CommunityLogo from 'components/elements/CommunityLogo'
 
 export default class DetailsStep extends Component {
-
   renderDetailsContent () {
     const {
       setCommunityType,

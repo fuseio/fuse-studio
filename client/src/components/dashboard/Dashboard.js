@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { fetchToken, fetchTokenStatistics } from 'actions/token'
+import { fetchToken, fetchTokenStatistics, transferToken, mintToken, burnToken } from 'actions/token'
 import { isUserExists } from 'actions/user'
 import { getClnBalance, getAccountAddress, getBalances } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
@@ -9,7 +9,6 @@ import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BUSINESS_LIST_MODAL, BRIDGE_MODAL
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
 import { createList } from 'actions/directory'
-import { transferToken, mintToken, burnToken } from 'actions/token'
 import TokenProgress from './TokenProgress'
 import TopNav from 'components/TopNav'
 import Breadcrumbs from 'components/elements/Breadcrumbs'
@@ -22,19 +21,19 @@ import classNames from 'classnames'
 import upperCase from 'lodash/upperCase'
 import web3 from 'web3'
 import {getTransaction} from 'selectors/transaction'
-import Message from './Message.jsx' 
+import Message from './Message.jsx'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
 const ERROR_MESSAGE = 'Oops, something went wrong'
 
 class UserDataModal extends React.Component {
-  componentDidMount(prevProps) {
+  componentDidMount (prevProps) {
     if (this.props.token.owner === this.props.accountAddress && !this.props.userExists) {
       this.timerId = setTimeout(this.props.loadUserDataModal, LOAD_USER_DATA_MODAL_TIMEOUT)
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     clearTimeout(this.timerId)
   }
 
@@ -49,8 +48,7 @@ UserDataModal.propTypes = {
 }
 
 class Dashboard extends Component {
-
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -98,7 +96,7 @@ class Dashboard extends Component {
           amount: null
         },
         mintBurnAmount: '',
-        actionType: null,
+        actionType: null
       })
     }
   }
@@ -120,7 +118,7 @@ class Dashboard extends Component {
     if (isOwner(this.props.token, this.props.accountAddress)) {
       this.props.loadModal(USER_DATA_MODAL, { tokenAddress: this.props.tokenAddress })
     } else {
-      this.props.loadModal(NO_DATA_ABOUT_OWNER_MODAL, { tokenAddress: this.props.tokenAddress })      
+      this.props.loadModal(NO_DATA_ABOUT_OWNER_MODAL, { tokenAddress: this.props.tokenAddress })
     }
   }
 
@@ -144,7 +142,7 @@ class Dashboard extends Component {
   onChange = (mintBurnAmount) => {
     const {actionType} = this.state
     if (!actionType) {
-      return;
+      return
     }
     this.setState({ mintBurnAmount })
   }
@@ -160,7 +158,7 @@ class Dashboard extends Component {
   }
 
   handleToField = toField => {
-    const {transfer: {...data}} = this.state    
+    const {transfer: {...data}} = this.state
     this.setState({ transfer: { ...data, toField } })
   }
 
@@ -182,7 +180,7 @@ class Dashboard extends Component {
 
   handleTransper = () => {
     const { transferToken, tokenAddress } = this.props
-    const { transfer: { toField, amount }} = this.state
+    const { transfer: { toField, amount } } = this.state
     transferToken(tokenAddress, toField, web3.utils.toWei(String(amount)))
   }
 
@@ -200,7 +198,7 @@ class Dashboard extends Component {
     return transactionStatus && transactionStatus === 'FAILURE' && this.state.showMessage !== false
   }
 
-  render() {
+  render () {
     if (!this.props.token) {
       return null
     }
@@ -253,7 +251,7 @@ class Dashboard extends Component {
                   </div>
                   <hr className='transfer-tab__line' />
                   <div className='transfer-tab__content'>
-                    
+
                     <Message message={'Your money has been sent successfully'} isOpen={this.isShow()} onTimeout={this.onTimeout} timeout={2500} />
                     <Message message={ERROR_MESSAGE} isOpen={this.isError()} onTimeout={this.onTimeout} timeout={2500} />
 
@@ -273,13 +271,13 @@ class Dashboard extends Component {
                   </div>
                 </div>
                 {
-                  isTransfer ?
-                  (
-                    <div className='bridge-deploying'>
-                      <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
-                      <div className='bridge-deploying-confirmation'>{`Your money on it's way`}</div>
-                    </div>
-                  ) :null
+                  isTransfer
+                    ? (
+                      <div className='bridge-deploying'>
+                        <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+                        <div className='bridge-deploying-confirmation'>{`Your money on it's way`}</div>
+                      </div>
+                    ) : null
                 }
               </div>
 
@@ -294,8 +292,8 @@ class Dashboard extends Component {
                     </div>
                     <hr className='transfer-tab__line' />
                     <div className='transfer-tab__content'>
-                      <Message message={'Your action has been sent successfully'} isOpen={this.isShow()} onTimeout={this.onTimeout} timeout={5000} />                      
-                      <Message message={ERROR_MESSAGE} isOpen={this.isError()} onTimeout={this.onTimeout} timeout={2500} />                      
+                      <Message message={'Your action has been sent successfully'} isOpen={this.isShow()} onTimeout={this.onTimeout} timeout={5000} />
+                      <Message message={ERROR_MESSAGE} isOpen={this.isError()} onTimeout={this.onTimeout} timeout={2500} />
                       <div className='transfer-tab__actions'>
                         <button disabled={!isOwner(token, accountAddress)} className={classNames('transfer-tab__actions__btn', { 'transfer-tab__actions__btn--active': actionType === 'mint' })} onClick={() => this.handleMintOrBurn('mint')}>Mint</button>
                         <button disabled={!isOwner(token, accountAddress)} className={classNames('transfer-tab__actions__btn', { 'transfer-tab__actions__btn--active': actionType === 'burn' })} onClick={() => this.handleMintOrBurn('burn')}>Burn</button>
@@ -309,15 +307,15 @@ class Dashboard extends Component {
                           actionType && <button onClick={this.handleMintOrBurnClick}>{upperCase(actionType)}</button>
                         }
                       </div>
-                    </div>                    
+                    </div>
                   </div>
                   {
-                    isBurning || isMinting ?
-                    (
-                      <div className='bridge-deploying'>
-                        <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
-                      </div>
-                    ) :null
+                    isBurning || isMinting
+                      ? (
+                        <div className='bridge-deploying'>
+                          <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+                        </div>
+                      ) : null
                   }
                 </div>
               }

@@ -8,11 +8,11 @@ class Tabs extends Component {
     children: PropTypes.instanceOf(Array).isRequired
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
-      activeTab: this.props.children[0].props.label,
+      activeTab: this.props.children[0].props.label
     }
   }
 
@@ -24,10 +24,10 @@ class Tabs extends Component {
     const {
       onClickTabItem,
       props: {
-        children,
+        children
       },
       state: {
-        activeTab,
+        activeTab
       }
     } = this
 
@@ -54,7 +54,7 @@ class Tabs extends Component {
   renderContent = () => {
     const {
       props: {
-        children,
+        children
       },
       state: {
         activeTab
@@ -69,17 +69,17 @@ class Tabs extends Component {
     })
   }
 
-  render() {
+  render () {
     return (
       <div className='tab__wrapper'>
-        <ol className="tab__list">
+        <ol className='tab__list'>
           {this.renderLabels()}
         </ol>
-        <div className="tab__content">
+        <div className='tab__content'>
           {this.renderContent()}
         </div>
       </div>
-    );
+    )
   }
 }
 

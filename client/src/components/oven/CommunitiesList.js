@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Community from 'components/Community'
 import InfiniteScroll from 'react-infinite-scroller'
 import Banner from 'images/illus.png'
-import FontAwesome from 'react-fontawesome'
 import ReactGA from 'services/ga'
 
 const PAGE_START = 1

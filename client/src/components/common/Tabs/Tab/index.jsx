@@ -6,7 +6,7 @@ class Tab extends Component {
   static propTypes = {
     activeTab: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired
   };
 
   onClick = () => {
@@ -14,14 +14,14 @@ class Tab extends Component {
     onClick(label)
   }
 
-  render() {
-    const { 
+  render () {
+    const {
       onClick,
       props: {
         activeTab,
         label,
         flexBasis
-      },
+      }
     } = this
 
     return (
@@ -36,5 +36,4 @@ class Tab extends Component {
   }
 }
 
-
-export default Tab;
+export default Tab

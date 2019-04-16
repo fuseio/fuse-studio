@@ -33,8 +33,6 @@ const NavList = [
   }
 ]
 
-
-
 class TopNav extends Component {
   state = {
     openMenu: false,
@@ -88,7 +86,7 @@ class TopNav extends Component {
     const { profile } = this.state
     if (!this.props.network.accountAddress) {
       return (
-        <div className={classNames('top-nav-text profile empty-wallet', { 'profile--open' : profile })} onClick={this.showConnectMetamask}>
+        <div className={classNames('top-nav-text profile empty-wallet', { 'profile--open': profile })} onClick={this.showConnectMetamask}>
           <span className='profile-icon empty-wallet' >
             <img src={WalletIcon} />
           </span>
@@ -103,7 +101,7 @@ class TopNav extends Component {
       )
     } else {
       return (
-        <div className={classNames('top-nav-text profile', { 'profile--open' : profile })} onClick={() => this.handleProfile(!profile)}>
+        <div className={classNames('top-nav-text profile', { 'profile--open': profile })} onClick={() => this.handleProfile(!profile)}>
           <span className='profile-icon'>
             <img src={WalletIcon} />
           </span>

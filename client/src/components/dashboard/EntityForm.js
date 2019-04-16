@@ -9,11 +9,10 @@ import { Formik, Field } from 'formik'
 import entityShape from 'utils/validation/shapes/entity'
 import { businessTypes, options } from 'constants/dropdownOptions'
 import FontAwesome from 'react-fontawesome'
-import uploadIcon from 'images/upload.svg';
+import uploadIcon from 'images/upload.svg'
 
 class EntityForm extends Component {
-
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     const { entity } = props
@@ -41,13 +40,12 @@ class EntityForm extends Component {
       submitEntity
     } = this.props
 
-    const entity = omit(values, 'selectedType');
+    const entity = omit(values, 'selectedType')
 
     submitEntity(entity)
   }
 
   renderForm = ({ handleSubmit, setFieldValue, setFieldTouched, values }) => {
-
     return (
       <form className='entity-modal-content' onSubmit={handleSubmit}>
         <h4 className='entity-modal-title'>Business name</h4>
@@ -67,28 +65,28 @@ class EntityForm extends Component {
               <label className='entity-modal-content-upload-label' htmlFor='logo' id='logo'>
                 <input
                   id='logo'
-                  type="file"
-                  accept="image/*"
+                  type='file'
+                  accept='image/*'
                 />
                 <p><img alt='upload' src={uploadIcon} /></p>
-                <button className="upload-text" type="button">Upload</button>
+                <button className='upload-text' type='button'>Upload</button>
               </label>
             </div>
           </div>
           <div className='col-5'>
             <p className='entity-modal-content-label'>
               Picture &nbsp;
-            <FontAwesome className='entity-modal-content-label-icon' name='info-circle' />
+              <FontAwesome className='entity-modal-content-label-icon' name='info-circle' />
             </p>
             <div className='picture-rectangle'>
               <label className='entity-modal-content-upload-label' htmlFor='picture' id='picture'>
                 <input
                   id='picture'
-                  type="file"
-                  accept="image/*"
+                  type='file'
+                  accept='image/*'
                 />
                 <p><img alt='upload' src={uploadIcon} /></p>
-                <button className="upload-text" type="button">Upload</button>
+                <button className='upload-text' type='button'>Upload</button>
               </label>
             </div>
           </div>
@@ -137,12 +135,12 @@ class EntityForm extends Component {
           <div className='col-7'>
             <p className='entity-modal-content-label'>
               More info
-          </p>
+            </p>
             <div className='row'>
               <div className='col-4'>
                 <p className='entity-modal-content-form-control-label'>
                   Business Account
-            </p>
+                </p>
               </div>
               <div className='col-8'>
                 <Field
@@ -158,7 +156,7 @@ class EntityForm extends Component {
               <div className='col-4'>
                 <p className='entity-modal-content-form-control-label'>
                   Business Address
-            </p>
+                </p>
               </div>
               <div className='col-8'>
                 <Field
@@ -174,7 +172,7 @@ class EntityForm extends Component {
               <div className='col-4'>
                 <p className='entity-modal-content-form-control-label'>
                   Business email
-            </p>
+                </p>
               </div>
               <div className='col-8'>
                 <Field
@@ -190,7 +188,7 @@ class EntityForm extends Component {
               <div className='col-4'>
                 <p className='entity-modal-content-form-control-label'>
                   Phone
-            </p>
+                </p>
               </div>
               <div className='col-8'>
                 <Field
@@ -206,7 +204,7 @@ class EntityForm extends Component {
               <div className='col-4'>
                 <p className='entity-modal-content-form-control-label'>
                   Website link
-            </p>
+                </p>
               </div>
               <div className='col-8'>
                 <Field
@@ -225,7 +223,7 @@ class EntityForm extends Component {
               <span className='entity-modal-content-label-type'>{values.description.length}/490</span>
             </p>
             <Field
-              name="description"
+              name='description'
               render={({ field }) => <textarea placeholder='Type...' className='entity-modal-content-form-control' {...field} rows='14' />}
             />
           </div>
@@ -239,7 +237,7 @@ class EntityForm extends Component {
     )
   }
 
-  render() {
+  render () {
     return (
       <Formik
         initialValues={this.initialValues}

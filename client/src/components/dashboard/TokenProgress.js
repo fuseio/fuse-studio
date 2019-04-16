@@ -43,14 +43,14 @@ class TokenProgress extends Component {
       <div className='dashboard-sidebar'>
         <div className='logo'><CommunityLogo token={token} metadata={this.props.metadata[token.tokenURI] || {}} /></div>
         <div className='token-info'>
-            <h5 className='token-info__title'>{token.name}</h5>
-            <div className='token-info__total'><span>Total supply: {formatWei(token.totalSupply, 0)}</span><span>{token.symbol}</span></div>
+          <h5 className='token-info__title'>{token.name}</h5>
+          <div className='token-info__total'><span>Total supply: {formatWei(token.totalSupply, 0)}</span><span>{token.symbol}</span></div>
           <div className='asset-id'>
-              <span className='text'>Asset ID</span>
-              <a href={`${getBlockExplorerUrl(this.props.tokenNetworkType)}/address/${this.props.tokenAddress}`}
-                target='_blank'>
-                <span className='id'>{this.props.tokenAddress.substring(0, 6)}...{this.props.tokenAddress.substr(this.props.tokenAddress.length - 4)}</span>
-              </a>
+            <span className='text'>Asset ID</span>
+            <a href={`${getBlockExplorerUrl(this.props.tokenNetworkType)}/address/${this.props.tokenAddress}`}
+              target='_blank'>
+              <span className='id'>{this.props.tokenAddress.substring(0, 6)}...{this.props.tokenAddress.substr(this.props.tokenAddress.length - 4)}</span>
+            </a>
             <CopyToClipboard text={this.props.tokenAddress}>
               <p className='dashboard-information-period'>
                 <FontAwesome name='clone' />

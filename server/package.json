@@ -7,17 +7,14 @@
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js",
     "test": "node ./node_modules/truffle/build/cli.bundled.js test",
-    "lint": "./node_modules/.bin/standard"
+    "lint": "standard",
+    "lint-fix": "standard --fix"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/colucom/CLN-community-server.git"
   },
   "standard": {
-    "ignore": [
-      "constants/abi",
-      "migrations"
-    ],
     "env": [
       "mocha"
     ],

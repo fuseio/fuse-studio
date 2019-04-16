@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import GenericModal from 'components/dashboard/GenericModal'
 
 class NoDataAboutOwnerModal extends React.Component {
