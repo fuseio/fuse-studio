@@ -1,5 +1,6 @@
 const tokenIssued = require('@utils/tokenProgress').tokenIssued
 const detailsGiven = require('@utils/tokenProgress').detailsGiven
+const BigNumber = require('bignumber.js')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
@@ -10,7 +11,7 @@ module.exports = (mongoose) => {
     name: {type: String, required: [true, "can't be blank"]},
     symbol: {type: String, required: [true, "can't be blank"]},
     tokenURI: {type: String},
-    totalSupply: {type: String, required: [true, "can't be blank"]},
+    totalSupply: {type: mongoose.Types.Decimal128, required: [true, "can't be blank"]},
     owner: {type: String, required: [true, "can't be blank"]},
     factoryAddress: {type: String, required: [true, "can't be blank"]},
     blockNumber: {type: Number},
@@ -22,7 +23,17 @@ module.exports = (mongoose) => {
   TokenSchema.index({blockNumber: -1})
 
   TokenSchema.set('toJSON', {
-    versionKey: false
+    versionKey: false,
+    transform: (doc, ret, options) => {
+      return ({...ret, totalSupply: doc.totalSupply.toString()})
+    }
+  })
+
+  TokenSchema.set('toObject', {
+    versionKey: false,
+    transform: (doc, ret, options) => {
+      return ({...ret, totalSupply: doc.totalSupply.toString()})
+    }
   })
 
   TokenSchema.post('save', token => {
@@ -57,16 +68,6 @@ module.exports = (mongoose) => {
     })
   }
 
-  token.upsertByccAddress = (data) => {
-    const {address} = data
-    return token.getModel().updateOne({address}, data, {upsert: true})
-  }
-
-  token.updateBymmAddress = (data) => {
-    const {mmAddress} = data
-    return token.getModel().updateOne({mmAddress}, data)
-  }
-
   token.getById = (id) => {
     return new Promise((resolve, reject) => {
       Token.findById(id, (err, doc) => {
@@ -95,6 +96,15 @@ module.exports = (mongoose) => {
         resolve(doc)
       })
     })
+  }
+
+  token.mintTokens = (address, value) => {
+    return Token.updateOne({address}, {$inc: {totalSupply: value}})
+  }
+
+  token.burnTokens = (address, value) => {
+    const negatedValue = new BigNumber(value).negated().toString()
+    return Token.updateOne({address}, {$inc: {totalSupply: negatedValue}})
   }
 
   token.getModel = () => {
