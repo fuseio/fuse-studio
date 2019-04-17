@@ -2,6 +2,8 @@ const tokenIssued = require('@utils/tokenProgress').tokenIssued
 const detailsGiven = require('@utils/tokenProgress').detailsGiven
 const BigNumber = require('bignumber.js')
 
+const transform = (doc, ret, options) => ({...ret, totalSupply: doc.totalSupply ? doc.totalSupply.toString() : undefined})
+
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
   const Schema = mongoose.Schema
@@ -24,16 +26,12 @@ module.exports = (mongoose) => {
 
   TokenSchema.set('toJSON', {
     versionKey: false,
-    transform: (doc, ret, options) => {
-      return ({...ret, totalSupply: doc.totalSupply.toString()})
-    }
+    transform
   })
 
   TokenSchema.set('toObject', {
     versionKey: false,
-    transform: (doc, ret, options) => {
-      return ({...ret, totalSupply: doc.totalSupply.toString()})
-    }
+    transform
   })
 
   TokenSchema.post('save', token => {

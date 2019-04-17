@@ -22,7 +22,7 @@ const fetchTokens = createEntitiesFetch(actions.FETCH_TOKENS, api.fetchTokens)
 const fetchToken = createEntitiesFetch(actions.FETCH_TOKEN, api.fetchToken)
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
 
-export const fetchTokensByAccount = createEntitiesFetch(actions.FETCH_TOKENS_BY_ACCOUNT, api.fetchTokensByAccount)
+export const fetchTokenList = createEntitiesFetch(actions.FETCH_TOKEN_LIST, api.fetchTokenList)
 
 function * fetchClnToken () {
   const tokenAddress = yield select(getAddress, 'ColuLocalNetwork')
@@ -163,7 +163,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.BURN_TOKEN, burnToken, 1),
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
-    tryTakeEvery(actions.FETCH_TOKENS_BY_ACCOUNT, fetchTokensByAccount, 1),
+    tryTakeEvery(actions.FETCH_TOKEN_LIST, fetchTokenList, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_CLN_TOKEN, fetchClnToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),

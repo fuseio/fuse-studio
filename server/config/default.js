@@ -73,8 +73,10 @@ module.exports = {
       templates: {}
     }
   },
-  amazon: {
-    apiBase: 'https://s3-eu-west-1.amazonaws.com/cln-dapp-images-qa/'
+  explorer: {
+    fuse: {
+      urlBase: 'https://explorer.fuse.io/api'
+    }
   },
   agenda: {
     start: true

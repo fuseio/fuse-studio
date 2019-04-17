@@ -17,8 +17,8 @@ export const fetchTokenProgress = (apiRoot, {tokenAddress}) =>
 export const fetchTokenStatistics = (apiRoot, {tokenAddress, activityType, interval}) =>
   request.get(`${apiRoot}/stats/${activityType}/${tokenAddress}?interval=${interval}`).then(response => response.body)
 
-export const fetchTokensByAccount = (apiRoot, {accountAddress}) =>
-  request.get(`${apiRoot}/balances/${accountAddress}`).then(response => response.body)
+export const fetchTokenList = (apiRoot, {accountAddress, networkSide}) =>
+  request.get(`${apiRoot}/tokenlist/${networkSide}/${accountAddress}`).then(response => response.body)
 
 export const deployBridge = (apiRoot, {foreignTokenAddress}) =>
   request.post(`${apiRoot}/bridges/${foreignTokenAddress}`).then(response => response.body)

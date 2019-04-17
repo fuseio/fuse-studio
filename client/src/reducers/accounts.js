@@ -1,5 +1,5 @@
 import {CHANGE} from 'actions/marketMaker'
-import {FETCH_TOKENS_BY_ACCOUNT} from 'actions/token'
+import {FETCH_TOKEN_LIST} from 'actions/token'
 import {LOGIN} from 'actions/user'
 import * as actions from 'actions/accounts'
 
@@ -56,7 +56,7 @@ const handlers = {
   [LOGIN.SUCCESS]: (state, action) => {
     return {...state, ...action.response}
   },
-  [FETCH_TOKENS_BY_ACCOUNT.SUCCESS]: (state, action) => {
+  [FETCH_TOKEN_LIST.SUCCESS]: (state, action) => {
     return {...state, tokens: action.response.result}
   }
 }

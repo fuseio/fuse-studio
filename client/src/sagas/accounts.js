@@ -2,10 +2,10 @@ import { all, put, call, takeEvery, select } from 'redux-saga/effects'
 
 import * as actions from 'actions/accounts'
 import {tryTakeEvery} from './utils'
-import {getAddress, getNetworkType} from 'selectors/network'
+import {getAddress, getNetworkType, getNetworkSide} from 'selectors/network'
 import {CHECK_ACCOUNT_CHANGED} from 'actions/network'
 import {TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN} from 'actions/token'
-import {fetchTokensByAccount} from 'sagas/token'
+import {fetchTokenList} from 'sagas/token'
 import web3 from 'services/web3'
 import {getContract} from 'services/contract'
 import {getAccountAddress} from 'selectors/accounts'
@@ -50,8 +50,9 @@ function * fetchBalances ({accountAddress, tokens}) {
 }
 
 function * fetchTokensWithBalances ({accountAddress}) {
-  const tokens = yield call(fetchTokensByAccount, {accountAddress, entity: 'tokens'})
-  yield call(fetchBalances, {accountAddress, tokens})
+  const networkSide = yield select(getNetworkSide)
+  const tokens = yield call(fetchTokenList, {accountAddress, networkSide, entity: 'tokens'})
+  yield call(fetchBalances, {accountAddress, tokens, networkSide})
 }
 
 function * watchAccountChanged ({response}) {

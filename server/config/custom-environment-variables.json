@@ -38,9 +38,6 @@
       }
     }
   },
-  "amazon": {
-    "apiBase": "COMMUNITY_AMAZON_BUCKET_API"
-  },
   "secrets": {
     "fuse": {
       "bridge": {

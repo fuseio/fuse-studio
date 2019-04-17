@@ -5,7 +5,7 @@ const tokenAction = createEntityAction(entityName)
 
 export const FETCH_TOKENS = createRequestTypes('FETCH_TOKENS')
 export const FETCH_TOKENS_BY_OWNER = createRequestTypes('FETCH_TOKENS_BY_OWNER')
-export const FETCH_TOKENS_BY_ACCOUNT = createRequestTypes('FETCH_TOKENS_BY_ACCOUNT')
+export const FETCH_TOKEN_LIST = createRequestTypes('FETCH_TOKEN_LIST')
 
 export const FETCH_TOKEN = createRequestTypes('FETCH_TOKEN')
 
@@ -24,7 +24,7 @@ export const BURN_TOKEN = createTransactionRequestTypes('BURN_TOKEN')
 
 export const fetchTokens = (page) => tokenAction(FETCH_TOKENS.REQUEST, {page})
 export const fetchTokensByOwner = (owner) => tokenAction(FETCH_TOKENS_BY_OWNER.REQUEST, {owner})
-export const fetchTokensByAccount = (accountAddress) => tokenAction(FETCH_TOKENS_BY_ACCOUNT.REQUEST, {accountAddress})
+export const fetchTokenList = (accountAddress) => tokenAction(FETCH_TOKEN_LIST.REQUEST, {accountAddress})
 
 export const fetchToken = (tokenAddress) => tokenAction(FETCH_TOKEN.REQUEST, {tokenAddress})
 
