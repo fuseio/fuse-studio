@@ -1,18 +1,16 @@
 import React from 'react'
-import FontAwesome from 'react-fontawesome'
 
-export default ({ message, onTimeout, isOpen, timeout }) => {
+export default ({ message, clickHandler, isOpen, timeout }) => {
   if (!isOpen) {
     return null
   }
 
-  setTimeout(onTimeout, timeout)
-
   return (
     <div className='status'>
       <p className='status__message'>{message}</p>
-      { message && !message.includes('Oops') && <FontAwesome className='status__icon' name='check' /> }
-      { message && message.includes('Oops') && <FontAwesome className='status__icon' name='close' /> }
+      <div className='transfer-tab__content__button' style={{ alignSelf: 'center' }}>
+        <button onClick={clickHandler}>Got it</button>
+      </div>
     </div>
   )
 }

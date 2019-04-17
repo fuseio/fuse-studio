@@ -58,7 +58,8 @@ class Dashboard extends Component {
         amount: null
       },
       mintBurnAmount: '',
-      showMessage: null
+      showMessage: null,
+      lastAction: {}
     }
   }
 
@@ -176,6 +177,8 @@ class Dashboard extends Component {
     } else {
       burnToken(tokenAddress, web3.utils.toWei(String(mintBurnAmount)))
     }
+
+    this.setState({ ...this.state, lastAction: { actionType, mintBurnAmount } })
   }
 
   handleTransper = () => {
@@ -184,7 +187,7 @@ class Dashboard extends Component {
     transferToken(tokenAddress, toField, web3.utils.toWei(String(amount)))
   }
 
-  onTimeout = () => {
+  closeMessage = () => {
     this.setState({ showMessage: false })
   }
 
@@ -202,8 +205,8 @@ class Dashboard extends Component {
     if (!this.props.token) {
       return null
     }
-    const { actionType, mintBurnAmount } = this.state
-    const { token, accountAddress, balances, tokenAddress, dashboard, isTransfer, isMinting, isBurning } = this.props
+    const { actionType, mintBurnAmount, lastAction } = this.state
+    const { token, accountAddress, balances, tokenAddress, dashboard, isTransfer, isMinting, isBurning, networkType, tokenNetworkType, signatureNeeded } = this.props
 
     const { tokenType } = token
     const balance = balances[tokenAddress]
@@ -216,10 +219,11 @@ class Dashboard extends Component {
       />,
       <div key={1} className='dashboard-content'>
         <Breadcrumbs breadCrumbsText={token.name} setToHomepage={this.showHomePage} />
-        <div className={`dashboard-container ${this.props.networkType}`}>
+        <div className={`dashboard-container ${networkType}`}>
           <div className='dashboard-section'>
             <TokenProgress
               token={token}
+              networkType={tokenNetworkType}
               metadata={this.props.metadata}
               steps={steps}
               tokenAddress={this.props.tokenAddress}
@@ -252,8 +256,8 @@ class Dashboard extends Component {
                   <hr className='transfer-tab__line' />
                   <div className='transfer-tab__content'>
 
-                    <Message message={'Your money has been sent successfully'} isOpen={this.isShow()} onTimeout={this.onTimeout} timeout={2500} />
-                    <Message message={ERROR_MESSAGE} isOpen={this.isError()} onTimeout={this.onTimeout} timeout={2500} />
+                    <Message message={'Your money has been sent successfully'} isOpen={this.isShow()} clickHandler={this.closeMessage} timeout={2500} />
+                    <Message message={ERROR_MESSAGE} isOpen={this.isError()} clickHandler={this.closeMessage} timeout={2500} />
 
                     <div className='transfer-tab__content__to-field'>
                       <span className='transfer-tab__content__to-field__text'>To</span>
@@ -279,6 +283,15 @@ class Dashboard extends Component {
                       </div>
                     ) : null
                 }
+                {
+                  signatureNeeded
+                    ? (
+                      <div className='bridge-deploying'>
+                        <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+                        <div className='bridge-deploying-confirmation'>{`Waiting for signing`}</div>
+                      </div>
+                    ) : null
+                }
               </div>
 
               {
@@ -292,8 +305,8 @@ class Dashboard extends Component {
                     </div>
                     <hr className='transfer-tab__line' />
                     <div className='transfer-tab__content'>
-                      <Message message={'Your action has been sent successfully'} isOpen={this.isShow()} onTimeout={this.onTimeout} timeout={5000} />
-                      <Message message={ERROR_MESSAGE} isOpen={this.isError()} onTimeout={this.onTimeout} timeout={2500} />
+                      <Message message={`Your just ${lastAction.actionType}ed ${lastAction.mintBurnAmount} ${token.symbol} on ${tokenNetworkType} network`} isOpen={this.isShow()} clickHandler={this.closeMessage} />
+                      <Message message={ERROR_MESSAGE} isOpen={this.isError()} clickHandler={this.closeMessage} />
                       <div className='transfer-tab__actions'>
                         <button disabled={!isOwner(token, accountAddress)} className={classNames('transfer-tab__actions__btn', { 'transfer-tab__actions__btn--active': actionType === 'mint' })} onClick={() => this.handleMintOrBurn('mint')}>Mint</button>
                         <button disabled={!isOwner(token, accountAddress)} className={classNames('transfer-tab__actions__btn', { 'transfer-tab__actions__btn--active': actionType === 'burn' })} onClick={() => this.handleMintOrBurn('burn')}>Burn</button>
@@ -317,6 +330,15 @@ class Dashboard extends Component {
                         </div>
                       ) : null
                   }
+                  {
+                    signatureNeeded
+                      ? (
+                        <div className='bridge-deploying'>
+                          <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+                          <div className='bridge-deploying-confirmation'>{`Waiting for signing`}</div>
+                        </div>
+                      ) : null
+                  }
                 </div>
               }
             </Tabs>
@@ -327,7 +349,7 @@ class Dashboard extends Component {
             foreignTokenAddress={this.props.tokenAddress}
             loadBridgePopup={this.loadBridgePopup}
             handleTransfer={this.handleTransfer}
-            network={this.props.networkType}
+            network={networkType}
           />
           <div className='dashboard-entities'>
             <EntityDirectory

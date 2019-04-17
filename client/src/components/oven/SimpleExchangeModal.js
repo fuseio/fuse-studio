@@ -65,7 +65,7 @@ class SimpleExchangeModal extends Component {
             <FontAwesome name='times' />
           </button>
           <div>
-            <CommunityLogo token={this.props.token} />
+            <CommunityLogo token={this.props.token} networkType={this.props.networkType} />
           </div>
           <div className='token-info'>
             <div>
@@ -111,7 +111,8 @@ SimpleExchangeModal.propTypes = {
 
 const mapStateToProps = (state, {tokenAddress}) => ({
   token: state.tokens[tokenAddress],
-  marketMaker: state.marketMaker[tokenAddress]
+  marketMaker: state.marketMaker[tokenAddress],
+  networkType: state.network.networkType
 })
 
 const mapDispatchToProps = {

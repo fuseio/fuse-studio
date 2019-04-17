@@ -46,6 +46,7 @@ const mapStateToProps = state => ({
   metadata: state.entities.metadata,
   account: getAccountAddress(state),
   foreignNetwork: getForeignNetwork(state),
+  networkType: state.network.networkType,
   ...state.screens.oven
 })
 

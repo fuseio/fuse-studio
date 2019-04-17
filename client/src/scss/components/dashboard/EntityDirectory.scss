@@ -35,7 +35,7 @@
   }
   &-entities {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    background: $color-step-text;
+    background: $color-white;
     border-radius: 10px;
     padding: 25px;
     margin-top: 20px;
@@ -91,7 +91,7 @@
       }
     }
     &-search {
-      color: $color-step-text;
+      color: $color-white;
       font-size: 16px;
       font-weight: 500;
       display: flex;
@@ -180,13 +180,13 @@
 }
 
 .emptyText {
-  color: $color-step-text;
+  color: $color-white;
   font-size: 16px;
 }
 
 .entities {
   &-logo {
-    color: $color-step-text;
+    color: $color-white;
     font-size: 32px;
     font-weight: 500;
     padding-right: 60px;
@@ -231,13 +231,13 @@
         text-align: center;
         margin-right: 15px;
         border-radius: 50%;
-        background-color: $color-step-text;
+        background-color: $color-white;
         img {
           display: inline-block;
         }
       }
       .profile-balance {
-        color: $color-step-text;
+        color: $color-white;
 
         .balance-address {
           width: 180px;
@@ -258,7 +258,7 @@
 
         .balance-number {
           font-size: 12px;
-          color: $color-step-text;
+          color: $color-white;
           margin-left: 10px;
           font-weight: bold;
         }
@@ -281,13 +281,13 @@
         border-bottom: 3px solid transparent;
         text-transform: uppercase;
         &.active-link {
-          color: $color-step-text;
-          border-bottom: 3px solid $color-step-text;
+          color: $color-white;
+          border-bottom: 3px solid $color-white;
         }
         &:hover {
           cursor: pointer;
-          color: $color-step-text;
-          border-bottom: 3px solid $color-step-text;
+          color: $color-white;
+          border-bottom: 3px solid $color-white;
         }
         &-name {
           background-color: #53c9a9;
@@ -324,7 +324,7 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: $color-step-text;
+    background-color: $color-white;
     line-height: 52px;
     font-size: 40px;
     color: $color-step-field;
@@ -452,7 +452,7 @@
       }
     }
     &-content {
-      background-color: $color-step-text;
+      background-color: $color-white;
       padding: 40px;
       text-align: left;
       flex: 1;
@@ -549,7 +549,7 @@
               height: 6px;
               content: '';
               display: block;
-              border: solid $color-step-text;
+              border: solid $color-white;
               border-width: 0 2px 2px 0;
               transform: rotate(45deg);
             }
@@ -591,7 +591,7 @@
             height: 6px;
             content: '';
             display: block;
-            border: solid $color-step-text;
+            border: solid $color-white;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
           }
@@ -738,7 +738,7 @@
       width: 900px;
       margin: 0 auto;
       border-radius: 4px;
-      background-color: $color-step-text;
+      background-color: $color-white;
       box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
       align-items: flex-start;
       @media (max-width: $breakpoint-tablet) {
@@ -780,7 +780,7 @@
         }
       }
       &-point {
-        color: $color-bg-gray;
+        color: $color-primary-dark;
         font-size: 12px;
         line-height: 2.25;
         overflow: hidden;
@@ -812,7 +812,7 @@
       &-img {
         height: 200px;
         background-size: cover;
-        background-color: $color-step-text;
+        background-color: $color-white;
         background-position: center;
         box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2);
       }
@@ -824,7 +824,7 @@
     &-logo {
       width: 100px;
       height: 100px;
-      background-color: $color-step-text;
+      background-color: $color-white;
       border-radius: 50%;
       color: $color-orange;
       text-align: center;
@@ -970,7 +970,7 @@
   height: 35px;
   border-radius: 17.5px;
   background-color: $color-mainnet;
-  color: $color-step-text;
+  color: $color-white;
   display: block;
   padding: 6px 12px;
   outline: none;

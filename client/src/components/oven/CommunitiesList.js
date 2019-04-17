@@ -35,7 +35,7 @@ class CommunitiesList extends Component {
   getScrollParent = () => this.myRef.current
 
   render () {
-    const {addresses, tokens, metadata} = this.props
+    const {addresses, tokens, metadata, networkType} = this.props
     return <div className={`communities-list ${this.props.networkType}`} ref={this.myRef}>
       <div className='communities-banner' >
         <div className='communities-banner-content' >
@@ -75,6 +75,7 @@ class CommunitiesList extends Component {
           {addresses.map(address =>
             <div className='list-item' key={address}>
               <Community
+                networkType={networkType}
                 token={tokens[address]}
                 metadata={metadata[tokens[address].tokenURI]}
                 history={this.props.history}

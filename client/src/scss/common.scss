@@ -37,20 +37,36 @@
 		}
 
 		@include modifier(CoinIcon1\.svg) {
-			> span {
-				color: $color-home-banner-bg;
+			@include modifier(ropsten) {
+				> span {
+					color: $color-primary-dark;
+				}
+			}
+
+			@include modifier(main) {
+				> span {
+					color: $color-primary-dark;
+				}
 			}
 		}
 
 		@include modifier(CoinIcon2\.svg) {
 			> span {
-				color: $color-step-text;
+				color: $color-white;
 			}
 		}
 
 		@include modifier(CoinIcon3\.svg) {
-			> span {
-				color: $color-ropsten;
+			@include modifier(ropsten) {
+				> span {
+					color: $color-ropsten;
+				}
+			}
+
+			@include modifier(main) {
+				> span {
+					color: $color-mainnet;
+				}
 			}
 		}
 	}
@@ -75,12 +91,10 @@
 	@include element(wrapper) {
 		margin-left: 20px;
 		flex: 1;
-		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 		border-radius: 10px;
 	}
 	
 	@include element(list) {
-		overflow: hidden;
     width: 100%;
     padding: 0;
     list-style: none;
@@ -89,47 +103,39 @@
     align-items: center;
 		justify-content: space-between;
 		position: relative;
-		
+		border-radius: 10px 10px 0 0 ;
+		background: inherit;
 	}
 
 	@include element(item) {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin: 0 .5em 0 0;
 		position: relative;
 		cursor: pointer;
+		border-radius: 10px 10px 0 0;
 
 		> span {
 			position: relative;
-			background-color: $light-grey;
+			background-color: #f8f8f8;
 			padding: .7em 3.5em;
 			text-decoration: none;
 			color: rgba(37, 67, 90, 0.6);
 			width: 100%;
 			text-align: center;
-			border-radius: 5px 0 0 0;
-			box-shadow: 0 2px 2px rgba(0,0,0,.4);
-		}
-
-		>span:after {
-			content: '';
-			position: absolute;
-			z-index: 1;
-			top: 0;
-			right: -.5em;
-			bottom: 0;
-			width: .7em;
-			background: inherit;
-			box-shadow: 2px 2px 2px rgba(0,0,0,.4);
-			border-radius: 0 5px 0 0;
+			font-weight: 500;
+			border-radius: 10px 10px 0 0;
+			box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 		}
 
 		
 		@include modifier(active) {
-			>span {
-				background: $color-step-text;
+			z-index: 2;
+			> span {
+				background: $color-white;
 				color: $color-filter-text;
+				box-shadow: 0px -7px 10px -6.3px rgba(0, 0, 0, 0.2);
+
 			}
 		}
 	}
@@ -137,9 +143,10 @@
 	@include element(content) {
 		height: 90%;
 		padding: 25px;
-		background: $color-step-text;
-		border-radius: 10px 10px;
-		box-shadow: 0 0px 0 -2px rgba(0, 0, 0, 0.4);
+		background: $color-white;
+		border-radius: 0 0 10px 10px;
+		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+
     position: relative;
 	}
 
@@ -147,7 +154,7 @@
 
 @include block(button) {
 	background-color: $color-ropsten;
-	color: $color-step-text;
+	color: $color-white;
 	font-weight: bold;
 	text-align: center;
 	height: 42px;
@@ -183,7 +190,7 @@
 		&[disabled] {
 			opacity: 0.3;
 			background-color: #34d080;;
-			color: $color-step-text;
+			color: $color-white;
 			cursor: not-allowed;
 		}
 }
@@ -431,7 +438,7 @@
 	border-radius: 30px;
   background-color: $color-ropsten;
 	font-size: 1em;
-	color: $color-step-text;
+	color: $color-white;
 	padding: 16px 40px;
 	text-transform: uppercase;
 	border: none;
@@ -518,7 +525,7 @@
 	select {
 		box-shadow: 0 0 1px 0 rgba(10, 117, 134, 0.44);
 		border-radius: 5px;
-		background-color: $color-step-text;
+		background-color: $color-white;
 		box-sizing: border-box;
 		flex: 1;
 		padding: 6px 12px;
@@ -536,7 +543,7 @@
 
 .coin-status {
 	font-size: 10px;
-	color: $color-step-text;
+	color: $color-white;
 	text-transform: uppercase;
 	padding-left: 20px;
 	position: relative;
@@ -653,7 +660,7 @@
 
 .btn-adding {
 	text-transform: uppercase;
-	color: $color-step-text;
+	color: $color-white;
 	font-size: 12px;
 	border-radius: 3px;
 	padding: 6px 12px;

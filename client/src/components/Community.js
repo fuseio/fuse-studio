@@ -11,7 +11,7 @@ export default class Community extends Component {
   render () {
     return <div className={this.props.coinWrapperClassName} onClick={this.handleClick}>
       <div className='coin-header'>
-        <CommunityLogo token={this.props.token} metadata={this.props.metadata} />
+        <CommunityLogo token={this.props.token} networkType={this.props.networkType} metadata={this.props.metadata} />
         <div className='coin-details'>
           <h3 className='coin-name'>{this.props.token.name}</h3>
           <p className='coin-total'>

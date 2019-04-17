@@ -8,9 +8,9 @@ import CommunityLogo from 'components/elements/CommunityLogo'
 import ReactGA from 'services/ga'
 import {getForeignNetwork} from 'selectors/network'
 
-const MinimizedToken = ({accountAddress, token, metadata, balance}) => (
+const MinimizedToken = ({networkType, accountAddress, token, metadata, balance}) => (
   <Fragment>
-    <CommunityLogo isSmall token={token} metadata={metadata} />
+    <CommunityLogo networkType={networkType} isSmall token={token} metadata={metadata} />
     <div className='personal-community-content'>
       <div className='personal-community-content-balance'>
         <p className='coin-name'>{token.name}</p>
@@ -59,6 +59,7 @@ class PersonalSidebar extends Component {
       return (
         <div className='personal-community' key={token.address} onClick={() => this.showDashboard(token.address)}>
           <MinimizedToken
+            networkType={this.props.networkType}
             accountAddress={accountAddress}
             token={token}
             metadata={this.props.metadata[token.tokenURI] || {}}
@@ -96,6 +97,7 @@ class PersonalSidebar extends Component {
 
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
+  networkType: state.network.networkType,
   account: getAccount(state),
   tokens: getAccountTokens(state),
   foreignNetwork: getForeignNetwork(state),

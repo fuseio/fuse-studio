@@ -16,7 +16,7 @@
       height: 0;
       border-left: 13px solid transparent;
       border-right: 13px solid transparent;
-      border-top: 10px solid $color-home-banner-bg;
+      border-top: 10px solid $color-primary-dark;
       position: absolute;
       top: 0;
       right: 50%;
@@ -55,7 +55,7 @@
       &:hover,
       &:active,
       &:focus:active {
-        color: $color-step-text;
+        color: $color-white;
         cursor: pointer;
       }
     }
@@ -63,7 +63,7 @@
     &-top {
       padding: 20px 40px;
       box-shadow: 0 0 10px 0 rgba(135, 118, 255, 0.15);
-      background: $color-home-banner-bg;
+      background: $color-primary-dark;
       text-align: center;
       @media (max-width: $breakpoint-mobile) {
         padding: 15px 40px;
@@ -76,7 +76,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       display: block;
-      color: $color-step-text;
+      color: $color-white;
       margin: 0 auto;
       font-size: 14px;
     }
@@ -94,7 +94,7 @@
     }
     &-search {
       display: flex;
-      background-color: $color-step-text;
+      background-color: $color-white;
       box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.2);
       border-radius: 16.5px;
       overflow: hidden;
@@ -105,18 +105,18 @@
       margin-left: 15px;
       input {
         padding: 7px 5px 7px 9px;
-        background-color: $color-step-text;
-        color: $color-bg-gray;
+        background-color: $color-white;
+        color: $color-primary-dark;
         flex: 1.7;
         border: none;
         font-size: 12px;
         &::placeholder {
-  				color: $color-bg-gray;
+  				color: $color-primary-dark;
           font-size: 10px;
   			}
       }
       .search-btn {
-        background-color: $color-step-text;
+        background-color: $color-white;
         border:none;
         color: $color-orange;
         outline: none;
@@ -155,7 +155,7 @@
     position: relative;
     border-radius: 5px;
     box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.2);
-    background: $color-step-text;
+    background: $color-white;
     margin-bottom: 15px;
     overflow: hidden;
 
@@ -175,7 +175,7 @@
     .coin-name {
       text-transform: capitalize;
       font-size: 11px;
-      color: $color-home-banner-bg;
+      color: $color-primary-dark;
       line-height: 2.45;
     }
   }
@@ -194,7 +194,7 @@
 	font-size: 11px;
 	line-height: 20px;
   padding: 1px 7px 2px 5px;
-	color: $color-step-text;
+	color: $color-white;
 
 	&:focus, &:active, &:focus:active {
 		outline: none;

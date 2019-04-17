@@ -87,7 +87,7 @@
 	&.done-step {
 		.done-check {
 			position: absolute;
-			color: $color-step-text;
+			color: $color-white;
 			top: -30px;
 	    left: 50%;
 	    margin-left: -4px;
@@ -144,8 +144,7 @@
 					}
 					&.active-step {
 						&::after {
-							background-color: $color-home-banner-bg;
-							box-shadow: 0 0 3px 0 #c095ff;
+							background-color: $color-primary-dark;
 						}
 					}
 				}
@@ -153,7 +152,7 @@
 		}
 	}
 	&-content {
-		background: $color-step-text;
+		background: $color-white;
 		min-height: calc(100vh - 180px);
 		padding-top: 50px;
     padding-bottom: 50px;
@@ -357,7 +356,7 @@
 					font-size: 19px;
   				font-weight: bold;
 					text-align: center;
-  				color: $color-step-text;
+  				color: $color-white;
 					position: absolute;
 					top: 50%;
 					margin-top: -10px;
@@ -451,7 +450,7 @@
 			&-status {
 				font-size: 11px;
   			font-weight: bold;
-				color: $color-step-text;
+				color: $color-white;
 				text-transform: uppercase;
 				&-point {
 					width: 5px;
@@ -470,7 +469,7 @@
 			}
 			&-title {
 				font-size: 15px;
-				color: $color-step-text;
+				color: $color-white;
 				text-align: center;
 				text-transform: capitalize;
 				margin-bottom: 10px;
@@ -518,7 +517,7 @@
 					font-size: 16px;
   				font-weight: bold;
 					text-align: center;
-  				color: $color-step-text;
+  				color: $color-white;
 					position: absolute;
 					top: 50%;
 					margin-top: -10px;
@@ -545,7 +544,7 @@
 	}
 	&-community-name {
 		input {
-  		background-color: $color-step-text;
+  		background-color: $color-white;
   		border: solid 1px $color-step-title;
 			border-radius: 10px;
 			padding: 8px 16px;

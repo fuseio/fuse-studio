@@ -152,6 +152,10 @@ function * burnToken ({tokenAddress, value}) {
   yield call(transactionFlow, {transactionPromise, action, sendReceipt: true, tokenAddress})
 }
 
+function * watchTokenChanges ({tokenAddress}) {
+  yield call(fetchToken, {tokenAddress})
+}
+
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(actions.TRANSFER_TOKEN, transferToken, 1),
@@ -166,6 +170,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),
     tryTakeEvery(actions.FETCH_TOKEN_STATISTICS, fetchTokenStatistics, 1),
     tryTakeEvery(actions.FETCH_TOKEN_PROGRESS, fetchTokenProgress, 1),
-    takeEvery([DEPLOY_BRIDGE.SUCCESS, ADD_USER.SUCCESS, CREATE_LIST.SUCCESS], fetchTokenProgress)
+    takeEvery([DEPLOY_BRIDGE.SUCCESS, ADD_USER.SUCCESS, CREATE_LIST.SUCCESS], fetchTokenProgress),
+    takeEvery([actions.MINT_TOKEN.SUCCESS, actions.BURN_TOKEN.SUCCESS], watchTokenChanges)
   ])
 }

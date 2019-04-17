@@ -35,13 +35,13 @@ class TokenProgress extends Component {
     }
   }
   render () {
-    const { token } = this.props
+    const { token, networkType } = this.props
     const steps = this.props.steps
     const doneSteps = Object.values(steps).filter(step => step)
     const progressOverall = doneSteps.length * 20
     return (
       <div className='dashboard-sidebar'>
-        <div className='logo'><CommunityLogo token={token} metadata={this.props.metadata[token.tokenURI] || {}} /></div>
+        <div className='logo'><CommunityLogo networkType={networkType} token={token} metadata={this.props.metadata[token.tokenURI] || {}} /></div>
         <div className='token-info'>
           <h5 className='token-info__title'>{token.name}</h5>
           <div className='token-info__total'><span>Total supply: {formatWei(token.totalSupply, 0)}</span><span>{token.symbol}</span></div>

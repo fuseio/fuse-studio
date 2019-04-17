@@ -15,7 +15,7 @@
 		background-repeat: no-repeat;
 		width: 100%;
 		display: flex;
-		background-color: $color-home-banner-bg;
+		background-color: $color-primary-dark;
 		&-content {
 			max-width: 675px;
 		}
@@ -30,13 +30,13 @@
 		}
 		&-text {
 			padding: 20px 0;
-			color: $color-step-text;
+			color: $color-white;
 			font-size: 17px;
 			line-height: 1.55;
   		letter-spacing: -0.4px;
 		}
 		&-title {
-			color: $color-step-text;
+			color: $color-white;
 			font-size: 40px;
 			line-height: 1.25;
   		letter-spacing: -0.5px;
@@ -47,7 +47,7 @@
 			border: none;
 			font-size: 12px;
 			text-transform: uppercase;
-			color: $color-step-text;
+			color: $color-white;
 			font-weight: bold;
 			text-align: center;
 			border-radius: 16px;
@@ -66,7 +66,7 @@
 			}
 		}
 		@media (max-width: $breakpoint-tablet) {
-			background: $color-home-banner-bg !important;
+			background: $color-primary-dark !important;
 		}
 		@media (max-width: $breakpoint-mobile) {
 			display: none;
@@ -128,7 +128,7 @@
 
 			input {
 				padding: 15px 20px;
-		    background-color: $color-step-text;
+		    background-color: $color-white;
 		    color: $color-btn-control;
 		    flex: 1.7;
 		    border: none;
@@ -137,7 +137,7 @@
   			}
 			}
 			.search-btn {
-				background-color: $color-step-text;
+				background-color: $color-white;
 				padding: 6px 12px;
 				color: $color-orange;
 				outline: none;
@@ -187,7 +187,7 @@
 
 	.coin-wrapper {
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  	background-color: $color-step-text;
+  	background-color: $color-white;
 		border-radius: 10px;
 		box-sizing: content-box;
 		overflow: hidden;
@@ -201,7 +201,7 @@
 
 		.coin-name {
 			font-size: 15px;
-			color: $color-bg-gray;
+			color: $color-primary-dark;
 			text-align: center;
       font-weight: 400;
 			text-transform: capitalize;
@@ -309,7 +309,7 @@
 			}
 
 			.coin-currency {
-				color: $color-step-text;
+				color: $color-white;
 				font-size: 10px;
 				font-weight: bold;
 				text-transform: uppercase;

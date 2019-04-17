@@ -1,0 +1,155 @@
+@import 'components/dashboard/Donut.scss';
+
+$themes: (
+  ropsten: (
+    primaty: #207b5d,
+    dark: $color-primary-dark,
+    secondary: #34d080,
+    hover: #2eba72
+  ),
+  main: (
+    primaty: #005d90,
+    dark: $color-primary-dark,
+    secondary: $color-mainnet,
+    hover: #0083ca
+  ),
+  fuse: (
+    primaty: #99faab,
+    dark: $color-primary-dark,
+    secondary: #f6e943,
+    hover: #f6e943
+  )
+) !default;
+
+@mixin dashboardTheme($name, $colorsList) {
+  $primary: map-get($colorsList, 'primary');
+  $secondary: map-get($colorsList, 'secondary');
+  $dark: map-get($colorsList, 'dark');
+  $hover: map-get($colorsList, 'hover');
+
+  .#{$name} {
+    .dashboard {
+      &-progress {
+        &-bar-20 {
+          @include donutChart(20, $secondary);
+        }
+        &-bar-40 {
+          @include donutChart(40, $secondary);
+        }
+        &-bar-60 {
+          @include donutChart(60, $secondary);
+        }
+        &-bar-80 {
+          @include donutChart(80, $secondary);
+        }
+        &-bar-100 {
+          @include donutChart(100, $secondary);
+        }
+        &-text {
+          &.text-positive {
+            .fa {
+              color: $secondary;
+            }
+          }
+        }
+      }
+      &-information {
+        &-period {
+          color: $secondary;
+          &-text {
+            color: $secondary;
+          }
+        }
+      }
+      &-transfer {
+        &-btn {
+          @if $name == fuse {
+            color: $dark;
+            background: linear-gradient(97deg, #98faac, #fae83e);
+          } @else {
+            background: $secondary;
+          }
+          &:hover {
+            background: $hover;
+          }
+          &[disabled] {
+            opacity: 0.3;
+            &:hover {
+              cursor: not-allowed;
+              opacity: 0.3;
+            }
+          }
+        }
+      }
+      &-network {
+        &-balance {
+          color: $secondary;
+          &.balance-fuse {
+            color: $color-close-gray;
+          }
+        }
+        &-btn {
+          &:hover,
+          &:focus:active,
+          &:active {
+            background: $secondary;
+          }
+        }
+      }
+    }
+    .btn-entity-adding {
+      .fa {
+        color: $secondary;
+
+        &:hover {
+          color: $hover;
+        }
+      }
+      &:hover,
+      &:focus:active,
+      &:active {
+        color: $dark;
+      }
+
+      .dashboard-entity-content-plus-icon {
+        &:hover {
+          color: $hover;
+        }
+      }
+    }
+    .communities-list-search .search-btn {
+      color: $secondary;
+    }
+    
+    .transfer-tab__content__button {
+      > button {
+        @if $name == 'fuse' {
+          background: linear-gradient(97deg, #98faac, #fae83e);
+          color: $dark;
+        } @else {
+          background: $secondary;
+        }
+
+        &:hover {
+          background: $hover;
+        }
+      }
+    }
+    .transfer-tab__actions__btn--active {
+      @if $name == 'fuse' {
+        background: linear-gradient(97deg, #98faac, #fae83e);
+        color: $dark;
+      } @else {
+        background: $secondary;
+      }
+
+      &:hover {
+        background: $hover;
+      }
+    }
+  }
+}
+
+@each $theme, $list in $themes {
+  @include dashboardTheme($theme, $list);
+}

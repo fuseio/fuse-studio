@@ -57,7 +57,7 @@
     padding: 25px;
     font-family: $font-family;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    background: $color-step-text;
+    background: $color-white;
     @media (max-width: $breakpoint-tablet) {
       margin-bottom: 40px;
       padding: 20px;
@@ -83,12 +83,12 @@
         line-height: 2.7;
         letter-spacing: normal;
         text-align: center;
-        color: $color-home-banner-bg;
+        color: $color-primary-dark;
       }
 
       &__total {
         font-weight: normal;
-        color: $color-home-banner-bg;
+        color: $color-primary-dark;
         text-align: center;
 
         >span:first-child {
@@ -106,7 +106,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: $color-home-banner-bg;
+      color: $color-primary-dark;
       font-family: $font-family;
       .text {
         font-size: 10px;
@@ -146,7 +146,7 @@
     padding: 25px 50px;
     position: relative;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    background: $color-step-text;
+    background: $color-white;
   }
 
   &-progress {
@@ -162,12 +162,12 @@
       &-donut {
         width: 20px;
         height: 20px;
-        background-color: $color-step-text;
+        background-color: $color-white;
       }
       &:after {
         width: 28px;
         height: 28px;
-        background-color: $color-step-text;
+        background-color: $color-white;
         position: absolute;
         content: '';
         top: 10px;
@@ -177,19 +177,19 @@
       }
     }
     &-bar-20 {
-      @include donutChart(20, $color-orange);
+      @include donutChart(20, $color-ropsten);
     }
     &-bar-40 {
-      @include donutChart(40, $color-orange);
+      @include donutChart(40, $color-ropsten);
     }
     &-bar-60 {
-      @include donutChart(60, $color-orange);
+      @include donutChart(60, $color-ropsten);
     }
     &-bar-80 {
-      @include donutChart(80, $color-orange);
+      @include donutChart(80, $color-ropsten);
     }
     &-bar-100 {
-      @include donutChart(100, $color-orange);
+      @include donutChart(100, $color-ropsten);
     }
 
     &-content {
@@ -220,7 +220,7 @@
           color: $color-btn-control;
         }
         .fa {
-          color: $color-orange;
+          color: $color-ropsten;
           font-size: 10px;
           margin-right: 10px;
         }
@@ -247,7 +247,7 @@
     margin-left: 20px;
     flex: 1;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    background: $color-step-text;
+    background: $color-white;
     border-radius: 10px;
     padding: 20px;
     @media (max-width: $breakpoint-mobile) {
@@ -383,7 +383,7 @@
         left: -10px;
         right: 40px;
         padding: 5px;
-        background-color: $color-step-text;
+        background-color: $color-white;
         box-shadow: 0 0 7px 0 rgba(179, 185, 200, 0.33);
         border-radius: 3px;
         z-index: 1;
@@ -461,7 +461,7 @@
         }
       }
       &.balance-disabled {
-        opacity: 0.51;
+        opacity: 0.3;
         .fuse-logo {
           background: $color-bg-fuse-disabled;
         }
@@ -511,7 +511,7 @@
     }
     &-balance {
       font-size: 11px;
-      color: $color-orange;
+      color: $color-ropsten;
       font-weight: 600;
       span {
         font-weight: 300;
@@ -523,7 +523,8 @@
     &-btn {
       color: $color-filter-text;
       font-size: 10px;
-      background-color: $color-community-bg;
+      // background-color: #f3f3f3;
+      font-weight: 500;
       border: none;
       outline: none;
       margin-top: 10px;
@@ -532,8 +533,8 @@
       &:hover,
       &:focus:active,
       &:active {
-        background-color: $color-orange;
-        color: $color-step-text;
+        background-color: $color-ropsten;
+        color: $color-white;
         cursor: pointer;
       }
     }
@@ -569,9 +570,9 @@
     }
     &-btn {
       border: none;
-      color: $color-step-text;
+      color: $color-white;
       padding: 9px 20px;
-      background-color: $color-orange;
+      background-color: $color-ropsten;
       border-radius: 16px;
       font-size: 11px;
       text-transform: uppercase;
@@ -582,7 +583,7 @@
       outline: none;
       &:hover {
         cursor: pointer;
-        background-color: darken($color-orange, 20%);
+        background-color: darken($color-ropsten, 20%);
       }
     }
 
@@ -614,258 +615,6 @@
     @media (max-width: $breakpoint-tablet) {
       width: auto;
     }
-    &.ropsten {
-      .dashboard {
-        &-progress {
-          &-bar-20 {
-            @include donutChart(20, $color-ropsten);
-          }
-          &-bar-40 {
-            @include donutChart(40, $color-ropsten);
-          }
-          &-bar-60 {
-            @include donutChart(60, $color-ropsten);
-          }
-          &-bar-80 {
-            @include donutChart(80, $color-ropsten);
-          }
-          &-bar-100 {
-            @include donutChart(100, $color-ropsten);
-          }
-          &-text {
-            &.text-positive {
-              .fa {
-                color: $color-ropsten;
-              }
-            }
-          }
-        }
-        &-information {
-          &-period {
-            color: $color-ropsten;
-            &-text {
-              color: $color-ropsten;
-            }
-          }
-        }
-        &-transfer {
-          &-btn {
-            background-color: $color-ropsten;
-            &:hover {
-              background-color: darken($color-ropsten, 10%);
-            }
-            &[disabled] {
-              background: $disabled !important;
-              &:hover {
-                cursor: not-allowed;
-                background: $disabled !important;
-              }
-            }
-          }
-        }
-        &-network {
-          &-balance {
-            color: $color-ropsten;
-            &.balance-fuse {
-              color: $color-close-gray;
-            }
-          }
-          &-btn {
-            &:hover,
-            &:focus:active,
-            &:active {
-              background-color: $color-ropsten;
-            }
-          }
-        }
-      }
-      .btn-entity-adding {
-        .fa {
-          color: $color-ropsten;
-        }
-        &:hover,
-        &:focus:active,
-        &:active {
-          color: $color-ropsten;
-        }
-      }
-    }
-    &.main {
-      .dashboard {
-        &-progress {
-          &-bar-20 {
-            @include donutChart(20, $color-mainnet);
-          }
-          &-bar-40 {
-            @include donutChart(40, $color-mainnet);
-          }
-          &-bar-60 {
-            @include donutChart(60, $color-mainnet);
-          }
-          &-bar-80 {
-            @include donutChart(80, $color-mainnet);
-          }
-          &-bar-100 {
-            @include donutChart(100, $color-mainnet);
-          }
-          &-text {
-            &.text-positive {
-              .fa {
-                color: $color-mainnet;
-              }
-            }
-          }
-        }
-        &-information {
-          &-period {
-            color: $color-mainnet;
-            &-text {
-              color: $color-mainnet;
-            }
-          }
-        }
-        &-transfer {
-          &-btn {
-            background-color: $color-mainnet;
-            &:hover {
-              background-color: darken($color-mainnet, 10%);
-            }
-            &[disabled] {
-              background: $disabled !important;
-              &:hover {
-                cursor: not-allowed;
-                background: $disabled !important;
-              }
-            }
-          }
-        }
-        &-network {
-          &-balance {
-            color: $color-mainnet;
-            &.balance-fuse {
-              color: $color-mainnet;
-            }
-          }
-          &-btn {
-            &:hover,
-            &:focus:active,
-            &:active {
-              background-color: $color-mainnet;
-            }
-            &[disabled] {
-              background: $disabled !important;
-              &:hover {
-                color: $color-filter-text;
-                cursor: not-allowed;
-                background: $disabled !important;
-              }
-            }
-          }
-          &-text span {
-            color: $color-mainnet;
-          }
-        }
-      }
-      .btn-entity-adding {
-        .fa {
-          color: $color-mainnet;
-        }
-        &:hover,
-        &:focus:active,
-        &:active {
-          color: $color-mainnet;
-        }
-      }
-    }
-    &.fuse {
-      .dashboard {
-        &-progress {
-          &-bar-20 {
-            @include donutChart(20, $color-fuse);
-          }
-          &-bar-40 {
-            @include donutChart(40, $color-fuse);
-          }
-          &-bar-60 {
-            @include donutChart(60, $color-fuse);
-          }
-          &-bar-80 {
-            @include donutChart(80, $color-fuse);
-          }
-          &-bar-100 {
-            @include donutChart(100, $color-fuse);
-          }
-          &-text {
-            &.text-positive {
-              .fa {
-                color: $color-fuse;
-              }
-            }
-          }
-        }
-        &-information {
-          &-period {
-            color: $color-black;
-            &-text .fa {
-              color: $color-fuse;
-            }
-          }
-        }
-        &-transfer {
-          &-btn {
-            background: linear-gradient(97deg, #fae83e, #98faac);
-            color: $color-home-banner-bg;
-            &:hover {
-              background: $color-fuse;
-            }
-            &[disabled] {
-              background: $disabled !important;
-              color: $color-step-text;
-              &:hover {
-                cursor: not-allowed;
-                background: $disabled !important;
-              }
-            }
-          }
-        }
-        &-network {
-          &-balance {
-            color: $color-fuse;
-            &.balance-fuse {
-              color: $color-close-gray;
-            }
-          }
-          &-text {
-            span {
-              color: $color-home-banner-bg;
-            }
-          }
-          &-btn {
-            &:hover,
-            &:focus:active,
-            &:active {
-              background: linear-gradient(97deg, #98faac, #fae83e);
-              color: $color-home-banner-bg;
-            }
-            &[disabled] {
-              background: $disabled !important;
-              &:hover {
-                cursor: not-allowed;
-                background: $disabled !important;
-              }
-            }
-          }
-        }
-      }
-      .btn-entity-adding {
-        color: $color-home-banner-bg;
-        &:hover,
-        &:focus:active,
-        &:active {
-          color: $color-home-banner-bg;
-        }
-      }
-    }
   }
 }
 
@@ -885,7 +634,7 @@
   flex-direction: column;
   justify-content: center;
   &-text {
-    color: $color-step-text;
+    color: $color-white;
     font-size: 20px;
     font-weight: 500;
     line-height: 1.35;
@@ -904,7 +653,7 @@
     }
   }
   &-confirmation {
-    color: $color-step-text;
+    color: $color-white;
     font-size: 18px;
     font-weight: normal;
     margin-top: 15px;
@@ -929,7 +678,7 @@
   bottom: 0;
   right: 0;
   left: 0;
-  background-color: $color-step-text;
+  background-color: $color-white;
   z-index: 5;
   font-family: $font-family;
   display: flex;
@@ -944,6 +693,7 @@
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: 0.5px;
+    width: 350px;
   }
 
   @include element(icon) {
@@ -1015,7 +765,7 @@
         font-size: 14px;
         min-width: 1em;
         font-weight: bold;
-        color: $color-home-banner-bg;
+        color: $color-primary-dark;
       }
   
       @include element(input) {
@@ -1035,7 +785,7 @@
         font-size: 14px;
         font-weight: bold;
         min-width: 65px;
-        color: $color-home-banner-bg;
+        color: $color-primary-dark;
       }
   
       @include element(field) {
@@ -1070,7 +820,7 @@
         border-radius: 30px;
         background-color: $color-ropsten;
         font-size: .8em;
-        color: $color-step-text;
+        color: $color-white;
         // padding: 10px 30px;
         width: 84px;
         height: 32px;
