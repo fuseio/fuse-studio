@@ -171,7 +171,7 @@ class EntityDirectory extends Component {
               </div>
               {business.length ? this.renderBusiness(filteredBusiness)
                 : <div className='dashboard-empty'>
-                  <div className='dashboard-empty-title'>Kind’a sad in here, isn’t it?</div>
+                  <div className='dashboard-empty-title'>Kinda sad in here, isn’t it?</div>
                   <div className='dashboard-empty-text'>You can keep watching Netflix later, add a business and let’s start Rock’n’Roll!</div>
                   <button
                     className='dashboard-transfer-btn'

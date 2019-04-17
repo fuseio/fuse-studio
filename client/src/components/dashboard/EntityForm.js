@@ -139,7 +139,7 @@ class EntityForm extends Component {
             <div className='row'>
               <div className='col-4'>
                 <p className='entity-modal-content-form-control-label'>
-                  Business Account
+                  Business Id
                 </p>
               </div>
               <div className='col-8'>
