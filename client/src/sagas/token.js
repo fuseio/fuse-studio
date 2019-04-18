@@ -152,8 +152,8 @@ function * burnToken ({tokenAddress, value}) {
   yield call(transactionFlow, {transactionPromise, action, sendReceipt: true, tokenAddress})
 }
 
-function * watchTokenChanges ({tokenAddress}) {
-  yield call(fetchToken, {tokenAddress})
+function * watchTokenChanges ({response}) {
+  yield put(actions.fetchToken(response.tokenAddress))
 }
 
 export default function * tokenSaga () {
