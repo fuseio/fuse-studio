@@ -1,0 +1,27 @@
+{
+  "name": "fuse-contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "compile": "truffle compile",
+    "deploy-dev": "truffle migrate --network development",
+    "deploy-ropsten": "truffle migrate --network ropsten",
+    "deploy-fuse": "truffle migrate --network fuse",
+    "deploy-mainnet": "truffle migrate --network mainnet"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "openzeppelin-solidity": "^2.2.0"
+  },
+  "devDependencies": {
+    "truffle": "^5.0.1",
+    "truffle-assertions": "^0.7.2",
+    "truffle-hdwallet-provider": "^1.0.6"
+  }
+}

@@ -11,6 +11,10 @@
     "lint-fix": "standard --fix",
     "test": "NODE_PATH=./src mocha --require babel-core/register --recursive"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ColuLocalNetwork/CLN-community-app.git"
+  },
   "author": "",
   "license": "MIT",
   "standard": {

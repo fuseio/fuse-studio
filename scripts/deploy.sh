@@ -1,6 +1,6 @@
 set -e
 
-cd client
+cd dapp
 
 if ! [ -n "$NO_INSTALL" ]
 then
