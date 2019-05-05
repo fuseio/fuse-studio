@@ -1,4 +1,4 @@
-import {action, createRequestTypes, createTransactionRequestTypes} from './utils'
+import { action, createRequestTypes, createTransactionRequestTypes } from './utils'
 
 export const quoteAction = (type, payload) => ({
   ...action(type, payload),
@@ -31,23 +31,23 @@ export const OPEN_MARKET = createRequestTypes('OPEN_MARKET')
 
 export const quoteActions = [CHANGE, BUY_QUOTE, SELL_QUOTE, INVERT_BUY_QUOTE, INVERT_SELL_QUOTE, ESTIMATE_GAS_BUY_CC, ESTIMATE_GAS_SELL_CC]
 
-export const fetchMarketMakerData = (tokenAddress, mmAddress, blockNumber) => action(FETCH_MARKET_MAKER_DATA.REQUEST, {tokenAddress, mmAddress, blockNumber})
+export const fetchMarketMakerData = (tokenAddress, mmAddress, blockNumber) => action(FETCH_MARKET_MAKER_DATA.REQUEST, { tokenAddress, mmAddress, blockNumber })
 
-export const change = (tokenAddress, amount, minReturn, isBuy) => action(CHANGE.REQUEST, {tokenAddress, amount, minReturn, isBuy})
+export const change = (tokenAddress, amount, minReturn, isBuy) => action(CHANGE.REQUEST, { tokenAddress, amount, minReturn, isBuy })
 
-export const buyQuote = (tokenAddress, clnAmount) => quoteAction(BUY_QUOTE.REQUEST, {tokenAddress, clnAmount})
-export const sellQuote = (tokenAddress, ccAmount) => quoteAction(SELL_QUOTE.REQUEST, {tokenAddress, ccAmount})
+export const buyQuote = (tokenAddress, clnAmount) => quoteAction(BUY_QUOTE.REQUEST, { tokenAddress, clnAmount })
+export const sellQuote = (tokenAddress, ccAmount) => quoteAction(SELL_QUOTE.REQUEST, { tokenAddress, ccAmount })
 
-export const invertBuyQuote = (tokenAddress, ccAmount) => quoteAction(INVERT_BUY_QUOTE.REQUEST, {tokenAddress, ccAmount})
-export const invertSellQuote = (tokenAddress, clnAmount) => quoteAction(INVERT_SELL_QUOTE.REQUEST, {tokenAddress, clnAmount})
+export const invertBuyQuote = (tokenAddress, ccAmount) => quoteAction(INVERT_BUY_QUOTE.REQUEST, { tokenAddress, ccAmount })
+export const invertSellQuote = (tokenAddress, clnAmount) => quoteAction(INVERT_SELL_QUOTE.REQUEST, { tokenAddress, clnAmount })
 
-export const buyCc = (tokenAddress, amount, minReturn, options) => action(BUY_CC.REQUEST, {tokenAddress, amount, minReturn, options})
-export const sellCc = (tokenAddress, amount, minReturn, options) => action(SELL_CC.REQUEST, {tokenAddress, amount, minReturn, options})
+export const buyCc = (tokenAddress, amount, minReturn, options) => action(BUY_CC.REQUEST, { tokenAddress, amount, minReturn, options })
+export const sellCc = (tokenAddress, amount, minReturn, options) => action(SELL_CC.REQUEST, { tokenAddress, amount, minReturn, options })
 
-export const estimateGasBuyCc = (tokenAddress, amount, minReturn) => action(ESTIMATE_GAS_BUY_CC.REQUEST, {tokenAddress, amount, minReturn})
-export const estimateGasSellCc = (tokenAddress, amount, minReturn) => action(ESTIMATE_GAS_SELL_CC.REQUEST, {tokenAddress, amount, minReturn})
+export const estimateGasBuyCc = (tokenAddress, amount, minReturn) => action(ESTIMATE_GAS_BUY_CC.REQUEST, { tokenAddress, amount, minReturn })
+export const estimateGasSellCc = (tokenAddress, amount, minReturn) => action(ESTIMATE_GAS_SELL_CC.REQUEST, { tokenAddress, amount, minReturn })
 
 export const predictClnPrices = (tokenAddress, params) => action(PREDICT_CLN_PRICES.REQUEST,
-  {tokenAddress, ...params})
+  { tokenAddress, ...params })
 
-export const openMarket = (tokenAddress) => action(OPEN_MARKET.REQUEST, {tokenAddress})
+export const openMarket = (tokenAddress) => action(OPEN_MARKET.REQUEST, { tokenAddress })

@@ -5,13 +5,13 @@ const Token = mongoose.model('Token')
 const bridgeUtils = require('@utils/bridge')
 
 router.get('/', async (req, res, next) => {
-  const {homeTokenAddress} = req.query
+  const { homeTokenAddress } = req.query
   const bridge = await Bridge.findOne({ homeTokenAddress }).lean()
   return res.json({ data: bridge })
 })
 
 router.get('/:foreignTokenAddress', async (req, res, next) => {
-  const {foreignTokenAddress} = req.params
+  const { foreignTokenAddress } = req.params
   const bridge = await Bridge.findOne({ foreignTokenAddress }).lean()
   return res.json({ data: bridge })
 })

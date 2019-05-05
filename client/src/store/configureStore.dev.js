@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware, { END } from 'redux-saga'
-import {createBrowserHistory} from 'history'
+import { createBrowserHistory } from 'history'
 import { routerMiddleware } from 'connected-react-router'
 import createRootReducer from '../reducers'
 
@@ -38,5 +38,5 @@ export default function configureStore (initialState) {
   }
   store.runSaga = sagaMiddleware.run
   store.close = () => store.dispatch(END)
-  return {store, history}
+  return { store, history }
 }

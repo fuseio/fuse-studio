@@ -4,12 +4,12 @@ import MediaMobile from 'images/issue-popup-mobile.svg'
 import FontAwesome from 'react-fontawesome'
 import TopNav from 'components/TopNav'
 import CopyToClipboard from 'components/common/CopyToClipboard'
-import {loadModal} from 'actions/ui'
+import { loadModal } from 'actions/ui'
 import { getList, fetchBusinesses, fetchBusiness, activateBusiness, deactivateBusiness, editEntity } from 'actions/directory'
 import { ADD_DIRECTORY_ENTITY, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
-import {getBlockExplorerUrl} from 'utils/network'
-import {getTransaction} from 'selectors/transaction'
+import { getBlockExplorerUrl } from 'utils/network'
+import { getTransaction } from 'selectors/transaction'
 
 class EntityProfile extends Component {
   componentDidMount () {
@@ -22,7 +22,7 @@ class EntityProfile extends Component {
     if (this.props.networkType === 'fuse') {
       successFunc()
     } else {
-      this.props.loadModal(WRONG_NETWORK_MODAL, {supportedNetworks: ['fuse']})
+      this.props.loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['fuse'] })
     }
   }
 
@@ -37,7 +37,7 @@ class EntityProfile extends Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.receipt && !prevProps.receipt) {
-      const {newHash} = this.props.receipt.events.EntityReplaced.returnValues
+      const { newHash } = this.props.receipt.events.EntityReplaced.returnValues
       this.showProfile(this.props.listAddress, newHash)
     }
 
@@ -61,12 +61,12 @@ class EntityProfile extends Component {
   handleActivate = () => this.onlyOnFuse(() => this.props.activateBusiness(this.props.listAddress, this.props.hash))
 
   handleEdit = () =>
-    this.onlyOnFuse(() => this.props.loadModal(ADD_DIRECTORY_ENTITY, {submitEntity: this.editEntity, entity: this.props.entity}))
+    this.onlyOnFuse(() => this.props.loadModal(ADD_DIRECTORY_ENTITY, { submitEntity: this.editEntity, entity: this.props.entity }))
 
   editEntity = (data) => this.props.editEntity(this.props.listAddress, this.props.hash, data)
 
   render () {
-    const {entity} = this.props
+    const { entity } = this.props
     return (
       <React.Fragment>
         <TopNav
@@ -77,7 +77,7 @@ class EntityProfile extends Component {
         <div className={`entity-profile ${this.props.networkType}`}>
           <div className='entity-profile-container'>
             <div className='entity-profile-media'>
-              <div className='entity-profile-media-img' style={{backgroundImage: `url(${MediaMobile})`}} />
+              <div className='entity-profile-media-img' style={{ backgroundImage: `url(${MediaMobile})` }} />
               <div className='entity-profile-media-content'>
                 <div className='entity-profile-logo'>
                   <FontAwesome name='bullseye' />
@@ -127,7 +127,7 @@ class EntityProfile extends Component {
                 }
                 {entity && entity.websiteUrl &&
                   <div className='entity-profile-content-point'>
-                    <FontAwesome name='home' /><a style={{textDecoration: 'underline'}} href={entity.websiteUrl}>{entity.websiteUrl}</a>
+                    <FontAwesome name='home' /><a style={{ textDecoration: 'underline' }} href={entity.websiteUrl}>{entity.websiteUrl}</a>
                   </div>
                 }
               </div>
@@ -163,7 +163,7 @@ class EntityProfile extends Component {
   }
 }
 
-const mapStateToProps = (state, {match}) => ({
+const mapStateToProps = (state, { match }) => ({
   listAddress: match.params.listAddress,
   hash: match.params.hash,
   entity: state.entities.metadata[`ipfs://${match.params.hash}`],

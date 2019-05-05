@@ -48,8 +48,8 @@ class DeployProgress extends Component {
     if ((this.props.receipt !== prevProps.receipt) && this.props.receipt) {
       const { fetchDeployProgress, receipt } = this.props
       const tokenAddress = receipt.events[0].address
-      fetchDeployProgress({tokenAddress})
-      this.interval = setInterval(() => fetchDeployProgress({tokenAddress}), 5000)
+      fetchDeployProgress({ tokenAddress })
+      this.interval = setInterval(() => fetchDeployProgress({ tokenAddress }), 5000)
     }
 
     if (this.props.steps !== prevProps.steps) {

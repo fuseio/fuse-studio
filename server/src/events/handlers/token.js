@@ -1,6 +1,6 @@
 const tokenUtils = require('@utils/token')
 const mongoose = require('mongoose')
-const {isZeroAddress} = require('@utils/network')
+const { isZeroAddress } = require('@utils/network')
 
 const token = mongoose.token
 
@@ -23,12 +23,12 @@ const handleTokenCreatedEvent = async (event) => {
 
   const fetchedTokenData = await tokenUtils.fetchTokenData(address)
 
-  return token.create({...tokenData, ...fetchedTokenData})
+  return token.create({ ...tokenData, ...fetchedTokenData })
 }
 
 const handleTransferEvent = (event) => {
   const tokenAddress = event.address
-  const {from, to, value} = event.returnValues
+  const { from, to, value } = event.returnValues
   if (isZeroAddress(from)) {
     return token.mintTokens(tokenAddress, value)
   } else if (isZeroAddress(to)) {

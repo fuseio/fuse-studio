@@ -1,10 +1,10 @@
 const validator = require('validator')
 const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
-const {detailsGiven} = require('@utils/tokenProgress')
+const { detailsGiven } = require('@utils/tokenProgress')
 
 const handleDetailsGiven = async (user) => {
-  const tokens = await Token.find({owner: user.accountAddress}).lean().exec()
+  const tokens = await Token.find({ owner: user.accountAddress }).lean().exec()
   for (let token of tokens) {
     detailsGiven(token.address)
   }
@@ -15,16 +15,16 @@ module.exports = (mongoose) => {
   const Schema = mongoose.Schema
 
   const UserSchema = new Schema({
-    firstName: {type: String, required: [true, "can't be blank"]},
-    lastName: {type: String, required: [true, "can't be blank"]},
-    email: {type: String, required: [true, "can't be blank"], validate: [ validator.isEmail, 'invalid email' ]},
-    accountAddress: {type: String, required: [true, "can't be blank"]},
-    country: {type: String, required: [true, "can't be blank"]},
-    subscribe: {type: Boolean, default: false},
-    verified: {type: Boolean, default: false}
-  }, {timestamps: true})
+    firstName: { type: String, required: [true, "can't be blank"] },
+    lastName: { type: String, required: [true, "can't be blank"] },
+    email: { type: String, required: [true, "can't be blank"], validate: [ validator.isEmail, 'invalid email' ] },
+    accountAddress: { type: String, required: [true, "can't be blank"] },
+    country: { type: String, required: [true, "can't be blank"] },
+    subscribe: { type: Boolean, default: false },
+    verified: { type: Boolean, default: false }
+  }, { timestamps: true })
 
-  UserSchema.index({accountAddress: 1}, {unique: true})
+  UserSchema.index({ accountAddress: 1 }, { unique: true })
 
   UserSchema.set('toJSON', {
     versionKey: false

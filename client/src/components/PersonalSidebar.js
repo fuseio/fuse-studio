@@ -1,14 +1,14 @@
-import React, {Component, Fragment} from 'react'
-import {connect} from 'react-redux'
-import {fetchTokensWithBalances} from 'actions/accounts'
+import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
+import { fetchTokensWithBalances } from 'actions/accounts'
 import FontAwesome from 'react-fontawesome'
-import {formatWei} from 'utils/format'
-import {getAccount, getAccountTokens} from 'selectors/accounts'
+import { formatWei } from 'utils/format'
+import { getAccount, getAccountTokens } from 'selectors/accounts'
 import CommunityLogo from 'components/elements/CommunityLogo'
 import ReactGA from 'services/ga'
-import {getForeignNetwork} from 'selectors/network'
+import { getForeignNetwork } from 'selectors/network'
 
-const MinimizedToken = ({networkType, accountAddress, token, metadata, balance}) => (
+const MinimizedToken = ({ networkType, accountAddress, token, metadata, balance }) => (
   <Fragment>
     <CommunityLogo networkType={networkType} isSmall token={token} metadata={metadata} />
     <div className='personal-community-content'>
@@ -25,7 +25,7 @@ class PersonalSidebar extends Component {
     search: ''
   }
 
-  componentWillReceiveProps = ({accountAddress, account}) => {
+  componentWillReceiveProps = ({ accountAddress, account }) => {
     if (accountAddress && !this.props.accountAddress) {
       this.props.fetchTokensWithBalances(accountAddress)
     }
@@ -70,7 +70,7 @@ class PersonalSidebar extends Component {
   }
 
   handleSearch = (event) => {
-    this.setState({search: event.target.value})
+    this.setState({ search: event.target.value })
   }
 
   render () {

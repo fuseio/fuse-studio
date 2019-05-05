@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import Moment from 'moment'
 import find from 'lodash/find'
 import FontAwesome from 'react-fontawesome'
-import {formatWei} from 'utils/format'
+import { formatWei } from 'utils/format'
 
 const intervals = {
   MONTH: 'month',
@@ -44,7 +44,7 @@ const getLatestDataEntry = (intervalType, stats) => {
     return null
   }
   const interval = getCurrentInterval(intervalType)
-  return find(stats, {interval})
+  return find(stats, { interval })
 }
 
 class ActivityDropdown extends Component {
@@ -59,7 +59,7 @@ class ActivityDropdown extends Component {
     this.props.handleChange(item)
   }
 
-  handleOpenDropDown = () => this.setState({isOpen: true})
+  handleOpenDropDown = () => this.setState({ isOpen: true })
 
   componentDidMount () {
     document.addEventListener('mousedown', this.handleClickOutside)
@@ -71,7 +71,7 @@ class ActivityDropdown extends Component {
 
   handleClickOutside = (event) => {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.setState({isOpen: false})
+      this.setState({ isOpen: false })
     }
   }
 
@@ -116,7 +116,7 @@ class ActivityContent extends Component {
   }
 
   handleIntervalChange = (interval) => {
-    this.setState({interval})
+    this.setState({ interval })
     this.props.handleChange(this.props.userType, interval.value)
   }
 

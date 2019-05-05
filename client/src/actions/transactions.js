@@ -1,4 +1,4 @@
-import {PENDING, SUCCESS, FAILURE} from 'actions/constants'
+import { PENDING, SUCCESS, FAILURE } from 'actions/constants'
 
 export const transactionPending = (action, transactionHash, response = {}) => ({
   type: action.PENDING,

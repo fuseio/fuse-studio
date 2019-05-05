@@ -1,21 +1,21 @@
 import React, { Component, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import {BigNumber} from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 import web3 from 'web3'
 import FontAwesome from 'react-fontawesome'
-import {balanceOfToken} from 'actions/accounts'
+import { balanceOfToken } from 'actions/accounts'
 import * as actions from 'actions/bridge'
-import {getBlockNumber} from 'actions/network'
-import {getBalances} from 'selectors/accounts'
-import {getBridgeStatus} from 'selectors/network'
+import { getBlockNumber } from 'actions/network'
+import { getBalances } from 'selectors/accounts'
+import { getBridgeStatus } from 'selectors/network'
 import RopstenLogo from 'images/Ropsten.png'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
-import {convertNetworkName} from 'utils/network'
-import {getTransaction} from 'selectors/transaction'
+import { convertNetworkName } from 'utils/network'
+import { getTransaction } from 'selectors/transaction'
 
-const NetworkLogo = ({network}) => {
+const NetworkLogo = ({ network }) => {
   switch (network) {
     case 'fuse':
       return <div className='dashboard-network-logo fuse-logo'><img src={FuseLogo} /></div>
@@ -29,7 +29,7 @@ const NetworkLogo = ({network}) => {
 const Balance = (props) => {
   useEffect(() => {
     if (props.tokenAddress && props.accountAddress && !props.transferStatus) {
-      props.balanceOfToken(props.tokenAddress, props.accountAddress, {bridgeType: props.bridgeSide.bridge})
+      props.balanceOfToken(props.tokenAddress, props.accountAddress, { bridgeType: props.bridgeSide.bridge })
     }
   }, [props.tokenAddress, props.accountAddress, props.transferStatus])
   return (<div className={`dashboard-network-content ${props.className}`}>
@@ -75,7 +75,7 @@ class Bridge extends Component {
     }
 
     if (!this.props.transferStatus && prevProps.transferStatus) {
-      this.setState({transferAmount: 0})
+      this.setState({ transferAmount: 0 })
     }
   }
 
@@ -241,7 +241,7 @@ class BridgeContainer extends Component {
   }
 }
 
-const mapStateToProps = (state, {foreignTokenAddress}) => ({
+const mapStateToProps = (state, { foreignTokenAddress }) => ({
   ...state.screens.bridge,
   ...state.entities.bridges[foreignTokenAddress],
   homeNetwork: state.network.homeNetwork,

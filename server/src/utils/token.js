@@ -10,7 +10,7 @@ const fetchTokenData = async (address) => {
     tokenContractInstance.methods.tokenURI().call()
   ])
 
-  return {name, symbol, totalSupply, tokenURI}
+  return { name, symbol, totalSupply, tokenURI }
 }
 
 module.exports = {

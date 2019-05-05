@@ -1,4 +1,4 @@
-import {REQUEST, CONFIRMATION, PENDING, SUCCESS, FAILURE} from 'actions/constants'
+import { REQUEST, CONFIRMATION, PENDING, SUCCESS, FAILURE } from 'actions/constants'
 
 export const action = (type, payload = {}) => ({
   type, ...payload
@@ -27,4 +27,4 @@ export function createTransactionRequestTypes (base) {
 }
 
 export const createEntityAction = (entity) => (...args) =>
-  ({...action.apply(null, args), entity})
+  ({ ...action.apply(null, args), entity })

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
 import TextInput from 'components/elements/TextInput'
 import PropTypes from 'prop-types'
@@ -13,7 +13,7 @@ export default class SymbolStep extends Component {
 
   handleChangeCustomSymbol = (event) => {
     const customSymbol = event.target.value.substr(0, 4)
-    this.setState({customSymbol})
+    this.setState({ customSymbol })
   }
 
   setNextStep = () => {

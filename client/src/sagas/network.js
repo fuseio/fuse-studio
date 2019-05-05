@@ -1,18 +1,18 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
-import {givenWeb3 as web3, getWeb3} from 'services/web3'
-import {isNetworkSupported} from 'utils/network'
+import { givenWeb3 as web3, getWeb3 } from 'services/web3'
+import { isNetworkSupported } from 'utils/network'
 import * as actions from 'actions/network'
-import {balanceOfCln} from 'actions/accounts'
-import {loadModal} from 'actions/ui'
+import { balanceOfCln } from 'actions/accounts'
+import { loadModal } from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
-import {networkIdToName} from 'constants/network'
-import {saveState} from 'utils/storage'
+import { networkIdToName } from 'constants/network'
+import { saveState } from 'utils/storage'
 
 function * getNetworkTypeInternal () {
   const networkId = yield web3.eth.net.getId()
   const networkType = networkIdToName[networkId]
-  return {networkId, networkType}
+  return { networkId, networkType }
 }
 
 function * getAccountAddress () {
@@ -47,27 +47,27 @@ function * deduceBridgeSides (networkType) {
 
 function * getNetworkType () {
   try {
-    const {networkType, networkId} = yield getNetworkTypeInternal()
+    const { networkType, networkId } = yield getNetworkTypeInternal()
     const bridgeSides = yield deduceBridgeSides(networkType)
 
-    yield put({type: actions.GET_NETWORK_TYPE.SUCCESS,
+    yield put({ type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
         networkId,
         isMetaMask: web3.currentProvider.isMetaMask || false,
         ...bridgeSides
-      }})
+      } })
     const accountAddress = yield getAccountAddress()
 
     if (accountAddress) {
-      const isChanged = yield call(checkAccountChanged, {selectedAddress: accountAddress})
+      const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
       if (!isChanged) {
         yield put(balanceOfCln(accountAddress))
       }
     }
 
     if (!isNetworkSupported(networkType)) {
-      yield put({type: actions.UNSUPPORTED_NETWORK_ERROR,
+      yield put({ type: actions.UNSUPPORTED_NETWORK_ERROR,
         error: {
           msg: `${networkType} is not supported`,
           networkType
@@ -76,7 +76,7 @@ function * getNetworkType () {
     }
   } catch (error) {
     yield put(loadModal(WRONG_NETWORK_MODAL))
-    yield put({type: actions.GET_NETWORK_TYPE.FAILURE, error})
+    yield put({ type: actions.GET_NETWORK_TYPE.FAILURE, error })
   }
 }
 
@@ -90,7 +90,7 @@ function * fetchGasPrices () {
   })
 }
 
-function * checkAccountChanged ({selectedAddress}) {
+function * checkAccountChanged ({ selectedAddress }) {
   const accountAddress = yield select(state => state.network.accountAddress)
   const checksummedAddress = selectedAddress && web3.utils.toChecksumAddress(selectedAddress)
 
@@ -106,8 +106,8 @@ function * checkAccountChanged ({selectedAddress}) {
   return false
 }
 
-function * getBlockNumber ({networkType, bridgeType}) {
-  const web3 = getWeb3({bridgeType})
+function * getBlockNumber ({ networkType, bridgeType }) {
+  const web3 = getWeb3({ bridgeType })
   const blockNumber = yield call(web3.eth.getBlockNumber)
   yield put({
     type: actions.GET_BLOCK_NUMBER.SUCCESS,
@@ -118,9 +118,9 @@ function * getBlockNumber ({networkType, bridgeType}) {
   })
 }
 
-function * watchGetNetworkTypeSuccess ({response}) {
-  const {foreignNetwork, homeNetwork} = response
-  saveState('state.network', {foreignNetwork, homeNetwork})
+function * watchGetNetworkTypeSuccess ({ response }) {
+  const { foreignNetwork, homeNetwork } = response
+  saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
 export default function * web3Saga () {

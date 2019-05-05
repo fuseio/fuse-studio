@@ -13,10 +13,10 @@ const generateSignatureData = require('@utils/auth').generateSignatureData
 
 router.post('/', auth.required, async (req, res) => {
   const user = new User(req.body.user)
-  const {tokenAddress} = req.body
+  const { tokenAddress } = req.body
   const results = await user.save()
 
-  const token = await Token.findOne({address: tokenAddress})
+  const token = await Token.findOne({ address: tokenAddress })
   sendgridUtils.sendWelcomeMail(user, token.toJSON())
 
   if (user.subscribe) {
@@ -30,29 +30,29 @@ router.post('/', auth.required, async (req, res) => {
 })
 
 router.get('/:accountAddress', async (req, res) => {
-  const {accountAddress} = req.params
-  const user = await User.findOne({accountAddress}).lean()
+  const { accountAddress } = req.params
+  const user = await User.findOne({ accountAddress }).lean()
   return res.json({
     userExists: !!user
   })
 })
 
 router.post('/verify', auth.required, async (req, res) => {
-  const {accountAddress} = req.user
+  const { accountAddress } = req.user
   if (req.user.accountAddress !== req.body.user.accountAddress) {
-    return res.status(404).json({error: 'The session token does not match the account'})
+    return res.status(404).json({ error: 'The session token does not match the account' })
   }
 
-  const result = await User.findOneAndUpdate({accountAddress}, {verified: true})
+  const result = await User.findOneAndUpdate({ accountAddress }, { verified: true })
   if (result) {
-    return res.json({message: 'account verified'})
+    return res.json({ message: 'account verified' })
   } else {
-    return res.status(404).json({error: 'Bad account'})
+    return res.status(404).json({ error: 'Bad account' })
   }
 })
 
 const validateDate = (req, res, next) => {
-  const {date} = req.body
+  const { date } = req.body
 
   const signatureDate = moment(date)
   if (!signatureDate.isValid()) {
@@ -70,11 +70,11 @@ const validateDate = (req, res, next) => {
   next()
 }
 router.post('/login/:accountAddress', validateDate, async (req, res) => {
-  const {signature, date} = req.body
-  const {accountAddress} = req.params
+  const { signature, date } = req.body
+  const { accountAddress } = req.params
 
   const recoveredAccount = sigUtil.recoverTypedSignature({
-    data: generateSignatureData({accountAddress, date}),
+    data: generateSignatureData({ accountAddress, date }),
     sig: signature
   })
 
@@ -91,7 +91,7 @@ router.post('/login/:accountAddress', validateDate, async (req, res) => {
     expiresIn
   })
 
-  res.json({token})
+  res.json({ token })
 })
 
 module.exports = router

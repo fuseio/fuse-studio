@@ -25,7 +25,7 @@ class BusinessListModal extends React.Component {
   }
 
   render () {
-    const {isOwner} = this.props
+    const { isOwner } = this.props
 
     const content = {
       title: 'Business list is not deployed yet',

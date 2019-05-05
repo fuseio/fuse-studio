@@ -9,8 +9,8 @@ const handleEntityAddedEvent = async (event) => {
   const hash = event.returnValues.hash
   const listAddress = event.address
   const metadata = await getMetadata(hash)
-  const {name} = metadata.data
-  const {active} = metadata.data
+  const { name } = metadata.data
+  const { active } = metadata.data
   return new Business({
     hash,
     listAddress,
@@ -21,13 +21,13 @@ const handleEntityAddedEvent = async (event) => {
 
 const handleEntityReplacedEvent = async (event) => {
   const oldHash = event.returnValues.oldHash
-  await Business.findOneAndDelete({hash: oldHash})
+  await Business.findOneAndDelete({ hash: oldHash })
 
   const hash = event.returnValues.newHash
   const listAddress = event.address
   const metadata = await getMetadata(hash)
-  const {name} = metadata.data
-  const {active} = metadata.data
+  const { name } = metadata.data
+  const { active } = metadata.data
   return new Business({
     hash,
     listAddress,
@@ -41,7 +41,7 @@ const handleSimpleListCreatedEvent = async (event) => {
   const homeTokenAddress = event.returnValues.token
   const admin = event.returnValues.admin
 
-  const bridge = await Bridge.findOne({homeTokenAddress}).lean()
+  const bridge = await Bridge.findOne({ homeTokenAddress }).lean()
   const tokenAddress = bridge.foreignTokenAddress
 
   await new BusinessList({

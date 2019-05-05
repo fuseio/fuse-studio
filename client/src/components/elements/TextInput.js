@@ -58,7 +58,7 @@ const TextInput = ({
         type={type}
         value={value}
         onChange={onChange}
-        style={{height: isMobile ? 'auto' : '52px'}}
+        style={{ height: isMobile ? 'auto' : '52px' }}
         {...props}
       />
       break

@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 
-const StepsIndicator = ({steps, activeStep, network}) => {
+const StepsIndicator = ({ steps, activeStep, network }) => {
   return steps.map((item, key) => {
     const stepsClassStyle = classNames('cell large-2 medium-2 small-4', {
       [`step-${network}`]: true,

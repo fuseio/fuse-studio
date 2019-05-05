@@ -1,9 +1,9 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import CopyToClipboard from 'components/common/CopyToClipboard'
-import {getBlockExplorerUrl} from 'utils/network'
+import { getBlockExplorerUrl } from 'utils/network'
 
-const Entity = ({entity, address, showProfile}) =>
+const Entity = ({ entity, address, showProfile }) =>
   <div className='entity' onClick={() => showProfile()}>
     <div className='entity-logo'>
       <FontAwesome name='bullseye' />

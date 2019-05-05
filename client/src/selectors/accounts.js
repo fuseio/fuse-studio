@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
-import {getAddresses, getNetworkType} from 'selectors/network'
-import {initialAccount} from 'reducers/accounts'
+import { getAddresses, getNetworkType } from 'selectors/network'
+import { initialAccount } from 'reducers/accounts'
 
 export const getAccountAddress = state => state.network.accountAddress
 

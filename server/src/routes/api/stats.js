@@ -41,7 +41,7 @@ router.get('/:activityType/:address', async (req, res, next) => {
 
   const interval = genInterval(req.query)
   const token = await tokenModel.getByAddress(tokenAddress)
-  const {owner} = token
+  const { owner } = token
 
   const $match = {
     eventName: 'Transfer',
@@ -53,9 +53,9 @@ router.get('/:activityType/:address', async (req, res, next) => {
 
   if (activityType === 'user') {
     $match.$and = [
-      {'returnValues.from': {$ne: token.factoryAddress}},
-      {'returnValues.from': {$ne: owner}},
-      {'returnValues.from': {$ne: ZERO_ADDRESS}}
+      { 'returnValues.from': { $ne: token.factoryAddress } },
+      { 'returnValues.from': { $ne: owner } },
+      { 'returnValues.from': { $ne: ZERO_ADDRESS } }
     ]
   } else {
     $match['returnValues.from'] = owner
@@ -67,14 +67,14 @@ router.get('/:activityType/:address', async (req, res, next) => {
     },
     {
       $group: {
-        _id: {[interval]: {[`$${interval}`]: '$timestamp'}},
-        totalCount: {$sum: 1},
-        volume: {$sum: {$toDecimal: '$returnValues.value'}}
+        _id: { [interval]: { [`$${interval}`]: '$timestamp' } },
+        totalCount: { $sum: 1 },
+        volume: { $sum: { $toDecimal: '$returnValues.value' } }
       }
     },
     {
       $project: {
-        volume: {$toString: '$volume'},
+        volume: { $toString: '$volume' },
         totalCount: 1,
         interval: `$_id.${interval}`
       }

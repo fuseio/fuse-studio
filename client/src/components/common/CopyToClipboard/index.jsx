@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import {CopyToClipboard} from 'react-copy-to-clipboard'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 const styles = {
   position: 'fixed',
@@ -30,7 +30,7 @@ export default ({ text, children }) => {
   return (
     <Fragment>
       <CopyToClipboard text={text}>
-        <div onClick={handleClick} style={{display: 'inline-block'}}>
+        <div onClick={handleClick} style={{ display: 'inline-block' }}>
           {children}
         </div>
       </CopyToClipboard>

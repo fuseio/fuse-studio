@@ -1,4 +1,4 @@
-import {requestAction, createRequestTypes} from './utils'
+import { requestAction, createRequestTypes } from './utils'
 
 export const GET_NETWORK_TYPE = createRequestTypes('GET_NETWORK_TYPE')
 export const GET_BLOCK_NUMBER = createRequestTypes('GET_BLOCK_NUMBER')
@@ -13,7 +13,7 @@ export const FETCH_GAS_PRICES = createRequestTypes('FETCH_GAS_PRICES')
 export const getNetworkType = () => requestAction(GET_NETWORK_TYPE)
 
 export const checkAccountChanged = (selectedAddress) => requestAction(CHECK_ACCOUNT_CHANGED,
-  {selectedAddress})
+  { selectedAddress })
 
 export const fetchGasPrices = () => requestAction(FETCH_GAS_PRICES)
-export const getBlockNumber = (networkType, bridgeType) => requestAction(GET_BLOCK_NUMBER, {networkType, bridgeType})
+export const getBlockNumber = (networkType, bridgeType) => requestAction(GET_BLOCK_NUMBER, { networkType, bridgeType })

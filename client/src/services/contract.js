@@ -1,11 +1,11 @@
 import abis from 'constants/abi'
-import {getWeb3} from 'services/web3'
-import {getOptions} from 'utils/network'
+import { getWeb3 } from 'services/web3'
+import { getOptions } from 'utils/network'
 
 const contracts = {
 }
 
-export const getContract = ({address, abiName, options}) => {
+export const getContract = ({ address, abiName, options }) => {
   if (address && contracts.hasOwnProperty(address)) {
     return contracts[address]
   }

@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js",
-    "test": "node ./node_modules/truffle/build/cli.bundled.js test",
     "lint": "standard",
     "lint-fix": "standard --fix"
   },
@@ -65,7 +64,6 @@
   },
   "devDependencies": {
     "nodemon": "^1.18.11",
-    "standard": "^11.0.1",
-    "truffle": "^4.1.14"
+    "standard": "^12.0.1"
   }
 }

@@ -1,4 +1,4 @@
-import {action, createEntityAction, createTransactionRequestTypes, createRequestTypes} from './utils'
+import { action, createEntityAction, createTransactionRequestTypes, createRequestTypes } from './utils'
 
 export const entityName = 'directoryEntities'
 
@@ -17,15 +17,15 @@ export const DEACTIVATE_BUSINESS = createTransactionRequestTypes('DEACTIVATE_BUS
 export const FETCH_BUSINESSES = createRequestTypes('FETCH_BUSINESSES')
 export const FETCH_BUSINESS = createRequestTypes('FETCH_BUSINESS')
 
-export const createList = (tokenAddress) => action(CREATE_LIST.REQUEST, {tokenAddress})
-export const getList = (tokenAddress) => action(GET_LIST.REQUEST, {tokenAddress})
+export const createList = (tokenAddress) => action(CREATE_LIST.REQUEST, { tokenAddress })
+export const getList = (tokenAddress) => action(GET_LIST.REQUEST, { tokenAddress })
 
-export const fetchBusinesses = (listAddress, page) => businessesAction(FETCH_BUSINESSES.REQUEST, {listAddress, page})
-export const fetchBusiness = (listAddress, hash) => businessesAction(FETCH_BUSINESS.REQUEST, {listAddress, hash})
+export const fetchBusinesses = (listAddress, page) => businessesAction(FETCH_BUSINESSES.REQUEST, { listAddress, page })
+export const fetchBusiness = (listAddress, hash) => businessesAction(FETCH_BUSINESS.REQUEST, { listAddress, hash })
 
-export const addEntity = (listAddress, data) => action(ADD_ENTITY.REQUEST, {listAddress, data})
-export const removeEntity = (listAddress, hash) => action(REMOVE_ENTITY.REQUEST, {listAddress, hash})
-export const editEntity = (listAddress, hash, data) => action(EDIT_ENTITY.REQUEST, {listAddress, hash, data})
+export const addEntity = (listAddress, data) => action(ADD_ENTITY.REQUEST, { listAddress, data })
+export const removeEntity = (listAddress, hash) => action(REMOVE_ENTITY.REQUEST, { listAddress, hash })
+export const editEntity = (listAddress, hash, data) => action(EDIT_ENTITY.REQUEST, { listAddress, hash, data })
 
-export const activateBusiness = (listAddress, hash) => action(ACTIVATE_BUSINESS.REQUEST, {listAddress, hash})
-export const deactivateBusiness = (listAddress, hash) => action(DEACTIVATE_BUSINESS.REQUEST, {listAddress, hash})
+export const activateBusiness = (listAddress, hash) => action(ACTIVATE_BUSINESS.REQUEST, { listAddress, hash })
+export const deactivateBusiness = (listAddress, hash) => action(DEACTIVATE_BUSINESS.REQUEST, { listAddress, hash })

@@ -4,22 +4,22 @@ const mongoose = require('mongoose')
 const manipulate = (data) => {
   // deleting double entries in returnValues
   const returnValues = pickBy(data.returnValues, (value, key) => isNaN(key))
-  return {...data, returnValues}
+  return { ...data, returnValues }
 }
 
 module.exports = () => {
   const EventSchema = new mongoose.Schema({
-    eventName: {type: String, required: [true, "can't be blank"]},
-    blockNumber: {type: Number, required: [true, "can't be blank"]},
-    timestamp: {type: Date, required: [true, "can't be blank"]},
-    address: {type: String, required: [true, "can't be blank"]},
-    transactionHash: {type: String, required: [true, "can't be blank"]},
-    logIndex: {type: Number, required: [true, "can't be blank"]},
-    returnValues: {type: Object}
-  }, {timestamps: true})
+    eventName: { type: String, required: [true, "can't be blank"] },
+    blockNumber: { type: Number, required: [true, "can't be blank"] },
+    timestamp: { type: Date, required: [true, "can't be blank"] },
+    address: { type: String, required: [true, "can't be blank"] },
+    transactionHash: { type: String, required: [true, "can't be blank"] },
+    logIndex: { type: Number, required: [true, "can't be blank"] },
+    returnValues: { type: Object }
+  }, { timestamps: true })
 
-  EventSchema.index({transactionHash: 1, logIndex: 1}, { unique: true })
-  EventSchema.index({eventName: 1, blockNumber: 1})
+  EventSchema.index({ transactionHash: 1, logIndex: 1 }, { unique: true })
+  EventSchema.index({ eventName: 1, blockNumber: 1 })
 
   EventSchema.set('toJSON', {
     versionKey: false
@@ -62,7 +62,7 @@ module.exports = () => {
 
   event.getLastEvent = (conditions) => {
     return new Promise((resolve, reject) => {
-      Event.findOne(conditions).sort({blockNumber: -1}).exec((err, doc) => {
+      Event.findOne(conditions).sort({ blockNumber: -1 }).exec((err, doc) => {
         if (err) {
           console.log(err)
           return reject(err)

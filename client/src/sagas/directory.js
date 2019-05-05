@@ -1,21 +1,21 @@
 import { all, call, put, select } from 'redux-saga/effects'
 
-import {getContract} from 'services/contract'
+import { getContract } from 'services/contract'
 import * as actions from 'actions/directory'
-import {apiCall, createEntitiesFetch, tryTakeEvery} from './utils'
-import {getAccountAddress} from 'selectors/accounts'
-import {getAddress} from 'selectors/network'
-import {createMetadata} from 'sagas/metadata'
-import {isZeroAddress} from 'utils/web3'
-import {processReceipt} from 'services/api/misc'
-import {getHomeTokenAddress} from 'selectors/token'
+import { apiCall, createEntitiesFetch, tryTakeEvery } from './utils'
+import { getAccountAddress } from 'selectors/accounts'
+import { getAddress } from 'selectors/network'
+import { createMetadata } from 'sagas/metadata'
+import { isZeroAddress } from 'utils/web3'
+import { processReceipt } from 'services/api/misc'
+import { getHomeTokenAddress } from 'selectors/token'
 import * as api from 'services/api/business'
-import {transactionFlow} from './transaction'
+import { transactionFlow } from './transaction'
 
-function * createList ({tokenAddress}) {
+function * createList ({ tokenAddress }) {
   const accountAddress = yield select(getAccountAddress)
   const contractAddress = yield select(getAddress, 'SimpleListFactory')
-  const SimpleListFactoryContract = getContract({abiName: 'SimpleListFactory',
+  const SimpleListFactoryContract = getContract({ abiName: 'SimpleListFactory',
     address: contractAddress
   })
   const homeTokenAddress = yield select(getHomeTokenAddress, tokenAddress)
@@ -25,9 +25,9 @@ function * createList ({tokenAddress}) {
     from: accountAddress
   })
 
-  yield apiCall(processReceipt, {receipt})
+  yield apiCall(processReceipt, { receipt })
 
-  yield put({type: actions.CREATE_LIST.SUCCESS,
+  yield put({ type: actions.CREATE_LIST.SUCCESS,
     tokenAddress,
     response: {
       listAddress: receipt.events.SimpleListCreated.returnValues.list
@@ -35,9 +35,9 @@ function * createList ({tokenAddress}) {
   })
 }
 
-function * getList ({tokenAddress}) {
+function * getList ({ tokenAddress }) {
   const contractAddress = yield select(getAddress, 'SimpleListFactory')
-  const options = {bridgeType: 'home'}
+  const options = { bridgeType: 'home' }
   const SimpleListFactoryContract = getContract({
     abiName: 'SimpleListFactory',
     address: contractAddress,
@@ -46,32 +46,32 @@ function * getList ({tokenAddress}) {
 
   const listAddress = yield SimpleListFactoryContract.methods.tokenToListMap(tokenAddress).call()
 
-  yield put({type: actions.GET_LIST.SUCCESS,
+  yield put({ type: actions.GET_LIST.SUCCESS,
     response: {
       listAddress: isZeroAddress(listAddress) ? null : listAddress
-    }})
+    } })
   return listAddress
 }
 
-function * addEntity ({listAddress, data}) {
+function * addEntity ({ listAddress, data }) {
   const accountAddress = yield select(getAccountAddress)
-  const SimpleListContract = getContract({abiName: 'SimpleList',
+  const SimpleListContract = getContract({ abiName: 'SimpleList',
     address: listAddress
   })
 
-  const {hash} = yield call(createMetadata, {metadata: data})
+  const { hash } = yield call(createMetadata, { metadata: data })
   const method = SimpleListContract.methods.addEntity(hash)
   const transactionPromise = method.send({
     from: accountAddress
   })
 
   const action = actions.ADD_ENTITY
-  yield call(transactionFlow, {transactionPromise, action, sendReceipt: true})
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
 }
 
-function * removeEntity ({listAddress, hash}) {
+function * removeEntity ({ listAddress, hash }) {
   const accountAddress = yield select(getAccountAddress)
-  const SimpleListContract = getContract({abiName: 'SimpleList',
+  const SimpleListContract = getContract({ abiName: 'SimpleList',
     address: listAddress
   })
 
@@ -80,17 +80,17 @@ function * removeEntity ({listAddress, hash}) {
   })
 
   const action = actions.REMOVE_DIRECTORY_ENTITY
-  yield call(transactionFlow, {transactionPromise, action, sendReceipt: true})
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
 }
 
-function * editEntity ({listAddress, hash, data}) {
+function * editEntity ({ listAddress, hash, data }) {
   const accountAddress = yield select(getAccountAddress)
 
-  const SimpleListContract = getContract({abiName: 'SimpleList',
+  const SimpleListContract = getContract({ abiName: 'SimpleList',
     address: listAddress
   })
 
-  const response = yield call(createMetadata, {metadata: data})
+  const response = yield call(createMetadata, { metadata: data })
   const newHash = response.hash
 
   const transactionPromise = SimpleListContract.methods.replaceEntity(hash, newHash).send({
@@ -98,23 +98,23 @@ function * editEntity ({listAddress, hash, data}) {
   })
 
   const action = actions.EDIT_ENTITY
-  return yield call(transactionFlow, {transactionPromise, action, sendReceipt: true})
+  return yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
 }
 
-export function * activateBusiness ({listAddress, hash}) {
+export function * activateBusiness ({ listAddress, hash }) {
   const data = yield select(state => state.entities.metadata[`ipfs://${hash}`])
-  const receipt = yield editEntity({listAddress, hash, data: {...data, active: true}})
-  yield put({type: actions.ACTIVATE_BUSINESS.SUCCESS,
+  const receipt = yield editEntity({ listAddress, hash, data: { ...data, active: true } })
+  yield put({ type: actions.ACTIVATE_BUSINESS.SUCCESS,
     response: {
       receipt
     }
   })
 }
 
-export function * deactivateBusiness ({listAddress, hash}) {
+export function * deactivateBusiness ({ listAddress, hash }) {
   const data = yield select(state => state.entities.metadata[`ipfs://${hash}`])
-  const receipt = yield editEntity({listAddress, hash, data: {...data, active: false}})
-  yield put({type: actions.DEACTIVATE_BUSINESS.SUCCESS,
+  const receipt = yield editEntity({ listAddress, hash, data: { ...data, active: false } })
+  yield put({ type: actions.DEACTIVATE_BUSINESS.SUCCESS,
     response: {
       receipt
     }

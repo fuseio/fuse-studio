@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import identity from 'lodash/identity'
-import {formatWei} from 'utils/format'
+import { formatWei } from 'utils/format'
 import CommunityLogo from 'components/elements/CommunityLogo'
 
 export default class Community extends Component {

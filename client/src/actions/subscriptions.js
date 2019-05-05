@@ -1,4 +1,4 @@
-import {action, createRequestTypes} from './utils'
+import { action, createRequestTypes } from './utils'
 
 export const SUBSCRIBE_TO_TRANSFER = createRequestTypes('SUBSCRIBE_TO_TRANSFER')
 export const SUBSCRIBE_TO_CHANGE = createRequestTypes('SUBSCRIBE_TO_CHANGE')

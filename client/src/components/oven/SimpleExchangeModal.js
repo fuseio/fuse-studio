@@ -1,15 +1,15 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {BigNumber} from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 import Modal from 'components/Modal'
-import {formatWei} from 'utils/format'
+import { formatWei } from 'utils/format'
 import FontAwesome from 'react-fontawesome'
 import CommunityLogo from 'components/elements/CommunityLogo'
 import TextInput from 'components/elements/TextInput'
-import {connect} from 'react-redux'
-import {buyQuote, buyCc} from 'actions/marketMaker'
-import {PENDING, SUCCESS} from 'actions/constants'
+import { connect } from 'react-redux'
+import { buyQuote, buyCc } from 'actions/marketMaker'
+import { PENDING, SUCCESS } from 'actions/constants'
 import Loader from 'components/Loader'
 
 class SimpleExchangeModal extends Component {
@@ -34,7 +34,7 @@ class SimpleExchangeModal extends Component {
 
   handleClnChange = (event) => {
     const clnAmount = event.target.value
-    this.setState({clnAmount})
+    this.setState({ clnAmount })
     const amountInWei = new BigNumber(clnAmount.toString()).multipliedBy(1e18)
 
     this.props.buyQuote(this.props.token.address, amountInWei)
@@ -109,7 +109,7 @@ SimpleExchangeModal.propTypes = {
   marketMaker: PropTypes.object.isRequired
 }
 
-const mapStateToProps = (state, {tokenAddress}) => ({
+const mapStateToProps = (state, { tokenAddress }) => ({
   token: state.tokens[tokenAddress],
   marketMaker: state.marketMaker[tokenAddress],
   networkType: state.network.networkType

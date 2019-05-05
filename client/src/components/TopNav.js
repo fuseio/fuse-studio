@@ -4,14 +4,14 @@ import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 
 import * as actions from 'actions/ui'
-import {getClnBalance} from 'selectors/accounts'
+import { getClnBalance } from 'selectors/accounts'
 import { LOGIN_MODAL } from 'constants/uiConstants'
 
 import Logo from 'components/Logo'
 import WalletIcon from 'images/wallet.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
-import {convertNetworkName} from 'utils/network'
+import { convertNetworkName } from 'utils/network'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 
 const NavList = [

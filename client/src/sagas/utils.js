@@ -2,10 +2,10 @@ import { call, put, takeEvery, takeLatest, select, delay } from 'redux-saga/effe
 
 import { getForeignNetwork } from 'selectors/network'
 import { getAccount } from 'selectors/accounts'
-import {getApiRoot} from 'utils/network'
+import { getApiRoot } from 'utils/network'
 import keyBy from 'lodash/keyBy'
 
-export const createEntityPut = (entity) => (action) => put({...action, entity})
+export const createEntityPut = (entity) => (action) => put({ ...action, entity })
 
 function * tryClause (args, error, action, numberOfTries = CONFIG.api.retryCount) {
   yield put({
@@ -13,7 +13,7 @@ function * tryClause (args, error, action, numberOfTries = CONFIG.api.retryCount
     error,
     type: action.FAILURE
   })
-  args = {...args, numberOfTries: args.numberOfTries ? args.numberOfTries + 1 : 1}
+  args = { ...args, numberOfTries: args.numberOfTries ? args.numberOfTries + 1 : 1 }
   if (args.numberOfTries < numberOfTries) {
     yield delay(CONFIG.api.retryTimeout)
     yield put(args)
@@ -49,8 +49,8 @@ export function * apiCall (apiFunc, params, options = {}) {
   const networkType = options.networkType ? options.networkType : yield select(getForeignNetwork)
   const apiRoot = getApiRoot(networkType)
   if (options.auth) {
-    const {authToken} = yield select(getAccount)
-    return yield call(apiFunc, apiRoot, {...params, authToken})
+    const { authToken } = yield select(getAccount)
+    return yield call(apiFunc, apiRoot, { ...params, authToken })
   }
   return yield call(apiFunc, apiRoot, params)
 }
@@ -70,7 +70,7 @@ export const createEntitiesFetch = (action, apiFunc) => function * (params) {
 
   const response = yield apiCall(apiFunc, params)
 
-  const {data, ...metadata} = response
+  const { data, ...metadata } = response
 
   const dataArray = Array.isArray(data) ? data : [data]
   const entities = keyBy(dataArray, entityKeys[entity])
@@ -83,7 +83,7 @@ export const createEntitiesFetch = (action, apiFunc) => function * (params) {
       entities,
       result,
       metadata
-    }})
+    } })
 
   return data
 }

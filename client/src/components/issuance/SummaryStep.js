@@ -123,7 +123,7 @@ export default class SummaryStep extends Component {
             radiusAll
             isOpen={transactionStatus === FAILURE && showError}
             message='Something went wrong'
-            clickHandler={() => this.setState({showError: false})}
+            clickHandler={() => this.setState({ showError: false })}
             subTitle='Try again later'
           />
         </div>

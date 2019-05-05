@@ -2,10 +2,10 @@ import { all, call, put, select } from 'redux-saga/effects'
 
 import { apiCall, tryTakeEvery } from './utils'
 import * as actions from 'actions/user'
-import {getAccountAddress} from 'selectors/accounts'
+import { getAccountAddress } from 'selectors/accounts'
 import web3 from 'services/web3'
 import * as api from 'services/api/user'
-import {generateSignatureData} from 'utils/web3'
+import { generateSignatureData } from 'utils/web3'
 
 export function * login () {
   const accountAddress = yield select(getAccountAddress)
@@ -13,7 +13,7 @@ export function * login () {
 
   const date = new Date().toUTCString()
 
-  const signatureData = generateSignatureData({accountAddress, date, chainId})
+  const signatureData = generateSignatureData({ accountAddress, date, chainId })
   const promise = new Promise((resolve, reject) => {
     web3.currentProvider.sendAsync(
       {
@@ -21,7 +21,7 @@ export function * login () {
         params: [accountAddress, JSON.stringify(signatureData)],
         from: accountAddress
       },
-      (error, {result}) => {
+      (error, { result }) => {
         if (error) {
           return reject(error)
         }
@@ -31,7 +31,7 @@ export function * login () {
   })
   const signature = yield promise
   if (signature) {
-    const response = yield apiCall(api.login, {accountAddress, signature, date})
+    const response = yield apiCall(api.login, { accountAddress, signature, date })
     yield put({
       type: actions.LOGIN.SUCCESS,
       accountAddress,
@@ -42,14 +42,14 @@ export function * login () {
   }
 }
 
-function * addUser ({user, tokenAddress}) {
+function * addUser ({ user, tokenAddress }) {
   yield call(login)
 
   const accountAddress = yield select(getAccountAddress)
   const response = yield apiCall(api.addUser,
-    {user: {...user, accountAddress}, tokenAddress}, {auth: true})
+    { user: { ...user, accountAddress }, tokenAddress }, { auth: true })
 
-  const {data} = response
+  const { data } = response
   yield put({
     type: actions.ADD_USER.SUCCESS,
     user,
@@ -60,8 +60,8 @@ function * addUser ({user, tokenAddress}) {
   })
 }
 
-function * isUserExists ({accountAddress}) {
-  const response = yield apiCall(api.isUserExists, {accountAddress})
+function * isUserExists ({ accountAddress }) {
+  const response = yield apiCall(api.isUserExists, { accountAddress })
 
   yield put({
     type: actions.IS_USER_EXISTS.SUCCESS,

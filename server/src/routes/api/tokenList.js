@@ -15,10 +15,10 @@ router.get('/home/:account', async (req, res, next) => {
   const response = JSON.parse(await request.get(url))
 
   const allFuseTokenAddresses = response.result.map(homeToken => web3.utils.toChecksumAddress(homeToken.contractAddress))
-  const bridges = await Bridge.find({homeTokenAddress: {$in: allFuseTokenAddresses}}, {foreignTokenAddress: 1}).lean()
+  const bridges = await Bridge.find({ homeTokenAddress: { $in: allFuseTokenAddresses } }, { foreignTokenAddress: 1 }).lean()
 
   const foreignTokenAddresses = bridges.map(bridge => bridge.foreignTokenAddress)
-  const tokens = await Token.find({address: {$in: foreignTokenAddresses}})
+  const tokens = await Token.find({ address: { $in: foreignTokenAddresses } })
 
   res.json({
     object: 'list',
@@ -34,8 +34,8 @@ router.get('/foreign/:account', async (req, res, next) => {
       $match: {
         eventName: 'Transfer',
         $or: [
-          {'returnValues.to': account},
-          {'returnValues.from': account}
+          { 'returnValues.to': account },
+          { 'returnValues.from': account }
         ]
       }
     },
@@ -47,7 +47,7 @@ router.get('/foreign/:account', async (req, res, next) => {
   ])
 
   const addresses = events.map(ev => ev._id)
-  const tokens = await Token.find({address: {$in: addresses}})
+  const tokens = await Token.find({ address: { $in: addresses } })
 
   res.json({
     object: 'list',

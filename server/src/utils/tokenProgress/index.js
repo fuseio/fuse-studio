@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 const TokenProgress = mongoose.model('TokenProgress')
 
 const stepDone = async (stepName, tokenAddress) => {
-  await TokenProgress.findOneAndUpdate({tokenAddress},
-    {[`steps.${stepName}`]: true, $unset: {[`stepErrors.${stepName}`]: ''}},
-    {upsert: true})
+  await TokenProgress.findOneAndUpdate({ tokenAddress },
+    { [`steps.${stepName}`]: true, $unset: { [`stepErrors.${stepName}`]: '' } },
+    { upsert: true })
 }
 
 const addError = async (stepName, tokenAddress, error) => {
   console.error(error)
-  await TokenProgress.findOneAndUpdate({tokenAddress}, {[`stepErrors.${stepName}`]: error}, {upsert: true})
+  await TokenProgress.findOneAndUpdate({ tokenAddress }, { [`stepErrors.${stepName}`]: error }, { upsert: true })
 }
 
 const steps = {

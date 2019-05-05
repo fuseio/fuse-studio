@@ -21,7 +21,7 @@ import { isOwner } from 'utils/token'
 import Tabs from 'components/common/Tabs'
 import Message from 'components/common/Message'
 import { getTransaction } from 'selectors/transaction'
-import {FAILURE, SUCCESS, PENDING} from 'actions/constants'
+import { FAILURE, SUCCESS, PENDING } from 'actions/constants'
 import TransferForm from './TransferForm'
 import MintBurnForm from './MintBurnForm'
 

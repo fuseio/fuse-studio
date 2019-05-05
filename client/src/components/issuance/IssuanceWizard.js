@@ -77,7 +77,7 @@ class IssuanceWizard extends Component {
       symbol: this.state.communitySymbol,
       totalSupply: new BigNumber(this.state.totalSupply).multipliedBy(1e18)
     }
-    const {contracts} = this.state
+    const { contracts } = this.state
     const steps = Object.keys(contracts)
       .filter((contractName) => contracts[contractName].checked)
       .reduce((steps, contractName) => {

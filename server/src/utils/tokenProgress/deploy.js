@@ -16,7 +16,7 @@ const mandatorySteps = {
 }
 
 const deploy = async (tokenProgress, steps) => {
-  const token = await Token.findOne({address: tokenProgress.tokenAddress})
+  const token = await Token.findOne({ address: tokenProgress.tokenAddress })
 
   if (!token) {
     return addError('tokenIssued', tokenProgress.tokenAddress, 'No such token issued')

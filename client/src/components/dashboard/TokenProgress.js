@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import CommunityLogo from 'components/elements/CommunityLogo'
-import {fetchTokenProgress} from 'actions/token'
+import { fetchTokenProgress } from 'actions/token'
 import FontAwesome from 'react-fontawesome'
 import classNames from 'classnames'
 import CopyToClipboard from 'components/common/CopyToClipboard'
-import {formatWei} from 'utils/format'
+import { formatWei } from 'utils/format'
 import { getBlockExplorerUrl } from 'utils/network'
 
-const Step = ({done, text, handleClick}) => (
+const Step = ({ done, text, handleClick }) => (
   <div
     className={classNames('dashboard-progress-text', {
       'text-positive': done,
@@ -17,7 +17,7 @@ const Step = ({done, text, handleClick}) => (
     })}
     onClick={done ? null : handleClick}
   >
-    <FontAwesome name={classNames({'check': done, 'minus': !done})} /> <span className='progress-text-content'>{text}</span>
+    <FontAwesome name={classNames({ 'check': done, 'minus': !done })} /> <span className='progress-text-content'>{text}</span>
   </div>
 )
 

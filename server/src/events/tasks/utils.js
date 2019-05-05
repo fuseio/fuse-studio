@@ -15,18 +15,18 @@ const defaultOptions = {
   conditions: {}
 }
 
-const processPastEvents = async (eventName, contract, {conditions} = defaultOptions) => {
-  const lastBlockNumber = await getLastBlockNumber({eventName, ...conditions})
+const processPastEvents = async (eventName, contract, { conditions } = defaultOptions) => {
+  const lastBlockNumber = await getLastBlockNumber({ eventName, ...conditions })
   const actualEventsCallback = eventsCallback.bind(null, handleEvent)
   try {
     console.log('last block ' + lastBlockNumber)
-    return contract.getPastEvents(eventName, {fromBlock: lastBlockNumber, toBlock: 'latest'}, actualEventsCallback)
+    return contract.getPastEvents(eventName, { fromBlock: lastBlockNumber, toBlock: 'latest' }, actualEventsCallback)
   } catch (error) {
     console.error(error)
     const latestBlock = await web3.eth.getBlock('latest')
     const pageSize = config.get('web3.pageSize')
     for (let i = lastBlockNumber; i < latestBlock.number; i += pageSize) {
-      return contract.getPastEvents(eventName, {fromBlock: i, toBlock: i + pageSize}, actualEventsCallback)
+      return contract.getPastEvents(eventName, { fromBlock: i, toBlock: i + pageSize }, actualEventsCallback)
     }
   }
 }

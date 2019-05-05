@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import GenericModal from 'components/dashboard/GenericModal'
 
-const Networks = ({networks}) => networks.map(network => <strong key={network} className='capitalize'>{network} Network</strong>)
+const Networks = ({ networks }) => networks.map(network => <strong key={network} className='capitalize'>{network} Network</strong>)
   .reduce((prev, curr) => [prev, ' or ', curr])
 
 class WrongNetworkModal extends React.Component {

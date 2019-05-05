@@ -22,7 +22,7 @@ async function init () {
 
   const agenda = require('./services/agenda')
 
-  console.log(util.inspect(config, {depth: null}))
+  console.log(util.inspect(config, { depth: null }))
 
   var isProduction = process.env.NODE_ENV === 'production'
 
@@ -77,18 +77,18 @@ async function init () {
 
       res.status(err.status || 500)
 
-      res.json({'errors': {
+      res.json({ 'errors': {
         message: err.message,
         error: err
-      }})
+      } })
     })
   } else {
     app.use(function (err, req, res, next) {
       res.status(err.status || 500)
-      res.json({'errors': {
+      res.json({ 'errors': {
         message: err.message,
         error: {}
-      }})
+      } })
     })
   }
 

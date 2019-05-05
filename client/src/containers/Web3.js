@@ -1,10 +1,10 @@
-import {Component} from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
-import {getNetworkType, checkAccountChanged} from 'actions/network'
-import {loadModal} from 'actions/ui'
-import {isNetworkSupported} from 'utils/network'
+import { getNetworkType, checkAccountChanged } from 'actions/network'
+import { loadModal } from 'actions/ui'
+import { isNetworkSupported } from 'utils/network'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
-import {withMaybe} from 'utils/components'
+import { withMaybe } from 'utils/components'
 
 class Web3 extends Component {
   componentDidMount () {
@@ -49,4 +49,4 @@ const withNetwork = (Component) => {
   return ConnectedComponent
 }
 
-export {withNetwork}
+export { withNetwork }

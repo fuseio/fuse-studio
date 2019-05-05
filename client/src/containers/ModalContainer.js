@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {hideModal} from 'actions/ui'
+import { hideModal } from 'actions/ui'
 import LoginModal from 'components/LoginModal'
 import WrongNetworkModal from 'components/WrongNetworkModal'
 import LoadingModal from 'components/LoadingModal'
@@ -45,7 +45,7 @@ const ModalContainer = (props) => {
   }
 
   const ModalType = MODAL_COMPONENTS[props.modalType]
-  return renderModal(ModalType, {...props.modalProps, hideModal: props.hideModal})
+  return renderModal(ModalType, { ...props.modalProps, hideModal: props.hideModal })
 }
 
 const mapStateToProps = state => {

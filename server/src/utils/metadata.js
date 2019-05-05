@@ -11,7 +11,7 @@ async function getMetadata (hash) {
 async function createMetadata (metadata) {
   return request.post(`${urlBase}/metadata`, {
     json: true,
-    body: {data: metadata}
+    body: { data: metadata }
   })
 }
 

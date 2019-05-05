@@ -1,5 +1,5 @@
-import {assert} from 'chai'
-import {nameToSymbol} from 'utils/format'
+import { assert } from 'chai'
+import { nameToSymbol } from 'utils/format'
 
 describe('nameToSymbol', () => {
   it('should return BIT for bitcoin', () => {

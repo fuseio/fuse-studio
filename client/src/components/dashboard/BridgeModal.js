@@ -25,7 +25,7 @@ class BridgeModal extends React.Component {
   }
 
   render () {
-    const {isOwner} = this.props
+    const { isOwner } = this.props
     const content = {
       title: 'Bridge is not deployed yet',
       body: 'In order to access cheaper and faster transactions on the Fuse chain, a bridge between the Ethereum network and the Fuse chain needs to be deployed. The bridge is a special smart contracts that locks the funds on one side of the bridge and unlock it on the other side. The bridge is opreated by validators who sign and lock the tokens  or unlocking it to provide easy movement between the chains.',

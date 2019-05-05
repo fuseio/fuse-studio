@@ -1,27 +1,27 @@
-const {tokenIssued, detailsGiven} = require('@utils/tokenProgress')
+const { tokenIssued, detailsGiven } = require('@utils/tokenProgress')
 const BigNumber = require('bignumber.js')
 
-const transform = (doc, ret, options) => ({...ret, totalSupply: doc.totalSupply ? doc.totalSupply.toString() : undefined})
+const transform = (doc, ret, options) => ({ ...ret, totalSupply: doc.totalSupply ? doc.totalSupply.toString() : undefined })
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
   const Schema = mongoose.Schema
 
   const TokenSchema = new Schema({
-    address: {type: String, required: [true, "can't be blank"]},
-    name: {type: String, required: [true, "can't be blank"]},
-    symbol: {type: String, required: [true, "can't be blank"]},
-    tokenURI: {type: String},
-    totalSupply: {type: mongoose.Types.Decimal128, required: [true, "can't be blank"]},
-    owner: {type: String, required: [true, "can't be blank"]},
-    factoryAddress: {type: String, required: [true, "can't be blank"]},
-    blockNumber: {type: Number},
-    tokenType: {type: String, required: [true, "can't be blank"]}
-  }, {timestamps: true})
+    address: { type: String, required: [true, "can't be blank"] },
+    name: { type: String, required: [true, "can't be blank"] },
+    symbol: { type: String, required: [true, "can't be blank"] },
+    tokenURI: { type: String },
+    totalSupply: { type: mongoose.Types.Decimal128, required: [true, "can't be blank"] },
+    owner: { type: String, required: [true, "can't be blank"] },
+    factoryAddress: { type: String, required: [true, "can't be blank"] },
+    blockNumber: { type: Number },
+    tokenType: { type: String, required: [true, "can't be blank"] }
+  }, { timestamps: true })
 
-  TokenSchema.index({address: 1}, {unique: true})
-  TokenSchema.index({owner: 1})
-  TokenSchema.index({blockNumber: -1})
+  TokenSchema.index({ address: 1 }, { unique: true })
+  TokenSchema.index({ owner: 1 })
+  TokenSchema.index({ blockNumber: -1 })
 
   TokenSchema.set('toJSON', {
     versionKey: false,
@@ -39,7 +39,7 @@ module.exports = (mongoose) => {
 
   TokenSchema.post('save', async token => {
     const User = mongoose.model('User')
-    const user = await User.findOne({accountAddress: token.owner})
+    const user = await User.findOne({ accountAddress: token.owner })
     if (user) {
       detailsGiven(token.address)
     }
@@ -82,7 +82,7 @@ module.exports = (mongoose) => {
 
   token.getByAddress = (address) => {
     return new Promise((resolve, reject) => {
-      Token.findOne({address}, (err, doc) => {
+      Token.findOne({ address }, (err, doc) => {
         if (err) {
           return reject(err)
         }
@@ -96,12 +96,12 @@ module.exports = (mongoose) => {
   }
 
   token.mintTokens = (address, value) => {
-    return Token.updateOne({address}, {$inc: {totalSupply: value}})
+    return Token.updateOne({ address }, { $inc: { totalSupply: value } })
   }
 
   token.burnTokens = (address, value) => {
     const negatedValue = new BigNumber(value).negated().toString()
-    return Token.updateOne({address}, {$inc: {totalSupply: negatedValue}})
+    return Token.updateOne({ address }, { $inc: { totalSupply: negatedValue } })
   }
 
   token.getModel = () => {

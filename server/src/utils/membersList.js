@@ -4,12 +4,12 @@ const SimpleListABI = require('@constants/abi/SimpleList.json')
 const homeAddresses = config.get('web3.addresses.fuse')
 const mongoose = require('mongoose')
 const Bridge = mongoose.model('Bridge')
-const {handleReceipt} = require('@events/handlers')
-const {web3, from, send} = require('@services/web3/home')
+const { handleReceipt } = require('@events/handlers')
+const { web3, from, send } = require('@services/web3/home')
 
 const deployMembersList = async (token, nonces) => {
   console.log('Deploying members list')
-  const {homeTokenAddress} = await Bridge.findOne({foreignTokenAddress: token.address})
+  const { homeTokenAddress } = await Bridge.findOne({ foreignTokenAddress: token.address })
 
   const SimpleListFactoryContract = new web3.eth.Contract(SimpleListFactoryABI, homeAddresses.SimpleListFactory)
 

@@ -4,14 +4,14 @@ const HomeBridgeFactoryABI = require('@constants/abi/HomeBridgeFactory.json')
 const BridgeMapperABI = require('@constants/abi/BridgeMapper.json')
 const foreignAddressess = require('@utils/network').addresses
 const homeAddresses = config.get('web3.addresses.fuse')
-const {fetchGasPrice, isZeroAddress} = require('@utils/network')
-const {handleReceipt} = require('@events/handlers')
+const { fetchGasPrice, isZeroAddress } = require('@utils/network')
+const { handleReceipt } = require('@events/handlers')
 const home = require('@services/web3/home')
 const foreign = require('@services/web3/foreign')
 
 const TOKEN_DECIMALS = 18
 
-async function deployForeignBridge (token, {web3, from, send}) {
+async function deployForeignBridge (token, { web3, from, send }) {
   console.log('Deploying foreign bridge using factory')
   const foreignFactory = new web3.eth.Contract(ForeignBridgeFactoryABI, foreignAddressess.ForeignBridgeFactory)
 
@@ -35,7 +35,7 @@ async function deployForeignBridge (token, {web3, from, send}) {
   return result
 }
 
-async function deployHomeBridge (token, {web3, from, send}) {
+async function deployHomeBridge (token, { web3, from, send }) {
   console.log('Deploying home bridge using factory')
 
   const homeFactory = new web3.eth.Contract(HomeBridgeFactoryABI, homeAddresses.HomeBridgeFactory, {
@@ -69,7 +69,7 @@ async function addBridgeMapping (
   homeBridge,
   foreignBlockNumber,
   homeBlockNumber,
-  {web3, from, send}) {
+  { web3, from, send }) {
   console.log('Add bridge mapping')
 
   const mapper = new web3.eth.Contract(BridgeMapperABI, homeAddresses.BridgeMapper, {

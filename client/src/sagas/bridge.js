@@ -1,20 +1,20 @@
 import { call, all, put, select, delay } from 'redux-saga/effects'
 
-import {apiCall, createEntityPut, tryTakeEvery} from './utils'
-import {getContract} from 'services/contract'
-import {zeroAddressToNull} from 'utils/web3'
-import {getAccountAddress} from 'selectors/accounts'
-import {getBlockNumber, getAddress} from 'selectors/network'
-import {transactionFlow} from './transaction'
+import { apiCall, createEntityPut, tryTakeEvery } from './utils'
+import { getContract } from 'services/contract'
+import { zeroAddressToNull } from 'utils/web3'
+import { getAccountAddress } from 'selectors/accounts'
+import { getBlockNumber, getAddress } from 'selectors/network'
+import { transactionFlow } from './transaction'
 import * as actions from 'actions/bridge'
 import * as api from 'services/api/token'
 
 const entityPut = createEntityPut(actions.entityName)
 
-export function * fetchHomeToken ({foreignTokenAddress}) {
+export function * fetchHomeToken ({ foreignTokenAddress }) {
   const contractAddress = yield select(getAddress, 'BridgeMapper')
-  const options = {bridgeType: 'home'}
-  const bridgeMapperContract = getContract({abiName: 'BridgeMapper', address: contractAddress, options})
+  const options = { bridgeType: 'home' }
+  const bridgeMapperContract = getContract({ abiName: 'BridgeMapper', address: contractAddress, options })
   const homeTokenAddress = yield bridgeMapperContract.methods.homeTokenByForeignToken(foreignTokenAddress).call()
 
   yield entityPut({
@@ -26,10 +26,10 @@ export function * fetchHomeToken ({foreignTokenAddress}) {
   })
 }
 
-export function * fetchHomeBridge ({foreignTokenAddress}) {
+export function * fetchHomeBridge ({ foreignTokenAddress }) {
   const contractAddress = yield select(getAddress, 'BridgeMapper')
-  const options = {bridgeType: 'home'}
-  const bridgeMapperContract = getContract({abiName: 'BridgeMapper', address: contractAddress, options})
+  const options = { bridgeType: 'home' }
+  const bridgeMapperContract = getContract({ abiName: 'BridgeMapper', address: contractAddress, options })
   const homeBridgeAddress = yield bridgeMapperContract.methods.homeBridgeByForeignToken(foreignTokenAddress).call()
 
   yield entityPut({
@@ -41,10 +41,10 @@ export function * fetchHomeBridge ({foreignTokenAddress}) {
   })
 }
 
-export function * fetchForeignBridge ({foreignTokenAddress}) {
+export function * fetchForeignBridge ({ foreignTokenAddress }) {
   const contractAddress = yield select(getAddress, 'BridgeMapper')
-  const options = {bridgeType: 'home'}
-  const bridgeMapperContract = getContract({abiName: 'BridgeMapper', address: contractAddress, options})
+  const options = { bridgeType: 'home' }
+  const bridgeMapperContract = getContract({ abiName: 'BridgeMapper', address: contractAddress, options })
   const foreignBridgeAddress = yield bridgeMapperContract.methods.foreignBridgeByForeignToken(foreignTokenAddress).call()
 
   yield entityPut({
@@ -56,8 +56,8 @@ export function * fetchForeignBridge ({foreignTokenAddress}) {
   })
 }
 
-export function * deployBridge ({foreignTokenAddress}) {
-  const response = yield apiCall(api.deployBridge, {foreignTokenAddress})
+export function * deployBridge ({ foreignTokenAddress }) {
+  const response = yield apiCall(api.deployBridge, { foreignTokenAddress })
 
   yield entityPut({
     type: actions.DEPLOY_BRIDGE.SUCCESS,
@@ -69,28 +69,28 @@ export function * deployBridge ({foreignTokenAddress}) {
   })
 }
 
-function * transferToHome ({foreignTokenAddress, foreignBridgeAddress, value, confirmationsLimit}) {
+function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, confirmationsLimit }) {
   const accountAddress = yield select(getAccountAddress)
-  const basicToken = getContract({abiName: 'BasicToken', address: foreignTokenAddress})
+  const basicToken = getContract({ abiName: 'BasicToken', address: foreignTokenAddress })
 
   const transactionPromise = basicToken.methods.transfer(foreignBridgeAddress, value).send({
     from: accountAddress
   })
 
   const action = actions.TRANSFER_TO_HOME
-  yield call(transactionFlow, {transactionPromise, action, confirmationsLimit})
+  yield call(transactionFlow, { transactionPromise, action, confirmationsLimit })
 }
 
-function * transferToForeign ({homeTokenAddress, homeBridgeAddress, value, confirmationsLimit}) {
+function * transferToForeign ({ homeTokenAddress, homeBridgeAddress, value, confirmationsLimit }) {
   const accountAddress = yield select(getAccountAddress)
-  const basicToken = getContract({abiName: 'BasicToken', address: homeTokenAddress})
+  const basicToken = getContract({ abiName: 'BasicToken', address: homeTokenAddress })
 
   const transactionPromise = basicToken.methods.transfer(homeBridgeAddress, value).send({
     from: accountAddress
   })
 
   const action = actions.TRANSFER_TO_FOREIGN
-  yield call(transactionFlow, {transactionPromise, action, confirmationsLimit})
+  yield call(transactionFlow, { transactionPromise, action, confirmationsLimit })
 }
 
 const getRelayEventByTransactionHash = (events, transactionHash) => {
@@ -101,9 +101,9 @@ const getRelayEventByTransactionHash = (events, transactionHash) => {
   }
 }
 
-function * pollForBridgeEvent ({bridgeContract, transactionHash, fromBlock, eventName}) {
+function * pollForBridgeEvent ({ bridgeContract, transactionHash, fromBlock, eventName }) {
   while (true) {
-    const events = yield bridgeContract.getPastEvents(eventName, {fromBlock})
+    const events = yield bridgeContract.getPastEvents(eventName, { fromBlock })
     const bridgeEvent = getRelayEventByTransactionHash(events, transactionHash)
 
     if (bridgeEvent) {
@@ -114,13 +114,13 @@ function * pollForBridgeEvent ({bridgeContract, transactionHash, fromBlock, even
   }
 }
 
-function * watchForeignBridge ({foreignBridgeAddress, transactionHash}) {
+function * watchForeignBridge ({ foreignBridgeAddress, transactionHash }) {
   const foreignNetwork = yield select(state => state.network.foreignNetwork)
   const fromBlock = yield select(getBlockNumber, foreignNetwork)
-  const options = {bridgeType: 'foreign'}
-  const bridgeContract = getContract({abiName: 'BasicForeignBridge', address: foreignBridgeAddress, options})
+  const options = { bridgeType: 'foreign' }
+  const bridgeContract = getContract({ abiName: 'BasicForeignBridge', address: foreignBridgeAddress, options })
 
-  const relayEvent = yield pollForBridgeEvent({bridgeContract, transactionHash, fromBlock, eventName: 'RelayedMessage'})
+  const relayEvent = yield pollForBridgeEvent({ bridgeContract, transactionHash, fromBlock, eventName: 'RelayedMessage' })
 
   yield put({
     type: actions.WATCH_FOREIGN_BRIDGE.SUCCESS,
@@ -130,13 +130,13 @@ function * watchForeignBridge ({foreignBridgeAddress, transactionHash}) {
   })
 }
 
-function * watchHomeBridge ({homeBridgeAddress, transactionHash}) {
+function * watchHomeBridge ({ homeBridgeAddress, transactionHash }) {
   const homeNetwork = yield select(state => state.network.homeNetwork)
   const fromBlock = yield select(getBlockNumber, homeNetwork)
-  const options = {bridgeType: 'home'}
-  const bridgeContract = getContract({abiName: 'BasicHomeBridge', address: homeBridgeAddress, options})
+  const options = { bridgeType: 'home' }
+  const bridgeContract = getContract({ abiName: 'BasicHomeBridge', address: homeBridgeAddress, options })
 
-  const relayEvent = yield pollForBridgeEvent({bridgeContract, transactionHash, fromBlock, eventName: 'AffirmationCompleted'})
+  const relayEvent = yield pollForBridgeEvent({ bridgeContract, transactionHash, fromBlock, eventName: 'AffirmationCompleted' })
 
   yield put({
     type: actions.WATCH_HOME_BRIDGE.SUCCESS,

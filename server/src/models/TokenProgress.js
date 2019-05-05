@@ -4,12 +4,12 @@ module.exports = (mongoose) => {
   const Schema = mongoose.Schema
 
   const TokenProgressSchema = new Schema({
-    tokenAddress: {type: String, required: [true, "can't be blank"]},
-    steps: {type: Object, default: {}},
-    stepErrors: {type: Object}
-  }, {timestamps: true})
+    tokenAddress: { type: String, required: [true, "can't be blank"] },
+    steps: { type: Object, default: {} },
+    stepErrors: { type: Object }
+  }, { timestamps: true })
 
-  TokenProgressSchema.index({tokenAddress: 1}, {unique: true})
+  TokenProgressSchema.index({ tokenAddress: 1 }, { unique: true })
 
   TokenProgressSchema.set('toJSON', {
     versionKey: false

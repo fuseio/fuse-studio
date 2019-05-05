@@ -15,7 +15,7 @@ utils.getLastBlockNumber = async (conditions) => {
 utils.addNewEvent = async (data) => {
   const block = await web3.eth.getBlock(data.blockNumber)
   const timestamp = block.timestamp * 1000
-  return event.create({...data, timestamp})
+  return event.create({ ...data, timestamp })
 }
 
 module.exports = utils

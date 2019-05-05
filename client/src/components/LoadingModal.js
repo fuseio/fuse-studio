@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Loader from 'components/Loader'
 import Modal from 'components/Modal'
 

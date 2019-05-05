@@ -1,17 +1,17 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects'
-import {getContract} from 'services/contract'
-import {getAddress} from 'selectors/network'
+import { getContract } from 'services/contract'
+import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
-import {DEPLOY_BRIDGE} from 'actions/bridge'
-import {ADD_USER} from 'actions/user'
-import {CREATE_LIST} from 'actions/directory'
-import {createMetadata} from 'sagas/metadata'
-import {getAccountAddress} from 'selectors/accounts'
+import { DEPLOY_BRIDGE } from 'actions/bridge'
+import { ADD_USER } from 'actions/user'
+import { CREATE_LIST } from 'actions/directory'
+import { createMetadata } from 'sagas/metadata'
+import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
-import {processReceipt} from 'services/api/misc'
-import {transactionSucceeded} from 'actions/transactions'
-import {apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch} from './utils'
-import {transactionFlow} from './transaction'
+import { processReceipt } from 'services/api/misc'
+import { transactionSucceeded } from 'actions/transactions'
+import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './utils'
+import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import web3 from 'services/web3'
 
@@ -25,7 +25,7 @@ export const fetchTokenList = createEntitiesFetch(actions.FETCH_TOKEN_LIST, api.
 
 function * fetchClnToken () {
   const tokenAddress = yield select(getAddress, 'ColuLocalNetwork')
-  const ColuLocalNetworkContract = getContract({abiName: 'ColuLocalNetwork', address: tokenAddress})
+  const ColuLocalNetworkContract = getContract({ abiName: 'ColuLocalNetwork', address: tokenAddress })
 
   const calls = {
     name: call(ColuLocalNetworkContract.methods.name().call),
@@ -36,7 +36,7 @@ function * fetchClnToken () {
 
   const response = yield all(calls)
 
-  yield entityPut({type: actions.FETCH_CLN_TOKEN.SUCCESS,
+  yield entityPut({ type: actions.FETCH_CLN_TOKEN.SUCCESS,
     address: tokenAddress,
     response: {
       ...response,
@@ -45,10 +45,10 @@ function * fetchClnToken () {
   })
 }
 
-export function * createToken ({name, symbol, totalSupply, tokenURI, tokenType}) {
+export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType }) {
   const tokenFactoryAddress = yield select(getAddress, 'TokenFactory')
 
-  const TokenFactoryContract = getContract({abiName: 'TokenFactory',
+  const TokenFactoryContract = getContract({ abiName: 'TokenFactory',
     address: tokenFactoryAddress
   })
   const accountAddress = yield select(getAccountAddress)
@@ -62,7 +62,7 @@ export function * createToken ({name, symbol, totalSupply, tokenURI, tokenType})
     ).send({
       from: accountAddress
     })
-    const receipt = yield transactionFlow({transactionPromise, action: actions.CREATE_TOKEN})
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN })
 
     return receipt
   } else if (tokenType === 'mintableBurnable') {
@@ -74,31 +74,31 @@ export function * createToken ({name, symbol, totalSupply, tokenURI, tokenType})
     ).send({
       from: accountAddress
     })
-    const receipt = yield transactionFlow({transactionPromise, action: actions.CREATE_TOKEN})
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN })
 
     return receipt
   }
 }
 
-function * createTokenWithMetadata ({tokenData, metadata, tokenType, steps}) {
-  const {hash} = yield call(createMetadata, {metadata})
+function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
+  const { hash } = yield call(createMetadata, { metadata })
   const tokenURI = `ipfs://${hash}`
-  const receipt = yield call(createToken, {...tokenData, tokenURI, tokenType})
+  const receipt = yield call(createToken, { ...tokenData, tokenURI, tokenType })
 
-  yield apiCall(processReceipt, {receipt})
+  yield apiCall(processReceipt, { receipt })
 
-  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, {steps}))
+  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps }))
 }
 
 function * deployChosenContracts ({ response: { steps, receipt } }) {
   const tokenAddress = receipt.events[0].address
-  yield apiCall(api.deployChosenContracts, {tokenAddress, steps})
+  yield apiCall(api.deployChosenContracts, { tokenAddress, steps })
 }
 
-function * fetchTokenStatistics ({tokenAddress, activityType, interval}) {
-  const response = yield apiCall(api.fetchTokenStatistics, {tokenAddress, activityType, interval})
+function * fetchTokenStatistics ({ tokenAddress, activityType, interval }) {
+  const response = yield apiCall(api.fetchTokenStatistics, { tokenAddress, activityType, interval })
 
-  const {data} = response
+  const { data } = response
 
   yield put({
     type: actions.FETCH_TOKEN_STATISTICS.SUCCESS,
@@ -108,8 +108,8 @@ function * fetchTokenStatistics ({tokenAddress, activityType, interval}) {
   })
 }
 
-function * fetchTokenProgress ({tokenAddress}) {
-  const response = yield apiCall(api.fetchTokenProgress, {tokenAddress})
+function * fetchTokenProgress ({ tokenAddress }) {
+  const response = yield apiCall(api.fetchTokenProgress, { tokenAddress })
 
   yield put({
     type: actions.FETCH_TOKEN_PROGRESS.SUCCESS,
@@ -120,8 +120,8 @@ function * fetchTokenProgress ({tokenAddress}) {
   })
 }
 
-function * fetchDeployProgress ({tokenAddress}) {
-  const response = yield apiCall(api.fetchTokenProgress, {tokenAddress: tokenAddress.tokenAddress})
+function * fetchDeployProgress ({ tokenAddress }) {
+  const response = yield apiCall(api.fetchTokenProgress, { tokenAddress: tokenAddress.tokenAddress })
 
   const { data } = response
   const { steps, stepErrors } = data
@@ -136,19 +136,19 @@ function * fetchDeployProgress ({tokenAddress}) {
   })
 }
 
-function * transferToken ({tokenAddress, to, value}) {
+function * transferToken ({ tokenAddress, to, value }) {
   const accountAddress = yield select(getAccountAddress)
-  const contract = getContract({abiName: 'BasicToken', address: tokenAddress})
+  const contract = getContract({ abiName: 'BasicToken', address: tokenAddress })
 
   const transactionPromise = contract.methods.transfer(to, value).send({
     from: accountAddress
   })
 
   const action = actions.TRANSFER_TOKEN
-  yield call(transactionFlow, {transactionPromise, action, sendReceipt: true, tokenAddress})
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
 }
 
-function * mintToken ({tokenAddress, value}) {
+function * mintToken ({ tokenAddress, value }) {
   const accountAddress = yield select(getAccountAddress)
   const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress)
 
@@ -157,10 +157,10 @@ function * mintToken ({tokenAddress, value}) {
   })
 
   const action = actions.MINT_TOKEN
-  yield call(transactionFlow, {transactionPromise, action, sendReceipt: true, tokenAddress})
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
 }
 
-function * burnToken ({tokenAddress, value}) {
+function * burnToken ({ tokenAddress, value }) {
   const accountAddress = yield select(getAccountAddress)
   const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress)
 
@@ -169,10 +169,10 @@ function * burnToken ({tokenAddress, value}) {
   })
 
   const action = actions.BURN_TOKEN
-  yield call(transactionFlow, {transactionPromise, action, sendReceipt: true, tokenAddress})
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
 }
 
-function * watchTokenChanges ({response}) {
+function * watchTokenChanges ({ response }) {
   yield put(actions.fetchToken(response.tokenAddress))
 }
 

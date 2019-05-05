@@ -1,13 +1,13 @@
 import { call, put, fork, take } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import {processReceipt} from 'services/api/misc'
-import {apiCall} from './utils'
+import { processReceipt } from 'services/api/misc'
+import { apiCall } from './utils'
 
-import {transactionPending, transactionConfirmed, transactionFailed, transactionSucceeded} from 'actions/transactions'
+import { transactionPending, transactionConfirmed, transactionFailed, transactionSucceeded } from 'actions/transactions'
 
-export function * transactionFlow ({transactionPromise, action, confirmationsLimit, sendReceipt, tokenAddress}) {
+export function * transactionFlow ({ transactionPromise, action, confirmationsLimit, sendReceipt, tokenAddress }) {
   if (confirmationsLimit) {
-    yield fork(transactionConfirmations, {transactionPromise, action, confirmationsLimit})
+    yield fork(transactionConfirmations, { transactionPromise, action, confirmationsLimit })
   }
 
   const transactionHash = yield new Promise((resolve, reject) => {
@@ -29,10 +29,10 @@ export function * transactionFlow ({transactionPromise, action, confirmationsLim
   }
 
   if (sendReceipt) {
-    yield apiCall(processReceipt, {receipt})
+    yield apiCall(processReceipt, { receipt })
   }
 
-  yield put(transactionSucceeded(action, receipt, {tokenAddress}))
+  yield put(transactionSucceeded(action, receipt, { tokenAddress }))
 
   return receipt
 }
@@ -40,7 +40,7 @@ export function * transactionFlow ({transactionPromise, action, confirmationsLim
 function createConfirmationChannel (transactionPromise) {
   return eventChannel(emit => {
     const func = (confirmationNumber, receipt) => {
-      emit({receipt, confirmationNumber})
+      emit({ receipt, confirmationNumber })
     }
 
     const emitter = transactionPromise.on('confirmation', func)
@@ -52,12 +52,12 @@ function createConfirmationChannel (transactionPromise) {
   })
 }
 
-export function * transactionConfirmations ({confirmationsLimit, transactionPromise, action}) {
+export function * transactionConfirmations ({ confirmationsLimit, transactionPromise, action }) {
   const confirmationChannel = yield call(createConfirmationChannel, transactionPromise)
 
   let isWaiting = true
   while (isWaiting) {
-    const {receipt, confirmationNumber} = yield take(confirmationChannel)
+    const { receipt, confirmationNumber } = yield take(confirmationChannel)
     yield put(transactionConfirmed(action, receipt, confirmationNumber))
     if (confirmationNumber > confirmationsLimit) {
       confirmationChannel.close()
