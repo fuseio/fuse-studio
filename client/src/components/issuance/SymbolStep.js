@@ -23,23 +23,24 @@ export default class SymbolStep extends Component {
 
   render () {
     return (
-      <div className='step-content-symbol'>
-        <h2 className='step-symbol-title'>{'\'' + this.props.communityName + '\''}</h2>
-        <h2 className='step-content-title'>Currency Symbol</h2>
-        <div className='step-content-symbol-field'>
+      <div className='symbol'>
+        <h2 className='symbol__title'>Currency Symbol</h2>
+        <h2 className='symbol__title symbol__title--name'>{this.props.communityName}</h2>
+        <div className='symbol__field'>
           <TextInput
-            className='step-community-symbol'
             id='communitySymbol'
             type='text'
             autoFocus
+            autoComplete='off'
             maxLength='4'
+            minLength='2'
             defaultValue={this.state.customSymbol}
             onChange={this.handleChangeCustomSymbol}
           />
         </div>
         <button
           className='button button--big'
-          disabled={this.props.communitySymbol.length < 3 || this.state.customSymbol.length < 3}
+          disabled={this.props.communitySymbol.length < 2 || this.state.customSymbol.length < 2}
           onClick={this.setNextStep}
         >
           NEXT<FontAwesome name='angle-right' className='symbol-icon' />

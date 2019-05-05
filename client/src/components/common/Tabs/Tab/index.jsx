@@ -20,14 +20,15 @@ class Tab extends Component {
       props: {
         activeTab,
         label,
-        flexBasis
+        flexBasis,
+        className
       }
     } = this
 
     return (
       <li
         style={{ flexBasis }}
-        className={classNames('tab__item', { 'tab__item--active': activeTab === label })}
+        className={classNames(`tab__item`, { 'tab__item--active': activeTab === label }, { [className]: className })}
         onClick={onClick}
       >
         <span>{label}</span>

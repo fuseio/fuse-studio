@@ -133,9 +133,16 @@
 			z-index: 2;
 			> span {
 				background: $color-white;
-				color: $color-filter-text;
+				color: $color-primary-dark;
 				box-shadow: 0px -7px 10px -6.3px rgba(0, 0, 0, 0.2);
+			}
+		}
 
+		@include modifier(loader) {
+			z-index: 2;
+			> span {
+				background: rgba(5, 40, 62, 0.97);
+				color: $color-white;
 			}
 		}
 	}
@@ -195,11 +202,353 @@
 		}
 }
 
-.hide {
-	display: none;
-	//opacity:0 !important;
+@include block(button-flip) {
+	transition: .8s cubic-bezier(.775, .07, .575, .995);
+	transform-style: preserve-3d;
+	border-radius: 20.5px;
+
+	@include element(wrapper) {
+		position: relative;
+	}
+
+	@include modifier(active) {
+		&:hover {
+			transform: rotateX(180deg);
+		}
+	}
+
+	@include modifier(disabled) {
+		pointer-events: none;
+	}
+
+	> button {
+		width: 105px;
+		height: 42px;
+		display: inline-block;
+		outline: none;
+		line-height: 42px;
+		font-size: 13px;
+		cursor: pointer;
+		font-weight: bold;
+		border: none;
+	}
+
+	@include element(front) {
+		border-radius: inherit;
+		background-color: $color-ropsten;
+		color: #fff;
+		backface-visibility: hidden;
+		z-index: 2;
+		transform: rotateX(0deg);
+		position: absolute;
+
+		&:disabled,
+		&[disabled] {
+			pointer-events: none;
+			opacity: 0.3;
+			color: $color-white;
+			cursor: not-allowed;
+		}
+
+		&:hover {
+			background-color: darken($color-ropsten, 10%);
+		}
+	}
+
+	@include element(back) {
+		border-radius: inherit;
+		background-color: #e4e4e4;
+		color: $color-primary-dark;
+		backface-visibility: hidden;
+		transform: rotateX(-180deg);
+		position: relative;
+	
+		> a {
+			margin-right: 5px;
+			display: inline-block;
+			width: 13px;
+			height: 12px;
+			background-position: center;
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
+	}
 }
 
+@include block(congratulation) {
+	@include xy-grid(vertical, false);
+	@include flex-align(center, middle);
+	position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: $color-white;
+  z-index: 5;
+  font-family: $font-family;
+	border-radius: 10px;
+	color: $color-primary-dark;
+	text-align: center;
+	padding: 20px 70px;
+
+	@include element(title) {
+		font-size: 1.250em;
+		font-weight: bold;
+		line-height: 1.25;
+	}
+
+	@include element(sub-title) {
+		font-size: 1.250em;
+		font-weight: 500;
+		line-height: 1.65;
+	}
+
+	@include element(what) {
+		font-size: 1em;
+    line-height: 1.25;
+		margin: 1em 0;
+	}
+
+	@include element(text) {
+		font-size: 0.813em;
+    line-height: 1.35;
+	}
+
+	@include element(btn) {
+		margin-top: 1.5em;
+		> button {
+			width: auto;
+			font-size: 0.875em;
+			text-transform: uppercase;
+			padding: 0 1em;
+		}
+	}
+}
+
+@include block(status) {
+	@include xy-grid(vertical, false);
+	@include flex-align(center, middle);
+	position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: $color-white;
+  z-index: 5;
+  font-family: $font-family;
+	border-radius: 0 0 10px 10px;
+
+	@include modifier(radius-all) {
+		border-radius: 10px;		
+	}
+
+	@include modifier(dark) {
+		background-color: rgba(5, 40, 62, 0.97);
+	}
+
+  @include element(title) {
+    font-size: 1.250em;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.5px;
+		
+		@include modifier(white) {
+			color: $color-white;
+		}
+
+		@include element(dark) {
+			color: $color-primary-dark;
+		}
+	}
+
+	@include element(sub-title) {
+    font-size: 1.125em;
+    font-weight: normal;
+		margin-top: 15px;
+		
+		@include modifier(white) {
+			color: $color-white;
+		}
+
+		@include element(dark) {
+			color: $color-primary-dark;
+		}
+	}
+
+  @include element(icon) {
+    margin: 1em auto;
+    font-size: 20px;
+	}
+
+	@include element(loader) {
+		display: inline-block;
+		span {
+      animation-name: blink;
+      animation-duration: 1.4s;
+      animation-iteration-count: infinite;
+      animation-fill-mode: both;
+      &:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      &:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+		}
+		
+		@include element(img) {
+			width: 40px;
+			height: 40px;
+			margin-top: 15px;
+
+			> img {
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: contain;
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+
+  .fa-close {
+    color: $color-red;
+  }
+  .fa-check {
+    color: $color-ropsten;
+	}
+	
+	@include element(button) {
+		margin: 40px 0 0px;
+  
+		> button {
+			display: inline-block;
+			border-radius: 30px;
+			background-color: $color-ropsten;
+			font-size: .8em;
+			color: $color-white;
+			// padding: 10px 30px;
+			width: 84px;
+			height: 32px;
+			text-transform: uppercase;
+			border: none;
+			font-weight: bold;
+			.symbol-icon {
+				margin-left: 5px;
+			}
+			&:focus,
+			&:active,
+			&:focus:active {
+				outline: none;
+			}
+			&:hover {
+				background-color: darken($color-ropsten, 10%);
+				cursor: pointer;
+			}
+			&[disabled] {
+				color: #fff;
+				cursor: not-allowed;
+				background-color: lighten($color-ropsten, 20%) !important;
+			}
+		}
+	}
+}
+
+.bridge-deploying {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(5, 40, 62, 0.8);
+  z-index: 5;
+  border-radius: 10px;
+  font-family: $font-family;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  &-text {
+    color: $color-white;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.5px;
+    span {
+      animation-name: blink;
+      animation-duration: 1.4s;
+      animation-iteration-count: infinite;
+      animation-fill-mode: both;
+      &:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      &:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+    }
+  }
+  &-confirmation {
+    color: $color-white;
+    font-size: 18px;
+    font-weight: normal;
+    margin-top: 15px;
+  }
+}
+
+@keyframes blink {
+	0% {
+		opacity: 0.2;
+	}
+	20% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.2;
+	}
+}
+
+@keyframes lds-rolling {
+  0% {
+    -webkit-transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@-webkit-keyframes lds-rolling {
+  0% {
+    -webkit-transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@include block(input-error) {
+	display: block;
+	position: absolute;
+	bottom: -1em;
+	color: $color-red;
+	font-size: 0.7em;
+	line-height: 1.25;
+
+	@include modifier(bold) {
+			font-weight: bold;
+	}
+
+	&:not(:first-child) {
+			margin-top: 5px;
+	}
+
+	&:not(:last-child) {
+			margin-bottom: 5px;
+	}
+}
 
 .flex {
 	@include flex-box();

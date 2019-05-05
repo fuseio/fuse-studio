@@ -5,7 +5,8 @@ module.exports = (mongoose) => {
 
   const TokenProgressSchema = new Schema({
     tokenAddress: {type: String, required: [true, "can't be blank"]},
-    steps: {type: Object, default: {}}
+    steps: {type: Object, default: {}},
+    stepErrors: {type: Object}
   }, {timestamps: true})
 
   TokenProgressSchema.index({tokenAddress: 1}, {unique: true})

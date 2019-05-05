@@ -14,6 +14,11 @@ module.exports = (mongoose) => {
   BridgeSchema.index({foreignTokenAddress: 1}, {unique: true})
   BridgeSchema.index({homeTokenAddress: 1}, {unique: true})
 
+  BridgeSchema.post('save', bridge => {
+    const {bridgeDeployed} = require('@utils/tokenProgress')
+    bridgeDeployed(bridge.foreignTokenAddress)
+  })
+
   const Bridge = mongoose.model('Bridge', BridgeSchema)
 
   function bridge () {}

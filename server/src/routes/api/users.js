@@ -17,7 +17,7 @@ router.post('/', auth.required, async (req, res) => {
   const results = await user.save()
 
   const token = await Token.findOne({address: tokenAddress})
-  sendgridUtils.sendWelcomeMail(user, token)
+  sendgridUtils.sendWelcomeMail(user, token.toJSON())
 
   if (user.subscribe) {
     sendgridUtils.subscribeUser(user)

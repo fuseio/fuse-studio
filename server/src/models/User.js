@@ -1,7 +1,7 @@
 const validator = require('validator')
 const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
-const detailsGiven = require('@utils/tokenProgress').detailsGiven
+const {detailsGiven} = require('@utils/tokenProgress')
 
 const handleDetailsGiven = async (user) => {
   const tokens = await Token.find({owner: user.accountAddress}).lean().exec()

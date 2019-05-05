@@ -144,7 +144,7 @@ class Bridge extends Component {
                       <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={this.setTransferAmount} disabled={transferStatus} />
                       <div className='dashboard-transfer-form-currency'>{this.props.token.symbol}</div>
                     </div>
-                    <button disabled={transferStatus || !Number(transferAmount) || !accountAddress || new BigNumber(transferAmount).toFormat(2, 1) > formatted}
+                    <button disabled={transferStatus || !Number(transferAmount) || !accountAddress || BigNumber(transferAmount).multipliedBy(1e18).isGreaterThan(new BigNumber(balance))}
                       className='dashboard-transfer-btn' onClick={this.handleTransfer}>
                       {transferStatus || `Transfer to ${bridgeStatus.to.network}`}
                     </button>

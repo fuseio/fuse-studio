@@ -8,7 +8,8 @@
 @import 'mixins';
 
 /*-------Helpers----------*/
-
+@import 'foundation/foundation';
+@import 'foundation/utils';
 @import 'components/placeholders/placeholders';
 @import 'elements';
 @import 'common';
@@ -28,11 +29,8 @@
 @import 'components/oven/SimpleExchangeModal';
 
 @import 'components/issuance/IssuanceBtn';
-@import 'components/issuance/IssuanceWizard';
-@import 'components/issuance/DetailsStep';
 
 @import 'components/issuance/SummaryStep';
-@import 'components/issuance/SymbolStep';
 @import 'components/issuance/IssuedPopup';
 
 @import 'components/dashboard/Dashboard';

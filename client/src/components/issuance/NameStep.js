@@ -2,26 +2,29 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import TextInput from 'components/elements/TextInput'
 
-const NameStep = ({communityName, handleChangeCommunityName, setNextStep}) => {
+const NameStep = ({ communityName, handleChangeCommunityName, setNextStep }) => {
   return (
-    <div className='step-content-community'>
-      <h2 className='step-content-title community-title'>Name your community</h2>
+    <div className='name'>
+      <h2 className='name__title'>Name your community</h2>
       <TextInput
-        className='step-community-name'
+        className='name__field'
         id='communityName'
         type='text'
+        autoComplete='off'
         placeholder='Type your community name...'
         value={communityName}
         maxLength='30'
         onChange={handleChangeCommunityName}
       />
-      <button
-        className='button button--normal'
-        disabled={communityName.length < 3}
-        onClick={setNextStep}
-      >
-        NEXT<FontAwesome className='next-icon' name='arrow-right' />
-      </button>
+      <div>
+        <button
+          className='button button--normal'
+          disabled={communityName.length < 3}
+          onClick={setNextStep}
+        >
+          NEXT<FontAwesome name='arrow-right' />
+        </button>
+      </div>
     </div>
   )
 }

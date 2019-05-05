@@ -1,4 +1,3 @@
-const bridgeDeployed = require('@utils/tokenProgress').bridgeDeployed
 const mongoose = require('mongoose')
 const Bridge = mongoose.model('Bridge')
 
@@ -10,7 +9,7 @@ const handleBridgeMappingUpdatedEvent = async (event) => {
   const foreignBridgeBlockNumber = event.returnValues.foreignStartBlock
   const homeBridgeBlockNumber = event.returnValues.homeStartBlock
 
-  await new Bridge({
+  return new Bridge({
     foreignTokenAddress,
     homeTokenAddress,
     foreignBridgeAddress,
@@ -18,8 +17,6 @@ const handleBridgeMappingUpdatedEvent = async (event) => {
     foreignBridgeBlockNumber,
     homeBridgeBlockNumber
   }).save()
-
-  return bridgeDeployed(foreignTokenAddress)
 }
 
 module.exports = {

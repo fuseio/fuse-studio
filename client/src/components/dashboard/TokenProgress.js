@@ -18,22 +18,14 @@ const Step = ({done, text, handleClick}) => (
     onClick={done ? null : handleClick}
   >
     <FontAwesome name={classNames({'check': done, 'minus': !done})} /> <span className='progress-text-content'>{text}</span>
-  </div>)
+  </div>
+)
 
 class TokenProgress extends Component {
   componentDidMount () {
     this.props.fetchTokenProgress(this.props.match.params.address)
   }
-  loadPersonalDetailsModal = (steps) => {
-    if (!steps.detailsGiven) {
-      this.props.loadUserDataModal()
-    }
-  }
-  loadBridgeModal = (steps) => {
-    if (!steps.bridgeDeployed) {
-      this.props.loadBridgePopup()
-    }
-  }
+
   render () {
     const { token, networkType } = this.props
     const steps = this.props.steps
@@ -70,9 +62,9 @@ class TokenProgress extends Component {
           text='Community token deployed' />
         <Step done={steps.detailsGiven} handleClick={this.props.loadUserDataModal}
           text='Admin personal name given' />
-        <Step done={steps.bridgeDeployed} handleClick={this.props.loadBridgePopup}
+        <Step done={steps.bridge} handleClick={this.props.loadBridgePopup}
           text='Bridge to Fuse - chain deployed' />
-        <Step done={steps.businessListDeployed} handleClick={this.props.loadBusinessListPopup}
+        <Step done={steps.membersList} handleClick={this.props.loadBusinessListPopup}
           text='Business list deployed' />
         <Step done={false}
           text='White label wallet paired' />

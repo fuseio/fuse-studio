@@ -1,19 +1,20 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
+import { connect } from 'react-redux'
+import { BigNumber } from 'bignumber.js'
 import classNames from 'classnames'
-import {connect} from 'react-redux'
-import {BigNumber} from 'bignumber.js'
 import { nameToSymbol } from 'utils/format'
 import StepsIndicator from './StepsIndicator'
 import NameStep from './NameStep'
 import SymbolStep from './SymbolStep'
 import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
-import Bg from 'images/background_pattern.jpg'
-import {createTokenWithMetadata} from 'actions/token'
-import { PENDING } from 'actions/constants'
+import DeployProgress from './DeployProgress'
+import Contracts from './Contracts'
+import { createTokenWithMetadata, fetchDeployProgress } from 'actions/token'
 import ReactGA from 'services/ga'
+import Logo from 'components/Logo'
 
 class IssuanceWizard extends Component {
   state = {
@@ -25,7 +26,20 @@ class IssuanceWizard extends Component {
     totalSupply: '',
     communityLogo: {},
     stepPosition: {},
-    scrollPosition: 0
+    scrollPosition: 0,
+    contracts: {
+      bridge: {
+        label: 'Bridge to fuse',
+        checked: true,
+        key: 'bridge'
+      },
+      membersList: {
+        label: 'Members list',
+        checked: false,
+        key: 'membersList'
+      }
+    },
+    currentDeploy: 'tokenIssued'
   }
 
   componentDidMount () {
@@ -40,20 +54,13 @@ class IssuanceWizard extends Component {
     })
   }
 
-  componentDidUpdate (prevProps) {
-    if (this.props.receipt !== prevProps.receipt) {
-      const tokenAddress = this.props.receipt.events[0].address
-      this.props.history.push(`/view/dashboard/${this.props.foreignNetwork}/${tokenAddress}`)
-    }
-  }
-
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       switch (this.state.activeStep) {
         case 0: return this.state.communityName.length > 2 ? this.setNextStep() : null
         case 1: return this.setNextStep()
         case 2: return (this.state.customSupply !== '' || this.state.totalSupply !== '') &&
-        Object.keys(this.state.communityType).length !== 0 && this.state.communityLogo !== ''
+          Object.keys(this.state.communityType).length !== 0 && this.state.communityLogo !== ''
           ? this.setNextStep() : null
       }
     }
@@ -70,17 +77,26 @@ class IssuanceWizard extends Component {
       symbol: this.state.communitySymbol,
       totalSupply: new BigNumber(this.state.totalSupply).multipliedBy(1e18)
     }
-    const metadata = {communityLogo: this.state.communityLogo.name}
-    this.props.createTokenWithMetadata(tokenData, metadata, this.state.communityType.value)
+    const {contracts} = this.state
+    const steps = Object.keys(contracts)
+      .filter((contractName) => contracts[contractName].checked)
+      .reduce((steps, contractName) => {
+        steps = {
+          ...steps,
+          [contracts[contractName].key]: true
+        }
+        return steps
+      }, {})
+
+    const metadata = { communityLogo: this.state.communityLogo.name }
+    this.props.createTokenWithMetadata(tokenData, metadata, this.state.communityType.value, steps)
   }
 
-  handleScroll = () => this.setState({scrollPosition: window.scrollY})
-
-  setQuitIssuance = () => this.props.history.goBack()
+  handleScroll = () => this.setState({ scrollPosition: window.scrollY })
 
   handleChangeCommunityName = (event) => {
-    this.setState({communityName: event.target.value})
-    this.setState({communitySymbol: nameToSymbol(event.target.value)})
+    this.setState({ communityName: event.target.value })
+    this.setState({ communitySymbol: nameToSymbol(event.target.value) })
   }
 
   setPreviousStep = () =>
@@ -94,24 +110,52 @@ class IssuanceWizard extends Component {
     })
 
   handleChangeCommunitySymbol = (communitySymbol) => {
-    this.setState({communitySymbol})
+    this.setState({ communitySymbol })
   }
 
+  showMetamaskPopup = () => this.setIssuanceTransaction()
+
   setCommunityType = type =>
-    this.setState({communityType: type})
+    this.setState({ communityType: type })
 
   setTotalSupply = supply =>
-    this.setState({totalSupply: supply})
+    this.setState({ totalSupply: supply })
 
   setCommunityLogo = logo =>
-    this.setState({communityLogo: logo})
+    this.setState({ communityLogo: logo })
 
-  renderStepContent (activeStep, name, communityType, communityLogo) {
+  setContracts = ({ key, value, label }) => {
+    const {
+      contracts
+    } = this.state
+
+    this.setState({ contracts: { ...contracts, [key]: { ...contracts[key], checked: value } } })
+  }
+
+  renderStepContent = () => {
+    const {
+      transactionStatus,
+      createTokenSignature,
+      foreignNetwork,
+      history
+    } = this.props
+
+    const {
+      communityName,
+      communityType,
+      communityLogo,
+      activeStep,
+      communitySymbol,
+      totalSupply,
+      contracts,
+      currentDeploy
+    } = this.state
+
     switch (activeStep) {
       case 0:
         return (
           <NameStep
-            communityName={name}
+            communityName={communityName}
             handleChangeCommunityName={this.handleChangeCommunityName}
             setNextStep={this.setNextStep}
           />
@@ -119,99 +163,98 @@ class IssuanceWizard extends Component {
       case 1:
         return (
           <SymbolStep
-            communityName={name}
+            communityName={communityName}
             setNextStep={this.setNextStep}
             handleChangeCommunitySymbol={this.handleChangeCommunitySymbol}
-            communitySymbol={this.state.communitySymbol}
+            communitySymbol={communitySymbol}
           />
         )
       case 2:
         return (
           <DetailsStep
-            communityType={this.state.communityType}
+            networkType={foreignNetwork}
+            communityType={communityType}
             setCommunityType={this.setCommunityType}
-            totalSupply={this.state.totalSupply}
+            totalSupply={totalSupply}
             setTotalSupply={this.setTotalSupply}
-            communitySymbol={this.state.communitySymbol}
-            communityLogo={this.state.communityLogo}
+            communitySymbol={communitySymbol}
+            communityLogo={communityLogo}
             setCommunityLogo={this.setCommunityLogo}
             setNextStep={this.setNextStep}
           />
         )
       case 3:
         return (
+          <Contracts
+            contracts={contracts}
+            setContracts={this.setContracts}
+            setNextStep={this.setNextStep}
+          />
+        )
+      case 4:
+        return (
           <SummaryStep
-            communityName={name}
-            communityLogo={this.state.communityLogo.name}
-            totalSupply={this.state.totalSupply}
-            communitySymbol={this.state.communitySymbol}
+            networkType={foreignNetwork}
+            createTokenSignature={createTokenSignature}
+            contracts={contracts}
+            communityName={communityName}
+            communityLogo={communityLogo.name}
+            totalSupply={totalSupply}
+            communitySymbol={communitySymbol}
+            setNextStep={this.setNextStep}
             showPopup={this.showMetamaskPopup}
-            transactionStatus={this.props.transactionStatus}
+            transactionStatus={transactionStatus}
+          />
+        )
+      case 5:
+        return (
+          <DeployProgress
+            history={history}
+            contracts={contracts}
+            currentDeploy={currentDeploy}
           />
         )
     }
   }
 
-  showMetamaskPopup = () => {
-    this.setIssuanceTransaction()
-  }
-
   render () {
-    const steps = ['Name', 'Symbol', 'Details', 'Summary']
-    const stepIndicatorInset = 55
-    const issuanceControlClassStyle = classNames({
-      'issuance-control': true,
-      'issuance-control-sticky': (this.state.scrollPosition > this.state.stepPosition - stepIndicatorInset)
-    })
-    const stepsIndicatorClassStyle = classNames({
-      'steps-indicator': true,
-      'step-sticky': (this.state.scrollPosition > this.state.stepPosition - stepIndicatorInset)
-    })
-    const stepsContainerClassStyle = classNames({
-      'steps-container': true,
-      'step-with-sticky': (this.state.scrollPosition > this.state.stepPosition - stepIndicatorInset)
-    })
+    const { history, foreignNetwork } = this.props
+    const steps = ['Name', 'Symbol', 'Attributes', 'Contracts', 'Summary']
+
     return (
-      <div className='issuance-form-wrapper' ref={wrapper => (this.wrapper = wrapper)}>
-        <div className='issuance-container'>
-          <div className={issuanceControlClassStyle}>
-            {this.state.activeStep > 0 && <button
-              className='prev-button ctrl-btn'
-              onClick={this.setPreviousStep}
-            >
-              <FontAwesome className='ctrl-icon' name='arrow-left' />
-              <span className='btn-text'>Back</span>
-            </button>}
-            <button
-              className='quit-button ctrl-btn'
-              onClick={this.setQuitIssuance}
-              disabled={this.props.transactionStatus === PENDING}
-            >
-              <FontAwesome className='ctrl-icon' name='times' />
-              <span className='btn-text'>Quit</span>
-            </button>
+      <div className={classNames(`issuance-${foreignNetwork}__wrapper`)}>
+        <div className={classNames(`issuance-${foreignNetwork}__header grid-x align-middle align-justify`)}>
+          <div onClick={() => history.push('/')} className={classNames(`issuance-${foreignNetwork}__header__logo grid-x align-middle`)}>
+            <Logo />
           </div>
-          <div className={stepsContainerClassStyle} style={{backgroundImage: `url(${Bg})`}}>
-            <div className={stepsIndicatorClassStyle} ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
-              <StepsIndicator
-                steps={steps}
-                activeStep={this.state.activeStep}
-              />
+          <div className={classNames(`issuance-${foreignNetwork}__header__indicators grid-x cell align-center`)} ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
+            <div className='grid-y cell auto'>
+              <h4 className={classNames(`issuance-${foreignNetwork}__header__current`)}>{steps[this.state.activeStep] || steps[this.state.activeStep - 1]}</h4>
+              <div className='grid-x align-center'>
+                <StepsIndicator
+                  network={foreignNetwork}
+                  steps={steps}
+                  activeStep={this.state.activeStep}
+                />
+              </div>
             </div>
           </div>
-          <div className='step-content'>
-            {this.renderStepContent(
-              this.state.activeStep,
-              this.state.communityName,
-              this.state.communityType,
-              this.state.communityLogo
-            )}
-            {this.state.activeStep > 0 && <div className='text-center'>
-              <button
-                className='back-btn'
-                onClick={this.setPreviousStep}>Back</button>
-            </div>}
+          <div onClick={() => history.push('/')} className={classNames(`issuance-${foreignNetwork}__header__close grid-x align-middle align-right`)}>
+            <FontAwesome name='times' />
           </div>
+        </div>
+        <div className={classNames(`issuance-${foreignNetwork}__wizard`)}>
+          {this.renderStepContent()}
+          {
+            this.state.activeStep > 0 && this.state.activeStep < 5 && (
+              <div className='text-center'>
+                <button
+                  className={classNames(`issuance-${foreignNetwork}__wizard__back`)}
+                  onClick={this.setPreviousStep}>Back
+                </button>
+              </div>
+            )
+          }
         </div>
       </div>
     )
@@ -230,7 +273,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  createTokenWithMetadata
+  createTokenWithMetadata,
+  fetchDeployProgress
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(IssuanceWizard)

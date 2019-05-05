@@ -1,5 +1,4 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects'
-
 import {getContract} from 'services/contract'
 import {getAddress} from 'selectors/network'
 import * as actions from 'actions/token'
@@ -81,14 +80,19 @@ export function * createToken ({name, symbol, totalSupply, tokenURI, tokenType})
   }
 }
 
-function * createTokenWithMetadata ({tokenData, metadata, tokenType}) {
+function * createTokenWithMetadata ({tokenData, metadata, tokenType, steps}) {
   const {hash} = yield call(createMetadata, {metadata})
   const tokenURI = `ipfs://${hash}`
   const receipt = yield call(createToken, {...tokenData, tokenURI, tokenType})
 
   yield apiCall(processReceipt, {receipt})
 
-  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt))
+  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, {steps}))
+}
+
+function * deployChosenContracts ({ response: { steps, receipt } }) {
+  const tokenAddress = receipt.events[0].address
+  yield apiCall(api.deployChosenContracts, {tokenAddress, steps})
 }
 
 function * fetchTokenStatistics ({tokenAddress, activityType, interval}) {
@@ -112,6 +116,22 @@ function * fetchTokenProgress ({tokenAddress}) {
     tokenAddress,
     response: {
       steps: response.data.steps
+    }
+  })
+}
+
+function * fetchDeployProgress ({tokenAddress}) {
+  const response = yield apiCall(api.fetchTokenProgress, {tokenAddress: tokenAddress.tokenAddress})
+
+  const { data } = response
+  const { steps, stepErrors } = data
+
+  yield put({
+    type: actions.FETCH_DEPLOY_PROGRESS.SUCCESS,
+    response: {
+      tokenAddress: tokenAddress.tokenAddress,
+      steps,
+      stepErrors
     }
   })
 }
@@ -171,6 +191,8 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN_STATISTICS, fetchTokenStatistics, 1),
     tryTakeEvery(actions.FETCH_TOKEN_PROGRESS, fetchTokenProgress, 1),
     takeEvery([DEPLOY_BRIDGE.SUCCESS, ADD_USER.SUCCESS, CREATE_LIST.SUCCESS], fetchTokenProgress),
-    takeEvery([actions.MINT_TOKEN.SUCCESS, actions.BURN_TOKEN.SUCCESS], watchTokenChanges)
+    takeEvery([actions.MINT_TOKEN.SUCCESS, actions.BURN_TOKEN.SUCCESS], watchTokenChanges),
+    takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
+    tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress)
   ])
 }

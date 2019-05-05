@@ -124,7 +124,7 @@ class TopNav extends Component {
       [this.props.network.networkType]: true
     })
     const navLinksClass = classNames({
-      'hide': !this.state.openMenu,
+      'hide-for-small-only': !this.state.openMenu,
       'top-nav-links': true,
       'show-top-nav-links': true
     })

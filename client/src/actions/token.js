@@ -1,7 +1,9 @@
-import {createRequestTypes, createEntityAction, createTransactionRequestTypes, requestAction} from './utils'
+import {createRequestTypes, createEntityAction, createTransactionRequestTypes, requestAction, action} from './utils'
 
 export const entityName = 'tokens'
 const tokenAction = createEntityAction(entityName)
+
+export const CLEAR_TRANSACTION_STATUS = createRequestTypes('CLEAR_TRANSACTION_STATUS')
 
 export const FETCH_TOKENS = createRequestTypes('FETCH_TOKENS')
 export const FETCH_TOKENS_BY_OWNER = createRequestTypes('FETCH_TOKENS_BY_OWNER')
@@ -17,6 +19,7 @@ export const CREATE_TOKEN_WITH_METADATA = createTransactionRequestTypes('CREATE_
 export const FETCH_TOKEN_STATISTICS = createRequestTypes('FETCH_TOKEN_STATISTICS')
 
 export const FETCH_TOKEN_PROGRESS = createRequestTypes('FETCH_TOKEN_PROGRESS')
+export const FETCH_DEPLOY_PROGRESS = createRequestTypes('FETCH_DEPLOY_PROGRESS')
 
 export const TRANSFER_TOKEN = createTransactionRequestTypes('TRANSFER_TOKEN')
 export const MINT_TOKEN = createTransactionRequestTypes('MINT_TOKEN')
@@ -31,7 +34,7 @@ export const fetchToken = (tokenAddress) => tokenAction(FETCH_TOKEN.REQUEST, {to
 export const fetchClnToken = () => tokenAction(FETCH_CLN_TOKEN.REQUEST)
 
 export const createToken = (tokenData) => requestAction(CREATE_TOKEN, tokenData)
-export const createTokenWithMetadata = (tokenData, metadata, tokenType) => requestAction(CREATE_TOKEN_WITH_METADATA, {tokenData, metadata, tokenType})
+export const createTokenWithMetadata = (tokenData, metadata, tokenType, steps) => requestAction(CREATE_TOKEN_WITH_METADATA, {tokenData, metadata, tokenType, steps})
 
 export const transferToken = (tokenAddress, to, value) => requestAction(TRANSFER_TOKEN, { tokenAddress, to, value })
 export const mintToken = (tokenAddress, value) => requestAction(MINT_TOKEN, { tokenAddress, value })
@@ -41,3 +44,6 @@ export const fetchTokenStatistics = (tokenAddress, activityType, interval) => re
   {tokenAddress, activityType, interval})
 
 export const fetchTokenProgress = (tokenAddress) => requestAction(FETCH_TOKEN_PROGRESS, {tokenAddress})
+export const fetchDeployProgress = (tokenAddress) => requestAction(FETCH_DEPLOY_PROGRESS, {tokenAddress})
+
+export const clearTransactionStatus = (transactionStatus) => action(CLEAR_TRANSACTION_STATUS.REQUEST, { transactionStatus })

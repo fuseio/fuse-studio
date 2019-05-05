@@ -1,107 +1,129 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import classNames from 'classnames'
-import FontAwesome from 'react-fontawesome'
-import MintableBurnable from 'images/mintable.svg'
-import OneTimeIssuer from 'images/one_time_issuer_token.svg'
 import PropTypes from 'prop-types'
-import TextInput from 'components/elements/TextInput'
-import CommunityLogo from 'components/elements/CommunityLogo'
+import { isMobileOnly } from 'react-device-detect'
+import TotalSupply from './TotalSupply'
+import LogosOptions from './LogosOptions'
+import CurrencyType from './CurrencyType'
 
 export default class DetailsStep extends Component {
-  renderDetailsContent () {
-    const {
-      setCommunityType,
-      communityType
-    } = this.props
+  constructor (props) {
+    super(props)
 
-    const communityTypes = [{ 'text': 'Mintable burnable token', 'img': MintableBurnable, value: 'mintableBurnable' }, { 'text': 'One time issuer token', 'img': OneTimeIssuer, value: 'basic' }]
-
-    const detailsContent = communityTypes.map(({ text, img }, key) => {
-      const stepDetailsClass = classNames({
-        'step-content-details-logo': true,
-        'chosen-type': communityType.text === text
-      })
-
-      return (
-        <div className={stepDetailsClass} key={key} onClick={() => setCommunityType(communityTypes[key])}>
-          <img src={img} className='type-img' />
-          <span className='step-content-details-logo-text'>{text}</span>
-        </div>
-      )
-    })
-    return detailsContent
+    this.state = {
+      currentStep: 0
+    }
   }
 
-  renderLogo (communityLogo, setCommunityLogo, communitySymbol) {
-    const communityLogos = ['CoinIcon1.svg', 'CoinIcon2.svg', 'CoinIcon3.svg']
-
-    const logoArr = communityLogos.map((logo, key) => {
-      const totalSupplyClass = classNames({
-        'step-content-details-type': true,
-        'chosen-type': communityLogo && communityLogo.icon ? communityLogo.icon === logo : false
-      })
-      return (
-        <div className={totalSupplyClass} key={key} onClick={() => setCommunityLogo({ name: logo, icon: communityLogos[key] })}>
-          <CommunityLogo token={{ symbol: communitySymbol }} metadata={{ communityLogo: communityLogos[key] }} />
-        </div>
-      )
+  nextAttribute = () => {
+    this.setState({
+      currentStep: this.state.currentStep + 1
     })
-    return logoArr
   }
 
-  checkCondition (evt, condition) {
+  checkCondition = (evt, condition) => {
     if (condition) {
       evt.preventDefault()
     }
   }
 
+  getCurrentStep = () => {
+    const {
+      setCommunityType,
+      communityType,
+      communityLogo,
+      setCommunityLogo,
+      communitySymbol,
+      setTotalSupply,
+      setNextStep,
+      totalSupply,
+      networkType
+    } = this.props
+
+    const { currentStep } = this.state
+
+    switch (currentStep) {
+      case 0:
+        return (
+          <CurrencyType nextAttribute={this.nextAttribute} setCommunityType={setCommunityType} communityType={communityType} />
+        )
+      case 1:
+        return (
+          <LogosOptions networkType={networkType} nextAttribute={this.nextAttribute} communityLogo={communityLogo} setCommunityLogo={setCommunityLogo} communitySymbol={communitySymbol} />
+        )
+      case 2:
+        return (
+          <TotalSupply checkCondition={this.checkCondition} communityType={communityType} communityLogo={communityLogo} setNextStep={setNextStep} setTotalSupply={setTotalSupply} totalSupply={totalSupply} />
+        )
+    }
+  }
+
+  mobileLayout = () => {
+    const { currentStep } = this.state
+    return (
+      <Fragment>
+        {this.getCurrentStep()}
+        <div className='attributes__progress'>
+          {
+            [1, 2, 3].map((item, index) => {
+              const classes = classNames('attributes__progress__item', {
+                'attributes__progress__item--active': index === currentStep
+              })
+              return (
+                <span key={item} className={classes} />
+              )
+            })
+          }
+        </div>
+      </Fragment>
+    )
+  }
+
+  mainLayout = () => {
+    const {
+      setCommunityType,
+      communityType,
+      communityLogo,
+      setCommunityLogo,
+      communitySymbol,
+      setTotalSupply,
+      setNextStep,
+      totalSupply,
+      networkType
+    } = this.props
+
+    return (
+      <Fragment>
+        <CurrencyType
+          setCommunityType={setCommunityType}
+          communityType={communityType}
+        />
+        <LogosOptions
+          networkType={networkType}
+          communityLogo={communityLogo}
+          setCommunityLogo={setCommunityLogo}
+          communitySymbol={communitySymbol}
+        />
+        <TotalSupply
+          checkCondition={this.checkCondition}
+          communityType={communityType}
+          communityLogo={communityLogo}
+          setNextStep={setNextStep}
+          setTotalSupply={setTotalSupply}
+          totalSupply={totalSupply}
+        />
+      </Fragment>
+    )
+  }
+
   render () {
     return (
-      <div className='step-content-details'>
-        <div className='step-content-details-block'>
-          <h3 className='step-content-details-title'>
-            Currency Type
-          </h3>
-          <div className='step-content-details-container'>
-            {this.renderDetailsContent()}
-          </div>
-        </div>
-        <div className='step-content-details-block'>
-          <h3 className='step-content-details-title'>
-            Community Logo
-          </h3>
-          <div className='step-content-details-container'>
-            {this.renderLogo(this.props.communityLogo, this.props.setCommunityLogo, this.props.communitySymbol)}
-          </div>
-        </div>
-        <div className='step-content-details-block'>
-          <h3 className='step-content-details-title'>
-            Initial \ Total Supply
-          </h3>
-          <div className='step-content-details-container total-container'>
-            <TextInput
-              className='step-community-name-total'
-              id='communityName'
-              type='number'
-              placeholder='22,000'
-              value={this.props.totalSupply}
-              onKeyDown={(evt) => this.checkCondition(evt, (evt.key === 'e' || evt.key === '-'))}
-              onChange={(event) => this.props.setTotalSupply(event.target.value)}
-            />
-          </div>
-        </div>
-        <div className='text-center'>
-          <button
-            className='button button--big'
-            disabled={
-              Object.keys(this.props.communityType).length === 0 || this.props.totalSupply < 0 || this.props.totalSupply === '0' || !this.props.totalSupply || !this.props.communityLogo.name
-            }
-            onClick={this.props.setNextStep}
-          >
-            NEXT
-            <FontAwesome className='symbol-icon' name='angle-right' />
-          </button>
-        </div>
+      <div className='attributes'>
+        {
+          !isMobileOnly
+            ? this.mainLayout()
+            : this.mobileLayout()
+        }
       </div>
     )
   }

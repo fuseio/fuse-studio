@@ -52,11 +52,13 @@ module.exports = {
         if (this.web3.network === 'mainnet') {
           return {
             HomeBridgeFactory: '0x93EF4d4032E053978aA71792Efd05d8b583a2B78',
+            SimpleListFactory: '0x9FA04c6fc70B0ae20dAD9D7b36161bf1EdcbA0E2',
             BridgeMapper: '0x41063a48F46EE7E20E7EbAd0185992724B4Ee56c'
           }
         } else {
           return {
             HomeBridgeFactory: '0xFb5CC1688Ec06c57cbAB6cC34c33413154A666Fa',
+            SimpleListFactory: '0x9FA04c6fc70B0ae20dAD9D7b36161bf1EdcbA0E2',
             BridgeMapper: '0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14'
           }
         }

@@ -37,10 +37,11 @@ class Tabs extends Component {
       if (!child) {
         return
       }
-      const { label } = child.props
+      const { label, className } = child.props
 
       return (
         <Tab
+          className={className}
           activeTab={activeTab}
           key={label}
           label={label}

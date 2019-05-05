@@ -1,5 +1,4 @@
-const tokenIssued = require('@utils/tokenProgress').tokenIssued
-const detailsGiven = require('@utils/tokenProgress').detailsGiven
+const {tokenIssued, detailsGiven} = require('@utils/tokenProgress')
 const BigNumber = require('bignumber.js')
 
 const transform = (doc, ret, options) => ({...ret, totalSupply: doc.totalSupply ? doc.totalSupply.toString() : undefined})

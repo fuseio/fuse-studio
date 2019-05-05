@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>check/on copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New-Onboarding" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="contracts" transform="translate(-426.000000, -354.000000)">
+            <g id="check/on" transform="translate(426.000000, 354.000000)">
+                <rect id="check_off" fill="#34D080" fill-rule="evenodd" x="0" y="0" width="18" height="18" rx="4"></rect>
+                <polygon id="Path-3" fill="#F9F9F9" fill-rule="nonzero" points="5.4601035 7.95675252 4 9.63264048 8.17097682 13.384755 14.4809437 6.52885532 12.8721361 5 8.02622441 10.2651757"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

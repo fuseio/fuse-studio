@@ -204,7 +204,7 @@
     &-percent {
       line-height: 16px;
       font-size: 16px;
-      color: $color-filter-text;
+      color: $color-primary-dark;
     }
     &-text {
       display: flex;
@@ -284,7 +284,7 @@
     }
     &-big-count {
       font-size: 35px;
-      color: $color-filter-text;
+      color: $color-primary-dark;
       font-weight: bold;
       margin-top: 10px;
       span {
@@ -470,7 +470,7 @@
     &-title {
       text-transform: capitalize;
       font-size: 15px;
-      color: $color-filter-text;
+      color: $color-primary-dark;
       text-align: center;
       text-transform: capitalize;
       margin-bottom: 10px;
@@ -521,7 +521,7 @@
       }
     }
     &-btn {
-      color: $color-filter-text;
+      color: $color-primary-dark;
       font-size: 10px;
       // background-color: #f3f3f3;
       font-weight: 500;
@@ -592,7 +592,7 @@
     }
 
     &-title {
-      color: $color-filter-text;
+      color: $color-primary-dark;
       font-size: 12px;
       font-weight: 500;
       line-height: 2.17;
@@ -618,96 +618,6 @@
   }
 }
 
-.bridge-deploying {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-color: rgba(5, 40, 62, 0.8);
-  z-index: 5;
-  border-radius: 10px;
-  font-family: $font-family;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  flex-direction: column;
-  justify-content: center;
-  &-text {
-    color: $color-white;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1.35;
-    letter-spacing: 0.5px;
-    span {
-      animation-name: blink;
-      animation-duration: 1.4s;
-      animation-iteration-count: infinite;
-      animation-fill-mode: both;
-      &:nth-child(2) {
-        animation-delay: 0.2s;
-      }
-      &:nth-child(3) {
-        animation-delay: 0.4s;
-      }
-    }
-  }
-  &-confirmation {
-    color: $color-white;
-    font-size: 18px;
-    font-weight: normal;
-    margin-top: 15px;
-  }
-}
-
-@keyframes blink {
-  0% {
-    opacity: 0.2;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.2;
-  }
-}
-
-@include block(status) {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-color: $color-white;
-  z-index: 5;
-  font-family: $font-family;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  flex-direction: column;
-  justify-content: center;
-
-  @include element(message) {
-    color: $color-filter-text;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1.35;
-    letter-spacing: 0.5px;
-    width: 350px;
-  }
-
-  @include element(icon) {
-    margin: 1em auto;
-    font-size: 20px;
-  }
-  .fa-close {
-    color: $color-red;
-  }
-  .fa-check {
-    color: $color-ropsten;
-  }
-}
-
 @include block(transfer-tab) {
   display: flex;
   flex-direction: column;
@@ -724,7 +634,7 @@
       font-stretch: normal;
       line-height: normal;
       letter-spacing: normal;
-      color: $color-filter-text;
+      color: $color-primary-dark;
     }
 
     @include block(amount) {
@@ -760,6 +670,7 @@
       justify-content: space-between;
       margin: 2.4em 0;
       height: 35px;
+      position: relative;
       @include element(text) {
         font-family: $font-family;
         font-size: 14px;
@@ -780,6 +691,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: relative;
       @include element(text) {
         font-family: $font-family;
         font-size: 14px;

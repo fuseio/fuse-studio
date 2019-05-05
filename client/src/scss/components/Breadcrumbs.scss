@@ -6,7 +6,7 @@
   padding: 40px 20px;
 
   &-title {
-    color: $color-filter-text;
+    color: $color-primary-dark;
     font-size: 12px;
     padding-right: 20px;
     position: relative;
@@ -21,7 +21,7 @@
     }
   }
   &-text {
-    color: $color-filter-text;
+    color: $color-primary-dark;
     font-size: 12px;
     font-weight: bold;
     text-transform: capitalize;

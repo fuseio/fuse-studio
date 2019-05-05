@@ -7,19 +7,23 @@
 
 .communities {
 	&-banner {
+		&-wrapper {
+			background-color: $color-primary-dark;
+			position: relative;
+		}
 		font-family: $font-family;
     align-items: center;
     justify-content: space-between;
-    padding: 50px 0 50px 100px;
-		background-position: right;
-		background-repeat: no-repeat;
+    padding-top: 50px;
+    padding-bottom: 50px;
 		width: 100%;
 		display: flex;
-		background-color: $color-primary-dark;
 		&-content {
 			max-width: 675px;
 		}
 		&-img {
+			position: absolute;
+			right: 0;
 			overflow: hidden;
 			height: 300px;
 			text-align: right;
@@ -83,39 +87,21 @@
 		background-color:  #f7f8fc;
 
 		&-title {
-			font-size: 30px;
+			font-size: 2em;
  			letter-spacing: -0.7px;
 			font-weight: bold;
-			color: $color-filter-text;
+			color: $color-primary-dark;
 
-			@media (max-width: $breakpoint-tablet) {
-				font-size: 20px;
-			}
-			@media (max-width: $breakpoint-mobile) {
-				font-size: 20px;
+			@include breakpoint(medium down) {
+				font-size: 1.5em;
 			}
 		}
 
 		&-container {
-			width: 1250px;
-			margin: 0 auto;
-			@media (max-width: 1250px) {
-				width: 840px;
-			}
-			@media (max-width: $breakpoint-tablet) {
-				width: auto;
-			}
 		}
 
 		&-content {
-			justify-content: space-between;
-			padding: 30px 10px;
-			margin: 0 auto;
-			display: flex;
-			@media (max-width: $breakpoint-tablet) {
-				display: block;
-				padding: 20px 0
-			}
+			padding: 30px 0;
 		}
 
 		&-search {
@@ -161,13 +147,6 @@
 }
 
 .list-item {
-	height: auto;
-	width: 395px;
-	display: inline-block;
-	margin-bottom: 15px;
-	margin-right: 10px;
-	margin-left: 10px;
-
 	.coin-footer-close {
 		display: none;
 		@media (max-width: $breakpoint-mobile) {

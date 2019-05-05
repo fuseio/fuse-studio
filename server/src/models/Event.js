@@ -2,7 +2,7 @@ const pickBy = require('lodash').pickBy
 const mongoose = require('mongoose')
 
 const manipulate = (data) => {
-  // delete double entries in returnValues
+  // deleting double entries in returnValues
   const returnValues = pickBy(data.returnValues, (value, key) => isNaN(key))
   return {...data, returnValues}
 }

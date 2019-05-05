@@ -27,7 +27,7 @@
     img {
       margin-right: 7px;
       position: relative;
-      top: 4px;
+      // top: 4px;
 			width: 102px;
   		height: 30px;
     }
@@ -112,12 +112,12 @@
 			@include flex-box();
 			align-items: center;
 			color: $color-white;
-			font-size: 12px;
+			font-size: 1em;
 			font-weight: 400;
-			line-height: 25px;
-			margin: 0 12px;
+			margin: 0 1em;
 			position: relative;
 			justify-content: center;
+
 			.profile {
 				&-icon {
 					line-height: 14px;
@@ -165,6 +165,7 @@
 				&-balance {
 					margin-left: 10px;
 					color: $color-white;
+					font-size: 0.8rem;
 					@media (max-width: $breakpoint-tablet) {
 						margin-left: 0;
 					}
@@ -176,6 +177,7 @@
 				border-radius: 29px;
   			border: solid 2px #083a5a;
 				width: 200px;
+				margin: 0;
 				&--open {
 					border-color: $color-white;
 					&:hover {

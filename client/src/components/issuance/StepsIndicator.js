@@ -1,19 +1,15 @@
 import React from 'react'
 import classNames from 'classnames'
-import FontAwesome from 'react-fontawesome'
 
-const StepsIndicator = ({steps, activeStep}) => {
+const StepsIndicator = ({steps, activeStep, network}) => {
   return steps.map((item, key) => {
-    const stepsClassStyle = classNames({
-      'step': true,
-      'active-step': key === activeStep,
-      'done-step': key < activeStep
+    const stepsClassStyle = classNames('cell large-2 medium-2 small-4', {
+      [`step-${network}`]: true,
+      [`step-${network}--active`]: key === activeStep,
+      [`step-${network}--done`]: key < activeStep
     })
     return (
-      <div key={key} className={stepsClassStyle}>
-        {(key < activeStep) && <FontAwesome className='done-check' name='check' />}
-        {item}
-      </div>
+      <div key={key} className={stepsClassStyle} />
     )
   })
 }

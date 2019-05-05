@@ -1,6 +1,6 @@
 const tokenUtils = require('@utils/token')
 const mongoose = require('mongoose')
-const isZeroAddress = require('@utils/network').isZeroAddress
+const {isZeroAddress} = require('@utils/network')
 
 const token = mongoose.token
 

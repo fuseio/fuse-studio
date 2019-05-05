@@ -1,13 +1,3 @@
-.prev-button {
-	left: 20px;
-	@media (max-width: $breakpoint-mobile) {
-		left: 15px;
-		.btn-text {
-			display: none;
-		}
-	}
-}
-
 .quit-button {
 	right: 45px;
 	@media (max-width: $breakpoint-mobile) {
@@ -15,27 +5,6 @@
 		.btn-text {
 			display: none;
 		}
-	}
-}
-
-.back-btn {
-	font-size: 17px;
-	background: none;
-	border: 1px solid transparent;
-	color: $color-step-title;
-	margin-top: 20px;
-	text-transform: uppercase;
-	font-weight: bold;
-
-	&:focus,
-	&:active,
-	&:focus:active {
-		outline: none;
-	}
-
-	&:hover {
-		cursor: pointer;
-		color: darken($color-step-title, 10%);
 	}
 }
 
