@@ -60,7 +60,10 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "validator": "^10.10.0",
-    "web3": "^1.0.0-beta.37"
+    "web3": "^1.0.0-beta.37",
+    "@fuse/token-factory-contracts": "../contracts/token-factory/",
+    "@fuse/entities-contracts": "../contracts/entities/",
+    "@fuse/roles": "../packages/roles"
   },
   "devDependencies": {
     "nodemon": "^1.18.11",

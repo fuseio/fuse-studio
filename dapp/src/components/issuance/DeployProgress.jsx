@@ -29,7 +29,7 @@ const Congratulations = ({ goToDashboard }) => {
       <div className='congratulation__title'>
         Congratulations!
       </div>
-      <div className='congratulation__sub-title'>Your community is ready to be burn!</div>
+      <div className='congratulation__sub-title'>Your community is ready to be born!</div>
       <div className='congratulation__what'>What should i do next?</div>
       <div className='congratulation__text'>to start building your community. Your community will now show on the homepage of the Fuse Studio. Go to your community page to start adding businesses and users.</div>
       <div className='congratulation__btn'>

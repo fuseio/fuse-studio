@@ -1,0 +1,25 @@
+{
+  "name": "@fuse/roles",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "standard": {
+    "env": [
+      "mocha"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "standard": "^12.0.1"
+  },
+  "dependencies": {
+    "ethereumjs-util": "^6.1.0"
+  }
+}

@@ -14,9 +14,12 @@ export function * transactionFlow ({ transactionPromise, action, confirmationsLi
     transactionPromise.on('transactionHash', (transactionHash) =>
       resolve(transactionHash)
     )
-    transactionPromise.on('error', (error) =>
+    transactionPromise.on('error', (error) => {
+      if (error.message.includes('User denied transaction signature')) {
+        error.error = 'User denied transaction signature'
+      }
       reject(error)
-    )
+    })
   })
 
   yield put(transactionPending(action, transactionHash))

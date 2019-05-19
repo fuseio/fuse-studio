@@ -16,8 +16,7 @@ const deployMembersList = async (token, nonces) => {
   const method = SimpleListFactoryContract.methods.createSimpleList(homeTokenAddress)
 
   const receipt = await send(method, {
-    from,
-    gasPrice: '1000000000'
+    from
   })
 
   await handleReceipt(receipt)
@@ -30,15 +29,13 @@ const deployMembersList = async (token, nonces) => {
 
   const addAdminMethod = simpleListContract.methods.addAdmin(token.owner)
   await send(addAdminMethod, {
-    from,
-    gasPrice: '1000000000'
+    from
   })
 
   console.log(`${token.owner} Added as owner of the list`)
   const removeAdminMethod = simpleListContract.methods.removeAdmin(from)
   await send(removeAdminMethod, {
-    from,
-    gasPrice: '1000000000'
+    from
   })
 
   console.log('list creator is removed from admins list')

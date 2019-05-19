@@ -11,6 +11,8 @@ router.use('/tokens/progress', require('./tokenProgress'))
 router.use('/businesses', require('./businesses'))
 router.use('/business/list', require('./businessList'))
 router.use('/bridges', require('./bridges'))
+router.use('/communities', require('./communities'))
+router.use('/entities', require('./entities'))
 
 router.use(function (err, req, res, next) {
   if (err.name === 'ValidationError') {

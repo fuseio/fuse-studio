@@ -41,7 +41,7 @@ module.exports = {
       ropsten: {
         ColuLocalNetwork: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
         TokenFactory: '0xE307a14b078030d81801e46F89285dbf5B4aa3F0',
-        ForeignBridgeFactory: '0x7D913f6F0bA5Cc0660d8F60Df894b01F272550A0'
+        ForeignBridgeFactory: '0x98C876777F03961e81fB3F1793a4fE03f1efeD54'
       },
       mainnet: {
         ColuLocalNetwork: '0x4162178B78D6985480A308B2190EE5517460406D',
@@ -57,9 +57,10 @@ module.exports = {
           }
         } else {
           return {
-            HomeBridgeFactory: '0xFb5CC1688Ec06c57cbAB6cC34c33413154A666Fa',
+            HomeBridgeFactory: '0xc40c690AaB6c218cbEd4d55970020fDF3a0210cC',
             SimpleListFactory: '0x9FA04c6fc70B0ae20dAD9D7b36161bf1EdcbA0E2',
-            BridgeMapper: '0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14'
+            BridgeMapper: '0xE92139Ae1d18Febf8cB68fF5D39Cd2c235677070',
+            UsersRegistry: '0xD54C1B417502CDe8275cBf91B0A8dC820ccb8054'
           }
         }
       })

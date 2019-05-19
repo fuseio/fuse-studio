@@ -12,11 +12,6 @@ module.exports = (mongoose) => {
   BusinessListSchema.index({ listAddress: 1 }, { unique: true })
   BusinessListSchema.index({ tokenAddress: 1 }, { unique: true })
 
-  BusinessListSchema.post('save', businessList => {
-    const { businessListDeployed } = require('@utils/tokenProgress')
-    businessListDeployed(businessList.tokenAddress)
-  })
-
   const BusinessList = mongoose.model('BusinessList', BusinessListSchema)
 
   function businessList () {}

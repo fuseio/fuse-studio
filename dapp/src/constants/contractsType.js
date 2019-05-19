@@ -9,10 +9,11 @@ const ContractsType = [
   },
   {
     label: 'Members list',
-    value: false,
+    value: true,
     disabled: false,
     text: `A list that holds the members of the community and allows managing apporved users, add merchants and manage permissions. Managing the list trough a smart contract allows greater flexibility and provides security and transparency out of the box.`,
-    key: 'membersList'
+    key: 'membersList',
+    readOnly: true
   },
   {
     label: 'Community contract | coming soon!',

@@ -1,7 +1,8 @@
 import { all, put, takeEvery } from 'redux-saga/effects'
 
 import { createEntityPut, tryTakeEvery, apiCall } from './utils'
-import * as api from 'services/api/metadata'
+import * as entitiesApi from 'services/api/entities'
+import * as metadataApi from 'services/api/metadata'
 import * as actions from 'actions/metadata'
 import { FETCH_TOKEN } from 'actions/token'
 
@@ -14,7 +15,7 @@ function * fetchMetadata ({ tokenURI }) {
 
   const hash = tokenURI.split('://')[1]
 
-  const { data } = yield apiCall(api.fetchMetadata, { hash })
+  const { data } = yield apiCall(metadataApi.fetchMetadata, { hash })
 
   yield entityPut({
     type: actions.FETCH_METADATA.SUCCESS,
@@ -27,12 +28,22 @@ function * fetchMetadata ({ tokenURI }) {
 }
 
 export function * createMetadata ({ metadata }) {
-  const { data, hash } = yield apiCall(api.createMetadata, { metadata })
+  const { data, hash } = yield apiCall(metadataApi.createMetadata, { metadata })
   yield put({
     type: actions.CREATE_METADATA.SUCCESS,
     response: {
-      data,
-      hash
+      data
+    }
+  })
+  return { data, hash }
+}
+
+export function * createEntitiesMetadata ({ communityAddress, accountId, metadata }) {
+  const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountId, metadata })
+  yield put({
+    type: actions.CREATE_METADATA.SUCCESS,
+    response: {
+      data
     }
   })
   return { data, hash }
@@ -46,11 +57,11 @@ function * watchTokensFetched ({ response }) {
   }
 }
 
-function * watchBusinessesFetched ({ response }) {
-  const { result } = response
-  for (let hash of result) {
-    const uri = `ipfs://${hash}`
-    yield put(actions.fetchMetadata(uri))
+function * watchEntitesFetched ({ response }) {
+  const { result, entities } = response
+  for (let account of result) {
+    const entity = entities[account]
+    yield put(actions.fetchMetadata(entity.uri))
   }
 }
 
@@ -59,7 +70,7 @@ export default function * apiSaga () {
     tryTakeEvery(actions.FETCH_METADATA, fetchMetadata, 1),
     tryTakeEvery(actions.CREATE_METADATA, createMetadata, 1),
     takeEvery(action => /^FETCH_TOKENS.*SUCCESS/.test(action.type), watchTokensFetched),
-    takeEvery(action => /^FETCH_BUSINESS.*SUCCESS/.test(action.type), watchBusinessesFetched),
+    takeEvery(action => /^(FETCH_BUSINESS|FETCH_USER|FETCH_ENTITY).*SUCCESS/.test(action.type), watchEntitesFetched),
     takeEvery(FETCH_TOKEN.SUCCESS, watchTokensFetched)
   ])
 }

@@ -45,8 +45,7 @@ async function deployHomeBridge (token, { web3, from, send }) {
   const method = homeFactory.methods.deployHomeBridge(token.name, token.symbol, TOKEN_DECIMALS)
 
   const receipt = await send(method, {
-    from,
-    gasPrice: '1000000000'
+    from
   })
 
   const event = receipt.events.HomeBridgeDeployed
@@ -86,8 +85,7 @@ async function addBridgeMapping (
   )
 
   const receipt = await send(method, {
-    from,
-    gasPrice: '1000000000'
+    from
   })
 
   console.log('Bridge mapping added')

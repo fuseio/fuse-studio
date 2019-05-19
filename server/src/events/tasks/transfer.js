@@ -1,5 +1,5 @@
 const processPastEvents = require('./utils').processPastEvents
-const basicTokenAbi = require('@constants/abi/BasicToken')
+const BasicTokenAbi = require('@fuse/token-factory-contracts/build/abi/BasicToken')
 const mongoose = require('mongoose')
 
 const Token = mongoose.model('Token')
@@ -10,7 +10,7 @@ const processPastTransferEvents = async () => {
 
   const processes = tokens.map(token => {
     const { address } = token
-    const basicTokenContract = new web3.eth.Contract(basicTokenAbi, address)
+    const basicTokenContract = new web3.eth.Contract(BasicTokenAbi, address)
     return processPastEvents('Transfer', basicTokenContract, { conditions: { address } })
   })
   return Promise.all(processes)

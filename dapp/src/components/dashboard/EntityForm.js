@@ -45,7 +45,7 @@ class EntityForm extends Component {
     submitEntity(entity)
   }
 
-  renderForm = ({ handleSubmit, setFieldValue, setFieldTouched, values }) => {
+  renderForm = ({ handleSubmit, setFieldValue, setFieldTouched, values, isValid }) => {
     return (
       <form className='entity-modal-content' onSubmit={handleSubmit}>
         <h4 className='entity-modal-title'>Business name</h4>
@@ -230,7 +230,7 @@ class EntityForm extends Component {
         </div>
         <div className='row justify-center'>
           <div className='col-12'>
-            <button type='submit' className='btn-add-entity'>Save</button>
+            <button type='submit' className='btn-add-entity' disabled={!isValid}>Save</button>
           </div>
         </div>
       </form>
@@ -244,6 +244,7 @@ class EntityForm extends Component {
         validationSchema={this.validationSchema}
         render={this.renderForm}
         onSubmit={this.onSubmit}
+        isInitialValid={false}
       />
     )
   }

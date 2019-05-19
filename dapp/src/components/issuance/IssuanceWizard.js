@@ -35,10 +35,11 @@ class IssuanceWizard extends Component {
       },
       membersList: {
         label: 'Members list',
-        checked: false,
+        checked: true,
         key: 'membersList'
       }
     },
+    isOpen: false,
     currentDeploy: 'tokenIssued'
   }
 
@@ -77,13 +78,14 @@ class IssuanceWizard extends Component {
       symbol: this.state.communitySymbol,
       totalSupply: new BigNumber(this.state.totalSupply).multipliedBy(1e18)
     }
-    const { contracts } = this.state
+    const { contracts, isOpen } = this.state
+
     const steps = Object.keys(contracts)
       .filter((contractName) => contracts[contractName].checked)
       .reduce((steps, contractName) => {
         steps = {
           ...steps,
-          [contracts[contractName].key]: true
+          [contracts[contractName].key]: contracts[contractName].key === 'membersList' && !isOpen ? { isClosed: true } : true
         }
         return steps
       }, {})
@@ -132,6 +134,10 @@ class IssuanceWizard extends Component {
     this.setState({ contracts: { ...contracts, [key]: { ...contracts[key], checked: value } } })
   }
 
+  setCommunityPrivacy = isOpen => {
+    this.setState({ isOpen })
+  }
+
   renderStepContent = () => {
     const {
       transactionStatus,
@@ -148,7 +154,8 @@ class IssuanceWizard extends Component {
       communitySymbol,
       totalSupply,
       contracts,
-      currentDeploy
+      currentDeploy,
+      isOpen
     } = this.state
 
     switch (activeStep) {
@@ -186,6 +193,8 @@ class IssuanceWizard extends Component {
       case 3:
         return (
           <Contracts
+            isOpen={isOpen}
+            setCommunityPrivacy={this.setCommunityPrivacy}
             contracts={contracts}
             setContracts={this.setContracts}
             setNextStep={this.setNextStep}
@@ -194,6 +203,7 @@ class IssuanceWizard extends Component {
       case 4:
         return (
           <SummaryStep
+            isOpen={isOpen}
             networkType={foreignNetwork}
             createTokenSignature={createTokenSignature}
             contracts={contracts}

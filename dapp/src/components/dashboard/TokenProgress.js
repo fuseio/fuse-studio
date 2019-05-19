@@ -9,7 +9,7 @@ import CopyToClipboard from 'components/common/CopyToClipboard'
 import { formatWei } from 'utils/format'
 import { getBlockExplorerUrl } from 'utils/network'
 
-const Step = ({ done, text, handleClick }) => (
+const Step = ({ done, text, handleClick = undefined }) => (
   <div
     className={classNames('dashboard-progress-text', {
       'text-positive': done,
@@ -23,27 +23,36 @@ const Step = ({ done, text, handleClick }) => (
 
 class TokenProgress extends Component {
   componentDidMount () {
-    this.props.fetchTokenProgress(this.props.match.params.address)
+    const { fetchTokenProgress, match: { params: { address } } } = this.props
+    fetchTokenProgress(address)
   }
 
   render () {
-    const { token, networkType } = this.props
-    const steps = this.props.steps
+    const {
+      token,
+      networkType,
+      tokenAddress,
+      tokenNetworkType,
+      metadata,
+      steps,
+      loadUserDataModal,
+      loadBridgePopup
+    } = this.props
     const doneSteps = Object.values(steps).filter(step => step)
     const progressOverall = doneSteps.length * 20
     return (
       <div className='dashboard-sidebar'>
-        <div className='logo'><CommunityLogo networkType={networkType} token={token} metadata={this.props.metadata[token.tokenURI] || {}} /></div>
+        <div className='logo'><CommunityLogo networkType={networkType} token={token} metadata={metadata[token.tokenURI] || {}} /></div>
         <div className='token-info'>
           <h5 className='token-info__title'>{token.name}</h5>
           <div className='token-info__total'><span>Total supply: {formatWei(token.totalSupply, 0)}</span><span>{token.symbol}</span></div>
           <div className='asset-id'>
             <span className='text'>Asset ID</span>
-            <a href={`${getBlockExplorerUrl(this.props.tokenNetworkType)}/address/${this.props.tokenAddress}`}
+            <a href={`${getBlockExplorerUrl(tokenNetworkType)}/address/${tokenAddress}`}
               target='_blank'>
-              <span className='id'>{this.props.tokenAddress.substring(0, 6)}...{this.props.tokenAddress.substr(this.props.tokenAddress.length - 4)}</span>
+              <span className='id'>{tokenAddress.substring(0, 6)}...{tokenAddress.substr(tokenAddress.length - 4)}</span>
             </a>
-            <CopyToClipboard text={this.props.tokenAddress}>
+            <CopyToClipboard text={tokenAddress}>
               <p className='dashboard-information-period'>
                 <FontAwesome name='clone' />
               </p>
@@ -60,14 +69,13 @@ class TokenProgress extends Component {
         </div>
         <Step done={steps.tokenIssued}
           text='Community token deployed' />
-        <Step done={steps.detailsGiven} handleClick={this.props.loadUserDataModal}
+        <Step done={steps.detailsGiven} handleClick={loadUserDataModal}
           text='Admin personal name given' />
-        <Step done={steps.bridge} handleClick={this.props.loadBridgePopup}
+        <Step done={steps.bridge} handleClick={loadBridgePopup}
           text='Bridge to Fuse - chain deployed' />
-        <Step done={steps.membersList} handleClick={this.props.loadBusinessListPopup}
-          text='Business list deployed' />
-        <Step done={false}
-          text='White label wallet paired' />
+        <Step done={steps.membersList}
+          text='Members list deployed' />
+        <Step done={false} text='White label wallet paired' />
       </div>
     )
   }

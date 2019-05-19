@@ -1,0 +1,40 @@
+{
+  "name": "@fuse/entities-contracts",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "truffle test",
+    "build": "truffle compile && npm run abi && npm run bytecode",
+    "compile": "truffle compile",
+    "abi": "node_modules/@fuse/contract-utils/bin/abi.js $PWD && node ./scripts/extendAbi.js",
+    "bytecode": "node_modules/@fuse/contract-utils/bin/bytecode.js $PWD",
+    "deploy-dev": "truffle migrate",
+    "deploy-fuse": "truffle migrate --network fuse --reset"
+  },
+  "author": "",
+  "license": "MIT",
+  "standard": {
+    "env": [
+      "mocha"
+    ],
+    "globals": [
+      "assert",
+      "contract",
+      "web3",
+      "artifacts"
+    ]
+  },
+  "dependencies": {
+    "openzeppelin-solidity": "2.0.1",
+    "truffle": "^5.0.14",
+    "truffle-assertions": "^0.9.0",
+    "truffle-hdwallet-provider": "^1.0.8"
+  },
+  "devDependencies": {
+    "@fuse/contract-utils": "../../packages/contract-utils",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bn": "^0.1.1"
+  }
+}

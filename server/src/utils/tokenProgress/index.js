@@ -7,7 +7,7 @@ const stepDone = async (stepName, tokenAddress) => {
     { upsert: true })
 }
 
-const addError = async (stepName, tokenAddress, error) => {
+const stepFailed = async (stepName, tokenAddress, error) => {
   console.error(error)
   await TokenProgress.findOneAndUpdate({ tokenAddress }, { [`stepErrors.${stepName}`]: error }, { upsert: true })
 }
@@ -21,7 +21,7 @@ const steps = {
 
 module.exports = {
   stepDone,
-  addError,
+  stepFailed,
   steps,
   bridgeDeployed: stepDone.bind(null, steps.bridge),
   tokenIssued: stepDone.bind(null, steps.tokenIssued),

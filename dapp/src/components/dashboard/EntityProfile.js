@@ -5,7 +5,8 @@ import FontAwesome from 'react-fontawesome'
 import TopNav from 'components/TopNav'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import { loadModal } from 'actions/ui'
-import { getList, fetchBusinesses, fetchBusiness, activateBusiness, deactivateBusiness, editEntity } from 'actions/directory'
+import { fetchMetadata } from 'actions/metadata'
+import { editEntity, fetchEntity } from 'actions/communityEntities'
 import { ADD_DIRECTORY_ENTITY, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
 import { getBlockExplorerUrl } from 'utils/network'
@@ -14,7 +15,7 @@ import { getTransaction } from 'selectors/transaction'
 class EntityProfile extends Component {
   componentDidMount () {
     if (!this.props.entity) {
-      this.props.fetchBusiness(this.props.listAddress, this.props.hash)
+      this.props.fetchEntity(this.props.communityAddress, this.props.account)
     }
   }
 
@@ -35,35 +36,10 @@ class EntityProfile extends Component {
     })
   }
 
-  componentDidUpdate (prevProps) {
-    if (this.props.receipt && !prevProps.receipt) {
-      const { newHash } = this.props.receipt.events.EntityReplaced.returnValues
-      this.showProfile(this.props.listAddress, newHash)
-    }
-
-    if (this.props.hash !== prevProps.hash) {
-      this.props.fetchBusiness(this.props.listAddress, this.props.hash)
-    }
-  }
-
   showHomePage = (address) => this.props.history.push('/')
-
-  toggleHandler = (isChecked) => {
-    if (isChecked) {
-      this.handleDeactivate()
-    } else {
-      this.handleActivate()
-    }
-  }
-
-  handleDeactivate = () => this.onlyOnFuse(() => this.props.deactivateBusiness(this.props.listAddress, this.props.hash))
-
-  handleActivate = () => this.onlyOnFuse(() => this.props.activateBusiness(this.props.listAddress, this.props.hash))
 
   handleEdit = () =>
     this.onlyOnFuse(() => this.props.loadModal(ADD_DIRECTORY_ENTITY, { submitEntity: this.editEntity, entity: this.props.entity }))
-
-  editEntity = (data) => this.props.editEntity(this.props.listAddress, this.props.hash, data)
 
   render () {
     const { entity } = this.props
@@ -164,21 +140,20 @@ class EntityProfile extends Component {
 }
 
 const mapStateToProps = (state, { match }) => ({
-  listAddress: match.params.listAddress,
-  hash: match.params.hash,
-  entity: state.entities.metadata[`ipfs://${match.params.hash}`],
-  editEntityReceipt: state.screens.directory.editEntityReceipt,
-  ...getTransaction(state, state.screens.directory.editTransactionHash)
+  communityAddress: match.params.communityAddress,
+  account: match.params.account,
+  entity: state.entities.communityEntities[match.params.account] &&
+    state.entities.communityEntities[match.params.account].uri &&
+    state.entities.metadata[state.entities.communityEntities[match.params.account].uri],
+  editEntityReceipt: state.screens.communityEntities.editEntityReceipt,
+  ...getTransaction(state, state.screens.communityEntities.editTransactionHash)
 })
 
 const mapDispatchToProps = {
   loadModal,
-  getList,
-  fetchBusinesses,
-  fetchBusiness,
-  activateBusiness,
-  deactivateBusiness,
-  editEntity
+  editEntity,
+  fetchMetadata,
+  fetchEntity
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EntityProfile)

@@ -71,7 +71,10 @@
     "webpack": "^4.6.0",
     "webpack-cli": "^3.1.2",
     "websocket": "^1.0.28",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "@fuse/token-factory-contracts": "../contracts/token-factory/",
+    "@fuse/entities-contracts": "../contracts/entities/",
+    "@fuse/roles": "../packages/roles"
   },
   "devDependencies": {
     "chai": "^4.1.2",

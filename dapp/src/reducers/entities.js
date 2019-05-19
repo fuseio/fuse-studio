@@ -5,7 +5,8 @@ const initialState = {
   metadata: {},
   tokens: {},
   businesses: {},
-  bridges: {}
+  bridges: {},
+  communityEntities: {}
 }
 
 export default (state = initialState, action) => {

@@ -61,19 +61,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BridgeMappingAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "foreignToken",
-        "type": "address"
-      }
-    ],
-    "name": "BridgeMappingRemoved",
+    "name": "BridgeMappingUpdated",
     "type": "event"
   },
   {
@@ -90,7 +78,7 @@
         "type": "address"
       }
     ],
-    "name": "OwnershipTransferred",
+    "name": "EternalOwnershipTransferred",
     "type": "event"
   },
   {
@@ -189,6 +177,20 @@
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [],
+    "name": "isInitialized",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "constant": false,
     "inputs": [
       {
@@ -267,7 +269,12 @@
       }
     ],
     "name": "initialize",
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"

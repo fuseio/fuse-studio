@@ -3,14 +3,20 @@ const eventUtils = require('@utils/event')
 const business = require('./business')
 const token = require('./token')
 const bridge = require('./bridge')
+const community = require('./community')
 
 const eventsHandlers = {
   TokenCreated: token.handleTokenCreatedEvent,
   Transfer: token.handleTransferEvent,
   BridgeMappingUpdated: bridge.handleBridgeMappingUpdatedEvent,
-  EntityAdded: business.handleEntityAddedEvent,
   EntityReplaced: business.handleEntityReplacedEvent,
-  SimpleListCreated: business.handleSimpleListCreatedEvent
+  SimpleListCreated: business.handleSimpleListCreatedEvent,
+  TransferManagerSet: community.handleTransferManagerSet,
+  EntityAdded: community.handleEntityAdded,
+  EntityRemoved: community.handleEntityRemoved,
+  EntityRolesUpdated: community.handleEntityRolesUpdated,
+  RuleAdded: community.handleRuleAdded,
+  RuleRemoved: community.handleRuleRemoved
 }
 
 const handleEvent = function (event) {

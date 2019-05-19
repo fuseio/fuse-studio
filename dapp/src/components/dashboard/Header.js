@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProfileIcon from 'images/user-dashboard.svg'
 import Logo from 'components/Logo'
-import { getEntities } from 'selectors/directory'
+import { getEntities } from 'selectors/entities'
 import { BigNumber } from 'bignumber.js'
 import classNames from 'classnames'
 import ReactGA from 'services/ga'
@@ -89,7 +89,7 @@ class Header extends Component {
 
 const mapStateToProps = (state) => ({
   entities: getEntities(state),
-  listHashes: state.screens.directory.listHashes
+  listHashes: state.screens.communityEntities.listHashes
 })
 
 export default connect(mapStateToProps, null)(Header)

@@ -1,5 +1,5 @@
 {
-  "name": "fuse-contracts",
+  "name": "@fuse/token-factory-contracts",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",
@@ -8,7 +8,9 @@
   },
   "scripts": {
     "test": "truffle test",
+    "build": "truffle compile && npm run abi",
     "compile": "truffle compile",
+    "abi": "node_modules/@fuse/contract-utils/bin/abi.js $PWD",
     "deploy-dev": "truffle migrate --network development",
     "deploy-ropsten": "truffle migrate --network ropsten",
     "deploy-fuse": "truffle migrate --network fuse",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "truffle": "^5.0.1",
     "truffle-assertions": "^0.7.2",
-    "truffle-hdwallet-provider": "^1.0.6"
+    "truffle-hdwallet-provider": "^1.0.6",
+    "@fuse/contract-utils": "../../packages/contract-utils"
   }
 }

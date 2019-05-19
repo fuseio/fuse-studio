@@ -12,7 +12,7 @@ export default class Contracts extends PureComponent {
   }
 
   render () {
-    const { setNextStep, contracts } = this.props
+    const { setNextStep, contracts, setCommunityPrivacy, isOpen } = this.props
 
     return (
       <div className='contracts__wrapper'>
@@ -29,6 +29,23 @@ export default class Contracts extends PureComponent {
                   <div className='content'>
                     <div className='content__title'>{label}</div>
                     <div className='content__text'>{text}</div>
+                    {
+                      key === 'membersList' && (
+                        <div className='content__toggle'>
+                          <label className='toggle'>
+                            <input type='checkbox' disabled={contracts['membersList'] && !contracts['membersList'].checked} checked={isOpen} onChange={e => setCommunityPrivacy(e.target.checked)} />
+                            <div className='toggle-wrapper'><span className='toggle' /></div>
+                          </label>
+                          <div className='content__toggle__text'>
+                            <span>{ isOpen ? 'Open' : 'Close' } community:</span>
+
+                            {
+                              isOpen ? <span>&nbsp;Any user can join the community</span> : <span>&nbsp;Users can add themselves but need to approve them</span>
+                            }
+                          </div>
+                        </div>
+                      )
+                    }
                   </div>
                 </div>
               )

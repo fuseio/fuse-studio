@@ -1,12 +1,12 @@
 import React, { PureComponent, Fragment } from 'react'
 import { Formik, Field, ErrorMessage } from 'formik'
-import { object, mixed, number } from 'yup'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/Message'
 import { FAILURE, SUCCESS, CONFIRMATION } from 'actions/constants'
 import { isOwner } from 'utils/token'
 import upperCase from 'lodash/upperCase'
 import classNames from 'classnames'
+import mintBurnShape from 'utils/validation/shapes/mintBurn'
 
 export default class MintBurnForm extends PureComponent {
   constructor (props) {
@@ -20,29 +20,22 @@ export default class MintBurnForm extends PureComponent {
       burnAmount: ''
     }
 
-    this.validationSchema = object().shape({
-      actionType: mixed().oneOf(['mint', 'burn']),
-      mintAmount: number().positive().label('Amount').when('actionType', (actionType, schema) => {
-        return actionType === 'mint' ? schema.required() : schema.notRequired()
-      }),
-      burnAmount: number().max(parseInt(balance.replace(/,/g, ''))).label('Amount').when('actionType', (actionType, schema) => {
-        return actionType === 'burn' ? schema.required() : schema.notRequired()
-      })
-    })
+    this.validationSchema = mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
   }
 
-  onSubmit = async (values, { resetForm }) => {
+  onSubmit = async (values) => {
     const { handleMintOrBurnClick } = this.props
     const {
-      actionType
+      actionType,
+      mintAmount,
+      burnAmount
     } = values
 
-    const amount = actionType === 'mint' ? values.mintAmount : values.burnAmount
+    const amount = actionType === 'mint' ? mintAmount : burnAmount
     await handleMintOrBurnClick(actionType, amount)
-    resetForm()
   }
 
-  actionSuccess = (actionType) => {
+  transactionConfirmed = (actionType) => {
     const { transactionStatus, mintMessage, burnMessage } = this.props
     const sharedCondition = transactionStatus && (transactionStatus === SUCCESS || transactionStatus === CONFIRMATION)
     if (actionType === 'mint') {
@@ -52,7 +45,7 @@ export default class MintBurnForm extends PureComponent {
     }
   }
 
-  actionFailed = (actionType) => {
+  transactionError = (actionType) => {
     const { transactionStatus, mintMessage, burnMessage } = this.props
     const sharedCondition = transactionStatus && transactionStatus === FAILURE
     if (actionType === 'mint') {
@@ -62,7 +55,14 @@ export default class MintBurnForm extends PureComponent {
     }
   }
 
-  renderForm = ({ handleSubmit, setFieldValue, setFieldTouched, values, isSubmitting }) => {
+  transactionDenied = (actionType) => {
+    const {
+      error
+    } = this.props
+    return this.transactionError(actionType) && error && typeof error.includes === 'function' && error.includes('denied')
+  }
+
+  renderForm = ({ handleSubmit, setFieldValue, values, isValid }) => {
     const {
       tokenNetworkType,
       token,
@@ -78,9 +78,10 @@ export default class MintBurnForm extends PureComponent {
 
     return (
       <form className='transfer-tab__content' onSubmit={handleSubmit}>
+
         <Message
           message={`Your just ${lastAction && lastAction.actionType}ed ${lastAction && lastAction.mintBurnAmount} ${token.symbol} on ${tokenNetworkType} network`}
-          isOpen={this.actionSuccess(actionType)}
+          isOpen={this.transactionConfirmed(actionType)}
           subTitle=''
           clickHandler={
             actionType === 'mint'
@@ -88,9 +89,10 @@ export default class MintBurnForm extends PureComponent {
               : closeBurnMessage
           }
         />
+
         <Message
           message={'Oops, something went wrong'}
-          isOpen={this.actionFailed(actionType)}
+          isOpen={this.transactionError(actionType)}
           subTitle=''
           clickHandler={
             actionType === 'mint'
@@ -98,6 +100,18 @@ export default class MintBurnForm extends PureComponent {
               : closeBurnMessage
           }
         />
+
+        <Message
+          message={'Oh no'}
+          subTitle={`You reject the action, That’s ok, try next time!`}
+          isOpen={this.transactionDenied(actionType)}
+          clickHandler={
+            actionType === 'mint'
+              ? closeMintMessage
+              : closeBurnMessage
+          }
+        />
+
         <div className='transfer-tab__actions'>
           <button
             disabled={!isOwner(token, accountAddress)}
@@ -127,7 +141,6 @@ export default class MintBurnForm extends PureComponent {
               ? (
                 <Fragment>
                   <Field
-                    onFocus={() => setFieldTouched('mintAmount', true)}
                     className='transfer-tab__content__amount__field'
                     type='number'
                     name='mintAmount'
@@ -138,7 +151,6 @@ export default class MintBurnForm extends PureComponent {
               ) : (
                 <Fragment>
                   <Field
-                    onFocus={() => setFieldTouched('burnAmount', true)}
                     className='transfer-tab__content__amount__field'
                     name='burnAmount'
                     type='number'
@@ -151,7 +163,7 @@ export default class MintBurnForm extends PureComponent {
         </div>
         <div className='transfer-tab__content__button'>
           {
-            actionType && <TransactionButton type='submit' disabled={isSubmitting} frontText={upperCase(actionType)} />
+            actionType && <TransactionButton type='submit' disabled={!isValid} frontText={upperCase(actionType)} />
           }
         </div>
       </form>
@@ -164,6 +176,7 @@ export default class MintBurnForm extends PureComponent {
       validationSchema={this.validationSchema}
       render={this.renderForm}
       onSubmit={this.onSubmit}
+      isInitialValid={false}
     />
   )
 }

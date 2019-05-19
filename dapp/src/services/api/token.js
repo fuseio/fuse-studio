@@ -27,3 +27,6 @@ export const fetchTokenList = (apiRoot, { accountAddress, networkSide }) =>
 
 export const deployBridge = (apiRoot, { foreignTokenAddress }) =>
   request.post(`${apiRoot}/bridges/${foreignTokenAddress}`).then(response => response.body)
+
+export const fetchCommunity = (apiRoot, { tokenAddress }) =>
+  request.get(`${apiRoot}/communities?tokenAddress=${tokenAddress}`).then(response => response.body)

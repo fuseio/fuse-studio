@@ -14,7 +14,7 @@
       "fuse": {
         "ropsten": {
           "SimpleListFactory": "0x9FA04c6fc70B0ae20dAD9D7b36161bf1EdcbA0E2",
-          "BridgeMapper": "0x9cb2820EA169D37aFa13C097776bDDB9b19d3C14"
+          "BridgeMapper": "0xE92139Ae1d18Febf8cB68fF5D39Cd2c235677070"
         },
         "main": {
           "SimpleListFactory": "0x91d7c5541a6057790483b007d6aA84674c043A1D",

@@ -109,7 +109,8 @@ class Bridge extends Component {
       network,
       waitingForConfirmation,
       confirmationNumber,
-      confirmationsLimit
+      confirmationsLimit,
+      bridgeDeployed
     } = this.props
 
     const {
@@ -137,7 +138,7 @@ class Bridge extends Component {
           </div>
           <div className='dashboard-transfer'>
             {
-              (foreignTokenAddress && homeTokenAddress)
+              (bridgeDeployed)
                 ? (
                   <div>
                     <div className='dashboard-transfer-form'>
