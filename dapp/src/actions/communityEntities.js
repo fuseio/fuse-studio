@@ -9,6 +9,7 @@ export const FETCH_ENTITIES = createRequestTypes('FETCH_ENTITIES')
 export const FETCH_USERS_ENTITIES = createRequestTypes('FETCH_USERS_ENTITIES')
 export const FETCH_BUSINESSES_ENTITIES = createRequestTypes('FETCH_BUSINESSES_ENTITIES')
 
+export const TOGGLE_COMMNITY_MODE = createTransactionRequestTypes('TOGGLE_COMMNITY_MODE')
 export const ADD_ENTITY = createTransactionRequestTypes('ADD_ENTITY')
 export const REMOVE_ENTITY = createTransactionRequestTypes('REMOVE_ENTITY')
 export const EDIT_ENTITY = createTransactionRequestTypes('EDIT_ENTITY')
@@ -31,3 +32,5 @@ export const addAdminRole = (account) => action(ADD_ADMIN_ROLE.REQUEST, { accoun
 export const removeAdminRole = (account) => action(REMOVE_ADMIN_ROLE.REQUEST, { account })
 export const confirmUser = (account) => action(CONFIRM_USER.REQUEST, { account })
 export const editEntity = (listAddress, hash, data) => action(EDIT_ENTITY.REQUEST, { listAddress, hash, data })
+
+export const toggleCommunityMode = (communityAddress, isClosed) => action(TOGGLE_COMMNITY_MODE.REQUEST, { communityAddress, isClosed })

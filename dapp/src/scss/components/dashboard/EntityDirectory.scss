@@ -34,7 +34,7 @@
       position: relative;
       cursor: pointer;
       z-index: 1;
-      width: 20%;
+      flex-basis: 30%;
 
       @include element(icon) {
         display: inline-block;
@@ -156,6 +156,13 @@
     }
 
     @include element(buttons) {
+
+      @include element(wrapper) {
+        @include xy-grid();
+        @include flex-align(center, middle);
+        flex-basis: 40%;
+      }
+
       @include xy-grid();
       @include flex-align(center, middle);
       // margin: 0 auto;
@@ -192,11 +199,25 @@
     }
 
     @include element(add) {
-      font-size: 11px;
-      @include xy-grid();
-      @include flex-align(null, middle);
-      width: 20%;
+      
+      @include element(wrapper) {
+        font-size: 11px;
+        @include xy-grid();
+        @include flex-align(justify, middle);
+        flex-basis: 30%;
+        
+        > div {
+          @include xy-grid();
+          @include flex-align(null, middle);
+        }
+      }
 
+      @include element (community) {
+        > span {
+          margin-left: 5px;
+        }
+      }
+      
       > span {
         width: 20px;
         height: 20px;
@@ -380,7 +401,6 @@
   }
 
   @include element(entity) {
-    cursor: pointer;
     width: 100%;
     display: flex;
     padding: 20px;
@@ -395,6 +415,7 @@
 
     @include element(logo) {
       width: 55px;
+      cursor: pointer;
       height: 55px;
       border-radius: 50%;
       background-color: $color-white;
@@ -409,6 +430,7 @@
     }
 
     @include element(content) {
+      cursor: pointer;
       @include element(title) {
         color: $color-primary-dark;
         font-size: 12px;
@@ -468,15 +490,14 @@
 
       .fa {
         color: $color-step;
-      }
-
-      &:hover {
-        .more {
-          @include xy-grid()
-        }
+        cursor: pointer;
       }
 
       @include block(more) {
+        @include modifier(show) {
+          @include xy-grid()
+        }
+
         position: absolute;
         display: none;
         right: 0;
@@ -507,6 +528,11 @@
           @include element(item) {
             padding: 10px;
             cursor: pointer;
+
+            &:hover {
+              background-color: darken($color: white, $amount: 10%)
+            }
+
             &:not(:last-child) {
               border-bottom: solid 1px #e2e2e2;
             }

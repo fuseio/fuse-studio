@@ -1,3 +1,71 @@
+@include block(toggle) {
+	max-height: 18px;
+	position: relative;
+	height: 100%;
+	display: inline-block;
+
+	@include breakpoint(small only) {
+		margin-bottom: auto;
+	}
+
+	> input {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
+		opacity: 0;
+	}
+
+	.toggle {
+		&-wrapper {
+			width: 34px;
+			height: 18px;
+			background-color: $disabled;
+			border-radius: 10px;
+			position: relative;
+		}
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		display: block;
+		position: absolute;
+		width: 14px;
+		border-radius: 50%;
+		height: 14px;
+		background: #fff;
+		top: 2px;
+		left: 2px;
+		border: 1px solid $disabled;
+		-webkit-transition: all 0.2s ease;
+		-moz-transition: all 0.2s ease;
+		-ms-transition: all 0.2s ease;
+		-o-transition: all 0.2s ease;
+		transition: all 0.2s ease;
+		text-align: center;
+	}
+
+	.toggle:before {
+		content: "";
+		color: #fff;
+		text-shadow: 1px 1px #000;
+		font-family: tahoma;
+		font-size: 11px;
+	}
+	> input:checked ~ .toggle-wrapper {
+		background: linear-gradient(97deg, #98faac, #fae83e);
+		.toggle {
+			left: 18px;
+			border-color: #fae83e;
+		}
+	}
+
+	input:checked + .toggle:before {
+		content: "";
+	}
+}
+
 @include block(logo-circle) {
 	
 	@include element(outer) {

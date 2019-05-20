@@ -7,12 +7,8 @@ import LogosOptions from './LogosOptions'
 import CurrencyType from './CurrencyType'
 
 export default class DetailsStep extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      currentStep: 0
-    }
+  state = {
+    currentStep: 0
   }
 
   nextAttribute = () => {

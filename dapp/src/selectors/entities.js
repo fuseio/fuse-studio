@@ -24,8 +24,12 @@ export const getBusinessesEntities = createSelector(
 
 export const checkIsAdmin = createSelector(
   getAccountAddress,
+  getCommunityAddress,
   state => state.entities.communityEntities,
-  (accountAddress, communityEntities) => {
-    return (communityEntities[accountAddress] && communityEntities[accountAddress].isAdmin) || false
+  (accountAddress, communityAddress, communityEntities) => {
+    return (communityEntities[accountAddress] &&
+      communityEntities[accountAddress].communityAddress &&
+      communityEntities[accountAddress].communityAddress === communityAddress &&
+      communityEntities[accountAddress].isAdmin) || false
   }
 )

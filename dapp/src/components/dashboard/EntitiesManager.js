@@ -14,7 +14,8 @@ import {
   removeEntity,
   addAdminRole,
   removeAdminRole,
-  confirmUser
+  confirmUser,
+  toggleCommunityMode
 } from 'actions/communityEntities'
 import Entity from './Entity.jsx'
 import EmptyBusinessList from 'images/emptyBusinessList.png'
@@ -51,6 +52,12 @@ const EntitiesManagerDataFetcher = (props) => {
   }, [props.foreignTokenAddress])
 
   useEffect(() => {
+    if (props.toggleSuccess) {
+      props.fetchCommunity(props.foreignTokenAddress)
+    }
+  }, [props.toggleSuccess])
+
+  useEffect(() => {
     if (props.communityAddress) {
       props.fetchUsersEntities(props.communityAddress)
       props.fetchBusinessesEntities(props.communityAddress)
@@ -61,18 +68,14 @@ const EntitiesManagerDataFetcher = (props) => {
 }
 
 class EntitiesManager extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      showSearch: false,
-      search: '',
-      showUsers: true,
-      filters: {
-        pending: false,
-        isApproved: true,
-        isAdmin: false
-      }
+  state = {
+    showSearch: false,
+    search: '',
+    showUsers: true,
+    filters: {
+      pending: false,
+      isApproved: true,
+      isAdmin: false
     }
   }
 
@@ -122,7 +125,7 @@ class EntitiesManager extends Component {
 
   filterBySearch = (search, entities) =>
     search ? entities.filter(entity =>
-      entity.name.toLowerCase().search(
+      entity && entity.name && entity.name.toLowerCase().search(
         this.state.search.toLowerCase()) !== -1
     ) : entities
 
@@ -133,23 +136,29 @@ class EntitiesManager extends Component {
   }
 
   handleRemoveEntity = (account) => {
-    const { removeEntity, communityAddress } = this.props
-    removeEntity(communityAddress, account)
+    const { removeEntity, communityAddress, onlyOnFuse } = this.props
+    onlyOnFuse(removeEntity(communityAddress, account))
   }
 
   handleAddAdminRole = (account) => {
-    const { addAdminRole } = this.props
-    addAdminRole(account)
+    const { addAdminRole, onlyOnFuse } = this.props
+    onlyOnFuse(addAdminRole(account))
   }
 
   handleRemoveAdminRole = (account) => {
-    const { removeAdminRole } = this.props
-    removeAdminRole(account)
+    const { removeAdminRole, onlyOnFuse } = this.props
+    onlyOnFuse(removeAdminRole(account))
   }
 
   handleConfirmUser = (account) => {
-    const { confirmUser } = this.props
-    confirmUser(account)
+    const { confirmUser, onlyOnFuse } = this.props
+    onlyOnFuse(confirmUser(account))
+  }
+
+  handleToggleCommunityMode = (event) => {
+    const isClosed = event.target.checked
+    const { communityAddress, toggleCommunityMode, onlyOnFuse } = this.props
+    onlyOnFuse(toggleCommunityMode(communityAddress, isClosed))
   }
 
   renderList = (entities) => {
@@ -316,20 +325,22 @@ class EntitiesManager extends Component {
                         )
                       }
                     </div>
-                    <div className='entities__actions__buttons'>
-                      <button
-                        className={classNames('entities__actions__buttons__btn', { 'entities__actions__buttons__btn--active': !showUsers })}
-                        onClick={() => this.setState({ showUsers: false })}
-                      >Merchant</button>
-                      <button
-                        className={classNames('entities__actions__buttons__btn', { 'entities__actions__buttons__btn--active': showUsers })}
-                        onClick={() => this.setState({ showUsers: true })}
-                      >User</button>
+                    <div className='entities__actions__buttons__wrapper'>
+                      <div className='entities__actions__buttons'>
+                        <button
+                          className={classNames('entities__actions__buttons__btn', { 'entities__actions__buttons__btn--active': !showUsers })}
+                          onClick={() => this.setState({ showUsers: false, search: '' })}
+                        >Merchant</button>
+                        <button
+                          className={classNames('entities__actions__buttons__btn', { 'entities__actions__buttons__btn--active': showUsers })}
+                          onClick={() => this.setState({ showUsers: true, search: '' })}
+                        >User</button>
+                      </div>
                     </div>
-                    <div className='entities__actions__add'>
+                    <div className='entities__actions__add__wrapper'>
                       {
                         (isAdmin || !isClosed) && (
-                          <Fragment>
+                          <div className='entities__actions__add'>
                             {
                               networkType === 'fuse'
                                 ? (
@@ -343,9 +354,16 @@ class EntitiesManager extends Component {
                                 )
                             }
                             {showUsers ? 'Add new user' : 'Add new merchant'}
-                          </Fragment>
+                          </div>
                         )
                       }
+                      <div className='entities__actions__add__community'>
+                        <label className='toggle'>
+                          <input type='checkbox' value={isClosed} checked={isClosed} onChange={this.handleToggleCommunityMode} />
+                          <div className='toggle-wrapper'><span className='toggle' /></div>
+                        </label>
+                        <span>{ !isClosed ? 'Open' : 'Close' } community</span>
+                      </div>
                     </div>
                   </div>
                   <div className='entities__search'>
@@ -376,6 +394,7 @@ class EntitiesManager extends Component {
             fetchCommunity={this.props.fetchCommunity}
             fetchBusinessesEntities={this.props.fetchBusinessesEntities}
             fetchUsersEntities={this.props.fetchUsersEntities}
+            toggleSuccess={this.props.toggleSuccess}
           />
         </div>
       </Fragment >
@@ -406,7 +425,8 @@ const mapDispatchToProps = {
   fetchHomeToken,
   fetchCommunity,
   fetchBusinessesEntities,
-  fetchUsersEntities
+  fetchUsersEntities,
+  toggleCommunityMode
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EntitiesManager)

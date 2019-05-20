@@ -27,6 +27,28 @@ function * confirmUser ({ account }) {
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
 }
 
+function * toggleCommunityMode ({ communityAddress, isClosed }) {
+  const accountAddress = yield select(getAccountAddress)
+  const CommunityContract = getContract({ abiName: 'CommunityTransferManager',
+    address: communityAddress
+  })
+  if (isClosed) {
+    const method = CommunityContract.methods.addRule(roles.APPROVED_ROLE, roles.APPROVED_ROLE)
+    const transactionPromise = method.send({
+      from: accountAddress
+    })
+    const action = actions.TOGGLE_COMMNITY_MODE
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  } else {
+    const method = CommunityContract.methods.removeRule(0)
+    const transactionPromise = method.send({
+      from: accountAddress
+    })
+    const action = actions.TOGGLE_COMMNITY_MODE
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  }
+}
+
 function * addAdminRole ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
   const accountAddress = yield select(getAccountAddress)
@@ -143,6 +165,7 @@ const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchE
 export default function * commuityEntitiesSaga () {
   yield all([
     tryTakeEvery(actions.ADD_ENTITY, addEntity, 1),
+    tryTakeEvery(actions.TOGGLE_COMMNITY_MODE, toggleCommunityMode, 1),
     tryTakeEvery(actions.REMOVE_ENTITY, removeEntity, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity, 1),
     tryTakeEvery(actions.FETCH_USERS_ENTITIES, fetchUsersEntities, 1),

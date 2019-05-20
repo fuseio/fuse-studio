@@ -48,15 +48,11 @@ UserDataModal.propTypes = {
 }
 
 class Dashboard extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      transferMessage: false,
-      burnMessage: false,
-      mintMessage: false,
-      lastAction: {}
-    }
+  state = {
+    transferMessage: false,
+    burnMessage: false,
+    mintMessage: false,
+    lastAction: {}
   }
 
   handleIntervalChange = (userType, intervalValue) => {

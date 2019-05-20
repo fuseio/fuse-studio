@@ -8,5 +8,6 @@ module.exports = {
   BasicForeignBridge: require('./BasicForeignBridge'),
   BasicHomeBridge: require('./BasicHomeBridge'),
   Community: require('@fuse/entities-contracts/build/abi/CommunityWithEvents'),
-  IRestrictedToken: require('./IRestrictedToken')
+  IRestrictedToken: require('./IRestrictedToken'),
+  CommunityTransferManager: require('@fuse/entities-contracts/build/abi/CommunityTransferManager')
 }

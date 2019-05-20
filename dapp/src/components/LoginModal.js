@@ -7,11 +7,8 @@ import LockIcon from 'images/lock.png'
 import MetamaskIcon from 'images/metamask.png'
 
 class LoginModal extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      finishInstall: false
-    }
+  state = {
+    finishInstall: false
   }
 
   onClose = () => {
