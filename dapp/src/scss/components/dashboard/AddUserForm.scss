@@ -1,0 +1,172 @@
+@include block(user-form) {
+  padding: 1em 5em ;
+  flex-basis: 55%;
+
+  @include element(wrapper) {
+    @include xy-grid();
+  }
+
+  @include element(modal) {
+    width: 1000px !important;
+    padding: 0 !important;
+  }
+
+  @include element(image) {
+    flex-basis: 30%;
+    min-height: 535px;
+    > div {
+      background-image: url(../../assets/images/dynamicdash.png);
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 100%;
+      display: inline-block;
+      height: 100%;
+    }
+  }
+  
+  @include element(title) {
+    text-align: start;
+    font-size: 14rem;
+    font-weight: 500;
+    color: $color-primary-dark;
+    margin-bottom: 1em;
+  }
+
+  @include element(text) {
+    text-align: start !important;
+    color: $color-primary-dark;
+    font-size: 11rem;
+  }
+
+  @include element(field) {
+    @include xy-grid();
+    @include flex-align(null, middle);
+    width: 100%;
+    position: relative;
+
+    > .input-error {
+      bottom: -1.3em;
+      margin-left: 36%;
+    }
+
+    @include element(phone) {
+      @include xy-grid(vertical);
+      @include flex-align(center, middle);
+      flex: 1;
+      border-radius: 10px;
+
+      > input {
+        width: 100%;
+        &:last-child {
+          border-radius: 0 0 10px 10px
+        }
+        &:first-child {
+          border-radius: 10px 10px 0 0;
+        }
+      }
+
+      @include element(input) {
+        border: 1px solid $color-brdr-issuance;
+        font-family: $font-family-lato;
+        padding: 5px 12px;
+        display: block;
+        height: 2em;
+        font-size: 12rem;
+        box-sizing: border-box;
+        color: $color-primary-dark;
+      }
+    }
+
+    @include element(input) {
+      border-radius: 16px;
+      border: 1px solid $color-brdr-issuance;
+      font-family: $font-family-lato;
+      flex: 1;
+      padding: 5px 12px;
+      display: block;
+      height: 2em;
+      font-size: 12rem;
+      box-sizing: border-box;
+      color: $color-primary-dark;
+      &::placeholder {
+        color: #c0c5d2;
+      }
+      &:focus {
+        // border: 1px solid $color-orange;
+      }
+    }
+
+    @include element(select) {
+      border-radius: 16px;
+      display: inline-block;
+      flex: 1;
+      @include element(prefix) {
+        color: #0a7586 !important;
+        font-size: 12rem;
+        &__control {
+          border: 1px solid $color-brdr-issuance !important;
+          min-height: auto !important;
+          border-radius: 16px !important;
+          height: 2em;
+          border-color: none !important;
+        }
+        &__value-container {
+          height: inherit;
+        }
+        &__placeholder,
+        &__single-value {
+          color: #8d95a9 !important;
+          font-size: 12rem !important;
+        }
+        &__indicator-separator {
+          display: none;
+        }
+        &__option {
+          color: #0a7586 !important;
+          font-size: 12rem !important;
+          text-align: start;
+          &--is-focused {
+            background-color: rgba(10, 117, 134, 0.53) !important;
+          }
+          &--is-selected {
+            background-color: rgba(10, 117, 134, 0.08) !important;
+          }
+        }
+        &__dropdown-indicator {
+          &::before {
+            content: "";
+            display: block;
+            position: absolute;
+            right: 10px;
+            width: 0;
+            height: 0;
+            top: 13px;
+            border-style: solid;
+            border-color: #8d95a9 transparent transparent transparent;
+            border-width: 6px;
+          }
+          [class^="css"] {
+            display: none;
+          }
+        }
+      }
+    }
+
+    @include element(label) {
+      font-size: 11rem;
+      font-weight: bold;
+      color: #8d95a9;
+      flex-basis: 35%;
+      text-align: start;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1.8em;
+    }
+  }
+
+  @include element(submit) {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

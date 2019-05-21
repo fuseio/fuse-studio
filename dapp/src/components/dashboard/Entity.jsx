@@ -34,25 +34,28 @@ export default class Entity extends PureComponent {
         businessType,
         type,
         account,
-        isAdmin,
+        isAdmin: hasAdminRole,
         isApproved
       },
+      metadata,
       showProfile,
       handleRemove,
       addAdminRole,
       removeAdminRole,
-      confirmUser
+      confirmUser,
+      isAdmin
     } = this.props
 
     const { isOpen } = this.state
 
     return (
       <div className='entities__entity'>
-        <div className='entities__entity__logo' onClick={() => showProfile()}>
+        <div className='entities__entity__logo' onClick={type !== 'user' ? () => showProfile() : null}>
           <FontAwesome name='bullseye' />
         </div>
-        <div className='entities__entity__content' onClick={() => showProfile()}>
-          <span className='entities__entity__content__title'>{name || ' '}</span>
+        <div className='entities__entity__content' onClick={type !== 'user' ? () => showProfile() : null}>
+          {name && <span className='entities__entity__content__title'>{name || ' '}</span>}
+          {metadata && metadata.firstName && <span className='entities__entity__content__title'>{`${metadata.firstName} ${metadata.lastName}` || ' '}</span>}
           {businessType && <div className='entities__entity__content__type'>{businessType}</div>}
           <div className='entities__entity__content__subtitle'>
             <span className='text-asset'>Account ID</span>
@@ -64,49 +67,53 @@ export default class Entity extends PureComponent {
             </CopyToClipboard>
           </div>
         </div>
-        <div
-          className='entities__entity__more'
-          ref={this.setDropdownRef}
-          onClick={(e) => {
-            e.stopPropagation()
-            this.setState({ isOpen: !isOpen })
-          }}
-        >
-          <FontAwesome name='ellipsis-v' />
-          <div className={classNames('more', { 'more--show': isOpen })} onClick={e => e.stopPropagation()}>
-            {
-              type === 'business' && (
-                <ul className='more__options'>
-                  <li className='more__options__item' onClick={() => handleRemove(account)}>Remove</li>
-                </ul>
-              )
-            }
-            {
-              type === 'user' && isApproved && !isAdmin && (
-                <ul className='more__options'>
-                  <li className='more__options__item' onClick={() => handleRemove(account)}>Remove</li>
-                  <li className='more__options__item' onClick={() => addAdminRole(account)}>Make admin</li>
-                </ul>
-              )
-            }
-            {
-              type === 'user' && isAdmin && isApproved && (
-                <ul className='more__options'>
-                  <li className='more__options__item' onClick={() => handleRemove(account)}>Remove</li>
-                  <li className='more__options__item' onClick={() => removeAdminRole(account)}>Remove as admin</li>
-                </ul>
-              )
-            }
-            {
-              type === 'user' && !isApproved && !isAdmin && (
-                <ul className='more__options'>
-                  <li className='more__options__item' onClick={() => confirmUser(account)}>Confirm</li>
-                  <li className='more__options__item' onClick={() => addAdminRole(account)}>Make admin</li>
-                </ul>
-              )
-            }
-          </div>
-        </div>
+        {
+          isAdmin && (
+            <div
+              className='entities__entity__more'
+              ref={this.setDropdownRef}
+              onClick={(e) => {
+                e.stopPropagation()
+                this.setState({ isOpen: !isOpen })
+              }}
+            >
+              <FontAwesome name='ellipsis-v' />
+              <div className={classNames('more', { 'more--show': isOpen })} onClick={e => e.stopPropagation()}>
+                {
+                  type === 'business' && (
+                    <ul className='more__options'>
+                      <li className='more__options__item' onClick={() => handleRemove(account)}>Remove</li>
+                    </ul>
+                  )
+                }
+                {
+                  type === 'user' && isApproved && !hasAdminRole && (
+                    <ul className='more__options'>
+                      <li className='more__options__item' onClick={() => handleRemove(account)}>Remove</li>
+                      <li className='more__options__item' onClick={() => addAdminRole(account)}>Make admin</li>
+                    </ul>
+                  )
+                }
+                {
+                  type === 'user' && hasAdminRole && isApproved && (
+                    <ul className='more__options'>
+                      <li className='more__options__item' onClick={() => handleRemove(account)}>Remove</li>
+                      <li className='more__options__item' onClick={() => removeAdminRole(account)}>Remove as admin</li>
+                    </ul>
+                  )
+                }
+                {
+                  type === 'user' && !isApproved && !hasAdminRole && (
+                    <ul className='more__options'>
+                      <li className='more__options__item' onClick={() => confirmUser(account)}>Confirm</li>
+                      <li className='more__options__item' onClick={() => addAdminRole(account)}>Make admin</li>
+                    </ul>
+                  )
+                }
+              </div>
+            </div>
+          )
+        }
       </div>
 
     )

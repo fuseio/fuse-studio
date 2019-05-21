@@ -9,7 +9,7 @@ import { createEntitiesMetadata } from 'sagas/metadata'
 import * as tokenApi from 'services/api/token'
 import * as entitiesApi from 'services/api/entities'
 import { transactionFlow } from './transaction'
-import { roles } from '@fuse/roles'
+import { roles, combineRoles } from '@fuse/roles'
 
 function * confirmUser ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
@@ -81,12 +81,15 @@ function * removeAdminRole ({ account }) {
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
 }
 
-function * addUser ({ communityAddress, data }) {
+function * addUser ({ communityAddress, data, isClosed }) {
   const accountAddress = yield select(getAccountAddress)
   const CommunityContract = getContract({ abiName: 'Community',
     address: communityAddress
   })
-  const method = CommunityContract.methods.addEntity(data.account, roles.USER_ROLE)
+
+  let userRoles = isClosed ? roles.USER_ROLE : combineRoles(roles.USER_ROLE, roles.APPROVED_ROLE)
+
+  const method = CommunityContract.methods.addEntity(data.account, userRoles)
   const transactionPromise = method.send({
     from: accountAddress
   })
@@ -110,9 +113,9 @@ function * addBusiness ({ communityAddress, data }) {
   yield call(createEntitiesMetadata, { communityAddress, accountId: data.account, metadata: data })
 }
 
-function * addEntity ({ communityAddress, data }) {
+function * addEntity ({ communityAddress, data, isClosed }) {
   if (data.type === 'user') {
-    yield call(addUser, { communityAddress, data })
+    yield call(addUser, { communityAddress, data, isClosed })
   } else if (data.type === 'business') {
     yield call(addBusiness, { communityAddress, data })
   }

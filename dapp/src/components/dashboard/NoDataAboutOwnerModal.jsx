@@ -28,7 +28,4 @@ class NoDataAboutOwnerModal extends React.Component {
   }
 }
 
-NoDataAboutOwnerModal.propTypes = {
-}
-
 export default NoDataAboutOwnerModal

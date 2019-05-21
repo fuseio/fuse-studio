@@ -7,6 +7,8 @@
   background-size: 20px 2px, 20px 2px, 2px 20px, 2px 20px;
 }
 
+
+
 @include block(entities) {
   @include element(wrapper) {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -51,7 +53,7 @@
       }
 
       > span {
-        font-size: .75rem;
+        font-size: 12rem;
         &:nth-child(2) {
           margin-left: 5px;
           font-weight: 500;
@@ -90,7 +92,7 @@
           padding: 0;
           @include xy-grid(vertical);
           @include flex-align(spaced);
-          font-size: 0.75rem;
+          font-size: 12rem;
           cursor: initial;
 
           @include element(item) {
@@ -201,7 +203,7 @@
     @include element(add) {
       
       @include element(wrapper) {
-        font-size: 11px;
+        font-size: 11rem;
         @include xy-grid();
         @include flex-align(justify, middle);
         flex-basis: 30%;
@@ -227,7 +229,7 @@
         margin-left: auto;
 
         .fa {
-          font-size: 20px;
+          font-size: 20rem;
         }
 
         > a {
@@ -247,7 +249,6 @@
     width: 100%;
     align-items: flex-start;
     margin-bottom: 1em;
-    padding: 0 50px;
 
     @include element(icon) {
       color: $color-step;
@@ -255,7 +256,7 @@
       border: none;
       background: none;
       outline: none;
-      font-size: 12px;
+      font-size: 12rem;
       padding: 8px 10px;
 
       &:hover,
@@ -279,7 +280,7 @@
       flex: 1;
       padding: 7px 0;
       border: none;
-      font-size: 12px;
+      font-size: 12rem;
       font-weight: 500;
       &::placeholder {
         font-weight: 500;
@@ -309,14 +310,14 @@
     
     @include element(title) {
       color: $color-primary-dark;
-      font-size: 12px;
+      font-size: 12rem;
       font-weight: 500;
       margin-bottom: 10px;
     }
 
     @include element(text) {
       color: $color-step;
-      font-size: 12px;
+      font-size: 12rem;
       margin-bottom: 20px;
     }
 
@@ -326,7 +327,7 @@
       padding: 9px 20px;
       background-color: $color-ropsten;
       border-radius: 16px;
-      font-size: 11px;
+      font-size: 11rem;
       text-transform: uppercase;
       display: inline-block;
       margin: 0 auto;
@@ -359,7 +360,7 @@
 
     @include element(empty) {
       color: $color-white;
-      font-size: 16px;
+      font-size: 16rem;
     }
   }
 
@@ -371,12 +372,12 @@
 
     @include element(title) {
       color: $color-primary-dark;
-      font-size: 30px;
+      font-size: 30rem;
       margin-bottom: 10px;
     }
     @include element(text) {
       color: $color-author;
-      font-size: 12px;
+      font-size: 12rem;
       margin-bottom: 20px;
     }
 
@@ -386,7 +387,7 @@
       padding: 9px 20px;
       background-color: $color-ropsten;
       border-radius: 16px;
-      font-size: 11px;
+      font-size: 11rem;
       text-transform: uppercase;
       display: inline-block;
       margin: 0 auto;
@@ -420,7 +421,7 @@
       border-radius: 50%;
       background-color: $color-white;
       line-height: 55px;
-      font-size: 55px;
+      font-size: 55rem;
       color: $color-step-field;
       margin-right: 15px;
       text-align: center;
@@ -433,7 +434,7 @@
       cursor: pointer;
       @include element(title) {
         color: $color-primary-dark;
-        font-size: 12px;
+        font-size: 12rem;
         margin-bottom: 7px;
         display: inline-block;
 
@@ -445,19 +446,19 @@
 
       @include element(type) {
         color: $color-author;
-        font-size: 10px;
+        font-size: 10rem;
         text-transform: capitalize;
       }
 
       @include element(subtitle) {
         color: $color-primary-dark;
-        font-size: 11px;
+        font-size: 11rem;
         font-weight: 500;
 
         .fa-clone {
           margin-left: 10px;
           font-weight: 400;
-          font-size: 12px;
+          font-size: 12rem;
           color: $color-arrow;
           &:hover {
             font-weight: 900;
@@ -466,7 +467,7 @@
     
         .text-asset {
           text-transform: capitalize;
-          font-size: 12px;
+          font-size: 12rem;
           font-weight: bold;
         }
         .id {
@@ -486,7 +487,7 @@
       top: 9px;
       right: 10px;
       color: $color-primary-dark;
-      font-size: .75rem;
+      font-size: 12rem;
 
       .fa {
         color: $color-step;
@@ -522,7 +523,7 @@
           padding: 0;
           @include xy-grid(vertical);
           @include flex-align(spaced);
-          font-size: 0.75rem;
+          font-size: 12rem;
           cursor: initial;
 
           @include element(item) {
@@ -545,7 +546,7 @@
 
 .btn-entity-search {
   color: $color-step;
-  font-size: 13px;
+  font-size: 13rem;
   font-weight: bold;
   border: none;
   background: none;
@@ -586,7 +587,7 @@
     border-radius: 50%;
     background-color: $color-white;
     line-height: 52px;
-    font-size: 40px;
+    font-size: 40rem;
     color: $color-step-field;
     margin-right: 15px;
     text-align: center;
@@ -596,7 +597,7 @@
   }
   &-name {
     color: $color-primary-dark;
-    font-size: 12px;
+    font-size: 12rem;
     margin-bottom: 7px;
     &:hover {
       cursor: pointer;
@@ -605,19 +606,19 @@
   }
   &-type {
     color: $color-author;
-    font-size: 10px;
+    font-size: 10rem;
     margin-bottom: 10px;
     text-transform: capitalize;
   }
   &-subtitle {
     color: $color-primary-dark;
-    font-size: 11px;
+    font-size: 11rem;
     font-weight: 500;
 
     .fa-clone {
       margin-left: 10px;
       font-weight: 400;
-      font-size: 12px;
+      font-size: 12rem;
       color: $color-arrow;
       &:hover {
         font-weight: 900;
@@ -627,7 +628,7 @@
     .text-asset {
       color: $color-author;
       text-transform: capitalize;
-      font-size: 12px;
+      font-size: 12rem;
       font-weight: bold;
       font-family: $font-family;
       font-style: normal;
@@ -669,13 +670,13 @@
       border-right: none;
       border-bottom: 1px solid $color-brdr-issuance;
       padding: 15px 0;
-      font-size: 20px;
+      font-size: 20rem;
       margin-bottom: 10px;
       font-weight: 500;
       color: #1a2b59;
       width: 100%;
       &::placeholder {
-        font-size: 17px;
+        font-size: 17rem;
         color: #b3b9c8;
         font-style: italic;
       }
@@ -694,7 +695,7 @@
         padding: 20px;
       }
       &-title {
-        font-size: 36px;
+        font-size: 36rem;
         font-weight: bold;
         line-height: 1.16;
         letter-spacing: -0.2px;
@@ -723,7 +724,7 @@
         color: #0a7586;
         border-radius: 3px;
         padding: 30px 0;
-        font-size: 11px;
+        font-size: 11rem;
         margin-bottom: 20px;
         background: linear-gradient(to right, #c0c5d2 50%, rgba(255, 255, 255, 0) 0%),
           linear-gradient(#c0c5d2 50%, rgba(255, 255, 255, 0) 0%),
@@ -736,7 +737,7 @@
           text-align: center;
           .fa {
             color: #e1e3ea;
-            font-size: 32px;
+            font-size: 32rem;
             display: block;
             margin-bottom: 5px;
           }
@@ -750,7 +751,7 @@
         width: 100%;
         &-prefix {
           color: #0a7586 !important;
-          font-size: 12px;
+          font-size: 12rem;
           &__value-container {
             padding: 4px 8px !important;
           }
@@ -763,14 +764,14 @@
           &__placeholder,
           &__single-value {
             color: #0a7586 !important;
-            font-size: 12px !important;
+            font-size: 12rem !important;
           }
           &__indicator-separator {
             display: none;
           }
           &__option {
             color: #0a7586 !important;
-            font-size: 12px !important;
+            font-size: 12rem !important;
             &--is-focused {
               background-color: rgba(10, 117, 134, 0.53) !important;
             }
@@ -834,7 +835,7 @@
         display: inline-block;
         padding: 7px;
         color: #0a7586;
-        font-size: 12px;
+        font-size: 12rem;
         margin-bottom: 5px;
         margin-right: 7px;
         border: 1px solid rgba(10, 117, 134, 0.08);
@@ -874,7 +875,7 @@
         border-top: 1px solid $color-brdr-issuance;
       }
       &-title {
-        font-size: 12px;
+        font-size: 12rem;
         font-weight: 500;
         color: #1a2b59;
       }
@@ -895,7 +896,7 @@
           }
         }
         &-type {
-          font-size: 13px;
+          font-size: 13rem;
           line-height: 3.38;
           color: #8d95a9;
           position: absolute;
@@ -932,7 +933,7 @@
           .upload-text {
             border: none;
             outline: none;
-            font-size: 12px;
+            font-size: 12rem;
           }
           input {
             display: none;
@@ -961,22 +962,24 @@
         padding: 5px 12px;
         margin-bottom: 20px;
         display: block;
-        font-size: 12px;
+        font-size: 12rem;
         box-sizing: border-box;
         color: #1a2b59;
-        &-label {
-          font-size: 11px !important;
-          font-weight: bold !important;
-          line-height: 3 !important;
-          color: #8d95a9 !important;
-        }
+        
         &::placeholder {
-          font-size: 13px;
+          font-size: 13rem;
           color: #c0c5d2;
           font-style: italic;
         }
         &:focus {
           border: 1px solid $color-orange;
+        }
+
+        &-label {
+          font-size: 11rem !important;
+          font-weight: bold !important;
+          line-height: 3 !important;
+          color: #8d95a9 !important;
         }
       }
     }
@@ -1038,7 +1041,7 @@
       }
       &-point {
         color: $color-primary-dark;
-        font-size: 12px;
+        font-size: 12rem;
         line-height: 2.25;
         overflow: hidden;
         a {
@@ -1055,7 +1058,7 @@
         .fa {
           margin-right: 10px;
           color: $color-orange;
-          font-size: 16px;
+          font-size: 12rem;
           min-width: 18px;
         }
       }
@@ -1085,7 +1088,7 @@
       border-radius: 50%;
       color: $color-orange;
       text-align: center;
-      font-size: 85px;
+      font-size: 85rem;
       position: absolute;
       top: -25px;
       box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.21);
@@ -1093,14 +1096,14 @@
     &-title {
       color: $color-primary-dark;
       line-height: 1.3;
-      font-size: 20px;
+      font-size: 20rem;
       font-weight: normal;
       font-family: $font-family;
     }
     &-type {
       color: $color-btn-control;
       line-height: 2.08;
-      font-size: 13px;
+      font-size: 13rem;
       font-weight: 500;
       margin-bottom: 20px;
       text-transform: capitalize;
@@ -1111,7 +1114,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 12rem;
       &-edit {
         cursor: pointer;
       }
@@ -1173,7 +1176,7 @@
           color: #fff;
           text-shadow: 1px 1px #000;
           font-family: tahoma;
-          font-size: 11px;
+          font-size: 11rem;
         }
         > input:checked ~ .toggle-wrapper {
           background-color: $color-mainnet;
@@ -1189,7 +1192,7 @@
       }
     }
     &-link {
-      font-size: 12px;
+      font-size: 12rem;
       color: $color-primary-dark;
       line-height: 2.17;
 

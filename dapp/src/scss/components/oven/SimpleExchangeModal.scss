@@ -35,7 +35,7 @@
       }
 
       .label {
-        font-size: 10px;
+        font-size: 10rem;
         font-weight: bold;
         text-transform: uppercase;
         color: $color-step;
@@ -69,7 +69,7 @@
       background-color: #eceff6;
 			.label {
 				color: #6e6d9f;
-				font-size: 11px;
+				font-size: 11rem;
 				height: 13px;
 				font-weight: bold;
 				margin-bottom: 10px;
@@ -94,18 +94,18 @@
       @include flex-direction(column);
 			input {
 				color: #5fddbb;
-				font-size: 16px;
+				font-size: 16rem;
 				border: none;
 				outline: none;
 				background: none;
 				text-align: center;
 				font-weight: bold;
 				&::placeholder {
-					font-size: 20px;
+					font-size: 20rem;
 					color: #d4d5eb;
 				}
 				@media (max-width: $breakpoint-mobile) {
-					font-size: 14px;
+					font-size: 14rem;
 				}
 			}
     }
@@ -115,18 +115,18 @@
       @include flex-direction(column);
 			input {
 				color: #6e6d9f;
-				font-size: 16px;
+				font-size: 16rem;
 				border: none;
 				outline: none;
 				background: none;
 				text-align: center;
 				font-weight: bold;
 				&::placeholder {
-					font-size: 16px;
+					font-size: 16rem;
 					color: #d4d5eb;
 				}
 				@media (max-width: $breakpoint-mobile) {
-					font-size: 14px;
+					font-size: 14rem;
 				}
 			}
     }
@@ -137,7 +137,7 @@
 .btn-exchange {
 	text-transform: uppercase;
 	color: $color-white;
-	font-size: 11px;
+	font-size: 11rem;
 	border-radius: 3px;
 	padding: 12.5px 52.5px;
 	background: #5fddbb;

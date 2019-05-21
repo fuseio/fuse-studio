@@ -35,13 +35,13 @@
 		&-text {
 			padding: 20px 0;
 			color: $color-white;
-			font-size: 17px;
+			font-size: 17rem;
 			line-height: 1.55;
   		letter-spacing: -0.4px;
 		}
 		&-title {
 			color: $color-white;
-			font-size: 40px;
+			font-size: 40rem;
 			line-height: 1.25;
   		letter-spacing: -0.5px;
 		}
@@ -49,7 +49,7 @@
 			padding: 10px;
 			background: $color-ropsten;
 			border: none;
-			font-size: 12px;
+			font-size: 12rem;
 			text-transform: uppercase;
 			color: $color-white;
 			font-weight: bold;
@@ -87,13 +87,13 @@
 		background-color:  #f7f8fc;
 
 		&-title {
-			font-size: 2em;
+			font-size: 32rem;
  			letter-spacing: -0.7px;
 			font-weight: bold;
 			color: $color-primary-dark;
 
 			@include breakpoint(medium down) {
-				font-size: 1.5em;
+				font-size: 24rem;
 			}
 		}
 
@@ -153,7 +153,7 @@
 			padding-top: 15px;
 			text-align: center;
 			color: #b6b5d8;
-			font-size: 13px;
+			font-size: 13rem;
 			.fa {
 				margin-right: 5px;
 			}
@@ -179,7 +179,7 @@
 		}
 
 		.coin-name {
-			font-size: 15px;
+			font-size: 15rem;
 			color: $color-primary-dark;
 			text-align: center;
       font-weight: 400;
@@ -189,7 +189,7 @@
 		}
 
 		.coin-total {
-			font-size: 10px;
+			font-size: 10rem;
 			font-weight: bold;
 			text-transform: uppercase;
 			color: $color-step;
@@ -216,17 +216,17 @@
 			display: flex;
 			padding: 30px 27px;
 			h1 {
-				font-size: 18px;
+				font-size: 18rem;
 				margin-bottom: 2px;
 				text-transform: uppercase;
 				font-weight: bold;
 			}
 			.price-wrapper {
-				font-size: 14px;
+				font-size: 14rem;
 				h2 {
 					-webkit-margin-before: 0;
 						-webkit-margin-after: 0;
-					font-size: 14px;
+					font-size: 14rem;
 				}
 			}
 			@media (max-width: $breakpoint-mobile) {
@@ -252,7 +252,7 @@
 			min-height: 90px;
 
 			.total-content {
-				font-size: 10px;
+				font-size: 10rem;
 				font-weight: bold;
 				text-transform: uppercase;
 				color: $color-step;
@@ -260,7 +260,7 @@
 			}
 
 			.total-supply {
-				font-size: 19px;
+				font-size: 19rem;
 				font-weight: 500;
 				text-align: center;
 				color: $color-step-field;
@@ -275,13 +275,13 @@
 
 			.coin-reverse {
 				font-weight: 500;
-				font-size: 30px;
+				font-size: 30rem;
 				color: $color-step-field;
 			}
 
 			.coin-currency-type {
 				color: $color-step;
-				font-size: 10px;
+				font-size: 10rem;
 				font-weight: bold;
 				text-transform: uppercase;
 				margin-right: 10px;
@@ -289,7 +289,7 @@
 
 			.coin-currency {
 				color: $color-white;
-				font-size: 10px;
+				font-size: 10rem;
 				font-weight: bold;
 				text-transform: uppercase;
 			}

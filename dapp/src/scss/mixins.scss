@@ -21,7 +21,7 @@
 }
 
 @mixin input() {
-    font-size: 14px;
+    font-size: 14rem;
 	font-weight: 500;
 	letter-spacing: 0;
 	color: $dark-grey;
@@ -30,19 +30,19 @@
 	margin-top: 12px;
   background-color: transparent;
 	@media (max-width: $breakpoint-tablet) {
-		font-size: 16px;
+		font-size: 16rem;
 	}
 }
 
 @mixin label() {
-    font-size: 12px;
+    font-size: 12rem;
 	font-weight: 500;
 	letter-spacing: 0;
 	color: #5a5959;
 }
 
 @mixin input-feedback() {
-    font-size: 14px;
+    font-size: 14rem;
 	color: #ff5705;
 	position: absolute;
 	bottom: -20px;
@@ -57,7 +57,7 @@
 	height: 34px;
 	border-radius: 2px;
 	background-color: $background;
-	font-size: 14px;
+	font-size: 14rem;
 	font-weight: 500;
 	text-transform: uppercase;
 	border: none;

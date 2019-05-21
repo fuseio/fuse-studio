@@ -11,9 +11,9 @@
 @import 'foundation/foundation';
 @import 'foundation/utils';
 @import 'components/placeholders/placeholders';
-@import 'elements';
 @import 'common';
 @import 'config/config';
+@import 'resets/resets';
 
 
 /*---------Components Styles--------*/
@@ -34,14 +34,15 @@
 @import 'components/issuance/IssuedPopup';
 
 @import 'components/dashboard/Dashboard';
-@import 'components/dashboard/EntityDirectory';
+@import 'components/dashboard/EntitiesManager';
+@import 'components/dashboard/AddUserForm.scss';
 @import 'components/dashboard/GenericModal';
 
 
 
 .minimum-coin-symbol, .price-change-percent, .price-limit-cln {
 	right: 40px;
-	font-size:14px;
+	font-size:14rem;
 	color: $dark-grey;
 	position: absolute;
 	display: none;

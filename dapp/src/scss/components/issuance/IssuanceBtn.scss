@@ -15,11 +15,11 @@
 	color: $color-btn-control;
 	border: none;
 	text-transform: uppercase;
-	font-size: 11px;
+	font-size: 11rem;
 	text-align: center;
 
 	.ctrl-icon {
-		font-size: 28px;
+		font-size: 28rem;
 		display: block;
 		margin-bottom: 3px;
 	}
@@ -51,7 +51,7 @@
 	@media (max-width: $breakpoint-mobile) {
 		top: 40px;
 		.ctrl-icon {
-			font-size: 18px;
+			font-size: 18rem;
 		}
 	}
 }

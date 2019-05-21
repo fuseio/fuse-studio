@@ -22,7 +22,7 @@
         top: 30px;
         z-index: 30;
         .ctrl-icon {
-          font-size: 22px;
+          font-size: 22rem;
         }
     	}
       @media (max-width: $breakpoint-mobile) {
@@ -76,7 +76,7 @@
       font-family: $font-family;
 
       &__title {
-        font-size: 12px;
+        font-size: 12rem;
         font-weight: bold;
         font-style: normal;
         font-stretch: normal;
@@ -92,11 +92,11 @@
         text-align: center;
 
         >span:first-child {
-          font-size: 10px;
+          font-size: 10rem;
         }
 
         >span:last-child {
-          font-size: 8px;
+          font-size: 8rem;
           margin-left: 3px;
         }
       }
@@ -109,11 +109,11 @@
       color: $color-primary-dark;
       font-family: $font-family;
       .text {
-        font-size: 10px;
+        font-size: 10rem;
         font-weight: bold;
       }
       .id {
-        font-size: 9px;
+        font-size: 9rem;
         display: inline-block;
         margin-left: 5px;
         cursor: pointer;
@@ -197,13 +197,13 @@
     }
 
     &-title {
-      font-size: 12px;
+      font-size: 12rem;
       color: $color-step;
       line-height: 16px;
     }
     &-percent {
       line-height: 16px;
-      font-size: 16px;
+      font-size: 16rem;
       color: $color-primary-dark;
     }
     &-text {
@@ -212,7 +212,7 @@
       justify-content: flex-start;
       margin-bottom: 10px;
       .progress-text-content {
-        font-size: 12px;
+        font-size: 12rem;
         white-space: nowrap;
       }
       &.text-positive {
@@ -221,7 +221,7 @@
         }
         .fa {
           color: $color-ropsten;
-          font-size: 10px;
+          font-size: 10rem;
           margin-right: 10px;
         }
       }
@@ -232,7 +232,7 @@
         }
         .fa {
           color: $color-minus;
-          font-size: 10px;
+          font-size: 10rem;
           margin-right: 10px;
         }
         &:hover {
@@ -254,13 +254,13 @@
       margin-left: 0;
   	}
     &-text {
-      font-size: 12px;
+      font-size: 12rem;
       font-weight: bold;
       text-align: center;
       color: $color-author;
       text-transform: capitalize;
       @media (max-width: $breakpoint-mobile) {
-        font-size: 10px;
+        font-size: 10rem;
       }
     }
     &-header {
@@ -283,16 +283,16 @@
       }
     }
     &-big-count {
-      font-size: 35px;
+      font-size: 35rem;
       color: $color-primary-dark;
       font-weight: bold;
       margin-top: 10px;
       span {
-        font-size: 13px;
+        font-size: 13rem;
         margin-left: 10px;
       }
       @media (max-width: $breakpoint-mobile) {
-        font-size: 24px;
+        font-size: 24rem;
       }
     }
     &-content {
@@ -319,7 +319,7 @@
       }
     }
     &-small-text {
-      font-size: 11px;
+      font-size: 11rem;
       font-weight: 500;
       color: #8c94a8;
       text-transform: uppercase;
@@ -338,7 +338,7 @@
       .text-asset {
         color: $color-author;
         text-transform: capitalize;
-        font-size: 12px;
+        font-size: 12rem;
         font-weight: bold;
         font-family: $font-family;
         font-style: normal;
@@ -356,11 +356,11 @@
         }
       }
       @media (max-width: $breakpoint-mobile) {
-        font-size: 10px;
+        font-size: 10rem;
       }
     }
     &-period {
-      font-size: 11px;
+      font-size: 11rem;
       font-weight: bold;
       color: $color-step;
       position: relative;
@@ -371,7 +371,7 @@
       .fa-clone {
         margin-left: 10px;
         font-weight: 400;
-        font-size: 12px;
+        font-size: 12rem;
         color: $color-arrow;
         &:hover {
           font-weight: 900;
@@ -406,7 +406,7 @@
       }
     }
     &-number {
-      font-size: 25px;
+      font-size: 25rem;
       color: $color-filter-genre;
       text-transform: uppercase;
     }
@@ -469,7 +469,7 @@
     }
     &-title {
       text-transform: capitalize;
-      font-size: 15px;
+      font-size: 15rem;
       color: $color-primary-dark;
       text-align: center;
       text-transform: capitalize;
@@ -487,7 +487,7 @@
       box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.15);
       &.fuse-logo {
         background-image: linear-gradient(to bottom, #ffea14, #ffea14 31%, #85ffbc);
-        padding: 11px;
+        padding: 2rem;
         img {
           width: 28px;
         }
@@ -497,12 +497,12 @@
       }
     }
     .fa-long-arrow-alt-right {
-      font-size: 24px;
+      font-size: 24rem;
       color: $color-arrow;
     }
     &-text {
       color: $color-author;
-      font-size: 11px;
+      font-size: 11rem;
       text-align: center;
       margin-bottom: 5px;
       span {
@@ -510,7 +510,7 @@
       }
     }
     &-balance {
-      font-size: 11px;
+      font-size: 11rem;
       color: $color-ropsten;
       font-weight: 600;
       span {
@@ -522,7 +522,7 @@
     }
     &-btn {
       color: $color-primary-dark;
-      font-size: 10px;
+      font-size: 10rem;
       // background-color: #f3f3f3;
       font-weight: 500;
       border: none;
@@ -556,14 +556,14 @@
       input {
         border: none;
         height: 14px;
-        font-size: 25px;
+        font-size: 25rem;
         color: $color-arrow;
         padding: 10px;
         font-weight: bold;
         width: 100%;
       }
       &-currency {
-        font-size: 25px;
+        font-size: 25rem;
         color: $color-arrow;
         font-weight: bold;
       }
@@ -574,7 +574,7 @@
       padding: 9px 20px;
       background-color: $color-ropsten;
       border-radius: 16px;
-      font-size: 11px;
+      font-size: 11rem;
       text-transform: uppercase;
       display: inline-block;
       margin: 0 auto;
@@ -593,13 +593,13 @@
 
     &-title {
       color: $color-primary-dark;
-      font-size: 12px;
+      font-size: 12rem;
       font-weight: 500;
       line-height: 2.17;
     }
     &-text {
       color: $color-author;
-      font-size: 12px;
+      font-size: 12rem;
       font-weight: normal;
       line-height: 2.17;
       margin-bottom: 10px;
@@ -628,7 +628,7 @@
       width: 206px;
       height: 21px;
       font-family: $font-family;
-      font-size: 18px;
+      font-size: 18rem;
       font-weight: 500;
       font-style: normal;
       font-stretch: normal;
@@ -643,7 +643,7 @@
     }
 
     @include block(symbol) {
-      font-size: 12px;
+      font-size: 12rem;
       font-weight: normal;
       margin-left: 3px;
       color: rgba(37, 67, 90, 0.8);
@@ -673,7 +673,7 @@
       position: relative;
       @include element(text) {
         font-family: $font-family;
-        font-size: 14px;
+        font-size: 14rem;
         min-width: 1em;
         font-weight: bold;
         color: $color-primary-dark;
@@ -694,7 +694,7 @@
       position: relative;
       @include element(text) {
         font-family: $font-family;
-        font-size: 14px;
+        font-size: 14rem;
         font-weight: bold;
         min-width: 65px;
         color: $color-primary-dark;
@@ -708,7 +708,7 @@
         padding: 8px 16px;
         color: $color-step-title;
         min-height: 1.5em;
-        font-size: 20px;
+        font-size: 20rem;
         width: 85%;
         font-weight: bold;
         &::placeholder {
@@ -731,7 +731,7 @@
         display: inline-block;
         border-radius: 30px;
         background-color: $color-ropsten;
-        font-size: .8em;
+        font-size: 12rem;
         color: $color-white;
         // padding: 10px 30px;
         width: 84px;
@@ -785,7 +785,7 @@
       border: solid 1px #dadada;
       flex-basis: 50%;
       color: rgba(37, 67, 90, 0.6);
-      font-size: 0.8em;
+      font-size: 12rem;
       height: 100%;
       outline: none;
       font-weight: bold;

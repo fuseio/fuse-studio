@@ -2,7 +2,7 @@
 	flex: 1;
 	&-prefix {
 		color: #0a7586 !important;
-		font-size: 12px;
+		font-size: 12rem;
 		&__input {
 			input {
 				box-shadow: none !important;
@@ -20,19 +20,19 @@
 		&__placeholder {
 			color: #5f677e !important;
 			font-style: italic;
-			font-size: 12px !important;
+			font-size: 12rem !important;
 			font-weight: 300 !important;
 		}
 		&__single-value {
 			color: $color-black !important;
-			font-size: 12px !important;
+			font-size: 12rem !important;
 		}
 		&__indicator-separator {
 			display: none;
 		}
 		&__option {
 			color: $color-black !important;
-			font-size: 12px !important;
+			font-size: 12rem !important;
 			&--is-focused {
 				background-color: rgba(252, 110, 76, 0.53) !important;
 			}
@@ -120,7 +120,7 @@
 		}
 		&-title {
 			background: linear-gradient(to bottom, #ffea14, #ffea14 31%, #85ffbc);
-			font-size: 36px;
+			font-size: 36rem;
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 		}
@@ -139,7 +139,7 @@
 	&-title {
 		font-weight: 500;
 		color: $color-white;
-		font-size: 14px;
+		font-size: 14rem;
 		line-height: 1.64;
 		text-transform: uppercase;
 		margin-top: 40px;
@@ -147,7 +147,7 @@
 	}
 
 	&-text {
-		font-size: 12px;
+		font-size: 12rem;
 		line-height: 1.33;
 		color: $color-text-gray;
 		font-weight: 800 !important;
@@ -185,7 +185,7 @@
 		border: none;
 		width: 168px;
 		height: 41px;
-		font-size: 13px;
+		font-size: 13rem;
 		font-weight: bold;
 		color: $color-white;
 		line-height: 40px;

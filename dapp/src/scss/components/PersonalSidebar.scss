@@ -50,7 +50,7 @@
       position: absolute;
       right: 10px;
       top: 10px;
-      font-size: 16px;
+      font-size: 16rem;
 
       &:hover,
       &:active,
@@ -78,16 +78,16 @@
       display: block;
       color: $color-white;
       margin: 0 auto;
-      font-size: 14px;
+      font-size: 14rem;
     }
     .balance-text {
-      font-size: 11px;
+      font-size: 11rem;
       font-weight: bold;
       color: #9390a6;
       text-transform: uppercase;
     }
     .balance-number {
-      font-size: 12px;
+      font-size: 12rem;
       color: #5fddbb;
       margin-left: 10px;
       font-weight: bold;
@@ -109,10 +109,10 @@
         color: $color-primary-dark;
         flex: 1.7;
         border: none;
-        font-size: 12px;
+        font-size: 12rem;
         &::placeholder {
   				color: $color-primary-dark;
-          font-size: 10px;
+          font-size: 10rem;
   			}
       }
       .search-btn {
@@ -123,7 +123,7 @@
         border: none;
         flex: 0.25;
         padding: 0;
-        font-size: 12px;
+        font-size: 12rem;
       }
     }
     &-content {
@@ -141,7 +141,7 @@
      }
     }
     &-title {
-      font-size: 10px;
+      font-size: 10rem;
       font-weight: bold;
       color: $color-primary-dark;
       margin-bottom: 15px;
@@ -166,7 +166,7 @@
     &-content {
       &-balance {
         color: $color-balance;
-        font-size: 11px;
+        font-size: 11rem;
         font-weight: bold;
         text-transform: capitalize;
       }
@@ -174,7 +174,7 @@
 
     .coin-name {
       text-transform: capitalize;
-      font-size: 11px;
+      font-size: 11rem;
       color: $color-primary-dark;
       line-height: 2.45;
     }
@@ -191,7 +191,7 @@
 	height: 22px;
 	text-align: center;
 	border: none;
-	font-size: 11px;
+	font-size: 11rem;
 	line-height: 20px;
   padding: 1px 7px 2px 5px;
 	color: $color-white;

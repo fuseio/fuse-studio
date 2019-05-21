@@ -8,8 +8,10 @@ import classNames from 'classnames'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import { formatWei } from 'utils/format'
 import { getBlockExplorerUrl } from 'utils/network'
+import { QR_MODAL } from 'constants/uiConstants'
+import { loadModal } from 'actions/ui'
 
-const Step = ({ done, text, handleClick = undefined }) => (
+const Step = ({ done, text, handleClick }) => (
   <div
     className={classNames('dashboard-progress-text', {
       'text-positive': done,
@@ -17,7 +19,8 @@ const Step = ({ done, text, handleClick = undefined }) => (
     })}
     onClick={done ? null : handleClick}
   >
-    <FontAwesome name={classNames({ 'check': done, 'minus': !done })} /> <span className='progress-text-content'>{text}</span>
+    <FontAwesome name={classNames({ 'check': done, 'minus': !done })} />
+    <span className='progress-text-content'>{text}</span>
   </div>
 )
 
@@ -36,7 +39,8 @@ class TokenProgress extends Component {
       metadata,
       steps,
       loadUserDataModal,
-      loadBridgePopup
+      loadBridgePopup,
+      loadModal
     } = this.props
     const doneSteps = Object.values(steps).filter(step => step)
     const progressOverall = doneSteps.length * 20
@@ -75,7 +79,7 @@ class TokenProgress extends Component {
           text='Bridge to Fuse - chain deployed' />
         <Step done={steps.membersList}
           text='Members list deployed' />
-        <Step done={false} text='White label wallet paired' />
+        <Step done={false} text='White label wallet paired' handleClick={() => loadModal(QR_MODAL, { value: tokenAddress })} />
       </div>
     )
   }
@@ -90,7 +94,8 @@ TokenProgress.defaultProps = {
 }
 
 const mapDispatchToProps = {
-  fetchTokenProgress
+  fetchTokenProgress,
+  loadModal
 }
 
 export default connect(

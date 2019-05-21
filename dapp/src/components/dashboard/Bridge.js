@@ -14,6 +14,8 @@ import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
 import { convertNetworkName } from 'utils/network'
 import { getTransaction } from 'selectors/transaction'
+import { loadModal } from 'actions/ui'
+import { SHOW_MORE_MODAL } from 'constants/uiConstants'
 
 const NetworkLogo = ({ network }) => {
   switch (network) {
@@ -42,7 +44,7 @@ const Balance = (props) => {
         : 0 } {props.token.symbol}
       </span>
     </div>
-    <button className='dashboard-network-btn' disabled={props.disabled}>Show more</button>
+    <button className='dashboard-network-btn' disabled={props.disabled} onClick={props.openModal}>Show more</button>
   </div>)
 }
 
@@ -94,6 +96,30 @@ class Bridge extends Component {
     this.props.getBlockNumber(this.props.bridgeStatus.from.network, this.props.bridgeStatus.from.bridge)
   }
 
+  openModal = (side) => {
+    const {
+      loadModal,
+      foreignTokenAddress,
+      homeTokenAddress,
+      homeBridgeAddress,
+      foreignBridgeAddress,
+      bridgeStatus,
+      token,
+      balances,
+      homeNetwork
+    } = this.props
+    loadModal(SHOW_MORE_MODAL, {
+      name: convertNetworkName(bridgeStatus[side].network),
+      network: 'http://rpc.fuse.io',
+      homeTokenAddress,
+      foreignTokenAddress,
+      homeBridgeAddress,
+      foreignBridgeAddress,
+      tokenName: token.name,
+      tokenAmount: new BigNumber(balances[homeNetwork === bridgeStatus[side].network ? homeTokenAddress : foreignTokenAddress]).div(1e18).toFormat(2, 1)
+    })
+  }
+
   render () {
     const {
       balances,
@@ -132,6 +158,7 @@ class Bridge extends Component {
             bridgeSide={bridgeStatus.from}
             transferStatus={transferStatus}
             className={`balance-${network}`}
+            openModal={() => this.openModal('from')}
           />
           <div className='dashboard-network-content network-arrow'>
             <FontAwesome name='long-arrow-alt-right' />
@@ -176,6 +203,7 @@ class Bridge extends Component {
             transferStatus={transferStatus}
             disabled={!foreignTokenAddress || !homeTokenAddress}
             className={foreignTokenAddress && homeTokenAddress ? `balance-${network}` : 'balance-disabled'}
+            openModal={() => this.openModal('to')}
           />
         </div>
         {
@@ -254,7 +282,8 @@ const mapStateToProps = (state, { foreignTokenAddress }) => ({
 const mapDispatchToProps = {
   ...actions,
   balanceOfToken,
-  getBlockNumber
+  getBlockNumber,
+  loadModal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BridgeContainer)

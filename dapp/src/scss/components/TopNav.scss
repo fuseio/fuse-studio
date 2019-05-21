@@ -17,7 +17,7 @@
 	}
 	.top-nav-logo {
 		color: $color-white;
-    font-size: 32px;
+    font-size: 32rem;
     font-weight: 500;
     display: flex;
     flex-direction: row;
@@ -39,7 +39,7 @@
     padding: 10px;
 	  background: $color-nav-btn-bg;
 	  border: none;
-		font-size: 12px;
+		font-size: 12rem;
 		text-transform: uppercase;
 		color: $color-white;
 		margin-left: 30px;
@@ -67,7 +67,7 @@
 			display: inline-block;
 			float: right;
 			margin-top: 10px;
-			font-size: 16px;
+			font-size: 16rem;
 			color: $color-white;
 			&:hover {
 				cursor: pointer;
@@ -112,7 +112,7 @@
 			@include flex-box();
 			align-items: center;
 			color: $color-white;
-			font-size: 1em;
+			font-size: 16rem;
 			font-weight: 400;
 			margin: 0 1em;
 			position: relative;
@@ -152,7 +152,7 @@
 							top: 14px;
 							left: -5px;
 							z-index: 3;
-							font-size: 10px;
+							font-size: 10rem;
 							border-radius: 50%;
 						}
 					}
@@ -165,7 +165,7 @@
 				&-balance {
 					margin-left: 10px;
 					color: $color-white;
-					font-size: 0.8rem;
+					font-size: 12.8rem;
 					@media (max-width: $breakpoint-tablet) {
 						margin-left: 0;
 					}
@@ -219,7 +219,7 @@
 			}
 		}
 		.top-nav-balance {
-			font-size: 12px;
+			font-size: 12rem;
 			color: $dark-grey;
 			line-height: 14px;
 			img {
@@ -229,12 +229,12 @@
 				margin-left: 8px;
 			}
 			.balance-text {
-				font-size: 11px;
+				font-size: 11rem;
 				font-weight: normal;
 				color: $color-white;
 			}
 			.balance-number {
-				font-size: 12px;
+				font-size: 12rem;
 				color: $color-network;
 				font-weight: normal;
 				text-transform: capitalize;
@@ -265,7 +265,7 @@
 				margin: 0;
 				padding: 20px 0;
 				text-align: left;
-				font-size: 14px;
+				font-size: 14rem;
 				width: 100%;
 				&:after {
 					display: none;
