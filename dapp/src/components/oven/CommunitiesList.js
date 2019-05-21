@@ -47,17 +47,13 @@ class CommunitiesList extends Component {
               <p className='communities-banner-text cell'>
                 Fuse is intended for community currencies operated by companies and entrepreneurs. It streamlines the process of launching your community currency and provide battle-tested and customizable tools to get it off the ground
               </p>
-              {/* TODO - MAKE IT STICKY */}
-              {/* <button onClick={this.showIssuance} className='communities-banner-issuance cell small-6'>
-                <FontAwesome name='plus' className='top-nav-issuance-plus' /> Currency issuer
-              </button>  */}
             </div>
             <div className='communities-banner-img'>
               <img src={Banner} />
             </div>
           </div>
         </div>
-        <div className='grid-container communities-list-container'>
+        <div className='grid-container'>
           <div className='grid-y'>
             <div className='grid-x grid-padding-x grid-padding-y communities-list-content'>
               <h2 className='communities-list-title cell auto'>All communities</h2>

@@ -13,17 +13,15 @@ export default ({ hideModal, name, network, tokenName, tokenAmount, foreignToken
       <div className='show-more'>
         <div className='show-more__header'>{name}</div>
         <div className='show-more__content'>
-          <div className='show-more__content__item'>
-            <span>Network</span>
-            <span>{network}</span>
-          </div>
+          {
+            name && name.toLowerCase() === 'fuse' && <div className='show-more__content__item'>
+              <span>RPC Network</span>
+              <span>{network}</span>
+            </div>
+          }
           <div className='show-more__content__item'>
             <span>Token name</span>
             <span>{tokenName}</span>
-          </div>
-          <div className='show-more__content__item'>
-            <span>CLN tokens amount</span>
-            <span>{tokenAmount}</span>
           </div>
           <div className='show-more__content__item'>
             <span>Token foreign address</span>

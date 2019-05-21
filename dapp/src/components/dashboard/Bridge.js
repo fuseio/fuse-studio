@@ -110,7 +110,7 @@ class Bridge extends Component {
     } = this.props
     loadModal(SHOW_MORE_MODAL, {
       name: convertNetworkName(bridgeStatus[side].network),
-      network: 'http://rpc.fuse.io',
+      network: 'https://rpc.fuse.io',
       homeTokenAddress,
       foreignTokenAddress,
       homeBridgeAddress,
