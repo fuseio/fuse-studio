@@ -2,7 +2,7 @@ import { createSelector } from 'reselect'
 import { getAccountAddress } from './accounts'
 import sortBy from 'lodash/sortBy'
 
-export const getCommunityAddress = state => state.screens.communityEntities.communityAddress
+export const getCommunityAddress = state => state.screens.dashboard && state.screens.dashboard.communityAddress
 
 export const getEntities = createSelector(
   state => state.screens.communityEntities.listHashes,

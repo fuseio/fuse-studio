@@ -1,9 +1,9 @@
 const processPastEvents = require('./utils').processPastEvents
 const BasicTokenAbi = require('@fuse/token-factory-contracts/build/abi/BasicToken')
+const { web3 } = require('@services/web3/foreign')
 const mongoose = require('mongoose')
 
 const Token = mongoose.model('Token')
-const web3 = require('@services/web3')
 
 const processPastTransferEvents = async () => {
   const tokens = await Token.find()

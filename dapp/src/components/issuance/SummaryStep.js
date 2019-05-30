@@ -1,28 +1,26 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import BigNumber from 'bignumber.js'
-import Loader from 'components/Loader'
-import { REQUEST, PENDING, SUCCESS, FAILURE } from 'actions/constants'
+import { PENDING, SUCCESS, FAILURE } from 'actions/constants'
 import ReactGA from 'services/ga'
 import CommunityLogo from 'components/elements/CommunityLogo'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/Message'
 import contractIcon from 'images/contract.svg'
+import DeployProgress from './DeployProgress'
 
 export default class SummaryStep extends Component {
   state = {
-    showError: true
+    showError: true,
+    showProgress: false
   }
 
   renderTransactionStatus = (transactionStatus) => {
     switch (transactionStatus) {
-      case REQUEST:
-        return (
-          <button className='button button--normal' disabled>Issue</button>
-        )
       case PENDING:
-        return <Loader color='#3a3269' className='loader' />
+        return (
+          <TransactionButton disabled clickHandler={this.props.showPopup} frontText='ISSUE' />
+        )
       case SUCCESS:
         return null
       default:
@@ -54,6 +52,15 @@ export default class SummaryStep extends Component {
         label: 'Issued'
       })
     }
+
+    if (this.props.transactionStatus === PENDING && (this.props.transactionStatus !== prevProps.transactionStatus)) {
+      // this.props.setNextStep()
+      this.setState({ showProgress: true })
+    }
+
+    if (this.props.transactionStatus === FAILURE && (this.props.transactionStatus !== prevProps.transactionStatus)) {
+      this.setState({ showProgress: false })
+    }
   }
 
   render () {
@@ -66,15 +73,14 @@ export default class SummaryStep extends Component {
       contracts,
       createTokenSignature,
       transactionStatus,
-      setNextStep,
-      isOpen
+      isOpen,
+      communityType,
+      existingToken,
+      history,
+      currentDeploy
     } = this.props
 
-    const { showError } = this.state
-    if (transactionStatus === PENDING) {
-      setNextStep()
-      return ''
-    }
+    const { showError, showProgress } = this.state
 
     const contractsItems = Object.values(contracts)
       .filter((contract) => contract.checked)
@@ -85,19 +91,24 @@ export default class SummaryStep extends Component {
         <div className='summary-step__wrapper'>
           <div className='summary-step__inner'>
             <div className='summary-step__logo'>
-              <CommunityLogo networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo }} />
+              <CommunityLogo isDaiToken={communityType && communityType.value === 'existingToken'} networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo }} />
               <span>{communityName} coin</span>
             </div>
             <hr className='summary-step__line' />
             <div className='summary-step__content'>
               <div className='summary-step__content__item'>
                 <h4 className='summary-step__content__title'>Currency type</h4>
-                <p>Mintable burnable token</p>
+                {totalSupply && communityType && communityType.value !== 'existingToken' && <p>{communityType.text}</p>}
+                {communityType && communityType.value === 'existingToken' && <p>{`${communityType.text} - ${existingToken.label}`}</p>}
               </div>
-              <div className='summary-step__content__item'>
-                <h4 className='summary-step__content__title'>Total supply</h4>
-                <p>{totalSupply}</p>
-              </div>
+              {
+                totalSupply && communityType && communityType.value !== 'existingToken' && (
+                  <div className='summary-step__content__item'>
+                    <h4 className='summary-step__content__title'>Total supply</h4>
+                    <p>{totalSupply}</p>
+                  </div>
+                )
+              }
               <div className='summary-step__content__item'>
                 <h4 className='summary-step__content__title'>Contracts</h4>
                 <div className='summary-step__content__contracts'>
@@ -130,6 +141,14 @@ export default class SummaryStep extends Component {
             <span>After published a bridge will allow you to start using your coin on the Fuse-chain!</span>
           </div>
 
+          {
+            showProgress && <DeployProgress
+              history={history}
+              contracts={contracts}
+              currentDeploy={currentDeploy}
+            />
+          }
+
           <Message
             radiusAll
             isOpen={createTokenSignature}
@@ -150,8 +169,4 @@ export default class SummaryStep extends Component {
       </div>
     )
   }
-}
-
-SummaryStep.propTypes = {
-  transactionStatus: PropTypes.string
 }

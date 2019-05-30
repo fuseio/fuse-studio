@@ -2,11 +2,10 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 
 import { getContract } from 'services/contract'
 import * as actions from 'actions/communityEntities'
-import { apiCall, createEntitiesFetch, tryTakeEvery } from './utils'
+import { createEntitiesFetch, tryTakeEvery } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
 import { getCommunityAddress } from 'selectors/entities'
 import { createEntitiesMetadata } from 'sagas/metadata'
-import * as tokenApi from 'services/api/token'
 import * as entitiesApi from 'services/api/entities'
 import { transactionFlow } from './transaction'
 import { roles, combineRoles } from '@fuse/roles'
@@ -32,7 +31,7 @@ function * toggleCommunityMode ({ communityAddress, isClosed }) {
   const CommunityContract = getContract({ abiName: 'CommunityTransferManager',
     address: communityAddress
   })
-  if (isClosed) {
+  if (!isClosed) {
     const method = CommunityContract.methods.addRule(roles.APPROVED_ROLE, roles.APPROVED_ROLE)
     const transactionPromise = method.send({
       from: accountAddress
@@ -135,15 +134,6 @@ function * removeEntity ({ communityAddress, account }) {
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
 }
 
-function * fetchCommunity ({ tokenAddress }) {
-  const { data } = yield apiCall(tokenApi.fetchCommunity, { tokenAddress })
-  yield put({ type: actions.FETCH_COMMUNITY.SUCCESS,
-    response: {
-      ...data
-    }
-  })
-}
-
 function * watchEntityChanges ({ response }) {
   const communityAddress = yield select(getCommunityAddress)
   const { data } = response
@@ -170,7 +160,6 @@ export default function * commuityEntitiesSaga () {
     tryTakeEvery(actions.ADD_ENTITY, addEntity, 1),
     tryTakeEvery(actions.TOGGLE_COMMNITY_MODE, toggleCommunityMode, 1),
     tryTakeEvery(actions.REMOVE_ENTITY, removeEntity, 1),
-    tryTakeEvery(actions.FETCH_COMMUNITY, fetchCommunity, 1),
     tryTakeEvery(actions.FETCH_USERS_ENTITIES, fetchUsersEntities, 1),
     tryTakeEvery(actions.FETCH_BUSINESSES_ENTITIES, fetchBusinessesEntities, 1),
     tryTakeEvery(actions.FETCH_ENTITY, fetchEntity, 1),

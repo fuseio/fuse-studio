@@ -16,23 +16,23 @@ contract EntitiesList is Ownable {
         return _entities.rolesOf(_account);
     }
 
-    function addEntity(address _account, bytes32 _roles) onlyOwner public {
+    function addEntity(address _account, bytes32 _roles) public onlyOwner {
         _entities.add(_account, _roles);
         emit EntityAdded(_account, _roles);
     }
 
-    function removeEntity(address _account) onlyOwner public {
+    function removeEntity(address _account) public onlyOwner {
         _entities.remove(_account);
 
         emit EntityRemoved(_account);
     }
 
-    function addRoles(address _account, bytes32 _roles) onlyOwner public {
+    function addRoles(address _account, bytes32 _roles) public onlyOwner {
         bytes32 roles = _entities.addRoles(_account, _roles);
         emit EntityRolesUpdated(_account, roles);
     }
 
-    function removeRoles(address _account, bytes32 _roles) onlyOwner public {
+    function removeRoles(address _account, bytes32 _roles) public onlyOwner {
         bytes32 roles = _entities.removeRoles(_account, _roles);
 
         emit EntityRolesUpdated(_account, roles);

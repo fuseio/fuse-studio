@@ -1,7 +1,7 @@
 const config = require('config')
 const { createWeb3, send } = require('@utils/web3')
 
-const { from, web3 } = createWeb3(config.get('web3.fuseProvider'))
+const { from, web3 } = createWeb3(config.get('network.home.provider'))
 
 module.exports = {
   from,

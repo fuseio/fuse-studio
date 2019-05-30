@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="63px" height="63px" viewBox="0 0 63 63" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New-Onboarding-NEW-existing-token" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="existing-token-DAI" transform="translate(-156.000000, -538.000000)" fill-rule="nonzero">
+            <g id="Group-4" transform="translate(158.000000, 540.000000)">
+                <g id="dai">
+                    <circle id="Oval" stroke="#05283E" stroke-width="2.496" fill="#FFFFFF" cx="29.4666397" cy="29.4666397" r="29.4523425"></circle>
+                    <polygon id="Path" fill="#05283E" points="29.4668304 6.41536834 52.0282779 28.9767205 29.4668304 51.5382633 6.90538288 28.9767205"></polygon>
+                    <polygon id="Path" fill="#05283E" points="29.4666397 36.338853 6.8865105 28.9757674 29.4666397 6.41470113 52.046769 28.9757674"></polygon>
+                    <polygon id="Path" fill="#FFFFFF" points="14.7404685 27.5031502 25.0487884 27.5031502 29.4666397 22.5944265 34.3753635 27.5031502 44.6836834 27.5031502 29.4666397 11.0594023"></polygon>
+                </g>
+                <polygon id="Path" fill="#E7E7E7" opacity="0.42" points="28.8979592 51.7755102 28.8979592 6.02040816 52.9795918 28.8979592 28.8979592 51.7755102"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -65,17 +65,17 @@ services:
             - COMMUNITY_MONGO_USER=${MONGO_USER}
             - COMMUNITY_MONGO_PASS=${MONGO_PASS}
             - COMMUNITY_MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}
-    client:
-        container_name: $PROJECT_NAME-client
+    dapp:
+        container_name: $PROJECT_NAME-dapp
         build:
-            context: ./client/
+            context: ./dapp/
         user: "${UID}:${GID}"
         restart: always
         env_file: .env
         depends_on:
             - server
         volumes:
-            - ./client/:/app
+            - ./dapp/:/app
             - /app/node_modules
         working_dir: /app
         command: "npm start"
@@ -83,7 +83,7 @@ services:
             internal-network:
             external-network:
                 aliases:
-                    - $PROJECT_NAME-client
+                    - $PROJECT_NAME-dapp
         ports:
             - "9000:$COMMUNITY_APP_PORT"
         environment:

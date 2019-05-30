@@ -81,6 +81,7 @@
 	  right: 0px;
 	  width: 100%;
 		top: $nav-height;
+		height: 100%;
 		padding-bottom: 100px;
 		overflow: auto;
 		margin-top: $nav-height;
@@ -147,6 +148,8 @@
 }
 
 .list-item {
+	@include padding(null, 2, null, 2);
+	@include margin(null, null, 2, null);
 	.coin-footer-close {
 		display: none;
 		@media (max-width: $breakpoint-mobile) {
@@ -304,17 +307,6 @@
 		.coin-total {
 			border-bottom: 1px solid rgba(255, 255, 255, 0.19);
 			padding-bottom: 15px;
-		}
-	}
-	@media (max-width: $breakpoint-tablet) {
-		display: block;
-		margin-right: 0;
-	}
-	@media (max-width: $breakpoint-mobile) {
-		width: 100%;
-		margin-left: 0;
-		&:not(:nth-child(3n)) {
-			margin-right: 0;
 		}
 	}
 	&:hover {

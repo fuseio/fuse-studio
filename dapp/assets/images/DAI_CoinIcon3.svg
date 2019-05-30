@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Group 11</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New-Onboarding-NEW-existing-token" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Wizard-symbol" transform="translate(-808.000000, -356.000000)">
+            <g id="Group-11" transform="translate(808.000000, 356.000000)">
+                <g id="Group-9">
+                    <g id="Group-18-Copy-4" fill="#05283E" stroke="#05283E" stroke-width="2">
+                        <g id="Group-4" transform="translate(0.000000, 0.000000)">
+                            <path d="M39.6039604,78.2079208 C60.8891737,78.2079208 78.2079208,60.8891737 78.2079208,39.6039604 C78.2079208,18.3187471 60.8891737,1 39.6039604,1 C18.3187471,1 1,18.3187471 1,39.6039604 C1,60.8891737 18.3187471,78.2079208 39.6039604,78.2079208 Z" id="Path"></path>
+                        </g>
+                    </g>
+                    <g id="Group-4" transform="translate(20.000000, 21.000000)" fill-rule="nonzero">
+                        <g id="dai">
+                            <polygon id="Path" fill="#FFFFFF" points="19.9720605 0.544038065 38.9760533 19.1619336 19.9720605 37.7799864 0.968067753 19.1619336"></polygon>
+                            <polygon id="Path" fill="#FFFFFF" points="19.9718999 25.2372526 0.952171146 19.161147 19.9718999 0.54348748 38.9916287 19.161147"></polygon>
+                            <polygon id="Path" fill="#05283E" points="7.56772899 17.9459259 16.2506487 17.9459259 19.9718999 13.8951888 24.1066236 17.9459259 32.7895433 17.9459259 19.9718999 4.37634996"></polygon>
+                        </g>
+                        <polygon id="Path" fill="#05283E" opacity="0.42" points="20 33.9140625 19.9718999 0.54348748 39.7773655 19.0969388 20.1786361 37.7799864"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

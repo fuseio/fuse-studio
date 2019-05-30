@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import FontAwesome from 'react-fontawesome'
 import TextInput from 'components/elements/TextInput'
+import { isMobileOnly } from 'react-device-detect'
 
 const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityType, setNextStep, communityLogo }) => {
   return (
@@ -22,18 +23,18 @@ const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityTyp
           />
         </div>
       </div>
-      <div className='grid-x align-center attributes__next'>
+      {isMobileOnly && <div className='grid-x align-center attributes__next'>
         <button
           className='button button--big'
           disabled={
-            Object.keys(communityType).length === 0 || totalSupply < 0 || totalSupply === '0' || !totalSupply || !communityLogo.name
+            totalSupply < 0 || totalSupply === '0' || !totalSupply
           }
           onClick={setNextStep}
         >
           NEXT
           <FontAwesome className='symbol-icon' name='angle-right' />
         </button>
-      </div>
+      </div>}
     </Fragment>
   )
 }

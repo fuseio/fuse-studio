@@ -1,27 +1,11 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import { fetchDeployProgress } from 'actions/token'
 import isEmpty from 'lodash/isEmpty'
 import FontAwesome from 'react-fontawesome'
-
-const deployProgress = [
-  {
-    label: 'Issuing community currency',
-    loaderText: 'Your asset is being deployed as an ERC-20 contract to Ethereum mainnet',
-    key: 'tokenIssued'
-  },
-  {
-    label: 'Deploying bridge contract',
-    loaderText: 'A bridge contract is being deployed for the community currency on mainnet and the Fuse sidechain',
-    key: 'bridge'
-  },
-  {
-    label: 'Deploying member list contract',
-    loaderText: 'The members list is deployed on the Fuse sidechain to allow adding users to the community',
-    key: 'membersList'
-  }
-]
+import get from 'lodash/get'
+import deployProgressSteps from 'constants/deployProgressSteps'
 
 const Congratulations = ({ goToDashboard }) => {
   return (
@@ -39,41 +23,68 @@ const Congratulations = ({ goToDashboard }) => {
   )
 }
 
-class DeployProgress extends Component {
+class DeployProgress extends PureComponent {
   state = {
-    isReady: false
+    isReady: false,
+    hasErrors: false
+  }
+
+  componentDidMount () {
+    if (this.props.deployResponse) {
+      const { fetchDeployProgress, deployResponse } = this.props
+      if (deployResponse && deployResponse.id) {
+        const { id } = deployResponse
+        fetchDeployProgress(id)
+        this.interval = setInterval(() => fetchDeployProgress(id), 5000)
+      }
+    }
   }
 
   componentDidUpdate (prevProps) {
-    if ((this.props.receipt !== prevProps.receipt) && this.props.receipt) {
-      const { fetchDeployProgress, receipt } = this.props
-      const tokenAddress = receipt.events[0].address
-      fetchDeployProgress({ tokenAddress })
-      this.interval = setInterval(() => fetchDeployProgress({ tokenAddress }), 5000)
+    if ((this.props.deployResponse !== prevProps.deployResponse) && this.props.deployResponse) {
+      const { fetchDeployProgress, deployResponse } = this.props
+      if (deployResponse && deployResponse.id) {
+        const { id } = deployResponse
+        fetchDeployProgress(id)
+        this.interval = setInterval(() => fetchDeployProgress(id), 5000)
+      }
     }
 
     if (this.props.steps !== prevProps.steps) {
       const { steps, stepErrors } = this.props
       const values = Object.values(steps).every(val => val)
 
-      if (((isEmpty(stepErrors) && values) || (!isEmpty(stepErrors) && (stepErrors.bridge || stepErrors.membersList)))) {
+      if (values) {
         clearInterval(this.interval)
         this.setState({ isReady: true })
       }
+
+      if ((!isEmpty(stepErrors) && (stepErrors.bridge || stepErrors.community))) {
+        clearInterval(this.interval)
+        this.setState({ hasErrors: true })
+      }
     }
+  }
+
+  goToDashboard = () => {
+    const { history, foreignNetwork, communityAddress } = this.props
+    history.push(`/view/dashboard/${foreignNetwork}/${communityAddress}`)
+  }
+
+  stepHasError = (step) => {
+    const { stepErrors } = this.props
+    return get(stepErrors, [`${step}`], false)
   }
 
   render () {
     const {
       contracts,
-      steps,
-      tokenAddress,
-      foreignNetwork
-      // stepErrors
+      steps
     } = this.props
 
     const {
-      isReady
+      isReady,
+      hasErrors
     } = this.state
 
     let currentStep = null
@@ -90,28 +101,34 @@ class DeployProgress extends Component {
     return (
       <div className='progress__wrapper'>
         <div className='progress__img'>
-          <div className='progress__loader'><div /></div>
+          <div className={classNames('progress__loader', { 'progress__loader--stop': hasErrors })} />
         </div>
         {
-          deployProgress
+          deployProgressSteps
             .filter(({ key }) => key === 'tokenIssued' || contracts[key].checked)
             .map(({ label, loaderText, key }) => {
               return (
-                <div key={key} className={classNames('progress__item', { 'progress__item--active': currentStep === key })}>
+                <div key={key} className={classNames('progress__item', { 'progress__item--active': currentStep === key && !this.stepHasError(key) })}>
                   <div className={classNames('progress__item__label')}>
                     { steps && steps[key] && <FontAwesome name='check' /> }
-                    {/* TODO */}
-                    {/* { stepErrors && stepErrors[key] && <FontAwesome name='times' /> } */}
+                    { this.stepHasError(key) && <FontAwesome name='times' /> }
                     {label}
                   </div>
                   {
-                    currentStep === key && <div className='progress__item__loaderText'>{loaderText}</div>
+                    currentStep === key &&
+                    !this.stepHasError(key) &&
+                    <div className='progress__item__loaderText'>{loaderText}</div>
                   }
                 </div>
               )
             })
         }
-        {isReady && <Congratulations goToDashboard={() => this.props.history.push(`/view/dashboard/${foreignNetwork}/${tokenAddress}`)} />}
+        {isReady && <Congratulations goToDashboard={this.goToDashboard} />}
+        {
+          hasErrors && <div className='congratulation__btn'>
+            <button className='button button--big' onClick={this.goToDashboard}>Go to the community page</button>
+          </div>
+        }
       </div>
     )
   }

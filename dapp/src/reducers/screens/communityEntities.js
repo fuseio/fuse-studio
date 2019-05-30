@@ -2,7 +2,6 @@ import union from 'lodash/union'
 import {
   ADD_ENTITY,
   EDIT_ENTITY,
-  FETCH_COMMUNITY,
   FETCH_USERS_ENTITIES,
   FETCH_BUSINESSES_ENTITIES,
   REMOVE_ENTITY,
@@ -51,16 +50,18 @@ export default (state = initialState, action) => {
       }
     case ADD_ENTITY.REQUEST:
       return { ...state, signatureNeeded: true }
+    case ADD_ENTITY.FAILURE:
+      return { ...omit(state, ['transactionHash']), signatureNeeded: false }
     case ADD_ENTITY.PENDING:
       return { ...state, transactionHash: action.response.transactionHash, signatureNeeded: false }
+    case ADD_ENTITY.SUCCESS:
+      return { ...state, fetchEntities: true }
     case EDIT_ENTITY.PENDING:
       return { ...state, editTransactionHash: action.response.transactionHash }
-    case FETCH_COMMUNITY.SUCCESS:
-      return { ...state, ...action.response }
     case FETCH_USERS_ENTITIES.SUCCESS:
-      return { ...state, usersResults: union(state.usersResults, action.response.result) }
+      return { ...state, usersResults: union(state.usersResults, action.response.result), fetchEntities: false }
     case FETCH_BUSINESSES_ENTITIES.SUCCESS:
-      return { ...state, merchantsResults: union(state.merchantsResults, action.response.result) }
+      return { ...state, merchantsResults: union(state.merchantsResults, action.response.result), fetchEntities: false }
     case LOCATION_CHANGE:
       if (action.payload.location.pathname === '/') {
         return initialState

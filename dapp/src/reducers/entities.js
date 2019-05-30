@@ -6,7 +6,8 @@ const initialState = {
   tokens: {},
   businesses: {},
   bridges: {},
-  communityEntities: {}
+  communityEntities: {},
+  communities: {}
 }
 
 export default (state = initialState, action) => {

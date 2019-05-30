@@ -9,6 +9,8 @@ export default (state = initialState, action) => {
       return { ...state, ...action.response }
     case actions.WATCH_HOME_BRIDGE.SUCCESS:
       return { ...state, ...action.response }
+    case actions.WATCH_COMMUNITY_DATA.SUCCESS:
+      return { ...state, ...action.response }
     case actions.DEPLOY_BRIDGE.REQUEST:
       return { ...state, bridgeDeploying: true }
     case actions.DEPLOY_BRIDGE.SUCCESS:

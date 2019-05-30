@@ -61,6 +61,7 @@
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
     "react-select": "^2.0.0-beta.2",
+    "react-swipeable": "^5.2.2",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.0.0",

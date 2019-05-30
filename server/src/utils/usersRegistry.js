@@ -1,7 +1,7 @@
 const config = require('config')
 const { web3, from, send } = require('@services/web3/home')
 const UsersRegistryABI = require('@fuse/entities-contracts/build/abi/UsersRegistry')
-const homeAddresses = config.get('web3.addresses.fuse')
+const homeAddresses = config.get('network.home.addresses')
 
 const usersRegistryContract = new web3.eth.Contract(UsersRegistryABI, homeAddresses.UsersRegistry)
 

@@ -1,6 +1,5 @@
 const eventUtils = require('@utils/event')
 
-const business = require('./business')
 const token = require('./token')
 const bridge = require('./bridge')
 const community = require('./community')
@@ -8,9 +7,9 @@ const community = require('./community')
 const eventsHandlers = {
   TokenCreated: token.handleTokenCreatedEvent,
   Transfer: token.handleTransferEvent,
+  OwnershipTransferred: token.handleOwnershipTransferredEvent,
   BridgeMappingUpdated: bridge.handleBridgeMappingUpdatedEvent,
-  EntityReplaced: business.handleEntityReplacedEvent,
-  SimpleListCreated: business.handleSimpleListCreatedEvent,
+  HomeBridgeDeployed: bridge.handleHomeBridgeDeployed,
   TransferManagerSet: community.handleTransferManagerSet,
   EntityAdded: community.handleEntityAdded,
   EntityRemoved: community.handleEntityRemoved,
@@ -19,16 +18,20 @@ const eventsHandlers = {
   RuleRemoved: community.handleRuleRemoved
 }
 
-const handleEvent = function (event) {
+const handleEvent = function (event, receipt) {
   const eventName = event.event
+  const blockNumber = event.blockNumber
   if (eventsHandlers.hasOwnProperty(eventName)) {
-    return eventsHandlers[eventName](event).then(() => {
-      const blockNumber = event.blockNumber
-      console.log(`recieved ${eventName} event at ${blockNumber} blockNumber`)
+    console.log(`Starting to process event ${eventName} at ${blockNumber} blockNumber`)
+    return eventsHandlers[eventName](event, receipt).then(() => {
+      console.log(`Done to process ${eventName} event at ${blockNumber} blockNumber`)
       eventUtils.addNewEvent({
         eventName,
         ...event
       })
+    }).catch(err => {
+      console.log(`Failed to process ${eventName} event at ${blockNumber} blockNumber`)
+      throw err
     })
   }
 }
@@ -39,10 +42,10 @@ const handleReceipt = async (receipt) => {
   for (let [eventName, event] of events) {
     if (eventsHandlers.hasOwnProperty(eventName)) {
       if (Array.isArray(event)) {
-        const eventPromisses = event.map((singleEvent) => handleEvent(singleEvent))
+        const eventPromisses = event.map((singleEvent) => handleEvent(singleEvent, receipt))
         promisses = [...promisses, ...eventPromisses]
       } else {
-        promisses.push(handleEvent(event))
+        promisses.push(handleEvent(event, receipt))
       }
     }
   }

@@ -249,12 +249,12 @@ $themes: (
       }
       @include element(logo) {
         min-width: 100px;
-        padding-left: 0.9375rem;
+        padding-left: 10px;
         flex-basis: 10%;
       }
   
       @include element(close) {
-        padding-right: 0.9375rem;
+        padding-right: 10px;
         flex-basis: 10%;
         .fa {
           cursor: pointer;
@@ -303,9 +303,13 @@ $themes: (
   
       @include block(name) {
         height: 100%;
-  
+        
         @include breakpoint(medium) {
-          @include xy-grid(vertical, false);
+          border-bottom: solid 2px $color-brdr-issuance;
+          min-height: 220px;
+          padding-bottom: 55px;
+          margin-bottom: 55px;
+          @include xy-grid(horizontal, false);
           @include flex-align(left, middle);
         }
   
@@ -314,160 +318,13 @@ $themes: (
           @include flex-align(spaced, middle);
         }
   
-        @include element(title) {
-          font-size: 21rem;
-          font-weight: bold;
-          line-height: 1.29;
-          text-transform: capitalize;
-          color: $dark;
-          
+        @include element(wrapper) {
           @include breakpoint(medium up) {
-            margin-bottom: 2em;
-          }
-  
-          @include breakpoint(small) {
-            margin-bottom: 1em;				
+            width: 60%;
+            margin: auto;
           }
         }
   
-        @include element(field) {
-          margin-bottom: 2em;
-          @include breakpoint(medium up) {
-            min-width: 300px;
-            max-width: 300px;
-          }
-  
-          @include breakpoint(small) {
-            max-width: 80%;
-            width: 100%;
-          }
-  
-          input {
-            width: 100%;
-            background-color: $color-white;
-            padding: 8px 16px;
-            font-size: 13rem;
-            color: $dark;
-            height: 60px;
-            border-radius: 46.5px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
-            border: solid 2px transparent;
-            &::placeholder {
-              color: rgba(0, 0, 0, 0.3);
-            }
-            &:focus {
-              border: solid 2px $dark;
-              box-shadow: none;
-            }
-          }
-        }
-      }
-  
-      @include block(symbol) {
-  
-        margin: 0 auto;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-  
-        @include element(title) {
-          color: $dark;
-          text-transform: capitalize;
-          line-height: 1.29;
-          font-weight: bold;
-  
-          @include breakpoint(medium) {
-            margin-bottom: 20px;
-            font-size: 21rem;
-          }
-  
-          @include breakpoint(small) {
-            margin-bottom: 5px;
-          }
-  
-          @include modifier(name) {
-            font-weight: normal;
-            color: $color-step;
-          }
-        }
-      
-        @include element(field) {
-      
-          margin: auto 0;
-          border-radius: 46.5px;
-          font-weight: bold;
-          text-align: center;
-          color: $secondary;
-          padding: 10px 0;
-          text-transform: uppercase;
-          position: relative;
-          width: 80%;
-  
-          > div:first-child {
-            width: 100%;
-            height: 100%;
-          }
-  
-          @include breakpoint(medium) {
-            min-width: 287px;
-            height: 93px;
-            max-width: 287px;
-          }
-  
-          @include breakpoint(small) {
-            margin-bottom: 1em;		
-          }
-  
-          input {
-            height: 100%;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
-            border: solid 2px transparent;
-            background-color: #fff;
-            border-radius: 46.5px;
-            color: $dark;
-            font-size: 60rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            outline: none;
-            width: 100%;
-            text-align: center;
-  
-            &::placeholder {
-              color: rgba(0, 0, 0, 0.3);
-              font-weight: bold;
-            }
-            
-            &:focus {
-              border: solid 2px $dark;
-              box-shadow: none;
-            }
-      
-            &::-webkit-input-placeholder {
-              line-height: normal;
-            }
-            
-          }
-        }
-        @media (max-width: $breakpoint-mobile) {
-          width: 100%;
-        }
-      }
-  
-      @include block(attributes) {
-          margin: 0 auto;
-        @include breakpoint(large) {
-          max-width: 60%;				
-        }
-        @include breakpoint(medium only) {
-          max-width: 70%;
-        }
-  
-        @include breakpoint(small) {
-          @include xy-grid(vertical);
-  
-        }
-        
         @include element(title) {
           font-size: 21rem;
           font-weight: bold;
@@ -488,14 +345,215 @@ $themes: (
           }
         }
   
+        @include element(field) {
+          // margin-bottom: 2em;
+          @include breakpoint(medium up) {
+            min-width: 300px;
+            max-width: 300px;
+          }
+  
+          @include breakpoint(small) {
+            max-width: 80%;
+            width: 100%;
+          }
+  
+          input {
+            width: 100%;
+            background-color: $color-white;
+            padding: 8px 16px;
+            font-size: 13rem;
+            color: $dark;
+            height: 50px;
+            border-radius: 46.5px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+            border: solid 2px transparent;
+            &::placeholder {
+              color: rgba(0, 0, 0, 0.3);
+            }
+            &:focus {
+              border: solid 2px $dark;
+              box-shadow: none;
+            }
+          }
+        }
+
+        @include element(next) {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }        
+      }
+
+      @include block(line) {
+        padding: 10px 20px;
+        hr {
+          margin: 32px 0;
+          border-top: solid 1px $color-brdr-issuance;
+        }
+      }
+  
+      @include block(symbol) {
+  
+       
+  
+        // @include element(title) {
+        //   color: $dark;
+        //   text-transform: capitalize;
+        //   line-height: 1.29;
+        //   font-weight: bold;
+  
+        @include breakpoint(medium) {
+          border-bottom: solid 2px $color-brdr-issuance;
+          min-height: 220px;
+          padding-bottom: 55px;
+          margin-bottom: 55px;
+          @include xy-grid(horizontal, false);
+          @include flex-align(left, middle);
+        }
+
+
+        @include breakpoint(small down) {
+          @include xy-grid(vertical, false);
+          @include flex-align(null, middle);
+          margin: 32px 0 0;
+        }
+  
+        //   @include modifier(name) {
+        //     font-weight: normal;
+        //     color: $color-step;
+        //   }
+        // }
+
+        @include element(title) {
+          font-size: 1.313em;
+          font-weight: bold;
+          line-height: 1.29;
+          text-transform: capitalize;
+          color: $dark;
+          
+          @include breakpoint(medium only) {
+            min-width: 250px;
+          }
+  
+          @include breakpoint(large) {
+            min-width: 330px;
+          }
+  
+          @include breakpoint(small only) {
+            margin-bottom: 1em;
+          }
+
+          @include modifier(name) {
+            font-weight: normal;
+            color: $color-step;
+          }
+        }
+      
+        @include element(field) {
+      
+          border-radius: 46.5px;
+          font-weight: bold;
+          text-align: center;
+          color: $secondary;
+          text-transform: uppercase;
+          position: relative;
+          width: 80%;
+  
+          > div:first-child {
+            width: 100%;
+            height: 100%;
+          }
+  
+          @include breakpoint(medium) {
+            min-width: 287px;
+            height: 93px;
+            max-width: 287px;
+          }
+  
+          input {
+            height: 100%;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+            border: solid 2px transparent;
+            background-color: #fff;
+            border-radius: 46.5px;
+            color: $dark;
+            font-size: 50rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            outline: none;
+            width: 100%;
+            padding: 5px 20px;
+  
+            &::placeholder {
+              color: rgba(0, 0, 0, 0.3);
+              font-weight: bold;
+            }
+            
+            &:focus {
+              border: solid 2px $dark;
+              box-shadow: none;
+            }
+      
+            &::-webkit-input-placeholder {
+              line-height: normal;
+            }
+            
+            &:disabled {
+              color: rgba(0, 0, 0, 0.3);
+            }
+
+            @include breakpoint(small only) {
+              font-size: 29rem;
+            }
+          }
+        }
+      
+      }
+  
+      @include block(attributes) {
+          margin: 0 auto;
+        @include breakpoint(large) {
+          max-width: 60%;				
+        }
+
+        @include breakpoint(medium only) {
+          max-width: 70%;
+        }
+  
+        @include breakpoint(small) {
+          // @include xy-grid(vertical);
+  
+        }
+        
+        @include element(title) {
+          font-size: 21rem;
+          font-weight: bold;
+          line-height: 1.29;
+          text-transform: capitalize;
+          color: $dark;
+          
+          @include breakpoint(medium only) {
+            min-width: 250px;
+          }
+  
+          @include breakpoint(large) {
+            min-width: 330px;
+          }
+  
+          @include breakpoint(small only) {
+            margin-bottom: 1em;
+            font-size: 20rem;
+          }
+        }
+  
         @include element(attribute) {
           
           
           @include breakpoint(medium) {
             border-bottom: solid 2px $color-brdr-issuance;
             min-height: 220px;
-            padding-bottom: 65px;
-            margin-bottom: 65px;
+            padding-bottom: 55px;
+            margin-bottom: 55px;
             @include xy-grid(horizontal, false);
             @include flex-align(left, middle);
           }
@@ -504,6 +562,12 @@ $themes: (
             @include xy-grid(vertical);					
             @include flex-align(spaced, middle);
           }
+
+          // @include modifier(space) {
+          //   margin: 32px 0;
+          //   border-top: solid 2px $color-brdr-issuance;
+          //   padding-top: 32px;
+          // }
         }
   
         @include element(types) {
@@ -515,7 +579,7 @@ $themes: (
             }
           }
   
-          @include breakpoint(small) {
+          @include breakpoint(small down) {
             @include xy-grid(vertical);	
             @include flex-align(spaced, middle);
             > div {
@@ -545,6 +609,108 @@ $themes: (
             @include modifier(chosen) {
               border: solid 2px $dark;
             }
+            
+            &:last-child {
+              > img {
+                width: 50px;
+              }
+            }
+          }
+
+          @include element(select) {
+
+            @include element(wrapper) {
+              width: 70%;
+            }
+
+            border-radius: 16px;
+            display: inline-block;
+            width: 100%;
+
+            >div {
+              border-color: none !important;
+             
+              
+            }
+
+            @include element(prefix) {
+              color: #0a7586 !important;
+              font-size: 12rem;
+              @include element(placeholder) {
+                color: #8d95a9 !important;
+              }
+              @include element(single-value) {
+                color: #8d95a9 !important;
+              }
+              @include element(control) {
+                border: none;
+                min-height: auto !important;
+                border-radius: 16px !important;
+                height: 2em;
+                box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+                &:hover {
+                  box-shadow: none;
+                  border: solid 1px $dark;
+                }
+              }
+
+              @include element(value-container) {
+                height: inherit;
+              }
+              
+              @include element(indicator-separator) {
+                display: none;
+              }
+              @include element(option) {
+                color: #0a7586 !important;
+                font-size: 12rem !important;
+                text-align: start;
+                @include modifier(is-focused) {
+                  border-color: none !important;
+                  background-color: rgba(10, 117, 134, 0.53) !important;
+                }
+                @include modifier(is-selected) {
+                  background-color: rgba(10, 117, 134, 0.08) !important;
+                }
+              }
+              
+              @include element(dropdown-indicator) {
+                &::before {
+                  content: "";
+                  display: block;
+                  position: absolute;
+                  right: 10px;
+                  width: 0;
+                  height: 0;
+                  top: 9px;
+                  border-style: solid;
+                  border-color: #8d95a9 transparent transparent transparent;
+                  border-width: 6px;
+                }
+                [class^="css"] {
+                  display: none;
+                }
+              }
+
+              @include element(menu-list) {
+                > div {
+                  padding: 3px;
+
+                  @include block(icon) {
+                    display: inline-block;
+                    width: 15px;
+                    height: 15px;
+                    margin-right: 5px;
+
+                    > img {
+                      background-repeat: no-repeat;
+                      background-size: contain;
+                      background-position: center;
+                    }
+                  }
+                }
+              }
+            }
           }
         }
   
@@ -560,6 +726,7 @@ $themes: (
           @include breakpoint(small down) {
             @include xy-grid(vertical, false);	
             @include flex-align(spaced, middle);
+            width: 100%;
             > div:not(:last-child) {
               margin-bottom: 1em;
             }
@@ -599,8 +766,8 @@ $themes: (
         
         @include element(supply) {
   
-          @include breakpoint(small) {
-            width: 75%;							
+          @include breakpoint(small down) {
+            width: 75%;	
           }
           
           @include element(input) {
@@ -635,7 +802,7 @@ $themes: (
           margin: 1em 0;
   
           @include breakpoint(small) {
-            margin-top: 3em;
+            margin-top: 2em;
           }
         }
   
@@ -702,7 +869,7 @@ $themes: (
           }
         }
   
-        @include element(checkbox) {
+        @include element(item) {
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
@@ -711,63 +878,34 @@ $themes: (
           
           @include breakpoint(medium) {
             font-size: 16rem;
-            margin: 16rem;
+            margin: 16px;
           }
   
           @include breakpoint(small) {
             font-size: 12rem;
-            margin: 8rem 0;
+            margin: 8px 0;
           }
   
-          @include block(input) {
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-
-            &:checked + .indicator--read-only {
-              background: $secondary url(../../assets/images/checkbox_valid.svg) center;
-              opacity: .5;
-            }
-            &:checked + .indicator:after {
-              background: $secondary url(../../assets/images/checkbox_valid.svg) center;
-              opacity: 1;
-            }
-          }
-  
-          @include block(indicator) {
+          @include block(icon) {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin-right: 5px;
             align-self: flex-start;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            min-width: 25px;
-            min-height: 25px;
-            width: 25px;
-            height: 25px;
-            font-size: 12rem;
-            border: 1px solid $color-author;
-            border-radius: 5px;
-            cursor: pointer;
 
-            @include modifier(disabled) {
-              background-color: #d8d8d8 !important;
-              opacity: .5 !important;
+            @include breakpoint(small down) {
+              height: min-content;
+              width: 100px;
             }
 
-            &:after {
-              content: '';
-              display: block;
-              flex: 0 0 auto;
+            > img {
+              background-repeat: no-repeat;
+              background-size: contain;
+              background-position: center;
               width: 100%;
-              height: 100%;
-              opacity: 0;
             }
           }
-  
+    
           @include block(content) {
             display: block;
             margin-left: 10px;
@@ -902,7 +1040,7 @@ $themes: (
       @include block(summary-step) {
         
         @include element(wrapper) {
-          box-shadow: 0 0 11rem 0 rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 11px 0 rgba(0, 0, 0, 0.25);
           position: relative;
           margin: auto;
           border-radius: 10px;
@@ -1011,14 +1149,14 @@ $themes: (
                 background-repeat: no-repeat;
                 background-position: center;
                 width: 9px;
-                height: 11rem;
+                height: 11px;
               }
             }
 
             @include element(small) {
               display: inline-block;
               font-size: 10.5rem;
-              padding-left: 13rem;
+              padding-left: 13px;
             }
           }
   
@@ -1036,6 +1174,10 @@ $themes: (
   
             > p, div {
               color: rgba(13, 45, 69, 0.6);
+
+              @include breakpoint(small down) {
+                font-size: 14rem;
+              }
             }
   
             ul {
@@ -1086,44 +1228,40 @@ $themes: (
   
         @include element(wrapper) {
           color:  $color-primary-dark;
-          box-shadow: 0 0 11rem 0 rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 11px 0 rgba(0, 0, 0, 0.25);
           border-radius: 10px;
           margin: 0 auto;
-          position: relative;
-  
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index: 20000000;
+          background: white;
+
           @include breakpoint(medium) {
-            width: 611rem;
-            min-height: 406px;
+            width: 100%;
+            height: 100%;
             @include xy-grid(vertical);
             @include flex-align(spaced, middle);
-            padding: 20px 50px;
+            padding: 10px 50px;
           }
     
           @include breakpoint(small only) {
             @include xy-grid(vertical);
             @include flex-align(justify, middle);
-            width: 90%;
+            width: 100%;
+            height: 100%;
             padding: 20px;
-            min-height: 60vh;
           }
         }
         @include element(img) {
-          width: 80px;
-          height: 80px;
-    
-          > img {
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: contain;
-            width: 100%;
-            height: 100%;
-          }
+          width: 50px;
+          height: 50px;
         }
         @include element(item) {
           text-align: center;
           opacity: 0.3;
           font-size: 14rem;
-          padding: 20px 0;
+          padding: 10px 0;
           @include modifier(active) {
             opacity: 1;
           }
@@ -1152,30 +1290,31 @@ $themes: (
 
         @include element(loader) {
           position: relative;
-          width: 80px !important;
-          height: 80px !important;
-          -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
-          transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
-          
-          div , &:after {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 6px solid $color-ropsten;
-            border-top-color: transparent;
+          text-indent: -9999em;
+          border-top: 7px solid rgba(225, 225, 225, 0.5);
+          border-right: 7px solid rgba(225, 225, 225, 0.5);
+          border-bottom: 7px solid rgba(225, 225, 225, 0.5);
+          border-left: 7px solid $color-ropsten;
+          -webkit-transform: translateZ(0);
+          -ms-transform: translateZ(0);
+          transform: translateZ(0);
+          animation: spinner 1.1s infinite linear;
+          border-radius: 50%;
+          width: 100%;
+          height: 100%;
+
+          &::after {
             border-radius: 50%;
+            width: 100%;
+            height: 100%;
           }
-        
-          div {
-            -webkit-animation: lds-rolling 1.3s linear infinite;
-            animation: lds-rolling 1.3s linear infinite;
-            top: 50%;
-            left: 50%;
-          }
-        
-          &:after {
-            -webkit-transform: rotate(90deg);
-            transform: rotate(90deg);
+
+          @include modifier(stop) {
+            border-top: 7px solid rgba(225, 225, 225, 0.5);
+            border-right: 7px solid rgba(225, 225, 225, 0.5);
+            border-bottom: 7px solid rgba(225, 225, 225, 0.5);
+            border-left: 7px solid rgba(225, 225, 225, 0.5);
+            animation: none;
           }
         }
       }
@@ -1185,7 +1324,7 @@ $themes: (
         background: none;
         border: 1px solid transparent;
         color: $dark;
-        margin-top: 20rem;
+        margin-top: 16px;
         text-transform: uppercase;
         font-weight: bold;
       
@@ -1225,4 +1364,15 @@ $themes: (
 
 @each $theme, $list in $themes {
   @include steps($theme, $list);
+}
+
+@keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }

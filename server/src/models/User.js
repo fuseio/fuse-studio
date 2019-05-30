@@ -1,14 +1,4 @@
 const validator = require('validator')
-const mongoose = require('mongoose')
-const Token = mongoose.model('Token')
-const { detailsGiven } = require('@utils/tokenProgress')
-
-const handleDetailsGiven = async (user) => {
-  const tokens = await Token.find({ owner: user.accountAddress }).lean().exec()
-  for (let token of tokens) {
-    detailsGiven(token.address)
-  }
-}
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
@@ -29,8 +19,6 @@ module.exports = (mongoose) => {
   UserSchema.set('toJSON', {
     versionKey: false
   })
-
-  UserSchema.post('save', handleDetailsGiven)
 
   const User = mongoose.model('User', UserSchema)
 

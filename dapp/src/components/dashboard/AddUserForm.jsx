@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-// import get from 'lodash/get'
 import omit from 'lodash/omit'
-// import capitalize from 'lodash/capitalize'
 import { Formik, Field, ErrorMessage } from 'formik'
 import userEntity from 'utils/validation/shapes/userEntity'
 import TransactionButton from 'components/common/TransactionButton'
@@ -12,8 +10,6 @@ import CountriesList from 'constants/countries'
 class AddUserForm extends Component {
   constructor (props) {
     super(props)
-
-    // const { entity } = props
 
     this.initialValues = {
       firstName: '',

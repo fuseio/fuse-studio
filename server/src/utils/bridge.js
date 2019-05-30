@@ -1,13 +1,16 @@
 const config = require('config')
 const ForeignBridgeFactoryABI = require('@constants/abi/ForeignBridgeFactory.json')
-const HomeBridgeFactoryABI = require('@constants/abi/HomeBridgeFactory.json')
-const BridgeMapperABI = require('@constants/abi/BridgeMapper.json')
-const foreignAddressess = require('@utils/network').addresses
-const homeAddresses = config.get('web3.addresses.fuse')
+const HomeBridgeFactoryABI = require('@constants/abi/HomeBridgeFactory')
+const BridgeMapperABI = require('@constants/abi/BridgeMapper')
+const IRestrictedTokenABI = require('@constants/abi/IRestrictedToken')
+const foreignAddressess = config.get('network.foreign.addresses')
+const homeAddresses = config.get('network.home.addresses')
 const { fetchGasPrice, isZeroAddress } = require('@utils/network')
 const { handleReceipt } = require('@events/handlers')
 const home = require('@services/web3/home')
 const foreign = require('@services/web3/foreign')
+const mongoose = require('mongoose')
+const Token = mongoose.model('Token')
 
 const TOKEN_DECIMALS = 18
 
@@ -48,6 +51,8 @@ async function deployHomeBridge (token, { web3, from, send }) {
     from
   })
 
+  await handleReceipt(receipt)
+
   const event = receipt.events.HomeBridgeDeployed
 
   const result = {
@@ -62,6 +67,7 @@ async function deployHomeBridge (token, { web3, from, send }) {
 }
 
 async function addBridgeMapping (
+  communityAddress,
   foreignToken,
   homeToken,
   foreignBridge,
@@ -76,6 +82,7 @@ async function addBridgeMapping (
   })
 
   const method = mapper.methods.addBridgeMapping(
+    communityAddress,
     foreignToken,
     homeToken,
     foreignBridge,
@@ -92,7 +99,12 @@ async function addBridgeMapping (
   return receipt
 }
 
-async function deployBridge (token) {
+async function deployBridge (communityProgress) {
+  const { communityAddress } = communityProgress.steps.community.results
+  const { foreignTokenAddress } = communityProgress.steps.bridge.args
+
+  const token = await Token.findOne({ address: foreignTokenAddress })
+
   const [deployForeignBridgeResponse, deployHomeBridgeResponse] = await Promise.all([
     deployForeignBridge(token, foreign),
     deployHomeBridge(
@@ -104,8 +116,8 @@ async function deployBridge (token) {
   const { foreignBridgeAddress, foreignBridgeBlockNumber } = deployForeignBridgeResponse
   const { homeBridgeAddress, homeTokenAddress, homeBridgeBlockNumber } = deployHomeBridgeResponse
 
-  const foreignTokenAddress = token.address
   const receipt = await addBridgeMapping(
+    communityAddress,
     foreignTokenAddress,
     homeTokenAddress,
     foreignBridgeAddress,
@@ -116,6 +128,11 @@ async function deployBridge (token) {
   )
 
   await handleReceipt(receipt)
+
+  const setTransferManagerMethod = new home.web3.eth.Contract(IRestrictedTokenABI, homeTokenAddress).methods.setTransferManager(communityAddress)
+  await home.send(setTransferManagerMethod, {
+    from: home.from
+  })
 
   return {
     foreignTokenAddress,

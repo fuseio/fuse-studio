@@ -8,6 +8,9 @@ import logoGreenGradiant from 'images/token-green_gradient.svg'
 import logoMain from 'images/token-main.svg'
 import logoMainDark from 'images/token-main-dark.svg'
 import logoMainGradiant from 'images/token-main-gradient.svg'
+import DAI_1 from 'images/DAI_CoinIcon1.svg'
+import DAI_2 from 'images/DAI_CoinIcon2.svg'
+import DAI_3 from 'images/DAI_CoinIcon3.svg'
 
 const getImages = (networkType) => {
   const isRopsten = networkType === 'ropsten'
@@ -19,7 +22,13 @@ const getImages = (networkType) => {
   return pictureEnum
 }
 
-const CommunityLogo = ({ networkType, metadata: { communityLogo }, token: { symbol }, isSmall = false, isBig = false }) => {
+const getDaiIcons = () => ({
+  'CoinIcon1.svg': DAI_1,
+  'CoinIcon2.svg': DAI_2,
+  'CoinIcon3.svg': DAI_3
+})
+
+const CommunityLogo = ({ networkType, metadata: { communityLogo }, token: { symbol }, isSmall = false, isBig = false, isDaiToken = false }) => {
   const wrapperClasses = classNames(`logo-circle__outer`,
     { 'logo-circle__outer--normal': !isSmall && !isBig },
     { 'logo-circle__outer--small': isSmall && !isBig },
@@ -32,10 +41,10 @@ const CommunityLogo = ({ networkType, metadata: { communityLogo }, token: { symb
     <div className={wrapperClasses}>
       {
         communityLogo
-          ? <img src={getImages(networkType)[communityLogo] || logoGreen} className='logo-circle__inner' alt='Community Logo' />
+          ? <img src={!isDaiToken ? (getImages(networkType)[communityLogo] || logoGreen) : getDaiIcons()[communityLogo]} className='logo-circle__inner' alt='Community Logo' />
           : <Loader color='#fff' className='logo-img' />
       }
-      <span className='logo-circle__name'>{symbol}</span>
+      {!isDaiToken && <span className='logo-circle__name'>{symbol}</span>}
     </div>
   )
 }

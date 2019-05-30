@@ -53,7 +53,9 @@ function * watchTokensFetched ({ response }) {
   const { result, entities } = response
   for (let tokenAddress of result) {
     const token = entities[tokenAddress]
-    yield put(actions.fetchMetadata(token.tokenURI))
+    if (token && token.tokenURI) {
+      yield put(actions.fetchMetadata(token.tokenURI))
+    }
   }
 }
 

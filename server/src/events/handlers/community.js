@@ -3,6 +3,7 @@ const Entity = mongoose.model('Entity')
 const Community = mongoose.model('Community')
 const { hasRole, roles: { APPROVED_ROLE } } = require('@fuse/roles')
 const { deriveFromRoles } = require('@utils/roles')
+const { web3 } = require('@services/web3/home')
 
 const handleTransferManagerSet = async (event) => {
   const token = event.address
@@ -10,26 +11,23 @@ const handleTransferManagerSet = async (event) => {
   console.log({ token, communityAddress })
 }
 
-const handleEntityAdded = async (event) => {
-  const entitiesListAddress = event.address
-  const { communityAddress } = await Community.findOne({ entitiesListAddress }, 'communityAddress')
+const handleEntityAdded = async (event, receipt) => {
+  const communityAddress = web3.utils.toChecksumAddress(receipt.to)
   const { roles, account } = event.returnValues
   const derivedFields = deriveFromRoles(roles)
 
   return Entity.findOneAndUpdate({ account, communityAddress }, { ...derivedFields, communityAddress, roles, account }, { new: true, upsert: true })
 }
 
-const handleEntityRemoved = async (event) => {
-  const entitiesListAddress = event.address
+const handleEntityRemoved = async (event, receipt) => {
+  const communityAddress = web3.utils.toChecksumAddress(receipt.to)
   const { account } = event.returnValues
-  const { communityAddress } = await Community.findOne({ entitiesListAddress }, 'communityAddress')
 
   return Entity.deleteOne({ account, communityAddress })
 }
 
-const handleEntityRolesUpdated = async (event) => {
-  const entitiesListAddress = event.address
-  const { communityAddress } = await Community.findOne({ entitiesListAddress }, 'communityAddress')
+const handleEntityRolesUpdated = async (event, receipt) => {
+  const communityAddress = web3.utils.toChecksumAddress(receipt.to)
   const { roles, account } = event.returnValues
   const derivedFields = deriveFromRoles(roles)
 

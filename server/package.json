@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js",
+    "dev": "nodemon --trace-warnings ./src/app.js",
     "lint": "standard",
     "lint-fix": "standard --fix"
   },

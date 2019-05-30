@@ -2,7 +2,7 @@ const config = require('config')
 const request = require('request-promise-native')
 const router = require('express').Router()
 const mongoose = require('mongoose')
-const web3 = require('@services/web3')
+const { web3 } = require('@services/web3/foreign')
 
 const Event = mongoose.model('Event')
 const Token = mongoose.model('Token')

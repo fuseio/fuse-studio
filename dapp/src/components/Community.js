@@ -6,7 +6,12 @@ import { formatWei } from 'utils/format'
 import CommunityLogo from 'components/elements/CommunityLogo'
 
 export default class Community extends Component {
-  handleClick = () => this.props.showDashboard(this.props.token.address)
+  handleClick = () => {
+    const { token } = this.props
+    if (token && token.communityAddress) {
+      this.props.showDashboard(token.communityAddress)
+    }
+  }
 
   render () {
     return <div className={this.props.coinWrapperClassName} onClick={this.handleClick}>

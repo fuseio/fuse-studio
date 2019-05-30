@@ -1,11 +1,26 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
+const Community = mongoose.model('Community')
 const paginate = require('express-paginate')
 
-router.get('/', async (req, res, next) => {
+const withCommunityAddress = async (tokens, { networkType }) => {
+  if (!networkType) {
+    return tokens
+  }
+
+  const tokenAddresses = tokens.map(token => token.address)
+  const key = networkType === 'fuse' ? 'homeTokenAddress' : 'foreignTokenAddress'
+  const communities = await Community.find({ [key]: { $in: tokenAddresses } }, { communityAddress: 1 })
+  const communityAddresses = communities.map(community => community.communityAddress)
+  return tokens.map((token, index) => ({ ...token.toObject(), communityAddress: communityAddresses[index] }))
+}
+
+const createFilter = ({ networkType }) => networkType ? ({ networkType }) : {}
+
+router.get('/', async (req, res) => {
   const [ results, itemCount ] = await Promise.all([
-    Token.find({}).sort({ blockNumber: -1 }).limit(req.query.limit).skip(req.skip),
+    Token.find(createFilter(req.query)).sort({ blockNumber: -1 }).limit(req.query.limit).skip(req.skip),
     Token.estimatedDocumentCount()
   ])
 
@@ -14,17 +29,17 @@ router.get('/', async (req, res, next) => {
   res.json({
     object: 'list',
     has_more: paginate.hasNextPages(req)(pageCount),
-    data: results
+    data: await withCommunityAddress(results, req.query)
   })
 })
 
 router.get('/owner/:owner', async (req, res) => {
   const { owner } = req.params
-  const results = await Token.find({ owner }).sort({ blockNumber: -1 })
+  const results = await Token.find({ ...createFilter(req.query), owner }).sort({ blockNumber: -1 })
 
   res.json({
     object: 'list',
-    data: results
+    data: await withCommunityAddress(results, req.query)
   })
 })
 

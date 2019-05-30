@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Group 6</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New-Onboarding-NEW-existing-token" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Wizard-symbol" transform="translate(-446.000000, -356.000000)">
+            <g id="Group-6" transform="translate(446.000000, 356.000000)">
+                <g id="Group-18-Copy-2" fill="#34D080">
+                    <path d="M39.6039604,79.2079208 C17.7664624,79.2079208 4.54747351e-13,61.4414584 4.54747351e-13,39.6039604 C4.54747351e-13,17.7664624 17.7664624,3.69482223e-13 39.6039604,3.69482223e-13 C61.4414584,3.69482223e-13 79.2079208,17.7664624 79.2079208,39.6039604 C79.2079208,61.4414584 61.4414584,79.2079208 39.6039604,79.2079208" id="Path"></path>
+                </g>
+                <g id="dai" transform="translate(19.000000, 21.000000)" fill-rule="nonzero">
+                    <polygon id="Path" fill="#05283E" points="19.9720605 0.544038065 38.9760533 19.1619336 19.9720605 37.7799864 0.968067753 19.1619336"></polygon>
+                    <polygon id="Path" fill="#05283E" points="19.9718999 25.2372526 0.952171146 19.161147 19.9718999 0.54348748 38.9916287 19.161147"></polygon>
+                    <polygon id="Path" fill="#34D080" points="7.56772899 17.9459259 16.2506487 17.9459259 19.9718999 13.8951888 24.1066236 17.9459259 32.7895433 17.9459259 19.9718999 4.37634996"></polygon>
+                </g>
+                <polygon id="Path" fill="#E7E7E7" fill-rule="nonzero" opacity="0.42" points="38.9718999 58.7799864 39 21.5434875 57.9760533 40.1620122 41.4645182 56.5113932"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

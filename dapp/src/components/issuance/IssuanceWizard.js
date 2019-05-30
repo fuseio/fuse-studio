@@ -6,13 +6,13 @@ import { BigNumber } from 'bignumber.js'
 import classNames from 'classnames'
 import { nameToSymbol } from 'utils/format'
 import StepsIndicator from './StepsIndicator'
-import NameStep from './NameStep'
-import SymbolStep from './SymbolStep'
+import NameCurrencyStep from './NameCurrencyStep'
 import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
-import DeployProgress from './DeployProgress'
+// import DeployProgress from './DeployProgress'
+import { getAccountAddress } from 'selectors/accounts'
 import Contracts from './Contracts'
-import { createTokenWithMetadata, fetchDeployProgress } from 'actions/token'
+import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken } from 'actions/token'
 import ReactGA from 'services/ga'
 import Logo from 'components/Logo'
 
@@ -23,20 +23,26 @@ class IssuanceWizard extends Component {
     communitySymbol: '',
     customSupply: '',
     communityType: {},
+    existingToken: {},
     totalSupply: '',
     communityLogo: {},
     stepPosition: {},
     scrollPosition: 0,
     contracts: {
+      community: {
+        label: 'Members list',
+        checked: true,
+        key: 'community'
+      },
       bridge: {
         label: 'Bridge to fuse',
         checked: true,
         key: 'bridge'
       },
-      membersList: {
-        label: 'Members list',
+      transferOwnership: {
+        label: 'Transfer ownership',
         checked: true,
-        key: 'membersList'
+        key: 'transferOwnership'
       }
     },
     isOpen: false,
@@ -78,20 +84,28 @@ class IssuanceWizard extends Component {
       symbol: this.state.communitySymbol,
       totalSupply: new BigNumber(this.state.totalSupply).multipliedBy(1e18)
     }
-    const { contracts, isOpen } = this.state
+    const { contracts, isOpen, communityType } = this.state
+    const { deployExistingToken, createTokenWithMetadata, adminAddress } = this.props
 
     const steps = Object.keys(contracts)
       .filter((contractName) => contracts[contractName].checked)
-      .reduce((steps, contractName) => {
-        steps = {
-          ...steps,
-          [contracts[contractName].key]: contracts[contractName].key === 'membersList' && !isOpen ? { isClosed: true } : true
-        }
-        return steps
-      }, {})
+      .reduce((steps, contractName) => ({
+        ...steps,
+        [contracts[contractName].key]: contracts[contractName].key === 'bridge'
+          ? { args: { foreignTokenAddress: null } }
+          : contracts[contractName].key === 'community'
+            ? { args: { isClosed: !isOpen, name: this.state.communityName, adminAddress } }
+            : {}
+      }), {})
 
     const metadata = { communityLogo: this.state.communityLogo.name }
-    this.props.createTokenWithMetadata(tokenData, metadata, this.state.communityType.value, steps)
+    if (communityType && communityType.value === 'existingToken') {
+      const { existingToken: { value: foreignTokenAddress } } = this.state
+      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
+      deployExistingToken(newSteps)
+    } else {
+      createTokenWithMetadata(tokenData, metadata, this.state.communityType.value, steps)
+    }
   }
 
   handleScroll = () => this.setState({ scrollPosition: window.scrollY })
@@ -117,8 +131,11 @@ class IssuanceWizard extends Component {
 
   showMetamaskPopup = () => this.setIssuanceTransaction()
 
-  setCommunityType = type =>
-    this.setState({ communityType: type })
+  setCommunityType = communityType =>
+    this.setState({ communityType })
+
+  setExistingToken = existingToken =>
+    this.setState({ existingToken })
 
   setTotalSupply = supply =>
     this.setState({ totalSupply: supply })
@@ -126,17 +143,8 @@ class IssuanceWizard extends Component {
   setCommunityLogo = logo =>
     this.setState({ communityLogo: logo })
 
-  setContracts = ({ key, value, label }) => {
-    const {
-      contracts
-    } = this.state
-
-    this.setState({ contracts: { ...contracts, [key]: { ...contracts[key], checked: value } } })
-  }
-
-  setCommunityPrivacy = isOpen => {
+  setCommunityPrivacy = isOpen =>
     this.setState({ isOpen })
-  }
 
   renderStepContent = () => {
     const {
@@ -155,28 +163,24 @@ class IssuanceWizard extends Component {
       totalSupply,
       contracts,
       currentDeploy,
-      isOpen
+      isOpen,
+      existingToken
     } = this.state
 
     switch (activeStep) {
       case 0:
         return (
-          <NameStep
+          <NameCurrencyStep
+            networkType={foreignNetwork}
             communityName={communityName}
             handleChangeCommunityName={this.handleChangeCommunityName}
             setNextStep={this.setNextStep}
+            communityType={communityType}
+            setCommunityType={this.setCommunityType}
+            setExistingToken={this.setExistingToken}
           />
         )
       case 1:
-        return (
-          <SymbolStep
-            communityName={communityName}
-            setNextStep={this.setNextStep}
-            handleChangeCommunitySymbol={this.handleChangeCommunitySymbol}
-            communitySymbol={communitySymbol}
-          />
-        )
-      case 2:
         return (
           <DetailsStep
             networkType={foreignNetwork}
@@ -188,19 +192,20 @@ class IssuanceWizard extends Component {
             communityLogo={communityLogo}
             setCommunityLogo={this.setCommunityLogo}
             setNextStep={this.setNextStep}
+            communityName={communityName}
+            handleChangeCommunitySymbol={this.handleChangeCommunitySymbol}
           />
         )
-      case 3:
+      case 2:
         return (
           <Contracts
             isOpen={isOpen}
             setCommunityPrivacy={this.setCommunityPrivacy}
             contracts={contracts}
-            setContracts={this.setContracts}
             setNextStep={this.setNextStep}
           />
         )
-      case 4:
+      case 3:
         return (
           <SummaryStep
             isOpen={isOpen}
@@ -213,14 +218,10 @@ class IssuanceWizard extends Component {
             communitySymbol={communitySymbol}
             setNextStep={this.setNextStep}
             showPopup={this.showMetamaskPopup}
+            communityType={communityType}
             transactionStatus={transactionStatus}
-          />
-        )
-      case 5:
-        return (
-          <DeployProgress
+            existingToken={existingToken}
             history={history}
-            contracts={contracts}
             currentDeploy={currentDeploy}
           />
         )
@@ -229,7 +230,8 @@ class IssuanceWizard extends Component {
 
   render () {
     const { history, foreignNetwork } = this.props
-    const steps = ['Name', 'Symbol', 'Attributes', 'Contracts', 'Summary']
+    const { communityType } = this.state
+    const steps = ['Name & currency', communityType && communityType.value === 'existingToken' ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary']
 
     return (
       <div className={classNames(`issuance-${foreignNetwork}__wrapper`)}>
@@ -256,7 +258,7 @@ class IssuanceWizard extends Component {
         <div className={classNames(`issuance-${foreignNetwork}__wizard`)}>
           {this.renderStepContent()}
           {
-            this.state.activeStep > 0 && this.state.activeStep < 5 && (
+            this.state.activeStep > 0 && (
               <div className='text-center'>
                 <button
                   className={classNames(`issuance-${foreignNetwork}__wizard__back`)}
@@ -279,12 +281,14 @@ IssuanceWizard.propTypes = {
 
 const mapStateToProps = (state) => ({
   ...state.screens.issuance,
-  foreignNetwork: state.network.foreignNetwork
+  foreignNetwork: state.network.foreignNetwork,
+  adminAddress: getAccountAddress(state)
 })
 
 const mapDispatchToProps = {
   createTokenWithMetadata,
-  fetchDeployProgress
+  fetchDeployProgress,
+  deployExistingToken
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(IssuanceWizard)

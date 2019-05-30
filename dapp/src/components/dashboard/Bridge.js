@@ -61,12 +61,6 @@ class Bridge extends Component {
     transferAmount: ''
   }
 
-  componentDidMount () {
-    this.props.fetchHomeToken(this.props.foreignTokenAddress)
-    this.props.fetchHomeBridge(this.props.foreignTokenAddress)
-    this.props.fetchForeignBridge(this.props.foreignTokenAddress)
-  }
-
   componentDidUpdate (prevProps) {
     if (this.props.waitingForConfirmation && !prevProps.waitingForConfirmation) {
       if (this.props.bridgeStatus.to.bridge === 'home') {
@@ -80,8 +74,6 @@ class Bridge extends Component {
       this.setState({ transferAmount: 0 })
     }
   }
-
-  isOwner = () => this.props.accountAddress === this.props.token.owner
 
   setTransferAmount = (e) => this.setState({ transferAmount: e.target.value })
 
@@ -136,7 +128,8 @@ class Bridge extends Component {
       waitingForConfirmation,
       confirmationNumber,
       confirmationsLimit,
-      bridgeDeployed
+      bridgeDeployed,
+      isOwner
     } = this.props
 
     const {
@@ -182,7 +175,7 @@ class Bridge extends Component {
                     <div className='dashboard-transfer-title'>Some Headline About the Bridge</div>
                     <div className='dashboard-transfer-text'>Explanation about deploying it</div>
                     <button className='dashboard-transfer-btn dashboard-transfer-deploy-btn'
-                      disabled={!this.isOwner() || this.props.bridgeDeploying}
+                      disabled={!isOwner() || this.props.bridgeDeploying}
                       onClick={this.props.loadBridgePopup}>
                       Deploy Bridge
                     </button>

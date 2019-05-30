@@ -6,7 +6,6 @@
 
 	@include element(title) {
 		display: inline-block;
-		text-transform: uppercase;
 		font-size: 14rem;
 		text-align: start;
 		font-weight: bold;
@@ -435,6 +434,10 @@
 	color: $color-primary-dark;
 	text-align: center;
 	padding: 20px 70px;
+
+	@include breakpoint(small down) {
+		padding: 20px 30px;
+	}
 
 	@include element(title) {
 		font-size: 20rem;

@@ -14,7 +14,8 @@ class CommunitiesList extends Component {
   }
 
   loadMore = (nextPage) => {
-    this.props.fetchTokens(nextPage)
+    const { networkType, fetchTokens } = this.props
+    fetchTokens(networkType, nextPage)
   }
 
   showIssuance = () => {
@@ -28,14 +29,15 @@ class CommunitiesList extends Component {
 
   componentDidMount () {
     if (this.props.addresses.length < PAGE_SIZE) {
-      this.props.fetchTokens(PAGE_START)
+      const { networkType, fetchTokens } = this.props
+      fetchTokens(networkType, PAGE_START)
     }
   }
 
   getScrollParent = () => this.myRef.current
 
   render () {
-    const { addresses, tokens, metadata, networkType } = this.props
+    const { showDashboard, account, hasMore, history, addresses, tokens, metadata, networkType } = this.props
     return (
       <div className={`communities-list ${this.props.networkType}`} ref={this.myRef}>
         <div className='grid-container full communities-banner-wrapper'>
@@ -71,19 +73,19 @@ class CommunitiesList extends Component {
               initialLoad={false}
               pageStart={PAGE_START}
               loadMore={this.loadMore}
-              hasMore={this.props.hasMore}
+              hasMore={hasMore}
               useWindow={false}
               getScrollParent={this.getScrollParent}
             >
               {addresses.map(address =>
-                <div className='cell medium-12 large-8 small-24 list-item' key={address}>
+                <div className='medium-12 large-8 small-24 list-item' key={address}>
                   <Community
                     networkType={networkType}
                     token={tokens[address]}
                     metadata={metadata[tokens[address].tokenURI]}
-                    history={this.props.history}
-                    account={this.props.account}
-                    showDashboard={this.props.showDashboard}
+                    history={history}
+                    account={account}
+                    showDashboard={showDashboard}
                   />
                 </div>
               )}

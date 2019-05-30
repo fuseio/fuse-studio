@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
+const Token = mongoose.model('Token')
 const Bridge = mongoose.model('Bridge')
+const config = require('config')
+const tokenUtils = require('@utils/token')
+const { web3 } = require('@services/web3/home')
 
 const handleBridgeMappingUpdatedEvent = async (event) => {
   const foreignTokenAddress = event.returnValues.foreignToken
@@ -19,6 +23,27 @@ const handleBridgeMappingUpdatedEvent = async (event) => {
   }).save()
 }
 
+const handleHomeBridgeDeployed = async (event) => {
+  const eventArgs = event.returnValues
+  const address = eventArgs._token
+
+  const tokenData = {
+    address,
+    factoryAddress: event.address,
+    blockNumber: event.blockNumber,
+    tokenType: 'basic',
+    networkType: config.get('network.home.name')
+  }
+
+  const fetchedTokenData = await tokenUtils.fetchTokenData(address, { tokenURI: false }, web3)
+
+  return new Token({
+    ...tokenData,
+    ...fetchedTokenData
+  }).save()
+}
+
 module.exports = {
-  handleBridgeMappingUpdatedEvent
+  handleBridgeMappingUpdatedEvent,
+  handleHomeBridgeDeployed
 }

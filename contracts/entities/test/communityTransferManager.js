@@ -26,14 +26,14 @@ contract('CommunityTransferManager', async (accounts) => {
   }
 
   beforeEach(async () => {
-    transferManager = await CommunityTransferManager.new()
+    transferManager = await CommunityTransferManager.new('My Community')
     entitiesList = await EntitiesList.at(await transferManager.entitiesList())
   })
 
   describe('#constructor', () => {
     it('creator is admin of the community', async () => {
       const entity = { roles: ADMIN_ROLE }
-      transferManager = await CommunityTransferManager.new()
+      transferManager = await CommunityTransferManager.new('My Community')
       await validateEntity(owner, entity)
     })
   })

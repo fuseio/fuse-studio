@@ -9,7 +9,7 @@ contract UsersRegistry is Ownable {
     event UserRemoved(address indexed account);
     event UserUpdated(address indexed account, string userUri);
 
-    function addUser(address _account, string _userUri) onlyOwner public {
+    function addUser(address _account, string _userUri) public onlyOwner {
         require(_account != address(0));
         require(bytes(users[_account]).length == 0);
         users[_account] = _userUri;
@@ -25,7 +25,7 @@ contract UsersRegistry is Ownable {
         emit UserRemoved(_account);
     }
 
-    function updateUser(address _account, string _userUri) onlyOwner public {
+    function updateUser(address _account, string _userUri) public onlyOwner {
         require(_account != address(0));
         require(bytes(users[_account]).length > 0);
         users[_account] = _userUri;

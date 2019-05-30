@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import web3 from 'web3'
-import { fetchToken, fetchTokenStatistics, transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
+import { fetchCommunity, fetchTokenProgress, fetchToken, fetchTokenStatistics, transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { isUserExists } from 'actions/user'
 import { getClnBalance, getAccountAddress, getBalances } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
@@ -13,22 +12,17 @@ import { deployBridge } from 'actions/bridge'
 import TokenProgress from './TokenProgress'
 import TopNav from 'components/TopNav'
 import Breadcrumbs from 'components/elements/Breadcrumbs'
-import ActivityContent from './ActivityContent'
 import Bridge from './Bridge'
 import EntitiesManager from './EntitiesManager'
 import { isOwner } from 'utils/token'
-import Tabs from 'components/common/Tabs'
-import Message from 'components/common/Message'
 import { getTransaction } from 'selectors/transaction'
-import { FAILURE, SUCCESS, PENDING } from 'actions/constants'
-import TransferForm from './TransferForm'
-import MintBurnForm from './MintBurnForm'
+import DashboardTabs from './DashboardTabs'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
 
 class UserDataModal extends React.Component {
-  componentDidMount (prevProps) {
-    if (this.props.token.owner === this.props.accountAddress && !this.props.userExists) {
+  componentDidMount () {
+    if (this.props.owner === this.props.accountAddress && !this.props.userExists) {
       this.timerId = setTimeout(this.props.loadUserDataModal, LOAD_USER_DATA_MODAL_TIMEOUT)
     }
   }
@@ -41,7 +35,7 @@ class UserDataModal extends React.Component {
 }
 
 UserDataModal.propTypes = {
-  token: PropTypes.object.isRequired,
+  owner: PropTypes.string.isRequired,
   accountAddress: PropTypes.string.isRequired,
   loadUserDataModal: PropTypes.func.isRequired,
   userExists: PropTypes.bool
@@ -56,15 +50,17 @@ class Dashboard extends Component {
   }
 
   handleIntervalChange = (userType, intervalValue) => {
-    this.props.fetchTokenStatistics(this.props.tokenAddress, userType, intervalValue)
+    const { token: { foreignTokenAddress } } = this.props
+    if (foreignTokenAddress) {
+      const { fetchTokenStatistics } = this.props
+      fetchTokenStatistics(foreignTokenAddress, userType, intervalValue)
+    }
   }
 
   componentDidMount () {
     if (!this.props.token) {
-      this.props.fetchToken(this.props.tokenAddress)
-    }
-    if (this.props.accountAddress) {
-      this.props.isUserExists(this.props.accountAddress)
+      this.props.fetchCommunity(this.props.communityAddress)
+      this.props.fetchTokenProgress(this.props.communityAddress)
     }
     if (this.props.networkType !== 'fuse' && this.props.tokenNetworkType !== this.props.networkType) {
       this.props.loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [this.props.tokenNetworkType], handleClose: this.showHomePage })
@@ -76,35 +72,17 @@ class Dashboard extends Component {
     if (this.props.dashboard.informationAdded && !prevProps.dashboard.informationAdded) {
       this.props.hideModal()
     }
-
+    if (this.props.communityAddress && !prevProps.communityAddress) {
+      this.props.fetchCommunity(this.props.communityAddress)
+      this.props.fetchTokenProgress(this.props.communityAddress)
+    }
+    if ((this.props.community && this.props.community.foreignTokenAddress) && !prevProps.community) {
+      const { fetchToken, community: { foreignTokenAddress } } = this.props
+      fetchToken(foreignTokenAddress)
+    }
     if (this.props.accountAddress && !prevProps.accountAddress) {
-      this.props.isUserExists(this.props.accountAddress)
-    }
-
-    if (this.props.transactionStatus === SUCCESS && (!prevProps.transactionStatus || prevProps.transactionStatus === PENDING)) {
-      this.setState({
-        ...this.state
-      })
-    }
-
-    if (this.props.transactionStatus === SUCCESS && (!prevProps.transactionStatus || prevProps.transactionStatus === PENDING)) {
-      if (this.props.transferSuccess) {
-        this.setState({ ...this.state, transferMessage: true })
-      } else if (this.props.burnSuccess) {
-        this.setState({ ...this.state, burnMessage: true })
-      } else if (this.props.mintSuccess) {
-        this.setState({ ...this.state, mintMessage: true })
-      }
-    }
-
-    if (this.props.transactionStatus === FAILURE && (!prevProps.transactionStatus || prevProps.transactionStatus === PENDING)) {
-      if (this.props.transferSuccess === false) {
-        this.setState({ ...this.state, transferMessage: true })
-      } else if (this.props.burnSuccess === false) {
-        this.setState({ ...this.state, burnMessage: true })
-      } else if (this.props.mintSuccess === false) {
-        this.setState({ ...this.state, mintMessage: true })
-      }
+      const { isUserExists } = this.props
+      isUserExists(this.props.accountAddress)
     }
   }
 
@@ -123,29 +101,37 @@ class Dashboard extends Component {
   }
 
   loadUserDataModal = () => {
-    if (isOwner(this.props.token, this.props.accountAddress)) {
-      this.props.loadModal(USER_DATA_MODAL, { tokenAddress: this.props.tokenAddress })
+    const { token, loadModal, accountAddress, dashboard: { owner } } = this.props
+    const { address: tokenAddress } = token
+    if (isOwner({ owner }, accountAddress)) {
+      loadModal(USER_DATA_MODAL, { tokenAddress })
     } else {
-      this.props.loadModal(NO_DATA_ABOUT_OWNER_MODAL, { tokenAddress: this.props.tokenAddress })
+      loadModal(NO_DATA_ABOUT_OWNER_MODAL, { tokenAddress })
     }
   }
 
-  loadBridgePopup = () => this.props.loadModal(BRIDGE_MODAL, {
-    tokenAddress: this.props.tokenAddress,
-    isOwner: isOwner(this.props.token, this.props.accountAddress),
-    buttonAction: this.props.deployBridge
-  })
+  loadBridgePopup = () => {
+    const { loadModal, deployBridge, token, accountAddress, dashboard: { owner } } = this.props
+    const { address: tokenAddress } = token
+    loadModal(BRIDGE_MODAL, {
+      tokenAddress,
+      isOwner: isOwner({ owner }, accountAddress),
+      buttonAction: deployBridge
+    })
+  }
 
   onlyOnFuse = (successFunc) => {
-    if (this.props.networkType === 'fuse') {
+    const { networkType } = this.props
+    if (networkType === 'fuse') {
       successFunc()
     } else {
-      this.props.loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['fuse'] })
+      const { loadModal } = this.props
+      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['fuse'] })
     }
   }
 
   handleMintOrBurnClick = (actionType, amount) => {
-    const { burnToken, mintToken, tokenAddress } = this.props
+    const { burnToken, mintToken, token: { address: tokenAddress } } = this.props
     if (actionType === 'mint') {
       mintToken(tokenAddress, web3.utils.toWei(String(amount)))
     } else {
@@ -156,7 +142,7 @@ class Dashboard extends Component {
   }
 
   handleTransper = ({ to: toField, amount }) => {
-    const { transferToken, tokenAddress } = this.props
+    const { transferToken, token: { address: tokenAddress } } = this.props
     transferToken(tokenAddress, toField, web3.utils.toWei(String(amount)))
   }
 
@@ -165,10 +151,7 @@ class Dashboard extends Component {
       return null
     }
     const {
-      lastAction,
-      burnMessage,
-      mintMessage,
-      transferMessage
+      lastAction
     } = this.state
 
     const {
@@ -176,7 +159,6 @@ class Dashboard extends Component {
       accountAddress,
       transactionStatus,
       balances,
-      tokenAddress,
       dashboard,
       isTransfer,
       isMinting,
@@ -190,12 +172,18 @@ class Dashboard extends Component {
       history,
       match,
       clearTransactionStatus,
-      error
+      transferSuccess,
+      burnSuccess,
+      mintSuccess,
+      error,
+      community
     } = this.props
 
-    const { tokenType } = token
+    const { address: tokenAddress } = token
+    const { communityAddress } = community
+
     const balance = balances[tokenAddress]
-    const { admin, user, steps } = dashboard
+    const { admin, user, steps, userExists, owner } = dashboard
     return [
       <TopNav
         key={0}
@@ -217,105 +205,57 @@ class Dashboard extends Component {
               loadBridgePopup={this.loadBridgePopup}
               loadUserDataModal={this.loadUserDataModal}
             />
-            <Tabs>
-              <div label='Stats'>
-                <div className='transfer-tab__balance'>
-                  <span className='title'>Balance: </span>
-                  <span className='amount'>{balance ? formatWei(balance, 0) : 0}</span>
-                  <span className='symbol'>{token.symbol}</span>
-                </div>
-                <hr className='transfer-tab__line' />
-                <div className='transfer-tab__content' ref={content => (this.content = content)}>
-                  <ActivityContent stats={user} userType='user' title='users' handleChange={this.handleIntervalChange} />
-                  <ActivityContent stats={admin} userType='admin' handleChange={this.handleIntervalChange} />
-                </div>
-              </div>
-              <div label='Transfer' className={classNames({ 'tab__item--loader': isTransfer || transferSignature })}>
-                <div className='transfer-tab'>
-                  <div className='transfer-tab__balance'>
-                    <span className='title'>Balance: </span>
-                    <span className='amount'>{balance ? formatWei(balance, 0) : 0}</span>
-                    <span className='symbol'>{token.symbol}</span>
-                  </div>
-                  <hr className='transfer-tab__line' />
-                  <TransferForm
-                    error={error}
-                    balance={balance ? formatWei(balance, 0) : 0}
-                    transactionStatus={transactionStatus}
-                    transferMessage={transferMessage}
-                    closeMessage={() => {
-                      this.setState({ transferMessage: false })
-                      clearTransactionStatus(null)
-                    }}
-                    handleTransper={this.handleTransper}
-                  />
-                </div>
-                <Message message={'Pending'} isOpen={isTransfer} isDark subTitle={`Your money on it's way`} />
-                <Message message={'Pending'} isOpen={transferSignature} isDark />
-              </div>
-
-              {
-                token &&
-                tokenType &&
-                tokenType === 'mintableBurnable' &&
-                networkType !== 'fuse' &&
-                <div label='Mint \ Burn' className={classNames({ 'tab__item--loader': (mintSignature || burnSignature) || (isBurning || isMinting) })}>
-                  <div className='transfer-tab'>
-                    <div className='transfer-tab__balance'>
-                      <span className='title'>Balance: </span>
-                      <span className='amount'>{balance ? formatWei(balance, 0) : 0}</span>
-                      <span className='symbol'>{token.symbol}</span>
-                    </div>
-                    <hr className='transfer-tab__line' />
-                    <MintBurnForm
-                      error={error}
-                      balance={balance ? formatWei(balance, 0) : 0}
-                      handleMintOrBurnClick={this.handleMintOrBurnClick}
-                      tokenNetworkType={tokenNetworkType}
-                      token={token}
-                      lastAction={lastAction}
-                      accountAddress={accountAddress}
-                      mintMessage={mintMessage}
-                      burnMessage={burnMessage}
-                      transactionStatus={transactionStatus}
-                      closeMintMessage={() => {
-                        this.setState({ mintMessage: false })
-                        clearTransactionStatus(null)
-                      }}
-                      closeBurnMessage={() => {
-                        this.setState({ burnMessage: false })
-                        clearTransactionStatus(null)
-                      }}
-                    />
-                  </div>
-                  <Message message={'Pending'} isOpen={isBurning || isMinting} isDark subTitle='' />
-                  <Message message={'Pending'} isOpen={mintSignature || burnSignature} isDark />
-                </div>
-              }
-            </Tabs>
+            <DashboardTabs
+              transferSuccess={transferSuccess}
+              burnSuccess={burnSuccess}
+              mintSuccess={mintSuccess}
+              user={user}
+              error={error}
+              admin={admin}
+              token={token}
+              isBurning={isBurning}
+              isMinting={isMinting}
+              isTransfer={isTransfer}
+              lastAction={lastAction}
+              networkType={networkType}
+              burnSignature={burnSignature}
+              mintSignature={mintSignature}
+              accountAddress={accountAddress}
+              tokenNetworkType={tokenNetworkType}
+              transferSignature={transferSignature}
+              transactionStatus={transactionStatus}
+              handleTransper={this.handleTransper}
+              handleIntervalChange={this.handleIntervalChange}
+              handleMintOrBurnClick={this.handleMintOrBurnClick}
+              balance={balance ? formatWei(balance, 0) : 0}
+              clearTransactionStatus={clearTransactionStatus}
+            />
           </div>
           <Bridge
             bridgeDeployed={steps && steps.bridge}
             accountAddress={accountAddress}
-            token={this.props.token}
-            foreignTokenAddress={this.props.tokenAddress}
+            token={token}
+            foreignTokenAddress={tokenAddress}
+            isOwner={() => isOwner({ owner }, accountAddress)}
             loadBridgePopup={this.loadBridgePopup}
             handleTransfer={this.handleTransfer}
+            communityAddress={communityAddress}
             network={networkType}
           />
           <EntitiesManager
-            history={this.props.history}
-            foreignTokenAddress={this.props.tokenAddress}
-            token={this.props.token}
+            {...dashboard}
+            community={community}
+            history={history}
+            token={token}
             onlyOnFuse={this.onlyOnFuse}
           />
         </div>
         {
-          this.props.token && accountAddress && this.props.dashboard.hasOwnProperty('userExists') &&
+          token && accountAddress && dashboard.hasOwnProperty('userExists') &&
           <UserDataModal
-            token={this.props.token}
+            owner={owner}
             accountAddress={accountAddress}
-            userExists={this.props.dashboard.userExists}
+            userExists={userExists}
             loadUserDataModal={this.loadUserDataModal}
           />
         }
@@ -327,8 +267,13 @@ class Dashboard extends Component {
 const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   networkType: state.network.networkType,
-  token: state.entities.tokens[match.params.address],
-  tokenAddress: match.params.address,
+  token: state.entities.communities &&
+    state.entities.tokens &&
+    state.entities.communities[match.params.address] &&
+    state.entities.communities[match.params.address].foreignTokenAddress &&
+    state.entities.tokens[state.entities.communities[match.params.address].foreignTokenAddress],
+  community: state.entities.communities && state.entities.communities[match.params.address],
+  communityAddress: match.params.address,
   tokenNetworkType: match.params.networkType,
   metadata: state.entities.metadata,
   dashboard: state.screens.dashboard,
@@ -341,7 +286,9 @@ const mapStateToProps = (state, { match }) => ({
 
 const mapDispatchToProps = {
   fetchTokenStatistics,
+  fetchCommunity,
   fetchToken,
+  fetchTokenProgress,
   isUserExists,
   loadModal,
   hideModal,

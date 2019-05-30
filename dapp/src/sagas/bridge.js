@@ -1,60 +1,15 @@
-import { call, all, put, select, delay } from 'redux-saga/effects'
+import { call, all, put, select, delay, takeEvery } from 'redux-saga/effects'
 
 import { apiCall, createEntityPut, tryTakeEvery } from './utils'
 import { getContract } from 'services/contract'
-import { zeroAddressToNull } from 'utils/web3'
 import { getAccountAddress } from 'selectors/accounts'
-import { getBlockNumber, getAddress } from 'selectors/network'
+import { getBlockNumber } from 'selectors/network'
 import { transactionFlow } from './transaction'
 import * as actions from 'actions/bridge'
+import { FETCH_TOKEN_PROGRESS } from 'actions/token'
 import * as api from 'services/api/token'
 
 const entityPut = createEntityPut(actions.entityName)
-
-export function * fetchHomeToken ({ foreignTokenAddress }) {
-  const contractAddress = yield select(getAddress, 'BridgeMapper')
-  const options = { bridgeType: 'home' }
-  const bridgeMapperContract = getContract({ abiName: 'BridgeMapper', address: contractAddress, options })
-  const homeTokenAddress = yield bridgeMapperContract.methods.homeTokenByForeignToken(foreignTokenAddress).call()
-
-  yield entityPut({
-    type: actions.FETCH_HOME_TOKEN.SUCCESS,
-    response: {
-      homeTokenAddress: zeroAddressToNull(homeTokenAddress),
-      foreignTokenAddress
-    }
-  })
-}
-
-export function * fetchHomeBridge ({ foreignTokenAddress }) {
-  const contractAddress = yield select(getAddress, 'BridgeMapper')
-  const options = { bridgeType: 'home' }
-  const bridgeMapperContract = getContract({ abiName: 'BridgeMapper', address: contractAddress, options })
-  const homeBridgeAddress = yield bridgeMapperContract.methods.homeBridgeByForeignToken(foreignTokenAddress).call()
-
-  yield entityPut({
-    type: actions.FETCH_HOME_BRIDGE.SUCCESS,
-    response: {
-      homeBridgeAddress: zeroAddressToNull(homeBridgeAddress),
-      foreignTokenAddress
-    }
-  })
-}
-
-export function * fetchForeignBridge ({ foreignTokenAddress }) {
-  const contractAddress = yield select(getAddress, 'BridgeMapper')
-  const options = { bridgeType: 'home' }
-  const bridgeMapperContract = getContract({ abiName: 'BridgeMapper', address: contractAddress, options })
-  const foreignBridgeAddress = yield bridgeMapperContract.methods.foreignBridgeByForeignToken(foreignTokenAddress).call()
-
-  yield entityPut({
-    type: actions.FETCH_FOREIGN_BRIDGE.SUCCESS,
-    response: {
-      foreignBridgeAddress: zeroAddressToNull(foreignBridgeAddress),
-      foreignTokenAddress
-    }
-  })
-}
 
 export function * deployBridge ({ foreignTokenAddress }) {
   const response = yield apiCall(api.deployBridge, { foreignTokenAddress })
@@ -146,15 +101,27 @@ function * watchHomeBridge ({ homeBridgeAddress, transactionHash }) {
   })
 }
 
+function * watchFetchProgress ({ response }) {
+  const { homeTokenAddress, foreignBridgeAddress, foreignTokenAddress, homeBridgeAddress } = response
+
+  yield entityPut({
+    type: actions.WATCH_COMMUNITY_DATA.SUCCESS,
+    response: {
+      homeTokenAddress,
+      foreignBridgeAddress,
+      foreignTokenAddress,
+      homeBridgeAddress
+    }
+  })
+}
+
 export default function * bridgeSaga () {
   yield all([
-    tryTakeEvery(actions.FETCH_HOME_TOKEN, fetchHomeToken, 1),
-    tryTakeEvery(actions.FETCH_HOME_BRIDGE, fetchHomeBridge, 1),
-    tryTakeEvery(actions.FETCH_FOREIGN_BRIDGE, fetchForeignBridge, 1),
     tryTakeEvery(actions.DEPLOY_BRIDGE, deployBridge, 1),
     tryTakeEvery(actions.TRANSFER_TO_HOME, transferToHome, 1),
     tryTakeEvery(actions.TRANSFER_TO_FOREIGN, transferToForeign, 1),
     tryTakeEvery(actions.WATCH_FOREIGN_BRIDGE, watchForeignBridge, 1),
-    tryTakeEvery(actions.WATCH_HOME_BRIDGE, watchHomeBridge, 1)
+    tryTakeEvery(actions.WATCH_HOME_BRIDGE, watchHomeBridge, 1),
+    takeEvery(FETCH_TOKEN_PROGRESS.SUCCESS, watchFetchProgress)
   ])
 }

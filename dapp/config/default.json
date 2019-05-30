@@ -5,11 +5,13 @@
     "addresses": {
       "ropsten": {
         "ColuLocalNetwork": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
-        "TokenFactory": "0xE307a14b078030d81801e46F89285dbf5B4aa3F0"
+        "TokenFactory": "0xE307a14b078030d81801e46F89285dbf5B4aa3F0",
+        "DaiToken": "0x1CAf0Ed93dD34152000ACec9441D4D9ed0f55D7B"
       },
       "main": {
         "ColuLocalNetwork": "0x4162178B78D6985480A308B2190EE5517460406D",
-        "TokenFactory": "0xac051e086FD2046FC75A53D38088B4DD6e00E25b"
+        "TokenFactory": "0xac051e086FD2046FC75A53D38088B4DD6e00E25b",
+        "DaiToken": "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"
       },
       "fuse": {
         "ropsten": {

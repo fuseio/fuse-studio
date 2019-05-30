@@ -11,7 +11,7 @@ module.exports = (mongoose) => {
     homeBridgeBlockNumber: { type: Number, required: [true, "can't be blank"] }
   })
 
-  BridgeSchema.index({ foreignTokenAddress: 1 }, { unique: true })
+  BridgeSchema.index({ foreignTokenAddress: 1 })
   BridgeSchema.index({ homeTokenAddress: 1 }, { unique: true })
 
   const Bridge = mongoose.model('Bridge', BridgeSchema)

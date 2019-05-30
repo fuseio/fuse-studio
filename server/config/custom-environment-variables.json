@@ -12,12 +12,14 @@
   "ipfsProxy": {
     "urlBase": "COMMUNITY_IPFS_PROXY_URL_BASE"
   },
-  "web3": {
-    "provider": "COMMUNITY_WEB3_PROVIDER",
-    "websocketProvider": "COMMUNITY_WEB3_WEBSOCKET_PROVIDER",
-    "network": "COMMUNITY_WEB3_NETWORK",
-    "apiKey": "COMMUNITY_WEB3_API_KEY",
-    "pageSize": "COMMUNITY_WEB3_PAGE_SIZE"
+  "network": {
+    "misc": {
+      "pageSize": "COMMUNITY_WEB3_PAGE_SIZE"
+    },
+    "foreign": {
+      "apiKey": "COMMUNITY_WEB3_API_KEY",
+      "name": "COMMUNITY_WEB3_NETWORK"
+    }
   },
   "mongo": {
     "uri": "COMMUNITY_MONGO_URI",

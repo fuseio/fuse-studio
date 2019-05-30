@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const web3 = require('@services/web3')
+const { web3 } = require('@services/web3/foreign')
 
 require('../models')(mongoose)
 

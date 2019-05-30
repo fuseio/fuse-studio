@@ -31,7 +31,12 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
+        "name": "key",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
         "name": "foreignToken",
         "type": "address"
       },
@@ -85,11 +90,11 @@
     "constant": true,
     "inputs": [
       {
-        "name": "_foreignToken",
-        "type": "address"
+        "name": "_key",
+        "type": "bytes32"
       }
     ],
-    "name": "homeBridgeByForeignToken",
+    "name": "homeBridgeByKey",
     "outputs": [
       {
         "name": "",
@@ -104,11 +109,11 @@
     "constant": true,
     "inputs": [
       {
-        "name": "_foreignToken",
-        "type": "address"
+        "name": "_key",
+        "type": "bytes32"
       }
     ],
-    "name": "foreignBridgeByForeignToken",
+    "name": "foreignBridgeByKey",
     "outputs": [
       {
         "name": "",
@@ -123,11 +128,11 @@
     "constant": true,
     "inputs": [
       {
-        "name": "_foreignToken",
-        "type": "address"
+        "name": "_key",
+        "type": "bytes32"
       }
     ],
-    "name": "homeTokenByForeignToken",
+    "name": "homeTokenByKey",
     "outputs": [
       {
         "name": "",
@@ -142,11 +147,30 @@
     "constant": true,
     "inputs": [
       {
-        "name": "_foreignToken",
+        "name": "_key",
+        "type": "bytes32"
+      }
+    ],
+    "name": "foreignTokenByKey",
+    "outputs": [
+      {
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "homeStartBlockByForeignToken",
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_key",
+        "type": "bytes32"
+      }
+    ],
+    "name": "homeStartBlockByKey",
     "outputs": [
       {
         "name": "",
@@ -161,11 +185,11 @@
     "constant": true,
     "inputs": [
       {
-        "name": "_foreignToken",
-        "type": "address"
+        "name": "_key",
+        "type": "bytes32"
       }
     ],
-    "name": "foreignStartBlockByForeignToken",
+    "name": "foreignStartBlockByKey",
     "outputs": [
       {
         "name": "",
@@ -193,6 +217,10 @@
   {
     "constant": false,
     "inputs": [
+      {
+        "name": "_key",
+        "type": "bytes32"
+      },
       {
         "name": "_foreignToken",
         "type": "address"
@@ -228,8 +256,8 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_foreignToken",
-        "type": "address"
+        "name": "_key",
+        "type": "bytes32"
       }
     ],
     "name": "removeBridgeMapping",

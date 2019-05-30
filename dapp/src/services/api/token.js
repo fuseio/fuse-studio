@@ -1,22 +1,25 @@
 import request from 'superagent'
 
-export const fetchTokens = (apiRoot, { page }) =>
-  request.get(`${apiRoot}/tokens?page=${page}`)
+export const fetchTokens = (apiRoot, { networkType, page }) =>
+  request.get(`${apiRoot}/tokens?networkType=${networkType}&page=${page}`)
     .then(response => response.body)
 
-export const fetchTokensByOwner = (apiRoot, { owner }) =>
-  request.get(`${apiRoot}/tokens/owner/${owner}`)
+export const fetchTokensByOwner = (apiRoot, { networkType, owner }) =>
+  request.get(`${apiRoot}/tokens/owner/${owner}?networkType=${networkType}`)
     .then(response => response.body)
 
 export const fetchToken = (apiRoot, { tokenAddress }) =>
   request.get(`${apiRoot}/tokens/${tokenAddress}`).then(response => response.body)
 
-export const fetchTokenProgress = (apiRoot, { tokenAddress }) =>
-  request.get(`${apiRoot}/tokens/progress/${tokenAddress}`).then(response => response.body)
+export const fetchTokenProgress = (apiRoot, { communityAddress }) =>
+  request.get(`${apiRoot}/communities/progress?communityAddress=${communityAddress}`).then(response => response.body)
 
-export const deployChosenContracts = (apiRoot, { tokenAddress, steps }) =>
-  request.post(`${apiRoot}/tokens/progress/deploy/${tokenAddress}`)
-    .send({ steps })
+export const fetchDeployProgress = (apiRoot, { id }) =>
+  request.get(`${apiRoot}/communities/progress/${id}`).then(response => response.body)
+
+export const deployChosenContracts = (apiRoot, { steps, accountAddress }) =>
+  request.post(`${apiRoot}/communities/deploy`)
+    .send({ steps, accountAddress })
     .then(response => response.body)
 
 export const fetchTokenStatistics = (apiRoot, { tokenAddress, activityType, interval }) =>
@@ -28,5 +31,5 @@ export const fetchTokenList = (apiRoot, { accountAddress, networkSide }) =>
 export const deployBridge = (apiRoot, { foreignTokenAddress }) =>
   request.post(`${apiRoot}/bridges/${foreignTokenAddress}`).then(response => response.body)
 
-export const fetchCommunity = (apiRoot, { tokenAddress }) =>
-  request.get(`${apiRoot}/communities?tokenAddress=${tokenAddress}`).then(response => response.body)
+export const fetchCommunity = (apiRoot, { communityAddress }) =>
+  request.get(`${apiRoot}/communities/${communityAddress}`).then(response => response.body)

@@ -1,5 +1,5 @@
 const client = require('@services/sendgrid')
-const web3 = require('@services/web3')
+const { web3 } = require('@services/web3/foreign')
 const config = require('config')
 
 const createMailRequest = ({ to, from, templateId, templateData }) => {

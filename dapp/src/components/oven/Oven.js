@@ -11,18 +11,20 @@ import ReactGA from 'services/ga'
 class Oven extends Component {
   componentDidMount () {
     if (this.props.account) {
-      this.props.fetchTokensByOwner(this.props.account)
+      const { networkType } = this.props
+      this.props.fetchTokensByOwner(networkType, this.props.account)
     }
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.account && !prevProps.account) {
-      this.props.fetchTokensByOwner(this.props.account)
+      const { networkType } = this.props
+      this.props.fetchTokensByOwner(networkType, this.props.account)
     }
   }
 
-  showDashboard = (tokenAddress) => {
-    this.props.history.push(`/view/dashboard/${this.props.foreignNetwork}/${tokenAddress}`)
+  showDashboard = (communityAddress) => {
+    this.props.history.push(`/view/dashboard/${this.props.foreignNetwork}/${communityAddress}`)
     ReactGA.event({
       category: 'Dashboard',
       action: 'Click',

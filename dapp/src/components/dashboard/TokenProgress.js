@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import CommunityLogo from 'components/elements/CommunityLogo'
-import { fetchTokenProgress } from 'actions/token'
 import FontAwesome from 'react-fontawesome'
 import classNames from 'classnames'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import { formatWei } from 'utils/format'
 import { getBlockExplorerUrl } from 'utils/network'
 import { QR_MODAL } from 'constants/uiConstants'
+import { checkImportedToken } from 'constants/existingTokens'
 import { loadModal } from 'actions/ui'
 
 const Step = ({ done, text, handleClick }) => (
@@ -25,11 +25,6 @@ const Step = ({ done, text, handleClick }) => (
 )
 
 class TokenProgress extends Component {
-  componentDidMount () {
-    const { fetchTokenProgress, match: { params: { address } } } = this.props
-    fetchTokenProgress(address)
-  }
-
   render () {
     const {
       token,
@@ -44,9 +39,23 @@ class TokenProgress extends Component {
     } = this.props
     const doneSteps = Object.values(steps).filter(step => step)
     const progressOverall = doneSteps.length * 20
+
+    let importedAddress
+    if (token && token.tokenType === 'imported') {
+      const { value } = checkImportedToken(token, networkType)
+      importedAddress = value
+    }
+
     return (
       <div className='dashboard-sidebar'>
-        <div className='logo'><CommunityLogo networkType={networkType} token={token} metadata={metadata[token.tokenURI] || {}} /></div>
+        <div className='logo'>
+          <CommunityLogo
+            isDaiToken={token && token.address === importedAddress}
+            networkType={networkType}
+            token={token}
+            metadata={metadata[token.tokenURI] || {}}
+          />
+        </div>
         <div className='token-info'>
           <h5 className='token-info__title'>{token.name}</h5>
           <div className='token-info__total'><span>Total supply: {formatWei(token.totalSupply, 0)}</span><span>{token.symbol}</span></div>
@@ -71,13 +80,13 @@ class TokenProgress extends Component {
             <div className='dashboard-progress-percent'>{progressOverall}%</div>
           </div>
         </div>
-        <Step done={steps.tokenIssued}
+        <Step done
           text='Community token deployed' />
-        <Step done={steps.detailsGiven} handleClick={loadUserDataModal}
+        <Step done handleClick={loadUserDataModal}
           text='Admin personal name given' />
         <Step done={steps.bridge} handleClick={loadBridgePopup}
           text='Bridge to Fuse - chain deployed' />
-        <Step done={steps.membersList}
+        <Step done={steps.community}
           text='Members list deployed' />
         <Step done={false} text='White label wallet paired' handleClick={() => loadModal(QR_MODAL, { value: tokenAddress })} />
       </div>
@@ -94,7 +103,6 @@ TokenProgress.defaultProps = {
 }
 
 const mapDispatchToProps = {
-  fetchTokenProgress,
   loadModal
 }
 

@@ -1,20 +1,19 @@
 import React, { Component, Fragment } from 'react'
-import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import { isMobileOnly } from 'react-device-detect'
 import TotalSupply from './TotalSupply'
 import LogosOptions from './LogosOptions'
-import CurrencyType from './CurrencyType'
+import FontAwesome from 'react-fontawesome'
+import SymbolStep from './SymbolStep'
 
 export default class DetailsStep extends Component {
-  state = {
-    currentStep: 0
-  }
+  constructor (props) {
+    super(props)
 
-  nextAttribute = () => {
-    this.setState({
-      currentStep: this.state.currentStep + 1
-    })
+    const { communityType } = props
+    this.state = {
+      currentStep: communityType && communityType.value !== 'existingToken' ? 0 : 1
+    }
   }
 
   checkCondition = (evt, condition) => {
@@ -23,9 +22,8 @@ export default class DetailsStep extends Component {
     }
   }
 
-  getCurrentStep = () => {
+  mobileLayout = () => {
     const {
-      setCommunityType,
       communityType,
       communityLogo,
       setCommunityLogo,
@@ -33,51 +31,74 @@ export default class DetailsStep extends Component {
       setTotalSupply,
       setNextStep,
       totalSupply,
-      networkType
+      networkType,
+      handleChangeCommunitySymbol,
+      communityName
     } = this.props
 
     const { currentStep } = this.state
 
     switch (currentStep) {
       case 0:
-        return (
-          <CurrencyType nextAttribute={this.nextAttribute} setCommunityType={setCommunityType} communityType={communityType} />
-        )
+        return <TotalSupply
+          checkCondition={this.checkCondition}
+          communityType={communityType}
+          communityLogo={communityLogo}
+          setNextStep={() => this.setState({ currentStep: 1 })}
+          setTotalSupply={setTotalSupply}
+          totalSupply={totalSupply}
+        />
       case 1:
         return (
-          <LogosOptions networkType={networkType} nextAttribute={this.nextAttribute} communityLogo={communityLogo} setCommunityLogo={setCommunityLogo} communitySymbol={communitySymbol} />
-        )
-      case 2:
-        return (
-          <TotalSupply checkCondition={this.checkCondition} communityType={communityType} communityLogo={communityLogo} setNextStep={setNextStep} setTotalSupply={setTotalSupply} totalSupply={totalSupply} />
+          <Fragment>
+            <SymbolStep
+              handleChangeCommunitySymbol={handleChangeCommunitySymbol}
+              communityName={communityName}
+              communityType={communityType}
+              communitySymbol={communitySymbol}
+            />
+            {isMobileOnly && <div className='line' ><hr /></div>}
+            <LogosOptions
+              communityType={communityType}
+              networkType={networkType}
+              communityLogo={communityLogo}
+              setCommunityLogo={setCommunityLogo}
+              communitySymbol={communitySymbol}
+            />
+            <div className='grid-x align-center attributes__next'>
+              <button
+                className='button button--big'
+                disabled={
+                  this.validateStep()
+                }
+                onClick={setNextStep}
+              >
+                NEXT
+                <FontAwesome className='symbol-icon' name='angle-right' />
+              </button>
+            </div>
+          </Fragment>
         )
     }
   }
 
-  mobileLayout = () => {
-    const { currentStep } = this.state
-    return (
-      <Fragment>
-        {this.getCurrentStep()}
-        <div className='attributes__progress'>
-          {
-            [1, 2, 3].map((item, index) => {
-              const classes = classNames('attributes__progress__item', {
-                'attributes__progress__item--active': index === currentStep
-              })
-              return (
-                <span key={item} className={classes} />
-              )
-            })
-          }
-        </div>
-      </Fragment>
-    )
+  validateStep = () => {
+    const {
+      communityType,
+      totalSupply,
+      communityLogo
+    } = this.props
+
+    if (communityType && communityType.value !== 'existingToken') {
+      return Object.keys(communityType).length === 0 || totalSupply < 0 || totalSupply === '0' || !totalSupply || !communityLogo.name
+    } else {
+      return Object.keys(communityType).length === 0 || !communityLogo.name
+    }
   }
 
   mainLayout = () => {
     const {
-      setCommunityType,
+      communityName,
       communityType,
       communityLogo,
       setCommunityLogo,
@@ -85,29 +106,49 @@ export default class DetailsStep extends Component {
       setTotalSupply,
       setNextStep,
       totalSupply,
-      networkType
+      networkType,
+      handleChangeCommunitySymbol
     } = this.props
 
     return (
       <Fragment>
-        <CurrencyType
-          setCommunityType={setCommunityType}
+        {
+          communityType && communityType.value !== 'existingToken' && (
+            <TotalSupply
+              checkCondition={this.checkCondition}
+              communityType={communityType}
+              communityLogo={communityLogo}
+              setNextStep={setNextStep}
+              setTotalSupply={setTotalSupply}
+              totalSupply={totalSupply}
+            />
+          )
+        }
+        <SymbolStep
+          handleChangeCommunitySymbol={handleChangeCommunitySymbol}
+          communityName={communityName}
           communityType={communityType}
+          communitySymbol={communitySymbol}
         />
         <LogosOptions
+          communityType={communityType}
           networkType={networkType}
           communityLogo={communityLogo}
           setCommunityLogo={setCommunityLogo}
           communitySymbol={communitySymbol}
         />
-        <TotalSupply
-          checkCondition={this.checkCondition}
-          communityType={communityType}
-          communityLogo={communityLogo}
-          setNextStep={setNextStep}
-          setTotalSupply={setTotalSupply}
-          totalSupply={totalSupply}
-        />
+        <div className='grid-x align-center attributes__next'>
+          <button
+            className='button button--big'
+            disabled={
+              this.validateStep()
+            }
+            onClick={setNextStep}
+          >
+            NEXT
+            <FontAwesome className='symbol-icon' name='angle-right' />
+          </button>
+        </div>
       </Fragment>
     )
   }
