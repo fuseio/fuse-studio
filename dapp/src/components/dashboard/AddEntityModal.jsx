@@ -1,7 +1,7 @@
 import React from 'react'
 import Modal from 'components/Modal'
 import DynamicImg from 'images/dynamicdash.png'
-import EntityForm from './EntityForm'
+import EntityForm from './EntityForm.jsx'
 
 const AddEntityModal = (props) => {
   const handleSubmitEntity = (...args) => {

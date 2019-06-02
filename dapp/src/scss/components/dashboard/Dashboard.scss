@@ -1,5 +1,66 @@
 @import './Donut.scss';
 
+@include block(Dashboard) {
+  height: 100vh;
+  @include element(container) {
+    @include breakpoint(large) {
+      @include xy-grid();
+      height: 100%;
+    }
+  }
+  
+
+  @include block (sidebar) {
+    flex-basis: 15%;
+    height: 100%;
+    box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
+    background-color: #051926;
+
+    @include block(item) {
+      padding: 20px;
+      font-size: 14rem;
+      @include xy-grid();
+      @include flex-align(null, middle);
+      min-height: 40px;
+      color: #d6d6d6;
+
+      @include element (icon) {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+
+        > img {
+          background-repeat: no-repeat;
+          background-size: contain;
+          background-position: center;
+        }
+      }
+
+      @include element (text) {
+        text-align: start;
+      }
+    }
+  }
+
+  @include block(content) {
+    flex: 1;
+    min-height:100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    @include breakpoint(large) {
+        position: relative;
+        height: auto;
+        width: 100%;
+    }
+  
+    @include breakpoint(medium down) {
+    }
+  }
+}
+
 .dashboard {
   &-content {
     padding-top: $nav-height;

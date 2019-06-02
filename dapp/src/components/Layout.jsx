@@ -1,10 +1,10 @@
 import React from 'react'
 import { isMobile } from 'react-device-detect'
-import ModalContainer from 'containers/ModalContainer'
+import ModalContainer from 'containers/ModalContainer.jsx'
 import classNames from 'classnames'
 import 'scss/main.scss'
 
-const Layout = (props) => {
+export default (props) => {
   let mainContainerClass = classNames({
     'main-container': true,
     'flex': true,
@@ -26,5 +26,3 @@ const Layout = (props) => {
     </div>
   </div>
 }
-
-export default Layout

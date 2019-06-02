@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import GenericModal from 'components/dashboard/GenericModal'
+import GenericModal from 'components/dashboard/GenericModal.jsx'
 
 class BusinessListModal extends React.Component {
   handleClose = () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import GenericModal from 'components/dashboard/GenericModal'
+import GenericModal from 'components/dashboard/GenericModal.jsx'
 
 class NoDataAboutOwnerModal extends React.Component {
   handleClose = () => {

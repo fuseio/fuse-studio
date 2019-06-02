@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import CommunitiesList from 'components/oven/CommunitiesList'
 import { connect } from 'react-redux'
-import { fetchTokens, fetchTokensByOwner } from 'actions/token'
+import { fetchTokens, fetchTokensByOwner, fetchClnToken } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
@@ -10,6 +10,9 @@ import ReactGA from 'services/ga'
 
 class Oven extends Component {
   componentDidMount () {
+    if (this.props.networkType !== 'fuse') {
+      this.props.fetchClnToken()
+    }
     if (this.props.account) {
       const { networkType } = this.props
       this.props.fetchTokensByOwner(networkType, this.props.account)
@@ -55,7 +58,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   fetchTokens,
   fetchTokensByOwner,
-  loadModal
+  loadModal,
+  fetchClnToken
+
 }
 
 export default connect(

@@ -17,6 +17,7 @@ import EntitiesManager from './EntitiesManager'
 import { isOwner } from 'utils/token'
 import { getTransaction } from 'selectors/transaction'
 import DashboardTabs from './DashboardTabs'
+import RouteWithSubRoutes from 'containers/RouteWithSubRoutes'
 
 const LOAD_USER_DATA_MODAL_TIMEOUT = 2000
 
@@ -176,7 +177,8 @@ class Dashboard extends Component {
       burnSuccess,
       mintSuccess,
       error,
-      community
+      community,
+      routes
     } = this.props
 
     const { address: tokenAddress } = token
@@ -259,12 +261,16 @@ class Dashboard extends Component {
             loadUserDataModal={this.loadUserDataModal}
           />
         }
-      </div>
+      </div>,
+      routes.map((route, i) => (
+        <RouteWithSubRoutes key={i} {...route} />
+      ))
     ]
   }
 }
 
-const mapStateToProps = (state, { match }) => ({
+const mapStateToProps = (state, { match, routes }) => ({
+  routes,
   ...state.screens.token,
   networkType: state.network.networkType,
   token: state.entities.communities &&
