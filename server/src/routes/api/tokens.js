@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
 const Community = mongoose.model('Community')
 const paginate = require('express-paginate')
+const { keyBy } = require('lodash')
 
 const withCommunityAddress = async (tokens, { networkType }) => {
   if (!networkType) {
@@ -11,9 +12,10 @@ const withCommunityAddress = async (tokens, { networkType }) => {
 
   const tokenAddresses = tokens.map(token => token.address)
   const key = networkType === 'fuse' ? 'homeTokenAddress' : 'foreignTokenAddress'
-  const communities = await Community.find({ [key]: { $in: tokenAddresses } }, { communityAddress: 1 })
-  const communityAddresses = communities.map(community => community.communityAddress)
-  return tokens.map((token, index) => ({ ...token.toObject(), communityAddress: communityAddresses[index] }))
+  const communities = await Community.find({ [key]: { $in: tokenAddresses } })
+  const communitiesByTokenAddress = keyBy(communities, key)
+
+  return tokens.map((token) => ({ ...token.toObject(), communityAddress: communitiesByTokenAddress[token.address].communityAddress }))
 }
 
 const createFilter = ({ networkType }) => networkType ? ({ networkType }) : {}
