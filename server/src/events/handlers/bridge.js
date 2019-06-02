@@ -13,6 +13,11 @@ const handleBridgeMappingUpdatedEvent = async (event) => {
   const foreignBridgeBlockNumber = event.returnValues.foreignStartBlock
   const homeBridgeBlockNumber = event.returnValues.homeStartBlock
 
+  // TODO
+  // temporal fix: add tokenURI to the contract on Fuse
+  const { tokenURI } = await Token.findOne({ address: foreignTokenAddress }, { tokenURI: 1 })
+  await Token.findOneAndUpdate({ address: homeTokenAddress }, { tokenURI })
+
   return new Bridge({
     foreignTokenAddress,
     homeTokenAddress,
@@ -23,7 +28,7 @@ const handleBridgeMappingUpdatedEvent = async (event) => {
   }).save()
 }
 
-const handleHomeBridgeDeployed = async (event) => {
+const handleHomeBridgeDeployed = async (event, receipt) => {
   const eventArgs = event.returnValues
   const address = eventArgs._token
 

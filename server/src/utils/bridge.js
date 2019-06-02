@@ -102,13 +102,14 @@ async function addBridgeMapping (
 async function deployBridge (communityProgress) {
   const { communityAddress } = communityProgress.steps.community.results
   const { foreignTokenAddress } = communityProgress.steps.bridge.args
+  const { name } = communityProgress.steps.community.args
 
   const token = await Token.findOne({ address: foreignTokenAddress })
 
   const [deployForeignBridgeResponse, deployHomeBridgeResponse] = await Promise.all([
     deployForeignBridge(token, foreign),
     deployHomeBridge(
-      token,
+      { name, symbol: token.symbol },
       home
     )
   ])
