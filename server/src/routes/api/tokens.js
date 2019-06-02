@@ -15,7 +15,7 @@ const withCommunityAddress = async (tokens, { networkType }) => {
   const communities = await Community.find({ [key]: { $in: tokenAddresses } })
   const communitiesByTokenAddress = keyBy(communities, key)
 
-  return tokens.map((token) => ({ ...token.toObject(), communityAddress: communitiesByTokenAddress[token.address].communityAddress }))
+  return tokens.map((token) => ({ ...token.toObject(), communityAddress: communitiesByTokenAddress[token.address] ? communitiesByTokenAddress[token.address].communityAddress : undefined }))
 }
 
 const createFilter = ({ networkType }) => networkType ? ({ networkType }) : {}
