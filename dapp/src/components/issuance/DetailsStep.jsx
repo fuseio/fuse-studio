@@ -43,7 +43,6 @@ export default class DetailsStep extends Component {
         return <TotalSupply
           checkCondition={this.checkCondition}
           communityType={communityType}
-          communityLogo={communityLogo}
           setNextStep={() => this.setState({ currentStep: 1 })}
           setTotalSupply={setTotalSupply}
           totalSupply={totalSupply}

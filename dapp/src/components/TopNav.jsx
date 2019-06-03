@@ -84,6 +84,7 @@ class TopNav extends Component {
 
   renderAccountSection = () => {
     const { profile } = this.state
+
     if (!this.props.network.accountAddress) {
       return (
         <div className={classNames('top-nav-text profile empty-wallet', { 'profile--open': profile })} onClick={this.showConnectMetamask}>
@@ -128,15 +129,21 @@ class TopNav extends Component {
       'top-nav-links': true,
       'show-top-nav-links': true
     })
+
+    const { network: { networkType } } = this.props
     return (
       <div className={topNavClass}>
         <div className='top-nav-logo'>
           <Logo showHomePage={this.showHomePage} />
         </div>
         <div className={navLinksClass}>
-          <button onClick={this.showIssuance} className='top-nav-issuance'>
-            <FontAwesome name='plus' className='top-nav-issuance-plus' onClick={this.props.setToggleMenu} /> Currency issuer
-          </button>
+          {
+            networkType && networkType !== 'fuse' && (
+              <button onClick={this.showIssuance} className='top-nav-issuance'>
+                <FontAwesome name='plus' className='top-nav-issuance-plus' onClick={this.props.setToggleMenu} /> Currency issuer
+              </button>
+            )
+          }
           <div className='top-nav-currency'>
             {NavList.map((item, key) =>
               <a className='top-nav-text'

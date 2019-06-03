@@ -14,20 +14,38 @@ export default class Community extends Component {
   }
 
   render () {
-    return <div className={this.props.coinWrapperClassName} onClick={this.handleClick}>
-      <div className='coin-header'>
-        <CommunityLogo token={this.props.token} networkType={this.props.networkType} metadata={this.props.metadata} />
-        <div className='coin-details'>
-          <h3 className='coin-name'>{this.props.token.name}</h3>
-          <p className='coin-total'>
-            Total Supply
-            <span className={classNames('total-text', 'positive-number')}>
-              {formatWei(this.props.token.totalSupply, 0)}
-            </span>
-          </p>
+    const {
+      coinWrapperClassName,
+      token,
+      networkType
+    } = this.props
+    const {
+      symbol,
+      name,
+      totalSupply
+    } = token
+
+    return (
+      <div className={coinWrapperClassName} onClick={this.handleClick}>
+        <div className='coin-header'>
+          <CommunityLogo
+            isDaiToken={symbol && symbol === 'DAI'}
+            token={token}
+            networkType={networkType}
+            metadata={this.props.metadata}
+          />
+          <div className='coin-details'>
+            <h3 className='coin-name'>{name}</h3>
+            <p className='coin-total'>
+              Total Supply
+              <span className={classNames('total-text', 'positive-number')}>
+                {formatWei(totalSupply, 0)}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    )
   }
 }
 

@@ -18,9 +18,7 @@ export default class SummaryStep extends Component {
   renderTransactionStatus = (transactionStatus) => {
     switch (transactionStatus) {
       case PENDING:
-        return (
-          <TransactionButton disabled clickHandler={this.props.showPopup} frontText='ISSUE' />
-        )
+        return null
       case SUCCESS:
         return null
       default:
@@ -115,7 +113,7 @@ export default class SummaryStep extends Component {
 
                   {
                     contractsItems.map(item => (
-                      <div key={item}>
+                      <div key={item} className='summary-step__content__contracts__item'>
                         <span className='summary-step__content__contracts__icon'><img src={contractIcon} />{item}</span>
                         {
                           item && item.includes('Members') && isOpen && (

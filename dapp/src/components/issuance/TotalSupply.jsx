@@ -3,12 +3,14 @@ import FontAwesome from 'react-fontawesome'
 import TextInput from 'components/elements/TextInput'
 import { isMobileOnly } from 'react-device-detect'
 
-const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityType, setNextStep, communityLogo }) => {
+const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityType, setNextStep }) => {
   return (
     <Fragment>
       <div className='attributes__attribute'>
         <h3 className='attributes__title'>
-          Initial \ Total Supply
+          {
+            communityType && communityType.value === 'mintableBurnable' ? 'Initial Supply' : 'Total Supply'
+          }
         </h3>
         <div className='attributes__supply'>
           <TextInput

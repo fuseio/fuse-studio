@@ -1047,6 +1047,7 @@ $themes: (
           @include breakpoint(medium) {
             padding: 20px;
             width: 559px;
+            min-height: 350px;
             @include xy-grid(vertical);
             @include flex-align(spaced, middle);
           }
@@ -1141,6 +1142,10 @@ $themes: (
             @include xy-grid(vertical);
             flex-basis: 50%;
 
+            @include element(item) {
+              padding: 5px;
+            }
+
             @include element(icon) {
               white-space: nowrap;              
               > img {
@@ -1162,6 +1167,7 @@ $themes: (
   
           @include element(item) {
             @include flex-align(left, middle);
+            width: 100%;
             @include breakpoint(medium) {
               padding: 20px;
               @include xy-grid();
@@ -1316,6 +1322,17 @@ $themes: (
             border-left: 7px solid rgba(225, 225, 225, 0.5);
             animation: none;
           }
+        }
+
+        @include element(error) {
+          margin-top: 20px;
+          @include xy-grid(vertical);
+          @include flex-align(null, middle);
+          > p {
+            margin-bottom: 5px;
+            color: $color-red;
+          }
+          
         }
       }
       

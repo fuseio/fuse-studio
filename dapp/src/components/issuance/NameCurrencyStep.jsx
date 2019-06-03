@@ -4,7 +4,13 @@ import TextInput from 'components/elements/TextInput'
 import CurrencyType from './CurrencyType'
 import { isMobileOnly } from 'react-device-detect'
 
-const NameCurrencyStep = ({ setExistingToken, communityName, handleChangeCommunityName, setNextStep, setCommunityType, communityType, networkType }) => {
+const NameCurrencyStep = ({ existingToken, setExistingToken, communityName, handleChangeCommunityName, setNextStep, setCommunityType, communityType, networkType }) => {
+  const validateStep = () => {
+    return (communityName && communityName.length < 3) ||
+    (communityType && !communityType.text) ||
+    (communityType && communityType.value === 'existingToken' && existingToken && !existingToken.value)
+  }
+
   return (
     <div className='name__wrapper'>
       <div className='name'>
@@ -25,7 +31,7 @@ const NameCurrencyStep = ({ setExistingToken, communityName, handleChangeCommuni
       <div className='name__next'>
         <button
           className='button button--normal'
-          disabled={communityName.length < 3 || (communityType && !communityType.text)}
+          disabled={validateStep()}
           onClick={setNextStep}
         >
           NEXT<FontAwesome name='arrow-right' />

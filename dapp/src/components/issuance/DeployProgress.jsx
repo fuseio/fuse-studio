@@ -76,6 +76,10 @@ class DeployProgress extends PureComponent {
     return get(stepErrors, [`${step}`], false)
   }
 
+  refreshPage = () => {
+    window.location.reload(true)
+  }
+
   render () {
     const {
       contracts,
@@ -125,9 +129,12 @@ class DeployProgress extends PureComponent {
         }
         {isReady && <Congratulations goToDashboard={this.goToDashboard} />}
         {
-          hasErrors && <div className='congratulation__btn'>
-            <button className='button button--big' onClick={this.goToDashboard}>Go to the community page</button>
-          </div>
+          hasErrors && (
+            <div className='progress__error'>
+              <p>The process has failed, please start over</p>
+              <button className='button button--normal' onClick={this.refreshPage}>Try again</button>
+            </div>
+          )
         }
       </div>
     )

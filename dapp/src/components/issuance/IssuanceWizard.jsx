@@ -9,7 +9,6 @@ import StepsIndicator from './StepsIndicator'
 import NameCurrencyStep from './NameCurrencyStep'
 import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
-// import DeployProgress from './DeployProgress'
 import { getAccountAddress } from 'selectors/accounts'
 import Contracts from './Contracts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken } from 'actions/token'
@@ -178,6 +177,7 @@ class IssuanceWizard extends Component {
             communityType={communityType}
             setCommunityType={this.setCommunityType}
             setExistingToken={this.setExistingToken}
+            existingToken={existingToken}
           />
         )
       case 1:

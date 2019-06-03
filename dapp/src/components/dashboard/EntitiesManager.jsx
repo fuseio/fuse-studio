@@ -17,7 +17,7 @@ import {
   toggleCommunityMode
 } from 'actions/communityEntities'
 import { fetchCommunity } from 'actions/token'
-import Entity from './Entity.jsx'
+import Entity from './Entity'
 import EmptyBusinessList from 'images/emptyBusinessList.png'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_DIRECTORY_ENTITY, ADD_USER_MODAL } from 'constants/uiConstants'
