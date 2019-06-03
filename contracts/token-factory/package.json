@@ -10,7 +10,7 @@
     "test": "truffle test",
     "build": "truffle compile && npm run abi",
     "compile": "truffle compile",
-    "abi": "node_modules/@fuse/contract-utils/bin/abi.js $PWD",
+    "abi": "node_modules/@fuse/contract-utils/bin/abi.js $PWD && node ./scripts/extendAbi.js",
     "deploy-dev": "truffle migrate --network development",
     "deploy-ropsten": "truffle migrate --network ropsten",
     "deploy-fuse": "truffle migrate --network fuse",
