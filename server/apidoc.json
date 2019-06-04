@@ -1,0 +1,12 @@
+{
+  "name": "fuse-studio-backend",
+  "version": "0.1.0",
+  "description": "Fuse studio API backend",
+  "title": "Fuse API",
+  "url" : "https://ropsten-qa.cln.network/api/v1",
+  "sampleUrl": "https://ropsten-qa.cln.network/api/v1",
+  "template": {
+  	"withCompare": true,
+  	"withGenerator": true
+  }
+}
