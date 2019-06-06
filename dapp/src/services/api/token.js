@@ -12,13 +12,13 @@ export const fetchToken = (apiRoot, { tokenAddress }) =>
   request.get(`${apiRoot}/tokens/${tokenAddress}`).then(response => response.body)
 
 export const fetchTokenProgress = (apiRoot, { communityAddress }) =>
-  request.get(`${apiRoot}/communities/progress?communityAddress=${communityAddress}`).then(response => response.body)
+  request.get(`${apiRoot}/deployments?communityAddress=${communityAddress}`).then(response => response.body)
 
 export const fetchDeployProgress = (apiRoot, { id }) =>
-  request.get(`${apiRoot}/communities/progress/${id}`).then(response => response.body)
+  request.get(`${apiRoot}/deployments/${id}`).then(response => response.body)
 
 export const deployChosenContracts = (apiRoot, { steps, accountAddress }) =>
-  request.post(`${apiRoot}/communities/deploy`)
+  request.post(`${apiRoot}/deployments`)
     .send({ steps, accountAddress })
     .then(response => response.body)
 

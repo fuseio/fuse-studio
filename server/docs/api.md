@@ -7,12 +7,12 @@ Fuse studio API backend
 	- [Fetch bridge by home token address](#Fetch-bridge-by-home-token-address)
 	
 - [Community](#Community)
-	- [Start community deploy process](#Start-community-deploy-process)
 	- [Fetch community by community address](#Fetch-community-by-community-address)
 	
-- [CommunityProgress](#CommunityProgress)
-	- [Fetch community progress by id](#Fetch-community-progress-by-id)
-	- [Fetch community progress by community address](#Fetch-community-progress-by-community-address)
+- [Deployment](#Deployment)
+	- [Start deployment process](#Start-deployment-process)
+	- [Fetch deployment progress by id](#Fetch-deployment-progress-by-id)
+	- [Fetch deployment progress by community address](#Fetch-deployment-progress-by-community-address)
 	
 - [Entity](#Entity)
 	- [Fetch entities by community address](#Fetch-entities-by-community-address)
@@ -52,25 +52,6 @@ GET /bridges/:homeTokenAddress
 | homeBridgeBlockNumber | `Number` |  |
 # <a name='Community'></a> Community
 
-## <a name='Start-community-deploy-process'></a> Start community deploy process
-[Back to top](#top)
-
-
-
-```
-GET /communities/deploy
-```
-
-### Parameter Parameters
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| steps | `Object` | <p>The steps (with arguments) to deploy</p> |
-
-
-### Success 200
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| steps | `Object` | <p>Steps to deploy</p> |
 ## <a name='Fetch-community-by-community-address'></a> Fetch community by community address
 [Back to top](#top)
 
@@ -95,15 +76,34 @@ GET /communities/:communityAddress
 | foreignTokenAddress | `String` |  |
 | foreignBridgeAddress | `String` |  |
 | homeBridgeAddress | `String` |  |
-# <a name='CommunityProgress'></a> CommunityProgress
+# <a name='Deployment'></a> Deployment
 
-## <a name='Fetch-community-progress-by-id'></a> Fetch community progress by id
+## <a name='Start-deployment-process'></a> Start deployment process
 [Back to top](#top)
 
 
 
 ```
-GET /communities/progress/:id
+POST /communities/deploy
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| steps | `Object` | <p>The steps (with arguments) to deploy</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| steps | `Object` | <p>Steps to deploy</p> |
+## <a name='Fetch-deployment-progress-by-id'></a> Fetch deployment progress by id
+[Back to top](#top)
+
+
+
+```
+GET /deployments/:id
 ```
 
 ### Parameter Parameters
@@ -119,13 +119,13 @@ GET /communities/progress/:id
 | steps | `Object` | <p>Steps with info about each step</p> |
 | communityAddress | `String` | <p>Community address if deploy process is completed</p> |
 | done | `Boolean` | <p>Done status if the deploy process is completed</p> |
-## <a name='Fetch-community-progress-by-community-address'></a> Fetch community progress by community address
+## <a name='Fetch-deployment-progress-by-community-address'></a> Fetch deployment progress by community address
 [Back to top](#top)
 
 
 
 ```
-GET /communities/progress
+GET /deployments
 ```
 
 ### Parameter Parameters
