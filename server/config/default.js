@@ -34,6 +34,11 @@ module.exports = {
     home: {
       name: 'fuse',
       bridgeType: 'home',
+      contract: {
+        options: {
+          transactionConfirmationBlocks: 2
+        }
+      },
       provider: 'http://rpc.fuse.io',
       addressesMainnet: {
         HomeBridgeFactory: '0x93EF4d4032E053978aA71792Efd05d8b583a2B78',
@@ -57,6 +62,11 @@ module.exports = {
     foreign: {
       name: 'ropsten',
       bridgeType: 'foreign',
+      contract: {
+        options: {
+          transactionConfirmationBlocks: 2
+        }
+      },
       provider: defer(function () {
         return `https://${this.network.foreign.name}.infura.io/v3/${this.network.foreign.apiKey}`
       }),

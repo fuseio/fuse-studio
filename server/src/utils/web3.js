@@ -16,22 +16,35 @@ const createWeb3 = (providerUrl) => {
   return { from: account.address, web3 }
 }
 
-const getMethodName = (method) => method._method.name || method._method.signature
+const createContract = (web3, bridgeType, abi, address) =>
+  new web3.eth.Contract(abi, address, config.get(`network.${bridgeType}.contract.options`))
+
+const createMethod = (contract, methodName, ...args) => {
+  const { inspect } = require('util')
+  console.log(`creating method ${methodName} with arguments: ${inspect(...args)}}`)
+
+  let method
+  if (methodName === 'deploy') {
+    method = contract[methodName](...args)
+  } else {
+    method = contract.methods[methodName](...args)
+  }
+  method.methodName = methodName
+  return method
+}
+
+const getMethodName = (method) => method.methodName || 'unknown'
 
 const send = async (web3, bridgeType, method, options) => {
   const doSend = async () => {
     const methodName = getMethodName(method)
     console.log(`[${bridgeType}] sending method ${methodName} from ${from} with nonce ${account.nonce}. gas price: ${gasPrice}, gas limit: ${gas}`)
-    receipt = await method.send({ gasPrice, ...options, gas, nonce: account.nonce })
-    if (methodName === 'constructor') {
-      console.log(`[${bridgeType}] contract ${receipt._address} deployed`)
-    } else {
-      console.log(`[${bridgeType}] method ${method._method.name} succeeded in tx ${receipt.transactionHash}`)
-    }
+    receipt = await method.send({ gasPrice, ...options, gas, nonce: account.nonce, chainId: bridgeType === 'home' ? 121 : undefined })
+    console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
   }
 
   const { from } = options
-  const gas = Math.max(await method.estimateGas({ from }), config.get('network.misc.minGasLimit'))
+  const gas = await method.estimateGas({ from })
   const gasPrice = bridgeType === 'home' ? '1000000000' : undefined
   const account = await Account.findOneOrCreate({ bridgeType, address: from })
   let receipt
@@ -49,5 +62,7 @@ const send = async (web3, bridgeType, method, options) => {
 
 module.exports = {
   createWeb3,
+  createContract,
+  createMethod,
   send
 }

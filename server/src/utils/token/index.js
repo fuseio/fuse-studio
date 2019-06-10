@@ -10,7 +10,7 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
     fields.tokenURI ? tokenContractInstance.methods.tokenURI().call() : undefined
   ])
 
-  return { name, symbol, totalSupply, tokenURI }
+  return { name, symbol, totalSupply: totalSupply.toString(), tokenURI }
 }
 
 module.exports = {

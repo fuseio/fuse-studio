@@ -28,8 +28,9 @@ const handleBridgeMappingUpdatedEvent = async (event) => {
   }).save()
 }
 
-const handleHomeBridgeDeployed = async (event, receipt) => {
+const handleHomeBridgeDeployed = async (event) => {
   const eventArgs = event.returnValues
+
   const address = eventArgs._token
 
   const tokenData = {

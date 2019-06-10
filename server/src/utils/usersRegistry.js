@@ -7,6 +7,8 @@ const usersRegistryContract = new web3.eth.Contract(UsersRegistryABI, homeAddres
 
 const addUser = async (account, userUri) => {
   const method = usersRegistryContract.methods.addUser(account, userUri)
+  method.methodName = 'addUser'
+
   return send(method, {
     from
   })
@@ -14,6 +16,8 @@ const addUser = async (account, userUri) => {
 
 const updateUser = async (account, userUri) => {
   const method = usersRegistryContract.methods.updateUser(account, userUri)
+  method.methodName = 'updateUser'
+
   return send(method, {
     from
   })

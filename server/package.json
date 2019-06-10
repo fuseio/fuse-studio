@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./src/app.js",
     "dev": "nodemon --trace-warnings ./src/app.js",
+    "debug": "node --inspect-brk --trace-warnings ./src/app.js",
     "doc": "apidoc -i src -o docs/api && apidoc-markdown -p docs/api -o docs/api.md",
     "lint": "standard",
     "lint-fix": "standard --fix"
@@ -37,7 +38,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/runtime": "^7.3.1",
+    "@babel/runtime": "^7.4.4",
+    "@fuse/entities-contracts": "../contracts/entities/",
+    "@fuse/roles": "../packages/roles",
+    "@fuse/token-factory-contracts": "../contracts/token-factory/",
     "@sendgrid/client": "^6.3.0",
     "@sendgrid/mail": "^6.3.1",
     "agenda": "^2.0.2",
@@ -64,10 +68,7 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "validator": "^10.10.0",
-    "web3": "^1.0.0-beta.37",
-    "@fuse/token-factory-contracts": "../contracts/token-factory/",
-    "@fuse/entities-contracts": "../contracts/entities/",
-    "@fuse/roles": "../packages/roles"
+    "web3": "^1.0.0-beta.55"
   },
   "devDependencies": {
     "@rigwild/apidoc-markdown": "^2.0.2",

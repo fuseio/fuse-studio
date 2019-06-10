@@ -40,10 +40,11 @@ const handleOwnershipTransferredEvent = async (event) => {
 const handleTransferEvent = (event) => {
   const tokenAddress = event.address
   const { from, to, value } = event.returnValues
+  const stringValue = value.toString()
   if (isZeroAddress(from)) {
-    return token.mintTokens(tokenAddress, value)
+    return token.mintTokens(tokenAddress, stringValue)
   } else if (isZeroAddress(to)) {
-    return token.burnTokens(tokenAddress, value)
+    return token.burnTokens(tokenAddress, stringValue)
   }
   return Promise.resolve()
 }
