@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import CommunityLogo from 'components/elements/CommunityLogo'
+import CommunityLogo from 'components/common/CommunityLogo'
 import FontAwesome from 'react-fontawesome'
 import classNames from 'classnames'
 import CopyToClipboard from 'components/common/CopyToClipboard'

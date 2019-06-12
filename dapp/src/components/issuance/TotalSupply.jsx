@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import FontAwesome from 'react-fontawesome'
-import TextInput from 'components/elements/TextInput'
+import TextInput from 'components/common/TextInput'
 import { isMobileOnly } from 'react-device-detect'
 
 const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityType, setNextStep }) => {

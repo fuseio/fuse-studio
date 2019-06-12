@@ -1,0 +1,50 @@
+@include block(profile) {
+  border-radius: 3px;
+  padding: 15px;
+  
+  @include breakpoint(medium up) {
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);
+    border: solid 1px #c8c8c8;
+    background-color: #ffffff;
+    min-width: 346px;
+    min-height: 440px;
+  }
+
+  @include breakpoint(small only) {
+  }
+
+  @include element(account) {
+    padding: 10px;
+    text-align: center;
+    @include element(avatar) {
+      .fa {
+        font-size: 50px;
+      }
+    }
+
+    @include element(address) {
+      margin-top: 10px;
+      height: 14px;
+      font-size: 16rem;
+      line-height: 0.88;
+      letter-spacing: normal;
+      color: #7a7a7a;
+
+      .fa{ 
+        font-size: 11rem;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  @include element(communities) {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e5e5e5;
+    color: #7a7a7a;
+
+    > span {
+      font-size: 10rem;
+    }
+  }
+}

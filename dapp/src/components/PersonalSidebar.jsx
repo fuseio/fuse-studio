@@ -4,7 +4,7 @@ import { fetchTokensWithBalances } from 'actions/accounts'
 import FontAwesome from 'react-fontawesome'
 import { formatWei } from 'utils/format'
 import { getAccount, getAccountTokens } from 'selectors/accounts'
-import CommunityLogo from 'components/elements/CommunityLogo'
+import CommunityLogo from 'components/common/CommunityLogo'
 import ReactGA from 'services/ga'
 import { getForeignNetwork } from 'selectors/network'
 

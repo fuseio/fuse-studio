@@ -14,7 +14,7 @@
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background: $color-white;
     border-radius: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 20px;
   }
 
@@ -32,130 +32,6 @@
     padding: 0 50px;
     justify-content: space-between;
 
-    @include element(filter) {
-      position: relative;
-      cursor: pointer;
-      z-index: 1;
-      flex-basis: 30%;
-
-      @include element(icon) {
-        display: inline-block;
-        width: 19px;
-        height: 18px;
-
-        > img {
-          background-position: center;
-          background-size: contain;
-          background-repeat: no-repeat;
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      > span {
-        font-size: 12rem;
-        &:nth-child(2) {
-          margin-left: 5px;
-          font-weight: 500;
-        }
-        &:nth-child(3) {
-          color: $color-step;
-        }
-      }
-
-      .fa-filter {
-        color: $color-primary-dark;
-      }
-
-      &:hover {
-        .filter-options {
-          @include xy-grid()
-        }
-      }
-
-      @include block(filter-options) {
-        position: absolute;
-        display: none;
-        @include flex-align(left, middle);
-        width: 188px;
-        border-radius: 5px;
-        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
-        background-color: #ffffff;
-
-        @include block(options) {
-          // z-index: 100;
-          position: relative;
-          width: 100%;
-          height: 100%;
-          margin: 0;
-          list-style: none;
-          padding: 0;
-          @include xy-grid(vertical);
-          @include flex-align(spaced);
-          font-size: 12rem;
-          cursor: initial;
-
-          @include element(item) {
-            @include xy-grid();
-            @include flex-align(justify, middle);
-            cursor: pointer;
-            padding: 10px;
-            &:not(:last-child) {
-              border-bottom: solid 1px #e2e2e2;
-            }
-
-            input {
-              position: absolute;
-              opacity: 0;
-              display: none;
-              cursor: pointer;
-            }
-
-            > label {
-              display: block;
-              position: relative;
-              padding-left: 2em;
-              cursor: pointer;
-              -webkit-user-select: none;
-              -moz-user-select: none;
-              -ms-user-select: none;
-              user-select: none;
-
-              > input:checked + span {
-                background-color: $color-ropsten;
-              }
-              > input:checked + span::after{
-                display: block;
-              }
-              > span {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 18px;
-                width: 18px;
-                background-color: #d0d0d0;
-                border-radius: 50%;
-
-                &:after {
-                  top: 5px;
-                  left: 4.5px;
-                  width: 8px;
-                  height: 8px;
-                  border-radius: 50%;
-                  background: white;
-                }
-
-                &:after {
-                  content: '';
-                  position: absolute;
-                }
-              }
-            }
-          }
-        }
-      }
-
-    }
 
     @include element(buttons) {
 
@@ -245,10 +121,144 @@
   }
 
   @include element(search) {
-    display: flex;
-    width: 100%;
-    align-items: flex-start;
+    @include xy-grid();
+    @include flex-align(null, middle);
+
+    @include breakpoint(medium down) {
+      flex-wrap: nowrap;
+    }
     margin-bottom: 1em;
+    min-height: 41px;
+    max-height: 41px;
+    height: 100%;
+
+    @include modifier(user) {
+      border-radius: 3px;
+      border: solid 1.3px #dedede;
+    }
+    
+    @include modifier(business) {
+      width: 100%;
+      border-radius: 20.5px;
+      border: solid 1.3px #dedede;
+      background-color: #ffffff;
+    }
+
+    @include element(filter) {
+      position: relative;
+      cursor: pointer;
+      z-index: 1;
+      @include breakpoint(medium up) {
+        flex-basis: 24%;
+        height: 100%;
+      }
+
+      @include modifier(border) {
+        border-right: solid 1.3px #dedede;
+      }
+
+      @include element(value) {
+        display: flex;
+        font-size: 12rem;
+        height: 100%;
+        align-items: center;
+      }
+
+      &:hover {
+        .filter-options {
+          @include xy-grid()
+        }
+      }
+
+      @include block(filter-options) {
+        position: absolute;
+        display: none;
+        @include flex-align(left, middle);
+        width: 188px;
+        border-radius: 5px;
+        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
+        background-color: #ffffff;
+
+        @include block(options) {
+          // z-index: 100;
+          position: relative;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          list-style: none;
+          padding: 0;
+          @include xy-grid(vertical);
+          @include flex-align(spaced);
+          font-size: 12rem;
+          cursor: initial;
+
+          @include element(item) {
+            @include xy-grid();
+            @include flex-align(justify, middle);
+            cursor: pointer;
+            padding: 10px;
+            &:not(:last-child) {
+              border-bottom: solid 1px #e2e2e2;
+            }
+
+            input {
+              position: absolute;
+              opacity: 0;
+              display: none;
+              cursor: pointer;
+            }
+
+            > label {
+              display: block;
+              position: relative;
+              padding-left: 2em;
+              cursor: pointer;
+              -webkit-user-select: none;
+              -moz-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
+
+              > input:checked + span {
+                background-color: $color-ropsten;
+              }
+              > input:checked + span::after{
+                display: block;
+              }
+              > span {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 18px;
+                width: 18px;
+                background-color: #d0d0d0;
+                border-radius: 50%;
+
+                &:after {
+                  top: 5px;
+                  left: 4.5px;
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 50%;
+                  background: white;
+                }
+
+                &:after {
+                  content: '';
+                  position: absolute;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @include block(selected) {
+      border-radius: 12px;
+      font-size: 11rem;
+      padding: 5px 20px;
+      background-color: #f6f6f6;
+    }
 
     @include element(icon) {
       color: $color-step;
@@ -262,7 +272,6 @@
       &:hover,
       &:focus,
       &:focus:active {
-        cursor: pointer;
         color: darken($color-step, 10%);
       }
       &[disabled] {
@@ -277,14 +286,14 @@
       }
     }
     > input {
-      flex: 1;
-      padding: 7px 0;
       border: none;
       font-size: 12rem;
       font-weight: 500;
+      @include breakpoint(medium down) {
+        width: 100%;
+      }
       &::placeholder {
         font-weight: 500;
-      // font-style: italic;
       }
     }
   }
@@ -299,68 +308,58 @@
     
   }
 
-  @include element(not-deploy) {
-    padding: 0 50px;
-
-    @include element(wrapper) {
-      width: 100%;
-      max-height: 500px;
-      overflow: auto;
-    }
-    
-    @include element(title) {
-      color: $color-primary-dark;
-      font-size: 12rem;
-      font-weight: 500;
-      margin-bottom: 10px;
-    }
-
-    @include element(text) {
-      color: $color-step;
-      font-size: 12rem;
-      margin-bottom: 20px;
-    }
-
-    @include element(btn) {
-      border: none;
-      color: $color-white;
-      padding: 9px 20px;
-      background-color: $color-ropsten;
-      border-radius: 16px;
-      font-size: 11rem;
-      text-transform: uppercase;
-      display: inline-block;
-      margin: 0 auto;
-      font-weight: bold;
-      text-align: center;
-      outline: none;
-      &:hover {
-        cursor: pointer;
-        background-color: darken($color-ropsten, 20%);
-      }
-    }
-
-    @include element(placeholder) {
-      margin-top: 20px;
-      background-color: $color-empty-list;
-      padding-left: 45px;
-      padding-right: 25px;
-      padding-bottom: 25px;
-      img {
-        width: 90%;
-      }
-    }
-  }
-
   @include element(items) {
     width: 100%;
     max-height: 500px;
     overflow: auto;
     padding: 5px 50px 30px;
 
+    @include breakpoint(medium down) {
+      padding: 5px 20px 30px;      
+    }
+
     @include element(empty) {
       color: $color-white;
       font-size: 16rem;
+    }
+  }
+
+  @include element(header) {
+    @include xy-grid();
+    @include flex-align(justify, middle);
+
+    @include breakpoint(large) {
+      margin-top: 40px;
+    }
+    color: $color-white;
+    @include element(title) {
+      font-size: 20rem;
+      font-weight: 500;
+    }
+
+    @include element(add) {
+      font-size: 11rem;
+      > span {
+        width: 15px;
+        height: 12px;
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 5px;
+        margin-left: auto;
+
+        .fa {
+          font-size: 14rem;
+        }
+
+        > a {
+          height: 100%;
+          width: 100%;
+          display: block;
+          background-size: contain;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+      }
     }
   }
 
@@ -454,6 +453,7 @@
         color: $color-primary-dark;
         font-size: 11rem;
         font-weight: 500;
+        display: flex;
 
         .fa-clone {
           margin-left: 10px;

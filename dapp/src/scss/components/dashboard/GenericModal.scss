@@ -1,5 +1,10 @@
 .generic-modal {
   width: 750px !important;
+
+  @include breakpoint(medium down) {
+    width: 95% !important;
+  }
+
   margin: auto;
   padding: 0;
   &-header {

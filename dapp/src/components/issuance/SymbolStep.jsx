@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react'
-// import FontAwesome from 'react-fontawesome'
-import TextInput from 'components/elements/TextInput'
-// import PropTypes from 'prop-types'
+import TextInput from 'components/common/TextInput'
 
 export default class SymbolStep extends PureComponent {
   constructor (props) {

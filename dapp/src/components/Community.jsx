@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import identity from 'lodash/identity'
 import { formatWei } from 'utils/format'
-import CommunityLogo from 'components/elements/CommunityLogo'
+import CommunityLogo from 'components/common/CommunityLogo'
 
 export default class Community extends Component {
   handleClick = () => {

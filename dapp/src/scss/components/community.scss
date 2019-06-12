@@ -1,0 +1,43 @@
+@include block(community) {
+  border-radius: 8px;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+  background-color: #ffffff;
+  @include xy-grid();
+  margin: 10px 0;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f3f3f3;
+  }
+
+  @include breakpoint(large) {
+    min-width: 242px;
+    min-height: 95px;
+  }
+
+  @include element(logo) {
+    padding: 5px;
+    margin: auto 2px;
+  }
+
+  @include element(content) {
+    @include xy-grid(vertical);
+    @include flex-align(center, null);
+    margin-left: 10px;
+  
+    @include element(title) {
+      font-size: 14rem;
+      color: $color-primary-dark;
+    }
+
+    @include element(members) {
+      font-size: 10rem; 
+
+      > span {
+        margin-left: 5px;
+				font-weight: bold;
+				color: $color-close-gray;
+      }
+    }
+  }
+}

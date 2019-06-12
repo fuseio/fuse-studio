@@ -1,0 +1,149 @@
+
+@include block(navbar) {
+  position: absolute;
+  @include xy-grid();
+  @include flex-align(justify, middle);
+  padding: 10px 20px;
+  width: 100%;
+  min-height: 70px;
+  color: #05283e;
+  z-index: 99;
+
+  @include modifier(scroll) {
+    position: sticky;
+    top: 0;
+    box-shadow: 0 1px 3px 0 rgba(37, 67, 90, 0.6), inset 5px -5px 11px 0 rgba(0, 0, 0, 0.25);
+    background-blend-mode: multiply;
+    background-image: linear-gradient(to bottom, #25435a, #25435a);
+    z-index: 11;
+  }
+
+  @include element(logo) {
+    @include breakpoint(small) {
+      width: 71px;
+      height: 20px;
+    }
+  }
+
+  @include element(links) {
+    @include breakpoint(large) {
+      flex-basis: 15%;
+    }
+
+    @include breakpoint(medium only) {
+      flex-basis: 15%;
+    }
+
+    @include breakpoint(small down) {
+      flex-basis: 40%;
+    }
+
+    @include xy-grid();
+    @include flex-align(justify, middle);
+
+    @include element(help) {
+      position: relative;
+    }
+
+    @include block(drop) {
+      @include modifier(show) {
+        @include xy-grid()
+      }
+
+      @include modifier(profile) {
+        top: 37px
+      }
+
+      display: none;
+      position: fixed;
+      right: 0;
+      top: 25px;
+      z-index: 1;
+      position: absolute;
+      display: none;
+      @include flex-align(left, middle);
+      min-width: 120px;
+      width: max-content;
+      height: auto;      
+      border-radius: 5px;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
+      background-color: #ffffff;
+
+      @include element (options) {
+        list-style: none;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        @include xy-grid(vertical);
+        @include flex-align(spaced);
+        font-size: 12rem;
+        cursor: initial;
+
+        @include element(item) {
+          padding: 10px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: darken($color: white, $amount: 10%)
+          }
+
+          &:not(:last-child) {
+            border-bottom: solid 1px #e2e2e2;
+          }
+        }
+      }
+    }
+
+    @include element(notification) {
+      position: relative;
+    }
+
+    @include element(wallet) {
+      cursor: pointer;
+      position: relative;
+      
+      @include breakpoint(medium) {
+        @include xy-grid();
+        @include flex-align(spaced, middle);
+        padding: 0 15px;
+        width: 156px;
+        height: 33px;
+        border-radius: 16.3px;
+        background-color: #ffffff;
+        font-size: 12.2rem;
+      }
+
+      @include breakpoint(small down) {
+        @include xy-grid();
+        @include flex-align(spaced, middle);
+        padding: 10px;
+        border-radius: 50%;
+        background-color: #ffffff;
+        font-size: 12.2rem;
+      }
+
+      @include element(text) {
+        @include breakpoint(small down) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @include block(icon) {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    cursor: pointer;
+
+    > img {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

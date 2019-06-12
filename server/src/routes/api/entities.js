@@ -5,6 +5,60 @@ const Entity = mongoose.model('Entity')
 const metadataUtils = require('@utils/metadata')
 const { upsertUser } = require('@utils/usersRegistry')
 const { getMetadata } = require('@utils/metadata')
+const Community = mongoose.model('Community')
+const Token = mongoose.model('Token')
+const { sortBy, keyBy } = require('lodash')
+
+const withCommunities = async (entities) => {
+  const communityAddresses = entities.map(token => token.communityAddress)
+  const communities = await Community.find({ communityAddress: { $in: communityAddresses } })
+  const communitiesByTokenAddress = keyBy(communities, 'communityAddress')
+
+  return entities.map((entity) => ({
+    ...entity.toObject(),
+    community: communitiesByTokenAddress[entity.communityAddress]
+      ? communitiesByTokenAddress[entity.communityAddress]
+      : undefined
+  }))
+}
+
+const withTokens = async (entities) => {
+  const filtered = entities
+    .filter(entity => entity.community && entity.community.homeTokenAddress)
+  const homeTokenAddresses = filtered.map(entity => entity.community.homeTokenAddress)
+
+  const tokens = await Token.find({ address: { $in: homeTokenAddresses } })
+
+  const communitiesByTokenAddress = keyBy(tokens, 'address')
+
+  return filtered.map((entity) => ({
+    ...entity,
+    token: communitiesByTokenAddress[entity.community.homeTokenAddress]
+      ? communitiesByTokenAddress[entity.community.homeTokenAddress]
+      : undefined
+  }))
+}
+
+/**
+ * @api {get} /entities/account/:account Fetch communities user own & part of
+ * @apiName GetCommunitiesIOwn&PartOf
+ * @apiGroup Entity
+ *
+ * @apiParam {String} account address
+ *
+ * @apiSuccess {Object[]} -   List of entities with their communities and tokens
+ */
+router.get('/account/:account', async (req, res, next) => {
+  const { account } = req.params
+
+  const results = await Entity.find({ account }).sort({ blockNumber: -1 })
+
+  const data = await withCommunities(results)
+
+  const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse().slice(0, 2)
+  const communitiesUserPartOf = sortBy(data.filter(({ isAdmin }) => !isAdmin), ['updatedAt']).reverse().slice(0, 2)
+  return res.json({ data: await withTokens([...communitiesUserOwn, ...communitiesUserPartOf]) })
+})
 
 router.put('/:communityAddress/:account', async (req, res) => {
   const { account, communityAddress } = req.params

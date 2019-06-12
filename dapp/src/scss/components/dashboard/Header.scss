@@ -1,0 +1,78 @@
+@include block(community_header) {
+  @include xy-grid();
+  @include breakpoint(large) {
+    min-height: 56px;
+  }
+
+  @include breakpoint(medium only) {
+    padding: 30px 0;
+  }
+
+  @include breakpoint(small down) {
+    padding: 40px 0;
+    @include xy-grid(horizontal, false);
+  }
+
+  @include element(image) {
+    display: inline-block;
+    width: 54px;
+    height: 54px;
+    margin-right: 10px;
+
+    > div {
+      max-width: inherit;
+      min-width: inherit;
+      max-height: inherit;
+      min-height: inherit;
+    }
+  }
+
+  @include element(content) {
+    color: $color-white;
+    @include xy-grid(vertical);
+    @include flex-align(spaced, null);
+    > div:first-child {
+      @include breakpoint(medium up) {
+        @include xy-grid();        
+      }
+    }
+
+    @include block(address) {
+      font-size: 14rem;
+      > span {
+        margin-right: 10px;
+      }
+    }
+
+    @include block(name) {
+      @include element(wrapper) {
+        width: max-content;
+      }
+
+      @include breakpoint(small down) {
+        font-size: 14rem;
+        display: inline;
+      }
+  
+      font-size: 24rem;
+      font-weight: 500;
+      @include element(status) {
+        font-size: 13rem;
+        align-self: flex-end;
+
+        @include breakpoint(small down) {
+          font-size: 11rem;
+        }
+      }
+
+      @include element(line) {
+        margin: auto 0;
+        height: 80%;
+        background-color: $color-brdr-issuance;
+        border: solid 1px $color-brdr-issuance;
+        width: 2px;
+      }
+    }
+    
+  }
+}

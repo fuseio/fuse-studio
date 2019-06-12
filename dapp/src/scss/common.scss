@@ -1,26 +1,51 @@
 @include block(qr-code) {
-	
+	@include xy-grid(vertical);
+	@include flex-align(justify, middle);
+	border-radius: 5px;
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+	background-color: $color-white;
+	margin-top: 10px;
+	@include breakpoint(large) {
+		margin-bottom: 20px;
+		padding: 90px 200px;
+	}
+
+	@include breakpoint(medium down) {
+		padding: 20px;
+		margin-bottom: 60px;
+	}
 	@include element(wrapper){
-		width: 502px !important;
+		
+		@include breakpoint(large) {
+			margin-top: 40px;
+		}
 	}
 
 	@include element(title) {
 		display: inline-block;
-		font-size: 14rem;
+		font-size: 20rem;
+		color: $color-white;
 		text-align: start;
-		font-weight: bold;
-		color: $color-primary-dark;
-		padding: 0 0 1em;
-		border-bottom: 1px solid #e7eaf3;
-		margin: 0;
+		font-weight: 500;
 	}
 
 	@include element(image) {
-    padding-top: 1em;
+    padding-top: 2em;
+	}
+
+	@include element(download) {
+		padding-top: 2em;
+		
+		@include breakpoint(large) {
+			min-width: 310px;
+		}
 	}
 
 	@include element(text) {
 		padding-top: 1em;
+		font-size: 15rem;
+		color: $color-primary-dark;
+		text-align: center;
 	}
 }
 
@@ -164,10 +189,10 @@
 		@include modifier(normal) {
 			height: 100%;
 			width: 100%;
-			max-width: 80px;
-			min-width: 80px;
-			min-height: 80px;
-			max-height: 80px;
+			max-width: 60px;
+			min-width: 60px;
+			min-height: 60px;
+			max-height: 60px;
 			margin: auto;
 		}
 
@@ -233,9 +258,8 @@
 @include block (tab){
 
 	@include element(wrapper) {
-		margin-left: 20px;
-		flex: 1;
-		border-radius: 10px;
+		@include breakpoint(large) {
+		}
 	}
 	
 	@include element(list) {
@@ -262,7 +286,6 @@
 		> span {
 			position: relative;
 			background-color: #f8f8f8;
-			padding: .7em 3.5em;
 			text-decoration: none;
 			color: rgba(37, 67, 90, 0.6);
 			width: 100%;
@@ -270,6 +293,15 @@
 			font-weight: 500;
 			border-radius: 10px 10px 0 0;
 			box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+
+			@include breakpoint(medium up) {
+				padding: .7em 3.5em;
+			}
+
+			@include breakpoint(small down) {
+				padding: 9px;
+				font-size: 12rem;
+			}
 		}
 
 		
@@ -296,9 +328,12 @@
 		padding: 25px;
 		background: $color-white;
 		border-radius: 0 0 10px 10px;
-		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-
-    position: relative;
+		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+		position: relative;
+		
+		@include breakpoint(small down) {
+			padding: 25px 15px;			
+		}
 	}
 
 }
@@ -612,7 +647,7 @@
   right: 0;
   left: 0;
   background-color: rgba(5, 40, 62, 0.8);
-  z-index: 5;
+  // z-index: 5;
   border-radius: 10px;
   font-family: $font-family;
   display: flex;

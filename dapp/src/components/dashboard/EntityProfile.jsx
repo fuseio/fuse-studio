@@ -11,6 +11,8 @@ import { ADD_DIRECTORY_ENTITY, WRONG_NETWORK_MODAL } from 'constants/uiConstants
 import ReactGA from 'services/ga'
 import { getBlockExplorerUrl } from 'utils/network'
 import { getTransaction } from 'selectors/transaction'
+import { formatAddress } from 'utils/format'
+import { isMobile } from 'react-device-detect'
 
 class EntityProfile extends Component {
   componentDidMount () {
@@ -43,6 +45,7 @@ class EntityProfile extends Component {
 
   render () {
     const { entity } = this.props
+    const { account } = entity
     return (
       <React.Fragment>
         <TopNav
@@ -118,12 +121,12 @@ class EntityProfile extends Component {
             <div className='row'>
               <div className='col-12'>
                 <div className='dashboard-information-footer entity-footer'>
-                  {this.props.entity && this.props.entity.account &&
+                  {entity && account &&
                     <div className='dashboard-information-small-text'>
                       <span className='text-asset'>Account ID</span>
-                      <a href={`${getBlockExplorerUrl('fuse')}/address/${this.props.entity.account}`} target='_blank'>
-                        <span className='id'>{this.props.entity.account}</span></a>
-                      <CopyToClipboard text={this.props.entity.account}>
+                      <a href={`${getBlockExplorerUrl('fuse')}/address/${account}`} target='_blank'>
+                        <span className='id'>{!isMobile ? account : formatAddress(account)}</span></a>
+                      <CopyToClipboard text={account}>
                         <p className='dashboard-information-period'>
                           <FontAwesome name='clone' />
                         </p>

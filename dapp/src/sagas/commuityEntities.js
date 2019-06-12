@@ -36,14 +36,14 @@ function * toggleCommunityMode ({ communityAddress, isClosed }) {
     const transactionPromise = method.send({
       from: accountAddress
     })
-    const action = actions.TOGGLE_COMMNITY_MODE
+    const action = actions.TOGGLE_COMMUNITY_MODE
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
   } else {
     const method = CommunityContract.methods.removeRule(0)
     const transactionPromise = method.send({
       from: accountAddress
     })
-    const action = actions.TOGGLE_COMMNITY_MODE
+    const action = actions.TOGGLE_COMMUNITY_MODE
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
   }
 }
@@ -158,7 +158,7 @@ const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchE
 export default function * commuityEntitiesSaga () {
   yield all([
     tryTakeEvery(actions.ADD_ENTITY, addEntity, 1),
-    tryTakeEvery(actions.TOGGLE_COMMNITY_MODE, toggleCommunityMode, 1),
+    tryTakeEvery(actions.TOGGLE_COMMUNITY_MODE, toggleCommunityMode, 1),
     tryTakeEvery(actions.REMOVE_ENTITY, removeEntity, 1),
     tryTakeEvery(actions.FETCH_USERS_ENTITIES, fetchUsersEntities, 1),
     tryTakeEvery(actions.FETCH_BUSINESSES_ENTITIES, fetchBusinessesEntities, 1),

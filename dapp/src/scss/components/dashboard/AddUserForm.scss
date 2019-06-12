@@ -2,18 +2,31 @@
   padding: 1em 5em ;
   flex-basis: 55%;
 
+  @include breakpoint(medium down) {
+    flex-basis: 100%;
+    padding: 1em 1em;
+  }
+
   @include element(wrapper) {
     @include xy-grid();
   }
 
   @include element(modal) {
-    width: 1000px !important;
+    width: 1000px;
     padding: 0 !important;
+
+    @include breakpoint(medium down) {
+      width: 90%;
+    }
   }
 
   @include element(image) {
     flex-basis: 30%;
     min-height: 535px;
+
+    @include breakpoint(medium down) {
+      display: none;
+    }
     > div {
       background-image: url(../../assets/images/dynamicdash.png);
       background-repeat: no-repeat;

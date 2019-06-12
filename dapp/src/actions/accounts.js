@@ -1,5 +1,6 @@
 import { createRequestTypes, action } from './utils'
 
+export const FETCH_COMMUNITIES = createRequestTypes('FETCH_COMMUNITIES')
 export const BALANCE_OF_TOKEN = createRequestTypes('BALANCE_OF_TOKEN')
 export const BALANCE_OF_NATIVE = createRequestTypes('BALANCE_OF_NATIVE')
 export const BALANCE_OF_CLN = createRequestTypes('BALANCE_OF_CLN')
@@ -14,3 +15,4 @@ export const balanceOfCln = (accountAddress) => action(BALANCE_OF_CLN.REQUEST, {
 
 export const fetchBalances = (tokens, accountAddress) => action(FETCH_BALANCES.REQUEST, { accountAddress, tokens })
 export const fetchTokensWithBalances = (accountAddress) => action(FETCH_TOKENS_WITH_BALANCES.REQUEST, { accountAddress })
+export const fetchCommunities = (account) => action(FETCH_COMMUNITIES.REQUEST, { account })

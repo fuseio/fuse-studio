@@ -46,11 +46,6 @@ $themes: (
           @include donutChart(100, $secondary);
         }
         &-text {
-          &.text-positive {
-            .fa {
-              color: $secondary;
-            }
-          }
         }
       }
       &-information {
@@ -226,7 +221,7 @@ $themes: (
   @include block(issuance-#{$name}) {
 
     @include element(wrapper) {
-  
+      height: 100%;
     }
   
     @include element(header) {

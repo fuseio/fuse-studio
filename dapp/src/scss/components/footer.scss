@@ -1,0 +1,55 @@
+@include block(footer) {
+  height: 30px;
+  border: solid 1px #e2e2e2;
+  background-color: #ffffff;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  @include xy-grid();
+  @include flex-align(justify, middle);
+  padding: 4px 20px;
+
+  @include breakpoint(medium up) {
+    &:first-child {
+      @include xy-grid();
+      @include flex-align(null, middle);
+    }
+  }
+
+  @include element(status_dot) {
+    height: 10px;
+    width: 10px;
+    background-color: $color-ropsten;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  @include breakpoint(medium down) {
+    @include xy-grid(vertical, false);
+    @include flex-align(center, middle);
+    height: auto;
+  }
+
+  @include element(item) {
+    font-size: 10px;
+    line-height: 1.4;
+    color: #000000; 
+
+    @include breakpoint(medium down) {
+      padding-top: 10px;
+    }
+    
+    @include modifier(last) {
+      @include breakpoint(medium down) {
+        padding-bottom: 10px;
+      }
+      color: rgba(0, 0, 0, 0.4);
+      > span {
+        &:last-child {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

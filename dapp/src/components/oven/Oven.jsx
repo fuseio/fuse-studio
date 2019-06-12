@@ -27,7 +27,7 @@ class Oven extends Component {
   }
 
   showDashboard = (communityAddress) => {
-    this.props.history.push(`/view/dashboard/${this.props.foreignNetwork}/${communityAddress}`)
+    this.props.history.push(`/view/community/${communityAddress}`)
     ReactGA.event({
       category: 'Dashboard',
       action: 'Click',
@@ -37,10 +37,7 @@ class Oven extends Component {
 
   render = () => (
     <React.Fragment>
-      <TopNav
-        active
-        history={this.props.history}
-      />
+
       <CommunitiesList {...this.props} showDashboard={this.showDashboard} />
     </React.Fragment>
   )

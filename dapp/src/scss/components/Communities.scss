@@ -5,10 +5,145 @@
 	position: relative;
 }
 
-.communities {
+@include block(communities) {
+	position: relative;
+	&:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 35%;
+    height: 30%;
+    right: 0;
+    background-image: url(../../assets/images/pattern.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+		background-position: top right;
+		
+		@include breakpoint(small down) {
+			width: 65%;
+      height: 200px;		
+		}
+	}
+	@include breakpoint(small down) {
+		margin-bottom: 70px;
+	}
+
+  @include element(wrapper) {
+    @include breakpoint(medium down) {
+			padding: 70px 0 10px;
+		}
+		@include breakpoint(large) {
+			padding: 100px 0 10px;
+		}
+	}
+
+	@include element(banner) {
+
+		@include breakpoint(small down) {
+			padding: 20px
+		}
+
+		@include element(content) {
+			@include xy-grid(vertical);
+			@include flex-align(justify, null);
+		}
+
+		@include element(title) {
+			font-weight: bold;
+			
+			@include breakpoint(large) {
+				font-size: 35rem;
+			}
+
+			@include breakpoint(medium down) {
+				font-size: 24rem;
+			}
+		}
+
+		@include element(text) {
+			@include breakpoint(medium up) {
+				font-size: 17rem;
+			}
+	
+			padding: 0 0 20px;
+			
+			@include modifier(space) {
+				padding-top: 20px;
+			}
+		}
+
+		@include element(image) {
+			img {
+				background-size: contain;
+				background-repeat: no-repeat; 
+			}
+	
+			@include modifier(second) {
+				@include breakpoint(medium) {
+					margin-left: auto;
+				}
+
+					@include breakpoint(small down) {
+					margin: auto;
+				}
+			}
+		}
+	}
+	
+	@include element(list) {
+		background-color: #f5f5f5;
+
+		@include element(items) {
+			padding: 10px 0;
+
+			@include element(item) {
+				@include padding(null, 2, null, 2);
+				@include margin(null, null, 2, null);
+			}
+		}
+	}
+
+	@include element(search) {
+		@include element(wrapper) {
+			padding: 30px 0;
+			position: sticky;
+			top: 70px;
+			background-color: #f5f5f5;
+			z-index: 10;
+		}
+
+		display: flex;
+		border: 1px solid #c0c5d2;
+		max-height: 40px;
+		min-width: 255px;
+		border-radius: 20px;
+		overflow: hidden;
+
+		input {
+			padding: 15px 0;
+			background-color: $color-white;
+			color: $color-btn-control;
+			flex: 1.7;
+			border: none;
+			&::placeholder {
+				color: #c0c5d2;
+			}
+		}
+
+		@include element(icon) {
+			background-color: $color-white;
+			padding: 6px 12px;
+			color: $color-btn-control;
+			outline: none;
+			border: none;
+		}
+	}
+}
+
+.communities-1 {
 	&-banner {
 		&-wrapper {
-			background-color: $color-primary-dark;
+			background-color: $color-white;
 			position: relative;
 		}
 		font-family: $font-family;
@@ -80,12 +215,24 @@
 	  flex-direction: column;
 	  right: 0px;
 	  width: 100%;
-		top: $nav-height;
+		// top: $nav-height;
 		height: 100%;
 		padding-bottom: 100px;
 		overflow: auto;
-		margin-top: $nav-height;
-		background-color:  #f7f8fc;
+		// margin-top: $nav-height;
+
+		&:before {
+			content: "";
+			display: block;
+			position: absolute;
+			width: 25%;
+			height: 30%;
+			right: 0;
+			background-image: url(../../assets/images/pattern.png);
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: top right;
+		}
 
 		&-title {
 			font-size: 32rem;
@@ -114,7 +261,7 @@
 			overflow: hidden;
 
 			input {
-				padding: 15px 20px;
+				padding: 15px 0;
 		    background-color: $color-white;
 		    color: $color-btn-control;
 		    flex: 1.7;
@@ -129,7 +276,6 @@
 				color: $color-orange;
 				outline: none;
 		    border: none;
-		    flex: 0.3;
 			}
 		}
 

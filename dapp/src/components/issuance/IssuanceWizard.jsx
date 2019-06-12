@@ -13,7 +13,7 @@ import { getAccountAddress } from 'selectors/accounts'
 import Contracts from './Contracts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken } from 'actions/token'
 import ReactGA from 'services/ga'
-import Logo from 'components/Logo'
+import Logo from 'components/common/Logo'
 
 class IssuanceWizard extends Component {
   state = {

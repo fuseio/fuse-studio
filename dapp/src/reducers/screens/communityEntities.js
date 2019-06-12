@@ -7,7 +7,7 @@ import {
   REMOVE_ENTITY,
   ADD_ADMIN_ROLE,
   REMOVE_ADMIN_ROLE,
-  TOGGLE_COMMNITY_MODE
+  TOGGLE_COMMUNITY_MODE
 } from 'actions/communityEntities'
 import { REQUEST } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
@@ -20,9 +20,9 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TOGGLE_COMMNITY_MODE.REQUEST:
+    case TOGGLE_COMMUNITY_MODE.REQUEST:
       return { ...omit(state, ['toggleSuccess']) }
-    case TOGGLE_COMMNITY_MODE.SUCCESS:
+    case TOGGLE_COMMUNITY_MODE.SUCCESS:
       return { ...state, toggleSuccess: true }
     case ADD_ADMIN_ROLE.REQUEST:
       return { ...state, transactionStatus: REQUEST, signatureNeeded: true }

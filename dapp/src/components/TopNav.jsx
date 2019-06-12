@@ -7,7 +7,7 @@ import * as actions from 'actions/ui'
 import { getClnBalance } from 'selectors/accounts'
 import { LOGIN_MODAL } from 'constants/uiConstants'
 
-import Logo from 'components/Logo'
+import Logo from 'components/common/Logo'
 import WalletIcon from 'images/wallet.svg'
 import ReactGA from 'services/ga'
 import PersonalSidebar from 'components/PersonalSidebar'
