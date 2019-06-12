@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Loader from 'components/Loader'
+import Loader from 'components/common/Loader'
 import classNames from 'classnames'
 import logoDarkBlue from 'images/token-dark_blue.svg'
 import logoGreen from 'images/token-green.svg'

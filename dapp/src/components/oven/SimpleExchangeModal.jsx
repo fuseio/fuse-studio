@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { BigNumber } from 'bignumber.js'
 
-import Modal from 'components/Modal'
+import Modal from 'components/common/Modal'
 import { formatWei } from 'utils/format'
 import FontAwesome from 'react-fontawesome'
 import CommunityLogo from 'components/common/CommunityLogo'
@@ -10,7 +10,7 @@ import TextInput from 'components/common/TextInput'
 import { connect } from 'react-redux'
 import { buyQuote, buyCc } from 'actions/marketMaker'
 import { PENDING, SUCCESS } from 'actions/constants'
-import Loader from 'components/Loader'
+import Loader from 'components/common/Loader'
 
 class SimpleExchangeModal extends Component {
   state = {

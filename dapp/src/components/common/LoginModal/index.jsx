@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Modal from 'components/Modal'
+import Modal from 'components/common/Modal'
 
 import ClnIcon from 'images/cln.png'
 import LockIcon from 'images/lock.png'

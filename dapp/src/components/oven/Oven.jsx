@@ -36,7 +36,6 @@ class Oven extends Component {
 
   render = () => (
     <React.Fragment>
-
       <CommunitiesList {...this.props} showDashboard={this.showDashboard} />
     </React.Fragment>
   )

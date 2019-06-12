@@ -1,5 +1,5 @@
 import React from 'react'
-import Modal from 'components/Modal'
+import Modal from 'components/common/Modal'
 import AddUserForm from '../../components/AddUserForm'
 
 export default ({ hideModal, submitEntity }) => {

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MediaMobile from 'images/issue-popup-mobile.svg'
 import FontAwesome from 'react-fontawesome'
-import TopNav from 'components/TopNav'
+import NavBar from 'components/common/NavBar'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import { loadModal } from 'actions/ui'
 import { fetchMetadata } from 'actions/metadata'
@@ -48,11 +48,7 @@ class EntityProfile extends Component {
     const { account } = entity
     return (
       <React.Fragment>
-        <TopNav
-          active
-          history={this.props.history}
-          showHomePage={this.showHomePage}
-        />
+        <NavBar />
         <div className={`entity-profile ${this.props.networkType}`}>
           <div className='entity-profile-container'>
             <div className='entity-profile-media'>

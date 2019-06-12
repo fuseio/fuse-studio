@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Community from 'components/Community'
+import Community from 'components/common/Community'
 import InfiniteScroll from 'react-infinite-scroller'
 import ReactGA from 'services/ga'
 import groupImage from 'images/all-communities.png'

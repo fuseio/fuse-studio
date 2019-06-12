@@ -1,7 +1,7 @@
 import React, { Component, Fragment, useEffect } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-import Loader from 'components/Loader'
+import Loader from 'components/common/Loader'
 import { getClnBalance, getAccountAddress } from 'selectors/accounts'
 import { REQUEST, PENDING } from 'actions/constants'
 import { getUsersEntities, checkIsAdmin } from 'selectors/entities'

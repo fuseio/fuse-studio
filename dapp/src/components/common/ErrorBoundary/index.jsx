@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Modal from 'components/Modal.jsx'
-import ModalBody from 'components/ModalBody.jsx'
+import Modal from 'components/common/Modal'
+import ModalBody from 'components/common/ModalBody'
 import CloseButton from 'images/x.png'
 
 class ErrorBoundary extends Component {

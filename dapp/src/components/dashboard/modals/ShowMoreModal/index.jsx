@@ -1,5 +1,5 @@
 import React from 'react'
-import Modal from 'components/Modal'
+import Modal from 'components/common/Modal'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { formatAddress } from 'utils/format'

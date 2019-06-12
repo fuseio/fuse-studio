@@ -1,5 +1,5 @@
 import React from 'react'
-import Modal from 'components/Modal'
+import Modal from 'components/common/Modal'
 import GenericHeader from 'images/generic-header.png'
 
 const GenericModal = (props) =>
