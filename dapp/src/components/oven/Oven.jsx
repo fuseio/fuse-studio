@@ -5,7 +5,6 @@ import { fetchTokens, fetchTokensByOwner, fetchClnToken } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
-import TopNav from 'components/TopNav'
 import ReactGA from 'services/ga'
 
 class Oven extends Component {

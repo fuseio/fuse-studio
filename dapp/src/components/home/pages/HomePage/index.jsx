@@ -12,7 +12,7 @@ import ReactGA from 'services/ga'
 export default class HomePage extends Component {
   showIssuance = () => {
     console.log('fdfsdfsd')
-    
+
     this.props.history.push('/view/issuance')
     ReactGA.event({
       category: 'Top Bar',

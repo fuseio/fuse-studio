@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default ({  }) => {
+export default (props) => {
   return (
     [1, 2, 3].map((val, index) => {
       return (
