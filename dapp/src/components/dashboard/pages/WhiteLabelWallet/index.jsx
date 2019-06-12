@@ -5,7 +5,6 @@ import GoogleDownload from 'images/google.svg'
 import { isMobile } from 'react-device-detect'
 
 export default ({ value }) => {
-  console.log({ value })
   if (!value) return null
 
   return (

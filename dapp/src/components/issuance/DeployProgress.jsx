@@ -67,8 +67,8 @@ class DeployProgress extends PureComponent {
   }
 
   goToDashboard = () => {
-    const { history, foreignNetwork, communityAddress } = this.props
-    history.push(`/view/dashboard/${foreignNetwork}/${communityAddress}`)
+    const { history, communityAddress } = this.props
+    history.push(`/view/community/${communityAddress}`)
   }
 
   stepHasError = (step) => {

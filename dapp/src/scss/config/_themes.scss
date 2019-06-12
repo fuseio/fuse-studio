@@ -221,7 +221,7 @@ $themes: (
   @include block(issuance-#{$name}) {
 
     @include element(wrapper) {
-      height: 100%;
+      height: inherit;
     }
   
     @include element(header) {
@@ -290,10 +290,12 @@ $themes: (
     }
   
     @include element(wizard) {
-      margin: 4em 0;
-  
+      @include breakpoint(medium) {
+        margin-top: 2em;        
+      }
       @include breakpoint(small down) {
         margin-top: 7em;
+        padding-bottom: 100px;
       }
   
       @include block(name) {
@@ -302,8 +304,8 @@ $themes: (
         @include breakpoint(medium) {
           border-bottom: solid 2px $color-brdr-issuance;
           min-height: 220px;
-          padding-bottom: 55px;
-          margin-bottom: 55px;
+          padding-bottom: 25px;
+          margin-bottom: 25px;
           @include xy-grid(horizontal, false);
           @include flex-align(left, middle);
         }
@@ -400,8 +402,8 @@ $themes: (
         @include breakpoint(medium) {
           border-bottom: solid 2px $color-brdr-issuance;
           min-height: 220px;
-          padding-bottom: 55px;
-          margin-bottom: 55px;
+          padding-bottom: 25px;
+          margin-bottom: 25px;
           @include xy-grid(horizontal, false);
           @include flex-align(left, middle);
         }
@@ -547,8 +549,8 @@ $themes: (
           @include breakpoint(medium) {
             border-bottom: solid 2px $color-brdr-issuance;
             min-height: 220px;
-            padding-bottom: 55px;
-            margin-bottom: 55px;
+            padding-bottom: 25px;
+            margin-bottom: 25px;
             @include xy-grid(horizontal, false);
             @include flex-align(left, middle);
           }
