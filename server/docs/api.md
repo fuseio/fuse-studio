@@ -15,6 +15,7 @@ Fuse studio API backend
 	- [Fetch deployment progress by community address](#Fetch-deployment-progress-by-community-address)
 	
 - [Entity](#Entity)
+	- [Fetch communities user own &amp; part of](#Fetch-communities-user-own-&amp;-part-of)
 	- [Fetch entities by community address](#Fetch-entities-by-community-address)
 	- [Fetch entity by community address and account](#Fetch-entity-by-community-address-and-account)
 	
@@ -143,6 +144,25 @@ GET /deployments
 | done | `Boolean` | <p>Done status if the deploy process is completed</p> |
 # <a name='Entity'></a> Entity
 
+## <a name='Fetch-communities-user-own-&amp;-part-of'></a> Fetch communities user own &amp; part of
+[Back to top](#top)
+
+
+
+```
+GET /entities/account/:account
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| account | `String` | <p>address</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| - | `Object[]` | <p>List of entities with their communities and tokens</p> |
 ## <a name='Fetch-entities-by-community-address'></a> Fetch entities by community address
 [Back to top](#top)
 
