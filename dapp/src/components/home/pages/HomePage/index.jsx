@@ -20,7 +20,7 @@ export default class HomePage extends Component {
   }
 
   showCommunities = () => {
-    this.props.history.push('/communities')
+    this.props.history.push('/view/communities')
   }
 
   render () {

@@ -24,8 +24,8 @@ export default class Root extends Component {
               <Web3 />
               <Switch>
                 <Route exact path='/' component={withTracker(withNetwork(HomePage))} />
-                <Route path='/communities' component={withTracker(withNetwork(Oven))} />
                 <Route path='/view/issuance' component={withTracker(withNetwork(IssuanceWizard))} />
+                <Route path='/view/communities' component={withTracker(withNetwork(Oven))} />
                 <Route path='/view/community/:address' component={withTracker(withNetwork(DashboardLayout))} />
                 <Route path='/view/directory/:communityAddress/:account' component={withTracker(withNetwork(EntityProfile))} />
               </Switch>
