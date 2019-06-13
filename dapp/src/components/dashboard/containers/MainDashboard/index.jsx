@@ -17,6 +17,8 @@ import FontAwesome from 'react-fontawesome'
 import { getForeignNetwork } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress } from 'selectors/accounts'
+import { checkIsAdmin } from 'selectors/entities'
+import { fetchEntities } from 'actions/communityEntities'
 
 class DashboardLayout extends PureComponent {
   state = {
@@ -27,6 +29,7 @@ class DashboardLayout extends PureComponent {
     if (!this.props.token) {
       this.props.fetchCommunity(this.props.communityAddress)
       this.props.fetchTokenProgress(this.props.communityAddress)
+      this.props.fetchEntities(this.props.communityAddress)
     }
   }
 
@@ -117,6 +120,7 @@ const mapStateToProps = (state, { match }) => ({
   communityAddress: match.params.address,
   tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
+  isAdmin: checkIsAdmin(state),
   dashboard: state.screens.dashboard,
   homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress
 })
@@ -127,7 +131,8 @@ const mapDispatchToProps = {
   fetchTokenProgress,
   isUserExists,
   loadModal,
-  hideModal
+  hideModal,
+  fetchEntities
 }
 
 export default connect(

@@ -60,7 +60,7 @@ const handlers = {
     return { ...state, tokens: action.response.result }
   },
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
-    return { ...state, communities: action.response }
+    return { ...state, communities: action.response.result }
   }
 }
 

@@ -30,13 +30,20 @@ class ProfileDropDown extends Component {
   }
 
   render () {
-    const { accountAddress, communities, metadata, networkType } = this.props
+    const { accountAddress, communities, metadata, networkType, communitiesKeys } = this.props
 
+    let filteredCommunities = []
+    if (communitiesKeys) {
+      filteredCommunities = communitiesKeys
+        .map((communityAddress) => {
+          return communities[communityAddress]
+        }).filter(obj => !!obj)
+    }
     let communitiesIOwn
     let communitiesIPartOf
-    if (communities && typeof communities.filter === 'function') {
-      communitiesIOwn = communities.filter(({ isAdmin, token }) => isAdmin && token)
-      communitiesIPartOf = communities.filter(({ isAdmin, token }) => !isAdmin && token)
+    if (communities && typeof filteredCommunities.filter === 'function') {
+      communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token)
+      communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token)
     }
     return (
       <div className='profile grid-y'>
@@ -126,9 +133,10 @@ class ProfileDropDown extends Component {
 
 const mapStateToProps = (state) => ({
   accountAddress: state.network && state.network.accountAddress,
-  communities: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
+  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
   tokens: state.entities.tokens,
   metadata: state.entities.metadata,
+  communities: state.entities.communities,
   networkType: state.network.networkType
 })
 

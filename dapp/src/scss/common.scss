@@ -7,7 +7,7 @@
 	margin-top: 10px;
 	@include breakpoint(large) {
 		margin-bottom: 20px;
-		padding: 90px 200px;
+		padding: 60px 100px;
 	}
 
 	@include breakpoint(medium down) {
@@ -760,7 +760,7 @@
 }
 
 .fullscreen {
-	height: 100vh;
+	// height: 100vh;
 	&.open-mobile-nav {
 		z-index: 2;
 		@media (max-width: $breakpoint-tablet) {

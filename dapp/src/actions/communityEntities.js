@@ -18,6 +18,7 @@ export const CONFIRM_USER = createTransactionRequestTypes('CONFIRM_USER')
 
 export const FETCH_ENTITY = createRequestTypes('FETCH_ENTITY')
 
+export const fetchEntities = (communityAddress) => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress })
 export const fetchUsersEntities = (communityAddress, entityType = 'user') => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress, entityType })
 export const fetchBusinessesEntities = (communityAddress, entityType = 'business') => entitiesAction(FETCH_BUSINESSES_ENTITIES.REQUEST, { communityAddress, entityType })
 

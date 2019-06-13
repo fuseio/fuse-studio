@@ -17,6 +17,10 @@
 		}
   }
 
+  &:after {
+    height: 100%;
+  }
+
   @include breakpoint(medium down) {
     margin-bottom: 60px;
   }
@@ -26,6 +30,9 @@
     align-items: center;
     padding-top: 3%;
     padding-bottom: 3%;
+    @include breakpoint(large) {
+      padding-top: 7%;      
+    }
     @include breakpoint(medium down) {
 			padding-top: 70px;
 		}

@@ -6,27 +6,27 @@ import TransferForm from './../TransferForm'
 import MintBurnForm from './../MintBurnForm'
 import ActivityContent from './../ActivityContent'
 import { FAILURE, SUCCESS } from 'actions/constants'
-import ethereumIcon from 'images/ethereum_icon.svg'
+import EthereumIcon from 'images/ethereum_icon.svg'
 import { getLatestDataEntry, dropdownOptions } from 'utils/activity'
 import { formatWei } from 'utils/format'
 import { isMobileOnly } from 'react-device-detect'
 
-const BalanceAndTotalSupply = ({ symbol }) => {
+const BalanceAndTotalSupply = ({ symbol, totalSupply, balanceOnEthereum }) => {
   return (
     <div className='balances'>
       <div className='balances__item'>
         <h6 className='balances__item__title'>Balance on Ethereum</h6>
         <div className='balances__item__value'>
-          <span className='balances__item__value__icon'><img src={ethereumIcon} /></span>
-          <span className='balances__item__value__number'>100000000000</span>
+          <span className='balances__item__value__icon'><img src={EthereumIcon} /></span>
+          <span className='balances__item__value__number'>{balanceOnEthereum}</span>
           <span className='balances__item__value__small'>{symbol}</span>
         </div>
       </div>
       <div className='balances__item'>
         <h6 className='balances__item__title'>Total supply on Ethereum</h6>
         <div className='balances__item__value'>
-          <span className='balances__item__value__icon'><img src={ethereumIcon} /></span>
-          <span className='balances__item__value__number'>100000000000</span>
+          <span className='balances__item__value__icon'><img src={EthereumIcon} /></span>
+          <span className='balances__item__value__number'>{totalSupply}</span>
           <span className='balances__item__value__small'>{symbol}</span>
         </div>
       </div>
@@ -58,6 +58,7 @@ export default ({
   mintSignature,
   accountAddress,
   handleTransfer,
+  balanceOnEthereum,
   tokenNetworkType,
   transactionStatus,
   transferSignature,
@@ -88,7 +89,7 @@ export default ({
     }
   }, [transactionStatus])
 
-  const { tokenType, symbol } = token
+  const { tokenType, symbol, totalSupply } = token
 
   const {
     transferMessage,
@@ -101,7 +102,7 @@ export default ({
   return (
     <Tabs>
       <div label='Stats'>
-        <BalanceAndTotalSupply symbol={symbol} />
+        <BalanceAndTotalSupply balanceOnEthereum={balanceOnEthereum} symbol={symbol} totalSupply={formatWei(totalSupply, 0)} />
         <div className='transfer-tab__content transfer-tab__content--activities'>
           <ActivityContent showStats={() => setStats('user')} statsToShow={statsToShow} stats={user} userType='user' title='users' handleChange={handleIntervalChange} />
           <ActivityContent showStats={() => setStats('admin')} statsToShow={statsToShow} stats={admin} userType='admin' handleChange={handleIntervalChange} />

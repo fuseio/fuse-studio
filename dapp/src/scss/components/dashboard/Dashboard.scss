@@ -89,7 +89,7 @@
 }
 
 @include block(Dashboard) {
-  height: inherit;
+  height: 100vh;
   @include element(container) {
     height: 100%;
     @include breakpoint(large) {
@@ -112,7 +112,10 @@
   @include block(sidebar) {
     flex-basis: 15%;
     box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
-    height: 100%;
+    height: auto;
+    @include breakpoint(medium down) {
+      height: 100%;
+    }
     background-color: #051926;
     
     @include block(item) {
@@ -186,6 +189,7 @@
       @include breakpoint(large up) {
         position: relative;
         height: auto;
+        min-height: 90vh;
         width: 100%;
         flex: 1;
       }
@@ -197,6 +201,10 @@
 
     @include element(bridge) {
       margin-top: 3em;
+
+      @include breakpoint(large) {
+        margin-bottom: 2em;        
+      }
 
       @include breakpoint(small down) {
         margin: 3em 0.5em 3em;

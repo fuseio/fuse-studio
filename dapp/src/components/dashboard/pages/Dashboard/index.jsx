@@ -12,6 +12,8 @@ import { getTransaction } from 'selectors/transaction'
 import { isOwner } from 'utils/token'
 import DashboardTabs from '../../components/DashboardTabs'
 import Bridge from '../../components/Bridge'
+import { getBridgeStatus } from 'selectors/network'
+import { BigNumber } from 'bignumber.js'
 
 class Dashboard extends Component {
   state = {
@@ -71,16 +73,6 @@ class Dashboard extends Component {
     })
   }
 
-  onlyOnFuse = (successFunc) => {
-    const { networkType } = this.props
-    if (networkType === 'fuse') {
-      successFunc()
-    } else {
-      const { loadModal } = this.props
-      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['fuse'] })
-    }
-  }
-
   handleMintOrBurnClick = (actionType, amount) => {
     const { burnToken, mintToken, token: { address: tokenAddress } } = this.props
     if (actionType === 'mint') {
@@ -129,12 +121,13 @@ class Dashboard extends Component {
       burnSuccess,
       mintSuccess,
       error,
-      community
+      community,
+      bridgeStatus,
+      homeNetwork
     } = this.props
 
     const { address: tokenAddress } = token
-    const { communityAddress } = community
-
+    const { communityAddress, homeTokenAddress, foreignTokenAddress } = community
     const balance = balances[tokenAddress]
     const { admin, user, steps, owner } = dashboard
 
@@ -155,6 +148,7 @@ class Dashboard extends Component {
             lastAction={lastAction}
             networkType={networkType}
             burnSignature={burnSignature}
+            balanceOnEthereum={new BigNumber(balances[homeNetwork === bridgeStatus['from'].network ? homeTokenAddress : foreignTokenAddress]).div(1e18).toFormat(2, 1)}
             mintSignature={mintSignature}
             accountAddress={accountAddress}
             tokenNetworkType={tokenNetworkType}
@@ -191,7 +185,9 @@ const mapStateToProps = (state) => ({
   ...state.screens.token,
   clnBalance: getClnBalance(state),
   balances: getBalances(state),
-  ...getTransaction(state, state.screens.token.transactionHash)
+  ...getTransaction(state, state.screens.token.transactionHash),
+  bridgeStatus: getBridgeStatus(state),
+  homeNetwork: state.network.homeNetwork
 })
 
 const mapDispatchToProps = {

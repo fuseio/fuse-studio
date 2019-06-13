@@ -14,15 +14,17 @@ class FeaturedCommunities extends Component {
       this.props.fetchClnToken()
     }
     if (this.props.account) {
-      const { networkType } = this.props
-      this.props.fetchTokensByOwner(networkType, this.props.account)
+      const { networkType, account } = this.props
+      this.props.fetchTokens(networkType)
+      this.props.fetchTokensByOwner(networkType, account)
     }
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.account && !prevProps.account) {
-      const { networkType } = this.props
-      this.props.fetchTokensByOwner(networkType, this.props.account)
+      const { networkType, account } = this.props
+      this.props.fetchTokens(networkType)
+      this.props.fetchTokensByOwner(networkType, account)
     }
   }
 

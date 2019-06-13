@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Loader from 'components/common/Loader'
 import { getClnBalance, getAccountAddress } from 'selectors/accounts'
 import { REQUEST, PENDING } from 'actions/constants'
-import { getUsersEntities, checkIsAdmin } from 'selectors/entities'
+import { getUsersEntities } from 'selectors/entities'
 import plusIcon from 'images/add.svg'
 import {
   addEntity,
@@ -42,12 +42,6 @@ const UsersDataFetcher = (props) => {
   useEffect(() => {
     if (props.toggleSuccess) {
       props.fetchCommunity(props.communityAddress)
-    }
-  }, [props.toggleSuccess])
-
-  useEffect(() => {
-    if (props.toggleSuccess) {
-      props.fetchCommunity(props.foreignTokenAddress)
     }
   }, [props.toggleSuccess])
 
@@ -336,7 +330,6 @@ const mapStateToProps = (state) => ({
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
-  isAdmin: checkIsAdmin(state),
   metadata: state.entities.metadata
 })
 

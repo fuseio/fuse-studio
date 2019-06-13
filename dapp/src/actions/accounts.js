@@ -1,4 +1,6 @@
-import { createRequestTypes, action } from './utils'
+import { createRequestTypes, action, createEntityAction } from './utils'
+
+const communitiesAction = createEntityAction('communities')
 
 export const FETCH_COMMUNITIES = createRequestTypes('FETCH_COMMUNITIES')
 export const BALANCE_OF_TOKEN = createRequestTypes('BALANCE_OF_TOKEN')
@@ -15,4 +17,4 @@ export const balanceOfCln = (accountAddress) => action(BALANCE_OF_CLN.REQUEST, {
 
 export const fetchBalances = (tokens, accountAddress) => action(FETCH_BALANCES.REQUEST, { accountAddress, tokens })
 export const fetchTokensWithBalances = (accountAddress) => action(FETCH_TOKENS_WITH_BALANCES.REQUEST, { accountAddress })
-export const fetchCommunities = (account) => action(FETCH_COMMUNITIES.REQUEST, { account })
+export const fetchCommunities = (accountAddress) => communitiesAction(FETCH_COMMUNITIES.REQUEST, { accountAddress })

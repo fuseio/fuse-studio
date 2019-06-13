@@ -7,6 +7,8 @@ import classNames from 'classnames'
 import ProfileDropDown from './../ProfileDropDown'
 import { isMobileOnly } from 'react-device-detect'
 import { withRouter } from 'react-router-dom'
+import { withNetwork } from 'containers/Web3'
+import capitalize from 'lodash/capitalize'
 
 class NavBar extends Component {
   state = {
@@ -55,7 +57,7 @@ class NavBar extends Component {
   }
 
   render () {
-    const { withLogo } = this.props
+    const { withLogo, networkType } = this.props
     const { isHelpOpen, isProfileOpen } = this.state
     return (
       <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })}>
@@ -90,7 +92,7 @@ class NavBar extends Component {
             }}
           >
             <span className='icon'><img src={WalletIcon} /></span>
-            <span className='navbar__links__wallet__text'>Fuse network</span>
+            <span className='navbar__links__wallet__text'>{capitalize(networkType)} network</span>
             <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
               <ProfileDropDown />
             </div>
@@ -105,4 +107,4 @@ NavBar.defaultProps = {
   withLogo: true
 }
 
-export default withRouter(NavBar)
+export default withRouter(withNetwork(NavBar))

@@ -90,7 +90,8 @@ export default class SummaryStep extends Component {
           <div className='summary-step__inner'>
             <div className='summary-step__logo'>
               <CommunityLogo isDaiToken={communityType && communityType.value === 'existingToken'} networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo }} />
-              <span>{communityName} coin</span>
+              <span className='communityName'>{communityName}</span>
+              <span>coin</span>
             </div>
             <hr className='summary-step__line' />
             <div className='summary-step__content'>

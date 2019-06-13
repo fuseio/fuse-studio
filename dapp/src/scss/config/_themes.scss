@@ -290,20 +290,22 @@ $themes: (
     }
   
     @include element(wizard) {
+      padding-bottom: 100px;
       @include breakpoint(medium) {
         margin-top: 2em;        
       }
       @include breakpoint(small down) {
         margin-top: 7em;
-        padding-bottom: 100px;
       }
   
       @include block(name) {
         height: 100%;
         
+        @include breakpoint(xxlarge) {
+          min-height: 220px;
+        }
         @include breakpoint(medium) {
           border-bottom: solid 2px $color-brdr-issuance;
-          min-height: 220px;
           padding-bottom: 25px;
           margin-bottom: 25px;
           @include xy-grid(horizontal, false);
@@ -398,10 +400,13 @@ $themes: (
         //   text-transform: capitalize;
         //   line-height: 1.29;
         //   font-weight: bold;
+        @include breakpoint(xxlarge) {
+          min-height: 220px;
+        }
   
         @include breakpoint(medium) {
           border-bottom: solid 2px $color-brdr-issuance;
-          min-height: 220px;
+          // min-height: 220px;
           padding-bottom: 25px;
           margin-bottom: 25px;
           @include xy-grid(horizontal, false);
@@ -518,8 +523,6 @@ $themes: (
         }
   
         @include breakpoint(small) {
-          // @include xy-grid(vertical);
-  
         }
         
         @include element(title) {
@@ -544,11 +547,13 @@ $themes: (
         }
   
         @include element(attribute) {
-          
+          @include breakpoint(xxlarge) {
+            min-height: 220px;
+          }
           
           @include breakpoint(medium) {
             border-bottom: solid 2px $color-brdr-issuance;
-            min-height: 220px;
+            // min-height: 220px;
             padding-bottom: 25px;
             margin-bottom: 25px;
             @include xy-grid(horizontal, false);
@@ -1098,17 +1103,24 @@ $themes: (
           @include breakpoint(medium) {
             flex-basis: 24%;
           }
+
+          @include block(communityName) {
+            text-overflow: ellipsis;
+            overflow: hidden; 
+            width: 108px;
+            height: 1.2em; 
+            white-space: nowrap;
+            margin-top: 10px;
+            @include breakpoint(small down) {
+              margin-bottom: 10px;
+            }
+          }
   
           > span {
-            margin-top: 10px;
             font-size: 14rem;
             color: $color-primary-dark;
             font-weight: 500;
             text-align: center;
-  
-            @include breakpoint(small) {
-              margin-bottom: 10px;
-            }
           }
         }
   

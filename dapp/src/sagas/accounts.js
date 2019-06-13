@@ -1,7 +1,7 @@
 import { all, put, call, takeEvery, select } from 'redux-saga/effects'
 
 import * as actions from 'actions/accounts'
-import { tryTakeEvery, apiCall } from './utils'
+import { tryTakeEvery, createEntitiesFetch } from './utils'
 import { getAddress, getNetworkType, getNetworkSide } from 'selectors/network'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
@@ -65,14 +65,7 @@ function * watchBalanceOfToken ({ response }) {
   yield put(actions.balanceOfToken(response.tokenAddress, accountAddress))
 }
 
-function * fetchCommunities ({ account }) {
-  const { data } = yield apiCall(fetchCommunitiesApi, { account })
-  yield put({
-    type: actions.FETCH_COMMUNITIES.SUCCESS,
-    accountAddress: account,
-    response: data
-  })
-}
+const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 
 export default function * accountsSaga () {
   yield all([

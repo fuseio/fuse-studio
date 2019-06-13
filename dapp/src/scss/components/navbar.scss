@@ -26,12 +26,12 @@
   }
 
   @include element(links) {
-    @include breakpoint(large) {
+    @include breakpoint(xxlarge) {
       flex-basis: 15%;
     }
 
-    @include breakpoint(medium only) {
-      flex-basis: 15%;
+    @include breakpoint(medium) {
+      flex-basis: 20%;
     }
 
     @include breakpoint(small down) {
@@ -108,7 +108,7 @@
         @include xy-grid();
         @include flex-align(spaced, middle);
         padding: 0 15px;
-        width: 156px;
+        width: 170px;
         height: 33px;
         border-radius: 16.3px;
         background-color: #ffffff;

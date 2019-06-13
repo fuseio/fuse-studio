@@ -12,7 +12,9 @@
   }
 
   @include element(modal) {
-    width: 1000px;
+    @include breakpoint(large up) {
+      width: 1000px !important;
+    }
     padding: 0 !important;
 
     @include breakpoint(medium down) {

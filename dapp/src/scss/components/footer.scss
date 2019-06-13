@@ -3,11 +3,15 @@
   border: solid 1px #e2e2e2;
   background-color: #ffffff;
   width: 100%;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   @include xy-grid();
   @include flex-align(justify, middle);
   padding: 4px 20px;
+
+  // @include breakpoint(large) {
+  //   position: sticky;    
+  // }
 
   @include breakpoint(medium up) {
     &:first-child {
