@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="17px" height="20px" viewBox="0 0 17 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 55 (78076) - https://sketchapp.com -->
-    <title>Group 10</title>
+    <!-- Generator: Sketch 55.1 (78136) - https://sketchapp.com -->
+    <title>Group 7</title>
     <desc>Created with Sketch.</desc>
-    <g id="community-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g transform="translate(-1714.000000, -20.000000)" fill-rule="nonzero" id="Group-10">
-            <g transform="translate(1714.000000, 20.000000)">
-                <path d="M8.5,20 C9.875,20 11,19.1 11,18 L6,18 C6,19.1 7.1125,20 8.5,20 Z" id="Path" fill="#658CA5"></path>
-                <path d="M14.875,13.8461538 L14.875,8.71794872 C14.875,5.56923077 13.1325,2.93333333 10.09375,2.23589744 L10.09375,1.53846154 C10.09375,0.687179487 9.381875,1.0658141e-13 8.5,1.0658141e-13 C7.618125,1.0658141e-13 6.90625,0.687179487 6.90625,1.53846154 L6.90625,2.23589744 C3.856875,2.93333333 2.125,5.55897436 2.125,8.71794872 L2.125,13.8461538 L0,15.8974359 L0,16.9230769 L17,16.9230769 L17,15.8974359 L14.875,13.8461538 Z" id="Path" fill="#D4EEFF"></path>
+    <g id="DApp-home-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Fuse--Home-page" transform="translate(-1714.000000, -20.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group-7" transform="translate(1714.000000, 20.000000)">
+                <path d="M8.5,20 C9.875,20 11,19.1 11,18 L6,18 C6,19.1 7.1125,20 8.5,20 Z" id="Path"></path>
+                <path d="M14.875,13.8461538 L14.875,8.71794872 C14.875,5.56923077 13.1325,2.93333333 10.09375,2.23589744 L10.09375,1.53846154 C10.09375,0.687179487 9.381875,-7.10542736e-15 8.5,-7.10542736e-15 C7.618125,-7.10542736e-15 6.90625,0.687179487 6.90625,1.53846154 L6.90625,2.23589744 C3.856875,2.93333333 2.125,5.55897436 2.125,8.71794872 L2.125,13.8461538 L0,15.8974359 L0,16.9230769 L17,16.9230769 L17,15.8974359 L14.875,13.8461538 Z" id="Path"></path>
             </g>
         </g>
     </g>

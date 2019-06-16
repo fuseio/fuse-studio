@@ -9,13 +9,30 @@
   color: #05283e;
   z-index: 99;
 
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: position 10s;
+  -ms-transition: position 10s;
+  -o-transition: position 10s;
+  transition: all 0.5s ease;
+
   @include modifier(scroll) {
     position: fixed;
     top: 0;
-    // box-shadow: 0 1px 3px 0 rgba(37, 67, 90, 0.6), inset 5px -5px 11px 0 rgba(0, 0, 0, 0.25);
-    // background-blend-mode: multiply;
     background-image: url(../../assets/images/header.jpg);
+    background-repeat: no-repeat;
+    background-size: contain;
     z-index: 11;
+
+    animation: smoothScroll 0.3s forwards;
+
+    @keyframes smoothScroll {
+      0% {
+        transform: translateY(-40px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
   }
 
   @include element(logo) {

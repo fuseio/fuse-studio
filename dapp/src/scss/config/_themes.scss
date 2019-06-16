@@ -229,7 +229,10 @@ $themes: (
       height: 100%;
       min-height: 80px;
       max-height: 80px;
-      background-color: $dark;	
+      height: 100%;
+      background-image: url(../../assets/images/header.jpg);
+      background-repeat: no-repeat;
+      background-size: contain;
       max-width: 100%;
       margin-left: auto;
       margin-right: auto;

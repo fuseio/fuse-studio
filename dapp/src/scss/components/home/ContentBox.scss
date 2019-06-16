@@ -21,7 +21,10 @@
   }
 
   @include element(content) {
-    // padding: 10px 0 20px;
+    @include breakpoint(large up) {
+      min-height: 360px;
+      max-height: 360px;
+    }
   }
 
   @include element(action) {

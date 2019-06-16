@@ -11,7 +11,7 @@ import isEmpty from 'lodash/isEmpty'
 import { withRouter } from 'react-router-dom'
 import ReactGA from 'services/ga'
 
-const InnerCommunities = ({ communities, networkType, metadata, title = 'Community I own' }) => {
+const InnerCommunities = ({ communities, networkType, metadata, showDashboard, title = 'Community I own' }) => {
   if (isEmpty(communities)) return null
   return (
     <React.Fragment>
@@ -19,7 +19,7 @@ const InnerCommunities = ({ communities, networkType, metadata, title = 'Communi
         <span>{title}</span>
         {communities && communities.map((entity, index) => {
           return (
-            <div className='community' key={index} onClick={() => this.showDashboard(entity.communityAddress)}>
+            <div className='community' key={index} onClick={() => showDashboard(entity.communityAddress)}>
               <div className='community__logo'>
                 <CommunityLogo
                   isDaiToken={entity.token && entity.token.symbol === 'DAI'}
@@ -95,11 +95,13 @@ class ProfileDropDown extends Component {
           </span>
         </div>
         <InnerCommunities
+          showDashboard={this.showDashboard}
           communities={communitiesIOwn}
           networkType={networkType}
           metadata={metadata}
         />
         <InnerCommunities
+          showDashboard={this.showDashboard}
           title='Community I am part'
           communities={communitiesIPartOf}
           networkType={networkType}

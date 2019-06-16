@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 55 (78076) - https://sketchapp.com -->
-    <title>Group 9</title>
+    <!-- Generator: Sketch 55.1 (78136) - https://sketchapp.com -->
+    <title>Group 15</title>
     <desc>Created with Sketch.</desc>
-    <g id="community-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g transform="translate(-1654.000000, -20.000000)" fill-rule="nonzero" id="Group-9">
-            <g transform="translate(1654.000000, 20.000000)">
-                <g id="Group-4">
-                    <path d="M10,0 C4.48,0 0,4.48 0,10 C0,15.52 4.48,20 10,20 C15.52,20 20,15.52 20,10 C20,4.48 15.52,0 10,0 Z" id="Path" fill="#D4EEFF"></path>
-                    <path d="M13.07,9.25 L12.17,10.17 C11.45,10.9 11,11.5 11,13 L9,13 L9,12.5 C9,11.4 9.45,10.4 10.17,9.67 L11.41,8.41 C11.78,8.05 12,7.55 12,7 C12,5.9 11.1,5 10,5 C8.9,5 8,5.9 8,7 L6,7 C6,4.79 7.79,3 10,3 C12.21,3 14,4.79 14,7 C14,7.88 13.64,8.68 13.07,9.25 Z" id="Path" fill="#4A687B"></path>
-                </g>
+    <g id="DApp-home-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Fuse--Home-page" transform="translate(-1654.000000, -20.000000)" fill-rule="nonzero">
+            <g id="Group-15" transform="translate(1654.000000, 20.000000)">
+                <path d="M10,0 C4.48,0 0,4.48 0,10 C0,15.52 4.48,20 10,20 C15.52,20 20,15.52 20,10 C20,4.48 15.52,0 10,0 Z" id="Path" fill="#FFFFFF"></path>
                 <polygon id="Path" fill="#4A687B" points="11 17 9 17 9 15 11 15"></polygon>
+                <path d="M13.07,9.25 L12.17,10.17 C11.45,10.9 11,11.5 11,13 L9,13 L9,12.5 C9,11.4 9.45,10.4 10.17,9.67 L11.41,8.41 C11.78,8.05 12,7.55 12,7 C12,5.9 11.1,5 10,5 C8.9,5 8,5.9 8,7 L6,7 C6,4.79 7.79,3 10,3 C12.21,3 14,4.79 14,7 C14,7.88 13.64,8.68 13.07,9.25 Z" id="Path" fill="#4A687B"></path>
             </g>
         </g>
     </g>
