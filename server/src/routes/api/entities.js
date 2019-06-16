@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const Entity = mongoose.model('Entity')
 const metadataUtils = require('@utils/metadata')
 const { upsertUser } = require('@utils/usersRegistry')
+const { getMetadata } = require('@utils/metadata')
 
 router.put('/:communityAddress/:account', async (req, res) => {
   const { account, communityAddress } = req.params
@@ -56,16 +57,23 @@ const getQueryFilter = ({ query: { type }, params: { communityAddress } }) =>
  *
  * @apiParam {String} communityAddress Community address
  * @apiParam {Number} page Page number for pagination
+ * @apiParam {Boolean} withMetadata Get entitites with entity's metadata
  *
  * @apiSuccess {Object[]} -   List of entities. See GetEntity endpoint for entity fields
  */
 router.get('/:communityAddress', async (req, res, next) => {
   const queryFilter = getQueryFilter(req)
+  const { withMetadata } = req.query
 
   let [ results, itemCount ] = await Promise.all([
     Entity.find(queryFilter).sort({ name: 1 }).limit(req.query.limit).skip(req.skip),
     Entity.countDocuments(queryFilter)
   ])
+
+  if (withMetadata) {
+    const metadatas = await Promise.all(results.map(result => result.uri ? getMetadata(result.uri.split('://')[1]).catch(console.error) : null))
+    results = results.map((result, index) => ({ ...result.toObject(), metadata: metadatas[index] && metadatas[index].data }))
+  }
 
   const pageCount = Math.ceil(itemCount / req.query.limit)
 

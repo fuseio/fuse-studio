@@ -157,6 +157,7 @@ GET /entities/:communityAddress
 |:---------|:-----------|:--------------------------------------|
 | communityAddress | `String` | <p>Community address</p> |
 | page | `Number` | <p>Page number for pagination</p> |
+| withMetadata | `Boolean` | <p>Get entitites with entity's metadata</p> |
 
 
 ### Success 200
