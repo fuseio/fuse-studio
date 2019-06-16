@@ -1,0 +1,41 @@
+@include block(content_box) {
+  @include xy-grid(vertical);
+  padding-top: 25px;
+  padding-bottom: 25px;
+  
+  @include modifier(border_shadow_color) {
+    border-radius: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+    background-color: #ffffff;
+  }
+
+  @include element(title) {
+    font-size: 18px;
+    color: $color-primary-dark;
+    font-weight: 500;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: solid 1px #dedede;
+  }
+
+  @include element(content) {
+    @include breakpoint(large up) {
+      min-height: 360px;
+      max-height: 360px;
+    }
+  }
+
+  @include element(action) {
+    font-size: 16px;    
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    color: $color-primary-dark;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

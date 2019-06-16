@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Modal from 'components/Modal'
+import Modal from 'components/common/Modal'
 import MediaMobile from 'images/issue-popup-mobile.svg'
 import { addUser } from 'actions/user'
 import FontAwesome from 'react-fontawesome'

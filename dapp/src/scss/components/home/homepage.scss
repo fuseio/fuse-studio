@@ -1,0 +1,139 @@
+@include block (home_page) {
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 35%;
+    height: 30%;
+    right: 0;
+    background-image: url(../../assets/images/pattern.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: top right;
+
+    @include breakpoint(small down) {
+      width: 65%;
+      height: 200px;	
+		}
+  }
+
+  &:after {
+    height: 100%;
+  }
+
+  @include breakpoint(medium down) {
+    margin-bottom: 60px;
+  }
+
+  @include element(wrapper) {
+    display: flex;
+    align-items: center;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    @include breakpoint(large) {
+      padding-top: 7%;      
+    }
+    @include breakpoint(medium down) {
+			padding-top: 70px;
+		}
+  }
+
+  @include element(faq) {
+    padding-top: 3%;
+    padding-bottom: 3%;
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+
+    @include breakpoint(medium down) {
+			padding: 20px;
+		}
+  }
+
+  @include element(content) {
+    @include xy-grid(vertical);
+    @include flex-align(justify, null);
+
+    > * {
+      @include xy-cell();
+    }
+
+    @include breakpoint(small down) {
+			padding: 20px
+		}
+  }
+
+  @include element(image) {
+    img {
+      background-size: contain;
+      background-repeat: no-repeat; 
+    }
+
+    @include modifier(first) {
+      img {
+        max-width: 60px;
+      }
+    }
+
+    @include modifier(second) {
+  		@include breakpoint(large up) {
+        margin-left: auto;
+      }
+
+      @include breakpoint(medium) {
+        margin-left: auto;
+      }
+
+      @include breakpoint(small) {
+        margin: auto;
+      }
+    }
+  }
+
+  @include element(title) {
+    font-weight: bold;
+    @include breakpoint(large) {
+      font-size: 35px;
+    }
+
+    @include breakpoint(medium down) {
+      font-size: 24px;
+    }
+  }
+
+  @include element(text) {
+    @include breakpoint(medium up) {
+      font-size: 17px;
+    }
+
+    padding: 0 0 20px;
+    
+    @include modifier(space) {
+      padding-top: 20px;
+    }
+  }
+
+  @include element(button) {
+    width: 70%;
+
+    @include breakpoint(medium down) {
+      width: 85%;      
+    }
+  
+    > button {
+      background-image: linear-gradient(98deg, #34d080, #fae83e);
+      color: $color-primary-dark;
+      font-weight: bold;
+      text-align: center;
+      height: 45px;
+      width: 100%;
+      border-radius: 22.5px;
+      border: none;
+      font-size: 16px;
+
+      &:hover {
+        background-color: #f6e943;
+      }
+    }
+  }
+}

@@ -13,7 +13,8 @@ import { getAccountAddress } from 'selectors/accounts'
 import Contracts from './Contracts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken } from 'actions/token'
 import ReactGA from 'services/ga'
-import Logo from 'components/Logo'
+import Logo from 'components/common/Logo'
+import { PENDING, REQUEST } from 'actions/constants'
 
 class IssuanceWizard extends Component {
   state = {
@@ -229,15 +230,15 @@ class IssuanceWizard extends Component {
   }
 
   render () {
-    const { history, foreignNetwork } = this.props
+    const { history, foreignNetwork, transactionStatus } = this.props
     const { communityType } = this.state
     const steps = ['Name & currency', communityType && communityType.value === 'existingToken' ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary']
 
     return (
       <div className={classNames(`issuance-${foreignNetwork}__wrapper`)}>
-        <div className={classNames(`issuance-${foreignNetwork}__header grid-x align-middle align-justify`)}>
-          <div onClick={() => history.push('/')} className={classNames(`issuance-${foreignNetwork}__header__logo grid-x align-middle`)}>
-            <Logo />
+        <div className={classNames(`issuance-${foreignNetwork}__header grid-x align-justify`)}>
+          <div onClick={() => history.push('/')} className={classNames(`issuance-${foreignNetwork}__header__logo align-self-middle grid-x align-middle`)}>
+            <Logo isGradientLogo />
           </div>
           <div className={classNames(`issuance-${foreignNetwork}__header__indicators grid-x cell align-center`)} ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
             <div className='grid-y cell auto'>
@@ -251,14 +252,14 @@ class IssuanceWizard extends Component {
               </div>
             </div>
           </div>
-          <div onClick={() => history.push('/')} className={classNames(`issuance-${foreignNetwork}__header__close grid-x align-middle align-right`)}>
+          <div onClick={() => history.push('/')} className={classNames(`issuance-${foreignNetwork}__header__close align-self-middle grid-x align-middle align-right`)}>
             <FontAwesome name='times' />
           </div>
         </div>
         <div className={classNames(`issuance-${foreignNetwork}__wizard`)}>
           {this.renderStepContent()}
           {
-            this.state.activeStep > 0 && (
+            this.state.activeStep > 0 && ((transactionStatus !== PENDING) && (transactionStatus !== REQUEST)) && (
               <div className='text-center'>
                 <button
                   className={classNames(`issuance-${foreignNetwork}__wizard__back`)}

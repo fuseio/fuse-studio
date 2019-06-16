@@ -1,7 +1,7 @@
 import React from 'react'
 import { isMobileOnly } from 'react-device-detect'
 import classNames from 'classnames'
-import CommunityLogo from 'components/elements/CommunityLogo'
+import CommunityLogo from 'components/common/CommunityLogo'
 import Carousel from 'components/common/Carousel'
 
 const logos = ['CoinIcon1.svg', 'CoinIcon2.svg', 'CoinIcon3.svg']

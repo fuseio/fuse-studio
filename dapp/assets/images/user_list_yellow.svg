@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="13px" viewBox="0 0 17 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group Copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="community-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-Copy" transform="translate(-3.000000, -2.000000)">
+            <g id="Group-6" transform="translate(14.000000, 2.000000)" stroke="#FAE83E" stroke-linecap="square" stroke-width="0.943488">
+                <path d="M0.5,0.5 L5.49780273,0.5" id="Line-2"></path>
+                <path d="M0.5,3.5 L5.49780273,3.5" id="Line-2-Copy"></path>
+                <path d="M0.5,6.5 L5.49780273,6.5" id="Line-2-Copy-2"></path>
+            </g>
+            <g id="baseline-person-24px">
+                <path d="M9,9 C10.6575,9 12,7.6575 12,6 C12,4.3425 10.6575,3 9,3 C7.3425,3 6,4.3425 6,6 C6,7.6575 7.3425,9 9,9 Z M9,10.5 C6.9975,10.5 3,11.505 3,13.5 L3,15 L15,15 L15,13.5 C15,11.505 11.0025,10.5 9,10.5 Z" id="Shape" fill="#FAE83E" fill-rule="nonzero"></path>
+                <polygon id="Path" points="0 0 18 0 18 18 0 18"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

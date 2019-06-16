@@ -2,18 +2,18 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { hideModal } from 'actions/ui'
-import LoginModal from 'components/LoginModal'
-import WrongNetworkModal from 'components/WrongNetworkModal'
-import LoadingModal from 'components/LoadingModal'
-import ErrorBoundary from 'components/ErrorBoundary'
-import UserDatatModal from 'components/issuance/UserDatatModal'
-import AddEntityModal from 'components/dashboard/AddEntityModal'
-import AddUserModal from 'components/dashboard/AddUserModal'
-import BusinessListModal from 'components/dashboard/BusinessListModal'
-import BridgeModal from 'components/dashboard/BridgeModal'
-import NoDataAboutOwnerModal from 'components/dashboard/NoDataAboutOwnerModal'
-import ShowMoreModal from 'components/dashboard/ShowMoreModal'
+import LoginModal from 'components/common/LoginModal'
+import WrongNetworkModal from 'components/common/WrongNetworkModal'
+import LoadingModal from 'components/common/LoadingModal'
+import ErrorBoundary from 'components/common/ErrorBoundary'
+import UserDatatModal from 'components/issuance/UserDatatModal.jsx'
 import QrModal from 'components/common/QrModal'
+import AddBusinessModal from 'components/dashboard/modals/AddBusinessModal'
+import AddUserModal from 'components/dashboard/modals/AddUserModal'
+import BusinessListModal from 'components/dashboard/modals/BusinessListModal'
+import BridgeModal from 'components/dashboard/modals/BridgeModal'
+import NoDataAboutOwnerModal from 'components/dashboard/modals/NoDataAboutOwnerModal'
+import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
 
 import {
   LOGIN_MODAL,
@@ -39,7 +39,7 @@ const MODAL_COMPONENTS = {
   [WRONG_NETWORK_MODAL]: WrongNetworkModal,
   [LOADING_MODAL]: LoadingModal,
   [USER_DATA_MODAL]: UserDatatModal,
-  [ADD_DIRECTORY_ENTITY]: AddEntityModal,
+  [ADD_DIRECTORY_ENTITY]: AddBusinessModal,
   [BUSINESS_LIST_MODAL]: BusinessListModal,
   [BRIDGE_MODAL]: BridgeModal,
   [NO_DATA_ABOUT_OWNER_MODAL]: NoDataAboutOwnerModal,

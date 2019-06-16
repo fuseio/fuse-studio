@@ -18,3 +18,7 @@ export const nameToSymbol = (name) => {
     default: return pickLetters(words[0], 1) + pickLetters(words[1], 1) + pickLetters(words[2], 1) + pickLetters(words[3], 1)
   }
 }
+
+export const formatAddress = (address) => {
+  return (address && `${address.substring(0, 6)}...${address.substr(address.length - 4)}`) || ''
+}

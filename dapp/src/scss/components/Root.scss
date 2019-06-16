@@ -1,3 +1,9 @@
+.id {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
 .modal-dialog-div.contact-form {
 	width: 720px !important;
 
@@ -48,9 +54,9 @@
   				flex-direction: column;
   				margin-bottom: 45px;
   				position: relative;
-  				font-size: 14rem;
+  				font-size: 14px;
   				@media (max-width: $breakpoint-tablet) {
-					font-size: 16rem;
+					font-size: 16px;
 				}
   				label {
   					@include label();

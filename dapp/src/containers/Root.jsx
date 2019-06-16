@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
-import { Route } from 'react-router'
 import { ConnectedRouter } from 'connected-react-router'
-import CLNFetcher from 'containers/CLNFetcher'
 import Oven from 'components/oven/Oven'
 import IssuanceWizard from 'components/issuance/IssuanceWizard'
-import Dashboard from 'components/dashboard/Dashboard'
+import DashboardLayout from 'components/dashboard/containers/MainDashboard'
 import EntityProfile from 'components/dashboard/EntityProfile'
 import withTracker from 'containers/withTracker'
 import Web3, { withNetwork } from 'containers/Web3'
-import Layout from 'components/Layout'
+import Layout from 'components/common/Layout'
+import HomePage from 'components/home/pages/HomePage'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import Footer from 'components/common/Footer'
 
 export default class Root extends Component {
   render () {
@@ -18,26 +19,19 @@ export default class Root extends Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <React.Fragment>
-            <Web3 />
+          <BrowserRouter>
             <Layout>
-              <Route path='/' component={withNetwork(CLNFetcher)} />
-              <Route exact path='/' component={withTracker(withNetwork(Oven))} />
-              <Route
-                path='/view/issuance'
-                component={withTracker(withNetwork(IssuanceWizard))}
-              />
-              <Route
-                path='/view/dashboard/:networkType/:address'
-                component={withTracker(withNetwork(Dashboard))}
-              />
-              <Route
-                exact
-                path='/view/directory/:communityAddress/:account'
-                component={withTracker(withNetwork(EntityProfile))}
-              />
+              <Web3 />
+              <Switch>
+                <Route exact path='/' component={withTracker(withNetwork(HomePage))} />
+                <Route path='/view/issuance' component={withTracker(withNetwork(IssuanceWizard))} />
+                <Route path='/view/communities' component={withTracker(withNetwork(Oven))} />
+                <Route path='/view/community/:address' component={withTracker(withNetwork(DashboardLayout))} />
+                <Route path='/view/directory/:communityAddress/:account' component={withTracker(withNetwork(EntityProfile))} />
+              </Switch>
+              <Footer />
             </Layout>
-          </React.Fragment>
+          </BrowserRouter>
         </ConnectedRouter>
       </Provider>)
   }

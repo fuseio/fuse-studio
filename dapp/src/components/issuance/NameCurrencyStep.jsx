@@ -1,6 +1,6 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import TextInput from 'components/elements/TextInput'
+import TextInput from 'components/common/TextInput'
 import CurrencyType from './CurrencyType'
 import { isMobileOnly } from 'react-device-detect'
 

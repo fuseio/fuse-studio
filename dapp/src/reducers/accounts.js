@@ -5,9 +5,9 @@ import * as actions from 'actions/accounts'
 
 export const initialAccount = {
   balances: {},
-  transactions: {
-  },
-  tokens: []
+  transactions: {},
+  tokens: [],
+  communities: []
 }
 
 const handlers = {
@@ -58,6 +58,9 @@ const handlers = {
   },
   [FETCH_TOKEN_LIST.SUCCESS]: (state, action) => {
     return { ...state, tokens: action.response.result }
+  },
+  [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
+    return { ...state, communities: action.response.result }
   }
 }
 

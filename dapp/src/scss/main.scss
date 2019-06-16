@@ -22,8 +22,6 @@
 @import 'components/Communities';
 @import 'components/Modal';
 @import 'components/Root';
-@import 'components/TopNav';
-@import 'components/PersonalSidebar';
 @import 'components/Breadcrumbs';
 
 @import 'components/oven/SimpleExchangeModal';
@@ -34,10 +32,19 @@
 @import 'components/issuance/IssuedPopup';
 
 @import 'components/dashboard/Dashboard';
+@import 'components/dashboard/ActivityContent';
+@import 'components/dashboard/Header';
 @import 'components/dashboard/EntitiesManager';
 @import 'components/dashboard/AddUserForm.scss';
 @import 'components/dashboard/GenericModal';
 
+@import 'components/navbar';
+@import 'components/home/homepage';
+@import 'components/home/ContentBox';
+@import 'components/home/Faq';
+@import 'components/ProfileDropDown';
+@import 'components/community';
+@import 'components/footer';
 
 
 .minimum-coin-symbol, .price-change-percent, .price-limit-cln {

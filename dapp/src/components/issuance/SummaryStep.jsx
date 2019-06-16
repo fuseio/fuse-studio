@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome'
 import BigNumber from 'bignumber.js'
 import { PENDING, SUCCESS, FAILURE } from 'actions/constants'
 import ReactGA from 'services/ga'
-import CommunityLogo from 'components/elements/CommunityLogo'
+import CommunityLogo from 'components/common/CommunityLogo'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/Message'
 import contractIcon from 'images/contract.svg'
@@ -90,7 +90,8 @@ export default class SummaryStep extends Component {
           <div className='summary-step__inner'>
             <div className='summary-step__logo'>
               <CommunityLogo isDaiToken={communityType && communityType.value === 'existingToken'} networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo }} />
-              <span>{communityName} coin</span>
+              <span className='communityName'>{communityName}</span>
+              <span>coin</span>
             </div>
             <hr className='summary-step__line' />
             <div className='summary-step__content'>
