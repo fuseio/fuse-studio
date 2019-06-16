@@ -262,8 +262,7 @@ class Users extends Component {
       isAdmin,
       fetchCommunity,
       fetchUsersEntities,
-      toggleSuccess,
-      networkType
+      toggleSuccess
     } = this.props
     const {
       communityAddress,
@@ -277,19 +276,10 @@ class Users extends Component {
           <h2 className='entities__header__title'>Users list</h2>
           {
             isAdmin && (
-              <div className='entities__header__add'>
-                {
-                  networkType === 'fuse'
-                    ? (
-                      <span onClick={this.handleAddUser}>
-                        <a style={{ backgroundImage: `url(${plusIcon})` }} />
-                      </span>
-                    ) : (
-                      <span onClick={this.handleAddUser}>
-                        <FontAwesome name='plus-circle' />
-                      </span>
-                    )
-                }
+              <div className='entities__header__add grid-x align-middle'>
+                <span onClick={this.handleAddUser}>
+                  <a style={{ backgroundImage: `url(${plusIcon})` }} />
+                </span>
                 Add new user
               </div>
             )

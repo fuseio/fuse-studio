@@ -25,13 +25,13 @@
     @include element(address) {
       margin-top: 10px;
       height: 14px;
-      font-size: 16rem;
+      font-size: 16px;
       line-height: 0.88;
       letter-spacing: normal;
       color: #7a7a7a;
 
       .fa{ 
-        font-size: 11rem;
+        font-size: 11px;
         margin-left: 10px;
       }
     }
@@ -44,7 +44,7 @@
     color: #7a7a7a;
 
     > span {
-      font-size: 10rem;
+      font-size: 10px;
     }
   }
 }

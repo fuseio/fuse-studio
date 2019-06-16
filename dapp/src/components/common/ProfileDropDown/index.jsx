@@ -11,6 +11,42 @@ import isEmpty from 'lodash/isEmpty'
 import { withRouter } from 'react-router-dom'
 import ReactGA from 'services/ga'
 
+const InnerCommunities = ({ communities, networkType, metadata, title = 'Community I own' }) => {
+  if (isEmpty(communities)) return null
+  return (
+    <React.Fragment>
+      <div className='profile__communities grid-y'>
+        <span>{title}</span>
+        {communities && communities.map((entity, index) => {
+          return (
+            <div className='community' key={index} onClick={() => this.showDashboard(entity.communityAddress)}>
+              <div className='community__logo'>
+                <CommunityLogo
+                  isDaiToken={entity.token && entity.token.symbol === 'DAI'}
+                  networkType={networkType}
+                  token={entity.token}
+                  isSmall={isMobileOnly}
+                  metadata={(entity.token && entity.token.tokenURI && metadata[entity.token.tokenURI]) || {}}
+                />
+              </div>
+              <div className='community__content'>
+                <h3 className='community__content__title'>{entity.token && entity.token.name}</h3>
+                <p className='community__content__members'>
+                  Total Supply
+                  <span>
+                    {formatWei(entity.token && entity.token.totalSupply, 0)}
+                  </span>
+                </p>
+              </div>
+            </div>
+          )
+        }
+        )}
+      </div>
+    </React.Fragment>
+  )
+}
+
 class ProfileDropDown extends Component {
   componentDidUpdate (prevProps) {
     const { accountAddress } = this.props
@@ -58,74 +94,17 @@ class ProfileDropDown extends Component {
             </CopyToClipboard>
           </span>
         </div>
-        {
-          !isEmpty(communitiesIOwn) && (
-            <React.Fragment>
-              <div className='profile__communities grid-y'>
-                <span>Community I own</span>
-                {communitiesIOwn && communitiesIOwn.map((entity, index) => {
-                  return (
-                    <div className='community' key={index} onClick={() => this.showDashboard(entity.communityAddress)}>
-                      <div className='community__logo'>
-                        <CommunityLogo
-                          isDaiToken={entity.token && entity.token.symbol === 'DAI'}
-                          networkType={networkType}
-                          token={entity.token}
-                          isSmall={isMobileOnly}
-                          metadata={(entity.token && entity.token.tokenURI && metadata[entity.token.tokenURI]) || {}}
-                        />
-                      </div>
-                      <div className='community__content'>
-                        <h3 className='community__content__title'>{entity.token && entity.token.name}</h3>
-                        <p className='community__content__members'>
-                          Total Supply
-                          <span>
-                            {formatWei(entity.token && entity.token.totalSupply, 0)}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                  )
-                }
-                )}
-              </div>
-            </React.Fragment>
-          )
-        }
-        {
-          !isEmpty(communitiesIPartOf) && (
-            <React.Fragment>
-              <div className='profile__communities grid-y'>
-                <span>Community I own</span>
-                {communitiesIPartOf && communitiesIPartOf.map((entity, index) => {
-                  return (
-                    <div className='community' key={index}>
-                      <div className='community__logo'>
-                        <CommunityLogo
-                          isDaiToken={entity.token && entity.token.symbol === 'DAI'}
-                          networkType={networkType}
-                          token={entity.token}
-                          isSmall={isMobileOnly}
-                          metadata={(entity.token && entity.token.tokenURI && metadata[entity.token.tokenURI]) || {}}
-                        />
-                      </div>
-                      <div className='community__content'>
-                        <h3 className='community__content__title'>{entity.token && entity.token.name}</h3>
-                        <p className='community__content__members'>
-                          Total Supply
-                          <span>
-                            {formatWei(entity.token && entity.token.totalSupply, 0)}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                  )
-                }
-                )}
-              </div>
-            </React.Fragment>
-          )
-        }
+        <InnerCommunities
+          communities={communitiesIOwn}
+          networkType={networkType}
+          metadata={metadata}
+        />
+        <InnerCommunities
+          title='Community I am part'
+          communities={communitiesIPartOf}
+          networkType={networkType}
+          metadata={metadata}
+        />
       </div>
     )
   }

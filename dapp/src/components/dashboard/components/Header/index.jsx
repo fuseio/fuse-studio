@@ -4,13 +4,14 @@ import FontAwesome from 'react-fontawesome'
 import { isMobileOnly } from 'react-device-detect'
 import CommunityLogo from 'components/common/CommunityLogo'
 import { formatAddress } from 'utils/format'
+import { isDaiToken } from 'constants/existingTokens'
 
 export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) => {
   return (
     <div className='community_header'>
       <div className='community_header__image'>
         <CommunityLogo
-          isDaiToken={token && token.symbol === 'DAI'}
+          isDaiToken={isDaiToken(networkType, token)}
           networkType={networkType}
           token={token}
           isSmall={isMobileOnly}

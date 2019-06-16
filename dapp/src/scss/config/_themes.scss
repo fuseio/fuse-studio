@@ -156,7 +156,7 @@ $themes: (
     color: $color-step;
     position: relative;
     text-transform: uppercase;
-    font-size: 16rem;
+    font-size: 16px;
     font-weight: 500;
     &:not(:last-child) {
       &:before {
@@ -239,10 +239,11 @@ $themes: (
       }
   
       .fa {
-        font-size: 20rem;
+        font-size: 20px;
         color: $color-author;
       }
       @include element(logo) {
+        cursor: pointer;
         min-width: 100px;
         padding-left: 10px;
         flex-basis: 10%;
@@ -263,7 +264,7 @@ $themes: (
       @include element(current) {
         text-transform: uppercase;
         text-align: center;
-        font-size: 16rem;
+        font-size: 16px;
         font-weight: 500;
         line-height: 1.69;
         color: $secondary;
@@ -301,7 +302,7 @@ $themes: (
       @include block(name) {
         height: 100%;
         
-        @include breakpoint(xxlarge) {
+        @include breakpoint(large up) {
           min-height: 220px;
         }
         @include breakpoint(medium) {
@@ -325,7 +326,7 @@ $themes: (
         }
   
         @include element(title) {
-          font-size: 21rem;
+          font-size: 21px;
           font-weight: bold;
           line-height: 1.29;
           text-transform: capitalize;
@@ -360,7 +361,7 @@ $themes: (
             width: 100%;
             background-color: $color-white;
             padding: 8px 16px;
-            font-size: 13rem;
+            font-size: 13px;
             color: $dark;
             height: 50px;
             border-radius: 46.5px;
@@ -400,7 +401,7 @@ $themes: (
         //   text-transform: capitalize;
         //   line-height: 1.29;
         //   font-weight: bold;
-        @include breakpoint(xxlarge) {
+        @include breakpoint(large up§) {
           min-height: 220px;
         }
   
@@ -479,7 +480,7 @@ $themes: (
             background-color: #fff;
             border-radius: 46.5px;
             color: $dark;
-            font-size: 50rem;
+            font-size: 50px;
             font-weight: bold;
             text-transform: uppercase;
             outline: none;
@@ -505,7 +506,7 @@ $themes: (
             }
 
             @include breakpoint(small only) {
-              font-size: 29rem;
+              font-size: 29px;
             }
           }
         }
@@ -526,7 +527,7 @@ $themes: (
         }
         
         @include element(title) {
-          font-size: 21rem;
+          font-size: 21px;
           font-weight: bold;
           line-height: 1.29;
           text-transform: capitalize;
@@ -542,12 +543,12 @@ $themes: (
   
           @include breakpoint(small only) {
             margin-bottom: 1em;
-            font-size: 20rem;
+            font-size: 20px;
           }
         }
   
         @include element(attribute) {
-          @include breakpoint(xxlarge) {
+          @include breakpoint(large up) {
             min-height: 220px;
           }
           
@@ -598,7 +599,7 @@ $themes: (
             flex-direction: column;
             align-items: center;
             text-transform: capitalize;
-            font-size: 12rem;
+            font-size: 12px;
             align-items: center;
             font-weight: 500;
             color: $color-text-gray;
@@ -637,7 +638,7 @@ $themes: (
 
             @include element(prefix) {
               color: #0a7586 !important;
-              font-size: 12rem;
+              font-size: 12px;
               @include element(placeholder) {
                 color: #8d95a9 !important;
               }
@@ -665,7 +666,7 @@ $themes: (
               }
               @include element(option) {
                 color: #0a7586 !important;
-                font-size: 12rem !important;
+                font-size: 12px !important;
                 text-align: start;
                 @include modifier(is-focused) {
                   border-color: none !important;
@@ -782,14 +783,14 @@ $themes: (
               padding: 8px 16px;
               line-height: 1.92;
               min-height: 2.5em;
-              font-size: 20rem;
+              font-size: 20px;
               font-weight: bold;
               width: 100%;
   
               &::placeholder {
                 color: rgba(0, 0, 0, 0.3);
                 font-weight: bold;
-                font-size: 20rem;
+                font-size: 20px;
               }
               
               &:focus {
@@ -851,7 +852,7 @@ $themes: (
         }
   
         @include element(title) {
-          font-size: 21rem;
+          font-size: 21px;
           font-weight: bold;
           line-height: 1.29;
           text-transform: capitalize;
@@ -879,12 +880,12 @@ $themes: (
           position: relative;
           
           @include breakpoint(medium) {
-            font-size: 16rem;
+            font-size: 16px;
             margin: 16px;
           }
   
           @include breakpoint(small) {
-            font-size: 12rem;
+            font-size: 12px;
             margin: 8px 0;
           }
   
@@ -919,7 +920,7 @@ $themes: (
               font-weight: 500;
   
               @include breakpoint(small) {
-                font-size: 14rem;							
+                font-size: 14px;							
               }
             }
   
@@ -932,7 +933,7 @@ $themes: (
               padding-top: 1em;
 
               @include element(text) {
-                font-size: 12rem;
+                font-size: 12px;
                 margin-left: 5px;
                 color: rgba(13, 45, 69, 0.5);
                 > span {
@@ -996,7 +997,7 @@ $themes: (
                   color: #fff;
                   text-shadow: 1px 1px #000;
                   font-family: tahoma;
-                  font-size: 11rem;
+                  font-size: 11px;
                 }
                 > input:checked ~ .toggle-wrapper {
                   background: linear-gradient(97deg, #98faac, #fae83e);
@@ -1016,12 +1017,12 @@ $themes: (
           @include block(tooltip) {
             align-self: flex-start;
             color: $color-author;
-            font-size: 19rem;
+            font-size: 19px;
   
             @include element(content) {
               @include xy-grid(vertical, false);
               width: 240px !important;
-              font-size: 9rem !important;
+              font-size: 9px !important;
               height: auto;
               color: $color-primary-dark !important;
               background: $color-white !important;
@@ -1080,7 +1081,7 @@ $themes: (
         }
 
         @include element(text) {
-          font-size: 11rem;
+          font-size: 11px;
           line-height: 1.45;
           color: rgba(5, 40, 62, 0.6);
           text-align: center;
@@ -1117,7 +1118,7 @@ $themes: (
           }
   
           > span {
-            font-size: 14rem;
+            font-size: 14px;
             color: $color-primary-dark;
             font-weight: 500;
             text-align: center;
@@ -1133,7 +1134,7 @@ $themes: (
   
           @include element(title) {
             height: 27px;
-            font-size: 14rem;
+            font-size: 14px;
             font-weight: 500;
             color: $color-primary-dark;
             align-self: flex-start;
@@ -1169,7 +1170,7 @@ $themes: (
 
             @include element(small) {
               display: inline-block;
-              font-size: 10.5rem;
+              font-size: 10.5px;
               padding-left: 13px;
             }
           }
@@ -1191,7 +1192,7 @@ $themes: (
               color: rgba(13, 45, 69, 0.6);
 
               @include breakpoint(small down) {
-                font-size: 14rem;
+                font-size: 14px;
               }
             }
   
@@ -1275,7 +1276,7 @@ $themes: (
         @include element(item) {
           text-align: center;
           opacity: 0.3;
-          font-size: 14rem;
+          font-size: 14px;
           padding: 10px 0;
           @include modifier(active) {
             opacity: 1;
@@ -1285,7 +1286,7 @@ $themes: (
             font-weight: bold;
 
             .fa {
-              font-size: 12rem;
+              font-size: 12px;
               margin-right: 5px;
             }
 
@@ -1346,7 +1347,7 @@ $themes: (
       }
       
       @include element(back) {
-        font-size: 16rem;
+        font-size: 16px;
         background: none;
         border: 1px solid transparent;
         color: $dark;

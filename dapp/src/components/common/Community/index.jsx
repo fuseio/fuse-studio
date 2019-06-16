@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import identity from 'lodash/identity'
 import { formatWei } from 'utils/format'
 import CommunityLogo from 'components/common/CommunityLogo'
+import { isDaiToken } from 'constants/existingTokens'
 
 export default class Community extends Component {
   handleClick = () => {
@@ -15,34 +16,32 @@ export default class Community extends Component {
 
   render () {
     const {
-      coinWrapperClassName,
       token,
       networkType
     } = this.props
     const {
-      symbol,
       name,
       totalSupply
     } = token
 
     return (
-      <div className={coinWrapperClassName} onClick={this.handleClick}>
-        <div className='coin-header'>
+      <div className='community' onClick={this.handleClick}>
+        <div className='community__logo'>
           <CommunityLogo
-            isDaiToken={symbol && symbol === 'DAI'}
+            isDaiToken={isDaiToken(networkType, token)}
             token={token}
             networkType={networkType}
             metadata={this.props.metadata}
           />
-          <div className='coin-details'>
-            <h3 className='coin-name'>{name}</h3>
-            <p className='coin-total'>
-              Total Supply
-              <span className={classNames('total-text', 'positive-number')}>
-                {formatWei(totalSupply, 0)}
-              </span>
-            </p>
-          </div>
+        </div>
+        <div className='community__content'>
+          <h3 className='community__content__title'>{name}</h3>
+          <p className='community__content__members'>
+            Total Supply
+            <span className={classNames('total-text', 'positive-number')}>
+              {formatWei(totalSupply, 0)}
+            </span>
+          </p>
         </div>
       </div>
     )
@@ -50,7 +49,6 @@ export default class Community extends Component {
 }
 
 Community.defaultProps = {
-  coinWrapperClassName: 'coin-wrapper',
   token: {},
   metadata: {},
   showDashboard: identity

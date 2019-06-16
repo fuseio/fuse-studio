@@ -8,7 +8,7 @@ import CopyToClipboard from 'components/common/CopyToClipboard'
 import { formatWei } from 'utils/format'
 import { getBlockExplorerUrl } from 'utils/network'
 import { QR_MODAL } from 'constants/uiConstants'
-import { checkImportedToken } from 'constants/existingTokens'
+import { isDaiToken } from 'constants/existingTokens'
 import { loadModal } from 'actions/ui'
 
 const Step = ({ done, text, handleClick }) => (
@@ -40,17 +40,11 @@ class TokenProgress extends Component {
     const doneSteps = Object.values(steps).filter(step => step)
     const progressOverall = doneSteps.length * 20
 
-    let importedAddress
-    if (token && token.tokenType === 'imported') {
-      const { value } = checkImportedToken(token, networkType)
-      importedAddress = value
-    }
-
     return (
       <div className='dashboard-sidebar'>
         <div className='logo'>
           <CommunityLogo
-            isDaiToken={token && token.address === importedAddress}
+            isDaiToken={isDaiToken(networkType, token)}
             networkType={networkType}
             token={token}
             metadata={metadata[token.tokenURI] || {}}

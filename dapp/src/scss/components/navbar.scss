@@ -10,39 +10,29 @@
   z-index: 99;
 
   @include modifier(scroll) {
-    position: sticky;
+    position: fixed;
     top: 0;
-    box-shadow: 0 1px 3px 0 rgba(37, 67, 90, 0.6), inset 5px -5px 11px 0 rgba(0, 0, 0, 0.25);
-    background-blend-mode: multiply;
-    background-image: linear-gradient(to bottom, #25435a, #25435a);
+    // box-shadow: 0 1px 3px 0 rgba(37, 67, 90, 0.6), inset 5px -5px 11px 0 rgba(0, 0, 0, 0.25);
+    // background-blend-mode: multiply;
+    background-image: url(../../assets/images/header.jpg);
     z-index: 11;
   }
 
   @include element(logo) {
-    @include breakpoint(small) {
+    cursor: pointer;
+    @include breakpoint(small only) {
       width: 71px;
       height: 20px;
     }
   }
 
   @include element(links) {
-    @include breakpoint(xxlarge) {
-      flex-basis: 15%;
-    }
-
-    @include breakpoint(medium) {
-      flex-basis: 20%;
-    }
-
-    @include breakpoint(small down) {
-      flex-basis: 40%;
-    }
-
     @include xy-grid();
     @include flex-align(justify, middle);
 
     @include element(help) {
       position: relative;
+      margin: 0 .8em;
     }
 
     @include block(drop) {
@@ -78,7 +68,7 @@
         padding: 0;
         @include xy-grid(vertical);
         @include flex-align(spaced);
-        font-size: 12rem;
+        font-size: 12px;
         cursor: initial;
 
         @include element(item) {
@@ -87,6 +77,14 @@
 
           &:hover {
             background-color: darken($color: white, $amount: 10%)
+          }
+
+          &:first-child {
+            border-radius: 5px 5px 0 0;
+          }
+
+          &:last-child {
+            border-radius: 0 0 5px 5px;
           }
 
           &:not(:last-child) {
@@ -98,11 +96,13 @@
 
     @include element(notification) {
       position: relative;
+      margin: 0 .8em;
     }
 
     @include element(wallet) {
       cursor: pointer;
       position: relative;
+      margin: 0 .8em;
       
       @include breakpoint(medium) {
         @include xy-grid();
@@ -112,7 +112,7 @@
         height: 33px;
         border-radius: 16.3px;
         background-color: #ffffff;
-        font-size: 12.2rem;
+        font-size: 12.2px;
       }
 
       @include breakpoint(small down) {
@@ -121,7 +121,7 @@
         padding: 10px;
         border-radius: 50%;
         background-color: #ffffff;
-        font-size: 12.2rem;
+        font-size: 12.2px;
       }
 
       @include element(text) {

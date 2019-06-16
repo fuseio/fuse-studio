@@ -29,7 +29,7 @@ export default class HomePage extends Component {
         <NavBar />
         <div className='home_page__wrapper grid-container'>
           <div className='home_page__banner grid-x  align-bottom'>
-            <div className='home_page__image home_page__image--first cell medium-3 show-for-large-only'>
+            <div className='home_page__image home_page__image--first cell medium-3 hide-for-small-only'>
               <div><img src={personImage} /></div>
             </div>
             <div className='home_page__content cell medium-8' style={{ height: '50%' }}>
@@ -49,13 +49,18 @@ export default class HomePage extends Component {
         </div>
         <div className='home_page__faq'>
           <div className='grid-container'>
-            <div className='grid-x align-justify'>
-              <div className='cell medium-11'>
-                <ContentBox withDecoration={!isMobile} action={this.showCommunities} title='Featured communities' actionTitle='Check out more communities >'>
-                  <FeaturedCommunities history={this.props.history} />
+            <div className='grid-x align-justify grid-margin-x'>
+              <div className='cell medium-12'>
+                <ContentBox
+                  withDecoration={!isMobile}
+                  action={this.showCommunities}
+                  title='Featured communities'
+                  actionTitle='Check out more communities >'
+                >
+                  <FeaturedCommunities />
                 </ContentBox>
               </div>
-              <div className='cell medium-11'>
+              <div className='cell medium-12'>
                 <ContentBox title={`FAQ’S`} actionTitle='Learn more >'>
                   <Faqs />
                 </ContentBox>

@@ -38,7 +38,7 @@
     }
 
     @include block(address) {
-      font-size: 14rem;
+      font-size: 14px;
       > span {
         margin-right: 10px;
       }
@@ -50,18 +50,18 @@
       }
 
       @include breakpoint(small down) {
-        font-size: 14rem;
+        font-size: 14px;
         display: inline;
       }
   
-      font-size: 24rem;
+      font-size: 24px;
       font-weight: 500;
       @include element(status) {
-        font-size: 13rem;
+        font-size: 13px;
         align-self: flex-end;
 
         @include breakpoint(small down) {
-          font-size: 11rem;
+          font-size: 11px;
         }
       }
 

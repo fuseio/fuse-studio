@@ -31,13 +31,15 @@
       height: 60px;
     }
 
+    &:last-child {
+      padding-left: 20px;
+    }
+
     
     &:not(:last-child) {
       
       
       @include breakpoint(medium up) {
-        flex-basis: 45%;
-        margin-right: 15px;
         border-right: solid 1px rgba(151, 151, 151, 0.34);        
       }
 
@@ -54,7 +56,7 @@
     }
 
     @include element(title) {
-      font-size: 12rem;
+      font-size: 12px;
       color: $color-primary-dark;
     }
 
@@ -63,12 +65,12 @@
       @include flex-align(null, middle);
       
       @include element(number) {
-        font-size: 14rem;
+        font-size: 14px;
         margin-right: 5px;
       }
       
       @include element(small) {
-        font-size: 10rem;
+        font-size: 10px;
       }
 
       @include element(icon) {
@@ -104,13 +106,17 @@
     padding: 20px;
 
     .fa {
-      font-size: 18rem;
+      font-size: 18px;
       color: $color-white;
     }
   }
 
   @include block(sidebar) {
-    flex-basis: 15%;
+    flex-basis: 20%;
+    @include breakpoint(xxlarge up) {
+      flex-basis: 15%;
+    }
+
     box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
     height: auto;
     @include breakpoint(medium down) {
@@ -120,7 +126,7 @@
     
     @include block(item) {
       padding: 20px;
-      font-size: 14rem;
+      font-size: 14px;
       @include xy-grid();
       @include flex-align(null, middle);
       min-height: 40px;
@@ -159,8 +165,13 @@
   @include block(content) {
     position: relative;
 
-    @include breakpoint(large up) {
-      width: 60%;
+    @include breakpoint(large) {
+      width: 80%;
+      margin: 2em auto auto;
+    }
+
+    @include breakpoint(xxlarge up) {
+      width: 65%;
       margin: 2em auto auto;
     }
 
@@ -181,9 +192,8 @@
         position: absolute;
         width: 100%;
         height: 320px;
+        background-image: url(../../assets/images/header-full.png);
         box-shadow: 0 1px 3px 0 rgba(37, 67, 90, 0.6), inset 5px -5px 11px 0 rgba(0, 0, 0, 0.25);
-        background-blend-mode: multiply;
-        background-image: linear-gradient(to bottom, #25435a, #25435a);
       }
 
       @include breakpoint(large up) {
@@ -200,7 +210,7 @@
     }
 
     @include element(bridge) {
-      margin-top: 3em;
+      margin-top: 2em;
 
       @include breakpoint(large) {
         margin-bottom: 2em;        
@@ -212,13 +222,13 @@
 
       @include element(title) {
         color: #7a7a7a;
-        font-size: 20rem;
+        font-size: 20px;
         margin-bottom: 10px;
       }
 
       @include element(wrapper) {
         border-radius: 10px;
-        padding: 25px 50px;
+        padding: 0 50px 15px;
         position: relative;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
         background: $color-white;
@@ -242,7 +252,7 @@
 
         @include block(fuse-logo) {
           background-image: linear-gradient(to bottom, #ffea14, #ffea14 31%, #85ffbc);
-          padding: 2rem;
+          padding: 2px;
           img {
             width: 28px;
             height: 100%;
@@ -265,7 +275,7 @@
 
         @include element(title) {
           text-transform: capitalize;
-          font-size: 15rem;
+          font-size: 15px;
           color: $color-primary-dark;
           text-align: center;
           text-transform: capitalize;
@@ -275,7 +285,7 @@
 
         @include element(text) {
           color: $color-author;
-          font-size: 11rem;
+          font-size: 11px;
           text-align: center;
           margin-bottom: 5px;
           span {
@@ -285,7 +295,7 @@
 
         @include element(more) {
           color: $color-primary-dark;
-          font-size: 10rem;
+          font-size: 10px;
           background-color: #f3f3f3;
           font-weight: 500;
           border: none;
@@ -318,7 +328,7 @@
           text-align: center;
           line-height: 95px;
           color: $color-author;
-          font-size: 12rem;
+          font-size: 12px;
           font-weight: normal;
           line-height: 2.17;
           
@@ -343,7 +353,7 @@
             input {
               border: none;
               height: 14px;
-              font-size: 25rem;
+              font-size: 25px;
               color: $color-arrow;
               padding: 10px;
               font-weight: bold;
@@ -351,7 +361,7 @@
             }
 
             @include element(currency) {
-              font-size: 25rem;
+              font-size: 25px;
               color: $color-arrow;
               font-weight: bold;
             }
@@ -362,7 +372,7 @@
               padding: 9px 20px;
               background-color: $color-ropsten;
               border-radius: 16px;
-              font-size: 11rem;
+              font-size: 11px;
               text-transform: uppercase;
               display: inline-block;
               margin: 0 auto;
@@ -379,7 +389,7 @@
 
           @include element(title) {
             color: $color-primary-dark;
-            font-size: 12rem;
+            font-size: 12px;
             font-weight: 500;
             line-height: 2.17;
           }
@@ -421,7 +431,7 @@
         top: 30px;
         z-index: 30;
         .ctrl-icon {
-          font-size: 22rem;
+          font-size: 22px;
         }
       }
       @media (max-width: $breakpoint-mobile) {
@@ -478,13 +488,13 @@
       margin-left: 0;
     }
     &-text {
-      font-size: 12rem;
+      font-size: 12px;
       font-weight: bold;
       text-align: center;
       color: $color-author;
       text-transform: capitalize;
       @media (max-width: $breakpoint-mobile) {
-        font-size: 10rem;
+        font-size: 10px;
       }
     }
     &-header {
@@ -507,16 +517,16 @@
       }
     }
     &-big-count {
-      font-size: 35rem;
+      font-size: 35px;
       color: $color-primary-dark;
       font-weight: bold;
       margin-top: 10px;
       span {
-        font-size: 13rem;
+        font-size: 13px;
         margin-left: 10px;
       }
       @media (max-width: $breakpoint-mobile) {
-        font-size: 24rem;
+        font-size: 24px;
       }
     }
     &-content {
@@ -542,7 +552,7 @@
       }
     }
     &-small-text {
-      font-size: 11rem;
+      font-size: 11px;
       font-weight: 500;
       color: #8c94a8;
       text-transform: uppercase;
@@ -561,7 +571,7 @@
       .text-asset {
         color: $color-author;
         text-transform: capitalize;
-        font-size: 12rem;
+        font-size: 12px;
         font-weight: bold;
         font-family: $font-family;
         font-style: normal;
@@ -579,11 +589,11 @@
         }
       }
       @media (max-width: $breakpoint-mobile) {
-        font-size: 10rem;
+        font-size: 10px;
       }
     }
     &-period {
-      font-size: 11rem;
+      font-size: 11px;
       font-weight: bold;
       color: $color-step;
       position: relative;
@@ -594,7 +604,7 @@
       .fa-clone {
         margin-left: 10px;
         font-weight: 400;
-        font-size: 12rem;
+        font-size: 12px;
         color: $color-arrow;
         &:hover {
           font-weight: 900;
@@ -629,7 +639,7 @@
       }
     }
     &-number {
-      font-size: 25rem;
+      font-size: 25px;
       color: $color-filter-genre;
       text-transform: uppercase;
     }
@@ -692,7 +702,7 @@
     }
     &-title {
       text-transform: capitalize;
-      font-size: 15rem;
+      font-size: 15px;
       color: $color-primary-dark;
       text-align: center;
       text-transform: capitalize;
@@ -710,7 +720,7 @@
       box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.15);
       &.fuse-logo {
         background-image: linear-gradient(to bottom, #ffea14, #ffea14 31%, #85ffbc);
-        padding: 2rem;
+        padding: 2px;
         img {
           width: 28px;
           height: 100%;
@@ -721,12 +731,12 @@
       }
     }
     .fa-long-arrow-alt-right {
-      font-size: 24rem;
+      font-size: 24px;
       color: $color-arrow;
     }
     &-text {
       color: $color-author;
-      font-size: 11rem;
+      font-size: 11px;
       text-align: center;
       margin-bottom: 5px;
       span {
@@ -734,7 +744,7 @@
       }
     }
     &-balance {
-      font-size: 11rem;
+      font-size: 11px;
       color: $color-ropsten;
       font-weight: 600;
       span {
@@ -746,7 +756,7 @@
     }
     &-btn {
       color: $color-primary-dark;
-      font-size: 10rem;
+      font-size: 10px;
       background-color: #f3f3f3;
       font-weight: 500;
       border: none;
@@ -780,14 +790,14 @@
       input {
         border: none;
         height: 14px;
-        font-size: 25rem;
+        font-size: 25px;
         color: $color-arrow;
         padding: 10px;
         font-weight: bold;
         width: 100%;
       }
       &-currency {
-        font-size: 25rem;
+        font-size: 25px;
         color: $color-arrow;
         font-weight: bold;
       }
@@ -798,7 +808,7 @@
       padding: 9px 20px;
       background-color: $color-ropsten;
       border-radius: 16px;
-      font-size: 11rem;
+      font-size: 11px;
       text-transform: uppercase;
       display: inline-block;
       margin: 0 auto;
@@ -817,13 +827,13 @@
 
     &-title {
       color: $color-primary-dark;
-      font-size: 12rem;
+      font-size: 12px;
       font-weight: 500;
       line-height: 2.17;
     }
     &-text {
       color: $color-author;
-      font-size: 12rem;
+      font-size: 12px;
       font-weight: normal;
       line-height: 2.17;
       margin-bottom: 10px;
@@ -852,7 +862,7 @@
       width: 206px;
       height: 21px;
       font-family: $font-family;
-      font-size: 18rem;
+      font-size: 18px;
       font-weight: 500;
       font-style: normal;
       font-stretch: normal;
@@ -867,7 +877,7 @@
     }
 
     @include block(symbol) {
-      font-size: 12rem;
+      font-size: 12px;
       font-weight: normal;
       margin-left: 3px;
       color: rgba(37, 67, 90, 0.8);
@@ -897,7 +907,7 @@
       position: relative;
       @include element(text) {
         font-family: $font-family;
-        font-size: 14rem;
+        font-size: 14px;
         min-width: 1em;
         font-weight: bold;
         color: $color-primary-dark;
@@ -926,7 +936,7 @@
       position: relative;
       @include element(text) {
         font-family: $font-family;
-        font-size: 14rem;
+        font-size: 14px;
         font-weight: bold;
         min-width: 65px;
         color: $color-primary-dark;
@@ -940,7 +950,7 @@
         padding: 8px 16px;
         color: $color-step-title;
         min-height: 1.5em;
-        font-size: 20rem;
+        font-size: 20px;
         width: 85%;
         font-weight: bold;
         &::placeholder {
@@ -963,7 +973,7 @@
         display: inline-block;
         border-radius: 30px;
         background-color: $color-ropsten;
-        font-size: 12rem;
+        font-size: 12px;
         color: $color-white;
         // padding: 10px 30px;
         width: 84px;
@@ -1015,7 +1025,7 @@
       border: solid 1px #dadada;
       flex-basis: 50%;
       color: rgba(37, 67, 90, 0.6);
-      font-size: 12rem;
+      font-size: 12px;
       height: 100%;
       outline: none;
       font-weight: bold;

@@ -129,11 +129,11 @@ class Businesses extends Component {
   }
 
   renderItems = () => {
-    const { transactionStatus, merchants } = this.props
+    const { transactionStatus, businesses } = this.props
 
-    const filteredItems = this.filterBySearch(this.state.search, merchants)
+    const filteredItems = this.filterBySearch(this.state.search, businesses)
 
-    if (merchants && merchants.length) {
+    if (businesses && businesses.length) {
       return (
         <Fragment>
           <div className='entities__search entities__search--business'>
@@ -195,19 +195,10 @@ class Businesses extends Component {
           <h2 className='entities__header__title'>Businesses list</h2>
           {
             isAdmin && (
-              <div className='entities__header__add'>
-                {
-                  networkType === 'fuse'
-                    ? (
-                      <span onClick={this.handleAddBusiness}>
-                        <a style={{ backgroundImage: `url(${plusIcon})` }} />
-                      </span>
-                    ) : (
-                      <span onClick={this.handleAddBusiness}>
-                        <FontAwesome name='plus-circle' />
-                      </span>
-                    )
-                }
+              <div className='entities__header__add grid-x align-middle'>
+                <span onClick={this.handleAddBusiness}>
+                  <a style={{ backgroundImage: `url(${plusIcon})` }} />
+                </span>
                 Add new merchant
               </div>
             )
@@ -243,7 +234,7 @@ class Businesses extends Component {
 
 const mapStateToProps = (state) => ({
   network: state.network,
-  merchants: getBusinessesEntities(state),
+  businesses: getBusinessesEntities(state),
   clnBalance: getClnBalance(state),
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,

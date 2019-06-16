@@ -43,20 +43,20 @@
 
 
   @include element(value) {
-    font-size: 25rem;
+    font-size: 25px;
     color: $color-filter-genre;
     text-transform: uppercase;
   }
 
   @include element(small) {
-    font-size: 11rem;
+    font-size: 11px;
     font-weight: 500;
     color: #8c94a8;
     text-transform: uppercase;
     margin-bottom: 7px;
 
     @include breakpoint(small down) {
-      font-size: 9rem;      
+      font-size: 9px;      
     }
 
     span {
@@ -70,7 +70,7 @@
     .text-asset {
       color: $color-author;
       text-transform: capitalize;
-      font-size: 12rem;
+      font-size: 12px;
       font-weight: bold;
       font-family: $font-family;
       font-style: normal;
@@ -90,7 +90,7 @@
   }
 
   @include block(drop_down) {
-    font-size: 11rem;
+    font-size: 11px;
     font-weight: bold;
     color: $color-step;
     position: relative;

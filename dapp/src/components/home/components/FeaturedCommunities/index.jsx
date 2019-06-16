@@ -7,6 +7,18 @@ import { getForeignNetwork } from 'selectors/network'
 import ReactGA from 'services/ga'
 import CommunityLogo from 'components/common/CommunityLogo'
 import { formatWei } from 'utils/format'
+import { withRouter } from 'react-router-dom'
+import GoogleImage from 'images/google-card.png'
+import McdonaldsImage from 'images/mcdonalds.png'
+import StarbucksImage from 'images/starbucks-card.png'
+import WalmartImage from 'images/walmart.png'
+
+const staticImages = [
+  GoogleImage,
+  McdonaldsImage,
+  StarbucksImage,
+  WalmartImage 
+]
 
 class FeaturedCommunities extends Component {
   componentDidMount () {
@@ -40,13 +52,18 @@ class FeaturedCommunities extends Component {
   }
 
   render () {
-    const { addresses, tokens, metadata, networkType } = this.props
+    // const { addresses, tokens, metadata, networkType } = this.props
     return (
-      <div className='grid-x align-justify'>
+      <div className='grid-x align-justify' style={{ marginBottom: '20px' }}>
         {
+          staticImages.map((img) =>
+            <div className='medium-12'><img src={img} /></div>
+          )
+        }
+        {/* {
           addresses.slice(0, 4).map(address => {
             return (
-              <div className='community medium-11 cell' key={address} onClick={() => this.showDashboard(tokens[address])}>
+              <div className='community medium-11 cell' style={{ minHeight: '120px' }} key={address} onClick={() => this.showDashboard(tokens[address])}>
                 <div className='community__logo'>
                   <CommunityLogo
                     isDaiToken={tokens[address] && tokens[address].symbol && tokens[address].symbol === 'DAI'}
@@ -67,7 +84,7 @@ class FeaturedCommunities extends Component {
               </div>
             )
           })
-        }
+        } */}
       </div>
     )
   }
@@ -90,7 +107,8 @@ const mapDispatchToProps = {
 
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FeaturedCommunities)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(FeaturedCommunities))

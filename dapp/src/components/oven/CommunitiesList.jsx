@@ -44,8 +44,8 @@ class CommunitiesList extends Component {
     return (
       <div className='communities' ref={this.myRef}>
         <NavBar />
-        <div className='communities__wrapper grid-container'>
-          <div className='communities__banner grid-x'>
+        <div className='communities__wrapper'>
+          <div className='grid-container communities__banner grid-x'>
             <div className='communities__banner__content cell medium-8' style={{ height: '50%' }}>
               <h2 className='communities__banner__title'>Welcome to<br />Fuse communities</h2>
               <p className='communities__banner__text communities__banner__text--space'>
@@ -83,7 +83,7 @@ class CommunitiesList extends Component {
                 getScrollParent={this.getScrollParent}
               >
                 {addresses.map(address =>
-                  <div className='medium-12 large-8 small-24 list-item' key={address}>
+                  <div className='medium-12 large-8 small-24 cell' key={address}>
                     <Community
                       networkType={networkType}
                       token={tokens[address]}

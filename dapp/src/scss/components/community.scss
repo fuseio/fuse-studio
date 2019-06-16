@@ -1,9 +1,10 @@
 @include block(community) {
   border-radius: 8px;
+  padding-left: 20px;
+  padding-right: 20px;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
   background-color: #ffffff;
   @include xy-grid();
-  margin: 10px 0;
 
   &:hover {
     cursor: pointer;
@@ -12,7 +13,7 @@
 
   @include breakpoint(large) {
     min-width: 242px;
-    min-height: 95px;
+    min-height: 100px;
   }
 
   @include element(logo) {
@@ -26,12 +27,12 @@
     margin-left: 10px;
   
     @include element(title) {
-      font-size: 14rem;
+      font-size: 14px;
       color: $color-primary-dark;
     }
 
     @include element(members) {
-      font-size: 10rem; 
+      font-size: 10px; 
 
       > span {
         margin-left: 5px;

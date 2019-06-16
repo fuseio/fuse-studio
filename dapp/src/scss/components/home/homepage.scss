@@ -39,7 +39,8 @@
   }
 
   @include element(faq) {
-    padding: 3% 0;
+    padding-top: 3%;
+    padding-bottom: 3%;
     display: flex;
     align-items: center;
     background-color: #f5f5f5;
@@ -92,17 +93,17 @@
   @include element(title) {
     font-weight: bold;
     @include breakpoint(large) {
-      font-size: 35rem;
+      font-size: 35px;
     }
 
     @include breakpoint(medium down) {
-      font-size: 24rem;
+      font-size: 24px;
     }
   }
 
   @include element(text) {
     @include breakpoint(medium up) {
-      font-size: 17rem;
+      font-size: 17px;
     }
 
     padding: 0 0 20px;
@@ -128,7 +129,7 @@
       width: 100%;
       border-radius: 22.5px;
       border: none;
-      font-size: 16rem;
+      font-size: 16px;
 
       &:hover {
         background-color: #f6e943;

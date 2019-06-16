@@ -1,9 +1,10 @@
 @include block(faq) {
   @include xy-grid(vertical);
   @include flex-align(null, null);
-  font-size: 16rem;
+  font-size: 16px;
   line-height: 25px;
-  
+  padding: 5px 0px;
+
   @include element(title) {
     font-weight: 500;
     color: $color-primary-dark;
@@ -15,6 +16,6 @@
 
   @include element(read) {
     color: #808080;
-    font-size: 12rem;
+    font-size: 12px;
   }
 }
