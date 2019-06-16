@@ -108,6 +108,11 @@ module.exports = {
     }
   },
   agenda: {
-    start: true
+    startPeriodicTasks: true,
+    tasks: {
+      deploy: {
+        concurrency: 5
+      }
+    }
   }
 }

@@ -1,11 +1,10 @@
 const { handleReceipt } = require('@events/handlers')
-const { createContract, createMethod, from, send } = require('@services/web3/home')
 const CommunityTransferManagerABI = require('@fuse/entities-contracts/build/abi/CommunityTransferManagerWithEvents')
 
 const CommunityTransferManagerBytecode = require('@fuse/entities-contracts/build/bytecode/CommunityTransferManager')
 const { combineRoles, roles: { ADMIN_ROLE, USER_ROLE, APPROVED_ROLE } } = require('@fuse/roles')
 
-const deployCommunity = async (communityProgress) => {
+const deployCommunity = async ({ home: { createContract, createMethod, send, from } }, communityProgress) => {
   const { name, isClosed, adminAddress } = communityProgress.steps.community.args
   const method = createMethod(createContract(CommunityTransferManagerABI), 'deploy', { data: CommunityTransferManagerBytecode, arguments: [name] })
 

@@ -5,10 +5,9 @@ const BridgeMapperABI = require('@constants/abi/BridgeMapper')
 const IRestrictedTokenABI = require('@constants/abi/IRestrictedToken')
 const foreignAddressess = config.get('network.foreign.addresses')
 const homeAddresses = config.get('network.home.addresses')
-const { fetchGasPrice, isZeroAddress } = require('@utils/network')
+const { fetchGasPrice } = require('@utils/network')
+const { generateSignature } = require('@utils/web3')
 const { handleReceipt } = require('@events/handlers')
-const home = require('@services/web3/home')
-const foreign = require('@services/web3/foreign')
 const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
 const { setLengthLeft } = require('ethereumjs-util')
@@ -79,7 +78,7 @@ async function addBridgeMapping (
   const mapper = createContract(BridgeMapperABI, homeAddresses.BridgeMapper)
   const key = setLengthLeft(communityAddress, 32)
 
-  const method = createMethod(mapper, 'addBridgeMapping',
+  const addBridgeMappingArguments = [
     key,
     foreignToken,
     homeToken,
@@ -87,6 +86,17 @@ async function addBridgeMapping (
     homeBridge,
     foreignBlockNumber,
     homeBlockNumber
+  ]
+
+  const signature = await generateSignature(
+    mapper.methods.getAddBridgeMappingHash,
+    addBridgeMappingArguments,
+    config.get('secrets.fuse.bridge.privateKey')
+  )
+
+  const method = createMethod(mapper, 'addBridgeMapping',
+    ...addBridgeMappingArguments,
+    signature
   )
 
   const receipt = await send(method, {
@@ -97,7 +107,7 @@ async function addBridgeMapping (
   return receipt
 }
 
-async function deployBridge (communityProgress) {
+async function deployBridge ({ home, foreign }, communityProgress) {
   const { communityAddress } = communityProgress.steps.community.results
   const { foreignTokenAddress } = communityProgress.steps.bridge.args
   const { name } = communityProgress.steps.community.args
@@ -145,13 +155,6 @@ async function deployBridge (communityProgress) {
   }
 }
 
-async function bridgeMappingExists (tokenAddress) {
-  const mapper = new home.web3.eth.Contract(BridgeMapperABI, homeAddresses.BridgeMapper)
-  const homeAddress = await mapper.methods.homeTokenByForeignToken(tokenAddress).call()
-  return homeAddress && !isZeroAddress(homeAddress)
-}
-
 module.exports = {
-  deployBridge,
-  bridgeMappingExists
+  deployBridge
 }

@@ -41,9 +41,19 @@
     }
   },
   "secrets": {
+    "accounts": {
+      "seed": "COMMUNITY_SECRETS_ACCOUNTS_SEED"
+    },
     "fuse": {
       "bridge": {
         "privateKey": "COMMUNITY_SECRETS_FUSE_BRIDGE_PRIVATE_KEY"
+      }
+    }
+  },
+  "agenda": {
+    "tasks": {
+      "deploy": {
+        "concurrency": "COMMUNITY_AGENDA_TASKS_DEPLOY_CONCURRENCY"
       }
     }
   }

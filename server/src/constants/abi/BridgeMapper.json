@@ -202,6 +202,25 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "_hashTx",
+        "type": "bytes32"
+      }
+    ],
+    "name": "hashedTxs",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "isInitialized",
     "outputs": [
@@ -212,6 +231,49 @@
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_key",
+        "type": "bytes32"
+      },
+      {
+        "name": "_foreignToken",
+        "type": "address"
+      },
+      {
+        "name": "_homeToken",
+        "type": "address"
+      },
+      {
+        "name": "_foreignBridge",
+        "type": "address"
+      },
+      {
+        "name": "_homeBridge",
+        "type": "address"
+      },
+      {
+        "name": "_foreignStartBlock",
+        "type": "uint256"
+      },
+      {
+        "name": "_homeStartBlock",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAddBridgeMappingHash",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -244,6 +306,10 @@
       {
         "name": "_homeStartBlock",
         "type": "uint256"
+      },
+      {
+        "name": "_signature",
+        "type": "bytes"
       }
     ],
     "name": "addBridgeMapping",

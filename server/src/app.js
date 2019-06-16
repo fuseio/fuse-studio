@@ -58,9 +58,7 @@ async function init () {
   app.use(require('./routes'))
 
   const agenda = require('./services/agenda')
-  if (config.get('agenda.start')) {
-    agenda.start()
-  }
+  agenda.start()
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {
