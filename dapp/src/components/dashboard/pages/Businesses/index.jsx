@@ -180,8 +180,7 @@ class Businesses extends Component {
       isAdmin,
       fetchCommunity,
       fetchBusinessesEntities,
-      toggleSuccess,
-      network: { networkType }
+      toggleSuccess
     } = this.props
     const {
       communityAddress,

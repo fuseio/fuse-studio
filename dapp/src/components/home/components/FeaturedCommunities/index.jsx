@@ -5,8 +5,8 @@ import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
 import ReactGA from 'services/ga'
-import CommunityLogo from 'components/common/CommunityLogo'
-import { formatWei } from 'utils/format'
+// import CommunityLogo from 'components/common/CommunityLogo'
+// import { formatWei } from 'utils/format'
 import { withRouter } from 'react-router-dom'
 import GoogleImage from 'images/google-card.png'
 import McdonaldsImage from 'images/mcdonalds.png'
@@ -17,7 +17,7 @@ const staticImages = [
   GoogleImage,
   McdonaldsImage,
   StarbucksImage,
-  WalmartImage 
+  WalmartImage
 ]
 
 class FeaturedCommunities extends Component {
