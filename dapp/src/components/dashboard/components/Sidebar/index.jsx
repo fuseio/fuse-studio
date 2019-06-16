@@ -65,7 +65,7 @@ export default ({ communityName, match, isGradientLogo }) => {
             onClick={() => setPath(path)}
             className={classNames('item item--hover', { 'item--home': currentPath === path })}
           >
-            <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon } /></span>
+            <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
             <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
           </Link>
         )
