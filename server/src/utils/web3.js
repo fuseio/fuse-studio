@@ -32,7 +32,13 @@ const createMethod = (contract, methodName, ...args) => {
 
 const getMethodName = (method) => method.methodName || 'unknown'
 
-const getGasPrice = (bridgeType) => bridgeType === 'home' ? '1000000000' : fetchGasPrice('fast')
+const getGasPrice = async (bridgeType, web3) => {
+  if (bridgeType === 'home') {
+    return '1000000000'
+  }
+  const gasPrice = await fetchGasPrice('fast')
+  return web3.utils.toWei(gasPrice.toString(), 'gwei')
+}
 
 const retries = 2
 
@@ -47,7 +53,7 @@ const send = async ({ web3, bridgeType, address }, method, options) => {
 
   const from = address
   const gas = await method.estimateGas({ from })
-  const gasPrice = await getGasPrice(bridgeType)
+  const gasPrice = await getGasPrice(bridgeType, web3)
   const account = await Account.findOne({ address })
   let receipt
   for (let i = 0; i < retries; i++) {
