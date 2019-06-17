@@ -36,13 +36,13 @@ const Option = (props) => {
   )
 }
 
-export default ({ communityType = { text: '' }, setCommunityType, networkType, setExistingToken }) => {
+export default ({ communityType = { text: '' }, setCommunityType, networkType, setExistingToken, existingToken }) => {
   const handleClick = (item) => {
     setCommunityType(item)
   }
 
   return (
-    <div className={classNames('attributes__attribute')}>
+    <div className='attributes__attribute attributes__attribute--long-height'>
       <h3 className='attributes__title'>
         Currency Type
       </h3>
@@ -58,7 +58,7 @@ export default ({ communityType = { text: '' }, setCommunityType, networkType, s
                 return (
                   <div className={classes} key={key} onClick={() => handleClick(communityTypes[key])}>
                     <span>{text}</span>
-                    <img src={img} />
+                    <img src={communityType && communityType.value === 'existingToken' && existingToken && existingToken.value ? existingToken.icon : img} />
                     {
                       value === 'existingToken' && (
                         <div className='attributes__types__select__wrapper'>
@@ -89,7 +89,7 @@ export default ({ communityType = { text: '' }, setCommunityType, networkType, s
                 return (
                   <div className={classes} key={key} onClick={() => handleClick(communityTypes[key])}>
                     <span>{text}</span>
-                    <img src={img} />
+                    <img src={value === 'existingToken' && communityType && communityType.value === 'existingToken' && existingToken && existingToken.value ? existingToken.icon : img} />
                     {
                       value === 'existingToken' && (
                         <div className='attributes__types__select__wrapper'>

@@ -1,4 +1,5 @@
 import DaiLogo from 'images/DAI_logo.svg'
+import isEmpty from 'lodash/isEmpty'
 
 export const existingTokens = (networkType) => ([
   {
@@ -19,9 +20,9 @@ export const isDaiToken = (networkType, token) => {
     return false
   }
 
-  const item = existingTokens(networkType).filter(({ value }) => value === token.address)
+  const item = existingTokens(networkType).filter(({ value, label }) => value === token.address && label === token.symbol)
 
-  if (item) {
+  if (!isEmpty(item)) {
     return true
   }
 

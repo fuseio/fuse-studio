@@ -895,7 +895,7 @@
   }
 
   @include element(content) {
-    padding: 1em;
+    padding: 0 1em;
     position: relative;
     display: flex;
     flex-direction: column;

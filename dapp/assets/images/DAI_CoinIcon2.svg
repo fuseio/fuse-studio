@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
-    <title>Group 10</title>
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 9</title>
     <desc>Created with Sketch.</desc>
     <defs>
-        <linearGradient x1="10.9063232%" y1="20.0421875%" x2="88.3651367%" y2="80.9158936%" id="linearGradient-1">
-            <stop stop-color="#05283E" offset="0%"></stop>
-            <stop stop-color="#2EBA72" offset="100%"></stop>
+        <linearGradient x1="6.99563419%" y1="0%" x2="83.7247243%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#98FAAC" offset="0%"></stop>
+            <stop stop-color="#FAE83E" offset="100%"></stop>
         </linearGradient>
-        <linearGradient x1="17.6293074%" y1="46.581594%" x2="91.8496881%" y2="59.9999925%" id="linearGradient-2">
-            <stop stop-color="#10504C" offset="0%"></stop>
-            <stop stop-color="#239464" offset="100%"></stop>
+        <linearGradient x1="6.99563419%" y1="34.9209224%" x2="83.7247243%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#98FAAC" offset="0%"></stop>
+            <stop stop-color="#FAE83E" offset="100%"></stop>
         </linearGradient>
     </defs>
-    <g id="New-Onboarding-NEW-existing-token" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Wizard-symbol" transform="translate(-627.000000, -356.000000)">
-            <g id="Group-10" transform="translate(627.000000, 356.000000)">
-                <g id="Group-7">
-                    <g id="Group-2" fill="url(#linearGradient-1)">
-                        <g id="Group-18-Copy-3" transform="translate(0.396040, 0.396040)">
-                            <path d="M39.6039604,79.2079208 C17.7664624,79.2079208 0,61.4414584 0,39.6039604 C0,17.7664624 17.7664624,0 39.6039604,0 C61.4414584,0 79.2079208,17.7664624 79.2079208,39.6039604 C79.2079208,61.4414584 61.4414584,79.2079208 39.6039604,79.2079208" id="Path"></path>
-                        </g>
+    <g id="New-Onboarding-NEW!!!" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Wizard--ATTRIBUTES-new" transform="translate(-600.000000, -1190.000000)">
+            <g id="Group-9" transform="translate(600.000000, 1190.000000)">
+                <g id="Group-6-Copy-2" transform="translate(21.000000, 22.000000)" fill-rule="nonzero">
+                    <g id="dai">
+                        <polygon id="Path" fill="#05283E" points="19.4724523 0.328017771 38.2099257 19.065412 19.4724523 37.8029645 0.734978998 19.065412"></polygon>
+                        <polygon id="Path" fill="#05283E" points="19.472294 25.1797254 0.719305331 19.0646204 19.472294 0.327463651 38.2252827 19.0646204"></polygon>
+                        <polygon id="Path" fill="#FBEF5B" points="7.24208401 17.8415994 15.803231 17.8415994 19.472294 13.7648627 23.5490307 17.8415994 32.1101777 17.8415994 19.472294 4.1849273"></polygon>
                     </g>
-                    <g id="Group-4" transform="translate(20.000000, 21.000000)" fill-rule="nonzero">
-                        <g id="dai">
-                            <polygon id="Path" fill="#05283E" points="19.9720605 0.544038065 38.9760533 19.1619336 19.9720605 37.7799864 0.968067753 19.1619336"></polygon>
-                            <polygon id="Path" fill="#05283E" points="19.9718999 25.2372526 0.952171146 19.161147 19.9718999 0.54348748 38.9916287 19.161147"></polygon>
-                            <polygon id="Path" fill="url(#linearGradient-2)" points="7.56772899 17.9459259 16.2506487 17.9459259 19.9718999 13.8951888 24.1066236 17.9459259 32.7895433 17.9459259 19.9718999 4.37634996"></polygon>
-                        </g>
+                    <polygon id="Path" fill="#E7E7E7" opacity="0.42" points="19 38 19 0 39 19 19 38"></polygon>
+                </g>
+                <g id="Group-2-Copy" fill="url(#linearGradient-1)">
+                    <g id="Group-18-Copy-3" transform="translate(0.396040, 0.396040)">
+                        <path d="M39.6039604,79.2079208 C17.7664624,79.2079208 0,61.4414584 0,39.6039604 C0,17.7664624 17.7664624,0 39.6039604,0 C61.4414584,0 79.2079208,17.7664624 79.2079208,39.6039604 C79.2079208,61.4414584 61.4414584,79.2079208 39.6039604,79.2079208" id="Path"></path>
                     </g>
                 </g>
-                <polygon id="Path-Copy" fill="#E7E7E7" fill-rule="nonzero" opacity="0.42" points="40 58.7799864 40.0281001 21.5434875 59.0041533 40.1620122 42.4926183 56.5113932"></polygon>
+                <g id="Group-6-Copy-3" transform="translate(21.000000, 22.000000)">
+                    <g id="dai">
+                        <polygon id="Path" fill="#05283E" fill-rule="nonzero" points="19.4724523 0.328017771 38.2099257 19.065412 19.4724523 37.8029645 0.734978998 19.065412"></polygon>
+                        <polygon id="Path" fill="#05283E" fill-rule="nonzero" points="19.472294 25.1797254 0.719305331 19.0646204 19.472294 0.327463651 38.2252827 19.0646204"></polygon>
+                        <polygon id="Path" fill="url(#linearGradient-2)" points="7.24208401 17.8415994 15.803231 17.8415994 19.472294 13.7648627 23.5490307 17.8415994 32.1101777 17.8415994 19.472294 4.1849273"></polygon>
+                    </g>
+                    <polygon id="Path" fill="#E7E7E7" fill-rule="nonzero" opacity="0.42" points="19 38 19 0 39 19 19 38"></polygon>
+                </g>
             </g>
         </g>
     </g>

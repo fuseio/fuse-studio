@@ -40,7 +40,7 @@ const LogosOptions = ({ communityType, communityLogo, setCommunityLogo, communit
   }
 
   return (
-    <div className='attributes__attribute'>
+    <div className='attributes__attribute attributes__attribute--long-height'>
       <h3 className='attributes__title'>
         Community Logo
       </h3>

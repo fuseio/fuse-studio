@@ -2,22 +2,25 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Loader from 'components/common/Loader'
 import classNames from 'classnames'
-import logoDarkBlue from 'images/token-dark_blue.svg'
-import logoGreen from 'images/token-green.svg'
-import logoGreenGradiant from 'images/token-green_gradient.svg'
-import logoMain from 'images/token-main.svg'
-import logoMainDark from 'images/token-main-dark.svg'
-import logoMainGradiant from 'images/token-main-gradient.svg'
+// import logoDarkBlue from 'images/token-dark_blue.svg'
+// import logoGreen from 'images/token-green.svg'
+// import logoGreenGradiant from 'images/token-green_gradient.svg'
+// import logoMain from 'images/token-main.svg'
+// import logoMainDark from 'images/token-main-dark.svg'
+// import logoMainGradiant from 'images/token-main-gradient.svg'
 import DAI_1 from 'images/DAI_CoinIcon1.svg'
 import DAI_2 from 'images/DAI_CoinIcon2.svg'
 import DAI_3 from 'images/DAI_CoinIcon3.svg'
+import tokenOne from 'images/CoinIcon1.svg'
+import tokenTwo from 'images/CoinIcon2.svg'
+import tokenThird from 'images/CoinIcon3.svg'
 
 const getImages = (networkType) => {
-  const isRopsten = networkType === 'ropsten'
+  // const isRopsten = networkType === 'ropsten'
   const pictureEnum = {
-    'CoinIcon1.svg': isRopsten ? logoGreen : logoMain,
-    'CoinIcon2.svg': isRopsten ? logoGreenGradiant : logoMainGradiant,
-    'CoinIcon3.svg': isRopsten ? logoDarkBlue : logoMainDark
+    'CoinIcon1.svg': tokenOne,
+    'CoinIcon2.svg': tokenTwo,
+    'CoinIcon3.svg': tokenThird
   }
   return pictureEnum
 }
@@ -41,7 +44,7 @@ const CommunityLogo = ({ networkType, metadata: { communityLogo }, token: { symb
     <div className={wrapperClasses}>
       {
         communityLogo
-          ? <img src={!isDaiToken ? (getImages(networkType)[communityLogo] || logoGreen) : getDaiIcons()[communityLogo]} className='logo-circle__inner' alt='Community Logo' />
+          ? <img src={!isDaiToken ? (getImages(networkType)[communityLogo] || tokenOne) : getDaiIcons()[communityLogo]} className='logo-circle__inner' alt='Community Logo' />
           : <Loader color='#fff' className='logo-img' />
       }
       {!isDaiToken && <span className='logo-circle__name'>{symbol}</span>}

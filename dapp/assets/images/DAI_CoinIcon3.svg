@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
     <title>Group 11</title>
     <desc>Created with Sketch.</desc>
-    <g id="New-Onboarding-NEW-existing-token" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Wizard-symbol" transform="translate(-808.000000, -356.000000)">
-            <g id="Group-11" transform="translate(808.000000, 356.000000)">
-                <g id="Group-9">
-                    <g id="Group-18-Copy-4" fill="#05283E" stroke="#05283E" stroke-width="2">
+    <defs>
+        <linearGradient x1="12.7704834%" y1="16.0044067%" x2="94.5037964%" y2="73.6959717%" id="linearGradient-1">
+            <stop stop-color="#25435A" offset="0%"></stop>
+            <stop stop-color="#052235" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="New-Onboarding-NEW!!!" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Wizard--ATTRIBUTES-new" transform="translate(-817.000000, -1191.000000)">
+            <g id="Group-11" transform="translate(817.000000, 1191.000000)">
+                <g id="Group-7-Copy" fill="url(#linearGradient-1)">
+                    <g id="Group-18-Copy-4">
                         <g id="Group-4" transform="translate(0.000000, 0.000000)">
-                            <path d="M39.6039604,78.2079208 C60.8891737,78.2079208 78.2079208,60.8891737 78.2079208,39.6039604 C78.2079208,18.3187471 60.8891737,1 39.6039604,1 C18.3187471,1 1,18.3187471 1,39.6039604 C1,60.8891737 18.3187471,78.2079208 39.6039604,78.2079208 Z" id="Path"></path>
+                            <path d="M39.6039604,79.2079208 C17.7664624,79.2079208 1.42108547e-14,61.4414584 1.42108547e-14,39.6039604 C1.42108547e-14,17.7664624 17.7664624,4.26325641e-14 39.6039604,4.26325641e-14 C61.4414584,4.26325641e-14 79.2079208,17.7664624 79.2079208,39.6039604 C79.2079208,61.4414584 61.4414584,79.2079208 39.6039604,79.2079208" id="Path"></path>
                         </g>
                     </g>
-                    <g id="Group-4" transform="translate(20.000000, 21.000000)" fill-rule="nonzero">
-                        <g id="dai">
-                            <polygon id="Path" fill="#FFFFFF" points="19.9720605 0.544038065 38.9760533 19.1619336 19.9720605 37.7799864 0.968067753 19.1619336"></polygon>
-                            <polygon id="Path" fill="#FFFFFF" points="19.9718999 25.2372526 0.952171146 19.161147 19.9718999 0.54348748 38.9916287 19.161147"></polygon>
-                            <polygon id="Path" fill="#05283E" points="7.56772899 17.9459259 16.2506487 17.9459259 19.9718999 13.8951888 24.1066236 17.9459259 32.7895433 17.9459259 19.9718999 4.37634996"></polygon>
-                        </g>
-                        <polygon id="Path" fill="#05283E" opacity="0.42" points="20 33.9140625 19.9718999 0.54348748 39.7773655 19.0969388 20.1786361 37.7799864"></polygon>
+                </g>
+                <g id="Group-6-Copy-2" transform="translate(21.000000, 21.000000)" fill-rule="nonzero">
+                    <g id="dai">
+                        <polygon id="Path" fill="#FFFFFF" points="19.4724523 0.328017771 38.2099257 19.065412 19.4724523 37.8029645 0.734978998 19.065412"></polygon>
+                        <polygon id="Path" fill="#FFFFFF" points="19.472294 25.1797254 0.719305331 19.0646204 19.472294 0.327463651 38.2252827 19.0646204"></polygon>
+                        <polygon id="Path" fill="#05283E" points="7.24208401 17.8415994 15.803231 17.8415994 19.472294 13.7648627 23.5490307 17.8415994 32.1101777 17.8415994 19.472294 4.1849273"></polygon>
                     </g>
+                    <polygon id="Path" fill="#4A687B" opacity="0.42" points="19 38 19 0 39 19 19 38"></polygon>
                 </g>
             </g>
         </g>

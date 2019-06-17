@@ -50,9 +50,9 @@ export default class Contracts extends PureComponent {
             })
           }
         </div>
-        <div className='grid-x align-center attributes__next'>
+        <div className='grid-x align-center next'>
           <button
-            className='button button--big'
+            className='button button--normal button--fuse'
             onClick={setNextStep}
           >
             NEXT

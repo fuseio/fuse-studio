@@ -20,10 +20,10 @@
     top: 0;
     background-image: url(../../assets/images/header.jpg);
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     z-index: 11;
 
-    animation: smoothScroll 0.3s forwards;
+    animation: smoothScroll 0.3s ease;
 
     @keyframes smoothScroll {
       0% {

@@ -54,10 +54,10 @@ class FeaturedCommunities extends Component {
   render () {
     // const { addresses, tokens, metadata, networkType } = this.props
     return (
-      <div className='grid-x align-justify' style={{ marginBottom: '20px' }}>
+      <div className='grid-x align-justify grid-margin-x grid-margin-y'>
         {
           staticImages.map((img) =>
-            <div className='medium-12'><img src={img} /></div>
+            <div className='medium-12 cell'><img src={img} /></div>
           )
         }
         {/* {
