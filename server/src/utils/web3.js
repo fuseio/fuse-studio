@@ -66,9 +66,11 @@ const send = async ({ web3, bridgeType, address }, method, options) => {
       account.nonces[bridgeType] = nonce
     }
   }
+  if (receipt) {
+    account.nonces[bridgeType]++
+    await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
+  }
 
-  account.nonces[bridgeType]++
-  await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
   return receipt
 }
 
