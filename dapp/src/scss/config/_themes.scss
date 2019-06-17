@@ -316,7 +316,7 @@ $themes: (
         text-align: center;
         color: $dark;
 
-        @include breakpoint(meduim up) {
+        @include breakpoint(medium up) {
           padding-top: 30px;
           padding-bottom: 30px;
         }
