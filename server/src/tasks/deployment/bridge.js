@@ -5,7 +5,6 @@ const BridgeMapperABI = require('@constants/abi/BridgeMapper')
 const IRestrictedTokenABI = require('@constants/abi/IRestrictedToken')
 const foreignAddressess = config.get('network.foreign.addresses')
 const homeAddresses = config.get('network.home.addresses')
-const { fetchGasPrice } = require('@utils/network')
 const { generateSignature } = require('@utils/web3')
 const { handleReceipt } = require('@events/handlers')
 const mongoose = require('mongoose')
@@ -20,11 +19,8 @@ async function deployForeignBridge (token, { web3, createContract, createMethod,
 
   const method = createMethod(foreignFactory, 'deployForeignBridge', token.address)
 
-  const gasPrice = await fetchGasPrice('standard')
-
   const receipt = await send(method, {
-    from,
-    gasPrice: web3.utils.toWei(gasPrice.toString(), 'gwei')
+    from
   })
 
   const event = receipt.events.ForeignBridgeDeployed

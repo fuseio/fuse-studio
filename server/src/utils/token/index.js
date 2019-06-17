@@ -1,3 +1,4 @@
+const { inspect } = require('util')
 const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/build/abi/BasicToken')
 
@@ -10,7 +11,10 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
     fields.tokenURI ? tokenContractInstance.methods.tokenURI().call() : undefined
   ])
 
-  return { name, symbol, totalSupply: totalSupply.toString(), tokenURI }
+  const fetchedTokedData = { name, symbol, totalSupply: totalSupply.toString(), tokenURI }
+
+  console.log(`Fetched token ${address} data: ${inspect(fetchedTokedData)}`)
+  return fetchedTokedData
 }
 
 module.exports = {
