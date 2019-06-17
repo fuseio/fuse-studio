@@ -59,7 +59,7 @@ class DashboardLayout extends PureComponent {
       return null
     }
     const { open } = this.state
-    const { match, token, community, metadata, networkType, accountAddress } = this.props
+    const { match, token, community, metadata, networkType, communityAddress } = this.props
 
     const { address: tokenAddress, name } = token
     const { isClosed } = community
@@ -98,7 +98,7 @@ class DashboardLayout extends PureComponent {
                 <Route exact path={`${match.url}`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={accountAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
               </Switch>
             </div>
           </div>
