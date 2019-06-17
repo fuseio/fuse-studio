@@ -12,10 +12,18 @@
 
   @include element(content) {
     color: #808080;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 100%;
+    white-space: nowrap;
   }
 
   @include element(read) {
     color: #808080;
     font-size: 12px;
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 }
