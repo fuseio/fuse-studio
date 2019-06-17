@@ -28,6 +28,10 @@
     ]
   },
   "dependencies": {
+    "3box": "^1.9.0",
+    "@fuse/entities-contracts": "../contracts/entities/",
+    "@fuse/roles": "../packages/roles",
+    "@fuse/token-factory-contracts": "../contracts/token-factory/",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",
@@ -75,10 +79,7 @@
     "webpack": "^4.6.0",
     "webpack-cli": "^3.1.2",
     "websocket": "^1.0.28",
-    "yup": "^0.27.0",
-    "@fuse/token-factory-contracts": "../contracts/token-factory/",
-    "@fuse/entities-contracts": "../contracts/entities/",
-    "@fuse/roles": "../packages/roles"
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

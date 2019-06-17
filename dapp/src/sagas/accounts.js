@@ -6,7 +6,7 @@ import { getAddress, getNetworkType, getNetworkSide } from 'selectors/network'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
 import { fetchTokenList } from 'sagas/token'
-import web3 from 'services/web3'
+import web3, { get3box } from 'services/web3'
 import { getContract } from 'services/contract'
 import { getAccountAddress } from 'selectors/accounts'
 import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
@@ -56,6 +56,19 @@ function * fetchTokensWithBalances ({ accountAddress }) {
   yield call(fetchBalances, { accountAddress, tokens, networkSide })
 }
 
+const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
+
+function * signIn ({ accountAddress }) {
+  yield call(get3box, { accountAddress })
+
+  yield put({ type: actions.SIGN_IN.SUCCESS,
+    accountAddress,
+    response: {
+      accountAddress
+    }
+  })
+}
+
 function * watchAccountChanged ({ response }) {
   yield put(actions.balanceOfCln(response.accountAddress))
 }
@@ -64,8 +77,6 @@ function * watchBalanceOfToken ({ response }) {
   const accountAddress = yield select(getAccountAddress)
   yield put(actions.balanceOfToken(response.tokenAddress, accountAddress))
 }
-
-const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 
 export default function * accountsSaga () {
   yield all([
@@ -76,6 +87,7 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.FETCH_COMMUNITIES, fetchCommunities),
     takeEvery([TRANSFER_TOKEN.SUCCESS, BURN_TOKEN.SUCCESS, MINT_TOKEN.SUCCESS], watchBalanceOfToken),
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
+    tryTakeEvery(actions.SIGN_IN, signIn, 1),
     tryTakeEvery(actions.FETCH_TOKENS_WITH_BALANCES, fetchTokensWithBalances, 1)
   ])
 }

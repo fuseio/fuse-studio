@@ -19,6 +19,7 @@ import NavBar from 'components/common/NavBar'
 import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import { fetchEntities } from 'actions/communityEntities'
+import SignIn from 'components/common/SignIn'
 
 class DashboardLayout extends PureComponent {
   state = {
@@ -78,6 +79,7 @@ class DashboardLayout extends PureComponent {
     const { isClosed } = community
     return (
       <div className='Dashboard'>
+        {accountAddress ? <SignIn accountAddress={accountAddress} /> : undefined}
         <div className='Dashboard__container'>
           {
             !isMobile

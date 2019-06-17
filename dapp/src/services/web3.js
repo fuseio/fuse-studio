@@ -1,4 +1,5 @@
 import Web3 from 'web3'
+import Box from '3box'
 import { isFuse, getProviderUrl } from 'utils/network'
 import { loadState } from 'utils/storage'
 
@@ -15,6 +16,16 @@ export const getWeb3 = ({ bridgeType } = {}) => {
   }
   const web3 = web3ByBridge[bridgeType]
   return web3
+}
+
+let box = null
+
+export function * get3box ({ accountAddress }) {
+  if (box && box._web3provider.selectedAddress === accountAddress) {
+    return box
+  }
+  box = yield Box.openBox(accountAddress, Web3.givenProvider)
+  return box
 }
 
 const networkState = loadState('state.network') || CONFIG.web3.bridge.network

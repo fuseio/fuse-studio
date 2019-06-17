@@ -275,12 +275,12 @@ class Users extends Component {
         <div className='entities__header'>
           <h2 className='entities__header__title'>Users list</h2>
           {
-            isAdmin && (
+            (
               <div className='entities__header__add grid-x align-middle'>
                 <span onClick={this.handleAddUser}>
                   <a style={{ backgroundImage: `url(${plusIcon})` }} />
                 </span>
-                Add new user
+                {isAdmin ? 'Add new user' : 'Join'}
               </div>
             )
           }
