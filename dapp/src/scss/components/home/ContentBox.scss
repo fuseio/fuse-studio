@@ -21,6 +21,7 @@
   }
 
   @include element(content) {
+    width: 100%;
     @include breakpoint(large up) {
       min-height: 360px;
       max-height: 360px;
