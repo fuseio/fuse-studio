@@ -221,14 +221,14 @@
 
 		@include modifier(CoinIcon2\.svg) {
 			> span {
-				color: $color-white;
+				color: $color-primary-dark;
 			}
 		}
 
 		@include modifier(CoinIcon3\.svg) {
 			@include modifier(ropsten) {
 				> span {
-					color: $color-ropsten;
+					color: $color-fuse;
 				}
 			}
 
@@ -252,6 +252,7 @@
 
 	@include element (name) {
 		@extend %logo-symbol;
+		color: $color-primary-dark;
 	}
 }
 
@@ -339,13 +340,30 @@
 }
 
 @include block(button) {
-	background-color: $color-ropsten;
+	background: $color-ropsten;
 	color: $color-white;
 	font-weight: bold;
 	text-align: center;
 	height: 42px;
 	border-radius: 20.5px;
 	border: none;
+
+	@include modifier(fuse) {
+		color: $color-primary-dark;
+		background: linear-gradient(97deg, #98faac, #fae83e) !important;
+
+		&:hover {
+			background: linear-gradient(97deg, #98faac, #fae83e) !important;
+		}
+
+		&:disabled,
+		&[disabled] {
+			opacity: 0.3;
+			background: linear-gradient(97deg, #98faac, #fae83e) !important;
+			color: $color-primary-dark !important;
+			cursor: not-allowed;
+		}
+	}
 
 	.fa {
 		margin-left: 4px;
@@ -369,13 +387,13 @@
 
 	&:hover {
 		cursor: pointer;
-		background-color: #2eba72;
+		background: #2eba72;
 	}
 
 	&:disabled,
 		&[disabled] {
 			opacity: 0.3;
-			background-color: #34d080;;
+			background-color: #34d080;
 			color: $color-white;
 			cursor: not-allowed;
 		}
@@ -431,6 +449,23 @@
 
 		&:hover {
 			background-color: darken($color-ropsten, 10%);
+		}
+
+		@include modifier(fuse) {
+			color: $color-primary-dark !important;
+			background: linear-gradient(97deg, #98faac, #fae83e) !important;
+
+			&:disabled,
+			&[disabled] {
+				pointer-events: none;
+				opacity: 0.3;
+				color: $color-white;
+				cursor: not-allowed;
+			}
+
+			&:hover {
+				background: darken($color-fuse, 10%) !important;
+			}
 		}
 	}
 

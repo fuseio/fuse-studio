@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 2 Copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="6.99563419%" y1="0%" x2="83.7247243%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#98FAAC" offset="0%"></stop>
+            <stop stop-color="#FAE83E" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="New-Onboarding-NEW!!!" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Wizard--ATTRIBUTES-new" transform="translate(-600.000000, -1190.000000)" fill="url(#linearGradient-1)">
+            <g id="Group-2-Copy" transform="translate(600.000000, 1190.000000)">
+                <g id="Group-18-Copy-3" transform="translate(0.396040, 0.396040)">
+                    <path d="M39.6039604,79.2079208 C17.7664624,79.2079208 0,61.4414584 0,39.6039604 C0,17.7664624 17.7664624,0 39.6039604,0 C61.4414584,0 79.2079208,17.7664624 79.2079208,39.6039604 C79.2079208,61.4414584 61.4414584,79.2079208 39.6039604,79.2079208" id="Path"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

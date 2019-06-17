@@ -14,27 +14,32 @@ const NameCurrencyStep = ({ existingToken, setExistingToken, communityName, hand
   return (
     <div className='name__wrapper'>
       <div className='name'>
-        <h2 className='name__title'>Name your community</h2>
         <TextInput
           className='name__field'
           id='communityName'
           type='text'
           autoComplete='off'
-          placeholder='Type your community name...'
+          placeholder='Name your community'
           value={communityName}
           maxLength='30'
           onChange={handleChangeCommunityName}
         />
       </div>
       {isMobileOnly && <div className='line' ><hr /></div>}
-      <CurrencyType setExistingToken={setExistingToken} setCommunityType={setCommunityType} communityType={communityType} networkType={networkType} />
-      <div className='name__next'>
+      <CurrencyType
+        existingToken={existingToken}
+        setExistingToken={setExistingToken}
+        setCommunityType={setCommunityType}
+        communityType={communityType}
+        networkType={networkType}
+      />
+      <div className='next'>
         <button
-          className='button button--normal'
+          className='button button--fuse button--normal'
           disabled={validateStep()}
           onClick={setNextStep}
         >
-          NEXT<FontAwesome name='arrow-right' />
+          NEXT<FontAwesome name='angle-right' />
         </button>
       </div>
     </div>

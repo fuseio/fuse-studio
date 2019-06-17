@@ -257,6 +257,7 @@ class IssuanceWizard extends Component {
           </div>
         </div>
         <div className={classNames(`issuance-${foreignNetwork}__wizard`)}>
+          {this.state.activeStep < 3 && <h1 className={classNames(`issuance-${foreignNetwork}__wizard__title`)}>Launch your community</h1>}
           {this.renderStepContent()}
           {
             this.state.activeStep > 0 && ((transactionStatus !== PENDING) && (transactionStatus !== REQUEST)) && (

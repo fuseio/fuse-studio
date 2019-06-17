@@ -6,7 +6,7 @@ import { isMobileOnly } from 'react-device-detect'
 const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityType, setNextStep }) => {
   return (
     <Fragment>
-      <div className='attributes__attribute'>
+      <div className='attributes__attribute attributes__attribute--supply'>
         <h3 className='attributes__title'>
           {
             communityType && communityType.value === 'mintableBurnable' ? 'Initial Supply' : 'Total Supply'
@@ -17,7 +17,7 @@ const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityTyp
             className='attributes__supply__input'
             id='communityName'
             type='number'
-            placeholder='21,000,000'
+            placeholder='...'
             autoComplete='off'
             value={totalSupply}
             onKeyDown={(evt) => checkCondition(evt, (evt.key === 'e' || evt.key === '-'))}
@@ -25,9 +25,9 @@ const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityTyp
           />
         </div>
       </div>
-      {isMobileOnly && <div className='grid-x align-center attributes__next'>
+      {isMobileOnly && <div className='grid-x align-center next'>
         <button
-          className='button button--big'
+          className='button button--normal button--fuse'
           disabled={
             totalSupply < 0 || totalSupply === '0' || !totalSupply
           }

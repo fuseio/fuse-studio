@@ -165,7 +165,7 @@ $themes: (
         width: 90%;
         position: absolute;
         margin-top: -2px;
-        left: 55%;
+        left: 50%;
         background-color: $color-author;
         box-shadow: 0 0 9px 0 rgba(192, 149, 255, 0.23);
         @include breakpoint(small only) {
@@ -176,12 +176,12 @@ $themes: (
     &:after {
       content: '';
       position: absolute;
-      top: -10px;
+      top: -6px;
       left: 50%;
       margin-left: -9px;
       border-radius: 50%;
-      width: 17px;
-      height: 17px;
+      width: 10px;
+      height: 10px;
       background-color: $color-author;
       border: 2px solid $color-author;
   
@@ -193,12 +193,16 @@ $themes: (
     }
   
     @include modifier(active) {
-      color: $secondary;
+      // color: $secondary;
+      color: $color-fuse;
       &:after {
-        border: solid 2px $secondary;
-        background-color: $secondary;
-        box-shadow: 0 0 0 0 $secondary,
-                    inset $color-issuance-bg 0 0 1px 2.5px,
+        top: -10px;
+        border: solid 2px $color-fuse;
+        background-color: $color-fuse;
+        box-shadow: 0 0 0 0 $color-fuse,
+                    inset $color-issuance-bg 0 0 1px 2.5px;
+        width: 17px;
+        height: 17px;
       }
       &:before {
         background-color: $color-author;
@@ -207,13 +211,13 @@ $themes: (
   
     @include modifier(done) {
       &:before {
-        background-color: $secondary !important;
+        background-color: $color-fuse !important;
       }
   
       &:after {
-        box-shadow: 0 0 0 0 $secondary;
-        background-color: $secondary;
-        border: solid 2px $secondary;
+        box-shadow: 0 0 0 0 $color-fuse;
+        background-color: $color-fuse;
+        border: solid 2px $color-fuse;
       }
     }
   }
@@ -232,7 +236,7 @@ $themes: (
       height: 100%;
       background-image: url(../../assets/images/header.jpg);
       background-repeat: no-repeat;
-      background-size: contain;
+      background-size: cover;
       max-width: 100%;
       margin-left: auto;
       margin-right: auto;
@@ -248,12 +252,12 @@ $themes: (
       @include element(logo) {
         cursor: pointer;
         min-width: 100px;
-        padding-left: 10px;
+        padding-left: 20px;
         flex-basis: 10%;
       }
   
       @include element(close) {
-        padding-right: 10px;
+        padding-right: 20px;
         flex-basis: 10%;
         .fa {
           cursor: pointer;
@@ -267,14 +271,16 @@ $themes: (
       @include element(current) {
         text-transform: uppercase;
         text-align: center;
-        font-size: 16px;
+        color: $color-fuse;
+        font-size: 11px;
         font-weight: 500;
-        line-height: 1.69;
-        color: $secondary;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 2.45;
     
         @include breakpoint(medium up) {
           min-height: 27px;
-          margin: .5em 0 1em 0;
+          margin: .5em 0 1.3em 0;
         }
   
         @include breakpoint(small down) {
@@ -287,7 +293,9 @@ $themes: (
         @include breakpoint(small down) {
           position: absolute;
           top: 80px;
-          background-color: inherit;
+          background-image: url(../../assets/images/header.jpg);
+          background-repeat: no-repeat;
+          background-size: cover;
           box-shadow: inset 0 0 1em 0 rgba(0, 0, 0, 1)
         }
       }
@@ -301,30 +309,46 @@ $themes: (
       @include breakpoint(small down) {
         margin-top: 7em;
       }
+
+      @include element(title) {
+        font-weight: bold;
+        font-size: 30px;
+        text-align: center;
+        color: $dark;
+
+        @include breakpoint(meduim up) {
+          padding-top: 30px;
+          padding-bottom: 30px;
+        }
+      }
+
+      @include block(next) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        @include breakpoint(medium up) {
+          margin-top: 3em;
+        }
+      }  
   
       @include block(name) {
         height: 100%;
+        width: 100%;
+        @include xy-grid(vertical);					
+        @include flex-align(spaced, middle);
         
         @include breakpoint(large up) {
-          min-height: 220px;
-        }
-        @include breakpoint(medium) {
-          border-bottom: solid 2px $color-brdr-issuance;
-          padding-bottom: 25px;
-          margin-bottom: 25px;
-          @include xy-grid(horizontal, false);
-          @include flex-align(left, middle);
-        }
-  
-        @include breakpoint(small) {
-          @include xy-grid(vertical);					
-          @include flex-align(spaced, middle);
+          padding: 40px 0 60px;
         }
   
         @include element(wrapper) {
           @include breakpoint(medium up) {
-            width: 60%;
+            max-width: 620px;
+            width: 100%;
             margin: auto;
+            @include xy-grid(vertical, false);
+            @include flex-align(spaced, middle);
           }
         }
   
@@ -334,15 +358,6 @@ $themes: (
           line-height: 1.29;
           text-transform: capitalize;
           color: $dark;
-          
-          @include breakpoint(medium only) {
-            min-width: 250px;
-          }
-  
-          @include breakpoint(large) {
-            min-width: 330px;
-          }
-  
           @include breakpoint(small only) {
             margin-bottom: 1em;
           }
@@ -351,12 +366,11 @@ $themes: (
         @include element(field) {
           // margin-bottom: 2em;
           @include breakpoint(medium up) {
-            min-width: 300px;
-            max-width: 300px;
+            // min-width: 300px;
+            // max-width: 300px;
           }
   
           @include breakpoint(small) {
-            max-width: 80%;
             width: 100%;
           }
   
@@ -364,12 +378,13 @@ $themes: (
             width: 100%;
             background-color: $color-white;
             padding: 8px 16px;
-            font-size: 13px;
+            font-size: 15px;
             color: $dark;
-            height: 50px;
-            border-radius: 46.5px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
-            border: solid 2px transparent;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 6px 0 #cbcbcb;
+            border: none;
+
             &::placeholder {
               color: rgba(0, 0, 0, 0.3);
             }
@@ -378,13 +393,7 @@ $themes: (
               box-shadow: none;
             }
           }
-        }
-
-        @include element(next) {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }        
+        }      
       }
 
       @include block(line) {
@@ -396,54 +405,24 @@ $themes: (
       }
   
       @include block(symbol) {
-  
-       
-  
-        // @include element(title) {
-        //   color: $dark;
-        //   text-transform: capitalize;
-        //   line-height: 1.29;
-        //   font-weight: bold;
-        @include breakpoint(large up§) {
-          min-height: 220px;
+        @include xy-grid(vertical);					
+        @include flex-align(spaced, null);
+        @include breakpoint(large up) {
+          min-height: 80px;
+          margin: 3em 0;
         }
   
-        @include breakpoint(medium) {
-          border-bottom: solid 2px $color-brdr-issuance;
-          // min-height: 220px;
-          padding-bottom: 25px;
-          margin-bottom: 25px;
-          @include xy-grid(horizontal, false);
-          @include flex-align(left, middle);
-        }
-
-
         @include breakpoint(small down) {
-          @include xy-grid(vertical, false);
-          @include flex-align(null, middle);
           margin: 32px 0 0;
         }
   
-        //   @include modifier(name) {
-        //     font-weight: normal;
-        //     color: $color-step;
-        //   }
-        // }
 
         @include element(title) {
-          font-size: 1.313em;
+          font-size: 15px;
           font-weight: bold;
           line-height: 1.29;
           text-transform: capitalize;
           color: $dark;
-          
-          @include breakpoint(medium only) {
-            min-width: 250px;
-          }
-  
-          @include breakpoint(large) {
-            min-width: 330px;
-          }
   
           @include breakpoint(small only) {
             margin-bottom: 1em;
@@ -456,62 +435,36 @@ $themes: (
         }
       
         @include element(field) {
-      
-          border-radius: 46.5px;
-          font-weight: bold;
-          text-align: center;
-          color: $secondary;
-          text-transform: uppercase;
-          position: relative;
-          width: 80%;
-  
+
           > div:first-child {
             width: 100%;
             height: 100%;
           }
   
-          @include breakpoint(medium) {
-            min-width: 287px;
-            height: 93px;
-            max-width: 287px;
-          }
-  
           input {
-            height: 100%;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
-            border: solid 2px transparent;
-            background-color: #fff;
-            border-radius: 46.5px;
-            color: $dark;
-            font-size: 50px;
-            font-weight: bold;
-            text-transform: uppercase;
-            outline: none;
             width: 100%;
-            padding: 5px 20px;
-  
+            background-color: $color-white;
+            padding: 8px 16px;
+            font-size: 15px;
+            color: $dark;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 6px 0 #cbcbcb;
+            border: none;
+
             &::placeholder {
               color: rgba(0, 0, 0, 0.3);
-              font-weight: bold;
             }
-            
             &:focus {
               border: solid 2px $dark;
               box-shadow: none;
             }
-      
-            &::-webkit-input-placeholder {
-              line-height: normal;
-            }
-            
-            &:disabled {
-              color: rgba(0, 0, 0, 0.3);
-            }
 
-            @include breakpoint(small only) {
-              font-size: 29px;
+            &:disabled {
+              cursor: not-allowed;
             }
           }
+
         }
       
       }
@@ -519,7 +472,7 @@ $themes: (
       @include block(attributes) {
           margin: 0 auto;
         @include breakpoint(large) {
-          max-width: 60%;				
+          max-width: 620px;				
         }
 
         @include breakpoint(medium only) {
@@ -530,20 +483,12 @@ $themes: (
         }
         
         @include element(title) {
-          font-size: 21px;
+          font-size: 15px;
           font-weight: bold;
           line-height: 1.29;
           text-transform: capitalize;
           color: $dark;
-          
-          @include breakpoint(medium only) {
-            min-width: 250px;
-          }
-  
-          @include breakpoint(large) {
-            min-width: 330px;
-          }
-  
+
           @include breakpoint(small only) {
             margin-bottom: 1em;
             font-size: 20px;
@@ -551,38 +496,28 @@ $themes: (
         }
   
         @include element(attribute) {
+          min-height: 80px;
+          width: 100%;
           @include breakpoint(large up) {
-            min-height: 220px;
-          }
-          
-          @include breakpoint(medium) {
-            border-bottom: solid 2px $color-brdr-issuance;
-            // min-height: 220px;
-            padding-bottom: 25px;
-            margin-bottom: 25px;
-            @include xy-grid(horizontal, false);
-            @include flex-align(left, middle);
-          }
-  
-          @include breakpoint(small) {
-            @include xy-grid(vertical);					
-            @include flex-align(spaced, middle);
+            margin: 3rem 0;
           }
 
-          // @include modifier(space) {
-          //   margin: 32px 0;
-          //   border-top: solid 2px $color-brdr-issuance;
-          //   padding-top: 32px;
-          // }
+          @include modifier(supply) {
+          }
+
+          @include modifier(long-height) {
+            min-height: 180px;
+            margin: 0;
+          }
+
+          @include xy-grid(vertical);					
+          @include flex-align(justify, null);
         }
   
         @include element(types) {
           @include breakpoint(medium) {
             @include xy-grid(horizontal, false);
-            @include flex-align(left, middle);
-            > div:not(:last-child) {
-              margin-right: 1em;
-            }
+            @include flex-align(justify, middle);
           }
   
           @include breakpoint(small down) {
@@ -600,26 +535,32 @@ $themes: (
             height: 145px;
             display: flex;
             flex-direction: column;
-            align-items: center;
             text-transform: capitalize;
             font-size: 12px;
             align-items: center;
             font-weight: 500;
             color: $color-text-gray;
-            justify-content: space-evenly;
             position: relative;
             &:hover {
-              border: solid 2px $dark;
+              border: solid 2px rgba(5, 34, 53, 0.3);
               cursor: pointer;
             }
             @include modifier(chosen) {
-              border: solid 2px $dark;
+              border: solid 2px rgba(5, 34, 53, 0.3);
             }
             
             &:last-child {
               > img {
                 width: 50px;
               }
+            }
+
+            >span {
+              padding: 10px 0 18px;
+            }
+
+            > img {
+              padding-bottom: 15px;
             }
           }
 
@@ -629,19 +570,16 @@ $themes: (
               width: 70%;
             }
 
-            border-radius: 16px;
+            border-radius: 2px;
             display: inline-block;
             width: 100%;
 
             >div {
               border-color: none !important;
-             
-              
             }
 
             @include element(prefix) {
               color: #0a7586 !important;
-              font-size: 12px;
               @include element(placeholder) {
                 color: #8d95a9 !important;
               }
@@ -651,9 +589,10 @@ $themes: (
               @include element(control) {
                 border: none;
                 min-height: auto !important;
-                border-radius: 16px !important;
-                height: 2em;
-                box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+                border-radius: 2px !important;
+                border: solid 1px #cccccc;
+                font-size: 9px;
+                // height: 2em;
                 &:hover {
                   box-shadow: none;
                   border: solid 1px $dark;
@@ -700,7 +639,20 @@ $themes: (
 
               @include element(menu-list) {
                 > div {
-                  padding: 3px;
+                  font-size: 9px;
+                  display: flex;
+                  align-items: center;
+                  padding: 3px 10px;
+                  min-height: 34px;
+                  height: 100%;
+                  max-height: 34px;
+                  &:not(:last-child) {
+                    border-bottom: 1px solid #ededed;
+                  }
+
+                  &:hover {
+                    background-color: rgba(238, 238, 238, 0.5);
+                  }
 
                   @include block(icon) {
                     display: inline-block;
@@ -723,10 +675,7 @@ $themes: (
         @include element(logos) {
           @include breakpoint(medium up) {
             @include xy-grid(horizontal, false);
-            @include flex-align(left, middle);
-            > div:not(:last-child) {
-              margin-right: 1em;
-            }
+            @include flex-align(justify, middle);
           }
   
           @include breakpoint(small down) {
@@ -778,24 +727,19 @@ $themes: (
           
           @include element(input) {
             input {
-              box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
-              border: solid 2px transparent;
-              background-color: #fff;
-              border-radius: 46.5px;
-              color: $dark;
-              padding: 8px 16px;
-              line-height: 1.92;
-              min-height: 2.5em;
-              font-size: 20px;
-              font-weight: bold;
               width: 100%;
-  
+              background-color: $color-white;
+              padding: 8px 16px;
+              font-size: 15px;
+              color: $dark;
+              height: 40px;
+              border-radius: 5px;
+              box-shadow: 0 0 6px 0 #cbcbcb;
+              border: none;
+
               &::placeholder {
                 color: rgba(0, 0, 0, 0.3);
-                font-weight: bold;
-                font-size: 20px;
               }
-              
               &:focus {
                 border: solid 2px $dark;
                 box-shadow: none;
@@ -806,6 +750,7 @@ $themes: (
   
         @include element(next) {
           margin: 1em 0;
+          
   
           @include breakpoint(small) {
             margin-top: 2em;
@@ -837,38 +782,31 @@ $themes: (
           @include xy-grid(vertical);
           @include flex-align(center, middle);
           padding: 0 10px;
+
+          @include breakpoint(large up) {
+            max-width: 620px;
+            margin: auto;
+          }
         }
   
         @include element(options) {
           @include xy-grid(vertical, false);
           @include flex-align(center, top);
-  
-          @include breakpoint(large) {
-            width: 30%;
-          }
-          @include breakpoint(medium) {
-            width: 50%;
-          }
+          width: 100%;
+
           @include breakpoint(small down) {
             width: 85%;
           }
         }
   
         @include element(title) {
-          font-size: 21px;
+          font-size: 18px;
           font-weight: bold;
           line-height: 1.29;
           text-transform: capitalize;
           color: $dark;
           text-align: center;
-  
-          @include breakpoint(large) {
-            width: 20%;					
-          }
-  
-          @include breakpoint(medium) {
-            width: 50%;
-          }
+          width: 100%;
   
           @include breakpoint(small) {
             margin-bottom: 1em;
@@ -884,7 +822,7 @@ $themes: (
           
           @include breakpoint(medium) {
             font-size: 16px;
-            margin: 16px;
+            margin: 16px 0;
           }
   
           @include breakpoint(small) {
@@ -1141,10 +1079,6 @@ $themes: (
             font-weight: 500;
             color: $color-primary-dark;
             align-self: flex-start;
-            
-            @include breakpoint(medium up) {
-              min-width: 130px;
-            }
   
             @include breakpoint(small) {
               flex-basis: 40%;
@@ -1233,14 +1167,6 @@ $themes: (
             margin-top: 1em;
           }
         }
-
-        div > div > button.button-flip__front, div.congratulation > div.congratulation__btn > button {
-          background-color: $secondary !important;
-
-          &:hover {
-            background-color: $hover !important;
-          }
-        }
       }
       
       @include block(progress) {
@@ -1313,7 +1239,7 @@ $themes: (
           border-top: 7px solid rgba(225, 225, 225, 0.5);
           border-right: 7px solid rgba(225, 225, 225, 0.5);
           border-bottom: 7px solid rgba(225, 225, 225, 0.5);
-          border-left: 7px solid $color-ropsten;
+          border-left: 7px solid $color-fuse;
           -webkit-transform: translateZ(0);
           -ms-transform: translateZ(0);
           transform: translateZ(0);
@@ -1350,7 +1276,7 @@ $themes: (
       }
       
       @include element(back) {
-        font-size: 16px;
+        font-size: 13px;
         background: none;
         border: 1px solid transparent;
         color: $dark;
@@ -1369,22 +1295,8 @@ $themes: (
           color: darken($dark, 10%);
         }
       }
-
-      .button {
-        background-color: $secondary !important;
-        &:hover {
-          background: $hover  !important;
-        }
-      }
     }
 
-    .button-flip__wrapper > .button-flip > .button-flip__front, .status__button > button {
-      background-color: $secondary !important;
-
-      &:hover {
-        background-color: $hover !important;
-      }
-    }
   }
 }
 

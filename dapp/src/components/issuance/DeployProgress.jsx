@@ -132,7 +132,7 @@ class DeployProgress extends PureComponent {
           hasErrors && (
             <div className='progress__error'>
               <p>The process has failed, please start over</p>
-              <button className='button button--normal' onClick={this.refreshPage}>Try again</button>
+              <button className='button button--normal button--fuse' onClick={this.refreshPage}>Try again</button>
             </div>
           )
         }

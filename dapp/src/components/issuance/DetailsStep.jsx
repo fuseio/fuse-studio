@@ -64,9 +64,9 @@ export default class DetailsStep extends Component {
               setCommunityLogo={setCommunityLogo}
               communitySymbol={communitySymbol}
             />
-            <div className='grid-x align-center attributes__next'>
+            <div className='grid-x align-center next'>
               <button
-                className='button button--big'
+                className='button button--normal button--fuse'
                 disabled={
                   this.validateStep()
                 }
@@ -136,9 +136,9 @@ export default class DetailsStep extends Component {
           setCommunityLogo={setCommunityLogo}
           communitySymbol={communitySymbol}
         />
-        <div className='grid-x align-center attributes__next'>
+        <div className='grid-x align-center next'>
           <button
-            className='button button--big'
+            className='button button--normal button--fuse'
             disabled={
               this.validateStep()
             }

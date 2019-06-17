@@ -23,7 +23,7 @@ export default class SummaryStep extends Component {
         return null
       default:
         return (
-          <TransactionButton clickHandler={this.props.showPopup} frontText='ISSUE' />
+          <TransactionButton modifier='fuse' clickHandler={this.props.showPopup} frontText='ISSUE' />
         )
     }
   }
