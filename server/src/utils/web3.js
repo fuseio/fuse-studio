@@ -2,6 +2,7 @@ const Web3 = require('web3')
 const ethUtils = require('ethereumjs-util')
 const config = require('config')
 const { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
+const { inspect } = require('util')
 const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
 const { fetchGasPrice } = require('@utils/network')
@@ -17,8 +18,7 @@ const createContract = ({ web3, bridgeType }, abi, address) =>
   new web3.eth.Contract(abi, address, config.get(`network.${bridgeType}.contract.options`))
 
 const createMethod = (contract, methodName, ...args) => {
-  const { inspect } = require('util')
-  console.log(`creating method ${methodName} with arguments: ${inspect(...args)}`)
+  console.log(`creating method ${methodName} with arguments: ${inspect(args)}`)
 
   let method
   if (methodName === 'deploy') {
@@ -34,6 +34,8 @@ const getMethodName = (method) => method.methodName || 'unknown'
 
 const getGasPrice = (bridgeType) => bridgeType === 'home' ? '1000000000' : fetchGasPrice('fast')
 
+const retries = 2
+
 const send = async ({ web3, bridgeType, address }, method, options) => {
   const doSend = async () => {
     const methodName = getMethodName(method)
@@ -48,13 +50,17 @@ const send = async ({ web3, bridgeType, address }, method, options) => {
   const gasPrice = await getGasPrice(bridgeType)
   const account = await Account.findOne({ address })
   let receipt
-  try {
-    await doSend()
-  } catch (error) {
-    const nonce = await web3.eth.getTransactionCount(from)
-    account.nonces[bridgeType] = nonce
-    await doSend()
+  for (let i = 0; i < retries; i++) {
+    try {
+      await doSend()
+      break
+    } catch (error) {
+      console.error(error)
+      const nonce = await web3.eth.getTransactionCount(from)
+      account.nonces[bridgeType] = nonce
+    }
   }
+
   account.nonces[bridgeType]++
   await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
   return receipt
