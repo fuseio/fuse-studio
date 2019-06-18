@@ -299,8 +299,11 @@
 				padding: .7em 3.5em;
 			}
 
-			@include breakpoint(small down) {
+			@include breakpoint(medium down) {
 				padding: 9px;
+			}
+
+			@include breakpoint(small only) {
 				font-size: 12px;
 			}
 		}

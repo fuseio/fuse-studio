@@ -28,11 +28,11 @@ export default class HomePage extends Component {
       <div className='home_page'>
         <NavBar />
         <div className='home_page__wrapper grid-container'>
-          <div className='home_page__banner grid-x  align-bottom'>
-            <div className='home_page__image home_page__image--first cell medium-3 hide-for-small-only'>
+          <div className='home_page__banner grid-x align-bottom'>
+            <div className='home_page__image home_page__image--first cell large-3 show-for-large'>
               <div><img src={personImage} /></div>
             </div>
-            <div className='home_page__content cell medium-8' style={{ height: '50%' }}>
+            <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>
               <h2 className='home_page__title'>Launch your<br /> community on Fuse</h2>
               <p className='home_page__text home_page__text--space'>
                 Fuse is intended for community currencies operated by companies and entrepreneurs.

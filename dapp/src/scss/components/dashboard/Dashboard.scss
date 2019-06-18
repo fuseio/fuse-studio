@@ -25,17 +25,15 @@
 
     @include breakpoint(medium up) {
       flex-basis: 50%;
+      &:last-child {
+        padding-left: 20px;
+      }
     }
 
     @include breakpoint(small down) {
       height: 60px;
     }
 
-    &:last-child {
-      padding-left: 20px;
-    }
-
-    
     &:not(:last-child) {
       
       
@@ -165,7 +163,7 @@
   @include block(content) {
     position: relative;
 
-    @include breakpoint(large) {
+    @include breakpoint(large up) {
       width: 80%;
       margin: 2em auto auto;
     }
@@ -175,13 +173,15 @@
       margin: 2em auto auto;
     }
 
-    @include breakpoint(medium only) {
+    @include breakpoint(medium) {
       width: 70%;
+      padding-top: 5em;
       margin: auto;
     }
 
     @include breakpoint(small only) {
       padding: 32px 10px;
+      // padding: 5em 0;
     }
 
     @include element(container) {
@@ -196,11 +196,16 @@
         box-shadow: 0 1px 3px 0 rgba(37, 67, 90, 0.6), inset 5px -5px 11px 0 rgba(0, 0, 0, 0.25);
         background-repeat: no-repeat;
         background-size: contain;
+
+        @include breakpoint(large down) {
+          background-size: cover;
+          height: 301px;
+        }
       }
 
       @include breakpoint(large up) {
         position: relative;
-        height: auto;
+        height: inherit;
         min-height: 90vh;
         width: 100%;
         flex: 1;
@@ -208,6 +213,11 @@
 
       @include breakpoint(medium down) {
         min-height: 90vh;
+        height: inherit;
+      }
+
+      @include breakpoint(small only) {
+        height: auto;
       }
     }
 

@@ -290,7 +290,7 @@ $themes: (
   
       @include element(indicators) {
         flex-basis: 78%;
-        @include breakpoint(small down) {
+        @include breakpoint(medium down) {
           position: absolute;
           top: 80px;
           background-image: url(../../assets/images/header.jpg);
@@ -303,10 +303,10 @@ $themes: (
   
     @include element(wizard) {
       padding-bottom: 100px;
-      @include breakpoint(medium) {
+      @include breakpoint(medium up) {
         margin-top: 2em;        
       }
-      @include breakpoint(small down) {
+      @include breakpoint(medium down) {
         margin-top: 7em;
       }
 
@@ -338,7 +338,7 @@ $themes: (
         @include xy-grid(vertical);					
         @include flex-align(spaced, middle);
         
-        @include breakpoint(large up) {
+        @include breakpoint(medium up) {
           padding: 40px 0 60px;
         }
   
@@ -407,7 +407,7 @@ $themes: (
       @include block(symbol) {
         @include xy-grid(vertical);					
         @include flex-align(spaced, null);
-        @include breakpoint(large up) {
+        @include breakpoint(medium up) {
           min-height: 80px;
           margin: 3em 0;
         }
@@ -471,7 +471,7 @@ $themes: (
   
       @include block(attributes) {
           margin: 0 auto;
-        @include breakpoint(large) {
+        @include breakpoint(medium up) {
           max-width: 620px;				
         }
 
@@ -498,7 +498,7 @@ $themes: (
         @include element(attribute) {
           min-height: 80px;
           width: 100%;
-          @include breakpoint(large up) {
+          @include breakpoint(medium up) {
             margin: 3rem 0;
           }
 
@@ -783,7 +783,7 @@ $themes: (
           @include flex-align(center, middle);
           padding: 0 10px;
 
-          @include breakpoint(large up) {
+          @include breakpoint(medium up) {
             max-width: 620px;
             margin: auto;
           }
