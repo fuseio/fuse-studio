@@ -48,8 +48,7 @@ module.exports = {
       addressesRopsten: {
         HomeBridgeFactory: '0xf01c10D1253061164153116925B7a9b11b0D903C',
         SimpleListFactory: '0x9FA04c6fc70B0ae20dAD9D7b36161bf1EdcbA0E2',
-        BridgeMapper: '0x0f4b2805522c471191f6a605B4E4795bb571e053',
-        UsersRegistry: '0xD54C1B417502CDe8275cBf91B0A8dC820ccb8054'
+        BridgeMapper: '0x0f4b2805522c471191f6a605B4E4795bb571e053'
       },
       addresses: defer(function () {
         if (this.network.foreign.name === 'mainnet') {
