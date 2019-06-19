@@ -3,7 +3,6 @@ const router = require('express').Router()
 const mongoose = require('mongoose')
 const Entity = mongoose.model('Entity')
 const metadataUtils = require('@utils/metadata')
-const { upsertUser } = require('@utils/usersRegistry')
 const { getMetadata } = require('@utils/metadata')
 const Community = mongoose.model('Community')
 const Token = mongoose.model('Token')
@@ -64,15 +63,8 @@ router.put('/:communityAddress/:account', async (req, res) => {
   const { account, communityAddress } = req.params
   const { name } = req.body.metadata
   const { hash } = await metadataUtils.createMetadata(req.body.metadata)
+
   const uri = `ipfs://${hash}`
-
-  try {
-    await upsertUser(account, uri)
-  } catch (err) {
-    console.log('user cannot be added to User Registry')
-    throw err
-  }
-
   const entity = await Entity.findOneAndUpdate({ account, communityAddress }, { uri, name }, { new: true, upsert: true })
   return res.json({ data: entity })
 })
