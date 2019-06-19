@@ -88,8 +88,9 @@ class Users extends Component {
 
   loadAddUserModal = (isJoin) => {
     const submitEntity = isJoin ? this.props.joinCommunity : this.props.addEntity
-    const { loadModal } = this.props
+    const { loadModal, accountAddress } = this.props
     loadModal(ADD_USER_MODAL, {
+      entity: isJoin ? { account: accountAddress } : undefined,
       submitEntity: (data) => submitEntity(this.props.community.communityAddress, { ...data, type: 'user' }, this.props.isClosed)
     })
   }

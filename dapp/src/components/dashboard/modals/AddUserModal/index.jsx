@@ -2,7 +2,7 @@ import React from 'react'
 import Modal from 'components/common/Modal'
 import AddUserForm from '../../components/AddUserForm'
 
-export default ({ hideModal, submitEntity }) => {
+export default ({ hideModal, submitEntity, entity }) => {
   const handleSubmitUser = (...args) => {
     submitEntity(...args)
     hideModal()
@@ -14,7 +14,7 @@ export default ({ hideModal, submitEntity }) => {
         <div className='user-form__image'>
           <div />
         </div>
-        <AddUserForm submitEntity={handleSubmitUser} />
+        <AddUserForm submitEntity={handleSubmitUser} entity={entity} />
       </div>
     </Modal>
   )

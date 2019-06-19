@@ -10,5 +10,6 @@ module.exports = (mongoose) => {
   mongoose.community = mongoose.community || require('./Community')(mongoose)
   mongoose.communityProgress = mongoose.communityProgress || require('./CommunityProgress')(mongoose)
   mongoose.entity = mongoose.entity || require('./Entity')(mongoose)
+  mongoose.profile = mongoose.profile || require('./Profile')(mongoose)
   return mongoose
 }

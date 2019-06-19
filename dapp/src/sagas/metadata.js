@@ -41,26 +41,23 @@ export function * createMetadata ({ metadata }) {
 }
 
 export function * createEntitiesMetadata ({ communityAddress, accountAddress, metadata }) {
+  debugger
   const box = yield get3box({ accountAddress })
   console.log({ box })
 
   const { publicData, privateData } = separateData(metadata)
+  const publicFields = Object.keys(publicData)
+  const publicValues = Object.values(publicData)
+  yield box.public.setMultiple(publicFields, publicValues)
 
-  let fields = Object.keys(publicData)
-  let values = Object.values(publicData)
+  const privateFields = Object.keys(privateData)
+  const privateValues = Object.values(privateData)
+  yield box.private.setMultiple(privateFields, privateValues)
+
   debugger
-  let response = yield box.public.setMultiple(fields, values)
-  debugger
-
-  fields = Object.keys(privateData)
-  values = Object.values(privateData)
-  response = yield box.private.setMultiple(fields, values)
-
-  // debugger
   // const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountId, metadata })
   yield put({
-    type: actions.CREATE_METADATA.SUCCESS,
-    response: response
+    type: actions.CREATE_METADATA.SUCCESS
   })
   // return { data, hash }
 }
