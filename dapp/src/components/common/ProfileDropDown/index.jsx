@@ -17,31 +17,33 @@ const InnerCommunities = ({ communities, networkType, metadata, showDashboard, t
     <React.Fragment>
       <div className='profile__communities grid-y'>
         <span>{title}</span>
-        {communities && communities.map((entity, index) => {
-          return (
-            <div className='community' key={index} onClick={() => showDashboard(entity.communityAddress)}>
-              <div className='community__logo'>
-                <CommunityLogo
-                  isDaiToken={entity.token && entity.token.symbol === 'DAI'}
-                  networkType={networkType}
-                  token={entity.token}
-                  isSmall={isMobileOnly}
-                  metadata={(entity.token && entity.token.tokenURI && metadata[entity.token.tokenURI]) || {}}
-                />
+        <div className='grid-y grid-margin-y grid-margin-x'>
+          {communities && communities.map((entity, index) => {
+            return (
+              <div className='community cell' key={index} onClick={() => showDashboard(entity.communityAddress)}>
+                <div className='community__logo'>
+                  <CommunityLogo
+                    isDaiToken={entity.token && entity.token.symbol === 'DAI'}
+                    networkType={networkType}
+                    token={entity.token}
+                    isSmall={isMobileOnly}
+                    metadata={(entity.token && entity.token.tokenURI && metadata[entity.token.tokenURI]) || {}}
+                  />
+                </div>
+                <div className='community__content'>
+                  <h3 className='community__content__title'>{entity.token && entity.token.name}</h3>
+                  <p className='community__content__members'>
+                    Total Supply
+                    <span>
+                      {formatWei(entity.token && entity.token.totalSupply, 0)}
+                    </span>
+                  </p>
+                </div>
               </div>
-              <div className='community__content'>
-                <h3 className='community__content__title'>{entity.token && entity.token.name}</h3>
-                <p className='community__content__members'>
-                  Total Supply
-                  <span>
-                    {formatWei(entity.token && entity.token.totalSupply, 0)}
-                  </span>
-                </p>
-              </div>
-            </div>
-          )
-        }
-        )}
+            )
+          }
+          )}
+        </div>
       </div>
     </React.Fragment>
   )

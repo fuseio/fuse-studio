@@ -58,7 +58,7 @@ export default ({ communityType = { text: '' }, setCommunityType, networkType, s
                 return (
                   <div className={classes} key={key} onClick={() => handleClick(communityTypes[key])}>
                     <span>{text}</span>
-                    <img src={communityType && communityType.value === 'existingToken' && existingToken && existingToken.value ? existingToken.icon : img} />
+                    <img src={value === 'existingToken' && communityType && communityType.value === 'existingToken' && existingToken && existingToken.value ? existingToken.icon : img} />
                     {
                       value === 'existingToken' && (
                         <div className='attributes__types__select__wrapper'>

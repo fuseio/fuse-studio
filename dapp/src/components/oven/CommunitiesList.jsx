@@ -45,8 +45,8 @@ class CommunitiesList extends Component {
       <div className='communities' ref={this.myRef}>
         <NavBar />
         <div className='communities__wrapper'>
-          <div className='grid-container communities__banner grid-x'>
-            <div className='communities__banner__content cell medium-8' style={{ height: '50%' }}>
+          <div className='grid-container communities__banner grid-x grid-padding-x grid-padding-y'>
+            <div className='communities__banner__content cell medium-14 large-8' style={{ height: '50%' }}>
               <h2 className='communities__banner__title'>Welcome to<br />Fuse communities</h2>
               <p className='communities__banner__text communities__banner__text--space'>
                 Fuse is intended for community currencies operated by companies and entrepreneurs.
@@ -60,8 +60,8 @@ class CommunitiesList extends Component {
             </div>
           </div>
         </div>
-        <div className='communities__list'>
-          <div className='grid-container'>
+        <div className='communities__list__wrapper'>
+          <div className='grid-container communities__list'>
             <div className='grid-y'>
               <div className='grid-x grid-padding-x grid-padding-y communities__search__wrapper'>
                 <div className='cell small-24'>

@@ -1,15 +1,9 @@
 @include block(community_header) {
   @include xy-grid();
-  @include breakpoint(large) {
-    min-height: 56px;
-  }
+  min-height: 56px;
 
-  @include breakpoint(medium only) {
-    padding: 30px 0;
-  }
-
-  @include breakpoint(small down) {
-    padding: 40px 0;
+  @include breakpoint(small only) {
+    padding: 2em 0;
     @include xy-grid(horizontal, false);
   }
 

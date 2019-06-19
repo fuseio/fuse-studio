@@ -34,7 +34,22 @@ class DashboardLayout extends PureComponent {
   }
 
   componentDidUpdate (prevProps) {
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.onSetSidebarOpen(false)
+    }
+
+    if (this.props.match.params.address !== prevProps.match.params.address) {
+      this.props.fetchCommunity(this.props.communityAddress)
+      this.props.fetchTokenProgress(this.props.communityAddress)
+      this.props.fetchEntities(this.props.communityAddress)
+    }
+
     if ((this.props.community && this.props.community.foreignTokenAddress) && !prevProps.community) {
+      const { fetchToken, community: { foreignTokenAddress } } = this.props
+      fetchToken(foreignTokenAddress)
+    }
+
+    if (prevProps.community && ((this.props.community && this.props.community.foreignTokenAddress) !== (prevProps.community && prevProps.community.foreignTokenAddress))) {
       const { fetchToken, community: { foreignTokenAddress } } = this.props
       fetchToken(foreignTokenAddress)
     }
@@ -50,9 +65,7 @@ class DashboardLayout extends PureComponent {
     }
   }
 
-  onSetSidebarOpen = (open) => {
-    this.setState({ open })
-  }
+  onSetSidebarOpen = open => this.setState({ open })
 
   render () {
     if (!this.props.token) {

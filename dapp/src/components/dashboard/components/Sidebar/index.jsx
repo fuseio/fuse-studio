@@ -55,8 +55,12 @@ export default ({ communityName, match, isGradientLogo }) => {
   const [currentPath, setPath] = useState('')
   return (
     <aside className='sidebar'>
-      <div className='item' style={{ cursor: 'pointer' }}><Link to='/'><Logo isGradientLogo={isGradientLogo} /></Link></div>
-      {sidebarItems.map(({ icon, name, url, style, path, selectedIcon }, index) => {
+      <div className='item' style={{ cursor: 'pointer' }}>
+        <Link to='/'>
+          <Logo isGradientLogo={isGradientLogo} />
+        </Link>
+      </div>
+      {sidebarItems.map(({ icon, name, url, style, path, selectedIcon }) => {
         return (
           <Link
             key={name}
