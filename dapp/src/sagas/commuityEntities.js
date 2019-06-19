@@ -80,44 +80,42 @@ function * removeAdminRole ({ account }) {
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
 }
 
-function * addUser ({ communityAddress, data, isClosed }) {
-  const accountAddress = yield select(getAccountAddress)
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
-
-  let userRoles = isClosed ? roles.USER_ROLE : combineRoles(roles.USER_ROLE, roles.APPROVED_ROLE)
-
-  const method = CommunityContract.methods.addEntity(data.account, userRoles)
-  const transactionPromise = method.send({
-    from: accountAddress
-  })
-
-  const action = actions.ADD_ENTITY
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-  yield call(createEntitiesMetadata, { communityAddress, accountId: data.account, metadata: data })
-}
-
-function * addBusiness ({ communityAddress, data }) {
-  const accountAddress = yield select(getAccountAddress)
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
-  const method = CommunityContract.methods.addEntity(data.account, roles.BUSINESS_ROLE)
-  const transactionPromise = method.send({
-    from: accountAddress
-  })
-  const action = actions.ADD_ENTITY
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-  yield call(createEntitiesMetadata, { communityAddress, accountId: data.account, metadata: data })
+function * deriveEntityData (data, isClosed) {
+  if (data.type === 'user') {
+    return { entityRoles: isClosed ? roles.USER_ROLE : combineRoles(roles.USER_ROLE, roles.APPROVED_ROLE) }
+  } else if (data.type === 'business') {
+    return { entityRoles: roles.BUSINESS_ROLE }
+  }
 }
 
 function * addEntity ({ communityAddress, data, isClosed }) {
-  if (data.type === 'user') {
-    yield call(addUser, { communityAddress, data, isClosed })
-  } else if (data.type === 'business') {
-    yield call(addBusiness, { communityAddress, data })
-  }
+  const { entityRoles } = deriveEntityData(data, isClosed)
+
+  const accountAddress = yield select(getAccountAddress)
+  const CommunityContract = getContract({ abiName: 'Community',
+    address: communityAddress
+  })
+  const method = CommunityContract.methods.addEntity(data.account, entityRoles)
+  const transactionPromise = method.send({
+    from: accountAddress
+  })
+  const action = actions.ADD_ENTITY
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+}
+
+function * joinCommunity ({ communityAddress, data }) {
+  // const accountAddress = yield select(getAccountAddress)
+  // const CommunityContract = getContract({ abiName: 'Community',
+  //   address: communityAddress
+  // })
+  // const method = CommunityContract.methods.join()
+  // const transactionPromise = method.send({
+  //   from: accountAddress
+  // })
+  // const action = actions.ADD_ENTITY
+  // yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: data })
 }
 
 function * removeEntity ({ communityAddress, account }) {
@@ -166,6 +164,7 @@ export default function * commuityEntitiesSaga () {
     tryTakeEvery(actions.ADD_ADMIN_ROLE, addAdminRole, 1),
     tryTakeEvery(actions.REMOVE_ADMIN_ROLE, removeAdminRole, 1),
     tryTakeEvery(actions.CONFIRM_USER, confirmUser, 1),
+    tryTakeEvery(actions.JOIN_COMMUNITY, joinCommunity, 1),
     takeEvery(action => /^(CREATE_METADATA|REMOVE_ENTITY|ADD_ADMIN_ROLE|REMOVE_ADMIN_ROLE|CONFIRM_USER).*SUCCESS/.test(action.type), watchEntityChanges)
   ])
 }

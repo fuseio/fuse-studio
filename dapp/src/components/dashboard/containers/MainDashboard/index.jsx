@@ -73,7 +73,7 @@ class DashboardLayout extends PureComponent {
       return null
     }
     const { open } = this.state
-    const { match, token, community, metadata, networkType, communityAddress } = this.props
+    const { match, token, community, metadata, networkType, communityAddress, accountAddress } = this.props
 
     const { address: tokenAddress, name } = token
     const { isClosed } = community

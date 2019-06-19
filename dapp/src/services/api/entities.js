@@ -7,8 +7,8 @@ export const fetchCommunityEntities = (apiRoot, { communityAddress, entityType }
   return request.get(path).then(response => response.body)
 }
 
-export const createEntitiesMetadata = (apiRoot, { communityAddress, accountId, metadata }) =>
-  request.put(`${apiRoot}/entities/${communityAddress}/${accountId}`)
+export const createEntitiesMetadata = (apiRoot, { communityAddress, accountAddress, metadata }) =>
+  request.put(`${apiRoot}/entities/${communityAddress}/${accountAddress}`)
     .send({ metadata })
     .then(response => response.body)
 

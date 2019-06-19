@@ -1,6 +1,8 @@
 import { all, put, takeEvery } from 'redux-saga/effects'
 
 import { createEntityPut, tryTakeEvery, apiCall } from './utils'
+import { get3box } from 'services/web3'
+import { separateData } from 'utils/3box'
 import * as entitiesApi from 'services/api/entities'
 import * as metadataApi from 'services/api/metadata'
 import * as actions from 'actions/metadata'
@@ -38,15 +40,29 @@ export function * createMetadata ({ metadata }) {
   return { data, hash }
 }
 
-export function * createEntitiesMetadata ({ communityAddress, accountId, metadata }) {
-  const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountId, metadata })
+export function * createEntitiesMetadata ({ communityAddress, accountAddress, metadata }) {
+  const box = yield get3box({ accountAddress })
+  console.log({ box })
+
+  const { publicData, privateData } = separateData(metadata)
+
+  let fields = Object.keys(publicData)
+  let values = Object.values(publicData)
+  debugger
+  let response = yield box.public.setMultiple(fields, values)
+  debugger
+
+  fields = Object.keys(privateData)
+  values = Object.values(privateData)
+  response = yield box.private.setMultiple(fields, values)
+
+  // debugger
+  // const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountId, metadata })
   yield put({
     type: actions.CREATE_METADATA.SUCCESS,
-    response: {
-      data
-    }
+    response: response
   })
-  return { data, hash }
+  // return { data, hash }
 }
 
 function * watchTokensFetched ({ response }) {
