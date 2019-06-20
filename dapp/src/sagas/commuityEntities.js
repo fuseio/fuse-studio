@@ -105,16 +105,16 @@ function * addEntity ({ communityAddress, data, isClosed }) {
 }
 
 function * joinCommunity ({ communityAddress, data }) {
-  // const accountAddress = yield select(getAccountAddress)
-  // const CommunityContract = getContract({ abiName: 'Community',
-  //   address: communityAddress
-  // })
-  // const method = CommunityContract.methods.join()
-  // const transactionPromise = method.send({
-  //   from: accountAddress
-  // })
-  // const action = actions.ADD_ENTITY
-  // yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  const accountAddress = yield select(getAccountAddress)
+  const CommunityContract = getContract({ abiName: 'Community',
+    address: communityAddress
+  })
+  const method = CommunityContract.methods.join()
+  const transactionPromise = method.send({
+    from: accountAddress
+  })
+  const action = actions.ADD_ENTITY
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
   yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: data })
 }
 

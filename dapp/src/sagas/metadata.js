@@ -3,7 +3,7 @@ import { all, put, takeEvery } from 'redux-saga/effects'
 import { createEntityPut, tryTakeEvery, apiCall } from './utils'
 import { get3box } from 'services/web3'
 import { separateData } from 'utils/3box'
-import * as entitiesApi from 'services/api/entities'
+import { createProfile } from 'services/api/profiles'
 import * as metadataApi from 'services/api/metadata'
 import * as actions from 'actions/metadata'
 import { FETCH_TOKEN } from 'actions/token'
@@ -40,10 +40,8 @@ export function * createMetadata ({ metadata }) {
   return { data, hash }
 }
 
-export function * createEntitiesMetadata ({ communityAddress, accountAddress, metadata }) {
-  debugger
+export function * createEntitiesMetadata ({ accountAddress, metadata }) {
   const box = yield get3box({ accountAddress })
-  console.log({ box })
 
   const { publicData, privateData } = separateData(metadata)
   const publicFields = Object.keys(publicData)
@@ -53,11 +51,10 @@ export function * createEntitiesMetadata ({ communityAddress, accountAddress, me
   const privateFields = Object.keys(privateData)
   const privateValues = Object.values(privateData)
   yield box.private.setMultiple(privateFields, privateValues)
+  yield apiCall(createProfile, { accountAddress, publicData })
 
-  debugger
-  // const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountId, metadata })
   yield put({
-    type: actions.CREATE_METADATA.SUCCESS
+    type: actions.CREATE_ENTITY_METADATA.SUCCESS
   })
   // return { data, hash }
 }
