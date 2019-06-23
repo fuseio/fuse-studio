@@ -86,7 +86,7 @@ export default class TransferForm extends PureComponent {
         </div>
 
         <div className='transfer-tab__content__button'>
-          <TransactionButton type='submit' disabled={!isValid} />
+          <TransactionButton modifier='fuse' type='submit' disabled={!isValid} />
         </div>
       </form>
     )
