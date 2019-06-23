@@ -163,7 +163,7 @@ export default class MintBurnForm extends PureComponent {
         </div>
         <div className='transfer-tab__content__button'>
           {
-            actionType && <TransactionButton type='submit' disabled={!isValid} frontText={upperCase(actionType)} />
+            actionType && <TransactionButton modifier='fuse' type='submit' disabled={!isValid} frontText={upperCase(actionType)} />
           }
         </div>
       </form>

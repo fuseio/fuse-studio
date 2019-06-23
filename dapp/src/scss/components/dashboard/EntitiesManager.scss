@@ -382,9 +382,9 @@
 
     @include element(btn) {
       border: none;
-      color: $color-white;
+      color: $color-primary-dark;
       padding: 9px 20px;
-      background-color: $color-ropsten;
+      background: $color-fuse_gradient;
       border-radius: 16px;
       font-size: 11px;
       text-transform: uppercase;
