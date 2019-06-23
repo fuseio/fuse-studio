@@ -14,11 +14,12 @@ import {
   removeAdminRole,
   confirmUser,
   toggleCommunityMode,
-  joinCommunity
+  joinCommunity,
+  importExistingEntity
 } from 'actions/communityEntities'
 import { fetchCommunity } from 'actions/token'
 import { loadModal, hideModal } from 'actions/ui'
-import { ADD_USER_MODAL } from 'constants/uiConstants'
+import { ADD_USER_MODAL, IMPORT_EXISTING_ENTITY } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
 import { isOwner } from 'utils/token'
 import { getTransaction } from 'selectors/transaction'
@@ -95,6 +96,13 @@ class Users extends Component {
     })
   }
 
+  importExisting = () => {
+    const { loadModal, importExistingEntity, community: { communityAddress, isClosed } } = this.props
+    loadModal(IMPORT_EXISTING_ENTITY, {
+      submitEntity: (data) => importExistingEntity(data.account, communityAddress, isClosed)
+    })
+  }
+
   renderTransactionStatus = () => {
     if (this.props.signatureNeeded || this.props.transactionStatus === PENDING || this.props.fetchEntities) {
       return (
@@ -155,25 +163,29 @@ class Users extends Component {
   }
 
   renderList = (entities) => {
-    const { metadata, isAdmin, community: { communityAddress, homeTokenAddress } } = this.props
+    const { isAdmin, community: { communityAddress, homeTokenAddress } } = this.props
+    // const filteredItems = this.filterByRadio(entities)
 
     if (entities.length) {
       return (
-        entities.map((entity, index) =>
-          <Entity
-            key={index}
-            index={index}
-            entity={entity}
-            address={homeTokenAddress}
-            addAdminRole={this.handleAddAdminRole}
-            removeAdminRole={this.handleRemoveAdminRole}
-            handleRemove={this.handleRemoveEntity}
-            confirmUser={this.handleConfirmUser}
-            isAdmin={isAdmin}
-            metadata={metadata[entity.uri]}
-            showProfile={() => this.showProfile(communityAddress, entity.account)}
-          />
-        ))
+        entities.map((entity, index) => {
+          const { profile } = entity
+          return (
+            <Entity
+              key={index}
+              index={index}
+              entity={entity}
+              address={homeTokenAddress}
+              addAdminRole={this.handleAddAdminRole}
+              removeAdminRole={this.handleRemoveAdminRole}
+              handleRemove={this.handleRemoveEntity}
+              confirmUser={this.handleConfirmUser}
+              isAdmin={isAdmin}
+              metadata={profile && profile.publicData ? profile.publicData : {}}
+              showProfile={() => this.showProfile(communityAddress, entity.account)}
+            />
+          )
+        }))
     } else {
       return <p className='entities__items__empty'>There are no any entities</p>
     }
@@ -284,10 +296,22 @@ class Users extends Component {
           {
             (
               <div className='entities__header__add grid-x align-middle'>
-                <span onClick={isAdmin ? this.handleAddUser : this.handleJoinCommunity}>
-                  <a style={{ backgroundImage: `url(${plusIcon})` }} />
-                </span>
-                {isAdmin ? 'Add new user' : 'Join'}
+                <div onClick={isAdmin ? this.handleAddUser : this.handleJoinCommunity}>
+                  <span>
+                    <a style={{ backgroundImage: `url(${plusIcon})` }} />
+                  </span>
+                  {isAdmin ? 'Add new user' : 'Join'}
+                </div>
+                {
+                  isAdmin && (
+                    <div onClick={this.importExisting}>
+                      <span>
+                        <a style={{ backgroundImage: `url(${plusIcon})` }} />
+                      </span>
+                      Existing user
+                    </div>
+                  )
+                }
               </div>
             )
           }
@@ -326,8 +350,7 @@ const mapStateToProps = (state) => ({
   clnBalance: getClnBalance(state),
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
-  ...getTransaction(state, state.screens.communityEntities.transactionHash),
-  metadata: state.entities.metadata
+  ...getTransaction(state, state.screens.communityEntities.transactionHash)
 })
 
 const mapDispatchToProps = {
@@ -341,7 +364,8 @@ const mapDispatchToProps = {
   hideModal,
   fetchCommunity,
   fetchUsersEntities,
-  toggleCommunityMode
+  toggleCommunityMode,
+  importExistingEntity
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users)

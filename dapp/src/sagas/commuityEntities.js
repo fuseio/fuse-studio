@@ -2,13 +2,18 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 
 import { getContract } from 'services/contract'
 import * as actions from 'actions/communityEntities'
-import { createEntitiesFetch, tryTakeEvery } from './utils'
+import { createEntitiesFetch, tryTakeEvery, apiCall } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
 import { getCommunityAddress } from 'selectors/entities'
 import { createEntitiesMetadata } from 'sagas/metadata'
 import * as entitiesApi from 'services/api/entities'
 import { transactionFlow } from './transaction'
 import { roles, combineRoles } from '@fuse/roles'
+import Box from '3box'
+import { separateData } from 'utils/3box'
+import { createProfile } from 'services/api/profiles'
+import { uploadImage as uploadImageApi } from 'services/api/images'
+import omit from 'lodash/omit'
 
 function * confirmUser ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
@@ -149,6 +154,36 @@ function * watchEntityChanges ({ response }) {
   }
 }
 
+function * importExistingEntity ({ accountAddress, communityAddress, isClosed }) {
+  const profile = yield Box.getProfile(accountAddress)
+  const { entityRoles } = yield deriveEntityData(omit({ ...profile, type: 'user' }, ['ethereum_proof', 'proof_did']), isClosed)
+
+  const adminAccountAddress = yield select(getAccountAddress)
+
+  const CommunityContract = getContract({ abiName: 'Community',
+    address: communityAddress
+  })
+  const method = CommunityContract.methods.addEntity(accountAddress, entityRoles)
+  const transactionPromise = method.send({
+    from: adminAccountAddress
+  })
+  const action = actions.ADD_ENTITY
+  const { publicData } = separateData(omit({ ...profile, type: 'user' }, ['ethereum_proof', 'proof_did']))
+  yield apiCall(createProfile, { accountAddress, publicData })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield put({
+    type: actions.IMPORT_EXISTING_ENTITY.SUCCESS
+  })
+}
+
+function * uploadImage ({ image }) {
+  console.log('fsfdsfssfsdf: ', image)
+  
+  const data = yield call(uploadImageApi, { image })
+  console.log({ data })
+  return data.json()
+}
+
 const fetchUsersEntities = createEntitiesFetch(actions.FETCH_USERS_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchBusinessesEntities = createEntitiesFetch(actions.FETCH_BUSINESSES_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchEntity)
@@ -165,6 +200,8 @@ export default function * commuityEntitiesSaga () {
     tryTakeEvery(actions.REMOVE_ADMIN_ROLE, removeAdminRole, 1),
     tryTakeEvery(actions.CONFIRM_USER, confirmUser, 1),
     tryTakeEvery(actions.JOIN_COMMUNITY, joinCommunity, 1),
-    takeEvery(action => /^(CREATE_METADATA|REMOVE_ENTITY|ADD_ADMIN_ROLE|REMOVE_ADMIN_ROLE|CONFIRM_USER).*SUCCESS/.test(action.type), watchEntityChanges)
+    tryTakeEvery(actions.IMPORT_EXISTING_ENTITY, importExistingEntity, 1),
+    tryTakeEvery(actions.UPLOAD_IMAGE, uploadImage, 1),
+    takeEvery(action => /^(CREATE_METADATA|ADD_ENTITY|REMOVE_ENTITY|ADD_ADMIN_ROLE|REMOVE_ADMIN_ROLE|CONFIRM_USER).*SUCCESS/.test(action.type), watchEntityChanges)
   ])
 }

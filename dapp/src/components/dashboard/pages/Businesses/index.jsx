@@ -195,10 +195,12 @@ class Businesses extends Component {
           {
             isAdmin && (
               <div className='entities__header__add grid-x align-middle'>
-                <span onClick={this.handleAddBusiness}>
-                  <a style={{ backgroundImage: `url(${plusIcon})` }} />
-                </span>
-                Add new merchant
+                <div>
+                  <span onClick={this.handleAddBusiness}>
+                    <a style={{ backgroundImage: `url(${plusIcon})` }} />
+                  </span>
+                  Add new merchant
+                </div>
               </div>
             )
           }

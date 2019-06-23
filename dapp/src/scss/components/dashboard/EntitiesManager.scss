@@ -338,26 +338,28 @@
     }
 
     @include element(add) {
-      font-size: 11px;
-      > span {
-        width: 15px;
-        height: 12px;
-        display: inline-block;
+      > div {
+        font-size: 11px;
         cursor: pointer;
-        margin-right: 5px;
-        margin-left: auto;
+          > span {
+          width: 15px;
+          height: 12px;
+          display: inline-block;
+          margin-right: 5px;
+          margin-left: auto;
 
-        .fa {
-          font-size: 14px;
-        }
+          .fa {
+            font-size: 14px;
+          }
 
-        > a {
-          height: 100%;
-          width: 100%;
-          display: block;
-          background-size: contain;
-          background-position: center;
-          background-repeat: no-repeat;
+          > a {
+            height: 100%;
+            width: 100%;
+            display: block;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+          }
         }
       }
     }
@@ -382,9 +384,9 @@
 
     @include element(btn) {
       border: none;
-      color: $color-white;
+      color: $color-primary-dark;
       padding: 9px 20px;
-      background-color: $color-ropsten;
+      background: $color-fuse_gradient;
       border-radius: 16px;
       font-size: 11px;
       text-transform: uppercase;

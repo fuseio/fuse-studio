@@ -22,7 +22,7 @@ export const getProviderUrl = (networkType) => {
   if (networkType === 'fuse') {
     return CONFIG.web3.fuseProvider
   } else {
-    return getInfuraUrl(networkType, CONFIG.web3.apiKey)
+    return getInfuraUrl(networkType)
   }
 }
 export const getOptions = (provider) => {

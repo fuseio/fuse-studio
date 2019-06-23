@@ -12,7 +12,8 @@ router.put('/:account', async (req, res) => {
     profile = await new Profile({ account, publicData }).save()
     await Entity.findOneAndUpdate({ account }, { profile: profile._id })
   } catch (error) {
-    profile = Profile.findOneAndUpdate({ account }, { publicData }, { new: true })
+    profile = await Profile.findOneAndUpdate({ account }, { publicData }, { new: true })
+    await Entity.findOneAndUpdate({ account }, { profile: profile._id })
   }
 
   return res.json({ data: profile })

@@ -380,9 +380,9 @@
 
             @include element(btn) {
               border: none;
-              color: $color-white;
+              color: $color-primary-dark;
               padding: 9px 20px;
-              background-color: $color-ropsten;
+              background: $color-fuse_gradient;
               border-radius: 16px;
               font-size: 11px;
               text-transform: uppercase;
@@ -394,7 +394,7 @@
               margin-top: 30px;
               &:hover {
                 cursor: pointer;
-                background-color: darken($color-ropsten, 20%);
+                // background-color: darken($color-fuse_gradient, 20%);
               }
             }
           }
@@ -984,7 +984,7 @@
       > button {
         display: inline-block;
         border-radius: 30px;
-        background-color: $color-ropsten;
+        background: $color-fuse_gradient;
         font-size: 12px;
         color: $color-white;
         // padding: 10px 30px;

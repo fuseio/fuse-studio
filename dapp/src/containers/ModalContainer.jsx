@@ -14,6 +14,7 @@ import BusinessListModal from 'components/dashboard/modals/BusinessListModal'
 import BridgeModal from 'components/dashboard/modals/BridgeModal'
 import NoDataAboutOwnerModal from 'components/dashboard/modals/NoDataAboutOwnerModal'
 import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
+import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEntity'
 
 import {
   LOGIN_MODAL,
@@ -26,7 +27,8 @@ import {
   NO_DATA_ABOUT_OWNER_MODAL,
   SHOW_MORE_MODAL,
   QR_MODAL,
-  ADD_USER_MODAL
+  ADD_USER_MODAL,
+  IMPORT_EXISTING_ENTITY
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -45,7 +47,8 @@ const MODAL_COMPONENTS = {
   [NO_DATA_ABOUT_OWNER_MODAL]: NoDataAboutOwnerModal,
   [SHOW_MORE_MODAL]: ShowMoreModal,
   [QR_MODAL]: QrModal,
-  [ADD_USER_MODAL]: AddUserModal
+  [ADD_USER_MODAL]: AddUserModal,
+  [IMPORT_EXISTING_ENTITY]: ImportExistingEntity
 }
 
 const ModalContainer = (props) => {

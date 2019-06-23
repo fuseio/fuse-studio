@@ -1,0 +1,82 @@
+@include block(existing_entity) {
+  @include element(title) {
+    text-align: start;
+    font-size: 14px;
+    font-weight: 500;
+    color: $color-primary-dark;
+    margin-bottom: 1em;
+  }
+
+  @include element(field) {
+    @include xy-grid();
+    @include flex-align(null, middle);
+    width: 100%;
+    position: relative;
+
+    > .input-error {
+      bottom: -1.3em;
+      margin-left: 36%;
+    }
+
+    @include element(phone) {
+      @include xy-grid(vertical);
+      @include flex-align(center, middle);
+      flex: 1;
+      border-radius: 10px;
+
+      > input {
+        width: 100%;
+        &:last-child {
+          border-radius: 0 0 10px 10px
+        }
+        &:first-child {
+          border-radius: 10px 10px 0 0;
+        }
+      }
+
+      @include element(input) {
+        border: 1px solid $color-brdr-issuance;
+        font-family: $font-family-lato;
+        padding: 5px 12px;
+        display: block;
+        height: 2em;
+        font-size: 12px;
+        box-sizing: border-box;
+        color: $color-primary-dark;
+      }
+    }
+
+    @include element(input) {
+      border-radius: 16px;
+      border: 1px solid $color-brdr-issuance;
+      font-family: $font-family-lato;
+      flex: 1;
+      padding: 5px 12px;
+      display: block;
+      height: 2em;
+      font-size: 12px;
+      box-sizing: border-box;
+      color: $color-primary-dark;
+      &::placeholder {
+        color: #c0c5d2;
+      }
+    }
+
+    @include element(label) {
+      font-size: 11px;
+      font-weight: bold;
+      color: #8d95a9;
+      flex-basis: 35%;
+      text-align: start;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1.8em;
+    }
+  }
+
+  @include element(submit) {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

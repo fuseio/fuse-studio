@@ -35,6 +35,14 @@ class BusinessForm extends Component {
     this.validationSchema = entityShape
   }
 
+  setUploadCoverPicture = (node) => {
+    this.uploadCoverPicture = node
+  }
+
+  setUploadLogoPicture = (node) => {
+    this.uploadLogoPicture = node
+  }
+
   onSubmit = (values) => {
     const {
       submitEntity
@@ -62,8 +70,9 @@ class BusinessForm extends Component {
               Logo&nbsp; <FontAwesome className='entity-modal-content-label-icon' name='info-circle' />
             </p>
             <div className='logo-rectangle'>
-              <label className='entity-modal-content-upload-label' htmlFor='logo' id='logo'>
+              <label onClick={() => this.uploadLogoPicture.click()} className='entity-modal-content-upload-label' htmlFor='logo' id='logo'>
                 <input
+                  ref={this.setUploadLogoPicture}
                   id='logo'
                   type='file'
                   accept='image/*'
@@ -79,8 +88,9 @@ class BusinessForm extends Component {
               <FontAwesome className='entity-modal-content-label-icon' name='info-circle' />
             </p>
             <div className='picture-rectangle'>
-              <label className='entity-modal-content-upload-label' htmlFor='picture' id='picture'>
+              <label className='entity-modal-content-upload-label' onClick={() => this.uploadCoverPicture.click()} htmlFor='picture' id='picture'>
                 <input
+                  ref={this.setUploadCover}
                   id='picture'
                   type='file'
                   accept='image/*'
