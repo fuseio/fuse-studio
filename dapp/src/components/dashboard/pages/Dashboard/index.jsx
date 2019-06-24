@@ -27,7 +27,7 @@ class Dashboard extends Component {
     if (this.props.networkType !== 'fuse' && this.props.tokenNetworkType !== this.props.networkType) {
       this.props.loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [this.props.tokenNetworkType], handleClose: this.showHomePage })
     }
-    document.addEventListener('mousedown', this.handleClickOutside)
+    window.addEventListener('mousedown', this.handleClickOutside)
   }
 
   componentWillUnmount () {
@@ -90,7 +90,7 @@ class Dashboard extends Component {
   }
 
   handleIntervalChange = (userType, intervalValue) => {
-    const { token: { foreignTokenAddress } } = this.props
+    const { community: { foreignTokenAddress } } = this.props
     if (foreignTokenAddress) {
       const { fetchTokenStatistics } = this.props
       fetchTokenStatistics(foreignTokenAddress, userType, intervalValue)
