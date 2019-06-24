@@ -252,8 +252,8 @@ class Users extends Component {
         <Fragment>
           {this.renderTransactionStatus()}
           <div className='entities__empty-list'>
-            <div className='entities__empty-list__title'>Kinda sad in here, isn’t it?</div>
-            <div className='entities__empty-list__text'>You can keep watching Netflix later, add a user and let’s start Rock’n’Roll!</div>
+            <div className='entities__empty-list__title'>Your list is empty - Start to fill it</div>
+            <div className='entities__empty-list__text' />
             <button
               className='entities__empty-list__btn'
               onClick={this.handleAddUser}
