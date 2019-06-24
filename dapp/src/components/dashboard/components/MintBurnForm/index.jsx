@@ -143,6 +143,7 @@ export default class MintBurnForm extends PureComponent {
                   <Field
                     className='transfer-tab__content__amount__field'
                     type='number'
+                    disabled={!isOwner(token, accountAddress)}
                     name='mintAmount'
                     placeholder='...'
                   />
@@ -153,6 +154,7 @@ export default class MintBurnForm extends PureComponent {
                   <Field
                     className='transfer-tab__content__amount__field'
                     name='burnAmount'
+                    disabled={!isOwner(token, accountAddress)}
                     type='number'
                     placeholder='...'
                   />
