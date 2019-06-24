@@ -140,9 +140,11 @@ export default ({
           <hr className='transfer-tab__line' />
           <TransferForm
             error={error}
+            token={token}
             balance={balance}
-            transactionStatus={transactionStatus}
+            accountAddress={accountAddress}
             transferMessage={transferMessage}
+            transactionStatus={transactionStatus}
             closeMessage={() => {
               setState({ transferMessage: false })
               clearTransactionStatus(null)

@@ -3,7 +3,8 @@ import { Formik, Field, ErrorMessage } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/Message'
 import transferShape from 'utils/validation/shapes/transfer'
-
+import { isOwner } from 'utils/token'
+ 
 export default class TransferForm extends PureComponent {
   constructor (props) {
     super(props)
@@ -41,6 +42,8 @@ export default class TransferForm extends PureComponent {
 
   renderForm = ({ handleSubmit, isValid }) => {
     const {
+      accountAddress,
+      token,
       closeMessage
     } = this.props
 
@@ -72,6 +75,7 @@ export default class TransferForm extends PureComponent {
           <Field
             name='to'
             className='transfer-tab__content__to-field__input'
+            disabled={!isOwner(token, accountAddress)}
           />
           <ErrorMessage name='to' render={msg => <div className='input-error'>{msg}</div>} />
         </div>
@@ -81,6 +85,7 @@ export default class TransferForm extends PureComponent {
             name='amount'
             type='number'
             className='transfer-tab__content__amount__field'
+            disabled={!isOwner(token, accountAddress)}
           />
           <ErrorMessage name='amount' render={msg => <div className='input-error'>{msg}</div>} />
         </div>
