@@ -36,7 +36,7 @@ class AddUserForm extends Component {
     submitEntity(entity)
   }
 
-  renderForm = ({ handleSubmit, setFieldValue, setFieldTouched, values, isValid }) => {
+  renderForm = ({ handleSubmit, setFieldValue, isValid }) => {
     return (
       <form className='user-form' onSubmit={handleSubmit}>
         <h5 className='user-form__title'>Add new user</h5>

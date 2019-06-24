@@ -21,6 +21,7 @@ import { isOwner } from 'utils/token'
 import plusIcon from 'images/add.svg'
 import { getTransaction } from 'selectors/transaction'
 import Entity from '../../components/Entity'
+import isEmpty from 'lodash/isEmpty'
 
 const BusinessesDataFetcher = (props) => {
   useEffect(() => {
@@ -61,7 +62,7 @@ class Businesses extends Component {
   }
 
   loadAddingModal = () => this.props.loadModal(ADD_DIRECTORY_ENTITY, {
-    submitEntity: (data) => this.props.addEntity(this.props.community.communityAddress, { ...data, type: 'business' }, this.props.isClosed)
+    submitEntity: (data) => this.props.addEntity(this.props.community.communityAddress, { ...data, type: 'business' }, this.props.community.isClosed)
   })
 
   renderTransactionStatus = () => {
@@ -124,7 +125,7 @@ class Businesses extends Component {
           />
         ))
     } else {
-      return <p className='entities__items__empty'>There are no any entities</p>
+      return <p className='entities__empty-list__title'>No entities found</p>
     }
   }
 
@@ -136,16 +137,7 @@ class Businesses extends Component {
     if (businesses && businesses.length) {
       return (
         <Fragment>
-          <div className='entities__search entities__search--business'>
-            <button className='entities__search__icon' onClick={() => this.setShowingSearch()}>
-              <FontAwesome name='search' />
-            </button>
-            <input
-              value={this.state.search}
-              onChange={this.setSearchValue}
-              placeholder='Search a merchant...'
-            />
-          </div>
+         
           {this.renderTransactionStatus()}
           {this.renderList(filteredItems)}
         </Fragment>
@@ -180,7 +172,8 @@ class Businesses extends Component {
       isAdmin,
       fetchCommunity,
       fetchBusinessesEntities,
-      toggleSuccess
+      toggleSuccess,
+      businesses
     } = this.props
     const {
       communityAddress,
@@ -205,6 +198,20 @@ class Businesses extends Component {
         </div>
         <div className='entities__wrapper'>
           <div className='entities__container'>
+            {
+              !isEmpty(businesses) && (
+                <div className='entities__search entities__search--business'>
+                  <button className='entities__search__icon'>
+                    <FontAwesome name='search' />
+                  </button>
+                  <input
+                    value={this.state.search}
+                    onChange={this.setSearchValue}
+                    placeholder='Search a merchant...'
+                  />
+                </div>
+              )
+            }
             {
               communityAddress && (
                 <Fragment>
