@@ -178,7 +178,7 @@ function * importExistingEntity ({ accountAddress, communityAddress, isClosed })
 
 function * uploadImage ({ image }) {
   console.log('fsdfsdfdsfs')
-  
+
   const data = yield call(uploadImageApi, { image })
   console.log({ data })
   return data.json()

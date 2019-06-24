@@ -62,7 +62,7 @@ class BusinessForm extends Component {
       formData.append('path', new window.Blob([photoFile]))
 
       const { uploadImage } = this.props
-      
+
       uploadImage(formData)
     } else {
       e.target.value = null
