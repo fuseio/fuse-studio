@@ -371,7 +371,7 @@
 
     @include element(title) {
       color: $color-primary-dark;
-      font-size: 30px;
+      font-size: 1.3em;
       margin-bottom: 10px;
     }
     @include element(text) {
