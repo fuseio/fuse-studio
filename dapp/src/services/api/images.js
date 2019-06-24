@@ -6,10 +6,9 @@ export const fetchImage = (apiRoot, { hash }) =>
 
 export const uploadImage = ({ image }) => {
   console.log('image: ', image)
-
   return request.post(`${'https://ipfs.infura.io:5001/api/v0/add'}`)
-    .set('Content-Type', 'multipart/form-data')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
     // .attach()
-    .send(image)
+    .attach('path', image)
     // .then(response => response.json)
 }

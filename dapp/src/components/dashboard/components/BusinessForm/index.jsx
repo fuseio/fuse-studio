@@ -10,6 +10,8 @@ import entityShape from 'utils/validation/shapes/entity'
 import { businessTypes, options } from 'constants/dropdownOptions'
 import FontAwesome from 'react-fontawesome'
 import uploadIcon from 'images/upload.svg'
+import { uploadImage } from 'actions/communityEntities'
+import { connect } from 'react-redux'
 
 class BusinessForm extends Component {
   constructor (props) {
@@ -53,6 +55,21 @@ class BusinessForm extends Component {
     submitEntity(entity)
   }
 
+  handleUploadImage = (photoFile, e) => {
+    console.log({ photoFile })
+    if (photoFile.size <= 2500000) {
+      const formData = new window.FormData()
+      formData.append('path', new window.Blob([photoFile]))
+
+      const { uploadImage } = this.props
+      
+      uploadImage(formData)
+    } else {
+      e.target.value = null
+      this.setState({ showFileSizeModal: true })
+    }
+  }
+
   renderForm = ({ handleSubmit, setFieldValue, setFieldTouched, values, isValid }) => {
     return (
       <form className='entity-modal-content' onSubmit={handleSubmit}>
@@ -75,6 +92,7 @@ class BusinessForm extends Component {
                   ref={this.setUploadLogoPicture}
                   id='logo'
                   type='file'
+                  onChange={e => this.handleUploadImage(e.target.files[0], e)}
                   accept='image/*'
                 />
                 <p><img alt='upload' src={uploadIcon} /></p>
@@ -90,7 +108,7 @@ class BusinessForm extends Component {
             <div className='picture-rectangle'>
               <label className='entity-modal-content-upload-label' onClick={() => this.uploadCoverPicture.click()} htmlFor='picture' id='picture'>
                 <input
-                  ref={this.setUploadCover}
+                  ref={this.setUploadCoverPicture}
                   id='picture'
                   type='file'
                   accept='image/*'
@@ -264,4 +282,8 @@ BusinessForm.propTypes = {
   submitEntity: PropTypes.func.isRequired
 }
 
-export default BusinessForm
+const mapDispatchToProps = {
+  uploadImage
+}
+
+export default connect(null, mapDispatchToProps)(BusinessForm)
