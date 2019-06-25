@@ -91,7 +91,9 @@
 @include block(Dashboard) {
   height: 100vh;
   @include element(container) {
-    height: 100%;
+    @include breakpoint(xlarge) {
+      height: 100%;
+    }
     @include breakpoint(large) {
       position: relative;
       @include xy-grid();
@@ -117,7 +119,7 @@
 
     box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
     height: auto;
-    @include breakpoint(medium down) {
+    @include breakpoint(large down) {
       height: 100%;
     }
     background-color: #051926;
@@ -165,15 +167,15 @@
 
     @include breakpoint(large up) {
       width: 80%;
-      margin: 2em auto auto;
+      margin: 4em auto 3em;
     }
 
     @include breakpoint(xxlarge up) {
       width: 65%;
-      margin: 2em auto auto;
+      margin: 4em auto 3em;
     }
 
-    @include breakpoint(medium) {
+    @include breakpoint(medium only) {
       width: 70%;
       padding-top: 5em;
       margin: auto;
@@ -200,14 +202,14 @@
 
       @include breakpoint(large up) {
         position: relative;
-        height: inherit;
+        // height: inherit;
         min-height: 90vh;
         width: 100%;
         flex: 1;
       }
 
-      @include breakpoint(medium down) {
-        min-height: 90vh;
+      @include breakpoint(large down) {
+        min-height: 100vh;
         height: inherit;
       }
 
