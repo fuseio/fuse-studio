@@ -6,14 +6,8 @@
   padding: 10px 20px;
   width: 100%;
   min-height: 70px;
-  color: #05283e;
+  color: $color-primary-dark;
   z-index: 99;
-
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: position 10s;
-  -ms-transition: position 10s;
-  -o-transition: position 10s;
-  transition: all 0.5s ease;
 
   @include modifier(scroll) {
     position: fixed;
