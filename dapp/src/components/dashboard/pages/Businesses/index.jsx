@@ -17,7 +17,6 @@ import { fetchCommunity } from 'actions/token'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_DIRECTORY_ENTITY } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
-import { isOwner } from 'utils/token'
 import plusIcon from 'images/add.svg'
 import { getTransaction } from 'selectors/transaction'
 import Entity from '../../components/Entity'
@@ -137,7 +136,6 @@ class Businesses extends Component {
     if (businesses && businesses.length) {
       return (
         <Fragment>
-         
           {this.renderTransactionStatus()}
           {this.renderList(filteredItems)}
         </Fragment>
@@ -161,10 +159,6 @@ class Businesses extends Component {
       )
     }
   }
-
-  canDeployBusinessList = () => !this.props.signatureNeeded &&
-    isOwner(this.props.token, this.props.accountAddress) &&
-    this.props.community.homeTokenAddress
 
   render () {
     const {
