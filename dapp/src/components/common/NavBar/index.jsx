@@ -60,7 +60,7 @@ class NavBar extends Component {
     const { withLogo, networkType } = this.props
     const { isHelpOpen, isProfileOpen } = this.state
     return (
-      <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })}>
+      <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })} style={{ width: (this.state.scrollTop > 70 && !isMobileOnly) && !withLogo ? '80%' : null }}>
         { (withLogo || (isMobileOnly && this.state.scrollTop > 70)) && <div className='navbar__logo'><Logo onClick={this.goToHome} isBlue={this.state.scrollTop < 70} /></div> }
         <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
           <div
