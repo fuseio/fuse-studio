@@ -29,7 +29,7 @@ export default class HomePage extends Component {
         <NavBar />
         <div className='home_page__wrapper grid-container'>
           <div className='home_page__banner grid-x align-bottom'>
-            <div className='home_page__image home_page__image--first cell large-3 show-for-large'>
+            <div className='home_page__image home_page__image--first cell large-2 show-for-large'>
               <div><img src={personImage} /></div>
             </div>
             <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>
@@ -42,17 +42,17 @@ export default class HomePage extends Component {
               </p>
               <div className='home_page__button'><button onClick={this.showIssuance}>Launch your community</button></div>
             </div>
-            <div className='home_page__image home_page__image--second cell medium-10 small-15'>
+            <div className='home_page__image home_page__image--second cell large-10 medium-12 small-15'>
               <img src={!isMobileOnly ? groupImage : groupImageMobile} />
             </div>
           </div>
         </div>
         <div className='home_page__faq'>
           <div className='grid-container'>
-            <div className='grid-x align-justify grid-margin-x'>
-              <div className='cell medium-12'>
+            <div className='grid-x align-justify grid-margin-x grid-margin-y'>
+              <div className='cell medium-24 large-12'>
                 <ContentBox
-                  withDecoration={!isMobile}
+                  withDecoration={!isMobileOnly}
                   action={this.showCommunities}
                   title='Featured communities'
                   actionTitle='Check out more communities >'
@@ -60,7 +60,7 @@ export default class HomePage extends Component {
                   <FeaturedCommunities />
                 </ContentBox>
               </div>
-              <div className='cell medium-12'>
+              <div className='cell medium-24 large-12'>
                 <ContentBox title={`FAQ’S`} actionTitle='Learn more >'>
                   <Faqs />
                 </ContentBox>
