@@ -310,14 +310,16 @@ class Users extends Component {
                       </ul>
                     </div>
                   </div>
-                  <button className='entities__search__icon'>
-                    <FontAwesome name='search' />
-                  </button>
-                  <input
-                    value={this.state.search}
-                    onChange={this.setSearchValue}
-                    placeholder='Search a user...'
-                  />
+                  <div className='entities__search__field'>
+                    <button className='entities__search__field__icon'>
+                      <FontAwesome name='search' />
+                    </button>
+                    <input
+                      value={this.state.search}
+                      onChange={this.setSearchValue}
+                      placeholder='Search a user...'
+                    />
+                  </div>
                 </div>
               )
             }
