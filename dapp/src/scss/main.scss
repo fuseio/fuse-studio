@@ -12,7 +12,6 @@
 @import 'foundation/utils';
 @import 'components/placeholders/placeholders';
 @import 'common';
-@import 'config/config';
 @import 'resets/resets';
 
 
@@ -24,10 +23,10 @@
 @import 'components/Root';
 @import 'components/Breadcrumbs';
 
-@import 'components/oven/SimpleExchangeModal';
+// @import 'components/oven/SimpleExchangeModal';
 
+@import 'components/issuance/Issuance';
 @import 'components/issuance/IssuanceBtn';
-
 @import 'components/issuance/SummaryStep';
 @import 'components/issuance/IssuedPopup';
 
@@ -45,15 +44,6 @@
 @import 'components/ProfileDropDown';
 @import 'components/community';
 @import 'components/footer';
-
-
-.minimum-coin-symbol, .price-change-percent, .price-limit-cln {
-	right: 40px;
-	font-size:14rem;
-	color: $dark-grey;
-	position: absolute;
-	display: none;
-}
 
 .loader {
 	height: 10px;
@@ -77,36 +67,5 @@
 	to {
 		transform: scale(2.5, 2.5);
 		opacity: 0;
-	}
-}
-
-@keyframes appear {
-	 0% {
-		opacity: 0;
-	 }
-	 100% {
-		opacity: 1;
-	 }
-}
-
-@keyframes load-box {
-	 0% {
-		opacity: 0;
-	 }
-	 100% {
-		opacity: 1;
-	 }
-}
-
-@-webkit-keyframes pulse {
-	0% {
-	background: rgba(255,255,255,1);
-	box-shadow: inset 0px 0px 10px 2px rgba(117,182,255,0.5),
-						0px 0px 40px 2px rgba(105,135,255,1);
-	}
-	100% {
-	background: rgba(255,255,255,0);
-	box-shadow: inset 0px 0px 10px 2px rgba(117,182,255,0.5),
-						0px 0px 30px 2px rgba(105,135,255,0.3);
 	}
 }

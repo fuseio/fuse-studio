@@ -17,7 +17,7 @@ const Congratulations = ({ goToDashboard }) => {
       <div className='congratulation__what'>What should i do next?</div>
       <div className='congratulation__text'>to start building your community. Your community will now show on the homepage of the Fuse Studio. Go to your community page to start adding businesses and users.</div>
       <div className='congratulation__btn'>
-        <button className='button button--big' onClick={goToDashboard}>Go to the community page</button>
+        <button className='button button--fuse button--big' onClick={goToDashboard}>Go to the community page</button>
       </div>
     </div>
   )

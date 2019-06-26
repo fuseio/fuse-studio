@@ -22,6 +22,7 @@ import ReactGA from 'services/ga'
 import { isOwner } from 'utils/token'
 import { getTransaction } from 'selectors/transaction'
 import Entity from '../../components/Entity'
+import isEmpty from 'lodash/isEmpty'
 
 const filterOptions = [
   {
@@ -168,62 +169,19 @@ class Users extends Component {
           />
         ))
     } else {
-      return <p className='entities__items__empty'>There are no any entities</p>
+      return <p className='entities__empty-list__title'>No entities found</p>
     }
   }
 
   renderItems = () => {
     const { transactionStatus, users } = this.props
-    const { filters } = this.state
 
-    const filteredItems = this.filterBySearch(this.state.search, users)
-    const val = Object.keys(filters).find((key) => filters[key])
+    let filteredItems = this.filterBySearch(this.state.search, users)
+    filteredItems = this.filterByRadio(filteredItems)
 
     if (users && users.length) {
       return (
         <Fragment>
-          <div className='entities__search entities__search--user'>
-            {
-              // showUsers && isAdmin &&
-              (
-                <div className='entities__search__filter entities__search__filter--border'>
-                  <div className='entities__search__filter__value'>
-                    <span>&nbsp;&nbsp;Filter&nbsp;&nbsp;</span>
-                    <span className='selected'>{filterOptions.find(({ value }) => val === value).label}</span>
-                  </div>
-                  <div className='filter-options'>
-                    <ul className='options'>
-                      {
-                        filterOptions
-                          .map(({ label, value }) =>
-                            <li key={value} className='options__item'>
-                              <label>{label}
-                                <input
-                                  type='radio'
-                                  name='filter'
-                                  checked={filters[value]}
-                                  value={value}
-                                  onChange={this.handleRadioInput}
-                                />
-                                <span />
-                              </label>
-                            </li>
-                          )
-                      }
-                    </ul>
-                  </div>
-                </div>
-              )
-            }
-            <button className='entities__search__icon' onClick={() => this.setShowingSearch()}>
-              <FontAwesome name='search' />
-            </button>
-            <input
-              value={this.state.search}
-              onChange={this.setSearchValue}
-              placeholder='Search a user...'
-            />
-          </div>
           {this.renderTransactionStatus()}
           {this.renderList(filteredItems)}
         </Fragment>
@@ -262,13 +220,16 @@ class Users extends Component {
       isAdmin,
       fetchCommunity,
       fetchUsersEntities,
-      toggleSuccess
+      toggleSuccess,
+      users
     } = this.props
     const {
       communityAddress,
       homeTokenAddress,
       foreignTokenAddress
     } = community
+    const { filters } = this.state
+    const val = Object.keys(filters).find((key) => filters[key])
 
     return (
       <Fragment>
@@ -288,12 +249,55 @@ class Users extends Component {
         <div className='entities__wrapper'>
           <div className='entities__container'>
             {
-              communityAddress && (
-                <Fragment>
-                  <div className='entities__items'>
-                    {this.renderItems()}
+              // showUsers && isAdmin &&
+              !isEmpty(users) && (
+                <div className='entities__search entities__search--user'>
+                  <div className='entities__search__filter entities__search__filter--border'>
+                    <div className='entities__search__filter__value'>
+                      <span>&nbsp;&nbsp;Filter&nbsp;&nbsp;</span>
+                      <span className='selected'>{filterOptions.find(({ value }) => val === value).label}</span>
+                    </div>
+                    <div className='filter-options'>
+                      <ul className='options'>
+                        {
+                          filterOptions
+                            .map(({ label, value }) =>
+                              <li key={value} className='options__item'>
+                                <label>{label}
+                                  <input
+                                    type='radio'
+                                    name='filter'
+                                    checked={filters[value]}
+                                    value={value}
+                                    onChange={this.handleRadioInput}
+                                  />
+                                  <span />
+                                </label>
+                              </li>
+                            )
+                        }
+                      </ul>
+                    </div>
                   </div>
-                </Fragment>
+                  <div className='entities__search__field'>
+                    <button className='entities__search__field__icon'>
+                      <FontAwesome name='search' />
+                    </button>
+                    <input
+                      value={this.state.search}
+                      onChange={this.setSearchValue}
+                      placeholder='Search a user...'
+                    />
+                  </div>
+                </div>
+              )
+            }
+
+            {
+              communityAddress && (
+                <div className='entities__items'>
+                  {this.renderItems()}
+                </div>
               )
             }
 

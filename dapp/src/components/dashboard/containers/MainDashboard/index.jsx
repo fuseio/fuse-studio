@@ -18,6 +18,7 @@ import { getForeignNetwork } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
+import { getToken } from 'selectors/dashboard'
 import { fetchEntities } from 'actions/communityEntities'
 
 class DashboardLayout extends PureComponent {
@@ -124,11 +125,7 @@ class DashboardLayout extends PureComponent {
 const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
   networkType: state.network.networkType,
-  token: state.entities.communities &&
-    state.entities.tokens &&
-    state.entities.communities[match.params.address] &&
-    state.entities.communities[match.params.address].foreignTokenAddress &&
-    state.entities.tokens[state.entities.communities[match.params.address].foreignTokenAddress],
+  token: getToken(state, match.params.address),
   community: state.entities.communities && state.entities.communities[match.params.address],
   communityAddress: match.params.address,
   tokenNetworkType: getForeignNetwork(state),

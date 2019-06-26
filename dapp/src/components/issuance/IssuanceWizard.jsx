@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
-import classNames from 'classnames'
 import { nameToSymbol } from 'utils/format'
 import StepsIndicator from './StepsIndicator'
 import NameCurrencyStep from './NameCurrencyStep'
@@ -230,40 +229,41 @@ class IssuanceWizard extends Component {
   }
 
   render () {
-    const { history, foreignNetwork, transactionStatus } = this.props
+    const { history, transactionStatus } = this.props
     const { communityType } = this.state
     const steps = ['Name & currency', communityType && communityType.value === 'existingToken' ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary']
 
     return (
-      <div className={classNames(`issuance-${foreignNetwork}__wrapper`)}>
-        <div className={classNames(`issuance-${foreignNetwork}__header grid-x align-justify`)}>
-          <div onClick={() => history.push('/')} className={classNames(`issuance-${foreignNetwork}__header__logo align-self-middle grid-x align-middle`)}>
+      <div className='issuance__wrapper'>
+        <div className='issuance__header grid-x align-justify'>
+          <div onClick={() => history.push('/')} className='issuance__header__logo align-self-middle grid-x align-middle'>
             <Logo isGradientLogo />
           </div>
-          <div className={classNames(`issuance-${foreignNetwork}__header__indicators grid-x cell align-center`)} ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
+          <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
             <div className='grid-y cell auto'>
-              <h4 className={classNames(`issuance-${foreignNetwork}__header__current`)}>{steps[this.state.activeStep] || steps[this.state.activeStep - 1]}</h4>
+              <h4 className='issuance__header__current'>{steps[this.state.activeStep] || steps[this.state.activeStep - 1]}</h4>
               <div className='grid-x align-center'>
                 <StepsIndicator
-                  network={foreignNetwork}
                   steps={steps}
                   activeStep={this.state.activeStep}
                 />
               </div>
             </div>
           </div>
-          <div onClick={() => history.push('/')} className={classNames(`issuance-${foreignNetwork}__header__close align-self-middle grid-x align-middle align-right`)}>
+          <div
+            onClick={() => history.push('/')}
+            className='issuance__header__close align-self-middle grid-x align-middle align-right'>
             <FontAwesome name='times' />
           </div>
         </div>
-        <div className={classNames(`issuance-${foreignNetwork}__wizard`)}>
-          {this.state.activeStep < 3 && <h1 className={classNames(`issuance-${foreignNetwork}__wizard__title`)}>Launch your community</h1>}
+        <div className='issuance__wizard'>
+          {this.state.activeStep < 3 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
           {this.renderStepContent()}
           {
             this.state.activeStep > 0 && ((transactionStatus !== PENDING) && (transactionStatus !== REQUEST)) && (
               <div className='text-center'>
                 <button
-                  className={classNames(`issuance-${foreignNetwork}__wizard__back`)}
+                  className='issuance__wizard__back'
                   onClick={this.setPreviousStep}>Back
                 </button>
               </div>

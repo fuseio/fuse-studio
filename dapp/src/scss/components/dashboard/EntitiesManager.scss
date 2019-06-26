@@ -121,16 +121,32 @@
   }
 
   @include element(search) {
-    @include xy-grid();
-    @include flex-align(null, middle);
+    height: 100%;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+    width: 100%;
+    margin: 0 50px 20px;
 
     @include breakpoint(medium down) {
-      flex-wrap: nowrap;
+      margin-left: 20px;
+      margin-right: 20px;
+      @include flex-align(null, null);
+      
+      > div {
+        @include xy-grid();
+        height: 2em;
+      }
     }
-    margin-bottom: 1em;
-    min-height: 41px;
-    max-height: 41px;
-    height: 100%;
+
+    @include breakpoint(medium up) {
+      @include xy-grid();
+      @include flex-align(null, middle);
+  
+      min-height: 41px;
+      max-height: 41px;
+    }
 
     @include modifier(user) {
       border-radius: 3px;
@@ -148,13 +164,27 @@
       position: relative;
       cursor: pointer;
       z-index: 1;
-      @include breakpoint(medium up) {
-        flex-basis: 35%;
-        height: 100%;
+      height: 100%; 
+      @include breakpoint(xxlarge up) {
+        flex-basis: 20%;
+      }
+      @include breakpoint(xxlarge down) {
+        flex-basis: 30%;
+      }
+      @include breakpoint(medium only) {
+        flex-basis: 45%;
       }
 
       @include modifier(border) {
-        border-right: solid 1.3px #dedede;
+        // border-right: solid 1.3px #dedede;
+
+        @include breakpoint(medium up) {
+          border-right: solid 1.3px #dedede;          
+        }
+
+        @include breakpoint(small down) {
+          border-bottom: solid 1.3px #dedede;          
+        }
       }
 
       @include element(value) {
@@ -260,40 +290,42 @@
       background-color: #f6f6f6;
     }
 
-    @include element(icon) {
-      color: $color-step;
-      font-weight: bold;
-      border: none;
-      background: none;
-      outline: none;
-      font-size: 12px;
-      padding: 8px 10px;
-
-      &:hover,
-      &:focus,
-      &:focus:active {
-        color: darken($color-step, 10%);
-      }
-      &[disabled] {
-        cursor: not-allowed !important;
-        background-color: transparent !important;
-        box-shadow: 0 0 6px 0 rgba(95, 221, 187, 0.77);
+    @include element(field) {
+      @include element(icon) {
+        color: $color-step;
+        font-weight: bold;
+        border: none;
+        background: none;
+        outline: none;
+        font-size: 12px;
+        padding: 8px 10px;
+  
         &:hover,
         &:focus,
         &:focus:active {
-          cursor: not-allowed;
+          color: darken($color-step, 10%);
+        }
+        &[disabled] {
+          cursor: not-allowed !important;
+          background-color: transparent !important;
+          box-shadow: 0 0 6px 0 rgba(95, 221, 187, 0.77);
+          &:hover,
+          &:focus,
+          &:focus:active {
+            cursor: not-allowed;
+          }
         }
       }
-    }
-    > input {
-      border: none;
-      font-size: 12px;
-      font-weight: 500;
-      @include breakpoint(medium down) {
-        width: 100%;
-      }
-      &::placeholder {
+      > input {
+        border: none;
+        font-size: 12px;
         font-weight: 500;
+        // @include breakpoint(medium down) {
+        //   width: 100%;
+        // }
+        &::placeholder {
+          font-weight: 500;
+        }
       }
     }
   }
@@ -332,7 +364,7 @@
       margin-top: 2em;
     }
     @include breakpoint(large) {
-      margin-top: 40px;
+      margin-top: 2em;
     }
     color: $color-white;
     @include element(title) {

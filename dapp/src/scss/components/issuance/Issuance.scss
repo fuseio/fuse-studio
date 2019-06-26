@@ -1,0 +1,1160 @@
+@include block(step) {
+  display: inline-block;
+  color: $color-step;
+  position: relative;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 500;
+  &:not(:last-child) {
+    &:before {
+      content: '';
+      height: 2px;
+      width: 100%;
+      position: absolute;
+      margin-top: -2px;
+      left: 50%;
+      background-color: $color-author;
+      box-shadow: 0 0 9px 0 rgba(192, 149, 255, 0.23);
+      @include breakpoint(small only) {
+        top: -19px;
+      }
+    }
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    margin-left: -9px;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: $color-author;
+    border: 2px solid $color-author;
+
+    @include breakpoint(small only) {
+      width: 15px;
+      height: 15px;
+      top: -28px;
+    }
+  }
+
+  @include modifier(active) {
+    color: $color-fuse;
+    &:after {
+      border: solid 2px $color-fuse;
+      background-color: $color-fuse;
+      box-shadow: 0 0 0 0 $color-fuse,
+                  inset $color-issuance-bg 0 0 1px 2.5px;
+      width: 17px;
+      height: 17px;
+
+      @include breakpoint(medium up) {
+        top: -10px;
+      }
+    }
+    &:before {
+      background-color: $color-author;
+    }
+  }
+
+  @include modifier(done) {
+    &:before {
+      background-color: $color-fuse !important;
+    }
+
+    &:after {
+      box-shadow: 0 0 0 0 $color-fuse;
+      background-color: $color-fuse;
+      border: solid 2px $color-fuse;
+    }
+  }
+}
+
+@include block(issuance) {
+
+  @include element(wrapper) {
+    height: inherit;
+  }
+
+  @include element(header) {
+    position: relative;
+    height: 100%;
+    min-height: 80px;
+    max-height: 80px;
+    height: 100%;
+    background-image: url(../../assets/images/header.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+
+    > div {
+      height: 100%;
+    }
+
+    .fa {
+      font-size: 20px;
+      color: $color-author;
+    }
+    @include element(logo) {
+      cursor: pointer;
+      min-width: 100px;
+      padding-left: 20px;
+      flex-basis: 10%;
+    }
+
+    @include element(close) {
+      padding-right: 20px;
+      flex-basis: 10%;
+      .fa {
+        cursor: pointer;
+
+        &:hover {
+          color: $color-fuse;
+        }
+      }
+    }
+
+    @include element(current) {
+      text-transform: uppercase;
+      text-align: center;
+      color: $color-fuse;
+      font-size: 11px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 2.45;
+  
+      @include breakpoint(medium up) {
+        min-height: 27px;
+        margin: .5em 0 1.3em 0;
+      }
+
+      @include breakpoint(small down) {
+        margin: 0.2em 0 2.7em 0;
+      }
+    }
+
+    @include element(indicators) {
+      flex-basis: 78%;
+      @include breakpoint(medium down) {
+        position: absolute;
+        top: 80px;
+        background-image: url(../../assets/images/header.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+        // box-shadow: inset 0 0 1em 0 rgba(0, 0, 0, 1)
+      }
+    }
+  }
+
+  @include element(wizard) {
+    padding-bottom: 100px;
+    @include breakpoint(medium up) {
+      margin-top: 2em;        
+    }
+    @include breakpoint(medium down) {
+      margin-top: 7em;
+    }
+
+    @include element(title) {
+      font-weight: bold;
+      font-size: 30px;
+      text-align: center;
+      color: $color-primary-dark;
+
+      @include breakpoint(medium up) {
+        padding-top: 30px;
+        padding-bottom: 30px;
+      }
+    }
+
+    @include block(next) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      @include breakpoint(medium up) {
+        margin-top: 3em;
+      }
+    }  
+
+    @include block(name) {
+      height: 100%;
+      width: 100%;
+      @include xy-grid(vertical);					
+      @include flex-align(spaced, middle);
+      
+      @include breakpoint(medium up) {
+        padding: 40px 0 60px;
+      }
+
+      @include element(wrapper) {
+        @include breakpoint(medium up) {
+          max-width: 620px;
+          width: 100%;
+          margin: auto;
+          @include xy-grid(vertical, false);
+          @include flex-align(spaced, middle);
+        }
+      }
+
+      @include element(title) {
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1.29;
+        text-transform: capitalize;
+        color: $color-primary-dark;
+        @include breakpoint(small only) {
+          margin-bottom: 1em;
+        }
+      }
+
+      @include element(field) {
+        // margin-bottom: 2em;
+        @include breakpoint(medium up) {
+          // min-width: 300px;
+          // max-width: 300px;
+        }
+
+        @include breakpoint(small) {
+          width: 100%;
+        }
+
+        input {
+          width: 100%;
+          background-color: $color-white;
+          padding: 8px 16px;
+          font-size: 15px;
+          color: $color-primary-dark;
+          height: 40px;
+          border-radius: 5px;
+          box-shadow: 0 0 6px 0 #cbcbcb;
+          border: none;
+
+          &::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+          }
+          &:focus {
+            border: solid 2px $color-primary-dark;
+            box-shadow: none;
+          }
+        }
+      }      
+    }
+
+    @include block(line) {
+      padding: 10px 20px;
+      hr {
+        margin: 32px 0;
+        border-top: solid 1px $color-brdr-issuance;
+      }
+    }
+
+    @include block(symbol) {
+      @include xy-grid(vertical);					
+      @include flex-align(spaced, null);
+      @include breakpoint(medium up) {
+        min-height: 80px;
+        margin: 3em 0;
+      }
+
+      @include breakpoint(small down) {
+        margin: 32px 0 0;
+      }
+
+
+      @include element(title) {
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 1.29;
+        text-transform: capitalize;
+        color: $color-primary-dark;
+
+        @include breakpoint(small only) {
+          margin-bottom: 1em;
+        }
+
+        @include modifier(name) {
+          font-weight: normal;
+          color: $color-step;
+        }
+      }
+    
+      @include element(field) {
+
+        > div:first-child {
+          width: 100%;
+          height: 100%;
+        }
+
+        input {
+          width: 100%;
+          background-color: $color-white;
+          padding: 8px 16px;
+          font-size: 15px;
+          color: $color-primary-dark;
+          height: 40px;
+          border-radius: 5px;
+          box-shadow: 0 0 6px 0 #cbcbcb;
+          border: none;
+
+          &::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+          }
+          &:focus {
+            border: solid 2px $color-primary-dark;
+            box-shadow: none;
+          }
+
+          &:disabled {
+            cursor: not-allowed;
+          }
+        }
+
+      }
+    
+    }
+
+    @include block(attributes) {
+        margin: 0 auto;
+      @include breakpoint(medium up) {
+        max-width: 620px;				
+      }
+
+      @include breakpoint(medium only) {
+        max-width: 70%;
+      }
+
+      @include breakpoint(small) {
+      }
+      
+      @include element(title) {
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 1.29;
+        text-transform: capitalize;
+        color: $color-primary-dark;
+
+        @include breakpoint(small only) {
+          margin-bottom: 1em;
+          font-size: 20px;
+        }
+      }
+
+      @include element(attribute) {
+        min-height: 80px;
+        width: 100%;
+        @include breakpoint(medium up) {
+          margin: 3rem 0;
+        }
+
+        @include modifier(supply) {
+        }
+
+        @include modifier(long-height) {
+          min-height: 180px;
+          margin: 0;
+        }
+
+        @include xy-grid(vertical);					
+        @include flex-align(justify, null);
+      }
+
+      @include element(types) {
+        @include breakpoint(medium) {
+          @include xy-grid(horizontal, false);
+          @include flex-align(justify, middle);
+        }
+
+        @include breakpoint(small down) {
+          @include xy-grid(vertical);	
+          @include flex-align(spaced, middle);
+          > div {
+            margin-bottom: 1em;
+          }
+        }
+        @include element(item) {
+          border-radius: 5px;
+          box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+          border: 2px solid rgba(226, 226, 226, 0.49);
+          width: 190px;
+          height: 145px;
+          display: flex;
+          flex-direction: column;
+          text-transform: capitalize;
+          font-size: 12px;
+          align-items: center;
+          font-weight: 500;
+          color: $color-text-gray;
+          position: relative;
+          &:hover {
+            border: solid 2px rgba(5, 34, 53, 0.3);
+            cursor: pointer;
+          }
+          @include modifier(chosen) {
+            border: solid 2px rgba(5, 34, 53, 0.3);
+          }
+          
+          &:last-child {
+            > img {
+              width: 50px;
+            }
+          }
+
+          >span {
+            padding: 10px 0 18px;
+          }
+
+          > img {
+            padding-bottom: 15px;
+          }
+        }
+
+        @include element(select) {
+
+          @include element(wrapper) {
+            width: 70%;
+          }
+
+          border-radius: 2px;
+          display: inline-block;
+          width: 100%;
+
+          >div {
+            border-color: none !important;
+          }
+
+          @include element(prefix) {
+            color: #0a7586 !important;
+            @include element(placeholder) {
+              color: #8d95a9 !important;
+            }
+            @include element(single-value) {
+              color: #8d95a9 !important;
+            }
+            @include element(control) {
+              border: none;
+              min-height: auto !important;
+              border-radius: 2px !important;
+              border: solid 1px #cccccc;
+              font-size: 9px;
+              // height: 2em;
+              &:hover {
+                box-shadow: none;
+                border: solid 1px $color-primary-dark;
+              }
+            }
+
+            @include element(value-container) {
+              height: inherit;
+            }
+            
+            @include element(indicator-separator) {
+              display: none;
+            }
+            @include element(option) {
+              color: #0a7586 !important;
+              font-size: 12px !important;
+              text-align: start;
+              @include modifier(is-focused) {
+                border-color: none !important;
+                background-color: rgba(10, 117, 134, 0.53) !important;
+              }
+              @include modifier(is-selected) {
+                background-color: rgba(10, 117, 134, 0.08) !important;
+              }
+            }
+            
+            @include element(dropdown-indicator) {
+              &::before {
+                content: "";
+                display: block;
+                position: absolute;
+                right: 10px;
+                width: 0;
+                height: 0;
+                top: 9px;
+                border-style: solid;
+                border-color: #8d95a9 transparent transparent transparent;
+                border-width: 6px;
+              }
+              [class^="css"] {
+                display: none;
+              }
+            }
+
+            @include element(menu-list) {
+              > div {
+                font-size: 9px;
+                display: flex;
+                align-items: center;
+                padding: 3px 10px;
+                min-height: 34px;
+                height: 100%;
+                max-height: 34px;
+                &:not(:last-child) {
+                  border-bottom: 1px solid #ededed;
+                }
+
+                &:hover {
+                  background-color: rgba(238, 238, 238, 0.5);
+                }
+
+                @include block(icon) {
+                  display: inline-block;
+                  width: 15px;
+                  height: 15px;
+                  margin-right: 5px;
+
+                  > img {
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    background-position: center;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      @include element(logos) {
+        @include breakpoint(medium up) {
+          @include xy-grid(horizontal, false);
+          @include flex-align(justify, middle);
+        }
+
+        @include breakpoint(small down) {
+          @include xy-grid(vertical, false);	
+          @include flex-align(spaced, middle);
+          width: 100%;
+          > div:not(:last-child) {
+            margin-bottom: 1em;
+          }
+        }
+        @include element(item) {
+          border-radius: 5px;
+          box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+          border: 2px solid rgba(226, 226, 226, 0.49);
+          display: flex;
+          flex-direction: column;
+          
+          text-transform: capitalize;
+          align-items: center;
+          font-weight: 500;
+          color: $color-text-gray;
+          justify-content: space-evenly;
+          position: relative;
+
+          @include breakpoint(medium) {
+            width: 160px;
+            height: 145px;						
+          }
+
+          @include breakpoint(small) {
+            width: 140px;
+            height: 115px;
+          }
+          &:hover {
+            border: solid 2px $color-primary-dark;
+            cursor: pointer;
+          }
+          @include modifier(chosen) {
+            border: solid 2px $color-primary-dark;
+          }
+        }
+      }
+      
+      @include element(supply) {
+
+        @include breakpoint(small down) {
+          width: 75%;	
+        }
+        
+        @include element(input) {
+          input {
+            width: 100%;
+            background-color: $color-white;
+            padding: 8px 16px;
+            font-size: 15px;
+            color: $color-primary-dark;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 6px 0 #cbcbcb;
+            border: none;
+
+            &::placeholder {
+              color: rgba(0, 0, 0, 0.3);
+            }
+            &:focus {
+              border: solid 2px $color-primary-dark;
+              box-shadow: none;
+            }
+          }
+        }
+      }
+
+      @include element(next) {
+        margin: 1em 0;
+        
+
+        @include breakpoint(small) {
+          margin-top: 2em;
+        }
+      }
+
+      @include element(progress) {
+        @include xy-grid();
+        @include flex-align(center, middle);
+        margin: 1em 0;
+        @include element(item) {
+          @include xy-cell(shrink);
+          height: 15px;
+          width: 15px;
+          background-color: $color-author;
+          border-radius: 50%;
+          display: inline-block;
+
+          @include modifier(active) {
+            background-color: $color-fuse;
+          }
+        }
+      }
+    }
+
+    @include block(contracts) {
+
+      @include element(wrapper) {
+        @include xy-grid(vertical);
+        @include flex-align(center, middle);
+        padding: 0 10px;
+
+        @include breakpoint(medium up) {
+          max-width: 620px;
+          margin: auto;
+        }
+      }
+
+      @include element(options) {
+        @include xy-grid(vertical, false);
+        @include flex-align(center, top);
+        width: 100%;
+
+        @include breakpoint(small down) {
+          width: 85%;
+        }
+      }
+
+      @include element(title) {
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1.29;
+        text-transform: capitalize;
+        color: $color-primary-dark;
+        text-align: center;
+        width: 100%;
+
+        @include breakpoint(small) {
+          margin-bottom: 1em;
+        }
+      }
+
+      @include element(item) {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        position: relative;
+        
+        @include breakpoint(medium) {
+          font-size: 16px;
+          margin: 16px 0;
+        }
+
+        @include breakpoint(small) {
+          font-size: 12px;
+          margin: 8px 0;
+        }
+
+        @include block(icon) {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          margin-right: 5px;
+          align-self: flex-start;
+
+          @include breakpoint(small down) {
+            height: min-content;
+            width: 100px;
+          }
+
+          > img {
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            width: 100%;
+          }
+        }
+  
+        @include block(content) {
+          display: block;
+          margin-left: 10px;
+          flex: 1 1 auto;
+          @include xy-grid(vertical);
+          color: $color-primary-dark;
+
+          @include element(title) {
+            font-weight: 500;
+
+            @include breakpoint(small) {
+              font-size: 14px;							
+            }
+          }
+
+          @include element(text) {
+          }
+
+          @include element(toggle) {
+            @include xy-grid(horizontal, false);
+            @include flex-align(null, middle);
+            padding-top: 1em;
+
+            @include element(text) {
+              font-size: 12px;
+              margin-left: 5px;
+              color: rgba(13, 45, 69, 0.5);
+              > span {
+                &:first-child {
+                  font-weight: bold;
+                  color: $color-primary-dark;
+                }  
+              }
+            }
+
+            @include block(toggle) {
+              max-height: 18px;
+              position: relative;
+              height: 100%;
+              display: inline-block;
+
+              @include breakpoint(small only) {
+                margin-bottom: auto;
+              }
+
+              > input {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+                opacity: 0;
+              }
+      
+              .toggle {
+                &-wrapper {
+                  width: 34px;
+                  height: 18px;
+                  background-color: $disabled;
+                  border-radius: 10px;
+                  position: relative;
+                }
+      
+                &:hover {
+                  cursor: pointer;
+                }
+      
+                display: block;
+                position: absolute;
+                width: 14px;
+                border-radius: 50%;
+                height: 14px;
+                background: #fff;
+                top: 2px;
+                left: 2px;
+                border: 1px solid $disabled;
+                -webkit-transition: all 0.2s ease;
+                -moz-transition: all 0.2s ease;
+                -ms-transition: all 0.2s ease;
+                -o-transition: all 0.2s ease;
+                transition: all 0.2s ease;
+                text-align: center;
+              }
+      
+              .toggle:before {
+                content: "";
+                color: #fff;
+                text-shadow: 1px 1px #000;
+                font-family: tahoma;
+                font-size: 11px;
+              }
+              > input:checked ~ .toggle-wrapper {
+                background: linear-gradient(97deg, #98faac, #fae83e);
+                .toggle {
+                  left: 18px;
+                  border-color: #fae83e;
+                }
+              }
+      
+              input:checked + .toggle:before {
+                content: "";
+              }
+            }
+          }
+        }
+
+        @include block(tooltip) {
+          align-self: flex-start;
+          color: $color-author;
+          font-size: 19px;
+
+          @include element(content) {
+            @include xy-grid(vertical, false);
+            width: 240px !important;
+            font-size: 9px !important;
+            height: auto;
+            color: $color-primary-dark !important;
+            background: $color-white !important;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.25);
+            opacity: 1 ;
+            >div:first-child {
+              font-weight: 500;
+            }
+
+            &:after {
+              border-color: $color-white !important;
+            }
+          }
+        }
+      }
+    }
+
+    @include block(summary-step) {
+      
+      @include element(wrapper) {
+        box-shadow: 0 0 11px 0 rgba(0, 0, 0, 0.25);
+        position: relative;
+        margin: auto;
+        border-radius: 10px;
+        @include breakpoint(medium) {
+          padding: 20px;
+          width: 559px;
+          min-height: 350px;
+          @include xy-grid(vertical);
+          @include flex-align(spaced, middle);
+        }
+
+        @include breakpoint(small) {
+          width: 90%;
+          padding: 20px;
+        }
+
+        div.status.status--radius-all > div.status__button > button {
+          background-color: $color-fuse !important;
+
+          &:hover {
+            background-color: $color-fuse !important;
+          }
+        }
+
+      }
+
+      @include element(inner) {
+        @include breakpoint(medium) {
+          width: 100%;
+          height: 100%;
+          @include xy-grid();
+          @include flex-align(left, middle);
+        }
+
+      }
+
+      @include element(text) {
+        font-size: 11px;
+        line-height: 1.45;
+        color: rgba(5, 40, 62, 0.6);
+        text-align: center;
+        margin-top: 1em;
+
+        .fa-info-circle {
+          color: $color-fuse;
+        }
+
+        @include breakpoint(medium up) {
+          height: 34px;
+        }
+      }
+
+      @include element(logo) {
+        margin: auto 0;
+        @include xy-grid(vertical);
+        @include flex-align(justify, middle);
+
+        @include breakpoint(medium) {
+          flex-basis: 24%;
+        }
+
+        @include block(communityName) {
+          text-overflow: ellipsis;
+          overflow: hidden; 
+          width: 108px;
+          height: 1.2em; 
+          white-space: nowrap;
+          margin-top: 10px;
+          @include breakpoint(small down) {
+            margin-bottom: 10px;
+          }
+        }
+
+        > span {
+          font-size: 14px;
+          color: $color-primary-dark;
+          font-weight: 500;
+          text-align: center;
+        }
+      }
+
+      @include element(content) {
+        @include breakpoint(medium) {
+          @include xy-grid(vertical, false);
+          @include flex-align(justify, top);
+          flex-basis: 75%;
+        }
+
+        @include element(title) {
+          height: 27px;
+          font-size: 14px;
+          font-weight: 500;
+          color: $color-primary-dark;
+          align-self: flex-start;
+
+          @include breakpoint(small) {
+            flex-basis: 40%;
+          }
+        }
+
+        @include element(contracts) {
+          @include xy-grid(vertical);
+          flex-basis: 50%;
+
+          @include element(item) {
+            padding: 5px;
+          }
+
+          @include element(icon) {
+            white-space: nowrap;              
+            > img {
+              margin-right: 5px;
+              background-size: contain;
+              background-repeat: no-repeat;
+              background-position: center;
+              width: 9px;
+              height: 11px;
+            }
+          }
+
+          @include element(small) {
+            display: inline-block;
+            font-size: 10.5px;
+            padding-left: 13px;
+          }
+        }
+
+        @include element(item) {
+          @include flex-align(left, middle);
+          width: 100%;
+          @include breakpoint(medium) {
+            padding: 20px;
+            @include xy-grid();
+          }
+
+          @include breakpoint(small) {
+            padding: 20px 0;
+            @include xy-grid(horizontal, false);
+          }
+
+          > p, div {
+            color: rgba(13, 45, 69, 0.6);
+
+            @include breakpoint(small down) {
+              font-size: 14px;
+            }
+          }
+
+          ul {
+            position: relative;
+            list-style: none;
+            margin: 0;
+            padding-left: 1.2em;
+
+            > li:before {
+              content: "-";
+              position: absolute;
+              left: 0;
+            }
+          }
+        }
+
+      }
+
+      @include element(line) {
+        border: solid 1px #e4e4e4;
+        margin: 0;
+        @include breakpoint(medium) {
+          height: 240px;					
+        }
+      }
+
+      @include element(issue) {
+
+        @include breakpoint(medium) {
+          margin-top: 2em;					
+        }
+
+        @include breakpoint(small) {
+          margin-top: 1em;
+        }
+      }
+    }
+    
+    @include block(progress) {
+
+      @include element(wrapper) {
+        color:  $color-primary-dark;
+        box-shadow: 0 0 11px 0 rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+        margin: 0 auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 20000000;
+        background: white;
+
+        @include breakpoint(medium) {
+          width: 100%;
+          height: 100%;
+          @include xy-grid(vertical);
+          @include flex-align(spaced, middle);
+          padding: 10px 50px;
+        }
+  
+        @include breakpoint(small only) {
+          @include xy-grid(vertical);
+          @include flex-align(justify, middle);
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+        }
+      }
+      @include element(img) {
+        width: 50px;
+        height: 50px;
+      }
+      @include element(item) {
+        text-align: center;
+        opacity: 0.3;
+        font-size: 14px;
+        padding: 10px 0;
+        @include modifier(active) {
+          opacity: 1;
+        }
+
+        @include element(label) {
+          font-weight: bold;
+
+          .fa {
+            font-size: 12px;
+            margin-right: 5px;
+          }
+
+          .fa-check {
+            color: $color-ropsten;
+          }
+
+          .fa-times {
+            color: $color-red;
+          }
+        }
+
+        @include element(loaderText) {
+
+        }
+      }
+
+      @include element(loader) {
+        position: relative;
+        text-indent: -9999em;
+        border-top: 7px solid rgba(225, 225, 225, 0.5);
+        border-right: 7px solid rgba(225, 225, 225, 0.5);
+        border-bottom: 7px solid rgba(225, 225, 225, 0.5);
+        border-left: 7px solid $color-fuse;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        animation: spinner 1.1s infinite linear;
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+
+        &::after {
+          border-radius: 50%;
+          width: 100%;
+          height: 100%;
+        }
+
+        @include modifier(stop) {
+          border-top: 7px solid rgba(225, 225, 225, 0.5);
+          border-right: 7px solid rgba(225, 225, 225, 0.5);
+          border-bottom: 7px solid rgba(225, 225, 225, 0.5);
+          border-left: 7px solid rgba(225, 225, 225, 0.5);
+          animation: none;
+        }
+      }
+
+      @include element(error) {
+        margin-top: 20px;
+        @include xy-grid(vertical);
+        @include flex-align(null, middle);
+        > p {
+          margin-bottom: 5px;
+          color: $color-red;
+        }
+        
+      }
+    }
+    
+    @include element(back) {
+      font-size: 13px;
+      background: none;
+      border: 1px solid transparent;
+      color: $color-primary-dark;
+      margin-top: 16px;
+      text-transform: uppercase;
+      font-weight: bold;
+    
+      &:focus,
+      &:active,
+      &:focus:active {
+        outline: none;
+      }
+    
+      &:hover {
+        cursor: pointer;
+        color: darken($color-primary-dark, 10%);
+      }
+    }
+  }
+
+}
+
+@keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

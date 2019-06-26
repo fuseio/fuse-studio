@@ -56,8 +56,8 @@ class FeaturedCommunities extends Component {
     return (
       <div className='grid-x align-justify grid-margin-x grid-margin-y'>
         {
-          staticImages.map((img) =>
-            <div className='medium-12 cell'><img src={img} /></div>
+          staticImages.map((img, index) =>
+            <div key={index} className='medium-12 cell'><img src={img} /></div>
           )
         }
         {/* {

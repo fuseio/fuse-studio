@@ -141,8 +141,8 @@ export default ({
           <TransferForm
             error={error}
             balance={balance}
-            transactionStatus={transactionStatus}
             transferMessage={transferMessage}
+            transactionStatus={transactionStatus}
             closeMessage={() => {
               setState({ transferMessage: false })
               clearTransactionStatus(null)

@@ -11,14 +11,30 @@
     background-repeat: no-repeat;
     background-position: top right;
 
+    @include breakpoint(large only) {
+      width: 50%;
+    }
+    
     @include breakpoint(medium down) {
-      width: 65%;
+      width: 70%;
       height: 200px;	
 		}
   }
 
   &:after {
     height: 100%;
+  }
+
+  @include breakpoint(large only) {
+    height: 100vh;
+
+    > div {
+      &:not(:first-child) {
+        height: 50%;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
   }
 
   @include breakpoint(medium down) {
@@ -32,6 +48,10 @@
     padding-bottom: 3%;
     @include breakpoint(large) {
       padding-top: 7%;      
+    }
+    @include breakpoint(medium up) {
+      padding-left: 40px;
+      padding-right: 40px;
     }
     @include breakpoint(medium down) {
       padding-top: 90px;
@@ -47,11 +67,11 @@
 
     > div {
       width: 100%;
+      @include breakpoint(medium up) {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
     }
-
-    @include breakpoint(medium down) {
-      padding: 20px;
-		}
   }
 
   @include element(content) {
@@ -76,15 +96,15 @@
     }
 
     @include modifier(second) {
-  		@include breakpoint(large up) {
+  		@include breakpoint(xlarge up) {
+        margin-left: 2%;
+      }
+      
+      @include breakpoint(large down) {
         margin-left: auto;
       }
 
-      @include breakpoint(medium) {
-        margin-left: auto;
-      }
-
-      @include breakpoint(small) {
+      @include breakpoint(medium down) {
         margin: auto;
       }
     }
