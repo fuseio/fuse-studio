@@ -6,8 +6,14 @@ import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
 import ReactGA from 'services/ga'
+import NavBar from 'components/common/NavBar'
 
 class Oven extends Component {
+  constructor (props) {
+    super(props)
+
+    this.myRef = React.createRef()
+  }
   componentDidMount () {
     if (this.props.networkType !== 'fuse') {
       this.props.fetchClnToken()
@@ -34,10 +40,13 @@ class Oven extends Component {
     })
   }
 
+  getScrollParent = () => this.myRef.current
+
   render = () => (
-    <React.Fragment>
-      <CommunitiesList {...this.props} showDashboard={this.showDashboard} />
-    </React.Fragment>
+    <div className='communities' ref={this.myRef}>
+      <NavBar />
+      <CommunitiesList getScrollParent={this.getScrollParent} {...this.props} showDashboard={this.showDashboard} />
+    </div>
   )
 }
 

@@ -89,12 +89,12 @@ class ProfileDropDown extends Component {
           <div className='profile__account__avatar cell small-24'>
             <img src={Avatar} />
           </div>
-          <span className='cell small-24 profile__account__address'>
+          {accountAddress && <span className='cell small-24 profile__account__address'>
             {formatAddress(accountAddress)}
             <CopyToClipboard text={accountAddress}>
               <FontAwesome name='clone' />
             </CopyToClipboard>
-          </span>
+          </span>}
         </div>
         <InnerCommunities
           showDashboard={this.showDashboard}
