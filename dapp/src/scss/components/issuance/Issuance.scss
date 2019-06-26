@@ -40,16 +40,18 @@
   }
 
   @include modifier(active) {
-    // color: $secondary;
     color: $color-fuse;
     &:after {
-      top: -10px;
       border: solid 2px $color-fuse;
       background-color: $color-fuse;
       box-shadow: 0 0 0 0 $color-fuse,
                   inset $color-issuance-bg 0 0 1px 2.5px;
       width: 17px;
       height: 17px;
+
+      @include breakpoint(medium up) {
+        top: -10px;
+      }
     }
     &:before {
       background-color: $color-author;
@@ -143,7 +145,7 @@
         background-image: url(../../assets/images/header.jpg);
         background-repeat: no-repeat;
         background-size: cover;
-        box-shadow: inset 0 0 1em 0 rgba(0, 0, 0, 1)
+        // box-shadow: inset 0 0 1em 0 rgba(0, 0, 0, 1)
       }
     }
   }

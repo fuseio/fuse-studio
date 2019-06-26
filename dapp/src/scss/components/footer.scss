@@ -9,15 +9,18 @@
   @include flex-align(justify, middle);
   padding: 4px 20px;
   z-index: 200;
-  // @include breakpoint(large) {
-  //   position: sticky;    
-  // }
 
   @include breakpoint(medium up) {
     &:first-child {
       @include xy-grid();
       @include flex-align(null, middle);
     }
+  }
+
+  @include breakpoint(medium down) {
+    @include xy-grid(vertical, false);
+    @include flex-align(center, middle);
+    height: auto;
   }
 
   @include element(status_dot) {
@@ -34,12 +37,6 @@
     @include modifier(on) {
       background-color: $color-ropsten;
     }
-  }
-
-  @include breakpoint(medium down) {
-    @include xy-grid(vertical, false);
-    @include flex-align(center, middle);
-    height: auto;
   }
 
   @include element(item) {

@@ -106,7 +106,8 @@
     padding: 20px;
 
     .fa {
-      font-size: 18px;
+      z-index: 100;
+      font-size: 20px;
       color: $color-white;
     }
   }
