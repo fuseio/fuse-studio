@@ -6,7 +6,7 @@ import personImage from 'images/person.png'
 import groupImageMobile from 'images/group_mobile.png'
 import groupImage from 'images/group_image.png'
 import NavBar from 'components/common/NavBar'
-import { isMobile, isMobileOnly } from 'react-device-detect'
+import { isMobileOnly } from 'react-device-detect'
 import ReactGA from 'services/ga'
 
 export default class HomePage extends Component {

@@ -4,7 +4,7 @@ import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/Message'
 import transferShape from 'utils/validation/shapes/transfer'
 import { isOwner } from 'utils/token'
- 
+
 export default class TransferForm extends PureComponent {
   constructor (props) {
     super(props)
