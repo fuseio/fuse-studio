@@ -195,14 +195,16 @@ class Businesses extends Component {
             {
               !isEmpty(businesses) && (
                 <div className='entities__search entities__search--business'>
-                  <button className='entities__search__icon'>
-                    <FontAwesome name='search' />
-                  </button>
-                  <input
-                    value={this.state.search}
-                    onChange={this.setSearchValue}
-                    placeholder='Search a merchant...'
-                  />
+                  <div className='entities__search__field'>
+                    <button className='entities__search__field__icon'>
+                      <FontAwesome name='search' />
+                    </button>
+                    <input
+                      value={this.state.search}
+                      onChange={this.setSearchValue}
+                      placeholder='Search a merchant...'
+                    />
+                  </div>
                 </div>
               )
             }
