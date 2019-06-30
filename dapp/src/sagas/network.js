@@ -1,6 +1,7 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
-import { givenWeb3 as web3, getWeb3, portis } from 'services/web3'
+import { givenWeb3 as web3, getWeb3 } from 'services/web3'
+import { portis } from 'services/web3/providers/portis'
 import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfCln } from 'actions/accounts'
@@ -16,6 +17,7 @@ function * getNetworkTypeInternal () {
 }
 
 function * getAccountAddress () {
+  debugger
   if (window.ethereum && window.ethereum.enable) {
     try {
       const enableResponse = yield window.ethereum.enable()
