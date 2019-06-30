@@ -1,7 +1,7 @@
 import { fromPrivateKey, generate } from 'ethereumjs-wallet'
 import WalletSubprovider from 'ethereumjs-wallet/provider-engine'
 import ZeroClientProvider from 'web3-provider-engine/zero'
-import { isValidPrivate, toBuffer } from 'ethereumjs-util'
+import { toBuffer } from 'ethereumjs-util'
 
 // const pk = generate()._privKey
 // console.log(isValidPrivate(pk))

@@ -1,4 +1,4 @@
-import { getProvider as getPortisProvider } from './portis'
+// import { getProvider as getPortisProvider } from './portis'
 import { getProvider as getZeroProvider } from './zero'
 
 const initializeProvider = () => {
