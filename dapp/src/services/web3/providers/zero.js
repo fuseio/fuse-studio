@@ -4,9 +4,7 @@ import ZeroClientProvider from 'web3-provider-engine/zero'
 import { toBuffer } from 'ethereumjs-util'
 
 export const getProvider = (opts = {}) => {
-  const pk = opts.pk ? toBuffer(opts.pk) : generate()._privKey
-
-  const wallet = fromPrivateKey(pk)
+  const wallet = opts.pk ? fromPrivateKey(toBuffer(opts.pk)) : generate()
   const walletProvider = new WalletSubprovider(wallet)
   const provider = new ZeroClientProvider({
     rpcUrl: CONFIG.web3.fuseProvider,
