@@ -1,5 +1,5 @@
 import { addMethod, string } from 'yup'
-import web3 from 'web3'
+import { isAddress } from 'web3-utils'
 
 addMethod(string, 'normalize', function yupNormalize () {
   return this.trim().ensure()
@@ -9,6 +9,6 @@ addMethod(string, 'isAddress', function yupIsAddress (address, message = 'Addres
   return this.test({
     name: 'some',
     message,
-    test: (address) => web3.utils.isAddress(address)
+    test: (address) => isAddress(address)
   })
 })

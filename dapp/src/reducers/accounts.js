@@ -1,7 +1,8 @@
+import * as actions from 'actions/accounts'
 import { CHANGE } from 'actions/marketMaker'
 import { FETCH_TOKEN_LIST } from 'actions/token'
 import { LOGIN } from 'actions/user'
-import * as actions from 'actions/accounts'
+import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 
 export const initialAccount = {
   balances: {},
@@ -61,7 +62,8 @@ const handlers = {
   },
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
     return { ...state, communities: action.response.result }
-  }
+  },
+  [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response })
 }
 
 export default (state = {}, action) => {

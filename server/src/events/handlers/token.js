@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
 const config = require('config')
 const { isZeroAddress } = require('@utils/network')
+const BigNumber = require('bignumber.js')
 
 const token = mongoose.token
 
@@ -26,7 +27,7 @@ const handleTokenCreatedEvent = async (event) => {
 
   const fetchedTokenData = await tokenUtils.fetchTokenData(address, { tokenURI: true })
 
-  return token.create({ ...tokenData, ...fetchedTokenData })
+  return new Token({ ...tokenData, ...fetchedTokenData }).save()
 }
 
 const handleOwnershipTransferredEvent = async (event) => {
@@ -40,7 +41,7 @@ const handleOwnershipTransferredEvent = async (event) => {
 const handleTransferEvent = (event) => {
   const tokenAddress = event.address
   const { from, to, value } = event.returnValues
-  const stringValue = value.toString()
+  const stringValue = new BigNumber(value._hex).toString()
   if (isZeroAddress(from)) {
     return token.mintTokens(tokenAddress, stringValue)
   } else if (isZeroAddress(to)) {

@@ -2,6 +2,8 @@
   "web3": {
     "fuseProvider": "http://rpc.fuse.io",
     "supportedNetworks": ["main", "ropsten", "fuse"],
+    "portis": {
+    },
     "addresses": {
       "ropsten": {
         "ColuLocalNetwork": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
@@ -35,7 +37,14 @@
     },
     "options": {
       "fuse": {
-        "gasPrice": 1e9
+        "gasPrice": 1e9,
+        "transactionConfirmationBlocks": 1
+      },
+      "ropsten": {
+        "transactionConfirmationBlocks": 1
+      },
+      "main": {
+        "transactionConfirmationBlocks": 2
       }
     }
   },

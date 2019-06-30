@@ -11,7 +11,6 @@ module.exports = () => {
   const EventSchema = new mongoose.Schema({
     eventName: { type: String, required: [true, "can't be blank"] },
     blockNumber: { type: Number, required: [true, "can't be blank"] },
-    timestamp: { type: Date, required: [true, "can't be blank"] },
     address: { type: String, required: [true, "can't be blank"] },
     transactionHash: { type: String, required: [true, "can't be blank"] },
     logIndex: { type: Number, required: [true, "can't be blank"] },
@@ -41,21 +40,6 @@ module.exports = () => {
           return reject(err)
         }
         resolve(newObj)
-      })
-    })
-  }
-
-  event.getById = (id) => {
-    return new Promise((resolve, reject) => {
-      Event.findById(id, (err, doc) => {
-        if (err) {
-          return reject(err)
-        }
-        if (!doc) {
-          err = `Event with not found for id ${id}`
-          return reject(err)
-        }
-        resolve(doc)
       })
     })
   }

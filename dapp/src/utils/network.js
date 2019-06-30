@@ -1,3 +1,4 @@
+import { networkIdToName } from 'constants/network'
 
 export const isNetworkSupported = (networkType) => CONFIG.web3.supportedNetworks.includes(networkType)
 
@@ -11,12 +12,13 @@ export const getBlockExplorerUrl = (networkType) => blockExplorers[networkType]
 
 export const getApiRoot = (networkType) => CONFIG.api.url[networkType]
 
-export const isFuse = (provider) => provider.networkVersion === '121'
+export const isFuse = (provider) => provider.connection.networkVersion === '121'
 
 const getInfuraUrl = (networkType) => {
-  const infuraNetworkType = networkType === 'main' ? 'mainnet' : networkType
-  return `https://${infuraNetworkType}.infura.io/v3/${CONFIG.web3.apiKey}`
+  return `https://${toLongName(networkType)}.infura.io/v3/${CONFIG.web3.apiKey}`
 }
+
+export const toLongName = (networkType) => networkType === 'main' ? 'mainnet' : networkType
 
 export const getProviderUrl = (networkType) => {
   if (networkType === 'fuse') {
@@ -25,10 +27,10 @@ export const getProviderUrl = (networkType) => {
     return getInfuraUrl(networkType, CONFIG.web3.apiKey)
   }
 }
-export const getOptions = (provider) => {
-  if (isFuse(provider)) {
-    return CONFIG.web3.options.fuse
-  }
+
+export const getOptions = (networkVersion) => {
+  const networkType = networkIdToName[networkVersion]
+  return CONFIG.web3.options[networkType]
 }
 
 export const convertNetworkName = (name) => {

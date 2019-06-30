@@ -37,37 +37,6 @@ module.exports = (mongoose) => {
 
   function token () {}
 
-  token.create = (data) => {
-    return new Promise((resolve, reject) => {
-      const token = new Token(data)
-      token.save((err, newObj) => {
-        if (err) {
-          return reject(err)
-        }
-        if (!newObj) {
-          let err = 'Token not saved'
-          return reject(err)
-        }
-        resolve(newObj)
-      })
-    })
-  }
-
-  token.getById = (id) => {
-    return new Promise((resolve, reject) => {
-      Token.findById(id, (err, doc) => {
-        if (err) {
-          return reject(err)
-        }
-        if (!doc) {
-          err = `Token with not found for id ${id}`
-          return reject(err)
-        }
-        resolve(doc)
-      })
-    })
-  }
-
   token.getByAddress = (address) => {
     return new Promise((resolve, reject) => {
       Token.findOne({ address }, (err, doc) => {

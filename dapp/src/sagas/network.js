@@ -1,7 +1,7 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
-import { givenWeb3 as web3, getWeb3 } from 'services/web3'
-import { isNetworkSupported } from 'utils/network'
+import { givenWeb3 as web3, getWeb3, portis } from 'services/web3'
+import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfCln } from 'actions/accounts'
 import { loadModal } from 'actions/ui'
@@ -54,7 +54,8 @@ function * getNetworkType () {
       response: {
         networkType,
         networkId,
-        isMetaMask: web3.currentProvider.isMetaMask || false,
+        isMetaMask: web3.currentProvider.connection.isMetaMask || false,
+        isPortis: web3.currentProvider.connection.isPortis || false,
         ...bridgeSides
       } })
     const accountAddress = yield getAccountAddress()
@@ -97,6 +98,7 @@ function * checkAccountChanged ({ selectedAddress }) {
   if (accountAddress !== checksummedAddress) {
     yield put({
       type: checksummedAddress ? actions.CHECK_ACCOUNT_CHANGED.SUCCESS : actions.ACCOUNT_LOGGED_OUT,
+      accountAddress: checksummedAddress,
       response: {
         accountAddress: checksummedAddress
       }
@@ -123,12 +125,21 @@ function * watchGetNetworkTypeSuccess ({ response }) {
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
+function * changeNetwork ({ networkType }) {
+  portis.changeNetwork(toLongName(networkType))
+  yield call(getNetworkType)
+  yield put({
+    type: actions.CHANGE_NETWORK.SUCCESS
+  })
+}
+
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
     takeEvery(actions.CHECK_ACCOUNT_CHANGED.REQUEST, checkAccountChanged),
     takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices),
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),
+    takeEvery(actions.CHANGE_NETWORK.REQUEST, changeNetwork),
     takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess)
   ])
 }
