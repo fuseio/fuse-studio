@@ -17,7 +17,6 @@ function * getNetworkTypeInternal () {
 }
 
 function * getAccountAddress () {
-  debugger
   if (window.ethereum && window.ethereum.enable) {
     try {
       const enableResponse = yield window.ethereum.enable()
