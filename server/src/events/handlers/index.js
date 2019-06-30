@@ -1,4 +1,5 @@
-const eventUtils = require('@utils/event')
+const mongoose = require('mongoose')
+const eventMethods = mongoose.event
 
 const token = require('./token')
 const bridge = require('./bridge')
@@ -18,21 +19,20 @@ const eventsHandlers = {
   RuleRemoved: community.handleRuleRemoved
 }
 
-const handleEvent = function (event, receipt) {
+const handleEvent = async function (event, receipt) {
   const eventName = event.event
   const blockNumber = event.blockNumber
   if (eventsHandlers.hasOwnProperty(eventName)) {
-    console.log(`Starting to process event ${eventName} at ${blockNumber} blockNumber`)
-    return eventsHandlers[eventName](event, receipt).then(() => {
-      console.log(`Done to process ${eventName} event at ${blockNumber} blockNumber`)
-      eventUtils.addNewEvent({
-        eventName,
-        ...event
-      })
-    }).catch(err => {
+    try {
+      console.log(`Start processing event ${eventName} at ${blockNumber} blockNumber`)
+      await eventsHandlers[eventName](event, receipt)
+      console.log(`Done processing ${eventName} event at ${blockNumber} blockNumber`)
+      await eventMethods.create({ eventName, ...event })
+    } catch (error) {
       console.log(`Failed to process ${eventName} event at ${blockNumber} blockNumber`)
-      throw err
-    })
+      console.error(error)
+      throw error
+    }
   }
 }
 

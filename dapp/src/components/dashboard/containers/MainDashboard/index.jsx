@@ -21,6 +21,7 @@ import { checkIsAdmin } from 'selectors/entities'
 import { getToken } from 'selectors/dashboard'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
+import { changeNetwork } from 'actions/network'
 
 class DashboardLayout extends PureComponent {
   state = {
@@ -58,8 +59,11 @@ class DashboardLayout extends PureComponent {
   }
 
   onlyOnFuse = (successFunc) => {
-    const { networkType } = this.props
+    const { networkType, isPortis } = this.props
     if (networkType === 'fuse') {
+      successFunc()
+    } else if (isPortis) {
+      this.props.changeNetwork('fuse')
       successFunc()
     } else {
       const { loadModal } = this.props
@@ -128,6 +132,7 @@ const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
   networkType: state.network.networkType,
   token: getToken(state, match.params.address),
+  isPortis: state.network.isPortis,
   community: state.entities.communities && state.entities.communities[match.params.address],
   communityAddress: match.params.address,
   tokenNetworkType: getForeignNetwork(state),
@@ -144,7 +149,8 @@ const mapDispatchToProps = {
   isUserExists,
   loadModal,
   hideModal,
-  fetchEntities
+  fetchEntities,
+  changeNetwork
 }
 
 export default connect(
