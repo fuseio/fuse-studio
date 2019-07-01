@@ -42,7 +42,7 @@ export function * createMetadata ({ metadata }) {
 
 export function * createEntitiesMetadata ({ accountAddress, metadata }) {
   const box = yield get3box({ accountAddress })
-  debugger
+  // debugger
   const { publicData, privateData } = separateData(metadata)
   const publicFields = Object.keys(publicData)
   const publicValues = Object.values(publicData)
