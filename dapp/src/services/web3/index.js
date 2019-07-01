@@ -26,7 +26,7 @@ export function * get3box ({ accountAddress }) {
   if (box && box._web3provider.selectedAddress === accountAddress) {
     return box
   }
-  box = yield Box.openBox(accountAddress, Web3.givenProvider)
+  box = yield Box.openBox(accountAddress, window.ethereum)
   return box
 }
 

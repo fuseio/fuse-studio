@@ -1,12 +1,16 @@
-// import { getProvider as getPortisProvider } from './portis'
+import { getProvider as getPortisProvider } from './portis'
 import { getProvider as getZeroProvider } from './zero'
 
 const initializeProvider = () => {
   if (window.ethereum) {
     return window.ethereum
   }
-  const provider = getZeroProvider({ pk: window.pk })
-  return provider
+
+  if (window.pk) {
+    return getZeroProvider({ pk: window.pk })
+  } else {
+    return getPortisProvider()
+  }
 }
 
 export default initializeProvider
