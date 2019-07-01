@@ -29,7 +29,7 @@ export const getProviderUrl = (networkType) => {
 }
 
 export const getOptions = (networkVersion) => {
-  const networkType = networkIdToName[networkVersion]
+  const networkType = networkIdToName[networkVersion] || 'fuse'
   return CONFIG.web3.options[networkType]
 }
 

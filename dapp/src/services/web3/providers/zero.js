@@ -6,7 +6,8 @@ import { toBuffer } from 'ethereumjs-util'
 export const getProvider = (opts = {}) => {
   const wallet = opts.pk ? fromPrivateKey(toBuffer(opts.pk)) : generate()
   const walletProvider = new WalletSubprovider(wallet)
-  const provider = new ZeroClientProvider({
+
+  const providerEngine = new ZeroClientProvider({
     rpcUrl: CONFIG.web3.fuseProvider,
     ...walletProvider,
     engineParams: {
@@ -14,11 +15,13 @@ export const getProvider = (opts = {}) => {
     }
   })
 
+  // TODO: The 3rd provider (BlockTracker) causing trouble. Find why.
+  providerEngine.removeProvider(providerEngine._providers[3])
   if (!window.ethereum) {
-    window.ethereum = provider
+    window.ethereum = providerEngine
     window.ethereum.enable = () =>
       new Promise((resolve, reject) => {
-        provider.sendAsync({ method: 'eth_accounts', params: [] }, (error, response) => {
+        providerEngine.sendAsync({ method: 'eth_accounts', params: [] }, (error, response) => {
           if (error) {
             reject(error)
           } else {
@@ -27,5 +30,5 @@ export const getProvider = (opts = {}) => {
         })
       })
   }
-  return provider
+  return providerEngine
 }

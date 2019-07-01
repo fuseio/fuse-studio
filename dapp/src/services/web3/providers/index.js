@@ -5,7 +5,7 @@ const initializeProvider = () => {
   if (window.ethereum) {
     return window.ethereum
   }
-  const provider = getZeroProvider()
+  const provider = getZeroProvider({ pk: window.pk })
   return provider
 }
 

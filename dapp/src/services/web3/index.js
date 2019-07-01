@@ -36,6 +36,7 @@ const { foreignNetwork } = networkState
 const foreignProviderUrl = getProviderUrl(foreignNetwork)
 
 export const givenWeb3 = new Web3(initializeProvider())
+
 export const homeWeb3 = new Web3(CONFIG.web3.fuseProvider)
 export const foreignWeb3 = new Web3(foreignProviderUrl)
 
