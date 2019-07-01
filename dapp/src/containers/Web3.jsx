@@ -5,6 +5,7 @@ import { loadModal } from 'actions/ui'
 import { isNetworkSupported } from 'utils/network'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { withMaybe } from 'utils/components'
+import { getAccountAddress } from 'selectors/accounts'
 
 class Web3 extends Component {
   componentDidMount () {
@@ -42,10 +43,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(Web3)
 
 const withNetwork = (Component) => {
   const mapStateToProps = (state) => ({
-    networkType: state.network.networkType
+    networkType: state.network.networkType,
+    accountAddress: getAccountAddress(state)
   })
 
-  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.networkType)(Component))
+  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.networkType && props.accountAddress)(Component))
   return ConnectedComponent
 }
 
