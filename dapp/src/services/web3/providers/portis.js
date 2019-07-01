@@ -9,5 +9,9 @@ export const getProvider = () => {
   const { foreignNetwork } = networkState
 
   portis = new Portis(CONFIG.web3.portis.id, toLongName(foreignNetwork))
+
+  if (!window.ethereum) {
+    window.ethereum = portis.provider
+  }
   return portis.provider
 }
