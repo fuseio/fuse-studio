@@ -51,4 +51,13 @@ const withNetwork = (Component) => {
   return ConnectedComponent
 }
 
-export { withNetwork }
+const withBox = (Component) => {
+  const mapStateToProps = (state) => ({
+    isBoxConnected: state.network.isBoxConnected
+  })
+
+  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.isBoxConnected)(Component))
+  return ConnectedComponent
+}
+
+export { withNetwork, withBox }

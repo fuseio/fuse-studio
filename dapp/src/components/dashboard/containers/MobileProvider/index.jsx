@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { joinCommunity } from 'actions/communityEntities'
 import JoinCommunity from 'components/dashboard/components/JoinCommunity'
 import Web3 from 'containers/Web3'
+import SignIn from 'components/common/SignIn'
 
-class JoinProvider extends Component {
+class MobileProvider extends Component {
   state = {
     user: {},
     pk: ''
   }
+
   componentDidMount () {
-    setTimeout(() => {
+    const interval = setInterval(() => {
       if (window && window.user) {
         console.log({ user: window.user })
         this.setState({ user: { ...window.user } })
@@ -19,7 +20,10 @@ class JoinProvider extends Component {
         console.log({ pk: window.pk })
         this.setState({ pk: window.pk })
       }
-    }, 5000)
+      if (window && window.user) {
+        clearInterval(interval)
+      }
+    }, 100)
   }
 
   render () {
@@ -30,9 +34,14 @@ class JoinProvider extends Component {
             ? (
               <React.Fragment>
                 <Web3 />
-                <JoinCommunity data={this.state.user} joinCommunity={this.props.joinCommunity} />
+                <JoinCommunity data={this.state.user} />
               </React.Fragment>
             )
+            : undefined
+        }
+        {
+          this.props.accountAddress
+            ? <SignIn accountAddress={this.props.accountAddress} />
             : undefined
         }
       </div>
@@ -40,10 +49,8 @@ class JoinProvider extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({ })
+const mapStateToProps = (state) => ({
+  accountAddress: state.network.accountAddress
+})
 
-const mapDispatchToProps = {
-  joinCommunity
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(JoinProvider)
+export default connect(mapStateToProps)(MobileProvider)

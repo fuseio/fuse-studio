@@ -6,7 +6,7 @@ import { getAddress, getNetworkType, getNetworkSide } from 'selectors/network'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
 import { fetchTokenList } from 'sagas/token'
-import web3, { get3box } from 'services/web3'
+import { getWeb3, get3box } from 'services/web3'
 import { getContract } from 'services/contract'
 import { getAccountAddress } from 'selectors/accounts'
 import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
@@ -25,6 +25,7 @@ function * balanceOfToken ({ tokenAddress, accountAddress, options }) {
 }
 
 function * balanceOfNative ({ accountAddress }) {
+  const web3 = yield getWeb3()
   const balanceOfNative = yield call(web3.eth.getBalance, accountAddress)
 
   yield put({ type: actions.BALANCE_OF_NATIVE.SUCCESS,
@@ -64,6 +65,7 @@ function * signIn ({ accountAddress }) {
   yield put({ type: actions.SIGN_IN.SUCCESS,
     accountAddress,
     response: {
+      isBoxConnected: true,
       accountAddress
     }
   })

@@ -42,12 +42,10 @@ export function * createMetadata ({ metadata }) {
 
 export function * createEntitiesMetadata ({ accountAddress, metadata }) {
   const box = yield get3box({ accountAddress })
-  // debugger
   const { publicData, privateData } = separateData(metadata)
   const publicFields = Object.keys(publicData)
   const publicValues = Object.values(publicData)
   yield box.public.setMultiple(publicFields, publicValues)
-
   const privateFields = Object.keys(privateData)
   const privateValues = Object.values(privateData)
   yield box.private.setMultiple(privateFields, privateValues)
@@ -56,7 +54,6 @@ export function * createEntitiesMetadata ({ accountAddress, metadata }) {
   yield put({
     type: actions.CREATE_ENTITY_METADATA.SUCCESS
   })
-  // return { data, hash }
 }
 
 function * watchTokensFetched ({ response }) {

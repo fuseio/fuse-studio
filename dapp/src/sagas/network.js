@@ -1,6 +1,7 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
-import { givenWeb3 as web3, getWeb3 } from 'services/web3'
+import { toChecksumAddress } from 'web3-utils'
+import { getWeb3 } from 'services/web3'
 import { portis } from 'services/web3/providers/portis'
 import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
@@ -10,13 +11,13 @@ import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
 import { saveState } from 'utils/storage'
 
-function * getNetworkTypeInternal () {
+function * getNetworkTypeInternal (web3) {
   const networkId = yield web3.eth.net.getId()
   const networkType = networkIdToName[networkId]
   return { networkId, networkType }
 }
 
-function * getAccountAddress () {
+function * getAccountAddress (web3) {
   if (window.ethereum && window.ethereum.enable) {
     try {
       const enableResponse = yield window.ethereum.enable()
@@ -48,7 +49,8 @@ function * deduceBridgeSides (networkType) {
 
 function * getNetworkType () {
   try {
-    const { networkType, networkId } = yield getNetworkTypeInternal()
+    const web3 = yield getWeb3()
+    const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const bridgeSides = yield deduceBridgeSides(networkType)
 
     yield put({ type: actions.GET_NETWORK_TYPE.SUCCESS,
@@ -59,7 +61,7 @@ function * getNetworkType () {
         isPortis: web3.currentProvider.connection.isPortis || false,
         ...bridgeSides
       } })
-    const accountAddress = yield getAccountAddress()
+    const accountAddress = yield getAccountAddress(web3)
 
     if (accountAddress) {
       const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
@@ -94,7 +96,7 @@ function * fetchGasPrices () {
 
 function * checkAccountChanged ({ selectedAddress }) {
   const accountAddress = yield select(state => state.network.accountAddress)
-  const checksummedAddress = selectedAddress && web3.utils.toChecksumAddress(selectedAddress)
+  const checksummedAddress = selectedAddress && toChecksumAddress(selectedAddress)
 
   if (accountAddress !== checksummedAddress) {
     yield put({

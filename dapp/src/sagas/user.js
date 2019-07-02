@@ -3,7 +3,6 @@ import { all, call, put, select } from 'redux-saga/effects'
 import { apiCall, tryTakeEvery } from './utils'
 import * as actions from 'actions/user'
 import { getAccountAddress } from 'selectors/accounts'
-import web3 from 'services/web3'
 import * as api from 'services/api/user'
 import { generateSignatureData } from 'utils/web3'
 
@@ -15,7 +14,7 @@ export function * login () {
 
   const signatureData = generateSignatureData({ accountAddress, date, chainId })
   const promise = new Promise((resolve, reject) => {
-    web3.currentProvider.sendAsync(
+    window.ethereum.sendAsync(
       {
         method: 'eth_signTypedData_v3',
         params: [accountAddress, JSON.stringify(signatureData)],

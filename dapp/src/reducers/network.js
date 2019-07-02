@@ -1,4 +1,5 @@
 import * as network from 'actions/network'
+import { SIGN_IN } from 'actions/accounts'
 import { loadState } from 'utils/storage'
 const { addresses } = CONFIG.web3
 
@@ -25,6 +26,8 @@ export default (state = initialState, action) => {
       return { ...state, ...action.response }
     case network.GET_BLOCK_NUMBER.SUCCESS:
       return { ...state, [action.networkType]: { ...state[action.networkType], ...action.response } }
+    case SIGN_IN.SUCCESS:
+      return { ...state, ...action.response }
     default:
       return state
   }

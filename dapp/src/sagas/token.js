@@ -12,7 +12,7 @@ import { transactionSucceeded } from 'actions/transactions'
 import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './utils'
 import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
-import web3 from 'services/web3'
+import { getWeb3 } from 'services/web3'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -194,6 +194,7 @@ function * transferToken ({ tokenAddress, to, value }) {
 
 function * mintToken ({ tokenAddress, value }) {
   const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
   const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress)
 
   const transactionPromise = contract.methods.mint(accountAddress, value).send({
@@ -206,6 +207,7 @@ function * mintToken ({ tokenAddress, value }) {
 
 function * burnToken ({ tokenAddress, value }) {
   const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
   const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress)
 
   const transactionPromise = contract.methods.burn(value).send({

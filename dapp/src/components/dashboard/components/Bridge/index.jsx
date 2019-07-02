@@ -2,7 +2,7 @@ import React, { Component, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
-import web3 from 'web3'
+import { toWei } from 'web3-utils'
 import FontAwesome from 'react-fontawesome'
 import { balanceOfToken } from 'actions/accounts'
 import * as actions from 'actions/bridge'
@@ -78,7 +78,7 @@ class Bridge extends Component {
   setTransferAmount = (e) => this.setState({ transferAmount: e.target.value })
 
   handleTransfer = () => {
-    const value = web3.utils.toWei(this.state.transferAmount)
+    const value = toWei(this.state.transferAmount)
     if (this.props.bridgeStatus.to.bridge === 'home') {
       this.props.transferToHome(this.props.foreignTokenAddress, this.props.foreignBridgeAddress, value)
     } else {

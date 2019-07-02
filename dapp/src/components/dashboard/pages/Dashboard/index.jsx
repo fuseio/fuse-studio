@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import web3 from 'web3'
+import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
 import { fetchTokenStatistics, transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { getClnBalance, getBalances } from 'selectors/accounts'
@@ -76,9 +76,9 @@ class Dashboard extends Component {
   handleMintOrBurnClick = (actionType, amount) => {
     const { burnToken, mintToken, token: { address: tokenAddress } } = this.props
     if (actionType === 'mint') {
-      mintToken(tokenAddress, web3.utils.toWei(String(amount)))
+      mintToken(tokenAddress, toWei(String(amount)))
     } else {
-      burnToken(tokenAddress, web3.utils.toWei(String(amount)))
+      burnToken(tokenAddress, toWei(String(amount)))
     }
 
     this.setState({ ...this.state, lastAction: { actionType, mintBurnAmount: amount } })
@@ -86,7 +86,7 @@ class Dashboard extends Component {
 
   handleTransfer = ({ to: toField, amount }) => {
     const { transferToken, token: { address: tokenAddress } } = this.props
-    transferToken(tokenAddress, toField, web3.utils.toWei(String(amount)))
+    transferToken(tokenAddress, toField, toWei(String(amount)))
   }
 
   handleIntervalChange = (userType, intervalValue) => {
