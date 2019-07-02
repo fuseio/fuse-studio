@@ -46,6 +46,7 @@ export function * createEntitiesMetadata ({ accountAddress, metadata }) {
   const publicFields = Object.keys(publicData)
   const publicValues = Object.values(publicData)
   yield box.public.setMultiple(publicFields, publicValues)
+
   const privateFields = Object.keys(privateData)
   const privateValues = Object.values(privateData)
   yield box.private.setMultiple(privateFields, privateValues)

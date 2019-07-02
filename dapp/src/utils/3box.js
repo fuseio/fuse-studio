@@ -19,11 +19,15 @@ export const privateFields = [
 ]
 
 export const getPublicData = (data) => {
-  return publicFields.reduce((fields, field) => ({ ...fields, [field]: data[field] }), {})
+  return publicFields.reduce((fields, field) =>
+    data.hasOwnProperty(field) ? ({ ...fields, [field]: data[field] }) : fields,
+  {})
 }
 
 export const getPrivateData = (data) => {
-  return privateFields.reduce((fields, field) => ({ ...fields, [field]: data[field] }), {})
+  return privateFields.reduce((fields, field) =>
+    data.hasOwnProperty(field) ? ({ ...fields, [field]: data[field] }) : fields,
+  {})
 }
 
 export const separateData = (data) => ({ publicData: getPublicData(data), privateData: getPrivateData(data) })
