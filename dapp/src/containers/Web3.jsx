@@ -43,11 +43,19 @@ export default connect(mapStateToProps, mapDispatchToProps)(Web3)
 
 const withNetwork = (Component) => {
   const mapStateToProps = (state) => ({
-    networkType: state.network.networkType,
+    networkType: state.network.networkType
+  })
+
+  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.networkType)(Component))
+  return ConnectedComponent
+}
+
+const withAccount = (Component) => {
+  const mapStateToProps = (state) => ({
     accountAddress: getAccountAddress(state)
   })
 
-  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.networkType && props.accountAddress)(Component))
+  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.accountAddress)(Component))
   return ConnectedComponent
 }
 
@@ -60,4 +68,4 @@ const withBox = (Component) => {
   return ConnectedComponent
 }
 
-export { withNetwork, withBox }
+export { withNetwork, withAccount, withBox }

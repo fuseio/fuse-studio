@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withNetwork, withBox } from 'containers/Web3'
+import { withNetwork, withAccount, withBox } from 'containers/Web3'
 import { connect } from 'react-redux'
 // import SignIn from 'components/common/SignIn'
 import { joinCommunity } from 'actions/communityEntities'
@@ -28,4 +28,4 @@ const mapDispatchToProps = {
   joinCommunity
 }
 
-export default withNetwork(withBox(connect(mapStateToProps, mapDispatchToProps)(JoinCommunity)))
+export default withNetwork(withAccount(withBox(connect(mapStateToProps, mapDispatchToProps)(JoinCommunity))))
