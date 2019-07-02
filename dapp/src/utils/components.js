@@ -10,7 +10,7 @@ export const withNeither = (conditionalRenderingFn, EitherComponent) => (Compone
     ? <EitherComponent {...props} />
     : <Component {...props} />
 
-export const withMaybe = (conditionalRenderingFn) => (Component) => (props) => 
+export const withMaybe = (conditionalRenderingFn) => (Component) => (props) =>
   conditionalRenderingFn(props)
     ? <Component {...props} />
     : null

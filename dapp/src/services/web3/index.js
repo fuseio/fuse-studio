@@ -51,7 +51,7 @@ export const foreignWeb3 = new Web3(foreignProviderUrl)
 
 const web3ByBridge = {
   home: homeWeb3,
-  foreign: foreignWeb3,
+  foreign: foreignWeb3
 }
 
 export default givenWeb3
