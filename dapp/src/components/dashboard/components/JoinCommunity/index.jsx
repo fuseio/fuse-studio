@@ -6,7 +6,7 @@ import { joinCommunity } from 'actions/communityEntities'
 
 class JoinCommunity extends Component {
   componentDidMount () {
-    const { joinCommunity, data, communityAddress = '0x9704a91CA5650EB5BD0313D65bC11214E730Ef22' } = this.props
+    const { joinCommunity, data, communityAddress } = this.props
     joinCommunity(communityAddress, { ...data, type: 'user' })
   }
 

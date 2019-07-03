@@ -27,6 +27,7 @@ class MobileProvider extends Component {
   }
 
   render () {
+    const { communityAddress } = this.props
     return (
       <div>
         {
@@ -34,7 +35,7 @@ class MobileProvider extends Component {
             ? (
               <React.Fragment>
                 <Web3 />
-                <JoinCommunity data={this.state.user} />
+                <JoinCommunity data={this.state.user} communityAddress={communityAddress} />
               </React.Fragment>
             )
             : undefined
@@ -49,8 +50,9 @@ class MobileProvider extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  accountAddress: state.network.accountAddress
+const mapStateToProps = (state, { match }) => ({
+  accountAddress: state.network.accountAddress,
+  communityAddress: match.params.address
 })
 
 export default connect(mapStateToProps)(MobileProvider)
