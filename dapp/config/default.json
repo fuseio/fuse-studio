@@ -1,6 +1,6 @@
 {
   "web3": {
-    "fuseProvider": "http://rpc.fuse.io",
+    "fuseProvider": "https://rpc.fuse.io",
     "supportedNetworks": ["main", "ropsten", "fuse"],
     "portis": {
     },

@@ -21,7 +21,10 @@ module.exports = {
   },
   devServer: {
     port: process.env.COMMUNITY_COLU_PORT || 9000,
-    historyApiFallback: true
+    historyApiFallback: true,
+    allowedHosts: [
+      '.ngrok.io'
+    ]
   },
   plugins: [
     new HtmlWebPackPlugin({
