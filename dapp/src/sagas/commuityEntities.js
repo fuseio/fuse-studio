@@ -94,7 +94,7 @@ function * deriveEntityData (data, isClosed) {
 }
 
 function * addEntity ({ communityAddress, data, isClosed }) {
-  const { entityRoles } = deriveEntityData(data, isClosed)
+  const { entityRoles } = yield deriveEntityData(data, isClosed)
 
   const accountAddress = yield select(getAccountAddress)
   const CommunityContract = getContract({ abiName: 'Community',

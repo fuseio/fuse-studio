@@ -5,7 +5,8 @@ import { ConnectedRouter } from 'connected-react-router'
 import Oven from 'components/oven/Oven'
 import IssuanceWizard from 'components/issuance/IssuanceWizard'
 import DashboardLayout from 'components/dashboard/containers/MainDashboard'
-import MobileProvider from 'components/dashboard/containers/MobileProvider'
+import MobileProvider from 'containers/MobileProvider'
+import SignInProvider from 'containers/SignInProvider'
 import EntityProfile from 'components/dashboard/EntityProfile'
 import withTracker from 'containers/withTracker'
 import Web3, { withNetwork } from 'containers/Web3'
@@ -22,13 +23,15 @@ export default class Root extends Component {
         <ConnectedRouter history={history}>
           <BrowserRouter>
             <Layout>
-              {!history.location.pathname.includes('/join') ? <Web3 /> : undefined}
+              {!history.location.pathname.includes('/join') || !history.location.pathname.includes('/sign')
+                ? <Web3 /> : undefined}
               <Switch>
                 <Route exact path='/' component={withTracker(withNetwork(HomePage))} />
                 <Route path='/view/issuance' component={withTracker(withNetwork(IssuanceWizard))} />
                 <Route path='/view/communities' component={withTracker(withNetwork(Oven))} />
                 <Route path='/view/community/:address' component={withTracker(withNetwork(DashboardLayout))} />
                 <Route path='/view/directory/:communityAddress/:account' component={withTracker(withNetwork(EntityProfile))} />
+                <Route path='/view/sign' component={SignInProvider} />
                 <Route path='/view/join/:address' component={MobileProvider} />
               </Switch>
               <Footer />

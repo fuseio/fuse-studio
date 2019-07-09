@@ -5,10 +5,12 @@ export const addUser = (box, data) => {
 
 export const publicFields = [
   'firstName',
+  'name',
   'lastName',
   'country',
   'city',
-  'account'
+  'account',
+  'image'
 ]
 
 export const privateFields = [
@@ -20,7 +22,7 @@ export const privateFields = [
 
 export const getPublicData = (data) => {
   return publicFields.reduce((fields, field) =>
-    data.hasOwnProperty(field) ? ({ ...fields, [field]: data[field] }) : fields,
+    data.hasOwnProperty(field) ? ({ ...fields, [field === 'name' ? 'firstName' : field]: data[field] }) : fields,
   {})
 }
 

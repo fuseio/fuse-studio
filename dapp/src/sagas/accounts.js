@@ -10,6 +10,7 @@ import { getWeb3, get3box } from 'services/web3'
 import { getContract } from 'services/contract'
 import { getAccountAddress } from 'selectors/accounts'
 import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
+import { createEntitiesMetadata } from 'sagas/metadata'
 
 function * balanceOfToken ({ tokenAddress, accountAddress, options }) {
   const basicTokenContract = getContract({ abiName: 'BasicToken', address: tokenAddress, options })
@@ -71,6 +72,18 @@ function * signIn ({ accountAddress }) {
   })
 }
 
+function * create3boxProfile ({ accountAddress, data }) {
+  yield call(createEntitiesMetadata, { accountAddress, metadata: data })
+
+  yield put({ type: actions.CREATE_3BOX_PROFILE.SUCCESS,
+    accountAddress,
+    response: {
+      isBoxConnected: true,
+      accountAddress
+    }
+  })
+}
+
 function * watchAccountChanged ({ response }) {
   yield put(actions.balanceOfCln(response.accountAddress))
 }
@@ -90,6 +103,7 @@ export default function * accountsSaga () {
     takeEvery([TRANSFER_TOKEN.SUCCESS, BURN_TOKEN.SUCCESS, MINT_TOKEN.SUCCESS], watchBalanceOfToken),
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
     tryTakeEvery(actions.SIGN_IN, signIn, 1),
+    tryTakeEvery(actions.CREATE_3BOX_PROFILE, create3boxProfile, 1),
     tryTakeEvery(actions.FETCH_TOKENS_WITH_BALANCES, fetchTokensWithBalances, 1)
   ])
 }

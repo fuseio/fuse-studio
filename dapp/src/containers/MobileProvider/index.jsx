@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import JoinCommunity from 'components/dashboard/components/JoinCommunity'
+import JoinCommunity from 'components/common/JoinCommunity'
 import Web3 from 'containers/Web3'
 import SignIn from 'components/common/SignIn'
 
@@ -13,11 +13,9 @@ class MobileProvider extends Component {
   componentDidMount () {
     const interval = setInterval(() => {
       if (window && window.user) {
-        console.log({ user: window.user })
         this.setState({ user: { ...window.user } })
       }
       if (window && window.pk) {
-        console.log({ pk: window.pk })
         this.setState({ pk: window.pk })
       }
       if (window && window.user) {

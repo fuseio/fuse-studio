@@ -98,10 +98,10 @@ class Users extends Component {
   }
 
   importExisting = () => {
-    const { loadModal, importExistingEntity, community: { communityAddress, isClosed } } = this.props
-    loadModal(IMPORT_EXISTING_ENTITY, {
+    const { loadModal, importExistingEntity, community: { communityAddress, isClosed }, onlyOnFuse } = this.props
+    onlyOnFuse(() => loadModal(IMPORT_EXISTING_ENTITY, {
       submitEntity: (data) => importExistingEntity(data.account, communityAddress, isClosed)
-    })
+    }))
   }
 
   renderTransactionStatus = () => {

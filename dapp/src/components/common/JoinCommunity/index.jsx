@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { withNetwork, withAccount, withBox } from 'containers/Web3'
 import { connect } from 'react-redux'
-// import SignIn from 'components/common/SignIn'
 import { joinCommunity } from 'actions/communityEntities'
+import { withRouter } from 'react-router-dom'
 
 class JoinCommunity extends Component {
   componentDidMount () {
@@ -11,21 +11,21 @@ class JoinCommunity extends Component {
   }
 
   render () {
-    // const { data: { account } } = this.props
     return (
       <div>
-        JoinCommunity
+        Join Community Page
       </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  accountAddress: state.network.accountAddress
+  accountAddress: state.network.accountAddress,
+  isBoxConnected: state.network.isBoxConnected
 })
 
 const mapDispatchToProps = {
   joinCommunity
 }
 
-export default withNetwork(withAccount(withBox(connect(mapStateToProps, mapDispatchToProps)(JoinCommunity))))
+export default withRouter(withNetwork(withAccount(withBox(connect(mapStateToProps, mapDispatchToProps)(JoinCommunity)))))

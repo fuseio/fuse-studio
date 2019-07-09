@@ -1,17 +1,24 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { signIn } from 'actions/accounts'
+import { signIn, create3boxProfile } from 'actions/accounts'
 
 class SignInLayout extends Component {
   componentDidMount = () => {
-    this.props.signIn(this.props.accountAddress)
+    const { signIn, create3boxProfile, createNew, accountAddress, data } = this.props
+
+    if (createNew) {
+      create3boxProfile(accountAddress, data)
+    } else {
+      signIn(accountAddress)
+    }
   }
 
   render = () => null
 }
 
 const mapDispatchToProps = {
-  signIn
+  signIn,
+  create3boxProfile
 }
 
 export default connect(
