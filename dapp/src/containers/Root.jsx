@@ -18,12 +18,13 @@ import Footer from 'components/common/Footer'
 export default class Root extends Component {
   render () {
     const { store, history } = this.props
+    console.log({ check: !history.location.pathname.includes('/join') && !history.location.pathname.includes('/sign') })
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <BrowserRouter>
             <Layout>
-              {!history.location.pathname.includes('/join') || !history.location.pathname.includes('/sign')
+              {!history.location.pathname.includes('/join') && !history.location.pathname.includes('/sign')
                 ? <Web3 /> : undefined}
               <Switch>
                 <Route exact path='/' component={withTracker(withNetwork(HomePage))} />
