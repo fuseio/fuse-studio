@@ -56,7 +56,6 @@ class BusinessForm extends Component {
   }
 
   handleUploadImage = (photoFile, e) => {
-    console.log({ photoFile })
     if (photoFile.size <= 2500000) {
       const formData = new window.FormData()
       formData.append('path', new window.Blob([photoFile]))

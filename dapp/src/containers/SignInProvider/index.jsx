@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-// import { connect } from 'react-redux'
-import Web3, { withNetwork } from 'containers/Web3'
+import { connect } from 'react-redux'
+import Web3 from 'containers/Web3'
 import SignIn from 'components/common/SignIn'
 
 class SignInProvider extends Component {
@@ -35,8 +35,8 @@ class SignInProvider extends Component {
   }
 }
 
-// const mapStateToProps = (state) => ({
-//   accountAddress: state.network.accountAddress
-// })
+const mapStateToProps = (state) => ({
+  accountAddress: state.network.accountAddress
+})
 
-export default withNetwork(SignInProvider)
+export default connect(mapStateToProps, null)(SignInProvider)
