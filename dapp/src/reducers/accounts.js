@@ -63,8 +63,7 @@ const handlers = {
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
     return { ...state, communities: action.response.result }
   },
-  [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
-  [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...action.response })
+  [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response })
 }
 
 export default (state = {}, action) => {

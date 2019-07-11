@@ -155,7 +155,7 @@
 		font-size: 11px;
 	}
 	> input:checked ~ .toggle-wrapper {
-		background: linear-gradient(97deg, #98faac, #fae83e);
+		background: $color-fuse_gradient;
 		.toggle {
 			left: 18px;
 			border-color: #fae83e;
