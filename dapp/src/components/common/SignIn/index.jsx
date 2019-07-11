@@ -21,7 +21,7 @@ class SignInLayout extends Component {
   componentDidUpdate (prepProps, prevState) {
     if (!prepProps.isBoxConnected && this.props.isBoxConnected) {
       console.log({ isBoxConnected: this.props.isBoxConnected })
-      this.props.history.push('/')
+      window.location.replace('http://communities-qa.cln.network')
     }
   }
 
