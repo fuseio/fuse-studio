@@ -9,18 +9,15 @@ class SignInLayout extends Component {
 
     if (createNew) {
       const { create3boxProfile, data } = this.props
-      console.log('create3boxProfile')
       create3boxProfile(accountAddress, data)
     } else {
       const { signIn } = this.props
-      console.log('signIn')
       signIn(accountAddress)
     }
   }
 
   componentDidUpdate (prepProps, prevState) {
-    if (!prepProps.isBoxConnected && this.props.isBoxConnected) {
-      console.log({ isBoxConnected: this.props.isBoxConnected })
+    if (!prepProps.isBoxConnected && this.props.isBoxConnected && this.props.isMobileApp) {
       window.location.replace('http://communities-qa.cln.network')
     }
   }
@@ -28,9 +25,10 @@ class SignInLayout extends Component {
   render = () => null
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, { match }) => ({
   accountAddress: state.network.accountAddress,
-  isBoxConnected: state.network.isBoxConnected
+  isBoxConnected: state.network.isBoxConnected,
+  isMobileApp: match.params.isMobileApp
 })
 
 const mapDispatchToProps = {
