@@ -10,18 +10,17 @@ class JoinCommunity extends Component {
     joinCommunity(communityAddress, { ...data, type: 'user' })
   }
 
-  render () {
-    return (
-      <div>
-        Join Community Page
-      </div>
-    )
+  componentDidUpdate (prepProps, prevState) {
+    if (this.props.isBoxConnected && (!prepProps.join && this.props.join)) {
+      window.location.replace('http://communities-qa.cln.network')
+    }
   }
+
+  render = () => null
 }
 
 const mapStateToProps = (state) => ({
-  accountAddress: state.network.accountAddress,
-  isBoxConnected: state.network.isBoxConnected
+  join: state.screens.communityEntities && state.screens.communityEntities.join
 })
 
 const mapDispatchToProps = {

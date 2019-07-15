@@ -6,7 +6,8 @@ import {
   REMOVE_ENTITY,
   ADD_ADMIN_ROLE,
   REMOVE_ADMIN_ROLE,
-  TOGGLE_COMMUNITY_MODE
+  TOGGLE_COMMUNITY_MODE,
+  JOIN_COMMUNITY
 } from 'actions/communityEntities'
 import { REQUEST } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
@@ -61,6 +62,8 @@ export default (state = initialState, action) => {
       return { ...state, usersResults: [...action.response.result], fetchEntities: false }
     case FETCH_BUSINESSES_ENTITIES.SUCCESS:
       return { ...state, merchantsResults: [...action.response.result], fetchEntities: false }
+    case JOIN_COMMUNITY.SUCCESS:
+      return { ...state, join: true }
     case LOCATION_CHANGE:
       if (action.payload.location.pathname === '/') {
         return initialState

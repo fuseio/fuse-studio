@@ -122,6 +122,9 @@ function * joinCommunity ({ communityAddress, data }) {
   })
   const action = actions.ADD_ENTITY
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield put({
+    type: actions.JOIN_COMMUNITY.SUCCESS
+  })
 }
 
 function * removeEntity ({ communityAddress, account }) {
