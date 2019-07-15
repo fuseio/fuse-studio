@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { withNetwork, withAccount, withBox } from 'containers/Web3'
 import { connect } from 'react-redux'
 import { joinCommunity } from 'actions/communityEntities'
