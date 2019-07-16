@@ -14,6 +14,10 @@ class JoinCommunity extends Component {
     if (this.props.isBoxConnected && (!prepProps.join && this.props.join)) {
       window.location.replace('http://communities-qa.cln.network')
     }
+
+    if (this.props.isBoxConnected && (!prepProps.join && this.props.join === false)) {
+      window.location.replace('http://communities-qa.cln.network')
+    }
   }
 
   render = () => null

@@ -64,6 +64,8 @@ export default (state = initialState, action) => {
       return { ...state, merchantsResults: [...action.response.result], fetchEntities: false }
     case JOIN_COMMUNITY.SUCCESS:
       return { ...state, join: true }
+    case JOIN_COMMUNITY.FAILURE:
+      return { ...state, join: false }
     case LOCATION_CHANGE:
       if (action.payload.location.pathname === '/') {
         return initialState
