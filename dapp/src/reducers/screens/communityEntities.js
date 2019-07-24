@@ -58,8 +58,12 @@ export default (state = initialState, action) => {
       return { ...state, fetchEntities: true }
     case EDIT_ENTITY.PENDING:
       return { ...state, editTransactionHash: action.response.transactionHash }
+    case FETCH_USERS_ENTITIES.REQUEST:
+      return { ...state, fetchEntities: true }
     case FETCH_USERS_ENTITIES.SUCCESS:
       return { ...state, usersResults: [...action.response.result], fetchEntities: false }
+    case FETCH_BUSINESSES_ENTITIES.REQUEST:
+      return { ...state, fetchEntities: true }
     case FETCH_BUSINESSES_ENTITIES.SUCCESS:
       return { ...state, merchantsResults: [...action.response.result], fetchEntities: false }
     case JOIN_COMMUNITY.SUCCESS:

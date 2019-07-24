@@ -3,7 +3,7 @@ import { all, fork } from 'redux-saga/effects'
 import networkSaga from './network'
 import metadataSaga from './metadata'
 import accountsSaga from './accounts'
-import commuityEntitiesSaga from './commuityEntities'
+import communityEntitiesSaga from './communityEntities'
 import tokenSaga from './token'
 import userSaga from './user'
 import bridgeSaga from './bridge'
@@ -13,7 +13,7 @@ export default function * rootSaga () {
     fork(metadataSaga),
     fork(networkSaga),
     fork(accountsSaga),
-    fork(commuityEntitiesSaga),
+    fork(communityEntitiesSaga),
     fork(tokenSaga),
     fork(userSaga),
     fork(bridgeSaga)

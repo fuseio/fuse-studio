@@ -409,7 +409,7 @@
     @include element(title) {
       color: $color-primary-dark;
       font-size: 1.3em;
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
     @include element(text) {
       color: $color-author;
@@ -419,20 +419,20 @@
 
     @include element(btn) {
       border: none;
-      color: $color-primary-dark;
+      color: $color-white;
       padding: 9px 20px;
-      background: $color-fuse_gradient;
-      border-radius: 16px;
+      background-color: #4a687b;
+      border-radius: 6px;
       font-size: 11px;
       text-transform: uppercase;
       display: inline-block;
       margin: 0 auto;
-      font-weight: bold;
+      // font-weight: bold;
       text-align: center;
       outline: none;
       &:hover {
         cursor: pointer;
-        background-color: darken($color-ropsten, 20%);
+        background-color: #25435a;
       }
     }
   }

@@ -31,7 +31,7 @@ export default ({ text, children }) => {
   return (
     <Fragment>
       <CopyToClipboard text={text}>
-        <div onClick={handleClick} style={{ display: 'inline-block' }}>
+        <div onClick={handleClick} style={{ display: 'inline-block', marginLeft: '5px' }}>
           {children}
         </div>
       </CopyToClipboard>

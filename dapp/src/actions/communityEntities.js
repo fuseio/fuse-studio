@@ -27,7 +27,7 @@ export const fetchBusinessesEntities = (communityAddress, entityType = 'business
 
 export const fetchEntity = (communityAddress, account) => entitiesAction(FETCH_ENTITY.REQUEST, { communityAddress, account })
 
-export const addEntity = (communityAddress, data, isClosed) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed })
+export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType })
 export const removeEntity = (communityAddress, account) => action(REMOVE_ENTITY.REQUEST, { communityAddress, account })
 export const addAdminRole = (account) => action(ADD_ADMIN_ROLE.REQUEST, { account })
 export const removeAdminRole = (account) => action(REMOVE_ADMIN_ROLE.REQUEST, { account })

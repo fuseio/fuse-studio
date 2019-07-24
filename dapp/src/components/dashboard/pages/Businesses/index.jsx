@@ -1,71 +1,151 @@
-import React, { Component, Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import Loader from 'components/common/Loader'
-import { getClnBalance, getAccountAddress } from 'selectors/accounts'
+import { getAccountAddress } from 'selectors/accounts'
 import { REQUEST, PENDING } from 'actions/constants'
 import { getBusinessesEntities } from 'selectors/entities'
 import {
   addEntity,
   fetchBusinessesEntities,
-  removeEntity,
-  addAdminRole,
-  removeAdminRole,
-  toggleCommunityMode
+  removeEntity
 } from 'actions/communityEntities'
-import { fetchCommunity } from 'actions/token'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_DIRECTORY_ENTITY } from 'constants/uiConstants'
-import ReactGA from 'services/ga'
-import plusIcon from 'images/add.svg'
 import { getTransaction } from 'selectors/transaction'
-import Entity from '../../components/Entity'
+import TableContainer from 'components/dashboard/components/TableContainer'
+import AddBusiness from 'images/add_business.svg'
+import { useFetch } from 'hooks/useFetch'
+import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
+import sortBy from 'lodash/sortBy'
 
-const BusinessesDataFetcher = (props) => {
+const Businesses = ({
+  network,
+  businesses,
+  community,
+  isAdmin,
+  history,
+  fetchEntities,
+  accountAddress,
+  signatureNeeded,
+  transactionStatus,
+  onlyOnFuse,
+  fetchBusinessesEntities,
+  loadModal,
+  addEntity,
+  removeEntity
+}) => {
+  const { communityAddress, isClosed } = community
+  const [data, setData] = useState(null)
+  const [search, setSearch] = useState('')
+  const apiRoot = getApiRoot(network.networkType === 'fuse' ? 'default' : network.networkType)
+  let url = `${apiRoot}/entities/${communityAddress}?type=business`
+
+  if (search) {
+    url = `${url}&search=${search}`
+  }
+
+  const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
+
   useEffect(() => {
-    if (props.toggleSuccess) {
-      props.fetchCommunity(props.communityAddress)
-    }
-  }, [props.toggleSuccess])
+    fetchData()
+  }, [])
 
   useEffect(() => {
-    if (props.communityAddress) {
-      props.fetchBusinessesEntities(props.communityAddress)
+    if (fetchEntities === false) {
+      fetchData()
     }
-  }, [props.communityAddress])
 
-  return null
-}
+    if (search) {
+      fetchData()
+    }
+  }, [search, fetchEntities])
 
-class Businesses extends Component {
-  state = {
-    search: ''
-  }
+  useEffect(() => {
+    if (communityAddress) {
+      fetchBusinessesEntities(communityAddress)
+    }
+  }, [communityAddress])
 
-  showHomePage = (address) => {
-    this.props.history.push('/')
-  }
+  useEffect(() => {
+    if (!isEmpty(response)) {
+      const { data: listData } = response
+      setData(sortBy(listData.map(({ profile, isAdmin, isApproved, account }, index) => ({
+        name: profile && profile.publicData ? profile.publicData.name : '',
+        type: profile && profile.publicData ? profile.publicData.type : '',
+        address: profile && profile.publicData ? profile.publicData.address : '',
+        account,
+        status: isAdmin
+          ? 'Community admin'
+          : isApproved
+            ? 'Community user'
+            : 'Pending user'
+      })), ['updatedAt']).reverse())
+    }
+  }, [response])
 
-  showProfile = (address, hash) => {
-    this.props.history.push(`/view/directory/${address}/${hash}`)
-    ReactGA.event({
-      category: 'Directory',
-      action: 'Click',
-      label: 'directory'
-    })
-  }
+  const columns = useMemo(() => [
+    {
+      id: 'checkbox',
+      accessor: '',
+      Cell: (rowInfo) => {
+        return null
+        // return (
+        //   <input
+        //     type='checkbox'
+        //     className='row_checkbox'
+        //     checked={rowInfo.value.checkbox}
+        //     // checked={this.state.selected[rowInfo.original.title.props.children] === true}
+        //     onChange={() => this.toggleRow(rowInfo.row.original)}
+        //   />
+        // )
+      }
+    },
+    {
+      Header: 'Name',
+      accessor: 'name'
+    },
+    {
+      Header: 'Type',
+      accessor: 'type'
+    },
+    {
+      Header: 'Address',
+      accessor: 'address'
+    },
+    {
+      Header: 'Account ID',
+      accessor: 'account'
+    },
+    {
+      id: 'dropdown',
+      accessor: '',
+      Cell: (rowInfo) => {
+        return (
+          <div className='table__body__cell__more'>
+            <div className='table__body__cell__more__toggler'><FontAwesome name='ellipsis-v' /></div>
+            <div className='more' onClick={e => e.stopPropagation()}>
+              <ul className='more__options'>
+                <li className='more__options__item' onClick={() => handleRemoveEntity(rowInfo.row.original.account)}>
+                  <FontAwesome name='trash' /> Remove from list
+                </li>
+              </ul>
+            </div>
+          </div>
+        )
+      }
+    }
+  ], [])
 
-  handleAddBusiness = () => {
-    this.props.onlyOnFuse(this.loadAddingModal)
-  }
+  const handleAddBusiness = () => onlyOnFuse(loadAddingModal)
 
-  loadAddingModal = () => this.props.loadModal(ADD_DIRECTORY_ENTITY, {
-    submitEntity: (data) => this.props.addEntity(this.props.community.communityAddress, { ...data, type: 'business' }, this.props.community.isClosed)
+  const loadAddingModal = () => loadModal(ADD_DIRECTORY_ENTITY, {
+    submitEntity: (data) => addEntity(communityAddress, { ...data }, isClosed, 'business')
   })
 
-  renderTransactionStatus = () => {
-    if (this.props.signatureNeeded || this.props.transactionStatus === PENDING || this.props.fetchEntities) {
+  const renderTransactionStatus = () => {
+    if (signatureNeeded || transactionStatus === PENDING || fetchEntities) {
       return (
         <div className='entities__loader'>
           <Loader color='#3a3269' className='loader' />
@@ -74,172 +154,73 @@ class Businesses extends Component {
     }
   }
 
-  setSearchValue = (e) => this.setState({ search: e.target.value })
-
-  filterBySearch = (search, entities) =>
-    search ? entities.filter(entity =>
-      entity && entity.name && entity.name.toLowerCase().search(
-        this.state.search.toLowerCase()) !== -1
-    ) : entities
-
-  handleRemoveEntity = (account) => {
-    const { removeEntity, community: { communityAddress }, onlyOnFuse } = this.props
+  const handleRemoveEntity = (account) =>
     onlyOnFuse(() => removeEntity(communityAddress, account))
+
+  // const toggleRow = (rowData) => {
+  //   const checkbox = data.find(({ account }) => account === rowData.account).checkbox
+  //   data.find(({ account }) => account === rowData.account).checkbox = !checkbox
+  //   setData([...data])
+  // }
+
+  const renderTable = () => {
+    if (!data) return null
+    return (
+      <TableContainer
+        addActionProps={{
+          placeholder: 'Search a business',
+          action: handleAddBusiness,
+          isAdmin,
+          text: 'Add business',
+          onChange: setSearch
+        }}
+        data={data}
+        loading={loading}
+        columns={columns}
+        pageCount={response && response.pageCount ? response.pageCount : 0}
+      />
+    )
   }
 
-  handleAddAdminRole = (account) => {
-    const { addAdminRole, onlyOnFuse } = this.props
-    onlyOnFuse(() => addAdminRole(account))
-  }
-
-  handleRemoveAdminRole = (account) => {
-    const { removeAdminRole, onlyOnFuse } = this.props
-    onlyOnFuse(() => removeAdminRole(account))
-  }
-
-  handleToggleCommunityMode = (event) => {
-    const isClosed = event.target.checked
-    const { community: { communityAddress }, toggleCommunityMode, onlyOnFuse } = this.props
-    onlyOnFuse(() => toggleCommunityMode(communityAddress, isClosed))
-  }
-
-  renderList = (entities) => {
-    const { metadata, isAdmin, community: { communityAddress, homeTokenAddress } } = this.props
-
-    if (entities.length) {
-      return (
-        entities.map((entity, index) =>
-          <Entity
-            key={index}
-            index={index}
-            entity={entity}
-            address={homeTokenAddress}
-            addAdminRole={this.handleAddAdminRole}
-            removeAdminRole={this.handleRemoveAdminRole}
-            handleRemove={this.handleRemoveEntity}
-            confirmUser={this.handleConfirmUser}
-            isAdmin={isAdmin}
-            metadata={metadata[entity.uri]}
-            showProfile={() => this.showProfile(communityAddress, entity.account)}
-          />
-        ))
-    } else {
-      return <p className='entities__empty-list__title'>No entities found</p>
-    }
-  }
-
-  renderItems = () => {
-    const { transactionStatus, businesses } = this.props
-
-    const filteredItems = this.filterBySearch(this.state.search, businesses)
-
+  const renderContent = () => {
     if (businesses && businesses.length) {
       return (
         <Fragment>
-          {this.renderTransactionStatus()}
-          {this.renderList(filteredItems)}
+          {renderTable()}
         </Fragment>
       )
     } else {
       return (
-        <Fragment>
-          {this.renderTransactionStatus()}
-          <div className='entities__empty-list'>
-            <div className='entities__empty-list__title'>Your list is empty - Start to fill it</div>
-            <div className='entities__empty-list__text' />
-            <button
-              className='entities__empty-list__btn'
-              onClick={this.handleAddBusiness}
-              disabled={transactionStatus === REQUEST || transactionStatus === PENDING}
-            >
-              Add new merchant
-            </button>
-          </div>
-        </Fragment>
+        <div className='entities__empty-list'>
+          <img src={AddBusiness} />
+          <div className='entities__empty-list__title'>Add a business to your List!</div>
+          <button
+            className='entities__empty-list__btn'
+            onClick={handleAddBusiness}
+            disabled={transactionStatus === REQUEST || transactionStatus === PENDING}
+          >
+            Add business
+          </button>
+        </div>
       )
     }
   }
 
-  render () {
-    const {
-      community,
-      isAdmin,
-      fetchCommunity,
-      fetchBusinessesEntities,
-      toggleSuccess,
-      businesses
-    } = this.props
-    const {
-      communityAddress,
-      homeTokenAddress,
-      foreignTokenAddress
-    } = community
-
-    return (
-      <Fragment>
-        <div className='entities__header'>
-          <h2 className='entities__header__title'>Businesses list</h2>
-          {
-            isAdmin && (
-              <div className='entities__header__add grid-x align-middle'>
-                <div>
-                  <span onClick={this.handleAddBusiness}>
-                    <a style={{ backgroundImage: `url(${plusIcon})` }} />
-                  </span>
-                  Add new merchant
-                </div>
-              </div>
-            )
-          }
-        </div>
-        <div className='entities__wrapper'>
-          <div className='entities__container'>
-            {
-              !isEmpty(businesses) && (
-                <div className='entities__search entities__search--business'>
-                  <div className='entities__search__field'>
-                    <button className='entities__search__field__icon'>
-                      <FontAwesome name='search' />
-                    </button>
-                    <input
-                      value={this.state.search}
-                      onChange={this.setSearchValue}
-                      placeholder='Search a merchant...'
-                    />
-                  </div>
-                </div>
-              )
-            }
-            {
-              communityAddress && (
-                <Fragment>
-                  <div className='entities__items'>
-                    {this.renderItems()}
-                  </div>
-                </Fragment>
-              )
-            }
-
-          </div>
-
-          <BusinessesDataFetcher
-            communityAddress={communityAddress}
-            homeTokenAddress={homeTokenAddress}
-            foreignTokenAddress={foreignTokenAddress}
-            fetchCommunity={fetchCommunity}
-            fetchBusinessesEntities={fetchBusinessesEntities}
-            toggleSuccess={toggleSuccess}
-          />
-        </div>
-      </Fragment >
-    )
-  }
+  return (
+    <Fragment>
+      <div className='entities__header'>
+        <h2 className='entities__header__title'>Businesses list</h2>
+      </div>
+      <div className='entities__wrapper'>
+        {renderContent()}
+      </div>
+    </Fragment >
+  )
 }
 
 const mapStateToProps = (state) => ({
   network: state.network,
   businesses: getBusinessesEntities(state),
-  clnBalance: getClnBalance(state),
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
@@ -248,14 +229,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   addEntity,
-  addAdminRole,
-  removeAdminRole,
   removeEntity,
   loadModal,
   hideModal,
-  fetchCommunity,
-  fetchBusinessesEntities,
-  toggleCommunityMode
+  fetchBusinessesEntities
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Businesses)
