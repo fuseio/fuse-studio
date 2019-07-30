@@ -19,6 +19,7 @@ const MyTable = ({
   addActionProps,
   loading,
   state,
+  justAdded,
   ...props
 }) => {
   const instance = useTable(
@@ -36,7 +37,6 @@ const MyTable = ({
     usePagination
   )
 
-  // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
     headerGroups,
@@ -62,17 +62,13 @@ const MyTable = ({
           <FontAwesome name='search' className='table__actions__search__icon' />
           <input type='text' onChange={(e) => addActionProps.onChange(e.target.value)} placeholder={addActionProps.placeholder} className='table__actions__search__input' />
         </div>
-        {
-          addActionProps.isAdmin && (
-            <button
-              className='table__actions__button'
-              onClick={addActionProps.action}
-            >
-              <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
-              {addActionProps.text}
-            </button>
-          )
-        }
+        <button
+          className='table__actions__button'
+          onClick={addActionProps.action}
+        >
+          <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
+          {addActionProps.text}
+        </button>
       </div>
       <div {...getTableProps({ className: 'table' })}>
         {headerGroups.map((headerGroup, index) => <HeaderRow key={index} headerGroup={headerGroup} />)}
@@ -80,13 +76,12 @@ const MyTable = ({
           {
             loading ? (
               <div className='table__body__row grid-x align-middle align-spaced'>Loading...</div>
-            ) : page && page.length ? page.map((row, i) => <BodyRow key={i} row={row} index={i} prepareRow={prepareRow} />) : (
+            ) : page && page.length ? page.map((row, i) => <BodyRow key={i} justAdded={justAdded} row={row} index={i} prepareRow={prepareRow} />) : (
               <div className='table__body__row grid-x align-middle'>
                 <div className='table__body__cell cell'>0 Total Records</div>
               </div>
             )
           }
-          {/* {page && page.length ? page.map((row, i) => <BodyRow row={row} index={i} prepareRow={prepareRow} />) : null} */}
         </div>
       </div>
       <div className='table__pagination__wrapper'>

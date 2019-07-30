@@ -1,17 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 import capitalize from 'lodash/capitalize'
 import Select from 'react-select'
-import { Formik, Field } from 'formik'
+import { Formik } from 'formik'
 import entityShape from 'utils/validation/shapes/entity'
 import { businessTypes, options } from 'constants/dropdownOptions'
 import FontAwesome from 'react-fontawesome'
-import uploadIcon from 'images/upload.svg'
-import { uploadImage } from 'actions/communityEntities'
-import { connect } from 'react-redux'
+import TextField from '@material-ui/core/TextField'
+import TransactionButton from 'components/common/TransactionButton'
 
 class BusinessForm extends Component {
   constructor (props) {
@@ -23,15 +21,17 @@ class BusinessForm extends Component {
       name: get(entity, 'name', ''),
       address: get(entity, 'address', ''),
       email: get(entity, 'email', ''),
-      phone: get(entity, 'phone', ''),
-      websiteUrl: get(entity, 'websiteUrl', ''),
+      phoneNumber: get(entity, 'phoneNumber', ''),
+      website: get(entity, 'website', ''),
       description: get(entity, 'description', ''),
       type: get(entity, 'type', '', ''),
       account: get(entity, 'account', ''),
       selectedType: options().some(({ value }) => value === get(entity, 'type', '')) ? {
         value: get(entity, 'type', ''),
         label: capitalize(get(entity, 'type', ''))
-      } : {}
+      } : {},
+      image: null,
+      coverPhoto: null
     }
 
     this.validationSchema = entityShape
@@ -69,196 +69,249 @@ class BusinessForm extends Component {
     }
   }
 
-  renderForm = ({ handleSubmit, setFieldValue, setFieldTouched, values, isValid }) => {
+  renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
+    const { isJoin } = this.props
     return (
-      <form className='entity-modal-content' onSubmit={handleSubmit}>
-        <h4 className='entity-modal-title'>Business name</h4>
-        <Field
-          onFocus={() => setFieldTouched('name', true)}
-          name='name'
-          type='text'
-          className='entity-modal-business-name'
-          placeholder='Your business name...'
-        />
-        <div className='row entity-modal-title'>
-          <div className='col-2'>
-            <p className='entity-modal-content-label'>
-              Logo&nbsp; <FontAwesome className='entity-modal-content-label-icon' name='info-circle' />
-            </p>
-            <div className='logo-rectangle'>
-              <label onClick={() => this.uploadLogoPicture.click()} className='entity-modal-content-upload-label' htmlFor='logo' id='logo'>
-                <input
-                  ref={this.setUploadLogoPicture}
-                  id='logo'
-                  type='file'
-                  onChange={e => this.handleUploadImage(e.target.files[0], e)}
-                  accept='image/*'
-                />
-                <p><img alt='upload' src={uploadIcon} /></p>
-                <button className='upload-text' type='button'>Upload</button>
-              </label>
-            </div>
-          </div>
-          <div className='col-5'>
-            <p className='entity-modal-content-label'>
-              Picture &nbsp;
-              <FontAwesome className='entity-modal-content-label-icon' name='info-circle' />
-            </p>
-            <div className='picture-rectangle'>
-              <label className='entity-modal-content-upload-label' onClick={() => this.uploadCoverPicture.click()} htmlFor='picture' id='picture'>
-                <input
-                  ref={this.setUploadCoverPicture}
-                  id='picture'
-                  type='file'
-                  accept='image/*'
-                />
-                <p><img alt='upload' src={uploadIcon} /></p>
-                <button className='upload-text' type='button'>Upload</button>
-              </label>
-            </div>
-          </div>
-          <div className='col-5'>
-            <p className='entity-modal-content-label'>
-              Business Type &nbsp;<span className='entity-modal-content-label-second'>Select one</span>
-            </p>
-            <div className='entity-modal-content-types'>
-              {
-                businessTypes().map(({ value, label }, key) =>
-                  <Field
-                    name='type'
-                    key={key}
-                    render={({ field }) => (
-                      <span
-                        {...field}
-                        className={classNames({
-                          'entity-modal-content-type': true,
-                          'active-business-type': values.type === value
-                        })}
-                        onClick={() => setFieldValue('type', value)}
-                      >
-                        {label}
-                      </span>
-                    )}
-                  />
-                )
+      <form className='user-form' onSubmit={handleSubmit}>
+        <h5 className='user-form__title'>
+          {isJoin ? 'Join community' : 'Add new business'}
+        </h5>
+        <div className='user-form__field user-form__field--space-bottom'>
+          <TextField
+            onBlur={() => setFieldTouched('name', true)}
+            label='Business name'
+            name='name'
+            fullWidth
+            type='search'
+            required
+            autoComplete='off'
+            margin='normal'
+            error={errors && errors.name && touched.name && true}
+            onChange={handleChange}
+            InputProps={{
+              classes: {
+                underline: 'user-form__field__underline',
+                error: 'user-form__field__error'
               }
-              <Select
-                className={classNames('entity-modal-content-select', {
-                  'active-business-select': ((values.type) && (values.type === values.selectedType.value))
-                })}
-                classNamePrefix='entity-modal-content-select-prefix'
-                options={options()}
-                placeholder={'Other...'}
-                onChange={(val) => {
-                  setFieldValue('selectedType', val)
-                  setFieldValue('type', val.value)
+            }}
+            InputLabelProps={{
+              shrink: true,
+              className: 'user-form__field__label'
+            }}
+          />
+        </div>
+        <div className='grid-x align-middle'>
+          <div className='grid-y'>
+            <h2 className='user-form__label'>Image</h2>
+            <div className='grid-x align-middle'>
+              <div className='uploader'>
+                <span className='uploader__title'>
+                  Logo
+                  <FontAwesome name='info-circle' />
+                </span>
+
+                <label className='uploader__label' htmlFor='uploadImage'>
+                  {
+                    !values.image
+                      ? (
+                        <Fragment>
+                          Upload image
+                          <input
+                            className='uploader__input'
+                            name='image'
+                            id='uploadImage'
+                            type='file'
+                            accept='image/*'
+                            onChange={(event) => setFieldValue('image', event.target.files[0])}
+                          />
+                        </Fragment>
+                      ) : (
+                        <div className='uploader__label__value'>
+                          {values.image.name}
+                        </div>
+                      )
+                  }
+                </label>
+              </div>
+              <div className='uploader' style={{ marginLeft: '20px' }}>
+                <span className='uploader__title'>
+                  Cover photo
+                  <FontAwesome name='info-circle' />
+                </span>
+
+                <label className='uploader__label' htmlFor='uploadCoverImage'>
+                  {
+                    !values.coverPhoto
+                      ? (
+                        <Fragment>
+                          Upload image
+                          <input
+                            className='uploader__input'
+                            name='coverPhoto'
+                            id='uploadCoverImage'
+                            type='file'
+                            accept='image/*'
+                            onChange={(event) => setFieldValue('coverPhoto', event.target.files[0])}
+                          />
+                        </Fragment>
+                      ) : (
+                        <div className='uploader__label__value'>
+                          {values.coverPhoto.name}
+                        </div>
+                      )
+                  }
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div className='grid-y' style={{ marginTop: '20px' }}>
+          <h2 className='user-form__label'>Business type</h2>
+          <Select
+            name='type'
+            className='user-form__field__select'
+            classNamePrefix='user-form__field__select__prefix'
+            error={errors && errors.type && true}
+            options={businessTypes()}
+            placeholder={'Choose type'}
+            onChange={val => {
+              setFieldValue('selectedType', val)
+              setFieldValue('type', val.value)
+            }}
+          />
+        </div>
+        <div className='grid-x align-middle user-form__more-info'>
+          <h2 className='user-form__label user-form__label--no-margin'>More info</h2>
+          <div className='user-form__field'>
+            <TextField
+              label='Ethereum account'
+              name='account'
+              type='search'
+              fullWidth
+              value={values.account}
+              onBlur={() => setFieldTouched('account', true)}
+              error={errors && errors.account && touched.account && true}
+              autoComplete='off'
+              onChange={handleChange}
+              margin='normal'
+              InputProps={{
+                classes: {
+                  root: 'input__root',
+                  focused: '',
+                  error: 'user-form__field__error',
+                  underline: 'user-form__field__underline'
+                }
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: 'user-form__field__label2'
+                }
+              }}
+            />
+          </div>
+          <div className='grid-x align-justify cell'>
+            <div className='cell small-10'>
+              <TextField
+                label='Full address (city & street)'
+                name='address'
+                type='search'
+                className='cell'
+                onChange={handleChange}
+                autoComplete='off'
+                margin='normal'
+                InputProps={{
+                  classes: {
+                    root: 'input__root',
+                    focused: '',
+                    underline: 'user-form__field__underline'
+                  }
+                }}
+                InputLabelProps={{
+                  classes: {
+                    root: 'user-form__field__label2'
+                  }
+                }}
+              />
+            </div>
+            <div className='cell small-10'>
+              <TextField
+                label='Phone'
+                name='phoneNumber'
+                type='search'
+                autoComplete='off'
+                className='cell'
+                onChange={handleChange}
+                margin='normal'
+                InputProps={{
+                  classes: {
+                    root: 'input__root',
+                    focused: '',
+                    underline: 'user-form__field__underline'
+                  }
+                }}
+                InputLabelProps={{
+                  classes: {
+                    root: 'user-form__field__label2'
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div className='grid-x align-justify cell'>
+            <div className='cell small-10'>
+              <TextField
+                label='Email'
+                name='email'
+                type='search'
+                className='cell'
+                onChange={handleChange}
+                onBlur={() => setFieldTouched('email', true)}
+                error={errors && errors.email && touched.email && true}
+                autoComplete='off'
+                margin='normal'
+                InputProps={{
+                  classes: {
+                    root: 'input__root',
+                    focused: '',
+                    error: 'user-form__field__error',
+                    underline: 'user-form__field__underline'
+                  }
+                }}
+                InputLabelProps={{
+                  classes: {
+                    root: 'user-form__field__label2'
+                  }
+                }}
+              />
+            </div>
+            <div className='cell small-10'>
+              <TextField
+                label='Website'
+                name='website'
+                type='search'
+                className='cell'
+                onChange={handleChange}
+                autoComplete='off'
+                margin='normal'
+                InputProps={{
+                  classes: {
+                    root: 'input__root',
+                    focused: '',
+                    underline: 'user-form__field__underline'
+                  }
+                }}
+                InputLabelProps={{
+                  classes: {
+                    root: 'user-form__field__label2'
+                  }
                 }}
               />
             </div>
           </div>
         </div>
-        <hr />
-        <div className='row'>
-          <div className='col-7'>
-            <p className='entity-modal-content-label'>
-              More info
-            </p>
-            <div className='row'>
-              <div className='col-4'>
-                <p className='entity-modal-content-form-control-label'>
-                  Account Id
-                </p>
-              </div>
-              <div className='col-8'>
-                <Field
-                  type='text'
-                  name='account'
-                  className='entity-modal-content-form-control'
-                  placeholder='Type...'
-                  onFocus={() => setFieldTouched('account', true)}
-                />
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-4'>
-                <p className='entity-modal-content-form-control-label'>
-                  Business Address
-                </p>
-              </div>
-              <div className='col-8'>
-                <Field
-                  type='text'
-                  name='address'
-                  className='entity-modal-content-form-control'
-                  placeholder='Type...'
-                  onFocus={() => setFieldTouched('address', true)}
-                />
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-4'>
-                <p className='entity-modal-content-form-control-label'>
-                  Business email
-                </p>
-              </div>
-              <div className='col-8'>
-                <Field
-                  type='email'
-                  name='email'
-                  className='entity-modal-content-form-control'
-                  placeholder='Type...'
-                  onFocus={() => setFieldTouched('email', true)}
-                />
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-4'>
-                <p className='entity-modal-content-form-control-label'>
-                  Phone
-                </p>
-              </div>
-              <div className='col-8'>
-                <Field
-                  type='text'
-                  name='phone'
-                  className='entity-modal-content-form-control'
-                  placeholder='Type...'
-                  onFocus={() => setFieldTouched('phone', true)}
-                />
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-4'>
-                <p className='entity-modal-content-form-control-label'>
-                  Website link
-                </p>
-              </div>
-              <div className='col-8'>
-                <Field
-                  type='text'
-                  name='websiteUrl'
-                  className='entity-modal-content-form-control'
-                  placeholder='Type...'
-                  onFocus={() => setFieldTouched('websiteUrl', true)}
-                />
-              </div>
-            </div>
-          </div>
-          <div className='col-5'>
-            <p className='entity-modal-content-label'>
-              Description
-              <span className='entity-modal-content-label-type'>{values.description.length}/490</span>
-            </p>
-            <Field
-              name='description'
-              render={({ field }) => <textarea placeholder='Type...' className='entity-modal-content-form-control' {...field} rows='14' />}
-            />
-          </div>
-        </div>
-        <div className='row justify-center'>
-          <div className='col-12'>
-            <button type='submit' className='btn-add-entity' disabled={!isValid}>Save</button>
-          </div>
+        <div className='user-form__submit'>
+          <TransactionButton frontText={isJoin ? 'Join' : 'Add business'} type='submit' disabled={!isValid} />
         </div>
       </form>
     )
@@ -281,8 +334,4 @@ BusinessForm.propTypes = {
   submitEntity: PropTypes.func.isRequired
 }
 
-const mapDispatchToProps = {
-  uploadImage
-}
-
-export default connect(null, mapDispatchToProps)(BusinessForm)
+export default BusinessForm

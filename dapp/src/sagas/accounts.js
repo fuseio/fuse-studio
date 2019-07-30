@@ -61,13 +61,25 @@ function * fetchTokensWithBalances ({ accountAddress }) {
 const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 
 function * signIn ({ accountAddress }) {
-  yield call(get3box, { accountAddress })
+  const box = yield call(get3box, { accountAddress })
+
+  const name = yield box.public.get('name')
+  const address = yield box.public.get('address')
+  const image = yield box.public.get('image')
+
+  const email = yield box.private.get('email')
+  const phoneNumber = yield box.private.get('phoneNumber')
+
+  const publicData = { name, image, address }
+  const privateData = { email, phoneNumber }
 
   yield put({ type: actions.SIGN_IN.SUCCESS,
     accountAddress,
     response: {
       isBoxConnected: true,
-      accountAddress
+      accountAddress,
+      publicData,
+      privateData
     }
   })
 }

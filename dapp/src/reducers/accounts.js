@@ -3,6 +3,7 @@ import { CHANGE } from 'actions/marketMaker'
 import { FETCH_TOKEN_LIST } from 'actions/token'
 import { LOGIN } from 'actions/user'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
+import pick from 'lodash/pick'
 
 export const initialAccount = {
   balances: {},
@@ -63,7 +64,8 @@ const handlers = {
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
     return { ...state, communities: action.response.result }
   },
-  [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response })
+  [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
+  [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) })
 }
 
 export default (state = {}, action) => {

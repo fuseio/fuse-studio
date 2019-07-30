@@ -7,7 +7,7 @@ import CopyToClipboard from 'components/common/CopyToClipboard'
 import { loadModal } from 'actions/ui'
 import { fetchMetadata } from 'actions/metadata'
 import { editEntity, fetchEntity } from 'actions/communityEntities'
-import { ADD_DIRECTORY_ENTITY, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+import { ADD_BUSINESS_MODAL, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
 import { getBlockExplorerUrl } from 'utils/network'
 import { getTransaction } from 'selectors/transaction'
@@ -41,7 +41,7 @@ class EntityProfile extends Component {
   showHomePage = (address) => this.props.history.push('/')
 
   handleEdit = () =>
-    this.onlyOnFuse(() => this.props.loadModal(ADD_DIRECTORY_ENTITY, { submitEntity: this.editEntity, entity: this.props.entity }))
+    this.onlyOnFuse(() => this.props.loadModal(ADD_BUSINESS_MODAL, { submitEntity: this.editEntity, entity: this.props.entity }))
 
   render () {
     const { entity } = this.props

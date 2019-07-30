@@ -18,6 +18,7 @@
     @include flex-align(null, middle);
   
     @include element(search) {
+      flex: 0.7;
       @include element(icon) {
         color: $color-step;
         font-weight: bold;
@@ -85,11 +86,26 @@
           display: block;
         }
       }
+
+      @include modifier(just-added) {
+        border-bottom: none;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+      }
     }
 
     @include element(cell) {
       font-size: 11px;
       color: #7a7a7a;
+
+      .fa-clone {
+        color: $color-step;
+        cursor: pointer;
+        font-weight: 300;
+
+        &:hover {
+          font-weight: 900;
+        }
+      }
 
       @include block(row_checkbox) {
         display: none;

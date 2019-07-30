@@ -19,7 +19,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 10000;
+    z-index: 1000;
     overflow: auto;
     text-align: center;
     padding: 4px;
@@ -76,10 +76,10 @@
     	letter-spacing: 0;
     	line-height: 1.38;
 	}
-	img {
-		height: 92px;
-		min-width: 92px;
-	}
+	// img {
+	// 	height: 92px;
+	// 	min-width: 92px;
+	// }
 	h4 {
 		font-weight: 500;
 		padding: 20px 0;

@@ -22,9 +22,7 @@ export default class Modal extends Component {
     }
   }
 
-  onDialogClick (event) {
-    event.stopPropagation()
-  }
+  onDialogClick = (event) => event.stopPropagation()
 
   render () {
     return (

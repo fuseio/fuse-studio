@@ -16,7 +16,7 @@ import {
   importExistingEntity
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
-import { ADD_USER_MODAL, IMPORT_EXISTING_ENTITY } from 'constants/uiConstants'
+import { ADD_USER_MODAL, IMPORT_EXISTING_ENTITY, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import ReactGA from 'services/ga'
 // import { isOwner } from 'utils/token'
 import isEmpty from 'lodash/isEmpty'
@@ -26,6 +26,7 @@ import AddBusiness from 'images/add_business.svg'
 import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
 import sortBy from 'lodash/sortBy'
+import Avatar from 'images/avatar.svg'
 
 const Users = ({
   users,
@@ -46,7 +47,9 @@ const Users = ({
   removeEntity,
   addAdminRole,
   removeAdminRole,
-  confirmUser
+  confirmUser,
+  transactionData,
+  entityAdded
 }) => {
   const { communityAddress, isClosed } = community
   const [data, setData] = useState(null)
@@ -83,23 +86,104 @@ const Users = ({
   useEffect(() => {
     if (!isEmpty(response)) {
       const { data: listData } = response
-      setData(sortBy(listData.map(({ profile, isAdmin, isApproved, account }, index) => ({
+      setData(sortBy(listData.map(({ profile, isAdmin: hasAdminRole, isApproved, account }, index) => ({
         isApproved,
-        isAdmin,
+        hasAdminRole,
         name: profile && profile.publicData
           ? profile.publicData.name
-            ? profile.publicData.name
-            : `${profile.publicData.firstName} ${profile.publicData.lastName}`
-          : '',
+            ? [
+              {
+                name: profile.publicData.name,
+                image: profile.publicData &&
+                  profile.publicData.image
+                  ? <div
+                    style={{
+                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                      width: '36px',
+                      height: '36px',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+                  : <div
+                    style={{
+                      backgroundImage: `url(${Avatar})`,
+                      width: '36px',
+                      height: '36px',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+              }
+            ]
+            : [
+              {
+                name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
+                image: profile.publicData &&
+                  profile.publicData.image
+                  ? <div
+                    style={{
+                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                      width: '36px',
+                      height: '36px',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+                  : <div
+                    style={{
+                      backgroundImage: `url(${Avatar})`,
+                      width: '36px',
+                      height: '36px',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+              }
+            ]
+          : [
+            {
+              name: '',
+              image: <div
+                style={{
+                  backgroundImage: `url(${Avatar})`,
+                  width: '36px',
+                  height: '36px',
+                  backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center'
+                }}
+              />
+            }
+          ],
         account,
-        status: isAdmin
+        status: hasAdminRole
           ? 'Community admin'
-          : isApproved
+          : !isClosed
             ? 'Community user'
-            : 'Pending user'
+            : isApproved
+              ? 'Community user'
+              : 'Pending user'
       })), ['updatedAt']).reverse())
     }
+
+    return () => { }
   }, [response])
+
+  useEffect(() => {
+    if (entityAdded) {
+      setTimeout(() => {
+        loadModal(ENTITY_ADDED_MODAL, {
+          type: 'users',
+          name: !isEmpty(data) ? data[0].name[0].name : ''
+        })
+      }, 1000)
+    }
+  }, [entityAdded])
 
   const columns = useMemo(() => [
     {
@@ -134,43 +218,46 @@ const Users = ({
       id: 'dropdown',
       accessor: '',
       Cell: (rowInfo) => {
-        const { isApproved, isAdmin, account } = rowInfo.row.original
+        const { isApproved, hasAdminRole, account } = rowInfo.row.original
         return (
-          <div className='table__body__cell__more'>
-            <div className='table__body__cell__more__toggler'><FontAwesome name='ellipsis-v' /></div>
-            <div className='more' onClick={e => e.stopPropagation()}>
-              <ul className='more__options'>
-                {
-                  !isApproved && !isAdmin && (
-                    <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleConfirmUser(account)}>Confirm</li>
-                      <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
-                    </ul>
-                  )
-                }
-                {
-                  isAdmin && isApproved && (
-                    <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
-                    </ul>
-                  )
-                }
-                {
-                  !isAdmin && isApproved && (
-                    <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                      <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
-                    </ul>
-                  )
-                }
-              </ul>
+          isAdmin ? (
+            <div className='table__body__cell__more'>
+              <div className='table__body__cell__more__toggler'><FontAwesome name='ellipsis-v' /></div>
+              <div className='more' onClick={e => e.stopPropagation()}>
+                <ul className='more__options'>
+                  {
+                    !isApproved && !hasAdminRole && (
+                      <ul className='more__options'>
+                        <li className='more__options__item' onClick={() => handleConfirmUser(account)}>Confirm</li>
+                        <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
+                        <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                      </ul>
+                    )
+                  }
+                  {
+                    hasAdminRole && isApproved && (
+                      <ul className='more__options'>
+                        <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                        <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
+                      </ul>
+                    )
+                  }
+                  {
+                    !hasAdminRole && isApproved && (
+                      <ul className='more__options'>
+                        <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                        <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
+                      </ul>
+                    )
+                  }
+                </ul>
+              </div>
             </div>
-          </div>
+          ) : null
         )
       }
     }
-  ], [])
+  ], [isAdmin])
 
   // const showProfile = (address, hash) => {
   //   history.push(`/view/directory/${address}/${hash}`)
@@ -179,10 +266,6 @@ const Users = ({
   //     action: 'Click',
   //     label: 'directory'
   //   })
-  // }
-
-  // const handleJoinCommunity = () => {
-  //   onlyOnFuse(() => loadAddUserModal(true))
   // }
 
   // const importExisting = () => {
@@ -207,10 +290,14 @@ const Users = ({
   const loadAddUserModal = (isJoin) => {
     const submitEntity = isJoin ? joinCommunity : addEntity
     loadModal(ADD_USER_MODAL, {
+      isJoin,
       entity: isJoin ? { account: accountAddress } : undefined,
       submitEntity: (data) => submitEntity(communityAddress, { ...data }, isClosed, 'user')
     })
   }
+
+  const handleJoinCommunity = () =>
+    onlyOnFuse(() => loadAddUserModal(true))
 
   const handleRemoveEntity = (account) =>
     onlyOnFuse(() => removeEntity(communityAddress, account))
@@ -230,12 +317,13 @@ const Users = ({
       <TableContainer
         addActionProps={{
           placeholder: 'Search a user',
-          action: handleAddUser,
+          action: isAdmin ? handleAddUser : handleJoinCommunity,
           isAdmin,
-          text: 'Add user',
+          text: isAdmin ? 'Add user' : 'Join community',
           onChange: setSearch
         }}
         data={data}
+        justAdded={entityAdded}
         loading={loading}
         columns={columns}
         pageCount={response && response.pageCount ? response.pageCount : 0}
@@ -253,9 +341,9 @@ const Users = ({
           <div className='entities__empty-list__title'>Add a user to your List!</div>
           <button
             className='entities__empty-list__btn'
-            onClick={handleAddUser}
+            onClick={isAdmin ? handleAddUser : handleJoinCommunity}
           >
-            Add User
+            {isAdmin ? 'Add user' : 'Join'}
           </button>
         </div>
       )
@@ -279,7 +367,7 @@ const mapStateToProps = (state) => ({
   users: getUsersEntities(state),
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
-  ...getTransaction(state, state.screens.communityEntities.transactionHash)
+  transactionData: getTransaction(state, state.screens.communityEntities.transactionHash)
 })
 
 const mapDispatchToProps = {

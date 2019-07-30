@@ -60,7 +60,7 @@ function * addAdminRole ({ account }) {
     address: communityAddress
   })
 
-  const method = CommunityContract.methods.addEnitityRoles(account, roles.ADMIN_ROLE)
+  const method = CommunityContract.methods.addEnitityRoles(account, combineRoles(roles.ADMIN_ROLE, roles.APPROVED_ROLE))
   const transactionPromise = method.send({
     from: accountAddress
   })
@@ -87,13 +87,15 @@ function * removeAdminRole ({ account }) {
 
 function deriveEntityData (type, isClosed) {
   if (type === 'user') {
-    return { entityRoles: isClosed ? roles.USER_ROLE : combineRoles(roles.USER_ROLE, roles.APPROVED_ROLE) }
+    return { entityRoles: isClosed ? roles.USER_ROLE : combineRoles(roles.APPROVED_ROLE, roles.USER_ROLE) }
   } else if (type === 'business') {
     return { entityRoles: roles.BUSINESS_ROLE }
   }
 }
 
 function * addEntity ({ communityAddress, data, isClosed, entityType }) {
+  yield call(metadataHandler, { communityAddress, data })
+
   const { entityRoles } = deriveEntityData(entityType, isClosed)
 
   const accountAddress = yield select(getAccountAddress)
@@ -106,12 +108,47 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
   })
   const action = actions.ADD_ENTITY
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-  yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+  // yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: data })
 }
+
+function * metadataHandler ({ communityAddress, data }) {
+  const getImageHash = async (image) => {
+    const formData = new window.FormData()
+    formData.append('path', new window.Blob([image]))
+    const response = await fetchPic(formData)
+    const { Hash } = await response.json()
+    return [{ '@type': 'ImageObject', contentUrl: { '/': Hash } }]
+  }
+
+  let image
+  let coverPhoto
+
+  if (data.image) {
+    image = yield getImageHash(data.image)
+  }
+
+  if (data.coverPhoto) {
+    coverPhoto = yield getImageHash(data.coverPhoto)
+  }
+
+  if (image || coverPhoto) {
+    let newData = image ? { ...data, image } : data
+    newData = coverPhoto ? { ...newData, coverPhoto } : newData
+    yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: { ...newData } })
+  } else {
+    yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+  }
+}
+
+const fetchPic = buffer => window.fetch('https://ipfs.infura.io:5001/api/v0/add', {
+  method: 'post',
+  'Content-Type': 'multipart/form-data',
+  body: buffer
+})
 
 function * joinCommunity ({ communityAddress, data }) {
   const accountAddress = yield select(getAccountAddress)
-  yield call(createEntitiesMetadata, { accountAddress, metadata: data })
+  yield call(metadataHandler, { communityAddress, data })
 
   const CommunityContract = getContract({ abiName: 'Community',
     address: communityAddress

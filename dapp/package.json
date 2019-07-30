@@ -32,6 +32,7 @@
     "@fuse/entities-contracts": "../contracts/entities/",
     "@fuse/roles": "../packages/roles",
     "@fuse/token-factory-contracts": "../contracts/token-factory/",
+    "@material-ui/core": "^4.2.1",
     "@portis/web3": "^2.0.0-beta.30",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",

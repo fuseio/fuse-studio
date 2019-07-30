@@ -411,7 +411,7 @@
 @include block(button-flip) {
 	transition: .8s cubic-bezier(.775, .07, .575, .995);
 	transform-style: preserve-3d;
-	border-radius: 20.5px;
+	border-radius: 3px;
 
 	@include element(wrapper) {
 		position: relative;
@@ -429,19 +429,17 @@
 
 	> button {
 		width: 105px;
-		height: 42px;
+		height: 33px;
 		display: inline-block;
 		outline: none;
-		line-height: 42px;
-		font-size: 13px;
+		font-size: 14px;
 		cursor: pointer;
-		font-weight: bold;
 		border: none;
 	}
 
 	@include element(front) {
 		border-radius: inherit;
-		background-color: $color-ropsten;
+		background-color: #4a687b;
 		color: #fff;
 		backface-visibility: hidden;
 		z-index: 2;
@@ -457,7 +455,7 @@
 		}
 
 		&:hover {
-			background-color: darken($color-ropsten, 10%);
+			background-color: #052235;
 		}
 
 		@include modifier(fuse) {
@@ -494,6 +492,38 @@
 			background-position: center;
 			background-size: contain;
 			background-repeat: no-repeat;
+		}
+	}
+}
+
+@include block(entity_added) {
+  width: 572px !important;
+  height: 321px !important;
+  border-radius: 3px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+	background-color: #ffffff;
+	@include xy-grid(vertical, false);
+	@include flex-align(spaced, middle);
+
+	@include breakpoint(small down) {
+		padding: 20px 30px;
+	}
+
+	@include element(title) {
+		font-size: 24px;
+		font-weight: 500;
+		color: #052235;
+	}
+
+	@include element(body) {
+		@include xy-grid(vertical, false);
+		@include flex-align(center, middle);
+		color: #7a7a7a;
+		font-size: 20px;
+		line-height: 1.6;
+		
+	  span:nth-child(2) {
+			color: #052235;
 		}
 	}
 }
@@ -569,6 +599,10 @@
 		border-radius: 10px;		
 	}
 
+	@include modifier(radius-all-3) {
+		border-radius: 3px;		
+	}
+
 	@include modifier(dark) {
 		background-color: rgba(5, 40, 62, 0.97);
 	}
@@ -578,7 +612,7 @@
     font-weight: 500;
     line-height: 1.35;
 		letter-spacing: 0.5px;
-		max-width: 30%;
+		// max-width: 30%;
     text-align: center;
 		
 		@include modifier(white) {
@@ -594,7 +628,7 @@
     font-size: 18px;
     font-weight: normal;
 		margin-top: 15px;
-		max-width: 30%;
+		// max-width: 30%;
     text-align: center;
 		
 		@include modifier(white) {

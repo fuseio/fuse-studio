@@ -10,6 +10,7 @@ import UserDatatModal from 'components/issuance/UserDatatModal.jsx'
 import QrModal from 'components/common/QrModal'
 import AddBusinessModal from 'components/dashboard/modals/AddBusinessModal'
 import AddUserModal from 'components/dashboard/modals/AddUserModal'
+import EntityAddedModal from 'components/dashboard/modals/EntityAddedModal'
 import BusinessListModal from 'components/dashboard/modals/BusinessListModal'
 import BridgeModal from 'components/dashboard/modals/BridgeModal'
 import NoDataAboutOwnerModal from 'components/dashboard/modals/NoDataAboutOwnerModal'
@@ -21,14 +22,15 @@ import {
   WRONG_NETWORK_MODAL,
   LOADING_MODAL,
   USER_DATA_MODAL,
-  ADD_DIRECTORY_ENTITY,
+  ADD_BUSINESS_MODAL,
   BUSINESS_LIST_MODAL,
   BRIDGE_MODAL,
   NO_DATA_ABOUT_OWNER_MODAL,
   SHOW_MORE_MODAL,
   QR_MODAL,
   ADD_USER_MODAL,
-  IMPORT_EXISTING_ENTITY
+  IMPORT_EXISTING_ENTITY,
+  ENTITY_ADDED_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -41,14 +43,15 @@ const MODAL_COMPONENTS = {
   [WRONG_NETWORK_MODAL]: WrongNetworkModal,
   [LOADING_MODAL]: LoadingModal,
   [USER_DATA_MODAL]: UserDatatModal,
-  [ADD_DIRECTORY_ENTITY]: AddBusinessModal,
+  [ADD_BUSINESS_MODAL]: AddBusinessModal,
   [BUSINESS_LIST_MODAL]: BusinessListModal,
   [BRIDGE_MODAL]: BridgeModal,
   [NO_DATA_ABOUT_OWNER_MODAL]: NoDataAboutOwnerModal,
   [SHOW_MORE_MODAL]: ShowMoreModal,
   [QR_MODAL]: QrModal,
   [ADD_USER_MODAL]: AddUserModal,
-  [IMPORT_EXISTING_ENTITY]: ImportExistingEntity
+  [IMPORT_EXISTING_ENTITY]: ImportExistingEntity,
+  [ENTITY_ADDED_MODAL]: EntityAddedModal
 }
 
 const ModalContainer = (props) => {

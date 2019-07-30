@@ -49,27 +49,32 @@ export default (state = initialState, action) => {
         usersResults: state.usersResults.filter(val => val !== account)
       }
     case ADD_ENTITY.REQUEST:
-      return { ...state, signatureNeeded: true }
+      return { ...state, signatureNeeded: true, showTransactionMessage: true }
     case ADD_ENTITY.FAILURE:
-      return { ...omit(state, ['transactionHash']), signatureNeeded: false }
+      return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), signatureNeeded: false }
     case ADD_ENTITY.PENDING:
       return { ...state, transactionHash: action.response.transactionHash, signatureNeeded: false }
     case ADD_ENTITY.SUCCESS:
-      return { ...state, fetchEntities: true }
+      return { ...state, fetchEntities: true, showTransactionMessage: false, entityAdded: true }
     case EDIT_ENTITY.PENDING:
       return { ...state, editTransactionHash: action.response.transactionHash }
     case FETCH_USERS_ENTITIES.REQUEST:
-      return { ...state, fetchEntities: true }
+      return {
+        ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']),
+        fetchEntities: true
+      }
     case FETCH_USERS_ENTITIES.SUCCESS:
       return { ...state, usersResults: [...action.response.result], fetchEntities: false }
     case FETCH_BUSINESSES_ENTITIES.REQUEST:
-      return { ...state, fetchEntities: true }
+      return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), fetchEntities: true }
     case FETCH_BUSINESSES_ENTITIES.SUCCESS:
       return { ...state, merchantsResults: [...action.response.result], fetchEntities: false }
     case JOIN_COMMUNITY.SUCCESS:
       return { ...state, join: true }
     case JOIN_COMMUNITY.FAILURE:
       return { ...state, join: false }
+    case JOIN_COMMUNITY.REQUEST:
+      return { ...state, join: false, signatureNeeded: true, showTransactionMessage: true }
     case LOCATION_CHANGE:
       if (action.payload.location.pathname === '/') {
         return initialState
