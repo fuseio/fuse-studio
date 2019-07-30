@@ -44,7 +44,7 @@ const MyTable = ({
     // getRowProps,
     // pageOptions,
     page,
-    state: [{ pageIndex, pageSize }],
+    state: [{ pageIndex }],
     gotoPage,
     prepareRow,
     // previousPage,

@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-import Loader from 'components/common/Loader'
+// import Loader from 'components/common/Loader'
 import { getAccountAddress } from 'selectors/accounts'
-import { REQUEST, PENDING } from 'actions/constants'
+// import { REQUEST, PENDING } from 'actions/constants'
 import { getUsersEntities } from 'selectors/entities'
 import {
   addEntity,
@@ -16,8 +16,8 @@ import {
   importExistingEntity
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
-import { ADD_USER_MODAL, IMPORT_EXISTING_ENTITY, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
-import ReactGA from 'services/ga'
+import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
+// import ReactGA from 'services/ga'
 // import { isOwner } from 'utils/token'
 import isEmpty from 'lodash/isEmpty'
 import { getTransaction } from 'selectors/transaction'

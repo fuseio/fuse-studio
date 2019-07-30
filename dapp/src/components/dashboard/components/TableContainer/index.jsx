@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useTableState } from 'react-table'
 import MyTable from 'components/dashboard/components/Table'
 
