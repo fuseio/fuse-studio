@@ -57,8 +57,8 @@ function * getNetworkType () {
       response: {
         networkType,
         networkId,
-        isMetaMask: (window.ethereum.isMetaMask || web3.currentProvider.connection.isMetaMask) || false,
-        isPortis: (window.ethereum.isPortis || web3.currentProvider.connection.isPortis) || false,
+        isMetaMask: (web3.currentProvider.isMetaMask || web3.currentProvider.connection.isMetaMask) || false,
+        isPortis: web3.currentProvider.connection.isPortis || false,
         ...bridgeSides
       } })
     const accountAddress = yield getAccountAddress(web3)
