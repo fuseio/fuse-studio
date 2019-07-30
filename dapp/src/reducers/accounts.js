@@ -3,7 +3,10 @@ import { CHANGE } from 'actions/marketMaker'
 import { FETCH_TOKEN_LIST } from 'actions/token'
 import { LOGIN } from 'actions/user'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
+<<<<<<< HEAD
 import pick from 'lodash/pick'
+=======
+>>>>>>> master
 
 export const initialAccount = {
   balances: {},
