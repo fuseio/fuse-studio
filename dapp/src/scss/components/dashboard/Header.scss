@@ -33,6 +33,16 @@
 
     @include block(address) {
       font-size: 14px;
+
+      .fa-clone {
+        font-weight: 400;
+        color: $color-arrow;
+        &:hover {
+          cursor: pointer;
+          font-weight: 900;
+        }
+      }
+
       > span {
         margin-right: 10px;
       }

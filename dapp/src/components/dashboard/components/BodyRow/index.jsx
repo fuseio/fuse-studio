@@ -7,7 +7,6 @@ export default ({
   row,
   index,
   style = {},
-  prepareRow,
   justAdded
 }) => {
   if (!row) {
@@ -29,7 +28,6 @@ export default ({
     }
   }, [justAdded])
 
-  prepareRow(row)
   const className = index === 0 && hasNewOne
     ? 'table__body__row grid-x align-middle align-spaced table__body__row--just-added'
     : 'table__body__row grid-x align-middle align-spaced'

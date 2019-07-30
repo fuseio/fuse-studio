@@ -76,7 +76,7 @@ const MyTable = ({
           {
             loading ? (
               <div className='table__body__row grid-x align-middle align-spaced'>Loading...</div>
-            ) : page && page.length ? page.map((row, i) => <BodyRow key={i} justAdded={justAdded} row={row} index={i} prepareRow={prepareRow} />) : (
+            ) : page && page.length ? page.map((row, i) => prepareRow(row) || <BodyRow key={i} justAdded={justAdded} row={row} index={i} />) : (
               <div className='table__body__row grid-x align-middle'>
                 <div className='table__body__cell cell'>0 Total Records</div>
               </div>
