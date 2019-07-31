@@ -7,7 +7,8 @@ import {
   useFilters,
   useSortBy,
   useExpanded,
-  usePagination
+  usePagination,
+  useTableState
 } from 'react-table'
 import BodyRow from 'components/dashboard/components/BodyRow'
 import HeaderRow from 'components/dashboard/components/HeaderRow'
@@ -18,11 +19,29 @@ const MyTable = ({
   data,
   addActionProps,
   loading,
-  state,
   justAdded,
+  pageCount,
   ...props
 }) => {
-  const instance = useTable(
+  const state = useTableState({ pageCount })
+
+  const {
+    getTableProps,
+    headerGroups,
+    rows,
+    // getRowProps,
+    // pageOptions,
+    page,
+    state: [{ pageIndex }],
+    gotoPage,
+    prepareRow,
+    // previousPage,
+    // nextPage,
+    // setPageSize,
+    // canPreviousPage,
+    // canNextPage,
+    pages
+  } = useTable(
     {
       columns,
       data,
@@ -36,24 +55,6 @@ const MyTable = ({
     useExpanded,
     usePagination
   )
-
-  const {
-    getTableProps,
-    headerGroups,
-    // rows,
-    // getRowProps,
-    // pageOptions,
-    page,
-    state: [{ pageIndex }],
-    gotoPage,
-    prepareRow,
-    // previousPage,
-    // nextPage,
-    // setPageSize,
-    // canPreviousPage,
-    // canNextPage,
-    pages
-  } = instance
 
   return (
     <div className='table__wrapper'>

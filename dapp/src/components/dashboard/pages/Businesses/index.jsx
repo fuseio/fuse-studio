@@ -12,7 +12,7 @@ import {
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_BUSINESS_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import { getTransaction } from 'selectors/transaction'
-import TableContainer from 'components/dashboard/components/TableContainer'
+import MyTable from 'components/dashboard/components/Table'
 import AddBusiness from 'images/add_business.svg'
 import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
@@ -49,10 +49,6 @@ const Businesses = ({
   }
 
   const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
-
-  useEffect(() => {
-    fetchData()
-  }, [])
 
   useEffect(() => {
     if (fetchEntities === false) {
@@ -135,6 +131,8 @@ const Businesses = ({
       }, 1000)
     }
   }, [entityAdded])
+
+  const tableData = useMemo(() => data, [data])
 
   const columns = useMemo(() => [
     {
@@ -227,7 +225,7 @@ const Businesses = ({
   const renderTable = () => {
     if (!data) return null
     return (
-      <TableContainer
+      <MyTable
         addActionProps={{
           placeholder: 'Search a business',
           action: isAdmin ? handleAddBusiness : handleJoinCommunity,
@@ -235,7 +233,7 @@ const Businesses = ({
           text: isAdmin ? 'Add business' : 'Join',
           onChange: setSearch
         }}
-        data={data}
+        data={tableData}
         justAdded={entityAdded}
         loading={loading}
         columns={columns}

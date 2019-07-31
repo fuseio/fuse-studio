@@ -1,9 +1,7 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-// import Loader from 'components/common/Loader'
 import { getAccountAddress } from 'selectors/accounts'
-// import { REQUEST, PENDING } from 'actions/constants'
 import { getUsersEntities } from 'selectors/entities'
 import {
   addEntity,
@@ -17,11 +15,9 @@ import {
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
-// import ReactGA from 'services/ga'
-// import { isOwner } from 'utils/token'
 import isEmpty from 'lodash/isEmpty'
 import { getTransaction } from 'selectors/transaction'
-import TableContainer from 'components/dashboard/components/TableContainer'
+import MyTable from 'components/dashboard/components/Table'
 import AddBusiness from 'images/add_business.svg'
 import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
@@ -62,10 +58,6 @@ const Users = ({
   }
 
   const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
-
-  useEffect(() => {
-    fetchData()
-  }, [])
 
   useEffect(() => {
     if (fetchEntities === false) {
@@ -184,6 +176,8 @@ const Users = ({
       }, 1000)
     }
   }, [entityAdded])
+
+  const tableData = useMemo(() => data, [data])
 
   const columns = useMemo(() => [
     {
@@ -314,7 +308,7 @@ const Users = ({
   const renderTable = () => {
     if (!data) return null
     return (
-      <TableContainer
+      <MyTable
         addActionProps={{
           placeholder: 'Search a user',
           action: isAdmin ? handleAddUser : handleJoinCommunity,
@@ -322,7 +316,7 @@ const Users = ({
           text: isAdmin ? 'Add user' : 'Join community',
           onChange: setSearch
         }}
-        data={data}
+        data={tableData}
         justAdded={entityAdded}
         loading={loading}
         columns={columns}
