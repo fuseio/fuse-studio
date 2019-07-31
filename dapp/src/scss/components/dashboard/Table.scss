@@ -18,7 +18,9 @@
     @include flex-align(null, middle);
   
     @include element(search) {
-      flex: 0.7;
+      @include breakpoint(medium up) {
+        flex: 0.7;
+      }
       @include element(icon) {
         color: $color-step;
         font-weight: bold;

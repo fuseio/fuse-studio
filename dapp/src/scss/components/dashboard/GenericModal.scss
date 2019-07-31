@@ -1,38 +1,44 @@
-.generic-modal {
-  width: 750px !important;
+@include block (generic-modal) {
 
-  @include breakpoint(medium down) {
-    width: 95% !important;
+  @include element(image) {
+
   }
 
-  margin: auto;
-  padding: 0;
-  &-header {
-    background-color: $color-generic-header;
-    height: 155px;
-    &-img {
-      min-width: auto !important;
-      height: auto !important;
-      position: relative;
-      top: 24px;
-    }
+  @include element(container) {
+
   }
-  &-container {
-    padding: 140px 40px 40px 40px;
-    text-align: center;
-    background-color: $color-white;
-  }
-  &-title {
+
+  @include element(title) {
     font-size: 20px;
     color: $color-text-gray;
-    font-weight: bold;
-    line-height: 1.35;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 20px 0;
+  }
+
+  @include element(text) {
+    color: #7a7a7a;
     margin-bottom: 20px;
   }
-  &-text {
-    font-size: 13px;
-    line-height: 1.46;
-    color: $color-text-gray;
-    margin-bottom: 20px;
+
+  @include element(button) {
+    border: none;
+    color: $color-white;
+    width: 89px;
+    height: 34px;
+    padding: 9px 20px;
+    background-color: #4a687b;
+    border-radius: 3px;
+    font-size: 12px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin: 0 auto;
+    font-weight: bold;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+    &:hover {
+			background-color: #052235;
+		}
   }
 }

@@ -141,18 +141,18 @@
     }
   
     > button {
-      background: linear-gradient(98deg, #34d080, #fae83e);
+      background: $color-fuse_gradient;
       color: $color-primary-dark;
       font-weight: bold;
       text-align: center;
       height: 45px;
       width: 100%;
-      border-radius: 22.5px;
+      border-radius: 30.5px;
       border: none;
       font-size: 16px;
 
       &:hover {
-        background-color: #f6e943;
+        background: #fae83e;
       }
     }
   }

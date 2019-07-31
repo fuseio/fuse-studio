@@ -359,7 +359,7 @@
 
 	@include modifier(fuse) {
 		color: $color-primary-dark;
-		background: linear-gradient(97deg, #98faac, #fae83e) !important;
+		background: $color-fuse_gradient !important;
 
 		&:hover {
 			background: $color-fuse !important;
@@ -368,7 +368,7 @@
 		&:disabled,
 		&[disabled] {
 			opacity: 0.3;
-			background: linear-gradient(97deg, #98faac, #fae83e) !important;
+			background: $color-fuse_gradient !important;
 			color: $color-primary-dark !important;
 			cursor: not-allowed;
 		}
@@ -460,7 +460,7 @@
 
 		@include modifier(fuse) {
 			color: $color-primary-dark !important;
-			background: linear-gradient(97deg, #98faac, #fae83e) !important;
+			background: $color-fuse_gradient !important;
 
 			&:disabled,
 			&[disabled] {

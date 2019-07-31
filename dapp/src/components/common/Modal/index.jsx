@@ -25,15 +25,20 @@ export default class Modal extends Component {
   onDialogClick = (event) => event.stopPropagation()
 
   render () {
+    const { children, hasCloseBtn } = this.props
     return (
-      <div>
-        <div className={'modal-overlay-div'} />
-        <div className={classNames('modal-content-div', this.props.className)} onClick={this.props.onClose}>
-          <div className={classNames('modal-dialog-div', this.props.className)} style={{ width: this.props.width || '432px' }} onClick={this.onDialogClick}>
-            <div className='sidebar-close' onClick={this.props.onClose}>
-              <img src={CloseButton} />
-            </div>
-            {this.props.children}
+      <div className='modal'>
+        <div className='overlay' />
+        <div className='modal__container' onClick={this.props.onClose}>
+          <div className='modal__content' onClick={this.onDialogClick}>
+            {
+              hasCloseBtn && (
+                <div className='modal__content__close' onClick={this.props.onClose}>
+                  <img src={CloseButton} />
+                </div>
+              )
+            }
+            {children}
           </div>
         </div>
       </div>
