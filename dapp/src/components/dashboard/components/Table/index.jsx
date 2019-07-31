@@ -28,7 +28,7 @@ const MyTable = ({
   const {
     getTableProps,
     headerGroups,
-    rows,
+    // rows,
     // getRowProps,
     // pageOptions,
     page,
