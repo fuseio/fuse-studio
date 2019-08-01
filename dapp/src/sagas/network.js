@@ -8,6 +8,7 @@ import { loadModal } from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
 import { saveState } from 'utils/storage'
+import get from 'lodash/get'
 
 function * getNetworkTypeInternal () {
   const networkId = yield web3.eth.net.getId()
@@ -50,12 +51,16 @@ function * getNetworkType () {
     const { networkType, networkId } = yield getNetworkTypeInternal()
     const bridgeSides = yield deduceBridgeSides(networkType)
 
-    yield put({ type: actions.GET_NETWORK_TYPE.SUCCESS,
+    const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
+    const isPortis = get(window.ethereum, 'isPortis', false) || get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
+
+    yield put({
+      type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
         networkId,
-        isMetaMask: web3.currentProvider.connection.isMetaMask || false,
-        isPortis: web3.currentProvider.connection.isPortis || false,
+        isMetaMask,
+        isPortis,
         ...bridgeSides
       } })
     const accountAddress = yield getAccountAddress()
@@ -68,7 +73,8 @@ function * getNetworkType () {
     }
 
     if (!isNetworkSupported(networkType)) {
-      yield put({ type: actions.UNSUPPORTED_NETWORK_ERROR,
+      yield put({
+        type: actions.UNSUPPORTED_NETWORK_ERROR,
         error: {
           msg: `${networkType} is not supported`,
           networkType
