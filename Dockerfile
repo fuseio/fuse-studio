@@ -3,6 +3,8 @@ USER root
 
 COPY . .
 
+ARG COMMMUNITY_WEB3_PORTIS_ID
+ARG COMMUNITY_WEB3_API_KEY
 RUN env
 
 RUN rm -rf node_modules && rm package-lock.json
@@ -11,7 +13,7 @@ RUN cd contracts/entities && npm install && npm run build
 
 RUN cd contracts/token-factory  && npm install && npm run build
 
-RUN cd dapp && npm install && npm run build && cp dist/* ../server/public
+RUN cd dapp && npm install && NODE_ENV=qa npm run build && cp dist/* ../server/public
 
 RUN cd server && npm install
 
