@@ -148,32 +148,6 @@ class Dashboard extends Component {
             homeTokenAddress={homeTokenAddress}
             foreignTokenAddress={foreignTokenAddress}
           />
-          {/* <DashboardTabs
-            transferSuccess={transferSuccess}
-            burnSuccess={burnSuccess}
-            mintSuccess={mintSuccess}
-            user={user}
-            error={error}
-            admin={admin}
-            token={token}
-            isBurning={isBurning}
-            isMinting={isMinting}
-            isTransfer={isTransfer}
-            lastAction={lastAction}
-            networkType={networkType}
-            burnSignature={burnSignature}
-            balanceOnEthereum={new BigNumber(balances[homeNetwork === bridgeStatus['from'].network ? homeTokenAddress : foreignTokenAddress]).div(1e18).toFormat(2, 1)}
-            mintSignature={mintSignature}
-            accountAddress={accountAddress}
-            tokenNetworkType={tokenNetworkType}
-            transferSignature={transferSignature}
-            transactionStatus={transactionStatus}
-            handleTransfer={this.handleTransfer}
-            handleIntervalChange={this.handleIntervalChange}
-            handleMintOrBurnClick={this.handleMintOrBurnClick}
-            balance={balance ? formatWei(balance, 0) : 0}
-            clearTransactionStatus={clearTransactionStatus}
-          /> */}
         </div>
 
         <div className='content__bridge'>

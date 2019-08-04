@@ -4,6 +4,7 @@ import SidebarContent from 'components/dashboard/components/Sidebar'
 import Dashboard from 'components/dashboard/pages/Dashboard'
 import WhiteLabelWallet from 'components/dashboard/pages/WhiteLabelWallet'
 import TransferPage from 'components/dashboard/pages/Transfer'
+import MintBurnPage from 'components/dashboard/pages/MintBurn'
 import { fetchCommunity, fetchTokenProgress, fetchToken } from 'actions/token'
 import { isUserExists } from 'actions/user'
 import { loadModal, hideModal } from 'actions/ui'
@@ -17,7 +18,7 @@ import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import { getForeignNetwork } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
-import { getAccountAddress } from 'selectors/accounts'
+import { getAccountAddress, getBalances } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import { getToken } from 'selectors/dashboard'
 import { fetchEntities } from 'actions/communityEntities'
@@ -79,7 +80,7 @@ class DashboardLayout extends PureComponent {
       return null
     }
     const { open } = this.state
-    const { match, token, community, metadata, networkType, communityAddress, accountAddress } = this.props
+    const { match, token, community, metadata, networkType, communityAddress, accountAddress, isAdmin } = this.props
 
     const { address: tokenAddress, name } = token
     const { isClosed } = community
@@ -89,10 +90,10 @@ class DashboardLayout extends PureComponent {
         <div className='Dashboard__container'>
           {
             !isMobile
-              ? <SidebarContent isGradientLogo communityName={token && token.name} match={match.url} />
+              ? <SidebarContent isAdmin={isAdmin} isGradientLogo communityName={token && token.name} match={match.url} />
               : <Sidebar
                 sidebar={
-                  <SidebarContent isGradientLogo communityName={token && token.name} match={match.url} />
+                  <SidebarContent isAdmin={isAdmin} isGradientLogo communityName={token && token.name} match={match.url} />
                 }
                 open={open}
                 styles={{
@@ -121,6 +122,7 @@ class DashboardLayout extends PureComponent {
                 <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/transfer`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.url}/mintBurn`} render={() => <MintBurnPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
               </Switch>
             </div>
           </div>
@@ -140,6 +142,7 @@ const mapStateToProps = (state, { match }) => ({
   tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
   isAdmin: checkIsAdmin(state),
+  balances: getBalances(state),
   dashboard: state.screens.dashboard,
   homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress
 })

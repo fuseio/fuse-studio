@@ -128,7 +128,7 @@
     @include block(item) {
       padding: 20px;
       font-size: 14px;
-      @include xy-grid();
+      @include xy-grid(horizontal, false);
       @include flex-align(null, middle);
       min-height: 40px;
       color: #d6d6d6;
@@ -159,6 +159,10 @@
 
       @include element(text) {
         text-align: start;
+        text-overflow: ellipsis;
+        overflow: hidden; 
+        white-space: nowrap;
+        width: 200px;
       }
     }
   }

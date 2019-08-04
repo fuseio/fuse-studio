@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Logo from 'components/common/Logo'
 import HomeIcon from 'images/home.svg'
 import HomeYellowIcon from 'images/home_yellow.svg'
@@ -8,12 +8,15 @@ import BusinessIcon from 'images/business_list.svg'
 import BusinessYellowIcon from 'images/business_list_yellow.svg'
 import TransferIcon from 'images/transfer.svg'
 import TransferYellowIcon from 'images/transfer-selected.svg'
+import MintBurnYellowIcon from 'images/mint-burn-selected.svg'
+import MintBurnIcon from 'images/mint-burn.svg'
+import SettingsIcon from 'images/settings.svg'
 import UsersIcon from 'images/user_list.svg'
 import UsersYellowIcon from 'images/user_list_yellow.svg'
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 
-const sidebarItems = [
+const getSideBarItems = (isAdmin) => isAdmin ? ([
   {
     name: 'community',
     path: '',
@@ -60,11 +63,83 @@ const sidebarItems = [
       borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
     },
     selectedIcon: TransferYellowIcon
+  },
+  {
+    name: 'Mint / Burn',
+    path: '/mintBurn',
+    url: (match) => `${match}/mintBurn`,
+    icon: MintBurnIcon,
+    style: {
+      borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
+    },
+    selectedIcon: MintBurnYellowIcon
+  },
+  {
+    name: 'Settings',
+    path: '/settings',
+    url: (match) => `${match}/settings`,
+    icon: SettingsIcon,
+    selectedIcon: SettingsIcon
   }
-]
+]) : ([
+  {
+    name: 'community',
+    path: '',
+    url: (match) => `${match}`,
+    icon: HomeIcon,
+    style: {
+      borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
+    },
+    selectedIcon: HomeYellowIcon
+  },
+  {
+    name: 'Business list',
+    path: '/merchants',
+    url: (match) => `${match}/merchants`,
+    icon: BusinessIcon,
+    style: {
+      borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
+    },
+    selectedIcon: BusinessYellowIcon
+  },
+  {
+    name: 'Users list',
+    path: '/users',
+    url: (match) => `${match}/users`,
+    icon: UsersIcon,
+    selectedIcon: UsersYellowIcon
+  },
+  {
+    name: 'White label wallet',
+    path: '/wallet',
+    url: (match) => `${match}/wallet`,
+    icon: WalletIcon,
+    selectedIcon: WalletYellowIcon
+  },
+  {
+    name: 'Transfer',
+    path: '/transfer',
+    url: (match) => `${match}/transfer`,
+    icon: TransferIcon,
+    style: {
+      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
+    },
+    selectedIcon: TransferYellowIcon
+  }
+])
 
-export default ({ communityName, match, isGradientLogo }) => {
+export default ({ communityName, match, isAdmin, isGradientLogo }) => {
   const [currentPath, setPath] = useState('')
+  const [sideBarItems, setSideBarItems] = useState([])
+
+  useEffect(() => {
+    setSideBarItems(getSideBarItems(isAdmin))
+  }, [isAdmin])
+
+  useEffect(() => {
+    setSideBarItems(getSideBarItems(isAdmin))
+  }, [])
+
   return (
     <aside className='sidebar'>
       <div className='item' style={{ cursor: 'pointer' }}>
@@ -72,7 +147,7 @@ export default ({ communityName, match, isGradientLogo }) => {
           <Logo isGradientLogo={isGradientLogo} />
         </Link>
       </div>
-      {sidebarItems.map(({ icon, name, url, style, path, selectedIcon }) => {
+      {sideBarItems.map(({ icon, name, url, style, path, selectedIcon }) => {
         return (
           <Link
             key={name}

@@ -1,21 +1,20 @@
 import React, { PureComponent, Fragment } from 'react'
-import { Formik, Field, ErrorMessage } from 'formik'
+import { Formik, ErrorMessage } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/Message'
 import { FAILURE, SUCCESS, CONFIRMATION } from 'actions/constants'
-import { isOwner } from 'utils/token'
 import upperCase from 'lodash/upperCase'
-import classNames from 'classnames'
 import mintBurnShape from 'utils/validation/shapes/mintBurn'
+import TextField from '@material-ui/core/TextField'
 
 export default class MintBurnForm extends PureComponent {
   constructor (props) {
     super(props)
 
-    const { balance } = this.props
+    const { balance, actionType } = this.props
 
     this.initialValues = {
-      actionType: '',
+      actionType,
       mintAmount: '',
       burnAmount: ''
     }
@@ -23,7 +22,7 @@ export default class MintBurnForm extends PureComponent {
     this.validationSchema = mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
   }
 
-  onSubmit = async (values) => {
+  onSubmit = (values) => {
     const { handleMintOrBurnClick } = this.props
     const {
       actionType,
@@ -32,7 +31,7 @@ export default class MintBurnForm extends PureComponent {
     } = values
 
     const amount = actionType === 'mint' ? mintAmount : burnAmount
-    await handleMintOrBurnClick(actionType, amount)
+    handleMintOrBurnClick(amount)
   }
 
   transactionConfirmed = (actionType) => {
@@ -62,12 +61,12 @@ export default class MintBurnForm extends PureComponent {
     return this.transactionError(actionType) && error && typeof error.includes === 'function' && error.includes('denied')
   }
 
-  renderForm = ({ handleSubmit, setFieldValue, values, isValid }) => {
+  renderForm = ({ handleSubmit, setFieldTouched, errors, handleChange, touched, setFieldValue, values, isValid }) => {
     const {
       tokenNetworkType,
       token,
       lastAction,
-      accountAddress,
+      // accountAddress,
       closeMintMessage,
       closeBurnMessage
     } = this.props
@@ -77,7 +76,7 @@ export default class MintBurnForm extends PureComponent {
     } = values
 
     return (
-      <form className='transfer-tab__content' onSubmit={handleSubmit}>
+      <form className='transfer__content grid-y align-justify' style={{ height: '140px' }} onSubmit={handleSubmit}>
 
         <Message
           message={`Your just ${lastAction && lastAction.actionType}ed ${lastAction && lastAction.mintBurnAmount} ${token.symbol} on ${tokenNetworkType} network`}
@@ -112,60 +111,73 @@ export default class MintBurnForm extends PureComponent {
           }
         />
 
-        <div className='transfer-tab__actions'>
-          <button
-            disabled={!isOwner(token, accountAddress)}
-            className={classNames('transfer-tab__actions__btn', { 'transfer-tab__actions__btn--active': actionType === 'mint' })}
-            onClick={(e) => {
-              e.preventDefault()
-              setFieldValue('actionType', 'mint')
-            }}
-          >
-          Mint
-          </button>
-          <button
-            disabled={!isOwner(token, accountAddress)}
-            className={classNames('transfer-tab__actions__btn', { 'transfer-tab__actions__btn--active': actionType === 'burn' })}
-            onClick={(e) => {
-              e.preventDefault()
-              setFieldValue('actionType', 'burn')
-            }}
-          >
-          Burn
-          </button>
-        </div>
-        <div className='transfer-tab__content__amount'>
-          <span className='transfer-tab__content__amount__text'>Amount</span>
-          {
-            actionType === 'mint'
-              ? (
-                <Fragment>
-                  <Field
-                    className='transfer-tab__content__amount__field'
-                    type='number'
-                    disabled={!isOwner(token, accountAddress)}
+        {
+          actionType === 'mint'
+            ? (
+              <Fragment>
+                <div className='grid-y field'>
+                  <h3 className='field__title'>Insert amount</h3>
+
+                  <TextField
+                    onBlur={() => setFieldTouched('mintAmount', true)}
                     name='mintAmount'
-                    placeholder='...'
+                    fullWidth
+                    placeholder='0'
+                    value={values.amount}
+                    type='number'
+                    autoComplete='off'
+                    margin='none'
+                    error={errors && errors.mintAmount && touched.mintAmount && true}
+                    onChange={handleChange}
+                    InputProps={{
+                      classes: {
+                        underline: 'user-form__field__underline',
+                        error: 'user-form__field__error'
+                      }
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                      className: 'user-form__field__label'
+                    }}
                   />
                   <ErrorMessage name='mintAmount' render={msg => <div className='input-error'>{msg}</div>} />
-                </Fragment>
-              ) : (
-                <Fragment>
-                  <Field
-                    className='transfer-tab__content__amount__field'
+                </div>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <div className='grid-y field'>
+                  <h3 className='field__title'>Insert amount</h3>
+
+                  <TextField
+                    onBlur={() => setFieldTouched('burnAmount', true)}
                     name='burnAmount'
-                    disabled={!isOwner(token, accountAddress)}
+                    fullWidth
+                    placeholder='0'
+                    value={values.burnAmount}
                     type='number'
-                    placeholder='...'
+                    autoComplete='off'
+                    margin='none'
+                    error={errors && errors.burnAmount && touched.burnAmount && true}
+                    onChange={handleChange}
+                    InputProps={{
+                      classes: {
+                        underline: 'user-form__field__underline',
+                        error: 'user-form__field__error'
+                      }
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                      className: 'user-form__field__label'
+                    }}
                   />
                   <ErrorMessage name='burnAmount' render={msg => <div className='input-error'>{msg}</div>} />
-                </Fragment>
-              )
-          }
-        </div>
-        <div className='transfer-tab__content__button'>
+                </div>
+              </Fragment>
+            )
+        }
+        <div className='transfer__content__button'>
           {
-            actionType && <TransactionButton modifier='fuse' type='submit' disabled={!isValid} frontText={upperCase(actionType)} />
+            actionType && <TransactionButton type='submit' disabled={!isValid} frontText={upperCase(actionType)} />
           }
         </div>
       </form>
