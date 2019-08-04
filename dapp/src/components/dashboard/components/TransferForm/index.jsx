@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
-import { Formik, Field, ErrorMessage } from 'formik'
+import { Formik, ErrorMessage } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/Message'
 import transferShape from 'utils/validation/shapes/transfer'
+import TextField from '@material-ui/core/TextField'
 
 export default class TransferForm extends PureComponent {
   constructor (props) {
@@ -18,10 +19,10 @@ export default class TransferForm extends PureComponent {
     this.validationSchema = transferShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
   }
 
-  onSubmit = async (values) => {
+  onSubmit = (values) => {
     const { handleTransfer } = this.props
     const { to, amount } = values
-    await handleTransfer({ to, amount })
+    handleTransfer({ to, amount })
   }
 
   transactionError = () => {
@@ -39,13 +40,13 @@ export default class TransferForm extends PureComponent {
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
-  renderForm = ({ handleSubmit, isValid }) => {
+  renderForm = ({ handleSubmit, isValid, setFieldTouched, values, handleChange, errors, touched }) => {
     const {
       closeMessage
     } = this.props
 
     return (
-      <form className='transfer-tab__content' onSubmit={handleSubmit}>
+      <form className='transfer__content grid-y align-justify' onSubmit={handleSubmit}>
 
         <Message
           message={'Your money has been sent successfully'}
@@ -67,26 +68,62 @@ export default class TransferForm extends PureComponent {
           clickHandler={closeMessage}
         />
 
-        <div className='transfer-tab__content__to-field'>
-          <span className='transfer-tab__content__to-field__text'>To</span>
-          <Field
+        <div className='grid-y field'>
+          <h3 className='field__title'>Who do you want to send?</h3>
+
+          <TextField
+            onBlur={() => setFieldTouched('to', true)}
             name='to'
-            className='transfer-tab__content__to-field__input'
+            fullWidth
+            value={values.to}
+            type='search'
+            autoComplete='off'
+            margin='none'
+            error={errors && errors.to && touched.to && true}
+            onChange={handleChange}
+            InputProps={{
+              classes: {
+                underline: 'user-form__field__underline',
+                error: 'user-form__field__error'
+              }
+            }}
+            InputLabelProps={{
+              shrink: true,
+              className: 'user-form__field__label'
+            }}
           />
           <ErrorMessage name='to' render={msg => <div className='input-error'>{msg}</div>} />
         </div>
-        <div className='transfer-tab__content__amount'>
-          <span className='transfer-tab__content__amount__text'>Amount</span>
-          <Field
+        <div className='grid-y field'>
+          <h3 className='field__title'>Insert amount</h3>
+
+          <TextField
+            onBlur={() => setFieldTouched('amount', true)}
             name='amount'
+            fullWidth
+            placeholder='0'
+            value={values.amount}
             type='number'
-            className='transfer-tab__content__amount__field'
+            autoComplete='off'
+            margin='none'
+            error={errors && errors.amount && touched.amount && true}
+            onChange={handleChange}
+            InputProps={{
+              classes: {
+                underline: 'user-form__field__underline',
+                error: 'user-form__field__error'
+              }
+            }}
+            InputLabelProps={{
+              shrink: true,
+              className: 'user-form__field__label'
+            }}
           />
           <ErrorMessage name='amount' render={msg => <div className='input-error'>{msg}</div>} />
         </div>
 
-        <div className='transfer-tab__content__button'>
-          <TransactionButton modifier='fuse' type='submit' disabled={!isValid} />
+        <div className='transfer__content__button'>
+          <TransactionButton type='submit' disabled={!isValid} />
         </div>
       </form>
     )

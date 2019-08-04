@@ -6,6 +6,8 @@ import WalletIcon from 'images/wallet_new.svg'
 import WalletYellowIcon from 'images/wallet_new_yellow.svg'
 import BusinessIcon from 'images/business_list.svg'
 import BusinessYellowIcon from 'images/business_list_yellow.svg'
+import TransferIcon from 'images/transfer.svg'
+import TransferYellowIcon from 'images/transfer-selected.svg'
 import UsersIcon from 'images/user_list.svg'
 import UsersYellowIcon from 'images/user_list_yellow.svg'
 import classNames from 'classnames'
@@ -44,10 +46,20 @@ const sidebarItems = [
     path: '/wallet',
     url: (match) => `${match}/wallet`,
     icon: WalletIcon,
+    // style: {
+    //   borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
+    // },
+    selectedIcon: WalletYellowIcon
+  },
+  {
+    name: 'Transfer',
+    path: '/transfer',
+    url: (match) => `${match}/transfer`,
+    icon: TransferIcon,
     style: {
       borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
     },
-    selectedIcon: WalletYellowIcon
+    selectedIcon: TransferYellowIcon
   }
 ]
 

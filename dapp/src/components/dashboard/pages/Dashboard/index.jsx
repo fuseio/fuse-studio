@@ -3,7 +3,7 @@ import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
 import { fetchTokenStatistics, transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { getClnBalance, getBalances } from 'selectors/accounts'
-import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL } from 'constants/uiConstants'
+import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
 import { isUserExists } from 'actions/user'
@@ -14,6 +14,7 @@ import DashboardTabs from '../../components/DashboardTabs'
 import Bridge from '../../components/Bridge'
 import { getBridgeStatus } from 'selectors/network'
 import { BigNumber } from 'bignumber.js'
+import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 
 class Dashboard extends Component {
   state = {
@@ -97,6 +98,11 @@ class Dashboard extends Component {
     }
   }
 
+  loadQrModal = (value) => {
+    const { loadModal } = this.props
+    loadModal(QR_MODAL, { value })
+  }
+
   render () {
     const {
       lastAction
@@ -134,7 +140,15 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <div className='content__tabs'>
-          <DashboardTabs
+          <CommunityInfo
+            token={token}
+            balances={balances}
+            loadQrModal={this.loadQrModal}
+            communityAddress={communityAddress}
+            homeTokenAddress={homeTokenAddress}
+            foreignTokenAddress={foreignTokenAddress}
+          />
+          {/* <DashboardTabs
             transferSuccess={transferSuccess}
             burnSuccess={burnSuccess}
             mintSuccess={mintSuccess}
@@ -159,7 +173,7 @@ class Dashboard extends Component {
             handleMintOrBurnClick={this.handleMintOrBurnClick}
             balance={balance ? formatWei(balance, 0) : 0}
             clearTransactionStatus={clearTransactionStatus}
-          />
+          /> */}
         </div>
 
         <div className='content__bridge'>
@@ -171,7 +185,6 @@ class Dashboard extends Component {
             foreignTokenAddress={tokenAddress}
             isOwner={() => isOwner({ owner }, accountAddress)}
             loadBridgePopup={this.loadBridgePopup}
-            handleTransfer={this.handleTransfer}
             communityAddress={communityAddress}
             network={networkType}
           />

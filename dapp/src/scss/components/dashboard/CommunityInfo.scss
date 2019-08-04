@@ -1,0 +1,207 @@
+//desired height for csspie
+$csspieheight: 100px;
+
+@include block(community_info) {
+  // @include element() {}
+
+  @include element(title) {
+    font-weight: 500;
+    font-size: 1em;
+    color: #25435a;
+    margin-bottom: 2em;
+  }
+
+  @include element(wrapper) {
+    border-radius: 5px;
+    position: relative;
+    padding: 2em;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    @include xy-grid(horizontal, false);
+  }
+
+  @include element(general) {
+    @include breakpoint(medium up) {
+      flex-basis: 55%;
+      &:after {
+        content: "";
+        background-color: #dadada;
+        position: absolute;
+        width: 1px;
+        height: 80%;
+        top: 20px;
+        left: 50%;
+        display: block;
+      }
+    }
+  }
+
+  @include element(supply_pie) {
+    @include xy-grid(vertical, false);
+    @include flex-align(null, middle);
+    position: relative;
+    font-size: 12px;
+    color: #a4a4a4;
+
+    @include block(title) {
+      font-weight: 500;
+      color: #4a687b;
+      display: inline-block;
+      height: 27px;
+      margin-right: 5px;
+    }
+
+    @include block(dot) {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 5px;
+
+      @include modifier(fuse) {
+        background-image: linear-gradient(128deg, #97fba2, #fae83e);
+      }
+      @include modifier(main) {
+        background-color: #abc3d2;
+      }
+    }
+  
+    @include breakpoint(medium up) {
+      flex-basis: 35%;
+    }
+
+    @include block(pie) {
+
+      @include element(wrapper) {
+        // position: relative;
+        margin-bottom: auto;
+        position: absolute;
+        top: 0;
+        left: 40%;
+      }
+      // margin-bottom: 20px;
+      // width: $csspieheight;
+      // height: $csspieheight;
+      // background: #abc3d2;
+      // border-radius: 50%;
+
+      //add color to pie pieces
+      &:nth-of-type(1):before,
+      &:nth-of-type(1):after {
+        // background-color: #6dbcd6;
+        background-image: linear-gradient(90deg, #97fba2, #fae83e)
+      }
+
+      &:nth-of-type(2):after,
+      &:nth-of-type(2):before {
+        background-color: #abc3d2;
+      }
+
+      position: absolute;
+      width: $csspieheight / 2;
+      height: $csspieheight;
+      overflow: hidden;
+      left: $csspieheight * 0.75;
+      transform-origin: left center;
+
+      &:before {
+        content: "";
+        position: absolute;
+        width: $csspieheight / 2;
+        height: $csspieheight;
+        left: -($csspieheight / 2);
+        border-radius: ($csspieheight / 2) 0 0 ($csspieheight / 2);
+        // @include transform-origin (right, center);
+        transform-origin: right center;
+     
+      }
+    }
+
+    @include block(big) {
+      width: $csspieheight;
+      height: $csspieheight;
+      left: $csspieheight / 4;
+      transform-origin: center center;
+
+      &:before {
+        left: 0px;
+      }
+
+      //big pieces need a second semicircle pointed in the opposite direction to hide the first part behind
+      &:after {
+        content: "";
+        position: absolute;
+        width: $csspieheight / 2;
+        height: $csspieheight;
+        left: $csspieheight / 2;
+        border-radius: 0 ($csspieheight / 2) ($csspieheight / 2) 0;
+      }
+    }
+
+    @include block(total__sides) {
+      margin-top: auto;
+      > p {
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+@include block(title_value) {
+  height: 40px;
+  font-size: 12px;
+  color: #7a7a7a;
+
+  @include element(title) {
+    font-weight: 500;
+    color: #4a687b;
+  }
+
+  @include element(value) {
+    > strong {
+      margin-right: 5px;
+    }
+  }
+
+  @include block(copy) {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    position: relative;
+    cursor: pointer;
+
+    @include modifier(spaced) {
+      margin-left: 5px;
+    }
+
+    .fa-clone {
+      font-weight: 400;
+      &:hover {
+        font-weight: 900;
+      }
+    }
+
+    .fa {
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+      justify-content: center;
+      padding-top: 4px;
+    }
+  }
+}
+
+//rotate each piece based on starting position
+@for $i from 1 through 100 {
+  .pie[data-start="#{$i}"] {
+    transform: rotate(#{$i * 3.6}deg);
+  }
+}
+
+//rotate the amount of the pie that's showing (add an extra degree to all but the final piece to fill in gaps)
+@for $i from 1 through 99 {
+  .pie[data-value="#{$i}"]:before {
+    transform: rotate(#{$i * 3.6}deg);
+  }
+}

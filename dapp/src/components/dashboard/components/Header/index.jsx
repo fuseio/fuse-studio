@@ -24,7 +24,7 @@ export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) 
           &nbsp;&nbsp;<span className='name__line' />&nbsp;&nbsp;
           <span className='name__status'>{isClosed ? 'Close' : 'Open'} community</span>
         </div>
-        <div className='address'>
+        {/* <div className='address'>
           {isMobileOnly
             ? <span>{formatAddress(tokenAddress)}</span>
             : <span>{tokenAddress}</span>
@@ -32,7 +32,7 @@ export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) 
           <CopyToClipboard text={tokenAddress}>
             <FontAwesome name='clone' />
           </CopyToClipboard>
-        </div>
+        </div> */}
       </div>
     </div>
   )

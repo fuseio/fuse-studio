@@ -49,10 +49,33 @@
 	}
 }
 
-@include block(show-more) {
-	@include element(wrapper) {
+@include block(qr_code_modal) {
+	width: 350px;
+	@include xy-grid(vertical);
+
+	@include element(wrapper){
+		
+		@include breakpoint(large) {
+			margin-top: 40px;
+		}
 	}
 
+	@include element(title) {
+		display: inline-block;
+		font-size: small;
+		color: #4a687b;
+		text-align: start;
+		font-weight: 500;
+	}
+
+	@include element(image) {
+		padding-top: 2em;
+		width: inherit;
+	}
+}
+
+@include block(show-more) {
+	max-width: 330px;
 	@include element(header) {
 		display: block;
 		text-transform: uppercase;
@@ -593,7 +616,7 @@
   background-color: $color-white;
   z-index: 5;
   font-family: $font-family;
-	border-radius: 0 0 10px 10px;
+	border-radius: 5px;
 
 	@include modifier(radius-all) {
 		border-radius: 10px;		
@@ -797,7 +820,7 @@
 @include block(input-error) {
 	display: block;
 	position: absolute;
-	bottom: -1em;
+	bottom: -2em;
 	color: $color-red;
 	font-size: 11px;
 	line-height: 1.25;

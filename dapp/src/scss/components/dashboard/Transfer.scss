@@ -1,0 +1,231 @@
+@include block(transfer) {
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 35px 50px 25px;
+  position: relative;
+
+  @include element(header) {
+    color: $color-white;
+    @include xy-grid();
+    @include flex-align(justify, middle);
+
+    @include breakpoint(medium up) {
+      margin-top: 2em;
+      margin-bottom: 1em;
+    }
+
+    @include element(title) {
+      font-size: 26px;
+      font-weight: 500;
+    }
+  }
+
+  @include element(content) {
+    position: relative;
+    @include breakpoint(medium up) {
+      height: 250px;
+    }
+
+    @include block(field) {
+      position: relative;
+      @include element(title) {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.83;
+        letter-spacing: -0.26px;
+        color: #4a687b;
+      }
+    }
+
+    @include element(button) {
+      align-self: flex-end;
+    }
+  }
+
+  @include element(balance) {
+    margin-bottom: 2em;
+    @include block(title) {
+      width: 206px;
+      height: 21px;
+      font-family: $font-family;
+      font-size: 16px;
+      font-weight: 500;
+      color: $color-primary-dark;
+    }
+
+    @include block(amount) {
+      color: #25435a;
+      font-size: 16px;
+    }
+
+    @include block(symbol) {
+      margin-left: 3px;
+      color: #25435a;
+      font-size: 10px;
+    }
+  }
+}
+
+@include block(transfer-tab) {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  @include element(balance) {
+    @include block(title) {
+      width: 206px;
+      height: 21px;
+      font-family: $font-family;
+      font-size: 18px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: $color-primary-dark;
+    }
+
+    @include block(amount) {
+      font-weight: normal;
+      color: rgba(37, 67, 90, 0.8);
+    }
+
+    @include block(symbol) {
+      font-size: 12px;
+      font-weight: normal;
+      margin-left: 3px;
+      color: rgba(37, 67, 90, 0.8);
+    }
+  }
+
+  @include element(content) {
+    padding: 0 1em;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    @include element(to-field) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 2.4em 0;
+      height: 35px;
+      position: relative;
+      @include element(text) {
+        font-family: $font-family;
+        font-size: 14px;
+        min-width: 1em;
+        font-weight: bold;
+        color: $color-primary-dark;
+      }
+
+      @include element(input) {
+        background: transparent;
+        border: none;
+        width: 96%;
+        border-bottom: 1px solid $color-brdr-issuance;
+      }
+    }
+
+    @include modifier(activities) {
+      @include breakpoint(small down) {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1em 0;
+      }
+    }    
+
+    @include element(amount) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      @include element(text) {
+        font-family: $font-family;
+        font-size: 14px;
+        font-weight: bold;
+        min-width: 65px;
+        color: $color-primary-dark;
+      }
+
+      @include element(field) {
+        box-shadow: 0 0 6px 0 #cccccc;
+        border: solid 2px transparent;
+        background-color: #fff;
+        border-radius: 45px;
+        padding: 8px 16px;
+        color: $color-step-title;
+        min-height: 1.5em;
+        font-size: 20px;
+        width: 85%;
+        font-weight: bold;
+        &::placeholder {
+          color: rgba(0, 0, 0, 0.3);
+          font-weight: bold;
+        }
+
+        &:focus {
+          border: solid 2px $color-step-title;
+          box-shadow: none;
+        }
+      }
+    }
+
+    @include element(button) {
+      align-self: flex-end;
+      margin: 40px 0 0px;
+
+      > button {
+        display: inline-block;
+        border-radius: 30px;
+        background-color: $color-fuse_gradient;
+        font-size: 12px;
+        color: $color-white;
+        // padding: 10px 30px;
+        width: 84px;
+        height: 32px;
+        text-transform: uppercase;
+        border: none;
+        font-weight: bold;
+        .symbol-icon {
+          margin-left: 5px;
+        }
+        &:focus,
+        &:active,
+        &:focus:active {
+          outline: none;
+        }
+        &:hover {
+          background-color: darken($color-ropsten, 10%);
+          cursor: pointer;
+        }
+        &[disabled] {
+          color: #fff;
+          cursor: not-allowed;
+          background-color: lighten($color-ropsten, 20%) !important;
+        }
+      }
+    }
+  }
+
+  @include element(actions) {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    margin: 2.4em 0;
+    width: 140px;
+    height: 35px;
+
+    > button {
+      &:last-child {
+        border-radius: 0 20px 20px 0;
+      }
+      &:first-child {
+        border-right: 0;
+        border-radius: 20px 0 0 20px;
+      }
+    }
+
+  }
+}

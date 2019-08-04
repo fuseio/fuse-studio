@@ -1,15 +1,16 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import SidebarContent from '../../components/Sidebar'
-import Dashboard from '../../pages/Dashboard'
-import WhiteLabelWallet from '../../pages/WhiteLabelWallet'
+import SidebarContent from 'components/dashboard/components/Sidebar'
+import Dashboard from 'components/dashboard/pages/Dashboard'
+import WhiteLabelWallet from 'components/dashboard/pages/WhiteLabelWallet'
+import TransferPage from 'components/dashboard/pages/Transfer'
 import { fetchCommunity, fetchTokenProgress, fetchToken } from 'actions/token'
 import { isUserExists } from 'actions/user'
 import { loadModal, hideModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
-import Users from '../../pages/Users'
-import Businesses from '../../pages/Businesses'
-import Header from '../../components/Header'
+import Users from 'components/dashboard/pages/Users'
+import Businesses from 'components/dashboard/pages/Businesses'
+import Header from 'components/dashboard/components/Header'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
@@ -119,6 +120,7 @@ class DashboardLayout extends PureComponent {
                 <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.url}/transfer`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
               </Switch>
             </div>
           </div>

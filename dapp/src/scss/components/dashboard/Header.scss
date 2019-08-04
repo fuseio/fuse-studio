@@ -49,6 +49,9 @@
     }
 
     @include block(name) {
+      font-size: 24px;
+      font-weight: 500;
+
       @include element(wrapper) {
         width: max-content;
       }
@@ -57,12 +60,11 @@
         font-size: 14px;
         display: inline;
       }
-  
-      font-size: 24px;
-      font-weight: 500;
+
       @include element(status) {
         font-size: 13px;
         align-self: flex-end;
+        line-height: 1.7;
 
         @include breakpoint(small down) {
           font-size: 11px;
