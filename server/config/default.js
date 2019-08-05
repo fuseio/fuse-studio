@@ -68,12 +68,12 @@ module.exports = {
         return `https://${this.network.foreign.name}.infura.io/v3/${this.network.foreign.apiKey}`
       }),
       addressesMainnet: {
-        ColuLocalNetwork: '0x4162178B78D6985480A308B2190EE5517460406D',
+        FuseToken: '0x4162178B78D6985480A308B2190EE5517460406D',
         TokenFactory: '0xac051e086FD2046FC75A53D38088B4DD6e00E25b',
         ForeignBridgeFactory: '0xE600496e0267D6b7AFDb62f83D46062199f0B0d7'
       },
       addressesRopsten: {
-        ColuLocalNetwork: '0x41C9d91E96b933b74ae21bCBb617369CBE022530', // TODO - change key to FuseToken & change address
+        FuseToken: '0x41C9d91E96b933b74ae21bCBb617369CBE022530', // TODO - change key to FuseToken
         TokenFactory: '0xA6D0f4552cf5237987F46095875fC64b006E7bda',
         ForeignBridgeFactory: '0xABBf5D8599B2Eb7b4e1D25a1Fd737FF1987655aD'
       },
@@ -88,7 +88,7 @@ module.exports = {
     }
   },
   mongo: {
-    uri: 'mongodb://localhost/CLN-community-app',
+    uri: 'mongodb://localhost/fuse-studio',
     debug: true,
     options: {
       useNewUrlParser: true

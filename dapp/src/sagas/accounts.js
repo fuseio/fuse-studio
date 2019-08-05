@@ -39,7 +39,7 @@ function * balanceOfCln ({ accountAddress }) {
   if (networkType === 'fuse') {
     yield call(balanceOfNative, { accountAddress })
   } else {
-    const tokenAddress = yield select(getAddress, 'ColuLocalNetwork')
+    const tokenAddress = yield select(getAddress, 'FuseToken')
     yield call(balanceOfToken, { tokenAddress, accountAddress })
   }
 }

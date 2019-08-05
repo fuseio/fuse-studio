@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ColuLocalNetwork/CLN-community-app.git"
+    "url": "git+https://github.com/fuseio/fuse-studio.git"
   },
   "standard": {
     "env": [

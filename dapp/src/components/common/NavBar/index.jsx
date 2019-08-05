@@ -75,7 +75,7 @@ class NavBar extends Component {
             <div className={classNames('drop', { 'drop--show': isHelpOpen })}>
               <ul className='drop__options'>
                 <li className='drop__options__item'><a href='' target='_blank'>FAQ</a></li>
-                <li className='drop__options__item'><a href='https://github.com/ColuLocalNetwork' target='_blank'>Github</a></li>
+                <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'>Github</a></li>
                 <li className='drop__options__item'>Contact us</li>
               </ul>
             </div>
