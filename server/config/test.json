@@ -10,7 +10,7 @@
     "timeout": 3000
   },
   "mongo": {
-    "uri": "mongodb://localhost/CLN-community-app",
+    "uri": "mongodb://localhost/fuse-studio",
     "options": {}
   }
 }
