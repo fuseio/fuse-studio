@@ -1,6 +1,6 @@
 {
   "web3": {
-    "fuseProvider": "https://rpc.fuse.io"
+    "fuseProvider": "https://rpc.fusenet.io"
   },
   "api": {
     "auth": {

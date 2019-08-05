@@ -5,14 +5,14 @@ export const isNetworkSupported = (networkType) => CONFIG.web3.supportedNetworks
 const blockExplorers = {
   main: 'https://etherscan.io',
   ropsten: 'https://ropsten.etherscan.io',
-  fuse: 'https://explorer.fuse.io'
+  fuse: 'https://explorer.fusenet.io'
 }
 
 export const getBlockExplorerUrl = (networkType) => blockExplorers[networkType]
 
 export const getApiRoot = (networkType) => CONFIG.api.url[networkType]
 
-export const isFuse = (connection) => connection.networkVersion === '121'
+export const isFuse = (connection) => connection.networkVersion === '122'
 
 const getInfuraUrl = (networkType) => {
   return `https://${toLongName(networkType)}.infura.io/v3/${CONFIG.web3.apiKey}`
