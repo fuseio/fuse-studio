@@ -34,6 +34,7 @@ module.exports = {
     home: {
       name: 'fuse',
       bridgeType: 'home',
+      chainId: 122,
       contract: {
         options: {
           transactionConfirmationBlocks: 2
