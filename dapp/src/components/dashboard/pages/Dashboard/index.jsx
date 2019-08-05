@@ -110,7 +110,8 @@ class Dashboard extends Component {
       token,
       accountAddress,
       balances,
-      dashboard
+      dashboard,
+      networkType
       // transactionStatus,
       // isTransfer,
       // isMinting,
