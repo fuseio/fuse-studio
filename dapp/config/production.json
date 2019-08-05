@@ -1,5 +1,6 @@
 {
   "web3": {
+    "fuseProvider": "https://rpc.fusenet.io",
     "addresses": {
       "ropsten": {
         "ColuLocalNetwork": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
