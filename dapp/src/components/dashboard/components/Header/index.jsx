@@ -1,9 +1,9 @@
 import React from 'react'
-import CopyToClipboard from 'components/common/CopyToClipboard'
-import FontAwesome from 'react-fontawesome'
+// import CopyToClipboard from 'components/common/CopyToClipboard'
+// import FontAwesome from 'react-fontawesome'
 import { isMobileOnly } from 'react-device-detect'
 import CommunityLogo from 'components/common/CommunityLogo'
-import { formatAddress } from 'utils/format'
+// import { formatAddress } from 'utils/format'
 import { isDaiToken } from 'constants/existingTokens'
 
 export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) => {

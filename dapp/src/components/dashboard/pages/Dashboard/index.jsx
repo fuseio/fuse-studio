@@ -7,13 +7,10 @@ import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
 import { isUserExists } from 'actions/user'
-import { formatWei } from 'utils/format'
 import { getTransaction } from 'selectors/transaction'
 import { isOwner } from 'utils/token'
-import DashboardTabs from '../../components/DashboardTabs'
 import Bridge from '../../components/Bridge'
 import { getBridgeStatus } from 'selectors/network'
-import { BigNumber } from 'bignumber.js'
 import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 
 class Dashboard extends Component {
@@ -104,38 +101,37 @@ class Dashboard extends Component {
   }
 
   render () {
-    const {
-      lastAction
-    } = this.state
+    // const {
+    //   lastAction
+    // } = this.state
 
     const {
+      community,
       token,
       accountAddress,
-      transactionStatus,
       balances,
-      dashboard,
-      isTransfer,
-      isMinting,
-      isBurning,
-      networkType,
-      tokenNetworkType,
-      burnSignature,
-      mintSignature,
-      transferSignature,
-      clearTransactionStatus,
-      transferSuccess,
-      burnSuccess,
-      mintSuccess,
-      error,
-      community,
-      bridgeStatus,
-      homeNetwork
+      dashboard
+      // transactionStatus,
+      // isTransfer,
+      // isMinting,
+      // isBurning,
+      // tokenNetworkType,
+      // burnSignature,
+      // mintSignature,
+      // transferSignature,
+      // clearTransactionStatus,
+      // transferSuccess,
+      // burnSuccess,
+      // mintSuccess,
+      // error,
+      // bridgeStatus,
+      // homeNetwork
     } = this.props
 
     const { address: tokenAddress } = token
     const { communityAddress, homeTokenAddress, foreignTokenAddress } = community
-    const balance = balances[tokenAddress]
-    const { admin, user, steps, owner } = dashboard
+    // const balance = balances[tokenAddress]
+    const { steps, owner } = dashboard
 
     return (
       <React.Fragment>
