@@ -63,7 +63,7 @@ function * getNetworkType () {
         networkType,
         networkId,
         isMetaMask,
-        isPortis, // : web3.currentProvider.connection.isPortis || false
+        isPortis,
         ...bridgeSides
       } })
     const accountAddress = yield getAccountAddress(web3)
