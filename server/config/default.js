@@ -16,13 +16,6 @@ module.exports = {
       }
     }
   },
-  aws: {
-    secrets: {
-      manager: {
-        region: 'eu-west-1'
-      }
-    }
-  },
   ipfsProxy: {
     urlBase: 'http://localhost:4000/api'
   },
