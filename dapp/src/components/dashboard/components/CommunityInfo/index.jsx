@@ -2,11 +2,9 @@ import React from 'react'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { formatWei, formatAddress } from 'utils/format'
-// import PieChart from 'react-minimal-pie-chart'
 import { BigNumber } from 'bignumber.js'
-// import { QR_MODAL } from 'constants/uiConstants'
 
-const TitleValue = ({ title, symbol = 'TAC', tokenType = 'One time', children }) => {
+const TitleValue = ({ title, symbol, tokenType, children }) => {
   return (
     <div className='title_value grid-y align-justify cell small-12' style={{ height: '50px' }}>
       <span className='title_value__title'>{title}</span>
@@ -26,14 +24,6 @@ const percentOnSide = (total, homeTokenBalance, foreignTokenBalance) => {
     percentOnForeign
   }
 }
-
-// const Totlasupply = ({  }) => {
-//   return (
-//     <div className='grid-y'>
-
-//     </div>
-//   )
-// }
 
 const CommunityInfo = ({
   token,
@@ -102,12 +92,12 @@ const CommunityInfo = ({
           <p>
             <span className='dot dot--fuse' />
             <span className='title'>Supply on Fuse:</span>
-            { (percentOnHome && (`${100 - percentOnHome.toFixed(4)}%`)) || '0%' } ({ formatWei(balances[homeTokenAddress], 0) } <small>{symbol}</small>)
+            {(percentOnHome && (`${percentOnHome.toFixed(4)}%`)) || '0%'} ({formatWei(balances[homeTokenAddress], 0)} <small>{symbol}</small>)
           </p>
           <p>
             <span className='dot dot--main' />
             <span className='title'>Supply on Ethereum:</span>
-            {(percentOnForeign && (`${percentOnForeign.toFixed(4)}%`)) || '0%'} ({ formatWei(balances[foreignTokenAddress], 0) } <small>{symbol}</small>)
+            {(percentOnForeign && (`${percentOnForeign.toFixed(4)}%`)) || '0%'} ({formatWei(balances[foreignTokenAddress], 0)} <small>{symbol}</small>)
           </p>
         </div>
       </div>

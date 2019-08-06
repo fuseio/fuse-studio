@@ -15,14 +15,11 @@ export default ({
               {column.render('Header')}
             </span>
             <span className='table__header__cell__sort'>
-              {
-                column.sortedIndex !== -1
-                  ? column.sorted && column.sortedDesc ? (
-                    <FontAwesome name='arrow-up' />
-                  ) : (
-                    <FontAwesome name='arrow-down' />
-                  ) : null
-              }
+              {column.sorted
+                ? (column.sortedDesc
+                  ? <FontAwesome name='arrow-down' />
+                  : <FontAwesome name='arrow-up' />)
+                : ''}
             </span>
           </div>
         )

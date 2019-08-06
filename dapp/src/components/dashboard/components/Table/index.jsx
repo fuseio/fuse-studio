@@ -1,12 +1,9 @@
 import React from 'react'
 import {
   useTable,
-  useColumns,
-  useRows,
-  useGroupBy,
-  useFilters,
+  // useColumns,
+  // useRows,
   useSortBy,
-  useExpanded,
   usePagination,
   useTableState
 } from 'react-table'
@@ -47,12 +44,9 @@ const MyTable = ({
       data,
       state
     },
-    useColumns,
-    useRows,
-    useGroupBy,
-    useFilters,
+    // useColumns,
+    // useRows,
     useSortBy,
-    useExpanded,
     usePagination
   )
 
