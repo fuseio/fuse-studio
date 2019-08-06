@@ -1,5 +1,5 @@
 module.exports = {
-  ColuLocalNetwork: require('./ColuLocalNetwork'),
+  FuseToken: require('./FuseToken'),
   TokenFactory: require('@fuse/token-factory-contracts/build/abi/TokenFactoryWithEvents'),
   BridgeMapper: require('./BridgeMapper'),
   BasicToken: require('@fuse/token-factory-contracts/build/abi/BasicToken'),

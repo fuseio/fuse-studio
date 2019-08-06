@@ -27,5 +27,5 @@ export const getClnBalance = createSelector(
   getAccount,
   (network, addresses, account) => network === 'fuse'
     ? account.balanceOfNative
-    : addresses ? account.balances[addresses.ColuLocalNetwork] : undefined
+    : addresses ? account.balances[addresses.FuseToken] : undefined
 )

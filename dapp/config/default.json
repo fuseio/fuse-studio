@@ -1,23 +1,23 @@
 {
   "web3": {
-    "fuseProvider": "http://rpc.fuse.io",
+    "fuseProvider": "https://rpc.fusenet.io",
     "supportedNetworks": ["main", "ropsten", "fuse"],
     "portis": {
     },
     "addresses": {
       "ropsten": {
-        "ColuLocalNetwork": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
-        "TokenFactory": "0xE307a14b078030d81801e46F89285dbf5B4aa3F0",
+        "FuseToken": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
+        "TokenFactory": "0xA6D0f4552cf5237987F46095875fC64b006E7bda",
         "DaiToken": "0x1CAf0Ed93dD34152000ACec9441D4D9ed0f55D7B"
       },
       "main": {
-        "ColuLocalNetwork": "0x4162178B78D6985480A308B2190EE5517460406D",
+        "FuseToken": "0x4162178B78D6985480A308B2190EE5517460406D",
         "TokenFactory": "0xac051e086FD2046FC75A53D38088B4DD6e00E25b",
         "DaiToken": "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"
       },
       "fuse": {
         "ropsten": {
-          "BridgeMapper": "0xE92139Ae1d18Febf8cB68fF5D39Cd2c235677070"
+          "BridgeMapper": "0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66"
         },
         "main": {
           "BridgeMapper": "0x41063a48F46EE7E20E7EbAd0185992724B4Ee56c"
@@ -34,6 +34,13 @@
         "homeNetwork": "fuse",
         "foreignNetwork": "ropsten"
       }
+    },
+    "chainId": {
+      "fuse": 122,
+      "main": 1,
+      "kovan": 2,
+      "ropsten": 3,
+      "rinkeby": 4 
     },
     "options": {
       "fuse": {

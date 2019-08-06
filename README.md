@@ -56,7 +56,7 @@ You can edit the `./server/config/local.json` file as you like.
 
 IPFS lacks permissions so all access to the IPFS node is done through the IPFS proxy.
 
-Learn how to install and configure the proxy in the [fuse-ipfs-proxy](https://github.com/ColuLocalNetwork/fuse-ipfs-proxy) repo.
+Learn how to install and configure the proxy in the [fuse-ipfs-proxy](https://github.com/fuseio/fuse-ipfs-proxy) repo.
 
 ### Setup Ethereum node (Optional)
 

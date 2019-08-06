@@ -34,21 +34,20 @@ module.exports = {
     home: {
       name: 'fuse',
       bridgeType: 'home',
+      chainId: 122,
       contract: {
         options: {
           transactionConfirmationBlocks: 2
         }
       },
-      provider: 'http://rpc.fuse.io',
+      provider: 'https://rpc.fusenet.io',
       addressesMainnet: {
         HomeBridgeFactory: '0x93EF4d4032E053978aA71792Efd05d8b583a2B78',
-        SimpleListFactory: '0x9FA04c6fc70B0ae20dAD9D7b36161bf1EdcbA0E2',
         BridgeMapper: '0x41063a48F46EE7E20E7EbAd0185992724B4Ee56c'
       },
       addressesRopsten: {
-        HomeBridgeFactory: '0xf01c10D1253061164153116925B7a9b11b0D903C',
-        SimpleListFactory: '0x9FA04c6fc70B0ae20dAD9D7b36161bf1EdcbA0E2',
-        BridgeMapper: '0x0f4b2805522c471191f6a605B4E4795bb571e053'
+        HomeBridgeFactory: '0xb895638fb3870AD5832402a5BcAa64A044687db0',
+        BridgeMapper: '0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66'
       },
       addresses: defer(function () {
         if (this.network.foreign.name === 'mainnet') {
@@ -70,14 +69,14 @@ module.exports = {
         return `https://${this.network.foreign.name}.infura.io/v3/${this.network.foreign.apiKey}`
       }),
       addressesMainnet: {
-        ColuLocalNetwork: '0x4162178B78D6985480A308B2190EE5517460406D',
+        FuseToken: '0x4162178B78D6985480A308B2190EE5517460406D',
         TokenFactory: '0xac051e086FD2046FC75A53D38088B4DD6e00E25b',
         ForeignBridgeFactory: '0xE600496e0267D6b7AFDb62f83D46062199f0B0d7'
       },
       addressesRopsten: {
-        ColuLocalNetwork: '0x41C9d91E96b933b74ae21bCBb617369CBE022530',
-        TokenFactory: '0xE307a14b078030d81801e46F89285dbf5B4aa3F0',
-        ForeignBridgeFactory: '0x4197122e1ff952D2BaEd1Fe8C10779fc9fd9dBCb'
+        FuseToken: '0x41C9d91E96b933b74ae21bCBb617369CBE022530', // TODO - change key to FuseToken
+        TokenFactory: '0xA6D0f4552cf5237987F46095875fC64b006E7bda',
+        ForeignBridgeFactory: '0xABBf5D8599B2Eb7b4e1D25a1Fd737FF1987655aD'
       },
       addresses: defer(function () {
         if (this.network.foreign.name === 'mainnet') {
@@ -90,7 +89,7 @@ module.exports = {
     }
   },
   mongo: {
-    uri: 'mongodb://localhost/CLN-community-app',
+    uri: 'mongodb://localhost/fuse-studio',
     debug: true,
     options: {
       useNewUrlParser: true
@@ -103,7 +102,7 @@ module.exports = {
   },
   explorer: {
     fuse: {
-      urlBase: 'https://explorer.fuse.io/api'
+      urlBase: 'https://explorer.fusenet.io/api'
     }
   },
   agenda: {

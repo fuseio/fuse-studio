@@ -24,14 +24,14 @@ const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, ap
 export const fetchTokenList = createEntitiesFetch(actions.FETCH_TOKEN_LIST, api.fetchTokenList)
 
 function * fetchClnToken () {
-  const tokenAddress = yield select(getAddress, 'ColuLocalNetwork')
-  const ColuLocalNetworkContract = getContract({ abiName: 'ColuLocalNetwork', address: tokenAddress })
+  const tokenAddress = yield select(getAddress, 'FuseToken')
+  const FuseTokenContract = getContract({ abiName: 'FuseToken', address: tokenAddress })
 
   const calls = {
-    name: call(ColuLocalNetworkContract.methods.name().call),
-    symbol: call(ColuLocalNetworkContract.methods.symbol().call),
-    totalSupply: call(ColuLocalNetworkContract.methods.totalSupply().call),
-    owner: call(ColuLocalNetworkContract.methods.owner().call)
+    name: call(FuseTokenContract.methods.name().call),
+    symbol: call(FuseTokenContract.methods.symbol().call),
+    totalSupply: call(FuseTokenContract.methods.totalSupply().call),
+    owner: call(FuseTokenContract.methods.owner().call)
   }
 
   const response = yield all(calls)
