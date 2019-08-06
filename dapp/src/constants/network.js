@@ -1,7 +1,7 @@
 export const networkIdToName = {
-  122: 'fuse',
-  1: 'main',
-  2: 'kovan',
-  3: 'ropsten',
-  4: 'rinkeby'
+  [CONFIG.web3.chainId.fuse]: 'fuse',
+  [CONFIG.web3.chainId.main]: 'main',
+  [CONFIG.web3.chainId.kovan]: 'kovan',
+  [CONFIG.web3.chainId.ropsten]: 'ropsten',
+  [CONFIG.web3.chainId.rinkeby]: 'rinkeby'
 }
