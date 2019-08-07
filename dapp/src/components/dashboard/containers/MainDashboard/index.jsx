@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux'
 import SidebarContent from 'components/dashboard/components/Sidebar'
 import Dashboard from 'components/dashboard/pages/Dashboard'
@@ -122,7 +122,13 @@ class DashboardLayout extends PureComponent {
                 <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/transfer`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/mintBurn`} render={() => <MintBurnPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                {
+                  isAdmin && (
+                    <Fragment>
+                      <Route exact path={`${match.url}/mintBurn`} render={() => <MintBurnPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                    </Fragment>
+                  )
+                }
               </Switch>
             </div>
           </div>

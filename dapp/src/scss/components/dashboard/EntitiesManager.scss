@@ -406,6 +406,15 @@
     @include xy-grid(vertical);
     @include flex-align(null, middle);
 
+    @include block(loader) {
+      width: 80px;
+    }
+
+    @include element(image) {
+      width: 150px;
+      height: 150px;
+    }
+
     @include element(title) {
       color: $color-primary-dark;
       font-size: 1.3em;

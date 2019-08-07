@@ -48,7 +48,7 @@ const Users = ({
   entityAdded
 }) => {
   const { communityAddress, isClosed } = community
-  const [data, setData] = useState(null)
+  const [data, setData] = useState([])
   const [search, setSearch] = useState('')
   const apiRoot = getApiRoot(network.networkType === 'fuse' ? 'default' : network.networkType)
   let url = `${apiRoot}/entities/${communityAddress}?type=user`
@@ -306,7 +306,6 @@ const Users = ({
     onlyOnFuse(() => confirmUser(account))
 
   const renderTable = () => {
-    if (!data) return null
     return (
       <MyTable
         addActionProps={{
