@@ -81,8 +81,8 @@ const CommunityInfo = ({
       </div>
       <div className='community_info__supply_pie'>
         <div className='pie__wrapper'>
-          <div className='pie' data-start='0' data-value={percentOnHome || 0} />
-          <div className='pie big' data-start={percentOnHome || 0} data-value={percentOnForeign || 0} />
+          <div className='pie' data-start='0' data-value={Math.round(percentOnHome) || 0} />
+          <div className='pie big' data-start={Math.round(percentOnHome) || 0} data-value={Math.round(percentOnForeign) || 0} />
         </div>
         <div className='grid-y total__sides'>
           <h6>
