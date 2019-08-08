@@ -6,7 +6,7 @@
     },
     "addresses": {
       "ropsten": {
-        "FuseToken": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
+        "FuseToken": "0xcd975c581AA0b83a8dE39035325BF44556517367",
         "TokenFactory": "0xA6D0f4552cf5237987F46095875fC64b006E7bda",
         "DaiToken": "0x1CAf0Ed93dD34152000ACec9441D4D9ed0f55D7B"
       },

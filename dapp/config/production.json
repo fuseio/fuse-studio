@@ -3,8 +3,8 @@
     "fuseProvider": "https://rpc.fusenet.io",
     "addresses": {
       "ropsten": {
-        "FuseToken": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
-        "TokenFactory": "0xED5B8b15936e13DF0e7B967C5c613fce3fcF1F12"
+        "FuseToken": "0xcd975c581AA0b83a8dE39035325BF44556517367",
+        "TokenFactory": "0xA6D0f4552cf5237987F46095875fC64b006E7bda"
       }
     },
     "bridge": {
@@ -21,9 +21,9 @@
         }
     },
     "url": {
-      "main": "https://communities.cln.network/api/v1",
-      "ropsten": "https://ropsten.cln.network/api/v1",
-      "default": "https://communities.cln.network/api/v1"
+      "main": "https://studio-qa.fusenet.io/api/v1",
+      "ropsten": "https://studio-qa.fusenet.io/api/v1",
+      "default": "https://studio-qa.fusenet.io/api/v1"
     }
   },
   "reactGA": {
