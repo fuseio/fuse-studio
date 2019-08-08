@@ -12,7 +12,7 @@ export const getBlockExplorerUrl = (networkType) => blockExplorers[networkType]
 
 export const getApiRoot = (networkType) => CONFIG.api.url[networkType]
 
-export const isFuse = (provider) => provider.connection.networkVersion === String(CONFIG.web3.chainId.fuse)
+export const isFuse = (provider) => (provider.networkVersion || provider.connection.networkVersion) === String(CONFIG.web3.chainId.fuse)
 
 const getInfuraUrl = (networkType) => {
   return `https://${toLongName(networkType)}.infura.io/v3/${CONFIG.web3.apiKey}`
