@@ -35,8 +35,8 @@ module.exports = {
       },
       provider: 'https://rpc.fusenet.io',
       addressesMainnet: {
-        HomeBridgeFactory: '0x93EF4d4032E053978aA71792Efd05d8b583a2B78',
-        BridgeMapper: '0x41063a48F46EE7E20E7EbAd0185992724B4Ee56c'
+        HomeBridgeFactory: '0xFbf20Fa994A577439Cd0b6033Db373f7a995E147',
+        BridgeMapper: '0x89b98bB511A41FeF73b388cF8C052221f42cd44f'
       },
       addressesRopsten: {
         HomeBridgeFactory: '0xb895638fb3870AD5832402a5BcAa64A044687db0',
@@ -63,8 +63,8 @@ module.exports = {
       }),
       addressesMainnet: {
         FuseToken: '0xcd975c581AA0b83a8dE39035325BF44556517367',
-        TokenFactory: '0xac051e086FD2046FC75A53D38088B4DD6e00E25b',
-        ForeignBridgeFactory: '0xE600496e0267D6b7AFDb62f83D46062199f0B0d7'
+        TokenFactory: '0x72eFE0bE5546e4928357ECcD074e16BA1edD3274',
+        ForeignBridgeFactory: '0xaC116929b2baB59D05a1Da99303e7CAEd100ECC9'
       },
       addressesRopsten: {
         FuseToken: '0xcd975c581AA0b83a8dE39035325BF44556517367',
