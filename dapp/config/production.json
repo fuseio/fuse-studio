@@ -21,9 +21,9 @@
         }
     },
     "url": {
-      "main": "https://studio-qa.fusenet.io/api/v1",
-      "ropsten": "https://studio-qa.fusenet.io/api/v1",
-      "default": "https://studio-qa.fusenet.io/api/v1"
+      "main": "https://studio.fusenet.io/api/v1",
+      "ropsten": "https://studio-ropsten.fusenet.io/api/v1",
+      "default": "https://studio.fusenet.io/api/v1"
     }
   },
   "reactGA": {

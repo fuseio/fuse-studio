@@ -10,7 +10,7 @@
     },
     "url": {
       "main": "https://studio-qa.fusenet.io/api/v1",
-      "ropsten": "https://studio-qa.fusenet.io/api/v1",
+      "ropsten": "https://studio-qa-ropsten.fusenet.io.api/v1",
       "default": "https://studio-qa.fusenet.io/api/v1"
     }
   },
