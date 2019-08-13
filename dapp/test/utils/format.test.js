@@ -10,8 +10,8 @@ describe('nameToSymbol', () => {
     assert.equal(nameToSymbol('Ethereum classic'), 'ETC')
   })
 
-  it('should return CLN for Colu Local Network', () => {
-    assert.equal(nameToSymbol('Colu Local Network'), 'CLN')
+  it('should return FN for Fuse Network', () => {
+    assert.equal(nameToSymbol('Fuse Network'), 'FN')
   })
 
   it('should return BDPN for Bitcoin Diamond Private Network', () => {

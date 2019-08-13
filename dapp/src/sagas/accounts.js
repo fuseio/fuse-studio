@@ -34,7 +34,7 @@ function * balanceOfNative ({ accountAddress }) {
     } })
 }
 
-function * balanceOfCln ({ accountAddress }) {
+function * balanceOfFuse ({ accountAddress }) {
   const networkType = yield select(getNetworkType)
   if (networkType === 'fuse') {
     yield call(balanceOfNative, { accountAddress })
@@ -57,7 +57,7 @@ function * fetchTokensWithBalances ({ accountAddress }) {
 }
 
 function * watchAccountChanged ({ response }) {
-  yield put(actions.balanceOfCln(response.accountAddress))
+  yield put(actions.balanceOfFuse(response.accountAddress))
 }
 
 function * watchBalanceOfToken ({ response }) {
@@ -71,7 +71,7 @@ export default function * accountsSaga () {
   yield all([
     tryTakeEvery(actions.BALANCE_OF_TOKEN, balanceOfToken),
     tryTakeEvery(actions.BALANCE_OF_NATIVE, balanceOfNative),
-    tryTakeEvery(actions.BALANCE_OF_CLN, balanceOfCln),
+    tryTakeEvery(actions.BALANCE_OF_FUSE, balanceOfFuse),
     takeEvery(CHECK_ACCOUNT_CHANGED.SUCCESS, watchAccountChanged),
     tryTakeEvery(actions.FETCH_COMMUNITIES, fetchCommunities),
     takeEvery([TRANSFER_TOKEN.SUCCESS, BURN_TOKEN.SUCCESS, MINT_TOKEN.SUCCESS], watchBalanceOfToken),

@@ -40,34 +40,27 @@ const sendWelcomeMail = (user, token) => {
   })
 }
 
-const addToList = async (recipientId, listId) => {
-  const request = {
-    method: 'POST',
-    url: `/v3/contactdb/lists/${listId}/recipients/${recipientId}`
-  }
-
-  await client.request(request)
-}
-
-const addContact = async (user) => {
-  const request = {
-    method: 'POST',
-    url: '/v3/contactdb/recipients',
-    body: [{
-      'email': user.email,
-      'first_name': user.firstName,
-      'last_name': user.lastName
-    }]
-  }
-  const body = (await client.request(request))[1]
-  const recipientId = body.persisted_recipients[0]
-  return recipientId
-}
-
 const subscribeUser = async (user) => {
-  const recipientId = await addContact(user)
   const listId = config.get('mail.sendgrid.listId')
-  await addToList(recipientId, listId)
+  const request = {
+    method: 'PUT',
+    url: '/v3/marketing/contacts',
+    body: {
+      'list_id': [
+        listId
+      ],
+      'contacts':
+        [{
+          'email': user.email,
+          'first_name': user.firstName,
+          'last_name': user.lastName
+        }]
+    }
+  }
+  const [response] = await client.request(request)
+  if (response.statusCode >= 400) {
+    throw Error(`Cannot add user ${user.email} to list`)
+  }
   console.log(`User ${user.email} subscribed to mail list`)
 }
 

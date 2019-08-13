@@ -1,11 +1,12 @@
 import request from 'superagent'
+import { toLongName } from 'utils/network'
 
 export const fetchTokens = (apiRoot, { networkType, page }) =>
-  request.get(`${apiRoot}/tokens?networkType=${networkType}&page=${page}`)
+  request.get(`${apiRoot}/tokens?networkType=${toLongName(networkType)}&page=${page}`)
     .then(response => response.body)
 
 export const fetchTokensByOwner = (apiRoot, { networkType, owner }) =>
-  request.get(`${apiRoot}/tokens/owner/${owner}?networkType=${networkType}`)
+  request.get(`${apiRoot}/tokens/owner/${owner}?networkType=${toLongName(networkType)}`)
     .then(response => response.body)
 
 export const fetchToken = (apiRoot, { tokenAddress }) =>

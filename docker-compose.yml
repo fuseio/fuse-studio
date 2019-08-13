@@ -89,8 +89,8 @@ services:
         environment:
             - NODE_ENV=${COMMUNITY_APP_ENV}
             - PORT=${COMMUNITY_APP_PORT}
-            - COMMUNITY_COLU_HOST=server
-            - COMMUNITY_COLU_PORT=${COMMUNITY_APP_PORT}
+            - COMMUNITY_APP_HOST=server
+            - COMMUNITY_APP_PORT=${COMMUNITY_APP_PORT}
             - COMMUNITY_WEB3_WEBSOCKET_PROVIDER=${COMMUNITY_WEB3_WEBSOCKET_PROVIDER}
 networks:
   internal-network:

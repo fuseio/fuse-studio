@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import web3 from 'web3'
 import { connect } from 'react-redux'
 import { fetchTokenStatistics, transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
-import { getClnBalance, getBalances } from 'selectors/accounts'
+import { getBalances } from 'selectors/accounts'
 import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
@@ -183,7 +183,6 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
-  clnBalance: getClnBalance(state),
   balances: getBalances(state),
   ...getTransaction(state, state.screens.token.transactionHash),
   bridgeStatus: getBridgeStatus(state),

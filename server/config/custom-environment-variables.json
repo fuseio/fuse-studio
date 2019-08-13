@@ -6,7 +6,10 @@
   },
   "aws": {
     "secrets": {
-      "secretId": "COMMUNITY_AWS_SECRET_ID"
+      "secretId": "COMMUNITY_AWS_SECRET_ID",
+       "manager": {
+        "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
+      }
     }
   },
   "ipfsProxy": {

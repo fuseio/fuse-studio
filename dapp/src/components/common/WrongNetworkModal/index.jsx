@@ -17,7 +17,7 @@ class WrongNetworkModal extends React.Component {
     const content = {
       title: 'Wrong network',
       text: 'Hi there, seems that you\'re on the wrong network.',
-      body: <p>Please open Metamask and switch to the <Networks networks={this.props.supportedNetworks} /> to view correct CLN and CC information</p>
+      body: <p>Please open Metamask and switch to the <Networks networks={this.props.supportedNetworks} /></p>
     }
     return (
       <GenericModal
