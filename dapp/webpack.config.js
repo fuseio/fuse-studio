@@ -20,7 +20,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.json']
   },
   devServer: {
-    port: process.env.COMMUNITY_COLU_PORT || 9000,
+    port: process.env.COMMUNITY_APP_PORT || 9000,
     historyApiFallback: true
   },
   plugins: [

@@ -58,7 +58,7 @@
   "api": {
     "auth": {
         "domain": {
-          "name": "CLN Communities Dev",
+          "name": "Fuse Studio Dev",
           "version": 1
         }
     },

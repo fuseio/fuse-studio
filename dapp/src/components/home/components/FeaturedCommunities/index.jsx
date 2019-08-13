@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchTokens, fetchTokensByOwner, fetchClnToken } from 'actions/token'
+import { fetchTokens, fetchTokensByOwner, fetchFuseToken } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
@@ -23,7 +23,7 @@ const staticImages = [
 class FeaturedCommunities extends Component {
   componentDidMount () {
     if (this.props.networkType !== 'fuse') {
-      this.props.fetchClnToken()
+      this.props.fetchFuseToken()
     }
     if (this.props.account) {
       const { networkType, account } = this.props
@@ -103,7 +103,7 @@ const mapDispatchToProps = {
   fetchTokens,
   fetchTokensByOwner,
   loadModal,
-  fetchClnToken
+  fetchFuseToken
 
 }
 

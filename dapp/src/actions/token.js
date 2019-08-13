@@ -13,7 +13,7 @@ export const FETCH_TOKEN_LIST = createRequestTypes('FETCH_TOKEN_LIST')
 export const FETCH_TOKEN = createRequestTypes('FETCH_TOKEN')
 export const FETCH_COMMUNITY_DATA = createRequestTypes('FETCH_COMMUNITY_DATA')
 
-export const FETCH_CLN_TOKEN = createRequestTypes('FETCH_CLN_TOKEN')
+export const FETCH_FUSE_TOKEN = createRequestTypes('FETCH_FUSE_TOKEN')
 
 export const CREATE_TOKEN = createTransactionRequestTypes('CREATE_TOKEN')
 export const CREATE_TOKEN_WITH_METADATA = createTransactionRequestTypes('CREATE_TOKEN_WITH_METADATA')
@@ -37,7 +37,7 @@ export const fetchTokenList = (accountAddress) => tokenAction(FETCH_TOKEN_LIST.R
 export const fetchToken = (tokenAddress) => tokenAction(FETCH_TOKEN.REQUEST, { tokenAddress })
 export const fetchCommunity = (communityAddress) => communitiesAction(FETCH_COMMUNITY_DATA.REQUEST, { communityAddress })
 
-export const fetchClnToken = () => tokenAction(FETCH_CLN_TOKEN.REQUEST)
+export const fetchFuseToken = () => tokenAction(FETCH_FUSE_TOKEN.REQUEST)
 
 export const createToken = (tokenData) => requestAction(CREATE_TOKEN, tokenData)
 export const createTokenWithMetadata = (tokenData, metadata, tokenType, steps) => requestAction(CREATE_TOKEN_WITH_METADATA, { tokenData, metadata, tokenType, steps })

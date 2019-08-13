@@ -10,7 +10,7 @@
     "allowCors": false,
     "auth": {
       "domain": {
-        "name": "CLN Communities Prod",
+        "name": "Fuse Studio Prod",
         "version": 1
       }
     }

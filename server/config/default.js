@@ -8,7 +8,7 @@ module.exports = {
     port: 3000,
     auth: {
       domain: {
-        name: 'CLN Communities Dev',
+        name: 'Fuse Studio Dev',
         chainId: defer(function () {
           return this.network.foreign.name === 'mainnet' ? 1 : 3
         }),

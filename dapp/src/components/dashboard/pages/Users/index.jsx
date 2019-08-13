@@ -2,7 +2,7 @@ import React, { Component, Fragment, useEffect } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import Loader from 'components/common/Loader'
-import { getClnBalance, getAccountAddress } from 'selectors/accounts'
+import { getAccountAddress } from 'selectors/accounts'
 import { REQUEST, PENDING } from 'actions/constants'
 import { getUsersEntities } from 'selectors/entities'
 import plusIcon from 'images/add.svg'
@@ -320,7 +320,6 @@ class Users extends Component {
 const mapStateToProps = (state) => ({
   network: state.network,
   users: getUsersEntities(state),
-  clnBalance: getClnBalance(state),
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),

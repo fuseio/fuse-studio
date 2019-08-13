@@ -1,7 +1,7 @@
 {
-  "name": "cln-community-server",
+  "name": "fuse-studio-backend",
   "version": "0.1.0",
-  "description": "backend for the CLN community DApp",
+  "description": "backend for the Fuse Studio DApp",
   "main": "app.js",
   "scripts": {
     "start": "node ./src/app.js",

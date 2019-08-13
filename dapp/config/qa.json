@@ -5,7 +5,7 @@
   "api": {
     "auth": {
         "domain": {
-          "name": "CLN Communities QA"
+          "name": "Fuse Studio QA"
         }
     },
     "url": {

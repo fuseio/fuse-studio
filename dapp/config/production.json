@@ -17,7 +17,7 @@
   "api": {
     "auth": {
         "domain": {
-          "name": "CLN Communities Prod"
+          "name": "Fuse Studio Prod"
         }
     },
     "url": {
