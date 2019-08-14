@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import Select from '../Select'
 
 const options = [
-  { value: 'Buy & Sell CLN / CC', label: 'Buy & Sell CLN / CC' },
+  { value: 'Buy & Sell Fuse Network token', label: 'Buy & Sell Fuse Network token' },
   { value: 'Issue new coin', label: 'Issue new coin' },
   { value: 'Partnerships', label: 'Partnerships' },
   { value: 'Technical Issue', label: 'Technical Issue' },

@@ -7,6 +7,8 @@ ARG COMMMUNITY_WEB3_PORTIS_ID
 ARG COMMUNITY_WEB3_API_KEY
 ARG NODE_ENV
 
+RUN env
+
 RUN rm -rf node_modules && rm package-lock.json
 
 RUN cd contracts/entities && npm install && npm run build

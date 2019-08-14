@@ -1,24 +1,24 @@
 import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { fetchClnToken } from 'actions/token'
+import { fetchFuseToken } from 'actions/token'
 
-class CLNFethcher extends Component {
+class FuseFetcher extends Component {
   componentDidMount () {
     if (this.props.networkType !== 'fuse') {
-      this.props.fetchClnToken()
+      this.props.fetchFuseToken()
     }
   }
 
   render = () => null
 }
 
-CLNFethcher.propTypes = {
+FuseFetcher.propTypes = {
   networkType: PropTypes.string.isRequired
 }
 
 const mapDispatchToProps = {
-  fetchClnToken
+  fetchFuseToken
 }
 
-export default connect(null, mapDispatchToProps)(CLNFethcher)
+export default connect(null, mapDispatchToProps)(FuseFetcher)

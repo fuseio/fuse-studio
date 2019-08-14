@@ -1,7 +1,7 @@
 [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
 
-# CLN Community App
-Welcome to the CLN community app repo. We're building a dApp that will interact with the smart contracts of the CLN ecosystem. For now, we have a small api server that communicates with an IPFS node (because exposing an IPFS node might be unsafe) and replicates the data into mongodb.
+# Fuse Studio DApp
+Welcome to the Fuse Studio DApp repo. We're building a DApp that will interact with the smart contracts of the Fuse ecosystem. For now, we have a small api server that communicates with an IPFS node (because exposing an IPFS node might be unsafe) and replicates the data into mongodb.
 
 # Develop
 
@@ -12,7 +12,7 @@ copy the confige file and start the docker compose:
 
 ```
 cp .env.dist .env
-docker network create cln-community
+docker network create fuse-studio
 docker-compose up -d
 ```
 

@@ -5,7 +5,7 @@ import { getWeb3 } from 'services/web3'
 import { portis } from 'services/web3/providers/portis'
 import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
-import { balanceOfCln } from 'actions/accounts'
+import { balanceOfFuse } from 'actions/accounts'
 import { loadModal } from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
@@ -71,7 +71,7 @@ function * getNetworkType () {
     if (accountAddress) {
       const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
       if (!isChanged) {
-        yield put(balanceOfCln(accountAddress))
+        yield put(balanceOfFuse(accountAddress))
       }
     }
 

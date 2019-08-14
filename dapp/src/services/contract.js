@@ -13,7 +13,7 @@ export const getContract = ({ address, abiName, options }) => {
   const abi = abis[abiName]
 
   const web3 = getWeb3(options)
-  const contract = new web3.eth.Contract(abi, address, getOptions(window.ethereum))
+  const contract = new web3.eth.Contract(abi, address, getOptions(web3.currentProvider.networkVersion || web3.currentProvider.connection.networkVersion))
   contracts[address] = contract
 
   return contract

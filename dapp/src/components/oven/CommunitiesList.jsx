@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
+import { isMobileOnly } from 'react-device-detect'
 import Community from 'components/common/Community'
 import InfiniteScroll from 'react-infinite-scroller'
 import groupImage from 'images/all-communities.png'
 import groupImageMobile from 'images/all-communities-mobile.png'
-import { isMobileOnly } from 'react-device-detect'
 
 const PAGE_START = 1
-const PAGE_SIZE = 10
 
 export default ({
   tokens,
@@ -21,10 +20,8 @@ export default ({
   getScrollParent
 }) => {
   useEffect(() => {
-    if (addresses.length < PAGE_SIZE) {
-      fetchTokens(networkType, PAGE_START)
-    }
-  }, [addresses])
+    fetchTokens(networkType, PAGE_START)
+  }, [])
 
   const loadMore = (nextPage) => {
     fetchTokens(networkType, nextPage)

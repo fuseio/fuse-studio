@@ -68,6 +68,13 @@ module.exports = {
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
     },
 
+    mainnet: {
+      provider: () => new HDWalletProvider(mnemonic, `https://mainnet.infura.io/v3/${apiKey}`),
+      network_id: 1,
+      gas: 5500000,
+      timeoutBlocks: 200,
+    },
+
     // Useful for private networks
     // private: {
       // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),

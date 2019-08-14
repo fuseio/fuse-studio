@@ -6,13 +6,13 @@
     },
     "addresses": {
       "ropsten": {
-        "FuseToken": "0x41C9d91E96b933b74ae21bCBb617369CBE022530",
+        "FuseToken": "0xcd975c581AA0b83a8dE39035325BF44556517367",
         "TokenFactory": "0xA6D0f4552cf5237987F46095875fC64b006E7bda",
         "DaiToken": "0x1CAf0Ed93dD34152000ACec9441D4D9ed0f55D7B"
       },
       "main": {
         "FuseToken": "0x4162178B78D6985480A308B2190EE5517460406D",
-        "TokenFactory": "0xac051e086FD2046FC75A53D38088B4DD6e00E25b",
+        "TokenFactory": "0x72eFE0bE5546e4928357ECcD074e16BA1edD3274",
         "DaiToken": "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"
       },
       "fuse": {
@@ -20,7 +20,7 @@
           "BridgeMapper": "0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66"
         },
         "main": {
-          "BridgeMapper": "0x41063a48F46EE7E20E7EbAd0185992724B4Ee56c"
+          "BridgeMapper": "0x89b98bB511A41FeF73b388cF8C052221f42cd44f"
         }
       }
     },
@@ -58,7 +58,7 @@
   "api": {
     "auth": {
         "domain": {
-          "name": "CLN Communities Dev",
+          "name": "Fuse Studio Dev",
           "version": 1
         }
     },

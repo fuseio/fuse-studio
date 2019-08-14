@@ -8,12 +8,3 @@ export const processReceipt = (apiRoot, { receipt }) =>
 export const sendContactUs = (formData) => request.post(`${API_ROOT}/mails`)
   .send({ formData })
   .then(response => response.body)
-
-const symbolToTickerId = {
-  'CLN': 2753,
-  'ETH': 1027
-}
-
-export const fetchTokenQuote = (symbol, currency) => request.get(
-  `https://api.coinmarketcap.com/v2/ticker/${symbolToTickerId[symbol]}/?convert=${currency}`
-).then(response => response.body)

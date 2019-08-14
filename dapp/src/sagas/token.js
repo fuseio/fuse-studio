@@ -23,7 +23,7 @@ const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, ap
 
 export const fetchTokenList = createEntitiesFetch(actions.FETCH_TOKEN_LIST, api.fetchTokenList)
 
-function * fetchClnToken () {
+function * fetchFuseToken () {
   const tokenAddress = yield select(getAddress, 'FuseToken')
   const FuseTokenContract = getContract({ abiName: 'FuseToken', address: tokenAddress })
 
@@ -36,7 +36,7 @@ function * fetchClnToken () {
 
   const response = yield all(calls)
 
-  yield entityPut({ type: actions.FETCH_CLN_TOKEN.SUCCESS,
+  yield entityPut({ type: actions.FETCH_FUSE_TOKEN.SUCCESS,
     address: tokenAddress,
     response: {
       ...response,
@@ -232,7 +232,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN_LIST, fetchTokenList, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
-    tryTakeEvery(actions.FETCH_CLN_TOKEN, fetchClnToken),
+    tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),
     tryTakeEvery(actions.FETCH_TOKEN_STATISTICS, fetchTokenStatistics, 1),

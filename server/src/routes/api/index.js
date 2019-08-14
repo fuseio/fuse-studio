@@ -14,6 +14,7 @@ router.use('/communities', require('./communities'))
 router.use('/deployments', require('./deployments'))
 router.use('/entities', require('./entities'))
 router.use('/profiles', require('./profiles'))
+router.use('/email', require('./email'))
 
 router.use(function (err, req, res, next) {
   if (err.name === 'ValidationError') {

@@ -35,7 +35,7 @@ export const getAccountTokens = createSelector(
   (tokens, account) => account.tokens.map(token => tokens[token] || {})
 )
 
-export const getClnBalance = createSelector(
+export const getFuseBalance = createSelector(
   getNetworkType,
   getAddresses,
   getAccount,
