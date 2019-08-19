@@ -3,7 +3,7 @@
     "fuseProvider": "https://rpc.fusenet.io",
     "addresses": {
       "ropsten": {
-        "FuseToken": "0xcd975c581AA0b83a8dE39035325BF44556517367",
+        "FuseToken": "0xEc304De130dA3afbD2F60C7aa6C5485e30239372",
         "TokenFactory": "0xA6D0f4552cf5237987F46095875fC64b006E7bda"
       }
     },
