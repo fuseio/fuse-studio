@@ -585,10 +585,23 @@
 	}
 
 	@include element(sub-title) {
+		position: relative;
   	font-size: 26px;
   	font-weight: 500;
   	text-align: center;
-  	color: #4a687b;
+		color: #4a687b;
+		
+		> img {
+			&:first-child {
+				position: absolute;
+				left: -5em;		
+			}
+
+			&:last-child {
+				position: absolute;
+				right: -5em;
+			}
+		}
 	}
 
 	@include element(boxImg) {

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { isMobileOnly } from 'react-device-detect'
 import TotalSupply from './TotalSupply'
 import LogosOptions from './LogosOptions'
-import FontAwesome from 'react-fontawesome'
 import SymbolStep from './SymbolStep'
 
 export default class DetailsStep extends Component {
@@ -150,7 +149,6 @@ export default class DetailsStep extends Component {
             onClick={setNextStep}
           >
             Next
-            {/* <FontAwesome className='symbol-icon' name='angle-right' /> */}
           </button>
         </div>
       </Fragment>

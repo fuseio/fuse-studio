@@ -14,7 +14,6 @@ import Layout from 'components/common/Layout'
 import HomePage from 'components/home/pages/HomePage'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Footer from 'components/common/Footer'
-import ImageCropper from 'components/common/ImageCropper'
 
 export default class Root extends Component {
   render () {
@@ -34,7 +33,6 @@ export default class Root extends Component {
                 <Route path='/view/community/:address' component={withTracker(withNetwork(DashboardLayout))} />
                 <Route path='/view/directory/:communityAddress/:account' component={withTracker(withNetwork(EntityProfile))} />
                 <Route path='/view/sign/:isMobileApp?' component={SignInProvider} />
-                <Route path='/view/test' component={ImageCropper} />
                 <Route path='/view/join/:address' component={MobileProvider} />
               </Switch>
               <Footer />

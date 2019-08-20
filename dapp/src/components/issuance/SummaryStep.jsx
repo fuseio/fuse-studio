@@ -1,20 +1,13 @@
 import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
 import BigNumber from 'bignumber.js'
-import { PENDING, SUCCESS, FAILURE } from 'actions/constants'
+import { PENDING, SUCCESS } from 'actions/constants'
 import ReactGA from 'services/ga'
 import CommunityLogo from 'components/common/CommunityLogo'
 import TransactionButton from 'components/common/TransactionButton'
-// import Message from 'components/common/Message'
 import contractIcon from 'images/contract.svg'
-import DeployProgress from './DeployProgress'
 
 export default class SummaryStep extends Component {
-  state = {
-    showError: true,
-    showProgress: false
-  }
-
   renderTransactionStatus = (transactionStatus) => {
     switch (transactionStatus) {
       case PENDING:
@@ -43,22 +36,9 @@ export default class SummaryStep extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    // if (this.props.transactionStatus === SUCCESS && prevProps.transactionStatus !== SUCCESS) {
-    //   ReactGA.event({
-    //     category: 'Issuance',
-    //     action: 'Load',
-    //     label: 'Issued'
-    //   })
-    // }
-
     if (this.props.transactionStatus === PENDING && (this.props.transactionStatus !== prevProps.transactionStatus)) {
       this.props.setNextStep()
-      // this.setState({ showProgress: true })
     }
-
-    // if (this.props.transactionStatus === FAILURE && (this.props.transactionStatus !== prevProps.transactionStatus)) {
-    //   this.setState({ showProgress: false })
-    // }
   }
 
   render () {
@@ -69,17 +49,11 @@ export default class SummaryStep extends Component {
       totalSupply,
       communityName,
       contracts,
-      createTokenSignature,
-      transactionStatus,
       isOpen,
       communityType,
       existingToken,
-      history,
-      currentDeploy,
       images
     } = this.props
-
-    const { showError, showProgress } = this.state
 
     const contractsItems = Object.values(contracts)
       .filter((contract) => contract.checked)
@@ -98,7 +72,6 @@ export default class SummaryStep extends Component {
                 metadata={{ communityLogo }}
               />
               <span className='communityName'>{communityName} coin</span>
-              {/* <span>coin</span> */}
             </div>
             <hr className='summary-step__line' />
             <div className='summary-step__content'>
@@ -146,30 +119,6 @@ export default class SummaryStep extends Component {
             <br />
             <span>After published a bridge will allow you to start using your coin on the Fuse-chain!</span>
           </div>
-
-          {/* {
-            showProgress && <DeployProgress
-              history={history}
-              contracts={contracts}
-              currentDeploy={currentDeploy}
-            />
-          } */}
-
-          {/* <Message
-            radiusAll
-            issue
-            isOpen={createTokenSignature}
-            message='Pending'
-            isDark
-          />
-          <Message
-            radiusAll
-            issue
-            isOpen={transactionStatus === FAILURE && showError}
-            message='Something went wrong'
-            clickHandler={() => this.setState({ showError: false })}
-            subTitle='Try again later'
-          /> */}
         </div>
         <div className='grid-x align-center summary-step__issue'>
           {this.renderTransactionStatus(this.props.transactionStatus)}

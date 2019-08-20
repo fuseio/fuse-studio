@@ -8,7 +8,8 @@ export default class ImageCropper extends Component {
       unit: 'px',
       width: 60,
       aspect: 1
-    }
+    },
+    images: {}
   }
 
   onImageLoaded = image => {
@@ -26,8 +27,7 @@ export default class ImageCropper extends Component {
         crop,
         'newFile.jpeg'
       )
-      const { setImages } = this.props
-      setImages({ croppedImageUrl, blob })
+      this.setState({ ...this.state, images: { croppedImageUrl, blob } })
     }
   }
 
@@ -84,12 +84,11 @@ export default class ImageCropper extends Component {
         <ReactCrop
           src={src}
           circularCrop
-          locked
           className='ReactCrop'
           onImageLoaded={this.onImageLoaded}
           crop={crop}
-          minWidth='60'
-          minHeight='60'
+          minWidth='50'
+          minHeight='50'
           maxWidth='60'
           maxHeight='60'
           onComplete={this.onCropComplete}
@@ -98,26 +97,16 @@ export default class ImageCropper extends Component {
         <div className='ReactCrop__footer'>
           <div className='buttons'>
             <button onClick={() => {
-              setImages(null)
+              setImages({})
               hideModal()
             }}>Cancel</button>
-            <button>Save</button>
+            <button onClick={() => {
+              setImages({ croppedImageUrl: this.state.images.croppedImageUrl, blob: this.state.images.blob })
+              hideModal()
+            }}>Save</button>
           </div>
         </div>
       </Modal>
-      // <div>
-      //   <input type='file' onChange={onSelectFile} />
-      //   <div className='ReactCrop__wrapper'>
-      //     <ReactCrop
-      //       src={src}
-      //       circularCrop
-      //       className='ReactCrop'
-      //       onImageLoaded={onImageLoaded}
-      //       crop={crop}
-      //       onChange={newCrop => setCrop(newCrop)}
-      //     />
-      //   </div>
-      // </div>
     )
   }
 }

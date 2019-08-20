@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { isMobileOnly } from 'react-device-detect'
 import classNames from 'classnames'
@@ -42,12 +42,16 @@ const LogosOptions = ({
     })
   }
 
+  const isChosen = (logo) => {
+    return communityLogo && communityLogo.icon && images && !images.croppedImageUrl ? communityLogo.icon === logo : false
+  }
+
   let items
   if (communityType && communityType.value !== 'existingToken') {
     items = logos.map((logo, key) => {
       const logoClass = classNames({
         'attributes__logos__item': true,
-        'attributes__logos__item--chosen': communityLogo && communityLogo.icon ? communityLogo.icon === logo : false
+        'attributes__logos__item--chosen': isChosen(logo)
       })
       return (
         <div className={logoClass} key={key} onClick={() => handleClick(logo, key)}>
@@ -57,16 +61,23 @@ const LogosOptions = ({
     })
 
     items.push((
-      <label htmlFor='logoUpload' className='attributes__logos__item' key={3}>
+      <label
+        key={3}
+        htmlFor='logoUpload'
+        className={classNames({
+          'attributes__logos__item': true,
+          'attributes__logos__item--chosen': (images && images.croppedImageUrl)
+        })}
+      >
         <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
-        <img src={(images && images.croppedImageUrl) || UploadImage} />
+        <img style={{ borderRadius: '50%', maxWidth: '60px' }} src={(images && images.croppedImageUrl) || UploadImage} />
       </label>
     ))
   } else {
     items = logos.map((logo, key) => {
       const logoClass = classNames({
         'attributes__logos__item': true,
-        'attributes__logos__item--chosen': communityLogo && communityLogo.icon ? communityLogo.icon === logo : false
+        'attributes__logos__item--chosen': isChosen(logo)
       })
 
       return (
@@ -77,9 +88,16 @@ const LogosOptions = ({
     })
 
     items.push((
-      <label htmlFor='logoUpload' className='attributes__logos__item' key={3}>
+      <label
+        key={3}
+        htmlFor='logoUpload'
+        className={classNames({
+          'attributes__logos__item': true,
+          'attributes__logos__item--chosen': (images && images.croppedImageUrl)
+        })}
+      >
         <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
-        <img src={(images && images.croppedImageUrl) || UploadImage} />
+        <img style={{ borderRadius: '50%', maxWidth: '60px' }} src={(images && images.croppedImageUrl) || UploadImage} />
       </label>
     ))
   }

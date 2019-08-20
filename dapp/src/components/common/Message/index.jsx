@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import classNames from 'classnames'
 import FuseLoader from 'images/loader-fuse.gif'
-import FontAwesome from 'react-fontawesome'
 import ErrorIssuance from 'images/error_issuance.svg'
 
 export default ({ message, clickHandler, isOpen, isDark = false, subTitle = 'Waiting for signing', radiusAll = false, issue = false }) => {
