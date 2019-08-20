@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
+import classNames from 'classnames'
 import { nameToSymbol } from 'utils/format'
 import StepsIndicator from './StepsIndicator'
 import NameCurrencyStep from './NameCurrencyStep'
@@ -10,12 +11,36 @@ import DetailsStep from './DetailsStep'
 import SummaryStep from './SummaryStep'
 import { getAccountAddress } from 'selectors/accounts'
 import Contracts from './Contracts'
-import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken } from 'actions/token'
+import DeployProgress from './DeployProgress'
+import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
 import ReactGA from 'services/ga'
 import Logo from 'components/common/Logo'
-import { PENDING, REQUEST } from 'actions/constants'
+import { PENDING, REQUEST, FAILURE, SUCCESS } from 'actions/constants'
+import Message from 'components/common/Message'
+import Box from 'images/box.svg'
 
-class IssuanceWizard extends Component {
+const Congratulations = ({ goToDashboard }) => {
+  return (
+    <div className='congratulation'>
+      <div className='congratulation__title'>
+        Congratulations!
+      </div>
+      <div className='congratulation__sub-title'>On the birth of your community!</div>
+      <p className='congratulation__fuse-text'>You have been awarded with 10 Fuse tokens on Fuse Network</p>
+      <div className='congratulation__boxImg'>
+        <img alt='box' src={Box} />
+      </div>
+      <p className='congratulation__what-small'>What's that?</p>
+      <div className='congratulation__what'>What should i do next?</div>
+      <div className='congratulation__text'>to start building your community. Your community will now show on the homepage of the Fuse Studio. Go to your community page to start adding businesses and users.</div>
+      <div className='congratulation__btn'>
+        <button className='button button--big' onClick={goToDashboard}>Go to the community page</button>
+      </div>
+    </div>
+  )
+}
+
+class IssuanceWizard extends PureComponent {
   state = {
     activeStep: 0,
     communityName: '',
@@ -26,6 +51,7 @@ class IssuanceWizard extends Component {
     totalSupply: '',
     communityLogo: {},
     stepPosition: {},
+    images: {},
     scrollPosition: 0,
     contracts: {
       community: {
@@ -60,6 +86,21 @@ class IssuanceWizard extends Component {
     })
   }
 
+  componentDidUpdate (prevProps) {
+    if (this.props.transactionStatus === SUCCESS && prevProps.transactionStatus !== SUCCESS) {
+      ReactGA.event({
+        category: 'Issuance',
+        action: 'Load',
+        label: 'Issued'
+      })
+    }
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('keypress', this.handleKeyPress)
+  }
+
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       switch (this.state.activeStep) {
@@ -70,11 +111,6 @@ class IssuanceWizard extends Component {
           ? this.setNextStep() : null
       }
     }
-  }
-
-  componentWillUnmount () {
-    window.removeEventListener('scroll', this.handleScroll)
-    window.removeEventListener('keypress', this.handleKeyPress)
   }
 
   setIssuanceTransaction = () => {
@@ -97,7 +133,7 @@ class IssuanceWizard extends Component {
             : {}
       }), {})
 
-    const metadata = { communityLogo: this.state.communityLogo.name }
+    const metadata = { communityLogo: this.state.communityLogo.name, image: this.state.images.blob }
     if (communityType && communityType.value === 'existingToken') {
       const { existingToken: { value: foreignTokenAddress } } = this.state
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
@@ -145,6 +181,19 @@ class IssuanceWizard extends Component {
   setCommunityPrivacy = isOpen =>
     this.setState({ isOpen })
 
+  setImages = (images) =>
+    this.setState({ images })
+
+  transactionDenied = () => {
+    const { error, transactionStatus } = this.props
+    return transactionStatus && transactionStatus === 'FAILURE' && error && typeof error.includes === 'function' && error.includes('denied')
+  }
+
+  goToDashboard = () => {
+    const { history, communityAddress } = this.props
+    history.push(`/view/community/${communityAddress}`)
+  }
+
   renderStepContent = () => {
     const {
       transactionStatus,
@@ -163,7 +212,8 @@ class IssuanceWizard extends Component {
       contracts,
       currentDeploy,
       isOpen,
-      existingToken
+      existingToken,
+      images
     } = this.state
 
     switch (activeStep) {
@@ -191,6 +241,8 @@ class IssuanceWizard extends Component {
             communitySymbol={communitySymbol}
             communityLogo={communityLogo}
             setCommunityLogo={this.setCommunityLogo}
+            setImages={this.setImages}
+            images={images}
             setNextStep={this.setNextStep}
             communityName={communityName}
             handleChangeCommunitySymbol={this.handleChangeCommunitySymbol}
@@ -209,6 +261,7 @@ class IssuanceWizard extends Component {
         return (
           <SummaryStep
             isOpen={isOpen}
+            images={images}
             networkType={foreignNetwork}
             createTokenSignature={createTokenSignature}
             contracts={contracts}
@@ -225,52 +278,93 @@ class IssuanceWizard extends Component {
             currentDeploy={currentDeploy}
           />
         )
+      case 4:
+        return (
+          <DeployProgress
+            setNextStep={this.setNextStep}
+            history={history}
+            contracts={contracts}
+            currentDeploy={currentDeploy}
+          />
+        )
+      case 5:
+        return (
+          <Congratulations goToDashboard={this.goToDashboard} />
+        )
     }
   }
 
   render () {
-    const { history, transactionStatus } = this.props
+    const { history, transactionStatus, createTokenSignature, clearTransaction } = this.props
     const { communityType } = this.state
     const steps = ['Name & currency', communityType && communityType.value === 'existingToken' ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary']
 
     return (
-      <div className='issuance__wrapper'>
-        <div className='issuance__header grid-x align-justify'>
-          <div onClick={() => history.push('/')} className='issuance__header__logo align-self-middle grid-x align-middle'>
-            <Logo isGradientLogo />
-          </div>
-          <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
-            <div className='grid-y cell auto'>
-              <h4 className='issuance__header__current'>{steps[this.state.activeStep] || steps[this.state.activeStep - 1]}</h4>
-              <div className='grid-x align-center'>
-                <StepsIndicator
-                  steps={steps}
-                  activeStep={this.state.activeStep}
-                />
+      <Fragment>
+        <div className='issuance__wrapper'>
+          <div className='issuance__header grid-x align-justify'>
+            <div onClick={() => history.push('/')} className='issuance__header__logo align-self-middle grid-x align-middle'>
+              <Logo isGradientLogo />
+            </div>
+            <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
+              <div className='grid-y cell auto'>
+                <h4 className='issuance__header__current'>{steps[this.state.activeStep] || steps[this.state.activeStep - 1]}</h4>
+                <div className='grid-x align-center'>
+                  <StepsIndicator
+                    steps={steps}
+                    activeStep={this.state.activeStep}
+                  />
+                </div>
               </div>
             </div>
+            <div
+              onClick={() => history.push('/')}
+              className='issuance__header__close align-self-middle grid-x align-middle align-right'>
+              <FontAwesome name='times' />
+            </div>
           </div>
-          <div
-            onClick={() => history.push('/')}
-            className='issuance__header__close align-self-middle grid-x align-middle align-right'>
-            <FontAwesome name='times' />
+          <div className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })}>
+            {this.state.activeStep < 3 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
+            {this.state.activeStep === 3 && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
+            {this.state.activeStep === 4 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
+            {this.renderStepContent()}
+            {
+              this.state.activeStep > 0 && ((transactionStatus !== PENDING) && (transactionStatus !== REQUEST)) && (
+                <div className='text-center'>
+                  <button
+                    className='issuance__wizard__back'
+                    onClick={this.setPreviousStep}>Back
+                  </button>
+                </div>
+              )
+            }
           </div>
         </div>
-        <div className='issuance__wizard'>
-          {this.state.activeStep < 3 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
-          {this.renderStepContent()}
-          {
-            this.state.activeStep > 0 && ((transactionStatus !== PENDING) && (transactionStatus !== REQUEST)) && (
-              <div className='text-center'>
-                <button
-                  className='issuance__wizard__back'
-                  onClick={this.setPreviousStep}>Back
-                </button>
-              </div>
-            )
-          }
-        </div>
-      </div>
+        <Message
+          radiusAll
+          issue
+          isOpen={createTokenSignature}
+          message='Pending'
+          isDark
+        />
+
+        <Message
+          issue
+          message={'Oh no'}
+          subTitle={`You reject the action, That’s ok, try next time!`}
+          isOpen={this.transactionDenied()}
+          clickHandler={() => clearTransaction()}
+        />
+
+        <Message
+          radiusAll
+          issue
+          isOpen={transactionStatus === FAILURE}
+          message='Something went wrong'
+          clickHandler={() => clearTransaction()}
+          subTitle='Try again later'
+        />
+      </Fragment>
     )
   }
 }
@@ -290,7 +384,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   createTokenWithMetadata,
   fetchDeployProgress,
-  deployExistingToken
+  deployExistingToken,
+  clearTransaction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(IssuanceWizard)

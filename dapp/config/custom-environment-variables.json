@@ -17,5 +17,8 @@
   "ui": {
     "debounce": "COMMUNITY_UI_DEBOUNCE"
   },
-  "debugTrace": "COMMUNITY_DEBUG_TRACE"
+  "debugTrace": "COMMUNITY_DEBUG_TRACE",
+  "ipfsProxy": {
+    "urlBase": "COMMUNITY_IPFS_PROXY_URL_BASE"
+  }
 }

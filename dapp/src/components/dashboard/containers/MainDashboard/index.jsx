@@ -16,7 +16,7 @@ import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
-import { getForeignNetwork } from 'selectors/network'
+import { getForeignNetwork, getBridgeStatus } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress, getBalances } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
@@ -24,6 +24,7 @@ import { getToken } from 'selectors/dashboard'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
+import { balanceOfToken } from 'actions/accounts'
 
 class DashboardLayout extends PureComponent {
   state = {
@@ -31,10 +32,12 @@ class DashboardLayout extends PureComponent {
   }
 
   componentDidMount () {
-    if (!this.props.token) {
-      this.props.fetchCommunity(this.props.communityAddress)
-      this.props.fetchTokenProgress(this.props.communityAddress)
-      this.props.fetchEntities(this.props.communityAddress)
+    const { token } = this.props
+    if (!token) {
+      const { fetchCommunity, fetchTokenProgress, fetchEntities } = this.props
+      fetchCommunity(this.props.communityAddress)
+      fetchTokenProgress(this.props.communityAddress)
+      fetchEntities(this.props.communityAddress)
     }
   }
 
@@ -57,6 +60,13 @@ class DashboardLayout extends PureComponent {
     if (prevProps.community && ((this.props.community && this.props.community.foreignTokenAddress) !== (prevProps.community && prevProps.community.foreignTokenAddress))) {
       const { fetchToken, community: { foreignTokenAddress } } = this.props
       fetchToken(foreignTokenAddress)
+    }
+
+    if (this.props.token !== prevProps.token && this.props.accountAddress) {
+      const { balanceOfToken, token: { address: tokenAddress }, accountAddress, bridgeStatus } = this.props
+      const { from, to } = bridgeStatus
+      balanceOfToken(tokenAddress, accountAddress, { bridgeType: from.bridge })
+      balanceOfToken(tokenAddress, accountAddress, { bridgeType: to.bridge })
     }
   }
 
@@ -149,6 +159,7 @@ const mapStateToProps = (state, { match }) => ({
   metadata: state.entities.metadata,
   isAdmin: checkIsAdmin(state),
   balances: getBalances(state),
+  bridgeStatus: getBridgeStatus(state),
   dashboard: state.screens.dashboard,
   homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress
 })
@@ -161,7 +172,8 @@ const mapDispatchToProps = {
   loadModal,
   hideModal,
   fetchEntities,
-  changeNetwork
+  changeNetwork,
+  balanceOfToken
 }
 
 export default connect(

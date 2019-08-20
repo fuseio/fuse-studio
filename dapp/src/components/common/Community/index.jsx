@@ -5,6 +5,7 @@ import identity from 'lodash/identity'
 import { formatWei } from 'utils/format'
 import CommunityLogo from 'components/common/CommunityLogo'
 import { isDaiToken } from 'constants/existingTokens'
+import isEmpty from 'lodash/isEmpty'
 
 export default class Community extends Component {
   handleClick = () => {
@@ -17,13 +18,15 @@ export default class Community extends Component {
   render () {
     const {
       token,
-      networkType
+      networkType,
+      metadata
     } = this.props
     const {
       name,
       totalSupply
     } = token
 
+    const { image } = metadata
     return (
       <div className='community' onClick={this.handleClick}>
         <div className='community__logo'>
@@ -31,7 +34,8 @@ export default class Community extends Component {
             isDaiToken={isDaiToken(networkType, token)}
             token={token}
             networkType={networkType}
-            metadata={this.props.metadata}
+            imageUrl={!isEmpty(image) ? `${CONFIG.ipfsProxy.urlBase}/image/${image}` : null}
+            metadata={metadata}
           />
         </div>
         <div className='community__content'>

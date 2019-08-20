@@ -6,26 +6,10 @@ import isEmpty from 'lodash/isEmpty'
 import FontAwesome from 'react-fontawesome'
 import get from 'lodash/get'
 import deployProgressSteps from 'constants/deployProgressSteps'
-
-const Congratulations = ({ goToDashboard }) => {
-  return (
-    <div className='congratulation'>
-      <div className='congratulation__title'>
-        Congratulations!
-      </div>
-      <div className='congratulation__sub-title'>Your community is ready to be born!</div>
-      <div className='congratulation__what'>What should i do next?</div>
-      <div className='congratulation__text'>to start building your community. Your community will now show on the homepage of the Fuse Studio. Go to your community page to start adding businesses and users.</div>
-      <div className='congratulation__btn'>
-        <button className='button button--fuse button--big' onClick={goToDashboard}>Go to the community page</button>
-      </div>
-    </div>
-  )
-}
+import FinishIssuance from 'images/finish_issuance.svg'
 
 class DeployProgress extends PureComponent {
   state = {
-    isReady: false,
     hasErrors: false
   }
 
@@ -51,12 +35,14 @@ class DeployProgress extends PureComponent {
     }
 
     if (this.props.steps !== prevProps.steps) {
-      const { steps, stepErrors } = this.props
+      const { steps, stepErrors, setNextStep } = this.props
       const values = Object.values(steps).every(val => val)
 
       if (values) {
         clearInterval(this.interval)
-        this.setState({ isReady: true })
+        setTimeout(() => {
+          setNextStep()
+        }, 1000)
       }
 
       if ((!isEmpty(stepErrors) && (stepErrors.bridge || stepErrors.community))) {
@@ -64,6 +50,10 @@ class DeployProgress extends PureComponent {
         this.setState({ hasErrors: true })
       }
     }
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.interval)
   }
 
   goToDashboard = () => {
@@ -87,13 +77,14 @@ class DeployProgress extends PureComponent {
     } = this.props
 
     const {
-      isReady,
       hasErrors
     } = this.state
 
     let currentStep = null
 
     const isFalsy = Object.values(steps).every(val => !val)
+
+    const isDone = Object.values(steps).every(val => val)
 
     if (isFalsy) {
       currentStep = 'tokenIssued'
@@ -105,7 +96,13 @@ class DeployProgress extends PureComponent {
     return (
       <div className='progress__wrapper'>
         <div className='progress__img'>
-          <div className={classNames('progress__loader', { 'progress__loader--stop': hasErrors })} />
+          {
+            !isDone ? (
+              <div className={classNames('progress__loader', { 'progress__loader--stop': hasErrors })} />
+            ) : (
+              <img src={FinishIssuance} alt='finish' />
+            )
+          }
         </div>
         {
           deployProgressSteps
@@ -127,12 +124,11 @@ class DeployProgress extends PureComponent {
               )
             })
         }
-        {isReady && <Congratulations goToDashboard={this.goToDashboard} />}
         {
           hasErrors && (
             <div className='progress__error'>
               <p>The process has failed, please start over</p>
-              <button className='button button--normal button--fuse' onClick={this.refreshPage}>Try again</button>
+              <button className='button button--normal' onClick={this.refreshPage}>Try again</button>
             </div>
           )
         }

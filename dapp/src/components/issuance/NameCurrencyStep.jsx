@@ -1,28 +1,38 @@
 import React from 'react'
-import FontAwesome from 'react-fontawesome'
-import TextInput from 'components/common/TextInput'
 import CurrencyType from './CurrencyType'
 import { isMobileOnly } from 'react-device-detect'
+import TextField from '@material-ui/core/TextField'
+import isEmpty from 'lodash/isEmpty'
 
 const NameCurrencyStep = ({ existingToken, setExistingToken, communityName, handleChangeCommunityName, setNextStep, setCommunityType, communityType, networkType }) => {
   const validateStep = () => {
-    return (communityName && communityName.length < 3) ||
-    (communityType && !communityType.text) ||
-    (communityType && communityType.value === 'existingToken' && existingToken && !existingToken.value)
+    return (
+      (isEmpty(communityName) || communityName.length < 3) ||
+      (isEmpty(communityType)) ||
+      (communityType && communityType.value === 'existingToken' && isEmpty(existingToken))
+    )
   }
 
   return (
     <div className='name__wrapper'>
       <div className='name'>
-        <TextInput
-          className='name__field'
-          id='communityName'
-          type='text'
-          autoComplete='off'
-          placeholder='Name your community'
-          value={communityName}
-          maxLength='30'
+        <TextField
           onChange={handleChangeCommunityName}
+          type='search'
+          placeholder='Name your community'
+          classes={{
+            root: 'name__field'
+          }}
+          inputProps={{
+            maxLength: '36',
+            autoComplete: 'off'
+          }}
+          InputProps={{
+            classes: {
+              underline: 'name__field--underline',
+              error: 'name__field--error'
+            }
+          }}
         />
       </div>
       {isMobileOnly && <div className='line' ><hr /></div>}
@@ -35,11 +45,10 @@ const NameCurrencyStep = ({ existingToken, setExistingToken, communityName, hand
       />
       <div className='next'>
         <button
-          className='button button--fuse button--normal'
+          className='button button--normal'
           disabled={validateStep()}
           onClick={setNextStep}
-        >
-          NEXT<FontAwesome name='angle-right' />
+        >Next
         </button>
       </div>
     </div>

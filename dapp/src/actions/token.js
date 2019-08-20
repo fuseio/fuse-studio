@@ -5,6 +5,7 @@ const tokenAction = createEntityAction(entityName)
 const communitiesAction = createEntityAction('communities')
 
 export const CLEAR_TRANSACTION_STATUS = createRequestTypes('CLEAR_TRANSACTION_STATUS')
+export const CLEAR_TRANSACTION = createRequestTypes('CLEAR_TRANSACTION')
 
 export const FETCH_TOKENS = createRequestTypes('FETCH_TOKENS')
 export const FETCH_TOKENS_BY_OWNER = createRequestTypes('FETCH_TOKENS_BY_OWNER')
@@ -55,3 +56,4 @@ export const fetchTokenProgress = (communityAddress) => requestAction(FETCH_TOKE
 export const fetchDeployProgress = (id) => requestAction(FETCH_DEPLOY_PROGRESS, { id })
 
 export const clearTransactionStatus = (transactionStatus) => action(CLEAR_TRANSACTION_STATUS.REQUEST, { transactionStatus })
+export const clearTransaction = () => action(CLEAR_TRANSACTION.REQUEST)

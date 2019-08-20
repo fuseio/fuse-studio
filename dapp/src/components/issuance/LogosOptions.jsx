@@ -1,42 +1,87 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import { isMobileOnly } from 'react-device-detect'
 import classNames from 'classnames'
 import CommunityLogo from 'components/common/CommunityLogo'
 import Carousel from 'components/common/Carousel'
+import UploadImage from 'images/upload_picture.svg'
+import { loadModal, hideModal } from 'actions/ui'
+import { IMAGE_CROPPER_MODAL } from 'constants/uiConstants'
 
-const logos = ['CoinIcon1.svg', 'CoinIcon2.svg', 'CoinIcon3.svg']
+const logos = ['CoinIcon1.svg', 'CoinIcon2.svg']
 
-const LogosOptions = ({ communityType, communityLogo, setCommunityLogo, communitySymbol, nextAttribute, networkType }) => {
+const LogosOptions = ({
+  communityType,
+  communityLogo,
+  setCommunityLogo,
+  communitySymbol,
+  networkType,
+  setImages,
+  images,
+  loadModal
+}) => {
   const handleClick = (logo, key) => {
     setCommunityLogo({ name: logo, icon: logos[key] })
+  }
+
+  const onSelectFile = e => {
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new window.FileReader()
+      reader.addEventListener('load', () => {
+        openImageCropper(reader.result)
+      })
+      reader.readAsDataURL(e.target.files[0])
+    }
+  }
+
+  const openImageCropper = (src) => {
+    loadModal(IMAGE_CROPPER_MODAL, {
+      src,
+      croppedImageUrl: images.croppedImageUrl,
+      setImages
+    })
   }
 
   let items
   if (communityType && communityType.value !== 'existingToken') {
     items = logos.map((logo, key) => {
-      const totalSupplyClass = classNames({
+      const logoClass = classNames({
         'attributes__logos__item': true,
         'attributes__logos__item--chosen': communityLogo && communityLogo.icon ? communityLogo.icon === logo : false
       })
       return (
-        <div className={totalSupplyClass} key={key} onClick={() => handleClick(logo, key)}>
+        <div className={logoClass} key={key} onClick={() => handleClick(logo, key)}>
           <CommunityLogo networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo: logos[key] }} />
         </div>
       )
     })
+
+    items.push((
+      <label htmlFor='logoUpload' className='attributes__logos__item' key={3}>
+        <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
+        <img src={(images && images.croppedImageUrl) || UploadImage} />
+      </label>
+    ))
   } else {
     items = logos.map((logo, key) => {
-      const totalSupplyClass = classNames({
+      const logoClass = classNames({
         'attributes__logos__item': true,
         'attributes__logos__item--chosen': communityLogo && communityLogo.icon ? communityLogo.icon === logo : false
       })
 
       return (
-        <div className={totalSupplyClass} key={key} onClick={() => handleClick(logo, key)}>
+        <div className={logoClass} key={key} onClick={() => handleClick(logo, key)}>
           <CommunityLogo isDaiToken networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo: logos[key] }} />
         </div>
       )
     })
+
+    items.push((
+      <label htmlFor='logoUpload' className='attributes__logos__item' key={3}>
+        <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
+        <img src={(images && images.croppedImageUrl) || UploadImage} />
+      </label>
+    ))
   }
 
   return (
@@ -48,7 +93,7 @@ const LogosOptions = ({ communityType, communityLogo, setCommunityLogo, communit
         {
           isMobileOnly ? (
             <Carousel>
-              { items }
+              {items}
             </Carousel>
           ) : (
             items
@@ -59,4 +104,9 @@ const LogosOptions = ({ communityType, communityLogo, setCommunityLogo, communit
   )
 }
 
-export default LogosOptions
+const mapDispatchToProps = {
+  loadModal,
+  hideModal
+}
+
+export default connect(null, mapDispatchToProps)(LogosOptions)

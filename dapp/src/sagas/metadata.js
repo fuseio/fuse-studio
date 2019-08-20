@@ -7,6 +7,7 @@ import { createProfile } from 'services/api/profiles'
 import * as metadataApi from 'services/api/metadata'
 import * as actions from 'actions/metadata'
 import { FETCH_TOKEN } from 'actions/token'
+import { imageUpload } from 'services/api/images'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -30,7 +31,12 @@ function * fetchMetadata ({ tokenURI }) {
 }
 
 export function * createMetadata ({ metadata }) {
-  const { data, hash } = yield apiCall(metadataApi.createMetadata, { metadata })
+  let imageHash
+  if (metadata && metadata.image) {
+    const { hash } = yield apiCall(imageUpload, { image: metadata.image })
+    imageHash = hash
+  }
+  const { data, hash } = yield apiCall(metadataApi.createMetadata, { metadata: imageHash ? { ...metadata, image: imageHash } : metadata })
   yield put({
     type: actions.CREATE_METADATA.SUCCESS,
     response: {

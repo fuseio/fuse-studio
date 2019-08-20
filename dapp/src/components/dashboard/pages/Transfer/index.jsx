@@ -19,7 +19,8 @@ const Transfer = ({
   transferToken,
   transferSignature,
   transactionStatus,
-  transferSuccess
+  transferSuccess,
+  clearTransactionStatus
 }) => {
   const [transferMessage, setTransferMessage] = useState(false)
 

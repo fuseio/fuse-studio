@@ -5,8 +5,11 @@ import { isMobileOnly } from 'react-device-detect'
 import CommunityLogo from 'components/common/CommunityLogo'
 // import { formatAddress } from 'utils/format'
 import { isDaiToken } from 'constants/existingTokens'
+import isEmpty from 'lodash/isEmpty'
 
-export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) => {
+export default ({ isClosed, networkType, token, metadata }) => {
+  const { name } = token
+  const { image } = metadata
   return (
     <div className='community_header'>
       <div className='community_header__image'>
@@ -14,6 +17,7 @@ export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) 
           isDaiToken={isDaiToken(networkType, token)}
           networkType={networkType}
           token={token}
+          imageUrl={!isEmpty(image) ? `${CONFIG.ipfsProxy.urlBase}/image/${image}` : null}
           isSmall={isMobileOnly}
           metadata={metadata}
         />

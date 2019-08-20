@@ -5,7 +5,7 @@ import { PENDING, SUCCESS, FAILURE } from 'actions/constants'
 import ReactGA from 'services/ga'
 import CommunityLogo from 'components/common/CommunityLogo'
 import TransactionButton from 'components/common/TransactionButton'
-import Message from 'components/common/Message'
+// import Message from 'components/common/Message'
 import contractIcon from 'images/contract.svg'
 import DeployProgress from './DeployProgress'
 
@@ -23,7 +23,7 @@ export default class SummaryStep extends Component {
         return null
       default:
         return (
-          <TransactionButton modifier='fuse' clickHandler={this.props.showPopup} frontText='ISSUE' />
+          <TransactionButton clickHandler={this.props.showPopup} frontText='ISSUE' />
         )
     }
   }
@@ -43,22 +43,22 @@ export default class SummaryStep extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.transactionStatus === SUCCESS && prevProps.transactionStatus !== SUCCESS) {
-      ReactGA.event({
-        category: 'Issuance',
-        action: 'Load',
-        label: 'Issued'
-      })
-    }
+    // if (this.props.transactionStatus === SUCCESS && prevProps.transactionStatus !== SUCCESS) {
+    //   ReactGA.event({
+    //     category: 'Issuance',
+    //     action: 'Load',
+    //     label: 'Issued'
+    //   })
+    // }
 
     if (this.props.transactionStatus === PENDING && (this.props.transactionStatus !== prevProps.transactionStatus)) {
-      // this.props.setNextStep()
-      this.setState({ showProgress: true })
+      this.props.setNextStep()
+      // this.setState({ showProgress: true })
     }
 
-    if (this.props.transactionStatus === FAILURE && (this.props.transactionStatus !== prevProps.transactionStatus)) {
-      this.setState({ showProgress: false })
-    }
+    // if (this.props.transactionStatus === FAILURE && (this.props.transactionStatus !== prevProps.transactionStatus)) {
+    //   this.setState({ showProgress: false })
+    // }
   }
 
   render () {
@@ -75,7 +75,8 @@ export default class SummaryStep extends Component {
       communityType,
       existingToken,
       history,
-      currentDeploy
+      currentDeploy,
+      images
     } = this.props
 
     const { showError, showProgress } = this.state
@@ -89,9 +90,15 @@ export default class SummaryStep extends Component {
         <div className='summary-step__wrapper'>
           <div className='summary-step__inner'>
             <div className='summary-step__logo'>
-              <CommunityLogo isDaiToken={communityType && communityType.value === 'existingToken'} networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo }} />
-              <span className='communityName'>{communityName}</span>
-              <span>coin</span>
+              <CommunityLogo
+                imageUrl={images && images.croppedImageUrl}
+                isDaiToken={communityType && communityType.value === 'existingToken'}
+                networkType={networkType}
+                token={{ symbol: communitySymbol }}
+                metadata={{ communityLogo }}
+              />
+              <span className='communityName'>{communityName} coin</span>
+              {/* <span>coin</span> */}
             </div>
             <hr className='summary-step__line' />
             <div className='summary-step__content'>
@@ -140,27 +147,29 @@ export default class SummaryStep extends Component {
             <span>After published a bridge will allow you to start using your coin on the Fuse-chain!</span>
           </div>
 
-          {
+          {/* {
             showProgress && <DeployProgress
               history={history}
               contracts={contracts}
               currentDeploy={currentDeploy}
             />
-          }
+          } */}
 
-          <Message
+          {/* <Message
             radiusAll
+            issue
             isOpen={createTokenSignature}
             message='Pending'
             isDark
           />
           <Message
             radiusAll
+            issue
             isOpen={transactionStatus === FAILURE && showError}
             message='Something went wrong'
             clickHandler={() => this.setState({ showError: false })}
             subTitle='Try again later'
-          />
+          /> */}
         </div>
         <div className='grid-x align-center summary-step__issue'>
           {this.renderTransactionStatus(this.props.transactionStatus)}

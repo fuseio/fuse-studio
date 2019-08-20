@@ -40,7 +40,7 @@ export default class TransferForm extends PureComponent {
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
-  renderForm = ({ handleSubmit, isValid, setFieldTouched, values, handleChange, errors, touched }) => {
+  renderForm = ({ handleSubmit, isValid, setFieldTouched, values, handleChange, errors, touched, resetForm }) => {
     const {
       closeMessage
     } = this.props
@@ -51,7 +51,10 @@ export default class TransferForm extends PureComponent {
         <Message
           message={'Your money has been sent successfully'}
           isOpen={this.transactionConfirmed()}
-          clickHandler={closeMessage}
+          clickHandler={() => {
+            resetForm()
+            closeMessage()
+          }}
           subTitle=''
         />
         <Message

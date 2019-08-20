@@ -277,6 +277,7 @@
 		background-position: center;
 		background-size: contain;
 		background-repeat: no-repeat;
+		border-radius: 50%;
 	}
 
 	@include element (name) {
@@ -372,30 +373,35 @@
 }
 
 @include block(button) {
-	background: $color-ropsten;
+	// background: $color-ropsten;
+	// color: $color-white;
+	// font-weight: bold;
+	// text-align: center;
+	height: 33px;
+	// border-radius: 20.5px;
+	// border: none;
+
+	// opacity: 0.3;
+	background-color: #4a687b;
+	border-radius: 3px;
 	color: $color-white;
-	font-weight: bold;
-	text-align: center;
-	height: 42px;
-	border-radius: 20.5px;
-	border: none;
 
-	@include modifier(fuse) {
-		color: $color-primary-dark;
-		background: $color-fuse_gradient !important;
+	// @include modifier(fuse) {
+	// 	color: $color-primary-dark;
+	// 	background: $color-fuse_gradient !important;
 
-		&:hover {
-			background: $color-fuse !important;
-		}
+	// 	&:hover {
+	// 		background: $color-fuse !important;
+	// 	}
 
-		&:disabled,
-		&[disabled] {
-			opacity: 0.3;
-			background: $color-fuse_gradient !important;
-			color: $color-primary-dark !important;
-			cursor: not-allowed;
-		}
-	}
+	// 	&:disabled,
+	// 	&[disabled] {
+	// 		opacity: 0.3;
+	// 		background: rgba(226, 226, 226, 0.49) !important;
+	// 		color: $color-white !important;
+	// 		cursor: not-allowed;
+	// 	}
+	// }
 
 	.fa {
 		margin-left: 4px;
@@ -419,13 +425,13 @@
 
 	&:hover {
 		cursor: pointer;
-		background: #2eba72;
+		background-color: #25435a;
 	}
 
 	&:disabled,
 		&[disabled] {
 			opacity: 0.3;
-			background-color: #34d080;
+			background-color: #4a687b;
 			color: $color-white;
 			cursor: not-allowed;
 		}
@@ -554,7 +560,6 @@
 @include block(congratulation) {
 	@include xy-grid(vertical, false);
 	@include flex-align(center, middle);
-	position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
@@ -565,42 +570,79 @@
 	border-radius: 10px;
 	color: $color-primary-dark;
 	text-align: center;
-	padding: 20px 70px;
+	width: 520px;
+	margin: auto;
 
 	@include breakpoint(small down) {
 		padding: 20px 30px;
 	}
 
 	@include element(title) {
-		font-size: 20px;
+	  font-size: 30px;
 		font-weight: bold;
-		line-height: 1.25;
+		color: #25435a;
+		line-height: 2;
 	}
 
 	@include element(sub-title) {
-		font-size: 20px;
+  	font-size: 26px;
+  	font-weight: 500;
+  	text-align: center;
+  	color: #4a687b;
+	}
+
+	@include element(boxImg) {
+		margin-top: 1em;
+	}
+
+	@include element(fuse-text) {
+		font-size: 21px;
 		font-weight: 500;
-		line-height: 1.65;
+		line-height: 1.43;
+		text-align: center;
+		color: #7a7a7a;
+		margin-top: 20px;
 	}
 
 	@include element(what) {
-		font-size: 16px;
+		font-size: 1.2em;
     line-height: 1.25;
-		margin: 1em 0;
+		color: #7a7a7a;
+		text-align: center;
+	}
+	
+	@include element(what-small) {
+		text-decoration: underline;
+    margin: 2em 0;
+  	font-size: 16px;
+  	font-weight: bold;
+  	text-align: center;
+  	color: #7a7a7a;
 	}
 
 	@include element(text) {
-		font-size: 13px;
-    line-height: 1.35;
+	  font-size: 0.9em;
+		line-height: 1.56;
+		text-align: center;
+		color: #7a7a7a;
 	}
 
 	@include element(btn) {
 		margin-top: 1.5em;
 		> button {
 			width: auto;
-			font-size: 14px;
-			text-transform: uppercase;
+			border-radius: 19px;
+			color: #25435a;
+			font-size: 14.3px;
+			font-weight: 500;
+			border-radius: 19px;
+			color: #25435a;
 			padding: 0 1em;
+			background: linear-gradient(96deg, #97fba2, #fae83e);
+
+			&:hover {
+				background: #fae83e;
+			}
 		}
 	}
 }
@@ -628,6 +670,27 @@
 
 	@include modifier(dark) {
 		background-color: rgba(5, 40, 62, 0.97);
+	}
+
+  @include element(issue) {
+		width: 411px;
+    height: 291px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 11px 0 rgba(0, 0, 0, 0.25);
+		margin: auto;
+		position: fixed;
+
+		@include modifier(white) {
+			background-color: $color-white;
+		}
+
+		@include modifier(dark) {
+			background-color: rgba(5, 40, 62, 0.95);
+		}
+
+		@include block(error_image) {
+			margin-bottom: 16px;
+		}
 	}
 
   @include element(title) {
@@ -686,7 +749,7 @@
 		@include element(img) {
 			width: 40px;
 			height: 40px;
-			margin-top: 15px;
+			margin: 15px auto auto;
 
 			> img {
 				background-position: center;

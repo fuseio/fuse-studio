@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import { hideModal } from 'actions/ui'
 import LoginModal from 'components/common/LoginModal'
+import ImageCropperModal from 'components/common/ImageCropper'
 import WrongNetworkModal from 'components/common/WrongNetworkModal'
 import LoadingModal from 'components/common/LoadingModal'
 import ErrorBoundary from 'components/common/ErrorBoundary'
@@ -30,7 +31,8 @@ import {
   QR_MODAL,
   ADD_USER_MODAL,
   IMPORT_EXISTING_ENTITY,
-  ENTITY_ADDED_MODAL
+  ENTITY_ADDED_MODAL,
+  IMAGE_CROPPER_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -51,7 +53,8 @@ const MODAL_COMPONENTS = {
   [QR_MODAL]: QrModal,
   [ADD_USER_MODAL]: AddUserModal,
   [IMPORT_EXISTING_ENTITY]: ImportExistingEntity,
-  [ENTITY_ADDED_MODAL]: EntityAddedModal
+  [ENTITY_ADDED_MODAL]: EntityAddedModal,
+  [IMAGE_CROPPER_MODAL]: ImageCropperModal
 }
 
 const ModalContainer = (props) => {
