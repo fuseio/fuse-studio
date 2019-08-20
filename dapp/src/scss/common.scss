@@ -762,7 +762,7 @@
 		@include element(img) {
 			width: 40px;
 			height: 40px;
-			margin: 15px auto auto;
+			margin: 15px auto 0;
 
 			> img {
 				background-position: center;

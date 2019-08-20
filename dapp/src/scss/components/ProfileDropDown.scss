@@ -47,4 +47,54 @@
       margin-bottom: 10px;
     }
   }
+
+  @include element(card) {
+    padding: .5em 0;
+    &:hover {
+      cursor: pointer;
+      > .profile__card__arrow {
+        display: inline-block;
+      }
+    }
+    @include element(logo) {
+      margin-right: 0.5em;
+    }
+
+    @include element(content) {
+      height: 34px;
+      font-size: 15px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.13;
+      letter-spacing: normal;
+      color: #7a7a7a;
+    }
+
+    @include element(title) {
+    }
+
+    @include element(arrow) {
+      display: none;
+    }
+
+    @include element(balance) {
+
+      > span {
+        &:nth-child(1) {
+          font-weight: normal;
+          color: #aeafae;        
+        }
+
+        &:nth-child(2) {
+          font-weight: normal;     
+        } 
+
+        &:nth-child(3) {
+          font-size: 9px;
+          font-weight: normal;
+        } 
+      }
+    }
+  }
 }
