@@ -15,6 +15,8 @@ RUN cd contracts/entities && npm install && npm run build
 
 RUN cd contracts/token-factory  && npm install && npm run build
 
+RUN cd packages/roles && npm install
+
 RUN cd dapp && npm install && npm run build && cp dist/* ../server/public
 
 RUN cd server && npm install
