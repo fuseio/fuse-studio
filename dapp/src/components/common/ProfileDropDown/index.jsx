@@ -1,5 +1,5 @@
-import React, { Component, useEffect } from 'react'
-import { connect } from 'react-redux'
+import React, { useEffect } from 'react'
+import { connect, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
 import { formatAddress } from 'utils/format'
 import CopyToClipboard from 'components/common/CopyToClipboard'
@@ -12,20 +12,22 @@ import ReactGA from 'services/ga'
 import { getBalances } from 'selectors/accounts'
 import { BigNumber } from 'bignumber.js'
 import ArrowTiny from 'images/arrow_tiny.svg'
+import { getNetworkSide } from 'selectors/network'
 
 const ProfileCard = ({
-  accountAddress,
   entity,
   networkType,
   metadata,
   balance,
   balanceOfToken,
-  showDashboard
+  showDashboard,
+  accountAddress
 }) => {
-  const { token: { name, symbol, address } } = entity
+  const { token: { name, symbol }, community: { homeTokenAddress, foreignTokenAddress } } = entity
 
   useEffect(() => {
-    balanceOfToken(address, accountAddress, { bridgeType: networkType === 'fuse' ? 'home' : 'foreign' })
+    balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+    balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
   }, [])
 
   return (
@@ -58,39 +60,40 @@ const ProfileCard = ({
 const InnerCommunities = ({
   fetchBalances,
   balances,
-  balanceOfToken,
   accountAddress,
   communities,
   networkType,
   metadata,
   showDashboard,
+  balanceOfToken,
   title
 }) => {
   if (isEmpty(communities)) return null
 
   useEffect(() => {
-    if (communities) {
+    if (communities && accountAddress) {
       fetchBalances(communities.map(({ token }) => token), accountAddress)
     }
-  }, [])
+    return () => { }
+  }, [accountAddress, communities])
 
+  const bridgeType = useSelector(getNetworkSide)
   return (
     <div className='profile__communities grid-y'>
       <span>{title}</span>
       <div className='grid-y grid-margin-y grid-margin-x'>
         {communities && communities.map((entity, index) => {
-          const { token: { address } } = entity
+          const { community: { homeTokenAddress, foreignTokenAddress } } = entity
+          const balance = new BigNumber(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress]).div(1e18).toFormat(2, 1)
           return (
             <ProfileCard
               key={index}
-              balance={balances[address]
-                ? new BigNumber(balances[address]).div(1e18).toFormat(2, 1)
-                : 0}
+              balance={balance || 0}
+              balanceOfToken={balanceOfToken}
               entity={entity}
               metadata={metadata}
               showDashboard={showDashboard}
               accountAddress={accountAddress}
-              balanceOfToken={balanceOfToken}
               networkType={networkType}
             />
           )
@@ -101,17 +104,39 @@ const InnerCommunities = ({
   )
 }
 
-class ProfileDropDown extends Component {
-  componentDidUpdate (prevProps) {
-    const { accountAddress } = this.props
-    if (accountAddress !== prevProps.accountAddress) {
-      const { fetchCommunities, accountAddress } = this.props
+const ProfileDropDown = ({
+  metadata,
+  balances,
+  networkType,
+  accountAddress,
+  communitiesKeys,
+  communities,
+  history,
+  fetchCommunities,
+  balanceOfToken
+}) => {
+  useEffect(() => {
+    if (accountAddress) {
       fetchCommunities(accountAddress)
     }
+    return () => { }
+  }, [accountAddress])
+
+  let filteredCommunities = []
+  if (communitiesKeys) {
+    filteredCommunities = communitiesKeys
+      .map((communityAddress) => communities[communityAddress])
+      .filter(obj => !!obj)
+  }
+  let communitiesIOwn
+  let communitiesIPartOf
+  if (communities && typeof filteredCommunities.filter === 'function') {
+    communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token)
+    communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token)
   }
 
-  showDashboard = (communityAddress) => {
-    this.props.history.push(`/view/community/${communityAddress}`)
+  const showDashboard = (communityAddress) => {
+    history.push(`/view/community/${communityAddress}`)
     ReactGA.event({
       category: 'Dashboard',
       action: 'Click',
@@ -119,68 +144,43 @@ class ProfileDropDown extends Component {
     })
   }
 
-  render () {
-    const {
-      accountAddress,
-      communities,
-      metadata,
-      networkType,
-      communitiesKeys,
-      balanceOfToken,
-      balances,
-      fetchBalances
-    } = this.props
-
-    let filteredCommunities = []
-    if (communitiesKeys) {
-      filteredCommunities = communitiesKeys
-        .map((communityAddress) => communities[communityAddress])
-        .filter(obj => !!obj)
-    }
-    let communitiesIOwn
-    let communitiesIPartOf
-    if (communities && typeof filteredCommunities.filter === 'function') {
-      communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token)
-      communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token)
-    }
-    return (
-      <div className='profile grid-y'>
-        <div className='profile__account grid-x cell small-8 align-middle align-center'>
-          <div className='profile__account__avatar cell small-24'>
-            <img src={Avatar} />
-          </div>
-          {accountAddress && <span className='cell small-24 profile__account__address'>
-            {formatAddress(accountAddress)}
-            <CopyToClipboard text={accountAddress}>
-              <FontAwesome name='clone' />
-            </CopyToClipboard>
-          </span>}
+  return (
+    <div className='profile grid-y'>
+      <div className='profile__account grid-x cell small-8 align-middle align-center'>
+        <div className='profile__account__avatar cell small-24'>
+          <img src={Avatar} />
         </div>
-        <InnerCommunities
-          showDashboard={this.showDashboard}
-          communities={communitiesIOwn}
-          networkType={networkType}
-          accountAddress={accountAddress}
-          metadata={metadata}
-          balanceOfToken={balanceOfToken}
-          balances={balances}
-          fetchBalances={fetchBalances}
-          title='Community I own'
-        />
-        <InnerCommunities
-          showDashboard={this.showDashboard}
-          title='Community I am part'
-          communities={communitiesIPartOf}
-          networkType={networkType}
-          accountAddress={accountAddress}
-          balanceOfToken={balanceOfToken}
-          metadata={metadata}
-          fetchBalances={fetchBalances}
-          balances={balances}
-        />
+        {accountAddress && <span className='cell small-24 profile__account__address'>
+          {formatAddress(accountAddress)}
+          <CopyToClipboard text={accountAddress}>
+            <FontAwesome name='clone' />
+          </CopyToClipboard>
+        </span>}
       </div>
-    )
-  }
+      <InnerCommunities
+        showDashboard={showDashboard}
+        communities={communitiesIOwn}
+        networkType={networkType}
+        accountAddress={accountAddress}
+        balanceOfToken={balanceOfToken}
+        metadata={metadata}
+        balances={balances}
+        fetchBalances={fetchBalances}
+        title='Community I own'
+      />
+      <InnerCommunities
+        showDashboard={showDashboard}
+        title='Community I am part'
+        communities={communitiesIPartOf}
+        networkType={networkType}
+        accountAddress={accountAddress}
+        balanceOfToken={balanceOfToken}
+        metadata={metadata}
+        fetchBalances={fetchBalances}
+        balances={balances}
+      />
+    </div>
+  )
 }
 
 const mapStateToProps = (state) => ({
