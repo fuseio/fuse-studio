@@ -23,8 +23,10 @@ import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
 import sortBy from 'lodash/sortBy'
 import Avatar from 'images/avatar.svg'
+import { Link } from 'react-router-dom'
 
 const Users = ({
+  currentUrl,
   users,
   isAdmin,
   history,
@@ -232,6 +234,7 @@ const Users = ({
                     hasAdminRole && isApproved && (
                       <ul className='more__options'>
                         <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                        <Link className='more__options__item' to={`${currentUrl}/transfer/${account}`}>Transfer tokens to user</Link>
                         <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
                       </ul>
                     )
@@ -240,6 +243,7 @@ const Users = ({
                     !hasAdminRole && isApproved && (
                       <ul className='more__options'>
                         <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                        <Link className='more__options__item' to={`${currentUrl}/transfer/${account}`}>Transfer tokens to user</Link>
                         <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
                       </ul>
                     )
@@ -355,7 +359,8 @@ const Users = ({
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, { match: { url: currentUrl } }) => ({
+  currentUrl,
   network: state.network,
   users: getUsersEntities(state),
   accountAddress: getAccountAddress(state),

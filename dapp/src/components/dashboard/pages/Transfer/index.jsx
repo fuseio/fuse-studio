@@ -5,12 +5,14 @@ import { formatWei } from 'utils/format'
 import TransferForm from 'components/dashboard/components/TransferForm'
 import { transferToken, clearTransactionStatus } from 'actions/token'
 import { getBalances } from 'selectors/accounts'
-// import { getTransaction } from 'selectors/transaction'
 import capitalize from 'lodash/capitalize'
 import Message from 'components/common/Message'
 import { FAILURE, SUCCESS } from 'actions/constants'
+import { withRouter } from 'react-router-dom'
 
 const Transfer = ({
+  sendTo,
+  match,
   error,
   token,
   balances,
@@ -61,6 +63,7 @@ const Transfer = ({
         </div>
         <TransferForm
           error={error}
+          sendTo={sendTo}
           balance={balance ? formatWei(balance, 0) : 0}
           transferMessage={transferMessage}
           transactionStatus={transactionStatus}
@@ -75,8 +78,9 @@ const Transfer = ({
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
+  sendTo: match.params.sendTo,
   balances: getBalances(state),
   networkType: state.network.networkType
 })
@@ -86,4 +90,4 @@ const mapDispatchToProps = {
   clearTransactionStatus
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Transfer)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Transfer))

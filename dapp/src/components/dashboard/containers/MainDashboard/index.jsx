@@ -131,7 +131,7 @@ class DashboardLayout extends PureComponent {
                 <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/transfer`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route path={`${match.url}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 {
                   isAdmin && (
                     <Fragment>

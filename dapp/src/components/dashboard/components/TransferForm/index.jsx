@@ -9,10 +9,10 @@ export default class TransferForm extends PureComponent {
   constructor (props) {
     super(props)
 
-    const { balance } = this.props
+    const { balance, sendTo } = this.props
 
     this.initialValues = {
-      to: '',
+      to: sendTo || '',
       amount: ''
     }
 
@@ -140,6 +140,7 @@ export default class TransferForm extends PureComponent {
         render={this.renderForm}
         onSubmit={this.onSubmit}
         isInitialValid={false}
+        enableReinitialize
       />
     )
   }
