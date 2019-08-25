@@ -37,7 +37,7 @@ const MyTable = ({
     // setPageSize,
     // canPreviousPage,
     // canNextPage,
-    pages
+    pageOptions
   } = useTable(
     {
       columns,
@@ -57,13 +57,13 @@ const MyTable = ({
           <FontAwesome name='search' className='table__actions__search__icon' />
           <input type='text' onChange={(e) => addActionProps.onChange(e.target.value)} placeholder={addActionProps.placeholder} className='table__actions__search__input' />
         </div>
-        <button
+        {/* <button
           className='table__actions__button'
           onClick={addActionProps.action}
         >
           <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
           {addActionProps.text}
-        </button>
+        </button> */}
       </div>
       <div {...getTableProps({ className: 'table' })}>
         {headerGroups.map((headerGroup, index) => <HeaderRow key={index} headerGroup={headerGroup} />)}
@@ -90,7 +90,7 @@ const MyTable = ({
             }}
           >
             {
-              pages.map((page, index) => <option key={index} value={index + 1}>{index + 1}</option>)
+              pageOptions.map((page, index) => <option key={index} value={index + 1}>{index + 1}</option>)
             }
           </select>
         </div>
