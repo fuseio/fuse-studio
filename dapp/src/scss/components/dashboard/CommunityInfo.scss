@@ -9,6 +9,10 @@ $csspieheight: 100px;
     font-size: 1em;
     color: #25435a;
     margin-bottom: 2em;
+
+    @include breakpoint(medium down) {
+      margin-bottom: 1em;      
+    }
   }
 
   @include element(wrapper) {
@@ -18,21 +22,48 @@ $csspieheight: 100px;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
     background-color: #ffffff;
     @include xy-grid(horizontal, false);
+
+    @include breakpoint(medium up) {
+      min-height: 271px;
+    }
+
+    @include breakpoint(small down) {
+      @include xy-grid(vertical, false);      
+    }
   }
 
   @include element(general) {
     @include breakpoint(medium up) {
       flex-basis: 55%;
-      &:after {
-        content: "";
-        background-color: #dadada;
-        position: absolute;
-        width: 1px;
-        height: 80%;
-        top: 20px;
-        left: 50%;
-        display: block;
+    }
+  }
+
+  @include element(line) {
+    border: solid 1px #dadada;
+    
+    @include breakpoint(medium up) {
+      margin: 0 1.5em;
+      width: 1px;			
+    }
+
+    @include breakpoint(medium down) {
+      height: 2px;
+      margin: 1.5em 0;
+    }
+  }
+
+  @include element(content) {
+    
+    @include breakpoint(medium up) {
+      @include xy-grid();
+
+      > div {
+        margin-top: 2em;
       }
+    }
+
+    @include breakpoint(medium down) {
+      @include xy-grid(vertical);      
     }
   }
 
@@ -73,19 +104,22 @@ $csspieheight: 100px;
     @include block(pie) {
 
       @include element(wrapper) {
-        // position: relative;
-        margin-bottom: auto;
         position: absolute;
         top: 0;
         left: 40%;
-      }
-      // margin-bottom: 20px;
-      // width: $csspieheight;
-      // height: $csspieheight;
-      // background: #abc3d2;
-      // border-radius: 50%;
 
-      //add color to pie pieces
+        @include modifier(container) {
+          @include breakpoint(medium down) {
+            min-width: 100%;
+            min-height: 120px;
+          }
+        }
+
+        @include breakpoint(medium down) {
+          
+        }
+      }
+
       &:nth-of-type(1):before,
       &:nth-of-type(1):after {
         // background-color: #6dbcd6;
@@ -148,9 +182,24 @@ $csspieheight: 100px;
 }
 
 @include block(title_value) {
-  height: 40px;
   font-size: 12px;
   color: #7a7a7a;
+  
+  @include breakpoint(medium up) {
+    @include xy-grid(vertical);
+    height: 50px;
+    flex-basis: 50%;
+  }
+
+  @include breakpoint(medium down) {
+    @include xy-grid(vertical, false);      
+    height: 40px;
+    margin-bottom: 1.5em;
+  }
+
+  @include breakpoint(small down) {
+    
+  }
 
   @include element(title) {
     font-weight: 500;

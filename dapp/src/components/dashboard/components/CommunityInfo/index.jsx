@@ -4,26 +4,23 @@ import FontAwesome from 'react-fontawesome'
 import { formatWei, formatAddress } from 'utils/format'
 import { BigNumber } from 'bignumber.js'
 
-const TitleValue = ({ title, symbol, tokenType, children }) => {
-  return (
-    <div className='title_value grid-y align-justify cell small-12' style={{ height: '50px' }}>
-      <span className='title_value__title'>{title}</span>
-      {
-        children || <p className='title_value__value'><strong>{symbol}</strong>{tokenType}</p>
-      }
-    </div>
-  )
-}
-
 const percentOnSide = (total, homeTokenBalance, foreignTokenBalance) => {
-  const percentOnHome = homeTokenBalance * 100 / total
-  const percentOnForeign = foreignTokenBalance * 100 / total
+  const calc = (value) => value * 100 / total
+  const percentOnHome = calc(homeTokenBalance)
+  const percentOnForeign = calc(foreignTokenBalance)
 
   return {
     percentOnHome,
     percentOnForeign
   }
 }
+
+const TitleValue = ({ title, symbol, tokenType, children }) => (
+  <div className='title_value grid-y align-justify'>
+    <span className='title_value__title'>{title}</span>
+    {children || <p className='title_value__value'><strong>{symbol}</strong>{tokenType}</p>}
+  </div>
+)
 
 const CommunityInfo = ({
   token,
@@ -52,13 +49,11 @@ const CommunityInfo = ({
     <div className='community_info__wrapper'>
       <div className='community_info__general'>
         <h3 className='community_info__title'>General information</h3>
-        <div className='grid-x grid-margin-y grid-margin-x'>
-          <div className='cell grid-x' style={{ marginBottom: '40px' }}>
-            <TitleValue title='Currency' symbol={symbol} tokenType={`(${type})`} />
-            <TitleValue title='Total entities'>
-              <span>0</span>
-            </TitleValue>
-          </div>
+        <div className='community_info__content'>
+          <TitleValue title='Currency' symbol={symbol} tokenType={`(${type})`} />
+          <TitleValue title='Total entities'>
+            <span>0</span>
+          </TitleValue>
           <TitleValue title='Currency address'>
             <div className='grid-x'>
               <span>{formatAddress(address)}</span>
@@ -79,10 +74,13 @@ const CommunityInfo = ({
           </TitleValue>
         </div>
       </div>
+      <div className='community_info__line' />
       <div className='community_info__supply_pie'>
-        <div className='pie__wrapper'>
-          <div className='pie' data-start='0' data-value={Math.round(percentOnHome) || 0} />
-          <div className='pie big' data-start={Math.round(percentOnHome) || 0} data-value={Math.round(percentOnForeign) || 0} />
+        <div className='pie__wrapper--container'>
+          <div className='pie__wrapper'>
+            <div className='pie' data-start='0' data-value={Math.round(percentOnHome) || 0} />
+            <div className='pie big' data-start={Math.round(percentOnHome) || 0} data-value={Math.round(percentOnForeign) || 0} />
+          </div>
         </div>
         <div className='grid-y total__sides'>
           <h6>

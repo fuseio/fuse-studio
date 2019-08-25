@@ -222,6 +222,16 @@ function * watchTokenChanges ({ response }) {
   yield put(actions.fetchToken(response.tokenAddress))
 }
 
+function * watchCommunityFetch ({ response }) {
+  const { entities } = response
+  for (const communityAddress in entities) {
+    if (entities.hasOwnProperty(communityAddress)) {
+      const { foreignTokenAddress } = entities[communityAddress]
+      yield put(actions.fetchToken(foreignTokenAddress))
+    }
+  }
+}
+
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(actions.TRANSFER_TOKEN, transferToken, 1),
@@ -232,6 +242,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN_LIST, fetchTokenList, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
+    takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchCommunityFetch),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),

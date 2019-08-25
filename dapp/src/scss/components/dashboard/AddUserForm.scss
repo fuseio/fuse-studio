@@ -8,7 +8,6 @@
   }
 
   @include element(wrapper) {
-    // @include xy-grid();
   }
 
   @include element(modal) {
@@ -255,7 +254,6 @@
     cursor: pointer;
     width: 114px;
     padding: 5px 10px;
-    // height: 23px;
     border-radius: 4px;
     box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.2);
     background-color: #f9f9f9;
@@ -266,7 +264,6 @@
       color: #25435a;
       text-overflow: ellipsis;
       overflow: hidden; 
-      // width: 100px;
       white-space: nowrap;
     }
   }

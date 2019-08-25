@@ -72,15 +72,25 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
     style: {
       borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
     },
-    selectedIcon: MintBurnYellowIcon
-  },
-  {
-    name: 'Settings',
-    path: '/settings',
-    url: (match) => `${match}/settings`,
-    icon: SettingsIcon,
-    selectedIcon: SettingsIcon
+    selectedIcon: MintBurnYellowIcon,
+    CustomElement: ({ children }) => {
+      return (
+        <div>
+          <span className='admin-title'>Admin tools</span>
+          {children}
+        </div>
+      )
+    }
   }
+  // TODO - Settings page
+  // ,
+  // {
+  //   name: 'Settings',
+  //   path: '/settings',
+  //   url: (match) => `${match}/settings`,
+  //   icon: SettingsIcon,
+  //   selectedIcon: SettingsIcon
+  // }
 ]) : ([
   {
     name: 'community',
@@ -147,19 +157,36 @@ export default ({ communityName, match, isAdmin, isGradientLogo }) => {
           <Logo isGradientLogo={isGradientLogo} />
         </Link>
       </div>
-      {sideBarItems.map(({ icon, name, url, style, path, selectedIcon }) => {
-        return (
-          <Link
-            key={name}
-            style={style}
-            to={url(match)}
-            onClick={() => setPath(path)}
-            className={classNames('item item--hover', { 'item--home': currentPath === path })}
-          >
-            <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
-            <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
-          </Link>
-        )
+      {sideBarItems.map(({ icon, name, url, style, path, selectedIcon, CustomElement }) => {
+        if (CustomElement) {
+          return (
+            <CustomElement style={style}>
+              <Link
+                key={name}
+                
+                to={url(match)}
+                onClick={() => setPath(path)}
+                className={classNames('item item--hover', { 'item--home': currentPath === path })}
+              >
+                <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
+                <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
+              </Link>
+            </CustomElement>
+          )
+        } else {
+          return (
+            <Link
+              key={name}
+              style={style}
+              to={url(match)}
+              onClick={() => setPath(path)}
+              className={classNames('item item--hover', { 'item--home': currentPath === path })}
+            >
+              <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
+              <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
+            </Link>
+          )
+        }
       })}
     </aside>
   )
