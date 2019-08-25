@@ -1,5 +1,9 @@
 @include block (generic-modal) {
 
+  @include breakpoint(medium down) {
+    width: 90%;
+  }
+
   @include element(image) {
 
   }

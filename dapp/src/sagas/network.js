@@ -83,6 +83,7 @@ function * getNetworkType () {
           networkType
         }
       })
+      throw new Error('This network is not supported')
     }
   } catch (error) {
     yield put(loadModal(WRONG_NETWORK_MODAL))
