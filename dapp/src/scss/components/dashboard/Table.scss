@@ -1,6 +1,4 @@
 @include block(table) {
-  overflow-x: scroll;
-  overflow-y: hidden;
   height: 318px;
 
   @include element(wrapper) {
@@ -72,7 +70,6 @@
   }
 
   @include element(body) {
-    overflow-y: scroll;
     height: 283px;
 
     @include element(row) {
