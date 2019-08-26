@@ -47,24 +47,6 @@ const TRANSACTION_HASH_IMPORTED = 'Node error: {"code":-32010,"message":"Transac
 const TRANSACTION_HASH_TOO_LOW = 'Node error: {"code":-32010,"message":"Transaction nonce is too low. Try incrementing the nonce."}'
 const TRANSACTION_TIMEOUT = 'Error: Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
 
-const calculateHash = async (web3, method, methodParams) => {
-  const data = method.encodeABI()
-  const { gasPrice, from, gas, nonce, value } = methodParams
-  console.log({ gasPrice, from, gas, nonce, value })
-
-  const transaction = await web3.eth.signTransaction({
-    gasPrice,
-    from,
-    gas,
-    nonce,
-    value,
-    to: method.contract.address,
-    data
-  }, from)
-  console.log(transaction)
-  return transaction.tx.hash
-}
-
 const send = async ({ web3, bridgeType, address }, method, options) => {
   const doSend = async (retry) => {
     let transactionHash
@@ -91,12 +73,10 @@ const send = async ({ web3, bridgeType, address }, method, options) => {
 
       const errorHandlers = {
         [TRANSACTION_HASH_IMPORTED]: async () => {
-          if (!transactionHash) {
-            transactionHash = await calculateHash(web3, method, methodParams)
-            console.log({ transactionHash })
+          if (transactionHash) {
+            const receipt = await web3.eth.getTransactionReceipt(transactionHash)
+            return { receipt }
           }
-          const receipt = await web3.eth.getTransactionReceipt(transactionHash)
-          return { receipt }
         },
         [TRANSACTION_HASH_TOO_LOW]: updateNonce,
         [TRANSACTION_TIMEOUT]: updateNonce
