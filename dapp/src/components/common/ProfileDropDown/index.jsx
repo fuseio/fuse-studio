@@ -3,16 +3,74 @@ import { connect, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
 import { formatAddress } from 'utils/format'
 import CopyToClipboard from 'components/common/CopyToClipboard'
-import { fetchCommunities, fetchBalances, balanceOfToken } from 'actions/accounts'
+import { fetchCommunities, fetchBalances, balanceOfToken, balanceOfNative } from 'actions/accounts'
 import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
 import { withRouter } from 'react-router-dom'
 import ReactGA from 'services/ga'
-import { getBalances } from 'selectors/accounts'
+import { getBalances, getAccount } from 'selectors/accounts'
 import { BigNumber } from 'bignumber.js'
 import ArrowTiny from 'images/arrow_tiny.svg'
 import { getNetworkSide } from 'selectors/network'
+import MainnetLogo from 'images/Mainnet.svg'
+import FuseLogo from 'images/fuseLogo.svg'
+
+const mapStateToNativeBalanceProps = (state) => ({
+  account: getAccount(state)
+})
+
+const mapDispatchToNativeBalanceProps = {
+  balanceOfNative
+}
+
+const NativeBalance = connect(mapStateToNativeBalanceProps, mapDispatchToNativeBalanceProps)(({
+  accountAddress,
+  balanceOfNative,
+  account
+}) => {
+  useEffect(() => {
+    if (accountAddress) {
+      balanceOfNative(accountAddress, { bridgeType: 'home' })
+      balanceOfNative(accountAddress, { bridgeType: 'foreign' })
+    }
+  }, [accountAddress])
+
+  const homeBalance = new BigNumber(account && account.home).div(1e18).toFormat(2, 1)
+  const foreignBalance = new BigNumber(account && account.foreign).div(1e18).toFormat(2, 1)
+
+  return (
+    <div className='profile__communities grid-y'>
+      <span>My balance</span>
+      <div className='profile__card grid-x cell align-middle'>
+        <div className='profile__card__logo'>
+          <img src={MainnetLogo} />
+        </div>
+        <div className='cell auto grid-y profile__card__content'>
+          <h5 className='profile__card__title'>Ethereum Network</h5>
+          <p className='profile__card__balance'>
+            <span>Balance:&nbsp;</span>
+            <span>{foreignBalance}&nbsp;</span>
+            <span>ETH</span>
+          </p>
+        </div>
+      </div>
+      <div className='profile__card grid-x cell align-middle'>
+        <div className='profile__card__logo'>
+          <img src={FuseLogo} />
+        </div>
+        <div className='cell auto grid-y profile__card__content'>
+          <h5 className='profile__card__title'>Fuse Network</h5>
+          <p className='profile__card__balance'>
+            <span>Balance:&nbsp;</span>
+            <span>{homeBalance}&nbsp;</span>
+            <span>FUSE</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+})
 
 const ProfileCard = ({
   entity,
@@ -157,6 +215,10 @@ const ProfileDropDown = ({
           </CopyToClipboard>
         </span>}
       </div>
+      <NativeBalance
+        balance={0}
+        accountAddress={accountAddress}
+      />
       <InnerCommunities
         showDashboard={showDashboard}
         communities={communitiesIOwn}

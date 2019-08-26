@@ -13,27 +13,28 @@ import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
 import { createEntitiesMetadata } from 'sagas/metadata'
 
 function * balanceOfToken ({ tokenAddress, accountAddress, options }) {
-  const basicTokenContract = getContract({ abiName: 'BasicToken', address: tokenAddress, options })
-  const balanceOf = yield call(basicTokenContract.methods.balanceOf(accountAddress).call)
+  if (accountAddress && tokenAddress) {
+    const basicTokenContract = getContract({ abiName: 'BasicToken', address: tokenAddress, options })
+    const balanceOf = yield call(basicTokenContract.methods.balanceOf(accountAddress).call)
 
-  yield put({ type: actions.BALANCE_OF_TOKEN.SUCCESS,
-    tokenAddress,
-    accountAddress,
-    response: {
-      balanceOf
-    } }
-  )
+    yield put({ type: actions.BALANCE_OF_TOKEN.SUCCESS,
+      tokenAddress,
+      accountAddress,
+      response: {
+        balanceOf
+      } }
+    )
+  }
 }
 
-function * balanceOfNative ({ accountAddress }) {
-  const web3 = yield getWeb3()
+function * balanceOfNative ({ accountAddress, options }) {
+  const web3 = yield getWeb3(options)
   const balanceOfNative = yield call(web3.eth.getBalance, accountAddress)
 
   yield put({ type: actions.BALANCE_OF_NATIVE.SUCCESS,
     accountAddress,
-    response: {
-      balanceOfNative
-    } })
+    response: options ? { [`${options.bridgeType}`]: balanceOfNative } : { balanceOfNative }
+  })
 }
 
 function * balanceOfFuse ({ accountAddress }) {
@@ -107,7 +108,7 @@ function * watchBalanceOfToken ({ response }) {
 
 function * watchBalanceOfTokenInBothSides ({ response }) {
   const accountAddress = yield select(getAccountAddress)
-  if (response && response.entities) {
+  if (response && response.entities && accountAddress) {
     const { entities } = response
     for (const communityAddress in entities) {
       if (entities.hasOwnProperty(communityAddress)) {

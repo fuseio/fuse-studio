@@ -15,7 +15,7 @@ export const SIGN_IN = createRequestTypes('SIGN_IN')
 export const CREATE_3BOX_PROFILE = createRequestTypes('CREATE_3BOX_PROFILE')
 
 export const balanceOfToken = (tokenAddress, accountAddress, options) => action(BALANCE_OF_TOKEN.REQUEST, { tokenAddress, accountAddress, options })
-export const balanceOfNative = (accountAddress) => action(BALANCE_OF_NATIVE.REQUEST, { accountAddress })
+export const balanceOfNative = (accountAddress, options) => action(BALANCE_OF_NATIVE.REQUEST, { accountAddress, options })
 export const balanceOfFuse = (accountAddress) => action(BALANCE_OF_FUSE.REQUEST, { accountAddress })
 
 export const fetchBalances = (tokens, accountAddress) => action(FETCH_BALANCES.REQUEST, { accountAddress, tokens })
