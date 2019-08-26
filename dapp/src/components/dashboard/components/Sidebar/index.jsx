@@ -10,7 +10,7 @@ import TransferIcon from 'images/transfer.svg'
 import TransferYellowIcon from 'images/transfer-selected.svg'
 import MintBurnYellowIcon from 'images/mint-burn-selected.svg'
 import MintBurnIcon from 'images/mint-burn.svg'
-import SettingsIcon from 'images/settings.svg'
+// import SettingsIcon from 'images/settings.svg'
 import UsersIcon from 'images/user_list.svg'
 import UsersYellowIcon from 'images/user_list_yellow.svg'
 import classNames from 'classnames'
@@ -163,7 +163,6 @@ export default ({ communityName, match, isAdmin, isGradientLogo }) => {
             <CustomElement style={style}>
               <Link
                 key={name}
-                
                 to={url(match)}
                 onClick={() => setPath(path)}
                 className={classNames('item item--hover', { 'item--home': currentPath === path })}
