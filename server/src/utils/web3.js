@@ -27,6 +27,7 @@ const createMethod = (contract, methodName, ...args) => {
     method = contract.methods[methodName](...args)
   }
   method.methodName = methodName
+  method.contract = contract
   return method
 }
 
@@ -34,44 +35,94 @@ const getMethodName = (method) => method.methodName || 'unknown'
 
 const getGasPrice = async (bridgeType, web3) => {
   if (bridgeType === 'home') {
-    return '1000000000'
+    return config.get('network.home.gasPrice')
   }
   const gasPrice = await fetchGasPrice('fast')
   return web3.utils.toWei(gasPrice.toString(), 'gwei')
 }
 
-const retries = 2
+const retries = 3
+
+const TRANSACTION_HASH_IMPORTED = 'Node error: {"code":-32010,"message":"Transaction with the same hash was already imported."}'
+const TRANSACTION_HASH_TOO_LOW = 'Node error: {"code":-32010,"message":"Transaction nonce is too low. Try incrementing the nonce."}'
+const TRANSACTION_TIMEOUT = 'Error: Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
+
+const calculateHash = async (web3, method, methodParams) => {
+  const data = method.encodeABI()
+  const { gasPrice, from, gas, nonce, value } = methodParams
+  console.log({ gasPrice, from, gas, nonce, value })
+
+  const transaction = await web3.eth.signTransaction({
+    gasPrice,
+    from,
+    gas,
+    nonce,
+    value,
+    to: method.contract.address,
+    data
+  }, from)
+  console.log(transaction)
+  return transaction.tx.hash
+}
 
 const send = async ({ web3, bridgeType, address }, method, options) => {
-  const doSend = async () => {
+  const doSend = async (retry) => {
+    let transactionHash
     const methodName = getMethodName(method)
     const nonce = account.nonces[bridgeType]
-    console.log(`[${bridgeType}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
-    receipt = await method.send({ gasPrice, ...options, gas, nonce: nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined })
-    console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
+    console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
+    const methodParams = { gasPrice, ...options, gas, nonce: nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
+    const promise = method.send({ ...methodParams })
+    promise.on('transactionHash', (hash) => {
+      transactionHash = hash
+    })
+
+    try {
+      const receipt = await promise
+      console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
+      return { receipt }
+    } catch (error) {
+      console.error(error)
+
+      const updateNonce = async () => {
+        const nonce = await web3.eth.getTransactionCount(from)
+        account.nonces[bridgeType] = nonce
+      }
+
+      const errorHandlers = {
+        [TRANSACTION_HASH_IMPORTED]: async () => {
+          if (!transactionHash) {
+            transactionHash = await calculateHash(web3, method, methodParams)
+            console.log({ transactionHash })
+          }
+          const receipt = await web3.eth.getTransactionReceipt(transactionHash)
+          return { receipt }
+        },
+        [TRANSACTION_HASH_TOO_LOW]: updateNonce,
+        [TRANSACTION_TIMEOUT]: updateNonce
+      }
+      const errorMessage = error.message || error.error
+      if (errorHandlers.hasOwnProperty(errorMessage)) {
+        return errorHandlers[errorMessage]()
+      } else {
+        return updateNonce()
+      }
+    }
   }
 
   const from = address
   const gas = await method.estimateGas({ from })
   const gasPrice = await getGasPrice(bridgeType, web3)
   const account = await Account.findOne({ address })
-  let receipt
   for (let i = 0; i < retries; i++) {
-    try {
-      await doSend()
-      break
-    } catch (error) {
-      console.error(error)
-      const nonce = await web3.eth.getTransactionCount(from)
-      account.nonces[bridgeType] = nonce
+    const response = await doSend(i) || {}
+    const { receipt } = response
+    if (receipt) {
+      account.nonces[bridgeType]++
+      await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
+      return receipt
     }
   }
-  if (receipt) {
-    account.nonces[bridgeType]++
-    await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
-  }
-
-  return receipt
 }
 
 const getPrivateKey = (account) => {

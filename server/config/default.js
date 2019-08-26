@@ -28,9 +28,11 @@ module.exports = {
       name: 'fuse',
       bridgeType: 'home',
       chainId: 122,
+      gasPrice: '1000000000',
       contract: {
         options: {
-          transactionConfirmationBlocks: 2
+          transactionConfirmationBlocks: 2,
+          transactionPollingTimeout: 30
         }
       },
       provider: 'https://rpc.fusenet.io',
