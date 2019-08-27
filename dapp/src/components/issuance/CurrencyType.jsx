@@ -9,9 +9,9 @@ import DefaultIcon from 'images/coin_default.svg'
 import { existingTokens } from 'constants/existingTokens'
 
 const communityTypes = [
-  { 'text': 'Mintable burnable token', 'img': MintableBurnable, value: 'mintableBurnable' },
-  { 'text': 'One time issuer token', 'img': OneTimeIssuer, value: 'basic' },
-  { 'text': 'Existing token', 'img': DefaultIcon, value: 'existingToken' }
+  { 'text': 'Mintable/Burnable token', 'img': MintableBurnable, value: 'mintableBurnable' },
+  { 'text': 'One time issued token', 'img': OneTimeIssuer, value: 'basic' },
+  { 'text': 'Use existing token', 'img': DefaultIcon, value: 'existingToken' }
 ]
 
 const Option = (props) => {

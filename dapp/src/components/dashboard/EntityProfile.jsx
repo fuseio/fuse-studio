@@ -8,7 +8,7 @@ import { loadModal } from 'actions/ui'
 import { fetchMetadata } from 'actions/metadata'
 import { editEntity, fetchEntity } from 'actions/communityEntities'
 import { ADD_BUSINESS_MODAL, WRONG_NETWORK_MODAL } from 'constants/uiConstants'
-import ReactGA from 'services/ga'
+// import ReactGA from 'services/ga'
 import { getBlockExplorerUrl } from 'utils/network'
 import { getTransaction } from 'selectors/transaction'
 import { formatAddress } from 'utils/format'
@@ -31,11 +31,11 @@ class EntityProfile extends Component {
 
   showProfile = (address, hash) => {
     this.props.history.push(`/view/directory/${address}/${hash}`)
-    ReactGA.event({
-      category: 'Directory',
-      action: 'Click',
-      label: 'directory'
-    })
+    // ReactGA.event({
+    //   category: 'Directory',
+    //   action: 'Click',
+    //   label: 'directory'
+    // })
   }
 
   showHomePage = (address) => this.props.history.push('/')

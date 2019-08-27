@@ -5,21 +5,24 @@ const { createNetwork } = require('@utils/web3')
 const { deployBridge } = require('./bridge')
 const { deployCommunity } = require('./community')
 const { transferOwnership } = require('./token')
+const { funder } = require('./funder')
 const CommunityProgress = mongoose.model('CommunityProgress')
 const Community = mongoose.model('Community')
 
 const deployFunctions = {
   community: deployCommunity,
   bridge: deployBridge,
-  transferOwnership
+  transferOwnership,
+  funder
 }
 
-const stepsOrder = ['community', 'bridge', 'transferOwnership']
+const stepsOrder = ['community', 'bridge', 'transferOwnership', 'funder']
 
 const mandatorySteps = {
   bridge: true,
   community: true,
-  transferOwnership: true
+  transferOwnership: true,
+  funder: true
 }
 
 const performStep = async ({ home, foreign }, communityProgress, stepName) => {

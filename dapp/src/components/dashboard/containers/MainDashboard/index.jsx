@@ -7,7 +7,7 @@ import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
 import { fetchCommunity, fetchTokenProgress } from 'actions/token'
 import { isUserExists } from 'actions/user'
-import { loadModal, hideModal } from 'actions/ui'
+import { loadModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
@@ -153,7 +153,6 @@ const mapDispatchToProps = {
   fetchTokenProgress,
   isUserExists,
   loadModal,
-  hideModal,
   fetchEntities,
   changeNetwork
 }

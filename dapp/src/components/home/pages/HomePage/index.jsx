@@ -1,23 +1,23 @@
 import React, { Component } from 'react'
-import ContentBox from '../../components/ContentBox'
-import FeaturedCommunities from '../../components/FeaturedCommunities'
-import Faqs from '../../components/Faq'
+import ContentBox from 'components/home/components/ContentBox'
+import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
+import Faqs from 'components/home/components/Faq'
 import personImage from 'images/person.png'
 import groupImageMobile from 'images/group_mobile.png'
 import groupImage from 'images/group_image.png'
 import NavBar from 'components/common/NavBar'
 import { isMobileOnly } from 'react-device-detect'
-import ReactGA from 'services/ga'
+// import ReactGA from 'services/ga'
 import arrowImage from 'images/arrow_1.svg'
 
 export default class HomePage extends Component {
   showIssuance = () => {
     this.props.history.push('/view/issuance')
-    ReactGA.event({
-      category: 'Top Bar',
-      action: 'Click',
-      label: 'issuance'
-    })
+    // ReactGA.event({
+    //   category: 'Top Bar',
+    //   action: 'Click',
+    //   label: 'issuance'
+    // })
   }
 
   showCommunities = () => {
@@ -59,7 +59,7 @@ export default class HomePage extends Component {
                   withDecoration={!isMobileOnly}
                   action={this.showCommunities}
                   title='Featured communities'
-                  actionTitle='Check out more communities >'
+                  actionTitle='Explore communities >'
                 >
                   <FeaturedCommunities />
                 </ContentBox>

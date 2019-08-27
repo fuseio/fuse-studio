@@ -18,7 +18,8 @@ const initialState = {
     tokenIssued: false,
     community: false,
     bridge: false,
-    transferOwnership: false
+    transferOwnership: false,
+    funder: false
   }
 }
 

@@ -160,7 +160,7 @@ export default ({ communityName, match, isAdmin, isGradientLogo }) => {
       {sideBarItems.map(({ icon, name, url, style, path, selectedIcon, CustomElement }) => {
         if (CustomElement) {
           return (
-            <CustomElement style={style}>
+            <CustomElement key={name} style={style}>
               <Link
                 key={name}
                 to={url(match)}

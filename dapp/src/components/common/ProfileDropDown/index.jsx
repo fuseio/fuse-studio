@@ -8,7 +8,7 @@ import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
 import { withRouter } from 'react-router-dom'
-import ReactGA from 'services/ga'
+// import ReactGA from 'services/ga'
 import { getBalances, getAccount } from 'selectors/accounts'
 import { BigNumber } from 'bignumber.js'
 import ArrowTiny from 'images/arrow_tiny.svg'
@@ -195,11 +195,11 @@ const ProfileDropDown = ({
 
   const showDashboard = (communityAddress) => {
     history.push(`/view/community/${communityAddress}`)
-    ReactGA.event({
-      category: 'Dashboard',
-      action: 'Click',
-      label: 'dashboard'
-    })
+    // ReactGA.event({
+    //   category: 'Dashboard',
+    //   action: 'Click',
+    //   label: 'dashboard'
+    // })
   }
 
   return (

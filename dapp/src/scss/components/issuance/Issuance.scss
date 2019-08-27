@@ -966,7 +966,11 @@
           flex-basis: 50%;
 
           @include element(item) {
-            padding: 5px;
+            padding: 0.7em 0;
+
+            &:first-child {
+              padding-top: 0;
+            }
           }
 
           @include element(icon) {
@@ -976,8 +980,8 @@
               background-size: contain;
               background-repeat: no-repeat;
               background-position: center;
-              width: 9px;
-              height: 11px;
+              width: 21px;
+              height: 21px;
             }
           }
 

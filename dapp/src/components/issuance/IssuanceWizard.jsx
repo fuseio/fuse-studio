@@ -13,11 +13,15 @@ import { getAccountAddress } from 'selectors/accounts'
 import Contracts from './Contracts'
 import DeployProgress from './DeployProgress'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
-import ReactGA from 'services/ga'
+// import ReactGA from 'services/ga'
 import Logo from 'components/common/Logo'
 import { PENDING, REQUEST, FAILURE, SUCCESS } from 'actions/constants'
 import Message from 'components/common/Message'
 import Congratulations from 'components/issuance/Congratulations'
+import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+import { loadModal } from 'actions/ui'
+import BridgeIcon from 'images/Bridge.svg'
+import contractIcon from 'images/contract.svg'
 
 class IssuanceWizard extends PureComponent {
   state = {
@@ -36,17 +40,26 @@ class IssuanceWizard extends PureComponent {
       community: {
         label: 'Members list',
         checked: true,
-        key: 'community'
+        key: 'community',
+        icon: contractIcon
       },
       bridge: {
         label: 'Bridge to fuse',
         checked: true,
-        key: 'bridge'
+        key: 'bridge',
+        icon: BridgeIcon
       },
       transferOwnership: {
         label: 'Transfer ownership',
         checked: true,
-        key: 'transferOwnership'
+        key: 'transferOwnership',
+        icon: contractIcon
+      },
+      funder: {
+        label: 'Gifting fuse tokens',
+        checked: true,
+        key: 'funder',
+        icon: contractIcon
       }
     },
     isOpen: false,
@@ -58,20 +71,20 @@ class IssuanceWizard extends PureComponent {
     window.addEventListener('keypress', this.handleKeyPress)
     this.setState({ stepPosition: this.stepIndicator.getBoundingClientRect().top })
 
-    ReactGA.event({
-      category: 'Issuance',
-      action: 'Load',
-      label: 'Started'
-    })
+    // ReactGA.event({
+    //   category: 'Issuance',
+    //   action: 'Load',
+    //   label: 'Started'
+    // })
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.transactionStatus === SUCCESS && prevProps.transactionStatus !== SUCCESS) {
-      ReactGA.event({
-        category: 'Issuance',
-        action: 'Load',
-        label: 'Issued'
-      })
+      // ReactGA.event({
+      //   category: 'Issuance',
+      //   action: 'Load',
+      //   label: 'Issued'
+      // })
     }
   }
 
@@ -143,7 +156,17 @@ class IssuanceWizard extends PureComponent {
     this.setState({ communitySymbol })
   }
 
-  showMetamaskPopup = () => this.setIssuanceTransaction()
+  onlyOnForeign = (successFunc) => {
+    const { networkType } = this.props
+    if (networkType === 'ropsten' || networkType === 'main') {
+      successFunc()
+    } else {
+      const { loadModal } = this.props
+      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['ropsten', 'mainnet'] })
+    }
+  }
+
+  showMetamaskPopup = () => this.onlyOnForeign(this.setIssuanceTransaction)
 
   setCommunityType = communityType =>
     this.setState({ communityType })
@@ -364,7 +387,8 @@ const mapDispatchToProps = {
   createTokenWithMetadata,
   fetchDeployProgress,
   deployExistingToken,
-  clearTransaction
+  clearTransaction,
+  loadModal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(IssuanceWizard)

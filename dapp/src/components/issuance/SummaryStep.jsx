@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
 import BigNumber from 'bignumber.js'
 import { PENDING, SUCCESS } from 'actions/constants'
-import ReactGA from 'services/ga'
+// import ReactGA from 'services/ga'
 import CommunityLogo from 'components/common/CommunityLogo'
 import TransactionButton from 'components/common/TransactionButton'
 import contractIcon from 'images/contract.svg'
@@ -28,11 +28,11 @@ export default class SummaryStep extends Component {
   })
 
   componentDidMount () {
-    ReactGA.event({
-      category: 'Issuance',
-      action: 'Load',
-      label: 'Finished'
-    })
+    // ReactGA.event({
+    //   category: 'Issuance',
+    //   action: 'Load',
+    //   label: 'Finished'
+    // })
   }
 
   componentDidUpdate (prevProps) {
@@ -57,7 +57,7 @@ export default class SummaryStep extends Component {
 
     const contractsItems = Object.values(contracts)
       .filter((contract) => contract.checked)
-      .map((contract) => contract.label)
+      .map(({ label, icon }) => ({ label, icon }))
 
     return (
       <div className='summary-step'>
@@ -93,16 +93,16 @@ export default class SummaryStep extends Component {
                 <div className='summary-step__content__contracts'>
 
                   {
-                    contractsItems.map(item => (
-                      <div key={item} className='summary-step__content__contracts__item'>
-                        <span className='summary-step__content__contracts__icon'><img src={contractIcon} />{item}</span>
+                    contractsItems.map(({ icon, label }) => (
+                      <div key={label} className='summary-step__content__contracts__item'>
+                        <span className='summary-step__content__contracts__icon'><img src={icon} />{label}</span>
                         {
-                          item && item.includes('Members') && isOpen && (
+                          label && label.includes('Members') && isOpen && (
                             <span className='summary-step__content__contracts__small'>Open community</span>
                           )
                         }
                         {
-                          item && item.includes('Members') && !isOpen && (
+                          label && label.includes('Members') && !isOpen && (
                             <span className='summary-step__content__contracts__small'>Close community</span>
                           )
                         }

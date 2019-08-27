@@ -31,7 +31,7 @@ export default class Root extends Component {
                 <Route path='/view/issuance' component={withNetwork(IssuanceWizard)} />
                 <Route path='/view/communities' component={withNetwork(Oven)} />
                 <Route path='/view/community/:address' component={withNetwork(DashboardLayout)} />
-                <Route path='/view/directory/:communityAddress/:account' component={withNetwork(EntityProfile)} />
+                {/* <Route path='/view/directory/:communityAddress/:account' component={withNetwork(EntityProfile)} /> */}
                 <Route path='/view/sign/:isMobileApp?' component={SignInProvider} />
                 <Route path='/view/join/:address' component={MobileProvider} />
               </Switch>
