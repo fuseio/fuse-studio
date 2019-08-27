@@ -1,0 +1,118 @@
+@include block(plugins) {
+  width: 100%;
+  font-size: 16px;
+
+  @include element(title) {
+    color: $color-white;
+    font-size: 1.625em;
+    font-weight: 500;
+  }
+
+  @include element(content) {
+    width: 645px;
+    font-size: 15px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    color: #ffffff;
+  }
+
+  @include element(items) {
+    @include xy-grid();
+    @include flex-align(justify, middle);
+    padding-top: 8em;
+  }
+}
+
+@include block(plugin-card) {
+  display: block;
+  width: 30%;
+  min-width: 30%;
+  height: 100%;
+  min-height: 15.563em;
+  max-height: 15.563em;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: $color-white;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+
+  @include element(image) {
+    position: relative;
+    width: 100%;
+    padding-top: 137 / 302 * 100%;
+
+    @include element(container) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  @include element(content) {
+    padding: 1.125em;
+    height: 100%;
+
+    @include modifier(disabled) {
+      opacity: .4;
+    }
+  }
+
+  @include element(title) {
+    font-size: 1.25em;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: normal;
+    color: $color-primary-dark;
+
+    > span {
+      font-size: 0.7em;
+    }
+  }
+
+  @include element(actions) {
+    @include xy-grid();
+    @include flex-align(right, middle);
+    margin-top: 1em;
+  }
+
+  @include element(learn) {
+    font-size: 0.813em;
+    font-weight: 500;
+    line-height: 2;
+    text-align: center;
+    color: #7a7a7a;
+    margin-right: 15px;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  @include element(btn) {
+    @include xy-grid();
+    @include flex-align(spaced, middle);
+    width: 77px;
+    height: 30px;
+    border-radius: 4px;
+    background-color: $color-primary-dark;
+    color: $color-white;
+    font-size: 0.813em;
+    font-weight: 500;
+    line-height: 2;
+
+    > img {
+      width: 13px;
+      height: 13px;
+    }
+  }
+}

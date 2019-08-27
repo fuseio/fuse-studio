@@ -5,6 +5,7 @@ import Dashboard from 'components/dashboard/pages/Dashboard'
 import WhiteLabelWallet from 'components/dashboard/pages/WhiteLabelWallet'
 import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
+import PluginsPage from 'components/dashboard/pages/Plugins'
 import { fetchCommunity, fetchTokenProgress } from 'actions/token'
 import { isUserExists } from 'actions/user'
 import { loadModal } from 'actions/ui'
@@ -102,16 +103,27 @@ class DashboardLayout extends PureComponent {
           <div className='content__container'>
             <NavBar withLogo={false} />
             <div className='content'>
-              <Header
+              {/* <Header
                 metadata={metadata[token.tokenURI] || {}}
                 tokenAddress={tokenAddress}
                 isClosed={isClosed}
                 name={name}
                 networkType={networkType}
                 token={token}
-              />
+              /> */}
               <Switch>
-                <Route exact path={`${match.url}`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.url}`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
+                  <Header
+                    metadata={metadata[token.tokenURI] || {}}
+                    tokenAddress={tokenAddress}
+                    isClosed={isClosed}
+                    name={name}
+                    networkType={networkType}
+                    token={token}
+                  />
+                </Dashboard>}
+                />
+                <Route exact path={`${match.url}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />

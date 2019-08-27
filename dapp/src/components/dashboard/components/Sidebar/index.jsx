@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Logo from 'components/common/Logo'
+import PluginIcon from 'images/plugin.svg'
+import AddIcon from 'images/add-selected.png'
+import AddYellowIcon from 'images/add-selected.svg'
+import PluginYellowIcon from 'images/plugin-selected.svg'
 import HomeIcon from 'images/home.svg'
 import HomeYellowIcon from 'images/home_yellow.svg'
 import WalletIcon from 'images/wallet_new.svg'
@@ -26,6 +30,21 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
       borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
     },
     selectedIcon: HomeYellowIcon
+  },
+  {
+    name: 'Plug-in store',
+    path: '/plugins',
+    url: (match) => `${match}/plugins`,
+    icon: PluginIcon,
+    style: {
+      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
+      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
+    },
+    selectedIcon: PluginYellowIcon,
+    moreIcon: {
+      AddIcon,
+      AddYellowIcon
+    }
   },
   {
     name: 'Business list',
@@ -70,14 +89,12 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
       borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
     },
     selectedIcon: MintBurnYellowIcon,
-    CustomElement: ({ children }) => {
-      return (
-        <div>
-          <span className='admin-title'>Admin tools</span>
-          {children}
-        </div>
-      )
-    }
+    CustomElement: ({ children }) => (
+      <div>
+        <span className='admin-title'>Admin tools</span>
+        {children}
+      </div>
+    )
   }
   // TODO - Settings page
   // ,
@@ -135,7 +152,7 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
   }
 ])
 
-export default ({ communityName, match, isAdmin, isGradientLogo }) => {
+const Sidebar = ({ communityName, match, isAdmin, isGradientLogo }) => {
   const [currentPath, setPath] = useState('')
   const [sideBarItems, setSideBarItems] = useState([])
 
@@ -154,7 +171,7 @@ export default ({ communityName, match, isAdmin, isGradientLogo }) => {
           <Logo isGradientLogo={isGradientLogo} />
         </Link>
       </div>
-      {sideBarItems.map(({ icon, name, url, style, path, selectedIcon, CustomElement }) => {
+      {sideBarItems.map(({ icon, name, url, style, path, selectedIcon, CustomElement, moreIcon }) => {
         if (CustomElement) {
           return (
             <CustomElement key={name} style={style}>
@@ -180,6 +197,7 @@ export default ({ communityName, match, isAdmin, isGradientLogo }) => {
             >
               <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
               <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
+              {moreIcon && <img src={currentPath === path ? moreIcon.AddYellowIcon : moreIcon.AddIcon} /> }
             </Link>
           )
         }
@@ -187,3 +205,5 @@ export default ({ communityName, match, isAdmin, isGradientLogo }) => {
     </aside>
   )
 }
+
+export default Sidebar
