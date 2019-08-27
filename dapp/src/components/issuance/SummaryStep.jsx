@@ -5,7 +5,6 @@ import { PENDING, SUCCESS } from 'actions/constants'
 // import ReactGA from 'services/ga'
 import CommunityLogo from 'components/common/CommunityLogo'
 import TransactionButton from 'components/common/TransactionButton'
-import contractIcon from 'images/contract.svg'
 
 export default class SummaryStep extends Component {
   renderTransactionStatus = (transactionStatus) => {
