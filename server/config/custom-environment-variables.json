@@ -19,6 +19,10 @@
     "misc": {
       "pageSize": "COMMUNITY_WEB3_PAGE_SIZE"
     },
+    "home": {
+      "provider": "COMMUNITY_NETWORK_HOME_PROVIDER",
+      "gasPrice": "COMMUNITY_NETWORK_HOME_GAS_PRICE"
+    },
     "foreign": {
       "apiKey": "COMMUNITY_WEB3_API_KEY",
       "name": "COMMUNITY_WEB3_NETWORK"
