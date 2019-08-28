@@ -19,12 +19,12 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "openzeppelin-solidity": "^2.2.0"
+    "truffle": "^5.0.1",
+    "truffle-hdwallet-provider": "^1.0.6",
+    "openzeppelin-solidity": "^2.2.0",
+    "@fuse/contract-utils": "../../packages/contract-utils"
   },
   "devDependencies": {
-    "truffle": "^5.0.1",
-    "truffle-assertions": "^0.7.2",
-    "truffle-hdwallet-provider": "^1.0.6",
-    "@fuse/contract-utils": "../../packages/contract-utils"
+    "truffle-assertions": "^0.7.2"
   }
 }
