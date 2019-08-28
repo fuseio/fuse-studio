@@ -145,7 +145,6 @@
         background-image: url(../../assets/images/header.jpg);
         background-repeat: no-repeat;
         background-size: cover;
-        // box-shadow: inset 0 0 1em 0 rgba(0, 0, 0, 1)
       }
     }
   }
@@ -157,6 +156,10 @@
     }
     @include breakpoint(medium down) {
       margin-top: 7em;
+    }
+
+    @include modifier(opacity) {
+      opacity: 0.5;
     }
 
     @include element(title) {
@@ -213,11 +216,7 @@
       }
 
       @include element(field) {
-        // margin-bottom: 2em;
-        @include breakpoint(medium up) {
-          // min-width: 300px;
-          // max-width: 300px;
-        }
+        @include breakpoint(medium up) {}
 
         @include breakpoint(small) {
           width: 100%;
@@ -226,20 +225,39 @@
         input {
           width: 100%;
           background-color: $color-white;
-          padding: 8px 16px;
+          padding: 0 16px;
           font-size: 15px;
           color: $color-primary-dark;
           height: 40px;
           border-radius: 5px;
           box-shadow: 0 0 6px 0 #cbcbcb;
-          border: none;
+          border: 1px solid transparent;
 
           &::placeholder {
             color: rgba(0, 0, 0, 0.3);
           }
           &:focus {
-            border: solid 2px $color-primary-dark;
+            border: solid 1px #25435a;
             box-shadow: none;
+          }
+        }
+
+        @include modifier(underline) {
+          &:before {
+            border-bottom: none !important;
+          }
+          &:hover:not(.Mui-disabled):before {
+            border-bottom: none !important;
+    
+          }
+          &:after {
+            border-bottom: none !important;
+          }
+        }
+    
+        @include modifier(error) {
+          &:after {
+            border-bottom-color: none !important;
           }
         }
       }      
@@ -293,19 +311,19 @@
         input {
           width: 100%;
           background-color: $color-white;
-          padding: 8px 16px;
+          padding: 0 16px;
           font-size: 15px;
           color: $color-primary-dark;
           height: 40px;
           border-radius: 5px;
           box-shadow: 0 0 6px 0 #cbcbcb;
-          border: none;
+          border: solid 1px transparent;
 
           &::placeholder {
             color: rgba(0, 0, 0, 0.3);
           }
           &:focus {
-            border: solid 2px $color-primary-dark;
+            border: solid 1px #25435a;
             box-shadow: none;
           }
 
@@ -391,11 +409,11 @@
           color: $color-text-gray;
           position: relative;
           &:hover {
-            border: solid 2px rgba(5, 34, 53, 0.3);
+            border: solid 2px rgba(74, 104, 123, 0.3);
             cursor: pointer;
           }
           @include modifier(chosen) {
-            border: solid 2px rgba(5, 34, 53, 0.3);
+            border: solid 2px rgba(74, 104, 123, 0.3);
           }
           
           &:last-child {
@@ -441,7 +459,6 @@
               border-radius: 2px !important;
               border: solid 1px #cccccc;
               font-size: 9px;
-              // height: 2em;
               &:hover {
                 box-shadow: none;
                 border: solid 1px $color-primary-dark;
@@ -559,11 +576,11 @@
             height: 115px;
           }
           &:hover {
-            border: solid 2px $color-primary-dark;
+            border: solid 2px rgba(74, 104, 123, 0.3);
             cursor: pointer;
           }
           @include modifier(chosen) {
-            border: solid 2px $color-primary-dark;
+            border: solid 2px rgba(74, 104, 123, 0.3);
           }
         }
       }
@@ -578,19 +595,19 @@
           input {
             width: 100%;
             background-color: $color-white;
-            padding: 8px 16px;
+            padding: 0 16px;
             font-size: 15px;
             color: $color-primary-dark;
             height: 40px;
             border-radius: 5px;
             box-shadow: 0 0 6px 0 #cbcbcb;
-            border: none;
+            border: solid 1px transparent;
 
             &::placeholder {
               color: rgba(0, 0, 0, 0.3);
             }
             &:focus {
-              border: solid 2px $color-primary-dark;
+              border: solid 1px #25435a;
               box-shadow: none;
             }
           }
@@ -681,8 +698,7 @@
 
         @include block(icon) {
           display: inline-block;
-          width: 40px;
-          height: 40px;
+          width: 55px;
           margin-right: 5px;
           align-self: flex-start;
 
@@ -708,6 +724,7 @@
 
           @include element(title) {
             font-weight: 500;
+            font-size: 14px;
 
             @include breakpoint(small) {
               font-size: 14px;							
@@ -715,6 +732,9 @@
           }
 
           @include element(text) {
+            color: #7a7a7a;
+            line-height: 1.25;
+            font-size: 12px;
           }
 
           @include element(toggle) {
@@ -790,7 +810,7 @@
                 font-size: 11px;
               }
               > input:checked ~ .toggle-wrapper {
-                background: linear-gradient(97deg, #98faac, #fae83e);
+                background: $color-fuse_gradient;
                 .toggle {
                   left: 18px;
                   border-color: #fae83e;
@@ -833,21 +853,17 @@
     @include block(summary-step) {
       
       @include element(wrapper) {
-        box-shadow: 0 0 11px 0 rgba(0, 0, 0, 0.25);
         position: relative;
         margin: auto;
-        border-radius: 10px;
         @include breakpoint(medium) {
-          padding: 20px;
-          width: 559px;
+          width: 420px;
           min-height: 350px;
           @include xy-grid(vertical);
           @include flex-align(spaced, middle);
         }
 
-        @include breakpoint(small) {
+        @include breakpoint(small down) {
           width: 90%;
-          padding: 20px;
         }
 
         div.status.status--radius-all > div.status__button > button {
@@ -864,21 +880,21 @@
         @include breakpoint(medium) {
           width: 100%;
           height: 100%;
-          @include xy-grid();
+          @include xy-grid(vertical);
           @include flex-align(left, middle);
         }
 
       }
 
       @include element(text) {
-        font-size: 11px;
-        line-height: 1.45;
-        color: rgba(5, 40, 62, 0.6);
         text-align: center;
         margin-top: 1em;
+        font-size: 12px;
+        line-height: 1.33;
+        color: rgba(5, 40, 62, 0.6);
 
         .fa-info-circle {
-          color: $color-fuse;
+          color: $color-primary-dark;
         }
 
         @include breakpoint(medium up) {
@@ -890,10 +906,9 @@
         margin: auto 0;
         @include xy-grid(vertical);
         @include flex-align(justify, middle);
+        margin-bottom: 20px;
 
-        @include breakpoint(medium) {
-          flex-basis: 24%;
-        }
+        @include breakpoint(medium) {}
 
         @include block(communityName) {
           text-overflow: ellipsis;
@@ -919,18 +934,17 @@
         @include breakpoint(medium) {
           @include xy-grid(vertical, false);
           @include flex-align(justify, top);
-          flex-basis: 75%;
+          width: 100%;
         }
 
         @include element(title) {
-          height: 27px;
           font-size: 14px;
           font-weight: 500;
           color: $color-primary-dark;
           align-self: flex-start;
 
           @include breakpoint(small) {
-            flex-basis: 40%;
+            flex-basis: 50%;
           }
         }
 
@@ -939,7 +953,11 @@
           flex-basis: 50%;
 
           @include element(item) {
-            padding: 5px;
+            padding: 0.7em 0;
+
+            &:first-child {
+              padding-top: 0;
+            }
           }
 
           @include element(icon) {
@@ -949,8 +967,8 @@
               background-size: contain;
               background-repeat: no-repeat;
               background-position: center;
-              width: 9px;
-              height: 11px;
+              width: 21px;
+              height: 21px;
             }
           }
 
@@ -965,7 +983,7 @@
           @include flex-align(left, middle);
           width: 100%;
           @include breakpoint(medium) {
-            padding: 20px;
+            padding: 20px 0;
             @include xy-grid();
           }
 
@@ -994,15 +1012,20 @@
               left: 0;
             }
           }
+
+          &:not(:last-child) {
+            width: 100%;
+            border-bottom: solid 1px #f1f1f1;
+          }
         }
 
       }
 
       @include element(line) {
         border: solid 1px #e4e4e4;
+        width: 100%;			
         margin: 0;
         @include breakpoint(medium) {
-          height: 240px;					
         }
       }
 
@@ -1022,14 +1045,8 @@
 
       @include element(wrapper) {
         color:  $color-primary-dark;
-        box-shadow: 0 0 11px 0 rgba(0, 0, 0, 0.25);
-        border-radius: 10px;
         margin: 0 auto;
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 20000000;
-        background: white;
+        max-width: 500px;
 
         @include breakpoint(medium) {
           width: 100%;
@@ -1051,17 +1068,19 @@
         width: 50px;
         height: 50px;
       }
+
       @include element(item) {
         text-align: center;
         opacity: 0.3;
         font-size: 14px;
-        padding: 10px 0;
+        padding: 30px 0;
         @include modifier(active) {
           opacity: 1;
         }
 
         @include element(label) {
-          font-weight: bold;
+          font-weight: 500;
+          color: #25435a;
 
           .fa {
             font-size: 12px;
@@ -1078,6 +1097,10 @@
         }
 
         @include element(loaderText) {
+          font-size: 14px;
+          line-height: 1.36;
+          text-align: center;
+          color: #7a7a7a;
 
         }
       }

@@ -2,19 +2,19 @@ import React from 'react'
 import Modal from 'components/common/Modal'
 import GenericHeader from 'images/generic-header.png'
 
-const GenericModal = (props) =>
-  <Modal className='generic-modal' onClose={props.hideModal}>
-    <div className='generic-modal-header'>
-      <img src={GenericHeader} className='generic-modal-header-img' />
+const GenericModal = ({ hideModal, content, buttonAction, image, hasCloseBtn = true }) =>
+  <Modal className='generic-modal' onClose={hideModal} hasCloseBtn={hasCloseBtn}>
+    <div className='generic-modal__image'>
+      <img src={content.image || GenericHeader} />
     </div>
-    <div className='generic-modal-container'>
-      <div className='generic-modal-title'>
-        {props.content.title}
+    <div className='generic-modal__container'>
+      <div className='generic-modal__title'>
+        {content.title}
       </div>
-      <div className='generic-modal-text'>
-        {props.content.body}
+      <div className='generic-modal__text'>
+        {content.body}
       </div>
-      {props.content.buttonText && <button className='dashboard-transfer-btn' onClick={props.buttonAction}>{props.content.buttonText}</button>}
+      {content.buttonText && <button className='generic-modal__button' onClick={buttonAction}>{content.buttonText}</button>}
     </div>
   </Modal>
 

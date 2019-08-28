@@ -1,0 +1,46 @@
+@include block(mint-burn) {
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+  background-color: #ffffff;
+  border-radius: 5px;
+  position: relative;
+
+  @include element(header) {
+    color: $color-white;
+    @include xy-grid();
+    @include flex-align(justify, middle);
+
+    @include breakpoint(medium up) {
+      margin-top: 2em;
+      margin-bottom: 1em;
+    }
+
+    @include element(title) {
+      font-size: 26px;
+      font-weight: 500;
+    }
+  }
+
+
+  @include element(balance) {
+    margin-bottom: 2em;
+    @include block(title) {
+      width: 206px;
+      height: 21px;
+      font-family: $font-family;
+      font-size: 16px;
+      font-weight: 500;
+      color: $color-primary-dark;
+    }
+
+    @include block(amount) {
+      color: #25435a;
+      font-size: 16px;
+    }
+
+    @include block(symbol) {
+      margin-left: 3px;
+      color: #25435a;
+      font-size: 10px;
+    }
+  }
+}

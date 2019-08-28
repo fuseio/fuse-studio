@@ -21,23 +21,36 @@ const getDaiIcons = () => ({
   'CoinIcon3.svg': DAI_3
 })
 
-const CommunityLogo = ({ networkType, metadata: { communityLogo = 'CoinIcon1.svg' }, token: { symbol }, isSmall = false, isBig = false, isDaiToken = false }) => {
+const CommunityLogo = ({
+  networkType,
+  metadata: { communityLogo = 'CoinIcon1.svg' },
+  token: { symbol },
+  imageUrl,
+  isSmall = false,
+  isBig = false,
+  isDaiToken = false
+}) => {
   const wrapperClasses = classNames(`logo-circle__outer`,
     { 'logo-circle__outer--normal': !isSmall && !isBig },
     { 'logo-circle__outer--small': isSmall && !isBig },
     { 'logo-circle__outer--big': isBig && !isSmall },
     { [`logo-circle__outer--${communityLogo}`]: true },
-    { [`logo-circle__outer--${communityLogo}--${networkType}`]: true }
-  )
+    { [`logo-circle__outer--${communityLogo}--${networkType}`]: true })
 
   return (
     <div className={wrapperClasses}>
       {
         communityLogo
-          ? <img src={!isDaiToken ? (getImages()[communityLogo] || tokenOne) : getDaiIcons()[communityLogo]} className='logo-circle__inner' alt='Community Logo' />
+          ? <img
+            className='logo-circle__inner'
+            alt='Community Logo'
+            src={imageUrl || (!isDaiToken
+              ? (getImages()[communityLogo] || tokenOne)
+              : getDaiIcons()[communityLogo])}
+          />
           : <Loader color='#fff' className='logo-img' />
       }
-      {!isDaiToken && <span className='logo-circle__name'>{symbol}</span>}
+      {!isDaiToken && !imageUrl && <span className='logo-circle__name'>{symbol}</span>}
     </div>
   )
 }

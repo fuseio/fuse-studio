@@ -12,7 +12,7 @@ import { transactionSucceeded } from 'actions/transactions'
 import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './utils'
 import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
-import web3 from 'services/web3'
+import { getWeb3 } from 'services/web3'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -194,6 +194,7 @@ function * transferToken ({ tokenAddress, to, value }) {
 
 function * mintToken ({ tokenAddress, value }) {
   const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
   const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress)
 
   const transactionPromise = contract.methods.mint(accountAddress, value).send({
@@ -206,6 +207,7 @@ function * mintToken ({ tokenAddress, value }) {
 
 function * burnToken ({ tokenAddress, value }) {
   const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
   const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress)
 
   const transactionPromise = contract.methods.burn(value).send({
@@ -220,6 +222,16 @@ function * watchTokenChanges ({ response }) {
   yield put(actions.fetchToken(response.tokenAddress))
 }
 
+function * watchCommunityFetch ({ response }) {
+  const { entities } = response
+  for (const communityAddress in entities) {
+    if (entities.hasOwnProperty(communityAddress)) {
+      const { foreignTokenAddress } = entities[communityAddress]
+      yield put(actions.fetchToken(foreignTokenAddress))
+    }
+  }
+}
+
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(actions.TRANSFER_TOKEN, transferToken, 1),
@@ -230,6 +242,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN_LIST, fetchTokenList, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
+    takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchCommunityFetch),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),

@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
-import web3 from 'web3'
+import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
 import { fetchTokenStatistics, transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { getBalances } from 'selectors/accounts'
-import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL } from 'constants/uiConstants'
+import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
 import { isUserExists } from 'actions/user'
-import { formatWei } from 'utils/format'
 import { getTransaction } from 'selectors/transaction'
 import { isOwner } from 'utils/token'
-import DashboardTabs from '../../components/DashboardTabs'
-import Bridge from '../../components/Bridge'
+import Bridge from 'components/dashboard/components/Bridge'
 import { getBridgeStatus } from 'selectors/network'
-import { BigNumber } from 'bignumber.js'
+import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 
 class Dashboard extends Component {
   state = {
@@ -76,9 +74,9 @@ class Dashboard extends Component {
   handleMintOrBurnClick = (actionType, amount) => {
     const { burnToken, mintToken, token: { address: tokenAddress } } = this.props
     if (actionType === 'mint') {
-      mintToken(tokenAddress, web3.utils.toWei(String(amount)))
+      mintToken(tokenAddress, toWei(String(amount)))
     } else {
-      burnToken(tokenAddress, web3.utils.toWei(String(amount)))
+      burnToken(tokenAddress, toWei(String(amount)))
     }
 
     this.setState({ ...this.state, lastAction: { actionType, mintBurnAmount: amount } })
@@ -86,7 +84,7 @@ class Dashboard extends Component {
 
   handleTransfer = ({ to: toField, amount }) => {
     const { transferToken, token: { address: tokenAddress } } = this.props
-    transferToken(tokenAddress, toField, web3.utils.toWei(String(amount)))
+    transferToken(tokenAddress, toField, toWei(String(amount)))
   }
 
   handleIntervalChange = (userType, intervalValue) => {
@@ -97,68 +95,35 @@ class Dashboard extends Component {
     }
   }
 
+  loadQrModal = (value) => {
+    const { loadModal } = this.props
+    loadModal(QR_MODAL, { value })
+  }
+
   render () {
     const {
-      lastAction
-    } = this.state
-
-    const {
+      community,
       token,
       accountAddress,
-      transactionStatus,
       balances,
       dashboard,
-      isTransfer,
-      isMinting,
-      isBurning,
-      networkType,
-      tokenNetworkType,
-      burnSignature,
-      mintSignature,
-      transferSignature,
-      clearTransactionStatus,
-      transferSuccess,
-      burnSuccess,
-      mintSuccess,
-      error,
-      community,
-      bridgeStatus,
-      homeNetwork
+      networkType
     } = this.props
 
     const { address: tokenAddress } = token
     const { communityAddress, homeTokenAddress, foreignTokenAddress } = community
-    const balance = balances[tokenAddress]
-    const { admin, user, steps, owner } = dashboard
+    const { steps, owner } = dashboard
 
     return (
       <React.Fragment>
         <div className='content__tabs'>
-          <DashboardTabs
-            transferSuccess={transferSuccess}
-            burnSuccess={burnSuccess}
-            mintSuccess={mintSuccess}
-            user={user}
-            error={error}
-            admin={admin}
+          <CommunityInfo
             token={token}
-            isBurning={isBurning}
-            isMinting={isMinting}
-            isTransfer={isTransfer}
-            lastAction={lastAction}
-            networkType={networkType}
-            burnSignature={burnSignature}
-            balanceOnEthereum={new BigNumber(balances[homeNetwork === bridgeStatus['from'].network ? homeTokenAddress : foreignTokenAddress]).div(1e18).toFormat(2, 1)}
-            mintSignature={mintSignature}
-            accountAddress={accountAddress}
-            tokenNetworkType={tokenNetworkType}
-            transferSignature={transferSignature}
-            transactionStatus={transactionStatus}
-            handleTransfer={this.handleTransfer}
-            handleIntervalChange={this.handleIntervalChange}
-            handleMintOrBurnClick={this.handleMintOrBurnClick}
-            balance={balance ? formatWei(balance, 0) : 0}
-            clearTransactionStatus={clearTransactionStatus}
+            balances={balances}
+            loadQrModal={this.loadQrModal}
+            communityAddress={communityAddress}
+            homeTokenAddress={homeTokenAddress}
+            foreignTokenAddress={foreignTokenAddress}
           />
         </div>
 
@@ -171,7 +136,6 @@ class Dashboard extends Component {
             foreignTokenAddress={tokenAddress}
             isOwner={() => isOwner({ owner }, accountAddress)}
             loadBridgePopup={this.loadBridgePopup}
-            handleTransfer={this.handleTransfer}
             communityAddress={communityAddress}
             network={networkType}
           />

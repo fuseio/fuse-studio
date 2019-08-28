@@ -1,6 +1,8 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
-import { givenWeb3 as web3, getWeb3, portis } from 'services/web3'
+import { toChecksumAddress } from 'web3-utils'
+import { getWeb3 } from 'services/web3'
+import { portis } from 'services/web3/providers/portis'
 import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse } from 'actions/accounts'
@@ -10,13 +12,13 @@ import { networkIdToName } from 'constants/network'
 import { saveState } from 'utils/storage'
 import get from 'lodash/get'
 
-function * getNetworkTypeInternal () {
+function * getNetworkTypeInternal (web3) {
   const networkId = yield web3.eth.net.getId()
   const networkType = networkIdToName[networkId]
   return { networkId, networkType }
 }
 
-function * getAccountAddress () {
+function * getAccountAddress (web3) {
   if (window.ethereum && window.ethereum.enable) {
     try {
       const enableResponse = yield window.ethereum.enable()
@@ -48,7 +50,8 @@ function * deduceBridgeSides (networkType) {
 
 function * getNetworkType () {
   try {
-    const { networkType, networkId } = yield getNetworkTypeInternal()
+    const web3 = yield getWeb3()
+    const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const bridgeSides = yield deduceBridgeSides(networkType)
 
     const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
@@ -63,7 +66,7 @@ function * getNetworkType () {
         isPortis,
         ...bridgeSides
       } })
-    const accountAddress = yield getAccountAddress()
+    const accountAddress = yield getAccountAddress(web3)
 
     if (accountAddress) {
       const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
@@ -80,6 +83,7 @@ function * getNetworkType () {
           networkType
         }
       })
+      throw new Error('This network is not supported')
     }
   } catch (error) {
     yield put(loadModal(WRONG_NETWORK_MODAL))
@@ -99,7 +103,7 @@ function * fetchGasPrices () {
 
 function * checkAccountChanged ({ selectedAddress }) {
   const accountAddress = yield select(state => state.network.accountAddress)
-  const checksummedAddress = selectedAddress && web3.utils.toChecksumAddress(selectedAddress)
+  const checksummedAddress = selectedAddress && toChecksumAddress(selectedAddress)
 
   if (accountAddress !== checksummedAddress) {
     yield put({

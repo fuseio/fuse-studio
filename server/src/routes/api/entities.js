@@ -2,8 +2,8 @@ const paginate = require('express-paginate')
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Entity = mongoose.model('Entity')
+const Profile = mongoose.model('Profile')
 const metadataUtils = require('@utils/metadata')
-const { getMetadata } = require('@utils/metadata')
 const Community = mongoose.model('Community')
 const Token = mongoose.model('Token')
 const { sortBy, keyBy } = require('lodash')
@@ -96,6 +96,8 @@ router.get('/:communityAddress/:account', async (req, res, next) => {
 const getQueryFilter = ({ query: { type }, params: { communityAddress } }) =>
   type ? { type, communityAddress } : { communityAddress }
 
+const getQuerySearch = ({ query: { search } }) => ({ search })
+
 /**
  * @api {get} /entities/:communityAddress Fetch entities by community address
  * @apiName GetEntities
@@ -103,30 +105,47 @@ const getQueryFilter = ({ query: { type }, params: { communityAddress } }) =>
  *
  * @apiParam {String} communityAddress Community address
  * @apiParam {Number} page Page number for pagination
- * @apiParam {Boolean} withMetadata Get entitites with entity's metadata
+ * @apiParam {String} search - search entities by name
  *
  * @apiSuccess {Object[]} -   List of entities. See GetEntity endpoint for entity fields
  */
 router.get('/:communityAddress', async (req, res, next) => {
   const queryFilter = getQueryFilter(req)
-  const { withMetadata } = req.query
+  // const { withMetadata } = req.query
+  const querySearch = getQuerySearch(req)
 
-  let [ results, itemCount ] = await Promise.all([
-    Entity.find(queryFilter).sort({ name: 1 }).limit(req.query.limit).skip(req.skip),
+  let profiles
+
+  if (querySearch && querySearch.search) {
+    const [searchMatches] = await Promise.all([
+      Profile.find({
+        $or: [
+          { 'publicData.firstName': { $regex: `.*${querySearch.search}.*`, $options: 'i' } },
+          { 'publicData.lastName': { $regex: `.*${querySearch.search}.*`, $options: 'i' } },
+          { 'publicData.name': { $regex: `.*${querySearch.search}.*`, $options: 'i' } }
+        ]
+      }).sort({ name: 1 })
+    ])
+
+    profiles = searchMatches.map(({ _id }) => _id)
+  }
+
+  const queries = profiles ? {
+    ...queryFilter, profile: { $in: profiles }
+  } : queryFilter
+
+  let [results, itemCount] = await Promise.all([
+    Entity.find(queries).sort({ name: 1 }).limit(req.query.limit).skip(req.skip).populate('profile'),
     Entity.countDocuments(queryFilter)
   ])
-
-  if (withMetadata) {
-    const metadatas = await Promise.all(results.map(result => result.uri ? getMetadata(result.uri.split('://')[1]).catch(console.error) : null))
-    results = results.map((result, index) => ({ ...result.toObject(), metadata: metadatas[index] && metadatas[index].data }))
-  }
 
   const pageCount = Math.ceil(itemCount / req.query.limit)
 
   res.json({
     object: 'list',
     has_more: paginate.hasNextPages(req)(pageCount),
-    data: results
+    data: results,
+    pageCount
   })
 })
 

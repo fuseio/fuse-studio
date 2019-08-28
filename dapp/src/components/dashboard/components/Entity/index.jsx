@@ -5,6 +5,7 @@ import { getBlockExplorerUrl } from 'utils/network'
 import classNames from 'classnames'
 import { formatAddress } from 'utils/format'
 import { isMobile } from 'react-device-detect'
+import get from 'lodash/get'
 
 export default class Entity extends PureComponent {
   state = {
@@ -53,11 +54,17 @@ export default class Entity extends PureComponent {
     return (
       <div className='entities__entity'>
         <div className='entities__entity__logo' onClick={type !== 'user' ? () => showProfile() : null}>
-          <FontAwesome name='bullseye' />
+          {
+            get(metadata, 'image[0].contentUrl', undefined) ? (
+              <img src={`https://ipfs.infura.io/ipfs/${metadata.image[0].contentUrl['/']}`} />
+            ) : (
+              <FontAwesome name='bullseye' />
+            )
+          }
         </div>
         <div className='entities__entity__content' onClick={type !== 'user' ? () => showProfile() : null}>
           {name && <span className='entities__entity__content__title'>{name || ' '}</span>}
-          {metadata && metadata.firstName && <span className='entities__entity__content__title'>{`${metadata.firstName} ${metadata.lastName}` || ' '}</span>}
+          {metadata && metadata.firstName && <span className='entities__entity__content__title'>{`${metadata.firstName || ''} ${metadata.lastName || ''}`}</span>}
           {businessType && <div className='entities__entity__content__type'>{businessType}</div>}
           <div className='entities__entity__content__subtitle'>
             <span className='text-asset'>Account ID</span>

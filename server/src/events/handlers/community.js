@@ -4,6 +4,7 @@ const Community = mongoose.model('Community')
 const { hasRole, roles: { APPROVED_ROLE } } = require('@fuse/roles')
 const { deriveFromRoles } = require('@utils/roles')
 const { web3 } = require('@services/web3/home')
+const Profile = mongoose.model('Profile')
 
 const handleTransferManagerSet = async (event) => {
   const token = event.address
@@ -16,7 +17,12 @@ const handleEntityAdded = async (event, receipt) => {
   const { roles, account } = event.returnValues
   const derivedFields = deriveFromRoles(roles)
 
-  return Entity.findOneAndUpdate({ account, communityAddress }, { ...derivedFields, communityAddress, roles, account }, { new: true, upsert: true })
+  const profile = await Profile.findOne({ account })
+  if (profile) {
+    return Entity.findOneAndUpdate({ account, communityAddress }, { ...derivedFields, communityAddress, roles, account, profile: profile._id }, { new: true, upsert: true })
+  } else {
+    return Entity.findOneAndUpdate({ account, communityAddress }, { ...derivedFields, communityAddress, roles, account }, { new: true, upsert: true })
+  }
 }
 
 const handleEntityRemoved = async (event, receipt) => {

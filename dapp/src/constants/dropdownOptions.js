@@ -1,9 +1,12 @@
 export const businessTypes = () => ([
-  { value: 'food', label: 'Food & Beverages' },
+  { value: 'food & beverages', label: 'Food & Beverages' },
   { value: 'sports', label: 'Sports' },
-  { value: 'teсh', label: 'Teсh' },
+  { value: 'tech', label: 'Tech' },
   { value: 'volunteer', label: 'Volunteer' },
-  { value: 'design', label: 'Design & Home' }
+  { value: 'design', label: 'Design & Home' },
+  { value: 'pets', label: 'Pets' },
+  { value: 'education', label: 'Education' },
+  { value: 'fashion', label: 'Fashion & Accessories' }
 ])
 
 export const options = () => ([

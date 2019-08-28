@@ -1,12 +1,12 @@
 import React from 'react'
-import CopyToClipboard from 'components/common/CopyToClipboard'
-import FontAwesome from 'react-fontawesome'
 import { isMobileOnly } from 'react-device-detect'
 import CommunityLogo from 'components/common/CommunityLogo'
-import { formatAddress } from 'utils/format'
 import { isDaiToken } from 'constants/existingTokens'
+import isEmpty from 'lodash/isEmpty'
 
-export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) => {
+export default ({ isClosed, networkType, token, metadata }) => {
+  const { name } = token
+  const { image } = metadata
   return (
     <div className='community_header'>
       <div className='community_header__image'>
@@ -14,6 +14,7 @@ export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) 
           isDaiToken={isDaiToken(networkType, token)}
           networkType={networkType}
           token={token}
+          imageUrl={!isEmpty(image) ? `${CONFIG.ipfsProxy.urlBase}/image/${image}` : null}
           isSmall={isMobileOnly}
           metadata={metadata}
         />
@@ -23,15 +24,6 @@ export default ({ tokenAddress, isClosed, name, networkType, token, metadata }) 
           <h2 className='name'>{name}</h2>
           &nbsp;&nbsp;<span className='name__line' />&nbsp;&nbsp;
           <span className='name__status'>{isClosed ? 'Close' : 'Open'} community</span>
-        </div>
-        <div className='address'>
-          {isMobileOnly
-            ? <span>{formatAddress(tokenAddress)}</span>
-            : <span>{tokenAddress}</span>
-          }
-          <CopyToClipboard text={tokenAddress}>
-            <FontAwesome name='clone' />
-          </CopyToClipboard>
         </div>
       </div>
     </div>

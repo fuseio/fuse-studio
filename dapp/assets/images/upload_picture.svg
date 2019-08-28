@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M39.6039604,79.2079208 C17.7664624,79.2079208 0,61.4414584 0,39.6039604 C0,17.7664624 17.7664624,0 39.6039604,0 C61.4414584,0 79.2079208,17.7664624 79.2079208,39.6039604 C79.2079208,61.4414584 61.4414584,79.2079208 39.6039604,79.2079208" id="path-1"></path>
+        <filter x="-4.4%" y="-4.4%" width="108.8%" height="108.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="3" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="1" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.06 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Currency-Isuser" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Wizard--ATTRIBUTES-new" transform="translate(-1167.000000, -627.000000)">
+            <g id="Group" transform="translate(1167.000000, 627.000000)">
+                <g id="Group-18-Copy-3">
+                    <g id="Path">
+                        <use fill="#F2F2F2" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    </g>
+                </g>
+                <g id="photo-camera" transform="translate(26.000000, 28.000000)" fill="#B0B0B0" fill-rule="nonzero">
+                    <path d="M14,8.625 C11.6802,8.625 9.8,10.556425 9.8,12.9375 C9.8,15.3194375 11.6802,17.25 14,17.25 C16.31924,17.25 18.2,15.3194375 18.2,12.9375 C18.2,10.556425 16.31924,8.625 14,8.625 Z M25.2,4.3125 L21.84,4.3125 C21.378,4.3125 20.88016,3.9445 20.73428,3.494275 L19.86572,0.8179375 C19.71928,0.368 19.222,0 18.76,0 L9.24,0 C8.778,0 8.28016,0.368 8.13428,0.818225 L7.26572,3.4945625 C7.11928,3.9445 6.622,4.3125 6.16,4.3125 L2.8,4.3125 C1.26,4.3125 0,5.60625 0,7.1875 L0,20.125 C0,21.70625 1.26,23 2.8,23 L25.2,23 C26.74,23 28,21.70625 28,20.125 L28,7.1875 C28,5.60625 26.74,4.3125 25.2,4.3125 Z M14,20.125 C10.13404,20.125 7,16.9070125 7,12.9375 C7,8.968275 10.13404,5.75 14,5.75 C17.8654,5.75 21,8.968275 21,12.9375 C21,16.9070125 17.8654,20.125 14,20.125 Z M24.22,9.1979875 C23.67904,9.1979875 23.24,8.7477625 23.24,8.1917375 C23.24,7.6362875 23.67904,7.1854875 24.22,7.1854875 C24.76152,7.1854875 25.2,7.6362875 25.2,8.1917375 C25.2,8.7477625 24.76124,9.1979875 24.22,9.1979875 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

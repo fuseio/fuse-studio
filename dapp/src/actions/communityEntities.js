@@ -17,6 +17,9 @@ export const REMOVE_ADMIN_ROLE = createTransactionRequestTypes('REMOVE_ADMIN_ROL
 export const CONFIRM_USER = createTransactionRequestTypes('CONFIRM_USER')
 
 export const FETCH_ENTITY = createRequestTypes('FETCH_ENTITY')
+export const JOIN_COMMUNITY = createRequestTypes('JOIN_COMMUNITY')
+export const IMPORT_EXISTING_ENTITY = createRequestTypes('IMPORT_EXISTING_ENTITY')
+export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
 
 export const fetchEntities = (communityAddress) => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress })
 export const fetchUsersEntities = (communityAddress, entityType = 'user') => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress, entityType })
@@ -24,11 +27,14 @@ export const fetchBusinessesEntities = (communityAddress, entityType = 'business
 
 export const fetchEntity = (communityAddress, account) => entitiesAction(FETCH_ENTITY.REQUEST, { communityAddress, account })
 
-export const addEntity = (communityAddress, data, isClosed) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed })
+export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType })
 export const removeEntity = (communityAddress, account) => action(REMOVE_ENTITY.REQUEST, { communityAddress, account })
 export const addAdminRole = (account) => action(ADD_ADMIN_ROLE.REQUEST, { account })
 export const removeAdminRole = (account) => action(REMOVE_ADMIN_ROLE.REQUEST, { account })
 export const confirmUser = (account) => action(CONFIRM_USER.REQUEST, { account })
 export const editEntity = (listAddress, hash, data) => action(EDIT_ENTITY.REQUEST, { listAddress, hash, data })
+export const joinCommunity = (communityAddress, data) => action(JOIN_COMMUNITY.REQUEST, { communityAddress, data })
+export const importExistingEntity = (accountAddress, communityAddress, isClosed) => action(IMPORT_EXISTING_ENTITY.REQUEST, { accountAddress, communityAddress, isClosed })
+export const uploadImage = (image) => action(UPLOAD_IMAGE.REQUEST, { image })
 
 export const toggleCommunityMode = (communityAddress, isClosed) => action(TOGGLE_COMMUNITY_MODE.REQUEST, { communityAddress, isClosed })

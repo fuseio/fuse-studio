@@ -1,18 +1,29 @@
-import { string, object } from 'yup'
+import { string, object, mixed } from 'yup'
 
-const regaxLetters = /^[a-zA-Z]+$/
+// const regaxLetters = /^[a-zA-Z]+$/
+
+// const SUPPORTED_FORMATS = [
+//   'image/jpg',
+//   'image/jpeg',
+//   'image/gif',
+//   'image/png'
+// ]
+
+// const FILE_SIZE = 2500000
 
 export default object().noUnknown(false).shape({
-  firstName: string().trim().ensure().label('First name').required().matches(regaxLetters, 'Please type only letters'),
-  lastName: string().trim().ensure().label('Last name').required().matches(regaxLetters, 'Please type only letters'),
+  name: string().trim().ensure().label('Full name').required(),
   email: string().email(),
-  mainPhoneNumber: string(),
-  secondPhoneNumber: string(),
+  phoneNumber: string(),
   country: object().shape({
     label: string(),
     value: string()
   }),
-  city: string(),
+  status: object().shape({
+    label: string(),
+    value: string()
+  }).nullable(true),
   address: string(),
-  account: string().normalize().required().isAddress()
+  account: string().normalize().required().isAddress(),
+  image: mixed().nullable(true)
 })

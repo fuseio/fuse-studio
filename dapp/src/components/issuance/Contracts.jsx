@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react'
-import FontAwesome from 'react-fontawesome'
 import ContractsType from 'constants/contractsType'
 
 export default class Contracts extends PureComponent {
@@ -52,11 +51,10 @@ export default class Contracts extends PureComponent {
         </div>
         <div className='grid-x align-center next'>
           <button
-            className='button button--normal button--fuse'
+            className='button button--normal'
             onClick={setNextStep}
           >
-            NEXT
-            <FontAwesome name='angle-right' />
+            Next
           </button>
         </div>
       </div>

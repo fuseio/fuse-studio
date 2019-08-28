@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="18px" height="30px" viewBox="0 0 18 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
-    <title>Group 33</title>
+<svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 14</title>
     <desc>Created with Sketch.</desc>
-    <g id="Fuse-color-network" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Fuse-example-of-Ethererum-color" transform="translate(-265.000000, -573.000000)" fill="#00A5FF">
-            <g id="Group-33" transform="translate(265.000000, 573.000000)">
-                <path d="M8.9945027,0.000462162164 L17.9889081,14.9239216 L8.9945027,20.2402459 L9.72973006e-05,14.9239459 L8.9945027,-3.00204306e-13 Z" id="Combined-Shape"></path>
-                <path d="M1.77635684e-14,16.6295189 L8.99440541,21.9434108 L8.99440541,29.3039514 L1.77635684e-14,16.6295189 Z M8.99452703,21.9434108 L17.9940405,16.6295189 L8.99452703,29.3039514 L8.99452703,21.9434108 Z" id="Combined-Shape"></path>
+    <g id="community-page-home" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="community-page-new" transform="translate(-1302.000000, -620.000000)">
+            <g id="Group-14" transform="translate(1303.000000, 621.000000)">
+                <g id="Group-28">
+                    <rect id="Rectangle" stroke="#C6C6C6" stroke-width="0.9" fill="#FFFFFF" x="0" y="0" width="52" height="52" rx="26"></rect>
+                    <g id="ether-logo" transform="translate(16.137931, 27.793103)"></g>
+                </g>
+                <g id="Group-28-Copy" transform="translate(17.034483, 9.862069)" fill="#4A687B">
+                    <g id="ether-logo">
+                        <path d="M9.4137931,0.000491320849 L18.8275862,15.8655001 L9.4137931,21.5172414 L2.86171087e-12,15.8655259 L9.4137931,-3.19744231e-13 Z" id="Combined-Shape"></path>
+                        <polygon id="Fill-10" points="9.86206897 22.6728168 9.86206897 30.4827586 18.8275862 17.0344828"></polygon>
+                        <polygon id="Fill-10" transform="translate(4.482759, 23.758621) scale(-1, 1) translate(-4.482759, -23.758621) " points="0 22.6728168 0 30.4827586 8.96551724 17.0344828"></polygon>
+                    </g>
+                </g>
             </g>
         </g>
     </g>

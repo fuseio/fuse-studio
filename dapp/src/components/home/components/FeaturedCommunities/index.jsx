@@ -4,7 +4,7 @@ import { fetchTokens, fetchTokensByOwner, fetchFuseToken } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
-import ReactGA from 'services/ga'
+// import ReactGA from 'services/ga'
 // import CommunityLogo from 'components/common/CommunityLogo'
 // import { formatWei } from 'utils/format'
 import { withRouter } from 'react-router-dom'
@@ -22,32 +22,32 @@ const staticImages = [
 
 class FeaturedCommunities extends Component {
   componentDidMount () {
-    if (this.props.networkType !== 'fuse') {
-      this.props.fetchFuseToken()
-    }
-    if (this.props.account) {
-      const { networkType, account } = this.props
-      this.props.fetchTokens(networkType)
-      this.props.fetchTokensByOwner(networkType, account)
-    }
+    // if (this.props.networkType !== 'fuse') {
+    //   this.props.fetchFuseToken()
+    // }
+    // if (this.props.account) {
+    //   const { networkType, account } = this.props
+    //   this.props.fetchTokens(networkType)
+    //   this.props.fetchTokensByOwner(networkType, account)
+    // }
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.account && !prevProps.account) {
-      const { networkType, account } = this.props
-      this.props.fetchTokens(networkType)
-      this.props.fetchTokensByOwner(networkType, account)
-    }
+    // if (this.props.account && !prevProps.account) {
+    //   const { networkType, account } = this.props
+    //   this.props.fetchTokens(networkType)
+    //   this.props.fetchTokensByOwner(networkType, account)
+    // }
   }
 
   showDashboard = (token) => {
     if (token && token.communityAddress) {
       this.props.history.push(`/view/community/${token.communityAddress}`)
-      ReactGA.event({
-        category: 'Dashboard',
-        action: 'Click',
-        label: 'dashboard'
-      })
+      // ReactGA.event({
+      //   category: 'Dashboard',
+      //   action: 'Click',
+      //   label: 'dashboard'
+      // })
     }
   }
 

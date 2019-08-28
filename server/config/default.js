@@ -107,5 +107,8 @@ module.exports = {
         concurrency: 5
       }
     }
+  },
+  funder: {
+    urlBase: 'https://funder-qa.fusenet.io/api/'
   }
 }

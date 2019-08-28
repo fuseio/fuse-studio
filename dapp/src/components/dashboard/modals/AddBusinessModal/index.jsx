@@ -1,25 +1,35 @@
 import React from 'react'
 import Modal from 'components/common/Modal'
-import DynamicImg from 'images/dynamicdash.png'
 import BusinessForm from '../../components/BusinessForm'
+import TransactionMessage from 'components/common/TransactionMessage'
+import { connect } from 'react-redux'
 
-const AddBusinessModal = (props) => {
+const AddBusinessModal = ({ hideModal, isJoin, showTransactionMessage, signatureNeeded, submitEntity, entity, transactionData }) => {
   const handleSubmitEntity = (...args) => {
-    props.submitEntity(...args)
-    props.hideModal()
+    submitEntity(...args)
+  }
+
+  if (showTransactionMessage === false) {
+    hideModal()
   }
 
   return (
-    <Modal className='entity-modal' onClose={props.hideModal}>
-      <div className='entity-modal-media'>
-        <h3 className='entity-modal-media-title'>
-          Bring Your Business to Fuse
-        </h3>
-        <img className='entity-modal-media-img' src={DynamicImg} />
+    <Modal className='user-form__modal' onClose={hideModal}>
+      <TransactionMessage
+        title={isJoin ? 'Joining the list' : 'Adding business to list'}
+        message={signatureNeeded ? 'Waiting for signing' : 'Pending'}
+        isOpen={showTransactionMessage}
+        isDark
+      />
+      <div className='user-form__wrapper'>
+        <BusinessForm isJoin={isJoin} submitEntity={handleSubmitEntity} entity={entity} />
       </div>
-      <BusinessForm submitEntity={handleSubmitEntity} entity={props.entity} />
     </Modal>
   )
 }
 
-export default AddBusinessModal
+const mapStateToProps = (state) => ({
+  ...state.screens.communityEntities
+})
+
+export default connect(mapStateToProps, null)(AddBusinessModal)

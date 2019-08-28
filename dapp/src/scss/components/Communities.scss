@@ -33,16 +33,6 @@
 
   @include element(wrapper) {
 		padding: 100px 0 10px;
-    // @include breakpoint(medium down) {
-		// 	padding: 70px 0 10px;
-		// }
-		// @include breakpoint(medium up) {
-		// }
-
-		> div {
-			// padding-right: 40px;
-			// padding-left: 40px;
-		}
 	}
 
 	@include element(banner) {
@@ -99,7 +89,6 @@
 	}
 	
 	@include element(list) {
-		// padding: 0 40px;
 		@include element(wrapper) {
 			background-color: #f5f5f5;
 			padding-bottom: 5em;

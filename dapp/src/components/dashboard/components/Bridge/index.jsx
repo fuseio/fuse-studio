@@ -2,16 +2,16 @@ import React, { Component, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
-import web3 from 'web3'
-import FontAwesome from 'react-fontawesome'
+import { toWei } from 'web3-utils'
 import { balanceOfToken } from 'actions/accounts'
 import * as actions from 'actions/bridge'
 import { getBlockNumber } from 'actions/network'
 import { getBalances } from 'selectors/accounts'
 import { getBridgeStatus } from 'selectors/network'
-import RopstenLogo from 'images/Ropsten.png'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
+import arrow1 from 'images/arrow--1.svg'
+import arrow2 from 'images/arrow--2.svg'
 import { convertNetworkName } from 'utils/network'
 import { getTransaction } from 'selectors/transaction'
 import { loadModal } from 'actions/ui'
@@ -20,20 +20,18 @@ import { SHOW_MORE_MODAL } from 'constants/uiConstants'
 const NetworkLogo = ({ network }) => {
   switch (network) {
     case 'fuse':
-      return <div className='network-logo fuse-logo'><img src={FuseLogo} /></div>
-    case 'ropsten':
-      return <div className='network-logo'><img src={RopstenLogo} /></div>
-    case 'main':
-      return <div className='network-logo ethereum-logo'><img src={MainnetLogo} /></div>
+      return <div className='network-logo'><img src={FuseLogo} /></div>
+    default:
+      return <div className='network-logo'><img src={MainnetLogo} /></div>
   }
 }
 
 const Balance = (props) => {
   useEffect(() => {
-    if (props.tokenAddress && props.accountAddress && !props.transferStatus) {
+    if (!props.transferStatus) {
       props.balanceOfToken(props.tokenAddress, props.accountAddress, { bridgeType: props.bridgeSide.bridge })
     }
-  }, [props.tokenAddress, props.accountAddress, props.transferStatus])
+  }, [props.transferStatus])
   return (<div className={`bridge ${props.className}`}>
     <NetworkLogo network={props.bridgeSide.network} />
     <div className='bridge__title'>{convertNetworkName(props.bridgeSide.network)}</div>
@@ -41,7 +39,7 @@ const Balance = (props) => {
       <div>Balance</div>
       <span>{props.balances[props.tokenAddress]
         ? new BigNumber(props.balances[props.tokenAddress]).div(1e18).toFormat(2, 1)
-        : 0 } {props.token.symbol}
+        : 0 } <small>{props.token.symbol}</small>
       </span>
     </div>
     <button className='bridge__more' disabled={props.disabled} onClick={props.openModal}>Show more</button>
@@ -78,7 +76,7 @@ class Bridge extends Component {
   setTransferAmount = (e) => this.setState({ transferAmount: e.target.value })
 
   handleTransfer = () => {
-    const value = web3.utils.toWei(this.state.transferAmount)
+    const value = toWei(this.state.transferAmount)
     if (this.props.bridgeStatus.to.bridge === 'home') {
       this.props.transferToHome(this.props.foreignTokenAddress, this.props.foreignBridgeAddress, value)
     } else {
@@ -154,7 +152,7 @@ class Bridge extends Component {
             openModal={() => this.openModal('from')}
           />
           <div className='bridge__arrow'>
-            <FontAwesome name='long-arrow-alt-right' />
+            <img src={homeNetwork === bridgeStatus.from.network ? arrow1 : arrow2} />
           </div>
           <div className='bridge__transfer'>
             {
@@ -184,7 +182,7 @@ class Bridge extends Component {
             }
           </div>
           <div className='bridge__arrow'>
-            <FontAwesome name='long-arrow-alt-right' />
+            <img src={homeNetwork === bridgeStatus.to.network ? arrow1 : arrow2} />
           </div>
           <Balance
             balanceOfToken={balanceOfToken}

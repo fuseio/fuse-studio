@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { isMobileOnly } from 'react-device-detect'
 import TotalSupply from './TotalSupply'
 import LogosOptions from './LogosOptions'
-import FontAwesome from 'react-fontawesome'
 import SymbolStep from './SymbolStep'
 
 export default class DetailsStep extends Component {
@@ -22,6 +21,20 @@ export default class DetailsStep extends Component {
     }
   }
 
+  validateStep = () => {
+    const {
+      communityType,
+      totalSupply,
+      communityLogo
+    } = this.props
+
+    if (communityType && communityType.value !== 'existingToken') {
+      return Object.keys(communityType).length === 0 || totalSupply < 0 || totalSupply === '0' || !totalSupply// || !communityLogo.name
+    } else {
+      return Object.keys(communityType).length === 0 || !communityLogo.name
+    }
+  }
+
   mobileLayout = () => {
     const {
       communityType,
@@ -33,7 +46,9 @@ export default class DetailsStep extends Component {
       totalSupply,
       networkType,
       handleChangeCommunitySymbol,
-      communityName
+      communityName,
+      setImages,
+      images
     } = this.props
 
     const { currentStep } = this.state
@@ -58,6 +73,8 @@ export default class DetailsStep extends Component {
             />
             {isMobileOnly && <div className='line' ><hr /></div>}
             <LogosOptions
+              setImages={setImages}
+              images={images}
               communityType={communityType}
               networkType={networkType}
               communityLogo={communityLogo}
@@ -66,32 +83,15 @@ export default class DetailsStep extends Component {
             />
             <div className='grid-x align-center next'>
               <button
-                className='button button--normal button--fuse'
+                className='button button--normal'
                 disabled={
                   this.validateStep()
                 }
                 onClick={setNextStep}
-              >
-                NEXT
-                <FontAwesome className='symbol-icon' name='angle-right' />
-              </button>
+              >Next</button>
             </div>
           </Fragment>
         )
-    }
-  }
-
-  validateStep = () => {
-    const {
-      communityType,
-      totalSupply,
-      communityLogo
-    } = this.props
-
-    if (communityType && communityType.value !== 'existingToken') {
-      return Object.keys(communityType).length === 0 || totalSupply < 0 || totalSupply === '0' || !totalSupply || !communityLogo.name
-    } else {
-      return Object.keys(communityType).length === 0 || !communityLogo.name
     }
   }
 
@@ -105,6 +105,8 @@ export default class DetailsStep extends Component {
       setTotalSupply,
       setNextStep,
       totalSupply,
+      setImages,
+      images,
       networkType,
       handleChangeCommunitySymbol
     } = this.props
@@ -130,6 +132,8 @@ export default class DetailsStep extends Component {
           communitySymbol={communitySymbol}
         />
         <LogosOptions
+          setImages={setImages}
+          images={images}
           communityType={communityType}
           networkType={networkType}
           communityLogo={communityLogo}
@@ -138,14 +142,13 @@ export default class DetailsStep extends Component {
         />
         <div className='grid-x align-center next'>
           <button
-            className='button button--normal button--fuse'
+            className='button button--normal'
             disabled={
               this.validateStep()
             }
             onClick={setNextStep}
           >
-            NEXT
-            <FontAwesome className='symbol-icon' name='angle-right' />
+            Next
           </button>
         </div>
       </Fragment>

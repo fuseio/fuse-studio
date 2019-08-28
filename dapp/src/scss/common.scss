@@ -49,10 +49,33 @@
 	}
 }
 
-@include block(show-more) {
-	@include element(wrapper) {
+@include block(qr_code_modal) {
+	width: 350px;
+	@include xy-grid(vertical);
+
+	@include element(wrapper){
+		
+		@include breakpoint(large) {
+			margin-top: 40px;
+		}
 	}
 
+	@include element(title) {
+		display: inline-block;
+		font-size: small;
+		color: #4a687b;
+		text-align: start;
+		font-weight: 500;
+	}
+
+	@include element(image) {
+		padding-top: 2em;
+		width: inherit;
+	}
+}
+
+@include block(show-more) {
+	max-width: 330px;
 	@include element(header) {
 		display: block;
 		text-transform: uppercase;
@@ -155,7 +178,7 @@
 		font-size: 11px;
 	}
 	> input:checked ~ .toggle-wrapper {
-		background: linear-gradient(97deg, #98faac, #fae83e);
+		background: $color-fuse_gradient;
 		.toggle {
 			left: 18px;
 			border-color: #fae83e;
@@ -254,6 +277,7 @@
 		background-position: center;
 		background-size: contain;
 		background-repeat: no-repeat;
+		border-radius: 50%;
 	}
 
 	@include element (name) {
@@ -349,30 +373,10 @@
 }
 
 @include block(button) {
-	background: $color-ropsten;
+	height: 33px;
+	background-color: #4a687b;
+	border-radius: 3px;
 	color: $color-white;
-	font-weight: bold;
-	text-align: center;
-	height: 42px;
-	border-radius: 20.5px;
-	border: none;
-
-	@include modifier(fuse) {
-		color: $color-primary-dark;
-		background: linear-gradient(97deg, #98faac, #fae83e) !important;
-
-		&:hover {
-			background: $color-fuse !important;
-		}
-
-		&:disabled,
-		&[disabled] {
-			opacity: 0.3;
-			background: linear-gradient(97deg, #98faac, #fae83e) !important;
-			color: $color-primary-dark !important;
-			cursor: not-allowed;
-		}
-	}
 
 	.fa {
 		margin-left: 4px;
@@ -396,13 +400,13 @@
 
 	&:hover {
 		cursor: pointer;
-		background: #2eba72;
+		background-color: #25435a;
 	}
 
 	&:disabled,
 		&[disabled] {
 			opacity: 0.3;
-			background-color: #34d080;
+			background-color: #4a687b;
 			color: $color-white;
 			cursor: not-allowed;
 		}
@@ -411,7 +415,7 @@
 @include block(button-flip) {
 	transition: .8s cubic-bezier(.775, .07, .575, .995);
 	transform-style: preserve-3d;
-	border-radius: 20.5px;
+	border-radius: 3px;
 
 	@include element(wrapper) {
 		position: relative;
@@ -429,19 +433,17 @@
 
 	> button {
 		width: 105px;
-		height: 42px;
+		height: 33px;
 		display: inline-block;
 		outline: none;
-		line-height: 42px;
-		font-size: 13px;
+		font-size: 14px;
 		cursor: pointer;
-		font-weight: bold;
 		border: none;
 	}
 
 	@include element(front) {
 		border-radius: inherit;
-		background-color: $color-ropsten;
+		background-color: #4a687b;
 		color: #fff;
 		backface-visibility: hidden;
 		z-index: 2;
@@ -457,12 +459,12 @@
 		}
 
 		&:hover {
-			background-color: darken($color-ropsten, 10%);
+			background-color: #052235;
 		}
 
 		@include modifier(fuse) {
 			color: $color-primary-dark !important;
-			background: linear-gradient(97deg, #98faac, #fae83e) !important;
+			background: $color-fuse_gradient !important;
 
 			&:disabled,
 			&[disabled] {
@@ -498,10 +500,41 @@
 	}
 }
 
+@include block(entity_added) {
+  width: 572px !important;
+  height: 321px !important;
+  border-radius: 3px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+	background-color: #ffffff;
+	@include xy-grid(vertical, false);
+	@include flex-align(spaced, middle);
+
+	@include breakpoint(small down) {
+		padding: 20px 30px;
+	}
+
+	@include element(title) {
+		font-size: 24px;
+		font-weight: 500;
+		color: #052235;
+	}
+
+	@include element(body) {
+		@include xy-grid(vertical, false);
+		@include flex-align(center, middle);
+		color: #7a7a7a;
+		font-size: 20px;
+		line-height: 1.6;
+		
+	  span:nth-child(2) {
+			color: #052235;
+		}
+	}
+}
+
 @include block(congratulation) {
 	@include xy-grid(vertical, false);
 	@include flex-align(center, middle);
-	position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
@@ -512,42 +545,92 @@
 	border-radius: 10px;
 	color: $color-primary-dark;
 	text-align: center;
-	padding: 20px 70px;
+	width: 520px;
+	margin: auto;
 
 	@include breakpoint(small down) {
 		padding: 20px 30px;
 	}
 
 	@include element(title) {
-		font-size: 20px;
+	  font-size: 30px;
 		font-weight: bold;
-		line-height: 1.25;
+		color: #25435a;
+		line-height: 2;
 	}
 
 	@include element(sub-title) {
-		font-size: 20px;
+		position: relative;
+  	font-size: 26px;
+  	font-weight: 500;
+  	text-align: center;
+		color: #4a687b;
+		
+		> img {
+			&:first-child {
+				position: absolute;
+				left: -5em;		
+			}
+
+			&:last-child {
+				position: absolute;
+				right: -5em;
+			}
+		}
+	}
+
+	@include element(boxImg) {
+		margin-top: 1em;
+	}
+
+	@include element(fuse-text) {
+		font-size: 21px;
 		font-weight: 500;
-		line-height: 1.65;
+		line-height: 1.43;
+		text-align: center;
+		color: #7a7a7a;
+		margin-top: 20px;
 	}
 
 	@include element(what) {
-		font-size: 16px;
+		font-size: 1.2em;
     line-height: 1.25;
-		margin: 1em 0;
+		color: #7a7a7a;
+		text-align: center;
+	}
+	
+	@include element(what-small) {
+		text-decoration: underline;
+    margin: 2em 0;
+  	font-size: 16px;
+  	font-weight: bold;
+  	text-align: center;
+  	color: #7a7a7a;
 	}
 
 	@include element(text) {
-		font-size: 13px;
-    line-height: 1.35;
+	  font-size: 0.9em;
+		line-height: 1.56;
+		text-align: center;
+		color: #7a7a7a;
 	}
 
 	@include element(btn) {
 		margin-top: 1.5em;
 		> button {
 			width: auto;
-			font-size: 14px;
-			text-transform: uppercase;
+			border-radius: 19px;
+			color: #25435a;
+			font-size: 14.3px;
+			font-weight: 500;
+			border-radius: 19px;
+			color: #25435a;
 			padding: 0 1em;
+			background: linear-gradient(96deg, #97fba2, #fae83e);
+
+			&:hover {
+				background: #fae83e;
+			}
 		}
 	}
 }
@@ -563,14 +646,39 @@
   background-color: $color-white;
   z-index: 5;
   font-family: $font-family;
-	border-radius: 0 0 10px 10px;
+	border-radius: 5px;
 
 	@include modifier(radius-all) {
 		border-radius: 10px;		
 	}
 
+	@include modifier(radius-all-3) {
+		border-radius: 3px;		
+	}
+
 	@include modifier(dark) {
 		background-color: rgba(5, 40, 62, 0.97);
+	}
+
+  @include element(issue) {
+		width: 411px;
+    height: 291px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 11px 0 rgba(0, 0, 0, 0.25);
+		margin: auto;
+		position: fixed;
+
+		@include modifier(white) {
+			background-color: $color-white;
+		}
+
+		@include modifier(dark) {
+			background-color: rgba(5, 40, 62, 0.95);
+		}
+
+		@include block(error_image) {
+			margin-bottom: 16px;
+		}
 	}
 
   @include element(title) {
@@ -578,7 +686,6 @@
     font-weight: 500;
     line-height: 1.35;
 		letter-spacing: 0.5px;
-		max-width: 30%;
     text-align: center;
 		
 		@include modifier(white) {
@@ -594,7 +701,6 @@
     font-size: 18px;
     font-weight: normal;
 		margin-top: 15px;
-		max-width: 30%;
     text-align: center;
 		
 		@include modifier(white) {
@@ -629,7 +735,7 @@
 		@include element(img) {
 			width: 40px;
 			height: 40px;
-			margin-top: 15px;
+			margin: 15px auto 0;
 
 			> img {
 				background-position: center;
@@ -657,7 +763,6 @@
 			background-color: $color-ropsten;
 			font-size: 12.8px;
 			color: $color-white;
-			// padding: 10px 30px;
 			width: 84px;
 			height: 32px;
 			text-transform: uppercase;
@@ -691,7 +796,6 @@
   right: 0;
   left: 0;
   background-color: rgba(5, 40, 62, 0.8);
-  // z-index: 5;
   border-radius: 10px;
   font-family: $font-family;
   display: flex;
@@ -763,7 +867,7 @@
 @include block(input-error) {
 	display: block;
 	position: absolute;
-	bottom: -1em;
+	bottom: -2em;
 	color: $color-red;
 	font-size: 11px;
 	line-height: 1.25;
@@ -804,7 +908,6 @@
 }
 
 .fullscreen {
-	// height: 100vh;
 	&.open-mobile-nav {
 		z-index: 2;
 		@media (max-width: $breakpoint-tablet) {

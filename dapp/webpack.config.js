@@ -20,8 +20,11 @@ module.exports = {
     extensions: ['.js', '.jsx', '.json']
   },
   devServer: {
-    port: process.env.COMMUNITY_APP_PORT || 9000,
-    historyApiFallback: true
+    port: process.env.COMMUNITY_COLU_PORT || 9000,
+    historyApiFallback: true,
+    allowedHosts: [
+      '.ngrok.io'
+    ]
   },
   plugins: [
     new HtmlWebPackPlugin({

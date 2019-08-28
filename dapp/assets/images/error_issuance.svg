@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="58px" viewBox="0 0 58 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Currency-Isuser" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Summery--new-Copy-6" transform="translate(-966.000000, -241.000000)">
+            <g id="Group" transform="translate(966.000000, 241.000000)">
+                <circle id="Oval" fill="#E8F0F5" cx="29" cy="29" r="29"></circle>
+                <g id="icon-copy" transform="translate(19.000000, 20.000000)" fill="#FC6E4C" fill-rule="nonzero">
+                    <path d="M20,16.2998087 L16.2957418,20 C16.2957418,20 10.4357951,13.7110057 9.99833666,13.7110057 C9.5675316,13.7110057 3.70592149,20 3.70592149,20 L0,16.2998087 C0,16.2998087 6.29407851,10.523251 6.29407851,10.0091507 C6.29407851,9.48673155 0,3.70851011 0,3.70851011 L3.70592149,2.27373675e-13 C3.70592149,2.27373675e-13 9.61576846,6.29232177 9.99833666,6.29232177 C10.3842315,6.29232177 16.2957418,2.27373675e-13 16.2957418,2.27373675e-13 L20,3.70851011 C20,3.70851011 13.7042582,9.56991931 13.7042582,10.0091507 C13.7042582,10.4267532 20,16.2998087 20,16.2998087 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

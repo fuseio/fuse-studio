@@ -33,12 +33,25 @@
 
     @include block(address) {
       font-size: 14px;
+
+      .fa-clone {
+        font-weight: 400;
+        color: $color-arrow;
+        &:hover {
+          cursor: pointer;
+          font-weight: 900;
+        }
+      }
+
       > span {
         margin-right: 10px;
       }
     }
 
     @include block(name) {
+      font-size: 24px;
+      font-weight: 500;
+
       @include element(wrapper) {
         width: max-content;
       }
@@ -47,12 +60,11 @@
         font-size: 14px;
         display: inline;
       }
-  
-      font-size: 24px;
-      font-weight: 500;
+
       @include element(status) {
         font-size: 13px;
         align-self: flex-end;
+        line-height: 1.7;
 
         @include breakpoint(small down) {
           font-size: 11px;

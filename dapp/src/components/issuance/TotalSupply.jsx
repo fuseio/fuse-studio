@@ -15,7 +15,6 @@ const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityTyp
         <div className='attributes__supply'>
           <TextInput
             className='attributes__supply__input'
-            id='communityName'
             type='number'
             placeholder='...'
             autoComplete='off'
@@ -27,7 +26,7 @@ const TotalSupply = ({ checkCondition, totalSupply, setTotalSupply, communityTyp
       </div>
       {isMobileOnly && <div className='grid-x align-center next'>
         <button
-          className='button button--normal button--fuse'
+          className='button button--normal'
           disabled={
             totalSupply < 0 || totalSupply === '0' || !totalSupply
           }

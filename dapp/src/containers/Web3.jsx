@@ -5,6 +5,7 @@ import { loadModal } from 'actions/ui'
 import { isNetworkSupported } from 'utils/network'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { withMaybe } from 'utils/components'
+import { getAccountAddress } from 'selectors/accounts'
 
 class Web3 extends Component {
   componentDidMount () {
@@ -49,4 +50,22 @@ const withNetwork = (Component) => {
   return ConnectedComponent
 }
 
-export { withNetwork }
+const withAccount = (Component) => {
+  const mapStateToProps = (state) => ({
+    accountAddress: getAccountAddress(state)
+  })
+
+  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.accountAddress)(Component))
+  return ConnectedComponent
+}
+
+const withBox = (Component) => {
+  const mapStateToProps = (state) => ({
+    isBoxConnected: state.network.isBoxConnected
+  })
+
+  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.isBoxConnected)(Component))
+  return ConnectedComponent
+}
+
+export { withNetwork, withAccount, withBox }

@@ -1,237 +1,267 @@
-import React, { Component, Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-import Loader from 'components/common/Loader'
 import { getAccountAddress } from 'selectors/accounts'
-import { REQUEST, PENDING } from 'actions/constants'
 import { getBusinessesEntities } from 'selectors/entities'
 import {
   addEntity,
   fetchBusinessesEntities,
   removeEntity,
-  addAdminRole,
-  removeAdminRole,
-  toggleCommunityMode
+  joinCommunity
 } from 'actions/communityEntities'
-import { fetchCommunity } from 'actions/token'
 import { loadModal, hideModal } from 'actions/ui'
-import { ADD_DIRECTORY_ENTITY } from 'constants/uiConstants'
-import ReactGA from 'services/ga'
-import plusIcon from 'images/add.svg'
+import { ADD_BUSINESS_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import { getTransaction } from 'selectors/transaction'
-import Entity from '../../components/Entity'
+import MyTable from 'components/dashboard/components/Table'
+import AddBusiness from 'images/add_business.svg'
+import { useFetch } from 'hooks/useFetch'
+import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
+import sortBy from 'lodash/sortBy'
+import capitalize from 'lodash/capitalize'
 
-const BusinessesDataFetcher = (props) => {
-  useEffect(() => {
-    if (props.toggleSuccess) {
-      props.fetchCommunity(props.communityAddress)
-    }
-  }, [props.toggleSuccess])
+const Businesses = ({
+  network,
+  businesses,
+  community,
+  isAdmin,
+  history,
+  fetchEntities,
+  accountAddress,
+  signatureNeeded,
+  entityAdded,
+  transactionStatus,
+  onlyOnFuse,
+  fetchBusinessesEntities,
+  loadModal,
+  addEntity,
+  joinCommunity,
+  removeEntity
+}) => {
+  const { communityAddress, isClosed } = community
+  const [data, setData] = useState(null)
+  const [search, setSearch] = useState('')
+  const apiRoot = getApiRoot(network.networkType === 'fuse' ? 'default' : network.networkType)
+  let url = `${apiRoot}/entities/${communityAddress}?type=business`
 
-  useEffect(() => {
-    if (props.communityAddress) {
-      props.fetchBusinessesEntities(props.communityAddress)
-    }
-  }, [props.communityAddress])
-
-  return null
-}
-
-class Businesses extends Component {
-  state = {
-    search: ''
+  if (search) {
+    url = `${url}&search=${search}`
   }
 
-  showHomePage = (address) => {
-    this.props.history.push('/')
-  }
+  const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
 
-  showProfile = (address, hash) => {
-    this.props.history.push(`/view/directory/${address}/${hash}`)
-    ReactGA.event({
-      category: 'Directory',
-      action: 'Click',
-      label: 'directory'
+  useEffect(() => {
+    if (fetchEntities === false) {
+      fetchData()
+    }
+
+    if (search) {
+      fetchData()
+    }
+  }, [search, fetchEntities])
+
+  useEffect(() => {
+    if (communityAddress) {
+      fetchBusinessesEntities(communityAddress)
+    }
+  }, [communityAddress])
+
+  useEffect(() => {
+    if (!isEmpty(response)) {
+      const { data: listData } = response
+      setData(sortBy(listData.map(({ profile, isAdmin: hasAdminRole, isApproved, account }, index) => ({
+        name: profile && profile.publicData
+          ? profile.publicData.name
+            ? [
+              {
+                name: profile.publicData.name,
+                image: profile.publicData &&
+                  profile.publicData.image
+                  ? <div
+                    style={{
+                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                      width: '36px',
+                      height: '36px',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+                  : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
+              }
+            ]
+            : [
+              {
+                name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
+                image: profile.publicData &&
+                  profile.publicData.image
+                  ? <div
+                    style={{
+                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                      width: '36px',
+                      height: '36px',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+                  : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
+              }
+            ]
+          : [
+            {
+              name: '',
+              image: <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
+            }
+          ],
+        type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
+        address: profile && profile.publicData ? profile.publicData.address : '',
+        account
+      })), ['updatedAt']).reverse())
+    }
+  }, [response])
+
+  useEffect(() => {
+    if (entityAdded) {
+      setTimeout(() => {
+        loadModal(ENTITY_ADDED_MODAL, {
+          type: 'business',
+          name: !isEmpty(data) ? data[0].name[0].name : ''
+        })
+      }, 1000)
+    }
+  }, [entityAdded])
+
+  const tableData = useMemo(() => data, [data])
+
+  const columns = useMemo(() => [
+    {
+      id: 'checkbox',
+      accessor: '',
+      Cell: (rowInfo) => {
+        return null
+        // return (
+        //   <input
+        //     type='checkbox'
+        //     className='row_checkbox'
+        //     checked={rowInfo.value.checkbox}
+        //     // checked={this.state.selected[rowInfo.original.title.props.children] === true}
+        //     onChange={() => this.toggleRow(rowInfo.row.original)}
+        //   />
+        // )
+      }
+    },
+    {
+      Header: 'Name',
+      accessor: 'name'
+    },
+    {
+      Header: 'Type',
+      accessor: 'type'
+    },
+    {
+      Header: 'Address',
+      accessor: 'address'
+    },
+    {
+      Header: 'Account ID',
+      accessor: 'account'
+    },
+    {
+      id: 'dropdown',
+      accessor: '',
+      Cell: (rowInfo) => {
+        return (
+          isAdmin ? (
+            <div className='table__body__cell__more'>
+              <div className='table__body__cell__more__toggler'><FontAwesome name='ellipsis-v' /></div>
+              <div className='more' onClick={e => e.stopPropagation()}>
+                <ul className='more__options'>
+                  <li className='more__options__item' onClick={() => handleRemoveEntity(rowInfo.row.original.account)}>
+                    <FontAwesome name='trash' /> Remove from list
+                  </li>
+                </ul>
+              </div>
+            </div>
+          ) : null
+        )
+      }
+    }
+  ], [isAdmin])
+
+  const handleAddBusiness = () => onlyOnFuse(loadAddBusinessModal)
+
+  const handleJoinCommunity = () =>
+    onlyOnFuse(() => loadAddBusinessModal(true))
+
+  const loadAddBusinessModal = (isJoin) => {
+    const submitEntity = isJoin ? joinCommunity : addEntity
+    loadModal(ADD_BUSINESS_MODAL, {
+      isJoin,
+      entity: isJoin ? { account: accountAddress } : undefined,
+      submitEntity: (data) => submitEntity(communityAddress, { ...data }, isClosed, 'business')
     })
   }
 
-  handleAddBusiness = () => {
-    this.props.onlyOnFuse(this.loadAddingModal)
-  }
-
-  loadAddingModal = () => this.props.loadModal(ADD_DIRECTORY_ENTITY, {
-    submitEntity: (data) => this.props.addEntity(this.props.community.communityAddress, { ...data, type: 'business' }, this.props.community.isClosed)
-  })
-
-  renderTransactionStatus = () => {
-    if (this.props.signatureNeeded || this.props.transactionStatus === PENDING || this.props.fetchEntities) {
-      return (
-        <div className='entities__loader'>
-          <Loader color='#3a3269' className='loader' />
-        </div>
-      )
-    }
-  }
-
-  setSearchValue = (e) => this.setState({ search: e.target.value })
-
-  filterBySearch = (search, entities) =>
-    search ? entities.filter(entity =>
-      entity && entity.name && entity.name.toLowerCase().search(
-        this.state.search.toLowerCase()) !== -1
-    ) : entities
-
-  handleRemoveEntity = (account) => {
-    const { removeEntity, community: { communityAddress }, onlyOnFuse } = this.props
+  const handleRemoveEntity = (account) =>
     onlyOnFuse(() => removeEntity(communityAddress, account))
-  }
 
-  handleAddAdminRole = (account) => {
-    const { addAdminRole, onlyOnFuse } = this.props
-    onlyOnFuse(() => addAdminRole(account))
-  }
+  // TODO - multi-selection
+  // const toggleRow = (rowData) => {
+  //   const checkbox = data.find(({ account }) => account === rowData.account).checkbox
+  //   data.find(({ account }) => account === rowData.account).checkbox = !checkbox
+  //   setData([...data])
+  // }
 
-  handleRemoveAdminRole = (account) => {
-    const { removeAdminRole, onlyOnFuse } = this.props
-    onlyOnFuse(() => removeAdminRole(account))
-  }
-
-  handleToggleCommunityMode = (event) => {
-    const isClosed = event.target.checked
-    const { community: { communityAddress }, toggleCommunityMode, onlyOnFuse } = this.props
-    onlyOnFuse(() => toggleCommunityMode(communityAddress, isClosed))
-  }
-
-  renderList = (entities) => {
-    const { metadata, isAdmin, community: { communityAddress, homeTokenAddress } } = this.props
-
-    if (entities.length) {
-      return (
-        entities.map((entity, index) =>
-          <Entity
-            key={index}
-            index={index}
-            entity={entity}
-            address={homeTokenAddress}
-            addAdminRole={this.handleAddAdminRole}
-            removeAdminRole={this.handleRemoveAdminRole}
-            handleRemove={this.handleRemoveEntity}
-            confirmUser={this.handleConfirmUser}
-            isAdmin={isAdmin}
-            metadata={metadata[entity.uri]}
-            showProfile={() => this.showProfile(communityAddress, entity.account)}
-          />
-        ))
-    } else {
-      return <p className='entities__empty-list__title'>No entities found</p>
-    }
-  }
-
-  renderItems = () => {
-    const { transactionStatus, businesses } = this.props
-
-    const filteredItems = this.filterBySearch(this.state.search, businesses)
-
-    if (businesses && businesses.length) {
-      return (
-        <Fragment>
-          {this.renderTransactionStatus()}
-          {this.renderList(filteredItems)}
-        </Fragment>
-      )
-    } else {
-      return (
-        <Fragment>
-          {this.renderTransactionStatus()}
-          <div className='entities__empty-list'>
-            <div className='entities__empty-list__title'>Your list is empty - Start to fill it</div>
-            <div className='entities__empty-list__text' />
-            <button
-              className='entities__empty-list__btn'
-              onClick={this.handleAddBusiness}
-              disabled={transactionStatus === REQUEST || transactionStatus === PENDING}
-            >
-              Add new merchant
-            </button>
-          </div>
-        </Fragment>
-      )
-    }
-  }
-
-  render () {
-    const {
-      community,
-      isAdmin,
-      fetchCommunity,
-      fetchBusinessesEntities,
-      toggleSuccess,
-      businesses
-    } = this.props
-    const {
-      communityAddress,
-      homeTokenAddress,
-      foreignTokenAddress
-    } = community
-
+  const renderTable = () => {
+    if (!data) return null
     return (
-      <Fragment>
-        <div className='entities__header'>
-          <h2 className='entities__header__title'>Businesses list</h2>
-          {
-            isAdmin && (
-              <div className='entities__header__add grid-x align-middle'>
-                <span onClick={this.handleAddBusiness}>
-                  <a style={{ backgroundImage: `url(${plusIcon})` }} />
-                </span>
-                Add new merchant
-              </div>
-            )
-          }
-        </div>
-        <div className='entities__wrapper'>
-          <div className='entities__container'>
-            {
-              !isEmpty(businesses) && (
-                <div className='entities__search entities__search--business'>
-                  <div className='entities__search__field'>
-                    <button className='entities__search__field__icon'>
-                      <FontAwesome name='search' />
-                    </button>
-                    <input
-                      value={this.state.search}
-                      onChange={this.setSearchValue}
-                      placeholder='Search a merchant...'
-                    />
-                  </div>
-                </div>
-              )
-            }
-            {
-              communityAddress && (
-                <Fragment>
-                  <div className='entities__items'>
-                    {this.renderItems()}
-                  </div>
-                </Fragment>
-              )
-            }
-
-          </div>
-
-          <BusinessesDataFetcher
-            communityAddress={communityAddress}
-            homeTokenAddress={homeTokenAddress}
-            foreignTokenAddress={foreignTokenAddress}
-            fetchCommunity={fetchCommunity}
-            fetchBusinessesEntities={fetchBusinessesEntities}
-            toggleSuccess={toggleSuccess}
-          />
-        </div>
-      </Fragment >
+      <MyTable
+        addActionProps={{
+          placeholder: 'Search a business',
+          action: isAdmin ? handleAddBusiness : handleJoinCommunity,
+          isAdmin,
+          text: isAdmin ? 'Add business' : 'Join',
+          onChange: setSearch
+        }}
+        data={tableData}
+        justAdded={entityAdded}
+        loading={loading}
+        columns={columns}
+        pageCount={response && response.pageCount ? response.pageCount : 0}
+      />
     )
   }
+
+  const renderContent = () => {
+    if (businesses && businesses.length) {
+      return renderTable()
+    } else {
+      return (
+        <div className='entities__empty-list'>
+          <img src={AddBusiness} />
+          <div className='entities__empty-list__title'>Add a business to your List!</div>
+          <button
+            className='entities__empty-list__btn'
+            onClick={handleAddBusiness}
+          >
+            Add business
+          </button>
+        </div>
+      )
+    }
+  }
+
+  return (
+    <Fragment>
+      <div className='entities__header'>
+        <h2 className='entities__header__title'>Businesses list</h2>
+      </div>
+      <div className='entities__wrapper'>
+        {renderContent()}
+      </div>
+    </Fragment >
+  )
 }
 
 const mapStateToProps = (state) => ({
@@ -245,14 +275,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   addEntity,
-  addAdminRole,
-  removeAdminRole,
   removeEntity,
   loadModal,
   hideModal,
-  fetchCommunity,
   fetchBusinessesEntities,
-  toggleCommunityMode
+  joinCommunity
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Businesses)

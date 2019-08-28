@@ -1,5 +1,7 @@
 import * as network from 'actions/network'
+import { SIGN_IN, CREATE_3BOX_PROFILE } from 'actions/accounts'
 import { loadState } from 'utils/storage'
+import omit from 'lodash/omit'
 const { addresses } = CONFIG.web3
 
 const loadedState = loadState('state.network') || CONFIG.web3.bridge.network
@@ -25,6 +27,10 @@ export default (state = initialState, action) => {
       return { ...state, ...action.response }
     case network.GET_BLOCK_NUMBER.SUCCESS:
       return { ...state, [action.networkType]: { ...state[action.networkType], ...action.response } }
+    case SIGN_IN.SUCCESS:
+      return { ...state, ...omit(action.response, ['publicData', 'privateData']) }
+    case CREATE_3BOX_PROFILE.SUCCESS:
+      return { ...state, ...action.response }
     default:
       return state
   }

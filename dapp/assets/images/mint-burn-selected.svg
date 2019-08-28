@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="15px" viewBox="0 0 14 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>Group 11</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="8" height="14"></rect>
+    </defs>
+    <g id="Mint-burn" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Transfer-new" transform="translate(-33.000000, -442.000000)">
+            <g id="Group-11" transform="translate(32.000000, 442.500000)">
+                <circle id="Oval" fill="#FAE83E" cx="8" cy="7" r="7"></circle>
+                <g id="Oval-Copy">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Mask"></g>
+                    <ellipse fill="#051926" mask="url(#mask-2)" cx="8" cy="7" rx="6.22222222" ry="6.125"></ellipse>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

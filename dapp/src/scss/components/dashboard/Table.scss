@@ -1,0 +1,205 @@
+@include block(table) {
+  height: 318px;
+
+  @include element(wrapper) {
+    display: block;
+    border: solid 1px #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+  }
+
+  @include element(actions) {
+    height: 40px;
+    padding: 0 8px;
+    @include xy-grid();
+    @include flex-align(null, middle);
+  
+    @include element(search) {
+      @include breakpoint(medium up) {
+        flex: 0.7;
+      }
+      @include element(icon) {
+        color: $color-step;
+        font-weight: bold;
+        border: none;
+        background: none;
+        outline: none;
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+
+      @include element(input) {
+        border: none;
+        font-size: 12px;
+        color: #92a1ac;
+      }
+    }
+
+    @include element(button) {
+      border: none;
+      color: $color-white;
+      padding: 9px 10px;
+      background-color: #4a687b;
+      border-radius: 6px;
+      font-size: 11px;
+      display: inline-block;
+      text-align: center;
+      margin-left: auto;
+      &:hover {
+        cursor: pointer;
+        background-color: #25435a;
+      }
+    }
+  }
+
+  @include element(header) {
+    border: solid 1px #ececec;
+    background-color: #f5f5f5;
+    height: 35.4px;
+
+    @include element(cell) {
+      font-size: 11px;
+      font-weight: bold;
+      color: #7a7a7a;
+      
+      @include element(sort) {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  @include element(body) {
+    height: 283px;
+
+    @include element(row) {
+      position: relative;
+      height: 47px;
+      border-bottom: solid 0.5px #efefef;
+
+      &:hover {
+        border-bottom: none;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+
+        .row_checkbox {
+          display: block;
+        }
+      }
+
+      @include modifier(just-added) {
+        border-bottom: none;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    @include element(cell) {
+      font-size: 11px;
+      color: #7a7a7a;
+
+      .fa-clone {
+        color: $color-step;
+        cursor: pointer;
+        font-weight: 300;
+
+        &:hover {
+          font-weight: 900;
+        }
+      }
+
+      @include block(row_checkbox) {
+        display: none;
+        margin-left: 10px;
+
+      }
+
+      @include element(more) {
+        position: relative;
+        right: 10px;
+        display: flex;
+        color: $color-primary-dark;
+        font-size: 12px;
+
+        @include element(toggler) {
+          margin-left: auto;
+        }
+  
+        &:hover {
+          .more {
+            display: flex;
+          }
+        }
+
+        .fa {
+          color: $color-step;
+          cursor: pointer;
+        }
+  
+        @include block(more) {
+  
+          position: absolute;
+          display: none;
+          right: 8px;
+          top: 0px;
+          z-index: 1;
+          @include flex-align(left, middle);
+          min-width: 120px;
+          width: max-content;
+          height: auto;      
+          border-radius: 5px;
+          box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
+          background-color: #ffffff;
+  
+          @include element (options) {
+            list-style: none;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 3px 0;
+            @include xy-grid(vertical);
+            @include flex-align(spaced);
+            font-size: 11px;
+            cursor: initial;
+  
+            @include element(item) {
+              padding: 10px;
+              cursor: pointer;
+  
+              &:hover {
+                background-color: darken($color: white, $amount: 10%)
+              }
+  
+              &:not(:last-child) {
+                border-bottom: solid 1px #e2e2e2;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include element(pagination) {
+    @include xy-grid();
+    @include flex-align(spaced, middle);
+    font-size: 11px;
+    color: rgba(122, 122, 122, 0.5);
+    margin-right: 1em;
+
+    > select {
+      width: 40px;
+      border: none;
+    }
+    
+    @include element(wrapper) {
+      height: 35px;
+      border-radius: 3px;
+      border: solid 1px #ececec;
+      background-color: #f5f5f5;
+  
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+}
