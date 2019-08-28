@@ -12,11 +12,11 @@ class JoinCommunity extends Component {
 
   componentDidUpdate (prepProps, prevState) {
     if (this.props.isBoxConnected && (!prepProps.join && this.props.join)) {
-      window.location.replace(CONFIG.dapp.urlBase)
+      window.location.replace(window.location.origin)
     }
 
     if (this.props.isBoxConnected && (!prepProps.join && this.props.join === false)) {
-      window.location.replace(CONFIG.dapp.urlBase)
+      window.location.replace(window.location.origin)
     }
   }
 
