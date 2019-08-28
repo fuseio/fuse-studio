@@ -17,10 +17,6 @@ const deployProgress = [
   {
     label: 'Transfer ownership to the user',
     key: 'transferOwnership'
-  },
-  {
-    label: 'Funding owner account with fuse tokens',
-    key: 'funder'
   }
 ]
 

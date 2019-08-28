@@ -5,7 +5,7 @@ const funder = async ({ home: { createContract, createMethod, send, from } }, co
   const { adminAddress } = communityProgress.steps.community.args
 
   try {
-    await request.post(config.get('funder.domain') + 'balance/request/' + adminAddress)
+    await request.post(config.get('funder.urlBase') + 'balance/request/' + adminAddress)
   } catch (error) {
     console.log('funder step error', { error })
   }

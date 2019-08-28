@@ -92,7 +92,7 @@ export default class SummaryStep extends Component {
                 <div className='summary-step__content__contracts'>
 
                   {
-                    contractsItems.map(({ icon, label }) => (
+                    contractsItems.map(({ icon, label }) => label && (
                       <div key={label} className='summary-step__content__contracts__item'>
                         <span className='summary-step__content__contracts__icon'><img src={icon} />{label}</span>
                         {

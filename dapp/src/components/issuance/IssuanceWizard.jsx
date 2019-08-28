@@ -50,13 +50,13 @@ class IssuanceWizard extends PureComponent {
         icon: BridgeIcon
       },
       transferOwnership: {
-        label: 'Transfer ownership',
+        // label: 'Transfer ownership',
         checked: true,
         key: 'transferOwnership',
         icon: contractIcon
       },
       funder: {
-        label: 'Gifting fuse tokens',
+        // label: 'Gifting fuse tokens',
         checked: true,
         key: 'funder',
         icon: contractIcon
