@@ -21,7 +21,7 @@ async function init () {
   await initConfig()
 
   console.log(util.inspect(config, { depth: null }))
-
+  console.log({ funderDomain: config.get('funder.urlBase') })
   var isProduction = process.env.NODE_ENV === 'production'
 
   var app = express()

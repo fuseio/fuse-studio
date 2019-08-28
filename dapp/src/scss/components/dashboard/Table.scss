@@ -114,7 +114,6 @@
 
       @include element(more) {
         position: relative;
-        // top: 17px;
         right: 10px;
         display: flex;
         color: $color-primary-dark;
@@ -136,9 +135,6 @@
         }
   
         @include block(more) {
-          // @include modifier(show) {
-          //   @include xy-grid()
-          // }
   
           position: absolute;
           display: none;

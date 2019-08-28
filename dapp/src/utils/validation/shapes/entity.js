@@ -1,5 +1,6 @@
 import { object, string, mixed } from 'yup'
 
+// TODO - implement file validation
 // const SUPPORTED_FORMATS = [
 //   'image/jpg',
 //   'image/jpeg',

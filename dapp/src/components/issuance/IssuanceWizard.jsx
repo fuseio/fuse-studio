@@ -16,7 +16,7 @@ import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clea
 // import ReactGA from 'services/ga'
 import Logo from 'components/common/Logo'
 import { PENDING, REQUEST, FAILURE, SUCCESS } from 'actions/constants'
-import Message from 'components/common/Message'
+import Message from 'components/common/SignMessage'
 import Congratulations from 'components/issuance/Congratulations'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'

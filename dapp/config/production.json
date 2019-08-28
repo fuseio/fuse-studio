@@ -32,5 +32,8 @@
       "testMode": false
     }
   },
+  "dapp": {
+    "urlBase": "https://studio.fusenet.io"
+  },
   "debugTrace": false
 }

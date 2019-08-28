@@ -79,9 +79,9 @@ class DashboardLayout extends PureComponent {
     const { address: tokenAddress, name } = token
     const { isClosed } = community
     return (
-      <div className='Dashboard'>
+      <div className='dashboard'>
         {accountAddress ? <SignIn accountAddress={accountAddress} /> : undefined}
-        <div className='Dashboard__container'>
+        <div className='container'>
           {
             !isMobile
               ? <SidebarContent isAdmin={isAdmin} isGradientLogo communityName={token && token.name} match={match.url} />
@@ -96,7 +96,7 @@ class DashboardLayout extends PureComponent {
                 }}
                 onSetOpen={this.onSetSidebarOpen}
               >
-                {!open && <div className='Dashboard__hamburger' onClick={() => this.onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
+                {!open && <div className='hamburger' onClick={() => this.onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
               </Sidebar>
           }
           <div className='content__container'>

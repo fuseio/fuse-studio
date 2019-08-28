@@ -101,10 +101,6 @@ class Dashboard extends Component {
   }
 
   render () {
-    // const {
-    //   lastAction
-    // } = this.state
-
     const {
       community,
       token,
@@ -112,26 +108,10 @@ class Dashboard extends Component {
       balances,
       dashboard,
       networkType
-      // transactionStatus,
-      // isTransfer,
-      // isMinting,
-      // isBurning,
-      // tokenNetworkType,
-      // burnSignature,
-      // mintSignature,
-      // transferSignature,
-      // clearTransactionStatus,
-      // transferSuccess,
-      // burnSuccess,
-      // mintSuccess,
-      // error,
-      // bridgeStatus,
-      // homeNetwork
     } = this.props
 
     const { address: tokenAddress } = token
     const { communityAddress, homeTokenAddress, foreignTokenAddress } = community
-    // const balance = balances[tokenAddress]
     const { steps, owner } = dashboard
 
     return (

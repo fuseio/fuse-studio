@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import { Formik, ErrorMessage } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
-import Message from 'components/common/Message'
+import Message from 'components/common/SignMessage'
 import { FAILURE, SUCCESS, CONFIRMATION } from 'actions/constants'
 import upperCase from 'lodash/upperCase'
 import mintBurnShape from 'utils/validation/shapes/mintBurn'
@@ -66,7 +66,6 @@ export default class MintBurnForm extends PureComponent {
       tokenNetworkType,
       token,
       lastAction,
-      // accountAddress,
       closeMintMessage,
       closeBurnMessage
     } = this.props

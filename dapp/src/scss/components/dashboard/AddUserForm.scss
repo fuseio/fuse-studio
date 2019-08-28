@@ -43,7 +43,6 @@
 
     > .input-error {
       bottom: -1.3em;
-      // margin-left: 36%;
     }
 
     @include element(label2) {
@@ -93,13 +92,9 @@
       &::placeholder {
         color: #c0c5d2;
       }
-      &:focus {
-        // border: 1px solid $color-orange;
-      }
     }
 
     @include element(select) {
-      // border-radius: 16px;
       display: inline-block;
       flex: 1;
       @include element(prefix) {

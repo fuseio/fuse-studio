@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Formik, ErrorMessage } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
-import Message from 'components/common/Message'
+import Message from 'components/common/SignMessage'
 import transferShape from 'utils/validation/shapes/transfer'
 import TextField from '@material-ui/core/TextField'
 

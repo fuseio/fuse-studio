@@ -7,7 +7,6 @@ import IssuanceWizard from 'components/issuance/IssuanceWizard'
 import DashboardLayout from 'components/dashboard/containers/MainDashboard'
 import MobileProvider from 'containers/MobileProvider'
 import SignInProvider from 'containers/SignInProvider'
-// import EntityProfile from 'components/dashboard/EntityProfile'
 // import withTracker from 'containers/withTracker'
 import Web3, { withNetwork } from 'containers/Web3'
 import Layout from 'components/common/Layout'
@@ -31,7 +30,6 @@ export default class Root extends Component {
                 <Route path='/view/issuance' component={withNetwork(IssuanceWizard)} />
                 <Route path='/view/communities' component={withNetwork(Oven)} />
                 <Route path='/view/community/:address' component={withNetwork(DashboardLayout)} />
-                {/* <Route path='/view/directory/:communityAddress/:account' component={withNetwork(EntityProfile)} /> */}
                 <Route path='/view/sign/:isMobileApp?' component={SignInProvider} />
                 <Route path='/view/join/:address' component={MobileProvider} />
               </Switch>

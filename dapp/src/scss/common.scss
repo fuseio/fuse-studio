@@ -373,35 +373,10 @@
 }
 
 @include block(button) {
-	// background: $color-ropsten;
-	// color: $color-white;
-	// font-weight: bold;
-	// text-align: center;
 	height: 33px;
-	// border-radius: 20.5px;
-	// border: none;
-
-	// opacity: 0.3;
 	background-color: #4a687b;
 	border-radius: 3px;
 	color: $color-white;
-
-	// @include modifier(fuse) {
-	// 	color: $color-primary-dark;
-	// 	background: $color-fuse_gradient !important;
-
-	// 	&:hover {
-	// 		background: $color-fuse !important;
-	// 	}
-
-	// 	&:disabled,
-	// 	&[disabled] {
-	// 		opacity: 0.3;
-	// 		background: rgba(226, 226, 226, 0.49) !important;
-	// 		color: $color-white !important;
-	// 		cursor: not-allowed;
-	// 	}
-	// }
 
 	.fa {
 		margin-left: 4px;
@@ -711,7 +686,6 @@
     font-weight: 500;
     line-height: 1.35;
 		letter-spacing: 0.5px;
-		// max-width: 30%;
     text-align: center;
 		
 		@include modifier(white) {
@@ -727,7 +701,6 @@
     font-size: 18px;
     font-weight: normal;
 		margin-top: 15px;
-		// max-width: 30%;
     text-align: center;
 		
 		@include modifier(white) {
@@ -790,7 +763,6 @@
 			background-color: $color-ropsten;
 			font-size: 12.8px;
 			color: $color-white;
-			// padding: 10px 30px;
 			width: 84px;
 			height: 32px;
 			text-transform: uppercase;
@@ -824,7 +796,6 @@
   right: 0;
   left: 0;
   background-color: rgba(5, 40, 62, 0.8);
-  // z-index: 5;
   border-radius: 10px;
   font-family: $font-family;
   display: flex;
@@ -937,7 +908,6 @@
 }
 
 .fullscreen {
-	// height: 100vh;
 	&.open-mobile-nav {
 		z-index: 2;
 		@media (max-width: $breakpoint-tablet) {

@@ -6,7 +6,7 @@ import TransferForm from 'components/dashboard/components/TransferForm'
 import { transferToken, clearTransactionStatus } from 'actions/token'
 import { getBalances } from 'selectors/accounts'
 import capitalize from 'lodash/capitalize'
-import Message from 'components/common/Message'
+import Message from 'components/common/SignMessage'
 import { FAILURE, SUCCESS } from 'actions/constants'
 import { withRouter } from 'react-router-dom'
 

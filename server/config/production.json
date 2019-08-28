@@ -17,5 +17,8 @@
   },
   "mongo": {
     "debug": false
+  },
+  "funder": {
+    "urlBase": "https://funder.fusenet.io/api/"
   }
 }

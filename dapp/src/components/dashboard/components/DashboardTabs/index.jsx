@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
-import Message from 'components/common/Message'
+import Message from 'components/common/SignMessage'
 import Tabs from 'components/common/Tabs'
 import TransferForm from './../TransferForm'
 import MintBurnForm from './../MintBurnForm'

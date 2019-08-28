@@ -145,7 +145,6 @@
         background-image: url(../../assets/images/header.jpg);
         background-repeat: no-repeat;
         background-size: cover;
-        // box-shadow: inset 0 0 1em 0 rgba(0, 0, 0, 1)
       }
     }
   }
@@ -217,11 +216,7 @@
       }
 
       @include element(field) {
-        // margin-bottom: 2em;
-        @include breakpoint(medium up) {
-          // min-width: 300px;
-          // max-width: 300px;
-        }
+        @include breakpoint(medium up) {}
 
         @include breakpoint(small) {
           width: 100%;
@@ -464,7 +459,6 @@
               border-radius: 2px !important;
               border: solid 1px #cccccc;
               font-size: 9px;
-              // height: 2em;
               &:hover {
                 box-shadow: none;
                 border: solid 1px $color-primary-dark;
@@ -859,12 +853,9 @@
     @include block(summary-step) {
       
       @include element(wrapper) {
-        // box-shadow: 0 0 11px 0 rgba(0, 0, 0, 0.25);
         position: relative;
         margin: auto;
-        // border-radius: 10px;
         @include breakpoint(medium) {
-          // padding: 20px;
           width: 420px;
           min-height: 350px;
           @include xy-grid(vertical);
@@ -873,7 +864,6 @@
 
         @include breakpoint(small down) {
           width: 90%;
-          // padding: 20px;
         }
 
         div.status.status--radius-all > div.status__button > button {
@@ -918,9 +908,7 @@
         @include flex-align(justify, middle);
         margin-bottom: 20px;
 
-        @include breakpoint(medium) {
-          // flex-basis: 24%;
-        }
+        @include breakpoint(medium) {}
 
         @include block(communityName) {
           text-overflow: ellipsis;
@@ -947,7 +935,6 @@
           @include xy-grid(vertical, false);
           @include flex-align(justify, top);
           width: 100%;
-          // flex-basis: 75%;
         }
 
         @include element(title) {
@@ -1028,7 +1015,6 @@
 
           &:not(:last-child) {
             width: 100%;
-            // height: 1px;
             border-bottom: solid 1px #f1f1f1;
           }
         }
@@ -1059,15 +1045,8 @@
 
       @include element(wrapper) {
         color:  $color-primary-dark;
-        // box-shadow: 0 0 11px 0 rgba(0, 0, 0, 0.25);
-        // border-radius: 10px;
         margin: 0 auto;
         max-width: 500px;
-        // position: absolute;
-        // top: 0;
-        // right: 0;
-        // z-index: 20000000;
-        // background: white;
 
         @include breakpoint(medium) {
           width: 100%;

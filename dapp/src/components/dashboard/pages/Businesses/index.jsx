@@ -202,15 +202,6 @@ const Businesses = ({
       submitEntity: (data) => submitEntity(communityAddress, { ...data }, isClosed, 'business')
     })
   }
-  // const renderTransactionStatus = () => {
-  //   if (signatureNeeded || transactionStatus === PENDING || fetchEntities) {
-  //     return (
-  //       <div className='entities__loader'>
-  //         <Loader color='#3a3269' className='loader' />
-  //       </div>
-  //     )
-  //   }
-  // }
 
   const handleRemoveEntity = (account) =>
     onlyOnFuse(() => removeEntity(communityAddress, account))

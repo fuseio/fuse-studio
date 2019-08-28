@@ -7,15 +7,11 @@ ARG COMMMUNITY_WEB3_PORTIS_ID
 ARG COMMUNITY_WEB3_API_KEY
 ARG NODE_ENV
 
-RUN npm install -g npm
-
 RUN rm -rf node_modules && rm package-lock.json
 
 RUN cd contracts/entities && npm install && npm run build
 
 RUN cd contracts/token-factory  && npm install && npm run build
-
-RUN cd packages/roles && npm install
 
 RUN cd dapp && npm install && npm run build && cp dist/* ../server/public
 

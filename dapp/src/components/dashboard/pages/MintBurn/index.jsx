@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import MintBurnForm from 'components/dashboard/components/MintBurnForm'
 import { mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { toWei } from 'web3-utils'
-import Message from 'components/common/Message'
+import Message from 'components/common/SignMessage'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props

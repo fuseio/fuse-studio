@@ -1,9 +1,6 @@
 import React from 'react'
-// import CopyToClipboard from 'components/common/CopyToClipboard'
-// import FontAwesome from 'react-fontawesome'
 import { isMobileOnly } from 'react-device-detect'
 import CommunityLogo from 'components/common/CommunityLogo'
-// import { formatAddress } from 'utils/format'
 import { isDaiToken } from 'constants/existingTokens'
 import isEmpty from 'lodash/isEmpty'
 
@@ -28,15 +25,6 @@ export default ({ isClosed, networkType, token, metadata }) => {
           &nbsp;&nbsp;<span className='name__line' />&nbsp;&nbsp;
           <span className='name__status'>{isClosed ? 'Close' : 'Open'} community</span>
         </div>
-        {/* <div className='address'>
-          {isMobileOnly
-            ? <span>{formatAddress(tokenAddress)}</span>
-            : <span>{tokenAddress}</span>
-          }
-          <CopyToClipboard text={tokenAddress}>
-            <FontAwesome name='clone' />
-          </CopyToClipboard>
-        </div> */}
       </div>
     </div>
   )

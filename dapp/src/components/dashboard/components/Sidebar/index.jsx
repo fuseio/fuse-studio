@@ -49,9 +49,6 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
     path: '/wallet',
     url: (match) => `${match}/wallet`,
     icon: WalletIcon,
-    // style: {
-    //   borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
-    // },
     selectedIcon: WalletYellowIcon
   },
   {
