@@ -105,13 +105,14 @@ const getQuerySearch = ({ query: { search } }) => ({ search })
  *
  * @apiParam {String} communityAddress Community address
  * @apiParam {Number} page Page number for pagination
+ * @apiParam {Boolean} withMetadata Get entities with entity's metadata
  * @apiParam {String} search - search entities by name
  *
  * @apiSuccess {Object[]} -   List of entities. See GetEntity endpoint for entity fields
  */
 router.get('/:communityAddress', async (req, res, next) => {
   const queryFilter = getQueryFilter(req)
-  // const { withMetadata } = req.query
+  const { withMetadata } = req.query
   const querySearch = getQuerySearch(req)
 
   let profiles
@@ -138,6 +139,11 @@ router.get('/:communityAddress', async (req, res, next) => {
     Entity.find(queries).sort({ name: 1 }).limit(req.query.limit).skip(req.skip).populate('profile'),
     Entity.countDocuments(queryFilter)
   ])
+
+  if (withMetadata) {
+    const metadatas = await Promise.all(results.map(result => result.uri ? metadataUtils.getMetadata(result.uri.split('://')[1]).catch(console.error) : null))
+    results = results.map((result, index) => ({ ...result.toObject(), metadata: metadatas[index] && metadatas[index].data }))
+  }
 
   const pageCount = Math.ceil(itemCount / req.query.limit)
 

@@ -78,6 +78,23 @@
       }
     }
 
+    @include block(plugins) {
+      @include xy-grid();
+      @include flex-align(justify, middle);
+      padding: 20px 20px 10px;
+      font-size: 10px;
+
+      @include block(title) {
+        // display: block;
+        color: rgba(214, 214, 214, 0.6)
+      }
+
+      @include block(manage) {
+        // display: block;
+        color: #d6d6d6;
+      }
+    }
+
     @include block(admin-title) {
       display: block;
       padding-left: 20px;

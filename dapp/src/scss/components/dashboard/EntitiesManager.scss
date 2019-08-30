@@ -3,8 +3,6 @@
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background: $color-white;
     border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 20px;
   }
 
   @include element(container) {
@@ -341,16 +339,15 @@
   @include element(header) {
     @include xy-grid();
     @include flex-align(justify, middle);
+    color: $color-white;
 
     @include breakpoint(medium up) {
-      margin-top: 2em;
+      margin-top: 12em;
+      margin-bottom: 1.5em;
     }
-    @include breakpoint(large) {
-      margin-top: 2em;
-    }
-    color: $color-white;
+
     @include element(title) {
-      font-size: 20px;
+      font-size: 1.625em;
       font-weight: 500;
     }
 

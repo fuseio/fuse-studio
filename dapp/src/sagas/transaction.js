@@ -15,8 +15,9 @@ export function * transactionFlow ({ transactionPromise, action, confirmationsLi
       resolve(transactionHash)
     )
     transactionPromise.on('error', (error) => {
-      if (error.message.includes('User denied transaction signature')) {
-        error.error = 'User denied transaction signature'
+      const rejected = 'User denied transaction signature'
+      if (error.message.includes(rejected)) {
+        error.error = rejected
       }
       reject(error)
     })

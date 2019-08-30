@@ -1,14 +1,16 @@
 import React from 'react'
-import AddIcon from 'images/add-selected.png'
+import RemoveIcon from 'images/remove.svg'
 import classNames from 'classnames'
+import FontAwesome from 'react-fontawesome'
 
 const Plugin = ({
   title,
   image,
-  status,
+  hasPlugin,
   disabled,
   showInfoModal,
-  subTitle
+  subTitle,
+  managePlugin
 }) => {
   return (
     <div className='plugin-card'>
@@ -21,7 +23,19 @@ const Plugin = ({
         <h2 className='plugin-card__title'>{title} <span>{subTitle}</span></h2>
         <div className='plugin-card__actions'>
           <span className='plugin-card__learn' onClick={showInfoModal}>LEARN MORE</span>
-          <button className='plugin-card__btn'><img src={AddIcon} /> ADD</button>
+          <button disabled={disabled} className={classNames('plugin-card__btn', { 'plugin-card__btn--add': !hasPlugin }, { 'plugin-card__btn--remove': hasPlugin })} onClick={managePlugin}>
+            {!hasPlugin ? (
+              <React.Fragment>
+                <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
+                <span>ADD</span>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <img src={RemoveIcon} />
+                <span>Remove</span>
+              </React.Fragment>
+            )}
+          </button>
         </div>
       </div>
     </div>

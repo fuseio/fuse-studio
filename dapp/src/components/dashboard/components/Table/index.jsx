@@ -57,13 +57,17 @@ const MyTable = ({
           <FontAwesome name='search' className='table__actions__search__icon' />
           <input type='text' onChange={(e) => addActionProps.onChange(e.target.value)} placeholder={addActionProps.placeholder} className='table__actions__search__input' />
         </div>
-        {/* <button
-          className='table__actions__button'
-          onClick={addActionProps.action}
-        >
-          <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
-          {addActionProps.text}
-        </button> */}
+        {
+          addActionProps && addActionProps.action && addActionProps.text && (
+            <button
+              className='table__actions__button'
+              onClick={addActionProps.action}
+            >
+              <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
+              {addActionProps.text}
+            </button>
+          )
+        }
       </div>
       <div {...getTableProps({ className: 'table' })}>
         {headerGroups.map((headerGroup, index) => <HeaderRow key={index} headerGroup={headerGroup} />)}

@@ -314,9 +314,9 @@ const Users = ({
       <MyTable
         addActionProps={{
           placeholder: 'Search a user',
-          action: isAdmin ? handleAddUser : handleJoinCommunity,
+          // action: isAdmin ? handleAddUser : handleJoinCommunity,
           isAdmin,
-          text: isAdmin ? 'Add user' : 'Join community',
+          // text: isAdmin ? 'Add user' : 'Join community',
           onChange: setSearch
         }}
         data={tableData}

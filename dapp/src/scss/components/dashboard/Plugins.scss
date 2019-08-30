@@ -9,20 +9,17 @@
   }
 
   @include element(content) {
-    width: 645px;
-    font-size: 15px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
+    width: 75%;
+    font-size: 0.938em;
     line-height: 1.33;
-    letter-spacing: normal;
     color: #ffffff;
+    margin-top: .5em;
   }
 
   @include element(items) {
     @include xy-grid();
     @include flex-align(justify, middle);
-    padding-top: 8em;
+    padding-top: 5em;
   }
 }
 
@@ -30,9 +27,9 @@
   display: block;
   width: 30%;
   min-width: 30%;
-  height: 100%;
-  min-height: 15.563em;
-  max-height: 15.563em;
+  // height: 100%;
+  min-height: 14.4em;
+  max-height: 16.4em;
   font-size: 16px;
   border-radius: 8px;
   background-color: $color-white;
@@ -42,6 +39,7 @@
     position: relative;
     width: 100%;
     padding-top: 137 / 302 * 100%;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
 
     @include element(container) {
       position: absolute;
@@ -79,7 +77,7 @@
   }
 
   @include element(actions) {
-    @include xy-grid();
+    @include xy-grid(horizontal, false);
     @include flex-align(right, middle);
     margin-top: 1em;
   }
@@ -91,6 +89,7 @@
     text-align: center;
     color: #7a7a7a;
     margin-right: 15px;
+    white-space: nowrap;
 
     &:hover {
       text-decoration: underline;
@@ -99,20 +98,41 @@
   }
 
   @include element(btn) {
-    @include xy-grid();
-    @include flex-align(spaced, middle);
-    width: 77px;
-    height: 30px;
+    @include xy-grid(horizontal, false);
+    // min-width: 77px;
     border-radius: 4px;
-    background-color: $color-primary-dark;
-    color: $color-white;
     font-size: 0.813em;
     font-weight: 500;
-    line-height: 2;
+    // padding: 8px 15px;
+    padding: 8px;
+    height: 30px;
+
+    .fa {
+      font-size: 0.9em;
+    }
 
     > img {
+      margin-right: 5px;
       width: 13px;
       height: 13px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    @include modifier(add) {
+      background-color: #4a687b;
+      color: $color-white;
+      &:hover {
+        background-color: $color-primary-dark;
+      }
+    }
+
+    @include modifier(remove) {
+      color: #7a7a7a;
+      border: solid 1.2px #e3e3e3;
+      background-color: #ffffff;
     }
   }
 }

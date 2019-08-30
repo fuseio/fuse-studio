@@ -21,6 +21,7 @@ const Transfer = ({
   transferToken,
   transferSignature,
   transactionStatus,
+  accountAddress,
   transferSuccess,
   clearTransactionStatus
 }) => {
@@ -38,12 +39,12 @@ const Transfer = ({
     }
   }, [transactionStatus])
 
-  const { address: tokenAddress, symbol } = token
+  const { address, symbol } = token
 
-  const balance = balances[tokenAddress]
+  const balance = balances[address]
 
   const handleTransfer = ({ to: toField, amount }) => {
-    transferToken(tokenAddress, toField, toWei(String(amount)))
+    transferToken(address, toField, toWei(String(amount)))
   }
 
   return (

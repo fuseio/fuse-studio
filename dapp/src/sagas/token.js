@@ -4,6 +4,7 @@ import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { DEPLOY_BRIDGE } from 'actions/bridge'
 import { ADD_USER } from 'actions/user'
+import { ADD_COMMUNITY_PLUGINS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -13,12 +14,20 @@ import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './u
 import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import { getWeb3 } from 'services/web3'
+import {
+  fetchCommunity as fetchCommunityApi,
+  addCommunityPlugins as addCommunityPluginsApi
+} from 'services/api/community'
+import { ADD_ENTITY } from 'actions/communityEntities'
+import { roles, combineRoles } from '@fuse/roles'
+import { getCommunityAddress } from 'selectors/entities'
+const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
 
 const entityPut = createEntityPut(actions.entityName)
 
 const fetchTokens = createEntitiesFetch(actions.FETCH_TOKENS, api.fetchTokens)
 const fetchToken = createEntitiesFetch(actions.FETCH_TOKEN, api.fetchToken)
-const fetchCommunity = createEntitiesFetch(actions.FETCH_COMMUNITY_DATA, api.fetchCommunity)
+const fetchCommunity = createEntitiesFetch(actions.FETCH_COMMUNITY_DATA, fetchCommunityApi)
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
 
 export const fetchTokenList = createEntitiesFetch(actions.FETCH_TOKEN_LIST, api.fetchTokenList)
@@ -232,9 +241,58 @@ function * watchCommunityFetch ({ response }) {
   }
 }
 
+function * addCommunityPlugins ({ communityAddress, plugins, tokenAddress }) {
+  const { data: { plugins: newPlugins } } = yield apiCall(addCommunityPluginsApi, { communityAddress, plugins })
+
+  if (tokenAddress && plugins && plugins.joinBonus && plugins.joinBonus.isActive) {
+    const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
+
+    const accountAddress = yield select(getAccountAddress)
+    const CommunityContract = getContract({ abiName: 'Community',
+      address: communityAddress
+    })
+    const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
+    const transactionPromise = method.send({
+      from: accountAddress
+    })
+    const action = ADD_ENTITY
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  }
+
+  yield put({
+    type: ADD_COMMUNITY_PLUGINS.SUCCESS,
+    communityAddress,
+    response: {
+      newPlugins
+    }
+  })
+}
+
+function * watchPluginsChanges () {
+  const communityAddress = yield select(getCommunityAddress)
+  yield put(actions.fetchCommunity(communityAddress))
+}
+
+function * transferTokenToFunder ({ tokenAddress, value }) {
+  const accountAddress = yield select(getAccountAddress)
+
+  const contract = getContract({ abiName: 'BasicToken', address: tokenAddress })
+
+  const transactionPromise = contract.methods.transfer(funderAddress, value).send({
+    from: accountAddress
+  })
+
+  const action = actions.TRANSFER_TOKEN_TO_FUNDER
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
+  const communityAddress = yield select(getCommunityAddress)
+  yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { hasTransferToFunder: true } } })
+}
+
 export default function * tokenSaga () {
   yield all([
+    tryTakeEvery(ADD_COMMUNITY_PLUGINS, addCommunityPlugins, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN, transferToken, 1),
+    tryTakeEvery(actions.TRANSFER_TOKEN_TO_FUNDER, transferTokenToFunder, 1),
     tryTakeEvery(actions.MINT_TOKEN, mintToken, 1),
     tryTakeEvery(actions.BURN_TOKEN, burnToken, 1),
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
@@ -242,6 +300,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN_LIST, fetchTokenList, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
+    takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS], watchPluginsChanges),
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchCommunityFetch),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),

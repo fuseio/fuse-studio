@@ -15,19 +15,24 @@
 		margin-bottom: 60px;
 	}
 	@include element(wrapper){
-		
-		@include breakpoint(large) {
-			margin-top: 40px;
-		}
+	
 	}
 
-	@include element(title) {
-		display: inline-block;
-		font-size: 20px;
-		color: $color-white;
-		text-align: start;
-		font-weight: 500;
-	}
+	@include element(header) {
+    color: $color-white;
+    @include xy-grid();
+    @include flex-align(justify, middle);
+
+    @include breakpoint(medium up) {
+      margin-top: 12em;
+      margin-bottom: 1.5em;
+    }
+
+    @include element(title) {
+      font-size: 1.625em;
+      font-weight: 500;
+    }
+  }
 
 	@include element(image) {
     padding-top: 2em;
@@ -561,7 +566,7 @@
 
 	@include element(sub-title) {
 		position: relative;
-  	font-size: 26px;
+  	font-size: 1.625em;
   	font-weight: 500;
   	text-align: center;
 		color: #4a687b;
@@ -756,36 +761,6 @@
 	
 	@include element(button) {
 		margin: 40px 0 0px;
-  
-		> button {
-			display: inline-block;
-			border-radius: 30px;
-			background-color: $color-ropsten;
-			font-size: 12.8px;
-			color: $color-white;
-			width: 84px;
-			height: 32px;
-			text-transform: uppercase;
-			border: none;
-			font-weight: bold;
-			.symbol-icon {
-				margin-left: 5px;
-			}
-			&:focus,
-			&:active,
-			&:focus:active {
-				outline: none;
-			}
-			&:hover {
-				background-color: darken($color-ropsten, 10%);
-				cursor: pointer;
-			}
-			&[disabled] {
-				color: #fff;
-				cursor: not-allowed;
-				background-color: lighten($color-ropsten, 20%) !important;
-			}
-		}
 	}
 }
 

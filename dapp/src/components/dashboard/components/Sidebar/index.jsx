@@ -19,15 +19,20 @@ import UsersIcon from 'images/user_list.svg'
 import UsersYellowIcon from 'images/user_list_yellow.svg'
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
+import isEmpty from 'lodash/isEmpty'
+import pickBy from 'lodash/pickBy'
 
-const getSideBarItems = (isAdmin) => isAdmin ? ([
+const getSideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
   {
     name: 'community',
     path: '',
     url: (match) => `${match}`,
     icon: HomeIcon,
-    style: {
+    style: !hasPlugins ? {
       borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
+    } : {
+      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
+      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
     },
     selectedIcon: HomeYellowIcon
   },
@@ -45,16 +50,6 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
       AddIcon,
       AddYellowIcon
     }
-  },
-  {
-    name: 'Business list',
-    path: '/merchants',
-    url: (match) => `${match}/merchants`,
-    icon: BusinessIcon,
-    style: {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: BusinessYellowIcon
   },
   {
     name: 'Users list',
@@ -80,7 +75,7 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
     },
     selectedIcon: TransferYellowIcon
   },
-  {
+  tokenType === 'mintableBurnable' && {
     name: 'Mint / Burn',
     path: '/mintBurn',
     url: (match) => `${match}/mintBurn`,
@@ -111,20 +106,13 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
     path: '',
     url: (match) => `${match}`,
     icon: HomeIcon,
-    style: {
+    style: !hasPlugins ? {
       borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
+    } : {
+      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
+      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
     },
     selectedIcon: HomeYellowIcon
-  },
-  {
-    name: 'Business list',
-    path: '/merchants',
-    url: (match) => `${match}/merchants`,
-    icon: BusinessIcon,
-    style: {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: BusinessYellowIcon
   },
   {
     name: 'Users list',
@@ -152,16 +140,40 @@ const getSideBarItems = (isAdmin) => isAdmin ? ([
   }
 ])
 
-const Sidebar = ({ communityName, match, isAdmin, isGradientLogo }) => {
+const allPlugins = {
+  businessList: {
+    name: 'Business list',
+    path: '/merchants',
+    url: (match) => `${match}/merchants`,
+    icon: BusinessIcon,
+    selectedIcon: BusinessYellowIcon
+  },
+  joinBonus: {
+    name: 'Join bonus',
+    path: '/joinBonus',
+    url: (match) => `${match}/joinBonus`,
+    icon: BusinessIcon,
+    selectedIcon: BusinessYellowIcon
+  }
+}
+
+const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, tokenType }) => {
   const [currentPath, setPath] = useState('')
   const [sideBarItems, setSideBarItems] = useState([])
+  const [addedPlugins, setAddedPlugins] = useState([])
 
   useEffect(() => {
-    setSideBarItems(getSideBarItems(isAdmin))
-  }, [isAdmin])
+    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+  }, [plugins])
 
   useEffect(() => {
-    setSideBarItems(getSideBarItems(isAdmin))
+    setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
+    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+  }, [isAdmin, tokenType])
+
+  useEffect(() => {
+    setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
+    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
   }, [])
 
   return (
@@ -172,7 +184,47 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo }) => {
         </Link>
       </div>
       {sideBarItems.map(({ icon, name, url, style, path, selectedIcon, CustomElement, moreIcon }) => {
-        if (CustomElement) {
+        if (path === '/plugins' && !isEmpty(addedPlugins)) {
+          return (
+            <div
+              key={name}
+              style={{ ...style, paddingTop: '10px', paddingBottom: '10px' }}
+            >
+              <div className='plugins'>
+                <span className='title'>Plugins</span>
+                <Link
+                  className='manage'
+                  to={url(match)}
+                  onClick={() => setPath(path)}
+                >Manage</Link>
+              </div>
+              {
+                addedPlugins.map((plugin) => {
+                  if (plugin && allPlugins[plugin]) {
+                    const {
+                      name,
+                      path,
+                      url,
+                      icon,
+                      selectedIcon
+                    } = plugin && allPlugins[plugin]
+                    return (
+                      <Link
+                        key={name}
+                        to={url(match)}
+                        onClick={() => setPath(path)}
+                        className={classNames('item item--hover', { 'item--home': currentPath === path })}
+                      >
+                        <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
+                        <span className='item__text'>{name}</span>
+                      </Link>
+                    )
+                  }
+                })
+              }
+            </div>
+          )
+        } else if (CustomElement) {
           return (
             <CustomElement key={name} style={style}>
               <Link

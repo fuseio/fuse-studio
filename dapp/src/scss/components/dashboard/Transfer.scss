@@ -10,13 +10,14 @@
     @include xy-grid();
     @include flex-align(justify, middle);
 
+
     @include breakpoint(medium up) {
-      margin-top: 2em;
-      margin-bottom: 1em;
+      margin-top: 12em;
+      margin-bottom: 1.5em;
     }
 
     @include element(title) {
-      font-size: 26px;
+      font-size: 1.625em;
       font-weight: 500;
     }
   }
