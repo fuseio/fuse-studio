@@ -8,7 +8,8 @@ module.exports = (mongoose) => {
     foreignTokenAddress: { type: String, required: [true, "can't be blank"] },
     homeBridgeAddress: { type: String, required: [true, "can't be blank"] },
     foreignBridgeAddress: { type: String, required: [true, "can't be blank"] },
-    isClosed: { type: Boolean, default: false }
+    isClosed: { type: Boolean, default: false },
+    plugins: { type: Object }
   }, { timestamp: true })
 
   CommunitySchema.index({ communityAddress: 1 }, { unique: true })
