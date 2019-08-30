@@ -3,8 +3,57 @@ const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
 
 /**
+ * @apiDefine Add Plugins
+ * @apiSuccess {Boolean} isClosed
+ * @apiSuccess {Object} plugins
+ * @apiSuccess {String} communityAddress
+ * @apiSuccess {String} homeTokenAddress
+ * @apiSuccess {String} foreignTokenAddress
+ * @apiSuccess {String} foreignBridgeAddress
+ * @apiSuccess {String} homeBridgeAddress
+ */
+
+/**
+ * @api {post} /communities/:communityAddress Add plugins to community
+ * @apiName AddPlugins
+ * @apiGroup Community
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {Object} plugins The plugins (with arguments)
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "plugins": {
+ *          "businessList": {
+ *              "isActive": true,
+ *           },
+ *          "joinBonus": {
+ *              "isActive": false,
+ *              "hasTransferToFunder": false
+ *          },
+ *       }
+ *     }
+ *
+ */
+router.post('/:communityAddress', async (req, res, next) => {
+  const { communityAddress } = req.params
+  const { plugins } = req.body
+  const { plugins: oldPlugins } = await Community.findOne({ communityAddress })
+  const newPlugins = Object.keys(plugins).reduce((newPlugins, key) => ({
+    ...oldPlugins,
+    ...newPlugins,
+    [key]: {
+      ...oldPlugins[key],
+      ...plugins[key]
+    }
+  })
+  , {})
+  const community = await Community.findOneAndUpdate({ communityAddress }, { plugins: { ...newPlugins } }, { new: true })
+  return res.json({ data: community })
+})
+
+/**
  * @apiDefine CommunityData
  * @apiSuccess {Boolean} isClosed
+ * @apiSuccess {Object} plugins
  * @apiSuccess {String} communityAddress
  * @apiSuccess {String} homeTokenAddress
  * @apiSuccess {String} foreignTokenAddress

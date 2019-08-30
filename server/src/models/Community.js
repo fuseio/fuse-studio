@@ -8,6 +8,7 @@ module.exports = (mongoose) => {
     foreignTokenAddress: { type: String, required: [true, "can't be blank"] },
     homeBridgeAddress: { type: String, required: [true, "can't be blank"] },
     foreignBridgeAddress: { type: String, required: [true, "can't be blank"] },
+    plugins: { type: Object, default: {} },
     isClosed: { type: Boolean, default: false }
   }, { timestamp: true })
 
