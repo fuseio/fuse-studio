@@ -1,5 +1,6 @@
 {
   "api": {
+    "allowCors": "COMMUNITY_API_ALLOW_CORS",
     "secret": "COMMUNITY_API_SECRET",
     "tokenExpiresIn": "COMMUNITY_TOKEN_EXPIRES_IN",
     "port": "PORT"

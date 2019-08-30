@@ -32,5 +32,8 @@
       "testMode": false
     }
   },
-  "debugTrace": false
+  "debugTrace": false,
+  "ipfsProxy": {
+    "urlBase": "https://ipfs-proxy.fusenet.io/api"
+  }
 }

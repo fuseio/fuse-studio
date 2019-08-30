@@ -18,5 +18,8 @@
     "gaOptions": {
       "testMode": false
     }
+  },
+  "ipfsProxy": {
+    "urlBase": "https://ipfs-proxy-qa.fusenet.io/api"
   }
 }
