@@ -67,7 +67,7 @@ POST /communities/:communityAddress
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | communityAddress | `String` | <p>Community address</p> |
-| plugins | `Object` | <p>The steps (with arguments) to deploy</p> |
+| plugins | `Object` | <p>The plugins (with arguments)</p> |
 
 ### Param Examples
 `json` - Request-Example:
@@ -75,8 +75,13 @@ POST /communities/:communityAddress
 ```json
 {
   "plugins": {
-     "businessList": true,
-     "joinBonus": true,
+     "businessList": {
+         "isActive": true,
+      },
+     "joinBonus": {
+         "isActive": false,
+         "hasTransferToFunder": false
+     },
   }
 }
 ```
