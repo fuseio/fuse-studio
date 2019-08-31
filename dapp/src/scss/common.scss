@@ -1064,3 +1064,12 @@
 		position: relative;
 	}
 }
+
+@keyframes copyAnime {
+	from {
+		bottom: 0;
+	}
+	to {
+		bottom: 50px;
+	}
+}

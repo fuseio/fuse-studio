@@ -13,7 +13,7 @@ const styles = {
   textAlign: 'center',
   left: '50%',
   fontSize: '14px',
-  animation: 'ani1 1s alternate infinite',
+  animation: 'copyAnime 1s alternate infinite',
   zIndex: 999999
 }
 
