@@ -40,12 +40,13 @@ router.post('/:communityAddress', async (req, res, next) => {
   const newPlugins = Object.keys(plugins).reduce((newPlugins, key) => ({
     ...oldPlugins,
     ...newPlugins,
-    [key]: {
+    [key]: oldPlugins && oldPlugins[key] ? {
       ...oldPlugins[key],
       ...plugins[key]
+    } : {
+      ...plugins[key]
     }
-  })
-  , {})
+  }), {})
   const community = await Community.findOneAndUpdate({ communityAddress }, { plugins: { ...newPlugins } }, { new: true })
   return res.json({ data: community })
 })
