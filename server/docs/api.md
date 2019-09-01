@@ -1,7 +1,7 @@
 <a name="top"></a>
 # fuse-studio-backend v0.1.0
 
-Fuse studio API backend
+The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities.
 
 - [Bridge](#Bridge)
 	- [Fetch bridge](#Fetch-bridge)
@@ -181,7 +181,7 @@ GET /entities/:communityAddress/:account
 ## <a name='Fetch-token'></a> Fetch token
 [Back to top](#top)
 
-
+<p>Tokens are compatible with the ERC20 standard, and they also can be burnable/mintable. Tokens are an important part of the community economy.</p>
 
 ```
 GET /tokens/:address
@@ -205,7 +205,7 @@ GET /tokens/:address
 | factoryAddress | `String` | <p>Factory contract that created the token</p> |
 | blockNumber | `String` | <p>Block number of the token's creation</p> |
 | tokenType | `String` | <p>Token type: basic/mintableBurnable/impornted</p> |
-| networkType | `String` | <p>Network type where the token is issued: Mainnet/Ropsten/Fuse</p> |
+| networkType | `String` | <p>Network type where the token is issued: mainnet/ropsten/fuse</p> |
 ## <a name='Fetch-tokens'></a> Fetch tokens
 [Back to top](#top)
 
@@ -239,7 +239,7 @@ GET /tokens/owner/:owner
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | owner | `String` | <p>account address of the token owner</p> |
-| networkType | `String` | <p>Mainnet/Ropsten/Fuse</p> |
+| networkType | `String` | <p>mainnet/ropsten/fuse</p> |
 
 
 ### Success 200

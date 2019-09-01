@@ -73,7 +73,7 @@ router.put('/:communityAddress/:account', async (req, res) => {
 /**
  * @apiDefine EntityData
  * @apiDescription Entity is an account on the Fuse network. It can have variety of roles like user, admin, business, or custom defined role.
- * @apiSuccess {String} account Entitiy's account on Fuse network
+ * @apiSuccess {String} account Entity's account on Fuse network
  * @apiSuccess {String} communityAddress Community address of the entity
  * @apiSuccess {String} uri IPFS URI points to entity's metadata
  * @apiSuccess {String} name Entity's name

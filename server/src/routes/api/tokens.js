@@ -27,7 +27,7 @@ const createFilter = ({ networkType }) => networkType ? ({ networkType }) : {}
  * @apiName GetTokens
  * @apiGroup Token
  *
- * @apiParam {String} networkType Mainnet/Ropsten/Fuse
+ * @apiParam {String} networkType mainnet/ropsten/fuse
  * @apiParam {Number} page Page number for pagination
  *
  * @apiSuccess {Object[]} - List of Tokens. See GetToken endpoint for token fields
@@ -83,7 +83,7 @@ router.get('/owner/:owner', async (req, res) => {
  * @apiSuccess {String} owner Token's owner
  * @apiSuccess {String} factoryAddress Factory contract that created the token
  * @apiSuccess {String} blockNumber Block number of the token's creation
- * @apiSuccess {String} tokenType Token type: basic/mintableBurnable/impornted
+ * @apiSuccess {String} tokenType Token type: basic/mintableBurnable/imported
  * @apiSuccess {String} networkType Network type where the token is issued: mainnet/ropsten/fuse
  */
 router.get('/:address', async (req, res, next) => {

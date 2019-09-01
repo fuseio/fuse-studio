@@ -1,8 +1,8 @@
 {
   "name": "fuse-studio-backend",
   "version": "0.1.0",
-  "description": "Fuse studio API backend",
-  "title": "Fuse API",
+  "description": "The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities.",
+  "title": "Fuse Studio REST API",
   "url" : "https://studio-qa-ropsten.fusenet.io/api/v1",
   "sampleUrl": "https://studio-qa-ropsten.fusenet.io/api/v1",
   "template": {
