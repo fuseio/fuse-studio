@@ -5,6 +5,8 @@ import Dashboard from 'components/dashboard/pages/Dashboard'
 import WhiteLabelWallet from 'components/dashboard/pages/WhiteLabelWallet'
 import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
+import PluginsPage from 'components/dashboard/pages/Plugins'
+import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
 import { fetchCommunity, fetchTokenProgress } from 'actions/token'
 import { isUserExists } from 'actions/user'
 import { loadModal } from 'actions/ui'
@@ -76,18 +78,31 @@ class DashboardLayout extends PureComponent {
     const { open } = this.state
     const { match, token, community, metadata, networkType, communityAddress, accountAddress, isAdmin } = this.props
 
-    const { address: tokenAddress, name } = token
-    const { isClosed } = community
+    const { address: tokenAddress, name, tokenType } = token
+    const { isClosed, plugins } = community
     return (
       <div className='dashboard'>
         {accountAddress ? <SignIn accountAddress={accountAddress} /> : undefined}
         <div className='container'>
           {
             !isMobile
-              ? <SidebarContent isAdmin={isAdmin} isGradientLogo communityName={token && token.name} match={match.url} />
+              ? <SidebarContent
+                plugins={plugins}
+                isAdmin={isAdmin}
+                isGradientLogo
+                communityName={token && token.name}
+                match={match.url}
+                tokenType={tokenType}
+              />
               : <Sidebar
                 sidebar={
-                  <SidebarContent isAdmin={isAdmin} isGradientLogo communityName={token && token.name} match={match.url} />
+                  <SidebarContent
+                    isAdmin={isAdmin}
+                    isGradientLogo
+                    communityName={token && token.name}
+                    match={match.url}
+                    tokenType={tokenType}
+                  />
                 }
                 open={open}
                 styles={{
@@ -102,22 +117,26 @@ class DashboardLayout extends PureComponent {
           <div className='content__container'>
             <NavBar withLogo={false} />
             <div className='content'>
-              <Header
-                metadata={metadata[token.tokenURI] || {}}
-                tokenAddress={tokenAddress}
-                isClosed={isClosed}
-                name={name}
-                networkType={networkType}
-                token={token}
-              />
               <Switch>
-                <Route exact path={`${match.url}`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.url}`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
+                  <Header
+                    metadata={metadata[token.tokenURI] || {}}
+                    tokenAddress={tokenAddress}
+                    isClosed={isClosed}
+                    name={name}
+                    networkType={networkType}
+                    token={token}
+                  />
+                </Dashboard>}
+                />
+                <Route exact path={`${match.url}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.url}/joinBonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route path={`${match.url}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 {
-                  isAdmin && (
+                  isAdmin && tokenType === 'mintableBurnable' && (
                     <Fragment>
                       <Route exact path={`${match.url}/mintBurn`} render={() => <MintBurnPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                     </Fragment>

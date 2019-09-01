@@ -5,7 +5,7 @@ import * as actions from 'actions/communityEntities'
 import { createEntitiesFetch, tryTakeEvery, apiCall } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
 import { getCommunityAddress } from 'selectors/entities'
-import { createEntitiesMetadata } from 'sagas/metadata'
+import { createEntitiesMetadata, createMetadata } from 'sagas/metadata'
 import * as entitiesApi from 'services/api/entities'
 import { transactionFlow } from './transaction'
 import { roles, combineRoles } from '@fuse/roles'
@@ -94,7 +94,11 @@ function deriveEntityData (type, isClosed) {
 }
 
 function * addEntity ({ communityAddress, data, isClosed, entityType }) {
-  yield call(metadataHandler, { communityAddress, data })
+  if (entityType === 'business') {
+    yield call(createMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+  } else {
+    yield call(metadataHandler, { communityAddress, data })
+  }
 
   const { entityRoles } = deriveEntityData(entityType, isClosed)
 
@@ -108,7 +112,6 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
   })
   const action = actions.ADD_ENTITY
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-  // yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: data })
 }
 
 function * metadataHandler ({ communityAddress, data }) {

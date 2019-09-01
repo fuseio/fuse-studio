@@ -28,6 +28,7 @@ export const FETCH_TOKEN_PROGRESS = createRequestTypes('FETCH_TOKEN_PROGRESS')
 export const FETCH_DEPLOY_PROGRESS = createRequestTypes('FETCH_DEPLOY_PROGRESS')
 
 export const TRANSFER_TOKEN = createTransactionRequestTypes('TRANSFER_TOKEN')
+export const TRANSFER_TOKEN_TO_FUNDER = createTransactionRequestTypes('TRANSFER_TOKEN_TO_FUNDER')
 export const MINT_TOKEN = createTransactionRequestTypes('MINT_TOKEN')
 export const BURN_TOKEN = createTransactionRequestTypes('BURN_TOKEN')
 
@@ -45,6 +46,7 @@ export const createTokenWithMetadata = (tokenData, metadata, tokenType, steps) =
 
 export const deployExistingToken = (steps) => requestAction(DEPLOY_EXISTING_TOKEN, { steps })
 
+export const transferTokenToFunder = (tokenAddress, value) => requestAction(TRANSFER_TOKEN_TO_FUNDER, { tokenAddress, value })
 export const transferToken = (tokenAddress, to, value) => requestAction(TRANSFER_TOKEN, { tokenAddress, to, value })
 export const mintToken = (tokenAddress, value) => requestAction(MINT_TOKEN, { tokenAddress, value })
 export const burnToken = (tokenAddress, value) => requestAction(BURN_TOKEN, { tokenAddress, value })

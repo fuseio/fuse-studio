@@ -107,7 +107,8 @@ class Dashboard extends Component {
       accountAddress,
       balances,
       dashboard,
-      networkType
+      networkType,
+      children
     } = this.props
 
     const { address: tokenAddress } = token
@@ -116,6 +117,7 @@ class Dashboard extends Component {
 
     return (
       <React.Fragment>
+        {children}
         <div className='content__tabs'>
           <CommunityInfo
             token={token}

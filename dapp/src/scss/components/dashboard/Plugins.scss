@@ -1,0 +1,138 @@
+@include block(plugins) {
+  width: 100%;
+  font-size: 16px;
+
+  @include element(title) {
+    color: $color-white;
+    font-size: 1.625em;
+    font-weight: 500;
+  }
+
+  @include element(content) {
+    width: 75%;
+    font-size: 0.938em;
+    line-height: 1.33;
+    color: #ffffff;
+    margin-top: .5em;
+  }
+
+  @include element(items) {
+    @include xy-grid();
+    @include flex-align(justify, middle);
+    padding-top: 5em;
+  }
+}
+
+@include block(plugin-card) {
+  display: block;
+  width: 30%;
+  min-width: 30%;
+  // height: 100%;
+  min-height: 14.4em;
+  max-height: 16.4em;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: $color-white;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+
+  @include element(image) {
+    position: relative;
+    width: 100%;
+    padding-top: 137 / 302 * 100%;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+
+    @include element(container) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  @include element(content) {
+    padding: 1.125em;
+    height: 100%;
+
+    @include modifier(disabled) {
+      opacity: .4;
+    }
+  }
+
+  @include element(title) {
+    font-size: 1.25em;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: normal;
+    color: $color-primary-dark;
+
+    > span {
+      font-size: 0.7em;
+    }
+  }
+
+  @include element(actions) {
+    @include xy-grid(horizontal, false);
+    @include flex-align(right, middle);
+    margin-top: 1em;
+  }
+
+  @include element(learn) {
+    font-size: 0.813em;
+    font-weight: 500;
+    line-height: 2;
+    text-align: center;
+    color: #7a7a7a;
+    margin-right: 15px;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  @include element(btn) {
+    @include xy-grid(horizontal, false);
+    // min-width: 77px;
+    border-radius: 4px;
+    font-size: 0.813em;
+    font-weight: 500;
+    // padding: 8px 15px;
+    padding: 8px;
+    height: 30px;
+
+    .fa {
+      font-size: 0.9em;
+    }
+
+    > img {
+      margin-right: 5px;
+      width: 13px;
+      height: 13px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    @include modifier(add) {
+      background-color: #4a687b;
+      color: $color-white;
+      &:hover {
+        background-color: $color-primary-dark;
+      }
+    }
+
+    @include modifier(remove) {
+      color: #7a7a7a;
+      border: solid 1.2px #e3e3e3;
+      background-color: #ffffff;
+    }
+  }
+}

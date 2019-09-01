@@ -1,0 +1,128 @@
+@include block(join_bonus) {
+
+  @include element(wrapper) {
+    display: flex;
+    justify-content: center;
+  }
+
+  @include element(container) {
+    position: relative;
+    @include xy-grid(vertical, false);
+    border-radius: 3px;
+    background-color: #ffffff;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+    @include breakpoint(medium up) {
+      width: 687px;
+      padding: 40px 65px 20px;
+      min-height: 200px;
+    }
+
+    @include modifier(opacity) {
+      > * {
+        opacity: .3;
+      }
+    }
+  }
+
+  @include element(funder_balance) {
+    font-size: 1.313em;
+    line-height: 1.05;
+    letter-spacing: -0.46px;
+    color: #4a687b;
+
+    > span {
+      &:not(:first-child) {
+        color: #7a7a7a;
+      }
+    }
+    > small {
+      font-size: 12px;
+      letter-spacing: -0.26px;
+      color: #7a7a7a;
+    }
+  }
+
+  @include element(main-title) {
+    font-weight: 500;
+    
+    @include modifier(white) {
+      font-size: 1.625em;
+      margin-bottom: 1em;
+      color: $color-white;
+    }
+
+    @include modifier(dark) {
+      margin-top: 2em;
+      font-size: 1.500em;
+      margin-bottom: 0.5em;  
+      color: #4a687b;
+    }
+  }
+ 
+  @include element(title) {
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.38;
+    letter-spacing: -0.35px;
+    color: #4a687b;
+  }
+
+  @include element(field) {
+    margin-top: 2em;
+    @include breakpoint(medium up) {}
+
+    @include breakpoint(small) {
+      width: 100%;
+    }
+
+    input {
+      width: 100%;
+      background-color: $color-white;
+      padding: 0 16px;
+      font-size: 15px;
+      color: $color-primary-dark;
+      height: 40px;
+      border-radius: 5px;
+      border: solid 1.8px #e3e3e3;
+
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.3);
+      }
+      &:focus {
+        border: solid 1.8px #25435a;
+        box-shadow: none;
+      }
+    }
+
+    @include element(add) {
+      font-size: 1em;
+      line-height: 1.38;
+      letter-spacing: -0.35px;
+      color: #a4a4a4;
+    }
+
+    @include modifier(underline) {
+      &:before {
+        border-bottom: none !important;
+      }
+      &:hover:not(.Mui-disabled):before {
+        border-bottom: none !important;
+
+      }
+      &:after {
+        border-bottom: none !important;
+      }
+    }
+
+    @include modifier(error) {
+      &:after {
+        border-bottom-color: none !important;
+      }
+    }
+  }  
+
+  @include element(button) {
+    margin-left: auto;
+    margin-top: 1em;
+  }
+}

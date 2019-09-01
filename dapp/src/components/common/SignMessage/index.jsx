@@ -65,7 +65,7 @@ export default ({ message, clickHandler, isOpen, isDark = false, subTitle = 'Wai
                 )
               }
               <div className='status__button'>
-                <button onClick={clickHandler}>Got it</button>
+                <button className='button button--normal' onClick={clickHandler}>Got it</button>
               </div>
             </Fragment>
           ) : (

@@ -7,6 +7,7 @@ Fuse studio API backend
 	- [Fetch bridge by home token address](#Fetch-bridge-by-home-token-address)
 	
 - [Community](#Community)
+	- [Add plugins to community](#Add-plugins-to-community)
 	- [Fetch community by community address](#Fetch-community-by-community-address)
 	
 - [Deployment](#Deployment)
@@ -53,6 +54,38 @@ GET /bridges/:homeTokenAddress
 | homeBridgeBlockNumber | `Number` |  |
 # <a name='Community'></a> Community
 
+## <a name='Add-plugins-to-community'></a> Add plugins to community
+[Back to top](#top)
+
+
+
+```
+POST /communities/:communityAddress
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Community address</p> |
+| plugins | `Object` | <p>The plugins (with arguments)</p> |
+
+### Param Examples
+`json` - Request-Example:
+
+```json
+{
+  "plugins": {
+     "businessList": {
+         "isActive": true,
+      },
+     "joinBonus": {
+         "isActive": false,
+         "hasTransferToFunder": false
+     },
+  }
+}
+```
+
 ## <a name='Fetch-community-by-community-address'></a> Fetch community by community address
 [Back to top](#top)
 
@@ -72,6 +105,7 @@ GET /communities/:communityAddress
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | isClosed | `Boolean` |  |
+| plugins | `Object` |  |
 | communityAddress | `String` |  |
 | homeTokenAddress | `String` |  |
 | foreignTokenAddress | `String` |  |
@@ -177,7 +211,8 @@ GET /entities/:communityAddress
 |:---------|:-----------|:--------------------------------------|
 | communityAddress | `String` | <p>Community address</p> |
 | page | `Number` | <p>Page number for pagination</p> |
-| withMetadata | `Boolean` | <p>Get entitites with entity's metadata</p> |
+| withMetadata | `Boolean` | <p>Get entities with entity's metadata</p> |
+| search | `String` | <ul> <li>search entities by name</li> </ul> |
 
 
 ### Success 200

@@ -22,6 +22,9 @@
         "main": {
           "BridgeMapper": "0x89b98bB511A41FeF73b388cF8C052221f42cd44f"
         }
+      },
+      "funder": {
+        "address": "0xa6c61e75e6008eed7f75b73c84755558764081d1"
       }
     },
     "bridge": {

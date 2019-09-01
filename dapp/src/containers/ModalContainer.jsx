@@ -17,6 +17,7 @@ import BridgeModal from 'components/dashboard/modals/BridgeModal'
 import NoDataAboutOwnerModal from 'components/dashboard/modals/NoDataAboutOwnerModal'
 import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
 import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEntity'
+import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
 
 import {
   LOGIN_MODAL,
@@ -32,7 +33,8 @@ import {
   ADD_USER_MODAL,
   IMPORT_EXISTING_ENTITY,
   ENTITY_ADDED_MODAL,
-  IMAGE_CROPPER_MODAL
+  IMAGE_CROPPER_MODAL,
+  PLUGIN_INFO_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -54,7 +56,8 @@ const MODAL_COMPONENTS = {
   [ADD_USER_MODAL]: AddUserModal,
   [IMPORT_EXISTING_ENTITY]: ImportExistingEntity,
   [ENTITY_ADDED_MODAL]: EntityAddedModal,
-  [IMAGE_CROPPER_MODAL]: ImageCropperModal
+  [IMAGE_CROPPER_MODAL]: ImageCropperModal,
+  [PLUGIN_INFO_MODAL]: PluginInfoModal
 }
 
 const ModalContainer = (props) => {

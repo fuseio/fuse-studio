@@ -2,7 +2,7 @@ const { handleReceipt } = require('@events/handlers')
 const CommunityTransferManagerABI = require('@fuse/entities-contracts/build/abi/CommunityTransferManagerWithEvents')
 
 const CommunityTransferManagerBytecode = require('@fuse/entities-contracts/build/bytecode/CommunityTransferManager')
-const { combineRoles, roles: { ADMIN_ROLE, USER_ROLE, APPROVED_ROLE } } = require('@fuse/roles')
+const { combineRoles, roles: { ADMIN_ROLE, USER_ROLE, APPROVED_ROLE, EMPTY_ROLE } } = require('@fuse/roles')
 
 const deployCommunity = async ({ home: { createContract, createMethod, send, from } }, communityProgress) => {
   const { name, isClosed, adminAddress } = communityProgress.steps.community.args
@@ -18,7 +18,9 @@ const deployCommunity = async ({ home: { createContract, createMethod, send, fro
 
   if (isClosed) {
     communityMethods.push(createMethod(transferManagerContract, 'addRule', APPROVED_ROLE, APPROVED_ROLE))
+    communityMethods.push(createMethod(transferManagerContract, 'addRule', ADMIN_ROLE, EMPTY_ROLE))
   }
+
   const adminMultiRole = combineRoles(USER_ROLE, ADMIN_ROLE, APPROVED_ROLE)
 
   const addEntityMethod = createMethod(transferManagerContract, 'addEntity', adminAddress, adminMultiRole)

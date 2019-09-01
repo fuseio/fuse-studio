@@ -1,8 +1,10 @@
-import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN, CLEAR_TRANSACTION_STATUS } from 'actions/token'
+import { TRANSFER_TOKEN_TO_FUNDER, TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN, CLEAR_TRANSACTION_STATUS } from 'actions/token'
 import { FAILURE } from 'actions/constants'
 
 export default (state = {}, action) => {
   switch (action.type) {
+    case TRANSFER_TOKEN_TO_FUNDER.REQUEST:
+      return { ...state, transferSignature: true }
     case TRANSFER_TOKEN.REQUEST:
       return { ...state, transferSignature: true }
     case TRANSFER_TOKEN.CONFIRMATION:

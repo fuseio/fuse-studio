@@ -1,0 +1,116 @@
+@include block(plugin-info) {
+  @include breakpoint(medium up) {
+    // width: 795px;
+    // height: 596px;
+    border-radius: 5px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+    background-color: #ffffff;
+  }
+
+  @include breakpoint(medium down) {
+    width: 90%;
+  }
+
+  padding: 0;
+  display: block;
+  width: 49.688em;
+  // height: 100%;
+  min-width: 18.875em;
+  min-height: 27.25em;
+  max-height: 37.25em;
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: $color-white;
+
+  @include element(image) {
+    position: relative;
+    width: 100%;
+    padding-top: 211 / 795 * 100%;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+
+    @include element(container) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  @include element(content) {
+    text-align: start;
+    height: 100%;
+    @include breakpoint(medium up) {
+      padding: 2.500em;
+    }
+
+    @include breakpoint(medium down) {
+      padding: 1.125em;
+    }
+
+    @include modifier(disabled) {
+      opacity: 0.4;
+    }
+  }
+
+  @include element(title) {
+    display: block;
+    height: 26px;
+    font-size: 1.125em;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.08;
+    letter-spacing: normal;
+    color: #4a687b;
+
+  }
+
+  @include element(text) {
+    width: 551px;
+    font-size: 0.8em;
+    line-height: 1.54;
+    letter-spacing: normal;
+    color: #7a7a7a;
+  }
+
+  @include element(btn) {
+    @include xy-grid();
+    min-width: 77px;
+    margin-left: auto;
+    margin-top: 3em;
+    border-radius: 4px;
+    font-size: 0.813em;
+    font-weight: 500;
+    padding: 8px 15px;
+
+    > img {
+      margin-right: 5px;
+      width: 13px;
+      height: 13px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    @include modifier(add) {
+      background-color: #4a687b;
+      color: $color-white;
+      &:hover {
+        background-color: $color-primary-dark;
+      }
+    }
+
+    @include modifier(remove) {
+      color: #7a7a7a;
+      border: solid 1.2px #e3e3e3;
+      background-color: #ffffff;
+    }
+  }
+}
