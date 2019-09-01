@@ -274,16 +274,7 @@ function * watchPluginsChanges () {
 }
 
 function * transferTokenToFunder ({ tokenAddress, value }) {
-  const accountAddress = yield select(getAccountAddress)
-
-  const contract = getContract({ abiName: 'BasicToken', address: tokenAddress })
-
-  const transactionPromise = contract.methods.transfer(funderAddress, value).send({
-    from: accountAddress
-  })
-
-  const action = actions.TRANSFER_TOKEN_TO_FUNDER
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
+  yield put(actions.transferToken(tokenAddress, funderAddress, value))
   const communityAddress = yield select(getCommunityAddress)
   yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { hasTransferToFunder: true } } })
 }

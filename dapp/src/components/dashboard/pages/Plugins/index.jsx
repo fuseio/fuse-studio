@@ -35,60 +35,16 @@ const PluginsItems = ([
   }
 ])
 
-// const PluginsItems = (tokenType) =>
-//   // tokenType === 'mintableBurnable'
-//     ? ([
-//       {
-//         title: 'Business list',
-//         coverImage: BusinessList,
-//         modalCoverPhoto: BusinessListBig,
-//         key: 'businessList'
-//       },
-//       {
-//         title: 'Join bonus',
-//         coverImage: JoinBonus,
-//         modalCoverPhoto: JoinBonusBig,
-//         key: 'joinBonus'
-//       },
-//       {
-//         title: 'Bounty',
-//         subTitle: ' | Coming soon!',
-//         coverImage: Bounty,
-//         disabled: true,
-//         modalCoverPhoto: BountyBig,
-//         key: 'bounty'
-//       }
-//     ]) : ([
-//       {
-//         title: 'Business list',
-//         coverImage: BusinessList,
-//         modalCoverPhoto: BusinessListBig,
-//         key: 'businessList'
-//       },
-//       {
-//         title: 'Bounty',
-//         subTitle: ' | Coming soon!',
-//         coverImage: Bounty,
-//         disabled: true,
-//         modalCoverPhoto: BountyBig,
-//         key: 'bounty'
-//       }
-//     ])
-
 const Plugins = ({
   loadModal,
   addCommunityPlugins,
   community,
-  token,
   onlyOnFuse
 }) => {
   const { plugins } = community
 
   const showInfoModal = (key, props) => {
     loadModal(PLUGIN_INFO_MODAL, {
-      // title,
-      // disabled,
-      // coverImage,
       ...props,
       hasPlugin: plugins && plugins[key] ? plugins[key] : false,
       managePlugin: () => addPlugin(toggleActive(key, plugins))
@@ -97,7 +53,7 @@ const Plugins = ({
 
   const addPlugin = (plugin) => {
     const { communityAddress } = community
-    if (plugin && (plugin.joinBonus === false || plugin.joinBonus === true)) {
+    if (plugin && (plugin.joinBonus.isActive === false || plugin.joinBonus.isActive === true)) {
       const { homeTokenAddress } = community
       onlyOnFuse(() => addCommunityPlugins(communityAddress, plugin, homeTokenAddress))
     } else {

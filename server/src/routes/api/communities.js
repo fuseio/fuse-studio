@@ -37,14 +37,14 @@ router.post('/:communityAddress', async (req, res, next) => {
   const { communityAddress } = req.params
   const { plugins } = req.body
   const { plugins: oldPlugins } = await Community.findOne({ communityAddress })
-  const newPlugins = Object.keys(plugins).reduce((newPlugins, key) => ({
+  const newPlugins = Object.keys(plugins).reduce((newPlugins, pluginName) => ({
     ...oldPlugins,
     ...newPlugins,
-    [key]: oldPlugins && oldPlugins[key] ? {
-      ...oldPlugins[key],
-      ...plugins[key]
+    [pluginName]: oldPlugins && oldPlugins[pluginName] ? {
+      ...oldPlugins[pluginName],
+      ...plugins[pluginName]
     } : {
-      ...plugins[key]
+      ...plugins[pluginName]
     }
   }), {})
   const community = await Community.findOneAndUpdate({ communityAddress }, { plugins: { ...newPlugins } }, { new: true })

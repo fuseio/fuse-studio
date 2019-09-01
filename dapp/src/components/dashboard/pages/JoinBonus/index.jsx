@@ -19,12 +19,13 @@ const JoinBonus = ({
   community,
   token: { address, symbol },
   transactionStatus,
-  transferFunderSignature,
-  isTransferToFunder,
-  transferToFunderSuccess,
+  transferSignature,
+  isTransfer,
+  transferSuccess,
   transferTokenToFunder,
   balanceOfToken,
-  addCommunityPlugins
+  addCommunityPlugins,
+  clearTransactionStatus
 }) => {
   const { plugins } = community
 
@@ -44,12 +45,12 @@ const JoinBonus = ({
 
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
-      if (transferToFunderSuccess) {
+      if (transferSuccess) {
         setTransferMessage(true)
         balanceOfToken(address, funderAddress)
       }
     } else if (transactionStatus && transactionStatus === FAILURE) {
-      if (transferToFunderSuccess === false) {
+      if (transferSuccess === false) {
         setTransferMessage(true)
       }
     }
@@ -113,8 +114,8 @@ const JoinBonus = ({
                   <TransactionButton frontText='Send' clickHandler={transferToFunder} />
                 </div>
 
-                <SignMessage message={'Pending'} isOpen={isTransferToFunder} isDark subTitle={`Your money on it's way`} />
-                <SignMessage message={'Pending'} isOpen={transferFunderSignature} isDark />
+                <SignMessage message={'Pending'} isOpen={isTransfer} isDark subTitle={`Your money on it's way`} />
+                <SignMessage message={'Pending'} isOpen={transferSignature} isDark />
 
                 <SignMessage
                   message={'Your money has been sent successfully'}
@@ -176,8 +177,8 @@ const JoinBonus = ({
                   <TransactionButton frontText='Send' clickHandler={transferToFunder} />
                 </div>
 
-                <SignMessage message={'Pending'} isOpen={isTransferToFunder} isDark subTitle={`Your money on it's way`} />
-                <SignMessage message={'Pending'} isOpen={transferFunderSignature} isDark />
+                <SignMessage message={'Pending'} isOpen={isTransfer} isDark subTitle={`Your money on it's way`} />
+                <SignMessage message={'Pending'} isOpen={transferSignature} isDark />
 
                 <SignMessage
                   message={'Your money has been sent successfully'}

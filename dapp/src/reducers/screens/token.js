@@ -4,13 +4,7 @@ import { FAILURE } from 'actions/constants'
 export default (state = {}, action) => {
   switch (action.type) {
     case TRANSFER_TOKEN_TO_FUNDER.REQUEST:
-      return { ...state, transferFunderSignature: true }
-    case TRANSFER_TOKEN_TO_FUNDER.PENDING:
-      return { ...state, transferFunderSignature: false, transactionHash: action.response.transactionHash, isTransferToFunder: true }
-    case TRANSFER_TOKEN_TO_FUNDER.SUCCESS:
-      return { ...state, ...action.response, transferFunderSignature: false, isTransferToFunder: false, transferToFunderSuccess: true }
-    case TRANSFER_TOKEN_TO_FUNDER.FAILURE:
-      return { ...state, ...action.response, ...action.error, transferFunderSignature: false, transactionStatus: FAILURE, transferToFunderSuccess: false }
+      return { ...state, transferSignature: true }
     case TRANSFER_TOKEN.REQUEST:
       return { ...state, transferSignature: true }
     case TRANSFER_TOKEN.CONFIRMATION:

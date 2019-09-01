@@ -19,8 +19,8 @@ export default ({ value }) => {
             Please download the Fuse wallet, register and click on "switch community" and then scan this QR code to add the community you created as the default community on the wallet
           </div>
           <div className='qr-code__download grid-x align-middle align align-justify'>
-            <a href='https://testflight.apple.com/join/CQKLoJje' target='_blank'><img src={AppleDownload} /></a>
-            <a href='https://play.google.com/store/apps/details?id=com.creatix.fusewallet&hl=en' target='_blank'><img src={GoogleDownload} /></a>
+            <a href='https://testflight.apple.com/join/02P1laVr' target='_blank'><img src={AppleDownload} /></a>
+            <a href='https://play.google.com/store/apps/details?id=io.fusenet.fusewallet' target='_blank'><img src={GoogleDownload} /></a>
           </div>
         </div>
       </div>
