@@ -53,7 +53,7 @@ router.get('/', async (req, res) => {
  * @apiGroup Token
  *
  * @apiParam {String} owner account address of the token owner
- * @apiParam {String} networkType Mainnet/Ropsten/Fuse
+ * @apiParam {String} networkType mainnet/ropsten/fuse
  *
  * @apiSuccess {Object[]} - List of Tokens. See GetToken endpoint for token fields
  */
@@ -68,22 +68,23 @@ router.get('/owner/:owner', async (req, res) => {
 })
 
 /**
- * @api {get} /tokens/:address Fetch token by token address
+ * @api {get} /tokens/:address Fetch token
  * @apiName GetToken
  * @apiGroup Token
+ * @apiDescription Tokens are compatible with the ERC20 standard, and they also can be burnable/mintable. Tokens are an important part of the community economy.
  *
  * @apiParam {String} address Token address
  *
- * @apiSuccess {String} address
- * @apiSuccess {String} name
- * @apiSuccess {String} symbol
+ * @apiSuccess {String} address Token's address
+ * @apiSuccess {String} name Token's name
+ * @apiSuccess {String} symbol Token's symbol
  * @apiSuccess {String} tokenURI IPFS URI points to token metadata
- * @apiSuccess {String} totalSupply
- * @apiSuccess {String} owner
+ * @apiSuccess {String} totalSupply Token's total supply
+ * @apiSuccess {String} owner Token's owner
  * @apiSuccess {String} factoryAddress Factory contract that created the token
- * @apiSuccess {String} blockNumber
- * @apiSuccess {String} tokenType basic/mintableBurnable/impornted
- * @apiSuccess {String} networkType Mainnet/Ropsten/Fuse
+ * @apiSuccess {String} blockNumber Block number of the token's creation
+ * @apiSuccess {String} tokenType Token type: basic/mintableBurnable/impornted
+ * @apiSuccess {String} networkType Network type where the token is issued: mainnet/ropsten/fuse
  */
 router.get('/:address', async (req, res, next) => {
   const { address } = req.params

@@ -16,7 +16,7 @@ Fuse studio API backend
 	- [Fetch entity](#Fetch-entity)
 	
 - [Token](#Token)
-	- [Fetch token by token address](#Fetch-token-by-token-address)
+	- [Fetch token](#Fetch-token)
 	- [Fetch tokens](#Fetch-tokens)
 	- [Fetch tokens by owner](#Fetch-tokens-by-owner)
 	
@@ -111,7 +111,7 @@ GET /communities/:communityAddress
 ## <a name='Fetch-my-communities'></a> Fetch my communities
 [Back to top](#top)
 
-
+<p>Fetching communities I'm part of</p>
 
 ```
 GET /entities/account/:account
@@ -178,7 +178,7 @@ GET /entities/:communityAddress/:account
 | isApproved | `Boolean` |  |
 # <a name='Token'></a> Token
 
-## <a name='Fetch-token-by-token-address'></a> Fetch token by token address
+## <a name='Fetch-token'></a> Fetch token
 [Back to top](#top)
 
 
@@ -196,16 +196,16 @@ GET /tokens/:address
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| address | `String` |  |
-| name | `String` |  |
-| symbol | `String` |  |
+| address | `String` | <p>Token's address</p> |
+| name | `String` | <p>Token's name</p> |
+| symbol | `String` | <p>Token's symbol</p> |
 | tokenURI | `String` | <p>IPFS URI points to token metadata</p> |
-| totalSupply | `String` |  |
-| owner | `String` |  |
+| totalSupply | `String` | <p>Token's total supply</p> |
+| owner | `String` | <p>Token's owner</p> |
 | factoryAddress | `String` | <p>Factory contract that created the token</p> |
-| blockNumber | `String` |  |
-| tokenType | `String` | <p>basic/mintableBurnable/impornted</p> |
-| networkType | `String` | <p>Mainnet/Ropsten/Fuse</p> |
+| blockNumber | `String` | <p>Block number of the token's creation</p> |
+| tokenType | `String` | <p>Token type: basic/mintableBurnable/impornted</p> |
+| networkType | `String` | <p>Network type where the token is issued: Mainnet/Ropsten/Fuse</p> |
 ## <a name='Fetch-tokens'></a> Fetch tokens
 [Back to top](#top)
 

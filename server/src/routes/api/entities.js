@@ -40,6 +40,7 @@ const withTokens = async (entities) => {
 
 /**
  * @api {get} /entities/account/:account Fetch my communities
+ * @apiDescription Fetching communities I'm part of
  * @apiName GetCommunitiesIOwn&PartOf
  * @apiGroup Entity
  *
