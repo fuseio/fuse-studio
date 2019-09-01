@@ -53,17 +53,18 @@ router.post('/:communityAddress', async (req, res, next) => {
 
 /**
  * @apiDefine CommunityData
- * @apiSuccess {Boolean} isClosed
- * @apiSuccess {Object} plugins
- * @apiSuccess {String} communityAddress
- * @apiSuccess {String} homeTokenAddress
- * @apiSuccess {String} foreignTokenAddress
- * @apiSuccess {String} foreignBridgeAddress
- * @apiSuccess {String} homeBridgeAddress
+ * @apiDescription Community is a set of contracts and services. Members of the community are users of the Fuse network. The community is configured via the plugins.
+ * @apiSuccess {String} communityAddress Address of the community on the Fuse network
+ * @apiSuccess {String} homeTokenAddress Address of the community token on the Fuse network
+ * @apiSuccess {String} foreignTokenAddress Address of the community token on the Ethereum network
+ * @apiSuccess {String} homeBridgeAddress Address of the community bridge on the Fuse network
+ * @apiSuccess {String} foreignBridgeAddress Address of the community bridge on the Ethereum network
+ * @apiSuccess {Boolean} isClosed Is the community is closed or open. Closed community requires an approve of community admin to join.
+ * @apiSuccess {Object} plugins Defines the community plugins.
  */
 
 /**
- * @api {get} /communities/:communityAddress Fetch community by community address
+ * @api {get} /communities/:communityAddress Fetch community
  * @apiName GetCommunity
  * @apiGroup Community
  *
