@@ -32,6 +32,10 @@
 
     @include modifier(disabled) {
       @extend %disabled-section;
+
+      * {
+        box-shadow: none !important;
+      }
     }
   }
 }
