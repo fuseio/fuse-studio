@@ -168,7 +168,7 @@ GET /entities/:communityAddress/:account
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| account | `String` | <p>Entitiy's account on Fuse network</p> |
+| account | `String` | <p>Entity's account on Fuse network</p> |
 | communityAddress | `String` | <p>Community address of the entity</p> |
 | uri | `String` | <p>IPFS URI points to entity's metadata</p> |
 | name | `String` | <p>Entity's name</p> |
@@ -204,7 +204,7 @@ GET /tokens/:address
 | owner | `String` | <p>Token's owner</p> |
 | factoryAddress | `String` | <p>Factory contract that created the token</p> |
 | blockNumber | `String` | <p>Block number of the token's creation</p> |
-| tokenType | `String` | <p>Token type: basic/mintableBurnable/impornted</p> |
+| tokenType | `String` | <p>Token type: basic/mintableBurnable/imported</p> |
 | networkType | `String` | <p>Network type where the token is issued: mainnet/ropsten/fuse</p> |
 ## <a name='Fetch-tokens'></a> Fetch tokens
 [Back to top](#top)
@@ -218,7 +218,7 @@ GET /tokens
 ### Parameter Parameters
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| networkType | `String` | <p>Mainnet/Ropsten/Fuse</p> |
+| networkType | `String` | <p>mainnet/ropsten/fuse</p> |
 | page | `Number` | <p>Page number for pagination</p> |
 
 
