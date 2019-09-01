@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { getAccountAddress } from 'selectors/accounts'
 import { getBusinessesEntities } from 'selectors/entities'
 import {
@@ -19,6 +19,7 @@ import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
 import sortBy from 'lodash/sortBy'
 import capitalize from 'lodash/capitalize'
+import { getForeignNetwork } from 'selectors/network'
 
 const Businesses = ({
   network,
@@ -41,7 +42,7 @@ const Businesses = ({
   const { communityAddress, isClosed } = community
   const [data, setData] = useState(null)
   const [search, setSearch] = useState('')
-  const apiRoot = getApiRoot(network.networkType === 'fuse' ? 'default' : network.networkType)
+  const apiRoot = getApiRoot(useSelector(getForeignNetwork))
   let url = `${apiRoot}/entities/${communityAddress}?type=business`
 
   if (search) {
