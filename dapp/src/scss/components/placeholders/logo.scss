@@ -1,26 +1,26 @@
 %outer-circle {
-	border-radius: 50%;
-	position: relative;
+  border-radius: 50%;
+  position: relative;
 }
 
 %inner-circle {
-    position: absolute;
-    background: inherit;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
 }
 
 %logo-symbol {
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    margin-top: -9px;
-    text-transform: uppercase;
-    left: 0;
-    right: 0;
-    z-index: 2;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  margin-top: -9px;
+  text-transform: uppercase;
+  left: 0;
+  right: 0;
+  z-index: 2;
 }

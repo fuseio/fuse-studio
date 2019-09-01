@@ -24,8 +24,11 @@ import { getApiRoot } from 'utils/network'
 import sortBy from 'lodash/sortBy'
 import Avatar from 'images/avatar.svg'
 import { Link } from 'react-router-dom'
+import classNames from 'classnames'
+import SwitchNetwork from 'components/common/SwitchNetwork'
 
 const Users = ({
+  networkType,
   currentUrl,
   users,
   isAdmin,
@@ -349,11 +352,14 @@ const Users = ({
 
   return (
     <Fragment>
-      <div className='entities__header'>
+      <div className={classNames('entities__header', { 'entities__header--disabled': networkType !== 'fuse' })}>
         <h2 className='entities__header__title'>Users list</h2>
       </div>
-      <div className='entities__wrapper'>
+      <div className={classNames('entities__wrapper', { 'entities--disabled': networkType !== 'fuse' })}>
         {renderContent()}
+        {networkType !== 'fuse' && (
+          <SwitchNetwork />
+        )}
       </div>
     </Fragment>
   )

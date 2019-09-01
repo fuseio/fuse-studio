@@ -6,6 +6,10 @@
     color: $color-white;
     font-size: 1.625em;
     font-weight: 500;
+
+    @include modifier(disabled) {
+      opacity: .15;
+    }
   }
 
   @include element(content) {
@@ -14,12 +18,21 @@
     line-height: 1.33;
     color: #ffffff;
     margin-top: .5em;
+    margin-bottom: 5em;
+
+    @include modifier(disabled) {
+      opacity: .15;
+    }
   }
 
   @include element(items) {
+    position: relative;
     @include xy-grid();
     @include flex-align(justify, middle);
-    padding-top: 5em;
+
+    @include modifier(disabled) {
+      @extend %disabled-section;
+    }
   }
 }
 

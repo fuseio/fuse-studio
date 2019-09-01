@@ -11,6 +11,8 @@ import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
 import { addCommunityPlugins } from 'actions/community'
 import get from 'lodash/get'
+import classNames from 'classnames'
+import SwitchNetwork from 'components/common/SwitchNetwork'
 
 const PluginsItems = ([
   {
@@ -39,7 +41,8 @@ const Plugins = ({
   loadModal,
   addCommunityPlugins,
   community,
-  onlyOnFuse
+  onlyOnFuse,
+  networkType
 }) => {
   const { plugins } = community
 
@@ -68,13 +71,16 @@ const Plugins = ({
 
   return (
     <div className='plugins'>
-      <h2 className='plugins__title'>Plugins</h2>
-      <h2 className='plugins__content'>
+      <h2 className={classNames('plugins__title', { 'plugins__title--disabled': networkType !== 'fuse' })}>Plugins</h2>
+      <h2 className={classNames('plugins__content', { 'plugins__content--disabled': networkType !== 'fuse' })}>
         Plug-ins are contracts deployed on the Fuse-chain and allow to add functionality to your app with a few easy steps.
         Any plug-in you activate will open a new navigation menu that allows to configure it's settings.
         <br /> Give it try.
       </h2>
-      <div className='plugins__items'>
+      <div className={classNames('plugins__items', { 'plugins__items--disabled': networkType !== 'fuse' })}>
+        {networkType !== 'fuse' && (
+          <SwitchNetwork />
+        )}
         {
           PluginsItems.map(({
             title,
@@ -103,8 +109,8 @@ const Plugins = ({
   )
 }
 
-const mapStateToProps = () => ({
-
+const mapStateToProps = (state) => ({
+  networkType: state.network.networkType
 })
 
 const mapDispatchToProps = {

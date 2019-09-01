@@ -1,8 +1,13 @@
 @include block(entities) {
   @include element(wrapper) {
+    position: relative;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background: $color-white;
     border-radius: 5px;
+  }
+
+  @include modifier(disabled) {
+    @extend %disabled-section;
   }
 
   @include element(container) {
@@ -344,6 +349,10 @@
     @include breakpoint(medium up) {
       margin-top: 12em;
       margin-bottom: 1.5em;
+    }
+
+    @include modifier(disabled) {
+      opacity: .15;
     }
 
     @include element(title) {

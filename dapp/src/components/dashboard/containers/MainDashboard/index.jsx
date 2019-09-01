@@ -33,6 +33,10 @@ class DashboardLayout extends PureComponent {
   }
 
   componentDidMount () {
+    if (window && window.Appcues) {
+      window.Appcues.anonymous()
+    }
+
     const { token } = this.props
     if (!token) {
       const { fetchCommunity, fetchTokenProgress, fetchEntities, communityAddress } = this.props
@@ -97,6 +101,7 @@ class DashboardLayout extends PureComponent {
               : <Sidebar
                 sidebar={
                   <SidebarContent
+                    plugins={plugins}
                     isAdmin={isAdmin}
                     isGradientLogo
                     communityName={token && token.name}

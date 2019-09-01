@@ -188,7 +188,7 @@
       height: 100%;
       width: 100%;
       @include xy-grid(vertical);					
-      @include flex-align(spaced, middle);
+      @include flex-align(spaced, null);
       
       @include breakpoint(medium up) {
         padding: 40px 0 60px;
@@ -205,13 +205,16 @@
       }
 
       @include element(title) {
-        font-size: 21px;
+        font-size: 15px;
         font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
         color: $color-primary-dark;
+        padding-bottom: 1em;
+
         @include breakpoint(small only) {
           margin-bottom: 1em;
+          font-size: 20px;
         }
       }
 
@@ -234,11 +237,10 @@
           border: 1px solid transparent;
 
           &::placeholder {
-            color: rgba(0, 0, 0, 0.3);
+            color: #92a1ac;
           }
           &:focus {
             border: solid 1px #25435a;
-            box-shadow: none;
           }
         }
 
@@ -324,7 +326,6 @@
           }
           &:focus {
             border: solid 1px #25435a;
-            box-shadow: none;
           }
 
           &:disabled {
@@ -608,7 +609,6 @@
             }
             &:focus {
               border: solid 1px #25435a;
-              box-shadow: none;
             }
           }
         }
