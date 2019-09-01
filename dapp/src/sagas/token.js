@@ -18,7 +18,7 @@ import {
   fetchCommunity as fetchCommunityApi,
   addCommunityPlugins as addCommunityPluginsApi
 } from 'services/api/community'
-import { ADD_ENTITY } from 'actions/communityEntities'
+import { ADD_ENTITY, REMOVE_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
 import { getCommunityAddress } from 'selectors/entities'
 const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
@@ -256,6 +256,17 @@ function * addCommunityPlugins ({ communityAddress, plugins, tokenAddress }) {
       from: accountAddress
     })
     const action = ADD_ENTITY
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  } else if (tokenAddress && plugins && plugins.joinBonus && !plugins.joinBonus.isActive) {
+    const accountAddress = yield select(getAccountAddress)
+    const CommunityContract = getContract({ abiName: 'Community',
+      address: communityAddress
+    })
+    const method = CommunityContract.methods.removeEntity(funderAddress)
+    const transactionPromise = method.send({
+      from: accountAddress
+    })
+    const action = REMOVE_ENTITY
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
   }
 

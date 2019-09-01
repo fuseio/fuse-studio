@@ -53,7 +53,7 @@ const Plugins = ({
 
   const addPlugin = (plugin) => {
     const { communityAddress } = community
-    if (plugin && (plugin.joinBonus.isActive === false || plugin.joinBonus.isActive === true)) {
+    if (plugin && plugin.joinBonus) {
       const { homeTokenAddress } = community
       onlyOnFuse(() => addCommunityPlugins(communityAddress, plugin, homeTokenAddress))
     } else {
