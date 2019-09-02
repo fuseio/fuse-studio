@@ -62,7 +62,7 @@ class IssuanceWizard extends PureComponent {
         icon: contractIcon
       }
     },
-    isOpen: false,
+    isOpen: true,
     currentDeploy: 'tokenIssued'
   }
 
