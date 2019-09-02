@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import capitalize from 'lodash/capitalize'
 import { formatWei } from 'utils/format'
 import Tabs from '@material-ui/core/Tabs'
@@ -10,6 +10,7 @@ import MintBurnForm from 'components/dashboard/components/MintBurnForm'
 import { mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { toWei } from 'web3-utils'
 import Message from 'components/common/SignMessage'
+import { getForeignNetwork } from 'selectors/network'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -71,7 +72,11 @@ const MintBurn = ({
   burnSignature,
   accountAddress,
   transactionStatus,
-  clearTransactionStatus
+  clearTransactionStatus,
+  onlyOnNetwork,
+  homeNetwork,
+  community,
+  bridgeStatus
 }) => {
   const { address: tokenAddress } = token
   const tabsClasses = useTabsStyles()
@@ -79,20 +84,21 @@ const MintBurn = ({
   const [value, setValue] = useState(0)
   const [mintMessage, setMintMessage] = useState(false)
   const [burnMessage, setBurnMessage] = useState(false)
+  const foreignNetwork = useSelector(getForeignNetwork)
 
-  const balance = balances[tokenAddress]
+  const { homeTokenAddress, foreignTokenAddress } = community
+
+  const balance = balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]
 
   const mintHandler = (amount) => {
-    mintToken(tokenAddress, toWei(String(amount)))
+    onlyOnNetwork(() => mintToken(tokenAddress, toWei(String(amount))), foreignNetwork)
   }
 
   const burnHandler = (amount) => {
-    burnToken(tokenAddress, toWei(String(amount)))
+    onlyOnNetwork(() => burnToken(tokenAddress, toWei(String(amount))), foreignNetwork)
   }
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
+  const handleChange = (event, newValue) => setValue(newValue)
 
   return (
     <Fragment>
@@ -123,7 +129,7 @@ const MintBurn = ({
           </div>
           <MintBurnForm
             error={error}
-            balance={formatWei(balance, 0)}
+            balance={balance ? formatWei(balance, 0) : 0}
             handleMintOrBurnClick={mintHandler}
             tokenNetworkType={tokenNetworkType}
             token={token}
@@ -145,7 +151,7 @@ const MintBurn = ({
           </div>
           <MintBurnForm
             error={error}
-            balance={formatWei(balance, 0)}
+            balance={balance ? formatWei(balance, 0) : 0}
             handleMintOrBurnClick={burnHandler}
             tokenNetworkType={tokenNetworkType}
             token={token}
@@ -165,7 +171,8 @@ const MintBurn = ({
 }
 
 const mapStateToProps = (state) => ({
-  ...state.screens.token
+  ...state.screens.token,
+  homeNetwork: state.network.homeNetwork
 })
 
 const mapDispatchToProps = {

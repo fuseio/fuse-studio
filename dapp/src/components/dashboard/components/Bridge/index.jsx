@@ -7,7 +7,6 @@ import { balanceOfToken } from 'actions/accounts'
 import * as actions from 'actions/bridge'
 import { getBlockNumber } from 'actions/network'
 import { getBalances } from 'selectors/accounts'
-import { getBridgeStatus } from 'selectors/network'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
 import arrow1 from 'images/arrow--1.svg'
@@ -265,7 +264,6 @@ const mapStateToProps = (state, { foreignTokenAddress }) => ({
   ...state.screens.bridge,
   ...state.entities.bridges[foreignTokenAddress],
   homeNetwork: state.network.homeNetwork,
-  bridgeStatus: getBridgeStatus(state),
   balances: getBalances(state),
   ...getTransaction(state, state.screens.bridge.transactionHash)
 })

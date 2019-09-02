@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
 import { fetchTokenStatistics, transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
-import { getBalances } from 'selectors/accounts'
 import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
@@ -10,7 +9,6 @@ import { isUserExists } from 'actions/user'
 import { getTransaction } from 'selectors/transaction'
 import { isOwner } from 'utils/token'
 import Bridge from 'components/dashboard/components/Bridge'
-import { getBridgeStatus } from 'selectors/network'
 import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 
 class Dashboard extends Component {
@@ -108,7 +106,8 @@ class Dashboard extends Component {
       balances,
       dashboard,
       networkType,
-      children
+      children,
+      bridgeStatus
     } = this.props
 
     const { address: tokenAddress } = token
@@ -135,6 +134,7 @@ class Dashboard extends Component {
             bridgeDeployed={steps && steps.bridge}
             accountAddress={accountAddress}
             token={token}
+            bridgeStatus={bridgeStatus}
             foreignTokenAddress={tokenAddress}
             isOwner={() => isOwner({ owner }, accountAddress)}
             loadBridgePopup={this.loadBridgePopup}
@@ -149,9 +149,7 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
-  balances: getBalances(state),
   ...getTransaction(state, state.screens.token.transactionHash),
-  bridgeStatus: getBridgeStatus(state),
   homeNetwork: state.network.homeNetwork
 })
 

@@ -26,6 +26,9 @@ import { getToken } from 'selectors/dashboard'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
+import { balanceOfToken } from 'actions/accounts'
+import isEqual from 'lodash/isEqual'
+import get from 'lodash/get'
 
 class DashboardLayout extends PureComponent {
   state = {
@@ -57,19 +60,37 @@ class DashboardLayout extends PureComponent {
       fetchTokenProgress(communityAddress)
       fetchEntities(communityAddress)
     }
+
+    if (!prevProps.community && this.props.community) {
+      const { balanceOfToken, community, accountAddress } = this.props
+      const { foreignTokenAddress, homeTokenAddress } = community
+      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+    }
+
+    if (!isEqual(this.props.community, prevProps.community)) {
+      const { balanceOfToken, community, accountAddress } = this.props
+      const { foreignTokenAddress, homeTokenAddress } = community
+      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+    }
   }
 
   onlyOnFuse = (successFunc) => {
+    return this.onlyOnNetwork(successFunc, 'fuse')
+  }
+
+  onlyOnNetwork = (successFunc, network) => {
     const { networkType, isPortis } = this.props
-    if (networkType === 'fuse') {
+    if (networkType === network) {
       successFunc()
     } else if (isPortis) {
       const { changeNetwork } = this.props
-      changeNetwork('fuse')
+      changeNetwork(network)
       successFunc()
     } else {
       const { loadModal } = this.props
-      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['fuse'] })
+      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [network] })
     }
   }
 
@@ -135,15 +156,15 @@ class DashboardLayout extends PureComponent {
                 </Dashboard>}
                 />
                 <Route exact path={`${match.url}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/joinBonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                {get(plugins, 'businessList.isActive', false) && <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                {get(plugins, 'joinBonus.isActive', false) && <Route exact path={`${match.url}/joinBonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
                 <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route path={`${match.url}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.url}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 {
                   isAdmin && tokenType === 'mintableBurnable' && (
                     <Fragment>
-                      <Route exact path={`${match.url}/mintBurn`} render={() => <MintBurnPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                      <Route exact path={`${match.url}/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                     </Fragment>
                   )
                 }
@@ -161,7 +182,7 @@ const mapStateToProps = (state, { match }) => ({
   networkType: state.network.networkType,
   token: getToken(state, match.params.address),
   isPortis: state.network.isPortis,
-  community: state.entities.communities && state.entities.communities[match.params.address],
+  community: state.entities.communities[match.params.address] || {},
   communityAddress: match.params.address,
   tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
@@ -178,7 +199,8 @@ const mapDispatchToProps = {
   isUserExists,
   loadModal,
   fetchEntities,
-  changeNetwork
+  changeNetwork,
+  balanceOfToken
 }
 
 export default connect(

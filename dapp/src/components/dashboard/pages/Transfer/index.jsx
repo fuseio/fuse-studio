@@ -4,17 +4,17 @@ import { toWei } from 'web3-utils'
 import { formatWei } from 'utils/format'
 import TransferForm from 'components/dashboard/components/TransferForm'
 import { transferToken, clearTransactionStatus } from 'actions/token'
-import { getBalances } from 'selectors/accounts'
 import capitalize from 'lodash/capitalize'
 import Message from 'components/common/SignMessage'
 import { FAILURE, SUCCESS } from 'actions/constants'
 import { withRouter } from 'react-router-dom'
+import { balanceOfToken } from 'actions/accounts'
 
 const Transfer = ({
   sendTo,
-  match,
   error,
   token,
+  community,
   balances,
   networkType,
   isTransfer,
@@ -23,9 +23,18 @@ const Transfer = ({
   transactionStatus,
   accountAddress,
   transferSuccess,
-  clearTransactionStatus
+  homeNetwork,
+  clearTransactionStatus,
+  balanceOfToken,
+  bridgeStatus
 }) => {
   const [transferMessage, setTransferMessage] = useState(false)
+  const { homeTokenAddress, foreignTokenAddress } = community
+
+  useEffect(() => {
+    balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+    balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+  }, [])
 
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
@@ -41,7 +50,7 @@ const Transfer = ({
 
   const { address, symbol } = token
 
-  const balance = balances[address]
+  const balance = balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]
 
   const handleTransfer = ({ to: toField, amount }) => {
     transferToken(address, toField, toWei(String(amount)))
@@ -82,13 +91,13 @@ const Transfer = ({
 const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   sendTo: match.params.sendTo,
-  balances: getBalances(state),
-  networkType: state.network.networkType
+  homeNetwork: state.network.homeNetwork
 })
 
 const mapDispatchToProps = {
   transferToken,
-  clearTransactionStatus
+  clearTransactionStatus,
+  balanceOfToken
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Transfer))

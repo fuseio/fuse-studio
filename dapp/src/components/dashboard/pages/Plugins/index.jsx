@@ -109,13 +109,9 @@ const Plugins = ({
   )
 }
 
-const mapStateToProps = (state) => ({
-  networkType: state.network.networkType
-})
-
 const mapDispatchToProps = {
   loadModal,
   addCommunityPlugins
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Plugins)
+export default connect(null, mapDispatchToProps)(Plugins)
