@@ -1,7 +1,7 @@
 <a name="top"></a>
-# fuse-studio-backend v0.1.0
+# Studio Backend API v0.1.0
 
-The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities.
+The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. Learn more on https://github.com/fuseio/fuse-studio
 
 - [Bridge](#Bridge)
 	- [Fetch bridge](#Fetch-bridge)
@@ -36,6 +36,13 @@ GET /bridges/:homeTokenAddress
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | homeTokenAddress | `String` | <p>Home (Fuse) token address</p> |
+
+### Examples
+Example usage:
+
+```
+curl -i http://localhost/user/4711
+```
 
 
 ### Success 200
