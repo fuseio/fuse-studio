@@ -1,111 +1,31 @@
 [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
 
-# Fuse Studio DApp
-Welcome to the Fuse Studio DApp repo. We're building a DApp that will interact with the smart contracts of the Fuse ecosystem. For now, we have a small api server that communicates with an IPFS node (because exposing an IPFS node might be unsafe) and replicates the data into mongodb.
+# Fuse Studio
+Fuse Studio is a DApp running on the Ethereum and Fuse networks. Via the DApp you can access to the contracts and the services of the Fuse network. You can launch your DeFi community on the Fuse network with a token bridged to Ethereum. The community is upgraded by a variety of plugins that customize the community to your needs.  It allows you to:
+- Add to your community users, business, admins and more tailor made roles
+- Define transfer and bonus rules for the community members
+- Make bounties (soon to come)
+- You can your own plugins (soon to come)
 
-# Develop
+The logic is defined by EVM compatible smart contracts and backend services that listen to the events on the blockchain. We prefer to use the Fuse chain for fast and cheap transactions, but some significant events are neccesery to happen on the Ethereum network, as a gateway to the whole ecosystem. We do not own user private data, it is controlled by the user itself via 3box and stored in IPFS.
 
+# Backend Infrastructure
+The backend is composed of the following independent services
+- Studio API Backend have two purposes. Provides an API for fast and convinient queriying of the blockchain data for the Studio DApp. Transmists heavy and complicated transaction flows on behalf of the user.
+- Fuse-funder service used to fund community members and wallet users on the Fuse blockchain.
+- Fuse ipfs proxy used for fast fetching and storing data in IPFS.
 
-## With Docker
+# Contracts
+Fuse studio is aimed to launch DeFi communities on Fuse network. The community contract binds together most of the services and features of the Studio. Among other things it consists of:
+- Entities List contract to store community members and their roles
+- Community ERC20 token on Fuse network with transfer rules
+- ERC20 token on Ethereum. That's the token that the user issues part of the community deploy process
+- [Multitoken bridge](https://github.com/fuseio/bridge-contracts) - to minimize friction and costs we extended the POA ERC20-ERC20 bridge contract to many-ERC20-to-many contract.
 
-copy the confige file and start the docker compose:
-
-```
-cp .env.dist .env
-docker network create fuse-studio
-docker-compose up -d
-```
-
-the `.env.dist` is the config template while `.env` is the actual file used for environment variables. The `.env` is gitignored so fill free to tweak it.
-
-Then open [localhost:9000](localhost:9000) in your browser. The IPFS node needs time to sync, so for the first time part of the data may not be fetched on time. Refresh the browser if this is the case.
-
-### Frontend Development
-
-For the best experience, stop the client docker container and start it natively as described [here](#setup-client).
-
-## Without Docker
-
-### dependencies
-
-- [mongoDB](https://www.mongodb.com/)
-- [ipfs](https://ipfs.io/docs/install/)
-
-Optional:
-- [geth](https://ethereum.gitbooks.io/frontier-guide/content/getting_a_client.html)
-
-### Setup database
-
-Start a mongodb daemon with default settings.
-
-### Setup IPFS node
-
-Start a IPFS daemon with default settings.
-
-```
-ipfs daemon
-```
-
-Then define following environment variables for the server's shell
-```
-cp ./server/config/defaults.json ./server/config/local.json
-```
-You can edit the `./server/config/local.json` file as you like.
-
-### Setup IPFS proxy
-
-IPFS lacks permissions so all access to the IPFS node is done through the IPFS proxy.
-
-Learn how to install and configure the proxy in the [fuse-ipfs-proxy](https://github.com/fuseio/fuse-ipfs-proxy) repo.
-
-### Setup Ethereum node (Optional)
-
-You can start your own Ethereum node:
-
-```
-geth --testnet  --rpc --rpcapi="db,eth,net,web3,personal,web3"
-```
-
-Or use Infura (or other provider) as your provider, just change it in the config file (`./server/config/local.json`)
-
-### Setup Server
-
-`cd` to project's directory, then:
-
-```
-cd server
-npm install
-npm run dev --NODE_ENV=local
-```
-
-### Setup client
-
-Load the relevant environment variables from the [.env](.env.dist) file.
-
-`cd` to project's directory, then:
-```
-cd client
-npm install
-npm start
-```
-
-If your browser has an MetaMask extension, that should be enought.
-
-
-### Other configs
-Take a look into [server/config](server/config) directory.
-
-## Fast frontend track
-
-If you plan to work only on the frontend you can use our QA servers as a backend infrastucture. For this setup just run:
-
-```
-cd client
-npm install
-NODE_ENV=QA npm start
-```
-
-Though you still need a web3 provider like [MetaMask](https://metamask.io/).
+# Plugins
+The plugins are used to customise the community to your special needs. They can be smart contracts, backend services or the integration of two. The available plugins now are:
+- Business list - allows you to add businesses to you community. Businesses are entities list members with special role.
+- Join bonus - new community members will receive a join bonus.
 
 # Contributing
 
