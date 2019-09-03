@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { getAddresses, getNetworkType, getBridgeStatus } from 'selectors/network'
+import { getAddresses, getNetworkType } from 'selectors/network'
 import { initialAccount } from 'reducers/accounts'
 const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
 
