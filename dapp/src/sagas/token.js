@@ -302,7 +302,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN_LIST, fetchTokenList, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
-    takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS], watchPluginsChanges),
+    takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN.SUCCESS], watchPluginsChanges),
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchCommunityFetch),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),

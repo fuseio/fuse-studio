@@ -192,7 +192,7 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
               key={name}
               style={{ ...style, paddingTop: '10px', paddingBottom: '10px' }}
             >
-              <div className='plugins'>
+              <div className='plugin__header'>
                 <span className='title'>Plugins</span>
                 <Link
                   className='manage'

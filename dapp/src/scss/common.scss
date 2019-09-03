@@ -3,8 +3,24 @@
 	top: 0;
 	z-index: 1;
 	display: flex;
+	width: 100%;
 	flex-direction: column;
-	padding: 20px 260px;
+	padding: 1.5em;
+	height: 100%;
+	justify-content: space-around;
+
+	@include element(content) {
+		@include xy-grid();
+    position: relative;
+    width: 100%;
+		height: 100%;
+
+		@include modifier(second) {
+			@include xy-grid(vertical);
+			justify-content: center;
+			height: 80%;
+		}
+	}
 
 	@include element(title) {
 		font-size: 1.313em;
@@ -13,7 +29,7 @@
 		margin-bottom: 1em;
 	}
 
-	@include element(content) {
+	@include element(text) {
 		font-size: 1.125em;
 		line-height: 1.5;
 		color: #7a7a7a;
@@ -32,11 +48,13 @@
 	}
 
 	@include element(image) {
-		width: 386.4px;
-		height: 206.9px;
-		margin-bottom: 1em;
+		height: 80%;
+		width: 30%;
+		display: flex;
+		justify-content: center;
+
 			> img {
-			width: 100%;
+			width: auto;
 			height: 100%;
 		}
 	}
@@ -68,7 +86,7 @@
     @include flex-align(justify, middle);
 
     @include breakpoint(medium up) {
-      margin-top: 12em;
+      margin-top: 10em;
       margin-bottom: 1.5em;
     }
 
@@ -629,7 +647,7 @@
 	}
 
 	@include element(boxImg) {
-		margin-top: 1em;
+		margin: 1em 0;
 	}
 
 	@include element(fuse-text) {
@@ -639,6 +657,15 @@
 		text-align: center;
 		color: #7a7a7a;
 		margin-top: 20px;
+
+		small {
+			font-size: 75%;
+		}
+
+		a {
+			font-size: 75%;
+			text-decoration: underline;
+		}
 	}
 
 	@include element(what) {
@@ -646,15 +673,6 @@
     line-height: 1.25;
 		color: #7a7a7a;
 		text-align: center;
-	}
-	
-	@include element(what-small) {
-		text-decoration: underline;
-    margin: 2em 0;
-  	font-size: 16px;
-  	font-weight: bold;
-  	text-align: center;
-  	color: #7a7a7a;
 	}
 
 	@include element(text) {
@@ -814,7 +832,7 @@
   bottom: 0;
   right: 0;
   left: 0;
-  background-color: rgba(5, 40, 62, 0.8);
+  background-color: rgba(5, 40, 62, 0.97);
   border-radius: 5px;
   font-family: $font-family;
   display: flex;

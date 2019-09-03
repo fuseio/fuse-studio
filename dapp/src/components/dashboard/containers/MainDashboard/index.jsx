@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import SidebarContent from 'components/dashboard/components/Sidebar'
 import Dashboard from 'components/dashboard/pages/Dashboard'
@@ -20,7 +20,7 @@ import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import { getForeignNetwork, getBridgeStatus } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
-import { getAccountAddress, getBalances } from 'selectors/accounts'
+import { getAccountAddress, getBalances, getBalance } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import { getToken } from 'selectors/dashboard'
 import { fetchEntities } from 'actions/communityEntities'
@@ -30,7 +30,7 @@ import { balanceOfToken } from 'actions/accounts'
 import isEqual from 'lodash/isEqual'
 import get from 'lodash/get'
 
-class DashboardLayout extends PureComponent {
+class DashboardLayout extends Component {
   state = {
     open: false
   }

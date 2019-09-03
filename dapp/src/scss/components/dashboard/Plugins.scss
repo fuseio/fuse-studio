@@ -2,6 +2,10 @@
   width: 100%;
   font-size: 16px;
 
+  @include breakpoint(medium up) {
+    margin-top: 10em;
+  }
+
   @include element(title) {
     color: $color-white;
     font-size: 1.625em;
@@ -10,19 +14,51 @@
     @include modifier(disabled) {
       opacity: .15;
     }
+
+    @include breakpoint(medium up) {
+      margin-bottom: 1.5em
+    }
+  }
+
+  @include element(wrapper) {
+    position: relative;
+    @include modifier(disabled) {
+      @extend %disabled-section;
+
+      * {
+        box-shadow: none !important;
+      }
+    }
   }
 
   @include element(content) {
-    width: 75%;
-    font-size: 0.938em;
+    width: 70%;
     line-height: 1.33;
-    color: #ffffff;
-    margin-top: .5em;
-    margin-bottom: 5em;
+    font-size: 1em;
+    line-height: 1.25;
+    color: #7a7a7a;
 
-    @include modifier(disabled) {
-      opacity: .15;
+    @include element(wrapper) {
+      border-radius: 8px;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      padding: 2em;
+
+      @include modifier(disabled) {
+        opacity: .15;
+      }
+
+      @include breakpoint(medium up) {
+        margin-bottom: 2.5em
+      }
     }
+  }
+
+  @include element(puzzle) {
+    height: 100%;
+    width: 20%;
   }
 
   @include element(items) {
@@ -30,12 +66,16 @@
     @include xy-grid();
     @include flex-align(justify, middle);
 
-    @include modifier(disabled) {
-      @extend %disabled-section;
+    @include element(wrapper) {
 
-      * {
-        box-shadow: none !important;
-      }
+    }
+
+    @include element(title) {
+      font-size: 1.125em;
+      font-weight: 500;
+      line-height: 1.44;
+      color: #7a7a7a; 
+      margin-bottom: 0.3em;
     }
   }
 }
@@ -116,11 +156,9 @@
 
   @include element(btn) {
     @include xy-grid(horizontal, false);
-    // min-width: 77px;
     border-radius: 4px;
     font-size: 0.813em;
     font-weight: 500;
-    // padding: 8px 15px;
     padding: 8px;
     height: 30px;
 

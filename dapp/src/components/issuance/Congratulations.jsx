@@ -14,13 +14,12 @@ const Congratulations = ({ goToDashboard }) => {
         On the birth of your community!
         <img src={confeRight} />
       </div>
-      <p className='congratulation__fuse-text'>You have been awarded with 10 Fuse tokens on Fuse Network</p>
+      <p className='congratulation__fuse-text'>You have been awarded with 10 Fuse tokens on the Fuse Network <small>(<a target='_blank' href='https://docs.fusenet.io/the-fuse-chain/fuse-token'>What's that?</a>)</small></p>
       <div className='congratulation__boxImg'>
         <img alt='box' src={Box} />
       </div>
-      <p className='congratulation__what-small'>What's that?</p>
       <div className='congratulation__what'>What should i do next?</div>
-      <div className='congratulation__text'>to start building your community. Your community will now show on the homepage of the Fuse Studio. Go to your community page to start adding businesses and users.</div>
+      <div className='congratulation__text'>to start building your community. Your community will now show on the homepage of the Fuse Studio. Go to your community page to start adding features to it.</div>
       <div className='congratulation__btn'>
         <button className='button button--big' onClick={goToDashboard}>Go to the community page</button>
       </div>

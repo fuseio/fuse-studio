@@ -95,6 +95,7 @@ class DeployProgress extends PureComponent {
 
     return (
       <div className='progress__wrapper'>
+        <div className='progress__title'>Please wait while your contracts are being published to Ethereum and verification received.</div>
         <div className='progress__img'>
           {
             !isDone ? (

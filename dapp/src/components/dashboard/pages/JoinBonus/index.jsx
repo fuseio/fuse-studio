@@ -25,9 +25,12 @@ const JoinBonus = ({
   transferTokenToFunder,
   balanceOfToken,
   addCommunityPlugins,
-  clearTransactionStatus
+  clearTransactionStatus,
+  bridgeStatus,
+  balances,
+  homeNetwork
 }) => {
-  const { plugins } = community
+  const { plugins, homeTokenAddress, foreignTokenAddress } = community
 
   const { joinBonus } = plugins
 
@@ -82,6 +85,8 @@ const JoinBonus = ({
     addCommunityPlugins(communityAddress, { joinBonus: { joinInfo: { message: joinBonusInfoMessage, amount: joinBonusInfoAmount } } })
   }
 
+  const balance = balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]
+
   return (
     <div className='join_bonus__wrapper'>
       <div className='join_bonus'>
@@ -90,6 +95,22 @@ const JoinBonus = ({
           !hasTransferToFunderFlag()
             ? (
               <div className='join_bonus__container'>
+                <div className='join_bonus__balances'>
+                  <div className='join_bonus__funder_balance'>
+                    <span>My balance:&nbsp;</span>
+                    <div>
+                      <span>{balance ? formatWei(balance, 0) : 0}&nbsp;</span>
+                      <small>{symbol}</small>
+                    </div>
+                  </div>
+                  <div className='join_bonus__funder_balance'>
+                    <span>Funder balance:&nbsp;</span>
+                    <div>
+                      <span>{funderAccount && funderAccount.balances && funderAccount.balances[address] ? formatWei(funderAccount.balances[address], 0) : 0}&nbsp;</span>
+                      <small>{symbol}</small>
+                    </div>
+                  </div>
+                </div>
                 <p className='join_bonus__title'>In order to reward your first users please transfer your tokens to the funder, choose how much to send to the funder:</p>
                 <div className='join_bonus__field'>
                   <TextField
@@ -148,10 +169,21 @@ const JoinBonus = ({
               </div>
             ) : (
               <div className='join_bonus__container'>
-                <div className='join_bonus__funder_balance'>
-                  <span>Funder balance:&nbsp;</span>
-                  <span>{funderAccount && funderAccount.balances && funderAccount.balances[address] ? formatWei(funderAccount.balances[address], 0) : 0}&nbsp;</span>
-                  <small>{symbol}</small>
+                <div className='join_bonus__balances'>
+                  <div className='join_bonus__funder_balance'>
+                    <span>My balance:&nbsp;</span>
+                    <div>
+                      <span>{balance ? formatWei(balance, 0) : 0}&nbsp;</span>
+                      <small>{symbol}</small>
+                    </div>
+                  </div>
+                  <div className='join_bonus__funder_balance'>
+                    <span>Funder balance:&nbsp;</span>
+                    <div>
+                      <span>{funderAccount && funderAccount.balances && funderAccount.balances[address] ? formatWei(funderAccount.balances[address], 0) : 0}&nbsp;</span>
+                      <small>{symbol}</small>
+                    </div>
+                  </div>
                 </div>
                 <div className='join_bonus__field'>
                   <div className='join_bonus__field__add'>Add funder balance:</div>
