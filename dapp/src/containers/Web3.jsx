@@ -8,7 +8,7 @@ import { withMaybe } from 'utils/components'
 import { getAccountAddress } from 'selectors/accounts'
 
 class Web3 extends Component {
-  componentDidMount () {
+  connectToNetwork = () => {
     this.props.getNetworkType()
     // TODO: Move this to getNetworkType saga after redux-saga 1.0.0 upgrade
     if (window.ethereum && window.ethereum.on) {
@@ -17,6 +17,20 @@ class Web3 extends Component {
           this.props.checkAccountChanged(accounts[0])
         }
       })
+    }
+  }
+
+  componentDidMount () {
+    const { isMobile } = this.props
+    if (isMobile) {
+      const interval = setInterval(() => {
+        if (window && window.pk) {
+          this.connectToNetwork()
+          clearInterval(interval)
+        }
+      }, 100)
+    } else {
+      this.connectToNetwork()
     }
   }
 
