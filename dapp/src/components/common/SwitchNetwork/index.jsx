@@ -1,11 +1,11 @@
 import React from 'react'
 import ChangeNetwork from 'images/change_network.png'
 
-const SwitchNetwork = ({ pluginName = 'plug-ins' }) => {
+const SwitchNetwork = ({ contentStyles, pluginName = 'plug-ins' }) => {
   return (
     <div className='switch__network'>
       <h3 className='switch__network__title'>Switch to Fuse chain to use {pluginName}</h3>
-      <div className='switch__network__content'>
+      <div className='switch__network__content' style={{ ...contentStyles }}>
         <div className='switch__network__image'><img src={ChangeNetwork} /></div>
         <div className='switch__network__content--second'>
           <div className='switch__network__text switch__network__text--space'>

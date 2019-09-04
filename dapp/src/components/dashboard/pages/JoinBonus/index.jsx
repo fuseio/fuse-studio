@@ -94,7 +94,7 @@ const JoinBonus = ({
         <h2 className={classNames('join_bonus__main-title join_bonus__main-title--white', { 'join_bonus__main-title--disabled': networkType !== 'fuse' })}>Join bonus</h2>
         <div style={{ position: 'relative' }}>
           {networkType !== 'fuse' && (
-            <SwitchNetwork pluginName='join bonus' />
+            <SwitchNetwork contentStyles={{ flexDirection: 'column' }} pluginName='join bonus' />
           )}
           {
             !hasTransferToFunderFlag()

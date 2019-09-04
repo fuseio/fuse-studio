@@ -1,4 +1,4 @@
-import { all, put, takeEvery, call } from 'redux-saga/effects'
+import { all, put, takeEvery } from 'redux-saga/effects'
 
 import { createEntityPut, tryTakeEvery, apiCall } from './utils'
 import { get3box } from 'services/web3'
@@ -7,16 +7,10 @@ import { createProfile } from 'services/api/profiles'
 import * as metadataApi from 'services/api/metadata'
 import * as actions from 'actions/metadata'
 import { FETCH_TOKEN } from 'actions/token'
-import { imageUpload, uploadImage } from 'services/api/images'
+import { imageUpload } from 'services/api/images'
 import * as entitiesApi from 'services/api/entities'
-// import { uploadImage as uploadImageTest } from './communityEntities'
 
 const entityPut = createEntityPut(actions.entityName)
-
-function * uploadImageTest ({ image }) {
-  const data = yield call(uploadImage, { image })
-  // return data.json()
-}
 
 function * fetchMetadata ({ tokenURI }) {
   if (!tokenURI) {
@@ -54,15 +48,6 @@ export function * createMetadata ({ metadata }) {
 }
 
 export function * createBusinessMetadata ({ communityAddress, accountAddress, metadata }) {
-  const getImageHash = async (image) => {
-    // const formData = new window.FormData()
-    // formData.append('path', new window.Blob([image]))
-    const response = await uploadImageTest({ image })
-    const { Hash } = await response.json()
-    return Hash
-    // return [{ '@type': 'ImageObject', contentUrl: { '/': Hash } }]
-  }
-
   let image
   let coverPhoto
 

@@ -18,11 +18,11 @@ import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
 import sortBy from 'lodash/sortBy'
-import capitalize from 'lodash/capitalize'
 import { getForeignNetwork } from 'selectors/network'
 import classNames from 'classnames'
 import SwitchNetwork from 'components/common/SwitchNetwork'
 import get from 'lodash/get'
+import capitalize from 'lodash/capitalize'
 
 const Businesses = ({
   networkType,
@@ -128,8 +128,8 @@ const Businesses = ({
                   : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
               }
             ],
-          type: get(metadata[uri], 'type', ''), // type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
-          address: get(metadata[uri], 'address', ''), // profile && profile.publicData ? profile.publicData.address : '',
+          type: get(metadata[uri], 'type', '') ? capitalize(get(metadata[uri], 'type')) : '', // type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
+          address: get(metadata[uri], 'address', '') ? capitalize(get(metadata[uri], 'address')) : '', // profile && profile.publicData ? profile.publicData.address : '',
           account
         }
       }), ['updatedAt']).reverse())
@@ -270,7 +270,7 @@ const Businesses = ({
   return (
     <Fragment>
       <div className={classNames('entities__header', { 'entities__header--disabled': networkType !== 'fuse' })}>
-        <h2 className='entities__header__title'>Businesses list</h2>
+        <h2 className='entities__header__title'>Business List</h2>
       </div>
       <div className={classNames('entities__wrapper', { 'entities--disabled': networkType !== 'fuse' })}>
         {renderContent()}
