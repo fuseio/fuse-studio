@@ -17,7 +17,7 @@ export const getProvider = (opts = {}) => {
 
   // TODO: The 3rd provider (BlockTracker) causing trouble. Find why.
   providerEngine.removeProvider(providerEngine._providers[3])
-  providerEngine.networkVersion = '121'
+  providerEngine.networkVersion = CONFIG.web3.chainId.fuse.toString()
   if (!window.ethereum) {
     window.ethereum = providerEngine
     window.ethereum.enable = () =>
