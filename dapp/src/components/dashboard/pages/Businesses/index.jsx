@@ -264,7 +264,7 @@ const Businesses = ({
       <div className={classNames('entities__wrapper', { 'entities--disabled': networkType !== 'fuse' })}>
         {renderContent()}
         {networkType !== 'fuse' && (
-          <SwitchNetwork />
+          <SwitchNetwork pluginName='businesses list' />
         )}
       </div>
     </Fragment>

@@ -8,9 +8,10 @@
 	padding: 1.5em;
 	height: 100%;
 	justify-content: space-around;
+	background: $color-white;
 
 	@include element(content) {
-		@include xy-grid();
+		@include xy-grid(horizontal, false);
     position: relative;
     width: 100%;
 		height: 100%;
