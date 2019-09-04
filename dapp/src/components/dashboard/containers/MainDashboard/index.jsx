@@ -104,7 +104,7 @@ class DashboardLayout extends Component {
     const { match, token, community, metadata, networkType, communityAddress, accountAddress, isAdmin } = this.props
 
     const { address: tokenAddress, name, tokenType } = token
-    const { isClosed, plugins } = community
+    const { isClosed, plugins, homeTokenAddress } = community
     return (
       <div className='dashboard'>
         {accountAddress ? <SignIn accountAddress={accountAddress} /> : undefined}
@@ -159,7 +159,7 @@ class DashboardLayout extends Component {
                 {get(plugins, 'businessList.isActive', false) && <Route exact path={`/view/community/:address/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
                 {get(plugins, 'joinBonus.isActive', false) && <Route exact path={`/view/community/:address/bonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
                 <Route exact path={`/view/community/:address/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`/view/community/:address/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`/view/community/:address/wallet`} render={() => <WhiteLabelWallet value={homeTokenAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`/view/community/:address/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 {
                   isAdmin && tokenType === 'mintableBurnable' && (
