@@ -19,7 +19,7 @@ import {
   fetchCommunity as fetchCommunityApi,
   addCommunityPlugins as addCommunityPluginsApi
 } from 'services/api/community'
-import { ADD_ENTITY, REMOVE_ENTITY } from 'actions/communityEntities'
+import { ADD_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
 import { getCommunityAddress } from 'selectors/entities'
 import get from 'lodash/get'
