@@ -12,6 +12,7 @@ import GoogleImage from 'images/google-card.png'
 import McdonaldsImage from 'images/mcdonalds.png'
 import StarbucksImage from 'images/starbucks-card.png'
 import WalmartImage from 'images/walmart.png'
+import CommunityPlaceholderImage from 'images/community_placeholder.png'
 
 const staticImages = [
   GoogleImage,
@@ -57,7 +58,7 @@ class FeaturedCommunities extends Component {
       <div className='grid-x align-justify grid-margin-x grid-margin-y'>
         {
           staticImages.map((img, index) =>
-            <div key={index} className='medium-12 cell'><img src={img} /></div>
+            <div key={index} className='medium-12 cell'><img src={CommunityPlaceholderImage} /></div>
           )
         }
         {/* {

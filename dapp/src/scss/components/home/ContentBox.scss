@@ -15,15 +15,20 @@
     font-size: 18px;
     color: $color-primary-dark;
     font-weight: 500;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: solid 1px #dedede;
+
+    @include element(wrapper) {
+      @include xy-grid();
+      @include flex-align(justify, middle);
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: solid 1px #dedede;
+    }
   }
 
   @include element(content) {
     width: 100%;
     @include breakpoint(large up) {
-      min-height: 360px;
+      min-height: 320px;
       max-height: 360px;
     }
   }

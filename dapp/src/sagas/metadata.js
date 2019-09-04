@@ -1,4 +1,4 @@
-import { all, put, takeEvery } from 'redux-saga/effects'
+import { all, put, takeEvery, call } from 'redux-saga/effects'
 
 import { createEntityPut, tryTakeEvery, apiCall } from './utils'
 import { get3box } from 'services/web3'
@@ -7,9 +7,16 @@ import { createProfile } from 'services/api/profiles'
 import * as metadataApi from 'services/api/metadata'
 import * as actions from 'actions/metadata'
 import { FETCH_TOKEN } from 'actions/token'
-import { imageUpload } from 'services/api/images'
+import { imageUpload, uploadImage } from 'services/api/images'
+import * as entitiesApi from 'services/api/entities'
+// import { uploadImage as uploadImageTest } from './communityEntities'
 
 const entityPut = createEntityPut(actions.entityName)
+
+function * uploadImageTest ({ image }) {
+  const data = yield call(uploadImage, { image })
+  // return data.json()
+}
 
 function * fetchMetadata ({ tokenURI }) {
   if (!tokenURI) {
@@ -46,7 +53,53 @@ export function * createMetadata ({ metadata }) {
   return { data, hash }
 }
 
-export function * createEntitiesMetadata ({ accountAddress, metadata }) {
+export function * createBusinessMetadata ({ communityAddress, accountAddress, metadata }) {
+  const getImageHash = async (image) => {
+    // const formData = new window.FormData()
+    // formData.append('path', new window.Blob([image]))
+    const response = await uploadImageTest({ image })
+    const { Hash } = await response.json()
+    return Hash
+    // return [{ '@type': 'ImageObject', contentUrl: { '/': Hash } }]
+  }
+
+  let image
+  let coverPhoto
+
+  if (metadata.image) {
+    const { hash } = yield apiCall(imageUpload, { image: metadata.image })
+    image = hash
+  }
+
+  if (metadata.coverPhoto) {
+    const { hash } = yield apiCall(imageUpload, { image: metadata.image })
+    coverPhoto = hash
+  }
+
+  if (image || coverPhoto) {
+    let newData = image ? { ...metadata, image } : metadata
+    newData = coverPhoto ? { ...newData, coverPhoto } : newData
+    const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountAddress, metadata: { ...newData } })
+    yield put({
+      type: actions.CREATE_METADATA.SUCCESS,
+      response: {
+        data
+      }
+    })
+    return { data, hash }
+  } else {
+    const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountAddress, metadata })
+    yield put({
+      type: actions.CREATE_METADATA.SUCCESS,
+      response: {
+        data
+      }
+    })
+    return { data, hash }
+  }
+}
+
+export function * createUsersMetadata ({ accountAddress, metadata }) {
   const box = yield get3box({ accountAddress })
   const { publicData, privateData } = separateData(metadata)
   const publicFields = Object.keys(publicData)

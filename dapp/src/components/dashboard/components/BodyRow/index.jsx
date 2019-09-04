@@ -39,10 +39,11 @@ export default ({
         const className = id === 'checkbox' || id === 'dropdown' ? `table__body__cell cell small-2` : `table__body__cell cell small-${Math.ceil(24 / row.cells.length)}`
         if (id === 'name') {
           return (
-            <div {...cell.getCellProps({ className, style: { display: 'flex', alignItems: 'center' } })}>
+            <div {...cell.getCellProps({ className, style: { display: 'flex', alignItems: 'center', position: 'relative', height: '100%' } })}>
               <div
                 style={{
-                  marginRight: '20px',
+                  position: 'absolute',
+                  left: '-50px',
                   width: '36px',
                   height: '36px',
                   maxHeight: '36px',

@@ -22,24 +22,22 @@ import capitalize from 'lodash/capitalize'
 import { getForeignNetwork } from 'selectors/network'
 import classNames from 'classnames'
 import SwitchNetwork from 'components/common/SwitchNetwork'
+import get from 'lodash/get'
 
 const Businesses = ({
-  network,
   networkType,
   businesses,
   community,
   isAdmin,
-  history,
   fetchEntities,
   accountAddress,
-  signatureNeeded,
   entityAdded,
-  transactionStatus,
   onlyOnFuse,
   fetchBusinessesEntities,
   loadModal,
   addEntity,
   joinCommunity,
+  metadata,
   removeEntity
 }) => {
   const { communityAddress, isClosed } = community
@@ -73,35 +71,53 @@ const Businesses = ({
   useEffect(() => {
     if (!isEmpty(response)) {
       const { data: listData } = response
-      setData(sortBy(listData.map(({ profile, isAdmin: hasAdminRole, isApproved, account }, index) => ({
-        name: profile && profile.publicData
-          ? profile.publicData.name
-            ? [
-              {
-                name: profile.publicData.name,
-                image: profile.publicData &&
-                  profile.publicData.image
-                  ? <div
-                    style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
-              }
-            ]
+      setData(sortBy(listData.map(({ profile, account, uri }) => {
+        return {
+          name: profile && profile.publicData
+            ? profile.publicData.name
+              ? [
+                {
+                  name: profile.publicData.name,
+                  image: profile.publicData &&
+                    profile.publicData.image
+                    ? <div
+                      style={{
+                        backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                        width: '36px',
+                        height: '36px',
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center'
+                      }}
+                    />
+                    : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
+                }
+              ]
+              : [
+                {
+                  name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
+                  image: profile.publicData &&
+                    profile.publicData.image
+                    ? <div
+                      style={{
+                        backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                        width: '36px',
+                        height: '36px',
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center'
+                      }}
+                    />
+                    : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
+                }
+              ]
             : [
               {
-                name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
-                image: profile.publicData &&
-                  profile.publicData.image
+                name: get(metadata[uri], 'name', ''),
+                image: get(metadata[uri], 'image')
                   ? <div
                     style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                      backgroundImage: `url(${CONFIG.ipfsProxy.urlBase}/image/${get(metadata[uri], 'image')}`,
                       width: '36px',
                       height: '36px',
                       backgroundSize: 'contain',
@@ -111,19 +127,14 @@ const Businesses = ({
                   />
                   : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
               }
-            ]
-          : [
-            {
-              name: '',
-              image: <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
-            }
-          ],
-        type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
-        address: profile && profile.publicData ? profile.publicData.address : '',
-        account
-      })), ['updatedAt']).reverse())
+            ],
+          type: get(metadata[uri], 'type', ''), // type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
+          address: get(metadata[uri], 'address', ''), // profile && profile.publicData ? profile.publicData.address : '',
+          account
+        }
+      }), ['updatedAt']).reverse())
     }
-  }, [response])
+  }, [response, metadata])
 
   useEffect(() => {
     if (entityAdded) {
@@ -132,7 +143,7 @@ const Businesses = ({
           type: 'business',
           name: !isEmpty(data) ? data[0].name[0].name : ''
         })
-      }, 1000)
+      }, 2000)
     }
   }, [entityAdded])
 
