@@ -42,7 +42,6 @@ const Plugins = ({
   loadModal,
   addCommunityPlugins,
   community,
-  onlyOnFuse,
   networkType
 }) => {
   const { plugins } = community
@@ -57,12 +56,7 @@ const Plugins = ({
 
   const addPlugin = (plugin) => {
     const { communityAddress } = community
-    if (plugin && plugin.joinBonus) {
-      const { homeTokenAddress } = community
-      onlyOnFuse(() => addCommunityPlugins(communityAddress, plugin, homeTokenAddress))
-    } else {
-      addCommunityPlugins(communityAddress, plugin)
-    }
+    addCommunityPlugins(communityAddress, plugin)
   }
 
   const toggleActive = (key, plugins) =>

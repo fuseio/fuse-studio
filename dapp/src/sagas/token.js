@@ -1,4 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects'
+import BasicToken from '@fuse/token-factory-contracts/build/abi/BasicToken'
 import { getContract } from 'services/contract'
 import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
@@ -21,6 +22,7 @@ import {
 import { ADD_ENTITY, REMOVE_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
 import { getCommunityAddress } from 'selectors/entities'
+import get from 'lodash/get'
 const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
 
 const entityPut = createEntityPut(actions.entityName)
@@ -139,7 +141,7 @@ function * fetchTokenProgress ({ communityAddress }) {
   const keys = Object.keys(steps)
     .reduce((obj, key) => ({
       ...obj,
-      [key]: steps[key] && steps[key].done,
+      [key]: get(steps, `${[key]}.done`, false),
       transferOwnership: done,
       done
     }), {})
@@ -147,7 +149,7 @@ function * fetchTokenProgress ({ communityAddress }) {
   const data = Object.keys(steps)
     .reduce((obj, key) => ({
       ...obj,
-      ...steps[key] && steps[key].results
+      ...get(steps, `${[key]}.results`)
     }), {})
 
   yield put({
@@ -168,15 +170,15 @@ function * fetchDeployProgress ({ id }) {
   const stepErrors = Object.keys(steps)
     .reduce((obj, key) => ({
       ...obj,
-      [key]: steps[key] && steps[key].error
+      [key]: get(steps, `${[key]}.error`)
     }), {})
 
   const keys = Object.keys(steps)
     .reduce((obj, key) => ({
       ...obj,
-      [key]: steps[key] && steps[key].done,
+      [key]: get(steps, `${[key]}.done`, false),
       transferOwnership: done,
-      done
+      done: get(steps, 'done', false)
     }), {})
 
   yield put({
@@ -191,7 +193,8 @@ function * fetchDeployProgress ({ id }) {
 
 function * transferToken ({ tokenAddress, to, value }) {
   const accountAddress = yield select(getAccountAddress)
-  const contract = getContract({ abiName: 'BasicToken', address: tokenAddress })
+  const web3 = yield getWeb3()
+  const contract = new web3.eth.Contract(BasicToken, tokenAddress)
 
   const transactionPromise = contract.methods.transfer(to, value).send({
     from: accountAddress
@@ -241,10 +244,8 @@ function * watchCommunityFetch ({ response }) {
   }
 }
 
-function * addCommunityPlugins ({ communityAddress, plugins, tokenAddress }) {
-  const { data: { plugins: newPlugins } } = yield apiCall(addCommunityPluginsApi, { communityAddress, plugins })
-
-  if (tokenAddress && plugins && plugins.joinBonus && plugins.joinBonus.isActive) {
+function * addCommunityPlugins ({ communityAddress, plugins }) {
+  if (get(plugins, 'joinBonus.isActive')) {
     const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
 
     const accountAddress = yield select(getAccountAddress)
@@ -257,18 +258,21 @@ function * addCommunityPlugins ({ communityAddress, plugins, tokenAddress }) {
     })
     const action = ADD_ENTITY
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-  } else if (tokenAddress && plugins && plugins.joinBonus && !plugins.joinBonus.isActive) {
-    const accountAddress = yield select(getAccountAddress)
-    const CommunityContract = getContract({ abiName: 'Community',
-      address: communityAddress
-    })
-    const method = CommunityContract.methods.removeEntity(funderAddress)
-    const transactionPromise = method.send({
-      from: accountAddress
-    })
-    const action = REMOVE_ENTITY
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
   }
+  // else if (tokenAddress && !get(plugins, 'joinBonus.isActive')) {
+  // const accountAddress = yield select(getAccountAddress)
+  // const CommunityContract = getContract({ abiName: 'Community',
+  //   address: communityAddress
+  // })
+  // const method = CommunityContract.methods.removeEntity(funderAddress)
+  // const transactionPromise = method.send({
+  //   from: accountAddress
+  // })
+  // const action = REMOVE_ENTITY
+  // yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  // }
+
+  const { data: { plugins: newPlugins } } = yield apiCall(addCommunityPluginsApi, { communityAddress, plugins })
 
   yield put({
     type: ADD_COMMUNITY_PLUGINS.SUCCESS,

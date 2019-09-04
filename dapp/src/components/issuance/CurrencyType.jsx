@@ -52,14 +52,17 @@ export default ({ communityType = { text: '' }, setCommunityType, networkType, s
         isMobileOnly ? (
           <Carousel>
             {
-              communityTypes.map(({ text, img, value }, key) => {
+              communityTypes.map(({ text, img, value, tooltipText }, key) => {
                 const classes = classNames({
                   'attributes__types__item': true,
                   'attributes__types__item--chosen': communityType.text === text
                 })
                 return (
                   <div className={classes} key={key} onClick={() => handleClick(communityTypes[key])}>
-                    <span>{text}</span>
+                    <span>{text} <FontAwesome data-tip data-for={value} name='info-circle' /></span>
+                    <ReactTooltip className='tooltip__content' id={value} place='bottom' effect='solid'>
+                      <div>{tooltipText}</div>
+                    </ReactTooltip>
                     <img src={value === 'existingToken' && communityType && communityType.value === 'existingToken' && existingToken && existingToken.value ? existingToken.icon : img} />
                     {
                       value === 'existingToken' && (

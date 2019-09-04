@@ -22,7 +22,7 @@ import { getForeignNetwork, getBridgeStatus } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress, getBalances } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
-import { getToken } from 'selectors/dashboard'
+import { getToken, getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
@@ -144,7 +144,7 @@ class DashboardLayout extends Component {
             <NavBar withLogo={false} />
             <div className='content'>
               <Switch>
-                <Route exact path={`${match.url}`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
+                <Route exact path={`/view/community/:address`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
                   <Header
                     metadata={metadata[token.tokenURI] || {}}
                     tokenAddress={tokenAddress}
@@ -155,16 +155,16 @@ class DashboardLayout extends Component {
                   />
                 </Dashboard>}
                 />
-                <Route exact path={`${match.url}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                {get(plugins, 'businessList.isActive', false) && <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                {get(plugins, 'joinBonus.isActive', false) && <Route exact path={`${match.url}/joinBonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`/view/community/:address/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                {get(plugins, 'businessList.isActive', false) && <Route exact path={`/view/community/:address/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                {get(plugins, 'joinBonus.isActive', false) && <Route exact path={`/view/community/:address/bonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                <Route exact path={`/view/community/:address/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`/view/community/:address/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`/view/community/:address/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 {
                   isAdmin && tokenType === 'mintableBurnable' && (
                     <Fragment>
-                      <Route exact path={`${match.url}/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                      <Route exact path={`/view/community/:address/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                     </Fragment>
                   )
                 }
@@ -190,7 +190,8 @@ const mapStateToProps = (state, { match }) => ({
   balances: getBalances(state),
   bridgeStatus: getBridgeStatus(state),
   dashboard: state.screens.dashboard,
-  homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress
+  homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress,
+  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, state.entities.communities[match.params.address])
 })
 
 const mapDispatchToProps = {

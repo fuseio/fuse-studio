@@ -9,6 +9,7 @@ import {
 import { REQUEST, FAILURE, PENDING } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
 import pick from 'lodash/pick'
+import omit from 'lodash/omit'
 
 const initialState = {
   receipt: null,
@@ -44,7 +45,7 @@ export default (state = initialState, action) => {
     case CREATE_TOKEN_WITH_METADATA.FAILURE:
       return { ...state, transactionStatus: FAILURE, createTokenSignature: false, ...action.error }
     case CREATE_TOKEN_WITH_METADATA.SUCCESS:
-      return { ...state, ...action.response, steps: { ...pick(state.steps, Object.keys(action.response.steps)), tokenIssued: true } }
+      return { ...state, ...omit(action.response, ['steps']), steps: { ...pick({ ...state.steps }, [...Object.keys(action.response.steps)]), tokenIssued: true } }
     case CREATE_TOKEN.REQUEST:
       return { ...state, ...action.response }
     case CREATE_TOKEN.PENDING:

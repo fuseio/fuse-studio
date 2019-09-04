@@ -152,8 +152,8 @@ const allPlugins = {
   },
   joinBonus: {
     name: 'Join bonus',
-    path: '/joinBonus',
-    url: (match) => `${match}/joinBonus`,
+    path: '/bonus',
+    url: (match) => `${match}/bonus`,
     icon: JoinBonusIcon,
     selectedIcon: JoinBonusYellowIcon
   }

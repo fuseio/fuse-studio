@@ -7,6 +7,7 @@ import FontAwesome from 'react-fontawesome'
 import get from 'lodash/get'
 import deployProgressSteps from 'constants/deployProgressSteps'
 import FinishIssuance from 'images/finish_issuance.svg'
+import { getTransaction } from 'selectors/transaction'
 
 class DeployProgress extends PureComponent {
   state = {
@@ -36,9 +37,9 @@ class DeployProgress extends PureComponent {
 
     if (this.props.steps !== prevProps.steps) {
       const { steps, stepErrors, setNextStep } = this.props
-      const values = Object.values(steps).every(val => val)
-
-      if (values) {
+      const allDone = Object.values(steps).every(val => val)
+      // const { done } = steps
+      if (allDone) {
         clearInterval(this.interval)
         setTimeout(() => {
           setNextStep()
@@ -73,7 +74,9 @@ class DeployProgress extends PureComponent {
   render () {
     const {
       contracts,
-      steps
+      steps,
+      networkType,
+      transactionHash
     } = this.props
 
     const {
@@ -84,7 +87,8 @@ class DeployProgress extends PureComponent {
 
     const isFalsy = Object.values(steps).every(val => !val)
 
-    const isDone = Object.values(steps).every(val => val)
+    const { done } = steps
+    // const allDone = Object.values(steps).every(val => val)
 
     if (isFalsy) {
       currentStep = 'tokenIssued'
@@ -98,7 +102,7 @@ class DeployProgress extends PureComponent {
         <div className='progress__title'>Please wait while your contracts are being published to Ethereum and verification received.</div>
         <div className='progress__img'>
           {
-            !isDone ? (
+            !done ? (
               <div className={classNames('progress__loader', { 'progress__loader--stop': hasErrors })} />
             ) : (
               <img src={FinishIssuance} alt='finish' />
@@ -108,18 +112,19 @@ class DeployProgress extends PureComponent {
         {
           deployProgressSteps
             .filter(({ key }) => key === 'tokenIssued' || contracts[key].checked)
-            .map(({ label, loaderText, key }) => {
+            .map(({ label, loaderText, key, RenderLink }) => {
               return (
                 <div key={key} className={classNames('progress__item', { 'progress__item--active': currentStep === key && !this.stepHasError(key) })}>
                   <div className={classNames('progress__item__label')}>
                     { steps && steps[key] && <FontAwesome name='check' /> }
                     { this.stepHasError(key) && <FontAwesome name='times' /> }
                     {label}
+                    {RenderLink && transactionHash ? <RenderLink txHash={transactionHash} /> : null}
                   </div>
                   {
                     currentStep === key &&
                     !this.stepHasError(key) &&
-                    <div className='progress__item__loaderText'>{loaderText}</div>
+                    <div className='progress__item__loaderText'>{typeof loaderText === 'function' ? loaderText(networkType) : loaderText}</div>
                   }
                 </div>
               )
@@ -140,7 +145,8 @@ class DeployProgress extends PureComponent {
 
 const mapStateToProps = (state) => ({
   ...state.screens.issuance,
-  foreignNetwork: state.network.foreignNetwork
+  networkType: state.network.networkType,
+  ...getTransaction(state, state.screens.issuance.transactionHash)
 })
 
 const mapDispatchToProps = {

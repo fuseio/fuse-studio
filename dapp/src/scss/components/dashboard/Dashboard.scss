@@ -280,6 +280,7 @@
           font-size: 12px;
           font-weight: normal;
           line-height: 2.17;
+          flex: .9;
           
           @include breakpoint(small down) {
             margin-bottom: 10px;
@@ -290,28 +291,38 @@
           }
 
           @include element(form) {
-            border-radius: 25px;
-            box-shadow: inset -1px 0 4px 0 rgba(0, 0, 0, 0.23);
-            height: 50px;
+            position: relative;
             display: flex;
             align-items: center;
-            padding-right: 10px;
-            padding-left: 3px;
-            overflow: hidden;
-            
+            height: 50px;
+
             input {
-              border: none;
-              height: 14px;
+              border: 1px solid transparent;
               font-size: 25px;
-              color: $color-arrow;
-              padding: 10px;
+              color: #25435a;
               font-weight: bold;
               width: 100%;
+              border-radius: 25px;
+              box-shadow: inset -1px 0 4px 0 rgba(0, 0, 0, 0.23);
+              height: 50px;
+              align-items: center;
+              padding-left: 16px;
+              overflow: hidden;
+
+              &::placeholder {
+                color: #92a1ac;
+              }
+
+              &:focus {
+                border: solid 1px #25435a;
+              }
             }
 
             @include element(currency) {
+              position: absolute;
+              right: 18px;
               font-size: 25px;
-              color: $color-arrow;
+              color: #92a1ac;
               font-weight: bold;
             }
 
@@ -332,6 +343,13 @@
               &:hover {
                 cursor: pointer;
               }
+
+              &:disabled {
+                cursor: not-allowed;
+                opacity: 0.3;
+                background: #4a687b;
+                color: $color-white;
+              }
             }
           }
 
@@ -343,6 +361,7 @@
           }
     
         }
+
         @include element(deploy-btn) {
           display: block;
         }          

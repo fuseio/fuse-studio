@@ -858,7 +858,10 @@
         animation-delay: 0.4s;
       }
     }
-  }
+	}
+	&__loader {
+		width: 30px;
+	}
   &-confirmation {
     color: $color-white;
     font-size: 18px;

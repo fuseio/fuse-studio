@@ -95,7 +95,7 @@ function deriveEntityData (type, isClosed) {
 
 function * addEntity ({ communityAddress, data, isClosed, entityType }) {
   if (entityType === 'business') {
-    yield call(createMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+    yield call(createMetadata, { communityAddress, accountId: data.account, metadata: data })
   } else {
     yield call(metadataHandler, { communityAddress, data })
   }

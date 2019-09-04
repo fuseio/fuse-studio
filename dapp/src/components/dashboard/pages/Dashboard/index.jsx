@@ -10,6 +10,8 @@ import { getTransaction } from 'selectors/transaction'
 import { isOwner } from 'utils/token'
 import Bridge from 'components/dashboard/components/Bridge'
 import CommunityInfo from 'components/dashboard/components/CommunityInfo'
+import FontAwesome from 'react-fontawesome'
+import ReactTooltip from 'react-tooltip'
 
 class Dashboard extends Component {
   state = {
@@ -107,7 +109,8 @@ class Dashboard extends Component {
       dashboard,
       networkType,
       children,
-      bridgeStatus
+      bridgeStatus,
+      tokenOfCommunityOnCurrentSide
     } = this.props
 
     const { address: tokenAddress } = token
@@ -129,8 +132,12 @@ class Dashboard extends Component {
         </div>
 
         <div className='content__bridge'>
-          <h3 className='content__bridge__title'>Bridge</h3>
+          <h3 className='content__bridge__title'>Bridge <FontAwesome style={{ fontSize: '60%' }} data-tip data-for='bridge' name='info-circle' /></h3>
+          <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
+            <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
+          </ReactTooltip>
           <Bridge
+            tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
             bridgeDeployed={steps && steps.bridge}
             accountAddress={accountAddress}
             token={token}

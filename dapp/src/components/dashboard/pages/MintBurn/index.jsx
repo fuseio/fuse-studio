@@ -74,9 +74,7 @@ const MintBurn = ({
   transactionStatus,
   clearTransactionStatus,
   onlyOnNetwork,
-  homeNetwork,
-  community,
-  bridgeStatus
+  tokenOfCommunityOnCurrentSide
 }) => {
   const { address: tokenAddress } = token
   const tabsClasses = useTabsStyles()
@@ -86,9 +84,7 @@ const MintBurn = ({
   const [burnMessage, setBurnMessage] = useState(false)
   const foreignNetwork = useSelector(getForeignNetwork)
 
-  const { homeTokenAddress, foreignTokenAddress } = community
-
-  const balance = balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]
+  const balance = balances[tokenOfCommunityOnCurrentSide]
 
   const mintHandler = (amount) => {
     onlyOnNetwork(() => mintToken(tokenAddress, toWei(String(amount))), foreignNetwork)

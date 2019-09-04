@@ -23,10 +23,9 @@ const Transfer = ({
   transactionStatus,
   accountAddress,
   transferSuccess,
-  homeNetwork,
   clearTransactionStatus,
   balanceOfToken,
-  bridgeStatus
+  tokenOfCommunityOnCurrentSide
 }) => {
   const [transferMessage, setTransferMessage] = useState(false)
   const { homeTokenAddress, foreignTokenAddress } = community
@@ -48,12 +47,12 @@ const Transfer = ({
     }
   }, [transactionStatus])
 
-  const { address, symbol } = token
+  const { symbol } = token
 
-  const balance = balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]
+  const balance = balances[tokenOfCommunityOnCurrentSide]
 
   const handleTransfer = ({ to: toField, amount }) => {
-    transferToken(address, toField, toWei(String(amount)))
+    transferToken(tokenOfCommunityOnCurrentSide, toField, toWei(String(amount)))
   }
 
   return (

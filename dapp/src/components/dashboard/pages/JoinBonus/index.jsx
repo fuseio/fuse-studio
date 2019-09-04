@@ -26,11 +26,10 @@ const JoinBonus = ({
   balanceOfToken,
   addCommunityPlugins,
   clearTransactionStatus,
-  bridgeStatus,
   balances,
-  homeNetwork
+  tokenOfCommunityOnCurrentSide
 }) => {
-  const { plugins, homeTokenAddress, foreignTokenAddress } = community
+  const { plugins } = community
 
   const { joinBonus } = plugins
 
@@ -42,7 +41,7 @@ const JoinBonus = ({
 
   useEffect(() => {
     if (hasTransferToFunderFlag()) {
-      balanceOfToken(address, funderAddress)
+      balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
     }
   }, [plugins])
 
@@ -60,7 +59,7 @@ const JoinBonus = ({
   }, [transactionStatus])
 
   const transferToFunder = () => {
-    transferTokenToFunder(address, toWei(String(amountToFunder)))
+    transferTokenToFunder(tokenOfCommunityOnCurrentSide, toWei(String(amountToFunder)))
   }
 
   const transactionError = () => {
@@ -85,7 +84,7 @@ const JoinBonus = ({
     addCommunityPlugins(communityAddress, { joinBonus: { joinInfo: { message: joinBonusInfoMessage, amount: joinBonusInfoAmount } } })
   }
 
-  const balance = balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]
+  const balance = balances[tokenOfCommunityOnCurrentSide]
 
   return (
     <div className='join_bonus__wrapper'>
@@ -106,7 +105,7 @@ const JoinBonus = ({
                   <div className='join_bonus__funder_balance'>
                     <span>Funder balance:&nbsp;</span>
                     <div>
-                      <span>{funderAccount && funderAccount.balances && funderAccount.balances[address] ? formatWei(funderAccount.balances[address], 0) : 0}&nbsp;</span>
+                      <span>{funderAccount && funderAccount.balances && funderAccount.balances[tokenOfCommunityOnCurrentSide] ? formatWei(funderAccount.balances[tokenOfCommunityOnCurrentSide], 0) : 0}&nbsp;</span>
                       <small>{symbol}</small>
                     </div>
                   </div>
