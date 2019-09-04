@@ -101,7 +101,7 @@ class DashboardLayout extends Component {
       return null
     }
     const { open } = this.state
-    const { match, token, community, metadata, networkType, communityAddress, accountAddress, isAdmin } = this.props
+    const { match, token, community, metadata, networkType, accountAddress, isAdmin } = this.props
 
     const { address: tokenAddress, name, tokenType } = token
     const { isClosed, plugins, homeTokenAddress } = community
