@@ -20,9 +20,12 @@ import isEmpty from 'lodash/isEmpty'
 import sortBy from 'lodash/sortBy'
 import capitalize from 'lodash/capitalize'
 import { getForeignNetwork } from 'selectors/network'
+import classNames from 'classnames'
+import SwitchNetwork from 'components/common/SwitchNetwork'
 
 const Businesses = ({
   network,
+  networkType,
   businesses,
   community,
   isAdmin,
@@ -255,13 +258,16 @@ const Businesses = ({
 
   return (
     <Fragment>
-      <div className='entities__header'>
+      <div className={classNames('entities__header', { 'entities__header--disabled': networkType !== 'fuse' })}>
         <h2 className='entities__header__title'>Businesses list</h2>
       </div>
-      <div className='entities__wrapper'>
+      <div className={classNames('entities__wrapper', { 'entities--disabled': networkType !== 'fuse' })}>
         {renderContent()}
+        {networkType !== 'fuse' && (
+          <SwitchNetwork />
+        )}
       </div>
-    </Fragment >
+    </Fragment>
   )
 }
 

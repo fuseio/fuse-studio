@@ -77,12 +77,12 @@ const JoinBonus = ({
   const hasTransferToFunderFlag = () =>
     plugins && plugins.joinBonus && plugins.joinBonus.hasTransferToFunder
 
-  const funderAccount = useSelector(getFunderAccount)
-
   const handleBonusInfo = () => {
     const { communityAddress } = community
     addCommunityPlugins(communityAddress, { joinBonus: { joinInfo: { message: joinBonusInfoMessage, amount: joinBonusInfoAmount } } })
   }
+
+  const funderAccount = useSelector(getFunderAccount)
 
   const balance = balances[tokenOfCommunityOnCurrentSide]
 
@@ -105,7 +105,7 @@ const JoinBonus = ({
                   <div className='join_bonus__funder_balance'>
                     <span>Funder balance:&nbsp;</span>
                     <div>
-                      <span>{funderAccount && funderAccount.balances && funderAccount.balances[tokenOfCommunityOnCurrentSide] ? formatWei(funderAccount.balances[tokenOfCommunityOnCurrentSide], 0) : 0}&nbsp;</span>
+                      <span>{get(funderAccount, `balances[${[tokenOfCommunityOnCurrentSide]}]`, false) ? formatWei(get(funderAccount, `balances[${[tokenOfCommunityOnCurrentSide]}]`, false), 0) : 0}&nbsp;</span>
                       <small>{symbol}</small>
                     </div>
                   </div>
@@ -179,7 +179,7 @@ const JoinBonus = ({
                   <div className='join_bonus__funder_balance'>
                     <span>Funder balance:&nbsp;</span>
                     <div>
-                      <span>{funderAccount && funderAccount.balances && funderAccount.balances[address] ? formatWei(funderAccount.balances[address], 0) : 0}&nbsp;</span>
+                      <span>{get(funderAccount, `balances[${[tokenOfCommunityOnCurrentSide]}]`, false) ? formatWei(get(funderAccount, `balances[${[tokenOfCommunityOnCurrentSide]}]`, false), 0) : 0}&nbsp;</span>
                       <small>{symbol}</small>
                     </div>
                   </div>

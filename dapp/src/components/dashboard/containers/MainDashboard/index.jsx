@@ -61,14 +61,14 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
-    if (!prevProps.community && this.props.community) {
+    if (!isEqual(this.props.accountAddress, prevProps.accountAddress)) {
       const { balanceOfToken, community, accountAddress } = this.props
       const { foreignTokenAddress, homeTokenAddress } = community
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
       balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
     }
 
-    if (!isEqual(this.props.community, prevProps.community)) {
+    if (((!prevProps.community && this.props.community) || (!isEqual(this.props.community, prevProps.community))) && this.props.accountAddress) {
       const { balanceOfToken, community, accountAddress } = this.props
       const { foreignTokenAddress, homeTokenAddress } = community
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
