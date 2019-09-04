@@ -39,7 +39,8 @@ const withTokens = async (entities) => {
 }
 
 /**
- * @api {get} /entities/account/:account Fetch communities user own & part of
+ * @api {get} /entities/account/:account Fetch my communities
+ * @apiDescription Fetching communities I'm part of
  * @apiName GetCommunitiesIOwn&PartOf
  * @apiGroup Entity
  *
@@ -70,21 +71,27 @@ router.put('/:communityAddress/:account', async (req, res) => {
 })
 
 /**
- * @api {get} /entities/:communityAddress/:account Fetch entity by community address and account
+ * @apiDefine EntityData
+ * @apiDescription Entity is an account on the Fuse network. It can have variety of roles like user, admin, business, or custom defined role.
+ * @apiSuccess {String} account Entity's account on Fuse network
+ * @apiSuccess {String} communityAddress Community address of the entity
+ * @apiSuccess {String} uri IPFS URI points to entity's metadata
+ * @apiSuccess {String} name Entity's name
+ * @apiSuccess {String} roles Entity's role encoded as a byte array
+ * @apiSuccess {String} type Entity's type
+ * @apiSuccess {Boolean} isAdmin
+ * @apiSuccess {Boolean} isApproved
+ */
+
+/**
+ * @api {get} /entities/:communityAddress/:account Fetch entity
  * @apiName GetEntity
  * @apiGroup Entity
  *
  * @apiParam {String} communityAddress Community address
  * @apiParam {String} account Entity's account address
  *
- * @apiSuccess {String} account
- * @apiSuccess {String} communityAddress
- * @apiSuccess {String} uri IPFS URI points to entities metadata
- * @apiSuccess {String} name
- * @apiSuccess {String} roles byte array on entity's roles
- * @apiSuccess {String} type entity's type - user/business
- * @apiSuccess {Boolean} isAdmin
- * @apiSuccess {Boolean} isApproved
+ * @apiUse EntityData
  */
 router.get('/:communityAddress/:account', async (req, res, next) => {
   const { account, communityAddress } = req.params
@@ -99,14 +106,14 @@ const getQueryFilter = ({ query: { type }, params: { communityAddress } }) =>
 const getQuerySearch = ({ query: { search } }) => ({ search })
 
 /**
- * @api {get} /entities/:communityAddress Fetch entities by community address
+ * @api {get} /entities/:communityAddress Fetch community entities
  * @apiName GetEntities
  * @apiGroup Entity
  *
- * @apiParam {String} communityAddress Community address
+ * @apiParam {String} communityAddress Community address of the Fuse network
  * @apiParam {Number} page Page number for pagination
  * @apiParam {Boolean} withMetadata Get entities with entity's metadata
- * @apiParam {String} search - search entities by name
+ * @apiParam {String} search Entity's name for a search by name
  *
  * @apiSuccess {Object[]} -   List of entities. See GetEntity endpoint for entity fields
  */

@@ -1,37 +1,32 @@
 <a name="top"></a>
-# fuse-studio-backend v0.1.0
+# Studio Backend API v0.1.0
 
-Fuse studio API backend
+The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. Learn more on https://github.com/fuseio/fuse-studio
 
 - [Bridge](#Bridge)
-	- [Fetch bridge by home token address](#Fetch-bridge-by-home-token-address)
+	- [Fetch bridge](#Fetch-bridge)
 	
 - [Community](#Community)
 	- [Add plugins to community](#Add-plugins-to-community)
-	- [Fetch community by community address](#Fetch-community-by-community-address)
-	
-- [Deployment](#Deployment)
-	- [Start deployment process](#Start-deployment-process)
-	- [Fetch deployment progress by id](#Fetch-deployment-progress-by-id)
-	- [Fetch deployment progress by community address](#Fetch-deployment-progress-by-community-address)
+	- [Fetch community](#Fetch-community)
 	
 - [Entity](#Entity)
-	- [Fetch communities user own &amp; part of](#Fetch-communities-user-own-&amp;-part-of)
-	- [Fetch entities by community address](#Fetch-entities-by-community-address)
-	- [Fetch entity by community address and account](#Fetch-entity-by-community-address-and-account)
+	- [Fetch my communities](#Fetch-my-communities)
+	- [Fetch community entities](#Fetch-community-entities)
+	- [Fetch entity](#Fetch-entity)
 	
 - [Token](#Token)
-	- [Fetch token by token address](#Fetch-token-by-token-address)
+	- [Fetch token](#Fetch-token)
 	- [Fetch tokens](#Fetch-tokens)
 	- [Fetch tokens by owner](#Fetch-tokens-by-owner)
 	
 
 # <a name='Bridge'></a> Bridge
 
-## <a name='Fetch-bridge-by-home-token-address'></a> Fetch bridge by home token address
+## <a name='Fetch-bridge'></a> Fetch bridge
 [Back to top](#top)
 
-
+<p>The token bridge connects the Ethereum and Fuse network</p>
 
 ```
 GET /bridges/:homeTokenAddress
@@ -42,16 +37,23 @@ GET /bridges/:homeTokenAddress
 |:---------|:-----------|:--------------------------------------|
 | homeTokenAddress | `String` | <p>Home (Fuse) token address</p> |
 
+### Examples
+Example usage:
+
+```
+curl -i http://localhost/user/4711
+```
+
 
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| homeTokenAddress | `String` |  |
-| foreignTokenAddress | `String` |  |
-| foreignBridgeAddress | `String` |  |
-| homeBridgeAddress | `String` |  |
-| foreignBridgeBlockNumber | `Number` |  |
-| homeBridgeBlockNumber | `Number` |  |
+| homeTokenAddress | `String` | <p>Token address on the Fuse network</p> |
+| foreignTokenAddress | `String` | <p>Token address on the Ethereum network</p> |
+| foreignBridgeAddress | `String` | <p>Bridge address on the Ethereum network</p> |
+| homeBridgeAddress | `String` | <p>Bridge address on the Fuse network</p> |
+| homeBridgeBlockNumber | `Number` | <p>Bridge creation block number on the Fuse network</p> |
+| foreignBridgeBlockNumber | `Number` | <p>Bridge creation block number on the Ethereum network</p> |
 # <a name='Community'></a> Community
 
 ## <a name='Add-plugins-to-community'></a> Add plugins to community
@@ -86,10 +88,10 @@ POST /communities/:communityAddress
 }
 ```
 
-## <a name='Fetch-community-by-community-address'></a> Fetch community by community address
+## <a name='Fetch-community'></a> Fetch community
 [Back to top](#top)
 
-
+<p>Community is a set of contracts and services. Members of the community are users of the Fuse network. The community is configured via the plugins.</p>
 
 ```
 GET /communities/:communityAddress
@@ -104,84 +106,19 @@ GET /communities/:communityAddress
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| isClosed | `Boolean` |  |
-| plugins | `Object` |  |
-| communityAddress | `String` |  |
-| homeTokenAddress | `String` |  |
-| foreignTokenAddress | `String` |  |
-| foreignBridgeAddress | `String` |  |
-| homeBridgeAddress | `String` |  |
-# <a name='Deployment'></a> Deployment
-
-## <a name='Start-deployment-process'></a> Start deployment process
-[Back to top](#top)
-
-
-
-```
-POST /communities/deploy
-```
-
-### Parameter Parameters
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| steps | `Object` | <p>The steps (with arguments) to deploy</p> |
-
-
-### Success 200
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| steps | `Object` | <p>Steps to deploy</p> |
-## <a name='Fetch-deployment-progress-by-id'></a> Fetch deployment progress by id
-[Back to top](#top)
-
-
-
-```
-GET /deployments/:id
-```
-
-### Parameter Parameters
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| id | `String` | <p>Auto Generated by the database</p> |
-
-
-### Success 200
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| _id | `String` | <p>Id of the deploy progress</p> |
-| steps | `Object` | <p>Steps with info about each step</p> |
-| communityAddress | `String` | <p>Community address if deploy process is completed</p> |
-| done | `Boolean` | <p>Done status if the deploy process is completed</p> |
-## <a name='Fetch-deployment-progress-by-community-address'></a> Fetch deployment progress by community address
-[Back to top](#top)
-
-
-
-```
-GET /deployments
-```
-
-### Parameter Parameters
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| communityAddress | `String` | <p>Community address</p> |
-
-
-### Success 200
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| _id | `String` | <p>Id of the deploy progress</p> |
-| steps | `Object` | <p>Steps with info about each step</p> |
-| communityAddress | `String` | <p>Community address if deploy process is completed</p> |
-| done | `Boolean` | <p>Done status if the deploy process is completed</p> |
+| communityAddress | `String` | <p>Address of the community on the Fuse network</p> |
+| homeTokenAddress | `String` | <p>Address of the community token on the Fuse network</p> |
+| foreignTokenAddress | `String` | <p>Address of the community token on the Ethereum network</p> |
+| homeBridgeAddress | `String` | <p>Address of the community bridge on the Fuse network</p> |
+| foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
+| isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
+| plugins | `Object` | <p>Defines the community plugins.</p> |
 # <a name='Entity'></a> Entity
 
-## <a name='Fetch-communities-user-own-&amp;-part-of'></a> Fetch communities user own &amp; part of
+## <a name='Fetch-my-communities'></a> Fetch my communities
 [Back to top](#top)
 
-
+<p>Fetching communities I'm part of</p>
 
 ```
 GET /entities/account/:account
@@ -197,7 +134,7 @@ GET /entities/account/:account
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | - | `Object[]` | <p>List of entities with their communities and tokens</p> |
-## <a name='Fetch-entities-by-community-address'></a> Fetch entities by community address
+## <a name='Fetch-community-entities'></a> Fetch community entities
 [Back to top](#top)
 
 
@@ -209,20 +146,20 @@ GET /entities/:communityAddress
 ### Parameter Parameters
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| communityAddress | `String` | <p>Community address</p> |
+| communityAddress | `String` | <p>Community address of the Fuse network</p> |
 | page | `Number` | <p>Page number for pagination</p> |
 | withMetadata | `Boolean` | <p>Get entities with entity's metadata</p> |
-| search | `String` | <ul> <li>search entities by name</li> </ul> |
+| search | `String` | <p>Entity's name for a search by name</p> |
 
 
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | - | `Object[]` | <p>List of entities. See GetEntity endpoint for entity fields</p> |
-## <a name='Fetch-entity-by-community-address-and-account'></a> Fetch entity by community address and account
+## <a name='Fetch-entity'></a> Fetch entity
 [Back to top](#top)
 
-
+<p>Entity is an account on the Fuse network. It can have variety of roles like user, admin, business, or custom defined role.</p>
 
 ```
 GET /entities/:communityAddress/:account
@@ -238,20 +175,20 @@ GET /entities/:communityAddress/:account
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| account | `String` |  |
-| communityAddress | `String` |  |
-| uri | `String` | <p>IPFS URI points to entities metadata</p> |
-| name | `String` |  |
-| roles | `String` | <p>byte array on entity's roles</p> |
-| type | `String` | <p>entity's type - user/business</p> |
+| account | `String` | <p>Entity's account on Fuse network</p> |
+| communityAddress | `String` | <p>Community address of the entity</p> |
+| uri | `String` | <p>IPFS URI points to entity's metadata</p> |
+| name | `String` | <p>Entity's name</p> |
+| roles | `String` | <p>Entity's role encoded as a byte array</p> |
+| type | `String` | <p>Entity's type</p> |
 | isAdmin | `Boolean` |  |
 | isApproved | `Boolean` |  |
 # <a name='Token'></a> Token
 
-## <a name='Fetch-token-by-token-address'></a> Fetch token by token address
+## <a name='Fetch-token'></a> Fetch token
 [Back to top](#top)
 
-
+<p>Tokens are compatible with the ERC20 standard, and they also can be burnable/mintable. Tokens are an important part of the community economy.</p>
 
 ```
 GET /tokens/:address
@@ -266,16 +203,16 @@ GET /tokens/:address
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| address | `String` |  |
-| name | `String` |  |
-| symbol | `String` |  |
+| address | `String` | <p>Token's address</p> |
+| name | `String` | <p>Token's name</p> |
+| symbol | `String` | <p>Token's symbol</p> |
 | tokenURI | `String` | <p>IPFS URI points to token metadata</p> |
-| totalSupply | `String` |  |
-| owner | `String` |  |
+| totalSupply | `String` | <p>Token's total supply</p> |
+| owner | `String` | <p>Token's owner</p> |
 | factoryAddress | `String` | <p>Factory contract that created the token</p> |
-| blockNumber | `String` |  |
-| tokenType | `String` | <p>basic/mintableBurnable/impornted</p> |
-| networkType | `String` | <p>Mainnet/Ropsten/Fuse</p> |
+| blockNumber | `String` | <p>Block number of the token's creation</p> |
+| tokenType | `String` | <p>Token type: basic/mintableBurnable/imported</p> |
+| networkType | `String` | <p>Network type where the token is issued: mainnet/ropsten/fuse</p> |
 ## <a name='Fetch-tokens'></a> Fetch tokens
 [Back to top](#top)
 
@@ -288,7 +225,7 @@ GET /tokens
 ### Parameter Parameters
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| networkType | `String` | <p>Mainnet/Ropsten/Fuse</p> |
+| networkType | `String` | <p>mainnet/ropsten/fuse</p> |
 | page | `Number` | <p>Page number for pagination</p> |
 
 
@@ -309,7 +246,7 @@ GET /tokens/owner/:owner
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | owner | `String` | <p>account address of the token owner</p> |
-| networkType | `String` | <p>Mainnet/Ropsten/Fuse</p> |
+| networkType | `String` | <p>mainnet/ropsten/fuse</p> |
 
 
 ### Success 200
