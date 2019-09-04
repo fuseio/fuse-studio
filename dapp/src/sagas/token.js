@@ -178,7 +178,7 @@ function * fetchDeployProgress ({ id }) {
       ...obj,
       [key]: get(steps, `${[key]}.done`, false),
       transferOwnership: done,
-      done: get(steps, 'done', false)
+      done
     }), {})
 
   yield put({

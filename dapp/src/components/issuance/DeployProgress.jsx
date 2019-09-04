@@ -38,8 +38,8 @@ class DeployProgress extends PureComponent {
     if (this.props.steps !== prevProps.steps) {
       const { steps, stepErrors, setNextStep } = this.props
       const allDone = Object.values(steps).every(val => val)
-      // const { done } = steps
-      if (allDone) {
+      const { done } = steps
+      if (allDone && done) {
         clearInterval(this.interval)
         setTimeout(() => {
           setNextStep()
@@ -88,7 +88,6 @@ class DeployProgress extends PureComponent {
     const isFalsy = Object.values(steps).every(val => !val)
 
     const { done } = steps
-    // const allDone = Object.values(steps).every(val => val)
 
     if (isFalsy) {
       currentStep = 'tokenIssued'
@@ -144,9 +143,9 @@ class DeployProgress extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
+  transactionHash: get(getTransaction(state, state.screens.issuance.transactionHash), 'transactionHash'),
   ...state.screens.issuance,
-  networkType: state.network.networkType,
-  ...getTransaction(state, state.screens.issuance.transactionHash)
+  networkType: state.network.networkType
 })
 
 const mapDispatchToProps = {
