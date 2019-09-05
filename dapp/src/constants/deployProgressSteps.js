@@ -1,8 +1,16 @@
+import React from 'react'
+import FontAwesome from 'react-fontawesome'
+
 const deployProgress = [
   {
     label: 'Issuing community currency',
-    loaderText: 'Your asset is being deployed as an ERC-20 contract to Ethereum mainnet',
-    key: 'tokenIssued'
+    loaderText: (networkType) => `Your asset is being deployed as an ERC-20 contract to Ethereum ${networkType}`,
+    key: 'tokenIssued',
+    RenderLink: ({ txHash }) => (
+      <a target='_blank' style={{ marginLeft: '5px' }} href={`https://ropsten.etherscan.io/tx/${txHash}`}>
+        <FontAwesome style={{ fontSize: '14px' }} name='external-link-alt' />
+      </a>
+    )
   },
   {
     label: 'Deploy community contract',
@@ -11,7 +19,7 @@ const deployProgress = [
   },
   {
     label: 'Deploying bridge contract',
-    loaderText: 'A bridge contract is being deployed for the community currency on mainnet and the Fuse sidechain',
+    loaderText: (networkType) => `A bridge contract is being deployed for the community currency on mainnet and the Fuse sidechain ${networkType}`,
     key: 'bridge'
   },
   {

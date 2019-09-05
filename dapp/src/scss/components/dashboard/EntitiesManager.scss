@@ -1,8 +1,18 @@
 @include block(entities) {
   @include element(wrapper) {
+    position: relative;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background: $color-white;
     border-radius: 5px;
+
+    @include breakpoint(medium up) {
+      min-height: 390px;
+      height: 390px;  
+    }
+  }
+
+  @include modifier(disabled) {
+    @extend %disabled-section;
   }
 
   @include element(container) {
@@ -342,8 +352,12 @@
     color: $color-white;
 
     @include breakpoint(medium up) {
-      margin-top: 12em;
+      margin-top: 10em;
       margin-bottom: 1.5em;
+    }
+
+    @include modifier(disabled) {
+      opacity: .15;
     }
 
     @include element(title) {
@@ -381,9 +395,10 @@
 
   @include element(empty-list) {
     text-align: center;
-    padding: 40px 0;
+    height: inherit;
+    width: 100%;
     @include xy-grid(vertical);
-    @include flex-align(null, middle);
+    @include flex-align(center, middle);
 
     @include block(loader) {
       width: 80px;

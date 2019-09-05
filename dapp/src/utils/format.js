@@ -20,5 +20,5 @@ export const nameToSymbol = (name) => {
 }
 
 export const formatAddress = (address) => {
-  return (address && `${address.substring(0, 4)}...${address.substr(address.length - 4)}`) || ''
+  return (address && `${address.substring(0, 6)}...${address.substr(address.length - 4)}`) || ''
 }

@@ -1,1 +1,15 @@
 @import 'logo';
+
+%disabled-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.97;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
+  background-color: #ffffff;
+  border-radius: 8px;
+  min-height: 391px;
+}
+

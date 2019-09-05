@@ -58,14 +58,15 @@ export default class HomePage extends Component {
                 <ContentBox
                   withDecoration={!isMobileOnly}
                   action={this.showCommunities}
-                  title='Featured communities'
-                  actionTitle='Explore communities >'
+                  title='My communities'
+                  subTitle='Explore'
+                  actionTitle='Explore communities'
                 >
                   <FeaturedCommunities />
                 </ContentBox>
               </div>
               <div className='cell medium-24 large-12'>
-                <ContentBox title={`FAQ’S`} actionTitle='Learn more >'>
+                <ContentBox title={`FAQ’S`} actionTitle='Learn more'>
                   <Faqs />
                 </ContentBox>
               </div>

@@ -7,7 +7,6 @@ import { balanceOfToken } from 'actions/accounts'
 import * as actions from 'actions/bridge'
 import { getBlockNumber } from 'actions/network'
 import { getBalances } from 'selectors/accounts'
-import { getBridgeStatus } from 'selectors/network'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
 import arrow1 from 'images/arrow--1.svg'
@@ -16,6 +15,7 @@ import { convertNetworkName } from 'utils/network'
 import { getTransaction } from 'selectors/transaction'
 import { loadModal } from 'actions/ui'
 import { SHOW_MORE_MODAL } from 'constants/uiConstants'
+import FuseLoader from 'images/loader-fuse.gif'
 
 const NetworkLogo = ({ network }) => {
   switch (network) {
@@ -127,14 +127,15 @@ class Bridge extends Component {
       confirmationNumber,
       confirmationsLimit,
       bridgeDeployed,
-      isOwner
+      isOwner,
+      tokenOfCommunityOnCurrentSide
     } = this.props
 
     const {
       transferAmount
     } = this.state
 
-    const balance = balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]
+    const balance = balances[tokenOfCommunityOnCurrentSide]
     const formatted = new BigNumber(balance).div(1e18).toFormat(2, 1)
 
     return (
@@ -158,7 +159,7 @@ class Bridge extends Component {
             {
               (bridgeDeployed)
                 ? (
-                  <div>
+                  <React.Fragment>
                     <div className='bridge__transfer__form'>
                       <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={this.setTransferAmount} disabled={transferStatus} />
                       <div className='bridge__transfer__form__currency'>{this.props.token.symbol}</div>
@@ -167,7 +168,7 @@ class Bridge extends Component {
                       className='bridge__transfer__form__btn' onClick={this.handleTransfer}>
                       {transferStatus || `Transfer to ${bridgeStatus.to.network}`}
                     </button>
-                  </div>
+                  </React.Fragment>
                 ) : (
                   <div>
                     <div className='bridge__transfer__title'>Some Headline About the Bridge</div>
@@ -210,6 +211,7 @@ class Bridge extends Component {
             ? (
               <div className='bridge-deploying'>
                 <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
+                <p className='bridge-deploying__loader'><img src={FuseLoader} alt='Fuse loader' /></p>
                 <div className='bridge-deploying-confirmation'>
                   Confirmations
                   <div>{confirmationNumber || '0'} / {confirmationsLimit}</div>
@@ -265,7 +267,6 @@ const mapStateToProps = (state, { foreignTokenAddress }) => ({
   ...state.screens.bridge,
   ...state.entities.bridges[foreignTokenAddress],
   homeNetwork: state.network.homeNetwork,
-  bridgeStatus: getBridgeStatus(state),
   balances: getBalances(state),
   ...getTransaction(state, state.screens.bridge.transactionHash)
 })

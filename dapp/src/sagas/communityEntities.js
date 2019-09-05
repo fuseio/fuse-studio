@@ -5,7 +5,7 @@ import * as actions from 'actions/communityEntities'
 import { createEntitiesFetch, tryTakeEvery, apiCall } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
 import { getCommunityAddress } from 'selectors/entities'
-import { createEntitiesMetadata, createMetadata } from 'sagas/metadata'
+import { createBusinessMetadata, createUsersMetadata } from 'sagas/metadata'
 import * as entitiesApi from 'services/api/entities'
 import { transactionFlow } from './transaction'
 import { roles, combineRoles } from '@fuse/roles'
@@ -95,7 +95,7 @@ function deriveEntityData (type, isClosed) {
 
 function * addEntity ({ communityAddress, data, isClosed, entityType }) {
   if (entityType === 'business') {
-    yield call(createMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+    yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
   } else {
     yield call(metadataHandler, { communityAddress, data })
   }
@@ -137,9 +137,9 @@ function * metadataHandler ({ communityAddress, data }) {
   if (image || coverPhoto) {
     let newData = image ? { ...data, image } : data
     newData = coverPhoto ? { ...newData, coverPhoto } : newData
-    yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: { ...newData } })
+    yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: { ...newData } })
   } else {
-    yield call(createEntitiesMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+    yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: data })
   }
 }
 

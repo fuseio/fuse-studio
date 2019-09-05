@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Logo from 'components/common/Logo'
 import PluginIcon from 'images/plugin.svg'
+import JoinBonusIcon from 'images/join_bonus.svg'
+import JoinBonusYellowIcon from 'images/join_bonus_selected.svg'
 import AddIcon from 'images/add-selected.png'
 import AddYellowIcon from 'images/add-selected.svg'
 import PluginYellowIcon from 'images/plugin-selected.svg'
@@ -150,10 +152,10 @@ const allPlugins = {
   },
   joinBonus: {
     name: 'Join bonus',
-    path: '/joinBonus',
-    url: (match) => `${match}/joinBonus`,
-    icon: BusinessIcon,
-    selectedIcon: BusinessYellowIcon
+    path: '/bonus',
+    url: (match) => `${match}/bonus`,
+    icon: JoinBonusIcon,
+    selectedIcon: JoinBonusYellowIcon
   }
 }
 
@@ -190,7 +192,7 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
               key={name}
               style={{ ...style, paddingTop: '10px', paddingBottom: '10px' }}
             >
-              <div className='plugins'>
+              <div className='plugin__header'>
                 <span className='title'>Plugins</span>
                 <Link
                   className='manage'

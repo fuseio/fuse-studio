@@ -30,7 +30,7 @@
     "bridge": {
       "confirmations": {
         "home": 1,
-        "foreign": 8
+        "foreign": 2
       },
       "pollingTimeout": 5000,
       "network": {

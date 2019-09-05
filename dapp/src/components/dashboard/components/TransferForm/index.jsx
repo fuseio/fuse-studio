@@ -19,6 +19,13 @@ export default class TransferForm extends PureComponent {
     this.validationSchema = transferShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
   }
 
+  componentDidUpdate (prevProps) {
+    if (prevProps.balance !== this.props.balance) {
+      const { balance } = this.props
+      this.validationSchema = transferShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
+    }
+  }
+
   onSubmit = (values) => {
     const { handleTransfer } = this.props
     const { to, amount } = values

@@ -16,6 +16,7 @@ const NameCurrencyStep = ({ existingToken, setExistingToken, communityName, hand
   return (
     <div className='name__wrapper'>
       <div className='name'>
+        <h3 className='name__title'>Name your community</h3>
         <TextField
           onChange={handleChangeCommunityName}
           type='search'

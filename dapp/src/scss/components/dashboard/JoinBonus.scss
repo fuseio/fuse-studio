@@ -13,7 +13,7 @@
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
     @include breakpoint(medium up) {
       width: 687px;
-      padding: 40px 65px 20px;
+      padding: 40px 40px 20px;
       min-height: 200px;
     }
 
@@ -24,26 +24,48 @@
     }
   }
 
+  @include element(balances) {
+    @include xy-grid();
+    margin-bottom: 1.5em;
+
+    > div {
+      flex-basis: 50%;
+    }
+  }
+
   @include element(funder_balance) {
-    font-size: 1.313em;
+    font-size: 1.125em;
     line-height: 1.05;
     letter-spacing: -0.46px;
     color: #4a687b;
 
-    > span {
-      &:not(:first-child) {
+    @include breakpoint(medium up) {
+    }    
+
+    > div {
+      @include xy-grid();
+      margin-top: 0.5em;
+      align-items: baseline;
+
+      > span {
         color: #7a7a7a;
       }
-    }
-    > small {
-      font-size: 12px;
-      letter-spacing: -0.26px;
-      color: #7a7a7a;
+
+      > small {
+        font-size: 0.750em;
+        letter-spacing: -0.26px;
+        color: #7a7a7a;
+        margin-top: auto;
+      }
     }
   }
 
   @include element(main-title) {
     font-weight: 500;
+
+    @include modifier(disabled) {
+      opacity: .15;
+    }
     
     @include modifier(white) {
       font-size: 1.625em;

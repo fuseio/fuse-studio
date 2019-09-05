@@ -90,12 +90,12 @@ const CommunityInfo = ({
           <p>
             <span className='dot dot--fuse' />
             <span className='title'>Supply on Fuse:</span>
-            {(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'} ({formatWei(balances[homeTokenAddress], 0)} <small>{symbol}</small>)
+            {formatWei(balances[homeTokenAddress], 0)} <small>{symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
           </p>
           <p>
             <span className='dot dot--main' />
             <span className='title'>Supply on Ethereum:</span>
-            {(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'} ({formatWei(balances[foreignTokenAddress], 0)} <small>{symbol}</small>)
+            {formatWei(balances[foreignTokenAddress], 0)} <small>{symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
           </p>
         </div>
       </div>

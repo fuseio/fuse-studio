@@ -8,6 +8,7 @@ import * as metadataApi from 'services/api/metadata'
 import * as actions from 'actions/metadata'
 import { FETCH_TOKEN } from 'actions/token'
 import { imageUpload } from 'services/api/images'
+import * as entitiesApi from 'services/api/entities'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -46,7 +47,44 @@ export function * createMetadata ({ metadata }) {
   return { data, hash }
 }
 
-export function * createEntitiesMetadata ({ accountAddress, metadata }) {
+export function * createBusinessMetadata ({ communityAddress, accountAddress, metadata }) {
+  let image
+  let coverPhoto
+
+  if (metadata.image) {
+    const { hash } = yield apiCall(imageUpload, { image: metadata.image })
+    image = hash
+  }
+
+  if (metadata.coverPhoto) {
+    const { hash } = yield apiCall(imageUpload, { image: metadata.image })
+    coverPhoto = hash
+  }
+
+  if (image || coverPhoto) {
+    let newData = image ? { ...metadata, image } : metadata
+    newData = coverPhoto ? { ...newData, coverPhoto } : newData
+    const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountAddress, metadata: { ...newData } })
+    yield put({
+      type: actions.CREATE_METADATA.SUCCESS,
+      response: {
+        data
+      }
+    })
+    return { data, hash }
+  } else {
+    const { data, hash } = yield apiCall(entitiesApi.createEntitiesMetadata, { communityAddress, accountAddress, metadata })
+    yield put({
+      type: actions.CREATE_METADATA.SUCCESS,
+      response: {
+        data
+      }
+    })
+    return { data, hash }
+  }
+}
+
+export function * createUsersMetadata ({ accountAddress, metadata }) {
   const box = yield get3box({ accountAddress })
   const { publicData, privateData } = separateData(metadata)
   const publicFields = Object.keys(publicData)

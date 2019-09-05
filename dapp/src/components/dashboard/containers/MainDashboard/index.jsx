@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import SidebarContent from 'components/dashboard/components/Sidebar'
 import Dashboard from 'components/dashboard/pages/Dashboard'
@@ -22,17 +22,24 @@ import { getForeignNetwork, getBridgeStatus } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress, getBalances } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
-import { getToken } from 'selectors/dashboard'
+import { getToken, getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
+import { balanceOfToken } from 'actions/accounts'
+import isEqual from 'lodash/isEqual'
+import get from 'lodash/get'
 
-class DashboardLayout extends PureComponent {
+class DashboardLayout extends Component {
   state = {
     open: false
   }
 
   componentDidMount () {
+    if (window && window.Appcues) {
+      window.Appcues.anonymous()
+    }
+
     const { token } = this.props
     if (!token) {
       const { fetchCommunity, fetchTokenProgress, fetchEntities, communityAddress } = this.props
@@ -53,19 +60,37 @@ class DashboardLayout extends PureComponent {
       fetchTokenProgress(communityAddress)
       fetchEntities(communityAddress)
     }
+
+    if (!isEqual(this.props.accountAddress, prevProps.accountAddress)) {
+      const { balanceOfToken, community, accountAddress } = this.props
+      const { foreignTokenAddress, homeTokenAddress } = community
+      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+    }
+
+    if (((!prevProps.community && this.props.community) || (!isEqual(this.props.community, prevProps.community))) && this.props.accountAddress) {
+      const { balanceOfToken, community, accountAddress } = this.props
+      const { foreignTokenAddress, homeTokenAddress } = community
+      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+    }
   }
 
   onlyOnFuse = (successFunc) => {
+    return this.onlyOnNetwork(successFunc, 'fuse')
+  }
+
+  onlyOnNetwork = (successFunc, network) => {
     const { networkType, isPortis } = this.props
-    if (networkType === 'fuse') {
+    if (networkType === network) {
       successFunc()
     } else if (isPortis) {
       const { changeNetwork } = this.props
-      changeNetwork('fuse')
+      changeNetwork(network)
       successFunc()
     } else {
       const { loadModal } = this.props
-      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['fuse'] })
+      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [network] })
     }
   }
 
@@ -76,10 +101,10 @@ class DashboardLayout extends PureComponent {
       return null
     }
     const { open } = this.state
-    const { match, token, community, metadata, networkType, communityAddress, accountAddress, isAdmin } = this.props
+    const { match, token, community, metadata, networkType, accountAddress, isAdmin } = this.props
 
     const { address: tokenAddress, name, tokenType } = token
-    const { isClosed, plugins } = community
+    const { isClosed, plugins, homeTokenAddress } = community
     return (
       <div className='dashboard'>
         {accountAddress ? <SignIn accountAddress={accountAddress} /> : undefined}
@@ -97,6 +122,7 @@ class DashboardLayout extends PureComponent {
               : <Sidebar
                 sidebar={
                   <SidebarContent
+                    plugins={plugins}
                     isAdmin={isAdmin}
                     isGradientLogo
                     communityName={token && token.name}
@@ -118,7 +144,7 @@ class DashboardLayout extends PureComponent {
             <NavBar withLogo={false} />
             <div className='content'>
               <Switch>
-                <Route exact path={`${match.url}`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
+                <Route exact path={`/view/community/:address`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
                   <Header
                     metadata={metadata[token.tokenURI] || {}}
                     tokenAddress={tokenAddress}
@@ -129,16 +155,16 @@ class DashboardLayout extends PureComponent {
                   />
                 </Dashboard>}
                 />
-                <Route exact path={`${match.url}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/joinBonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`${match.url}/wallet`} render={() => <WhiteLabelWallet value={communityAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route path={`${match.url}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`/view/community/:address/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                {get(plugins, 'businessList.isActive', false) && <Route exact path={`/view/community/:address/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                {get(plugins, 'joinBonus.isActive', false) && <Route exact path={`/view/community/:address/bonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                <Route exact path={`/view/community/:address/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`/view/community/:address/wallet`} render={() => <WhiteLabelWallet value={homeTokenAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`/view/community/:address/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 {
                   isAdmin && tokenType === 'mintableBurnable' && (
                     <Fragment>
-                      <Route exact path={`${match.url}/mintBurn`} render={() => <MintBurnPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                      <Route exact path={`/view/community/:address/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                     </Fragment>
                   )
                 }
@@ -156,7 +182,7 @@ const mapStateToProps = (state, { match }) => ({
   networkType: state.network.networkType,
   token: getToken(state, match.params.address),
   isPortis: state.network.isPortis,
-  community: state.entities.communities && state.entities.communities[match.params.address],
+  community: state.entities.communities[match.params.address] || {},
   communityAddress: match.params.address,
   tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
@@ -164,7 +190,8 @@ const mapStateToProps = (state, { match }) => ({
   balances: getBalances(state),
   bridgeStatus: getBridgeStatus(state),
   dashboard: state.screens.dashboard,
-  homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress
+  homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress,
+  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, state.entities.communities[match.params.address])
 })
 
 const mapDispatchToProps = {
@@ -173,7 +200,8 @@ const mapDispatchToProps = {
   isUserExists,
   loadModal,
   fetchEntities,
-  changeNetwork
+  changeNetwork,
+  balanceOfToken
 }
 
 export default connect(

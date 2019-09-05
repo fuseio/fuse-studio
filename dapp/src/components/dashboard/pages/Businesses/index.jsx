@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { getAccountAddress } from 'selectors/accounts'
 import { getBusinessesEntities } from 'selectors/entities'
 import {
@@ -18,30 +18,32 @@ import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
 import sortBy from 'lodash/sortBy'
+import { getForeignNetwork } from 'selectors/network'
+import classNames from 'classnames'
+import SwitchNetwork from 'components/common/SwitchNetwork'
+import get from 'lodash/get'
 import capitalize from 'lodash/capitalize'
 
 const Businesses = ({
-  network,
+  networkType,
   businesses,
   community,
   isAdmin,
-  history,
   fetchEntities,
   accountAddress,
-  signatureNeeded,
   entityAdded,
-  transactionStatus,
   onlyOnFuse,
   fetchBusinessesEntities,
   loadModal,
   addEntity,
   joinCommunity,
+  metadata,
   removeEntity
 }) => {
   const { communityAddress, isClosed } = community
   const [data, setData] = useState(null)
   const [search, setSearch] = useState('')
-  const apiRoot = getApiRoot(network.networkType === 'fuse' ? 'default' : network.networkType)
+  const apiRoot = getApiRoot(useSelector(getForeignNetwork))
   let url = `${apiRoot}/entities/${communityAddress}?type=business`
 
   if (search) {
@@ -69,35 +71,53 @@ const Businesses = ({
   useEffect(() => {
     if (!isEmpty(response)) {
       const { data: listData } = response
-      setData(sortBy(listData.map(({ profile, isAdmin: hasAdminRole, isApproved, account }, index) => ({
-        name: profile && profile.publicData
-          ? profile.publicData.name
-            ? [
-              {
-                name: profile.publicData.name,
-                image: profile.publicData &&
-                  profile.publicData.image
-                  ? <div
-                    style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
-              }
-            ]
+      setData(sortBy(listData.map(({ profile, account, uri }) => {
+        return {
+          name: profile && profile.publicData
+            ? profile.publicData.name
+              ? [
+                {
+                  name: profile.publicData.name,
+                  image: profile.publicData &&
+                    profile.publicData.image
+                    ? <div
+                      style={{
+                        backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                        width: '36px',
+                        height: '36px',
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center'
+                      }}
+                    />
+                    : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
+                }
+              ]
+              : [
+                {
+                  name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
+                  image: profile.publicData &&
+                    profile.publicData.image
+                    ? <div
+                      style={{
+                        backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                        width: '36px',
+                        height: '36px',
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center'
+                      }}
+                    />
+                    : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
+                }
+              ]
             : [
               {
-                name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
-                image: profile.publicData &&
-                  profile.publicData.image
+                name: get(metadata[uri], 'name', ''),
+                image: get(metadata[uri], 'image')
                   ? <div
                     style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
+                      backgroundImage: `url(${CONFIG.ipfsProxy.urlBase}/image/${get(metadata[uri], 'image')}`,
                       width: '36px',
                       height: '36px',
                       backgroundSize: 'contain',
@@ -107,19 +127,14 @@ const Businesses = ({
                   />
                   : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
               }
-            ]
-          : [
-            {
-              name: '',
-              image: <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
-            }
-          ],
-        type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
-        address: profile && profile.publicData ? profile.publicData.address : '',
-        account
-      })), ['updatedAt']).reverse())
+            ],
+          type: get(metadata[uri], 'type', '') ? capitalize(get(metadata[uri], 'type')) : '', // type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
+          address: get(metadata[uri], 'address', '') ? capitalize(get(metadata[uri], 'address')) : '', // profile && profile.publicData ? profile.publicData.address : '',
+          account
+        }
+      }), ['updatedAt']).reverse())
     }
-  }, [response])
+  }, [response, metadata])
 
   useEffect(() => {
     if (entityAdded) {
@@ -128,7 +143,7 @@ const Businesses = ({
           type: 'business',
           name: !isEmpty(data) ? data[0].name[0].name : ''
         })
-      }, 1000)
+      }, 2000)
     }
   }, [entityAdded])
 
@@ -254,13 +269,16 @@ const Businesses = ({
 
   return (
     <Fragment>
-      <div className='entities__header'>
-        <h2 className='entities__header__title'>Businesses list</h2>
+      <div className={classNames('entities__header', { 'entities__header--disabled': networkType !== 'fuse' })}>
+        <h2 className='entities__header__title'>Business List</h2>
       </div>
-      <div className='entities__wrapper'>
+      <div className={classNames('entities__wrapper', { 'entities--disabled': networkType !== 'fuse' })}>
         {renderContent()}
+        {networkType !== 'fuse' && (
+          <SwitchNetwork pluginName='businesses list' />
+        )}
       </div>
-    </Fragment >
+    </Fragment>
   )
 }
 

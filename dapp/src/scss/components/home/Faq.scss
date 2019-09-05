@@ -15,7 +15,9 @@
     text-overflow: ellipsis;
     overflow: hidden; 
     width: 100%;
+    font-size: 12px;
     white-space: nowrap;
+    line-height: 1.67;
   }
 
   @include element(read) {

@@ -62,15 +62,21 @@ class IssuanceWizard extends PureComponent {
         icon: contractIcon
       }
     },
-    isOpen: false,
+    isOpen: true,
     currentDeploy: 'tokenIssued'
   }
 
   componentDidMount () {
+    const { networkType, homeNetwork } = this.props
+
+    if (networkType === homeNetwork) {
+      const { loadModal } = this.props
+      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['ropsten', 'mainnet'] })
+    }
+
     window.addEventListener('scroll', this.handleScroll)
     window.addEventListener('keypress', this.handleKeyPress)
     this.setState({ stepPosition: this.stepIndicator.getBoundingClientRect().top })
-
     // ReactGA.event({
     //   category: 'Issuance',
     //   action: 'Load',
@@ -166,7 +172,7 @@ class IssuanceWizard extends PureComponent {
     }
   }
 
-  showMetamaskPopup = () => this.onlyOnForeign(this.setIssuanceTransaction)
+  showMetamaskPopup = () => this.setIssuanceTransaction()
 
   setCommunityType = communityType =>
     this.setState({ communityType })
@@ -225,7 +231,7 @@ class IssuanceWizard extends PureComponent {
             networkType={foreignNetwork}
             communityName={communityName}
             handleChangeCommunityName={this.handleChangeCommunityName}
-            setNextStep={this.setNextStep}
+            setNextStep={() => this.onlyOnForeign(this.setNextStep)}
             communityType={communityType}
             setCommunityType={this.setCommunityType}
             setExistingToken={this.setExistingToken}
@@ -380,6 +386,7 @@ IssuanceWizard.propTypes = {
 const mapStateToProps = (state) => ({
   ...state.screens.issuance,
   foreignNetwork: state.network.foreignNetwork,
+  homeNetwork: state.network.homeNetwork,
   adminAddress: getAccountAddress(state)
 })
 

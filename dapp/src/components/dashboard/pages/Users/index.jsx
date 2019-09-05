@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { getAccountAddress } from 'selectors/accounts'
 import { getUsersEntities } from 'selectors/entities'
 import {
@@ -24,8 +24,12 @@ import { getApiRoot } from 'utils/network'
 import sortBy from 'lodash/sortBy'
 import Avatar from 'images/avatar.svg'
 import { Link } from 'react-router-dom'
+import classNames from 'classnames'
+import SwitchNetwork from 'components/common/SwitchNetwork'
+import { getForeignNetwork } from 'selectors/network'
 
 const Users = ({
+  networkType,
   currentUrl,
   users,
   isAdmin,
@@ -52,7 +56,7 @@ const Users = ({
   const { communityAddress, isClosed } = community
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
-  const apiRoot = getApiRoot(network.networkType === 'fuse' ? 'default' : network.networkType)
+  const apiRoot = getApiRoot(useSelector(getForeignNetwork))
   let url = `${apiRoot}/entities/${communityAddress}?type=user`
 
   if (search) {
@@ -349,11 +353,14 @@ const Users = ({
 
   return (
     <Fragment>
-      <div className='entities__header'>
+      <div className={classNames('entities__header', { 'entities__header--disabled': networkType !== 'fuse' })}>
         <h2 className='entities__header__title'>Users list</h2>
       </div>
-      <div className='entities__wrapper'>
+      <div className={classNames('entities__wrapper', { 'entities--disabled': networkType !== 'fuse' })}>
         {renderContent()}
+        {networkType !== 'fuse' && (
+          <SwitchNetwork pluginName='users list' />
+        )}
       </div>
     </Fragment>
   )
