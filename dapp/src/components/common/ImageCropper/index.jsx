@@ -89,8 +89,6 @@ export default class ImageCropper extends Component {
           crop={crop}
           minWidth='50'
           minHeight='50'
-          // maxWidth='60'
-          // maxHeight='60'
           onComplete={this.onCropComplete}
           onChange={newCrop => this.setState({ crop: { ...this.state.crop, ...newCrop } })}
         />

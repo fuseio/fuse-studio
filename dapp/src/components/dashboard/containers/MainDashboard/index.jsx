@@ -36,10 +36,6 @@ class DashboardLayout extends Component {
   }
 
   componentDidMount () {
-    if (window && window.Appcues) {
-      window.Appcues.anonymous()
-    }
-
     const { token } = this.props
     if (!token) {
       const { fetchCommunity, fetchTokenProgress, fetchEntities, communityAddress } = this.props
@@ -62,10 +58,15 @@ class DashboardLayout extends Component {
     }
 
     if (!isEqual(this.props.accountAddress, prevProps.accountAddress)) {
-      const { balanceOfToken, community, accountAddress } = this.props
+      const { balanceOfToken, community, accountAddress, isAdmin } = this.props
       const { foreignTokenAddress, homeTokenAddress } = community
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
       balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+
+      if (window && window.Appcues && isAdmin) {
+        const { Appcues } = window
+        Appcues.identify(`${accountAddress}_a`, {})
+      }
     }
 
     if (((!prevProps.community && this.props.community) || (!isEqual(this.props.community, prevProps.community))) && this.props.accountAddress) {
@@ -144,7 +145,14 @@ class DashboardLayout extends Component {
             <NavBar withLogo={false} />
             <div className='content'>
               <Switch>
-                <Route exact path={`/view/community/:address`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
+                {get(plugins, 'joinBonus.isActive', false) && <Route path={`${match.path}/bonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                {isAdmin && tokenType === 'mintableBurnable' && <Route path={`${match.path}/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                {isAdmin && <Route path={`${match.path}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                {get(plugins, 'businessList.isActive', false) && <Route exact path={`${match.path}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
+                <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={homeTokenAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route path={`${match.path}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
                   <Header
                     metadata={metadata[token.tokenURI] || {}}
                     tokenAddress={tokenAddress}
@@ -155,19 +163,6 @@ class DashboardLayout extends Component {
                   />
                 </Dashboard>}
                 />
-                <Route exact path={`/view/community/:address/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                {get(plugins, 'businessList.isActive', false) && <Route exact path={`/view/community/:address/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                {get(plugins, 'joinBonus.isActive', false) && <Route exact path={`/view/community/:address/bonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                <Route exact path={`/view/community/:address/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`/view/community/:address/wallet`} render={() => <WhiteLabelWallet value={homeTokenAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route exact path={`/view/community/:address/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                {
-                  isAdmin && tokenType === 'mintableBurnable' && (
-                    <Fragment>
-                      <Route exact path={`/view/community/:address/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                    </Fragment>
-                  )
-                }
               </Switch>
             </div>
           </div>

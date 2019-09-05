@@ -22,6 +22,7 @@ import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'
 import BridgeIcon from 'images/Bridge.svg'
 import contractIcon from 'images/contract.svg'
+import SignIn from 'components/common/SignIn'
 
 class IssuanceWizard extends PureComponent {
   state = {
@@ -303,7 +304,7 @@ class IssuanceWizard extends PureComponent {
   }
 
   render () {
-    const { history, transactionStatus, createTokenSignature, clearTransaction } = this.props
+    const { history, transactionStatus, createTokenSignature, clearTransaction, adminAddress } = this.props
     const { communityType } = this.state
     const steps = ['Name & currency', communityType && communityType.value === 'existingToken' ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary']
 
@@ -332,6 +333,7 @@ class IssuanceWizard extends PureComponent {
             </div>
           </div>
           <div className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })}>
+            {adminAddress ? <SignIn accountAddress={adminAddress} /> : undefined}
             {this.state.activeStep < 3 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
             {this.state.activeStep === 3 && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
             {this.state.activeStep === 4 && <h1 className='issuance__wizard__title'>Issuance process</h1>}

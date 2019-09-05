@@ -4,6 +4,7 @@ import { apiCall, tryTakeEvery } from './utils'
 import * as actions from 'actions/user'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/user'
+import { isUserProfileExists } from 'services/api/profiles'
 import { generateSignatureData } from 'utils/web3'
 
 export function * login () {
@@ -59,8 +60,18 @@ function * addUser ({ user, tokenAddress }) {
   })
 }
 
+// function * isUserExists ({ accountAddress }) {
+//   const response = yield apiCall(api.isUserExists, { accountAddress })
+
+//   yield put({
+//     type: actions.IS_USER_EXISTS.SUCCESS,
+//     accountAddress,
+//     response
+//   })
+// }
+
 function * isUserExists ({ accountAddress }) {
-  const response = yield apiCall(api.isUserExists, { accountAddress })
+  const response = yield apiCall(isUserProfileExists, { accountAddress })
 
   yield put({
     type: actions.IS_USER_EXISTS.SUCCESS,

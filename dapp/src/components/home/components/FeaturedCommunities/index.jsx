@@ -13,6 +13,10 @@ import McdonaldsImage from 'images/mcdonalds.png'
 import StarbucksImage from 'images/starbucks-card.png'
 import WalmartImage from 'images/walmart.png'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
+// import { formatWei } from 'utils/format'
+// import CommunityLogo from 'components/common/CommunityLogo'
+import Community from 'components/common/Community'
+import isEmpty from 'lodash/isEmpty'
 
 const staticImages = [
   GoogleImage,
@@ -26,66 +30,62 @@ class FeaturedCommunities extends Component {
     // if (this.props.networkType !== 'fuse') {
     //   this.props.fetchFuseToken()
     // }
-    // if (this.props.account) {
-    //   const { networkType, account } = this.props
-    //   this.props.fetchTokens(networkType)
-    //   this.props.fetchTokensByOwner(networkType, account)
-    // }
-  }
-
-  componentDidUpdate (prevProps) {
-    // if (this.props.account && !prevProps.account) {
-    //   const { networkType, account } = this.props
-    //   this.props.fetchTokens(networkType)
-    //   this.props.fetchTokensByOwner(networkType, account)
-    // }
-  }
-
-  showDashboard = (token) => {
-    if (token && token.communityAddress) {
-      this.props.history.push(`/view/community/${token.communityAddress}`)
-      // ReactGA.event({
-      //   category: 'Dashboard',
-      //   action: 'Click',
-      //   label: 'dashboard'
-      // })
+    if (this.props.account) {
+      const { networkType, account, fetchTokensByOwner } = this.props
+      //   this.props.fetchTokens(networkType)
+      fetchTokensByOwner(networkType, account)
     }
   }
 
+  componentDidUpdate (prevProps) {
+    if (this.props.account && !prevProps.account) {
+      const { networkType, account, fetchTokensByOwner } = this.props
+      // this.props.fetchTokens(networkType)
+      fetchTokensByOwner(networkType, account)
+    }
+  }
+
+  showDashboard = (communityAddress) => {
+    this.props.history.push(`/view/community/${communityAddress}`)
+    // ReactGA.event({
+    //   category: 'Dashboard',
+    //   action: 'Click',
+    //   label: 'dashboard'
+    // })
+  }
+
   render () {
-    // const { addresses, tokens, metadata, networkType } = this.props
+    const { metadata, networkType, account, history, communitiesKeys, communities } = this.props
+
+    let filteredCommunities = []
+    if (communitiesKeys) {
+      filteredCommunities = communitiesKeys
+        .map((communityAddress) => communities[communityAddress])
+        .filter(obj => !!obj)
+    }
+    let communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token)
+
     return (
       <div className='grid-x align-justify grid-margin-x grid-margin-y'>
         {
-          staticImages.map((img, index) =>
+          !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity) => {
+            const { community: { communityAddress } } = entity
+            return (
+              <div className='cell medium-12'>
+                <Community
+                  networkType={networkType}
+                  token={{ ...entity.token, communityAddress }}
+                  metadata={metadata[entity.tokenURI]}
+                  history={history}
+                  account={account}
+                  showDashboard={this.showDashboard}
+                />
+              </div>
+            )
+          }) : staticImages.map((img, index) =>
             <div key={index} className='medium-12 cell'><img src={CommunityPlaceholderImage} /></div>
           )
         }
-        {/* {
-          addresses.slice(0, 4).map(address => {
-            return (
-              <div className='community medium-11 cell' style={{ minHeight: '120px' }} key={address} onClick={() => this.showDashboard(tokens[address])}>
-                <div className='community__logo'>
-                  <CommunityLogo
-                    isDaiToken={tokens[address] && tokens[address].symbol && tokens[address].symbol === 'DAI'}
-                    token={tokens[address]}
-                    networkType={networkType}
-                    metadata={metadata[tokens[address].tokenURI] || {}}
-                  />
-                </div>
-                <div className='community__content'>
-                  <h3 className='community__content__title'>{tokens[address] && tokens[address].name}</h3>
-                  <p className='community__content__members'>
-                    Total Supply
-                    <span>
-                      {formatWei(tokens[address] && tokens[address].totalSupply, 0)}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            )
-          })
-        } */}
       </div>
     )
   }
@@ -96,7 +96,9 @@ const mapStateToProps = state => ({
   metadata: state.entities.metadata,
   account: getAccountAddress(state),
   foreignNetwork: getForeignNetwork(state),
+  communities: state.entities.communities,
   networkType: state.network.networkType,
+  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
   ...state.screens.oven
 })
 

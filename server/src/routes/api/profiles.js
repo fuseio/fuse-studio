@@ -18,4 +18,12 @@ router.put('/:account', async (req, res) => {
   return res.json({ data: profile })
 })
 
+router.get('/:accountAddress', async (req, res) => {
+  const { accountAddress } = req.params
+  const user = await Profile.findOne({ account: accountAddress }).lean()
+  return res.json({
+    userExists: !!user
+  })
+})
+
 module.exports = router

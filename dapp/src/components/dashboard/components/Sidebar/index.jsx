@@ -117,6 +117,21 @@ const getSideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
     selectedIcon: HomeYellowIcon
   },
   {
+    name: 'Plug-in store',
+    path: '/plugins',
+    url: (match) => `${match}/plugins`,
+    icon: PluginIcon,
+    style: {
+      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
+      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
+    },
+    selectedIcon: PluginYellowIcon,
+    moreIcon: {
+      AddIcon,
+      AddYellowIcon
+    }
+  },
+  {
     name: 'Users list',
     path: '/users',
     url: (match) => `${match}/users`,
@@ -194,11 +209,15 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
             >
               <div className='plugin__header'>
                 <span className='title'>Plugins</span>
-                <Link
-                  className='manage'
-                  to={url(match)}
-                  onClick={() => setPath(path)}
-                >Manage</Link>
+                {
+                  isAdmin && (
+                    <Link
+                      className='manage'
+                      to={url(match)}
+                      onClick={() => setPath(path)}
+                    >Manage</Link>
+                  )
+                }
               </div>
               {
                 addedPlugins.map((plugin) => {

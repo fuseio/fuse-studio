@@ -55,8 +55,8 @@ router.get('/account/:account', async (req, res, next) => {
 
   const data = await withCommunities(results)
 
-  const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse().slice(0, 2)
-  const communitiesUserPartOf = sortBy(data.filter(({ isAdmin }) => !isAdmin), ['updatedAt']).reverse().slice(0, 2)
+  const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse().slice(0, 4)
+  const communitiesUserPartOf = sortBy(data.filter(({ isAdmin }) => !isAdmin), ['updatedAt']).reverse().slice(0, 4)
   return res.json({ data: await withTokens([...communitiesUserOwn, ...communitiesUserPartOf]) })
 })
 

@@ -8,9 +8,11 @@ import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
 import { fetchTokenList } from 'sagas/token'
 import { getWeb3, get3box } from 'services/web3'
 import { getContract } from 'services/contract'
-import { getAccountAddress } from 'selectors/accounts'
+import { getAccountAddress, getAccount } from 'selectors/accounts'
 import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
-import { createEntitiesMetadata } from 'sagas/metadata'
+import { createUsersMetadata } from 'sagas/metadata'
+import { separateData } from 'utils/3box'
+import { isUserExists } from 'actions/user'
 
 function * balanceOfToken ({ tokenAddress, accountAddress, options }) {
   if (accountAddress && tokenAddress) {
@@ -62,17 +64,18 @@ function * fetchTokensWithBalances ({ accountAddress }) {
 const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 
 function * signIn ({ accountAddress }) {
+  yield put(isUserExists(accountAddress))
   const box = yield call(get3box, { accountAddress })
+  const profilePublicData = yield box.public.all()
+  const privatePrivateData = yield box.private.all()
+  const { publicData } = separateData({ ...profilePublicData, type: 'user' })
+  const { privateData } = separateData(privatePrivateData)
 
-  const name = yield box.public.get('name')
-  const address = yield box.public.get('address')
-  const image = yield box.public.get('image')
+  const { userExists } = yield select(getAccount)
 
-  const email = yield box.private.get('email')
-  const phoneNumber = yield box.private.get('phoneNumber')
-
-  const publicData = { name, image, address }
-  const privateData = { email, phoneNumber }
+  if (!userExists) {
+    yield call(create3boxProfile, { accountAddress, data: { ...publicData, ...privateData } })
+  }
 
   yield put({ type: actions.SIGN_IN.SUCCESS,
     accountAddress,
@@ -86,7 +89,7 @@ function * signIn ({ accountAddress }) {
 }
 
 function * create3boxProfile ({ accountAddress, data }) {
-  yield call(createEntitiesMetadata, { accountAddress, metadata: data })
+  yield call(createUsersMetadata, { accountAddress, metadata: data })
 
   yield put({ type: actions.CREATE_3BOX_PROFILE.SUCCESS,
     accountAddress,
