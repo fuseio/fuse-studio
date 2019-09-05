@@ -1,24 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import JoinCommunity from 'components/common/JoinCommunity'
-import Web3 from 'containers/Web3'
 import SignIn from 'components/common/SignIn'
+import isEmpty from 'lodash/isEmpty'
 
-class MobileProvider extends Component {
+class JoinProvider extends Component {
   state = {
-    user: {},
-    pk: ''
+    user: {}
   }
 
   componentDidMount () {
     const interval = setInterval(() => {
       if (window && window.user) {
         this.setState({ user: { ...window.user } })
-      }
-      if (window && window.pk) {
-        this.setState({ pk: window.pk })
-      }
-      if (window && window.user) {
         clearInterval(interval)
       }
     }, 100)
@@ -29,13 +23,8 @@ class MobileProvider extends Component {
     return (
       <div>
         {
-          this.state.pk
-            ? (
-              <React.Fragment>
-                <Web3 />
-                <JoinCommunity data={this.state.user} communityAddress={communityAddress} />
-              </React.Fragment>
-            )
+          !isEmpty(this.state.user)
+            ? <JoinCommunity data={this.state.user} communityAddress={communityAddress} />
             : undefined
         }
         {
@@ -53,4 +42,4 @@ const mapStateToProps = (state, { match }) => ({
   communityAddress: match.params.address
 })
 
-export default connect(mapStateToProps)(MobileProvider)
+export default connect(mapStateToProps)(JoinProvider)
