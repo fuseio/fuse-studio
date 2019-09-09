@@ -63,7 +63,8 @@ function * fetchFuseToken () {
 export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType }) {
   const tokenFactoryAddress = yield select(getAddress, 'TokenFactory')
   const web3 = yield getWeb3()
-  const TokenFactoryContract = new web3.eth.Contract(TokenFactoryABI, tokenFactoryAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const TokenFactoryContract = new web3.eth.Contract(TokenFactoryABI, tokenFactoryAddress, getOptions(networkVersion))
 
   const accountAddress = yield select(getAccountAddress)
 
@@ -282,10 +283,10 @@ function * toggleJoinBonus ({ toSend }) {
   const communityAddress = yield select(getCommunityAddress)
   const web3 = yield getWeb3()
   const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
   if (toSend) {
     const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
-    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
     const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
     const transactionPromise = method.send({ from: accountAddress })
     const action = ADD_ENTITY
@@ -293,7 +294,6 @@ function * toggleJoinBonus ({ toSend }) {
     yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { toSend } } })
   } else {
     const accountAddress = yield select(getAccountAddress)
-    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
     const method = CommunityContract.methods.removeEntity(funderAddress)
     const transactionPromise = method.send({ from: accountAddress })
     const action = REMOVE_ENTITY
