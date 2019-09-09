@@ -67,10 +67,8 @@
 	border-radius: 5px;
 	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 	background-color: $color-white;
-	margin-top: 10px;
 	@include breakpoint(large) {
-		margin-bottom: 20px;
-		padding: 60px 100px;
+		padding: 2em 0;
 	}
 
 	@include breakpoint(medium down) {
@@ -98,7 +96,6 @@
   }
 
 	@include element(image) {
-    padding-top: 2em;
 	}
 
 	@include element(download) {
@@ -114,6 +111,12 @@
 		font-size: 15px;
 		color: $color-primary-dark;
 		text-align: center;
+
+		> a {
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 }
 

@@ -13,7 +13,7 @@ class Footer extends Component {
           Connected to {capitalize(networkType)} network
         </div>
         <div className='footer__item footer__item--last'>
-          <span>All right reserve&nbsp;|&nbsp;</span>
+          <span><a href='https://cdn.forms-content.sg-form.com/d81bb4fc-c732-11e9-a6f6-de5802169549' target='_blank'>Sign up for updates&nbsp;|&nbsp;</a></span>
           <span>Fuse 2019&nbsp;|&nbsp;</span>
           <span style={{ fontWeight: 'bold' }}>BETA</span>
         </div>

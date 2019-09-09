@@ -76,7 +76,7 @@ class NavBar extends Component {
               <ul className='drop__options'>
                 <li className='drop__options__item'><a href='' target='_blank'>FAQ</a></li>
                 <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'>Github</a></li>
-                <li className='drop__options__item'>Contact us</li>
+                <li className='drop__options__item'><a href='mailto:hello@fuse.io'>Contact us</a></li>
               </ul>
             </div>
           </div>

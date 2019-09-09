@@ -16,7 +16,16 @@ export default ({ value }) => {
             <QRCode size={!isMobile ? 250 : 150} value={value} />
           </div>
           <div className='qr-code__text'>
-            Please download the Fuse wallet, register and click on "switch community" and then scan this QR code to add the community you created as the default community on the wallet
+            Please download the Fuse wallet from Google play/Apple app store <br /> by clicking on this <a target='_blank' href='http://fuseio.app.link/PKSgcxA6KZ'>link</a> (launch this link on mobile device)
+          </div>
+          <div className='qr-code__text'>
+            Sign up to the app
+          </div>
+          <div className='qr-code__text'>
+            Open the left menu and choose "switch community"
+          </div>
+          <div className='qr-code__text'>
+            Scan this QR code to switch to the community you created!
           </div>
           <div className='qr-code__download grid-x align-middle align align-justify'>
             <a href='https://testflight.apple.com/join/02P1laVr' target='_blank'><img src={AppleDownload} /></a>
