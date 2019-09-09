@@ -30,7 +30,7 @@ function * confirmUser ({ account }) {
   })
 
   const action = actions.CONFIRM_USER
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
 }
 
 function * toggleCommunityMode ({ communityAddress, isClosed }) {
@@ -45,14 +45,14 @@ function * toggleCommunityMode ({ communityAddress, isClosed }) {
       from: accountAddress
     })
     const action = actions.TOGGLE_COMMUNITY_MODE
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'CommunityTransferManager' })
   } else {
     const method = CommunityContract.methods.removeRule(0)
     const transactionPromise = method.send({
       from: accountAddress
     })
     const action = actions.TOGGLE_COMMUNITY_MODE
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'CommunityTransferManager' })
   }
 }
 
@@ -69,7 +69,7 @@ function * addAdminRole ({ account }) {
   })
 
   const action = actions.ADD_ADMIN_ROLE
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
 }
 
 function * removeAdminRole ({ account }) {
@@ -85,7 +85,7 @@ function * removeAdminRole ({ account }) {
   })
 
   const action = actions.REMOVE_ADMIN_ROLE
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
 }
 
 function deriveEntityData (type, isClosed) {
@@ -115,7 +115,7 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
     from: accountAddress
   })
   const action = actions.ADD_ENTITY
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
 }
 
 function * metadataHandler ({ communityAddress, data }) {
@@ -166,7 +166,7 @@ function * joinCommunity ({ communityAddress, data }) {
     from: accountAddress
   })
   const action = actions.ADD_ENTITY
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
   yield put({
     type: actions.JOIN_COMMUNITY.SUCCESS
   })
@@ -185,7 +185,7 @@ function * removeEntity ({ communityAddress, account }) {
   })
 
   const action = actions.REMOVE_ENTITY
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
 }
 
 function * watchEntityChanges ({ response }) {
@@ -222,7 +222,7 @@ function * importExistingEntity ({ accountAddress, communityAddress, isClosed })
   const action = actions.ADD_ENTITY
   const { publicData } = separateData(omit({ ...profile, type: 'user' }, ['ethereum_proof', 'proof_did']))
   yield apiCall(createProfile, { accountAddress, publicData })
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
   yield put({
     type: actions.IMPORT_EXISTING_ENTITY.SUCCESS
   })

@@ -11,6 +11,8 @@ export const ACCOUNT_LOGGED_OUT = 'ACCOUNT_LOGGED_OUT'
 
 export const FETCH_GAS_PRICES = createRequestTypes('FETCH_GAS_PRICES')
 
+export const SEND_TRANSACTION_HASH = createRequestTypes('SEND_TRANSACTION_HASH')
+
 export const getNetworkType = () => requestAction(GET_NETWORK_TYPE)
 export const getBlockNumber = (networkType, bridgeType) => requestAction(GET_BLOCK_NUMBER, { networkType, bridgeType })
 
@@ -19,3 +21,5 @@ export const checkAccountChanged = (selectedAddress) => requestAction(CHECK_ACCO
   { selectedAddress })
 
 export const fetchGasPrices = () => requestAction(FETCH_GAS_PRICES)
+
+export const sendTransactionHash = (transactionHash, abiName) => requestAction(SEND_TRANSACTION_HASH, { transactionHash, abiName })
