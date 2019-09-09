@@ -20,6 +20,10 @@ export default class HomePage extends Component {
     // })
   }
 
+  gotToFaqs = () => {
+    window.open('https://docs.fusenet.io/the-fuse-studio/faq', '_blank')
+  }
+
   showCommunities = () => {
     this.props.history.push('/view/communities')
   }
@@ -67,7 +71,7 @@ export default class HomePage extends Component {
                 </ContentBox>
               </div>
               <div className='cell medium-24 large-12'>
-                <ContentBox title={`FAQ’S`} actionTitle='Learn more'>
+                <ContentBox title={`FAQ’S`} action={this.gotToFaqs} actionTitle='Learn more'>
                   <Faqs />
                 </ContentBox>
               </div>

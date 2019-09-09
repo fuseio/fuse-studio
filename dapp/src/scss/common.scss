@@ -62,27 +62,44 @@
 }
 
 @include block(qr-code) {
-	@include xy-grid(vertical);
+	@include xy-grid();
 	@include flex-align(justify, middle);
 	border-radius: 5px;
 	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 	background-color: $color-white;
 	@include breakpoint(large) {
-		padding: 2em 0;
+		padding: 2em 3em;
 	}
 
 	@include breakpoint(medium down) {
-		padding: 20px;
+		padding: 1.5em;
 		margin-bottom: 60px;
 	}
 	@include element(wrapper){
 	
 	}
 
+	@include element(steps) {
+		list-style-type: decimal;
+
+		> li {
+			padding-top: 1em;
+			font-size: .935em;
+			color: $color-primary-dark;
+			// text-align: center;
+	
+			> a {
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
 	@include element(header) {
     color: $color-white;
     @include xy-grid();
-    @include flex-align(justify, middle);
+    @include flex-align(null, middle);
 
     @include breakpoint(medium up) {
       margin-top: 10em;
@@ -96,13 +113,20 @@
   }
 
 	@include element(image) {
+		margin: auto;
 	}
 
 	@include element(download) {
-		padding-top: 2em;
+		padding-top: 1em;
+
+		> a {
+			&:last-child {
+				margin-left: .5em
+			}
+		}
 		
 		@include breakpoint(large) {
-			min-width: 310px;
+			// min-width: 310px;
 		}
 	}
 
