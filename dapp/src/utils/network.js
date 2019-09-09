@@ -29,9 +29,13 @@ export const getProviderUrl = (networkType) => {
   }
 }
 
-export const getOptions = (connection) => {
-  const networkType = networkIdToName[connection.networkVersion] || 'fuse'
+export const getOptions = (networkVersion) => {
+  const networkType = networkIdToName[networkVersion] || 'fuse'
   return CONFIG.web3.options[networkType]
+}
+
+export const getNetworkVersion = (provider) => {
+  return get(provider, 'currentProvider.networkVersion', false) || get(provider, 'currentProvider.connection.networkVersion', false)
 }
 
 export const convertNetworkName = (name) => {

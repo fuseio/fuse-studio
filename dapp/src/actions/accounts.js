@@ -13,6 +13,7 @@ export const ADD_USER = createRequestTypes('ADD_USER')
 
 export const SIGN_IN = createRequestTypes('SIGN_IN')
 export const CREATE_3BOX_PROFILE = createRequestTypes('CREATE_3BOX_PROFILE')
+export const SEND_EMAIL = createRequestTypes('SEND_EMAIL')
 
 export const balanceOfToken = (tokenAddress, accountAddress, options) => action(BALANCE_OF_TOKEN.REQUEST, { tokenAddress, accountAddress, options })
 export const balanceOfNative = (accountAddress, options) => action(BALANCE_OF_NATIVE.REQUEST, { accountAddress, options })
@@ -24,3 +25,5 @@ export const fetchCommunities = (accountAddress) => communitiesAction(FETCH_COMM
 
 export const signIn = (accountAddress) => action(SIGN_IN.REQUEST, { accountAddress })
 export const create3boxProfile = (accountAddress, data) => action(CREATE_3BOX_PROFILE.REQUEST, { accountAddress, data })
+
+export const sendEmail = (email) => action(SEND_EMAIL.REQUEST, { email })

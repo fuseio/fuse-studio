@@ -57,10 +57,11 @@ export default class HomePage extends Component {
               <div className='cell medium-24 large-12'>
                 <ContentBox
                   withDecoration={!isMobileOnly}
-                  action={this.showCommunities}
+                  subTitleAction={this.showCommunities}
+                  action={this.showIssuance}
                   title='My communities'
                   subTitle='Explore'
-                  actionTitle='Explore communities'
+                  actionTitle='Launch your community'
                 >
                   <FeaturedCommunities />
                 </ContentBox>

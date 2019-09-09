@@ -1,9 +1,11 @@
-import { FETCH_TOKEN_STATISTICS, FETCH_TOKEN_PROGRESS } from 'actions/token'
+import { FETCH_TOKEN_STATISTICS, FETCH_TOKEN_PROGRESS, FETCH_TOKEN_TOTAL_SUPPLY } from 'actions/token'
 import { ADD_USER, IS_USER_EXISTS } from 'actions/user'
 import pick from 'lodash/pick'
 
 export default (state = {}, action) => {
   switch (action.type) {
+    case FETCH_TOKEN_TOTAL_SUPPLY.SUCCESS:
+      return { ...state, totalSupply: { ...state.totalSupply, [action.tokenAddress]: action.response.totalSupply } }
     case FETCH_TOKEN_STATISTICS.SUCCESS:
       return { ...state, ...action.response }
     case FETCH_TOKEN_PROGRESS.SUCCESS:

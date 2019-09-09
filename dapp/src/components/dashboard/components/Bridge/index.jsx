@@ -16,6 +16,7 @@ import { getTransaction } from 'selectors/transaction'
 import { loadModal } from 'actions/ui'
 import { SHOW_MORE_MODAL } from 'constants/uiConstants'
 import FuseLoader from 'images/loader-fuse.gif'
+import { formatWei } from 'utils/format'
 
 const NetworkLogo = ({ network }) => {
   switch (network) {
@@ -38,7 +39,7 @@ const Balance = (props) => {
     <div className='bridge__text'>
       <div>Balance</div>
       <span>{props.balances[props.tokenAddress]
-        ? new BigNumber(props.balances[props.tokenAddress]).div(1e18).toFormat(2, 1)
+        ? formatWei(props.balances[props.tokenAddress], 2)
         : 0 } <small>{props.token.symbol}</small>
       </span>
     </div>
@@ -100,13 +101,15 @@ class Bridge extends Component {
     } = this.props
     loadModal(SHOW_MORE_MODAL, {
       name: convertNetworkName(bridgeStatus[side].network),
-      network: 'https://rpc.fusenet.io',
+      network: bridgeStatus[side].network !== 'fuse' ? `https://api.infura.io/v1/jsonrpc/${bridgeStatus[side].network}` : 'https://rpc.fusenet.io',
       homeTokenAddress,
       foreignTokenAddress,
       homeBridgeAddress,
       foreignBridgeAddress,
       tokenName: token.name,
-      tokenAmount: new BigNumber(balances[homeNetwork === bridgeStatus[side].network ? homeTokenAddress : foreignTokenAddress]).div(1e18).toFormat(2, 1)
+      tokenAmount: balances[homeNetwork === bridgeStatus[side].network ? homeTokenAddress : foreignTokenAddress]
+        ? formatWei(balances[homeNetwork === bridgeStatus[side].network ? homeTokenAddress : foreignTokenAddress])
+        : 0
     })
   }
 
@@ -136,7 +139,7 @@ class Bridge extends Component {
     } = this.state
 
     const balance = balances[tokenOfCommunityOnCurrentSide]
-    const formatted = new BigNumber(balance).div(1e18).toFormat(2, 1)
+    const formatted = formatWei(balance, 2)
 
     return (
       <div className='content__bridge__wrapper'>

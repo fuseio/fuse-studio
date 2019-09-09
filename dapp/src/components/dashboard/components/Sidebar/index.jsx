@@ -117,6 +117,21 @@ const getSideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
     selectedIcon: HomeYellowIcon
   },
   {
+    name: 'Plug-in store',
+    path: '/plugins',
+    url: (match) => `${match}/plugins`,
+    icon: PluginIcon,
+    style: {
+      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
+      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
+    },
+    selectedIcon: PluginYellowIcon,
+    moreIcon: {
+      AddIcon,
+      AddYellowIcon
+    }
+  },
+  {
     name: 'Users list',
     path: '/users',
     url: (match) => `${match}/users`,
@@ -165,6 +180,11 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
   const [addedPlugins, setAddedPlugins] = useState([])
 
   useEffect(() => {
+    setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
+    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+  }, [])
+
+  useEffect(() => {
     setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
   }, [plugins])
 
@@ -172,11 +192,6 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
     setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
     setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
   }, [isAdmin, tokenType])
-
-  useEffect(() => {
-    setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
-    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
-  }, [])
 
   return (
     <aside className='sidebar'>
@@ -194,11 +209,15 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
             >
               <div className='plugin__header'>
                 <span className='title'>Plugins</span>
-                <Link
-                  className='manage'
-                  to={url(match)}
-                  onClick={() => setPath(path)}
-                >Manage</Link>
+                {
+                  isAdmin && (
+                    <Link
+                      className='manage'
+                      to={url(match)}
+                      onClick={() => setPath(path)}
+                    >Manage</Link>
+                  )
+                }
               </div>
               {
                 addedPlugins.map((plugin) => {

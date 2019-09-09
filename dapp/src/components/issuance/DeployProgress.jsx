@@ -57,11 +57,6 @@ class DeployProgress extends PureComponent {
     clearInterval(this.interval)
   }
 
-  goToDashboard = () => {
-    const { history, communityAddress } = this.props
-    history.push(`/view/community/${communityAddress}`)
-  }
-
   stepHasError = (step) => {
     const { stepErrors } = this.props
     return get(stepErrors, [`${step}`], false)

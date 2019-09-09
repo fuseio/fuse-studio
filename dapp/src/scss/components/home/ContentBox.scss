@@ -16,6 +16,14 @@
     color: $color-primary-dark;
     font-weight: 500;
 
+    @include modifier(underline) {
+      cursor: pointer;
+      font-size: 16px;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
     @include element(wrapper) {
       @include xy-grid();
       @include flex-align(justify, middle);

@@ -1,6 +1,6 @@
 import * as actions from 'actions/accounts'
 import { FETCH_TOKEN_LIST } from 'actions/token'
-import { LOGIN } from 'actions/user'
+import { LOGIN, IS_USER_EXISTS } from 'actions/user'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import pick from 'lodash/pick'
 
@@ -29,7 +29,8 @@ const handlers = {
     return { ...state, communities: action.response.result }
   },
   [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
-  [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) })
+  [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) }),
+  [IS_USER_EXISTS.SUCCESS]: (state, action) => ({ ...state, ...action.response })
 }
 
 export default (state = {}, action) => {

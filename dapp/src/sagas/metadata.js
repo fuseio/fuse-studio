@@ -57,7 +57,7 @@ export function * createBusinessMetadata ({ communityAddress, accountAddress, me
   }
 
   if (metadata.coverPhoto) {
-    const { hash } = yield apiCall(imageUpload, { image: metadata.image })
+    const { hash } = yield apiCall(imageUpload, { image: metadata.coverPhoto })
     coverPhoto = hash
   }
 

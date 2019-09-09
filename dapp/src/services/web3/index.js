@@ -47,6 +47,9 @@ const foreignProviderUrl = getProviderUrl(foreignNetwork)
 export const homeWeb3 = new Web3(CONFIG.web3.fuseProvider)
 export const foreignWeb3 = new Web3(foreignProviderUrl)
 
+homeWeb3.currentProvider.networkVersion = String(CONFIG.web3.chainId.fuse)
+foreignWeb3.currentProvider.networkVersion = String(CONFIG.web3.chainId[foreignNetwork])
+
 const web3ByBridge = {
   home: homeWeb3,
   foreign: foreignWeb3

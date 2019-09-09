@@ -1,16 +1,14 @@
 import React, { useEffect } from 'react'
 import { connect, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
-import { formatAddress } from 'utils/format'
+import { formatAddress, formatWei } from 'utils/format'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import { fetchCommunities, fetchBalances, balanceOfToken, balanceOfNative } from 'actions/accounts'
 import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
 import { withRouter } from 'react-router-dom'
-// import ReactGA from 'services/ga'
 import { getBalances, getAccount } from 'selectors/accounts'
-import { BigNumber } from 'bignumber.js'
 import ArrowTiny from 'images/arrow_tiny.svg'
 import { getNetworkSide } from 'selectors/network'
 import MainnetLogo from 'images/Mainnet.svg'
@@ -36,8 +34,8 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, mapDispatchToNativeB
     }
   }, [accountAddress])
 
-  const homeBalance = new BigNumber(account && account.home).div(1e18).toFormat(2, 1)
-  const foreignBalance = new BigNumber(account && account.foreign).div(1e18).toFormat(2, 1)
+  const homeBalance = account && account.home ? formatWei(account.home, 2) : 0
+  const foreignBalance = account && account.foreign ? formatWei(account.foreign, 2) : 0
 
   return (
     <div className='profile__communities grid-y'>
@@ -142,7 +140,9 @@ const InnerCommunities = ({
       <div className='grid-y grid-margin-y grid-margin-x'>
         {communities && communities.map((entity, index) => {
           const { community: { homeTokenAddress, foreignTokenAddress } } = entity
-          const balance = new BigNumber(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress]).div(1e18).toFormat(2, 1)
+          const balance = balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress]
+            ? formatWei(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress], 2)
+            : 0
           return (
             <ProfileCard
               key={index}
@@ -189,7 +189,7 @@ const ProfileDropDown = ({
   let communitiesIOwn
   let communitiesIPartOf
   if (communities && typeof filteredCommunities.filter === 'function') {
-    communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token)
+    communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
     communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token)
   }
 

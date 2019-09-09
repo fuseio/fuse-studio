@@ -115,13 +115,14 @@ class Dashboard extends Component {
 
     const { address: tokenAddress } = token
     const { communityAddress, homeTokenAddress, foreignTokenAddress } = community
-    const { steps, owner } = dashboard
+    const { steps, owner, totalSupply } = dashboard
 
     return (
       <React.Fragment>
         {children}
         <div className='content__tabs'>
           <CommunityInfo
+            tokensTotalSupplies={totalSupply}
             token={token}
             balances={balances}
             loadQrModal={this.loadQrModal}

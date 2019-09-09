@@ -29,9 +29,14 @@
       letter-spacing: normal;
       color: #7a7a7a;
 
-      .fa{ 
+      .fa-clone {
+        font-weight: 500;
         font-size: 11px;
         margin-left: 10px;
+      }
+
+      .fa-clone:hover {
+        font-weight: 900;
       }
     }
   }
