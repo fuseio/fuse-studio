@@ -220,7 +220,7 @@ function * mintToken ({ tokenAddress, value }) {
   })
 
   const action = actions.MINT_TOKEN
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableTokenAbi' })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
 }
 
 function * burnToken ({ tokenAddress, value }) {
@@ -234,7 +234,7 @@ function * burnToken ({ tokenAddress, value }) {
   })
 
   const action = actions.BURN_TOKEN
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableTokenAbi' })
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
 }
 
 function * watchTokenChanges ({ response }) {
