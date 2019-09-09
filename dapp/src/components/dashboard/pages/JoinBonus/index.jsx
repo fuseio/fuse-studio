@@ -310,7 +310,7 @@ const JoinBonus = ({
                   </div>
                 </label>
                 <div className='content__toggle__text'>
-                  <span>{ joinBonus && joinBonus.toSend ? 'Activate' : 'Deactivate' }</span>
+                  <span>{ joinBonus && !joinBonus.toSend ? 'Activate' : 'Deactivate' }</span>
                 </div>
               </div>
               <button className='button button--normal join_bonus__button' disabled={!hasTransferToFunderFlag()} onClick={handleBonusInfo}>Save</button>
