@@ -200,7 +200,7 @@ class IssuanceWizard extends PureComponent {
 
   goToDashboard = () => {
     const { history, communityAddress } = this.props
-    history.push(`/view/community/${communityAddress}`)
+    history.push(`/view/community/${communityAddress}/justCreated`)
   }
 
   renderStepContent = () => {
