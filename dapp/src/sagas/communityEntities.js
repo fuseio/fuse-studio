@@ -1,6 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 
-import { getContract } from 'services/contract'
 import * as actions from 'actions/communityEntities'
 import { createEntitiesFetch, tryTakeEvery, apiCall } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
@@ -14,13 +13,15 @@ import { separateData } from 'utils/3box'
 import { createProfile } from 'services/api/profiles'
 import { uploadImage as uploadImageApi } from 'services/api/images'
 import omit from 'lodash/omit'
+import CommunityABI from '@fuse/entities-contracts/build/abi/CommunityWithEvents'
+import CommunityTransferManagerABI from '@fuse/entities-contracts/build/abi/CommunityTransferManager'
+import { getWeb3 } from 'services/web3'
 
 function * confirmUser ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
   const accountAddress = yield select(getAccountAddress)
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
+  const web3 = yield getWeb3()
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
 
   const method = CommunityContract.methods.addEnitityRoles(account, roles.APPROVED_ROLE)
   const transactionPromise = method.send({
@@ -33,9 +34,9 @@ function * confirmUser ({ account }) {
 
 function * toggleCommunityMode ({ communityAddress, isClosed }) {
   const accountAddress = yield select(getAccountAddress)
-  const CommunityContract = getContract({ abiName: 'CommunityTransferManager',
-    address: communityAddress
-  })
+  const web3 = yield getWeb3()
+  const CommunityContract = new web3.eth.Contract(CommunityTransferManagerABI, communityAddress)
+
   if (!isClosed) {
     const method = CommunityContract.methods.addRule(roles.APPROVED_ROLE, roles.APPROVED_ROLE)
     const transactionPromise = method.send({
@@ -56,9 +57,8 @@ function * toggleCommunityMode ({ communityAddress, isClosed }) {
 function * addAdminRole ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
   const accountAddress = yield select(getAccountAddress)
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
+  const web3 = yield getWeb3()
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
 
   const method = CommunityContract.methods.addEnitityRoles(account, combineRoles(roles.ADMIN_ROLE, roles.APPROVED_ROLE))
   const transactionPromise = method.send({
@@ -72,9 +72,8 @@ function * addAdminRole ({ account }) {
 function * removeAdminRole ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
   const accountAddress = yield select(getAccountAddress)
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
+  const web3 = yield getWeb3()
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
 
   const method = CommunityContract.methods.removeEnitityRoles(account, roles.ADMIN_ROLE)
   const transactionPromise = method.send({
@@ -103,9 +102,9 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
   const { entityRoles } = deriveEntityData(entityType, isClosed)
 
   const accountAddress = yield select(getAccountAddress)
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
+  const web3 = yield getWeb3()
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+
   const method = CommunityContract.methods.addEntity(data.account, entityRoles)
   const transactionPromise = method.send({
     from: accountAddress
@@ -153,9 +152,9 @@ function * joinCommunity ({ communityAddress, data }) {
   const accountAddress = yield select(getAccountAddress)
   yield call(metadataHandler, { communityAddress, data })
 
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
+  const web3 = yield getWeb3()
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+
   const method = CommunityContract.methods.join()
   const transactionPromise = method.send({
     from: accountAddress
@@ -169,9 +168,10 @@ function * joinCommunity ({ communityAddress, data }) {
 
 function * removeEntity ({ communityAddress, account }) {
   const accountAddress = yield select(getAccountAddress)
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
+
+  const web3 = yield getWeb3()
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+
   const method = CommunityContract.methods.removeEntity(account)
   const transactionPromise = method.send({
     from: accountAddress
@@ -204,9 +204,9 @@ function * importExistingEntity ({ accountAddress, communityAddress, isClosed })
 
   const adminAccountAddress = yield select(getAccountAddress)
 
-  const CommunityContract = getContract({ abiName: 'Community',
-    address: communityAddress
-  })
+  const web3 = yield getWeb3()
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+
   const method = CommunityContract.methods.addEntity(accountAddress, entityRoles)
   const transactionPromise = method.send({
     from: adminAccountAddress

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import SidebarContent from 'components/dashboard/components/Sidebar'
 import Dashboard from 'components/dashboard/pages/Dashboard'

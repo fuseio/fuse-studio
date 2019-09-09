@@ -1,11 +1,10 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 import BasicToken from '@fuse/token-factory-contracts/build/abi/BasicToken'
-import { getContract } from 'services/contract'
 import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { DEPLOY_BRIDGE } from 'actions/bridge'
 import { ADD_USER } from 'actions/user'
-import { ADD_COMMUNITY_PLUGINS } from 'actions/community'
+import { ADD_COMMUNITY_PLUGINS, TOGGLE_JOIN_BONUS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -19,10 +18,14 @@ import {
   fetchCommunity as fetchCommunityApi,
   addCommunityPlugins as addCommunityPluginsApi
 } from 'services/api/community'
-import { ADD_ENTITY } from 'actions/communityEntities'
+import { ADD_ENTITY, REMOVE_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
 import { getCommunityAddress } from 'selectors/entities'
 import get from 'lodash/get'
+import TokenFactoryABI from '@fuse/token-factory-contracts/build/abi/TokenFactoryWithEvents'
+import CommunityABI from '@fuse/entities-contracts/build/abi/CommunityWithEvents'
+import { getOptions, getNetworkVersion } from 'utils/network'
+import FuseTokenABI from 'constants/abi/FuseToken'
 const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
 
 const entityPut = createEntityPut(actions.entityName)
@@ -36,7 +39,8 @@ export const fetchTokenList = createEntitiesFetch(actions.FETCH_TOKEN_LIST, api.
 
 function * fetchFuseToken () {
   const tokenAddress = yield select(getAddress, 'FuseToken')
-  const FuseTokenContract = getContract({ abiName: 'FuseToken', address: tokenAddress })
+  const web3 = yield getWeb3()
+  const FuseTokenContract = new web3.eth.Contract(FuseTokenABI, tokenAddress)
 
   const calls = {
     name: call(FuseTokenContract.methods.name().call),
@@ -58,10 +62,9 @@ function * fetchFuseToken () {
 
 export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType }) {
   const tokenFactoryAddress = yield select(getAddress, 'TokenFactory')
+  const web3 = yield getWeb3()
+  const TokenFactoryContract = new web3.eth.Contract(TokenFactoryABI, tokenFactoryAddress)
 
-  const TokenFactoryContract = getContract({ abiName: 'TokenFactory',
-    address: tokenFactoryAddress
-  })
   const accountAddress = yield select(getAccountAddress)
 
   if (tokenType === 'basic') {
@@ -194,7 +197,8 @@ function * fetchDeployProgress ({ id }) {
 function * transferToken ({ tokenAddress, to, value }) {
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const contract = new web3.eth.Contract(BasicToken, tokenAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const contract = new web3.eth.Contract(BasicToken, tokenAddress, getOptions(networkVersion))
 
   const transactionPromise = contract.methods.transfer(to, value).send({
     from: accountAddress
@@ -207,7 +211,8 @@ function * transferToken ({ tokenAddress, to, value }) {
 function * mintToken ({ tokenAddress, value }) {
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress, getOptions(networkVersion))
 
   const transactionPromise = contract.methods.mint(accountAddress, value).send({
     from: accountAddress
@@ -220,7 +225,8 @@ function * mintToken ({ tokenAddress, value }) {
 function * burnToken ({ tokenAddress, value }) {
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress, getOptions(networkVersion))
 
   const transactionPromise = contract.methods.burn(value).send({
     from: accountAddress
@@ -245,33 +251,6 @@ function * watchCommunityFetch ({ response }) {
 }
 
 function * addCommunityPlugins ({ communityAddress, plugins }) {
-  if (get(plugins, 'joinBonus.isActive')) {
-    const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
-
-    const accountAddress = yield select(getAccountAddress)
-    const CommunityContract = getContract({ abiName: 'Community',
-      address: communityAddress
-    })
-    const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
-    const transactionPromise = method.send({
-      from: accountAddress
-    })
-    const action = ADD_ENTITY
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-  }
-  // else if (tokenAddress && !get(plugins, 'joinBonus.isActive')) {
-  // const accountAddress = yield select(getAccountAddress)
-  // const CommunityContract = getContract({ abiName: 'Community',
-  //   address: communityAddress
-  // })
-  // const method = CommunityContract.methods.removeEntity(funderAddress)
-  // const transactionPromise = method.send({
-  //   from: accountAddress
-  // })
-  // const action = REMOVE_ENTITY
-  // yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-  // }
-
   const { data: { plugins: newPlugins } } = yield apiCall(addCommunityPluginsApi, { communityAddress, plugins })
 
   yield put({
@@ -292,6 +271,39 @@ function * transferTokenToFunder ({ tokenAddress, value }) {
   yield put(actions.transferToken(tokenAddress, funderAddress, value))
   const communityAddress = yield select(getCommunityAddress)
   yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { hasTransferToFunder: true } } })
+
+  yield put({
+    type: actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS
+  })
+}
+
+function * toggleJoinBonus ({ toSend }) {
+  const accountAddress = yield select(getAccountAddress)
+  const communityAddress = yield select(getCommunityAddress)
+  const web3 = yield getWeb3()
+  const networkVersion = getNetworkVersion(web3)
+
+  if (toSend) {
+    const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
+    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
+    const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
+    const transactionPromise = method.send({ from: accountAddress })
+    const action = ADD_ENTITY
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+    yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { toSend } } })
+  } else {
+    const accountAddress = yield select(getAccountAddress)
+    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
+    const method = CommunityContract.methods.removeEntity(funderAddress)
+    const transactionPromise = method.send({ from: accountAddress })
+    const action = REMOVE_ENTITY
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+    yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { toSend, joinInfo: null } } })
+  }
+
+  yield put({
+    type: TOGGLE_JOIN_BONUS.SUCCESS
+  })
 }
 
 export default function * tokenSaga () {
@@ -306,7 +318,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN_LIST, fetchTokenList, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
-    takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN.SUCCESS], watchPluginsChanges),
+    takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchCommunityFetch),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
@@ -317,6 +329,7 @@ export default function * tokenSaga () {
     takeEvery([actions.MINT_TOKEN.SUCCESS, actions.BURN_TOKEN.SUCCESS], watchTokenChanges),
     takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),
-    tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress)
+    tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
+    tryTakeEvery(TOGGLE_JOIN_BONUS, toggleJoinBonus)
   ])
 }

@@ -7,16 +7,17 @@ import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
 import { fetchTokenList } from 'sagas/token'
 import { getWeb3, get3box } from 'services/web3'
-import { getContract } from 'services/contract'
 import { getAccountAddress, getAccount } from 'selectors/accounts'
 import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
 import { createUsersMetadata } from 'sagas/metadata'
 import { separateData } from 'utils/3box'
 import { isUserExists } from 'actions/user'
+import BasicTokenABI from '@fuse/token-factory-contracts/build/abi/BasicToken'
 
 function * balanceOfToken ({ tokenAddress, accountAddress, options }) {
   if (accountAddress && tokenAddress) {
-    const basicTokenContract = getContract({ abiName: 'BasicToken', address: tokenAddress, options })
+    const web3 = yield getWeb3(options)
+    const basicTokenContract = new web3.eth.Contract(BasicTokenABI, tokenAddress)
     const balanceOf = yield call(basicTokenContract.methods.balanceOf(accountAddress).call)
 
     yield put({ type: actions.BALANCE_OF_TOKEN.SUCCESS,

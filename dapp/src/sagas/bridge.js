@@ -1,13 +1,16 @@
 import { call, all, put, select, delay, takeEvery } from 'redux-saga/effects'
 
 import { apiCall, createEntityPut, tryTakeEvery } from './utils'
-import { getContract } from 'services/contract'
 import { getAccountAddress } from 'selectors/accounts'
 import { getBlockNumber } from 'selectors/network'
 import { transactionFlow } from './transaction'
 import * as actions from 'actions/bridge'
 import { FETCH_TOKEN_PROGRESS } from 'actions/token'
 import * as api from 'services/api/token'
+import BasicTokenABI from '@fuse/token-factory-contracts/build/abi/BasicToken'
+import { getWeb3 } from 'services/web3'
+import BasicForeignBridgeABI from 'constants/abi/BasicForeignBridge'
+import BasicHomeBridgeABI from 'constants/abi/BasicHomeBridge'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -26,7 +29,8 @@ export function * deployBridge ({ foreignTokenAddress }) {
 
 function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, confirmationsLimit }) {
   const accountAddress = yield select(getAccountAddress)
-  const basicToken = getContract({ abiName: 'BasicToken', address: foreignTokenAddress })
+  const web3 = yield getWeb3()
+  const basicToken = new web3.eth.Contract(BasicTokenABI, foreignTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
 
   const transactionPromise = basicToken.methods.transfer(foreignBridgeAddress, value).send({
     from: accountAddress
@@ -38,7 +42,8 @@ function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, c
 
 function * transferToForeign ({ homeTokenAddress, homeBridgeAddress, value, confirmationsLimit }) {
   const accountAddress = yield select(getAccountAddress)
-  const basicToken = getContract({ abiName: 'BasicToken', address: homeTokenAddress })
+  const web3 = yield getWeb3()
+  const basicToken = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
 
   const transactionPromise = basicToken.methods.transfer(homeBridgeAddress, value).send({
     from: accountAddress
@@ -73,7 +78,8 @@ function * watchForeignBridge ({ foreignBridgeAddress, transactionHash }) {
   const foreignNetwork = yield select(state => state.network.foreignNetwork)
   const fromBlock = yield select(getBlockNumber, foreignNetwork)
   const options = { bridgeType: 'foreign' }
-  const bridgeContract = getContract({ abiName: 'BasicForeignBridge', address: foreignBridgeAddress, options })
+  const web3 = yield getWeb3(options)
+  const bridgeContract = new web3.eth.Contract(BasicForeignBridgeABI, foreignBridgeAddress)
 
   const relayEvent = yield pollForBridgeEvent({ bridgeContract, transactionHash, fromBlock, eventName: 'RelayedMessage' })
 
@@ -89,7 +95,8 @@ function * watchHomeBridge ({ homeBridgeAddress, transactionHash }) {
   const homeNetwork = yield select(state => state.network.homeNetwork)
   const fromBlock = yield select(getBlockNumber, homeNetwork)
   const options = { bridgeType: 'home' }
-  const bridgeContract = getContract({ abiName: 'BasicHomeBridge', address: homeBridgeAddress, options })
+  const web3 = yield getWeb3(options)
+  const bridgeContract = new web3.eth.Contract(BasicHomeBridgeABI, homeBridgeAddress)
 
   const relayEvent = yield pollForBridgeEvent({ bridgeContract, transactionHash, fromBlock, eventName: 'AffirmationCompleted' })
 

@@ -10,7 +10,7 @@ import { toWei } from 'web3-utils'
 import classNames from 'classnames'
 import { getFunderAccount } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
-import { addCommunityPlugins } from 'actions/community'
+import { addCommunityPlugins, toggleJoinBonus } from 'actions/community'
 import get from 'lodash/get'
 import SwitchNetwork from 'components/common/SwitchNetwork'
 const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
@@ -29,7 +29,8 @@ const JoinBonus = ({
   addCommunityPlugins,
   clearTransactionStatus,
   balances,
-  tokenOfCommunityOnCurrentSide
+  tokenOfCommunityOnCurrentSide,
+  toggleJoinBonus
 }) => {
   const { plugins } = community
 
@@ -249,7 +250,7 @@ const JoinBonus = ({
 
               )
           }
-          <h2 className='join_bonus__main-title join_bonus__main-title--dark'>Reward  user</h2>
+          <h2 className='join_bonus__main-title join_bonus__main-title--dark'>Reward user</h2>
           <div className={classNames('join_bonus__container', { 'join_bonus__container--opacity': !hasTransferToFunderFlag() })}>
             <p className='join_bonus__title'>How much fuse tokens you want to reward new user community?</p>
             <div className='join_bonus__field'>
@@ -296,7 +297,24 @@ const JoinBonus = ({
                 />
               </div>
             </div>
-            <button className='button button--normal join_bonus__button' disabled={!hasTransferToFunderFlag()} onClick={handleBonusInfo}>Send</button>
+            <div className='join_bonus__actions'>
+              <div className='content__toggle'>
+                <label className='toggle'>
+                  <input
+                    type='checkbox'
+                    checked={joinBonus && joinBonus.toSend}
+                    onChange={e => toggleJoinBonus(e.target.checked)}
+                  />
+                  <div className='toggle-wrapper'>
+                    <span className='toggle' />
+                  </div>
+                </label>
+                <div className='content__toggle__text'>
+                  <span>{ joinBonus && joinBonus.toSend ? 'Activate' : 'Deactivate' }</span>
+                </div>
+              </div>
+              <button className='button button--normal join_bonus__button' disabled={!hasTransferToFunderFlag()} onClick={handleBonusInfo}>Save</button>
+            </div>
           </div>
         </div>
       </div>
@@ -312,7 +330,8 @@ const mapDispatchToState = {
   transferTokenToFunder,
   clearTransactionStatus,
   balanceOfToken,
-  addCommunityPlugins
+  addCommunityPlugins,
+  toggleJoinBonus
 }
 
 export default connect(mapStateToProps, mapDispatchToState)(JoinBonus)

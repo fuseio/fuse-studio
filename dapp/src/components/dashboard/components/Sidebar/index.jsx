@@ -180,6 +180,11 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
   const [addedPlugins, setAddedPlugins] = useState([])
 
   useEffect(() => {
+    setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
+    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+  }, [])
+
+  useEffect(() => {
     setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
   }, [plugins])
 
@@ -187,11 +192,6 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
     setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
     setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
   }, [isAdmin, tokenType])
-
-  useEffect(() => {
-    setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
-    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
-  }, [])
 
   return (
     <aside className='sidebar'>
