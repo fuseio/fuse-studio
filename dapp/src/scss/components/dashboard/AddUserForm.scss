@@ -11,15 +11,16 @@
   }
 
   @include element(modal) {
-    @include breakpoint(large up) {
-      width: 603px !important;
-      height: 90%;
-      overflow-y: scroll;  
-    }
     padding: 0 !important;
 
-    @include breakpoint(medium down) {
+    @include breakpoint(large up) {
+      width: 603px !important;
+    }
+
+    @include breakpoint(small down) {
       width: 90%;
+      height: 90%;
+      overflow-y: auto;
     }
   }
 
