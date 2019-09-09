@@ -16,13 +16,14 @@ import omit from 'lodash/omit'
 import CommunityABI from '@fuse/entities-contracts/build/abi/CommunityWithEvents'
 import CommunityTransferManagerABI from '@fuse/entities-contracts/build/abi/CommunityTransferManager'
 import { getWeb3 } from 'services/web3'
+import { getOptions, getNetworkVersion } from 'utils/network'
 
 function * confirmUser ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
-
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
   const method = CommunityContract.methods.addEnitityRoles(account, roles.APPROVED_ROLE)
   const transactionPromise = method.send({
     from: accountAddress
@@ -35,7 +36,8 @@ function * confirmUser ({ account }) {
 function * toggleCommunityMode ({ communityAddress, isClosed }) {
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const CommunityContract = new web3.eth.Contract(CommunityTransferManagerABI, communityAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityTransferManagerABI, communityAddress, getOptions(networkVersion))
 
   if (!isClosed) {
     const method = CommunityContract.methods.addRule(roles.APPROVED_ROLE, roles.APPROVED_ROLE)
@@ -58,7 +60,8 @@ function * addAdminRole ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
   const method = CommunityContract.methods.addEnitityRoles(account, combineRoles(roles.ADMIN_ROLE, roles.APPROVED_ROLE))
   const transactionPromise = method.send({
@@ -73,7 +76,8 @@ function * removeAdminRole ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
   const method = CommunityContract.methods.removeEnitityRoles(account, roles.ADMIN_ROLE)
   const transactionPromise = method.send({
@@ -103,7 +107,8 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
 
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
   const method = CommunityContract.methods.addEntity(data.account, entityRoles)
   const transactionPromise = method.send({
@@ -153,7 +158,8 @@ function * joinCommunity ({ communityAddress, data }) {
   yield call(metadataHandler, { communityAddress, data })
 
   const web3 = yield getWeb3()
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
   const method = CommunityContract.methods.join()
   const transactionPromise = method.send({
@@ -170,7 +176,8 @@ function * removeEntity ({ communityAddress, account }) {
   const accountAddress = yield select(getAccountAddress)
 
   const web3 = yield getWeb3()
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
   const method = CommunityContract.methods.removeEntity(account)
   const transactionPromise = method.send({
@@ -205,7 +212,8 @@ function * importExistingEntity ({ accountAddress, communityAddress, isClosed })
   const adminAccountAddress = yield select(getAccountAddress)
 
   const web3 = yield getWeb3()
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
   const method = CommunityContract.methods.addEntity(accountAddress, entityRoles)
   const transactionPromise = method.send({

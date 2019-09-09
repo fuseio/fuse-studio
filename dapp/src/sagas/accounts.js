@@ -4,7 +4,7 @@ import * as actions from 'actions/accounts'
 import { tryTakeEvery, createEntitiesFetch } from './utils'
 import { getAddress, getNetworkType, getNetworkSide } from 'selectors/network'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
-import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
+import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN, FETCH_TOKEN_TOTAL_SUPPLY } from 'actions/token'
 import { fetchTokenList } from 'sagas/token'
 import { getWeb3, get3box } from 'services/web3'
 import { getAccountAddress, getAccount } from 'selectors/accounts'
@@ -13,6 +13,19 @@ import { createUsersMetadata } from 'sagas/metadata'
 import { separateData } from 'utils/3box'
 import { isUserExists } from 'actions/user'
 import BasicTokenABI from '@fuse/token-factory-contracts/build/abi/BasicToken'
+
+function * fetchTokenTotalSupply ({ tokenAddress, options }) {
+  const web3 = yield getWeb3(options)
+  const basicTokenContract = new web3.eth.Contract(BasicTokenABI, tokenAddress)
+  const totalSupply = yield call(basicTokenContract.methods.totalSupply().call)
+
+  yield put({ type: FETCH_TOKEN_TOTAL_SUPPLY.SUCCESS,
+    tokenAddress,
+    response: {
+      totalSupply
+    }
+  })
+}
 
 function * balanceOfToken ({ tokenAddress, accountAddress, options }) {
   if (accountAddress && tokenAddress) {
@@ -121,6 +134,7 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
     tryTakeEvery(actions.SIGN_IN, signIn, 1),
     tryTakeEvery(actions.CREATE_3BOX_PROFILE, create3boxProfile, 1),
-    tryTakeEvery(actions.FETCH_TOKENS_WITH_BALANCES, fetchTokensWithBalances, 1)
+    tryTakeEvery(actions.FETCH_TOKENS_WITH_BALANCES, fetchTokensWithBalances, 1),
+    tryTakeEvery(FETCH_TOKEN_TOTAL_SUPPLY, fetchTokenTotalSupply)
   ])
 }

@@ -7,7 +7,7 @@ import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
-import { fetchCommunity, fetchTokenProgress } from 'actions/token'
+import { fetchCommunity, fetchTokenProgress, fetchTokenTotalSupply } from 'actions/token'
 import { isUserExists } from 'actions/user'
 import { loadModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
@@ -58,8 +58,10 @@ class DashboardLayout extends Component {
     }
 
     if (!isEqual(this.props.accountAddress, prevProps.accountAddress)) {
-      const { balanceOfToken, community, accountAddress, isAdmin } = this.props
+      const { balanceOfToken, community, accountAddress, isAdmin, fetchTokenTotalSupply } = this.props
       const { foreignTokenAddress, homeTokenAddress } = community
+      fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })
+      fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
       balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
 
@@ -70,8 +72,10 @@ class DashboardLayout extends Component {
     }
 
     if (((!prevProps.community && this.props.community) || (!isEqual(this.props.community, prevProps.community))) && this.props.accountAddress) {
-      const { balanceOfToken, community, accountAddress } = this.props
+      const { balanceOfToken, community, accountAddress, fetchTokenTotalSupply } = this.props
       const { foreignTokenAddress, homeTokenAddress } = community
+      fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })
+      fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
       balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
     }
@@ -196,7 +200,8 @@ const mapDispatchToProps = {
   loadModal,
   fetchEntities,
   changeNetwork,
-  balanceOfToken
+  balanceOfToken,
+  fetchTokenTotalSupply
 }
 
 export default connect(
