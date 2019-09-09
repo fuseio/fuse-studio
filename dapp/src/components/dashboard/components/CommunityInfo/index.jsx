@@ -38,19 +38,19 @@ const CommunityInfo = ({
       ? 'One time issuer token'
       : 'Imported'
 
-  let totalSupply2 = 0
-  let homeTokenBalance2 = 0
-  let foreignTokenBalance2 = 0
+  let totalSupply = 0
+  let homeTokenSupply = 0
+  let foreignTokenSupply = 0
 
   if (tokensTotalSupplies && tokensTotalSupplies[homeTokenAddress] && tokensTotalSupplies[foreignTokenAddress]) {
-    homeTokenBalance2 = new BigNumber(tokensTotalSupplies[homeTokenAddress])
-    foreignTokenBalance2 = new BigNumber(tokensTotalSupplies[foreignTokenAddress]).minus(tokensTotalSupplies[homeTokenAddress])
-    totalSupply2 = new BigNumber(foreignTokenBalance2).plus(homeTokenBalance2)
+    homeTokenSupply = new BigNumber(tokensTotalSupplies[homeTokenAddress])
+    foreignTokenSupply = new BigNumber(tokensTotalSupplies[foreignTokenAddress]).minus(tokensTotalSupplies[homeTokenAddress])
+    totalSupply = new BigNumber(foreignTokenSupply).plus(homeTokenSupply)
   }
 
-  const total = Number(new BigNumber(totalSupply2).div(1e18).toFixed())
-  const homeTokenBalance = Number(new BigNumber(homeTokenBalance2).div(1e18).toFixed())
-  const foreignTokenBalance = Number(new BigNumber(foreignTokenBalance2).div(1e18).toFixed())
+  const total = Number(new BigNumber(totalSupply).div(1e18).toFixed())
+  const homeTokenBalance = Number(new BigNumber(homeTokenSupply).div(1e18).toFixed())
+  const foreignTokenBalance = Number(new BigNumber(foreignTokenSupply).div(1e18).toFixed())
 
   let {
     percentOnHome,
@@ -97,17 +97,17 @@ const CommunityInfo = ({
         <div className='grid-y total__sides'>
           <h6>
             <span className='title'>Total supply</span>
-            {formatWei(totalSupply2, 0)} <small>{symbol}</small>
+            {formatWei(totalSupply, 0)} <small>{symbol}</small>
           </h6>
           <p>
             <span className='dot dot--fuse' />
             <span className='title'>Supply on Fuse:</span>
-            {formatWei(homeTokenBalance2, 0)} <small>{symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
+            {formatWei(homeTokenSupply, 0)} <small>{symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
           </p>
           <p>
             <span className='dot dot--main' />
             <span className='title'>Supply on Ethereum:</span>
-            {formatWei(foreignTokenBalance2, 0)} <small>{symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
+            {formatWei(foreignTokenSupply, 0)} <small>{symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
           </p>
         </div>
       </div>
