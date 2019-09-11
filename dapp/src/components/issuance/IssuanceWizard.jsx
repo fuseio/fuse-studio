@@ -13,7 +13,7 @@ import { getAccountAddress } from 'selectors/accounts'
 import Contracts from './Contracts'
 import DeployProgress from './DeployProgress'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
-// import ReactGA from 'services/ga'
+import ReactGA from 'services/ga'
 import Logo from 'components/common/Logo'
 import { PENDING, REQUEST, FAILURE, SUCCESS } from 'actions/constants'
 import Message from 'components/common/SignMessage'
@@ -23,6 +23,8 @@ import { loadModal } from 'actions/ui'
 import BridgeIcon from 'images/Bridge.svg'
 import contractIcon from 'images/contract.svg'
 import SignIn from 'components/common/SignIn'
+
+const getStep = (communityType) => (['Name & currency', communityType && communityType.value === 'existingToken' ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary'])
 
 class IssuanceWizard extends PureComponent {
   state = {
@@ -78,20 +80,20 @@ class IssuanceWizard extends PureComponent {
     window.addEventListener('scroll', this.handleScroll)
     window.addEventListener('keypress', this.handleKeyPress)
     this.setState({ stepPosition: this.stepIndicator.getBoundingClientRect().top })
-    // ReactGA.event({
-    //   category: 'Issuance',
-    //   action: 'Load',
-    //   label: 'Started'
-    // })
+    ReactGA.event({
+      category: 'Issuance',
+      action: 'Load',
+      label: 'Started'
+    })
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.transactionStatus === SUCCESS && prevProps.transactionStatus !== SUCCESS) {
-      // ReactGA.event({
-      //   category: 'Issuance',
-      //   action: 'Load',
-      //   label: 'Issued'
-      // })
+      ReactGA.event({
+        category: 'Issuance',
+        action: 'Load',
+        label: 'Issued'
+      })
     }
   }
 
@@ -147,6 +149,12 @@ class IssuanceWizard extends PureComponent {
   handleChangeCommunityName = (event) => {
     this.setState({ communityName: event.target.value })
     this.setState({ communitySymbol: nameToSymbol(event.target.value) })
+    ReactGA.event({
+      category: 'Issuance',
+      action: 'Typing',
+      label: 'Naming community',
+      nonInteraction: true
+    })
   }
 
   setPreviousStep = () =>
@@ -154,10 +162,19 @@ class IssuanceWizard extends PureComponent {
       activeStep: this.state.activeStep - 1
     })
 
-  setNextStep = () =>
+  setNextStep = () => {
     this.setState({
       activeStep: this.state.activeStep + 1
+    }, () => {
+      const currentStep = getStep(this.state.setCommunityType)
+      ReactGA.event({
+        category: 'Issuance',
+        action: 'Next step',
+        label: currentStep[this.state.activeStep],
+        nonInteraction: true
+      })
     })
+  }
 
   handleChangeCommunitySymbol = (communitySymbol) => {
     this.setState({ communitySymbol })
@@ -306,7 +323,6 @@ class IssuanceWizard extends PureComponent {
   render () {
     const { history, transactionStatus, createTokenSignature, clearTransaction, adminAddress } = this.props
     const { communityType } = this.state
-    const steps = ['Name & currency', communityType && communityType.value === 'existingToken' ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary']
 
     return (
       <Fragment>
@@ -317,10 +333,10 @@ class IssuanceWizard extends PureComponent {
             </div>
             <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
               <div className='grid-y cell auto'>
-                <h4 className='issuance__header__current'>{steps[this.state.activeStep] || steps[this.state.activeStep - 1]}</h4>
+                <h4 className='issuance__header__current'>{getStep(communityType)[this.state.activeStep] || getStep(communityType)[this.state.activeStep - 1]}</h4>
                 <div className='grid-x align-center'>
                   <StepsIndicator
-                    steps={steps}
+                    steps={getStep(communityType)}
                     activeStep={this.state.activeStep}
                   />
                 </div>

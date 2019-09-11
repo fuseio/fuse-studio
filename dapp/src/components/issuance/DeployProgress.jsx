@@ -8,6 +8,7 @@ import get from 'lodash/get'
 import deployProgressSteps from 'constants/deployProgressSteps'
 import FinishIssuance from 'images/finish_issuance.svg'
 import { getTransaction } from 'selectors/transaction'
+import ReactGA from 'services/ga'
 
 class DeployProgress extends PureComponent {
   state = {
@@ -48,6 +49,20 @@ class DeployProgress extends PureComponent {
 
       if ((!isEmpty(stepErrors) && (stepErrors.bridge || stepErrors.community))) {
         clearInterval(this.interval)
+        try {
+          const keys = Object.keys(stepErrors).filter(stepName => stepErrors && stepErrors[stepName])
+          ReactGA.event({
+            category: 'Issuance',
+            action: 'Stop deployment process',
+            label: `Error in step ${keys && keys[0]}`
+          })
+        } catch (error) {
+          ReactGA.event({
+            category: 'Issuance',
+            action: 'Stop deployment process',
+            label: `Error`
+          })
+        }
         this.setState({ hasErrors: true })
       }
     }
