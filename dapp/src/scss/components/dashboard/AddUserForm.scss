@@ -28,13 +28,13 @@
     text-align: start;
     font-size: 18px;
     font-weight: 500;
-    color: $color-primary-dark;
+    color: $color-dark;
     margin-bottom: 1em;
   }
 
   @include element(text) {
     text-align: start !important;
-    color: $color-primary-dark;
+    color: $color-dark;
     font-size: 11px;
   }
 
@@ -70,20 +70,20 @@
       }
 
       @include element(input) {
-        border: 1px solid $color-brdr-issuance;
+        border: 1px solid $color-light-gray;
         font-family: $font-family-lato;
         padding: 5px 12px;
         display: block;
         height: 2em;
         font-size: 12px;
         box-sizing: border-box;
-        color: $color-primary-dark;
+        color: $color-dark;
       }
     }
 
     @include element(input) {
       border-radius: 16px;
-      border: 1px solid $color-brdr-issuance;
+      border: 1px solid $color-light-gray;
       font-family: $font-family-lato;
       flex: 1;
       padding: 5px 12px;
@@ -91,9 +91,9 @@
       height: 2em;
       font-size: 12px;
       box-sizing: border-box;
-      color: $color-primary-dark;
+      color: $color-dark;
       &::placeholder {
-        color: #c0c5d2;
+        color: $color-light-gray;
       }
     }
 
@@ -169,11 +169,11 @@
         border-bottom: 1px solid #dadada !important;
       }
       &:hover:not(.Mui-disabled):before {
-        border-bottom: solid 1px #25435A !important;
+        border-bottom: solid 1px $color-dark !important;
 
       }
       &:after {
-        border-bottom: solid 1px #25435A !important;
+        border-bottom: solid 1px $color-dark !important;
       }
     }
 
@@ -232,7 +232,7 @@
 
   @include element(title) {
     margin-right: 5px;
-    color: #7a7a7a;
+    color: $color-gray;
     font-size: 12px;
     font-weight: 500;
     .fa {
@@ -255,11 +255,11 @@
     border-radius: 4px;
     box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.2);
     background-color: #f9f9f9;
-    color: #7a7a7a;
+    color: $color-gray;
     font-size: 12px;
 
     @include element(value) {
-      color: #25435a;
+      color: $color-dark;
       text-overflow: ellipsis;
       overflow: hidden; 
       white-space: nowrap;
@@ -273,6 +273,6 @@
   @include element(root) {
     text-align: start;
     font-size: 12px !important;
-    color: #7a7a7a !important;
+    color: $color-gray !important;
   }
 }

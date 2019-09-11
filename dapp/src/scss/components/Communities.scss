@@ -36,6 +36,7 @@
 	}
 
 	@include element(banner) {
+		color: $color-dark;
 
 		@include breakpoint(small down) {
 			padding: 20px
@@ -114,7 +115,7 @@
 		}
 
 		display: flex;
-		border: 1px solid #c0c5d2;
+		border: 1px solid $color-light-gray;
 		max-height: 40px;
 		min-width: 255px;
 		border-radius: 20px;
@@ -123,20 +124,21 @@
 		input {
 			padding: 15px 0;
 			background-color: $color-white;
-			color: $color-btn-control;
+			color: $color-dark-gray;
 			flex: 1.7;
 			border: none;
 			&::placeholder {
-				color: #c0c5d2;
+				color: $color-light-gray;
 			}
 		}
 
 		@include element(icon) {
 			background-color: $color-white;
 			padding: 6px 12px;
-			color: $color-btn-control;
+			color: $color-dark-gray;
 			outline: none;
 			border: none;
+			cursor: default;
 		}
 	}
 }

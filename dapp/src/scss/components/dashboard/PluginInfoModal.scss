@@ -4,7 +4,7 @@
     // height: 596px;
     border-radius: 5px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
-    background-color: #ffffff;
+    background-color: $color-white;
   }
 
   @include breakpoint(medium down) {
@@ -67,7 +67,7 @@
     font-stretch: normal;
     line-height: 1.08;
     letter-spacing: normal;
-    color: #4a687b;
+    color: $color-light-dark;
 
   }
 
@@ -76,7 +76,7 @@
     font-size: 0.8em;
     line-height: 1.54;
     letter-spacing: normal;
-    color: #7a7a7a;
+    color: $color-gray;
   }
 
   @include element(btn) {
@@ -100,17 +100,17 @@
     }
 
     @include modifier(add) {
-      background-color: #4a687b;
+      background-color: $color-light-dark;
       color: $color-white;
       &:hover {
-        background-color: $color-primary-dark;
+        background-color: $color-dark;
       }
     }
 
     @include modifier(remove) {
-      color: #7a7a7a;
+      color: $color-gray;
       border: solid 1.2px #e3e3e3;
-      background-color: #ffffff;
+      background-color: $color-white;
     }
   }
 }

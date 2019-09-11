@@ -340,7 +340,7 @@ class IssuanceWizard extends PureComponent {
             {this.renderStepContent()}
             {
               this.state.activeStep > 0 && ((transactionStatus !== PENDING) && (transactionStatus !== REQUEST)) && (
-                <div className='text-center'>
+                <div style={{ textAlign: 'center' }}>
                   <button
                     className='issuance__wizard__back'
                     onClick={this.setPreviousStep}>Back

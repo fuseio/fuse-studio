@@ -1,6 +1,6 @@
 @include block(mint-burn) {
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
-  background-color: #ffffff;
+  background-color: $color-white;
   border-radius: 5px;
   position: relative;
 
@@ -29,17 +29,17 @@
       font-family: $font-family;
       font-size: 16px;
       font-weight: 500;
-      color: $color-primary-dark;
+      color: $color-dark;
     }
 
     @include block(amount) {
-      color: #25435a;
+      color: $color-dark;
       font-size: 16px;
     }
 
     @include block(symbol) {
       margin-left: 3px;
-      color: #25435a;
+      color: $color-dark;
       font-size: 10px;
     }
   }

@@ -3,7 +3,7 @@
     text-align: start;
     font-size: 14px;
     font-weight: 500;
-    color: $color-primary-dark;
+    color: $color-dark;
     margin-bottom: 1em;
   }
 
@@ -35,20 +35,20 @@
       }
 
       @include element(input) {
-        border: 1px solid $color-brdr-issuance;
+        border: 1px solid $color-light-gray;
         font-family: $font-family-lato;
         padding: 5px 12px;
         display: block;
         height: 2em;
         font-size: 12px;
         box-sizing: border-box;
-        color: $color-primary-dark;
+        color: $color-dark;
       }
     }
 
     @include element(input) {
       border-radius: 16px;
-      border: 1px solid $color-brdr-issuance;
+      border: 1px solid $color-light-gray;
       font-family: $font-family-lato;
       flex: 1;
       padding: 5px 12px;
@@ -56,9 +56,9 @@
       height: 2em;
       font-size: 12px;
       box-sizing: border-box;
-      color: $color-primary-dark;
+      color: $color-dark;
       &::placeholder {
-        color: #c0c5d2;
+        color: $color-light-gray;
       }
     }
 

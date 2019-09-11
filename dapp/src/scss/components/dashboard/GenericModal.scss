@@ -14,14 +14,14 @@
 
   @include element(title) {
     font-size: 20px;
-    color: $color-text-gray;
+    color: $color-dark;
     font-weight: 500;
     line-height: 1.25;
     margin: 20px 0;
   }
 
   @include element(text) {
-    color: #7a7a7a;
+    color: $color-gray;
     margin-bottom: 20px;
   }
 
@@ -31,7 +31,7 @@
     width: 89px;
     height: 34px;
     padding: 9px 20px;
-    background-color: #4a687b;
+    background-color: $color-light-dark;
     border-radius: 3px;
     font-size: 12px;
     text-transform: uppercase;

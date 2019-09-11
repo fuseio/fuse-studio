@@ -5,7 +5,7 @@
   @include breakpoint(medium up) {
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);
     border: solid 1px #c8c8c8;
-    background-color: #ffffff;
+    background-color: $color-white;
     min-width: 346px;
   }
 
@@ -27,7 +27,7 @@
       font-size: 16px;
       line-height: 0.88;
       letter-spacing: normal;
-      color: #7a7a7a;
+      color: $color-gray;
 
       .fa-clone {
         font-weight: 500;
@@ -45,7 +45,7 @@
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px solid #e5e5e5;
-    color: #7a7a7a;
+    color: $color-gray;
 
     > span {
       font-size: 10px;
@@ -73,7 +73,7 @@
       font-stretch: normal;
       line-height: 1.13;
       letter-spacing: normal;
-      color: #7a7a7a;
+      color: $color-gray;
     }
 
     @include element(title) {

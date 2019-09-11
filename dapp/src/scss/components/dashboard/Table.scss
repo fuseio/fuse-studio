@@ -5,7 +5,7 @@
     display: block;
     border: solid 1px #ddd;
     border-radius: 5px;
-    background-color: #ffffff;
+    background-color: $color-white;
   }
 
   @include element(actions) {
@@ -19,7 +19,7 @@
         flex: 0.7;
       }
       @include element(icon) {
-        color: $color-step;
+        color: $color-dark-gray;
         font-weight: bold;
         border: none;
         background: none;
@@ -39,7 +39,7 @@
       border: none;
       color: $color-white;
       padding: 9px 10px;
-      background-color: #4a687b;
+      background-color: $color-light-dark;
       border-radius: 6px;
       font-size: 11px;
       display: inline-block;
@@ -47,7 +47,7 @@
       margin-left: auto;
       &:hover {
         cursor: pointer;
-        background-color: #25435a;
+        background-color: $color-dark;
       }
     }
   }
@@ -60,7 +60,7 @@
     @include element(cell) {
       font-size: 11px;
       font-weight: bold;
-      color: #7a7a7a;
+      color: $color-gray;
       
       @include element(sort) {
         margin-left: 5px;
@@ -93,10 +93,10 @@
 
     @include element(cell) {
       font-size: 11px;
-      color: #7a7a7a;
+      color: $color-gray;
 
       .fa-clone {
-        color: $color-step;
+        color: $color-dark-gray;
         cursor: pointer;
         font-weight: 300;
 
@@ -115,7 +115,7 @@
         position: relative;
         right: 10px;
         display: flex;
-        color: $color-primary-dark;
+        color: $color-dark;
         font-size: 12px;
 
         @include element(toggler) {
@@ -129,7 +129,7 @@
         }
 
         .fa {
-          color: $color-step;
+          color: $color-dark-gray;
           cursor: pointer;
         }
   
@@ -146,7 +146,7 @@
           height: auto;      
           border-radius: 5px;
           box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
-          background-color: #ffffff;
+          background-color: $color-white;
   
           @include element (options) {
             list-style: none;

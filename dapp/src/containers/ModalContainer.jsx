@@ -5,9 +5,7 @@ import { hideModal } from 'actions/ui'
 import LoginModal from 'components/common/LoginModal'
 import ImageCropperModal from 'components/common/ImageCropper'
 import WrongNetworkModal from 'components/common/WrongNetworkModal'
-import LoadingModal from 'components/common/LoadingModal'
 import ErrorBoundary from 'components/common/ErrorBoundary'
-import UserDatatModal from 'components/issuance/UserDatatModal.jsx'
 import QrModal from 'components/common/QrModal'
 import AddBusinessModal from 'components/dashboard/modals/AddBusinessModal'
 import AddUserModal from 'components/dashboard/modals/AddUserModal'
@@ -22,8 +20,6 @@ import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
 import {
   LOGIN_MODAL,
   WRONG_NETWORK_MODAL,
-  LOADING_MODAL,
-  USER_DATA_MODAL,
   ADD_BUSINESS_MODAL,
   BUSINESS_LIST_MODAL,
   BRIDGE_MODAL,
@@ -45,8 +41,6 @@ const renderModal = (modalComponent, props) =>
 const MODAL_COMPONENTS = {
   [LOGIN_MODAL]: LoginModal,
   [WRONG_NETWORK_MODAL]: WrongNetworkModal,
-  [LOADING_MODAL]: LoadingModal,
-  [USER_DATA_MODAL]: UserDatatModal,
   [ADD_BUSINESS_MODAL]: AddBusinessModal,
   [BUSINESS_LIST_MODAL]: BusinessListModal,
   [BRIDGE_MODAL]: BridgeModal,

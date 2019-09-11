@@ -1,11 +1,10 @@
-//desired height for csspie
 $csspieheight: 100px;
 
 @include block(community_info) {
   @include element(title) {
     font-weight: 500;
     font-size: 1em;
-    color: #25435a;
+    color: $color-dark;
     margin-bottom: 2em;
 
     @include breakpoint(medium down) {
@@ -18,7 +17,7 @@ $csspieheight: 100px;
     position: relative;
     padding: 2em;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
-    background-color: #ffffff;
+    background-color: $color-white;
     @include xy-grid(horizontal, false);
 
     @include breakpoint(medium up) {
@@ -74,7 +73,7 @@ $csspieheight: 100px;
 
     @include block(title) {
       font-weight: 500;
-      color: #4a687b;
+      color: $color-light-dark;
       display: inline-block;
       height: 27px;
       margin-right: 5px;
@@ -88,7 +87,7 @@ $csspieheight: 100px;
       margin-right: 5px;
 
       @include modifier(fuse) {
-        background-image: linear-gradient(128deg, #97fba2, #fae83e);
+        background-image: $color-fuse_gradient;
       }
       @include modifier(main) {
         background-color: #abc3d2;
@@ -120,7 +119,7 @@ $csspieheight: 100px;
 
       &:nth-of-type(1):before,
       &:nth-of-type(1):after {
-        background-image: linear-gradient(90deg, #97fba2, #fae83e)
+        background-image: $color-fuse_gradient;
       }
 
       &:nth-of-type(2):after,
@@ -179,7 +178,7 @@ $csspieheight: 100px;
 
 @include block(title_value) {
   font-size: 12px;
-  color: #7a7a7a;
+  color: $color-gray;
   
   @include breakpoint(medium up) {
     @include xy-grid(vertical);
@@ -199,7 +198,7 @@ $csspieheight: 100px;
 
   @include element(title) {
     font-weight: 500;
-    color: #4a687b;
+    color: $color-light-dark;
   }
 
   @include element(value) {

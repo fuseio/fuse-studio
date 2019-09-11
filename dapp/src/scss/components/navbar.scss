@@ -6,7 +6,7 @@
   padding: 10px 20px;
   width: 100%;
   min-height: 70px;
-  color: $color-primary-dark;
+  color: $color-dark;
   z-index: 99;
 
   @include modifier(scroll) {
@@ -68,7 +68,7 @@
       height: auto;      
       border-radius: 5px;
       box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
-      background-color: #ffffff;
+      background-color: $color-white;
 
       @include element (options) {
         list-style: none;
@@ -128,7 +128,7 @@
         width: 170px;
         height: 33px;
         border-radius: 16.3px;
-        background-color: #ffffff;
+        background-color: $color-white;
         font-size: 12.2px;
       }
 
@@ -137,7 +137,7 @@
         @include flex-align(spaced, middle);
         padding: 10px;
         border-radius: 50%;
-        background-color: #ffffff;
+        background-color: $color-white;
         font-size: 12.2px;
       }
 
