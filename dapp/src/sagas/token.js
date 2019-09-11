@@ -330,6 +330,6 @@ export default function * tokenSaga () {
     takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),
     tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
-    tryTakeEvery(TOGGLE_JOIN_BONUS, toggleJoinBonus)
+    tryTakeEvery(TOGGLE_JOIN_BONUS, toggleJoinBonus, 1)
   ])
 }

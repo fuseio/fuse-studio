@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import TextField from '@material-ui/core/TextField'
 import TransactionButton from 'components/common/TransactionButton'
 import { connect, useSelector } from 'react-redux'
@@ -35,6 +35,7 @@ const JoinBonus = ({
   const { plugins } = community
 
   const { joinBonus } = plugins
+  const { toSend } = joinBonus
 
   const [transferMessage, setTransferMessage] = useState(false)
   const [amountToFunder, setAmount] = useState(0)
@@ -84,6 +85,10 @@ const JoinBonus = ({
     const { communityAddress } = community
     addCommunityPlugins(communityAddress, { joinBonus: { joinInfo: { message: joinBonusInfoMessage, amount: joinBonusInfoAmount } } })
   }
+
+  const handleToggle = useCallback(() => {
+    toggleJoinBonus(!toSend)
+  }, [toSend])
 
   const funderAccount = useSelector(getFunderAccount)
 
@@ -303,14 +308,14 @@ const JoinBonus = ({
                   <input
                     type='checkbox'
                     checked={joinBonus && joinBonus.toSend}
-                    onChange={e => toggleJoinBonus(e.target.checked)}
+                    onChange={handleToggle}
                   />
                   <div className='toggle-wrapper'>
                     <span className='toggle' />
                   </div>
                 </label>
                 <div className='content__toggle__text'>
-                  <span>{ joinBonus && joinBonus.toSend ? 'Activate' : 'Deactivate' }</span>
+                  <span>{ joinBonus && !joinBonus.toSend ? 'Activate' : 'Deactivate' }</span>
                 </div>
               </div>
               <button className='button button--normal join_bonus__button' disabled={!hasTransferToFunderFlag()} onClick={handleBonusInfo}>Save</button>
