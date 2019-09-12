@@ -8,12 +8,12 @@
     padding-left: 25px;
     padding-right: 25px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
-    background-color: #ffffff;
+    background-color: $color-white;
   }
 
   @include element(title) {
     font-size: 18px;
-    color: $color-primary-dark;
+    color: $color-dark;
     font-weight: 500;
 
     @include modifier(underline) {
@@ -46,7 +46,7 @@
     cursor: pointer;
     display: inline-block;
     font-weight: bold;
-    color: $color-primary-dark;
+    color: $color-dark;
     margin-top: 10px;
 
     &:hover {

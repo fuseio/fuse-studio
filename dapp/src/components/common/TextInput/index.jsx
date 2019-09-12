@@ -11,11 +11,6 @@ const options = [
   { value: 'General Inquiry', label: 'General Inquiry' }
 ]
 
-const InputFeedback = ({ error }) =>
-  error ? (
-    <div className='input-feedback'>{error}</div>
-  ) : null
-
 const Label = ({
   className,
   children,
@@ -93,7 +88,6 @@ const TextInput = ({
         {label}
       </Label>
       {field}
-      <InputFeedback error={error || ''} />
     </div>
   )
 }

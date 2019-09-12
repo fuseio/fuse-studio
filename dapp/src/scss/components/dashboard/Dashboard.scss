@@ -53,7 +53,7 @@
       }
 
       @include modifier(home) {
-        color: #fae83e;
+        color: $color-fuse;
       }
 
       @include element(icon) {
@@ -166,7 +166,7 @@
       }
 
       @include element(title) {
-        color: #7a7a7a;
+        color: $color-gray;
         font-size: 20px;
         margin-bottom: 10px;
         font-weight: 500;
@@ -197,7 +197,7 @@
         text-align: center;
 
         @include block(fuse-logo) {
-          background-image: linear-gradient(to bottom, #ffea14, #ffea14 31%, #85ffbc);
+          background-image: $color-fuse_gradient;
           padding: 2px;
           img {
             width: 28px;
@@ -223,7 +223,7 @@
         @include element(title) {
           text-transform: capitalize;
           font-size: 14px;
-          color: $color-primary-dark;
+          color: $color-dark;
           text-align: center;
           text-transform: capitalize;
           margin-bottom: 5px;
@@ -231,7 +231,7 @@
         }
 
         @include element(text) {
-          color: $color-author;
+          color: $color-dark-gray;
           font-size: 11px;
           text-align: center;
           margin-bottom: 5px;
@@ -240,7 +240,7 @@
             line-height: 1.8;
             font-size: 12px;
             text-align: center;
-            color: #4a687b;
+            color: $color-light-dark;
           }
 
           span {
@@ -265,7 +265,7 @@
           flex: 0.5;
           line-height: 125px;
           text-align: center;
-          color: $color-brdr-issuance;
+          color: $color-light-gray;
 
           @include breakpoint(small down) {
             transform: rotate(90deg);
@@ -276,7 +276,7 @@
         @include element(transfer) {
           text-align: center;
           line-height: 95px;
-          color: $color-author;
+          color: $color-dark-gray;
           font-size: 12px;
           font-weight: normal;
           line-height: 2.17;
@@ -299,7 +299,7 @@
             input {
               border: 1px solid transparent;
               font-size: 25px;
-              color: #25435a;
+              color: $color-dark;
               font-weight: bold;
               width: 100%;
               border-radius: 25px;
@@ -314,7 +314,7 @@
               }
 
               &:focus {
-                border: solid 1px #25435a;
+                border: solid 1px $color-dark;
               }
             }
 
@@ -328,7 +328,7 @@
 
             @include element(btn) {
               border: none;
-              color: $color-primary-dark;
+              color: $color-dark;
               padding: 9px 20px;
               background: $color-fuse_gradient;
               border-radius: 16px;
@@ -347,14 +347,14 @@
               &:disabled {
                 cursor: not-allowed;
                 opacity: 0.3;
-                background: #4a687b;
+                background: $color-light-dark;
                 color: $color-white;
               }
             }
           }
 
           @include element(title) {
-            color: $color-primary-dark;
+            color: $color-dark;
             font-size: 12px;
             font-weight: 500;
             line-height: 2.17;

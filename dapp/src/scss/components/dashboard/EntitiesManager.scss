@@ -66,7 +66,7 @@
         cursor: pointer;
 
         @include modifier(active) {
-          background-color: $color-ropsten;
+          background-color: $color-light-green;
           color: white;
         }
       }
@@ -153,7 +153,7 @@
       width: 100%;
       border-radius: 20.5px;
       border: solid 1.3px #dedede;
-      background-color: #ffffff;
+      background-color: $color-white;
     }
 
     @include element(filter) {
@@ -201,7 +201,7 @@
         width: 188px;
         border-radius: 5px;
         box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
-        background-color: #ffffff;
+        background-color: $color-white;
 
         @include block(options) {
           position: relative;
@@ -242,7 +242,7 @@
               user-select: none;
 
               > input:checked + span {
-                background-color: $color-ropsten;
+                background-color: $color-light-green;
               }
               > input:checked + span::after{
                 display: block;
@@ -285,7 +285,7 @@
 
     @include element(field) {
       @include element(icon) {
-        color: $color-step;
+        color: $color-dark-gray;
         font-weight: bold;
         border: none;
         background: none;
@@ -296,7 +296,7 @@
         &:hover,
         &:focus,
         &:focus:active {
-          color: darken($color-step, 10%);
+          color: darken($color-dark-gray, 10%);
         }
         &[disabled] {
           cursor: not-allowed !important;
@@ -410,12 +410,12 @@
     }
 
     @include element(title) {
-      color: $color-primary-dark;
+      color: $color-dark;
       font-size: 1.3em;
       margin: 10px 0;
     }
     @include element(text) {
-      color: $color-author;
+      color: $color-dark-gray;
       font-size: 12px;
       margin-bottom: 20px;
     }
@@ -424,7 +424,7 @@
       border: none;
       color: $color-white;
       padding: 9px 20px;
-      background-color: #4a687b;
+      background-color: $color-light-dark;
       border-radius: 6px;
       font-size: 11px;
       text-transform: uppercase;
@@ -434,150 +434,7 @@
       outline: none;
       &:hover {
         cursor: pointer;
-        background-color: #25435a;
-      }
-    }
-  }
-
-  @include element(entity) {
-    width: 100%;
-    display: flex;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2);
-    position: relative;
-    max-height: 90px;
-
-    &:not(:last-child) {
-      margin-bottom: 20px;
-    }
-
-    @include element(logo) {
-      width: 55px;
-      cursor: pointer;
-      height: 55px;
-      border-radius: 50%;
-      background-color: $color-white;
-      line-height: 55px;
-      font-size: 55px;
-      color: $color-step-field;
-      margin-right: 15px;
-      text-align: center;
-      &:hover {
-        cursor: pointer;
-      }
-    }
-
-    @include element(content) {
-      cursor: pointer;
-      @include element(title) {
-        color: $color-primary-dark;
-        font-size: 12px;
-        margin-bottom: 7px;
-        display: inline-block;
-
-        &:hover {
-          cursor: pointer;
-          text-decoration: underline;
-        }
-      }
-
-      @include element(type) {
-        color: $color-author;
-        font-size: 10px;
-        text-transform: capitalize;
-      }
-
-      @include element(subtitle) {
-        color: $color-primary-dark;
-        font-size: 11px;
-        font-weight: 500;
-        display: flex;
-
-        .fa-clone {
-          margin-left: 10px;
-          font-weight: 400;
-          font-size: 12px;
-          color: $color-arrow;
-          &:hover {
-            font-weight: 900;
-          }
-        }
-    
-        .text-asset {
-          text-transform: capitalize;
-          font-size: 12px;
-          font-weight: bold;
-        }
-        .id {
-          margin-left: 5px;
-          cursor: pointer;
-          text-transform: none;
-          color: $color-negative;
-          &:hover {
-            cursor: pointer;
-          }
-        }
-      }
-    }
-
-    @include element(more) {
-      position: absolute;
-      top: 9px;
-      right: 10px;
-      color: $color-primary-dark;
-      font-size: 12px;
-
-      .fa {
-        color: $color-step;
-        cursor: pointer;
-      }
-
-      @include block(more) {
-        @include modifier(show) {
-          @include xy-grid()
-        }
-
-        position: absolute;
-        display: none;
-        right: 0;
-        top: 17px;
-        z-index: 1;
-        position: absolute;
-        display: none;
-        @include flex-align(left, middle);
-        min-width: 120px;
-        width: max-content;
-        height: auto;      
-        border-radius: 5px;
-        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
-        background-color: #ffffff;
-
-        @include element (options) {
-          list-style: none;
-          position: relative;
-          width: 100%;
-          height: 100%;
-          margin: 0;
-          padding: 0;
-          @include xy-grid(vertical);
-          @include flex-align(spaced);
-          font-size: 12px;
-          cursor: initial;
-
-          @include element(item) {
-            padding: 10px;
-            cursor: pointer;
-
-            &:hover {
-              background-color: darken($color: white, $amount: 10%)
-            }
-
-            &:not(:last-child) {
-              border-bottom: solid 1px #e2e2e2;
-            }
-          }
-        }
+        background-color: $color-dark;
       }
     }
   }

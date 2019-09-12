@@ -1,6 +1,6 @@
 @include block(step) {
   display: inline-block;
-  color: $color-step;
+  color: $color-dark-gray;
   position: relative;
   text-transform: uppercase;
   font-size: 16px;
@@ -13,7 +13,7 @@
       position: absolute;
       margin-top: -2px;
       left: 50%;
-      background-color: $color-author;
+      background-color: $color-dark-gray;
       box-shadow: 0 0 9px 0 rgba(192, 149, 255, 0.23);
       @include breakpoint(small only) {
         top: -19px;
@@ -29,8 +29,8 @@
     border-radius: 50%;
     width: 10px;
     height: 10px;
-    background-color: $color-author;
-    border: 2px solid $color-author;
+    background-color: $color-dark-gray;
+    border: 2px solid $color-dark-gray;
 
     @include breakpoint(small only) {
       width: 15px;
@@ -45,7 +45,7 @@
       border: solid 2px $color-fuse;
       background-color: $color-fuse;
       box-shadow: 0 0 0 0 $color-fuse,
-                  inset $color-issuance-bg 0 0 1px 2.5px;
+                  inset #162a39 0 0 1px 2.5px;
       width: 17px;
       height: 17px;
 
@@ -54,7 +54,7 @@
       }
     }
     &:before {
-      background-color: $color-author;
+      background-color: $color-dark-gray;
     }
   }
 
@@ -96,7 +96,7 @@
 
     .fa {
       font-size: 20px;
-      color: $color-author;
+      color: $color-dark-gray;
     }
     @include element(logo) {
       cursor: pointer;
@@ -166,7 +166,7 @@
       font-weight: bold;
       font-size: 30px;
       text-align: center;
-      color: $color-primary-dark;
+      color: $color-dark;
 
       @include breakpoint(medium up) {
         padding-top: 30px;
@@ -209,7 +209,7 @@
         font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
-        color: $color-primary-dark;
+        color: $color-dark;
         padding-bottom: 1em;
 
         @include breakpoint(small only) {
@@ -230,7 +230,7 @@
           background-color: $color-white;
           padding: 0 16px;
           font-size: 15px;
-          color: $color-primary-dark;
+          color: $color-dark;
           height: 40px;
           border-radius: 5px;
           box-shadow: 0 0 6px 0 #cbcbcb;
@@ -240,7 +240,7 @@
             color: #92a1ac;
           }
           &:focus {
-            border: solid 1px #25435a;
+            border: solid 1px $color-dark;
           }
         }
 
@@ -269,7 +269,7 @@
       padding: 10px 20px;
       hr {
         margin: 32px 0;
-        border-top: solid 1px $color-brdr-issuance;
+        border-top: solid 1px $color-light-gray;
       }
     }
 
@@ -291,7 +291,7 @@
         font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
-        color: $color-primary-dark;
+        color: $color-dark;
 
         @include breakpoint(small only) {
           margin-bottom: 1em;
@@ -299,7 +299,7 @@
 
         @include modifier(name) {
           font-weight: normal;
-          color: $color-step;
+          color: $color-dark-gray;
         }
       }
     
@@ -315,7 +315,7 @@
           background-color: $color-white;
           padding: 0 16px;
           font-size: 15px;
-          color: $color-primary-dark;
+          color: $color-dark;
           height: 40px;
           border-radius: 5px;
           box-shadow: 0 0 6px 0 #cbcbcb;
@@ -325,7 +325,7 @@
             color: rgba(0, 0, 0, 0.3);
           }
           &:focus {
-            border: solid 1px #25435a;
+            border: solid 1px $color-dark;
           }
 
           &:disabled {
@@ -355,7 +355,7 @@
         font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
-        color: $color-primary-dark;
+        color: $color-dark;
 
         @include breakpoint(small only) {
           margin-bottom: 1em;
@@ -407,7 +407,7 @@
           font-size: 12px;
           align-items: center;
           font-weight: 500;
-          color: $color-text-gray;
+          color: $color-dark;
           position: relative;
           &:hover {
             border: solid 2px rgba(74, 104, 123, 0.3);
@@ -462,7 +462,7 @@
               font-size: 9px;
               &:hover {
                 box-shadow: none;
-                border: solid 1px $color-primary-dark;
+                border: solid 1px $color-dark;
               }
             }
 
@@ -563,7 +563,7 @@
           text-transform: capitalize;
           align-items: center;
           font-weight: 500;
-          color: $color-text-gray;
+          color: $color-dark;
           justify-content: space-evenly;
           position: relative;
 
@@ -598,7 +598,7 @@
             background-color: $color-white;
             padding: 0 16px;
             font-size: 15px;
-            color: $color-primary-dark;
+            color: $color-dark;
             height: 40px;
             border-radius: 5px;
             box-shadow: 0 0 6px 0 #cbcbcb;
@@ -608,7 +608,7 @@
               color: rgba(0, 0, 0, 0.3);
             }
             &:focus {
-              border: solid 1px #25435a;
+              border: solid 1px $color-dark;
             }
           }
         }
@@ -631,7 +631,7 @@
           @include xy-cell(shrink);
           height: 15px;
           width: 15px;
-          background-color: $color-author;
+          background-color: $color-dark-gray;
           border-radius: 50%;
           display: inline-block;
 
@@ -670,7 +670,7 @@
         font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
-        color: $color-primary-dark;
+        color: $color-dark;
         text-align: center;
         width: 100%;
 
@@ -720,7 +720,7 @@
           margin-left: 10px;
           flex: 1 1 auto;
           @include xy-grid(vertical);
-          color: $color-primary-dark;
+          color: $color-dark;
 
           @include element(title) {
             font-weight: 500;
@@ -732,7 +732,7 @@
           }
 
           @include element(text) {
-            color: #7a7a7a;
+            color: $color-gray;
             line-height: 1.25;
             font-size: 12px;
           }
@@ -749,7 +749,7 @@
               > span {
                 &:first-child {
                   font-weight: bold;
-                  color: $color-primary-dark;
+                  color: $color-dark;
                 }  
               }
             }
@@ -776,7 +776,7 @@
                 &-wrapper {
                   width: 34px;
                   height: 18px;
-                  background-color: $disabled;
+                  background-color: $color-disabled;
                   border-radius: 10px;
                   position: relative;
                 }
@@ -790,10 +790,10 @@
                 width: 14px;
                 border-radius: 50%;
                 height: 14px;
-                background: #fff;
+                background: $color-white;
                 top: 2px;
                 left: 2px;
-                border: 1px solid $disabled;
+                border: 1px solid $color-disabled;
                 -webkit-transition: all 0.2s ease;
                 -moz-transition: all 0.2s ease;
                 -ms-transition: all 0.2s ease;
@@ -804,8 +804,8 @@
       
               .toggle:before {
                 content: "";
-                color: #fff;
-                text-shadow: 1px 1px #000;
+                color: $color-white;
+                text-shadow: 1px 1px $color-black;
                 font-family: tahoma;
                 font-size: 11px;
               }
@@ -813,7 +813,7 @@
                 background: $color-fuse_gradient;
                 .toggle {
                   left: 18px;
-                  border-color: #fae83e;
+                  border-color: $color-fuse;
                 }
               }
       
@@ -832,7 +832,7 @@
       @include element(text) {
         font-size: 12px;
         line-height: 1.25;
-        color: #25435a;
+        color: $color-dark;
       }
 
       @include element(wrapper) {
@@ -845,7 +845,7 @@
           background-color: $color-white;
           padding: 0 16px;
           font-size: 15px;
-          color: $color-primary-dark;
+          color: $color-dark;
           height: 33px;
           border-radius: 5px;
           box-shadow: 0 0 6px 0 #cbcbcb;
@@ -856,7 +856,7 @@
           }
 
           &:focus {
-            border: solid 1px #25435a;
+            border: solid 1px $color-dark;
           }
         }
 
@@ -926,7 +926,7 @@
         color: rgba(5, 40, 62, 0.6);
 
         .fa-info-circle {
-          color: $color-primary-dark;
+          color: $color-dark;
         }
 
         @include breakpoint(medium up) {
@@ -956,7 +956,7 @@
 
         > span {
           font-size: 14px;
-          color: $color-primary-dark;
+          color: $color-dark;
           font-weight: 500;
           text-align: center;
         }
@@ -972,7 +972,7 @@
         @include element(title) {
           font-size: 14px;
           font-weight: 500;
-          color: $color-primary-dark;
+          color: $color-dark;
           align-self: flex-start;
 
           @include breakpoint(small) {
@@ -1076,14 +1076,14 @@
     @include block(progress) {
       @include element(title) {
         font-size: 14px;
-        color: #7a7a7a;
+        color: $color-gray;
         margin-top: -2em;
         margin-bottom: 3em;
         text-align: center;
       }
 
       @include element(wrapper) {
-        color:  $color-primary-dark;
+        color:  $color-dark;
         margin: 0 auto;
         max-width: 500px;
 
@@ -1120,7 +1120,7 @@
 
         @include element(label) {
           font-weight: 500;
-          color: #25435a;
+          color: $color-dark;
 
           .fa {
             font-size: 12px;
@@ -1128,11 +1128,11 @@
           }
 
           .fa-check {
-            color: $color-ropsten;
+            color: $color-light-green;
           }
 
           .fa-times {
-            color: $color-red;
+            color: red;
           }
         }
 
@@ -1140,7 +1140,7 @@
           font-size: 14px;
           line-height: 1.36;
           text-align: center;
-          color: #7a7a7a;
+          color: $color-gray;
         }
       }
 
@@ -1180,7 +1180,7 @@
         @include flex-align(null, middle);
         > p {
           margin-bottom: 5px;
-          color: $color-red;
+          color: red;
         }
         
       }
@@ -1190,7 +1190,7 @@
       font-size: 13px;
       background: none;
       border: 1px solid transparent;
-      color: $color-primary-dark;
+      color: $color-dark;
       margin-top: 16px;
       text-transform: uppercase;
       font-weight: bold;
@@ -1203,7 +1203,7 @@
     
       &:hover {
         cursor: pointer;
-        color: darken($color-primary-dark, 10%);
+        color: darken($color-dark, 10%);
       }
     }
   }
@@ -1212,7 +1212,7 @@
 
 @include block(tooltip) {
   align-self: flex-start;
-  color: $color-author;
+  color: $color-dark-gray;
   font-size: 19px;
   opacity: 1 !important;
 
@@ -1222,7 +1222,7 @@
     font-size: 10px !important;
     height: auto;
     padding: 10px;
-    color: $color-primary-dark !important;
+    color: $color-dark !important;
     background: $color-white !important;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.25);
     opacity: 1 !important;

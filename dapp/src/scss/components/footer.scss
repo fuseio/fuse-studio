@@ -1,7 +1,7 @@
 @include block(footer) {
   height: 30px;
   border: solid 1px #e2e2e2;
-  background-color: #ffffff;
+  background-color: $color-white;
   width: 100%;
   position: fixed;
   bottom: 0;
@@ -31,18 +31,18 @@
     margin-right: 5px;
     
     @include modifier(off) {
-      background-color: $color-red;
+      background-color: red;
     }
 
     @include modifier(on) {
-      background-color: $color-ropsten;
+      background-color: $color-light-green;
     }
   }
 
   @include element(item) {
     font-size: 10px;
     line-height: 1.4;
-    color: #000000; 
+    color: $color-black; 
 
     @include breakpoint(medium down) {
       padding-top: 10px;

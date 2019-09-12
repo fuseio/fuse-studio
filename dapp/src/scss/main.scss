@@ -3,9 +3,7 @@
 
 /*-------Basic helpers----------*/
 
-@import 'variables';
-@import 'bem';
-@import 'mixins';
+@import 'config/config';
 
 /*-------Helpers----------*/
 @import 'foundation/foundation';
@@ -17,17 +15,12 @@
 
 /*---------Components Styles--------*/
 
-@import 'components/App';
-@import 'components/Communities';
 @import 'components/Modal';
 @import 'components/Root';
-@import 'components/Breadcrumbs';
+@import 'components/Communities';
 
 @import 'components/ImageCropper';
 @import 'components/issuance/Issuance';
-@import 'components/issuance/IssuanceBtn';
-@import 'components/issuance/SummaryStep';
-@import 'components/issuance/IssuedPopup';
 
 @import 'components/dashboard/Dashboard';
 @import 'components/dashboard/Plugins';
@@ -38,7 +31,6 @@
 @import 'components/dashboard/MintBurn';
 @import 'components/dashboard/Table';
 @import 'components/dashboard/ExistingEntity';
-@import 'components/dashboard/ActivityContent';
 @import 'components/dashboard/Header';
 @import 'components/dashboard/EntitiesManager';
 @import 'components/dashboard/AddUserForm.scss';
@@ -51,28 +43,3 @@
 @import 'components/ProfileDropDown';
 @import 'components/community';
 @import 'components/footer';
-
-.loader {
-	height: 10px;
-	width: 30px;
-	&.image {
-		height: 70px;
-		width: 70px;
-	}
-	&.input {
-		position: absolute;
-    	margin-top: -45px;
-    	left: 30px;
-	}
-}
-
- @keyframes scaleIn {
-	from {
-		transform: scale(.5, .5);
-		opacity: .5;
-	}
-	to {
-		transform: scale(2.5, 2.5);
-		opacity: 0;
-	}
-}

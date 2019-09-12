@@ -110,7 +110,8 @@ class Dashboard extends Component {
       networkType,
       children,
       bridgeStatus,
-      tokenOfCommunityOnCurrentSide
+      tokenOfCommunityOnCurrentSide,
+      isAdmin
     } = this.props
 
     const { address: tokenAddress } = token
@@ -138,6 +139,7 @@ class Dashboard extends Component {
             <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
           </ReactTooltip>
           <Bridge
+            isAdmin={isAdmin}
             tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
             bridgeDeployed={steps && steps.bridge}
             accountAddress={accountAddress}

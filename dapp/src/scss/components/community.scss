@@ -3,7 +3,7 @@
   padding-left: 20px;
   padding-right: 20px;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
-  background-color: #ffffff;
+  background-color: $color-white;
   @include xy-grid();
 
   &:hover {
@@ -28,7 +28,7 @@
   
     @include element(title) {
       font-size: 14px;
-      color: $color-primary-dark;
+      color: $color-dark;
     }
 
     @include element(members) {
@@ -37,7 +37,7 @@
       > span {
         margin-left: 5px;
 				font-weight: bold;
-				color: $color-close-gray;
+				color: #0a7586;
       }
     }
   }

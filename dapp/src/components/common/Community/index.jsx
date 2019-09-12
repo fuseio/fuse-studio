@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
 import identity from 'lodash/identity'
 import { formatWei } from 'utils/format'
 import CommunityLogo from 'components/common/CommunityLogo'
@@ -42,9 +41,7 @@ export default class Community extends Component {
           <h3 className='community__content__title'>{name}</h3>
           <p className='community__content__members'>
             Total Supply
-            <span className={classNames('total-text', 'positive-number')}>
-              {formatWei(totalSupply, 0)}
-            </span>
+            <span>{formatWei(totalSupply, 0)}</span>
           </p>
         </div>
       </div>

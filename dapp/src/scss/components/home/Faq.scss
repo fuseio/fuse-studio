@@ -7,7 +7,7 @@
 
   @include element(title) {
     font-weight: 500;
-    color: $color-primary-dark;
+    color: $color-dark;
   }
 
   @include element(content) {

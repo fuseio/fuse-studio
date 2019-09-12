@@ -77,13 +77,13 @@ $drag-handle-border: 1px solid rgba(255, 255, 255, 0.7) !default;
         border-radius: 3px;
 
         &:first-child{
-          color: #7a7a7a;
+          color: $color-gray;
           background-color: #ececec;
         }
   
         &:last-child {
-          color: #ffffff;
-          background-color: #4a687b;
+          color: $color-white;
+          background-color: $color-light-dark;
         }
       }
       
