@@ -27,23 +27,57 @@ const NetworkLogo = ({ network }) => {
   }
 }
 
-const Balance = (props) => {
+const Balance = ({
+  isAdmin,
+  accountAddress,
+  bridgeSide,
+  disabled,
+  transferStatus,
+  tokenAddress,
+  token,
+  className,
+  balances,
+  openModal
+}) => {
+  const { symbol } = token
+  const { bridge } = bridgeSide
+  const balance = balances[tokenAddress]
+
   useEffect(() => {
-    if (!props.transferStatus) {
-      props.balanceOfToken(props.tokenAddress, props.accountAddress, { bridgeType: props.bridgeSide.bridge })
+    if (window && window.Appcues && isAdmin) {
+      const { Appcues } = window
+      if (bridge === 'home' && Number(new BigNumber(balance).div(1e18).toFixed()) > 0) {
+        Appcues.identify(`${accountAddress}`, {
+          role: 'admin',
+          bridgeWasUsed: true
+        })
+      } else {
+        Appcues.identify(`${accountAddress}`, {
+          role: 'admin',
+          bridgeWasUsed: false
+        })
+      }
     }
-  }, [props.transferStatus])
-  return (<div className={`bridge ${props.className}`}>
-    <NetworkLogo network={props.bridgeSide.network} />
-    <div className='bridge__title'>{convertNetworkName(props.bridgeSide.network)}</div>
+    return () => {}
+  }, [bridge, balances])
+
+  useEffect(() => {
+    if (!transferStatus) {
+      balanceOfToken(tokenAddress, accountAddress, { bridgeType: bridge })
+    }
+  }, [transferStatus])
+
+  return (<div className={`bridge ${className}`}>
+    <NetworkLogo network={bridgeSide.network} />
+    <div className='bridge__title'>{convertNetworkName(bridgeSide.network)}</div>
     <div className='bridge__text'>
       <div>Balance</div>
-      <span>{props.balances[props.tokenAddress]
-        ? formatWei(props.balances[props.tokenAddress], 2)
-        : 0 } <small>{props.token.symbol}</small>
+      <span>{balance
+        ? formatWei(balance, 2)
+        : 0 } <small>{symbol}</small>
       </span>
     </div>
-    <button className='bridge__more' disabled={props.disabled} onClick={props.openModal}>Show more</button>
+    <button className='bridge__more' disabled={disabled} onClick={openModal}>Show more</button>
   </div>)
 }
 
@@ -131,7 +165,8 @@ class Bridge extends Component {
       confirmationsLimit,
       bridgeDeployed,
       isOwner,
-      tokenOfCommunityOnCurrentSide
+      tokenOfCommunityOnCurrentSide,
+      isAdmin
     } = this.props
 
     const {
@@ -145,6 +180,7 @@ class Bridge extends Component {
       <div className='content__bridge__wrapper'>
         <div className='content__bridge__container'>
           <Balance
+            isAdmin={isAdmin}
             balanceOfToken={balanceOfToken}
             tokenAddress={homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
@@ -189,6 +225,7 @@ class Bridge extends Component {
             <img src={homeNetwork === bridgeStatus.to.network ? arrow1 : arrow2} />
           </div>
           <Balance
+            isAdmin={isAdmin}
             balanceOfToken={balanceOfToken}
             tokenAddress={homeNetwork === bridgeStatus.to.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}

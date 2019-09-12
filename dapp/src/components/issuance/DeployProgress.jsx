@@ -42,6 +42,11 @@ class DeployProgress extends PureComponent {
       const { done } = steps
       if (allDone && done) {
         clearInterval(this.interval)
+        ReactGA.event({
+          category: 'Issuance',
+          action: 'New community',
+          label: 'A new community has been created'
+        })
         setTimeout(() => {
           setNextStep()
         }, 1000)

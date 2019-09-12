@@ -67,7 +67,9 @@ class DashboardLayout extends Component {
 
       if (window && window.Appcues && isAdmin) {
         const { Appcues } = window
-        Appcues.identify(`${accountAddress}_a`, {})
+        Appcues.identify(`${accountAddress}`, {
+          role: 'admin'
+        })
       }
     }
 

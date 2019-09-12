@@ -170,7 +170,7 @@ class IssuanceWizard extends PureComponent {
       ReactGA.event({
         category: 'Issuance',
         action: 'Next step',
-        label: currentStep[this.state.activeStep],
+        label: `${currentStep[this.state.activeStep]} step`,
         nonInteraction: true
       })
     })
