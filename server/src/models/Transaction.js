@@ -25,13 +25,12 @@ module.exports = () => {
     return Transaction
   }
 
-  transaction.start = async ({ transactionHash }, isForced) => {
+  transaction.start = async ({ transactionHash }) => {
     const transaction = await Transaction.findOne({ transactionHash })
-    if (isForced || !transaction || get(transaction, 'status') === 'PENDING') {
+    if (!transaction || get(transaction, 'status') === 'PENDING') {
       return Transaction.findOneAndUpdate({ transactionHash }, { status: 'STARTED' }, { upsert: true })
-    } else {
-      throw new Error(`Wrong transaction status ${transaction.status} of the transaction hash ${transactionHash}`)
     }
+    return transaction
   }
 
   transaction.pending = async ({ transactionHash, abiName, bridgeType }) => {

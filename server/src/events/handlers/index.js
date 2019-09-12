@@ -2,6 +2,7 @@ const { getWeb3 } = require('@services/web3')
 const { getAbi } = require('@constants/abi')
 const { logsToEvents } = require('@utils/web3/events')
 const { isEmpty } = require('@utils/web3/receipt')
+const { get } = require('lodash')
 const mongoose = require('mongoose')
 const eventMethods = mongoose.event
 const transactionMethods = mongoose.transaction
@@ -41,9 +42,15 @@ const handleEvent = async function (event, receipt) {
   }
 }
 
-const handleReceipt = async (receipt, isForced) => {
-  await transactionMethods.start(receipt, isForced)
+const handleReceipt = async (receipt) => {
+  const transaction = await transactionMethods.start(receipt)
+  const status = get(transaction, 'status')
+  if (status === 'DONE' || status === 'FAILED') {
+    console.log(`Transaction ${receipt.transactionHash} already executed with status ${status}`)
+    return
+  }
   try {
+    console.log(`Starting to execute transaction ${receipt.transactionHash}`)
     const events = Object.entries(receipt.events)
     let promisses = []
     for (let [eventName, event] of events) {
