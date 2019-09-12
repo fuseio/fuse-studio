@@ -11,9 +11,8 @@ import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
 import { addCommunityPlugins } from 'actions/community'
 import get from 'lodash/get'
-import classNames from 'classnames'
-import SwitchNetwork from 'components/common/SwitchNetwork'
 import Puzzle from 'images/puzzle.svg'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
 const PluginsItems = ([
   {
@@ -44,6 +43,7 @@ const Plugins = ({
   community,
   networkType
 }) => {
+  useSwitchNetwork(networkType)
   const { plugins } = community
 
   const showInfoModal = (key, props) => {
@@ -66,10 +66,9 @@ const Plugins = ({
 
   return (
     <div className='plugins'>
-      <h2 className={classNames('plugins__title', { 'plugins__title--disabled': networkType !== 'fuse' })}>Plugins</h2>
-      <div className={classNames('plugins__wrapper', { 'plugins__wrapper--disabled': networkType !== 'fuse' })}>
-        {networkType !== 'fuse' && <SwitchNetwork />}
-        <div className={classNames('plugins__content__wrapper', { 'plugins__content__wrapper--disabled': networkType !== 'fuse' })}>
+      <h2 className='plugins__title'>Plugins</h2>
+      <div className='plugins__wrapper'>
+        <div className='plugins__content__wrapper'>
           <div className='plugins__content'>
             Plug-ins are contracts deployed on the Fuse-chain and allow to add functionality to your app with a few easy steps.
             Any plug-in you activate will open a new navigation menu that allows to configure it's settings.

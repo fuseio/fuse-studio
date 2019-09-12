@@ -63,10 +63,6 @@
   @include element(main-title) {
     font-weight: 500;
 
-    @include modifier(disabled) {
-      opacity: .15;
-    }
-    
     @include modifier(white) {
       font-size: 1.625em;
       margin-bottom: 1em;

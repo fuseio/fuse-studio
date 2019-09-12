@@ -11,11 +11,13 @@ import classNames from 'classnames'
 import { getFunderAccount } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
 import { addCommunityPlugins, toggleJoinBonus } from 'actions/community'
+import { loadModal } from 'actions/ui'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import get from 'lodash/get'
-import SwitchNetwork from 'components/common/SwitchNetwork'
 const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
 
 const JoinBonus = ({
+  loadModal,
   error,
   networkType,
   community,
@@ -32,6 +34,8 @@ const JoinBonus = ({
   tokenOfCommunityOnCurrentSide,
   toggleJoinBonus
 }) => {
+  useSwitchNetwork(networkType, 'join bonus')
+
   const { plugins } = community
 
   const { joinBonus } = plugins
@@ -47,6 +51,7 @@ const JoinBonus = ({
     if (hasTransferToFunderFlag()) {
       balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
     }
+    return () => {}
   }, [plugins])
 
   useEffect(() => {
@@ -60,6 +65,7 @@ const JoinBonus = ({
         setTransferMessage(true)
       }
     }
+    return () => {}
   }, [transactionStatus])
 
   const transferToFunder = () => {
@@ -97,11 +103,8 @@ const JoinBonus = ({
   return (
     <div className='join_bonus__wrapper'>
       <div className='join_bonus'>
-        <h2 className={classNames('join_bonus__main-title join_bonus__main-title--white', { 'join_bonus__main-title--disabled': networkType !== 'fuse' })}>Join bonus</h2>
+        <h2 className='join_bonus__main-title join_bonus__main-title--white'>Join bonus</h2>
         <div style={{ position: 'relative' }}>
-          {networkType !== 'fuse' && (
-            <SwitchNetwork contentStyles={{ flexDirection: 'column' }} pluginName='join bonus' />
-          )}
           {
             !hasTransferToFunderFlag()
               ? (
@@ -336,7 +339,8 @@ const mapDispatchToState = {
   clearTransactionStatus,
   balanceOfToken,
   addCommunityPlugins,
-  toggleJoinBonus
+  toggleJoinBonus,
+  loadModal
 }
 
 export default connect(mapStateToProps, mapDispatchToState)(JoinBonus)

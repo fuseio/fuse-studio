@@ -6,6 +6,7 @@ import LoginModal from 'components/common/LoginModal'
 import ImageCropperModal from 'components/common/ImageCropper'
 import WrongNetworkModal from 'components/common/WrongNetworkModal'
 import ErrorBoundary from 'components/common/ErrorBoundary'
+import EmailModal from 'components/common/EmailModal'
 import QrModal from 'components/common/QrModal'
 import AddBusinessModal from 'components/dashboard/modals/AddBusinessModal'
 import AddUserModal from 'components/dashboard/modals/AddUserModal'
@@ -16,6 +17,7 @@ import NoDataAboutOwnerModal from 'components/dashboard/modals/NoDataAboutOwnerM
 import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
 import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEntity'
 import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
+import SwitchNetwork from 'components/common/SwitchNetwork'
 
 import {
   LOGIN_MODAL,
@@ -30,7 +32,9 @@ import {
   IMPORT_EXISTING_ENTITY,
   ENTITY_ADDED_MODAL,
   IMAGE_CROPPER_MODAL,
-  PLUGIN_INFO_MODAL
+  PLUGIN_INFO_MODAL,
+  EMAIL_MODAL,
+  SWITCH_NETWORK
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -51,7 +55,9 @@ const MODAL_COMPONENTS = {
   [IMPORT_EXISTING_ENTITY]: ImportExistingEntity,
   [ENTITY_ADDED_MODAL]: EntityAddedModal,
   [IMAGE_CROPPER_MODAL]: ImageCropperModal,
-  [PLUGIN_INFO_MODAL]: PluginInfoModal
+  [PLUGIN_INFO_MODAL]: PluginInfoModal,
+  [EMAIL_MODAL]: EmailModal,
+  [SWITCH_NETWORK]: SwitchNetwork
 }
 
 const ModalContainer = (props) => {

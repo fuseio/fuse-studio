@@ -19,10 +19,9 @@ import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
 import sortBy from 'lodash/sortBy'
 import { getForeignNetwork } from 'selectors/network'
-import classNames from 'classnames'
-import SwitchNetwork from 'components/common/SwitchNetwork'
 import get from 'lodash/get'
 import capitalize from 'lodash/capitalize'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
 const Businesses = ({
   networkType,
@@ -40,6 +39,7 @@ const Businesses = ({
   metadata,
   removeEntity
 }) => {
+  useSwitchNetwork(networkType, 'business list')
   const { communityAddress, isClosed } = community
   const [data, setData] = useState(null)
   const [search, setSearch] = useState('')
@@ -60,12 +60,14 @@ const Businesses = ({
     if (search) {
       fetchData()
     }
+    return () => {}
   }, [search, fetchEntities])
 
   useEffect(() => {
     if (communityAddress) {
       fetchBusinessesEntities(communityAddress)
     }
+    return () => {}
   }, [communityAddress])
 
   useEffect(() => {
@@ -134,6 +136,7 @@ const Businesses = ({
         }
       }), ['updatedAt']).reverse())
     }
+    return () => {}
   }, [response, metadata])
 
   useEffect(() => {
@@ -145,6 +148,7 @@ const Businesses = ({
         })
       }, 2000)
     }
+    return () => {}
   }, [entityAdded])
 
   const tableData = useMemo(() => data, [data])
@@ -269,14 +273,11 @@ const Businesses = ({
 
   return (
     <Fragment>
-      <div className={classNames('entities__header', { 'entities__header--disabled': networkType !== 'fuse' })}>
+      <div className='entities__header'>
         <h2 className='entities__header__title'>Business List</h2>
       </div>
-      <div className={classNames('entities__wrapper', { 'entities--disabled': networkType !== 'fuse' })}>
+      <div className='entities__wrapper'>
         {renderContent()}
-        {networkType !== 'fuse' && (
-          <SwitchNetwork pluginName='businesses list' />
-        )}
       </div>
     </Fragment>
   )

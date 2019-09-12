@@ -24,7 +24,7 @@ const Root = ({ store, history }) => {
             <Layout>
               <Web3 isMobile={history.location.search.includes('isMobile')} />
               <Switch>
-                <Route exact path='/' component={withTracker(HomePage)} />
+                <Route exact path='/' component={HomePage} />
                 <Route path='/view/issuance' component={withTracker(withNetwork(IssuanceWizard))} />
                 <Route path='/view/communities' component={withTracker(withNetwork(Oven))} />
                 <Route path='/view/community/:address' component={withTracker(withNetwork(DashboardLayout))} />

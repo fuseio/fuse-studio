@@ -51,9 +51,9 @@ const subscribeUser = async (user) => {
       ],
       'contacts':
         [{
-          'email': user.email,
-          'first_name': user.firstName,
-          'last_name': user.lastName
+          'email': user.email
+          // 'first_name': user.firstName,
+          // 'last_name': user.lastName
         }]
     }
   }

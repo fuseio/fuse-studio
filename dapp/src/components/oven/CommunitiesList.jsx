@@ -21,6 +21,7 @@ export default ({
 }) => {
   useEffect(() => {
     fetchTokens(networkType, PAGE_START)
+    return () => {}
   }, [])
 
   const loadMore = (nextPage) => {
