@@ -826,62 +826,6 @@
       }
     }
 
-    @include block(email__form) {
-      margin: 2em auto 4em;
-
-      @include element(text) {
-        font-size: 12px;
-        line-height: 1.25;
-        color: $color-dark;
-      }
-
-      @include element(wrapper) {
-        margin-top: 0.6em;
-      }
-
-      @include element(field) {
-        input {
-          width: 100%;
-          background-color: $color-white;
-          padding: 0 16px;
-          font-size: 15px;
-          color: $color-dark;
-          height: 33px;
-          border-radius: 5px;
-          box-shadow: 0 0 6px 0 #cbcbcb;
-          border: 1px solid transparent;
-
-          &::placeholder {
-            color: #92a1ac;
-          }
-
-          &:focus {
-            border: solid 1px $color-dark;
-          }
-        }
-
-        @include modifier(underline) {
-          &:before {
-            border-bottom: none !important;
-          }
-          &:hover:not(.Mui-disabled):before {
-            border-bottom: none !important;
-    
-          }
-          &:after {
-            border-bottom: none !important;
-          }
-        }
-    
-        @include modifier(error) {
-          &:after {
-            border-bottom-color: none !important;
-          }
-        }
-      }  
-    }
-
-
     @include block(summary-step) {
       
       @include element(wrapper) {

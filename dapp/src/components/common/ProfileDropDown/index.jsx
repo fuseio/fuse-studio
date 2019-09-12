@@ -32,6 +32,7 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, mapDispatchToNativeB
       balanceOfNative(accountAddress, { bridgeType: 'home' })
       balanceOfNative(accountAddress, { bridgeType: 'foreign' })
     }
+    return () => {}
   }, [accountAddress])
 
   const homeBalance = account && account.home ? formatWei(account.home, 2) : 0
@@ -84,6 +85,7 @@ const ProfileCard = ({
   useEffect(() => {
     balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
     balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+    return () => {}
   }, [])
 
   return (

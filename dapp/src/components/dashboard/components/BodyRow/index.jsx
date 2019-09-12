@@ -26,6 +26,7 @@ export default ({
         setNewOne(false)
       }, 5000)
     }
+    return () => {}
   }, [justAdded])
 
   const className = index === 0 && hasNewOne

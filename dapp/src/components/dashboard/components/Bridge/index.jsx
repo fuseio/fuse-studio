@@ -65,6 +65,7 @@ const Balance = ({
     if (!transferStatus) {
       balanceOfToken(tokenAddress, accountAddress, { bridgeType: bridge })
     }
+    return () => {}
   }, [transferStatus])
 
   return (<div className={`bridge ${className}`}>

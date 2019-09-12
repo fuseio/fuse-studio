@@ -11,10 +11,6 @@
     }
   }
 
-  @include modifier(disabled) {
-    @extend %disabled-section;
-  }
-
   @include element(container) {
     @include xy-grid();
     @include flex-align(justify, null);
@@ -354,10 +350,6 @@
     @include breakpoint(medium up) {
       margin-top: 10em;
       margin-bottom: 1.5em;
-    }
-
-    @include modifier(disabled) {
-      opacity: .15;
     }
 
     @include element(title) {

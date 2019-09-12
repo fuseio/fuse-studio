@@ -47,7 +47,7 @@
     padding-top: 3%;
     padding-bottom: 3%;
     @include breakpoint(large) {
-      padding-top: 7%;      
+      padding-top: 10%;      
     }
     @include breakpoint(medium up) {
       padding-left: 40px;
@@ -56,6 +56,10 @@
     @include breakpoint(medium down) {
       padding-top: 90px;
 		}
+  }
+
+  @include element(banner) {
+    width: 100%;
   }
 
   @include element(faq) {
@@ -75,7 +79,7 @@
   }
 
   @include element(content) {
-    color: $color-dark;
+    color: $color-primary-dark;
     @include xy-grid(vertical);
     @include flex-align(justify, null);
 
@@ -85,58 +89,59 @@
   }
 
   @include element(image) {
+    display: flex;
+    align-items: baseline;
+    margin: auto 0;
+
     img {
       background-size: contain;
       background-repeat: no-repeat; 
     }
 
-    @include modifier(first) {
-      img {
-        max-width: 60px;
-      }
-    }
-
-    @include modifier(second) {
-  		@include breakpoint(xlarge up) {
-        margin-left: 2%;
-      }
-      
-      @include breakpoint(large down) {
-        margin-left: auto;
-      }
-
-      @include breakpoint(medium down) {
-        margin: auto;
+    >img {
+      &:nth-of-type(1) {
+        height: 130px;
+        width: 65px;
+        margin-right: 4em;
       }
     }
   }
 
   @include element(title) {
+    color: $color-primary-dark;
     font-weight: bold;
-    @include breakpoint(large) {
-      font-size: 35px;
+    line-height: 1.14;
+    padding-bottom: .4em;
+    @include breakpoint(medium up) {
+      font-size: 2.750em;
     }
 
     @include breakpoint(medium down) {
-      font-size: 24px;
+      font-size: 1.438em;
     }
   }
 
   @include element(text) {
+    line-height: 1.29;
+    padding: 0 0 1.250em;
+    letter-spacing: -0.46px;
     @include breakpoint(medium up) {
-      font-size: 17px;
+      font-size: 1.313em;
+      min-width: 400px;
     }
 
-    padding: 0 0 20px;
-    
-    @include modifier(space) {
-      padding-top: 20px;
+    > span {
+      font-weight: bold;
+      color: $color-dark;
     }
   }
 
   @include element(button) {
-    width: 70%;
-
+    
+    @include breakpoint(medium up) {
+      min-width: 300px;
+      width: 70%;
+    }
     @include breakpoint(medium down) {
       width: 85%;      
     }

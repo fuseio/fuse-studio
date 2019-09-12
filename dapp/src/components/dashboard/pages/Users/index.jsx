@@ -24,8 +24,7 @@ import { getApiRoot } from 'utils/network'
 import sortBy from 'lodash/sortBy'
 import Avatar from 'images/avatar.svg'
 import { Link } from 'react-router-dom'
-import classNames from 'classnames'
-import SwitchNetwork from 'components/common/SwitchNetwork'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import { getForeignNetwork } from 'selectors/network'
 
 const Users = ({
@@ -53,6 +52,7 @@ const Users = ({
   transactionData,
   entityAdded
 }) => {
+  useSwitchNetwork(networkType, 'users list')
   const { communityAddress, isClosed } = community
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
@@ -73,12 +73,14 @@ const Users = ({
     if (search) {
       fetchData()
     }
+    return () => {}
   }, [search, fetchEntities])
 
   useEffect(() => {
     if (communityAddress) {
       fetchUsersEntities(communityAddress)
     }
+    return () => {}
   }, [communityAddress])
 
   useEffect(() => {
@@ -181,6 +183,7 @@ const Users = ({
         })
       }, 1000)
     }
+    return () => {}
   }, [entityAdded])
 
   const tableData = useMemo(() => data, [data])
@@ -353,14 +356,11 @@ const Users = ({
 
   return (
     <Fragment>
-      <div className={classNames('entities__header', { 'entities__header--disabled': networkType !== 'fuse' })}>
+      <div className='entities__header'>
         <h2 className='entities__header__title'>Users list</h2>
       </div>
-      <div className={classNames('entities__wrapper', { 'entities--disabled': networkType !== 'fuse' })}>
+      <div className='entities__wrapper'>
         {renderContent()}
-        {networkType !== 'fuse' && (
-          <SwitchNetwork pluginName='users list' />
-        )}
       </div>
     </Fragment>
   )

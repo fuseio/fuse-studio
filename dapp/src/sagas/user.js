@@ -6,6 +6,7 @@ import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/user'
 import { isUserProfileExists } from 'services/api/profiles'
 import { generateSignatureData } from 'utils/web3'
+import { saveState } from 'utils/storage'
 
 export function * login () {
   const accountAddress = yield select(getAccountAddress)
@@ -60,6 +61,11 @@ function * addUser ({ user, tokenAddress }) {
   })
 }
 
+function * subscribeUser ({ user }) {
+  yield apiCall(api.subscribeUser, { user: { ...user } })
+  saveState('subscribe', true)
+}
+
 // function * isUserExists ({ accountAddress }) {
 //   const response = yield apiCall(api.isUserExists, { accountAddress })
 
@@ -84,6 +90,7 @@ export default function * userSaga () {
   yield all([
     tryTakeEvery(actions.LOGIN, login, 1),
     tryTakeEvery(actions.ADD_USER, addUser, 1),
-    tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1)
+    tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1),
+    tryTakeEvery(actions.SEND_EMAIL, subscribeUser, 1)
   ])
 }

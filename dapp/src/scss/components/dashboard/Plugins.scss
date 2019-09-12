@@ -22,13 +22,6 @@
 
   @include element(wrapper) {
     position: relative;
-    @include modifier(disabled) {
-      @extend %disabled-section;
-
-      * {
-        box-shadow: none !important;
-      }
-    }
   }
 
   @include element(content) {
@@ -45,10 +38,6 @@
       display: flex;
       justify-content: space-between;
       padding: 2em;
-
-      @include modifier(disabled) {
-        opacity: .15;
-      }
 
       @include breakpoint(medium up) {
         margin-bottom: 2.5em
@@ -84,9 +73,7 @@
   display: block;
   width: 30%;
   min-width: 30%;
-  // height: 100%;
   min-height: 14.4em;
-  max-height: 16.4em;
   font-size: 16px;
   border-radius: 8px;
   background-color: $color-white;
@@ -115,10 +102,6 @@
   @include element(content) {
     padding: 1.125em;
     height: 100%;
-
-    @include modifier(disabled) {
-      opacity: .4;
-    }
   }
 
   @include element(title) {

@@ -182,15 +182,18 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
   useEffect(() => {
     setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
     setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+    return () => {}
   }, [])
 
   useEffect(() => {
     setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+    return () => {}
   }, [plugins])
 
   useEffect(() => {
     setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
     setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+    return () => {}
   }, [isAdmin, tokenType])
 
   return (

@@ -13,3 +13,8 @@ export const addUser = (apiRoot, { user, tokenAddress, authToken }) =>
 export const isUserExists = (apiRoot, { accountAddress }) =>
   request.get(`${apiRoot}/users/${accountAddress}`)
     .then(response => response.body)
+
+export const subscribeUser = (apiRoot, { user }) =>
+  request.post(`${apiRoot}/email/subscribe`)
+    .send({ user })
+    .then(response => response.body)
