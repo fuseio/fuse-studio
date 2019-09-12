@@ -44,15 +44,15 @@ const Balance = ({
   const balance = balances[tokenAddress]
 
   useEffect(() => {
-    if (window && window.Appcues && isAdmin) {
-      const { Appcues } = window
+    if (window && window.analytics && isAdmin) {
+      const { analytics } = window
       if (bridge === 'home' && Number(new BigNumber(balance).div(1e18).toFixed()) > 0) {
-        Appcues.identify(`${accountAddress}`, {
+        analytics.identify(`${accountAddress}`, {
           role: 'admin',
           bridgeWasUsed: true
         })
       } else {
-        Appcues.identify(`${accountAddress}`, {
+        analytics.identify(`${accountAddress}`, {
           role: 'admin',
           bridgeWasUsed: false
         })

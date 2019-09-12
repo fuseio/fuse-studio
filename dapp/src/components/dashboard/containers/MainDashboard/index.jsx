@@ -65,9 +65,9 @@ class DashboardLayout extends Component {
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
       balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
 
-      if (window && window.Appcues && isAdmin) {
-        const { Appcues } = window
-        Appcues.identify(`${accountAddress}`, {
+      if (window && window.analytics && isAdmin) {
+        const { analytics } = window
+        analytics.identify(`${accountAddress}`, {
           role: 'admin'
         })
       }
