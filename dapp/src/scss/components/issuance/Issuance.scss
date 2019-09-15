@@ -874,7 +874,6 @@
         }
 
         @include breakpoint(medium up) {
-          height: 34px;
         }
       }
 
@@ -1128,6 +1127,14 @@
         }
         
       }
+    }
+
+    @include element(buttons) {
+      margin: auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;  
     }
     
     @include element(back) {
