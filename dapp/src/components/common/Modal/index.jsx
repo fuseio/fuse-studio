@@ -1,53 +1,50 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { useEffect } from 'react'
 import classNames from 'classnames'
 import CloseButton from 'images/x.png'
 import CloseButtonWhite from 'images/x_white.svg'
 
-export default class Modal extends Component {
-  listenKeyboard (event) {
+const Modal = ({
+  onClose,
+  children,
+  hasCloseBtn,
+  className,
+  whiteClose
+}) => {
+  useEffect(() => {
+    if (onClose) {
+      window.addEventListener('keydown', listenKeyboard.bind(this), true)
+    }
+
+    return () => {
+      window.removeEventListener('keydown', listenKeyboard.bind(this), true)
+    }
+  }, [onClose])
+
+  const listenKeyboard = (event) => {
     if (event.key === 'Escape' || event.keyCode === 27) {
-      this.props.onClose()
+      onClose()
     }
   }
 
-  componentDidMount () {
-    if (this.props.onClose) {
-      window.addEventListener('keydown', this.listenKeyboard.bind(this), true)
-    }
-  }
+  const onDialogClick = (event) => event.stopPropagation()
 
-  componentWillUnmount () {
-    if (this.props.onClose) {
-      window.removeEventListener('keydown', this.listenKeyboard.bind(this), true)
-    }
-  }
-
-  onDialogClick = (event) => event.stopPropagation()
-
-  render () {
-    const { children, hasCloseBtn, className, whiteClose, onClose } = this.props
-
-    return (
-      <div className='modal'>
-        <div className='overlay' />
-        <div className='modal__container' onClick={onClose}>
-          <div className={classNames('modal__content', className)} onClick={this.onDialogClick}>
-            {
-              hasCloseBtn && (
-                <div className='modal__content__close' onClick={onClose}>
-                  <img src={whiteClose ? CloseButtonWhite : CloseButton} />
-                </div>
-              )
-            }
-            {children}
-          </div>
+  return (
+    <div className='modal'>
+      <div className='overlay' />
+      <div className='modal__container' onClick={onClose}>
+        <div className={classNames('modal__content', className)} onClick={onDialogClick}>
+          {
+            hasCloseBtn && (
+              <div className='modal__content__close' onClick={onClose}>
+                <img src={whiteClose ? CloseButtonWhite : CloseButton} />
+              </div>
+            )
+          }
+          {children}
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
-Modal.propTypes = {
-  onClose: PropTypes.func.isRequired
-}
+export default Modal

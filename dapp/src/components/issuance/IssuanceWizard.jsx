@@ -80,20 +80,28 @@ class IssuanceWizard extends PureComponent {
     window.addEventListener('scroll', this.handleScroll)
     window.addEventListener('keypress', this.handleKeyPress)
     this.setState({ stepPosition: this.stepIndicator.getBoundingClientRect().top })
-    ReactGA.event({
-      category: 'Issuance',
-      action: 'Load',
-      label: 'Started'
+    window.analytics.track(`Started`, {
+      category: 'Load',
+      action: 'Stop deployment process'
     })
+    // ReactGA.event({
+    //   category: 'Issuance',
+    //   action: 'Load',
+    //   label: 'Started'
+    // })
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.transactionStatus === SUCCESS && prevProps.transactionStatus !== SUCCESS) {
-      ReactGA.event({
+      window.analytics.track(`Issued`, {
         category: 'Issuance',
-        action: 'Load',
-        label: 'Issued'
+        action: 'Load'
       })
+      // ReactGA.event({
+      //   category: 'Issuance',
+      //   action: 'Load',
+      //   label: 'Issued'
+      // })
     }
   }
 
@@ -149,12 +157,12 @@ class IssuanceWizard extends PureComponent {
   handleChangeCommunityName = (event) => {
     this.setState({ communityName: event.target.value })
     this.setState({ communitySymbol: nameToSymbol(event.target.value) })
-    ReactGA.event({
-      category: 'Issuance',
-      action: 'Typing',
-      label: 'Naming community',
-      nonInteraction: true
-    })
+    // ReactGA.event({
+    //   category: 'Issuance',
+    //   action: 'Typing',
+    //   label: 'Naming community',
+    //   nonInteraction: true
+    // })
   }
 
   setPreviousStep = () =>
@@ -167,12 +175,16 @@ class IssuanceWizard extends PureComponent {
       activeStep: this.state.activeStep + 1
     }, () => {
       const currentStep = getStep(this.state.setCommunityType)
-      ReactGA.event({
+      window.analytics.track(`${currentStep[this.state.activeStep] || 'Name & logo'} step`, {
         category: 'Issuance',
-        action: 'Next step',
-        label: `${currentStep[this.state.activeStep]} step`,
-        nonInteraction: true
+        action: 'Next step'
       })
+      // ReactGA.event({
+      //   category: 'Issuance',
+      //   action: 'Next step',
+      //   label: `${currentStep[this.state.activeStep]} step`,
+      //   nonInteraction: true
+      // })
     })
   }
 

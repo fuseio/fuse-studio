@@ -19,39 +19,24 @@ export default object().noUnknown(false).shape({
   communityLogo: object().noUnknown(false).shape({
     name: string().normalize().required(),
     icon: string().normalize().required()
-  }).default({}),
-  isOpen: boolean().default(true),
+  }),
+  isOpen: boolean(),
   images: object().noUnknown(false).shape({
     croppedImageUrl: string(),
     blob: mixed()
-  }).default({
-    croppedImageUrl: ''
   }),
   contracts: object().noUnknown(false).shape({
     community: object().noUnknown(false).shape({
-      checked: boolean().default(true)
+      checked: boolean()
     }),
     bridge: object().noUnknown(false).shape({
-      checked: boolean().default(true)
+      checked: boolean()
     }),
     transferOwnership: object().noUnknown(false).shape({
-      checked: boolean().default(true)
+      checked: boolean()
     }),
     funder: object().noUnknown(false).shape({
-      checked: boolean().default(true)
+      checked: boolean()
     })
-  }).default({
-    community: {
-      checked: true
-    },
-    bridge: {
-      checked: true
-    },
-    transferOwnership: {
-      checked: true
-    },
-    funder: {
-      checked: true
-    }
   })
 })

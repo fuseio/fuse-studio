@@ -42,11 +42,15 @@ class DeployProgress extends PureComponent {
       const { done } = steps
       if (allDone && done) {
         clearInterval(this.interval)
-        ReactGA.event({
-          category: 'Issuance',
+        window.analytics.track('A new community has been created', {
           action: 'New community',
-          label: 'A new community has been created'
+          category: 'Issuance'
         })
+        // ReactGA.event({
+        //   category: 'Issuance',
+        //   action: 'New community',
+        //   label: 'A new community has been created'
+        // })
         setTimeout(() => {
           setNextStep()
         }, 1000)
@@ -56,17 +60,26 @@ class DeployProgress extends PureComponent {
         clearInterval(this.interval)
         try {
           const keys = Object.keys(stepErrors).filter(stepName => stepErrors && stepErrors[stepName])
-          ReactGA.event({
+          window.analytics.track(`Error in step ${keys && keys[0]}`, {
             category: 'Issuance',
-            action: 'Stop deployment process',
-            label: `Error in step ${keys && keys[0]}`
+            action: 'Stop deployment process'
           })
+          // ReactGA.event({
+          //   category: 'Issuance',
+          //   action: 'Stop deployment process',
+          //   label: `Error in step ${keys && keys[0]}`
+          // })
         } catch (error) {
-          ReactGA.event({
+          window.analytics.track(`Error`, {
+            error: error,
             category: 'Issuance',
-            action: 'Stop deployment process',
-            label: `Error`
+            action: 'Stop deployment process'
           })
+          // ReactGA.event({
+          //   category: 'Issuance',
+          //   action: 'Stop deployment process',
+          //   label: `Error`
+          // })
         }
         this.setState({ hasErrors: true })
       }

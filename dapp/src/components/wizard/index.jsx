@@ -1,8 +1,9 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
+import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import WizardShape from 'utils/validation/shapes/wizard'
@@ -30,10 +31,17 @@ const WizardPage = ({
   createTokenSignature,
   clearTransaction,
   steps,
+  loadModal,
   history,
   communityAddress,
   ...props
 }) => {
+  useEffect(() => {
+    if (networkType === homeNetwork) {
+      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['ropsten', 'mainnet'] })
+    }
+  }, [homeNetwork, networkType])
+
   const setIssuanceTransaction = (values) => {
     const {
       communityName,
