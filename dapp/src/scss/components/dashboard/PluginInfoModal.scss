@@ -1,7 +1,5 @@
 @include block(plugin-info) {
   @include breakpoint(medium up) {
-    // width: 795px;
-    // height: 596px;
     border-radius: 5px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
     background-color: $color-white;
@@ -14,7 +12,6 @@
   padding: 0;
   display: block;
   width: 49.688em;
-  // height: 100%;
   min-width: 18.875em;
   min-height: 27.25em;
   max-height: 37.25em;
@@ -51,10 +48,6 @@
 
     @include breakpoint(medium down) {
       padding: 1.125em;
-    }
-
-    @include modifier(disabled) {
-      opacity: 0.4;
     }
   }
 

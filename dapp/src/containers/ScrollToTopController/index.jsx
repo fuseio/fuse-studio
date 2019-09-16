@@ -12,6 +12,7 @@ const ScrollToTopController = ({ children, location: { pathname } }) => {
     } catch (error) {
       window.scrollTo(0, 0)
     }
+    return () => {}
   }, [pathname])
 
   return children || null

@@ -33,6 +33,7 @@ const Transfer = ({
   useEffect(() => {
     balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
     balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+    return () => {}
   }, [accountAddress])
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const Transfer = ({
         setTransferMessage(true)
       }
     }
+    return () => {}
   }, [transactionStatus])
 
   const { symbol } = token
