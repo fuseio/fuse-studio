@@ -92,6 +92,8 @@ const WizardPage = ({
   return (
     <Fragment>
       <Wizard
+        networkType={networkType}
+        loadModal={loadModal}
         transactionStatus={transactionStatus}
         createTokenSignature={createTokenSignature}
         validationSchema={WizardShape}
@@ -141,12 +143,10 @@ const WizardPage = ({
         <Wizard.Page>
           <ContractsStep />
         </Wizard.Page>
-        <Wizard.Page submit>
-          <h1 className='issuance__wizard__title'>Review and Sign</h1>
+        <Wizard.Page isSubmitStep={Boolean(true).toString()}>
           <SummaryStep networkType={networkType} />
         </Wizard.Page>
         <Wizard.Page>
-          <h1 className='issuance__wizard__title'>Issuance process</h1>
           <DeployProgressStep />
         </Wizard.Page>
         <Wizard.Page>
