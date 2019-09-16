@@ -8,8 +8,9 @@ import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 import TransactionButton from 'components/common/TransactionButton'
 import { PENDING, SUCCESS, FAILURE, REQUEST } from 'actions/constants'
+import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
-const validate = {
+const validations = {
   0: ['communityName', 'communityType'],
   1: ['totalSupply', 'communitySymbol', 'communityLogo']
 }
@@ -56,6 +57,16 @@ class Wizard extends React.Component {
     }))
   }
 
+  onlyOnForeign = (successFunc) => {
+    const { networkType } = this.props
+    if (networkType === 'ropsten' || networkType === 'main') {
+      successFunc()
+    } else {
+      const { loadModal } = this.props
+      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['ropsten', 'mainnet'] })
+    }
+  }
+
   previous = () =>
     this.setState(state => ({
       page: Math.max(state.page - 1, 0)
@@ -64,7 +75,7 @@ class Wizard extends React.Component {
   onSubmit = (values, bag) => {
     const { children, submitHandler } = this.props
     const { page } = this.state
-    const isSubmitStep = get(React.Children.toArray(children)[page].props, 'submit')
+    const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
     if (isSubmitStep) {
       return submitHandler(values, bag)
@@ -99,22 +110,23 @@ class Wizard extends React.Component {
   renderForm = ({ values, handleSubmit, isSubmitting, handleReset, errors, isValid }) => {
     const { children, transactionStatus, createTokenSignature } = this.props
     const { page } = this.state
-
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
       setNextStep: () => this.next(values),
       previous: () => this.previous()
     })
     const isLastPage = page === React.Children.count(children) - 1
-    const isSubmitStep = get(React.Children.toArray(children)[page].props, 'submit')
+    const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
     return (
       <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
         { page < 3 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
+        {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
+        {page === 4 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>
           {!isLastPage && !isSubmitStep && page < 4 && (
             <div className='grid-x align-center next'>
-              <button disabled={this.stepValidator(validate[page], errors)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
+              <button disabled={this.stepValidator(validations[page], errors)} onClick={() => this.onlyOnForeign(() => this.next(values))} type='button' className='button button--normal'>Next</button>
             </div>
           )}
           {isSubmitStep && (

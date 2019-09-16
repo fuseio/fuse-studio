@@ -536,7 +536,7 @@
 	color: $color-dark;
 	text-align: center;
 	width: 520px;
-	margin: auto;
+	margin: 1em auto auto;
 
 	@include breakpoint(small down) {
 		padding: 20px 30px;
