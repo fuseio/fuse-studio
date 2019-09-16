@@ -2,10 +2,11 @@ import { call, put, fork, take } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { processReceipt } from 'services/api/misc'
 import { apiCall } from './utils'
+import { sendTransactionHash } from 'actions/network'
 
 import { transactionPending, transactionConfirmed, transactionFailed, transactionSucceeded } from 'actions/transactions'
 
-export function * transactionFlow ({ transactionPromise, action, confirmationsLimit, sendReceipt, tokenAddress }) {
+export function * transactionFlow ({ transactionPromise, action, confirmationsLimit, sendReceipt, tokenAddress, abiName }) {
   if (confirmationsLimit) {
     yield fork(transactionConfirmations, { transactionPromise, action, confirmationsLimit })
   }
@@ -22,9 +23,10 @@ export function * transactionFlow ({ transactionPromise, action, confirmationsLi
       reject(error)
     })
   })
-
+  if (abiName) {
+    yield put(sendTransactionHash(transactionHash, abiName))
+  }
   yield put(transactionPending(action, transactionHash))
-
   const receipt = yield transactionPromise
 
   if (!Number(receipt.status)) {

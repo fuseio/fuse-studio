@@ -35,10 +35,9 @@ async function start () {
     await agenda.now('processPastBridgeMappingEvents')
     await agenda.now('processPastTokenCreatedEvents')
     await agenda.every('10 minutes', 'processPastTokenCreatedEvents')
+    await agenda.every('1 minute', 'proccessPendingTransactions')
 
-    // run the task every hour
-    await agenda.every('00 * * * *', 'processPastTransferEvents')
-    await agenda.now('processPastTransferEvents')
+    await agenda.now('proccessPendingTransactions')
   }
 
   console.log('Agenda job scheduling is successfully defined')

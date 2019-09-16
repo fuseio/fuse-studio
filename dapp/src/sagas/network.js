@@ -1,3 +1,4 @@
+import get from 'lodash/get'
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
@@ -10,7 +11,9 @@ import { loadModal } from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
 import { saveState } from 'utils/storage'
-import get from 'lodash/get'
+import { processTransactionHash } from 'services/api/misc'
+import { getNetworkSide } from 'selectors/network'
+import { apiCall, tryTakeEvery } from './utils'
 
 function * getNetworkTypeInternal (web3) {
   const networkId = yield web3.eth.net.getId()
@@ -143,6 +146,15 @@ function * changeNetwork ({ networkType }) {
   })
 }
 
+function * sendTransactionHash ({ transactionHash, abiName }) {
+  const bridgeType = yield select(getNetworkSide)
+  yield apiCall(processTransactionHash, { transactionHash, abiName, bridgeType })
+  yield put({
+    transactionHash,
+    type: actions.SEND_TRANSACTION_HASH.SUCCESS
+  })
+}
+
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
@@ -150,6 +162,7 @@ export default function * web3Saga () {
     takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices),
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),
     takeEvery(actions.CHANGE_NETWORK.REQUEST, changeNetwork),
-    takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess)
+    takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess),
+    tryTakeEvery(actions.SEND_TRANSACTION_HASH, sendTransactionHash, 1)
   ])
 }
