@@ -148,31 +148,40 @@ addEntity(communityAddress, distributorAddress, roles.ADMIN_ROLE)
 # Issuance
 - Minting of ERC20 tokens:
 ```js
-send(tokenContract.methods.mint(account, amount)) 
+send(tokenContract.methods.mint(accountAddress, amount)) 
+// accountAddress will receive the tokens 
 ```
 
 - Minting of ERC721 tokens:
 ```js
-send(tokenContract.methods.mint(account, tokenId)) 
+send(tokenContract.methods.mint(accountAddress, tokenId)) 
 //the tokenId must be unique
 ```
 
 - Minting tokens with expirity date (blockNumber) and value
 ```js
-send(tokenContract.methods.mint(account, tokenId, blockNumber, value)) 
+send(tokenContract.methods.mint(accountAddress, tokenId, blockNumber, value)) 
 ```
 
 - Batch token Minting (tokenIds is array)
 ```js
-send(tokenContract.methods.mint(account, tokenIds, blockNumber, value)) 
+send(tokenContract.methods.mint(accountAddress, tokenIds, blockNumber, value)) 
 ```
 The problem is that the `tokenIds` should be given as an array not used tokenIds. Why not to keep the tokenId counter in the contract and let the contract allocate the ids?
 
 
 # Onboarding
+
+## Adding businesses or users to the community by the community admins
+
+- Adding user to community
 ```js
-// Adding user
 addEntity(communityAddress, entityAddress, roles.USER_ROLE)
-// Adding business
+```
+
+- Adding a business to community
+```js
 addEntity(communityAddress, entityAddress, roles.BUSINESS_ROLE)
 ```
+
+This also can be done via the fuse-studio UI.
