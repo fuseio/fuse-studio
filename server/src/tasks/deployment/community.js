@@ -1,4 +1,4 @@
-const { handleReceipt } = require('@events/handlers')
+const { handleReceipt } = require('@handlers/receipts')
 const CommunityTransferManagerABI = require('@fuse/entities-contracts/build/abi/CommunityTransferManagerWithEvents')
 
 const CommunityTransferManagerBytecode = require('@fuse/entities-contracts/build/bytecode/CommunityTransferManager')

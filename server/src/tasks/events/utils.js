@@ -1,7 +1,7 @@
 const config = require('config')
 const { web3 } = require('@services/web3/foreign')
 const getLastBlockNumber = require('@utils/event').getLastBlockNumber
-const handleEvent = require('@events/handlers').handleEvent
+const handleEvent = require('@handlers/events').handleEvent
 
 const eventsCallback = function (handleEvent, error, events) {
   if (error) {

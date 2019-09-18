@@ -1,5 +1,4 @@
 const processPastEvents = require('./utils').processPastEvents
-const processPastTransferEvents = require('./transfer').processPastTransferEvents
 const processPastBridgeMappingEvents = require('./bridge').processPastBridgeMappingEvents
 const { proccessPendingTransactions } = require('./transaction')
 
@@ -12,7 +11,6 @@ const processPastTokenCreatedEvents = processPastEvents.bind(null, 'TokenCreated
 
 module.exports = {
   processPastTokenCreatedEvents,
-  processPastTransferEvents,
   processPastBridgeMappingEvents,
   proccessPendingTransactions
 }

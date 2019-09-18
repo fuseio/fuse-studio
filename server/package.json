@@ -35,7 +35,7 @@
     "@utils": "./src/utils",
     "@services": "./src/services",
     "@tasks": "./src/tasks",
-    "@events": "./src/events"
+    "@handlers": "./src/handlers"
   },
   "license": "MIT",
   "dependencies": {

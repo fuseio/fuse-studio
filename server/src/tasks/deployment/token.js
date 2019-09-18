@@ -1,5 +1,5 @@
 const BasicTokenAbi = require('@fuse/token-factory-contracts/build/abi/BasicToken')
-const { handleReceipt } = require('@events/handlers')
+const { handleReceipt } = require('@handlers/receipts')
 
 const transferOwnership = async ({ home: { createContract, createMethod, send, from } }, communityProgress) => {
   const { homeTokenAddress } = communityProgress.steps.bridge.results

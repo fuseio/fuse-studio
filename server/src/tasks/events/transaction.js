@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const transactionMethods = mongoose.transaction
-const { handleTransactionHash } = require('@events/handlers')
+const { handleTransactionHash } = require('@handlers/receipts')
 
 const proccessPendingTransactions = async () => {
   const transactions = await transactionMethods.getPending()
