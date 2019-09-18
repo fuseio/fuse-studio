@@ -46,11 +46,6 @@ class DeployProgress extends PureComponent {
           action: 'New community',
           category: 'Issuance'
         })
-        // ReactGA.event({
-        //   category: 'Issuance',
-        //   action: 'New community',
-        //   label: 'A new community has been created'
-        // })
         setTimeout(() => {
           setNextStep()
         }, 1000)
@@ -64,22 +59,12 @@ class DeployProgress extends PureComponent {
             category: 'Issuance',
             action: 'Stop deployment process'
           })
-          // ReactGA.event({
-          //   category: 'Issuance',
-          //   action: 'Stop deployment process',
-          //   label: `Error in step ${keys && keys[0]}`
-          // })
         } catch (error) {
           window.analytics.track(`Error`, {
             error: error,
             category: 'Issuance',
             action: 'Stop deployment process'
           })
-          // ReactGA.event({
-          //   category: 'Issuance',
-          //   action: 'Stop deployment process',
-          //   label: `Error`
-          // })
         }
         this.setState({ hasErrors: true })
       }

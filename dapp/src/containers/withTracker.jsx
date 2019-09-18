@@ -8,6 +8,9 @@ const withTracker = (WrappedComponent, options = {}) => {
       ...options
     })
     ReactGA.pageview(page)
+    if (window.analytics) {
+      window.analytics.page()
+    }
   }
 
   const Tracker = class extends Component {

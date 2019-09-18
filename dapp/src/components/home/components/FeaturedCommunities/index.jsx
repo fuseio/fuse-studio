@@ -68,10 +68,10 @@ class FeaturedCommunities extends Component {
     return (
       <div className='grid-x align-justify grid-margin-x grid-margin-y'>
         {
-          !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity) => {
+          !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
             const { community: { communityAddress } } = entity
             return (
-              <div className='cell medium-12'>
+              <div className='cell medium-12' key={index}>
                 <Community
                   networkType={networkType}
                   token={{ ...entity.token, communityAddress }}
