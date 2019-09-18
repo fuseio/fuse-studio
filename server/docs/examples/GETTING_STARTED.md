@@ -6,6 +6,8 @@
 ```
 npm instal web3@2.0.0-alpha.1
 npm install ethereumjs-util
+npm install request
+npm install request-promise-native
 ```  
 - Creating a fuse provider and setting network configurations:
 ```js
@@ -14,6 +16,7 @@ const accountAddress = process.env.ACCOUNT_ADDRESS // Ethereum account address c
 
 const Web3 = require('web3')
 const ethUtils = require('ethereumjs-util')
+const request = require('request-promise-native')
 
 const web3 = new Web3('https://rpc.fusenet.io')
 web3.eth.accounts.wallet.add(ethUtils.addHexPrefix(pk))
@@ -21,19 +24,31 @@ const contractOptions = {
   transactionConfirmationBlocks: 2 
 } // contract options to use on Fuse network.
 
+const apiUrl = 'https://studio-qa-ropsten.fusenet.io/api/v1' // we'll use our QA server. Ropsten means that the Fuse network is connected to Ethereum Ropsten (might be irelevant)
+
+const apiUrl = 'http://localhost:3000/api/v1' 
 let send = async (method) => {
   const gasLimit = await method.estimateGas({ from: accountAddress })
   const nonce = await web3.eth.getTransactionCount(accountAddress)
-  console.log(`gas limit estimated is ${gasLimit}`)
-  return method.send({
+  console.log(`gas limit estimated is ${gasLimit}`) 
+  const receipt = await method.send({
     from: accountAddress,
     gasPrice: 1e9,
     nonce,
     gasLimit
   })
+  console.log(receipt.events.TokenCreated.returnValues)
+
+  
+  await request({
+    method: 'POST',
+    uri: `http://localhost:3000/api/v1/receipts`,
+    body: { receipt },
+    json: true
+  })
+  return receipt
 }
 
-const apiUrl = 'https://studio-qa-ropsten.fusenet.io/api/v1' // we'll use our QA server. Ropsten means that the Fuse network is connected to Ethereum Ropsten (might be irelevant)
   ```
 
 # Launching a Community
@@ -43,22 +58,29 @@ Sardex can do the issuance themselves and send the token address to fuse-studio.
 - Issue a mintable/burnable token with zero supply:
 ```js
 const abi = require('./TokenABI') // we need to provide the ABI for Sardex
-const contractBytecode = require('./TokenBytecode') // we need to provide the Bytecode for Sardex
-
-const tokenContract = new web3.eth.Contract(abi, null, contractOptions)
 
 // define token arguments
 const tokenName = 'SardexCoin'
 const tokenSymbol = 'SC'
-const initialSupply = '1e24' /// issue milion tokens
+const initialSupply = '0' /// issue milion tokens
 
-const issueToken = async (tokenName, tokenSymbol, initialSupply) => {
+let issueToken = async (tokenName, tokenSymbol, initialSupply) => {
+    const tokenFactory = '0x49cc3F721DCf33d716B6241Bce0892dEaf9Da58A'
+    const factoryABI = require('./TokenFactory')
     const tokenURI = 'ipfs://hash' // link to IPFS, might be removed
-    const method = contract.deploy({ data: contractBytecode, arguments: [ tokenName, tokenSymbol, initialSupply, tokenURI ]})
+    const factoryContract = new web3.eth.Contract(factoryABI, tokenFactory, contractOptions)
+    // const method = tokenContract.deploy({ data: contractBytecode, arguments: [ tokenName, tokenSymbol, initialSupply, tokenURI ]})
+    const method = factoryContract.methods.createMintableBurnableToken(tokenName, tokenSymbol, initialSupply, '')
     const receipt = await send(method)
-    console.log(`Token is issued with contract address ${receipt.address}`)
-    return receipt
+    const tokenAddress = receipt.events.TokenCreated.returnValues.token
+    // console.log({ receipt })
+    console.log(`Token is issued with contract address ${tokenAddress}`)
+    return tokenAddress
 }
+
+issueToken(tokenName, tokenSymbol, initialSupply)
+issueToken(tokenName, tokenSymbol, 0)
+
 ```
 
 ## Launching and configuring the community 

@@ -27,7 +27,6 @@ contract TokenFactory {
     returns (address tokenAddress) {
       require(bytes(name).length != 0);
       require(bytes(symbol).length != 0);
-      require(initialSupply != 0);
 
       MintableBurnableToken token = new MintableBurnableToken(name, symbol, initialSupply, tokenURI);
 
