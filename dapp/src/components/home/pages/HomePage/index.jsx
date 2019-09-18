@@ -20,11 +20,6 @@ const HomePage = ({
   history,
   loadModal
 }) => {
-  useEffect(() => {
-    sendMailBlocker()
-    return () => {}
-  }, [])
-
   const sendMailBlocker = () => {
     const subscribe = loadState('subscribe')
     if (!subscribe) {
