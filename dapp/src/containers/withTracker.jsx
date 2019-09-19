@@ -9,7 +9,7 @@ const withTracker = (WrappedComponent, options = {}) => {
     })
     ReactGA.pageview(page)
     if (window.analytics) {
-      window.analytics.page()
+      window.analytics.page(page)
     }
   }
 

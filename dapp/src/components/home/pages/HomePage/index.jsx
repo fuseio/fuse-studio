@@ -32,9 +32,15 @@ const HomePage = ({
     const subscribe = loadState('subscribe')
     if (!subscribe) {
       sendMailBlocker()
-    } else {
-      history.push('/view/issuance')
     }
+
+    const interval = setInterval(() => {
+      const subscribe = loadState('subscribe')
+      if (subscribe) {
+        history.push('/view/issuance')
+        clearInterval(interval)
+      }
+    }, 500)
   }
 
   const gotToFaqs = () => {

@@ -74,6 +74,8 @@ function * getNetworkType () {
     if (accountAddress) {
       const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
       if (!isChanged) {
+        const { analytics } = window
+        analytics.identify(accountAddress)
         yield put(balanceOfFuse(accountAddress))
       }
     }
