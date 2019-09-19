@@ -102,32 +102,32 @@ const FeaturedCommunities = memo(({
     setTitle('My communities')
   }
 
-    return (
-      <div className='grid-x align-justify grid-margin-x grid-margin-y'>
-        {
-          !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
-            const { community: { communityAddress } } = entity
-            return (
-              <div className='cell medium-12' key={index}>
-                <Community
-                  networkType={networkType}
-                  token={{ ...entity.token, communityAddress }}
-                  metadata={metadata[entity.tokenURI]}
-                  history={history}
-                  account={account}
-                  showDashboard={this.showDashboard}
-                />
-              </div>
-            )
-          }) : !isEmpty(filteredCommunities) ? filteredCommunities.map(({ token, community, communityAddress }, index) => {
-            return (
-              <div className='cell medium-12 small-24' key={index}>
-                <FeaturedCommunity fetchMetadata={fetchMetadata} metadata={metadata[token.tokenURI]} showDashboard={showDashboard} token={token} community={community} communityAddress={communityAddress} />
-              </div>
-            )
-          }) : staticImages.map((img, index) =>
-            <div key={index} className='medium-12 cell'><img src={CommunityPlaceholderImage} /></div>
+  return (
+    <div className='grid-x align-justify grid-margin-x grid-margin-y'>
+      {
+        !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
+          const { community: { communityAddress } } = entity
+          return (
+            <div className='cell medium-12' key={index}>
+              <Community
+                networkType={networkType}
+                token={{ ...entity.token, communityAddress }}
+                metadata={metadata[entity.tokenURI]}
+                history={history}
+                account={account}
+                showDashboard={this.showDashboard}
+              />
+            </div>
           )
+        }) : !isEmpty(filteredCommunities) ? filteredCommunities.map(({ token, community, communityAddress }, index) => {
+          return (
+            <div className='cell medium-12 small-24' key={index}>
+              <FeaturedCommunity fetchMetadata={fetchMetadata} metadata={metadata[token.tokenURI]} showDashboard={showDashboard} token={token} community={community} communityAddress={communityAddress} />
+            </div>
+          )
+        }) : staticImages.map((img, index) =>
+          <div key={index} className='medium-12 cell'><img src={CommunityPlaceholderImage} /></div>
+        )
       }
     </div>
   )
