@@ -8,7 +8,6 @@ import get from 'lodash/get'
 import deployProgressSteps from 'constants/deployProgressSteps'
 import FinishIssuance from 'images/finish_issuance.svg'
 import { getTransaction } from 'selectors/transaction'
-// import ReactGA from 'services/ga'
 import { connect as connectFormik, getIn } from 'formik'
 
 class DeployProgress extends PureComponent {

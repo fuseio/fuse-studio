@@ -86,19 +86,6 @@ class Wizard extends React.Component {
     }
   }
 
-  renderTransactionStatus = (transactionStatus) => {
-    switch (transactionStatus) {
-      case PENDING:
-        return null
-      case SUCCESS:
-        return null
-      default:
-        return (
-          <TransactionButton type='submit' frontText='ISSUE' />
-        )
-    }
-  }
-
   stepValidator = (keys, errors) => {
     if (!isEmpty(keys)) {
       return keys.some((key) => errors[key])

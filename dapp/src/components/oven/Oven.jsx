@@ -5,7 +5,6 @@ import { fetchTokens, fetchTokensByOwner, fetchFuseToken } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
-// import ReactGA from 'services/ga'
 import NavBar from 'components/common/NavBar'
 
 class Oven extends Component {
@@ -33,11 +32,6 @@ class Oven extends Component {
 
   showDashboard = (communityAddress) => {
     this.props.history.push(`/view/community/${communityAddress}`)
-    // ReactGA.event({
-    //   category: 'Dashboard',
-    //   action: 'Click',
-    //   label: 'dashboard'
-    // })
   }
 
   getScrollParent = () => this.myRef.current

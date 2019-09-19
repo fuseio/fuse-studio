@@ -13,7 +13,6 @@ import { getAccountAddress } from 'selectors/accounts'
 import Contracts from './Contracts'
 import DeployProgress from './DeployProgress'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
-// import ReactGA from 'services/ga'
 import Logo from 'components/common/Logo'
 import { PENDING, REQUEST, FAILURE, SUCCESS } from 'actions/constants'
 import Message from 'components/common/SignMessage'
@@ -84,11 +83,6 @@ class IssuanceWizard extends PureComponent {
       category: 'Load',
       action: 'Stop deployment process'
     })
-    // ReactGA.event({
-    //   category: 'Issuance',
-    //   action: 'Load',
-    //   label: 'Started'
-    // })
   }
 
   componentDidUpdate (prevProps) {
@@ -97,11 +91,6 @@ class IssuanceWizard extends PureComponent {
         category: 'Issuance',
         action: 'Load'
       })
-      // ReactGA.event({
-      //   category: 'Issuance',
-      //   action: 'Load',
-      //   label: 'Issued'
-      // })
     }
   }
 
@@ -157,12 +146,6 @@ class IssuanceWizard extends PureComponent {
   handleChangeCommunityName = (event) => {
     this.setState({ communityName: event.target.value })
     this.setState({ communitySymbol: nameToSymbol(event.target.value) })
-    // ReactGA.event({
-    //   category: 'Issuance',
-    //   action: 'Typing',
-    //   label: 'Naming community',
-    //   nonInteraction: true
-    // })
   }
 
   setPreviousStep = () =>
@@ -179,12 +162,6 @@ class IssuanceWizard extends PureComponent {
         category: 'Issuance',
         action: 'Next step'
       })
-      // ReactGA.event({
-      //   category: 'Issuance',
-      //   action: 'Next step',
-      //   label: `${currentStep[this.state.activeStep]} step`,
-      //   nonInteraction: true
-      // })
     })
   }
 
