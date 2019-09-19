@@ -80,7 +80,7 @@ const ProfileCard = ({
   showDashboard,
   accountAddress
 }) => {
-  const { token: { name, symbol }, community: { homeTokenAddress, foreignTokenAddress } } = entity
+  const { token: { name, symbol }, community: { homeTokenAddress, foreignTokenAddress, communityAddress } } = entity
 
   useEffect(() => {
     balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
@@ -89,7 +89,7 @@ const ProfileCard = ({
   }, [])
 
   return (
-    <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(entity.communityAddress)}>
+    <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
       <div className='profile__card__logo'>
         <CommunityLogo
           isDaiToken={entity.token && entity.token.symbol === 'DAI'}
