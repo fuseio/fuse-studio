@@ -24,18 +24,18 @@ const staticImages = [
 
 const FeaturedCommunity = memo(({
   community,
-  token,
+  token: { name, tokenURI },
   communityAddress,
   showDashboard,
   metadata,
   fetchMetadata
 }) => {
   useEffect(() => {
-    if (token && token.tokenURI) {
-      fetchMetadata(token.tokenURI)
+    if (tokenURI) {
+      fetchMetadata(tokenURI)
     }
-  }, [token.tokenURI])
-  const { name } = token
+  }, [tokenURI])
+
   return (
     <div className='featured' onClick={() => showDashboard(communityAddress)}>
       <div className='featured__image'>
