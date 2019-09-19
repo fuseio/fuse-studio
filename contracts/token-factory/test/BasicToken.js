@@ -6,4 +6,6 @@ contract('BasicToken', (accounts) => {
   basicTokenUtils.describeConstruction(BasicToken.new, accounts)
 
   basicTokenUtils.describeTokenURI(BasicToken.new, accounts)
+
+  basicTokenUtils.describeTransferAndCall(BasicToken.new, accounts)
 })

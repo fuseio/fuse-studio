@@ -1,6 +1,6 @@
 pragma solidity ^0.5.2;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import './ERC677.sol';
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/drafts/ERC1046/ERC20Metadata.sol";
@@ -11,7 +11,7 @@ import "openzeppelin-solidity/contracts/drafts/ERC1046/ERC20Metadata.sol";
  * Note they can later distribute these tokens as they wish using `transfer` and other
  * `ERC20` functions.
  */
-contract BasicToken is ERC20, ERC20Detailed, ERC20Metadata, Ownable {
+contract BasicToken is ERC677, ERC20Detailed, ERC20Metadata, Ownable {
 
     event TokenURIChanged(string tokenURI);
     /**

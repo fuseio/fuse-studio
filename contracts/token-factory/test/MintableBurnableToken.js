@@ -8,5 +8,7 @@ contract('MintableBurnableToken', (accounts) => {
 
   basicTokenUtils.describeTokenURI(MintableBurnableToken.new, accounts)
 
+  basicTokenUtils.describeTransferAndCall(MintableBurnableToken.new, accounts)
+
   burnableUtils.describeBurnable(MintableBurnableToken.new, accounts)
 })
