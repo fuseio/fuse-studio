@@ -115,7 +115,7 @@ const FeaturedCommunities = memo(({
                 metadata={metadata[entity.tokenURI]}
                 history={history}
                 account={account}
-                showDashboard={this.showDashboard}
+                showDashboard={showDashboard}
               />
             </div>
           )
