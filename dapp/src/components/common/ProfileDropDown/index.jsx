@@ -126,7 +126,7 @@ const InnerCommunities = ({
   balanceOfToken,
   title
 }) => {
-  if (isEmpty(communities)) return null
+  if (isEmpty(communities) || isEmpty(communities.filter(({ entity }) => entity))) return null
 
   useEffect(() => {
     if (communities && accountAddress) {

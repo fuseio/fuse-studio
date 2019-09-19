@@ -6,7 +6,7 @@ const Profile = mongoose.model('Profile')
 const metadataUtils = require('@utils/metadata')
 const Community = mongoose.model('Community')
 const Token = mongoose.model('Token')
-const { sortBy, keyBy } = require('lodash')
+const { sortBy, keyBy, isEmpty } = require('lodash')
 
 const withCommunities = async (entities) => {
   const communityAddresses = entities.map(token => token.communityAddress)
@@ -14,7 +14,8 @@ const withCommunities = async (entities) => {
   const communitiesByTokenAddress = keyBy(communities, 'communityAddress')
 
   return entities.map((entity) => ({
-    ...entity.toObject(),
+    entity: { ...entity.toObject() },
+    isAdmin: entity.isAdmin,
     community: communitiesByTokenAddress[entity.communityAddress]
       ? communitiesByTokenAddress[entity.communityAddress]
       : undefined
@@ -38,6 +39,24 @@ const withTokens = async (entities) => {
   }))
 }
 
+const communitiesWithTokens = async (communities) => {
+  const filtered = communities
+    .filter(community => community && community.homeTokenAddress)
+  const homeTokenAddresses = filtered.map(community => community.homeTokenAddress)
+
+  const tokens = await Token.find({ address: { $in: homeTokenAddresses } })
+
+  const tokensByTokenAddress = keyBy(tokens, 'address')
+
+  return filtered.map((community) => ({
+    community: { ...community.toObject() },
+    communityAddress: community.communityAddress,
+    token: tokensByTokenAddress[community.homeTokenAddress]
+      ? tokensByTokenAddress[community.homeTokenAddress]
+      : undefined
+  }))
+}
+
 /**
  * @api {get} /entities/account/:account Fetch my communities
  * @apiDescription Fetching communities I'm part of
@@ -53,11 +72,15 @@ router.get('/account/:account', async (req, res, next) => {
 
   const results = await Entity.find({ account }).sort({ blockNumber: -1 })
 
-  const data = await withCommunities(results)
-
-  const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse().slice(0, 4)
-  const communitiesUserPartOf = sortBy(data.filter(({ isAdmin }) => !isAdmin), ['updatedAt']).reverse().slice(0, 4)
-  return res.json({ data: await withTokens([...communitiesUserOwn, ...communitiesUserPartOf]) })
+  if (isEmpty(results)) {
+    const results = await Community.find({ featured: true })
+    return res.json({ data: await communitiesWithTokens([...results]) })
+  } else {
+    const data = await withCommunities(results)
+    const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse().slice(0, 4)
+    const communitiesUserPartOf = sortBy(data.filter(({ isAdmin }) => !isAdmin), ['updatedAt']).reverse().slice(0, 4)
+    return res.json({ data: await withTokens([...communitiesUserOwn, ...communitiesUserPartOf]) })
+  }
 })
 
 router.put('/:communityAddress/:account', async (req, res) => {
