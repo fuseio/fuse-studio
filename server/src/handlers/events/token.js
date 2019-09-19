@@ -25,7 +25,6 @@ const handleTokenCreatedEvent = async (event) => {
     networkType: config.get(`network.${event.bridgeType}.name`)
   }
   const web3 = getWeb3(event)
-  console.log(web3)
   const fetchedTokenData = await tokenUtils.fetchTokenData(address, { tokenURI: true }, web3)
 
   return new Token({ ...tokenData, ...fetchedTokenData }).save()
