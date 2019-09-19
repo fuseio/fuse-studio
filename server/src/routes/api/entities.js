@@ -16,6 +16,7 @@ const withCommunities = async (entities) => {
   return entities.map((entity) => ({
     entity: { ...entity.toObject() },
     isAdmin: entity.isAdmin,
+    communityAddress: entity.communityAddress,
     community: communitiesByTokenAddress[entity.communityAddress]
       ? communitiesByTokenAddress[entity.communityAddress]
       : undefined
