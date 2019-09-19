@@ -1,3 +1,81 @@
+@include block (featured) {
+	cursor: pointer;
+	width: 100%;
+  min-height: 144px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+	background-color: $color-white;
+
+	&:hover {
+		background-color: #f3f3f3;
+	}
+
+  @include element(image) {
+    position: relative;
+    width: 100%;
+    padding-top: 35%;
+
+    @include element(container) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+	@include element(images) {
+		position: relative;
+		width: 100%;
+		height: 85px;
+	}
+	
+	@include element(cover) {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+	}
+
+	@include element(logo) {
+		width: 54px;
+		height: 54px;
+		background-color: $color-white;
+		position: absolute;
+    border-radius: 50%;
+    right: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: -1.6em;
+		
+		> img {
+			width: 46px;
+			height: 46px;
+			border-radius: 50%;
+		}
+	}
+
+	@include element(content) {
+		min-height: 3em;
+    display: flex;
+    align-items: center;
+    padding-left: 1em;
+	}
+
+	@include element(name) {
+		font-size: 0.875em;
+		font-weight: 500;
+		line-height: 2.79;
+		color: #6a6a6a;
+	}
+}
+
 @include block(switch__network) {
 	display: flex;
 	flex-direction: column;
