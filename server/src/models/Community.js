@@ -5,9 +5,9 @@ module.exports = (mongoose) => {
   const CommunitySchema = new Schema({
     communityAddress: { type: String, required: [true, "can't be blank"] },
     homeTokenAddress: { type: String, required: [true, "can't be blank"] },
-    foreignTokenAddress: { type: String, required: [true, "can't be blank"] },
-    homeBridgeAddress: { type: String, required: [true, "can't be blank"] },
-    foreignBridgeAddress: { type: String, required: [true, "can't be blank"] },
+    foreignTokenAddress: { type: String },
+    homeBridgeAddress: { type: String },
+    foreignBridgeAddress: { type: String },
     isClosed: { type: Boolean, default: false },
     plugins: { type: Object }
   }, { timestamp: true })
