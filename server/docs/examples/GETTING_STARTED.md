@@ -43,7 +43,7 @@ let send = async (method) => {
   await request({
     method: 'POST',
     uri: `http://localhost:3000/api/v1/receipts`,
-    body: { receipt },
+    body: { receipt, bridgeType: 'home' },
     json: true
   })
   return receipt
@@ -69,17 +69,14 @@ let issueToken = async (tokenName, tokenSymbol, initialSupply) => {
     const factoryABI = require('./TokenFactory')
     const tokenURI = 'ipfs://hash' // link to IPFS, might be removed
     const factoryContract = new web3.eth.Contract(factoryABI, tokenFactory, contractOptions)
-    // const method = tokenContract.deploy({ data: contractBytecode, arguments: [ tokenName, tokenSymbol, initialSupply, tokenURI ]})
     const method = factoryContract.methods.createMintableBurnableToken(tokenName, tokenSymbol, initialSupply, '')
     const receipt = await send(method)
     const tokenAddress = receipt.events.TokenCreated.returnValues.token
-    // console.log({ receipt })
     console.log(`Token is issued with contract address ${tokenAddress}`)
     return tokenAddress
 }
 
 issueToken(tokenName, tokenSymbol, initialSupply)
-issueToken(tokenName, tokenSymbol, 0)
 
 ```
 
