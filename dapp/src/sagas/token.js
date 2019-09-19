@@ -77,7 +77,7 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
     ).send({
       from: accountAddress
     })
-    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, abiName: 'TokenFactory' })
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
 
     return receipt
   } else if (tokenType === 'mintableBurnable') {
@@ -89,7 +89,7 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
     ).send({
       from: accountAddress
     })
-    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, abiName: 'TokenFactory' })
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
 
     return receipt
   }
@@ -99,9 +99,6 @@ function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
   const { hash } = yield call(createMetadata, { metadata })
   const tokenURI = `ipfs://${hash}`
   const receipt = yield call(createToken, { ...tokenData, tokenURI, tokenType })
-
-  yield apiCall(processReceipt, { receipt })
-
   yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps }))
 }
 
