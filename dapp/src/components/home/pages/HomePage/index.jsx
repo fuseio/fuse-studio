@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ContentBox from 'components/home/components/ContentBox'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import Faqs from 'components/home/components/Faq'
@@ -7,7 +7,6 @@ import groupImageMobile from 'images/group_mobile.png'
 import groupImage from 'images/group_image.png'
 import NavBar from 'components/common/NavBar'
 import { isMobileOnly } from 'react-device-detect'
-// import ReactGA from 'services/ga'
 import arrowImage from 'images/arrow_1.svg'
 import GiftIcon from 'images/gift.svg'
 import withTracker from 'containers/withTracker'
@@ -20,11 +19,6 @@ const HomePage = ({
   history,
   loadModal
 }) => {
-  useEffect(() => {
-    sendMailBlocker()
-    return () => {}
-  }, [])
-
   const sendMailBlocker = () => {
     const subscribe = loadState('subscribe')
     if (!subscribe) {
@@ -39,11 +33,6 @@ const HomePage = ({
     } else {
       history.push('/view/issuance')
     }
-    // ReactGA.event({
-    //   category: 'Top Bar',
-    //   action: 'Click',
-    //   label: 'issuance'
-    // })
   }
 
   const gotToFaqs = () => {

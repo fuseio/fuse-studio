@@ -8,6 +8,7 @@ import get from 'lodash/get'
 import deployProgressSteps from 'constants/deployProgressSteps'
 import FinishIssuance from 'images/finish_issuance.svg'
 import { getTransaction } from 'selectors/transaction'
+import { connect as connectFormik, getIn } from 'formik'
 
 class DeployProgress extends PureComponent {
   state = {
@@ -20,7 +21,7 @@ class DeployProgress extends PureComponent {
       if (deployResponse && deployResponse.id) {
         const { id } = deployResponse
         fetchDeployProgress(id)
-        this.interval = setInterval(() => fetchDeployProgress(id), 5000)
+        this.interval = setInterval(() => fetchDeployProgress(id), 3000)
       }
     }
   }
@@ -31,7 +32,7 @@ class DeployProgress extends PureComponent {
       if (deployResponse && deployResponse.id) {
         const { id } = deployResponse
         fetchDeployProgress(id)
-        this.interval = setInterval(() => fetchDeployProgress(id), 5000)
+        this.interval = setInterval(() => fetchDeployProgress(id), 3000)
       }
     }
 
@@ -85,7 +86,7 @@ class DeployProgress extends PureComponent {
 
   render () {
     const {
-      contracts,
+      formik,
       steps,
       networkType,
       transactionHash
@@ -98,6 +99,7 @@ class DeployProgress extends PureComponent {
     let currentStep = null
 
     const isFalsy = Object.values(steps).every(val => !val)
+    const contracts = getIn(formik.values, 'contracts')
 
     const { done } = steps
 
@@ -145,7 +147,7 @@ class DeployProgress extends PureComponent {
           hasErrors && (
             <div className='progress__error'>
               <p>The process has failed, please start over</p>
-              <button className='button button--normal' onClick={this.refreshPage}>Try again</button>
+              <button className='button button--normal' type='button' onClick={this.refreshPage}>Try again</button>
             </div>
           )
         }
@@ -164,4 +166,4 @@ const mapDispatchToProps = {
   fetchDeployProgress
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeployProgress)
+export default connect(mapStateToProps, mapDispatchToProps)(connectFormik(DeployProgress))

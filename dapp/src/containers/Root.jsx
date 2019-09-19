@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import Oven from 'components/oven/Oven'
 import IssuanceWizard from 'components/issuance/IssuanceWizard'
+import Wizard from 'components/wizard'
 import DashboardLayout from 'components/dashboard/containers/MainDashboard'
 import JoinProvider from 'containers/JoinProvider'
 import SignInProvider from 'containers/SignInProvider'
@@ -26,6 +27,7 @@ const Root = ({ store, history }) => {
               <Switch>
                 <Route exact path='/' component={HomePage} />
                 <Route path='/view/issuance' component={withTracker(withNetwork(IssuanceWizard))} />
+                <Route path='/view/wizard' component={withTracker(withNetwork(Wizard))} />
                 <Route path='/view/communities' component={withTracker(withNetwork(Oven))} />
                 <Route path='/view/community/:address' component={withTracker(withNetwork(DashboardLayout))} />
                 <Route path='/view/sign/:isMobileApp?' component={withTracker(withNetwork(SignInProvider))} />

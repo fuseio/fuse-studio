@@ -197,11 +197,6 @@ const ProfileDropDown = ({
 
   const showDashboard = (communityAddress) => {
     history.push(`/view/community/${communityAddress}`)
-    // ReactGA.event({
-    //   category: 'Dashboard',
-    //   action: 'Click',
-    //   label: 'dashboard'
-    // })
   }
 
   return (

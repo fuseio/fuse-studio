@@ -264,15 +264,6 @@ const Users = ({
     }
   ], [isAdmin])
 
-  // const showProfile = (address, hash) => {
-  //   history.push(`/view/directory/${address}/${hash}`)
-  //   ReactGA.event({
-  //     category: 'Directory',
-  //     action: 'Click',
-  //     label: 'directory'
-  //   })
-  // }
-
   // const importExisting = () => {
   //   // const { loadModal, importExistingEntity, community: { communityAddress, isClosed }, onlyOnFuse } = props
   //   onlyOnFuse(() => loadModal(IMPORT_EXISTING_ENTITY, {

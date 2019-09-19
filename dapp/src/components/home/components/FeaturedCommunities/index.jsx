@@ -4,7 +4,6 @@ import { fetchTokens, fetchTokensByOwner, fetchFuseToken } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
-// import ReactGA from 'services/ga'
 // import CommunityLogo from 'components/common/CommunityLogo'
 // import { formatWei } from 'utils/format'
 import { withRouter } from 'react-router-dom'
@@ -47,11 +46,6 @@ class FeaturedCommunities extends Component {
 
   showDashboard = (communityAddress) => {
     this.props.history.push(`/view/community/${communityAddress}`)
-    // ReactGA.event({
-    //   category: 'Dashboard',
-    //   action: 'Click',
-    //   label: 'dashboard'
-    // })
   }
 
   render () {
@@ -68,10 +62,10 @@ class FeaturedCommunities extends Component {
     return (
       <div className='grid-x align-justify grid-margin-x grid-margin-y'>
         {
-          !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity) => {
+          !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
             const { community: { communityAddress } } = entity
             return (
-              <div className='cell medium-12'>
+              <div className='cell medium-12' key={index}>
                 <Community
                   networkType={networkType}
                   token={{ ...entity.token, communityAddress }}

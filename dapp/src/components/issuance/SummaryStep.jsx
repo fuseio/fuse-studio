@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
 import BigNumber from 'bignumber.js'
 import { PENDING, SUCCESS } from 'actions/constants'
-// import ReactGA from 'services/ga'
 import CommunityLogo from 'components/common/CommunityLogo'
 import TransactionButton from 'components/common/TransactionButton'
 
@@ -25,14 +24,6 @@ export default class SummaryStep extends Component {
     name: this.props.communityName,
     totalSupply: new BigNumber(this.props.totalSupply.toString()).multipliedBy(1e18)
   })
-
-  componentDidMount () {
-    // ReactGA.event({
-    //   category: 'Issuance',
-    //   action: 'Load',
-    //   label: 'Finished'
-    // })
-  }
 
   componentDidUpdate (prevProps) {
     if (this.props.transactionStatus === PENDING && (this.props.transactionStatus !== prevProps.transactionStatus)) {
