@@ -7,7 +7,7 @@ import Logo from 'components/common/Logo'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 import TransactionButton from 'components/common/TransactionButton'
-import { PENDING, SUCCESS, FAILURE, REQUEST } from 'actions/constants'
+import { PENDING, FAILURE, REQUEST } from 'actions/constants'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
 const validations = {
