@@ -77,7 +77,7 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
     ).send({
       from: accountAddress
     })
-    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN })
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, abiName: 'TokenFactory' })
 
     return receipt
   } else if (tokenType === 'mintableBurnable') {
@@ -89,7 +89,7 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
     ).send({
       from: accountAddress
     })
-    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN })
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, abiName: 'TokenFactory' })
 
     return receipt
   }

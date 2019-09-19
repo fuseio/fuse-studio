@@ -9,7 +9,8 @@ router.post('/', async (req, res, next) => {
     console.log(msg)
     return res.json({ updated: false, msg })
   }
-  await handleReceipt(receipt, bridgeType)
+  receipt.bridgeType = bridgeType
+  await handleReceipt(receipt)
   return res.json({ updated: true })
 })
 

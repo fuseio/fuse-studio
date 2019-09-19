@@ -14,7 +14,8 @@ module.exports = () => {
     address: { type: String, required: [true, "can't be blank"] },
     transactionHash: { type: String, required: [true, "can't be blank"] },
     logIndex: { type: Number, required: [true, "can't be blank"] },
-    returnValues: { type: Object }
+    returnValues: { type: Object },
+    bridgeType: { type: String }
   }, { timestamps: true })
 
   EventSchema.index({ transactionHash: 1, logIndex: 1 }, { unique: true })

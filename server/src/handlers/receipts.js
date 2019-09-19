@@ -4,7 +4,7 @@ const { getWeb3 } = require('@services/web3')
 const { getAbi } = require('@constants/abi')
 const { logsToEvents } = require('@utils/web3/events')
 const { isEmpty } = require('@utils/web3/receipt')
-const { eventsHandlers, handleEvent } = require('@handlers/events')
+const { getEventHandlers, handleEvent } = require('@handlers/events')
 const transactionMethods = mongoose.transaction
 
 const handleReceipt = async (receipt) => {
@@ -18,12 +18,15 @@ const handleReceipt = async (receipt) => {
     console.log(`Starting to execute transaction ${receipt.transactionHash}`)
     const events = Object.entries(receipt.events)
     let promisses = []
+    const { bridgeType } = receipt
+    const eventHandlers = getEventHandlers(receipt.bridgeType)
     for (let [eventName, event] of events) {
-      if (eventsHandlers.hasOwnProperty(eventName)) {
+      if (eventHandlers.hasOwnProperty(eventName)) {
         if (Array.isArray(event)) {
-          const eventPromisses = event.map((singleEvent) => handleEvent(singleEvent, receipt))
+          const eventPromisses = event.map((singleEvent) => handleEvent({ ...singleEvent, bridgeType }, receipt))
           promisses = [...promisses, ...eventPromisses]
         } else {
+          event.bridgeType = receipt.bridgeType
           promisses.push(handleEvent(event, receipt))
         }
       }
@@ -43,8 +46,7 @@ const handleTransactionHash = async ({ transactionHash, bridgeType, abiName }) =
     const abi = getAbi(abiName)
     const contract = new web3.eth.Contract(abi)
     const events = logsToEvents(receipt.logs, contract)
-    receipt.events = events
-    return handleReceipt(receipt)
+    return handleReceipt({ ...receipt, events, bridgeType })
   } else {
     return transactionMethods.pending({ transactionHash, bridgeType, abiName })
   }
