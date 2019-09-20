@@ -49,6 +49,10 @@
     color: $color-dark;
     margin-top: 10px;
 
+    @include breakpoint(medium down) {
+      margin-top: 1em;      
+    }
+
     &:hover {
       text-decoration: underline;
     }

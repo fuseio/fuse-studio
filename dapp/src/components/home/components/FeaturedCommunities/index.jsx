@@ -73,9 +73,7 @@ const FeaturedCommunities = memo(({
   fetchCommunities
 }) => {
   useEffect(() => {
-    if (account) {
-      fetchCommunities(account)
-    }
+    fetchCommunities(account)
     return () => { }
   }, [account])
 
@@ -100,6 +98,8 @@ const FeaturedCommunities = memo(({
 
   if (!isEmpty(communitiesIOwn)) {
     setTitle('My communities')
+  } else {
+    filteredCommunities = Object.values(communities)
   }
 
   return (
