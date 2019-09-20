@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import ContentBox from 'components/home/components/ContentBox'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import Faqs from 'components/home/components/Faq'
@@ -19,8 +19,6 @@ const HomePage = ({
   history,
   loadModal
 }) => {
-  const [title, setTitle] = useState('Featured communities')
-
   const sendMailBlocker = () => {
     const subscribe = loadState('subscribe')
     if (!subscribe) {
@@ -80,11 +78,11 @@ const HomePage = ({
                 withDecoration={!isMobileOnly}
                 subTitleAction={showCommunities}
                 action={showIssuance}
-                title={title}
+                title='Featured communities'
                 subTitle='Explore'
                 actionTitle='Launch your community'
               >
-                <FeaturedCommunities setTitle={setTitle} />
+                <FeaturedCommunities />
               </ContentBox>
             </div>
             <div className='cell medium-24 large-12'>

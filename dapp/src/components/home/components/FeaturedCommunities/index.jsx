@@ -11,9 +11,9 @@ import McdonaldsImage from 'images/mcdonalds.png'
 import StarbucksImage from 'images/starbucks-card.png'
 import WalmartImage from 'images/walmart.png'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
-import Community from 'components/common/Community'
 import isEmpty from 'lodash/isEmpty'
 import { fetchCommunities } from 'actions/accounts'
+import pickBy from 'lodash/pickBy'
 
 const staticImages = [
   GoogleImage,
@@ -63,63 +63,26 @@ const FeaturedCommunity = memo(({
 
 const FeaturedCommunities = memo(({
   metadata,
-  networkType,
-  account,
   history,
-  communitiesKeys,
   communities,
   fetchMetadata,
-  setTitle,
   fetchCommunities
 }) => {
   useEffect(() => {
-    fetchCommunities(account)
+    fetchCommunities()
     return () => { }
-  }, [account])
-
-  useEffect(() => {
-    if (account) {
-      fetchTokensByOwner(networkType, account)
-    }
-    return () => { }
-  }, [account])
+  }, [])
 
   const showDashboard = (communityAddress) => {
     history.push(`/view/community/${communityAddress}`)
   }
 
-  let filteredCommunities = []
-  if (communitiesKeys) {
-    filteredCommunities = communitiesKeys
-      .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj)
-  }
-  let communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token)
-
-  if (!isEmpty(communitiesIOwn)) {
-    setTitle('My communities')
-  } else {
-    filteredCommunities = Object.values(communities)
-  }
+  const filteredCommunities = Object.values(pickBy(communities, (item) => item.community.featured))
 
   return (
     <div className='grid-x align-justify grid-margin-x grid-margin-y'>
       {
-        !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
-          const { community: { communityAddress } } = entity
-          return (
-            <div className='cell medium-12' key={index}>
-              <Community
-                networkType={networkType}
-                token={{ ...entity.token, communityAddress }}
-                metadata={metadata[entity.tokenURI]}
-                history={history}
-                account={account}
-                showDashboard={showDashboard}
-              />
-            </div>
-          )
-        }) : !isEmpty(filteredCommunities) ? filteredCommunities.map(({ token, community, communityAddress }, index) => {
+        !isEmpty(filteredCommunities) ? filteredCommunities.map(({ token, community, communityAddress }, index) => {
           return (
             <div className='cell medium-12 small-24' key={index}>
               <FeaturedCommunity fetchMetadata={fetchMetadata} metadata={metadata[token.tokenURI]} showDashboard={showDashboard} token={token} community={community} communityAddress={communityAddress} />
