@@ -69,12 +69,10 @@ const ModalContainer = (props) => {
   return renderModal(ModalType, { ...props.modalProps, hideModal: props.hideModal })
 }
 
-const mapStateToProps = state => {
-  return {
-    modalType: state.ui.modalType,
-    modalProps: state.ui.modalProps
-  }
-}
+const mapStateToProps = state => ({
+  modalType: state.ui.modalType,
+  modalProps: state.ui.modalProps
+})
 
 const mapDispatchToProps = {
   hideModal

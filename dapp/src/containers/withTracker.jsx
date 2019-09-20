@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { hideModal } from 'actions/ui'
 import ReactGA from 'services/ga'
 
 const withTracker = (WrappedComponent, options = {}) => {
@@ -25,6 +27,10 @@ const withTracker = (WrappedComponent, options = {}) => {
 
       if (currentPage !== nextPage) {
         trackPage(nextPage)
+
+        if (this.props.modalType) {
+          this.props.hideModal()
+        }
       }
     }
 
@@ -33,7 +39,15 @@ const withTracker = (WrappedComponent, options = {}) => {
     }
   }
 
-  return Tracker
+  const mapStateToProps = (state) => ({
+    ...state.ui
+  })
+
+  const mapDispatchToProps = {
+    hideModal
+  }
+
+  return connect(mapStateToProps, mapDispatchToProps)(Tracker)
 }
 
 export default withTracker
