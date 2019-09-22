@@ -1,15 +1,21 @@
 
 # Prerequisites
   
-
+- Install nodejs, I advise to install node v10 because  
+- [experimental-repl-await](https://nodejs.org/api/cli.html#cli_experimental_repl_await) flag that allow to use `await` not in a function. 
 - Install web3:
 ```
 npm instal web3@2.0.0-alpha.1
 npm install ethereumjs-util
 npm install request
 npm install request-promise-native
-```  
-- Creating a fuse provider and setting network configurations:
+``` 
+- Run node with a required parameters: `PK` and the associated `ACCOUNT_ADDRESS`:
+  ```
+  PK=7b84f5037b8e9350557c05ece0e333b42838930063d652044367d110c3d508e3 ACCOUNT_ADDRESS=0x915C2352A5e0747ee0AB2D2F152b274189594a22 node --experimental-repl-await
+  ```
+Your account will be needed to have some balance on the Fuse chain to pay for transaction's gas.
+- Create a fuse provider with the following configurations:
 ```js
 const pk = process.env.PK // Ethereum private key of your account
 const accountAddress = process.env.ACCOUNT_ADDRESS // Ethereum account address corresponding to the private key
@@ -26,7 +32,7 @@ const contractOptions = {
 
 const apiUrl = 'https://studio-qa-ropsten.fusenet.io/api/v1' // we'll use our QA server. Ropsten means that the Fuse network is connected to Ethereum Ropsten (might be irelevant)
 
-const apiUrl = 'http://localhost:3000/api/v1' 
+// This function submits a contract method on the Fuse chain, and updated studio backend about the transaction result
 let send = async (method) => {
   const gasLimit = await method.estimateGas({ from: accountAddress })
   const nonce = await web3.eth.getTransactionCount(accountAddress)
@@ -37,15 +43,18 @@ let send = async (method) => {
     nonce,
     gasLimit
   })
-  console.log(receipt.events.TokenCreated.returnValues)
-
-  
-  await request({
+  console.log('transaction is confirmed, updating fuse backend')
+  const response = await request({
     method: 'POST',
-    uri: `http://localhost:3000/api/v1/receipts`,
+    uri: `${apiUrl}/receipts`,
     body: { receipt, bridgeType: 'home' },
     json: true
   })
+  if (response.updated) {
+    console.log('fuse backend is updated')
+  } else {
+    console.error(`fuse is not updated. reason: ${response.msg}`)
+  }
   return receipt
 }
 
@@ -57,18 +66,18 @@ let send = async (method) => {
 Sardex can do the issuance themselves and send the token address to fuse-studio. On the other hand we can do the issuance to lower friction.
 - Issue a mintable/burnable token with zero supply:
 ```js
-const abi = require('./TokenABI') // we need to provide the ABI for Sardex
+const tokenAbi = require('./TokenABI') // we need to provide the ABI for Sardex
 
 // define token arguments
 const tokenName = 'SardexCoin'
 const tokenSymbol = 'SC'
-const initialSupply = '0' /// issue milion tokens
+const initialSupply = '0'
 
 let issueToken = async (tokenName, tokenSymbol, initialSupply) => {
-    const tokenFactory = '0x49cc3F721DCf33d716B6241Bce0892dEaf9Da58A'
+    const factoryAddress = '0x49cc3F721DCf33d716B6241Bce0892dEaf9Da58A'
     const factoryABI = require('./TokenFactory')
     const tokenURI = 'ipfs://hash' // link to IPFS, might be removed
-    const factoryContract = new web3.eth.Contract(factoryABI, tokenFactory, contractOptions)
+    const factoryContract = new web3.eth.Contract(factoryABI, factoryAddress, contractOptions)
     const method = factoryContract.methods.createMintableBurnableToken(tokenName, tokenSymbol, initialSupply, '')
     const receipt = await send(method)
     const tokenAddress = receipt.events.TokenCreated.returnValues.token
@@ -76,8 +85,11 @@ let issueToken = async (tokenName, tokenSymbol, initialSupply) => {
     return tokenAddress
 }
 
-issueToken(tokenName, tokenSymbol, initialSupply)
+// let tokenAddress
+tokenAddress = await issueToken(tokenName, tokenSymbol, initialSupply)
 
+
+const tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress, contractOptions)
 ```
 
 ## Launching and configuring the community 
@@ -157,34 +169,33 @@ const addEntity = async (communityAddress, entityAddress, role) => {
     const communityContract = new web3.eth.Contract(communityAbi, communityAddress, contractOptions)
     const method = communityContract.methods.addEntity(entityAddress, roles.ADMIN_ROLE)
 
-    const receipt = await send(method)
-    return receipt
+    return send(method)
 }
 
-addEntity(communityAddress, distributorAddress, roles.ADMIN_ROLE)
+await addEntity(communityAddress, distributorAddress, roles.ADMIN_ROLE)
 ```
 
 # Issuance
 - Minting of ERC20 tokens:
 ```js
-send(tokenContract.methods.mint(accountAddress, amount)) 
+await send(tokenContract.methods.mint(accountAddress, amount)) 
 // accountAddress will receive the tokens 
 ```
 
 - Minting of ERC721 tokens:
 ```js
-send(tokenContract.methods.mint(accountAddress, tokenId)) 
+await send(tokenContract.methods.mint(accountAddress, tokenId)) 
 //the tokenId must be unique
 ```
 
 - Minting tokens with expirity date (blockNumber) and value
 ```js
-send(tokenContract.methods.mint(accountAddress, tokenId, blockNumber, value)) 
+await send(tokenContract.methods.mint(accountAddress, tokenId, blockNumber, value)) 
 ```
 
 - Batch token Minting (tokenIds is array)
 ```js
-send(tokenContract.methods.mint(accountAddress, tokenIds, blockNumber, value)) 
+await send(tokenContract.methods.mint(accountAddress, tokenIds, blockNumber, value)) 
 ```
 The problem is that the `tokenIds` should be given as an array not used tokenIds. Why not to keep the tokenId counter in the contract and let the contract allocate the ids?
 
@@ -195,12 +206,12 @@ The problem is that the `tokenIds` should be given as an array not used tokenIds
 
 - Adding user to community
 ```js
-addEntity(communityAddress, entityAddress, roles.USER_ROLE)
+await addEntity(communityAddress, entityAddress, roles.USER_ROLE)
 ```
 
 - Adding a business to community
 ```js
-addEntity(communityAddress, entityAddress, roles.BUSINESS_ROLE)
+await addEntity(communityAddress, entityAddress, roles.BUSINESS_ROLE)
 ```
 
 This also can be done via the fuse-studio UI.
