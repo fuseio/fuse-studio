@@ -1,8 +1,9 @@
-import { call, put, fork, take } from 'redux-saga/effects'
+import { call, put, fork, take, select } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { processReceipt } from 'services/api/misc'
 import { apiCall } from './utils'
 import { sendTransactionHash } from 'actions/network'
+import { getNetworkSide } from 'selectors/network'
 
 import { transactionPending, transactionConfirmed, transactionFailed, transactionSucceeded } from 'actions/transactions'
 
@@ -35,7 +36,8 @@ export function * transactionFlow ({ transactionPromise, action, confirmationsLi
   }
 
   if (sendReceipt) {
-    yield apiCall(processReceipt, { receipt })
+    const bridgeType = yield select(getNetworkSide)
+    yield apiCall(processReceipt, { receipt, bridgeType })
   }
 
   yield put(transactionSucceeded(action, receipt, { tokenAddress }))

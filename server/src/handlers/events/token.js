@@ -4,6 +4,7 @@ const Token = mongoose.model('Token')
 const config = require('config')
 const { isZeroAddress } = require('@utils/network')
 const BigNumber = require('bignumber.js')
+const { getWeb3 } = require('@services/web3')
 
 const token = mongoose.token
 
@@ -15,17 +16,16 @@ const tokenTypeEnumToString = {
 const handleTokenCreatedEvent = async (event) => {
   const eventArgs = event.returnValues
   const address = eventArgs.token
-
   const tokenData = {
     address,
     factoryAddress: event.address,
     blockNumber: event.blockNumber,
     owner: eventArgs.issuer,
     tokenType: tokenTypeEnumToString[eventArgs.tokenType],
-    networkType: config.get('network.foreign.name')
+    networkType: config.get(`network.${event.bridgeType}.name`)
   }
-
-  const fetchedTokenData = await tokenUtils.fetchTokenData(address, { tokenURI: true })
+  const web3 = getWeb3(event)
+  const fetchedTokenData = await tokenUtils.fetchTokenData(address, { tokenURI: true }, web3)
 
   return new Token({ ...tokenData, ...fetchedTokenData }).save()
 }

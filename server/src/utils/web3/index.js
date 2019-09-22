@@ -8,14 +8,22 @@ const Account = mongoose.model('Account')
 const { fetchGasPrice } = require('@utils/network')
 const wallet = fromMasterSeed(config.get('secrets.accounts.seed'))
 
-const createWeb3 = (providerUrl) => {
+const createWeb3 = (providerUrl, account) => {
   const web3 = new Web3(providerUrl)
-  const account = web3.eth.accounts.wallet.add(ethUtils.addHexPrefix(config.get('secrets.fuse.bridge.privateKey')))
-  return { from: account.address, web3 }
+  let walletAccount
+  if (account) {
+    walletAccount = web3.eth.accounts.wallet.add(getPrivateKey(account))
+  } else {
+    walletAccount = web3.eth.accounts.wallet.add(ethUtils.addHexPrefix(config.get('secrets.fuse.bridge.privateKey')))
+  }
+  return { from: walletAccount.address, web3 }
 }
 
-const createContract = ({ web3, bridgeType }, abi, address) =>
-  new web3.eth.Contract(abi, address, config.get(`network.${bridgeType}.contract.options`))
+const createContract = ({ web3, bridgeType }, abi, address) => {
+  const contract = new web3.eth.Contract(abi, address, config.get(`network.${bridgeType}.contract.options`))
+  contract.bridgeType = bridgeType
+  return contract
+}
 
 const createMethod = (contract, methodName, ...args) => {
   console.log(`creating method ${methodName} with arguments: ${inspect(args)}`)
@@ -29,6 +37,18 @@ const createMethod = (contract, methodName, ...args) => {
   method.methodName = methodName
   method.contract = contract
   return method
+}
+
+const createNetwork = (bridgeType, account) => {
+  const { web3, from } = createWeb3(config.get(`network.${bridgeType}.provider`), account)
+
+  return {
+    from,
+    web3,
+    createContract: createContract.bind(null, { web3, bridgeType, address: from }),
+    createMethod,
+    send: send.bind(null, { web3, bridgeType, address: from })
+  }
 }
 
 const getMethodName = (method) => method.methodName || 'unknown'
@@ -100,6 +120,7 @@ const send = async ({ web3, bridgeType, address }, method, options) => {
     if (receipt) {
       account.nonces[bridgeType]++
       await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
+      receipt.bridgeType = bridgeType
       return receipt
     }
   }
@@ -112,19 +133,6 @@ const getPrivateKey = (account) => {
     throw new Error(`Account address does not match with the private key. account address: ${account.address}, derived: ${derivedAddress}`)
   }
   return ethUtils.addHexPrefix(ethUtils.bufferToHex(derivedWallet.getPrivateKey()))
-}
-
-const createNetwork = (bridgeType, account) => {
-  const web3 = new Web3(config.get(`network.${bridgeType}.provider`))
-  web3.eth.accounts.wallet.add(getPrivateKey(account))
-
-  return {
-    from: account.address,
-    web3,
-    createContract: createContract.bind(null, { web3, bridgeType, address: account.address }),
-    createMethod,
-    send: send.bind(null, { web3, bridgeType, address: account.address })
-  }
 }
 
 const toBufferStripPrefix = (str) => Buffer.from(ethUtils.stripHexPrefix(str), 'hex')

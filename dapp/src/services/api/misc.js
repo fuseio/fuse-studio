@@ -2,8 +2,8 @@ import request from 'superagent'
 
 export const API_ROOT = CONFIG.api.url.default
 
-export const processReceipt = (apiRoot, { receipt }) =>
-  request.post(`${apiRoot}/receipts/`).send({ receipt }).then(response => response.body)
+export const processReceipt = (apiRoot, { receipt, bridgeType }) =>
+  request.post(`${apiRoot}/receipts/`).send({ receipt, bridgeType }).then(response => response.body)
 
 export const processTransactionHash = (apiRoot, { transactionHash, bridgeType, abiName }) =>
   request.post(`${apiRoot}/receipts/${transactionHash}`).send({ abiName, bridgeType }).then(response => response.body)

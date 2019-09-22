@@ -19,10 +19,10 @@ const deployFunctions = {
 const stepsOrder = ['community', 'bridge', 'transferOwnership', 'funder']
 
 const mandatorySteps = {
-  bridge: true,
+  bridge: false,
   community: true,
-  transferOwnership: true,
-  funder: true
+  transferOwnership: false,
+  funder: false
 }
 
 const performStep = async ({ home, foreign }, communityProgress, stepName) => {
@@ -36,8 +36,12 @@ const performStep = async ({ home, foreign }, communityProgress, stepName) => {
     return error || Error(errorMsg)
   }
 
-  if (!currentStep && mandatorySteps[stepName]) {
-    throw stepFailed(`step ${stepName} should be mandatory`)
+  if (!currentStep) {
+    if (mandatorySteps[stepName]) {
+      throw stepFailed(`step ${stepName} should be mandatory`)
+    } else {
+      return communityProgress
+    }
   }
 
   if (communityProgress.steps[stepName].done) {
@@ -72,21 +76,31 @@ const deploy = async ({ communityProgressId }) => {
     communityProgress = await CommunityProgress.findByIdAndUpdate(communityProgress._id, { account })
 
     for (let stepName of stepsOrder) {
+      console.log({ communityProgress })
       communityProgress = await performStep({ home, foreign }, communityProgress, stepName)
     }
 
     const { steps } = communityProgress
     const { communityAddress, isClosed } = steps.community.results
-    const { homeTokenAddress, foreignTokenAddress, foreignBridgeAddress, homeBridgeAddress } = steps.bridge.results
 
-    new Community({
-      communityAddress,
-      isClosed,
-      homeTokenAddress,
-      foreignTokenAddress,
-      foreignBridgeAddress,
-      homeBridgeAddress
-    }).save()
+    if (steps.bridge) {
+      const { homeTokenAddress, foreignTokenAddress, foreignBridgeAddress, homeBridgeAddress } = steps.bridge.results
+      await new Community({
+        communityAddress,
+        isClosed,
+        homeTokenAddress,
+        foreignTokenAddress,
+        foreignBridgeAddress,
+        homeBridgeAddress
+      }).save()
+    } else {
+      const { homeTokenAddress } = steps.community.args
+      await new Community({
+        communityAddress,
+        isClosed,
+        homeTokenAddress
+      }).save()
+    }
 
     await CommunityProgress.findByIdAndUpdate(communityProgress._id, { communityAddress, done: true })
 
