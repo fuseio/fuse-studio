@@ -1,9 +1,8 @@
 
 # Prerequisites
   
-- Install nodejs, I advise to install node v10 because  
-- [experimental-repl-await](https://nodejs.org/api/cli.html#cli_experimental_repl_await) flag that allow to use `await` not in a function. 
-- Install web3:
+- Install nodejs, I advise to install node v10 because [experimental-repl-await](https://nodejs.org/api/cli.html#cli_experimental_repl_await) flag that allow to use `await` not in a function. 
+- Install dependencies:
 ```
 npm instal web3@2.0.0-alpha.1
 npm install ethereumjs-util
@@ -85,7 +84,6 @@ let issueToken = async (tokenName, tokenSymbol, initialSupply) => {
     return tokenAddress
 }
 
-// let tokenAddress
 tokenAddress = await issueToken(tokenName, tokenSymbol, initialSupply)
 
 
