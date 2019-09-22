@@ -64,7 +64,7 @@ const HomePage = ({
               <span style={{ marginLeft: '5px' }}><img src={arrowImage} alt='arrow' /></span>
             </button></div>
           </div>
-          <div className='home_page__image home_page__image--second cell large-12 medium-12 small-15'>
+          <div className='home_page__image home_page__image--second cell large-12 medium-12 small-18'>
             <img src={personImage} />
             <img src={!isMobileOnly ? groupImage : groupImageMobile} />
           </div>

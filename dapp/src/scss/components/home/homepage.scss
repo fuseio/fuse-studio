@@ -93,6 +93,16 @@
     align-items: baseline;
     margin: auto 0;
 
+    @include breakpoint(small down) {
+      margin: auto;
+
+      >img {
+        &:nth-of-type(1) {
+          display: none;
+        }
+      }
+    }
+
     img {
       background-size: contain;
       background-repeat: no-repeat; 

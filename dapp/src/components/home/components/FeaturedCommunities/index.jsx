@@ -77,7 +77,7 @@ const FeaturedCommunities = memo(({
     history.push(`/view/community/${communityAddress}`)
   }
 
-  const filteredCommunities = Object.values(pickBy(communities, (item) => item.community.featured))
+  const filteredCommunities = Object.values(pickBy(communities, (item) => item && item.community && item.community.featured))
 
   return (
     <div className='grid-x align-justify grid-margin-x grid-margin-y'>
