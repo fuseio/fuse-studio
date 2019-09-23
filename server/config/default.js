@@ -80,7 +80,7 @@ module.exports = {
           return this.network.foreign.addressesRopsten
         }
       }),
-      gasStation: 'https://gasprice.poa.network/'
+      gasStation: 'https://ethgasstation.info/json/ethgasAPI.json'
     }
   },
   mongo: {
