@@ -76,7 +76,6 @@ const deploy = async ({ communityProgressId }) => {
     communityProgress = await CommunityProgress.findByIdAndUpdate(communityProgress._id, { account })
 
     for (let stepName of stepsOrder) {
-      console.log({ communityProgress })
       communityProgress = await performStep({ home, foreign }, communityProgress, stepName)
     }
 

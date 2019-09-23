@@ -8,7 +8,12 @@ const isZeroAddress = (address) => address === ZERO_ADDRESS
 const fetchGasPrice = async (speed) => {
   const url = config.get('network.foreign.gasStation')
   const response = JSON.parse(await request.get(url))
-  return response[speed]
+  const gas = response[speed]
+  // special treatment for https://ethgasstation.info/
+  if (url.includes('ethgasstation')) {
+    return gas / 10
+  }
+  return gas
 }
 
 module.exports = {
