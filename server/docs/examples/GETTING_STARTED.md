@@ -92,19 +92,24 @@ const tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress, contractOpti
 
 ## Launching and configuring the community 
 - After the token is created, you should launch the community with that token. 
-```
-curl -X POST -d '{
-        "steps": {
-                "community": {
-                        "args": {
-                        "isClosed":false,
-                        "name":"SardexCoin",
-                        "adminAddress":"you account"}
-                }
+```js
+  const response = await request({
+    method: 'POST',
+    uri: `${apiUrl}/deployments`,
+    body: {
+      steps: {
+        community: {
+          args: {
+            isClosed:false,
+            name:"SardexCoin",
+            homeTokenAddress: tokenAddress, //token address on the Fuse (home) chain
+            adminAddress: accountAddress
+          }
         }
-}' https://studio-qa-ropsten.fusenet.io/api/v1/deployments 
-```
-*TODO: Make that API work on Fuse (now the bridge is a mandatory step)*
+      }
+    },
+    json: true
+  })
 
 - Add business list plugin to the community
 
@@ -117,13 +122,8 @@ curl -X POST -d '{
   
 ' https://studio-qa-ropsten.fusenet.io/api/v1/communities/{communityAddress}
 
-- *TODO: Make the business list customizable to the issuer needs (define fields, roles, etc..)*
-- *TODO: Make the endpoint nicer and safier (not it looks too generic)*
-- *TODO: Authentication is misssing*
-
 ## Expiration Feature
 Basically Should be part of the token contract. ERC721 with transfer rules based on the blocknumbers. We can use our own tranfer rules and roles to customise this.
-
 
 
 # Actor Representation and Rights:
