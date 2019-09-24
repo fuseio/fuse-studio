@@ -1,4 +1,4 @@
-import { FETCH_TOKENS, FETCH_TOKENS_BY_OWNER, FETCH_FEATURED_COMMUNITIES } from 'actions/token'
+import { FETCH_FEATURED_COMMUNITIES } from 'actions/token'
 import union from 'lodash/union'
 
 const initialState = {
