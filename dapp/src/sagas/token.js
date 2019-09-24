@@ -34,8 +34,7 @@ const fetchTokens = createEntitiesFetch(actions.FETCH_TOKENS, api.fetchTokens)
 const fetchToken = createEntitiesFetch(actions.FETCH_TOKEN, api.fetchToken)
 const fetchCommunity = createEntitiesFetch(actions.FETCH_COMMUNITY_DATA, fetchCommunityApi)
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
-
-export const fetchTokenList = createEntitiesFetch(actions.FETCH_TOKEN_LIST, api.fetchTokenList)
+const fetchFeaturedCommunities = createEntitiesFetch(actions.FETCH_FEATURED_COMMUNITIES, api.fetchFeaturedCommunities)
 
 function * fetchFuseToken () {
   const tokenAddress = yield select(getAddress, 'FuseToken')
@@ -119,19 +118,6 @@ function * deployExistingToken ({ steps }) {
     type: actions.DEPLOY_TOKEN.SUCCESS,
     response: {
       id: _id
-    }
-  })
-}
-
-function * fetchTokenStatistics ({ tokenAddress, activityType, interval }) {
-  const response = yield apiCall(api.fetchTokenStatistics, { tokenAddress, activityType, interval })
-
-  const { data } = response
-
-  yield put({
-    type: actions.FETCH_TOKEN_STATISTICS.SUCCESS,
-    response: {
-      [activityType]: data
     }
   })
 }
@@ -303,6 +289,14 @@ function * toggleJoinBonus ({ toSend }) {
   })
 }
 
+function * watchFeaturedCommunities ({ response }) {
+  const { result, entities } = response
+  for (let account of result) {
+    const community = entities[account]
+    yield put(actions.fetchToken(community.foreignTokenAddress))
+  }
+}
+
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(ADD_COMMUNITY_PLUGINS, addCommunityPlugins, 1),
@@ -312,7 +306,6 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.BURN_TOKEN, burnToken, 1),
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
-    tryTakeEvery(actions.FETCH_TOKEN_LIST, fetchTokenList, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
     takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
@@ -320,13 +313,14 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),
-    tryTakeEvery(actions.FETCH_TOKEN_STATISTICS, fetchTokenStatistics, 1),
     tryTakeEvery(actions.FETCH_TOKEN_PROGRESS, fetchTokenProgress, 1),
     takeEvery([DEPLOY_BRIDGE.SUCCESS, ADD_USER.SUCCESS], fetchTokenProgress),
     takeEvery([actions.MINT_TOKEN.SUCCESS, actions.BURN_TOKEN.SUCCESS], watchTokenChanges),
     takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),
     tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
-    tryTakeEvery(TOGGLE_JOIN_BONUS, toggleJoinBonus, 1)
+    tryTakeEvery(TOGGLE_JOIN_BONUS, toggleJoinBonus, 1),
+    tryTakeEvery(actions.FETCH_FEATURED_COMMUNITIES, fetchFeaturedCommunities),
+    takeEvery(action => /^FETCH_FEATURED_COMMUNITIES.*SUCCESS/.test(action.type), watchFeaturedCommunities)
   ])
 }

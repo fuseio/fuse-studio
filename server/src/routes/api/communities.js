@@ -79,8 +79,7 @@ router.get('/:communityAddress', async (req, res, next) => {
 })
 
 router.get('/', async (req, res, next) => {
-  const { homeTokenAddress } = req.query
-  const community = await Community.findOne({ homeTokenAddress }).lean()
+  const community = await Community.find({ featured: true }).lean()
   return res.json({ data: community })
 })
 

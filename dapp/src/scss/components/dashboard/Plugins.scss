@@ -102,6 +102,10 @@
   @include element(content) {
     padding: 1.125em;
     height: 100%;
+
+    @include modifier(disabled) {
+      opacity: .4;
+    }
   }
 
   @include element(title) {

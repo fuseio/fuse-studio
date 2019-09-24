@@ -192,7 +192,7 @@ const ProfileDropDown = ({
   let communitiesIPartOf
   if (communities && typeof filteredCommunities.filter === 'function') {
     communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
-    communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token)
+    communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
   }
 
   const showDashboard = (communityAddress) => {

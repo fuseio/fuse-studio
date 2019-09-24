@@ -22,8 +22,15 @@ const EmailModal = ({
     return re.test(String(email).toLowerCase())
   }
 
+  const handleClose = () => {
+    if (window && window.analytics) {
+      window.analytics.track('User close email modal')
+    }
+    hideModal()
+  }
+
   return (
-    <Modal hasCloseBtn className='email_modal__wrapper' onClose={hideModal}>
+    <Modal hasCloseBtn className='email_modal__wrapper' onClose={() => handleClose()}>
       <div className='email_modal'>
         <div className='email_modal__image'><img src={Missile} /></div>
         <h3 className='email_modal__title'>Getting Started!</h3>

@@ -1,94 +1,91 @@
 import React, { useEffect, memo } from 'react'
 import { connect } from 'react-redux'
 import { fetchMetadata } from 'actions/metadata'
-import { fetchTokens, fetchTokensByOwner, fetchFuseToken } from 'actions/token'
+import { fetchTokens, fetchTokensByOwner, fetchFuseToken, fetchFeaturedCommunities } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
 import { withRouter } from 'react-router-dom'
-import GoogleImage from 'images/google-card.png'
-import McdonaldsImage from 'images/mcdonalds.png'
-import StarbucksImage from 'images/starbucks-card.png'
-import WalmartImage from 'images/walmart.png'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 import isEmpty from 'lodash/isEmpty'
 import { fetchCommunities } from 'actions/accounts'
-import pickBy from 'lodash/pickBy'
-
-const staticImages = [
-  GoogleImage,
-  McdonaldsImage,
-  StarbucksImage,
-  WalmartImage
-]
-
-const FeaturedCommunity = memo(({
-  community,
-  token: { name, tokenURI },
-  communityAddress,
-  showDashboard,
-  metadata,
-  fetchMetadata
-}) => {
-  useEffect(() => {
-    if (tokenURI) {
-      fetchMetadata(tokenURI)
-    }
-  }, [tokenURI])
-
-  return (
-    <div className='featured' onClick={() => showDashboard(communityAddress)}>
-      <div className='featured__image'>
-        <div className='featured__image__container'>
-          <img alt='cover photo' src={community.coverPhoto ? `${CONFIG.ipfsProxy.urlBase}/image/${community.coverPhoto}` : CommunityPlaceholderImage} />
-        </div>
-        <div className='featured__logo'>
-          <img alt='logo photo' src={`${CONFIG.ipfsProxy.urlBase}/image/${metadata && metadata.image}`} />
-        </div>
-      </div>
-      <div className='featured__content'>
-        <h6 className='featured__name'>{name}</h6>
-      </div>
-    </div>
-  )
-}, (prevProps, nextProps) => {
-  if (prevProps.token !== nextProps.token) {
-    return false
-  }
-  if (prevProps.metadata !== nextProps.metadata) {
-    return false
-  }
-  return true
-})
+import Community from 'components/common/Community'
+import FeaturedCommunity from 'components/common/FeaturedCommunity'
 
 const FeaturedCommunities = memo(({
   metadata,
+  networkType,
+  account,
   history,
+  communitiesKeys,
   communities,
   fetchMetadata,
-  fetchCommunities
+  setTitle,
+  tokens,
+  fetchCommunities,
+  fetchFeaturedCommunities,
+  featuredCommunities
 }) => {
   useEffect(() => {
-    fetchCommunities()
+    fetchFeaturedCommunities(account)
+    fetchCommunities(account)
     return () => { }
-  }, [])
+  }, [account])
 
   const showDashboard = (communityAddress) => {
     history.push(`/view/community/${communityAddress}`)
   }
 
-  const filteredCommunities = Object.values(pickBy(communities, (item) => item && item.community && item.community.featured))
+  let filteredCommunities = []
+  if (communitiesKeys) {
+    filteredCommunities = communitiesKeys
+      .map((communityAddress) => communities[communityAddress])
+      .filter(obj => !!obj)
+  }
+
+  let communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 4)
+
+  if (!isEmpty(communitiesIOwn)) {
+    setTitle('My communities')
+  } else {
+    setTitle('Featured communities')
+  }
 
   return (
     <div className='grid-x align-justify grid-margin-x grid-margin-y'>
       {
-        !isEmpty(filteredCommunities) ? filteredCommunities.map(({ token, community, communityAddress }, index) => {
+        !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
+          const { community: { communityAddress } } = entity
           return (
-            <div className='cell medium-12 small-24' key={index}>
-              <FeaturedCommunity fetchMetadata={fetchMetadata} metadata={metadata[token.tokenURI]} showDashboard={showDashboard} token={token} community={community} communityAddress={communityAddress} />
+            <div className='cell medium-12' key={index}>
+              <Community
+                networkType={networkType}
+                token={{ ...entity.token, communityAddress }}
+                metadata={metadata[entity.tokenURI]}
+                history={history}
+                account={account}
+                showDashboard={showDashboard}
+              />
             </div>
           )
-        }) : staticImages.map((img, index) =>
+        }) : !isEmpty(featuredCommunities) ? featuredCommunities.map((address, index) => {
+          const token = tokens[communities[address].foreignTokenAddress]
+          const community = communities[address]
+          if (token && community) {
+            return (
+              <div className='cell medium-12 small-24' key={address}>
+                <FeaturedCommunity
+                  fetchMetadata={fetchMetadata}
+                  metadata={metadata[token.tokenURI]}
+                  showDashboard={showDashboard}
+                  token={token}
+                  community={community}
+                  communityAddress={community.communityAddress}
+                />
+              </div>
+            )
+          }
+        }) : [1, 2, 3, 4].map((img, index) =>
           <div key={index} className='medium-12 cell'><img src={CommunityPlaceholderImage} /></div>
         )
       }
@@ -112,7 +109,8 @@ const mapStateToProps = state => ({
   foreignNetwork: getForeignNetwork(state),
   communities: state.entities.communities,
   networkType: state.network.networkType,
-  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities
+  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
+  featuredCommunities: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].featuredCommunities
 })
 
 const mapDispatchToProps = {
@@ -121,7 +119,8 @@ const mapDispatchToProps = {
   loadModal,
   fetchFuseToken,
   fetchMetadata,
-  fetchCommunities
+  fetchCommunities,
+  fetchFeaturedCommunities
 }
 
 export default withRouter(

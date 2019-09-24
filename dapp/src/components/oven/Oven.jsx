@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import CommunitiesList from 'components/oven/CommunitiesList'
 import { connect } from 'react-redux'
-import { fetchTokens, fetchTokensByOwner, fetchFuseToken } from 'actions/token'
+import { fetchTokens, fetchTokensByOwner, fetchFuseToken, fetchFeaturedCommunities } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
+import { fetchMetadata } from 'actions/metadata'
 
 class Oven extends Component {
   constructor (props) {
@@ -13,22 +14,29 @@ class Oven extends Component {
 
     this.myRef = React.createRef()
   }
+
   componentDidMount () {
-    if (this.props.networkType !== 'fuse') {
-      this.props.fetchFuseToken()
-    }
-    if (this.props.account) {
-      const { networkType } = this.props
-      this.props.fetchTokensByOwner(networkType, this.props.account)
-    }
+    this.props.fetchFeaturedCommunities()
+    // if (this.props.networkType !== 'fuse') {
+    //   this.props.fetchFuseToken()
+    // }
+    // if (this.props.account) {
+    //   const { networkType } = this.props
+    //   this.props.fetchTokensByOwner(networkType, this.props.account)
+    // }
   }
 
-  componentDidUpdate (prevProps) {
-    if (this.props.account && !prevProps.account) {
-      const { networkType } = this.props
-      this.props.fetchTokensByOwner(networkType, this.props.account)
-    }
-  }
+  // componentDidUpdate (prevProps) {
+  //   if (this.props.account && !prevProps.account) {
+  //     const { networkType } = this.props
+  //     this.props.fetchTokensByOwner(networkType, this.props.account)
+  //   }
+
+  //   if (!isEqual(this.props.account, prevProps.account)) {
+  //     const { networkType } = this.props
+  //     this.props.fetchTokensByOwner(networkType, this.props.account)
+  //   }
+  // }
 
   showDashboard = (communityAddress) => {
     this.props.history.push(`/view/community/${communityAddress}`)
@@ -39,13 +47,14 @@ class Oven extends Component {
   render = () => (
     <div className='communities' ref={this.myRef}>
       <NavBar />
-      <CommunitiesList getScrollParent={this.getScrollParent} {...this.props} showDashboard={this.showDashboard} />
+      <CommunitiesList fetchMetadata={this.props.fetchMetadata} getScrollParent={this.getScrollParent} {...this.props} showDashboard={this.showDashboard} />
     </div>
   )
 }
 
 const mapStateToProps = state => ({
   tokens: state.entities.tokens,
+  communities: state.entities.communities,
   metadata: state.entities.metadata,
   account: getAccountAddress(state),
   foreignNetwork: getForeignNetwork(state),
@@ -57,8 +66,9 @@ const mapDispatchToProps = {
   fetchTokens,
   fetchTokensByOwner,
   loadModal,
-  fetchFuseToken
-
+  fetchFuseToken,
+  fetchFeaturedCommunities,
+  fetchMetadata
 }
 
 export default connect(

@@ -1,6 +1,6 @@
 import * as actions from 'actions/accounts'
-import { FETCH_TOKEN_LIST } from 'actions/token'
 import { LOGIN, IS_USER_EXISTS } from 'actions/user'
+import { FETCH_FEATURED_COMMUNITIES } from 'actions/token'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import pick from 'lodash/pick'
 
@@ -22,12 +22,13 @@ const handlers = {
   [LOGIN.SUCCESS]: (state, action) => {
     return { ...state, ...action.response }
   },
-  [FETCH_TOKEN_LIST.SUCCESS]: (state, action) => {
-    return { ...state, tokens: action.response.result }
-  },
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
     return { ...state, communities: action.response.result }
   },
+  [FETCH_FEATURED_COMMUNITIES.SUCCESS]: (state, action) => ({
+    ...state,
+    featuredCommunities: [...action.response.result]
+  }),
   [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
   [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) }),
   [IS_USER_EXISTS.SUCCESS]: (state, action) => ({ ...state, ...action.response })

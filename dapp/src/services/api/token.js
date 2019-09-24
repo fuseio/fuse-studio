@@ -23,14 +23,11 @@ export const deployChosenContracts = (apiRoot, { steps, accountAddress }) =>
     .send({ steps, accountAddress })
     .then(response => response.body)
 
-export const fetchTokenStatistics = (apiRoot, { tokenAddress, activityType, interval }) =>
-  request.get(`${apiRoot}/stats/${activityType}/${tokenAddress}?interval=${interval}`).then(response => response.body)
-
-export const fetchTokenList = (apiRoot, { accountAddress, networkSide }) =>
-  request.get(`${apiRoot}/tokenlist/${networkSide}/${accountAddress}`).then(response => response.body)
-
 export const deployBridge = (apiRoot, { foreignTokenAddress }) =>
   request.post(`${apiRoot}/bridges/${foreignTokenAddress}`).then(response => response.body)
 
 export const fetchCommunity = (apiRoot, { communityAddress }) =>
   request.get(`${apiRoot}/communities/${communityAddress}`).then(response => response.body)
+
+export const fetchFeaturedCommunities = (apiRoot) =>
+  request.get(`${apiRoot}/communities`).then(response => response.body)

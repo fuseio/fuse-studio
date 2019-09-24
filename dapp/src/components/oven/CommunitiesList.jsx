@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import { isMobileOnly } from 'react-device-detect'
-import Community from 'components/common/Community'
+// import Community from 'components/common/Community'
 import InfiniteScroll from 'react-infinite-scroller'
 import groupImage from 'images/all-communities.png'
 import groupImageMobile from 'images/all-communities-mobile.png'
+import FeaturedCommunity from 'components/common/FeaturedCommunity'
 
 const PAGE_START = 1
 
@@ -17,15 +18,17 @@ export default ({
   fetchTokens,
   networkType,
   showDashboard,
-  getScrollParent
+  getScrollParent,
+  fetchMetadata,
+  communities
 }) => {
   useEffect(() => {
-    fetchTokens(networkType, PAGE_START)
-    return () => {}
+    // fetchTokens(networkType, PAGE_START)
+    return () => { }
   }, [])
 
   const loadMore = (nextPage) => {
-    fetchTokens(networkType, nextPage)
+    // fetchTokens(networkType, nextPage)
   }
 
   return (
@@ -67,7 +70,27 @@ export default ({
               hasMore={hasMore}
               getScrollParent={getScrollParent}
             >
-              {addresses.map(address =>
+              {
+                addresses.map((address, index) => {
+                  const token = tokens[communities[address].foreignTokenAddress]
+                  const community = communities[address]
+                  if (token && community) {
+                    return (
+                      <div className='medium-12 large-8 small-24 cell' key={address}>
+                        <FeaturedCommunity
+                          fetchMetadata={fetchMetadata}
+                          metadata={metadata[token.tokenURI]}
+                          showDashboard={showDashboard}
+                          token={token}
+                          community={community}
+                          communityAddress={community.communityAddress}
+                        />
+                      </div>
+                    )
+                  }
+                })
+              }
+              {/* {addresses.map(address =>
                 <div className='medium-12 large-8 small-24 cell' key={address}>
                   <Community
                     networkType={networkType}
@@ -78,7 +101,7 @@ export default ({
                     showDashboard={showDashboard}
                   />
                 </div>
-              )}
+              )} */}
             </InfiniteScroll>
           </div>
         </div>
