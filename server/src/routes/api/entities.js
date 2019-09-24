@@ -6,7 +6,7 @@ const Profile = mongoose.model('Profile')
 const metadataUtils = require('@utils/metadata')
 const Community = mongoose.model('Community')
 const Token = mongoose.model('Token')
-const { sortBy, keyBy, isEmpty } = require('lodash')
+const { sortBy, keyBy } = require('lodash')
 
 const withCommunities = async (entities) => {
   const communityAddresses = entities.map(token => token.communityAddress)
