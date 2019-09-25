@@ -1,4 +1,5 @@
 {
+  "env": "production",
   "web3": {
     "fuseProvider": "https://rpc.fusenet.io",
     "addresses": {

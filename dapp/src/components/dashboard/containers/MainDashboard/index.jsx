@@ -112,6 +112,13 @@ class DashboardLayout extends Component {
 
     const { address: tokenAddress, name, tokenType } = token
     const { isClosed, plugins, homeTokenAddress } = community
+
+    const qrValue = JSON.stringify({
+      tokenAddress: homeTokenAddress,
+      originNetwork: token.networkType,
+      env: CONFIG.env
+    })
+
     return (
       <div className='dashboard'>
         {accountAddress ? <SignIn accountAddress={accountAddress} /> : undefined}
@@ -155,7 +162,7 @@ class DashboardLayout extends Component {
                 {isAdmin && tokenType === 'mintableBurnable' && <Route path={`${match.path}/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
                 {isAdmin && <Route path={`${match.path}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
                 {get(plugins, 'businessList.isActive', false) && <Route exact path={`${match.path}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={homeTokenAddress} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route path={`${match.path}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
                 <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>

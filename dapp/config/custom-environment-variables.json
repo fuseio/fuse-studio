@@ -1,4 +1,5 @@
 {
+  "qa": "NODE_CONFIG_ENV",
   "web3": {
     "apiKey": "COMMUNITY_WEB3_API_KEY",
     "portis": {
