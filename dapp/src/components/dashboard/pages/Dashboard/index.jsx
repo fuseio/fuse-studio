@@ -107,8 +107,8 @@ class Dashboard extends Component {
     } = this.props
 
     const { address: tokenAddress } = token
-    const { communityAddress, homeTokenAddress, foreignTokenAddress } = community
-    const { steps, owner, totalSupply } = dashboard
+    const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress } = community
+    const { owner, totalSupply } = dashboard
 
     return (
       <React.Fragment>
@@ -133,7 +133,7 @@ class Dashboard extends Component {
           <Bridge
             isAdmin={isAdmin}
             tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
-            bridgeDeployed={steps && steps.bridge}
+            bridgeDeployed={homeBridgeAddress && foreignBridgeAddress}
             accountAddress={accountAddress}
             token={token}
             bridgeStatus={bridgeStatus}
