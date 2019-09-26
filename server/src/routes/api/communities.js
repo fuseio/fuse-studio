@@ -65,6 +65,20 @@ router.post('/:communityAddress', async (req, res, next) => {
 
 /**
  * @api {get} /communities/:communityAddress Fetch community
+ * @apiName GetFeaturedCommunities
+ * @apiGroup Community
+ *
+ *
+ * @apiUse CommunityData
+ */
+
+router.get('/featured', async (req, res, next) => {
+  const community = await Community.find({ featured: true }).lean()
+  return res.json({ data: community })
+})
+
+/**
+ * @api {get} /communities/:communityAddress Fetch community
  * @apiName GetCommunity
  * @apiGroup Community
  *
@@ -78,8 +92,18 @@ router.get('/:communityAddress', async (req, res, next) => {
   return res.json({ data: community })
 })
 
+/**
+ * @api {get} /communities
+ * @apiName GetCommunities
+ * @apiGroup Community
+ *
+ * @apiParam {String} homeTokenAddress Home token address (optional)
+ *
+ * @apiUse CommunityData
+ */
 router.get('/', async (req, res, next) => {
-  const community = await Community.find({ featured: true }).lean()
+  const { homeTokenAddress } = req.query
+  const community = await Community.findOne({ homeTokenAddress }).lean()
   return res.json({ data: community })
 })
 

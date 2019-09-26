@@ -30,4 +30,4 @@ export const fetchCommunity = (apiRoot, { communityAddress }) =>
   request.get(`${apiRoot}/communities/${communityAddress}`).then(response => response.body)
 
 export const fetchFeaturedCommunities = (apiRoot) =>
-  request.get(`${apiRoot}/communities`).then(response => response.body)
+  request.get(`${apiRoot}/communities/featured`).then(response => response.body)
