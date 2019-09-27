@@ -13,6 +13,9 @@
         "homeNetwork": "fuse",
         "foreignNetwork": "main"
       }
+    },
+    "funder": {
+      "address": "0x373c383b05c121e541f239afe5fd73c013fed20f"
     }
   },
   "api": {
