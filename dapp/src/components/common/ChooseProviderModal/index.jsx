@@ -28,14 +28,14 @@ const ChooseProviderModal = ({
         </p>
 
         <div className='choose_provider__options'>
-          <a className='choose_provider__metamask' href='https://metamask.io/' target='_blank' rel='noopener noreferrer'>
+          <div className='choose_provider__metamask'>
             <img src={MetamaskIcon} />
             <span>Metamask</span>
-          </a>
-          <a className='choose_provider__portis' href='https://wallet.portis.io/login/?widget=1&dappId=ff4643ff-4583-4b85-9a91-773b0fb07f8a&dappDomain=https://studio.fusenet.io&dappName=Fuse%20Studio&dappLogoUrl=https://portis-prod.s3.amazonaws.com/assets/dapps-logo/83f4d2de-2ce4-4024-8826-26be6d6e6a38.png&email=' target='_blank' rel='noopener noreferrer'>
+          </div>
+          <div className='choose_provider__portis'>
             <img src={PortisIcon} />
             <span>Portis</span>
-          </a>
+          </div>
         </div>
 
         <button className='choose_provider__button button button--normal' onClick={handleConnectWallet}>Connect wallet</button>

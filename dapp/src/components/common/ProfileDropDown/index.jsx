@@ -3,10 +3,11 @@ import { connect, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
 import { formatAddress, formatWei } from 'utils/format'
 import CopyToClipboard from 'components/common/CopyToClipboard'
-import { fetchCommunities, fetchBalances, balanceOfToken, balanceOfNative } from 'actions/accounts'
+import { fetchCommunities, fetchBalances, balanceOfToken } from 'actions/accounts'
 import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 import { withRouter } from 'react-router-dom'
 import { getBalances, getAccount } from 'selectors/accounts'
 import ArrowTiny from 'images/arrow_tiny.svg'
@@ -15,28 +16,30 @@ import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
 
 const mapStateToNativeBalanceProps = (state) => ({
-  account: getAccount(state)
+  account: getAccount(state),
+  isPortis: state.network.isPortis,
+  isMetaMask: state.network.isMetaMask
 })
 
-const mapDispatchToNativeBalanceProps = {
-  balanceOfNative
-}
-
-const NativeBalance = connect(mapStateToNativeBalanceProps, mapDispatchToNativeBalanceProps)(({
-  accountAddress,
-  balanceOfNative,
-  account
+const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
+  account,
+  isMetaMask,
+  isPortis
 }) => {
   useEffect(() => {
-    if (accountAddress) {
-      balanceOfNative(accountAddress, { bridgeType: 'home' })
-      balanceOfNative(accountAddress, { bridgeType: 'foreign' })
+    if (account && account.accountAddress) {
+      const { analytics } = window
+      analytics.identify(account.accountAddress,
+        isPortis ? {
+          provider: 'Portis'
+        } : isMetaMask ? {
+          provider: 'MetaMask'
+        } : null)
     }
-    return () => {}
-  }, [accountAddress])
+  }, [account])
 
-  const homeBalance = account && account.home ? formatWei(account.home, 2) : 0
-  const foreignBalance = account && account.foreign ? formatWei(account.foreign, 2) : 0
+  const homeBalance = get(account, account.home, 0) ? formatWei(account.home, 2) : 0
+  const foreignBalance = get(account, account.foreign, 0) ? formatWei(account.foreign, 2) : 0
 
   return (
     <div className='profile__communities grid-y'>
@@ -85,7 +88,7 @@ const ProfileCard = ({
   useEffect(() => {
     balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
     balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-    return () => {}
+    return () => { }
   }, [])
 
   return (
@@ -212,10 +215,7 @@ const ProfileDropDown = ({
           </CopyToClipboard>
         </span>}
       </div>
-      <NativeBalance
-        balance={0}
-        accountAddress={accountAddress}
-      />
+      <NativeBalance />
       <InnerCommunities
         showDashboard={showDashboard}
         communities={communitiesIOwn}
