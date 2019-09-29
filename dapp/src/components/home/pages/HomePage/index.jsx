@@ -12,35 +12,23 @@ import GiftIcon from 'images/gift.svg'
 import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
-import { EMAIL_MODAL } from 'constants/uiConstants'
-import { loadState } from 'utils/storage'
+import { CHOOSE_PROVIDER } from 'constants/uiConstants'
+import isEmpty from 'lodash/isEmpty'
 
 const HomePage = ({
   history,
-  loadModal
+  loadModal,
+  accounts
 }) => {
   const [title, setTitle] = useState('Featured communities')
 
-  const sendMailBlocker = () => {
-    const subscribe = loadState('subscribe')
-    if (!subscribe) {
-      loadModal(EMAIL_MODAL)
-    }
-  }
-
   const showIssuance = () => {
-    const subscribe = loadState('subscribe')
-    if (!subscribe) {
-      sendMailBlocker()
+    const { featuredCommunities, ...rest } = accounts
+    if (isEmpty(rest)) {
+      loadModal(CHOOSE_PROVIDER)
+    } else {
+      history.push('/view/issuance')
     }
-
-    const interval = setInterval(() => {
-      const subscribe = loadState('subscribe')
-      if (subscribe) {
-        history.push('/view/issuance')
-        clearInterval(interval)
-      }
-    }, 500)
   }
 
   const gotToFaqs = () => {
@@ -99,8 +87,12 @@ const HomePage = ({
   )
 }
 
+const mapStateToProps = (state) => ({
+  accounts: state.accounts
+})
+
 const mapDispatchToProps = {
   loadModal
 }
 
-export default withTracker(connect(null, mapDispatchToProps)(HomePage))
+export default withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage))

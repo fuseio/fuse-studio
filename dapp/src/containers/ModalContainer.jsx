@@ -18,6 +18,7 @@ import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
 import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEntity'
 import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
 import SwitchNetwork from 'components/common/SwitchNetwork'
+import ChooseProviderModal from 'components/common/ChooseProviderModal'
 
 import {
   LOGIN_MODAL,
@@ -34,7 +35,8 @@ import {
   IMAGE_CROPPER_MODAL,
   PLUGIN_INFO_MODAL,
   EMAIL_MODAL,
-  SWITCH_NETWORK
+  SWITCH_NETWORK,
+  CHOOSE_PROVIDER
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -57,7 +59,8 @@ const MODAL_COMPONENTS = {
   [IMAGE_CROPPER_MODAL]: ImageCropperModal,
   [PLUGIN_INFO_MODAL]: PluginInfoModal,
   [EMAIL_MODAL]: EmailModal,
-  [SWITCH_NETWORK]: SwitchNetwork
+  [SWITCH_NETWORK]: SwitchNetwork,
+  [CHOOSE_PROVIDER]: ChooseProviderModal
 }
 
 const ModalContainer = (props) => {

@@ -1,14 +1,89 @@
-@include block (featured) {
-	cursor: pointer;
-	width: 100%;
+@include block(choose_provider) {
+  height: 100%;
+  @include xy-grid(vertical);
+  align-items: flex-start;
+  text-align: start;
+  @include element(wrapper) {
+    border-radius: 5px;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.15);
+    background-color: $color-white;
+
+    @include breakpoint(medium up) {
+      width: 619px !important;
+      padding: 2em !important;
+    }
+  }
+
+  @include element(title) {
+    font-size: 1.875em;
+    font-weight: 500;
+    line-height: 0.67;
+    letter-spacing: -0.65px;
+		color: $color-light-dark;
+		margin-top: 1em;
+
+    > img {
+      width: 45px;
+      height: 45px;
+    }
+  }
+
+  @include element(text) {
+    font-size: 1.125em;
+    line-height: 1.33;
+    letter-spacing: -0.39px;
+    color: $color-gray;
+    margin-top: 2em;
+
+    > a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @include element(options) {
+    @include xy-grid();
+    margin-top: 4em;
+  }
+
+  @include element(metamask) {
+    @include xy-grid(vertical);
+    @include flex-align(null, middle);
+    margin-right: 3em;
+    > img {
+      width: 64px;
+      height: 59px;
+      margin-bottom: 1em;
+    }
+  }
+
+  @include element(portis) {
+    @include xy-grid(vertical);
+    @include flex-align(null, middle);
+
+    > img {
+      width: 64px;
+      height: 59px;
+      margin-bottom: 1em;
+    }
+  }
+
+  @include element(button) {
+    margin-top: 4em;
+    min-width: 135px;
+  }
+}
+
+@include block(featured) {
+  cursor: pointer;
+  width: 100%;
   min-height: 144px;
   border-radius: 8px;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
-	background-color: $color-white;
+  background-color: $color-white;
 
-	&:hover {
-		background-color: #f3f3f3;
-	}
+  &:hover {
+    background-color: #f3f3f3;
+  }
 
   @include element(image) {
     position: relative;
@@ -25,146 +100,145 @@
 
     img {
       height: 100%;
-			width: 100%;
-			border-top-left-radius: 8px;
-			border-top-right-radius: 8px;
+      width: 100%;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
     }
   }
 
-	@include element(images) {
-		position: relative;
-		width: 100%;
-		height: 85px;
-	}
-	
-	@include element(cover) {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-	}
+  @include element(images) {
+    position: relative;
+    width: 100%;
+    height: 85px;
+  }
 
-	@include element(logo) {
-		width: 54px;
-		height: 54px;
-		background-color: $color-white;
-		position: absolute;
+  @include element(cover) {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+  }
+
+  @include element(logo) {
+    width: 54px;
+    height: 54px;
+    background-color: $color-white;
+    position: absolute;
     border-radius: 50%;
     right: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
     bottom: -1.6em;
-		
-		> img {
-			width: 46px;
-			height: 46px;
-			border-radius: 50%;
-		}
-	}
 
-	@include element(content) {
-		min-height: 3em;
+    > img {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+    }
+  }
+
+  @include element(content) {
+    min-height: 3em;
     display: flex;
     align-items: center;
     padding-left: 1em;
-	}
+  }
 
-	@include element(name) {
-		font-size: 0.875em;
-		font-weight: 500;
-		line-height: 2.79;
-		color: #6a6a6a;
-	}
+  @include element(name) {
+    font-size: 0.875em;
+    font-weight: 500;
+    line-height: 2.79;
+    color: #6a6a6a;
+  }
 }
 
 @include block(switch__network) {
-	display: flex;
-	flex-direction: column;
-	text-align: start;
-	background: $color-white;
-	width: 427px !important;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  background: $color-white;
+  width: 427px !important;
   height: 562px !important;
-	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
-	
-	@include element(content) {
-		@include xy-grid();
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
+
+  @include element(content) {
+    @include xy-grid();
     position: relative;
     width: 100%;
-		height: 100%;
+    height: 100%;
 
-		@include modifier(second) {
-			@include xy-grid(vertical);
-			justify-content: center;
-		}
-	}
+    @include modifier(second) {
+      @include xy-grid(vertical);
+      justify-content: center;
+    }
+  }
 
-	@include element(title) {
-		font-size: 1.125em;
-		font-weight: 500;
-		color: $color-light-dark;
-		margin-bottom: 1em;
-	}
+  @include element(title) {
+    font-size: 1.125em;
+    font-weight: 500;
+    color: $color-light-dark;
+    margin-bottom: 1em;
+  }
 
-	@include element(text) {
-		font-size: 1.000em;
-		line-height: 1.5;
-		color: $color-gray;
-		
-		> a {
-			text-decoration: underline;
-			font-weight: bold;
-		}
-	}
+  @include element(text) {
+    font-size: 1em;
+    line-height: 1.5;
+    color: $color-gray;
 
-	@include element(image) {
+    > a {
+      text-decoration: underline;
+      font-weight: bold;
+    }
+  }
+
+  @include element(image) {
     height: 60%;
     display: flex;
     justify-content: center;
     margin: 0 auto;
 
-			> img {
-			width: auto;
-			height: 100%;
-		}
-	}
+    > img {
+      width: auto;
+      height: 100%;
+    }
+  }
 }
 
 @include block(qr-code) {
-	@include xy-grid();
-	@include flex-align(justify, middle);
-	border-radius: 5px;
-	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-	background-color: $color-white;
-	@include breakpoint(large) {
-		padding: 2em 3em;
-	}
+  @include xy-grid();
+  @include flex-align(justify, middle);
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: $color-white;
+  @include breakpoint(large) {
+    padding: 2em 3em;
+  }
 
-	@include breakpoint(medium down) {
-		padding: 1.5em;
-		margin-bottom: 60px;
-	}
-	@include element(wrapper){
-	
-	}
+  @include breakpoint(medium down) {
+    padding: 1.5em;
+    margin-bottom: 60px;
+  }
+  @include element(wrapper) {
+  }
 
-	@include element(steps) {
-		list-style-type: decimal;
+  @include element(steps) {
+    list-style-type: decimal;
 
-		> li {
-			padding-top: 1em;
-			font-size: .935em;
-			color: $color-dark;
-	
-			> a {
-				&:hover {
-					text-decoration: underline;
-				}
-			}
-		}
-	}
+    > li {
+      padding-top: 1em;
+      font-size: 0.935em;
+      color: $color-dark;
 
-	@include element(header) {
+      > a {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  @include element(header) {
     color: $color-white;
     @include xy-grid();
     @include flex-align(null, middle);
@@ -180,394 +254,392 @@
     }
   }
 
-	@include element(image) {
-		margin: auto;
-	}
+  @include element(image) {
+    margin: auto;
+  }
 
-	@include element(download) {
-		padding-top: 1em;
+  @include element(download) {
+    padding-top: 1em;
 
-		> a {
-			&:last-child {
-				margin-left: .5em
-			}
-		}
-		
-		@include breakpoint(large) {
-		}
-	}
+    > a {
+      &:last-child {
+        margin-left: 0.5em;
+      }
+    }
 
-	@include element(text) {
-		padding-top: 1em;
-		font-size: 15px;
-		color: $color-dark;
-		text-align: center;
+    @include breakpoint(large) {
+    }
+  }
 
-		> a {
-			&:hover {
-				text-decoration: underline;
-			}
-		}
-	}
+  @include element(text) {
+    padding-top: 1em;
+    font-size: 15px;
+    color: $color-dark;
+    text-align: center;
+
+    > a {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
 @include block(qr_code_modal) {
-	width: 350px;
-	@include xy-grid(vertical);
+  width: 350px;
+  @include xy-grid(vertical);
 
-	@include element(wrapper){
-		
-		@include breakpoint(large) {
-			margin-top: 40px;
-		}
-	}
+  @include element(wrapper) {
+    @include breakpoint(large) {
+      margin-top: 40px;
+    }
+  }
 
-	@include element(title) {
-		display: inline-block;
-		font-size: small;
-		color: $color-light-dark;
-		text-align: start;
-		font-weight: 500;
-	}
+  @include element(title) {
+    display: inline-block;
+    font-size: small;
+    color: $color-light-dark;
+    text-align: start;
+    font-weight: 500;
+  }
 
-	@include element(image) {
-		padding-top: 2em;
-		width: inherit;
-	}
+  @include element(image) {
+    padding-top: 2em;
+    width: inherit;
+  }
 }
 
 @include block(show-more) {
-	max-width: 330px;
-	@include element(header) {
-		display: block;
-		text-transform: uppercase;
-		font-size: 14px;
-		text-align: start;
-		font-weight: bold;
-		color: $color-dark;
+  max-width: 330px;
+  @include element(header) {
+    display: block;
+    text-transform: uppercase;
+    font-size: 14px;
+    text-align: start;
+    font-weight: bold;
+    color: $color-dark;
     padding: 0 0 1em;
-	}
+  }
 
-	@include element(content) {
-		@include xy-grid();
-		@include flex-align(null, middle);
+  @include element(content) {
+    @include xy-grid();
+    @include flex-align(null, middle);
 
-		@include element(item) {
-			@include xy-grid();
-			@include flex-align(justify, middle);
-			font-size: 11px;
-			padding: 1em 0;
-			width: 100%;
+    @include element(item) {
+      @include xy-grid();
+      @include flex-align(justify, middle);
+      font-size: 11px;
+      padding: 1em 0;
+      width: 100%;
 
-			> span {
-				&:first-child {
-					color: rgba(37, 67, 90, 0.6);
-				}
-				flex-basis: 50%;
-				text-align: start;
-			}
+      > span {
+        &:first-child {
+          color: rgba(37, 67, 90, 0.6);
+        }
+        flex-basis: 50%;
+        text-align: start;
+      }
 
-			@include block(address) {
-				color: $color-gray;
-				.fa-clone {
+      @include block(address) {
+        color: $color-gray;
+        .fa-clone {
           margin-left: 10px;
           font-weight: 400;
           font-size: 12px;
           color: $color-light-gray;
           &:hover {
-						cursor: pointer;
+            cursor: pointer;
             font-weight: 900;
           }
         }
-			}
-		}
-	}
+      }
+    }
+  }
 }
 
 @include block(toggle) {
-	max-height: 18px;
-	position: relative;
-	height: 100%;
-	display: inline-block;
+  max-height: 18px;
+  position: relative;
+  height: 100%;
+  display: inline-block;
 
-	@include breakpoint(small only) {
-		margin-bottom: auto;
-	}
+  @include breakpoint(small only) {
+    margin-bottom: auto;
+  }
 
-	> input {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		cursor: pointer;
-		opacity: 0;
-	}
+  > input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0;
+  }
 
-	.toggle {
-		&-wrapper {
-			width: 34px;
-			height: 18px;
-			background-color: $color-disabled;
-			border-radius: 10px;
-			position: relative;
-		}
+  .toggle {
+    &-wrapper {
+      width: 34px;
+      height: 18px;
+      background-color: $color-disabled;
+      border-radius: 10px;
+      position: relative;
+    }
 
-		&:hover {
-			cursor: pointer;
-		}
+    &:hover {
+      cursor: pointer;
+    }
 
-		display: block;
-		position: absolute;
-		width: 14px;
-		border-radius: 50%;
-		height: 14px;
-		background: $color-white;
-		top: 2px;
-		left: 2px;
-		border: 1px solid $color-disabled;
-		-webkit-transition: all 0.2s ease;
-		-moz-transition: all 0.2s ease;
-		-ms-transition: all 0.2s ease;
-		-o-transition: all 0.2s ease;
-		transition: all 0.2s ease;
-		text-align: center;
-	}
+    display: block;
+    position: absolute;
+    width: 14px;
+    border-radius: 50%;
+    height: 14px;
+    background: $color-white;
+    top: 2px;
+    left: 2px;
+    border: 1px solid $color-disabled;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
 
-	.toggle:before {
-		content: "";
-		color: $color-white;
-		text-shadow: 1px 1px $color-black;
-		font-family: tahoma;
-		font-size: 11px;
-	}
-	> input:checked ~ .toggle-wrapper {
-		background: $color-fuse_gradient;
-		.toggle {
-			left: 18px;
-			border-color: $color-fuse;
-		}
-	}
+  .toggle:before {
+    content: "";
+    color: $color-white;
+    text-shadow: 1px 1px $color-black;
+    font-family: tahoma;
+    font-size: 11px;
+  }
+  > input:checked ~ .toggle-wrapper {
+    background: $color-fuse_gradient;
+    .toggle {
+      left: 18px;
+      border-color: $color-fuse;
+    }
+  }
 
-	input:checked + .toggle:before {
-		content: "";
-	}
+  input:checked + .toggle:before {
+    content: "";
+  }
 }
 
 @include block(logo-circle) {
-	
-	@include element(outer) {
-		position: relative;
-		@include modifier (small) {
-			height: 100%;
-			width: 100%;
-			max-width: 50px;
-			min-width: 50px;
-			min-height: 50px;
-			max-height: 50px;
-			margin-right: 10px;
+  @include element(outer) {
+    position: relative;
+    @include modifier(small) {
+      height: 100%;
+      width: 100%;
+      max-width: 50px;
+      min-width: 50px;
+      min-height: 50px;
+      max-height: 50px;
+      margin-right: 10px;
 
-			> span {
-				font-size: 9px !important;
-				margin-top: -5px;
-			}
-		}
+      > span {
+        font-size: 9px !important;
+        margin-top: -5px;
+      }
+    }
 
-		@include modifier(normal) {
-			height: 100%;
-			width: 100%;
-			max-width: 60px;
-			min-width: 60px;
-			min-height: 60px;
-			max-height: 60px;
-			margin: auto;
-		}
+    @include modifier(normal) {
+      height: 100%;
+      width: 100%;
+      max-width: 60px;
+      min-width: 60px;
+      min-height: 60px;
+      max-height: 60px;
+      margin: auto;
+    }
 
-		@include modifier (big) {
-			height: 100%;
-			width: 100%;
-			max-width: 100px;
-			min-height: 100px;
-			max-height: 100px;
-			min-width: 100px;
-		}
+    @include modifier(big) {
+      height: 100%;
+      width: 100%;
+      max-width: 100px;
+      min-height: 100px;
+      max-height: 100px;
+      min-width: 100px;
+    }
 
-		@include modifier(CoinIcon1\.svg) {
-			@include modifier(ropsten) {
-				> span {
-					color: $color-dark;
-				}
-			}
+    @include modifier(CoinIcon1\.svg) {
+      @include modifier(ropsten) {
+        > span {
+          color: $color-dark;
+        }
+      }
 
-			@include modifier(main) {
-				> span {
-					color: $color-dark;
-				}
-			}
-		}
+      @include modifier(main) {
+        > span {
+          color: $color-dark;
+        }
+      }
+    }
 
-		@include modifier(CoinIcon2\.svg) {
-			> span {
-				color: $color-dark;
-			}
-		}
+    @include modifier(CoinIcon2\.svg) {
+      > span {
+        color: $color-dark;
+      }
+    }
 
-		@include modifier(CoinIcon3\.svg) {
-			@include modifier(ropsten) {
-				> span {
-					color: $color-fuse;
-				}
-			}
+    @include modifier(CoinIcon3\.svg) {
+      @include modifier(ropsten) {
+        > span {
+          color: $color-fuse;
+        }
+      }
 
-			@include modifier(fuse) {
-				> span {
-					color: $color-fuse;
-				}
-			}
-		}
-	}
+      @include modifier(fuse) {
+        > span {
+          color: $color-fuse;
+        }
+      }
+    }
+  }
 
-	@include element (inner){
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		width: 100%;
-		background-position: center;
-		background-size: contain;
-		background-repeat: no-repeat;
-		border-radius: 50%;
-	}
+  @include element(inner) {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+  }
 
-	@include element (name) {
-		@extend %logo-symbol;
-		color: $color-dark;
-	}
+  @include element(name) {
+    @extend %logo-symbol;
+    color: $color-dark;
+  }
 }
 
 @include block(button) {
-	height: 33px;
-	background-color: $color-light-dark;
-	border-radius: 3px;
-	color: $color-white;
+  height: 33px;
+  background-color: $color-light-dark;
+  border-radius: 3px;
+  color: $color-white;
 
-	.fa {
-		margin-left: 4px;
-	}
+  .fa {
+    margin-left: 4px;
+  }
 
-	@include modifier(normal){
-		width: 105px;
-		font-size: 13px;
-	}
+  @include modifier(normal) {
+    width: 105px;
+    font-size: 13px;
+  }
 
-	@include modifier(big) {
-		width: 160px;
-		font-size: 15px;
-	}
+  @include modifier(big) {
+    width: 160px;
+    font-size: 15px;
+  }
 
-	&:focus,
-	&:active,
-	&:focus:active {
-		outline: none;
-	}
+  &:focus,
+  &:active,
+  &:focus:active {
+    outline: none;
+  }
 
-	&:hover {
-		cursor: pointer;
-		background-color: $color-dark;
-	}
+  &:hover {
+    cursor: pointer;
+    background-color: $color-dark;
+  }
 
-	&:disabled,
-		&[disabled] {
-			opacity: 0.3;
-			background-color: $color-light-dark;
-			color: $color-white;
-			cursor: not-allowed;
-		}
+  &:disabled,
+  &[disabled] {
+    opacity: 0.3;
+    background-color: $color-light-dark;
+    color: $color-white;
+    cursor: not-allowed;
+  }
 }
 
 @include block(button-flip) {
-	transition: .8s cubic-bezier(.775, .07, .575, .995);
-	transform-style: preserve-3d;
-	border-radius: 3px;
+  transition: 0.8s cubic-bezier(0.775, 0.07, 0.575, 0.995);
+  transform-style: preserve-3d;
+  border-radius: 3px;
 
-	@include element(wrapper) {
-		position: relative;
-	}
+  @include element(wrapper) {
+    position: relative;
+  }
 
-	@include modifier(active) {
-		&:hover {
-			transform: rotateX(180deg);
-		}
-	}
+  @include modifier(active) {
+    &:hover {
+      transform: rotateX(180deg);
+    }
+  }
 
-	@include modifier(disabled) {
-		pointer-events: none;
-	}
+  @include modifier(disabled) {
+    pointer-events: none;
+  }
 
-	> button {
-		width: 105px;
-		height: 33px;
-		display: inline-block;
-		outline: none;
-		font-size: 14px;
-		cursor: pointer;
-		border: none;
-	}
+  > button {
+    width: 105px;
+    height: 33px;
+    display: inline-block;
+    outline: none;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+  }
 
-	@include element(front) {
-		border-radius: inherit;
-		background-color: $color-light-dark;
-		color: $color-white;
-		backface-visibility: hidden;
-		z-index: 2;
-		transform: rotateX(0deg);
-		position: absolute;
+  @include element(front) {
+    border-radius: inherit;
+    background-color: $color-light-dark;
+    color: $color-white;
+    backface-visibility: hidden;
+    z-index: 2;
+    transform: rotateX(0deg);
+    position: absolute;
 
-		&:disabled,
-		&[disabled] {
-			pointer-events: none;
-			opacity: 0.3;
-			color: $color-white;
-			cursor: not-allowed;
-		}
+    &:disabled,
+    &[disabled] {
+      pointer-events: none;
+      opacity: 0.3;
+      color: $color-white;
+      cursor: not-allowed;
+    }
 
-		&:hover {
-			background-color: #052235;
-		}
+    &:hover {
+      background-color: #052235;
+    }
 
-		@include modifier(fuse) {
-			color: $color-dark !important;
-			background: $color-fuse_gradient !important;
+    @include modifier(fuse) {
+      color: $color-dark !important;
+      background: $color-fuse_gradient !important;
 
-			&:disabled,
-			&[disabled] {
-				pointer-events: none;
-				opacity: 0.3;
-				color: $color-white;
-				cursor: not-allowed;
-			}
+      &:disabled,
+      &[disabled] {
+        pointer-events: none;
+        opacity: 0.3;
+        color: $color-white;
+        cursor: not-allowed;
+      }
 
-			&:hover {
-				background: darken($color-fuse, 10%) !important;
-			}
-		}
-	}
+      &:hover {
+        background: darken($color-fuse, 10%) !important;
+      }
+    }
+  }
 
-	@include element(back) {
-		border-radius: inherit;
-		background-color: #e4e4e4;
-		color: $color-dark;
-		backface-visibility: hidden;
-		transform: rotateX(-180deg);
-		position: relative;
-	
-		> a {
-			margin-right: 5px;
-			display: inline-block;
-			width: 13px;
-			height: 12px;
-			background-position: center;
-			background-size: contain;
-			background-repeat: no-repeat;
-		}
-	}
+  @include element(back) {
+    border-radius: inherit;
+    background-color: #e4e4e4;
+    color: $color-dark;
+    backface-visibility: hidden;
+    transform: rotateX(-180deg);
+    position: relative;
+
+    > a {
+      margin-right: 5px;
+      display: inline-block;
+      width: 13px;
+      height: 12px;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+  }
 }
 
 @include block(entity_added) {
@@ -575,36 +647,36 @@
   height: 321px !important;
   border-radius: 3px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-	background-color: $color-white;
-	@include xy-grid(vertical, false);
-	@include flex-align(spaced, middle);
+  background-color: $color-white;
+  @include xy-grid(vertical, false);
+  @include flex-align(spaced, middle);
 
-	@include breakpoint(small down) {
-		padding: 20px 30px;
-	}
+  @include breakpoint(small down) {
+    padding: 20px 30px;
+  }
 
-	@include element(title) {
-		font-size: 24px;
-		font-weight: 500;
-		color: #052235;
-	}
+  @include element(title) {
+    font-size: 24px;
+    font-weight: 500;
+    color: #052235;
+  }
 
-	@include element(body) {
-		@include xy-grid(vertical, false);
-		@include flex-align(center, middle);
-		color: $color-gray;
-		font-size: 20px;
-		line-height: 1.6;
-		
-	  span:nth-child(2) {
-			color: #052235;
-		}
-	}
+  @include element(body) {
+    @include xy-grid(vertical, false);
+    @include flex-align(center, middle);
+    color: $color-gray;
+    font-size: 20px;
+    line-height: 1.6;
+
+    span:nth-child(2) {
+      color: #052235;
+    }
+  }
 }
 
 @include block(congratulation) {
-	@include xy-grid(vertical, false);
-	@include flex-align(center, middle);
+  @include xy-grid(vertical, false);
+  @include flex-align(center, middle);
   top: 0;
   bottom: 0;
   right: 0;
@@ -612,103 +684,103 @@
   background-color: $color-white;
   z-index: 5;
   font-family: $font-family;
-	border-radius: 10px;
-	color: $color-dark;
-	text-align: center;
-	width: 520px;
-	margin: 1em auto auto;
+  border-radius: 10px;
+  color: $color-dark;
+  text-align: center;
+  width: 520px;
+  margin: 1em auto auto;
 
-	@include breakpoint(small down) {
-		padding: 20px 30px;
-	}
+  @include breakpoint(small down) {
+    padding: 20px 30px;
+  }
 
-	@include element(title) {
-	  font-size: 30px;
-		font-weight: bold;
-		color: $color-dark;
-		line-height: 2;
-	}
+  @include element(title) {
+    font-size: 30px;
+    font-weight: bold;
+    color: $color-dark;
+    line-height: 2;
+  }
 
-	@include element(sub-title) {
-		position: relative;
-  	font-size: 1.625em;
-  	font-weight: 500;
-  	text-align: center;
-		color: $color-light-dark;
-		
-		> img {
-			&:first-child {
-				position: absolute;
-				left: -5em;		
-			}
+  @include element(sub-title) {
+    position: relative;
+    font-size: 1.625em;
+    font-weight: 500;
+    text-align: center;
+    color: $color-light-dark;
 
-			&:last-child {
-				position: absolute;
-				right: -5em;
-			}
-		}
-	}
+    > img {
+      &:first-child {
+        position: absolute;
+        left: -5em;
+      }
 
-	@include element(boxImg) {
-		margin: 1em 0;
-	}
+      &:last-child {
+        position: absolute;
+        right: -5em;
+      }
+    }
+  }
 
-	@include element(fuse-text) {
-		font-size: 21px;
-		font-weight: 500;
-		line-height: 1.43;
-		text-align: center;
-		color: $color-gray;
-		margin-top: 20px;
+  @include element(boxImg) {
+    margin: 1em 0;
+  }
 
-		small {
-			font-size: 75%;
-		}
+  @include element(fuse-text) {
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 1.43;
+    text-align: center;
+    color: $color-gray;
+    margin-top: 20px;
 
-		a {
-			font-size: 75%;
-			text-decoration: underline;
-		}
-	}
+    small {
+      font-size: 75%;
+    }
 
-	@include element(what) {
-		font-size: 1.2em;
+    a {
+      font-size: 75%;
+      text-decoration: underline;
+    }
+  }
+
+  @include element(what) {
+    font-size: 1.2em;
     line-height: 1.25;
-		color: $color-gray;
-		text-align: center;
-	}
+    color: $color-gray;
+    text-align: center;
+  }
 
-	@include element(text) {
-	  font-size: 0.9em;
-		line-height: 1.56;
-		text-align: center;
-		color: $color-gray;
-	}
+  @include element(text) {
+    font-size: 0.9em;
+    line-height: 1.56;
+    text-align: center;
+    color: $color-gray;
+  }
 
-	@include element(btn) {
-		margin-top: 1.5em;
-		> button {
-			width: auto;
-			border-radius: 19px;
-			color: $color-dark;
-			font-size: 14.3px;
-			font-weight: 500;
-			border-radius: 19px;
-			color: $color-dark;
-			padding: 0 1em;
-			background: $color-fuse_gradient;
+  @include element(btn) {
+    margin-top: 1.5em;
+    > button {
+      width: auto;
+      border-radius: 19px;
+      color: $color-dark;
+      font-size: 14.3px;
+      font-weight: 500;
+      border-radius: 19px;
+      color: $color-dark;
+      padding: 0 1em;
+      background: $color-fuse_gradient;
 
-			&:hover {
-				background: $color-fuse;
-			}
-		}
-	}
+      &:hover {
+        background: $color-fuse;
+      }
+    }
+  }
 }
 
 @include block(status) {
-	@include xy-grid(vertical, false);
-	@include flex-align(center, middle);
-	position: absolute;
+  @include xy-grid(vertical, false);
+  @include flex-align(center, middle);
+  position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
@@ -716,80 +788,80 @@
   background-color: $color-white;
   z-index: 5;
   font-family: $font-family;
-	border-radius: 5px;
+  border-radius: 5px;
 
-	@include modifier(radius-all) {
-		border-radius: 10px;		
-	}
+  @include modifier(radius-all) {
+    border-radius: 10px;
+  }
 
-	@include modifier(radius-all-3) {
-		border-radius: 3px;		
-	}
+  @include modifier(radius-all-3) {
+    border-radius: 3px;
+  }
 
-	@include modifier(dark) {
-		background-color: rgba(5, 40, 62, 0.97);
-	}
+  @include modifier(dark) {
+    background-color: rgba(5, 40, 62, 0.97);
+  }
 
   @include element(issue) {
-		width: 411px;
+    width: 411px;
     height: 291px;
     border-radius: 10px;
     box-shadow: 2px 2px 11px 0 rgba(0, 0, 0, 0.25);
-		margin: auto;
-		position: fixed;
+    margin: auto;
+    position: fixed;
 
-		@include modifier(white) {
-			background-color: $color-white;
-		}
+    @include modifier(white) {
+      background-color: $color-white;
+    }
 
-		@include modifier(dark) {
-			background-color: rgba(5, 40, 62, 0.95);
-		}
+    @include modifier(dark) {
+      background-color: rgba(5, 40, 62, 0.95);
+    }
 
-		@include block(error_image) {
-			margin-bottom: 16px;
-		}
-	}
+    @include block(error_image) {
+      margin-bottom: 16px;
+    }
+  }
 
   @include element(title) {
     font-size: 20px;
     font-weight: 500;
     line-height: 1.35;
-		letter-spacing: 0.5px;
+    letter-spacing: 0.5px;
     text-align: center;
-		
-		@include modifier(white) {
-			color: $color-white;
-		}
 
-		@include element(dark) {
-			color: $color-dark;
-		}
-	}
+    @include modifier(white) {
+      color: $color-white;
+    }
 
-	@include element(sub-title) {
+    @include element(dark) {
+      color: $color-dark;
+    }
+  }
+
+  @include element(sub-title) {
     font-size: 18px;
     font-weight: normal;
-		margin-top: 15px;
+    margin-top: 15px;
     text-align: center;
-		
-		@include modifier(white) {
-			color: $color-white;
-		}
 
-		@include element(dark) {
-			color: $color-dark;
-		}
-	}
+    @include modifier(white) {
+      color: $color-white;
+    }
+
+    @include element(dark) {
+      color: $color-dark;
+    }
+  }
 
   @include element(icon) {
     margin: 1em auto;
     font-size: 20px;
-	}
+  }
 
-	@include element(loader) {
-		display: inline-block;
-		span {
+  @include element(loader) {
+    display: inline-block;
+    span {
       animation-name: blink;
       animation-duration: 1.4s;
       animation-iteration-count: infinite;
@@ -800,33 +872,33 @@
       &:nth-child(3) {
         animation-delay: 0.4s;
       }
-		}
-		
-		@include element(img) {
-			width: 40px;
-			height: 40px;
-			margin: 15px auto 0;
+    }
 
-			> img {
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: contain;
-				width: 100%;
-				height: 100%;
-			}
-		}
-	}
+    @include element(img) {
+      width: 40px;
+      height: 40px;
+      margin: 15px auto 0;
+
+      > img {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 
   .fa-close {
     color: red;
   }
   .fa-check {
     color: $color-light-green;
-	}
-	
-	@include element(button) {
-		margin: 40px 0 0px;
-	}
+  }
+
+  @include element(button) {
+    margin: 40px 0 0px;
+  }
 }
 
 .bridge-deploying {
@@ -861,10 +933,10 @@
         animation-delay: 0.4s;
       }
     }
-	}
-	&__loader {
-		width: 30px;
-	}
+  }
+  &__loader {
+    width: 30px;
+  }
   &-confirmation {
     color: $color-white;
     font-size: 18px;
@@ -874,15 +946,15 @@
 }
 
 @keyframes blink {
-	0% {
-		opacity: 0.2;
-	}
-	20% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0.2;
-	}
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
 }
 
 @keyframes lds-rolling {
@@ -908,119 +980,118 @@
 }
 
 @include block(input-error) {
-	display: block;
-	position: absolute;
-	bottom: -2em;
-	color: red;
-	font-size: 11px;
-	line-height: 1.25;
+  display: block;
+  position: absolute;
+  bottom: -2em;
+  color: red;
+  font-size: 11px;
+  line-height: 1.25;
 
-	@include modifier(bold) {
-			font-weight: bold;
-	}
+  @include modifier(bold) {
+    font-weight: bold;
+  }
 
-	&:not(:first-child) {
-			margin-top: 5px;
-	}
+  &:not(:first-child) {
+    margin-top: 5px;
+  }
 
-	&:not(:last-child) {
-			margin-bottom: 5px;
-	}
+  &:not(:last-child) {
+    margin-bottom: 5px;
+  }
 }
 
 @include block(email_modal) {
-	height: 100%;
-	@include xy-grid(vertical);
+  height: 100%;
+  @include xy-grid(vertical);
 
-	@include element(wrapper) {
-		border-radius: 5px;
-		box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.15);
-		background-color: $color-white;
+  @include element(wrapper) {
+    border-radius: 5px;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.15);
+    background-color: $color-white;
 
-		@include breakpoint(medium up) {
-			width: 619px !important;
-			height: 559px !important;
-			padding: 4em 2em !important;
-		}
-	}
+    @include breakpoint(medium up) {
+      width: 619px !important;
+      height: 559px !important;
+      padding: 4em 2em !important;
+    }
+  }
 
-	@include element(image) {
-		display: block;
-		margin: auto;
-	}
+  @include element(image) {
+    display: block;
+    margin: auto;
+  }
 
-	@include element(title) {
-		font-size: 1.313em;
-		font-weight: 500;
-		line-height: 0.95;
-		letter-spacing: -0.46px;
-		text-align: start;
-		color: $color-light-dark;
-		margin-bottom: .4em;
-	}
+  @include element(title) {
+    font-size: 1.313em;
+    font-weight: 500;
+    line-height: 0.95;
+    letter-spacing: -0.46px;
+    text-align: start;
+    color: $color-light-dark;
+    margin-bottom: 0.4em;
+  }
 
-	@include element(text) {
-		text-align: start;
-		font-size: 1em;
-		line-height: 1.25;
-		letter-spacing: -0.35px;
-		color: $color-gray;
+  @include element(text) {
+    text-align: start;
+    font-size: 1em;
+    line-height: 1.25;
+    letter-spacing: -0.35px;
+    color: $color-gray;
 
-		> p {
-			&:first-child {
-				padding-bottom: 1em;
-			}
+    > p {
+      &:first-child {
+        padding-bottom: 1em;
+      }
 
-			&:last-child {
-				padding-bottom: 3em;				
-			}
-		}
-	}
+      &:last-child {
+        padding-bottom: 3em;
+      }
+    }
+  }
 
-	@include block(email__form) {
-		@include element(field) {
-			input {
-				width: 100%;
-				background-color: $color-white;
-				padding: 0 16px;
-				font-size: 15px;
-				color: $color-dark;
-				height: 30px;
-				border-radius: 5px;
+  @include block(email__form) {
+    @include element(field) {
+      input {
+        width: 100%;
+        background-color: $color-white;
+        padding: 0 16px;
+        font-size: 15px;
+        color: $color-dark;
+        height: 30px;
+        border-radius: 5px;
 
-				box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
-				border: solid 1.1px #e1e1e1;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+        border: solid 1.1px #e1e1e1;
 
-				&::placeholder {
-					color: #92a1ac;
-				}
+        &::placeholder {
+          color: #92a1ac;
+        }
 
-				&:focus {
-					border: solid 1px $color-dark;
-				}
-			}
+        &:focus {
+          border: solid 1px $color-dark;
+        }
+      }
 
-			@include modifier(underline) {
-				&:before {
-					border-bottom: none !important;
-				}
-				&:hover:not(.Mui-disabled):before {
-					border-bottom: none !important;
-	
-				}
-				&:after {
-					border-bottom: none !important;
-				}
-			}
-	
-			@include modifier(error) {
-				&:after {
-					border-bottom-color: none !important;
-				}
-			}
-		}
+      @include modifier(underline) {
+        &:before {
+          border-bottom: none !important;
+        }
+        &:hover:not(.Mui-disabled):before {
+          border-bottom: none !important;
+        }
+        &:after {
+          border-bottom: none !important;
+        }
+      }
 
-		@include element(toggle) {
+      @include modifier(error) {
+        &:after {
+          border-bottom-color: none !important;
+        }
+      }
+    }
+
+    @include element(toggle) {
       @include xy-grid(horizontal, false);
       @include flex-align(null, middle);
       padding-top: 1em;
@@ -1031,93 +1102,92 @@
         > span {
           &:first-child {
             color: $color-gray;
-          }  
+          }
         }
-			}
-		}
-		
-		@include block(toggle) {
-			max-height: 18px;
-			position: relative;
-			height: 100%;
-			cursor: pointer;
-			display: inline-block;
+      }
+    }
 
-			@include breakpoint(small only) {
-				margin-bottom: auto;
-			}
+    @include block(toggle) {
+      max-height: 18px;
+      position: relative;
+      height: 100%;
+      cursor: pointer;
+      display: inline-block;
 
-			> input {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				cursor: pointer;
-				opacity: 0;
-			}
+      @include breakpoint(small only) {
+        margin-bottom: auto;
+      }
 
-			@include element(handler) {
-				width: 11px;
-				height: 11px;
-				background-color: $color-light-gray;
-				position: relative;
+      > input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        opacity: 0;
+      }
 
-				:before {
-					content: "";
-					color: $color-white;
-					text-shadow: 1px 1px $color-black;
-					font-family: tahoma;
-					font-size: 11px;
-				}
-			}
+      @include element(handler) {
+        width: 11px;
+        height: 11px;
+        background-color: $color-light-gray;
+        position: relative;
 
-			@include element(indicator) {
-				display: block;
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				background: $color-white;
-				top: 2px;
-				left: 2px;
-				border: 1px solid $color-disabled;
-				-webkit-transition: all 0.2s ease;
-				-moz-transition: all 0.2s ease;
-				-ms-transition: all 0.2s ease;
-				-o-transition: all 0.2s ease;
-				transition: all 0.2s ease;
-				text-align: center;
-				&:hover {
-					cursor: pointer;
-				}
-			}
+        :before {
+          content: "";
+          color: $color-white;
+          text-shadow: 1px 1px $color-black;
+          font-family: tahoma;
+          font-size: 11px;
+        }
+      }
 
-			> input:checked ~ .toggle__handler {
-				background: $color-light-dark;
-				&:before {
-					content: '\2713\0020';
-					color: white;
-					height: 6px;
-					width: 1px;
-					position: absolute;
-					top: -4px;
-					right: 0;
-					left: 0;
-					bottom: 0;
-				}
-			}
+      @include element(indicator) {
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: $color-white;
+        top: 2px;
+        left: 2px;
+        border: 1px solid $color-disabled;
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+        text-align: center;
+        &:hover {
+          cursor: pointer;
+        }
+      }
 
-			input:checked + .toggle__handler__indicator:before {
-				content: "";
-			}
-		}
-	}
+      > input:checked ~ .toggle__handler {
+        background: $color-light-dark;
+        &:before {
+          content: "\2713\0020";
+          color: white;
+          height: 6px;
+          width: 1px;
+          position: absolute;
+          top: -4px;
+          right: 0;
+          left: 0;
+          bottom: 0;
+        }
+      }
 
+      input:checked + .toggle__handler__indicator:before {
+        content: "";
+      }
+    }
+  }
 }
 
 @keyframes copyAnime {
-	from {
-		bottom: 0;
-	}
-	to {
-		bottom: 50px;
-	}
+  from {
+    bottom: 0;
+  }
+  to {
+    bottom: 50px;
+  }
 }
