@@ -6,6 +6,9 @@
       "ropsten": {
         "FuseToken": "0xEc304De130dA3afbD2F60C7aa6C5485e30239372",
         "TokenFactory": "0xA6D0f4552cf5237987F46095875fC64b006E7bda"
+      },
+      "fuse": {
+        "funder": "0x373c383b05c121e541f239afe5fd73c013fed20f"
       }
     },
     "bridge": {
@@ -13,9 +16,6 @@
         "homeNetwork": "fuse",
         "foreignNetwork": "main"
       }
-    },
-    "funder": {
-      "address": "0x373c383b05c121e541f239afe5fd73c013fed20f"
     }
   },
   "api": {

@@ -14,7 +14,7 @@ import { addCommunityPlugins, toggleJoinBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import get from 'lodash/get'
-const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
+const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
 const JoinBonus = ({
   loadModal,
