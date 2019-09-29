@@ -25,10 +25,6 @@ const handlers = {
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
     return { ...state, communities: action.response.result }
   },
-  [FETCH_FEATURED_COMMUNITIES.SUCCESS]: (state, action) => ({
-    ...state,
-    featuredCommunities: [...action.response.result]
-  }),
   [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
   [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) }),
   [IS_USER_EXISTS.SUCCESS]: (state, action) => ({ ...state, ...action.response })
@@ -38,6 +34,10 @@ export default (state = {}, action) => {
   if (handlers.hasOwnProperty(action.type) && action.accountAddress) {
     const account = state[action.accountAddress] || initialAccount
     return { ...state, [action.accountAddress]: handlers[action.type](account, action) }
+  }
+
+  if (action.type === FETCH_FEATURED_COMMUNITIES.SUCCESS) {
+    return { ...state, featuredCommunities: [...action.response.result] }
   }
   return state
 }

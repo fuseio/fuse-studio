@@ -110,7 +110,7 @@ const mapStateToProps = state => ({
   communities: state.entities.communities,
   networkType: state.network.networkType,
   communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
-  featuredCommunities: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].featuredCommunities
+  featuredCommunities: state.accounts.featuredCommunities
 })
 
 const mapDispatchToProps = {
