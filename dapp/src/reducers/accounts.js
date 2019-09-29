@@ -1,6 +1,6 @@
 import * as actions from 'actions/accounts'
-import { FETCH_TOKEN_LIST } from 'actions/token'
 import { LOGIN, IS_USER_EXISTS } from 'actions/user'
+import { FETCH_FEATURED_COMMUNITIES } from 'actions/token'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import pick from 'lodash/pick'
 
@@ -22,9 +22,6 @@ const handlers = {
   [LOGIN.SUCCESS]: (state, action) => {
     return { ...state, ...action.response }
   },
-  [FETCH_TOKEN_LIST.SUCCESS]: (state, action) => {
-    return { ...state, tokens: action.response.result }
-  },
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
     return { ...state, communities: action.response.result }
   },
@@ -37,6 +34,10 @@ export default (state = {}, action) => {
   if (handlers.hasOwnProperty(action.type) && action.accountAddress) {
     const account = state[action.accountAddress] || initialAccount
     return { ...state, [action.accountAddress]: handlers[action.type](account, action) }
+  }
+
+  if (action.type === FETCH_FEATURED_COMMUNITIES.SUCCESS) {
+    return { ...state, featuredCommunities: [...action.response.result] }
   }
   return state
 }

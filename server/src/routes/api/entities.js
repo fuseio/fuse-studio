@@ -14,7 +14,9 @@ const withCommunities = async (entities) => {
   const communitiesByTokenAddress = keyBy(communities, 'communityAddress')
 
   return entities.map((entity) => ({
-    ...entity.toObject(),
+    entity: { ...entity.toObject() },
+    isAdmin: entity.isAdmin,
+    communityAddress: entity.communityAddress,
     community: communitiesByTokenAddress[entity.communityAddress]
       ? communitiesByTokenAddress[entity.communityAddress]
       : undefined
@@ -55,8 +57,8 @@ router.get('/account/:account', async (req, res, next) => {
 
   const data = await withCommunities(results)
 
-  const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse().slice(0, 4)
-  const communitiesUserPartOf = sortBy(data.filter(({ isAdmin }) => !isAdmin), ['updatedAt']).reverse().slice(0, 4)
+  const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse()
+  const communitiesUserPartOf = sortBy(data.filter(({ isAdmin }) => !isAdmin), ['updatedAt']).reverse()
   return res.json({ data: await withTokens([...communitiesUserOwn, ...communitiesUserPartOf]) })
 })
 

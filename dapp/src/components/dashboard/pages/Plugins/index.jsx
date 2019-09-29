@@ -11,6 +11,9 @@ import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
 import { addCommunityPlugins } from 'actions/community'
 import get from 'lodash/get'
+import upperCase from 'lodash/upperCase'
+import lowerCase from 'lodash/lowerCase'
+import upperFirst from 'lodash/upperFirst'
 import Puzzle from 'images/puzzle.svg'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
@@ -54,8 +57,16 @@ const Plugins = ({
     })
   }
 
+  const handleTracker = (plugin) => {
+    if (window && window.analytics) {
+      const pluginsValues = Object.values(plugin)[0]
+      window.analytics.track(`${upperFirst(lowerCase(upperCase(Object.keys(plugin))))} ${pluginsValues.isActive ? 'added' : 'removed'}`)
+    }
+  }
+
   const addPlugin = (plugin) => {
     const { communityAddress } = community
+    handleTracker(plugin)
     addCommunityPlugins(communityAddress, plugin)
   }
 

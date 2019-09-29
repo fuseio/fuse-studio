@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
-import { fetchTokenStatistics, transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
+import { transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
@@ -87,14 +87,6 @@ class Dashboard extends Component {
     transferToken(tokenAddress, toField, toWei(String(amount)))
   }
 
-  handleIntervalChange = (userType, intervalValue) => {
-    const { community: { foreignTokenAddress } } = this.props
-    if (foreignTokenAddress) {
-      const { fetchTokenStatistics } = this.props
-      fetchTokenStatistics(foreignTokenAddress, userType, intervalValue)
-    }
-  }
-
   loadQrModal = (value) => {
     const { loadModal } = this.props
     loadModal(QR_MODAL, { value })
@@ -115,8 +107,8 @@ class Dashboard extends Component {
     } = this.props
 
     const { address: tokenAddress } = token
-    const { communityAddress, homeTokenAddress, foreignTokenAddress } = community
-    const { steps, owner, totalSupply } = dashboard
+    const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress } = community
+    const { owner, totalSupply } = dashboard
 
     return (
       <React.Fragment>
@@ -141,7 +133,7 @@ class Dashboard extends Component {
           <Bridge
             isAdmin={isAdmin}
             tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
-            bridgeDeployed={steps && steps.bridge}
+            bridgeDeployed={homeBridgeAddress && foreignBridgeAddress}
             accountAddress={accountAddress}
             token={token}
             bridgeStatus={bridgeStatus}
@@ -164,7 +156,6 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  fetchTokenStatistics,
   isUserExists,
   loadModal,
   hideModal,

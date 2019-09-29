@@ -2,10 +2,9 @@ import { all, put, call, takeEvery, select } from 'redux-saga/effects'
 
 import * as actions from 'actions/accounts'
 import { tryTakeEvery, createEntitiesFetch } from './utils'
-import { getAddress, getNetworkType, getNetworkSide } from 'selectors/network'
+import { getAddress, getNetworkType } from 'selectors/network'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN, FETCH_TOKEN_TOTAL_SUPPLY } from 'actions/token'
-import { fetchTokenList } from 'sagas/token'
 import { getWeb3, get3box } from 'services/web3'
 import { getAccountAddress, getAccount } from 'selectors/accounts'
 import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
@@ -13,6 +12,8 @@ import { createUsersMetadata } from 'sagas/metadata'
 import { separateData } from 'utils/3box'
 import { isUserExists } from 'actions/user'
 import BasicTokenABI from '@fuse/token-factory-contracts/build/abi/BasicToken'
+
+const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 
 function * fetchTokenTotalSupply ({ tokenAddress, options }) {
   const web3 = yield getWeb3(options)
@@ -68,14 +69,6 @@ function * fetchBalances ({ accountAddress, tokens }) {
     yield put(actions.balanceOfToken(token.address, accountAddress))
   }
 }
-
-function * fetchTokensWithBalances ({ accountAddress }) {
-  const networkSide = yield select(getNetworkSide)
-  const tokens = yield call(fetchTokenList, { accountAddress, networkSide, entity: 'tokens' })
-  yield call(fetchBalances, { accountAddress, tokens, networkSide })
-}
-
-const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 
 function * signIn ({ accountAddress }) {
   yield put(isUserExists(accountAddress))
@@ -134,7 +127,6 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
     tryTakeEvery(actions.SIGN_IN, signIn, 1),
     tryTakeEvery(actions.CREATE_3BOX_PROFILE, create3boxProfile, 1),
-    tryTakeEvery(actions.FETCH_TOKENS_WITH_BALANCES, fetchTokensWithBalances, 1),
     tryTakeEvery(FETCH_TOKEN_TOTAL_SUPPLY, fetchTokenTotalSupply)
   ])
 }

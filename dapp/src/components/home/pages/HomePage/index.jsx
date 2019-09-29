@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ContentBox from 'components/home/components/ContentBox'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import Faqs from 'components/home/components/Faq'
@@ -19,6 +19,8 @@ const HomePage = ({
   history,
   loadModal
 }) => {
+  const [title, setTitle] = useState('Featured communities')
+
   const sendMailBlocker = () => {
     const subscribe = loadState('subscribe')
     if (!subscribe) {
@@ -30,9 +32,15 @@ const HomePage = ({
     const subscribe = loadState('subscribe')
     if (!subscribe) {
       sendMailBlocker()
-    } else {
-      history.push('/view/issuance')
     }
+
+    const interval = setInterval(() => {
+      const subscribe = loadState('subscribe')
+      if (subscribe) {
+        history.push('/view/issuance')
+        clearInterval(interval)
+      }
+    }, 500)
   }
 
   const gotToFaqs = () => {
@@ -58,7 +66,7 @@ const HomePage = ({
               <span style={{ marginLeft: '5px' }}><img src={arrowImage} alt='arrow' /></span>
             </button></div>
           </div>
-          <div className='home_page__image home_page__image--second cell large-12 medium-12 small-15'>
+          <div className='home_page__image home_page__image--second cell large-12 medium-12 small-18'>
             <img src={personImage} />
             <img src={!isMobileOnly ? groupImage : groupImageMobile} />
           </div>
@@ -72,11 +80,11 @@ const HomePage = ({
                 withDecoration={!isMobileOnly}
                 subTitleAction={showCommunities}
                 action={showIssuance}
-                title='My communities'
+                title={title}
                 subTitle='Explore'
                 actionTitle='Launch your community'
               >
-                <FeaturedCommunities />
+                <FeaturedCommunities setTitle={setTitle} />
               </ContentBox>
             </div>
             <div className='cell medium-24 large-12'>

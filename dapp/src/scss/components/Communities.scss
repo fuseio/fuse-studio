@@ -98,6 +98,10 @@
 		@include element(items) {
 			padding: 10px 0;
 
+			> div {
+				border-radius: 8px;
+			}
+			
 			@include element(item) {
 				@include padding(null, 2, null, 2);
 				@include margin(null, null, 2, null);

@@ -7,7 +7,3 @@ export const processReceipt = (apiRoot, { receipt, bridgeType }) =>
 
 export const processTransactionHash = (apiRoot, { transactionHash, bridgeType, abiName }) =>
   request.post(`${apiRoot}/receipts/${transactionHash}`).send({ abiName, bridgeType }).then(response => response.body)
-
-export const sendContactUs = (formData) => request.post(`${API_ROOT}/mails`)
-  .send({ formData })
-  .then(response => response.body)

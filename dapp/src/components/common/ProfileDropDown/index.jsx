@@ -80,7 +80,7 @@ const ProfileCard = ({
   showDashboard,
   accountAddress
 }) => {
-  const { token: { name, symbol }, community: { homeTokenAddress, foreignTokenAddress } } = entity
+  const { token: { name, symbol }, community: { homeTokenAddress, foreignTokenAddress, communityAddress } } = entity
 
   useEffect(() => {
     balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
@@ -89,7 +89,7 @@ const ProfileCard = ({
   }, [])
 
   return (
-    <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(entity.communityAddress)}>
+    <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
       <div className='profile__card__logo'>
         <CommunityLogo
           isDaiToken={entity.token && entity.token.symbol === 'DAI'}
@@ -126,7 +126,7 @@ const InnerCommunities = ({
   balanceOfToken,
   title
 }) => {
-  if (isEmpty(communities)) return null
+  if (isEmpty(communities) || isEmpty(communities.filter(({ entity }) => entity))) return null
 
   useEffect(() => {
     if (communities && accountAddress) {
@@ -192,7 +192,7 @@ const ProfileDropDown = ({
   let communitiesIPartOf
   if (communities && typeof filteredCommunities.filter === 'function') {
     communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
-    communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token)
+    communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
   }
 
   const showDashboard = (communityAddress) => {
