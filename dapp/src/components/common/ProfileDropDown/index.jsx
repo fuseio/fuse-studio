@@ -33,7 +33,7 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
         isPortis ? {
           provider: 'Portis'
         } : isMetaMask ? {
-          provider: 'MetaMask'
+          provider: 'Metamask'
         } : null)
     }
   }, [account])
