@@ -52,7 +52,7 @@ class DashboardLayout extends Component {
     }
 
     if (this.props.community && !isEqual(this.props.accountAddress, prevProps.accountAddress)) {
-      const { balanceOfToken, community, accountAddress, isAdmin } = this.props
+      const { balanceOfToken, community, accountAddress, isAdmin, networkType } = this.props
       const { foreignTokenAddress, homeTokenAddress } = community
       console.log('balanceOfToken')
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
@@ -63,6 +63,10 @@ class DashboardLayout extends Component {
         analytics.identify(`${accountAddress}`, {
           role: 'admin'
         })
+
+        if (networkType === 'fuse') {
+          window.analytics.track(`Switch to fuse network`)
+        }
       }
     }
 

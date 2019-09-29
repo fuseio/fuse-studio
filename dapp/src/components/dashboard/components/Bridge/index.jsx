@@ -46,10 +46,6 @@ const Balance = ({
   useEffect(() => {
     if (window && window.analytics && isAdmin) {
       const { analytics } = window
-      if (bridge === 'home') {
-        analytics.track(`Switch to fuse network`)
-      }
-
       if (bridge === 'home' && Number(new BigNumber(balance).div(1e18).toFixed()) > 0) {
         analytics.identify(`${accountAddress}`, {
           role: 'admin',
