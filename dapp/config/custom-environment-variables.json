@@ -4,6 +4,9 @@
     "apiKey": "COMMUNITY_WEB3_API_KEY",
     "portis": {
       "id": "COMMMUNITY_WEB3_PORTIS_ID"
+    },
+    "funder": {
+      "address": "COMMUNITY_WEB3_FUNDER_ADDRESS"
     }
   },
   "api": {
