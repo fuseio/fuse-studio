@@ -23,6 +23,7 @@ const HDWalletProvider = require('truffle-hdwallet-provider');
 //
 // const fs = require('fs');
 const mnemonic = process.env.MNEMONIC
+const privateKey = process.env.PRIVATE_KEY
 const apiKey = process.env.API_KEY
 
 module.exports = {
@@ -62,14 +63,14 @@ module.exports = {
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
     ropsten: {
-      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${apiKey}`),
+      provider: () => new HDWalletProvider(mnemonic || privateKey, `https://ropsten.infura.io/v3/${apiKey}`),
       network_id: 3,       // Ropsten's id
       gas: 5500000,        // Ropsten has a lower block limit than mainnet
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
     },
 
     mainnet: {
-      provider: () => new HDWalletProvider(mnemonic, `https://mainnet.infura.io/v3/${apiKey}`),
+      provider: () => new HDWalletProvider(mnemonic || privateKey, `https://mainnet.infura.io/v3/${apiKey}`),
       network_id: 1,
       gas: 5500000,
       timeoutBlocks: 200,
