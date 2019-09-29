@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
 import { getAddresses, getNetworkType } from 'selectors/network'
 import { initialAccount } from 'reducers/accounts'
-const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
+const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
 export const getAccountAddress = state => state.network.accountAddress
 

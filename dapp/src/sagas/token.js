@@ -25,7 +25,7 @@ import TokenFactoryABI from '@fuse/token-factory-contracts/build/abi/TokenFactor
 import CommunityABI from '@fuse/entities-contracts/build/abi/CommunityWithEvents'
 import { getOptions, getNetworkVersion } from 'utils/network'
 import FuseTokenABI from 'constants/abi/FuseToken'
-const { addresses: { funder: { address: funderAddress } } } = CONFIG.web3
+const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
 const entityPut = createEntityPut(actions.entityName)
 
