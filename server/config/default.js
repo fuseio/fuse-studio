@@ -65,12 +65,12 @@ module.exports = {
       }),
       addressesMainnet: {
         FuseToken: '0xcd975c581AA0b83a8dE39035325BF44556517367',
-        TokenFactory: '0x72eFE0bE5546e4928357ECcD074e16BA1edD3274',
+        TokenFactory: '0xB2100946628D3e45FF94971b35508AfCBBc87432',
         ForeignBridgeFactory: '0xaC116929b2baB59D05a1Da99303e7CAEd100ECC9'
       },
       addressesRopsten: {
         FuseToken: '0xcd975c581AA0b83a8dE39035325BF44556517367',
-        TokenFactory: '0xA6D0f4552cf5237987F46095875fC64b006E7bda',
+        TokenFactory: '0x6004EAdF0aD3aCd568F354CA7E2b410bA0080E98',
         ForeignBridgeFactory: '0xABBf5D8599B2Eb7b4e1D25a1Fd737FF1987655aD'
       },
       addresses: defer(function () {
