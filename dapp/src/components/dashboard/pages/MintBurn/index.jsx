@@ -11,6 +11,7 @@ import { mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { toWei } from 'web3-utils'
 import Message from 'components/common/SignMessage'
 import { getForeignNetwork } from 'selectors/network'
+import { getBalances } from 'selectors/accounts'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -168,7 +169,8 @@ const MintBurn = ({
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
-  homeNetwork: state.network.homeNetwork
+  homeNetwork: state.network.homeNetwork,
+  balances: getBalances(state)
 })
 
 const mapDispatchToProps = {

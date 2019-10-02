@@ -21,14 +21,14 @@ export const JOIN_COMMUNITY = createRequestTypes('JOIN_COMMUNITY')
 export const IMPORT_EXISTING_ENTITY = createRequestTypes('IMPORT_EXISTING_ENTITY')
 export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
 
-export const fetchEntities = (communityAddress) => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress })
+export const fetchEntities = (communityAddress) => entitiesAction(FETCH_ENTITIES.REQUEST, { communityAddress })
 export const fetchUsersEntities = (communityAddress, entityType = 'user') => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress, entityType })
 export const fetchBusinessesEntities = (communityAddress, entityType = 'business') => entitiesAction(FETCH_BUSINESSES_ENTITIES.REQUEST, { communityAddress, entityType })
 
 export const fetchEntity = (communityAddress, account) => entitiesAction(FETCH_ENTITY.REQUEST, { communityAddress, account })
 
 export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType })
-export const removeEntity = (communityAddress, account) => action(REMOVE_ENTITY.REQUEST, { communityAddress, account })
+export const removeEntity = (account) => action(REMOVE_ENTITY.REQUEST, { account })
 export const addAdminRole = (account) => action(ADD_ADMIN_ROLE.REQUEST, { account })
 export const removeAdminRole = (account) => action(REMOVE_ADMIN_ROLE.REQUEST, { account })
 export const confirmUser = (account) => action(CONFIRM_USER.REQUEST, { account })

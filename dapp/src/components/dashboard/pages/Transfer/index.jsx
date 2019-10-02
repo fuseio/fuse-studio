@@ -8,33 +8,23 @@ import capitalize from 'lodash/capitalize'
 import Message from 'components/common/SignMessage'
 import { FAILURE, SUCCESS } from 'actions/constants'
 import { withRouter } from 'react-router-dom'
-import { balanceOfToken } from 'actions/accounts'
+import { getBalances } from 'selectors/accounts'
 
 const Transfer = ({
   sendTo,
   error,
   token,
-  community,
   balances,
   networkType,
   isTransfer,
   transferToken,
   transferSignature,
   transactionStatus,
-  accountAddress,
   transferSuccess,
   clearTransactionStatus,
-  balanceOfToken,
   tokenOfCommunityOnCurrentSide
 }) => {
   const [transferMessage, setTransferMessage] = useState(false)
-  const { homeTokenAddress, foreignTokenAddress } = community
-
-  useEffect(() => {
-    balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
-    balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-    return () => {}
-  }, [accountAddress])
 
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
@@ -92,13 +82,13 @@ const Transfer = ({
 const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   sendTo: match.params.sendTo,
-  homeNetwork: state.network.homeNetwork
+  homeNetwork: state.network.homeNetwork,
+  balances: getBalances(state)
 })
 
 const mapDispatchToProps = {
   transferToken,
-  clearTransactionStatus,
-  balanceOfToken
+  clearTransactionStatus
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Transfer))

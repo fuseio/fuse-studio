@@ -23,7 +23,7 @@ import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
 import sortBy from 'lodash/sortBy'
 import Avatar from 'images/avatar.svg'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import { getForeignNetwork } from 'selectors/network'
 
@@ -296,7 +296,7 @@ const Users = ({
     onlyOnFuse(() => loadAddUserModal(true))
 
   const handleRemoveEntity = (account) =>
-    onlyOnFuse(() => removeEntity(communityAddress, account))
+    onlyOnFuse(() => removeEntity(account))
 
   const handleAddAdminRole = (account) =>
     onlyOnFuse(() => addAdminRole(account))
@@ -379,4 +379,4 @@ const mapDispatchToProps = {
   importExistingEntity
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Users)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Users))

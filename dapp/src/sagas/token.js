@@ -227,8 +227,11 @@ function * watchCommunityFetch ({ response }) {
   const { entities } = response
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
-      const { foreignTokenAddress } = entities[communityAddress]
+      const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
+      yield put(actions.fetchToken(homeTokenAddress))
       yield put(actions.fetchToken(foreignTokenAddress))
+      yield put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' }))
+      yield put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' }))
     }
   }
 }

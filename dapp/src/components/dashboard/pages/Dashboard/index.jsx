@@ -2,12 +2,11 @@ import React, { Component } from 'react'
 import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
 import { transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
-import { USER_DATA_MODAL, WRONG_NETWORK_MODAL, BRIDGE_MODAL, NO_DATA_ABOUT_OWNER_MODAL, QR_MODAL } from 'constants/uiConstants'
+import { WRONG_NETWORK_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
 import { isUserExists } from 'actions/user'
 import { getTransaction } from 'selectors/transaction'
-import { isOwner } from 'utils/token'
 import Bridge from 'components/dashboard/components/Bridge'
 import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 import FontAwesome from 'react-fontawesome'
@@ -51,26 +50,6 @@ class Dashboard extends Component {
     this.props.history.push('/')
   }
 
-  loadUserDataModal = () => {
-    const { token, loadModal, accountAddress, dashboard: { owner } } = this.props
-    const { address: tokenAddress } = token
-    if (isOwner({ owner }, accountAddress)) {
-      loadModal(USER_DATA_MODAL, { tokenAddress })
-    } else {
-      loadModal(NO_DATA_ABOUT_OWNER_MODAL, { tokenAddress })
-    }
-  }
-
-  loadBridgePopup = () => {
-    const { loadModal, deployBridge, token, accountAddress, dashboard: { owner } } = this.props
-    const { address: tokenAddress } = token
-    loadModal(BRIDGE_MODAL, {
-      tokenAddress,
-      isOwner: isOwner({ owner }, accountAddress),
-      buttonAction: deployBridge
-    })
-  }
-
   handleMintOrBurnClick = (actionType, amount) => {
     const { burnToken, mintToken, token: { address: tokenAddress } } = this.props
     if (actionType === 'mint') {
@@ -95,10 +74,8 @@ class Dashboard extends Component {
   render () {
     const {
       community,
-      homeToken,
       foreignToken,
       accountAddress,
-      balances,
       dashboard,
       networkType,
       children,
@@ -107,44 +84,42 @@ class Dashboard extends Component {
       isAdmin
     } = this.props
 
-    const { address: tokenAddress } = foreignToken
     const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress } = community
-    const { owner } = dashboard
+    const { totalSupply } = dashboard
 
     return (
       <React.Fragment>
         {children}
         <div className='content__tabs'>
           <CommunityInfo
-            homeToken={homeToken}
+            tokensTotalSupplies={totalSupply}
             foreignToken={foreignToken}
-            balances={balances}
             loadQrModal={this.loadQrModal}
             communityAddress={communityAddress}
             homeTokenAddress={homeTokenAddress}
             foreignTokenAddress={foreignTokenAddress}
           />
         </div>
-
-        <div className='content__bridge'>
-          <h3 className='content__bridge__title'>Bridge <FontAwesome style={{ fontSize: '60%' }} data-tip data-for='bridge' name='info-circle' /></h3>
-          <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
-            <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
-          </ReactTooltip>
-          <Bridge
-            isAdmin={isAdmin}
-            tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
-            bridgeDeployed={homeBridgeAddress && foreignBridgeAddress}
-            accountAddress={accountAddress}
-            token={foreignToken}
-            bridgeStatus={bridgeStatus}
-            foreignTokenAddress={tokenAddress}
-            isOwner={() => isOwner({ owner }, accountAddress)}
-            loadBridgePopup={this.loadBridgePopup}
-            communityAddress={communityAddress}
-            network={networkType}
-          />
-        </div>
+        {
+          homeBridgeAddress && foreignBridgeAddress && (
+            <div className='content__bridge'>
+              <h3 className='content__bridge__title'>Bridge <FontAwesome style={{ fontSize: '60%' }} data-tip data-for='bridge' name='info-circle' /></h3>
+              <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
+                <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
+              </ReactTooltip>
+              <Bridge
+                isAdmin={isAdmin}
+                network={networkType}
+                token={foreignToken}
+                community={community}
+                bridgeStatus={bridgeStatus}
+                accountAddress={accountAddress}
+                communityAddress={communityAddress}
+                tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+              />
+            </div>
+          )
+        }
       </React.Fragment>
     )
   }

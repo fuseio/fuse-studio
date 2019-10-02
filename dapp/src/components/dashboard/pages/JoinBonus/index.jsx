@@ -8,7 +8,7 @@ import SignMessage from 'components/common/SignMessage'
 import { FAILURE, SUCCESS } from 'actions/constants'
 import { toWei } from 'web3-utils'
 import classNames from 'classnames'
-import { getFunderAccount } from 'selectors/accounts'
+import { getFunderAccount, getBalances } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
 import { addCommunityPlugins, toggleJoinBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
@@ -17,7 +17,6 @@ import get from 'lodash/get'
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
 const JoinBonus = ({
-  loadModal,
   error,
   networkType,
   community,
@@ -42,7 +41,7 @@ const JoinBonus = ({
   const { toSend } = joinBonus
 
   const [transferMessage, setTransferMessage] = useState(false)
-  const [amountToFunder, setAmount] = useState(0)
+  const [amountToFunder, setAmount] = useState(null)
 
   const [joinBonusInfoMessage, setJoinBonusInfoMessage] = useState(get(joinBonus, 'joinInfo.message', ''))
   const [joinBonusInfoAmount, setJoinBonusInfoAmount] = useState(get(joinBonus, 'joinInfo.amount', 0))
@@ -58,11 +57,13 @@ const JoinBonus = ({
     if (transactionStatus && transactionStatus === SUCCESS) {
       if (transferSuccess) {
         setTransferMessage(true)
-        balanceOfToken(address, funderAddress)
+        setAmount(null)
+        balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
       }
     } else if (transactionStatus && transactionStatus === FAILURE) {
       if (transferSuccess === false) {
         setTransferMessage(true)
+        setAmount(null)
       }
     }
     return () => {}
@@ -98,6 +99,7 @@ const JoinBonus = ({
 
   const funderAccount = useSelector(getFunderAccount)
 
+  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[tokenOfCommunityOnCurrentSide]
   const balance = balances[tokenOfCommunityOnCurrentSide]
 
   return (
@@ -120,7 +122,7 @@ const JoinBonus = ({
                     <div className='join_bonus__funder_balance'>
                       <span>Funder balance:&nbsp;</span>
                       <div>
-                        <span>{get(funderAccount, `balances[${[tokenOfCommunityOnCurrentSide]}]`, false) ? formatWei(get(funderAccount, `balances[${[tokenOfCommunityOnCurrentSide]}]`, false), 0) : 0}&nbsp;</span>
+                        <span>{funderBalance ? formatWei(funderBalance, 0) : 0}&nbsp;</span>
                         <small>{symbol}</small>
                       </div>
                     </div>
@@ -134,7 +136,8 @@ const JoinBonus = ({
                         root: 'join_bonus__field'
                       }}
                       inputProps={{
-                        autoComplete: 'off'
+                        autoComplete: 'off',
+                        value: amountToFunder
                       }}
                       InputProps={{
                         classes: {
@@ -194,7 +197,7 @@ const JoinBonus = ({
                     <div className='join_bonus__funder_balance'>
                       <span>Funder balance:&nbsp;</span>
                       <div>
-                        <span>{get(funderAccount, `balances[${[tokenOfCommunityOnCurrentSide]}]`, false) ? formatWei(get(funderAccount, `balances[${[tokenOfCommunityOnCurrentSide]}]`, false), 0) : 0}&nbsp;</span>
+                        <span>{funderBalance ? formatWei(funderBalance, 0) : 0}&nbsp;</span>
                         <small>{symbol}</small>
                       </div>
                     </div>
@@ -208,7 +211,8 @@ const JoinBonus = ({
                         root: 'join_bonus__field'
                       }}
                       inputProps={{
-                        autoComplete: 'off'
+                        autoComplete: 'off',
+                        value: amountToFunder
                       }}
                       InputProps={{
                         classes: {
@@ -331,7 +335,8 @@ const JoinBonus = ({
 }
 
 const mapStateToProps = (state) => ({
-  ...state.screens.token
+  ...state.screens.token,
+  balances: getBalances(state)
 })
 
 const mapDispatchToState = {

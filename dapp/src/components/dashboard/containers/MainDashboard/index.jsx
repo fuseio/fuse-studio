@@ -7,7 +7,7 @@ import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
-import { fetchCommunity, fetchTokenTotalSupply, fetchToken } from 'actions/token'
+import { fetchCommunity } from 'actions/token'
 import { isUserExists } from 'actions/user'
 import { loadModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
@@ -36,43 +36,25 @@ class DashboardLayout extends Component {
     open: false
   }
 
-  // componentDidMount () {
-  //   const { token } = this.props
-  //   if (!token) {
-  //     const { fetchCommunity, fetchTokenProgress, fetchEntities, communityAddress } = this.props
-  //     fetchCommunity(communityAddress)
-  //     fetchTokenProgress(communityAddress)
-  //     fetchEntities(communityAddress)
-  //   }
-  // }
-
   componentDidMount () {
-    const { community, communityAddress } = this.props
-    debugger
-    if (community) {
-      this.props.fetchToken(community.homeTokenAddress)
-      this.props.fetchToken(community.foreignTokenAddress)
-    } else {
-      this.props.fetchCommunity(communityAddress)
-    }
+    const { fetchCommunity, communityAddress, fetchEntities } = this.props
+    fetchCommunity(communityAddress)
+    fetchEntities(communityAddress)
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.location.pathname !== prevProps.location.pathname) {
-      this.onSetSidebarOpen(false)
-    }
+    if (this.props.communityAddress !== prevProps.communityAddress) {
 
-    debugger
-    if (this.props.community && !prevProps.community) {
-      this.props.fetchToken(this.props.community.homeTokenAddress)
-      this.props.fetchToken(this.props.community.foreignTokenAddress)
+      const { fetchCommunity, communityAddress, fetchEntities } = this.props
+      this.onSetSidebarOpen(false)
+      fetchCommunity(communityAddress)
+      fetchEntities(communityAddress)
     }
 
     if (this.props.community && !isEqual(this.props.accountAddress, prevProps.accountAddress)) {
-      const { balanceOfToken, community, accountAddress, isAdmin, fetchTokenTotalSupply } = this.props
+      const { balanceOfToken, community, accountAddress, isAdmin } = this.props
       const { foreignTokenAddress, homeTokenAddress } = community
-      fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })
-      fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })
+      console.log('balanceOfToken')
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
       balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
 
@@ -85,10 +67,9 @@ class DashboardLayout extends Component {
     }
 
     if (((!prevProps.community && this.props.community) || (!isEqual(this.props.community, prevProps.community))) && this.props.accountAddress) {
-      const { balanceOfToken, community, accountAddress, fetchTokenTotalSupply } = this.props
+      const { balanceOfToken, community, accountAddress } = this.props
       const { foreignTokenAddress, homeTokenAddress } = community
-      fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })
-      fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })
+      console.log('balanceOfToken2222')
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
       balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
     }
@@ -120,7 +101,7 @@ class DashboardLayout extends Component {
     }
 
     const { open } = this.state
-    const { match, foreignToken, community, metadata, networkType, accountAddress, isAdmin } = this.props
+    const { match, foreignToken, community, metadata, networkType, accountAddress, isAdmin, tokenOfCommunityOnCurrentSide } = this.props
 
     const { address: tokenAddress, name, tokenType } = foreignToken
     const { isClosed, plugins, homeTokenAddress } = community
@@ -170,13 +151,69 @@ class DashboardLayout extends Component {
             <NavBar withLogo={false} />
             <div className='content'>
               <Switch>
-                {get(plugins, 'joinBonus.isActive', false) && <Route path={`${match.path}/bonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                {isAdmin && tokenType === 'mintableBurnable' && <Route path={`${match.path}/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                {isAdmin && <Route path={`${match.path}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                {get(plugins, 'businessList.isActive', false) && <Route exact path={`${match.path}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route path={`${match.path}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                {get(plugins, 'joinBonus.isActive', false) && (
+                  <Route path={`${match.path}/bonus`}
+                    render={() => (
+                      <JoinBonusPage
+                        token={foreignToken}
+                        community={community}
+                        networkType={networkType}
+                        tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+                      />
+                    )}
+                  />
+                )}
+                {isAdmin && tokenType === 'mintableBurnable' && (
+                  <Route
+                    path={`${match.path}/mintBurn`}
+                    render={() => (
+                      <MintBurnPage
+                        token={foreignToken}
+                        networkType={networkType}
+                        accountAddress={accountAddress}
+                        onlyOnNetwork={this.onlyOnNetwork}
+                        tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+                      />
+                    )}
+                  />
+                )}
+                {isAdmin && (
+                  <Route
+                    path={`${match.path}/plugins`}
+                    render={() => (
+                      <PluginsPage
+                        community={community}
+                        networkType={networkType}
+                      />
+                    )}
+                  />
+                )}
+                {get(plugins, 'businessList.isActive', false) && (
+                  <Route
+                    exact
+                    path={`${match.path}/merchants`}
+                    render={() => (
+                      <Businesses
+                        onlyOnFuse={this.onlyOnFuse}
+                        community={community}
+                        isAdmin={isAdmin}
+                        networkType={networkType}
+                      />
+                    )}
+                  />
+                )}
+                <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} />} />
+                <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} community={community} />} />
+                <Route
+                  path={`${match.path}/transfer/:sendTo?`}
+                  render={() => (
+                    <TransferPage
+                      token={foreignToken}
+                      networkType={networkType}
+                      tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+                    />
+                  )}
+                />
                 <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
                   <Header
                     metadata={metadata[foreignToken.tokenURI] || {}}
@@ -216,13 +253,11 @@ const mapStateToProps = (state, { match }) => ({
 
 const mapDispatchToProps = {
   fetchCommunity,
-  fetchToken,
   isUserExists,
   loadModal,
   fetchEntities,
   changeNetwork,
-  balanceOfToken,
-  fetchTokenTotalSupply
+  balanceOfToken
 }
 
 export default connect(

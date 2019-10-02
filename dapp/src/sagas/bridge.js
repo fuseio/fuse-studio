@@ -1,11 +1,10 @@
-import { call, all, put, select, delay, takeEvery } from 'redux-saga/effects'
+import { call, all, put, select, delay } from 'redux-saga/effects'
 
 import { apiCall, createEntityPut, tryTakeEvery } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
 import { getBlockNumber } from 'selectors/network'
 import { transactionFlow } from './transaction'
 import * as actions from 'actions/bridge'
-import { FETCH_TOKEN_PROGRESS } from 'actions/token'
 import * as api from 'services/api/token'
 import BasicTokenABI from '@fuse/token-factory-contracts/build/abi/BasicToken'
 import { getWeb3 } from 'services/web3'
@@ -108,27 +107,12 @@ function * watchHomeBridge ({ homeBridgeAddress, transactionHash }) {
   })
 }
 
-function * watchFetchProgress ({ response }) {
-  const { homeTokenAddress, foreignBridgeAddress, foreignTokenAddress, homeBridgeAddress } = response
-
-  yield entityPut({
-    type: actions.WATCH_COMMUNITY_DATA.SUCCESS,
-    response: {
-      homeTokenAddress,
-      foreignBridgeAddress,
-      foreignTokenAddress,
-      homeBridgeAddress
-    }
-  })
-}
-
 export default function * bridgeSaga () {
   yield all([
     tryTakeEvery(actions.DEPLOY_BRIDGE, deployBridge, 1),
     tryTakeEvery(actions.TRANSFER_TO_HOME, transferToHome, 1),
     tryTakeEvery(actions.TRANSFER_TO_FOREIGN, transferToForeign, 1),
     tryTakeEvery(actions.WATCH_FOREIGN_BRIDGE, watchForeignBridge, 1),
-    tryTakeEvery(actions.WATCH_HOME_BRIDGE, watchHomeBridge, 1),
-    takeEvery(FETCH_TOKEN_PROGRESS.SUCCESS, watchFetchProgress)
+    tryTakeEvery(actions.WATCH_HOME_BRIDGE, watchHomeBridge, 1)
   ])
 }
