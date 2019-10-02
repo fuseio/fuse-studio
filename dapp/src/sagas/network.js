@@ -21,7 +21,7 @@ function * getNetworkTypeInternal (web3) {
   return { networkId, networkType }
 }
 
-function * getAccountAddress (web3) {
+export function * getAccountAddress (web3) {
   if (window.ethereum && window.ethereum.enable) {
     try {
       const enableResponse = yield window.ethereum.enable()

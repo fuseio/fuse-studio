@@ -17,6 +17,7 @@ import { loadModal } from 'actions/ui'
 import { SHOW_MORE_MODAL } from 'constants/uiConstants'
 import FuseLoader from 'images/loader-fuse.gif'
 import { formatWei } from 'utils/format'
+import { fetchTokenTotalSupply } from 'actions/token'
 
 const NetworkLogo = ({ network }) => {
   switch (network) {
@@ -37,12 +38,13 @@ const Balance = ({
   token,
   className,
   balances,
-  openModal
+  openModal,
+  balanceOfToken,
+  fetchTokenTotalSupply
 }) => {
   const { symbol } = token
   const { bridge } = bridgeSide
   const balance = balances[tokenAddress]
-
   useEffect(() => {
     if (window && window.analytics && isAdmin) {
       const { analytics } = window
@@ -64,6 +66,7 @@ const Balance = ({
   useEffect(() => {
     if (!transferStatus) {
       balanceOfToken(tokenAddress, accountAddress, { bridgeType: bridge })
+      fetchTokenTotalSupply(tokenAddress, { bridgeType: bridge })
     }
     return () => {}
   }, [transferStatus])
@@ -100,9 +103,9 @@ class Bridge extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.waitingForConfirmation && !prevProps.waitingForConfirmation) {
       if (this.props.bridgeStatus.to.bridge === 'home') {
-        this.props.watchHomeBridge(this.props.homeBridgeAddress, this.props.transactionHash)
+        this.props.watchHomeBridge(this.props.community.homeBridgeAddress, this.props.transactionHash)
       } else {
-        this.props.watchForeignBridge(this.props.foreignBridgeAddress, this.props.transactionHash)
+        this.props.watchForeignBridge(this.props.community.foreignBridgeAddress, this.props.transactionHash)
       }
     }
 
@@ -116,9 +119,9 @@ class Bridge extends Component {
   handleTransfer = () => {
     const value = toWei(this.state.transferAmount)
     if (this.props.bridgeStatus.to.bridge === 'home') {
-      this.props.transferToHome(this.props.foreignTokenAddress, this.props.foreignBridgeAddress, value)
+      this.props.transferToHome(this.props.community.foreignTokenAddress, this.props.community.foreignBridgeAddress, value)
     } else {
-      this.props.transferToForeign(this.props.homeTokenAddress, this.props.homeBridgeAddress, value)
+      this.props.transferToForeign(this.props.community.homeTokenAddress, this.props.community.homeBridgeAddress, value)
     }
     this.props.getBlockNumber(this.props.bridgeStatus.to.network, this.props.bridgeStatus.to.bridge)
     this.props.getBlockNumber(this.props.bridgeStatus.from.network, this.props.bridgeStatus.from.bridge)
@@ -170,7 +173,8 @@ class Bridge extends Component {
       confirmationsLimit,
       tokenOfCommunityOnCurrentSide,
       isAdmin,
-      community
+      community,
+      fetchTokenTotalSupply
     } = this.props
 
     const {
@@ -193,6 +197,7 @@ class Bridge extends Component {
             balanceOfToken={balanceOfToken}
             tokenAddress={homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
+            fetchTokenTotalSupply={fetchTokenTotalSupply}
             token={token}
             balances={balances}
             bridgeSide={bridgeStatus.from}
@@ -221,6 +226,7 @@ class Bridge extends Component {
             balanceOfToken={balanceOfToken}
             tokenAddress={homeNetwork === bridgeStatus.to.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
+            fetchTokenTotalSupply={fetchTokenTotalSupply}
             token={token}
             balances={balances}
             bridgeSide={bridgeStatus.to}
@@ -302,6 +308,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   ...actions,
   balanceOfToken,
+  fetchTokenTotalSupply,
   getBlockNumber,
   loadModal
 }

@@ -8,7 +8,6 @@ import MintBurnPage from 'components/dashboard/pages/MintBurn'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
 import { fetchCommunity } from 'actions/token'
-import { isUserExists } from 'actions/user'
 import { loadModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
 import Users from 'components/dashboard/pages/Users'
@@ -27,7 +26,6 @@ import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } fro
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
-import { balanceOfToken } from 'actions/accounts'
 import isEqual from 'lodash/isEqual'
 import get from 'lodash/get'
 
@@ -52,12 +50,7 @@ class DashboardLayout extends Component {
     }
 
     if (this.props.community && !isEqual(this.props.accountAddress, prevProps.accountAddress)) {
-      const { balanceOfToken, community, accountAddress, isAdmin, networkType } = this.props
-      const { foreignTokenAddress, homeTokenAddress } = community
-      console.log('balanceOfToken')
-      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
-
+      const { accountAddress, isAdmin, networkType, location } = this.props
       if (window && window.analytics && isAdmin) {
         const { analytics } = window
         analytics.identify(`${accountAddress}`, {
@@ -65,17 +58,19 @@ class DashboardLayout extends Component {
         })
 
         if (networkType === 'fuse') {
-          window.analytics.track(`Switch to fuse network`)
+          analytics.identify(`${accountAddress}`, {
+            switchToFuse: true
+          })
+        }
+
+        if (location.pathname.includes('/justCreated')) {
+          analytics.identify(`${accountAddress}`, {
+            role: 'admin',
+            bridgeWasUsed: false,
+            switchToFuse: false
+          })
         }
       }
-    }
-
-    if (((!prevProps.community && this.props.community) || (!isEqual(this.props.community, prevProps.community))) && this.props.accountAddress) {
-      const { balanceOfToken, community, accountAddress } = this.props
-      const { foreignTokenAddress, homeTokenAddress } = community
-      console.log('balanceOfToken2222')
-      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
     }
   }
 
@@ -257,11 +252,9 @@ const mapStateToProps = (state, { match }) => ({
 
 const mapDispatchToProps = {
   fetchCommunity,
-  isUserExists,
   loadModal,
   fetchEntities,
-  changeNetwork,
-  balanceOfToken
+  changeNetwork
 }
 
 export default connect(

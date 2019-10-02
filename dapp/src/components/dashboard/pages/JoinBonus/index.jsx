@@ -56,14 +56,14 @@ const JoinBonus = ({
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
       if (transferSuccess) {
-        setTransferMessage(true)
         setAmount(null)
+        setTransferMessage(true)
         balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
       }
     } else if (transactionStatus && transactionStatus === FAILURE) {
       if (transferSuccess === false) {
-        setTransferMessage(true)
         setAmount(null)
+        setTransferMessage(true)
       }
     }
     return () => {}
