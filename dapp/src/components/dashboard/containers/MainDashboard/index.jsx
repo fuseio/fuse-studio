@@ -22,7 +22,7 @@ import { getForeignNetwork, getBridgeStatus } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress, getBalances } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
-import { getToken, getTokenAddressOfByNetwork } from 'selectors/dashboard'
+import { getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
@@ -48,6 +48,7 @@ class DashboardLayout extends Component {
 
   componentDidMount () {
     const { community, communityAddress } = this.props
+    debugger
     if (community) {
       this.props.fetchToken(community.homeTokenAddress)
       this.props.fetchToken(community.foreignTokenAddress)
@@ -60,18 +61,12 @@ class DashboardLayout extends Component {
     if (this.props.location.pathname !== prevProps.location.pathname) {
       this.onSetSidebarOpen(false)
     }
-    // debugger
+
+    debugger
     if (this.props.community && !prevProps.community) {
       this.props.fetchToken(this.props.community.homeTokenAddress)
       this.props.fetchToken(this.props.community.foreignTokenAddress)
     }
-
-    // if (this.props.match.params.address !== prevProps.match.params.address) {
-    //   const { communityAddress, fetchCommunity, fetchTokenProgress, fetchEntities } = this.props
-    //   fetchCommunity(communityAddress)
-    //   fetchTokenProgress(communityAddress)
-    //   fetchEntities(communityAddress)
-    // }
 
     if (this.props.community && !isEqual(this.props.accountAddress, prevProps.accountAddress)) {
       const { balanceOfToken, community, accountAddress, isAdmin, fetchTokenTotalSupply } = this.props
@@ -120,12 +115,10 @@ class DashboardLayout extends Component {
   onSetSidebarOpen = open => this.setState({ open })
 
   render () {
-    if (!this.props.community) {
+    if (!this.props.community || !this.props.foreignToken || !this.props.homeToken) {
       return null
     }
-    if (!this.props.foreignToken) {
-      return null
-    }
+
     const { open } = this.state
     const { match, foreignToken, community, metadata, networkType, accountAddress, isAdmin } = this.props
 
@@ -209,7 +202,6 @@ const mapStateToProps = (state, { match }) => ({
   networkType: state.network.networkType,
   homeToken: getHomeTokenByCommunityAddress(state, match.params.address),
   foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
-  token: getToken(state, match.params.address),
   isPortis: state.network.isPortis,
   community: state.entities.communities[match.params.address],
   communityAddress: match.params.address,

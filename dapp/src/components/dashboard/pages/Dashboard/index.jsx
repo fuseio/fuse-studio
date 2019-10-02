@@ -95,7 +95,8 @@ class Dashboard extends Component {
   render () {
     const {
       community,
-      token,
+      homeToken,
+      foreignToken,
       accountAddress,
       balances,
       dashboard,
@@ -106,17 +107,17 @@ class Dashboard extends Component {
       isAdmin
     } = this.props
 
-    const { address: tokenAddress } = token
+    const { address: tokenAddress } = foreignToken
     const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress } = community
-    const { owner, totalSupply } = dashboard
+    const { owner } = dashboard
 
     return (
       <React.Fragment>
         {children}
         <div className='content__tabs'>
           <CommunityInfo
-            tokensTotalSupplies={totalSupply}
-            token={token}
+            homeToken={homeToken}
+            foreignToken={foreignToken}
             balances={balances}
             loadQrModal={this.loadQrModal}
             communityAddress={communityAddress}
@@ -135,7 +136,7 @@ class Dashboard extends Component {
             tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
             bridgeDeployed={homeBridgeAddress && foreignBridgeAddress}
             accountAddress={accountAddress}
-            token={token}
+            token={foreignToken}
             bridgeStatus={bridgeStatus}
             foreignTokenAddress={tokenAddress}
             isOwner={() => isOwner({ owner }, accountAddress)}

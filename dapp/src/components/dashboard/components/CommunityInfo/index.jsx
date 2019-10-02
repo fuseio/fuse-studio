@@ -23,30 +23,22 @@ const TitleValue = ({ title, symbol, tokenType, children }) => (
 )
 
 const CommunityInfo = ({
-  token,
-  balances,
+  foreignToken,
+  homeToken,
   loadQrModal,
-  communityAddress,
-  homeTokenAddress,
-  foreignTokenAddress,
-  tokensTotalSupplies
+  communityAddress
 }) => {
-  const { symbol, tokenType, address } = token
+  const { symbol, tokenType, address } = foreignToken
   const type = tokenType === 'mintableBurnable'
     ? 'Mintable burnable token'
     : tokenType === 'basic'
       ? 'One time issuer token'
       : 'Imported'
 
-  let totalSupply = 0
-  let homeTokenSupply = 0
-  let foreignTokenSupply = 0
+  const homeTokenSupply = homeToken.totalSupply
+  const foreignTokenSupply = foreignToken.totalSupply
 
-  if (tokensTotalSupplies && tokensTotalSupplies[homeTokenAddress] && tokensTotalSupplies[foreignTokenAddress]) {
-    homeTokenSupply = new BigNumber(tokensTotalSupplies[homeTokenAddress])
-    foreignTokenSupply = new BigNumber(tokensTotalSupplies[foreignTokenAddress]).minus(tokensTotalSupplies[homeTokenAddress])
-    totalSupply = new BigNumber(foreignTokenSupply).plus(homeTokenSupply)
-  }
+  const totalSupply = new BigNumber(foreignTokenSupply).plus(homeTokenSupply)
 
   const total = Number(new BigNumber(totalSupply).div(1e18).toFixed())
   const homeTokenBalance = Number(new BigNumber(homeTokenSupply).div(1e18).toFixed())
