@@ -42,7 +42,6 @@ class DashboardLayout extends Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.communityAddress !== prevProps.communityAddress) {
-
       const { fetchCommunity, communityAddress, fetchEntities } = this.props
       this.onSetSidebarOpen(false)
       fetchCommunity(communityAddress)

@@ -7,7 +7,6 @@ import { fetchCommunities, fetchBalances, balanceOfToken } from 'actions/account
 import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
 import { withRouter } from 'react-router-dom'
 import { getBalances, getAccount } from 'selectors/accounts'
 import ArrowTiny from 'images/arrow_tiny.svg'
