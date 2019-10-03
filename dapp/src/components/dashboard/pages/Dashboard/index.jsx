@@ -77,7 +77,6 @@ class Dashboard extends Component {
       foreignToken,
       accountAddress,
       dashboard,
-      networkType,
       children,
       bridgeStatus,
       tokenOfCommunityOnCurrentSide,
