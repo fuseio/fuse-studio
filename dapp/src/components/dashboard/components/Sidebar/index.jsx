@@ -174,7 +174,7 @@ const allPlugins = {
   }
 }
 
-const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, tokenType }) => {
+const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLogo, plugins, tokenType, location }) => {
   const [currentPath, setPath] = useState('')
   const [sideBarItems, setSideBarItems] = useState([])
   const [addedPlugins, setAddedPlugins] = useState([])
@@ -195,6 +195,14 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
     setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
     return () => {}
   }, [isAdmin, tokenType])
+
+  useEffect(() => {
+    const paramsArr = location.pathname.split('/')
+    const lastItem = paramsArr[paramsArr.length - 1]
+    if (communityAddress !== lastItem) {
+      setPath(`/${lastItem}`)
+    }
+  }, [location.pathname])
 
   return (
     <aside className='sidebar'>
@@ -231,7 +239,7 @@ const Sidebar = ({ communityName, match, isAdmin, isGradientLogo, plugins, token
                       url,
                       icon,
                       selectedIcon
-                    } = plugin && allPlugins[plugin]
+                    } = allPlugins[plugin]
                     return (
                       <Link
                         key={name}

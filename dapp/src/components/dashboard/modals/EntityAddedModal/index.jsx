@@ -3,7 +3,7 @@ import Modal from 'components/common/Modal'
 
 const EntityAddedModal = ({ name, type, hideModal }) => {
   return (
-    <Modal className='entity_added' onClose={hideModal}>
+    <Modal className='entity_added' onClose={hideModal} hasCloseBtn>
       <div className='entity_added__title'>
         Congratulations!
       </div>

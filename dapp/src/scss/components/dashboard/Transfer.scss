@@ -31,7 +31,7 @@
     @include block(field) {
       position: relative;
       @include element(title) {
-        font-size: 12px;
+        font-size: 0.750em;
         font-weight: 500;
         line-height: 1.83;
         letter-spacing: -0.26px;

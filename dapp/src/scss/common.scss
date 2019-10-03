@@ -273,7 +273,7 @@
 
   @include element(text) {
     padding-top: 1em;
-    font-size: 15px;
+    font-size: 0.938em;
     color: $color-dark;
     text-align: center;
 
@@ -328,7 +328,7 @@
     @include element(item) {
       @include xy-grid();
       @include flex-align(justify, middle);
-      font-size: 11px;
+      font-size: 0.688em;
       padding: 1em 0;
       width: 100%;
 
@@ -345,7 +345,7 @@
         .fa-clone {
           margin-left: 10px;
           font-weight: 400;
-          font-size: 12px;
+          font-size: 0.750em;
           color: $color-light-gray;
           &:hover {
             cursor: pointer;
@@ -410,7 +410,7 @@
     color: $color-white;
     text-shadow: 1px 1px $color-black;
     font-family: tahoma;
-    font-size: 11px;
+    font-size: 0.688em;
   }
   > input:checked ~ .toggle-wrapper {
     background: $color-fuse_gradient;
@@ -531,7 +531,7 @@
 
   @include modifier(big) {
     width: 160px;
-    font-size: 15px;
+    font-size: 0.938em;
   }
 
   &:focus,
@@ -695,7 +695,7 @@
   }
 
   @include element(title) {
-    font-size: 30px;
+    font-size: 1.875em;
     font-weight: bold;
     color: $color-dark;
     line-height: 2;
@@ -984,7 +984,7 @@
   position: absolute;
   bottom: -2em;
   color: red;
-  font-size: 11px;
+  font-size: 0.688em;
   line-height: 1.25;
 
   @include modifier(bold) {
@@ -1055,7 +1055,7 @@
         width: 100%;
         background-color: $color-white;
         padding: 0 16px;
-        font-size: 15px;
+        font-size: 0.938em;
         color: $color-dark;
         height: 30px;
         border-radius: 5px;
@@ -1097,7 +1097,7 @@
       padding-top: 1em;
 
       @include element(text) {
-        font-size: 12px;
+        font-size: 0.750em;
         margin-left: 5px;
         > span {
           &:first-child {
@@ -1137,7 +1137,7 @@
           color: $color-white;
           text-shadow: 1px 1px $color-black;
           font-family: tahoma;
-          font-size: 11px;
+          font-size: 0.688em;
         }
       }
 

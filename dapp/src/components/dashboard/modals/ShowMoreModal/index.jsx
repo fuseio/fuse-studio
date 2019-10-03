@@ -6,7 +6,7 @@ import { formatAddress } from 'utils/format'
 
 export default ({ hideModal, name, network, tokenName, tokenAmount, foreignTokenAddress, homeTokenAddress, homeBridgeAddress, foreignBridgeAddress }) => {
   return (
-    <Modal className='show-more__wrapper' onClose={hideModal}>
+    <Modal className='show-more__wrapper' onClose={hideModal} hasCloseBtn>
       <div className='show-more'>
         <div className='show-more__header'>{name}</div>
         <div className='show-more__content'>

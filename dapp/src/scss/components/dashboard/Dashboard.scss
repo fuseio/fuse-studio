@@ -230,13 +230,13 @@
 
         @include element(text) {
           color: $color-dark-gray;
-          font-size: 11px;
+          font-size: 0.688em;
           text-align: center;
           margin-bottom: 5px;
 
           > div:first-child {
             line-height: 1.8;
-            font-size: 12px;
+            font-size: 0.9em;
             text-align: center;
             color: $color-light-dark;
           }
@@ -247,9 +247,9 @@
         }
 
         @include element(more) {
-          width: 66px;
+          min-width: 66px;
           height: 14px;
-          font-size: 11px;
+          font-size: 0.688em;
           font-weight: 500;
           text-align: center;
           color: #a4a4a4;
@@ -275,7 +275,6 @@
           text-align: center;
           line-height: 95px;
           color: $color-dark-gray;
-          font-size: 12px;
           font-weight: normal;
           line-height: 2.17;
           flex: .9;
@@ -330,7 +329,7 @@
               padding: 9px 20px;
               background: $color-fuse_gradient;
               border-radius: 16px;
-              font-size: 11px;
+              font-size: 0.688em;
               text-transform: uppercase;
               display: inline-block;
               margin: 0 auto;
@@ -353,7 +352,7 @@
 
           @include element(title) {
             color: $color-dark;
-            font-size: 12px;
+            font-size: 0.750em;
             font-weight: 500;
             line-height: 2.17;
           }

@@ -59,6 +59,10 @@
 
     }
 
+    @include breakpoint(medium down) {
+      @include xy-grid(vertical);
+    }
+
     @include element(title) {
       font-size: 1.125em;
       font-weight: 500;
@@ -78,6 +82,11 @@
   border-radius: 8px;
   background-color: $color-white;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+
+  @include breakpoint(medium down) {
+    width: 100%;
+    margin-bottom:1em;
+  }
 
   @include element(image) {
     position: relative;

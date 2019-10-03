@@ -40,7 +40,7 @@
         padding: 5px 12px;
         display: block;
         height: 2em;
-        font-size: 12px;
+        font-size: 0.750em;
         box-sizing: border-box;
         color: $color-dark;
       }
@@ -54,7 +54,7 @@
       padding: 5px 12px;
       display: block;
       height: 2em;
-      font-size: 12px;
+      font-size: 0.750em;
       box-sizing: border-box;
       color: $color-dark;
       &::placeholder {
@@ -63,7 +63,7 @@
     }
 
     @include element(label) {
-      font-size: 11px;
+      font-size: 0.688em;
       font-weight: bold;
       color: #8d95a9;
       flex-basis: 35%;

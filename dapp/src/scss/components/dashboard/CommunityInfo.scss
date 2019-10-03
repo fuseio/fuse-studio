@@ -68,7 +68,7 @@ $csspieheight: 100px;
     @include xy-grid(vertical, false);
     @include flex-align(null, middle);
     position: relative;
-    font-size: 12px;
+    font-size: 0.750em;
     color: #a4a4a4;
 
     @include block(title) {
@@ -177,7 +177,7 @@ $csspieheight: 100px;
 }
 
 @include block(title_value) {
-  font-size: 12px;
+  font-size: 0.750em;
   color: $color-gray;
   
   @include breakpoint(medium up) {

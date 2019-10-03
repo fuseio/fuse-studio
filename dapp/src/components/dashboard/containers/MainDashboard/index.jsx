@@ -48,6 +48,10 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.onSetSidebarOpen(false)
+    }
+
     if (this.props.community && !isEqual(this.props.accountAddress, prevProps.accountAddress)) {
       const { accountAddress, isAdmin, networkType, location } = this.props
       if (window && window.analytics && isAdmin) {
@@ -99,7 +103,18 @@ class DashboardLayout extends Component {
     }
 
     const { open } = this.state
-    const { match, foreignToken, community, metadata, networkType, accountAddress, isAdmin, tokenOfCommunityOnCurrentSide } = this.props
+    const {
+      match,
+      foreignToken,
+      community,
+      metadata,
+      networkType,
+      accountAddress,
+      isAdmin,
+      tokenOfCommunityOnCurrentSide,
+      location,
+      communityAddress
+    } = this.props
 
     const { address: tokenAddress, name, tokenType } = foreignToken
     const { isClosed, plugins, homeTokenAddress } = community
@@ -123,6 +138,8 @@ class DashboardLayout extends Component {
                 communityName={community.name}
                 match={match.url}
                 tokenType={tokenType}
+                location={location}
+                communityAddress={communityAddress}
               />
               : <Sidebar
                 sidebar={
@@ -133,6 +150,8 @@ class DashboardLayout extends Component {
                     communityName={community.name}
                     match={match.url}
                     tokenType={tokenType}
+                    location={location}
+                    communityAddress={communityAddress}
                   />
                 }
                 open={open}
@@ -201,7 +220,7 @@ class DashboardLayout extends Component {
                   />
                 )}
                 <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} />} />
-                <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} community={community} />} />
+                <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} networkType={networkType} community={community} />} />
                 <Route
                   path={`${match.path}/transfer/:sendTo?`}
                   render={() => (

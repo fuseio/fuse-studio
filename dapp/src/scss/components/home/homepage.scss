@@ -1,4 +1,8 @@
 @include block (home_page) {
+  @include breakpoint(xxlarge up) {
+    min-height: 100vh;
+  }
+
   position: relative;
   &:before {
     content: "";
@@ -47,6 +51,11 @@
     align-items: center;
     padding-top: 3%;
     padding-bottom: 3%;
+
+    @include breakpoint(xxlarge up) {
+      min-height: 50vh;
+    }
+
     @include breakpoint(large) {
       padding-top: 10%;      
     }
@@ -69,6 +78,10 @@
     display: flex;
     align-items: center;
     background-color: #f5f5f5;
+
+    @include breakpoint(xxlarge up) {
+      min-height: 50vh;
+    }
 
     > div {
       width: 100%;

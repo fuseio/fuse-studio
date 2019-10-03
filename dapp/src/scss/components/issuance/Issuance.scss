@@ -121,7 +121,7 @@
       text-transform: uppercase;
       text-align: center;
       color: $color-fuse;
-      font-size: 11px;
+      font-size: 0.688em;
       font-weight: 500;
       font-style: normal;
       font-stretch: normal;
@@ -164,7 +164,7 @@
 
     @include element(title) {
       font-weight: bold;
-      font-size: 30px;
+      font-size: 1.875em;
       text-align: center;
       color: $color-dark;
 
@@ -205,7 +205,7 @@
       }
 
       @include element(title) {
-        font-size: 15px;
+        font-size: 0.938em;
         font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
@@ -229,7 +229,7 @@
           width: 100%;
           background-color: $color-white;
           padding: 0 16px;
-          font-size: 15px;
+          font-size: 0.938em;
           color: $color-dark;
           height: 40px;
           border-radius: 5px;
@@ -287,7 +287,7 @@
 
 
       @include element(title) {
-        font-size: 15px;
+        font-size: 0.938em;
         font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
@@ -314,7 +314,7 @@
           width: 100%;
           background-color: $color-white;
           padding: 0 16px;
-          font-size: 15px;
+          font-size: 0.938em;
           color: $color-dark;
           height: 40px;
           border-radius: 5px;
@@ -351,7 +351,7 @@
       }
       
       @include element(title) {
-        font-size: 15px;
+        font-size: 0.938em;
         font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
@@ -404,7 +404,7 @@
           display: flex;
           flex-direction: column;
           text-transform: capitalize;
-          font-size: 12px;
+          font-size: 0.750em;
           align-items: center;
           font-weight: 500;
           color: $color-dark;
@@ -475,7 +475,7 @@
             }
             @include element(option) {
               color: #0a7586 !important;
-              font-size: 12px !important;
+              font-size: 0.750em !important;
               text-align: start;
               @include modifier(is-focused) {
                 border-color: none !important;
@@ -597,7 +597,7 @@
             width: 100%;
             background-color: $color-white;
             padding: 0 16px;
-            font-size: 15px;
+            font-size: 0.938em;
             color: $color-dark;
             height: 40px;
             border-radius: 5px;
@@ -692,7 +692,7 @@
         }
 
         @include breakpoint(small) {
-          font-size: 12px;
+          font-size: 0.750em;
           margin: 8px 0;
         }
 
@@ -734,7 +734,7 @@
           @include element(text) {
             color: $color-gray;
             line-height: 1.25;
-            font-size: 12px;
+            font-size: 0.750em;
           }
 
           @include element(toggle) {
@@ -743,7 +743,7 @@
             padding-top: 1em;
 
             @include element(text) {
-              font-size: 12px;
+              font-size: 0.750em;
               margin-left: 5px;
               color: rgba(13, 45, 69, 0.5);
               > span {
@@ -807,7 +807,7 @@
                 color: $color-white;
                 text-shadow: 1px 1px $color-black;
                 font-family: tahoma;
-                font-size: 11px;
+                font-size: 0.688em;
               }
               > input:checked ~ .toggle-wrapper {
                 background: $color-fuse_gradient;
@@ -865,7 +865,7 @@
       @include element(text) {
         text-align: center;
         margin-top: 1em;
-        font-size: 12px;
+        font-size: 0.750em;
         line-height: 1.33;
         color: rgba(5, 40, 62, 0.6);
 
@@ -1066,7 +1066,7 @@
           color: $color-dark;
 
           .fa {
-            font-size: 12px;
+            font-size: 0.750em;
             margin-right: 5px;
           }
 

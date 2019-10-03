@@ -71,7 +71,7 @@
     @include element(add) {
       
       @include element(wrapper) {
-        font-size: 11px;
+        font-size: 0.688em;
         @include xy-grid();
         @include flex-align(justify, middle);
         flex-basis: 30%;
@@ -179,7 +179,7 @@
 
       @include element(value) {
         display: flex;
-        font-size: 12px;
+        font-size: 0.750em;
         height: 100%;
         align-items: center;
       }
@@ -208,7 +208,7 @@
           padding: 0;
           @include xy-grid(vertical);
           @include flex-align(spaced);
-          font-size: 12px;
+          font-size: 0.750em;
           cursor: initial;
 
           @include element(item) {
@@ -274,7 +274,7 @@
 
     @include block(selected) {
       border-radius: 12px;
-      font-size: 11px;
+      font-size: 0.688em;
       padding: 5px 20px;
       background-color: #f6f6f6;
     }
@@ -286,7 +286,7 @@
         border: none;
         background: none;
         outline: none;
-        font-size: 12px;
+        font-size: 0.750em;
         padding: 8px 10px;
   
         &:hover,
@@ -307,7 +307,7 @@
       }
       > input {
         border: none;
-        font-size: 12px;
+        font-size: 0.750em;
         font-weight: 500;
         &::placeholder {
           font-weight: 500;
@@ -359,7 +359,7 @@
 
     @include element(add) {
       > div {
-        font-size: 11px;
+        font-size: 0.688em;
         cursor: pointer;
           > span {
           width: 15px;
@@ -408,7 +408,7 @@
     }
     @include element(text) {
       color: $color-dark-gray;
-      font-size: 12px;
+      font-size: 0.750em;
       margin-bottom: 20px;
     }
 
@@ -418,7 +418,7 @@
       padding: 9px 20px;
       background-color: $color-light-dark;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 0.688em;
       text-transform: uppercase;
       display: inline-block;
       margin: 0 auto;

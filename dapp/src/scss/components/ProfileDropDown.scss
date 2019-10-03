@@ -31,7 +31,7 @@
 
       .fa-clone {
         font-weight: 500;
-        font-size: 11px;
+        font-size: 0.688em;
         margin-left: 10px;
       }
 
@@ -55,6 +55,7 @@
 
   @include element(card) {
     padding: .5em 0;
+    font-size: 1em;
     &:hover {
       cursor: pointer;
       > .profile__card__arrow {
@@ -67,7 +68,7 @@
 
     @include element(content) {
       height: 34px;
-      font-size: 15px;
+      font-size: 0.938em;
       font-weight: 500;
       font-style: normal;
       font-stretch: normal;

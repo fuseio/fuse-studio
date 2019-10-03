@@ -79,7 +79,7 @@
         padding: 0;
         @include xy-grid(vertical);
         @include flex-align(spaced);
-        font-size: 12px;
+        font-size: 0.750em;
         cursor: initial;
 
         @include element(item) {
@@ -129,7 +129,6 @@
         height: 33px;
         border-radius: 16.3px;
         background-color: $color-white;
-        font-size: 12.2px;
       }
 
       @include breakpoint(small down) {
@@ -138,10 +137,10 @@
         padding: 10px;
         border-radius: 50%;
         background-color: $color-white;
-        font-size: 12.2px;
       }
 
       @include element(text) {
+        font-size: 0.762em;
         @include breakpoint(small down) {
           display: none;
         }
@@ -150,6 +149,7 @@
   }
 
   @include block(icon) {
+    font-size: 0.762em;
     width: 20px;
     height: 20px;
     display: inline-block;

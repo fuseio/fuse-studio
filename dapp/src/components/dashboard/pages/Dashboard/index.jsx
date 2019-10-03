@@ -109,7 +109,6 @@ class Dashboard extends Component {
               </ReactTooltip>
               <Bridge
                 isAdmin={isAdmin}
-                network={networkType}
                 token={foreignToken}
                 community={community}
                 bridgeStatus={bridgeStatus}
