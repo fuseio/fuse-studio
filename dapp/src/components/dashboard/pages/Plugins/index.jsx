@@ -71,7 +71,7 @@ const Plugins = ({
   }
 
   const togglePlugin = (key, plugins) => {
-    if (key === 'joinBonus' && !isEmpty(plugins[key])) {
+    if (key === 'joinBonus' && !isEmpty(plugins && plugins[key])) {
       return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true, joinInfo: null } })
     }
 

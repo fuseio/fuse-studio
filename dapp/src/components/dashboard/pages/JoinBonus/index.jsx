@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import TextField from '@material-ui/core/TextField'
-import TransactionButton from 'components/common/TransactionButton'
 import RewardUserForm from 'components/dashboard/components/RewardUserForm'
+import TransferToFunderForm from 'components/dashboard/components/TransferToFunderForm'
 import { connect, useSelector } from 'react-redux'
 import { transferTokenToFunder, clearTransactionStatus } from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
-import SignMessage from 'components/common/SignMessage'
 import { FAILURE, SUCCESS } from 'actions/constants'
 import { toWei } from 'web3-utils'
 import { getFunderAccount, getBalances } from 'selectors/accounts'
@@ -20,7 +18,7 @@ const JoinBonus = ({
   error,
   networkType,
   community,
-  token: { address, symbol },
+  symbol,
   transactionStatus,
   transferSignature,
   isTransfer,
@@ -44,7 +42,6 @@ const JoinBonus = ({
   const { toSend } = joinBonus
 
   const [transferMessage, setTransferMessage] = useState(false)
-  const [amountToFunder, setAmount] = useState(null)
 
   useEffect(() => {
     balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
@@ -54,21 +51,19 @@ const JoinBonus = ({
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
       if (transferSuccess) {
-        setAmount(null)
         setTransferMessage(true)
         balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
       }
     } else if (transactionStatus && transactionStatus === FAILURE) {
       if (transferSuccess === false) {
-        setAmount(null)
         setTransferMessage(true)
       }
     }
     return () => {}
   }, [transactionStatus])
 
-  const transferToFunder = () => {
-    transferTokenToFunder(tokenOfCommunityOnCurrentSide, toWei(String(amountToFunder)))
+  const transferToFunder = (amount) => {
+    transferTokenToFunder(tokenOfCommunityOnCurrentSide, toWei(String(amount)))
   }
 
   const transactionError = () => {
@@ -90,161 +85,21 @@ const JoinBonus = ({
       <div className='join_bonus'>
         <h2 className='join_bonus__main-title join_bonus__main-title--white'>Join bonus</h2>
         <div style={{ position: 'relative' }}>
-          {
-            !funderBalance
-              ? (
-                <div className='join_bonus__container'>
-                  <div className='join_bonus__balances'>
-                    <div className='join_bonus__funder_balance'>
-                      <span>My balance:&nbsp;</span>
-                      <div>
-                        <span>{balance ? formatWei(balance, 0) : 0}&nbsp;</span>
-                        <small>{symbol}</small>
-                      </div>
-                    </div>
-                    <div className='join_bonus__funder_balance'>
-                      <span>Funder balance:&nbsp;</span>
-                      <div>
-                        <span>{funderBalance ? formatWei(funderBalance, 0) : 0}&nbsp;</span>
-                        <small>{symbol}</small>
-                      </div>
-                    </div>
-                  </div>
-                  <p className='join_bonus__title'>In order to reward your first users please transfer your tokens to the funder, choose how much to send to the funder:</p>
-                  <div className='join_bonus__field'>
-                    <TextField
-                      type='number'
-                      placeholder='Insert amount'
-                      classes={{
-                        root: 'join_bonus__field'
-                      }}
-                      inputProps={{
-                        autoComplete: 'off',
-                        value: amountToFunder
-                      }}
-                      InputProps={{
-                        classes: {
-                          underline: 'join_bonus__field--underline',
-                          error: 'join_bonus__field--error'
-                        }
-                      }}
-                      onChange={(e) => setAmount(e.target.value)}
-                    />
-                  </div>
-                  <div className='join_bonus__button'>
-                    <TransactionButton frontText='Send' clickHandler={transferToFunder} />
-                  </div>
-
-                  <SignMessage message={'Pending'} isOpen={isTransfer} isDark subTitle={`Your money on it's way`} />
-                  <SignMessage message={'Pending'} isOpen={transferSignature} isDark />
-
-                  <SignMessage
-                    message={'Your money has been sent successfully'}
-                    isOpen={transactionConfirmed()}
-                    clickHandler={() => {
-                      setTransferMessage(false)
-                      clearTransactionStatus(null)
-                    }}
-                    subTitle=''
-                  />
-                  <SignMessage
-                    message={'Oops, something went wrong'}
-                    subTitle=''
-                    isOpen={transactionError()}
-                    clickHandler={() => {
-                      setTransferMessage(false)
-                      clearTransactionStatus(null)
-                    }}
-                  />
-
-                  <SignMessage
-                    message={'Oh no'}
-                    subTitle={`You reject the action, That’s ok, try next time!`}
-                    isOpen={transactionDenied()}
-                    clickHandler={() => {
-                      setTransferMessage(false)
-                      clearTransactionStatus(null)
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className='join_bonus__container'>
-                  <div className='join_bonus__balances'>
-                    <div className='join_bonus__funder_balance'>
-                      <span>My balance:&nbsp;</span>
-                      <div>
-                        <span>{balance ? formatWei(balance, 0) : 0}&nbsp;</span>
-                        <small>{symbol}</small>
-                      </div>
-                    </div>
-                    <div className='join_bonus__funder_balance'>
-                      <span>Funder balance:&nbsp;</span>
-                      <div>
-                        <span>{funderBalance ? formatWei(funderBalance, 0) : 0}&nbsp;</span>
-                        <small>{symbol}</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='join_bonus__field'>
-                    <div className='join_bonus__field__add'>Add funder balance:</div>
-                    <TextField
-                      type='number'
-                      placeholder='Insert amount'
-                      classes={{
-                        root: 'join_bonus__field'
-                      }}
-                      inputProps={{
-                        autoComplete: 'off',
-                        value: amountToFunder
-                      }}
-                      InputProps={{
-                        classes: {
-                          underline: 'join_bonus__field--underline',
-                          error: 'join_bonus__field--error'
-                        }
-                      }}
-                      onChange={(e) => setAmount(e.target.value)}
-                    />
-                  </div>
-                  <div className='join_bonus__button'>
-                    <TransactionButton frontText='Send' clickHandler={transferToFunder} />
-                  </div>
-
-                  <SignMessage message={'Pending'} isOpen={isTransfer} isDark subTitle={`Your money on it's way`} />
-                  <SignMessage message={'Pending'} isOpen={transferSignature} isDark />
-
-                  <SignMessage
-                    message={'Your money has been sent successfully'}
-                    isOpen={transactionConfirmed()}
-                    clickHandler={() => {
-                      setTransferMessage(false)
-                      clearTransactionStatus(null)
-                    }}
-                    subTitle=''
-                  />
-                  <SignMessage
-                    message={'Oops, something went wrong'}
-                    subTitle=''
-                    isOpen={transactionError()}
-                    clickHandler={() => {
-                      setTransferMessage(false)
-                      clearTransactionStatus(null)
-                    }}
-                  />
-
-                  <SignMessage
-                    message={'Oh no'}
-                    subTitle={`You reject the action, That’s ok, try next time!`}
-                    isOpen={transactionDenied()}
-                    clickHandler={() => {
-                      setTransferMessage(false)
-                      clearTransactionStatus(null)
-                    }}
-                  />
-                </div>
-
-              )
-          }
+          <TransferToFunderForm
+            isTransfer={isTransfer}
+            transferSignature={transferSignature}
+            closeInnerModal={() => {
+              setTransferMessage(false)
+              clearTransactionStatus(null)
+            }}
+            symbol={symbol}
+            transactionConfirmed={transactionConfirmed}
+            transactionError={transactionError}
+            transactionDenied={transactionDenied}
+            balance={balance ? formatWei(balance, 0) : 0}
+            transferToFunder={transferToFunder}
+            funderBalance={funderBalance ? formatWei(funderBalance, 0) : 0}
+          />
           <RewardUserForm
             hasFunderBalance={funderBalance}
             initialValues={{

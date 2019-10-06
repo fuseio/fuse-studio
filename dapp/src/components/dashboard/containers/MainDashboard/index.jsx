@@ -173,7 +173,7 @@ class DashboardLayout extends Component {
                   <Route path={`${match.path}/bonus`}
                     render={() => (
                       <JoinBonusPage
-                        token={foreignToken}
+                        symbol={foreignToken && foreignToken.symbol}
                         community={community}
                         networkType={networkType}
                         tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
