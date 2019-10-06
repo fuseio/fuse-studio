@@ -3,6 +3,8 @@ import CurrencyType from './CurrencyType'
 import { isMobileOnly } from 'react-device-detect'
 import TextField from '@material-ui/core/TextField'
 import isEmpty from 'lodash/isEmpty'
+import ReactTooltip from 'react-tooltip'
+import FontAwesome from 'react-fontawesome'
 
 const NameCurrencyStep = ({
   email,
@@ -18,14 +20,14 @@ const NameCurrencyStep = ({
   communityType,
   networkType
 }) => {
-  // const validateEmail = () => {
-  //   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  //   return re.test(String(email).toLowerCase())
-  // }
+  const validateEmail = () => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(String(email).toLowerCase())
+  }
 
   const validateStep = () => {
     return (
-      // (!validateEmail()) ||
+      (!validateEmail()) ||
       (isEmpty(communityName) || communityName.length < 3) ||
       (isEmpty(communityType)) ||
       (communityType && communityType.value === 'existingToken' && isEmpty(existingToken))
@@ -37,7 +39,7 @@ const NameCurrencyStep = ({
       <div className='name'>
         <h3 className='name__title'>Name your community</h3>
         <TextField
-          onChange={handleChangeCommunityName}
+          onChange={(event) => handleChangeCommunityName(event.target.value)}
           type='search'
           placeholder='Name your community'
           classes={{
@@ -57,7 +59,10 @@ const NameCurrencyStep = ({
         />
       </div>
       <div className='name' style={{ paddingTop: '0' }}>
-        <h3 className='name__title' style={{ paddingBottom: '.2em' }}>Email</h3>
+        <h3 className='name__title' style={{ paddingBottom: '.2em' }}>Email <FontAwesome data-tip style={{ fontSize: '0.750em' }} data-for='email' name='info-circle' /></h3>
+        <ReactTooltip className='tooltip__content' id='email' place='bottom' effect='solid'>
+          <div>We collect your email only to send you important notifications about your community and for a friendlier experience with future collaborators.</div>
+        </ReactTooltip>
         <p className='name__text' style={{ marginBottom: '1em' }}>Leave us your mail and we will notify you with all the essential information</p>
         <TextField
           onChange={(event) => handleChangeEmail(event.target.value)}

@@ -158,9 +158,9 @@ class IssuanceWizard extends PureComponent {
 
   handleScroll = () => this.setState({ scrollPosition: window.scrollY })
 
-  handleChangeCommunityName = (event) => {
-    this.setState({ communityName: event.target.value })
-    this.setState({ communitySymbol: nameToSymbol(event.target.value) })
+  handleChangeCommunityName = (communityName) => {
+    this.setState({ communityName })
+    this.setState({ communitySymbol: nameToSymbol(communityName) })
   }
 
   setPreviousStep = () =>
