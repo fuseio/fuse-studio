@@ -9,6 +9,7 @@ import { isMobileOnly } from 'react-device-detect'
 import { withRouter } from 'react-router-dom'
 import { withNetwork } from 'containers/Web3'
 import capitalize from 'lodash/capitalize'
+import { convertNetworkName } from 'utils/network'
 
 class NavBar extends Component {
   state = {
@@ -92,7 +93,7 @@ class NavBar extends Component {
             }}
           >
             <span className='icon'><img src={WalletIcon} /></span>
-            <span className='navbar__links__wallet__text'>{capitalize(networkType)} network</span>
+            <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
             <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
               <ProfileDropDown />
             </div>

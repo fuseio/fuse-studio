@@ -99,6 +99,8 @@ const FeaturedCommunities = memo(({
     return false
   } else if (prevProps.communities !== nextProps.communities) {
     return false
+  } else if (prevProps.metadata !== nextProps.metadata) {
+    return false
   }
   return true
 })

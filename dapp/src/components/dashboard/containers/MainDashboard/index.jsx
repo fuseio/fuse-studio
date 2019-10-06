@@ -56,21 +56,22 @@ class DashboardLayout extends Component {
       const { accountAddress, isAdmin, networkType, location } = this.props
       if (window && window.analytics && isAdmin) {
         const { analytics } = window
+
         analytics.identify(`${accountAddress}`, {
           role: 'admin'
         })
-
-        if (networkType === 'fuse') {
-          analytics.identify(`${accountAddress}`, {
-            switchToFuse: true
-          })
-        }
 
         if (location.pathname.includes('/justCreated')) {
           analytics.identify(`${accountAddress}`, {
             role: 'admin',
             bridgeWasUsed: false,
             switchToFuse: false
+          })
+        }
+
+        if (networkType === 'fuse') {
+          analytics.identify(`${accountAddress}`, {
+            switchToFuse: true
           })
         }
       }

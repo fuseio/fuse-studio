@@ -9,6 +9,7 @@ import Message from 'components/common/SignMessage'
 import { FAILURE, SUCCESS } from 'actions/constants'
 import { withRouter } from 'react-router-dom'
 import { getBalances } from 'selectors/accounts'
+import { convertNetworkName } from 'utils/network'
 
 const Transfer = ({
   sendTo,
@@ -59,7 +60,7 @@ const Transfer = ({
 
         <div className='transfer__balance'>
           <span className='title'>My Balance: </span>
-          <span className='amount'>{`(${capitalize(networkType)}) `}{balance ? formatWei(balance, 0) : 0}</span>
+          <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 0) : 0}</span>
           <small className='symbol'>{symbol}</small>
         </div>
         <TransferForm

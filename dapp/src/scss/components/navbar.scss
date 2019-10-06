@@ -63,7 +63,7 @@
       position: absolute;
       display: none;
       @include flex-align(left, middle);
-      min-width: 120px;
+      min-width: 250px;
       width: max-content;
       height: auto;      
       border-radius: 5px;
@@ -137,10 +137,11 @@
         padding: 10px;
         border-radius: 50%;
         background-color: $color-white;
+        font-size: 0.762em;
       }
 
       @include element(text) {
-        font-size: 0.762em;
+        font-size: 0.72em;
         @include breakpoint(small down) {
           display: none;
         }

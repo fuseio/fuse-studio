@@ -204,12 +204,12 @@ const ProfileDropDown = ({
         <div className='profile__account__avatar cell small-24'>
           <img src={Avatar} />
         </div>
-        {accountAddress && <span className='cell small-24 profile__account__address'>
-          {formatAddress(accountAddress)}
+        {accountAddress && <div className='cell small-24 profile__account__address grid-x align-middle align-center'>
+          <span>{formatAddress(accountAddress)}</span>
           <CopyToClipboard text={accountAddress}>
             <FontAwesome name='clone' />
           </CopyToClipboard>
-        </span>}
+        </div>}
       </div>
       <NativeBalance />
       <InnerCommunities

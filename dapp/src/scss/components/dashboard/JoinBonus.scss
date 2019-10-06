@@ -3,9 +3,17 @@
   @include element(wrapper) {
     display: flex;
     justify-content: center;
+
+    @include breakpoint(small down) {
+      margin-top: 4em;
+    }
   }
 
   @include element(container) {
+    @include breakpoint(small down) {
+      padding: 2em 1em;
+    }
+
     position: relative;
     @include xy-grid(vertical, false);
     border-radius: 6px;
@@ -19,6 +27,7 @@
 
     @include modifier(opacity) {
       > * {
+        cursor: not-allowed;
         opacity: .3;
       }
     }

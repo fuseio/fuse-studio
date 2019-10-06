@@ -10,7 +10,7 @@ import BountyBig from 'images/bounty_big.png'
 import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
 import { addCommunityPlugins } from 'actions/community'
-import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
 import upperFirst from 'lodash/upperFirst'
@@ -53,7 +53,7 @@ const Plugins = ({
     loadModal(PLUGIN_INFO_MODAL, {
       ...props,
       hasPlugin: plugins && plugins[key] ? plugins[key] : false,
-      managePlugin: () => addPlugin(toggleActive(key, plugins))
+      managePlugin: () => addPlugin(togglePlugin(key, plugins))
     })
   }
 
@@ -70,10 +70,13 @@ const Plugins = ({
     addCommunityPlugins(communityAddress, plugin)
   }
 
-  const toggleActive = (key, plugins) =>
-    get(plugins, 'joinBonus.isActive')
-      ? ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true, joinInfo: null } })
-      : ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true } })
+  const togglePlugin = (key, plugins) => {
+    if (key === 'joinBonus' && !isEmpty(plugins[key])) {
+      return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true, joinInfo: null } })
+    }
+
+    return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true } })
+  }
 
   return (
     <div className='plugins'>
@@ -108,7 +111,7 @@ const Plugins = ({
                     title={title}
                     hasPlugin={plugins && plugins[key] ? plugins[key].isActive : false}
                     image={coverImage}
-                    managePlugin={() => addPlugin(toggleActive(key, plugins))}
+                    managePlugin={() => addPlugin(togglePlugin(key, plugins))}
                   />
                 )
               })

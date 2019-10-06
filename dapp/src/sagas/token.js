@@ -230,15 +230,21 @@ function * watchFetchCommunity ({ response }) {
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
       const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
-      yield put(actions.fetchToken(homeTokenAddress))
-      yield put(actions.fetchToken(foreignTokenAddress))
-      yield put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' }))
-      yield put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' }))
       const web3 = yield getWeb3()
       const accountAddress = yield getAccount(web3)
+
+      yield all([
+        put(actions.fetchToken(homeTokenAddress)),
+        put(actions.fetchToken(foreignTokenAddress)),
+        put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
+        put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' }))
+      ])
+
       if (accountAddress) {
-        yield put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' }))
-        yield put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
+        yield all([
+          put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
+          put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
+        ])
       }
     }
   }
@@ -263,8 +269,6 @@ function * watchPluginsChanges () {
 
 function * transferTokenToFunder ({ tokenAddress, value }) {
   yield put(actions.transferToken(tokenAddress, funderAddress, value))
-  const communityAddress = yield select(getCommunityAddress)
-  yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { hasTransferToFunder: true } } })
 
   yield put({
     type: actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS

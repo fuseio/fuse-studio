@@ -122,7 +122,7 @@
     }
 
     @include breakpoint(small only) {
-      padding: 2em 0.625em 3.125em;
+      padding: 2em 0.625em 6.125em;
     }
 
     @include element(container) {

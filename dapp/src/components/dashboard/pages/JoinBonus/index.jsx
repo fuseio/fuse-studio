@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
 import TransactionButton from 'components/common/TransactionButton'
+import RewardUserForm from 'components/dashboard/components/RewardUserForm'
 import { connect, useSelector } from 'react-redux'
 import { transferTokenToFunder, clearTransactionStatus } from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import SignMessage from 'components/common/SignMessage'
 import { FAILURE, SUCCESS } from 'actions/constants'
 import { toWei } from 'web3-utils'
-import classNames from 'classnames'
 import { getFunderAccount, getBalances } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
 import { addCommunityPlugins, toggleJoinBonus } from 'actions/community'
@@ -35,7 +35,10 @@ const JoinBonus = ({
 }) => {
   useSwitchNetwork(networkType, 'join bonus')
 
-  const { plugins } = community
+  const funderAccount = useSelector(getFunderAccount)
+  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[tokenOfCommunityOnCurrentSide]
+
+  const { plugins, communityAddress } = community
 
   const { joinBonus } = plugins
   const { toSend } = joinBonus
@@ -43,15 +46,10 @@ const JoinBonus = ({
   const [transferMessage, setTransferMessage] = useState(false)
   const [amountToFunder, setAmount] = useState(null)
 
-  const [joinBonusInfoMessage, setJoinBonusInfoMessage] = useState(get(joinBonus, 'joinInfo.message', ''))
-  const [joinBonusInfoAmount, setJoinBonusInfoAmount] = useState(get(joinBonus, 'joinInfo.amount', 0))
-
   useEffect(() => {
-    if (hasTransferToFunderFlag()) {
-      balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
-    }
+    balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
     return () => {}
-  }, [plugins])
+  }, [])
 
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
@@ -85,21 +83,6 @@ const JoinBonus = ({
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
-  const hasTransferToFunderFlag = () =>
-    plugins && plugins.joinBonus && plugins.joinBonus.hasTransferToFunder
-
-  const handleBonusInfo = () => {
-    const { communityAddress } = community
-    addCommunityPlugins(communityAddress, { joinBonus: { joinInfo: { message: joinBonusInfoMessage, amount: joinBonusInfoAmount } } })
-  }
-
-  const handleToggle = useCallback(() => {
-    toggleJoinBonus(!toSend)
-  }, [toSend])
-
-  const funderAccount = useSelector(getFunderAccount)
-
-  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[tokenOfCommunityOnCurrentSide]
   const balance = balances[tokenOfCommunityOnCurrentSide]
 
   return (
@@ -108,7 +91,7 @@ const JoinBonus = ({
         <h2 className='join_bonus__main-title join_bonus__main-title--white'>Join bonus</h2>
         <div style={{ position: 'relative' }}>
           {
-            !hasTransferToFunderFlag()
+            !funderBalance
               ? (
                 <div className='join_bonus__container'>
                   <div className='join_bonus__balances'>
@@ -262,72 +245,17 @@ const JoinBonus = ({
 
               )
           }
-          <h2 className='join_bonus__main-title join_bonus__main-title--dark'>Reward user</h2>
-          <div className={classNames('join_bonus__container', { 'join_bonus__container--opacity': !hasTransferToFunderFlag() })}>
-            <p className='join_bonus__title'>How much fuse tokens you want to reward new user community?</p>
-            <div className='join_bonus__field'>
-              <TextField
-                type='number'
-                placeholder='20.00'
-                onChange={(e) => setJoinBonusInfoAmount(e.target.value)}
-                disabled={!hasTransferToFunderFlag()}
-                classes={{
-                  root: 'join_bonus__field'
-                }}
-                inputProps={{
-                  autoComplete: 'off',
-                  value: joinBonusInfoAmount
-                }}
-                InputProps={{
-                  classes: {
-                    underline: 'join_bonus__field--underline',
-                    error: 'join_bonus__field--error'
-                  }
-                }}
-              />
-            </div>
-            <div style={{ marginTop: '2em' }}>
-              <p className='join_bonus__title'>A message that goes along with it</p>
-              <div className='join_bonus__field'>
-                <TextField
-                  type='text'
-                  onChange={(e) => setJoinBonusInfoMessage(e.target.value)}
-                  disabled={!hasTransferToFunderFlag()}
-                  classes={{
-                    root: 'join_bonus__field'
-                  }}
-                  inputProps={{
-                    autoComplete: 'off',
-                    value: joinBonusInfoMessage
-                  }}
-                  InputProps={{
-                    classes: {
-                      underline: 'join_bonus__field--underline',
-                      error: 'join_bonus__field--error'
-                    }
-                  }}
-                />
-              </div>
-            </div>
-            <div className='join_bonus__actions'>
-              <div className='content__toggle'>
-                <label className='toggle'>
-                  <input
-                    type='checkbox'
-                    checked={joinBonus && joinBonus.toSend}
-                    onChange={handleToggle}
-                  />
-                  <div className='toggle-wrapper'>
-                    <span className='toggle' />
-                  </div>
-                </label>
-                <div className='content__toggle__text'>
-                  <span>{ joinBonus && !joinBonus.toSend ? 'Activate' : 'Deactivate' }</span>
-                </div>
-              </div>
-              <button className='button button--normal join_bonus__button' disabled={!hasTransferToFunderFlag()} onClick={handleBonusInfo}>Save</button>
-            </div>
-          </div>
+          <RewardUserForm
+            hasFunderBalance={funderBalance}
+            initialValues={{
+              message: get(joinBonus, 'joinInfo.message', ''),
+              amount: get(joinBonus, 'joinInfo.amount', ''),
+              activated: toSend || false
+            }}
+            communityAddress={communityAddress}
+            toggleJoinBonus={toggleJoinBonus}
+            addCommunityPlugins={addCommunityPlugins}
+          />
         </div>
       </div>
     </div>

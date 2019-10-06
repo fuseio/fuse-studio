@@ -199,7 +199,7 @@ const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLo
   useEffect(() => {
     const paramsArr = location.pathname.split('/')
     const lastItem = paramsArr[paramsArr.length - 1]
-    if (communityAddress !== lastItem) {
+    if ((communityAddress !== lastItem) && lastItem !== 'justCreated') {
       setPath(`/${lastItem}`)
     }
   }, [location.pathname])
