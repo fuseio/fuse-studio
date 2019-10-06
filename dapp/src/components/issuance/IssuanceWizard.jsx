@@ -250,13 +250,15 @@ class IssuanceWizard extends PureComponent {
       isOpen,
       existingToken,
       images,
-      subscribe
+      subscribe,
+      email
     } = this.state
 
     switch (activeStep) {
       case 0:
         return (
           <NameCurrencyStep
+            email={email}
             networkType={foreignNetwork}
             communityName={communityName}
             subscribe={subscribe}
