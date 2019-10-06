@@ -35,7 +35,7 @@
   @include element(text) {
     text-align: start !important;
     color: $color-dark;
-    font-size: 11px;
+    font-size: 0.688em;
   }
 
   @include element(field) {
@@ -49,7 +49,7 @@
     }
 
     @include element(label2) {
-      font-size: 12px !important;
+      font-size: 0.750em !important;
       color: #a4a4a4 !important;
     }  
 
@@ -75,7 +75,7 @@
         padding: 5px 12px;
         display: block;
         height: 2em;
-        font-size: 12px;
+        font-size: 0.750em;
         box-sizing: border-box;
         color: $color-dark;
       }
@@ -89,7 +89,7 @@
       padding: 5px 12px;
       display: block;
       height: 2em;
-      font-size: 12px;
+      font-size: 0.750em;
       box-sizing: border-box;
       color: $color-dark;
       &::placeholder {
@@ -102,7 +102,7 @@
       flex: 1;
       @include element(prefix) {
         color: #0a7586 !important;
-        font-size: 12px;
+        font-size: 0.750em;
         &__control {
           border: 1px solid #dadada !important;
           min-height: auto !important;
@@ -120,7 +120,7 @@
         &__placeholder,
         &__single-value {
           color: #8d95a9 !important;
-          font-size: 12px !important;
+          font-size: 0.750em !important;
         }
         &__indicator-separator {
           display: none;
@@ -130,7 +130,7 @@
         }
         &__option {
           color: #0a7586 !important;
-          font-size: 12px !important;
+          font-size: 0.750em !important;
           text-align: start !important;
           background-color: $color-white;
           height: 41px !important;
@@ -184,7 +184,7 @@
     }
 
     @include element(label) {
-      font-size: 12px;
+      font-size: 0.750em;
       font-weight: bold !important;
       color: #052235 !important;
       text-align: start;
@@ -201,7 +201,7 @@
   }
 
   @include element(label) {
-    font-size: 12px;
+    font-size: 0.750em;
     font-weight: 500;
     color: #052235;
     display: block;
@@ -233,7 +233,7 @@
   @include element(title) {
     margin-right: 5px;
     color: $color-gray;
-    font-size: 12px;
+    font-size: 0.750em;
     font-weight: 500;
     .fa {
       color:  #a4a4a4;
@@ -256,7 +256,7 @@
     box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.2);
     background-color: #f9f9f9;
     color: $color-gray;
-    font-size: 12px;
+    font-size: 0.750em;
 
     @include element(value) {
       color: $color-dark;
@@ -272,7 +272,7 @@
 
   @include element(root) {
     text-align: start;
-    font-size: 12px !important;
+    font-size: 0.750em !important;
     color: $color-gray !important;
   }
 }

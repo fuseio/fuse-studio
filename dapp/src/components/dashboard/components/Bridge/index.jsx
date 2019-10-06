@@ -1,14 +1,12 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component, memo } from 'react'
+import Balance from 'components/dashboard/components/Balance'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { toWei } from 'web3-utils'
-import { balanceOfToken } from 'actions/accounts'
 import * as actions from 'actions/bridge'
 import { getBlockNumber } from 'actions/network'
 import { getBalances } from 'selectors/accounts'
-import MainnetLogo from 'images/Mainnet.svg'
-import FuseLogo from 'images/fuseLogo.svg'
 import arrow1 from 'images/arrow--1.svg'
 import arrow2 from 'images/arrow--2.svg'
 import { convertNetworkName } from 'utils/network'
@@ -18,82 +16,6 @@ import { SHOW_MORE_MODAL } from 'constants/uiConstants'
 import FuseLoader from 'images/loader-fuse.gif'
 import { formatWei } from 'utils/format'
 
-const NetworkLogo = ({ network }) => {
-  switch (network) {
-    case 'fuse':
-      return <div className='network-logo'><img src={FuseLogo} /></div>
-    default:
-      return <div className='network-logo'><img src={MainnetLogo} /></div>
-  }
-}
-
-const Balance = ({
-  isAdmin,
-  accountAddress,
-  bridgeSide,
-  disabled,
-  transferStatus,
-  tokenAddress,
-  token,
-  className,
-  balances,
-  openModal
-}) => {
-  const { symbol } = token
-  const { bridge } = bridgeSide
-  const balance = balances[tokenAddress]
-
-  useEffect(() => {
-    if (window && window.analytics && isAdmin) {
-      const { analytics } = window
-      if (bridge === 'home') {
-        analytics.track(`Switch to fuse network`)
-      }
-
-      if (bridge === 'home' && Number(new BigNumber(balance).div(1e18).toFixed()) > 0) {
-        analytics.identify(`${accountAddress}`, {
-          role: 'admin',
-          bridgeWasUsed: true
-        })
-      } else {
-        analytics.identify(`${accountAddress}`, {
-          role: 'admin',
-          bridgeWasUsed: false
-        })
-      }
-    }
-    return () => {}
-  }, [bridge, balances])
-
-  useEffect(() => {
-    if (!transferStatus) {
-      balanceOfToken(tokenAddress, accountAddress, { bridgeType: bridge })
-    }
-    return () => {}
-  }, [transferStatus])
-
-  return (<div className={`bridge ${className}`}>
-    <NetworkLogo network={bridgeSide.network} />
-    <div className='bridge__title'>{convertNetworkName(bridgeSide.network)}</div>
-    <div className='bridge__text'>
-      <div>Balance</div>
-      <span>{balance
-        ? formatWei(balance, 2)
-        : 0 } <small>{symbol}</small>
-      </span>
-    </div>
-    <button className='bridge__more' disabled={disabled} onClick={openModal}>Show more</button>
-  </div>)
-}
-
-Balance.propTypes = {
-  balanceOfToken: PropTypes.func.isRequired,
-  accountAddress: PropTypes.string,
-  tokenAddress: PropTypes.string,
-  token: PropTypes.object,
-  bridgeSide: PropTypes.object.isRequired
-}
-
 class Bridge extends Component {
   state = {
     transferAmount: ''
@@ -102,9 +24,9 @@ class Bridge extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.waitingForConfirmation && !prevProps.waitingForConfirmation) {
       if (this.props.bridgeStatus.to.bridge === 'home') {
-        this.props.watchHomeBridge(this.props.homeBridgeAddress, this.props.transactionHash)
+        this.props.watchHomeBridge(this.props.community.homeBridgeAddress, this.props.transactionHash)
       } else {
-        this.props.watchForeignBridge(this.props.foreignBridgeAddress, this.props.transactionHash)
+        this.props.watchForeignBridge(this.props.community.foreignBridgeAddress, this.props.transactionHash)
       }
     }
 
@@ -118,9 +40,9 @@ class Bridge extends Component {
   handleTransfer = () => {
     const value = toWei(this.state.transferAmount)
     if (this.props.bridgeStatus.to.bridge === 'home') {
-      this.props.transferToHome(this.props.foreignTokenAddress, this.props.foreignBridgeAddress, value)
+      this.props.transferToHome(this.props.community.foreignTokenAddress, this.props.community.foreignBridgeAddress, value)
     } else {
-      this.props.transferToForeign(this.props.homeTokenAddress, this.props.homeBridgeAddress, value)
+      this.props.transferToForeign(this.props.community.homeTokenAddress, this.props.community.homeBridgeAddress, value)
     }
     this.props.getBlockNumber(this.props.bridgeStatus.to.network, this.props.bridgeStatus.to.bridge)
     this.props.getBlockNumber(this.props.bridgeStatus.from.network, this.props.bridgeStatus.from.bridge)
@@ -129,15 +51,20 @@ class Bridge extends Component {
   openModal = (side) => {
     const {
       loadModal,
-      foreignTokenAddress,
-      homeTokenAddress,
-      homeBridgeAddress,
-      foreignBridgeAddress,
       bridgeStatus,
       token,
       balances,
-      homeNetwork
+      homeNetwork,
+      community
     } = this.props
+
+    const {
+      foreignTokenAddress,
+      homeTokenAddress,
+      homeBridgeAddress,
+      foreignBridgeAddress
+    } = community
+
     loadModal(SHOW_MORE_MODAL, {
       name: convertNetworkName(bridgeStatus[side].network),
       network: bridgeStatus[side].network !== 'fuse' ? `https://api.infura.io/v1/jsonrpc/${bridgeStatus[side].network}` : 'https://rpc.fusenet.io',
@@ -155,24 +82,24 @@ class Bridge extends Component {
   render () {
     const {
       balances,
-      balanceOfToken,
       homeNetwork,
       bridgeStatus,
       accountAddress,
       token,
-      homeTokenAddress,
-      foreignTokenAddress,
       transferStatus,
-      bridgeDeploying,
-      network,
       waitingForConfirmation,
       confirmationNumber,
       confirmationsLimit,
-      bridgeDeployed,
-      isOwner,
       tokenOfCommunityOnCurrentSide,
-      isAdmin
+      isAdmin,
+      community,
+      waitingForRelayEvent
     } = this.props
+
+    const {
+      homeTokenAddress,
+      foreignTokenAddress
+    } = community
 
     const {
       transferAmount
@@ -186,71 +113,39 @@ class Bridge extends Component {
         <div className='content__bridge__container'>
           <Balance
             isAdmin={isAdmin}
-            balanceOfToken={balanceOfToken}
             tokenAddress={homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
             token={token}
             balances={balances}
             bridgeSide={bridgeStatus.from}
-            transferStatus={transferStatus}
-            className={`balance-${network}`}
             openModal={() => this.openModal('from')}
           />
           <div className='bridge__arrow'>
             <img src={homeNetwork === bridgeStatus.from.network ? arrow1 : arrow2} />
           </div>
           <div className='bridge__transfer'>
-            {
-              (bridgeDeployed)
-                ? (
-                  <React.Fragment>
-                    <div className='bridge__transfer__form'>
-                      <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={this.setTransferAmount} disabled={transferStatus} />
-                      <div className='bridge__transfer__form__currency'>{this.props.token.symbol}</div>
-                    </div>
-                    <button disabled={transferStatus || !Number(transferAmount) || !accountAddress || BigNumber(transferAmount).multipliedBy(1e18).isGreaterThan(new BigNumber(balance))}
-                      className='bridge__transfer__form__btn' onClick={this.handleTransfer}>
-                      {transferStatus || `Transfer to ${bridgeStatus.to.network}`}
-                    </button>
-                  </React.Fragment>
-                ) : (
-                  <div>
-                    <div className='bridge__transfer__title'>Some Headline About the Bridge</div>
-                    <div className='bridge__transfer__text'>Explanation about deploying it</div>
-                    <button className='bridge__transfer__deploy-btn'
-                      disabled={!isOwner() || this.props.bridgeDeploying}
-                      onClick={this.props.loadBridgePopup}>
-                      Deploy Bridge
-                    </button>
-                  </div>
-                )
-            }
+            <div className='bridge__transfer__form'>
+              <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={this.setTransferAmount} disabled={transferStatus} />
+              <div className='bridge__transfer__form__currency'>{this.props.token.symbol}</div>
+            </div>
+            <button disabled={transferStatus || !Number(transferAmount) || !accountAddress || BigNumber(transferAmount).multipliedBy(1e18).isGreaterThan(new BigNumber(balance))}
+              className='bridge__transfer__form__btn' onClick={this.handleTransfer}>
+              {transferStatus || `Transfer to ${bridgeStatus.to.network}`}
+            </button>
           </div>
           <div className='bridge__arrow'>
             <img src={homeNetwork === bridgeStatus.to.network ? arrow1 : arrow2} />
           </div>
           <Balance
             isAdmin={isAdmin}
-            balanceOfToken={balanceOfToken}
             tokenAddress={homeNetwork === bridgeStatus.to.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
             token={token}
             balances={balances}
             bridgeSide={bridgeStatus.to}
-            transferStatus={transferStatus}
-            disabled={!foreignTokenAddress || !homeTokenAddress}
-            className={foreignTokenAddress && homeTokenAddress ? `balance-${network}` : 'balance-disabled'}
             openModal={() => this.openModal('to')}
           />
         </div>
-        {
-          bridgeDeploying
-            ? (
-              <div className='bridge-deploying'>
-                <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
-              </div>
-            ) : null
-        }
         {
           waitingForConfirmation
             ? (
@@ -261,6 +156,16 @@ class Bridge extends Component {
                   Confirmations
                   <div>{confirmationNumber || '0'} / {confirmationsLimit}</div>
                 </div>
+              </div>
+            ) : null
+        }
+
+        {
+          waitingForRelayEvent
+            ? (
+              <div className='bridge-deploying'>
+                <p className='bridge-deploying-text'>Waiting for bridge<span>.</span><span>.</span><span>.</span></p>
+                <p className='bridge-deploying__loader'><img src={FuseLoader} alt='Fuse loader' /></p>
               </div>
             ) : null
         }
@@ -276,41 +181,61 @@ Bridge.propTypes = {
   networkType: PropTypes.string
 }
 
-class BridgeContainer extends Component {
-  isConfirmed = () => this.props.confirmationsLimit <= this.props.confirmationNumber
-  isSent = () => this.props.transactionStatus === 'PENDING' || this.props.transactionStatus === 'SUCCESS'
+const BridgeContainer = memo((props) => {
+  const {
+    relayEvent,
+    transactionStatus,
+    confirmationNumber,
+    confirmationsLimit
+  } = props
+  const isConfirmed = () => confirmationsLimit <= confirmationNumber
+  const isSent = () => transactionStatus === 'PENDING' || transactionStatus === 'SUCCESS'
 
-  isWaitingForConfirmation = () => this.isSent() && !this.isConfirmed()
+  const isWaitingForConfirmation = () => isSent() && !isConfirmed()
 
-  getTransferStatus = () => {
-    if (this.props.transactionStatus === 'PENDING') {
+  const getTransferStatus = () => {
+    if (transactionStatus === 'PENDING') {
       return 'PENDING'
     }
 
-    if (this.props.transactionStatus === 'SUCCESS') {
-      if (!this.isConfirmed()) {
+    if (transactionStatus === 'SUCCESS') {
+      if (!isConfirmed()) {
         return 'WAITING FOR CONFIRMATION'
       }
-      if (!this.props.relayEvent) {
+      if (!relayEvent) {
         return 'WAITING FOR BRIDGE'
       }
     }
   }
 
-  render = () => {
-    if (this.props.foreignTokenAddress) {
-      return <Bridge
-        {...this.props} waitingForConfirmation={this.isWaitingForConfirmation()}
-        transferStatus={this.getTransferStatus()} />
-    } else {
-      return null
-    }
+  return (
+    <Bridge
+      {...props}
+      waitingForConfirmation={isWaitingForConfirmation()}
+      transferStatus={getTransferStatus()}
+      waitingForRelayEvent={getTransferStatus() === 'WAITING FOR BRIDGE'}
+    />
+  )
+}, (prevProps, nextProps) => {
+  if (prevProps.balances[prevProps.community.homeTokenAddress] !== nextProps.balances[nextProps.community.homeTokenAddress]) {
+    return false
+  } else if (prevProps.balances[prevProps.community.foreignTokenAddress] !== nextProps.balances[nextProps.community.foreignTokenAddress]) {
+    return false
+  } else if (prevProps.transactionStatus !== nextProps.transactionStatus) {
+    return false
+  } else if (prevProps.relayEvent !== nextProps.relayEvent) {
+    return false
+  } else if (prevProps.confirmationsLimit !== nextProps.confirmationsLimit) {
+    return false
+  } else if (prevProps.confirmationNumber !== nextProps.confirmationNumber) {
+    return false
   }
-}
 
-const mapStateToProps = (state, { foreignTokenAddress }) => ({
+  return true
+})
+
+const mapStateToProps = (state) => ({
   ...state.screens.bridge,
-  ...state.entities.bridges[foreignTokenAddress],
   homeNetwork: state.network.homeNetwork,
   balances: getBalances(state),
   ...getTransaction(state, state.screens.bridge.transactionHash)
@@ -318,7 +243,6 @@ const mapStateToProps = (state, { foreignTokenAddress }) => ({
 
 const mapDispatchToProps = {
   ...actions,
-  balanceOfToken,
   getBlockNumber,
   loadModal
 }

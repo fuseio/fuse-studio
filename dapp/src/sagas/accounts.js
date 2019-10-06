@@ -109,6 +109,8 @@ function * create3boxProfile ({ accountAddress, data }) {
 
 function * watchAccountChanged ({ response }) {
   yield put(actions.balanceOfFuse(response.accountAddress))
+  yield put(actions.balanceOfNative(response.accountAddress, { bridgeType: 'home' }))
+  yield put(actions.balanceOfNative(response.accountAddress, { bridgeType: 'foreign' }))
 }
 
 function * watchBalanceOfToken ({ response }) {

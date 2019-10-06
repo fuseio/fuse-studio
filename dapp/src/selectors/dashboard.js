@@ -5,7 +5,7 @@ export const getToken = (state, address) => {
   if (address) {
     const { communities, tokens } = getTokenUtil(state)
     if (communities && tokens) {
-      if (communities[address] && communities[address].foreignTokenAddress) {
+      if (communities[address] && communities[address].foreignTokenAddress && tokens[communities[address].foreignTokenAddress]) {
         return tokens[communities[address].foreignTokenAddress]
       }
     }

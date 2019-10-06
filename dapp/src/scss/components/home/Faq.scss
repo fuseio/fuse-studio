@@ -15,14 +15,14 @@
     text-overflow: ellipsis;
     overflow: hidden; 
     width: 100%;
-    font-size: 12px;
+    font-size: 0.750em;
     white-space: nowrap;
     line-height: 1.67;
   }
 
   @include element(read) {
     color: #808080;
-    font-size: 12px;
+    font-size: 0.750em;
     &:hover {
       text-decoration: underline;
       cursor: pointer;

@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import identity from 'lodash/identity'
-import { formatWei } from 'utils/format'
+// import { formatWei } from 'utils/format'
 import CommunityLogo from 'components/common/CommunityLogo'
 import { isDaiToken } from 'constants/existingTokens'
 import isEmpty from 'lodash/isEmpty'
@@ -14,7 +14,7 @@ const Community = memo(({
 }) => {
   const {
     name,
-    totalSupply,
+    // totalSupply,
     communityAddress
   } = token
 
@@ -38,10 +38,10 @@ const Community = memo(({
       </div>
       <div className='community__content'>
         <h3 className='community__content__title'>{name}</h3>
-        <p className='community__content__members'>
+        {/* <p className='community__content__members'>
           Total Supply
           <span>{formatWei(totalSupply, 0)}</span>
-        </p>
+        </p> */}
       </div>
     </div>
   )

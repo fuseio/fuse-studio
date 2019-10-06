@@ -23,15 +23,14 @@ const TitleValue = ({ title, symbol, tokenType, children }) => (
 )
 
 const CommunityInfo = ({
-  token,
-  balances,
+  foreignToken,
   loadQrModal,
   communityAddress,
   homeTokenAddress,
   foreignTokenAddress,
   tokensTotalSupplies
 }) => {
-  const { symbol, tokenType, address } = token
+  const { symbol, tokenType, address } = foreignToken
   const type = tokenType === 'mintableBurnable'
     ? 'Mintable burnable token'
     : tokenType === 'basic'

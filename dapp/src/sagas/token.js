@@ -2,6 +2,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 import BasicToken from '@fuse/token-factory-contracts/build/abi/BasicToken'
 import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
+import { balanceOfToken } from 'actions/accounts'
 import { DEPLOY_BRIDGE } from 'actions/bridge'
 import { ADD_USER } from 'actions/user'
 import { ADD_COMMUNITY_PLUGINS, TOGGLE_JOIN_BONUS } from 'actions/community'
@@ -25,6 +26,7 @@ import TokenFactoryABI from '@fuse/token-factory-contracts/build/abi/TokenFactor
 import CommunityABI from '@fuse/entities-contracts/build/abi/CommunityWithEvents'
 import { getOptions, getNetworkVersion } from 'utils/network'
 import FuseTokenABI from 'constants/abi/FuseToken'
+import { getAccountAddress as getAccount } from 'sagas/network'
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
 const entityPut = createEntityPut(actions.entityName)
@@ -223,12 +225,27 @@ function * watchTokenChanges ({ response }) {
   yield put(actions.fetchToken(response.tokenAddress))
 }
 
-function * watchCommunityFetch ({ response }) {
+function * watchFetchCommunity ({ response }) {
   const { entities } = response
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
-      const { foreignTokenAddress } = entities[communityAddress]
-      yield put(actions.fetchToken(foreignTokenAddress))
+      const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
+      const web3 = yield getWeb3()
+      const accountAddress = yield getAccount(web3)
+
+      yield all([
+        put(actions.fetchToken(homeTokenAddress)),
+        put(actions.fetchToken(foreignTokenAddress)),
+        put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
+        put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' }))
+      ])
+
+      if (accountAddress) {
+        yield all([
+          put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
+          put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
+        ])
+      }
     }
   }
 }
@@ -252,8 +269,6 @@ function * watchPluginsChanges () {
 
 function * transferTokenToFunder ({ tokenAddress, value }) {
   yield put(actions.transferToken(tokenAddress, funderAddress, value))
-  const communityAddress = yield select(getCommunityAddress)
-  yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { hasTransferToFunder: true } } })
 
   yield put({
     type: actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS
@@ -308,7 +323,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
     takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
-    takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchCommunityFetch),
+    takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchFetchCommunity),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),

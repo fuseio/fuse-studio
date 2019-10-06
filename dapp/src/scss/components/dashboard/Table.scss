@@ -24,13 +24,13 @@
         border: none;
         background: none;
         outline: none;
-        font-size: 12px;
+        font-size: 0.750em;
         padding: 8px 10px;
       }
 
       @include element(input) {
         border: none;
-        font-size: 12px;
+        font-size: 0.750em;
         color: #92a1ac;
       }
     }
@@ -41,7 +41,7 @@
       padding: 9px 10px;
       background-color: $color-light-dark;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 0.688em;
       display: inline-block;
       text-align: center;
       margin-left: auto;
@@ -58,7 +58,7 @@
     height: 35.4px;
 
     @include element(cell) {
-      font-size: 11px;
+      font-size: 0.688em;
       font-weight: bold;
       color: $color-gray;
       
@@ -92,7 +92,7 @@
     }
 
     @include element(cell) {
-      font-size: 11px;
+      font-size: 0.688em;
       color: $color-gray;
 
       .fa-clone {
@@ -116,7 +116,7 @@
         right: 10px;
         display: flex;
         color: $color-dark;
-        font-size: 12px;
+        font-size: 0.750em;
 
         @include element(toggler) {
           margin-left: auto;
@@ -157,7 +157,7 @@
             padding: 3px 0;
             @include xy-grid(vertical);
             @include flex-align(spaced);
-            font-size: 11px;
+            font-size: 0.688em;
             cursor: initial;
   
             @include element(item) {
@@ -181,7 +181,7 @@
   @include element(pagination) {
     @include xy-grid();
     @include flex-align(spaced, middle);
-    font-size: 11px;
+    font-size: 0.688em;
     color: rgba(122, 122, 122, 0.5);
     margin-right: 1em;
 

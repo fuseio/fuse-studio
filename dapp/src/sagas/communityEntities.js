@@ -172,9 +172,9 @@ function * joinCommunity ({ communityAddress, data }) {
   })
 }
 
-function * removeEntity ({ communityAddress, account }) {
+function * removeEntity ({ account }) {
   const accountAddress = yield select(getAccountAddress)
-
+  const communityAddress = yield select(getCommunityAddress)
   const web3 = yield getWeb3()
   const networkVersion = getNetworkVersion(web3)
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
@@ -233,6 +233,7 @@ function * uploadImage ({ image }) {
   return data.json()
 }
 
+const fetchEntities = createEntitiesFetch(actions.FETCH_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchUsersEntities = createEntitiesFetch(actions.FETCH_USERS_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchBusinessesEntities = createEntitiesFetch(actions.FETCH_BUSINESSES_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchEntity)
@@ -242,6 +243,7 @@ export default function * communityEntitiesSaga () {
     tryTakeEvery(actions.ADD_ENTITY, addEntity, 1),
     tryTakeEvery(actions.TOGGLE_COMMUNITY_MODE, toggleCommunityMode, 1),
     tryTakeEvery(actions.REMOVE_ENTITY, removeEntity, 1),
+    tryTakeEvery(actions.FETCH_ENTITIES, fetchEntities, 1),
     tryTakeEvery(actions.FETCH_USERS_ENTITIES, fetchUsersEntities, 1),
     tryTakeEvery(actions.FETCH_BUSINESSES_ENTITIES, fetchBusinessesEntities, 1),
     tryTakeEvery(actions.FETCH_ENTITY, fetchEntity, 1),

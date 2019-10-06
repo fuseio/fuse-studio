@@ -3,9 +3,17 @@
   @include element(wrapper) {
     display: flex;
     justify-content: center;
+
+    @include breakpoint(small down) {
+      margin-top: 4em;
+    }
   }
 
   @include element(container) {
+    @include breakpoint(small down) {
+      padding: 2em 1em;
+    }
+
     position: relative;
     @include xy-grid(vertical, false);
     border-radius: 6px;
@@ -19,6 +27,7 @@
 
     @include modifier(opacity) {
       > * {
+        cursor: not-allowed;
         opacity: .3;
       }
     }
@@ -97,7 +106,7 @@
       width: 100%;
       background-color: $color-white;
       padding: 0 16px;
-      font-size: 15px;
+      font-size: 0.938em;
       color: $color-dark;
       height: 40px;
       border-radius: 5px;
@@ -163,7 +172,7 @@
     @include element(text) {
       color: $color-gray;
       line-height: 1.25;
-      font-size: 12px;
+      font-size: 0.750em;
     }
 
     @include element(toggle) {
@@ -172,7 +181,7 @@
       padding-top: 1em;
 
       @include element(text) {
-        font-size: 12px;
+        font-size: 0.750em;
         margin-left: 5px;
         color: rgba(13, 45, 69, 0.5);
         > span {
@@ -236,7 +245,7 @@
           color: $color-white;
           text-shadow: 1px 1px $color-black;
           font-family: tahoma;
-          font-size: 11px;
+          font-size: 0.688em;
         }
         > input:checked ~ .toggle-wrapper {
           background: $color-fuse_gradient;

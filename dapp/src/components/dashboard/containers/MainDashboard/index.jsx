@@ -7,8 +7,7 @@ import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
-import { fetchCommunity, fetchTokenProgress, fetchTokenTotalSupply } from 'actions/token'
-import { isUserExists } from 'actions/user'
+import { fetchCommunity } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
 import Users from 'components/dashboard/pages/Users'
@@ -22,11 +21,11 @@ import { getForeignNetwork, getBridgeStatus } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress, getBalances } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
-import { getToken, getTokenAddressOfByNetwork } from 'selectors/dashboard'
+import { getTokenAddressOfByNetwork } from 'selectors/dashboard'
+import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
-import { balanceOfToken } from 'actions/accounts'
 import isEqual from 'lodash/isEqual'
 import get from 'lodash/get'
 
@@ -36,50 +35,46 @@ class DashboardLayout extends Component {
   }
 
   componentDidMount () {
-    const { token } = this.props
-    if (!token) {
-      const { fetchCommunity, fetchTokenProgress, fetchEntities, communityAddress } = this.props
-      fetchCommunity(communityAddress)
-      fetchTokenProgress(communityAddress)
-      fetchEntities(communityAddress)
-    }
+    const { fetchCommunity, communityAddress, fetchEntities } = this.props
+    fetchCommunity(communityAddress)
+    fetchEntities(communityAddress)
   }
 
   componentDidUpdate (prevProps) {
+    if (this.props.communityAddress !== prevProps.communityAddress) {
+      const { fetchCommunity, communityAddress, fetchEntities } = this.props
+      this.onSetSidebarOpen(false)
+      fetchCommunity(communityAddress)
+      fetchEntities(communityAddress)
+    }
+
     if (this.props.location.pathname !== prevProps.location.pathname) {
       this.onSetSidebarOpen(false)
     }
 
-    if (this.props.match.params.address !== prevProps.match.params.address) {
-      const { communityAddress, fetchCommunity, fetchTokenProgress, fetchEntities } = this.props
-      fetchCommunity(communityAddress)
-      fetchTokenProgress(communityAddress)
-      fetchEntities(communityAddress)
-    }
-
-    if (!isEqual(this.props.accountAddress, prevProps.accountAddress)) {
-      const { balanceOfToken, community, accountAddress, isAdmin, fetchTokenTotalSupply } = this.props
-      const { foreignTokenAddress, homeTokenAddress } = community
-      fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })
-      fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })
-      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
-
+    if (this.props.community && !isEqual(this.props.accountAddress, prevProps.accountAddress)) {
+      const { accountAddress, isAdmin, networkType, location } = this.props
       if (window && window.analytics && isAdmin) {
         const { analytics } = window
+
         analytics.identify(`${accountAddress}`, {
           role: 'admin'
         })
-      }
-    }
 
-    if (((!prevProps.community && this.props.community) || (!isEqual(this.props.community, prevProps.community))) && this.props.accountAddress) {
-      const { balanceOfToken, community, accountAddress, fetchTokenTotalSupply } = this.props
-      const { foreignTokenAddress, homeTokenAddress } = community
-      fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })
-      fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })
-      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+        if (location.pathname.includes('/justCreated')) {
+          analytics.identify(`${accountAddress}`, {
+            role: 'admin',
+            bridgeWasUsed: false,
+            switchToFuse: false
+          })
+        }
+
+        if (networkType === 'fuse') {
+          analytics.identify(`${accountAddress}`, {
+            switchToFuse: true
+          })
+        }
+      }
     }
   }
 
@@ -104,18 +99,30 @@ class DashboardLayout extends Component {
   onSetSidebarOpen = open => this.setState({ open })
 
   render () {
-    if (!this.props.token) {
+    if (!this.props.community || !this.props.foreignToken || !this.props.homeToken) {
       return null
     }
-    const { open } = this.state
-    const { match, token, community, metadata, networkType, accountAddress, isAdmin } = this.props
 
-    const { address: tokenAddress, name, tokenType } = token
+    const { open } = this.state
+    const {
+      match,
+      foreignToken,
+      community,
+      metadata,
+      networkType,
+      accountAddress,
+      isAdmin,
+      tokenOfCommunityOnCurrentSide,
+      location,
+      communityAddress
+    } = this.props
+
+    const { address: tokenAddress, name, tokenType } = foreignToken
     const { isClosed, plugins, homeTokenAddress } = community
 
     const qrValue = JSON.stringify({
       tokenAddress: homeTokenAddress,
-      originNetwork: token.networkType,
+      originNetwork: foreignToken.networkType,
       env: CONFIG.env
     })
 
@@ -129,9 +136,11 @@ class DashboardLayout extends Component {
                 plugins={plugins}
                 isAdmin={isAdmin}
                 isGradientLogo
-                communityName={token && token.name}
+                communityName={community.name}
                 match={match.url}
                 tokenType={tokenType}
+                location={location}
+                communityAddress={communityAddress}
               />
               : <Sidebar
                 sidebar={
@@ -139,9 +148,11 @@ class DashboardLayout extends Component {
                     plugins={plugins}
                     isAdmin={isAdmin}
                     isGradientLogo
-                    communityName={token && token.name}
+                    communityName={community.name}
                     match={match.url}
                     tokenType={tokenType}
+                    location={location}
+                    communityAddress={communityAddress}
                   />
                 }
                 open={open}
@@ -158,21 +169,77 @@ class DashboardLayout extends Component {
             <NavBar withLogo={false} />
             <div className='content'>
               <Switch>
-                {get(plugins, 'joinBonus.isActive', false) && <Route path={`${match.path}/bonus`} render={() => <JoinBonusPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                {isAdmin && tokenType === 'mintableBurnable' && <Route path={`${match.path}/mintBurn`} render={() => <MintBurnPage onlyOnNetwork={this.onlyOnNetwork} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                {isAdmin && <Route path={`${match.path}/plugins`} render={() => <PluginsPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                {get(plugins, 'businessList.isActive', false) && <Route exact path={`${match.path}/merchants`} render={() => <Businesses onlyOnFuse={this.onlyOnFuse} {...this.props} />} />}
-                <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
-                <Route path={`${match.path}/transfer/:sendTo?`} render={() => <TransferPage onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                {get(plugins, 'joinBonus.isActive', false) && (
+                  <Route path={`${match.path}/bonus`}
+                    render={() => (
+                      <JoinBonusPage
+                        symbol={foreignToken && foreignToken.symbol}
+                        community={community}
+                        networkType={networkType}
+                        tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+                      />
+                    )}
+                  />
+                )}
+                {isAdmin && tokenType === 'mintableBurnable' && (
+                  <Route
+                    path={`${match.path}/mintBurn`}
+                    render={() => (
+                      <MintBurnPage
+                        token={foreignToken}
+                        networkType={networkType}
+                        accountAddress={accountAddress}
+                        onlyOnNetwork={this.onlyOnNetwork}
+                        tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+                      />
+                    )}
+                  />
+                )}
+                {isAdmin && (
+                  <Route
+                    path={`${match.path}/plugins`}
+                    render={() => (
+                      <PluginsPage
+                        community={community}
+                        networkType={networkType}
+                      />
+                    )}
+                  />
+                )}
+                {get(plugins, 'businessList.isActive', false) && (
+                  <Route
+                    exact
+                    path={`${match.path}/merchants`}
+                    render={() => (
+                      <Businesses
+                        onlyOnFuse={this.onlyOnFuse}
+                        community={community}
+                        isAdmin={isAdmin}
+                        networkType={networkType}
+                      />
+                    )}
+                  />
+                )}
+                <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} />} />
+                <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} networkType={networkType} community={community} />} />
+                <Route
+                  path={`${match.path}/transfer/:sendTo?`}
+                  render={() => (
+                    <TransferPage
+                      token={foreignToken}
+                      networkType={networkType}
+                      tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+                    />
+                  )}
+                />
                 <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
                   <Header
-                    metadata={metadata[token.tokenURI] || {}}
+                    metadata={metadata[foreignToken.tokenURI] || {}}
                     tokenAddress={tokenAddress}
                     isClosed={isClosed}
                     name={name}
                     networkType={networkType}
-                    token={token}
+                    token={foreignToken}
                   />
                 </Dashboard>}
                 />
@@ -188,9 +255,10 @@ class DashboardLayout extends Component {
 const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
   networkType: state.network.networkType,
-  token: getToken(state, match.params.address),
+  homeToken: getHomeTokenByCommunityAddress(state, match.params.address),
+  foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
   isPortis: state.network.isPortis,
-  community: state.entities.communities[match.params.address] || {},
+  community: state.entities.communities[match.params.address],
   communityAddress: match.params.address,
   tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
@@ -198,19 +266,14 @@ const mapStateToProps = (state, { match }) => ({
   balances: getBalances(state),
   bridgeStatus: getBridgeStatus(state),
   dashboard: state.screens.dashboard,
-  homeTokenAddress: state.entities.bridges[match.params.address] && state.entities.bridges[match.params.address].homeTokenAddress,
   tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, state.entities.communities[match.params.address])
 })
 
 const mapDispatchToProps = {
   fetchCommunity,
-  fetchTokenProgress,
-  isUserExists,
   loadModal,
   fetchEntities,
-  changeNetwork,
-  balanceOfToken,
-  fetchTokenTotalSupply
+  changeNetwork
 }
 
 export default connect(

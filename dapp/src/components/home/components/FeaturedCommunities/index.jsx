@@ -55,13 +55,14 @@ const FeaturedCommunities = memo(({
     <div className='grid-x align-justify grid-margin-x grid-margin-y'>
       {
         !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
-          const { community: { communityAddress } } = entity
+          const { community: { communityAddress }, token } = entity
+          const { tokenURI } = token
           return (
             <div className='cell medium-12' key={index}>
               <Community
                 networkType={networkType}
-                token={{ ...entity.token, communityAddress }}
-                metadata={metadata[entity.tokenURI]}
+                token={{ ...token, communityAddress }}
+                metadata={metadata[tokenURI]}
                 history={history}
                 account={account}
                 showDashboard={showDashboard}
@@ -97,6 +98,8 @@ const FeaturedCommunities = memo(({
   } else if (prevProps.communitiesKeys !== nextProps.communitiesKeys) {
     return false
   } else if (prevProps.communities !== nextProps.communities) {
+    return false
+  } else if (prevProps.metadata !== nextProps.metadata) {
     return false
   }
   return true

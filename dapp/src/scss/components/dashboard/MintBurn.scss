@@ -9,6 +9,10 @@
     @include xy-grid();
     @include flex-align(justify, middle);
 
+    @include breakpoint(small down) {
+      margin-top: 4em;
+    }
+
     @include breakpoint(medium up) {
       margin-top: 10em;
       margin-bottom: 1.5em;

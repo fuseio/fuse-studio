@@ -21,7 +21,7 @@ function * getNetworkTypeInternal (web3) {
   return { networkId, networkType }
 }
 
-function * getAccountAddress (web3) {
+export function * getAccountAddress (web3) {
   if (window.ethereum && window.ethereum.enable) {
     try {
       const enableResponse = yield window.ethereum.enable()
@@ -74,8 +74,6 @@ function * getNetworkType () {
     if (accountAddress) {
       const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
       if (!isChanged) {
-        const { analytics } = window
-        analytics.identify(accountAddress)
         yield put(balanceOfFuse(accountAddress))
       }
     }

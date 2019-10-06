@@ -11,6 +11,8 @@ import { mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { toWei } from 'web3-utils'
 import Message from 'components/common/SignMessage'
 import { getForeignNetwork } from 'selectors/network'
+import { getBalances } from 'selectors/accounts'
+import { convertNetworkName } from 'utils/network'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -120,7 +122,7 @@ const MintBurn = ({
         <TabPanel value={value} index={0}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(networkType)}) `}{balance ? formatWei(balance, 0) : 0}</span>
+            <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 0) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
@@ -142,7 +144,7 @@ const MintBurn = ({
         <TabPanel value={value} index={1}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(networkType)}) `}{balance ? formatWei(balance, 0) : 0}</span>
+            <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 0) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
@@ -168,7 +170,8 @@ const MintBurn = ({
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
-  homeNetwork: state.network.homeNetwork
+  homeNetwork: state.network.homeNetwork,
+  balances: getBalances(state)
 })
 
 const mapDispatchToProps = {

@@ -223,7 +223,7 @@ const Businesses = ({
   }
 
   const handleRemoveEntity = (account) =>
-    onlyOnFuse(() => removeEntity(communityAddress, account))
+    onlyOnFuse(() => removeEntity(account))
 
   // TODO - multi-selection
   // const toggleRow = (rowData) => {
