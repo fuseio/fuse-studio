@@ -10,7 +10,7 @@ const { email } = require('./email')
 const CommunityProgress = mongoose.model('CommunityProgress')
 const Community = mongoose.model('Community')
 
-const deployFunctions = {
+const stepFunctions = {
   community: deployCommunity,
   bridge: deployBridge,
   transferOwnership,
@@ -52,7 +52,7 @@ const performStep = async ({ home, foreign }, communityProgress, stepName) => {
   } else {
     try {
       console.log(`starting step ${stepName}`)
-      const deployFunction = deployFunctions[stepName]
+      const deployFunction = stepFunctions[stepName]
       const results = await deployFunction({ home, foreign }, communityProgress)
       console.log(`step ${stepName} done`)
       return CommunityProgress.findByIdAndUpdate(communityProgress._id,
