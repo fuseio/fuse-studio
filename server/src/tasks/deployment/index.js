@@ -6,6 +6,7 @@ const { deployBridge } = require('./bridge')
 const { deployCommunity } = require('./community')
 const { transferOwnership } = require('./token')
 const { funder } = require('./funder')
+const { email } = require('./email')
 const CommunityProgress = mongoose.model('CommunityProgress')
 const Community = mongoose.model('Community')
 
@@ -13,16 +14,18 @@ const deployFunctions = {
   community: deployCommunity,
   bridge: deployBridge,
   transferOwnership,
-  funder
+  funder,
+  email
 }
 
-const stepsOrder = ['community', 'bridge', 'transferOwnership', 'funder']
+const stepsOrder = ['community', 'bridge', 'transferOwnership', 'funder', 'email']
 
 const mandatorySteps = {
   bridge: false,
   community: true,
   transferOwnership: false,
-  funder: false
+  funder: false,
+  email: false
 }
 
 const performStep = async ({ home, foreign }, communityProgress, stepName) => {
