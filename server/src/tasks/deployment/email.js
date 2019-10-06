@@ -1,6 +1,6 @@
 const sendgridUtils = require('@utils/sendgrid')
 
-const email = async (networks, communityProgress) => {
+const onboardUser = async (networks, communityProgress) => {
   const { email, subscribe } = communityProgress.steps.email.args
   try {
     sendgridUtils.sendInfoMail({ email })
@@ -13,5 +13,5 @@ const email = async (networks, communityProgress) => {
 }
 
 module.exports = {
-  email
+  onboardUser
 }
