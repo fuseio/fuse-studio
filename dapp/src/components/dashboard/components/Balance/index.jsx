@@ -24,13 +24,10 @@ const Balance = ({
   isAdmin,
   accountAddress,
   bridgeSide,
-  transferStatus,
   tokenAddress,
   token,
   balances,
-  openModal,
-  balanceOfToken,
-  fetchTokenTotalSupply
+  openModal
 }) => {
   const { symbol } = token
   const { bridge } = bridgeSide
@@ -52,14 +49,6 @@ const Balance = ({
     }
     return () => { }
   }, [bridge, balances])
-
-  useEffect(() => {
-    if (!transferStatus) {
-      balanceOfToken(tokenAddress, accountAddress, { bridgeType: bridge })
-      fetchTokenTotalSupply(tokenAddress, { bridgeType: bridge })
-    }
-    return () => { }
-  }, [transferStatus])
 
   return (
     <div className='bridge'>

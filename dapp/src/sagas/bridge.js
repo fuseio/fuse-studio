@@ -1,4 +1,4 @@
-import { call, all, put, select, delay } from 'redux-saga/effects'
+import { call, all, put, select, delay, takeEvery } from 'redux-saga/effects'
 
 import { apiCall, createEntityPut, tryTakeEvery } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
@@ -10,6 +10,10 @@ import BasicTokenABI from '@fuse/token-factory-contracts/build/abi/BasicToken'
 import { getWeb3 } from 'services/web3'
 import BasicForeignBridgeABI from 'constants/abi/BasicForeignBridge'
 import BasicHomeBridgeABI from 'constants/abi/BasicHomeBridge'
+import { getCommunityAddress } from 'selectors/entities'
+import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
+import { balanceOfToken } from 'actions/accounts'
+import { fetchTokenTotalSupply } from 'actions/token'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -107,12 +111,28 @@ function * watchHomeBridge ({ homeBridgeAddress, transactionHash }) {
   })
 }
 
+function * watchBridgeTransfers () {
+  const communityAddress = yield select(getCommunityAddress)
+  const accountAddress = yield select(getAccountAddress)
+  const foreignToken = yield select(state => getForeignTokenByCommunityAddress(state, communityAddress))
+  const homeToken = yield select(state => getHomeTokenByCommunityAddress(state, communityAddress))
+
+  yield all([
+    put(balanceOfToken(homeToken.address, accountAddress, { bridgeType: 'home' })),
+    put(balanceOfToken(foreignToken.address, accountAddress, { bridgeType: 'foreign' })),
+    put(fetchTokenTotalSupply(homeToken.address, { bridgeType: 'home' })),
+    put(fetchTokenTotalSupply(foreignToken.address, { bridgeType: 'foreign' }))
+  ])
+}
+
 export default function * bridgeSaga () {
   yield all([
     tryTakeEvery(actions.DEPLOY_BRIDGE, deployBridge, 1),
     tryTakeEvery(actions.TRANSFER_TO_HOME, transferToHome, 1),
     tryTakeEvery(actions.TRANSFER_TO_FOREIGN, transferToForeign, 1),
     tryTakeEvery(actions.WATCH_FOREIGN_BRIDGE, watchForeignBridge, 1),
-    tryTakeEvery(actions.WATCH_HOME_BRIDGE, watchHomeBridge, 1)
+    tryTakeEvery(actions.WATCH_HOME_BRIDGE, watchHomeBridge, 1),
+    takeEvery([ actions.WATCH_HOME_BRIDGE.SUCCESS,
+      actions.WATCH_FOREIGN_BRIDGE.SUCCESS], watchBridgeTransfers, 1)
   ])
 }

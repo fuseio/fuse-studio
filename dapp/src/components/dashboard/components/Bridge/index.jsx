@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { toWei } from 'web3-utils'
-import { balanceOfToken } from 'actions/accounts'
 import * as actions from 'actions/bridge'
 import { getBlockNumber } from 'actions/network'
 import { getBalances } from 'selectors/accounts'
@@ -16,7 +15,6 @@ import { loadModal } from 'actions/ui'
 import { SHOW_MORE_MODAL } from 'constants/uiConstants'
 import FuseLoader from 'images/loader-fuse.gif'
 import { formatWei } from 'utils/format'
-import { fetchTokenTotalSupply } from 'actions/token'
 
 class Bridge extends Component {
   state = {
@@ -84,7 +82,6 @@ class Bridge extends Component {
   render () {
     const {
       balances,
-      balanceOfToken,
       homeNetwork,
       bridgeStatus,
       accountAddress,
@@ -96,7 +93,6 @@ class Bridge extends Component {
       tokenOfCommunityOnCurrentSide,
       isAdmin,
       community,
-      fetchTokenTotalSupply,
       waitingForRelayEvent
     } = this.props
 
@@ -117,14 +113,11 @@ class Bridge extends Component {
         <div className='content__bridge__container'>
           <Balance
             isAdmin={isAdmin}
-            balanceOfToken={balanceOfToken}
             tokenAddress={homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
-            fetchTokenTotalSupply={fetchTokenTotalSupply}
             token={token}
             balances={balances}
             bridgeSide={bridgeStatus.from}
-            transferStatus={transferStatus}
             openModal={() => this.openModal('from')}
           />
           <div className='bridge__arrow'>
@@ -145,14 +138,11 @@ class Bridge extends Component {
           </div>
           <Balance
             isAdmin={isAdmin}
-            balanceOfToken={balanceOfToken}
             tokenAddress={homeNetwork === bridgeStatus.to.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
-            fetchTokenTotalSupply={fetchTokenTotalSupply}
             token={token}
             balances={balances}
             bridgeSide={bridgeStatus.to}
-            transferStatus={transferStatus}
             openModal={() => this.openModal('to')}
           />
         </div>
@@ -253,8 +243,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   ...actions,
-  balanceOfToken,
-  fetchTokenTotalSupply,
   getBlockNumber,
   loadModal
 }
