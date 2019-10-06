@@ -40,6 +40,10 @@ const sendWelcomeMail = (user, token) => {
   })
 }
 
+const sendInfoMail = async (user) => {
+  // TODO - send email with all the essential information
+}
+
 const subscribeUser = async (user) => {
   const listId = config.get('mail.sendgrid.listId')
   const request = {
@@ -66,5 +70,6 @@ const subscribeUser = async (user) => {
 
 module.exports = {
   sendWelcomeMail,
-  subscribeUser
+  subscribeUser,
+  sendInfoMail
 }
