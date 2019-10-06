@@ -6,7 +6,7 @@ const { deployBridge } = require('./bridge')
 const { deployCommunity } = require('./community')
 const { transferOwnership } = require('./token')
 const { funder } = require('./funder')
-const { email } = require('./email')
+const { onboardUser } = require('./email')
 const CommunityProgress = mongoose.model('CommunityProgress')
 const Community = mongoose.model('Community')
 
@@ -15,7 +15,7 @@ const stepFunctions = {
   bridge: deployBridge,
   transferOwnership,
   funder,
-  email
+  email: onboardUser
 }
 
 const stepsOrder = ['community', 'bridge', 'transferOwnership', 'funder', 'email']
