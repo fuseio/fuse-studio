@@ -4,9 +4,28 @@ import { isMobileOnly } from 'react-device-detect'
 import TextField from '@material-ui/core/TextField'
 import isEmpty from 'lodash/isEmpty'
 
-const NameCurrencyStep = ({ subscribe, setSubscription, handleChangeEmail, existingToken, setExistingToken, communityName, handleChangeCommunityName, setNextStep, setCommunityType, communityType, networkType }) => {
+const NameCurrencyStep = ({
+  email,
+  subscribe,
+  setSubscription,
+  handleChangeEmail,
+  existingToken,
+  setExistingToken,
+  communityName,
+  handleChangeCommunityName,
+  setNextStep,
+  setCommunityType,
+  communityType,
+  networkType
+}) => {
+  // const validateEmail = () => {
+  //   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  //   return re.test(String(email).toLowerCase())
+  // }
+
   const validateStep = () => {
     return (
+      // (!validateEmail()) ||
       (isEmpty(communityName) || communityName.length < 3) ||
       (isEmpty(communityType)) ||
       (communityType && communityType.value === 'existingToken' && isEmpty(existingToken))
@@ -26,7 +45,8 @@ const NameCurrencyStep = ({ subscribe, setSubscription, handleChangeEmail, exist
           }}
           inputProps={{
             maxLength: '36',
-            autoComplete: 'off'
+            autoComplete: 'off',
+            value: communityName
           }}
           InputProps={{
             classes: {
@@ -41,13 +61,14 @@ const NameCurrencyStep = ({ subscribe, setSubscription, handleChangeEmail, exist
         <p className='name__text' style={{ marginBottom: '1em' }}>Leave us your mail and we will notify you with all the essential information</p>
         <TextField
           onChange={(event) => handleChangeEmail(event.target.value)}
-          type='search'
+          type='email'
           placeholder='Insert mail'
           classes={{
             root: 'name__field'
           }}
           inputProps={{
-            autoComplete: 'off'
+            autoComplete: 'off',
+            value: email
           }}
           InputProps={{
             classes: {
