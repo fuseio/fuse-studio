@@ -9,6 +9,19 @@ const lockAccount = async (query = { role: '*' }) => {
 const unlockAccount = async (address) =>
   Account.findOneAndUpdate({ address }, { isLocked: false, lockingTime: null })
 
+const withAccount = (func, getAccount) => async (...params) => {
+  const account = getAccount ? await getAccount(...params) : await lockAccount()
+  if (!account) {
+    throw new Error('no unlocked accounts available')
+  }
+  try {
+    await func(account, ...params)
+    await unlockAccount(account.address)
+  } catch (e) {
+    await unlockAccount(account.address)
+    throw e
+  }
+}
 const generateAccounts = (seed, accountsNumber) => {
   const wallet = fromMasterSeed(seed)
   for (let i = 0; i < accountsNumber; i++) {
@@ -21,5 +34,6 @@ const generateAccounts = (seed, accountsNumber) => {
 module.exports = {
   lockAccount,
   unlockAccount,
+  withAccount,
   generateAccounts
 }

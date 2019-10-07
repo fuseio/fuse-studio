@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { lockAccount, unlockAccount } = require('@utils/account')
+const { withAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
 
 const { deployBridge } = require('./bridge')
@@ -63,13 +63,7 @@ const performStep = async ({ home, foreign }, communityProgress, stepName) => {
     }
   }
 }
-const deploy = async ({ communityProgressId }) => {
-  const account = await lockAccount()
-
-  if (!account) {
-    throw new Error('no unlocked accounts available')
-  }
-
+const deploy = withAccount(async (account, { communityProgressId }) => {
   try {
     let communityProgress = await CommunityProgress.findById(communityProgressId)
 
@@ -109,14 +103,12 @@ const deploy = async ({ communityProgressId }) => {
 
     await CommunityProgress.findByIdAndUpdate(communityProgress._id, { communityAddress, done: true })
 
-    await unlockAccount(account.address)
     console.log('Community deploy is done')
   } catch (error) {
-    await unlockAccount(account.address)
     console.log('Community deploy failed')
     throw error
   }
-}
+})
 
 module.exports = {
   deploy
