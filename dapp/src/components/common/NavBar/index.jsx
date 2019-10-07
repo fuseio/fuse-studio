@@ -73,7 +73,7 @@ class NavBar extends Component {
             }}
           >
             <span className='icon'><img src={HelpIcon} /></span>
-            <div className={classNames('drop', { 'drop--show': isHelpOpen })}>
+            <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
               <ul className='drop__options'>
                 <li className='drop__options__item'><a href='https://docs.fusenet.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer'>FAQ</a></li>
                 <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'>Github</a></li>
