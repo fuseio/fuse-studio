@@ -1,8 +1,7 @@
 const client = require('@services/sendgrid')
-const { web3 } = require('@services/web3/foreign')
 const config = require('config')
 
-const createMailRequest = ({ to, from, templateId, templateData }) => {
+const createMailRequest = ({ to, from, templateId }) => {
   return {
     method: 'POST',
     url: '/v3/mail/send',
@@ -13,8 +12,7 @@ const createMailRequest = ({ to, from, templateId, templateData }) => {
             {
               'email': to
             }
-          ],
-          'dynamic_template_data': templateData
+          ]
         }
       ],
       'from': {
@@ -25,19 +23,17 @@ const createMailRequest = ({ to, from, templateId, templateData }) => {
   }
 }
 
-const sendWelcomeMail = (user, token) => {
-  const from = config.get('mail.supportAddress')
-  const to = user.email
-  const templateData = {
-    name: token.name,
-    symbol: token.symbol,
-    totalSupply: web3.utils.fromWei(token.totalSupply)
-  }
-  const templateId = config.get('mail.sendgrid.templates.welcome')
-  const request = createMailRequest({ to, from, templateId, templateData })
-  client.request(request).then(() => {
-    console.log(`Sent welcoming mail to address ${to}, with template data ${JSON.stringify(templateData)}`)
+const sendWelcomeMail = async (user) => {
+  const request = createMailRequest({
+    to: user.email,
+    from: config.get('mail.supportAddress'),
+    templateId: config.get('mail.sendgrid.templates.welcome')
   })
+
+  const [response] = await client.request(request)
+  if (response.statusCode >= 400) {
+    throw Error(`Cannot send welcome email to ${user.email}`)
+  }
 }
 
 const sendInfoMail = async (user) => {
