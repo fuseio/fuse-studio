@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
 var { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
 
-const lockAccount = async () => {
-  return Account.findOneAndUpdate({ isLocked: false }, { isLocked: true, lockingTime: new Date() })
+const lockAccount = async (query = { role: '*' }) => {
+  return Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date() })
 }
 
 const unlockAccount = async (address) =>

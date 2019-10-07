@@ -1,24 +1,17 @@
-module.exports = (mongoose) => {
-  mongoose = mongoose || require('mongoose')
-  const Schema = mongoose.Schema
-  const ProfileSchema = new Schema({
-    account: { type: String, required: [true, "can't be blank"] },
-    publicData: { type: Object, required: [true, "can't be blank"] }
-  }, { timestamps: true })
+const mongoose = require('mongoose')
+const { Schema } = mongoose
 
-  ProfileSchema.index({ account: 1 }, { unique: true })
+const ProfileSchema = new Schema({
+  account: { type: String, required: [true, "can't be blank"] },
+  publicData: { type: Object, required: [true, "can't be blank"] }
+}, { timestamps: true })
 
-  ProfileSchema.set('toJSON', {
-    versionKey: false
-  })
+ProfileSchema.index({ account: 1 }, { unique: true })
 
-  const Profile = mongoose.model('Profile', ProfileSchema)
+ProfileSchema.set('toJSON', {
+  versionKey: false
+})
 
-  function profile () {}
+const Profile = mongoose.model('Profile', ProfileSchema)
 
-  profile.getModel = () => {
-    return Profile
-  }
-
-  return profile
-}
+module.exports = Profile

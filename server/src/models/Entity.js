@@ -1,31 +1,24 @@
-module.exports = (mongoose) => {
-  mongoose = mongoose || require('mongoose')
-  const Schema = mongoose.Schema
-  const EntitySchema = new Schema({
-    account: { type: String, required: [true, "can't be blank"] },
-    communityAddress: { type: String, required: [true, "can't be blank"] },
-    uri: { type: String },
-    name: { type: String },
-    roles: { type: String, required: [true, "can't be blank"] },
-    type: { type: String, required: [true, "can't be blank"] },
-    isAdmin: { type: Boolean },
-    isApproved: { type: Boolean },
-    profile: { type: Schema.Types.ObjectId, ref: 'Profile' }
-  }, { timestamps: true })
+const mongoose = require('mongoose')
+const { Schema } = mongoose
 
-  EntitySchema.index({ communityAddress: 1, account: 1 }, { unique: true })
+const EntitySchema = new Schema({
+  account: { type: String, required: [true, "can't be blank"] },
+  communityAddress: { type: String, required: [true, "can't be blank"] },
+  uri: { type: String },
+  name: { type: String },
+  roles: { type: String, required: [true, "can't be blank"] },
+  type: { type: String, required: [true, "can't be blank"] },
+  isAdmin: { type: Boolean },
+  isApproved: { type: Boolean },
+  profile: { type: Schema.Types.ObjectId, ref: 'Profile' }
+}, { timestamps: true })
 
-  EntitySchema.set('toJSON', {
-    versionKey: false
-  })
+EntitySchema.index({ communityAddress: 1, account: 1 }, { unique: true })
 
-  const Entity = mongoose.model('Entity', EntitySchema)
+EntitySchema.set('toJSON', {
+  versionKey: false
+})
 
-  function entity () {}
+const Entity = mongoose.model('Entity', EntitySchema)
 
-  entity.getModel = () => {
-    return Entity
-  }
-
-  return entity
-}
+module.exports = Entity

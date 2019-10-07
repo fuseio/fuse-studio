@@ -1,9 +1,11 @@
 const router = require('express').Router()
+const paginate = require('express-paginate')
+const { keyBy } = require('lodash')
 const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
 const Community = mongoose.model('Community')
-const paginate = require('express-paginate')
-const { keyBy } = require('lodash')
+const { fetchTokenData } = require('@utils/token')
+const { getWeb3 } = require('@services/web3')
 
 const withCommunityAddress = async (tokens, { networkType }) => {
   if (!networkType) {
@@ -89,6 +91,37 @@ router.get('/owner/:owner', async (req, res) => {
 router.get('/:address', async (req, res, next) => {
   const { address } = req.params
   const token = await Token.findOne({ address })
+  return res.json({ data: token })
+})
+
+/**
+ * @api {get} /tokens/:address Adding new token
+ * @apiName AddToken
+ * @apiGroup Token
+ * @apiDescription Tokens are compatible with the ERC20 standard, and they also can be burnable/mintable. Tokens are an important part of the community economy.
+ * @apiExample Adding DAI token on mainnet:
+ *  POST /tokens/0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359
+ *  body: { networkType: mainnet }
+ * @apiParam {String} address Token address to add
+ * @apiParam {String} networkType The network of the token (body parameter)
+ *
+ * @apiSuccess {String} address Token's address
+ * @apiSuccess {String} name Token's name
+ * @apiSuccess {String} symbol Token's symbol
+ * @apiSuccess {String} tokenURI IPFS URI points to token metadata
+ * @apiSuccess {String} totalSupply Token's total supply
+ * @apiSuccess {String} owner Token's owner
+ * @apiSuccess {String} factoryAddress Factory contract that created the token
+ * @apiSuccess {String} blockNumber Block number of the token's creation
+ * @apiSuccess {String} tokenType Token type: basic/mintableBurnable/imported
+ * @apiSuccess {String} networkType Network type where the token is issued: mainnet/ropsten/fuse
+ */
+router.post('/:address', async (req, res, next) => {
+  const { address } = req.params
+  const { networkType, tokenType } = req.body
+  const web3 = getWeb3({ networkType })
+  const tokenData = await fetchTokenData(address, {}, web3)
+  const token = await new Token({ address, networkType, tokenType, ...tokenData }).save()
   return res.json({ data: token })
 })
 
