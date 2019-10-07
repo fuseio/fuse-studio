@@ -105,10 +105,21 @@ module.exports = {
     tasks: {
       deploy: {
         concurrency: 5
+      },
+      transfer: {
+        concurrency: 1
+      },
+      startTransfers: {
+        concurrency: 1
       }
     }
   },
   funder: {
     urlBase: 'https://funder-qa.fusenet.io/api/'
+  },
+  moonpay: {
+    currencies: {
+      '0c9480ef-2fab-4d31-9037-da4b29ecc16f': '0x48B0C1D90C3058ab032C44ec52d98633587eE711'
+    }
   }
 }

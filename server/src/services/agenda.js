@@ -36,6 +36,7 @@ async function start () {
     await agenda.now('processPastTokenCreatedEvents')
     await agenda.every('10 minutes', 'processPastTokenCreatedEvents')
     await agenda.every('1 minute', 'proccessPendingTransactions')
+    await agenda.every('10 seconds', 'startTransfers')
 
     await agenda.now('proccessPendingTransactions')
   }
