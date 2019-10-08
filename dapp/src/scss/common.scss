@@ -1,78 +1,3 @@
-@include block(choose_provider) {
-  height: 100%;
-  @include xy-grid(vertical);
-  align-items: flex-start;
-  text-align: start;
-  @include element(wrapper) {
-    border-radius: 5px;
-    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.15);
-    background-color: $color-white;
-
-    @include breakpoint(medium up) {
-      width: 619px !important;
-      padding: 2em !important;
-    }
-  }
-
-  @include element(title) {
-    font-size: 1.875em;
-    font-weight: 500;
-    line-height: 0.67;
-    letter-spacing: -0.65px;
-		color: $color-light-dark;
-		margin-top: 1em;
-
-    > img {
-      width: 45px;
-      height: 45px;
-    }
-  }
-
-  @include element(text) {
-    font-size: 1.125em;
-    line-height: 1.33;
-    letter-spacing: -0.39px;
-    color: $color-gray;
-    margin-top: 2em;
-
-    > a:hover {
-      text-decoration: underline;
-    }
-  }
-
-  @include element(options) {
-    @include xy-grid();
-    margin-top: 4em;
-  }
-
-  @include element(metamask) {
-    @include xy-grid(vertical);
-    @include flex-align(null, middle);
-    margin-right: 3em;
-    > img {
-      width: 64px;
-      height: 59px;
-      margin-bottom: 1em;
-    }
-  }
-
-  @include element(portis) {
-    @include xy-grid(vertical);
-    @include flex-align(null, middle);
-
-    > img {
-      width: 64px;
-      height: 59px;
-      margin-bottom: 1em;
-    }
-  }
-
-  @include element(button) {
-    margin-top: 4em;
-    min-width: 135px;
-  }
-}
-
 @include block(featured) {
   cursor: pointer;
   width: 100%;
@@ -1191,6 +1116,94 @@
 
       input:checked + .toggle__handler__indicator:before {
         content: "";
+      }
+    }
+  }
+}
+
+@include block(choose_provider) {
+  height: 100%;
+  @include xy-grid(vertical);
+  align-items: flex-start;
+  text-align: start;
+  @include element(wrapper) {
+    border-radius: 5px;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.15);
+    background-color: $color-white;
+
+    @include breakpoint(medium up) {
+      width: 619px !important;
+      padding: 2em !important;
+    }
+  }
+
+  @include element(title) {
+    font-size: 1.875em;
+    font-weight: 500;
+    line-height: 0.67;
+    letter-spacing: -0.65px;
+		color: $color-light-dark;
+		margin-top: 1em;
+
+    > img {
+      width: 45px;
+      height: 45px;
+    }
+  }
+
+  @include element(text) {
+    font-size: 1.125em;
+    line-height: 1.33;
+    letter-spacing: -0.39px;
+    color: $color-gray;
+    margin-top: 2em;
+
+    > a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @include element(options) {
+    @include xy-grid();
+    margin-top: 4em;
+  }
+
+  @include element(metamask) {
+    @include xy-grid(vertical);
+    @include flex-align(null, middle);
+    margin-right: 3em;
+    > img {
+      width: 64px;
+      height: 59px;
+      margin-bottom: 1em;
+    }
+  }
+
+  @include element(portis) {
+    @include xy-grid(vertical);
+    @include flex-align(null, middle);
+
+    > img {
+      width: 64px;
+      height: 59px;
+      margin-bottom: 1em;
+    }
+  }
+
+  @include element(button) {
+    margin-top: 4em;
+    min-width: 145px;
+
+    span {
+      animation-name: blink;
+      animation-duration: 1.4s;
+      animation-iteration-count: infinite;
+      animation-fill-mode: both;
+      &:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      &:nth-child(3) {
+        animation-delay: 0.4s;
       }
     }
   }
