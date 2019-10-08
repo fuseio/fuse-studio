@@ -86,6 +86,7 @@ class Dashboard extends Component {
     const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress } = community
     const { totalSupply } = dashboard
 
+    const { symbol, name } = foreignToken
     return (
       <React.Fragment>
         {children}
@@ -107,8 +108,9 @@ class Dashboard extends Component {
                 <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
               </ReactTooltip>
               <Bridge
+                symbol={symbol}
+                tokenName={name}
                 isAdmin={isAdmin}
-                token={foreignToken}
                 community={community}
                 bridgeStatus={bridgeStatus}
                 accountAddress={accountAddress}

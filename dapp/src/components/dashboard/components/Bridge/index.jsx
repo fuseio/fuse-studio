@@ -52,7 +52,7 @@ class Bridge extends Component {
     const {
       loadModal,
       bridgeStatus,
-      token,
+      tokenName,
       balances,
       homeNetwork,
       community
@@ -72,7 +72,7 @@ class Bridge extends Component {
       foreignTokenAddress,
       homeBridgeAddress,
       foreignBridgeAddress,
-      tokenName: token.name,
+      tokenName,
       tokenAmount: balances[homeNetwork === bridgeStatus[side].network ? homeTokenAddress : foreignTokenAddress]
         ? formatWei(balances[homeNetwork === bridgeStatus[side].network ? homeTokenAddress : foreignTokenAddress])
         : 0
@@ -85,7 +85,7 @@ class Bridge extends Component {
       homeNetwork,
       bridgeStatus,
       accountAddress,
-      token,
+      symbol,
       transferStatus,
       waitingForConfirmation,
       confirmationNumber,
@@ -113,10 +113,9 @@ class Bridge extends Component {
         <div className='content__bridge__container'>
           <Balance
             isAdmin={isAdmin}
-            tokenAddress={homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
-            token={token}
-            balances={balances}
+            symbol={symbol}
+            balance={balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]}
             bridgeSide={bridgeStatus.from}
             openModal={() => this.openModal('from')}
           />
@@ -126,7 +125,7 @@ class Bridge extends Component {
           <div className='bridge__transfer'>
             <div className='bridge__transfer__form'>
               <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={this.setTransferAmount} disabled={transferStatus} />
-              <div className='bridge__transfer__form__currency'>{this.props.token.symbol}</div>
+              <div className='bridge__transfer__form__currency'>{symbol}</div>
             </div>
             <button disabled={transferStatus || !Number(transferAmount) || !accountAddress || BigNumber(transferAmount).multipliedBy(1e18).isGreaterThan(new BigNumber(balance))}
               className='bridge__transfer__form__btn' onClick={this.handleTransfer}>
@@ -138,10 +137,9 @@ class Bridge extends Component {
           </div>
           <Balance
             isAdmin={isAdmin}
-            tokenAddress={homeNetwork === bridgeStatus.to.network ? homeTokenAddress : foreignTokenAddress}
             accountAddress={accountAddress}
-            token={token}
-            balances={balances}
+            symbol={symbol}
+            balance={balances[homeNetwork === bridgeStatus.to.network ? homeTokenAddress : foreignTokenAddress]}
             bridgeSide={bridgeStatus.to}
             openModal={() => this.openModal('to')}
           />
