@@ -201,7 +201,10 @@ const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLo
     const lastItem = paramsArr[paramsArr.length - 1]
     if ((communityAddress !== lastItem) && lastItem !== 'justCreated') {
       setPath(`/${lastItem}`)
+    } else {
+      setPath('')
     }
+    return () => {}
   }, [location.pathname])
 
   return (
