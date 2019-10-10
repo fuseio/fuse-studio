@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
-const transform = (doc, ret, options) => ({ ...ret, amount: doc.amount ? doc.amount.toString() : undefined })
+const transform = (doc, ret) => ({ ...ret, amount: doc.amount ? doc.amount.toString() : undefined })
 
 const TransferSchema = new Schema({
   from: { type: String, required: [true, "can't be blank"] },

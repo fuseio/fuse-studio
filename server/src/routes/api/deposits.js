@@ -19,21 +19,24 @@ const moonpayAuthCheck = (req, res, next) => {
 }
 
 router.post('/moonpay', moonpayAuthCheck, async (req, res) => {
-  const { status, walletAddress, baseCurrencyAmount } = req.body.data
+  const { status } = req.body.data
   const { type } = req.body
   const currencies = config.get('moonpay.currencies')
   if (type === 'transaction_updated' && status === 'completed') {
-    const { currencyId, cryptoTransactionId } = req.body.data
+    const { currencyId, cryptoTransactionId, baseCurrencyAmount, walletAddress, id } = req.body.data
     const { externalCustomerId } = req.body
-    const foreignTokenAddress = currencies[currencyId]
-    if (!foreignTokenAddress) {
+    const tokenAddress = currencies[currencyId]
+    if (!tokenAddress) {
       throw new Error(`The currency type ${currencyId} is not supported. Cannot process transaction ${cryptoTransactionId} from account ${externalCustomerId}`)
     }
     await makeDeposit({
+      transactionHash: cryptoTransactionId,
       walletAddress,
       customerAddress: externalCustomerId,
-      foreignTokenAddress,
-      amount: web3Utils.toWei(String(baseCurrencyAmount))
+      tokenAddress,
+      amount: web3Utils.toWei(String(baseCurrencyAmount)),
+      externalId: id,
+      provider: 'moonpay'
     })
     return res.json({ response: 'job started' })
   } else {
