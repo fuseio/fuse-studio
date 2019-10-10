@@ -20,8 +20,6 @@ TransferSchema.set('toObject', {
   transform
 })
 
-TransferSchema.index({ externalId: 1 }, { unique: true })
-
 const Transfer = mongoose.model('Transfer', TransferSchema)
 
 module.exports = Transfer
