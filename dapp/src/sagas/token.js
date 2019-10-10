@@ -303,11 +303,15 @@ function * toggleJoinBonus ({ toSend }) {
   })
 }
 
-function * watchFeaturedCommunities ({ response }) {
+function * watchCommunities ({ response }) {
   const { result, entities } = response
   for (let account of result) {
-    const community = entities[account]
-    yield put(actions.fetchToken(community.foreignTokenAddress))
+    const entity = entities[account]
+    if (entity.foreignTokenAddress) {
+      yield put(actions.fetchToken(entity.foreignTokenAddress))
+    } else if (entity && entity.community) {
+      yield put(actions.fetchToken(entity.community.foreignTokenAddress))
+    }
   }
 }
 
@@ -335,6 +339,6 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
     tryTakeEvery(TOGGLE_JOIN_BONUS, toggleJoinBonus, 1),
     tryTakeEvery(actions.FETCH_FEATURED_COMMUNITIES, fetchFeaturedCommunities),
-    takeEvery(action => /^FETCH_FEATURED_COMMUNITIES.*SUCCESS/.test(action.type), watchFeaturedCommunities)
+    takeEvery(action => /^(FETCH_FEATURED_COMMUNITIES|FETCH_COMMUNITIES).*SUCCESS/.test(action.type), watchCommunities)
   ])
 }

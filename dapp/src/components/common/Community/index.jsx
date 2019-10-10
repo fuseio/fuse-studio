@@ -7,10 +7,10 @@ import { isDaiToken } from 'constants/existingTokens'
 import isEmpty from 'lodash/isEmpty'
 
 const Community = memo(({
-  token,
-  showDashboard,
+  token = {},
+  showDashboard = identity,
   networkType,
-  metadata
+  metadata = {}
 }) => {
   const {
     name,
@@ -54,12 +54,6 @@ const Community = memo(({
 
   return true
 })
-
-Community.defaultProps = {
-  token: {},
-  metadata: {},
-  showDashboard: identity
-}
 
 Community.propTypes = {
   token: PropTypes.object,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { connect } from 'react-redux'
 import Modal from 'components/common/Modal'
 import Missile from 'images/missile.svg'
@@ -8,8 +8,18 @@ import { getNetworkType } from 'actions/network'
 
 const ChooseProviderModal = ({
   hideModal,
-  getNetworkType
+  getNetworkType,
+  isMetaMask,
+  isPortis
 }) => {
+  const to = useMemo(() => {
+    if (isMetaMask) {
+      return 'Metamask'
+    } else if (isPortis) {
+      return 'Portis'
+    }
+  }, [isPortis, isMetaMask])
+
   const handleClose = () => {
     hideModal()
   }
@@ -38,14 +48,27 @@ const ChooseProviderModal = ({
           </div>
         </div>
 
-        <button className='choose_provider__button button button--normal' onClick={handleConnectWallet}>Connect wallet</button>
+        <button className='choose_provider__button button button--normal' disabled={!to} onClick={handleConnectWallet}>Connect {!to
+          ? (
+            <React.Fragment>
+              <span>.</span>
+              <span>.</span>
+              <span>.</span>
+            </React.Fragment>
+          ) : to
+        }</button>
       </div>
     </Modal>
   )
 }
 
+const mapStateToProps = (state) => ({
+  isPortis: state.network.isPortis,
+  isMetaMask: state.network.isMetaMask
+})
+
 const mapDispatchToProps = {
   getNetworkType
 }
 
-export default connect(null, mapDispatchToProps)(ChooseProviderModal)
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseProviderModal)

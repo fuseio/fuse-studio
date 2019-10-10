@@ -13,18 +13,16 @@ import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER } from 'constants/uiConstants'
-import isEmpty from 'lodash/isEmpty'
 
 const HomePage = ({
   history,
   loadModal,
-  accounts
+  accountAddress
 }) => {
   const [title, setTitle] = useState('Featured communities')
 
   const showIssuance = () => {
-    const { featuredCommunities, ...rest } = accounts
-    if (isEmpty(rest)) {
+    if (!accountAddress) {
       loadModal(CHOOSE_PROVIDER)
     } else {
       history.push('/view/issuance')
@@ -88,7 +86,7 @@ const HomePage = ({
 }
 
 const mapStateToProps = (state) => ({
-  accounts: state.accounts
+  accountAddress: state.network.accountAddress
 })
 
 const mapDispatchToProps = {
