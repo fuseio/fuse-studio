@@ -198,7 +198,7 @@ class TransferToFunderForm extends Component {
       <Formik
         initialValues={this.initialValues}
         validationSchema={this.validationSchema}
-        render={Number(funderBalance) <= 0 ? this.renderForm : this.renderHasBalanceForm}
+        render={!Number(funderBalance) ? this.renderForm : this.renderHasBalanceForm}
         onSubmit={this.onSubmit}
         enableReinitialize
         validateOnChange

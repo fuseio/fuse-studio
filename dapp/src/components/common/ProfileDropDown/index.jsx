@@ -174,8 +174,6 @@ const ProfileDropDown = ({
   fetchCommunities,
   balanceOfToken
 }) => {
-  if (!accountAddress) return null
-
   useEffect(() => {
     if (accountAddress) {
       fetchCommunities(accountAddress)

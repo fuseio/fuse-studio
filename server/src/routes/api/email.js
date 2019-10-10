@@ -3,8 +3,7 @@ const sendgridUtils = require('@utils/sendgrid')
 
 router.post('/subscribe', async (req, res, next) => {
   const { user } = req.body
-  sendgridUtils.subscribeUser(user)
-  sendgridUtils.sendWelcomeMail(user)
+  await sendgridUtils.subscribeUser(user)
   res.send({ response: 'ok' })
 })
 

@@ -26,11 +26,10 @@ export default class TransferForm extends PureComponent {
     }
   }
 
-  onSubmit = (values, formikBag) => {
+  onSubmit = (values) => {
     const { handleTransfer } = this.props
     const { to, amount } = values
     handleTransfer({ to, amount })
-    formikBag.resetForm()
   }
 
   transactionError = () => {
