@@ -13,7 +13,7 @@ import BasicHomeBridgeABI from 'constants/abi/BasicHomeBridge'
 import { getCommunityAddress } from 'selectors/entities'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { balanceOfToken } from 'actions/accounts'
-import { fetchTokenTotalSupply, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
+import { fetchTokenTotalSupply } from 'actions/token'
 
 const entityPut = createEntityPut(actions.entityName)
 
@@ -132,11 +132,7 @@ export default function * bridgeSaga () {
     tryTakeEvery(actions.TRANSFER_TO_FOREIGN, transferToForeign, 1),
     tryTakeEvery(actions.WATCH_FOREIGN_BRIDGE, watchForeignBridge, 1),
     tryTakeEvery(actions.WATCH_HOME_BRIDGE, watchHomeBridge, 1),
-    takeEvery([
-      MINT_TOKEN.SUCCESS,
-      BURN_TOKEN.SUCCESS,
-      actions.WATCH_HOME_BRIDGE.SUCCESS,
-      actions.WATCH_FOREIGN_BRIDGE.SUCCESS
-    ], watchBridgeTransfers, 1)
+    takeEvery([ actions.WATCH_HOME_BRIDGE.SUCCESS,
+      actions.WATCH_FOREIGN_BRIDGE.SUCCESS], watchBridgeTransfers, 1)
   ])
 }

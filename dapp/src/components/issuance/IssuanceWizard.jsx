@@ -38,8 +38,6 @@ class IssuanceWizard extends PureComponent {
     stepPosition: {},
     images: {},
     scrollPosition: 0,
-    email: '',
-    subscribe: true,
     contracts: {
       community: {
         label: 'Members list',
@@ -64,10 +62,6 @@ class IssuanceWizard extends PureComponent {
         checked: true,
         key: 'funder',
         icon: contractIcon
-      },
-      email: {
-        checked: true,
-        key: 'email'
       }
     },
     isOpen: true,
@@ -123,7 +117,7 @@ class IssuanceWizard extends PureComponent {
       symbol: this.state.communitySymbol,
       totalSupply: new BigNumber(this.state.totalSupply).multipliedBy(1e18)
     }
-    const { contracts, isOpen, communityType, email, subscribe } = this.state
+    const { contracts, isOpen, communityType } = this.state
     const { deployExistingToken, createTokenWithMetadata, adminAddress } = this.props
 
     const steps = Object.keys(contracts)
@@ -134,19 +128,10 @@ class IssuanceWizard extends PureComponent {
           ? { args: { foreignTokenAddress: null } }
           : contracts[contractName].key === 'community'
             ? { args: { isClosed: !isOpen, name: this.state.communityName, adminAddress } }
-            : contracts[contractName].key === 'email'
-              ? { args: { email, subscribe } }
-              : {}
+            : {}
       }), {})
 
     const metadata = { communityLogo: this.state.communityLogo.name, image: this.state.images.blob }
-
-    if (adminAddress) {
-      window.analytics.identify(adminAddress, {
-        email
-      })
-    }
-
     if (communityType && communityType.value === 'existingToken') {
       const { existingToken: { value: foreignTokenAddress } } = this.state
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
@@ -158,9 +143,9 @@ class IssuanceWizard extends PureComponent {
 
   handleScroll = () => this.setState({ scrollPosition: window.scrollY })
 
-  handleChangeCommunityName = (communityName) => {
-    this.setState({ communityName })
-    this.setState({ communitySymbol: nameToSymbol(communityName) })
+  handleChangeCommunityName = (event) => {
+    this.setState({ communityName: event.target.value })
+    this.setState({ communitySymbol: nameToSymbol(event.target.value) })
   }
 
   setPreviousStep = () =>
@@ -195,12 +180,6 @@ class IssuanceWizard extends PureComponent {
   }
 
   showMetamaskPopup = () => this.setIssuanceTransaction()
-
-  handleChangeEmail = email =>
-    this.setState({ email })
-
-  setSubscription = (subscribe) =>
-    this.setState({ subscribe })
 
   setCommunityType = communityType =>
     this.setState({ communityType })
@@ -249,21 +228,15 @@ class IssuanceWizard extends PureComponent {
       currentDeploy,
       isOpen,
       existingToken,
-      images,
-      subscribe,
-      email
+      images
     } = this.state
 
     switch (activeStep) {
       case 0:
         return (
           <NameCurrencyStep
-            email={email}
             networkType={foreignNetwork}
             communityName={communityName}
-            subscribe={subscribe}
-            setSubscription={this.setSubscription}
-            handleChangeEmail={this.handleChangeEmail}
             handleChangeCommunityName={this.handleChangeCommunityName}
             setNextStep={() => this.onlyOnForeign(this.setNextStep)}
             communityType={communityType}

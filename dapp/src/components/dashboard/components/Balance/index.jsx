@@ -1,4 +1,5 @@
 import React, { useEffect, memo } from 'react'
+import PropTypes from 'prop-types'
 import { BigNumber } from 'bignumber.js'
 import { convertNetworkName } from 'utils/network'
 import MainnetLogo from 'images/Mainnet.svg'
@@ -23,12 +24,14 @@ const Balance = ({
   isAdmin,
   accountAddress,
   bridgeSide,
-  symbol,
+  tokenAddress,
+  token,
   balances,
-  openModal,
-  balance
+  openModal
 }) => {
-  const { bridge, network } = bridgeSide
+  const { symbol } = token
+  const { bridge } = bridgeSide
+  const balance = balances[tokenAddress]
   useEffect(() => {
     if (window && window.analytics && isAdmin) {
       const { analytics } = window
@@ -49,8 +52,8 @@ const Balance = ({
 
   return (
     <div className='bridge'>
-      <NetworkLogo network={network} />
-      <div className='bridge__title'>{convertNetworkName(network)}</div>
+      <NetworkLogo network={bridgeSide.network} />
+      <div className='bridge__title'>{convertNetworkName(bridgeSide.network)}</div>
       <div className='bridge__text'>
         <div>Balance</div>
         <span>{balance ? formatWei(balance, 2) : 0} <small>{symbol}</small>
@@ -59,6 +62,14 @@ const Balance = ({
       <button className='bridge__more' onClick={openModal}>Show more</button>
     </div>
   )
+}
+
+Balance.propTypes = {
+  balanceOfToken: PropTypes.func.isRequired,
+  accountAddress: PropTypes.string,
+  tokenAddress: PropTypes.string,
+  token: PropTypes.object,
+  bridgeSide: PropTypes.object.isRequired
 }
 
 export default Balance

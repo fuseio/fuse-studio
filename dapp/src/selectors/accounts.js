@@ -13,7 +13,9 @@ export const getAccount = createSelector(
 
 export const getFunderAccount = createSelector(
   state => state.accounts,
-  (accounts) => (accounts && accounts[funderAddress]) || null
+  (accounts) => {
+    return (accounts && accounts[funderAddress]) || null
+  }
 )
 
 export const getUser3boxData = createSelector(
