@@ -65,5 +65,10 @@
         "concurrency": "COMMUNITY_AGENDA_TASKS_DEPLOY_CONCURRENCY"
       }
     }
+  },
+  "moonpay": {
+    "webhook": {
+      "secret": "COMMUNITY_MOONPAY_WEBHOOK_SECRET"
+    }
   }
 }
