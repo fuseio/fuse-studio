@@ -2,6 +2,7 @@ require('./Account')
 require('./Bridge')
 require('./Community')
 require('./Transfer')
+require('./Deposit')
 require('./Entity')
 require('./Profile')
 
