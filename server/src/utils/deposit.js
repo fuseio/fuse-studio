@@ -28,7 +28,7 @@ const makeDeposit = async ({
     status: 'WAITING'
   }).save()
 
-  agenda.now('transfer', transferToHome._id)
+  agenda.now('transfer', { transferId: transferToHome._id })
 }
 
 module.exports = {

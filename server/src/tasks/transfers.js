@@ -26,7 +26,7 @@ const transfer = withAccount(async (account, { transferId }) => {
     await transferDoc.save()
     throw e
   }
-}, async (transferId) => {
+}, async ({ transferId }) => {
   const transferDoc = await Transfer.findById(transferId)
   if (!transferDoc || transferDoc.status !== 'READY') {
     return
