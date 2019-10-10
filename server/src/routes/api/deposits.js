@@ -2,8 +2,23 @@ const router = require('express').Router()
 const { makeDeposit } = require('@utils/deposit')
 const config = require('config')
 const web3Utils = require('web3-utils')
+const crypto = require('crypto')
 
-router.post('/moonpay', async (req, res) => {
+const moonpayAuthCheck = (req, res, next) => {
+  const sigHeader = req.header('Moonpay-Signature')
+  const [timestampPart, sigPart] = sigHeader.split(',')
+  const timestamp = timestampPart.split('t=')[1]
+  const sig = sigPart.split('s=')[1]
+  const signedPayload = timestamp + '.' + JSON.stringify(req.body)
+  const computedSig = crypto.createHmac('sha256', config.get('moonpay.webhook.secret')).update(signedPayload).digest('hex')
+  if (computedSig === sig) {
+    return next()
+  } else {
+    throw Error('Invalid moonpay signature')
+  }
+}
+
+router.post('/moonpay', moonpayAuthCheck, async (req, res) => {
   const { status, walletAddress, baseCurrencyAmount } = req.body.data
   const { type } = req.body
   const currencies = config.get('moonpay.currencies')
