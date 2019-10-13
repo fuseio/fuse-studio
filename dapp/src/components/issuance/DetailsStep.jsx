@@ -48,7 +48,8 @@ export default class DetailsStep extends Component {
       handleChangeCommunitySymbol,
       communityName,
       setImages,
-      images
+      images,
+      existingToken
     } = this.props
 
     const { currentStep } = this.state
@@ -70,9 +71,11 @@ export default class DetailsStep extends Component {
               communityName={communityName}
               communityType={communityType}
               communitySymbol={communitySymbol}
+              existingToken={existingToken}
             />
             {isMobileOnly && <div className='line' ><hr /></div>}
             <LogosOptions
+              existingToken={existingToken}
               setImages={setImages}
               images={images}
               communityType={communityType}
@@ -108,7 +111,8 @@ export default class DetailsStep extends Component {
       setImages,
       images,
       networkType,
-      handleChangeCommunitySymbol
+      handleChangeCommunitySymbol,
+      existingToken
     } = this.props
 
     return (
@@ -129,6 +133,7 @@ export default class DetailsStep extends Component {
           handleChangeCommunitySymbol={handleChangeCommunitySymbol}
           communityName={communityName}
           communityType={communityType}
+          existingToken={existingToken}
           communitySymbol={communitySymbol}
         />
         <LogosOptions
@@ -137,6 +142,7 @@ export default class DetailsStep extends Component {
           communityType={communityType}
           networkType={networkType}
           communityLogo={communityLogo}
+          existingToken={existingToken}
           setCommunityLogo={setCommunityLogo}
           communitySymbol={communitySymbol}
         />

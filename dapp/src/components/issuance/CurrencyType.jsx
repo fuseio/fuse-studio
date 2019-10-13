@@ -67,7 +67,7 @@ const OptionItem = (props) => {
 }
 
 export default ({ communityType = { text: '' }, setCommunityType, networkType, setExistingToken, existingToken }) => {
-  const handleClick = (item) => {
+  const handleChange = (item) => {
     setCommunityType(item)
   }
 
@@ -119,8 +119,9 @@ export default ({ communityType = { text: '' }, setCommunityType, networkType, s
               classNamePrefix='attributes__options__select__prefix'
               components={{ Option: OptionItem }}
               options={CommunityTypes}
+              value={communityType}
               placeholder={'I want to make new currency'}
-              onChange={(val) => handleClick(val)}
+              onChange={(val) => handleChange(val)}
             />
           </div>
           <div className='attributes__options'>
@@ -130,7 +131,11 @@ export default ({ communityType = { text: '' }, setCommunityType, networkType, s
               components={{ Option: OptionItem }}
               options={existingTokens(networkType)}
               placeholder={'I want to use existing currency'}
-              onChange={(val) => handleClick(val)}
+              value={existingToken}
+              onChange={(val) => {
+                handleChange({ value: 'existingToken' })
+                setExistingToken(val)
+              }}
             />
           </div>
 

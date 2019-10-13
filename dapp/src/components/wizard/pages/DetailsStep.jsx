@@ -31,7 +31,7 @@ const DetailsStep = ({
     return (
       <Fragment>
         {
-          communityType && communityType.value !== 'existingToken' && (
+          communityType && (
             <TotalSupply />
           )
         }

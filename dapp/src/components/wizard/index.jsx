@@ -52,7 +52,9 @@ const WizardPage = ({
       contracts,
       communityLogo,
       images,
-      existingToken
+      existingToken,
+      email,
+      subscribe
     } = values
 
     const steps = Object.keys(contracts)
@@ -63,11 +65,13 @@ const WizardPage = ({
           ? { args: { foreignTokenAddress: null } }
           : contracts[contractName].key === 'community'
             ? { args: { isClosed: !isOpen, name: communityName, adminAddress } }
-            : {}
+            : contracts[contractName].key === 'email'
+              ? { args: { email, subscribe } }
+              : {}
       }), {})
 
     const metadata = { communityLogo: communityLogo.name, image: images.blob }
-    if (communityType && communityType.value === 'existingToken') {
+    if (existingToken) {
       const { value: foreignTokenAddress } = existingToken
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
       deployExistingToken(newSteps)
@@ -101,11 +105,13 @@ const WizardPage = ({
           communityName: '',
           communitySymbol: '',
           totalSupply: '',
-          communityType: {},
-          existingToken: {},
-          communityLogo: {},
+          communityType: undefined,
+          existingToken: undefined,
+          communityLogo: undefined,
           isOpen: true,
-          images: {},
+          images: undefined,
+          email: '',
+          subscribe: true,
           contracts: {
             community: {
               label: 'Members list',
@@ -126,6 +132,10 @@ const WizardPage = ({
             funder: {
               checked: true,
               key: 'funder'
+            },
+            email: {
+              checked: true,
+              key: 'email'
             }
           }
         }}

@@ -1182,6 +1182,10 @@
 
           > p, div {
             color: rgba(13, 45, 69, 0.6);
+            
+            @include breakpoint(medium up) {
+              flex-basis: 50%;
+            }
 
             @include breakpoint(small down) {
               font-size: 14px;

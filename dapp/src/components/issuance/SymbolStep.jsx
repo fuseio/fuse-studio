@@ -15,7 +15,7 @@ export default class SymbolStep extends PureComponent {
   }
 
   render () {
-    const { communityType } = this.props
+    const { communityType, existingToken } = this.props
     return (
       <div className='symbol'>
         <h2 className='symbol__title'>Currency Symbol</h2>
@@ -27,7 +27,7 @@ export default class SymbolStep extends PureComponent {
             maxLength='4'
             minLength='2'
             disabled={communityType && communityType.value === 'existingToken'}
-            defaultValue={communityType && communityType.value !== 'existingToken' ? this.state.customSymbol : 'DAI'}
+            defaultValue={communityType && communityType.value !== 'existingToken' ? this.state.customSymbol : existingToken.symbol}
             onChange={this.handleChangeCustomSymbol}
           />
         </div>

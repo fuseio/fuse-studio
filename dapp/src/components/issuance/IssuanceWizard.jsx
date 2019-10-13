@@ -275,6 +275,7 @@ class IssuanceWizard extends PureComponent {
       case 1:
         return (
           <DetailsStep
+            existingToken={existingToken}
             networkType={foreignNetwork}
             communityType={communityType}
             setCommunityType={this.setCommunityType}

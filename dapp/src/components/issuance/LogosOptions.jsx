@@ -7,6 +7,7 @@ import Carousel from 'components/common/Carousel'
 import UploadImage from 'images/upload_picture.svg'
 import { loadModal, hideModal } from 'actions/ui'
 import { IMAGE_CROPPER_MODAL } from 'constants/uiConstants'
+import { isDaiToken } from 'constants/existingTokens'
 
 const logos = ['CoinIcon1.svg', 'CoinIcon2.svg']
 
@@ -18,6 +19,7 @@ const LogosOptions = ({
   networkType,
   setImages,
   images,
+  existingToken,
   loadModal
 }) => {
   const handleClick = (logo, key) => {
@@ -82,7 +84,13 @@ const LogosOptions = ({
 
       return (
         <div className={logoClass} key={key} onClick={() => handleClick(logo, key)}>
-          <CommunityLogo isDaiToken networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo: logos[key] }} />
+          <CommunityLogo
+            isDaiToken={isDaiToken(networkType, existingToken)}
+            networkType={networkType}
+            token={{ symbol: communitySymbol }}
+            imageUrl={!isDaiToken(networkType, existingToken) && existingToken.icon}
+            metadata={{ communityLogo: logos[key] }}
+          />
         </div>
       )
     })

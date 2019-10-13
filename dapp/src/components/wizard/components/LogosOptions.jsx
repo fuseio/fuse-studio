@@ -20,6 +20,7 @@ const LogosOptions = ({
   const communityLogoValue = getIn(formik.values, 'communityLogo')
   const communityTypeValue = getIn(formik.values, 'communityType')
   const communitySymbol = getIn(formik.values, 'communitySymbol')
+  const existingToken = getIn(formik.values, 'existingToken')
 
   const onSelectFile = e => {
     if (e.target.files && e.target.files.length > 0) {
@@ -34,7 +35,10 @@ const LogosOptions = ({
   const openImageCropper = (src) => {
     loadModal(IMAGE_CROPPER_MODAL, {
       src,
-      setImages: (values) => formik.setFieldValue('images', values)
+      setImages: (values) => {
+        formik.setFieldValue('communityLogo', {})
+        formik.setFieldValue('images', values)
+      }
     })
   }
 
@@ -43,7 +47,7 @@ const LogosOptions = ({
   }
 
   let items
-  if (communityTypeValue && communityTypeValue.value !== 'existingToken') {
+  if (communityTypeValue) {
     items = logos.map((logo, key) => {
       const logoClass = classNames({
         'attributes__logos__item': true,
@@ -54,7 +58,10 @@ const LogosOptions = ({
           key={key}
           name='communityLogo'
           render={({ field, form: { isSubmitting, setFieldValue } }) => (
-            <div className={logoClass} onClick={() => setFieldValue('communityLogo', { name: logo, icon: logos[key] })}>
+            <div className={logoClass} onClick={() => {
+              setFieldValue('images', {})
+              setFieldValue('communityLogo', { name: logo, icon: logos[key] })
+            }}>
               <CommunityLogo networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo: logos[key] }} />
             </div>
           )}
@@ -88,7 +95,12 @@ const LogosOptions = ({
           name='communityLogo'
           render={({ field, form: { isSubmitting, setFieldValue } }) => (
             <div className={logoClass} onClick={() => setFieldValue('communityLogo', { name: logo, icon: logos[key] })}>
-              <CommunityLogo isDaiToken networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo: logos[key] }} />
+              <CommunityLogo
+                isDaiToken={existingToken && existingToken.symbol && existingToken.symbol === 'DAI'}
+                networkType={networkType}
+                token={{ symbol: communitySymbol }}
+                metadata={{ communityLogo: logos[key] }}
+              />
             </div>
           )}
         />

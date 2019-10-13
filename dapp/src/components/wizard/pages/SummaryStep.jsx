@@ -28,7 +28,7 @@ const SummaryStep = ({
           <div className='summary-step__logo'>
             <CommunityLogo
               imageUrl={images && images.croppedImageUrl}
-              isDaiToken={communityType && communityType.value === 'existingToken'}
+              isDaiToken={existingToken && existingToken.symbol && existingToken.symbol === 'DAI'}
               networkType={networkType}
               token={{ symbol: communitySymbol }}
               metadata={{ communityLogo: communityLogo.name }}
@@ -39,11 +39,11 @@ const SummaryStep = ({
           <div className='summary-step__content'>
             <div className='summary-step__content__item'>
               <h4 className='summary-step__content__title'>Currency type</h4>
-              {totalSupply && communityType && communityType.value !== 'existingToken' && <p>{communityType.text}</p>}
-              {communityType && communityType.value === 'existingToken' && <p>{`${communityType.text} - ${existingToken.label}`}</p>}
+              {communityType && <p>{communityType.label}</p>}
+              {existingToken && <p>{`Existing token - ${existingToken.label}`}</p>}
             </div>
             {
-              totalSupply && communityType && communityType.value !== 'existingToken' && (
+              totalSupply && (
                 <div className='summary-step__content__item'>
                   <h4 className='summary-step__content__title'>Total supply</h4>
                   <p>{totalSupply}</p>

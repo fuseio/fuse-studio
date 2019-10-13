@@ -5,6 +5,7 @@ import { connect, getIn, Field } from 'formik'
 const SymbolStep = ({ formik }) => {
   const communityType = getIn(formik.values, 'communityType')
   const communitySymbol = getIn(formik.values, 'communitySymbol')
+  const existingToken = getIn(formik.values, 'existingToken')
   return (
     <div className='symbol'>
       <h2 className='symbol__title'>Currency Symbol</h2>
@@ -18,8 +19,8 @@ const SymbolStep = ({ formik }) => {
               autoComplete='off'
               maxLength='4'
               minLength='2'
-              disabled={communityType && communityType.value === 'existingToken'}
-              defaultValue={communityType && communityType.value !== 'existingToken' ? communitySymbol : 'DAI'}
+              disabled={!communityType}
+              defaultValue={communityType ? communitySymbol : existingToken.symbol}
               onChange={(event) => {
                 setFieldValue('communitySymbol', event.target.value)
               }}
