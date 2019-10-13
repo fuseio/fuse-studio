@@ -36,7 +36,7 @@ const LogosOptions = ({
     loadModal(IMAGE_CROPPER_MODAL, {
       src,
       setImages: (values) => {
-        formik.setFieldValue('communityLogo', {})
+        formik.setFieldValue('communityLogo', '')
         formik.setFieldValue('images', values)
       }
     })
@@ -59,7 +59,7 @@ const LogosOptions = ({
           name='communityLogo'
           render={({ field, form: { isSubmitting, setFieldValue } }) => (
             <div className={logoClass} onClick={() => {
-              setFieldValue('images', {})
+              setFieldValue('images', '')
               setFieldValue('communityLogo', { name: logo, icon: logos[key] })
             }}>
               <CommunityLogo networkType={networkType} token={{ symbol: communitySymbol }} metadata={{ communityLogo: logos[key] }} />

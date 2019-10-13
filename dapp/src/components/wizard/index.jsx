@@ -70,7 +70,6 @@ const WizardPage = ({
               : {}
       }), {})
 
-    const metadata = { communityLogo: communityLogo.name, image: images.blob }
     if (existingToken) {
       const { value: foreignTokenAddress } = existingToken
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
@@ -81,6 +80,7 @@ const WizardPage = ({
         symbol: communitySymbol,
         totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
       }
+      const metadata = communityLogo ? { communityLogo: communityLogo.name } : { image: images.blob }
       createTokenWithMetadata(tokenData, metadata, communityType.value, steps)
     }
   }
