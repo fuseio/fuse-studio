@@ -58,6 +58,14 @@ const NameCurrencyStep = ({
           }}
         />
       </div>
+      {isMobileOnly && <div className='line' ><hr /></div>}
+      <CurrencyType
+        existingToken={existingToken}
+        setExistingToken={setExistingToken}
+        setCommunityType={setCommunityType}
+        communityType={communityType}
+        networkType={networkType}
+      />
       <div className='name' style={{ paddingTop: '0' }}>
         <h3 className='name__title' style={{ paddingBottom: '.2em' }}>Email <FontAwesome data-tip style={{ fontSize: '0.750em' }} data-for='email' name='info-circle' /></h3>
         <ReactTooltip className='tooltip__content' id='email' place='bottom' effect='solid'>
@@ -99,14 +107,6 @@ const NameCurrencyStep = ({
           </div>
         </div>
       </div>
-      {isMobileOnly && <div className='line' ><hr /></div>}
-      <CurrencyType
-        existingToken={existingToken}
-        setExistingToken={setExistingToken}
-        setCommunityType={setCommunityType}
-        communityType={communityType}
-        networkType={networkType}
-      />
       <div className='next'>
         <button
           className='button button--normal'

@@ -28,7 +28,3 @@ export const isDaiToken = (networkType, token) => {
 
   return false
 }
-
-export const checkImportedToken = (token, networkType) => {
-  return existingTokens(networkType).find(({ value, label }) => value === token.address && token.symbol === label)
-}

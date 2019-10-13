@@ -458,6 +458,18 @@
         }
       }
 
+      @include element(currency) {
+          width: 100%;
+
+          @include breakpoint(medium up) {
+            padding-bottom: 3em; 
+          }
+
+          .attributes__title {
+            padding-bottom: 1em;
+          }
+      }
+
       @include element(attribute) {
         min-height: 80px;
         width: 100%;
@@ -475,6 +487,112 @@
 
         @include xy-grid(vertical);					
         @include flex-align(justify, null);
+      }
+
+      @include element(options) {
+        @include breakpoint(medium up) {
+          flex: .49;
+        }
+
+        @include breakpoint(medium down) {
+          flex: 1;
+        }
+        @include element(select) {
+
+          border-radius: 2px;
+          display: inline-block;
+          width: 100%;
+          height: 52px;
+
+          > div {
+            border-color: none !important;
+          }
+
+          @include element(prefix) {
+            @include element(placeholder) {
+              color: #92a1ac !important;
+              text-align: center !important;
+            }
+
+            @include element(single-value) {
+              color: $color-dark;
+            }
+
+            @include element(control) {
+              border: none;
+              height: 100%;
+              font-size: 0.875em;
+              border-radius: 5px !important;
+              box-shadow: 0 0 6px 0 #cbcbcb !important;
+              border: 1px solid transparent;
+
+              &:focus {
+                border: solid 1px $color-dark;
+              }
+
+              &:hover {
+                border: solid 1px $color-dark;
+              }
+            }
+
+            @include element(value-container) {
+              height: inherit;
+              justify-content: center;
+            }
+            
+            @include element(indicator-separator) {
+              display: none;
+            }
+
+            @include element(option-item) {
+              color: #0a7586 !important;
+              font-size: 0.750em !important;
+              text-align: start;
+
+              @include modifier(is-focused) {
+                border-color: none !important;
+                background-color: rgba(10, 117, 134, 0.53) !important;
+              }
+
+              @include modifier(is-selected) {
+                background-color: rgba(10, 117, 134, 0.08) !important;
+              }
+            }
+            
+            @include element(dropdown-indicator) {
+                display: none;
+            }
+
+            @include element(menu-list) {
+              color: $color-dark;
+              > div {
+                font-size: 0.750em;
+                display: flex;
+                align-items: center;
+                padding: 5px 16px;
+                min-height: 54px;
+                height: 100%;
+                max-height: 54px;
+
+                &:hover {
+                  background-color: rgba(238, 238, 238, 0.5);
+                }
+
+                @include block(icon) {
+                  display: inline-block;
+                  width: 25px;          
+                  margin-right: 1em;
+
+                  > img {
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    background-position: center;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
 
       @include element(types) {
