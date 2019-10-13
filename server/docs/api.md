@@ -1,13 +1,15 @@
 <a name="top"></a>
 # Studio Backend API v0.1.0
 
-The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. Learn more on https://github.com/fuseio/fuse-studio
+The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. Learn more on https://github.com/fuseio/fuse-studio.
 
 - [Bridge](#Bridge)
 	- [Fetch bridge](#Fetch-bridge)
 	
 - [Community](#Community)
 	- [Add plugins to community](#Add-plugins-to-community)
+	- [](#)
+	- [Fetch community](#Fetch-community)
 	- [Fetch community](#Fetch-community)
 	
 - [Entity](#Entity)
@@ -16,6 +18,7 @@ The Fuse Studio REST API for accessing the data and the services of the Fuse net
 	- [Fetch entity](#Fetch-entity)
 	
 - [Token](#Token)
+	- [Adding new token](#Adding-new-token)
 	- [Fetch token](#Fetch-token)
 	- [Fetch tokens](#Fetch-tokens)
 	- [Fetch tokens by owner](#Fetch-tokens-by-owner)
@@ -36,13 +39,6 @@ GET /bridges/:homeTokenAddress
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | homeTokenAddress | `String` | <p>Home (Fuse) token address</p> |
-
-### Examples
-Example usage:
-
-```
-curl -i http://localhost/user/4711
-```
 
 
 ### Success 200
@@ -88,6 +84,31 @@ POST /communities/:communityAddress
 }
 ```
 
+## <a name=''></a> 
+[Back to top](#top)
+
+<p>Community is a set of contracts and services. Members of the community are users of the Fuse network. The community is configured via the plugins.</p>
+
+```
+GET /communities
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| homeTokenAddress | `String` | <p>Home token address (optional)</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Address of the community on the Fuse network</p> |
+| homeTokenAddress | `String` | <p>Address of the community token on the Fuse network</p> |
+| foreignTokenAddress | `String` | <p>Address of the community token on the Ethereum network</p> |
+| homeBridgeAddress | `String` | <p>Address of the community bridge on the Fuse network</p> |
+| foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
+| isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
+| plugins | `Object` | <p>Defines the community plugins.</p> |
 ## <a name='Fetch-community'></a> Fetch community
 [Back to top](#top)
 
@@ -101,6 +122,27 @@ GET /communities/:communityAddress
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | communityAddress | `String` | <p>Community address</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Address of the community on the Fuse network</p> |
+| homeTokenAddress | `String` | <p>Address of the community token on the Fuse network</p> |
+| foreignTokenAddress | `String` | <p>Address of the community token on the Ethereum network</p> |
+| homeBridgeAddress | `String` | <p>Address of the community bridge on the Fuse network</p> |
+| foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
+| isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
+| plugins | `Object` | <p>Defines the community plugins.</p> |
+## <a name='Fetch-community'></a> Fetch community
+[Back to top](#top)
+
+<p>Community is a set of contracts and services. Members of the community are users of the Fuse network. The community is configured via the plugins.</p>
+
+```
+GET /communities/:communityAddress
+```
+
 
 
 ### Success 200
@@ -185,6 +227,43 @@ GET /entities/:communityAddress/:account
 | isApproved | `Boolean` |  |
 # <a name='Token'></a> Token
 
+## <a name='Adding-new-token'></a> Adding new token
+[Back to top](#top)
+
+<p>Tokens are compatible with the ERC20 standard, and they also can be burnable/mintable. Tokens are an important part of the community economy.</p>
+
+```
+GET /tokens/:address
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| address | `String` | <p>Token address to add</p> |
+| networkType | `String` | <p>The network of the token (body parameter)</p> |
+
+### Examples
+Adding DAI token on mainnet
+
+```
+POST /tokens/0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359
+body: { networkType: mainnet }
+```
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| address | `String` | <p>Token's address</p> |
+| name | `String` | <p>Token's name</p> |
+| symbol | `String` | <p>Token's symbol</p> |
+| tokenURI | `String` | <p>IPFS URI points to token metadata</p> |
+| totalSupply | `String` | <p>Token's total supply</p> |
+| owner | `String` | <p>Token's owner</p> |
+| factoryAddress | `String` | <p>Factory contract that created the token</p> |
+| blockNumber | `String` | <p>Block number of the token's creation</p> |
+| tokenType | `String` | <p>Token type: basic/mintableBurnable/imported</p> |
+| networkType | `String` | <p>Network type where the token is issued: mainnet/ropsten/fuse</p> |
 ## <a name='Fetch-token'></a> Fetch token
 [Back to top](#top)
 

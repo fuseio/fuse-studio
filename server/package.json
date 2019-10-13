@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./src/app.js",
     "dev": "nodemon --trace-warnings ./src/app.js",
-    "debug": "node --inspect-brk --trace-warnings ./src/app.js",
+    "debug": "node --inspect --trace-warnings ./src/app.js",
+    "debug-brk": "node --inspect-brk --trace-warnings ./src/app.js",
     "doc": "apidoc -i src -o docs/api && apidoc-markdown -p docs/api -o docs/api.md",
     "lint": "standard",
     "lint-fix": "standard --fix"
@@ -70,7 +71,8 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "validator": "^10.10.0",
-    "web3": "^2.0.0-alpha.1"
+    "web3": "^2.0.0-alpha.1",
+    "web3-utils": "^1.2.1"
   },
   "devDependencies": {
     "@rigwild/apidoc-markdown": "^2.0.2",

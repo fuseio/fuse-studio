@@ -17,6 +17,28 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
   return fetchedTokedData
 }
 
+const fetchBalance = async ({ createContract }, tokenAddress, accountAddress) => {
+  const tokenContract = createContract(BasicTokenAbi, tokenAddress)
+  const accountBalance = await tokenContract.methods.balanceOf(accountAddress).call()
+  console.log(`balance of account ${accountAddress} of token ${tokenAddress} is ${accountBalance}`)
+  return accountBalance
+}
+
+const transfer = async (network, { from, to, tokenAddress, amount }) => {
+  const { createContract, createMethod, send } = network
+
+  const tokenContract = createContract(BasicTokenAbi, tokenAddress)
+
+  const method = createMethod(tokenContract, 'transfer', to, amount)
+
+  const receipt = await send(method, {
+    from
+  })
+  return receipt
+}
+
 module.exports = {
-  fetchTokenData
+  fetchTokenData,
+  fetchBalance,
+  transfer
 }
