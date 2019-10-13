@@ -22,7 +22,14 @@ export default class MintBurnForm extends PureComponent {
     this.validationSchema = mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
   }
 
-  onSubmit = (values) => {
+  componentDidUpdate (prevProps) {
+    if (prevProps.balance !== this.props.balance) {
+      const { balance } = this.props
+      this.validationSchema = mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
+    }
+  }
+
+  onSubmit = (values, formikBag) => {
     const { handleMintOrBurnClick } = this.props
     const {
       actionType,
@@ -32,6 +39,7 @@ export default class MintBurnForm extends PureComponent {
 
     const amount = actionType === 'mint' ? mintAmount : burnAmount
     handleMintOrBurnClick(amount)
+    formikBag.resetForm()
   }
 
   transactionConfirmed = (actionType) => {
@@ -61,7 +69,7 @@ export default class MintBurnForm extends PureComponent {
     return this.transactionError(actionType) && error && typeof error.includes === 'function' && error.includes('denied')
   }
 
-  renderForm = ({ handleSubmit, setFieldTouched, errors, handleChange, touched, setFieldValue, values, isValid }) => {
+  renderForm = ({ handleSubmit, errors, handleChange, touched, values, isValid }) => {
     const {
       tokenNetworkType,
       token,
@@ -118,11 +126,9 @@ export default class MintBurnForm extends PureComponent {
                   <h3 className='field__title'>Insert amount</h3>
 
                   <TextField
-                    onBlur={() => setFieldTouched('mintAmount', true)}
                     name='mintAmount'
                     fullWidth
                     placeholder='0'
-                    value={values.amount}
                     type='number'
                     autoComplete='off'
                     margin='none'
@@ -148,11 +154,9 @@ export default class MintBurnForm extends PureComponent {
                   <h3 className='field__title'>Insert amount</h3>
 
                   <TextField
-                    onBlur={() => setFieldTouched('burnAmount', true)}
                     name='burnAmount'
                     fullWidth
                     placeholder='0'
-                    value={values.burnAmount}
                     type='number'
                     autoComplete='off'
                     margin='none'
@@ -190,6 +194,8 @@ export default class MintBurnForm extends PureComponent {
       render={this.renderForm}
       onSubmit={this.onSubmit}
       isInitialValid={false}
+      enableReinitialize
+      validateOnChange
     />
   )
 }

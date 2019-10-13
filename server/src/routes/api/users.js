@@ -7,17 +7,17 @@ const moment = require('moment')
 const jwt = require('jsonwebtoken')
 const auth = require('@routes/auth')
 const User = mongoose.model('User')
-const Token = mongoose.model('Token')
+// const Token = mongoose.model('Token')
 
 const generateSignatureData = require('@utils/auth').generateSignatureData
 
 router.post('/', auth.required, async (req, res) => {
   const user = new User(req.body.user)
-  const { tokenAddress } = req.body
+  // const { tokenAddress } = req.body
   const results = await user.save()
 
-  const token = await Token.findOne({ address: tokenAddress })
-  sendgridUtils.sendWelcomeMail(user, token.toJSON())
+  // const token = await Token.findOne({ address: tokenAddress })
+  // sendgridUtils.sendWelcomeMail(user, token.toJSON())
 
   if (user.subscribe) {
     sendgridUtils.subscribeUser(user)
