@@ -10,7 +10,7 @@ const TransferSchema = new Schema({
   amount: { type: mongoose.Types.Decimal128, required: [true, "can't be blank"] },
   bridgeType: { type: String, required: [true, "can't be blank"] },
   status: { type: String }
-})
+}, { timestamp: true })
 
 TransferSchema.set('toJSON', {
   transform
