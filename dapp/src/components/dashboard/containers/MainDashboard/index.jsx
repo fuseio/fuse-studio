@@ -57,11 +57,17 @@ class DashboardLayout extends Component {
       if (window && window.analytics && isAdmin) {
         const { analytics } = window
 
-        analytics.identify(`${accountAddress}`, {
-          role: 'admin'
-        })
-
         if (location.pathname.includes('/justCreated')) {
+          analytics.reset()
+          // analytics.ready(() => {
+          // window.mixpanel.cookie.clear()
+          // })
+          analytics.identify(`${accountAddress}`, {
+            role: 'admin',
+            bridgeWasUsed: false,
+            switchToFuse: false
+          })
+        } else {
           analytics.identify(`${accountAddress}`, {
             role: 'admin',
             bridgeWasUsed: false,

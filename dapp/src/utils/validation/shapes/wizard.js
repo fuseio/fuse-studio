@@ -14,14 +14,16 @@ export default object().noUnknown(false).shape({
     label: string().normalize(),
     value: string().normalize()
   }),
-  totalSupply: number().when('existingToken', (existingToken, schema) => {
-    return existingToken ? schema.notRequired() : schema.required()
+  totalSupply: number().when('images', {
+    is: images => isEmpty(images),
+    then: number().required(),
+    otherwise: number()
   }),
   communityLogo: object().noUnknown(false).shape({
     name: string().normalize(),
     icon: string().normalize()
   }).when('images', {
-    is: val => isEmpty(val),
+    is: images => isEmpty(images),
     then: object().noUnknown(false).shape({
       name: string().normalize().required(),
       icon: string().normalize().required()
