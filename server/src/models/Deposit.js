@@ -11,7 +11,7 @@ const DepositSchema = new Schema({
   amount: { type: String, required: [true, "can't be blank"] },
   provider: { type: String, required: [true, "can't be blank"] },
   externalId: { type: String, required: [true, "can't be blank"] }
-})
+}, { timestamp: true })
 
 DepositSchema.index({ transactionHash: 1 }, { unique: true })
 DepositSchema.index({ provider: 1, externalId: 1 }, { unique: true })
