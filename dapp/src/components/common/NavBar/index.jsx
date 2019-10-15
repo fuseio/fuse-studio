@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Logo from 'components/common/Logo'
 import HelpIcon from 'images/help.svg'
 import NotificationIcon from 'images/notification.svg'
@@ -10,6 +11,7 @@ import { withRouter } from 'react-router-dom'
 import { withNetwork } from 'containers/Web3'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
+import { getNetworkType } from 'actions/network'
 
 class NavBar extends Component {
   state = {
@@ -57,8 +59,10 @@ class NavBar extends Component {
     history.push('/')
   }
 
+  handleConnect = () => this.props.getNetworkType(true)
+
   render () {
-    const { withLogo, networkType } = this.props
+    const { withLogo, networkType, accountAddress } = this.props
     const { isHelpOpen, isProfileOpen } = this.state
     return (
       <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })} style={{ width: (this.state.scrollTop > 70 && !isMobileOnly) && !withLogo ? '80%' : null }}>
@@ -93,10 +97,20 @@ class NavBar extends Component {
             }}
           >
             <span className='icon'><img src={WalletIcon} /></span>
-            <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
-            <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-              <ProfileDropDown />
-            </div>
+            {
+              accountAddress ? (
+                <React.Fragment>
+                  <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
+                  <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
+                    <ProfileDropDown />
+                  </div>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <span className='navbar__links__wallet__text' onClick={this.handleConnect}>Connect wallet</span>
+                </React.Fragment>
+              )
+            }
           </div>
         </div>
       </div>
@@ -108,4 +122,12 @@ NavBar.defaultProps = {
   withLogo: true
 }
 
-export default withRouter(withNetwork(NavBar))
+const mapStateToProps = (state) => ({
+  accountAddress: state.network && state.network.accountAddress
+})
+
+const mapDispatchToProps = {
+  getNetworkType
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withNetwork(NavBar)))

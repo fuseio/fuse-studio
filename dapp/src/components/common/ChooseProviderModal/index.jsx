@@ -25,7 +25,7 @@ const ChooseProviderModal = ({
   }
 
   const handleConnectWallet = () => {
-    getNetworkType()
+    getNetworkType(true)
   }
 
   return (
