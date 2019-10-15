@@ -8,14 +8,14 @@ import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import WizardShape from 'utils/validation/shapes/wizard'
 
-import Wizard from './container'
 import Message from 'components/common/SignMessage'
-import NameAndCurrencyStep from './pages/NameAndCurrency'
-import DetailsStep from './pages/DetailsStep'
-import ContractsStep from './pages/Contracts'
-import SummaryStep from './pages/SummaryStep'
-import DeployProgressStep from './pages/DeployProgress'
-import Congratulations from 'components/issuance/Congratulations'
+import Wizard from 'components/wizard/container'
+import NameAndCurrencyStep from 'components/wizard/pages/NameAndCurrency'
+import DetailsStep from 'components/wizard/pages/DetailsStep'
+import ContractsStep from 'components/wizard/pages/Contracts'
+import SummaryStep from 'components/wizard/pages/SummaryStep'
+import DeployProgressStep from 'components/wizard/pages/DeployProgress'
+import Congratulations from 'components/wizard/components/Congratulations'
 
 import contractIcon from 'images/contract.svg'
 import BridgeIcon from 'images/Bridge.svg'
@@ -30,11 +30,9 @@ const WizardPage = ({
   error,
   createTokenSignature,
   clearTransaction,
-  steps,
   loadModal,
   history,
-  communityAddress,
-  ...props
+  communityAddress
 }) => {
   useEffect(() => {
     if (networkType === homeNetwork) {

@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
 import { isMobileOnly } from 'react-device-detect'
-import TotalSupply from '../components/TotalSupply'
-import LogosOptions from '../components/LogosOptions'
-import SymbolStep from '../components/SymbolStep'
+import TotalSupply from 'components/wizard/components/TotalSupply'
+import LogosOptions from 'components/wizard/components/LogosOptions'
+import SymbolStep from 'components/wizard/components/SymbolStep'
 import { connect, getIn } from 'formik'
 
 const DetailsStep = ({

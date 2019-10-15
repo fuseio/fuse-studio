@@ -24,11 +24,6 @@ export const existingTokens = (networkType) => ([
     value: CONFIG.web3.addresses[networkType].TetherToken,
     isDisabled: false,
     icon: TetherLogo
-  },
-  {
-    label: 'More token soon!',
-    value: undefined,
-    isDisabled: true
   }
 ])
 

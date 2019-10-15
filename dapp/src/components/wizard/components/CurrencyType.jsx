@@ -1,26 +1,11 @@
 import React, { Fragment } from 'react'
 import Select from 'react-select'
-import MintableBurnable from 'images/mintable.svg'
-import OneTimeIssuer from 'images/one_time_issuer_token.svg'
+import CommunityTypes from 'constants/communityTypes'
 import { existingTokens } from 'constants/existingTokens'
-import { Field, connect } from 'formik'
+import { Field, connect, getIn } from 'formik'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
-
-const CommunityTypes = [
-  {
-    label: 'Mintable/Burnable token',
-    icon: MintableBurnable,
-    value: 'mintableBurnable',
-    tooltipText: `This allows community manager to mint or burn tokens and fully control the token supply. Those types of tokens are used for credit-like or reward systems that can be used by any organization.`
-  },
-  {
-    label: 'One time issued token',
-    icon: OneTimeIssuer,
-    value: 'basic',
-    tooltipText: `Those types of tokens could be minted once and their supply is fixed. This allows to create assets which are digitally scarce and can be produced in limited supply. Usually to achieve a higher level of protection and guarantee no one can create more coins of this type can protect its value and decentralization.`
-  }
-]
+import classNames from 'classnames'
 
 const Option = (props) => {
   const { children, className, cx, isDisabled, isFocused, isSelected, innerRef, innerProps, data } = props
@@ -55,7 +40,9 @@ const Option = (props) => {
   )
 }
 
-const CurrencyType = ({ networkType }) => {
+const CurrencyType = ({ networkType, formik }) => {
+  const communityType = getIn(formik.values, 'communityType')
+  const existingToken = getIn(formik.values, 'existingToken')
   return (
     <div className='attributes__currency'>
       <h3 className='attributes__title'>
@@ -66,7 +53,7 @@ const CurrencyType = ({ networkType }) => {
           name='communityType'
           render={({ field, form: { setFieldValue } }) => {
             return (
-              <div className='attributes__options'>
+              <div className={classNames('attributes__options', { 'attributes__options--selected': communityType })}>
                 <Select
                   {...field}
                   onChange={val => {
@@ -85,8 +72,8 @@ const CurrencyType = ({ networkType }) => {
         />
         <Field
           name='existingToken'
-          render={({ field, form: { handleChange, setFieldValue } }) => (
-            <div className='attributes__options'>
+          render={({ field, form: { setFieldValue } }) => (
+            <div className={classNames('attributes__options', { 'attributes__options--selected': existingToken })}>
               <Select
                 {...field}
                 onChange={val => {

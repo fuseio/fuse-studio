@@ -25,7 +25,6 @@ import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } fro
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
-import isEqual from 'lodash/isEqual'
 import get from 'lodash/get'
 
 class DashboardLayout extends Component {
@@ -37,6 +36,10 @@ class DashboardLayout extends Component {
     const { fetchCommunity, communityAddress, fetchEntities } = this.props
     fetchCommunity(communityAddress)
     fetchEntities(communityAddress)
+  }
+
+  componentWillUnmount () {
+    window.analytics.reset()
   }
 
   componentDidUpdate (prevProps) {
@@ -51,34 +54,30 @@ class DashboardLayout extends Component {
       this.onSetSidebarOpen(false)
     }
 
-    if (this.props.community && !isEqual(this.props.accountAddress, prevProps.accountAddress)) {
+    if (prevProps.isAdmin !== this.props.isAdmin) {
       const { accountAddress, isAdmin, networkType, location } = this.props
-      if (window && window.analytics && isAdmin) {
-        const { analytics } = window
-
+      const { analytics } = window
+      if (isAdmin) {
         if (location.pathname.includes('/justCreated')) {
-          analytics.ready(() => {
-            window.mixpanel.cookie.clear()
-          })
           analytics.reset()
-          analytics.identify(`${accountAddress}`, {
-            role: 'admin',
-            bridgeWasUsed: false,
-            switchToFuse: false
-          })
-        } else {
-          analytics.identify(`${accountAddress}`, {
-            role: 'admin',
-            bridgeWasUsed: false,
-            switchToFuse: false
-          })
         }
+
+        analytics.identify(`${accountAddress}`, { role: 'admin' })
 
         if (networkType === 'fuse') {
           analytics.identify(`${accountAddress}`, {
             switchToFuse: true
           })
+        } else {
+          analytics.identify(`${accountAddress}`, {
+            switchToFuse: false
+          })
         }
+      } else {
+        analytics.reset()
+        analytics.identify(`${accountAddress}`, {
+          role: 'user'
+        })
       }
     }
   }

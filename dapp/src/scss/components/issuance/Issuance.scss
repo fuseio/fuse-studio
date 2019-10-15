@@ -488,9 +488,15 @@
           flex: 0.49;
         }
 
+        @include modifier(selected) {
+          border: solid 1px $color-dark;
+          border-radius: 5px;
+        }
+
         @include breakpoint(medium down) {
           flex: 1;
         }
+
         @include element(select) {
           border-radius: 2px;
           display: inline-block;
@@ -562,9 +568,7 @@
               }
             }
 
-            @include element(dropdown-indicator) {
-              display: none;
-            }
+            @include element(dropdown-indicator) { }
 
             @include element(menu-list) {
               color: $color-dark;

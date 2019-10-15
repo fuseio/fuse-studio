@@ -24,17 +24,6 @@ class Dashboard extends Component {
     if (this.props.networkType !== 'fuse' && this.props.tokenNetworkType !== this.props.networkType) {
       this.props.loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [this.props.tokenNetworkType], handleClose: this.showHomePage })
     }
-    window.addEventListener('mousedown', this.handleClickOutside)
-  }
-
-  componentWillUnmount () {
-    window.removeEventListener('mousedown', this.handleClickOutside)
-  }
-
-  handleClickOutside = (event) => {
-    if (this.content && !this.content.contains(event.target)) {
-      this.setState({ dropdownOpen: '' })
-    }
   }
 
   showHomePage = () => {
