@@ -50,7 +50,7 @@ const Option = (props) => {
         ) : (
           <span>{children}</span>
         )
-      } 
+      }
     </div>
   )
 }
