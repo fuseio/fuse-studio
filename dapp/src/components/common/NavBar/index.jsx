@@ -59,10 +59,8 @@ class NavBar extends Component {
     history.push('/')
   }
 
-  handleConnect = () => this.props.getNetworkType(true)
-
   render () {
-    const { withLogo, networkType, accountAddress } = this.props
+    const { withLogo, networkType, accountAddress, getNetworkType } = this.props
     const { isHelpOpen, isProfileOpen } = this.state
     return (
       <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })} style={{ width: (this.state.scrollTop > 70 && !isMobileOnly) && !withLogo ? '80%' : null }}>
@@ -107,7 +105,7 @@ class NavBar extends Component {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  <span className='navbar__links__wallet__text' onClick={this.handleConnect}>Connect wallet</span>
+                  <span className='navbar__links__wallet__text' onClick={() => getNetworkType(true)}>Connect wallet</span>
                 </React.Fragment>
               )
             }
@@ -130,4 +128,4 @@ const mapDispatchToProps = {
   getNetworkType
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withNetwork(NavBar)))
+export default withRouter(withNetwork((connect(mapStateToProps, mapDispatchToProps)(NavBar))))

@@ -26,7 +26,6 @@ import TokenFactoryABI from '@fuse/token-factory-contracts/build/abi/TokenFactor
 import CommunityABI from '@fuse/entities-contracts/build/abi/CommunityWithEvents'
 import { getOptions, getNetworkVersion } from 'utils/network'
 import FuseTokenABI from 'constants/abi/FuseToken'
-import { getAccountAddress as getAccount } from 'sagas/network'
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
 const entityPut = createEntityPut(actions.entityName)
@@ -230,22 +229,16 @@ function * watchFetchCommunity ({ response }) {
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
       const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
-      const web3 = yield getWeb3()
-      const accountAddress = yield getAccount(web3)
+      const accountAddress = yield select(getAccountAddress)
 
       yield all([
         put(actions.fetchToken(homeTokenAddress)),
         put(actions.fetchToken(foreignTokenAddress)),
         put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-        put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' }))
+        put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
+        put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
+        put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
       ])
-
-      if (accountAddress) {
-        yield all([
-          put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
-          put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
-        ])
-      }
     }
   }
 }
