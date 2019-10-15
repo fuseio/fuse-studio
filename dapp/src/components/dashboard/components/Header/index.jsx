@@ -4,8 +4,7 @@ import CommunityLogo from 'components/common/CommunityLogo'
 import { isDaiToken } from 'constants/existingTokens'
 import isEmpty from 'lodash/isEmpty'
 
-export default ({ isClosed, networkType, token, metadata }) => {
-  const { name } = token
+export default ({ isClosed, networkType, token, metadata, name }) => {
   const { image } = metadata
   return (
     <div className='community_header'>

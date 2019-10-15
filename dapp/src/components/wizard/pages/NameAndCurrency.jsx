@@ -43,7 +43,7 @@ const NameAndCurrency = ({ networkType }) => {
       <CurrencyType
         networkType={networkType}
       />
-      <div className='name' style={{ paddingTop: '0' }}>
+      <div className='name' style={{ padding: '0' }}>
         <h3 className='name__title' style={{ paddingBottom: '.2em' }}>Email <FontAwesome data-tip style={{ fontSize: '0.750em' }} data-for='email' name='info-circle' /></h3>
         <ReactTooltip className='tooltip__content' id='email' place='bottom' effect='solid'>
           <div>We collect your email only to send you important notifications about your community and for a friendlier experience with future collaborators.</div>

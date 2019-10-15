@@ -12,7 +12,6 @@ import { loadModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
-import Header from 'components/dashboard/components/Header'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
@@ -58,10 +57,10 @@ class DashboardLayout extends Component {
         const { analytics } = window
 
         if (location.pathname.includes('/justCreated')) {
+          analytics.ready(() => {
+            window.mixpanel.cookie.clear()
+          })
           analytics.reset()
-          // analytics.ready(() => {
-          // window.mixpanel.cookie.clear()
-          // })
           analytics.identify(`${accountAddress}`, {
             role: 'admin',
             bridgeWasUsed: false,
@@ -114,7 +113,6 @@ class DashboardLayout extends Component {
       match,
       foreignToken,
       community,
-      metadata,
       networkType,
       accountAddress,
       isAdmin,
@@ -123,8 +121,8 @@ class DashboardLayout extends Component {
       communityAddress
     } = this.props
 
-    const { address: tokenAddress, name, tokenType } = foreignToken
-    const { isClosed, plugins, homeTokenAddress } = community
+    const { tokenType, symbol } = foreignToken
+    const { plugins, homeTokenAddress } = community
 
     const qrValue = JSON.stringify({
       tokenAddress: homeTokenAddress,
@@ -179,7 +177,7 @@ class DashboardLayout extends Component {
                   <Route path={`${match.path}/bonus`}
                     render={() => (
                       <JoinBonusPage
-                        symbol={foreignToken && foreignToken.symbol}
+                        symbol={symbol}
                         community={community}
                         networkType={networkType}
                         tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
@@ -192,7 +190,8 @@ class DashboardLayout extends Component {
                     path={`${match.path}/mintBurn`}
                     render={() => (
                       <MintBurnPage
-                        token={foreignToken}
+                        symbol={symbol}
+                        tokenAddress={foreignToken.address}
                         networkType={networkType}
                         accountAddress={accountAddress}
                         onlyOnNetwork={this.onlyOnNetwork}
@@ -232,23 +231,13 @@ class DashboardLayout extends Component {
                   path={`${match.path}/transfer/:sendTo?`}
                   render={() => (
                     <TransferPage
-                      token={foreignToken}
+                      symbol={symbol}
                       networkType={networkType}
                       tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
                     />
                   )}
                 />
-                <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
-                  <Header
-                    metadata={metadata[foreignToken.tokenURI] || {}}
-                    tokenAddress={tokenAddress}
-                    isClosed={isClosed}
-                    name={name}
-                    networkType={networkType}
-                    token={foreignToken}
-                  />
-                </Dashboard>}
-                />
+                <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
               </Switch>
             </div>
           </div>

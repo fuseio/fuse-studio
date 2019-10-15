@@ -5,12 +5,12 @@ import { transferToken, mintToken, burnToken, clearTransactionStatus } from 'act
 import { WRONG_NETWORK_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
-import { isUserExists } from 'actions/user'
 import { getTransaction } from 'selectors/transaction'
 import Bridge from 'components/dashboard/components/Bridge'
 import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
+import Header from 'components/dashboard/components/Header'
 
 class Dashboard extends Component {
   state = {
@@ -31,15 +31,6 @@ class Dashboard extends Component {
     window.removeEventListener('mousedown', this.handleClickOutside)
   }
 
-  componentDidUpdate (prevProps) {
-    if (this.props.dashboard.informationAdded && !prevProps.dashboard.informationAdded) {
-      this.props.hideModal()
-    }
-    if (this.props.accountAddress && !prevProps.accountAddress) {
-      const { isUserExists } = this.props
-      isUserExists(this.props.accountAddress)
-    }
-  }
   handleClickOutside = (event) => {
     if (this.content && !this.content.contains(event.target)) {
       this.setState({ dropdownOpen: '' })
@@ -77,19 +68,27 @@ class Dashboard extends Component {
       foreignToken,
       accountAddress,
       dashboard,
-      children,
       bridgeStatus,
+      metadata,
+      networkType,
       tokenOfCommunityOnCurrentSide,
       isAdmin
     } = this.props
 
-    const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress } = community
+    const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress, isClosed } = community
     const { totalSupply } = dashboard
 
-    const { symbol, name } = foreignToken
+    const { symbol, tokenAddress } = foreignToken
     return (
       <React.Fragment>
-        {children}
+        <Header
+          metadata={metadata[foreignToken.tokenURI] || {}}
+          tokenAddress={tokenAddress}
+          isClosed={isClosed}
+          name={community.name}
+          networkType={networkType}
+          token={foreignToken}
+        />
         <div className='content__tabs'>
           <CommunityInfo
             tokensTotalSupplies={totalSupply}
@@ -109,7 +108,7 @@ class Dashboard extends Component {
               </ReactTooltip>
               <Bridge
                 symbol={symbol}
-                tokenName={name}
+                tokenName={community.name}
                 isAdmin={isAdmin}
                 community={community}
                 bridgeStatus={bridgeStatus}
@@ -127,12 +126,10 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
-  ...getTransaction(state, state.screens.token.transactionHash),
-  homeNetwork: state.network.homeNetwork
+  ...getTransaction(state, state.screens.token.transactionHash)
 })
 
 const mapDispatchToProps = {
-  isUserExists,
   loadModal,
   hideModal,
   deployBridge,
