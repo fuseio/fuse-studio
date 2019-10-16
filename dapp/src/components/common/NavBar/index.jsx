@@ -86,30 +86,28 @@ class NavBar extends Component {
           <div className='navbar__links__notification'>
             <span className='icon'><img src={NotificationIcon} /></span>
           </div>
-          <div
-            className='navbar__links__wallet'
-            ref={this.setDropdownProfileRef}
-            onClick={(e) => {
-              e.stopPropagation()
-              this.setState({ isProfileOpen: !isProfileOpen })
-            }}
-          >
-            <span className='icon'><img src={WalletIcon} /></span>
-            {
-              accountAddress ? (
-                <React.Fragment>
-                  <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
-                  <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                    <ProfileDropDown />
-                  </div>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  <span className='navbar__links__wallet__text' onClick={() => getNetworkType(true)}>Connect wallet</span>
-                </React.Fragment>
-              )
-            }
-          </div>
+          {
+            accountAddress ? (
+              <div
+                className='navbar__links__wallet'
+                ref={this.setDropdownProfileRef}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  this.setState({ isProfileOpen: !isProfileOpen })
+                }}
+              >
+                <span className='icon'><img src={WalletIcon} /></span>
+                <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
+                <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
+                  <ProfileDropDown />
+                </div>
+              </div>
+            ) : (
+              <div className='navbar__links__wallet' onClick={() => getNetworkType(true)}>
+                <span className='navbar__links__wallet__text'>Connect wallet</span>
+              </div>
+            )
+          }
         </div>
       </div>
     )
