@@ -488,23 +488,31 @@
           flex: 0.49;
         }
 
-        @include modifier(selected) {
-          border: solid 1px $color-dark;
-          border-radius: 5px;
-        }
-
         @include breakpoint(medium down) {
           flex: 1;
+          width: 100%;
         }
 
         @include element(select) {
-          border-radius: 2px;
+          border-radius: 5px;
           display: inline-block;
           width: 100%;
           height: 52px;
 
+          @include modifier(selected) {
+            border: solid 1px $color-dark;
+          }
+
+          &:focus {
+            border: solid 1px $color-dark;
+          }
+
+          &:hover {
+            border: solid 1px $color-dark;
+          }
+
           > div {
-            border-color: none !important;
+            border-color: transparent !important;
           }
 
           @include element(prefix) {
@@ -525,18 +533,10 @@
               box-shadow: 0 0 6px 0 #cbcbcb !important;
               border: 1px solid transparent;
 
-              &:focus {
-                border: solid 1px $color-dark;
-              }
-
-              &:hover {
-                border: solid 1px $color-dark;
-              }
 
               @include modifier(menu-is-open) {
                 font-weight: 500;
                 color: $color-dark;
-                border: solid 1px $color-dark !important;
 
                 .attributes__options__select__prefix__placeholder {
                   color: $color-dark !important;

@@ -43,6 +43,7 @@ const Option = (props) => {
 const CurrencyType = ({ networkType, formik }) => {
   const communityType = getIn(formik.values, 'communityType')
   const existingToken = getIn(formik.values, 'existingToken')
+
   return (
     <div className='attributes__currency'>
       <h3 className='attributes__title'>
@@ -53,14 +54,14 @@ const CurrencyType = ({ networkType, formik }) => {
           name='communityType'
           render={({ field, form: { setFieldValue } }) => {
             return (
-              <div className={classNames('attributes__options', { 'attributes__options--selected': communityType })}>
+              <div className='attributes__options'>
                 <Select
                   {...field}
                   onChange={val => {
                     setFieldValue('communityType', val)
                     setFieldValue('existingToken', '')
                   }}
-                  className='attributes__options__select'
+                  className={classNames('attributes__options__select', { 'attributes__options__select--selected': communityType })}
                   classNamePrefix='attributes__options__select__prefix'
                   components={{ Option }}
                   options={CommunityTypes}
@@ -73,14 +74,14 @@ const CurrencyType = ({ networkType, formik }) => {
         <Field
           name='existingToken'
           render={({ field, form: { setFieldValue } }) => (
-            <div className={classNames('attributes__options', { 'attributes__options--selected': existingToken })}>
+            <div className='attributes__options'>
               <Select
                 {...field}
                 onChange={val => {
                   setFieldValue('existingToken', val)
                   setFieldValue('communityType', '')
                 }}
-                className='attributes__options__select'
+                className={classNames('attributes__options__select', { 'attributes__options__select--selected': existingToken })}
                 classNamePrefix='attributes__options__select__prefix'
                 components={{ Option }}
                 options={existingTokens(networkType)}

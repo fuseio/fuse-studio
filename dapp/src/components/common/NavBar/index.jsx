@@ -104,6 +104,7 @@ class NavBar extends Component {
               </div>
             ) : (
               <div className='navbar__links__wallet' onClick={() => getNetworkType(true)}>
+                <span className='icon'><img src={WalletIcon} /></span>
                 <span className='navbar__links__wallet__text'>Connect wallet</span>
               </div>
             )
