@@ -1,6 +1,5 @@
 import React, { useEffect, memo } from 'react'
 import { connect } from 'react-redux'
-import { fetchMetadata } from 'actions/metadata'
 import { fetchTokens, fetchTokensByOwner, fetchFuseToken, fetchFeaturedCommunities } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
@@ -19,7 +18,6 @@ const FeaturedCommunities = memo(({
   history,
   communitiesKeys,
   communities,
-  fetchMetadata,
   setTitle,
   tokens,
   fetchCommunities,
@@ -51,21 +49,6 @@ const FeaturedCommunities = memo(({
     setTitle('Featured communities')
   }
 
-  const getCommunityMetadata = (community, token, metadata) => {
-    if (community && community.communityURI && metadata) {
-      return {
-        ...metadata[token.tokenURI],
-        ...metadata[community.communityURI]
-      }
-    } else if (token && token.tokenURI && (metadata && metadata[token.tokenURI])) {
-      return {
-        ...metadata[token.tokenURI]
-      }
-    } else {
-      return {}
-    }
-  }
-
   return (
     <div className='grid-x align-justify grid-margin-x grid-margin-y'>
       {
@@ -77,7 +60,10 @@ const FeaturedCommunities = memo(({
               <Community
                 networkType={networkType}
                 token={{ ...token, communityAddress }}
-                metadata={getCommunityMetadata(community, token, metadata)}
+                metadata={{
+                  ...metadata[token.tokenURI],
+                  ...metadata[community.communityURI]
+                }}
                 history={history}
                 account={account}
                 showDashboard={showDashboard}
@@ -91,7 +77,10 @@ const FeaturedCommunities = memo(({
             return (
               <div className='cell medium-12 small-24' key={address}>
                 <FeaturedCommunity
-                  metadata={getCommunityMetadata(community, token, metadata)}
+                  metadata={{
+                    ...metadata[token.tokenURI],
+                    ...metadata[community.communityURI]
+                  }}
                   showDashboard={() => showDashboard(address)}
                   community={community}
                 />
@@ -133,7 +122,6 @@ const mapDispatchToProps = {
   fetchTokensByOwner,
   loadModal,
   fetchFuseToken,
-  fetchMetadata,
   fetchCommunities,
   fetchFeaturedCommunities
 }

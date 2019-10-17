@@ -87,14 +87,14 @@ class Dashboard extends Component {
     const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress, isClosed } = community
     const { totalSupply } = dashboard
 
-    console.log({ communityURI: community && community.communityURI && metadata[community.communityURI] })
-    console.log({ tokenURI: metadata[foreignToken.tokenURI] })
-
     const { symbol, tokenAddress } = foreignToken
     return (
       <React.Fragment>
         <Header
-          metadata={this.getHeaderMetadata()}
+          metadata={{
+            ...metadata[foreignToken.tokenURI],
+            ...metadata[community.communityURI]
+          }}
           tokenAddress={tokenAddress}
           isClosed={isClosed}
           communityURI={community.communityURI}

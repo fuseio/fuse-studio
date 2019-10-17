@@ -135,21 +135,6 @@ const InnerCommunities = ({
     return () => { }
   }, [accountAddress, communities])
 
-  const getCommunityMetadata = (community, token, metadata) => {
-    if (community && community.communityURI && metadata) {
-      return {
-        ...metadata[token.tokenURI],
-        ...metadata[community.communityURI]
-      }
-    } else if (token && token.tokenURI && (metadata && metadata[token.tokenURI])) {
-      return {
-        ...metadata[token.tokenURI]
-      }
-    } else {
-      return {}
-    }
-  }
-
   const bridgeType = useSelector(getNetworkSide)
   return (
     <div className='profile__communities grid-y'>
@@ -167,7 +152,7 @@ const InnerCommunities = ({
               balance={balance || 0}
               balanceOfToken={balanceOfToken}
               entity={entity}
-              metadata={getCommunityMetadata(community, token, metadata)}
+              metadata={{ ...metadata[token.tokenURI], ...metadata[community && community.communityURI] }}
               showDashboard={showDashboard}
               accountAddress={accountAddress}
               networkType={networkType}
