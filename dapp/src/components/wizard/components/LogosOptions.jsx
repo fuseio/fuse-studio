@@ -112,7 +112,7 @@ const LogosOptions = ({
                   metadata={{
                     isDefault: communityType && communityType.value && communityType.label
                   }}
-                  token={{ symbol: communitySymbol }}
+                  symbol={communitySymbol}
                   imageUrl={field && field.value && field.value.croppedImageUrl}
                 />
               </div>
@@ -129,7 +129,7 @@ const LogosOptions = ({
                     setFieldValue('images.chosen', 'defaultTwo')
                   }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultTwo' })}>
                     <CommunityLogo
-                      token={{ symbol: communitySymbol }}
+                      symbol={communitySymbol}
                       imageUrl={field && field.value && field.value.croppedImageUrl}
                       metadata={{
                         isDefault: communityType && communityType.value && communityType.label

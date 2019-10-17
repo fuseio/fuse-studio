@@ -5,6 +5,7 @@ import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { DEPLOY_BRIDGE } from 'actions/bridge'
 import { ADD_USER } from 'actions/user'
+import { fetchMetadata } from 'actions/metadata'
 import { ADD_COMMUNITY_PLUGINS, TOGGLE_JOIN_BONUS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
@@ -112,8 +113,11 @@ function * deployChosenContracts ({ response: { steps, receipt } }) {
   })
 }
 
-function * deployExistingToken ({ steps }) {
-  const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps })
+function * deployExistingToken ({ steps, metadata }) {
+  const { hash } = yield call(createMetadata, { metadata })
+  const communityURI = `ipfs://${hash}`
+  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
+  const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps })
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,
     response: {
@@ -231,6 +235,10 @@ function * watchFetchCommunity ({ response }) {
       const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
       const accountAddress = yield select(getAccountAddress)
 
+      if (entities[communityAddress] && entities[communityAddress].communityURI) {
+        yield put(fetchMetadata(entities[communityAddress].communityURI))
+      }
+
       yield all([
         put(actions.fetchToken(homeTokenAddress)),
         put(actions.fetchToken(foreignTokenAddress)),
@@ -304,6 +312,10 @@ function * watchCommunities ({ response }) {
       yield put(actions.fetchToken(entity.foreignTokenAddress))
     } else if (entity && entity.community) {
       yield put(actions.fetchToken(entity.community.foreignTokenAddress))
+
+      if (entity.community && entity.community.communityURI) {
+        yield put(fetchMetadata(entity.community.communityURI))
+      }
     }
   }
 }

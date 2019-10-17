@@ -2,6 +2,7 @@ import React, { Fragment, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
+import { getNetworkType } from 'actions/network'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'
@@ -32,8 +33,13 @@ const WizardPage = ({
   clearTransaction,
   loadModal,
   history,
-  communityAddress
+  communityAddress,
+  getNetworkType
 }) => {
+  useEffect(() => {
+    getNetworkType(true)
+  }, [])
+
   useEffect(() => {
     if (networkType === homeNetwork) {
       loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['ropsten', 'mainnet'] })
@@ -67,20 +73,21 @@ const WizardPage = ({
               : {}
       }), {})
 
+    const { chosen } = images
+    const metadata = chosen !== 'custom' && !existingToken
+      ? { isDefault: true, image: images && images[chosen] && images[chosen].blob }
+      : { image: images && images[chosen] && images[chosen].blob }
+
     if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
-      deployExistingToken(newSteps)
+      deployExistingToken(metadata, newSteps)
     } else {
       const tokenData = {
         name: communityName,
         symbol: communitySymbol,
         totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
       }
-      const { chosen } = images
-      const metadata = chosen !== 'custom'
-        ? { isDefault: true, image: images && images[chosen] && images[chosen].blob }
-        : { image: images && images[chosen] && images[chosen].blob }
       createTokenWithMetadata(tokenData, metadata, communityType.value, steps)
     }
   }
@@ -205,7 +212,8 @@ const mapDispatchToProps = {
   fetchDeployProgress,
   deployExistingToken,
   clearTransaction,
-  loadModal
+  loadModal,
+  getNetworkType
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WizardPage)

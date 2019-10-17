@@ -32,7 +32,7 @@ const SummaryStep = ({
               metadata={{
                 isDefault: communityType && communityType.value && communityType.label
               }}
-              token={{ symbol: communitySymbol }}
+              symbol={communitySymbol}
             />
             <span className='communityName'>{communityName} coin</span>
           </div>

@@ -18,8 +18,8 @@ const getDaiIcons = () => ({
 })
 
 const CommunityLogo = ({
-  metadata: { communityLogo, isDefault } = { communityLogo: 'CoinIcon1.svg', isDefault: false },
-  token: { symbol },
+  metadata,
+  symbol,
   imageUrl,
   isSmall = false,
   isBig = false,
@@ -33,24 +33,26 @@ const CommunityLogo = ({
   return (
     <div className={wrapperClasses}>
       {
-        imageUrl || communityLogo
-          ? <img
+        imageUrl ? (
+          <img
             className='logo-circle__inner'
             alt='Community Logo'
-            src={imageUrl || (!isDaiToken
-              ? (getImages()[communityLogo] || tokenOne)
-              : getDaiIcons()[communityLogo])}
+            src={imageUrl}
           />
-          : <Loader color='#fff' className='logo-img' />
+        ) : (metadata && metadata.communityLogo)
+          ? (
+            <img
+              className='logo-circle__inner'
+              alt='Community Logo'
+              src={(!isDaiToken
+                ? (getImages()[(metadata && metadata.communityLogo)] || tokenOne)
+                : getDaiIcons()[(metadata && metadata.communityLogo)])}
+            />
+          ) : <Loader color='#4a687b' className='logo-img' />
       }
-      {!isDaiToken && isDefault && imageUrl && <span className='logo-circle__name'>{symbol}</span>}
+      {!isDaiToken && (metadata && metadata.isDefault) && <span className='logo-circle__name'>{symbol}</span>}
     </div>
   )
-}
-
-CommunityLogo.propTypes = {
-  token: PropTypes.object.isRequired,
-  metadata: PropTypes.object
 }
 
 export default CommunityLogo

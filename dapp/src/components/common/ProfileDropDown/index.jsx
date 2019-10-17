@@ -7,6 +7,7 @@ import { fetchCommunities, fetchBalances, balanceOfToken } from 'actions/account
 import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 import { withRouter } from 'react-router-dom'
 import { getBalances, getAccount } from 'selectors/accounts'
 import ArrowTiny from 'images/arrow_tiny.svg'
@@ -79,7 +80,8 @@ const ProfileCard = ({
   showDashboard,
   accountAddress
 }) => {
-  const { token: { name, symbol }, community: { homeTokenAddress, foreignTokenAddress, communityAddress } } = entity
+  const { token: { name, symbol }, community } = entity
+  const { homeTokenAddress, foreignTokenAddress, communityAddress } = community
 
   useEffect(() => {
     balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
@@ -87,15 +89,21 @@ const ProfileCard = ({
     return () => { }
   }, [])
 
+  const metaData = community && community.communityURI
+    ? metadata[community.communityURI]
+    : metadata[entity.token.tokenURI]
+      ? metadata[entity.token.tokenURI]
+      : null
+
   return (
     <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
       <div className='profile__card__logo'>
         <CommunityLogo
+          symbol={symbol}
           isDaiToken={entity.token && entity.token.symbol === 'DAI'}
-          imageUrl={!isEmpty(metadata[entity.token.tokenURI] && metadata[entity.token.tokenURI].image) ? `${CONFIG.ipfsProxy.urlBase}/image/${metadata[entity.token.tokenURI].image}` : null}
-          token={entity.token}
+          imageUrl={!isEmpty(get(metaData, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metaData, 'image')}` : null}
           isSmall
-          metadata={(entity.token && entity.token.tokenURI && metadata[entity.token.tokenURI]) || {}}
+          metadata={metaData}
         />
       </div>
       <div className='cell auto grid-y profile__card__content'>
