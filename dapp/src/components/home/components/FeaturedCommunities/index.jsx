@@ -51,25 +51,33 @@ const FeaturedCommunities = memo(({
     setTitle('Featured communities')
   }
 
+  const getCommunityMetadata = (community, token, metadata) => {
+    if (community && community.communityURI && metadata) {
+      return {
+        ...metadata[token.tokenURI],
+        ...metadata[community.communityURI]
+      }
+    } else if (token && token.tokenURI && (metadata && metadata[token.tokenURI])) {
+      return {
+        ...metadata[token.tokenURI]
+      }
+    } else {
+      return {}
+    }
+  }
+
   return (
     <div className='grid-x align-justify grid-margin-x grid-margin-y'>
       {
         !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
           const { community, token } = entity
           const { communityAddress } = community
-          const { tokenURI } = token
-          const communityMetadata = community && community.communityURI
-            ? metadata[community.communityURI]
-            : metadata[tokenURI]
-              ? metadata[tokenURI]
-              : {}
-
           return (
             <div className='cell medium-12' key={index}>
               <Community
                 networkType={networkType}
                 token={{ ...token, communityAddress }}
-                metadata={communityMetadata}
+                metadata={getCommunityMetadata(community, token, metadata)}
                 history={history}
                 account={account}
                 showDashboard={showDashboard}
@@ -83,12 +91,9 @@ const FeaturedCommunities = memo(({
             return (
               <div className='cell medium-12 small-24' key={address}>
                 <FeaturedCommunity
-                  fetchMetadata={fetchMetadata}
-                  metadata={metadata[token.tokenURI]}
-                  showDashboard={showDashboard}
-                  token={token}
+                  metadata={getCommunityMetadata(community, token, metadata)}
+                  showDashboard={() => showDashboard(address)}
                   community={community}
-                  communityAddress={community.communityAddress}
                 />
               </div>
             )

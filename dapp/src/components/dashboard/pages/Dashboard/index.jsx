@@ -51,6 +51,26 @@ class Dashboard extends Component {
     loadModal(QR_MODAL, { value })
   }
 
+  getHeaderMetadata = () => {
+    const {
+      community,
+      foreignToken,
+      metadata
+    } = this.props
+    if (community && community.communityURI && metadata) {
+      return {
+        ...metadata[foreignToken.tokenURI],
+        ...metadata[community.communityURI]
+      }
+    } else if (foreignToken && foreignToken.tokenURI && (metadata && metadata[foreignToken.tokenURI])) {
+      return {
+        ...metadata[foreignToken.tokenURI]
+      }
+    } else {
+      return {}
+    }
+  }
+
   render () {
     const {
       community,
@@ -67,17 +87,14 @@ class Dashboard extends Component {
     const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress, isClosed } = community
     const { totalSupply } = dashboard
 
-    const headerMetadata = community && community.communityURI
-      ? metadata[community.communityURI]
-      : metadata[foreignToken.tokenURI]
-        ? metadata[foreignToken.tokenURI]
-        : {}
+    console.log({ communityURI: community && community.communityURI && metadata[community.communityURI] })
+    console.log({ tokenURI: metadata[foreignToken.tokenURI] })
 
     const { symbol, tokenAddress } = foreignToken
     return (
       <React.Fragment>
         <Header
-          metadata={headerMetadata}
+          metadata={this.getHeaderMetadata()}
           tokenAddress={tokenAddress}
           isClosed={isClosed}
           communityURI={community.communityURI}

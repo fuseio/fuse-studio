@@ -1,22 +1,13 @@
-import React, { useEffect, memo } from 'react'
+import React, { memo } from 'react'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 
 const FeaturedCommunity = memo(({
   community,
-  token: { name, tokenURI },
-  communityAddress,
   showDashboard,
-  metadata,
-  fetchMetadata
+  metadata
 }) => {
-  useEffect(() => {
-    if (tokenURI) {
-      fetchMetadata(tokenURI)
-    }
-  }, [tokenURI])
-
   return (
-    <div className='featured' onClick={() => showDashboard(communityAddress)}>
+    <div className='featured' onClick={showDashboard}>
       <div className='featured__image'>
         <div className='featured__image__container'>
           <img alt='cover photo' src={community.coverPhoto ? `${CONFIG.ipfsProxy.urlBase}/image/${community.coverPhoto}` : CommunityPlaceholderImage} />
@@ -26,12 +17,12 @@ const FeaturedCommunity = memo(({
         </div>
       </div>
       <div className='featured__content'>
-        <h6 className='featured__name'>{name}</h6>
+        <h6 className='featured__name'>{community.name}</h6>
       </div>
     </div>
   )
 }, (prevProps, nextProps) => {
-  if (prevProps.token !== nextProps.token) {
+  if (prevProps.community !== nextProps.community) {
     return false
   }
   if (prevProps.metadata !== nextProps.metadata) {

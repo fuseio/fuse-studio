@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { connect, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
 import { formatAddress, formatWei } from 'utils/format'
@@ -73,14 +73,14 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
 
 const ProfileCard = ({
   entity,
-  networkType,
   metadata,
   balance,
   balanceOfToken,
   showDashboard,
   accountAddress
 }) => {
-  const { token: { name, symbol }, community } = entity
+  const { token, community } = entity
+  const { name, symbol } = token
   const { homeTokenAddress, foreignTokenAddress, communityAddress } = community
 
   useEffect(() => {
@@ -89,21 +89,15 @@ const ProfileCard = ({
     return () => { }
   }, [])
 
-  const metaData = community && community.communityURI
-    ? metadata[community.communityURI]
-    : metadata[entity.token.tokenURI]
-      ? metadata[entity.token.tokenURI]
-      : null
-
   return (
     <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
       <div className='profile__card__logo'>
         <CommunityLogo
           symbol={symbol}
           isDaiToken={entity.token && entity.token.symbol === 'DAI'}
-          imageUrl={!isEmpty(get(metaData, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metaData, 'image')}` : null}
+          imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
           isSmall
-          metadata={metaData}
+          metadata={metadata}
         />
       </div>
       <div className='cell auto grid-y profile__card__content'>
@@ -141,13 +135,29 @@ const InnerCommunities = ({
     return () => { }
   }, [accountAddress, communities])
 
+  const getCommunityMetadata = (community, token, metadata) => {
+    if (community && community.communityURI && metadata) {
+      return {
+        ...metadata[token.tokenURI],
+        ...metadata[community.communityURI]
+      }
+    } else if (token && token.tokenURI && (metadata && metadata[token.tokenURI])) {
+      return {
+        ...metadata[token.tokenURI]
+      }
+    } else {
+      return {}
+    }
+  }
+
   const bridgeType = useSelector(getNetworkSide)
   return (
     <div className='profile__communities grid-y'>
       <span>{title}</span>
       <div className='grid-y grid-margin-y grid-margin-x'>
         {communities && communities.map((entity, index) => {
-          const { community: { homeTokenAddress, foreignTokenAddress } } = entity
+          const { community, token } = entity
+          const { homeTokenAddress, foreignTokenAddress } = community
           const balance = balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress]
             ? formatWei(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress], 2)
             : 0
@@ -157,7 +167,7 @@ const InnerCommunities = ({
               balance={balance || 0}
               balanceOfToken={balanceOfToken}
               entity={entity}
-              metadata={metadata}
+              metadata={getCommunityMetadata(community, token, metadata)}
               showDashboard={showDashboard}
               accountAddress={accountAddress}
               networkType={networkType}

@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Loader from 'components/common/Loader'
 import classNames from 'classnames'
 import DAI_1 from 'images/DAI_CoinIcon1.svg'
@@ -50,7 +49,7 @@ const CommunityLogo = ({
             />
           ) : <Loader color='#4a687b' className='logo-img' />
       }
-      {!isDaiToken && (metadata && metadata.isDefault) && <span className='logo-circle__name'>{symbol}</span>}
+      {!isDaiToken && ((metadata && metadata.isDefault) || (metadata && metadata.communityLogo)) && <span className='logo-circle__name'>{symbol}</span>}
     </div>
   )
 }
