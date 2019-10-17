@@ -92,7 +92,6 @@ const ProfileCard = ({
       <div className='profile__card__logo'>
         <CommunityLogo
           isDaiToken={entity.token && entity.token.symbol === 'DAI'}
-          networkType={networkType}
           imageUrl={!isEmpty(metadata[entity.token.tokenURI] && metadata[entity.token.tokenURI].image) ? `${CONFIG.ipfsProxy.urlBase}/image/${metadata[entity.token.tokenURI].image}` : null}
           token={entity.token}
           isSmall

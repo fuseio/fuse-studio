@@ -31,7 +31,6 @@ const Community = memo(({
         <CommunityLogo
           isDaiToken={isDaiToken(networkType, token)}
           token={token}
-          networkType={networkType}
           imageUrl={!isEmpty(image) ? `${CONFIG.ipfsProxy.urlBase}/image/${image}` : null}
           metadata={metadata}
         />

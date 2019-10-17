@@ -11,7 +11,6 @@ export default ({ isClosed, networkType, token, metadata, name }) => {
       <div className='community_header__image'>
         <CommunityLogo
           isDaiToken={isDaiToken(networkType, token)}
-          networkType={networkType}
           token={token}
           imageUrl={!isEmpty(image) ? `${CONFIG.ipfsProxy.urlBase}/image/${image}` : null}
           isSmall={isMobileOnly}

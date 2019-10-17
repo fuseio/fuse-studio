@@ -1,5 +1,4 @@
 import { object, number, string, boolean, mixed } from 'yup'
-import isEmpty from 'lodash/isEmpty'
 
 export default object().noUnknown(false).shape({
   email: string().email().required(),
@@ -14,29 +13,26 @@ export default object().noUnknown(false).shape({
     label: string().normalize(),
     value: string().normalize()
   }),
-  totalSupply: number().when('images', {
-    is: images => isEmpty(images),
-    then: number().required(),
-    otherwise: number()
-  }),
-  communityLogo: object().noUnknown(false).shape({
-    name: string().normalize(),
-    icon: string().normalize()
-  }).when('images', {
-    is: images => isEmpty(images),
-    then: object().noUnknown(false).shape({
-      name: string().normalize().required(),
-      icon: string().normalize().required()
-    }),
-    otherwise: object().noUnknown(false).shape({
-      name: string().normalize(),
-      icon: string().normalize()
-    })
+  totalSupply: number().when('existingToken', {
+    is: existingToken => existingToken && existingToken.label && existingToken.value,
+    then: number(),
+    otherwise: number().required()
   }),
   isOpen: boolean(),
   images: object().noUnknown(false).shape({
-    croppedImageUrl: string(),
-    blob: mixed()
+    defaultOne: object().noUnknown(false).shape({
+      blob: mixed(),
+      croppedImageUrl: string()
+    }),
+    defaultTwo: object().noUnknown(false).shape({
+      blob: mixed(),
+      croppedImageUrl: string()
+    }).nullable(),
+    custom: object().noUnknown().shape({
+      croppedImageUrl: string(),
+      blob: mixed()
+    }),
+    chosen: string().required()
   }),
   contracts: object().noUnknown(false).shape({
     community: object().noUnknown(false).shape({
@@ -49,6 +45,9 @@ export default object().noUnknown(false).shape({
       checked: boolean()
     }),
     funder: object().noUnknown(false).shape({
+      checked: boolean()
+    }),
+    email: object().noUnknown(false).shape({
       checked: boolean()
     })
   })

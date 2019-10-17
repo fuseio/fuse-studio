@@ -12,7 +12,7 @@ import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
 const validations = {
   0: ['communityName', 'communityType', 'existingToken', 'email'],
-  1: ['totalSupply', 'communitySymbol', 'communityLogo', 'images']
+  1: ['totalSupply', 'communitySymbol', 'images.chosen']
 }
 
 const getStep = (communityType) => (['Name & currency', communityType ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary'])
@@ -165,7 +165,6 @@ class Wizard extends React.Component {
           </div>
           <Formik
             initialValues={values}
-            enableReinitialize={false}
             onSubmit={this.onSubmit}
             validationSchema={validationSchema}
             render={this.renderForm}

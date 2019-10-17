@@ -79,6 +79,7 @@ const CurrencyType = ({ networkType, formik }) => {
                 {...field}
                 onChange={val => {
                   setFieldValue('existingToken', val)
+                  setFieldValue('totalSupply', '')
                   setFieldValue('communityType', '')
                 }}
                 className={classNames('attributes__options__select', { 'attributes__options__select--selected': existingToken })}

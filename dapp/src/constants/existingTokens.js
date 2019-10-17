@@ -1,6 +1,6 @@
-import DaiLogo from 'images/DAI_logo.svg'
-import UsdCoin from 'images/USD_Coin.svg'
-import TetherLogo from 'images/tether_logo.svg'
+import DaiIcon from 'images/dai.png'
+import UsdcIcon from 'images/usdc.png'
+import TetherIcon from 'images/tether.png'
 import isEmpty from 'lodash/isEmpty'
 
 export const existingTokens = (networkType) => ([
@@ -9,21 +9,21 @@ export const existingTokens = (networkType) => ([
     symbol: 'DAI',
     value: CONFIG.web3.addresses[networkType].DaiToken,
     isDisabled: false,
-    icon: DaiLogo
+    icon: DaiIcon
   },
   {
     label: 'USD Coin',
     symbol: 'USDC',
     value: CONFIG.web3.addresses[networkType].UsdToken,
     isDisabled: false,
-    icon: UsdCoin
+    icon: UsdcIcon
   },
   {
     label: 'Tether USD',
     symbol: 'USDT',
     value: CONFIG.web3.addresses[networkType].TetherToken,
     isDisabled: false,
-    icon: TetherLogo
+    icon: TetherIcon
   }
 ])
 

@@ -48,7 +48,6 @@ const WizardPage = ({
       isOpen,
       communityType,
       contracts,
-      communityLogo,
       images,
       existingToken,
       email,
@@ -68,7 +67,7 @@ const WizardPage = ({
               : {}
       }), {})
 
-    if (existingToken) {
+    if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
       deployExistingToken(newSteps)
@@ -78,7 +77,10 @@ const WizardPage = ({
         symbol: communitySymbol,
         totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
       }
-      const metadata = communityLogo ? { communityLogo: communityLogo.name } : { image: images.blob }
+      const { chosen } = images
+      const metadata = chosen !== 'custom'
+        ? { isDefault: true, image: images && images[chosen] && images[chosen].blob }
+        : { image: images && images[chosen] && images[chosen].blob }
       createTokenWithMetadata(tokenData, metadata, communityType.value, steps)
     }
   }
@@ -105,9 +107,10 @@ const WizardPage = ({
           totalSupply: '',
           communityType: undefined,
           existingToken: undefined,
-          communityLogo: undefined,
           isOpen: true,
-          images: undefined,
+          images: {
+            chosen: ''
+          },
           email: '',
           subscribe: true,
           contracts: {

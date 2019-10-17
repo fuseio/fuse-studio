@@ -21,7 +21,7 @@ const DetailsStep = ({
           <Fragment>
             <SymbolStep />
             {isMobileOnly && <div className='line' ><hr /></div>}
-            <LogosOptions networkType={networkType} />
+            <LogosOptions />
           </Fragment>
         )
     }
@@ -36,7 +36,7 @@ const DetailsStep = ({
           )
         }
         <SymbolStep />
-        <LogosOptions networkType={networkType} />
+        <LogosOptions />
       </Fragment>
     )
   }
