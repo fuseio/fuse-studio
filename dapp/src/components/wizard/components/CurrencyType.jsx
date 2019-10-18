@@ -65,7 +65,7 @@ const CurrencyType = ({ networkType, formik }) => {
                   classNamePrefix='attributes__options__select__prefix'
                   components={{ Option }}
                   options={CommunityTypes}
-                  placeholder={'I want to make new currency'}
+                  placeholder={'I want to create a new currency'}
                 />
               </div>
             )
@@ -86,7 +86,7 @@ const CurrencyType = ({ networkType, formik }) => {
                 classNamePrefix='attributes__options__select__prefix'
                 components={{ Option }}
                 options={existingTokens(networkType)}
-                placeholder={'I want to use existing currency'}
+                placeholder={'I want to use an existing currency'}
               />
             </div>
           )}

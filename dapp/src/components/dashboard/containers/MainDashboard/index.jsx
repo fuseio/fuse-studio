@@ -24,7 +24,7 @@ import { getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
-import { changeNetwork } from 'actions/network'
+import { changeNetwork, getNetworkType } from 'actions/network'
 import get from 'lodash/get'
 
 class DashboardLayout extends Component {
@@ -33,7 +33,8 @@ class DashboardLayout extends Component {
   }
 
   componentDidMount () {
-    const { fetchCommunity, communityAddress, fetchEntities } = this.props
+    const { fetchCommunity, communityAddress, fetchEntities, getNetworkType } = this.props
+    getNetworkType(true)
     fetchCommunity(communityAddress)
     fetchEntities(communityAddress)
   }
@@ -267,7 +268,8 @@ const mapDispatchToProps = {
   fetchCommunity,
   loadModal,
   fetchEntities,
-  changeNetwork
+  changeNetwork,
+  getNetworkType
 }
 
 export default connect(

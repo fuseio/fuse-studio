@@ -5,7 +5,6 @@ const onboardUser = async (networks, communityProgress) => {
   try {
     sendgridUtils.sendInfoMail({ email })
     if (subscribe) {
-      sendgridUtils.sendWelcomeMail({ email })
       sendgridUtils.subscribeUser({ email })
     }
   } catch (error) {
