@@ -1,7 +1,7 @@
 const request = require('request-promise-native')
 const config = require('config')
 
-const funder = async ({ home: { createContract, createMethod, send, from } }, communityProgress) => {
+const funder = async (networks, communityProgress) => {
   const { adminAddress: accountAddress } = communityProgress.steps.community.args
   const { foreignTokenAddress: tokenAddress } = communityProgress.steps.bridge.args
   const options = {

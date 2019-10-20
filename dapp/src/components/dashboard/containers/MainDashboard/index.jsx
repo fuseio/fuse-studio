@@ -118,7 +118,9 @@ class DashboardLayout extends Component {
       isAdmin,
       tokenOfCommunityOnCurrentSide,
       location,
-      communityAddress
+      communityAddress,
+      isPortis,
+      changeNetwork
     } = this.props
 
     const { tokenType, symbol } = foreignToken
@@ -177,6 +179,8 @@ class DashboardLayout extends Component {
                   <Route path={`${match.path}/bonus`}
                     render={() => (
                       <JoinBonusPage
+                        isPortis={isPortis}
+                        changeNetwork={changeNetwork}
                         symbol={symbol}
                         community={community}
                         networkType={networkType}
@@ -205,6 +209,8 @@ class DashboardLayout extends Component {
                     path={`${match.path}/plugins`}
                     render={() => (
                       <PluginsPage
+                        isPortis={isPortis}
+                        changeNetwork={changeNetwork}
                         community={community}
                         networkType={networkType}
                       />

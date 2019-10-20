@@ -142,7 +142,7 @@ function * watchGetNetworkTypeSuccess ({ response }) {
 
 function * changeNetwork ({ networkType }) {
   portis.changeNetwork(toLongName(networkType))
-  yield call(getNetworkType)
+  yield call(getNetworkType, true)
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
