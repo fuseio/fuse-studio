@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import Plugin from 'components/dashboard/components/Plugin'
 import JoinBonus from 'images/join_bonus.png'
@@ -44,8 +44,18 @@ const Plugins = ({
   loadModal,
   addCommunityPlugins,
   community,
-  networkType
+  networkType,
+  changeNetwork,
+  isPortis,
+  homeNetwork
 }) => {
+  useEffect(() => {
+    if (isPortis && networkType !== homeNetwork) {
+      changeNetwork(homeNetwork)
+    }
+    return () => { }
+  }, [isPortis, networkType])
+
   useSwitchNetwork(networkType)
   const { plugins } = community
 
@@ -123,9 +133,13 @@ const Plugins = ({
   )
 }
 
+const mapStateToProps = (state) => ({
+  homeNetwork: state.network.homeNetwork
+})
+
 const mapDispatchToProps = {
   loadModal,
   addCommunityPlugins
 }
 
-export default connect(null, mapDispatchToProps)(Plugins)
+export default connect(mapStateToProps, mapDispatchToProps)(Plugins)

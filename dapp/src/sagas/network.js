@@ -51,7 +51,7 @@ function * deduceBridgeSides (networkType) {
   }
 }
 
-function * getNetworkType () {
+function * getNetworkType ({ enableProvider }) {
   try {
     const web3 = yield getWeb3()
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
@@ -69,12 +69,14 @@ function * getNetworkType () {
         isPortis,
         ...bridgeSides
       } })
-    const accountAddress = yield getAccountAddress(web3)
 
-    if (accountAddress) {
-      const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
-      if (!isChanged) {
-        yield put(balanceOfFuse(accountAddress))
+    if (enableProvider) {
+      const accountAddress = yield getAccountAddress(web3)
+      if (accountAddress) {
+        const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
+        if (!isChanged) {
+          yield put(balanceOfFuse(accountAddress))
+        }
       }
     }
 
@@ -140,7 +142,7 @@ function * watchGetNetworkTypeSuccess ({ response }) {
 
 function * changeNetwork ({ networkType }) {
   portis.changeNetwork(toLongName(networkType))
-  yield call(getNetworkType)
+  yield call(getNetworkType, true)
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })

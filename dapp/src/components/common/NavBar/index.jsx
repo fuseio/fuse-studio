@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Logo from 'components/common/Logo'
 import HelpIcon from 'images/help.svg'
 import NotificationIcon from 'images/notification.svg'
@@ -10,6 +11,7 @@ import { withRouter } from 'react-router-dom'
 import { withNetwork } from 'containers/Web3'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
+import { getNetworkType } from 'actions/network'
 
 class NavBar extends Component {
   state = {
@@ -58,7 +60,7 @@ class NavBar extends Component {
   }
 
   render () {
-    const { withLogo, networkType } = this.props
+    const { withLogo, networkType, accountAddress, getNetworkType } = this.props
     const { isHelpOpen, isProfileOpen } = this.state
     return (
       <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })} style={{ width: (this.state.scrollTop > 70 && !isMobileOnly) && !withLogo ? '80%' : null }}>
@@ -84,20 +86,29 @@ class NavBar extends Component {
           <div className='navbar__links__notification'>
             <span className='icon'><img src={NotificationIcon} /></span>
           </div>
-          <div
-            className='navbar__links__wallet'
-            ref={this.setDropdownProfileRef}
-            onClick={(e) => {
-              e.stopPropagation()
-              this.setState({ isProfileOpen: !isProfileOpen })
-            }}
-          >
-            <span className='icon'><img src={WalletIcon} /></span>
-            <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
-            <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-              <ProfileDropDown />
-            </div>
-          </div>
+          {
+            accountAddress ? (
+              <div
+                className='navbar__links__wallet'
+                ref={this.setDropdownProfileRef}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  this.setState({ isProfileOpen: !isProfileOpen })
+                }}
+              >
+                <span className='icon'><img src={WalletIcon} /></span>
+                <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
+                <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
+                  <ProfileDropDown />
+                </div>
+              </div>
+            ) : (
+              <div className='navbar__links__wallet' onClick={() => getNetworkType(true)}>
+                <span className='icon'><img src={WalletIcon} /></span>
+                <span className='navbar__links__wallet__text'>Connect wallet</span>
+              </div>
+            )
+          }
         </div>
       </div>
     )
@@ -108,4 +119,12 @@ NavBar.defaultProps = {
   withLogo: true
 }
 
-export default withRouter(withNetwork(NavBar))
+const mapStateToProps = (state) => ({
+  accountAddress: state.network && state.network.accountAddress
+})
+
+const mapDispatchToProps = {
+  getNetworkType
+}
+
+export default withRouter(withNetwork((connect(mapStateToProps, mapDispatchToProps)(NavBar))))

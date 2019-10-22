@@ -72,7 +72,7 @@ export default class MintBurnForm extends PureComponent {
   renderForm = ({ handleSubmit, errors, handleChange, touched, values, isValid }) => {
     const {
       tokenNetworkType,
-      token,
+      symbol,
       lastAction,
       closeMintMessage,
       closeBurnMessage
@@ -86,7 +86,7 @@ export default class MintBurnForm extends PureComponent {
       <form className='transfer__content grid-y align-justify' style={{ height: '140px' }} onSubmit={handleSubmit}>
 
         <Message
-          message={`Your just ${lastAction && lastAction.actionType}ed ${lastAction && lastAction.mintBurnAmount} ${token.symbol} on ${tokenNetworkType} network`}
+          message={`Your just ${lastAction && lastAction.actionType}ed ${lastAction && lastAction.mintBurnAmount} ${symbol} on ${tokenNetworkType} network`}
           isOpen={this.transactionConfirmed(actionType)}
           subTitle=''
           clickHandler={

@@ -6,7 +6,6 @@ import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
-import { fetchMetadata } from 'actions/metadata'
 
 class Oven extends Component {
   constructor (props) {
@@ -47,7 +46,7 @@ class Oven extends Component {
   render = () => (
     <div className='communities' ref={this.myRef}>
       <NavBar />
-      <CommunitiesList fetchMetadata={this.props.fetchMetadata} getScrollParent={this.getScrollParent} {...this.props} showDashboard={this.showDashboard} />
+      <CommunitiesList getScrollParent={this.getScrollParent} {...this.props} showDashboard={this.showDashboard} />
     </div>
   )
 }
@@ -67,8 +66,7 @@ const mapDispatchToProps = {
   fetchTokensByOwner,
   loadModal,
   fetchFuseToken,
-  fetchFeaturedCommunities,
-  fetchMetadata
+  fetchFeaturedCommunities
 }
 
 export default connect(

@@ -19,7 +19,6 @@ export default ({
   networkType,
   showDashboard,
   getScrollParent,
-  fetchMetadata,
   communities
 }) => {
   useEffect(() => {
@@ -78,12 +77,12 @@ export default ({
                     return (
                       <div className='medium-12 large-8 small-24 cell' key={address}>
                         <FeaturedCommunity
-                          fetchMetadata={fetchMetadata}
-                          metadata={metadata[token.tokenURI]}
-                          showDashboard={showDashboard}
-                          token={token}
+                          metadata={{
+                            ...metadata[token.tokenURI],
+                            ...metadata[community.communityURI]
+                          }}
+                          showDashboard={() => showDashboard(address)}
                           community={community}
-                          communityAddress={community.communityAddress}
                         />
                       </div>
                     )

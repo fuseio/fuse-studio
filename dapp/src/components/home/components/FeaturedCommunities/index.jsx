@@ -1,6 +1,5 @@
 import React, { useEffect, memo } from 'react'
 import { connect } from 'react-redux'
-import { fetchMetadata } from 'actions/metadata'
 import { fetchTokens, fetchTokensByOwner, fetchFuseToken, fetchFeaturedCommunities } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
@@ -19,7 +18,6 @@ const FeaturedCommunities = memo(({
   history,
   communitiesKeys,
   communities,
-  fetchMetadata,
   setTitle,
   tokens,
   fetchCommunities,
@@ -55,14 +53,17 @@ const FeaturedCommunities = memo(({
     <div className='grid-x align-justify grid-margin-x grid-margin-y'>
       {
         !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
-          const { community: { communityAddress }, token } = entity
-          const { tokenURI } = token
+          const { community, token } = entity
+          const { communityAddress } = community
           return (
             <div className='cell medium-12' key={index}>
               <Community
                 networkType={networkType}
                 token={{ ...token, communityAddress }}
-                metadata={metadata[tokenURI]}
+                metadata={{
+                  ...metadata[token.tokenURI],
+                  ...metadata[community.communityURI]
+                }}
                 history={history}
                 account={account}
                 showDashboard={showDashboard}
@@ -76,12 +77,12 @@ const FeaturedCommunities = memo(({
             return (
               <div className='cell medium-12 small-24' key={address}>
                 <FeaturedCommunity
-                  fetchMetadata={fetchMetadata}
-                  metadata={metadata[token.tokenURI]}
-                  showDashboard={showDashboard}
-                  token={token}
+                  metadata={{
+                    ...metadata[token.tokenURI],
+                    ...metadata[community.communityURI]
+                  }}
+                  showDashboard={() => showDashboard(address)}
                   community={community}
-                  communityAddress={community.communityAddress}
                 />
               </div>
             )
@@ -121,7 +122,6 @@ const mapDispatchToProps = {
   fetchTokensByOwner,
   loadModal,
   fetchFuseToken,
-  fetchMetadata,
   fetchCommunities,
   fetchFeaturedCommunities
 }

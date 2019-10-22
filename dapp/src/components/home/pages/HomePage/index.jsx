@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
 import ContentBox from 'components/home/components/ContentBox'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import Faqs from 'components/home/components/Faq'
@@ -19,11 +20,21 @@ const HomePage = ({
   loadModal,
   accountAddress
 }) => {
+  const [isClicked, setClicked] = useState(false)
+  useEffect(() => {
+    if (accountAddress && isClicked) {
+      history.push('/view/issuance')
+    }
+    return () => { }
+  }, [accountAddress])
+
   const [title, setTitle] = useState('Featured communities')
 
   const showIssuance = () => {
     if (!accountAddress) {
-      loadModal(CHOOSE_PROVIDER)
+      loadModal(CHOOSE_PROVIDER, {
+        setClicked
+      })
     } else {
       history.push('/view/issuance')
     }
@@ -93,4 +104,4 @@ const mapDispatchToProps = {
   loadModal
 }
 
-export default withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage))
+export default withRouter(withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage)))

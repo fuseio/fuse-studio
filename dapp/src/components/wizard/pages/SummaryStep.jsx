@@ -9,13 +9,14 @@ const SummaryStep = ({
 }) => {
   const contracts = getIn(formik.values, 'contracts')
   const communitySymbol = getIn(formik.values, 'communitySymbol')
-  const communityLogo = getIn(formik.values, 'communityLogo')
   const totalSupply = getIn(formik.values, 'totalSupply')
   const communityName = getIn(formik.values, 'communityName')
   const isOpen = getIn(formik.values, 'isOpen')
   const communityType = getIn(formik.values, 'communityType')
   const existingToken = getIn(formik.values, 'existingToken')
   const images = getIn(formik.values, 'images')
+
+  const { chosen } = images
 
   const contractsItems = Object.values(contracts)
     .filter((contract) => contract.checked)
@@ -27,11 +28,11 @@ const SummaryStep = ({
         <div className='summary-step__inner'>
           <div className='summary-step__logo'>
             <CommunityLogo
-              imageUrl={images && images.croppedImageUrl}
-              isDaiToken={communityType && communityType.value === 'existingToken'}
-              networkType={networkType}
-              token={{ symbol: communitySymbol }}
-              metadata={{ communityLogo: communityLogo.name }}
+              imageUrl={images && images[chosen] && images[chosen].croppedImageUrl}
+              metadata={{
+                isDefault: communityType && communityType.value && communityType.label
+              }}
+              symbol={communitySymbol}
             />
             <span className='communityName'>{communityName} coin</span>
           </div>
@@ -39,11 +40,11 @@ const SummaryStep = ({
           <div className='summary-step__content'>
             <div className='summary-step__content__item'>
               <h4 className='summary-step__content__title'>Currency type</h4>
-              {totalSupply && communityType && communityType.value !== 'existingToken' && <p>{communityType.text}</p>}
-              {communityType && communityType.value === 'existingToken' && <p>{`${communityType.text} - ${existingToken.label}`}</p>}
+              {communityType && <p>{communityType.label}</p>}
+              {existingToken && <p>{`Existing token - ${existingToken.label}`}</p>}
             </div>
             {
-              totalSupply && communityType && communityType.value !== 'existingToken' && (
+              totalSupply && (
                 <div className='summary-step__content__item'>
                   <h4 className='summary-step__content__title'>Total supply</h4>
                   <p>{totalSupply}</p>

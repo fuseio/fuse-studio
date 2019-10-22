@@ -81,7 +81,7 @@ const deploy = withAccount(async (account, { communityProgressId }) => {
 
     if (steps.bridge) {
       const { homeTokenAddress, foreignTokenAddress, foreignBridgeAddress, homeBridgeAddress } = steps.bridge.results
-      const { name } = steps.community.args
+      const { name, communityURI } = steps.community.args
       await new Community({
         communityAddress,
         isClosed,
@@ -89,15 +89,17 @@ const deploy = withAccount(async (account, { communityProgressId }) => {
         foreignTokenAddress,
         foreignBridgeAddress,
         homeBridgeAddress,
-        name
+        name,
+        communityURI
       }).save()
     } else {
-      const { homeTokenAddress, name } = steps.community.args
+      const { homeTokenAddress, name, communityURI } = steps.community.args
       await new Community({
         communityAddress,
         isClosed,
         homeTokenAddress,
-        name
+        name,
+        communityURI
       }).save()
     }
 

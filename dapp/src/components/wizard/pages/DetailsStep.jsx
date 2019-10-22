@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
 import { isMobileOnly } from 'react-device-detect'
-import TotalSupply from '../components/TotalSupply'
-import LogosOptions from '../components/LogosOptions'
-import SymbolStep from '../components/SymbolStep'
+import TotalSupply from 'components/wizard/components/TotalSupply'
+import LogosOptions from 'components/wizard/components/LogosOptions'
+import SymbolStep from 'components/wizard/components/SymbolStep'
 import { connect, getIn } from 'formik'
 
 const DetailsStep = ({
@@ -21,7 +21,7 @@ const DetailsStep = ({
           <Fragment>
             <SymbolStep />
             {isMobileOnly && <div className='line' ><hr /></div>}
-            <LogosOptions networkType={networkType} />
+            <LogosOptions />
           </Fragment>
         )
     }
@@ -31,12 +31,12 @@ const DetailsStep = ({
     return (
       <Fragment>
         {
-          communityType && communityType.value !== 'existingToken' && (
+          communityType && communityType.value && communityType.label && (
             <TotalSupply />
           )
         }
         <SymbolStep />
-        <LogosOptions networkType={networkType} />
+        <LogosOptions />
       </Fragment>
     )
   }

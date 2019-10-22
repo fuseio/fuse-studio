@@ -2,20 +2,21 @@ import React, { Fragment, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
+import { getNetworkType } from 'actions/network'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import WizardShape from 'utils/validation/shapes/wizard'
 
-import Wizard from './container'
 import Message from 'components/common/SignMessage'
-import NameAndCurrencyStep from './pages/NameAndCurrency'
-import DetailsStep from './pages/DetailsStep'
-import ContractsStep from './pages/Contracts'
-import SummaryStep from './pages/SummaryStep'
-import DeployProgressStep from './pages/DeployProgress'
-import Congratulations from 'components/issuance/Congratulations'
+import Wizard from 'components/wizard/container'
+import NameAndCurrencyStep from 'components/wizard/pages/NameAndCurrency'
+import DetailsStep from 'components/wizard/pages/DetailsStep'
+import ContractsStep from 'components/wizard/pages/Contracts'
+import SummaryStep from 'components/wizard/pages/SummaryStep'
+import DeployProgressStep from 'components/wizard/pages/DeployProgress'
+import Congratulations from 'components/wizard/components/Congratulations'
 
 import contractIcon from 'images/contract.svg'
 import BridgeIcon from 'images/Bridge.svg'
@@ -30,12 +31,15 @@ const WizardPage = ({
   error,
   createTokenSignature,
   clearTransaction,
-  steps,
   loadModal,
   history,
   communityAddress,
-  ...props
+  getNetworkType
 }) => {
+  useEffect(() => {
+    getNetworkType(true)
+  }, [])
+
   useEffect(() => {
     if (networkType === homeNetwork) {
       loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['ropsten', 'mainnet'] })
@@ -50,9 +54,10 @@ const WizardPage = ({
       isOpen,
       communityType,
       contracts,
-      communityLogo,
       images,
-      existingToken
+      existingToken,
+      email,
+      subscribe
     } = values
 
     const steps = Object.keys(contracts)
@@ -63,14 +68,20 @@ const WizardPage = ({
           ? { args: { foreignTokenAddress: null } }
           : contracts[contractName].key === 'community'
             ? { args: { isClosed: !isOpen, name: communityName, adminAddress } }
-            : {}
+            : contracts[contractName].key === 'email'
+              ? { args: { email, subscribe } }
+              : {}
       }), {})
 
-    const metadata = { communityLogo: communityLogo.name, image: images.blob }
-    if (communityType && communityType.value === 'existingToken') {
+    const { chosen } = images
+    const metadata = chosen !== 'custom' && !existingToken
+      ? { isDefault: true, image: images && images[chosen] && images[chosen].blob }
+      : { image: images && images[chosen] && images[chosen].blob }
+
+    if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
-      deployExistingToken(newSteps)
+      deployExistingToken(metadata, newSteps)
     } else {
       const tokenData = {
         name: communityName,
@@ -101,11 +112,14 @@ const WizardPage = ({
           communityName: '',
           communitySymbol: '',
           totalSupply: '',
-          communityType: {},
-          existingToken: {},
-          communityLogo: {},
+          communityType: undefined,
+          existingToken: undefined,
           isOpen: true,
-          images: {},
+          images: {
+            chosen: ''
+          },
+          email: '',
+          subscribe: true,
           contracts: {
             community: {
               label: 'Members list',
@@ -126,6 +140,10 @@ const WizardPage = ({
             funder: {
               checked: true,
               key: 'funder'
+            },
+            email: {
+              checked: true,
+              key: 'email'
             }
           }
         }}
@@ -194,7 +212,8 @@ const mapDispatchToProps = {
   fetchDeployProgress,
   deployExistingToken,
   clearTransaction,
-  loadModal
+  loadModal,
+  getNetworkType
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WizardPage)

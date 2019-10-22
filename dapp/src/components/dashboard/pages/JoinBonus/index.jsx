@@ -29,8 +29,18 @@ const JoinBonus = ({
   clearTransactionStatus,
   balances,
   tokenOfCommunityOnCurrentSide,
-  toggleJoinBonus
+  toggleJoinBonus,
+  isPortis,
+  changeNetwork,
+  homeNetwork
 }) => {
+  useEffect(() => {
+    if (isPortis && networkType !== homeNetwork) {
+      changeNetwork(homeNetwork)
+    }
+    return () => { }
+  }, [isPortis, networkType])
+
   useSwitchNetwork(networkType, 'join bonus')
 
   const funderAccount = useSelector(getFunderAccount)
@@ -119,6 +129,7 @@ const JoinBonus = ({
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
+  homeNetwork: state.network.homeNetwork,
   balances: getBalances(state)
 })
 

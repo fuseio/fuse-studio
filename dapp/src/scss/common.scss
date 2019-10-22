@@ -399,40 +399,6 @@
       max-height: 100px;
       min-width: 100px;
     }
-
-    @include modifier(CoinIcon1\.svg) {
-      @include modifier(ropsten) {
-        > span {
-          color: $color-dark;
-        }
-      }
-
-      @include modifier(main) {
-        > span {
-          color: $color-dark;
-        }
-      }
-    }
-
-    @include modifier(CoinIcon2\.svg) {
-      > span {
-        color: $color-dark;
-      }
-    }
-
-    @include modifier(CoinIcon3\.svg) {
-      @include modifier(ropsten) {
-        > span {
-          color: $color-fuse;
-        }
-      }
-
-      @include modifier(fuse) {
-        > span {
-          color: $color-fuse;
-        }
-      }
-    }
   }
 
   @include element(inner) {
@@ -449,6 +415,7 @@
   @include element(name) {
     @extend %logo-symbol;
     color: $color-dark;
+    
   }
 }
 

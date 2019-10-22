@@ -30,16 +30,14 @@ const Balance = ({
 }) => {
   const { bridge, network } = bridgeSide
   useEffect(() => {
-    if (window && window.analytics && isAdmin) {
+    if (isAdmin) {
       const { analytics } = window
       if (bridge === 'home' && Number(new BigNumber(balance).div(1e18).toFixed()) > 0) {
-        analytics.identify(`${accountAddress}`, {
-          role: 'admin',
+        analytics.identify(accountAddress, {
           bridgeWasUsed: true
         })
       } else {
-        analytics.identify(`${accountAddress}`, {
-          role: 'admin',
+        analytics.identify(accountAddress, {
           bridgeWasUsed: false
         })
       }

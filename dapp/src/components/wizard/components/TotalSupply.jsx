@@ -15,12 +15,11 @@ const TotalSupply = ({ formik }) => {
           render={({ field, form: { handleChange } }) => (
             <div className='attributes__supply'>
               <TextInput
+                {...field}
                 className='attributes__supply__input'
                 type='number'
-                name='totalSupply'
                 placeholder='...'
                 autoComplete='off'
-                {...field}
                 onChange={handleChange}
               />
             </div>

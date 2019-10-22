@@ -10,7 +10,8 @@ const ChooseProviderModal = ({
   hideModal,
   getNetworkType,
   isMetaMask,
-  isPortis
+  isPortis,
+  setClicked
 }) => {
   const to = useMemo(() => {
     if (isMetaMask) {
@@ -25,7 +26,9 @@ const ChooseProviderModal = ({
   }
 
   const handleConnectWallet = () => {
-    getNetworkType()
+    setClicked(true)
+    getNetworkType(true)
+    hideModal()
   }
 
   return (

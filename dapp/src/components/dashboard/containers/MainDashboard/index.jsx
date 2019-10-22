@@ -12,7 +12,6 @@ import { loadModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
-import Header from 'components/dashboard/components/Header'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
@@ -25,8 +24,7 @@ import { getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
-import { changeNetwork } from 'actions/network'
-import isEqual from 'lodash/isEqual'
+import { changeNetwork, getNetworkType } from 'actions/network'
 import get from 'lodash/get'
 
 class DashboardLayout extends Component {
@@ -35,9 +33,14 @@ class DashboardLayout extends Component {
   }
 
   componentDidMount () {
-    const { fetchCommunity, communityAddress, fetchEntities } = this.props
+    const { fetchCommunity, communityAddress, fetchEntities, getNetworkType } = this.props
+    getNetworkType(true)
     fetchCommunity(communityAddress)
     fetchEntities(communityAddress)
+  }
+
+  componentWillUnmount () {
+    window.analytics.reset()
   }
 
   componentDidUpdate (prevProps) {
@@ -52,28 +55,30 @@ class DashboardLayout extends Component {
       this.onSetSidebarOpen(false)
     }
 
-    if (this.props.community && !isEqual(this.props.accountAddress, prevProps.accountAddress)) {
+    if (prevProps.isAdmin !== this.props.isAdmin) {
       const { accountAddress, isAdmin, networkType, location } = this.props
-      if (window && window.analytics && isAdmin) {
-        const { analytics } = window
-
-        analytics.identify(`${accountAddress}`, {
-          role: 'admin'
-        })
-
+      const { analytics } = window
+      if (isAdmin) {
         if (location.pathname.includes('/justCreated')) {
-          analytics.identify(`${accountAddress}`, {
-            role: 'admin',
-            bridgeWasUsed: false,
-            switchToFuse: false
-          })
+          analytics.reset()
         }
+
+        analytics.identify(`${accountAddress}`, { role: 'admin' })
 
         if (networkType === 'fuse') {
           analytics.identify(`${accountAddress}`, {
             switchToFuse: true
           })
+        } else {
+          analytics.identify(`${accountAddress}`, {
+            switchToFuse: false
+          })
         }
+      } else {
+        analytics.reset()
+        analytics.identify(`${accountAddress}`, {
+          role: 'user'
+        })
       }
     }
   }
@@ -108,17 +113,18 @@ class DashboardLayout extends Component {
       match,
       foreignToken,
       community,
-      metadata,
       networkType,
       accountAddress,
       isAdmin,
       tokenOfCommunityOnCurrentSide,
       location,
-      communityAddress
+      communityAddress,
+      isPortis,
+      changeNetwork
     } = this.props
 
-    const { address: tokenAddress, name, tokenType } = foreignToken
-    const { isClosed, plugins, homeTokenAddress } = community
+    const { tokenType, symbol } = foreignToken
+    const { plugins, homeTokenAddress } = community
 
     const qrValue = JSON.stringify({
       tokenAddress: homeTokenAddress,
@@ -173,7 +179,9 @@ class DashboardLayout extends Component {
                   <Route path={`${match.path}/bonus`}
                     render={() => (
                       <JoinBonusPage
-                        symbol={foreignToken && foreignToken.symbol}
+                        isPortis={isPortis}
+                        changeNetwork={changeNetwork}
+                        symbol={symbol}
                         community={community}
                         networkType={networkType}
                         tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
@@ -186,7 +194,8 @@ class DashboardLayout extends Component {
                     path={`${match.path}/mintBurn`}
                     render={() => (
                       <MintBurnPage
-                        token={foreignToken}
+                        symbol={symbol}
+                        tokenAddress={foreignToken.address}
                         networkType={networkType}
                         accountAddress={accountAddress}
                         onlyOnNetwork={this.onlyOnNetwork}
@@ -200,6 +209,8 @@ class DashboardLayout extends Component {
                     path={`${match.path}/plugins`}
                     render={() => (
                       <PluginsPage
+                        isPortis={isPortis}
+                        changeNetwork={changeNetwork}
                         community={community}
                         networkType={networkType}
                       />
@@ -226,23 +237,13 @@ class DashboardLayout extends Component {
                   path={`${match.path}/transfer/:sendTo?`}
                   render={() => (
                     <TransferPage
-                      token={foreignToken}
+                      symbol={symbol}
                       networkType={networkType}
                       tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
                     />
                   )}
                 />
-                <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props}>
-                  <Header
-                    metadata={metadata[foreignToken.tokenURI] || {}}
-                    tokenAddress={tokenAddress}
-                    isClosed={isClosed}
-                    name={name}
-                    networkType={networkType}
-                    token={foreignToken}
-                  />
-                </Dashboard>}
-                />
+                <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
               </Switch>
             </div>
           </div>
@@ -273,7 +274,8 @@ const mapDispatchToProps = {
   fetchCommunity,
   loadModal,
   fetchEntities,
-  changeNetwork
+  changeNetwork,
+  getNetworkType
 }
 
 export default connect(

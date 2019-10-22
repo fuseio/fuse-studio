@@ -1,17 +1,29 @@
-import DaiLogo from 'images/DAI_logo.svg'
+import DaiIcon from 'images/dai.png'
+import UsdcIcon from 'images/usdc.png'
+import TetherIcon from 'images/tether.png'
 import isEmpty from 'lodash/isEmpty'
 
 export const existingTokens = (networkType) => ([
   {
     label: 'DAI',
+    symbol: 'DAI',
     value: CONFIG.web3.addresses[networkType].DaiToken,
     isDisabled: false,
-    icon: DaiLogo
+    icon: DaiIcon
   },
   {
-    label: 'More token soon!',
-    value: undefined,
-    isDisabled: true
+    label: 'USD Coin',
+    symbol: 'USDC',
+    value: CONFIG.web3.addresses[networkType].UsdToken,
+    isDisabled: false,
+    icon: UsdcIcon
+  },
+  {
+    label: 'Tether USD',
+    symbol: 'USDT',
+    value: CONFIG.web3.addresses[networkType].TetherToken,
+    isDisabled: false,
+    icon: TetherIcon
   }
 ])
 
@@ -27,8 +39,4 @@ export const isDaiToken = (networkType, token) => {
   }
 
   return false
-}
-
-export const checkImportedToken = (token, networkType) => {
-  return existingTokens(networkType).find(({ value, label }) => value === token.address && token.symbol === label)
 }

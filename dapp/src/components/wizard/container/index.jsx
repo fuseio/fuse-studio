@@ -11,11 +11,11 @@ import { PENDING, FAILURE, REQUEST } from 'actions/constants'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
 const validations = {
-  0: ['communityName', 'communityType'],
-  1: ['totalSupply', 'communitySymbol', 'communityLogo']
+  0: ['communityName', 'communityType', 'existingToken', 'email'],
+  1: ['totalSupply', 'communitySymbol', 'images.chosen']
 }
 
-const getStep = (communityType) => (['Name & currency', communityType && communityType.value === 'existingToken' ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary'])
+const getStep = (communityType) => (['Name & currency', communityType ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary'])
 
 const StepsIndicator = ({ steps, activeStep }) => {
   return steps.map((item, index) => {
@@ -94,7 +94,7 @@ class Wizard extends React.Component {
     }
   }
 
-  renderForm = ({ values, handleSubmit, isSubmitting, handleReset, errors, isValid }) => {
+  renderForm = ({ values, handleSubmit, errors, isValid }) => {
     const { children, transactionStatus, createTokenSignature } = this.props
     const { page } = this.state
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
@@ -165,11 +165,12 @@ class Wizard extends React.Component {
           </div>
           <Formik
             initialValues={values}
-            enableReinitialize={false}
             onSubmit={this.onSubmit}
             validationSchema={validationSchema}
             render={this.renderForm}
             initialStatus={false}
+            validateOnChange
+            isInitialValid={false}
           />
         </div>
       </Fragment>

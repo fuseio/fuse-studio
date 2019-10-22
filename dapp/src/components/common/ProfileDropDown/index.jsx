@@ -7,6 +7,7 @@ import { fetchCommunities, fetchBalances, balanceOfToken } from 'actions/account
 import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 import { withRouter } from 'react-router-dom'
 import { getBalances, getAccount } from 'selectors/accounts'
 import ArrowTiny from 'images/arrow_tiny.svg'
@@ -72,14 +73,15 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
 
 const ProfileCard = ({
   entity,
-  networkType,
   metadata,
   balance,
   balanceOfToken,
   showDashboard,
   accountAddress
 }) => {
-  const { token: { name, symbol }, community: { homeTokenAddress, foreignTokenAddress, communityAddress } } = entity
+  const { token, community } = entity
+  const { name, symbol } = token
+  const { homeTokenAddress, foreignTokenAddress, communityAddress } = community
 
   useEffect(() => {
     balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
@@ -91,12 +93,11 @@ const ProfileCard = ({
     <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
       <div className='profile__card__logo'>
         <CommunityLogo
+          symbol={symbol}
           isDaiToken={entity.token && entity.token.symbol === 'DAI'}
-          networkType={networkType}
-          imageUrl={!isEmpty(metadata[entity.token.tokenURI] && metadata[entity.token.tokenURI].image) ? `${CONFIG.ipfsProxy.urlBase}/image/${metadata[entity.token.tokenURI].image}` : null}
-          token={entity.token}
+          imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
           isSmall
-          metadata={(entity.token && entity.token.tokenURI && metadata[entity.token.tokenURI]) || {}}
+          metadata={metadata}
         />
       </div>
       <div className='cell auto grid-y profile__card__content'>
@@ -140,7 +141,8 @@ const InnerCommunities = ({
       <span>{title}</span>
       <div className='grid-y grid-margin-y grid-margin-x'>
         {communities && communities.map((entity, index) => {
-          const { community: { homeTokenAddress, foreignTokenAddress } } = entity
+          const { community, token } = entity
+          const { homeTokenAddress, foreignTokenAddress } = community
           const balance = balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress]
             ? formatWei(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress], 2)
             : 0
@@ -150,7 +152,7 @@ const InnerCommunities = ({
               balance={balance || 0}
               balanceOfToken={balanceOfToken}
               entity={entity}
-              metadata={metadata}
+              metadata={{ ...metadata[token.tokenURI], ...metadata[community && community.communityURI] }}
               showDashboard={showDashboard}
               accountAddress={accountAddress}
               networkType={networkType}

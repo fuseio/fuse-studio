@@ -13,7 +13,7 @@ export const FETCH_GAS_PRICES = createRequestTypes('FETCH_GAS_PRICES')
 
 export const SEND_TRANSACTION_HASH = createRequestTypes('SEND_TRANSACTION_HASH')
 
-export const getNetworkType = () => requestAction(GET_NETWORK_TYPE)
+export const getNetworkType = (enableProvider) => requestAction(GET_NETWORK_TYPE, { enableProvider })
 export const getBlockNumber = (networkType, bridgeType) => requestAction(GET_BLOCK_NUMBER, { networkType, bridgeType })
 
 export const changeNetwork = (networkType) => requestAction(CHANGE_NETWORK, { networkType })

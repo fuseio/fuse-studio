@@ -9,12 +9,16 @@
       "ropsten": {
         "FuseToken": "0xEc304De130dA3afbD2F60C7aa6C5485e30239372",
         "TokenFactory": "0x6004EAdF0aD3aCd568F354CA7E2b410bA0080E98",
-        "DaiToken": "0x1CAf0Ed93dD34152000ACec9441D4D9ed0f55D7B"
+        "DaiToken": "0x1CAf0Ed93dD34152000ACec9441D4D9ed0f55D7B",
+        "UsdToken": "0x9756abE980756c3913Dfd5Efe327E0e3aa843d30",
+        "TetherToken": "0x7b732Ee450Ab4B66A63B9ad5E408C62c942bBc9b"
       },
       "main": {
         "FuseToken": "0x4162178B78D6985480A308B2190EE5517460406D",
         "TokenFactory": "0xB2100946628D3e45FF94971b35508AfCBBc87432",
-        "DaiToken": "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"
+        "DaiToken": "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359",
+        "UsdToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "TetherToken": "0xdAC17F958D2ee523a2206206994597C13D831ec7"
       },
       "fuse": {
         "ropsten": {

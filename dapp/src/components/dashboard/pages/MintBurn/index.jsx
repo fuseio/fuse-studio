@@ -61,11 +61,11 @@ const useTabStyles = makeStyles(theme => ({
 
 const MintBurn = ({
   error,
+  symbol,
   networkType,
   balances,
-  symbol,
   tokenNetworkType,
-  token,
+  tokenAddress,
   isMinting,
   isBurning,
   mintToken,
@@ -78,7 +78,6 @@ const MintBurn = ({
   onlyOnNetwork,
   tokenOfCommunityOnCurrentSide
 }) => {
-  const { address: tokenAddress } = token
   const tabsClasses = useTabsStyles()
   const tabClasses = useTabStyles()
   const [value, setValue] = useState(0)
@@ -130,7 +129,7 @@ const MintBurn = ({
             balance={balance ? formatWei(balance, 0) : 0}
             handleMintOrBurnClick={mintHandler}
             tokenNetworkType={tokenNetworkType}
-            token={token}
+            symbol={symbol}
             actionType='mint'
             accountAddress={accountAddress}
             mintMessage={mintMessage}
@@ -152,7 +151,7 @@ const MintBurn = ({
             balance={balance ? formatWei(balance, 0) : 0}
             handleMintOrBurnClick={burnHandler}
             tokenNetworkType={tokenNetworkType}
-            token={token}
+            symbol={symbol}
             actionType='burn'
             accountAddress={accountAddress}
             burnMessage={burnMessage}

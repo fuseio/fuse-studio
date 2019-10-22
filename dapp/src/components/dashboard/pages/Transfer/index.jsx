@@ -15,6 +15,7 @@ const Transfer = ({
   sendTo,
   error,
   token,
+  symbol,
   balances,
   networkType,
   isTransfer,
@@ -39,8 +40,6 @@ const Transfer = ({
     }
     return () => {}
   }, [transactionStatus])
-
-  const { symbol } = token
 
   const balance = balances[tokenOfCommunityOnCurrentSide]
 

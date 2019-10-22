@@ -9,7 +9,8 @@ const CommunitySchema = new Schema({
   foreignBridgeAddress: { type: String },
   isClosed: { type: Boolean, default: false },
   plugins: { type: Object },
-  name: { type: String, required: [true, "can't be blank"] }
+  name: { type: String, required: [true, "can't be blank"] },
+  communityURI: { type: String }
 }, { timestamp: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })

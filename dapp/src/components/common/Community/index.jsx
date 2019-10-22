@@ -5,6 +5,7 @@ import identity from 'lodash/identity'
 import CommunityLogo from 'components/common/CommunityLogo'
 import { isDaiToken } from 'constants/existingTokens'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 
 const Community = memo(({
   token = {},
@@ -14,6 +15,7 @@ const Community = memo(({
 }) => {
   const {
     name,
+    symbol,
     // totalSupply,
     communityAddress
   } = token
@@ -24,15 +26,13 @@ const Community = memo(({
     }
   }
 
-  const { image } = metadata
   return (
     <div className='community' onClick={handleClick}>
       <div className='community__logo'>
         <CommunityLogo
           isDaiToken={isDaiToken(networkType, token)}
-          token={token}
-          networkType={networkType}
-          imageUrl={!isEmpty(image) ? `${CONFIG.ipfsProxy.urlBase}/image/${image}` : null}
+          symbol={symbol}
+          imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
           metadata={metadata}
         />
       </div>
