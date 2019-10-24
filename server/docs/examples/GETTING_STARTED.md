@@ -8,6 +8,7 @@ npm instal web3@2.0.0-alpha.1
 npm install ethereumjs-util
 npm install request
 npm install request-promise-native
+npm install ethereumjs-wallet
 ``` 
 - Run node with a required parameters: `PK` and the associated `ACCOUNT_ADDRESS`:
   ```
@@ -197,8 +198,15 @@ await send(tokenContract.methods.mint(accountAddress, tokenIds, blockNumber, val
 ```
 The problem is that the `tokenIds` should be given as an array not used tokenIds. Why not to keep the tokenId counter in the contract and let the contract allocate the ids?
 
-
 # Onboarding
+
+## Generating an Ethereum account
+```js
+const { generate } = require('ethereumjs-wallet')
+const wallet = generate()
+const entityAddress = wallet.getAddressString()
+const entityAddressPrivateKey = wallet.getPrivateKeyString()
+```
 
 ## Adding businesses or users to the community by the community admins
 
