@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import Plugin from 'components/dashboard/components/Plugin'
-import JoinBonus from 'images/join_bonus.png'
-import JoinBonusBig from 'images/join_bonus_big.png'
-import BusinessList from 'images/business_list.png'
-import BusinessListBig from 'images/business_list_big.png'
-import Bounty from 'images/bounty.png'
-import BountyBig from 'images/bounty_big.png'
 import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
 import { addCommunityPlugins } from 'actions/community'
@@ -14,10 +8,21 @@ import isEmpty from 'lodash/isEmpty'
 import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
 import upperFirst from 'lodash/upperFirst'
-import Puzzle from 'images/puzzle.svg'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
+import Puzzle from 'images/puzzle.svg'
+import JoinBonus from 'images/join_bonus.png'
+import JoinBonusBig from 'images/join_bonus_big.png'
+import BusinessList from 'images/business_list.png'
+import BusinessListBig from 'images/business_list_big.png'
+import Bounty from 'images/bounty.png'
+import BountyBig from 'images/bounty_big.png'
+import Moonpay from 'images/moonpay.png'
+import Ramp from 'images/ramp.png'
+import Coindirect from 'images/coindirect.png'
+import Carbon from 'images/carbon.png'
+import Wyre from 'images/wyre.png'
 
-const PluginsItems = ([
+const pluginItems = ([
   {
     title: 'Business list',
     coverImage: BusinessList,
@@ -37,6 +42,39 @@ const PluginsItems = ([
     disabled: true,
     modalCoverPhoto: BountyBig,
     key: 'bounty'
+  }
+])
+
+const onRampPluginItems = ([
+  {
+    title: 'Moonpay',
+    subTitle: ' | Top up account!',
+    coverImage: Moonpay,
+    key: 'moonpay'
+  },
+  {
+    title: 'Ramp',
+    subTitle: ' | Top up account!',
+    coverImage: Ramp,
+    key: 'ramp'
+  },
+  {
+    title: 'Coindirect',
+    subTitle: ' | Top up account!',
+    coverImage: Coindirect,
+    key: 'coindirect'
+  },
+  {
+    title: 'Carbon',
+    subTitle: ' | Top up account!',
+    coverImage: Carbon,
+    key: 'carbon'
+  },
+  {
+    title: 'Wyre',
+    subTitle: ' | Top up account!',
+    coverImage: Wyre,
+    key: 'wyre'
   }
 ])
 
@@ -93,7 +131,35 @@ const Plugins = ({
           <h5 className='plugins__items__title'>Choose plug-in you want to add</h5>
           <div className='plugins__items'>
             {
-              PluginsItems.map(({
+              pluginItems.map(({
+                title,
+                coverImage,
+                disabled,
+                subTitle,
+                modalCoverPhoto,
+                key
+              }) => {
+                return (
+                  <Plugin
+                    showInfoModal={() => showInfoModal(key, { title, coverImage: modalCoverPhoto, disabled })}
+                    key={title}
+                    subTitle={subTitle}
+                    disabled={disabled}
+                    title={title}
+                    hasPlugin={plugins && plugins[key] ? plugins[key].isActive : false}
+                    image={coverImage}
+                    managePlugin={() => addPlugin(togglePlugin(key, plugins))}
+                  />
+                )
+              })
+            }
+          </div>
+        </div>
+        <div className='plugins__items__wrapper'>
+          <h5 className='plugins__items__title'>Fiat On-ramp</h5>
+          <div className='plugins__items'>
+            {
+              onRampPluginItems.map(({
                 title,
                 coverImage,
                 disabled,

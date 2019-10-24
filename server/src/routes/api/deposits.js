@@ -10,7 +10,7 @@ const moonpayAuthCheck = (req, res, next) => {
   const timestamp = timestampPart.split('t=')[1]
   const sig = sigPart.split('s=')[1]
   const signedPayload = timestamp + '.' + JSON.stringify(req.body)
-  const computedSig = crypto.createHmac('sha256', config.get('moonpay.webhook.secret')).update(signedPayload).digest('hex')
+  const computedSig = crypto.createHmac('sha256', config.get('plugins.moonpay.webhook.secret')).update(signedPayload).digest('hex')
   if (computedSig === sig) {
     return next()
   } else {
@@ -21,7 +21,7 @@ const moonpayAuthCheck = (req, res, next) => {
 router.post('/moonpay', moonpayAuthCheck, async (req, res) => {
   const { status } = req.body.data
   const { type } = req.body
-  const currencies = config.get('moonpay.currencies')
+  const currencies = config.get('plugins.moonpay.currencies')
   if (type === 'transaction_updated' && status === 'completed') {
     const { currencyId, cryptoTransactionId, baseCurrencyAmount, walletAddress, id } = req.body.data
     const { externalCustomerId } = req.body

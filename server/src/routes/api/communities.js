@@ -1,17 +1,37 @@
+const config = require('config')
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
 
+const makePlugin = (plugin) => {
+  const { name } = plugin
+  const defaultProps = { name, isActive: false }
+  if (config.has(`plugins.${name}.args`)) {
+    return { ...defaultProps, ...config.get(`plugins.${name}.args`), ...plugin }
+  } else {
+    return { ...defaultProps, ...plugin }
+  }
+}
+
 /**
- * @apiDefine Add Plugins
- * @apiSuccess {Boolean} isClosed
- * @apiSuccess {Object} plugins
- * @apiSuccess {String} communityAddress
- * @apiSuccess {String} homeTokenAddress
- * @apiSuccess {String} foreignTokenAddress
- * @apiSuccess {String} foreignBridgeAddress
- * @apiSuccess {String} homeBridgeAddress
+ * @api {post} /communities/:communityAddress/plugins Add plugins to community
+ * @apiName AddPlugins
+ * @apiGroup Community
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {Object} plugins The plugins (with arguments)
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "name": "joinBonus",
+ *      "hasTransferToFunder": false
+ *    }
  */
+
+router.post('/:communityAddress/plugins', async (req, res, next) => {
+  const { communityAddress } = req.params
+  const plugin = makePlugin(req.body)
+  const community = await Community.findOneAndUpdate({ communityAddress }, { $set: { [`plugins.${plugin.name}`]: plugin } }, { new: true })
+  return res.json({ data: community })
+})
 
 /**
  * @api {post} /communities/:communityAddress Add plugins to community
