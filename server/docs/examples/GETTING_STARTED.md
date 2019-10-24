@@ -205,7 +205,7 @@ The problem is that the `tokenIds` should be given as an array not used tokenIds
 const { generate } = require('ethereumjs-wallet')
 const wallet = generate()
 const entityAddress = wallet.getAddressString()
-const entityAddressPrivateKey = wallet.getPrivateKeyString()
+const entityPrivateKey = wallet.getPrivateKeyString()
 ```
 
 ## Adding businesses or users to the community by the community admins
