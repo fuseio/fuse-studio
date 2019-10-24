@@ -1,13 +1,20 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
-import { SHOW_MODAL } from 'actions/ui'
+import { loadModal } from 'actions/ui'
+import { changeNetwork } from 'actions/network'
 
-const useSwitchNetwork = (networkType, pluginName) => {
+const useSwitchNetwork = (tmp, pluginName) => {
   const dispatch = useDispatch()
-  React.useEffect(() => {
+  const { networkType, isPortis } = useSelector(state => state.network)
+
+  useEffect(() => {
     if (networkType !== 'fuse') {
-      dispatch({ type: SHOW_MODAL, modalType: SWITCH_NETWORK, modalProps: { pluginName } })
+      if (isPortis) {
+        dispatch(changeNetwork('fuse'))
+      } else {
+        dispatch(loadModal(SWITCH_NETWORK, { pluginName }))
+      }
     }
     return () => {}
   }, [networkType])

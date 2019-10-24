@@ -84,10 +84,12 @@ class DashboardLayout extends Component {
   }
 
   onlyOnFuse = (successFunc) => {
+    debugger
     return this.onlyOnNetwork(successFunc, 'fuse')
   }
 
   onlyOnNetwork = (successFunc, network) => {
+    debugger
     const { networkType, isPortis } = this.props
     if (networkType === network) {
       successFunc()
