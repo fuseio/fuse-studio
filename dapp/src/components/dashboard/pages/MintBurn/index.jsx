@@ -13,6 +13,7 @@ import Message from 'components/common/SignMessage'
 import { getForeignNetwork } from 'selectors/network'
 import { getBalances } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -75,7 +76,6 @@ const MintBurn = ({
   accountAddress,
   transactionStatus,
   clearTransactionStatus,
-  onlyOnNetwork,
   tokenOfCommunityOnCurrentSide
 }) => {
   const tabsClasses = useTabsStyles()
@@ -87,12 +87,14 @@ const MintBurn = ({
 
   const balance = balances[tokenOfCommunityOnCurrentSide]
 
+  useSwitchNetwork(foreignNetwork, { featureName: 'mint or burn' })
+
   const mintHandler = (amount) => {
-    onlyOnNetwork(() => mintToken(tokenAddress, toWei(String(amount))), foreignNetwork)
+    mintToken(tokenAddress, toWei(String(amount)))
   }
 
   const burnHandler = (amount) => {
-    onlyOnNetwork(() => burnToken(tokenAddress, toWei(String(amount))), foreignNetwork)
+    burnToken(tokenAddress, toWei(String(amount)))
   }
 
   const handleChange = (event, newValue) => setValue(newValue)

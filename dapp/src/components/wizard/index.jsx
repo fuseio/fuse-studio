@@ -4,7 +4,6 @@ import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
 import { getNetworkType } from 'actions/network'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
-import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import WizardShape from 'utils/validation/shapes/wizard'
@@ -20,12 +19,12 @@ import Congratulations from 'components/wizard/components/Congratulations'
 
 import contractIcon from 'images/contract.svg'
 import BridgeIcon from 'images/Bridge.svg'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
 const WizardPage = ({
   deployExistingToken,
   createTokenWithMetadata,
   adminAddress,
-  homeNetwork,
   networkType,
   transactionStatus,
   error,
@@ -40,11 +39,7 @@ const WizardPage = ({
     getNetworkType(true)
   }, [])
 
-  useEffect(() => {
-    if (networkType === homeNetwork) {
-      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['ropsten', 'mainnet'] })
-    }
-  }, [homeNetwork, networkType])
+  useSwitchNetwork(['ropsten', 'mainnet'], { featureName: 'Wizard' })
 
   const setIssuanceTransaction = (values) => {
     const {
@@ -203,7 +198,6 @@ const WizardPage = ({
 const mapStateToProps = (state) => ({
   ...state.screens.issuance,
   foreignNetwork: state.network.foreignNetwork,
-  homeNetwork: state.network.homeNetwork,
   adminAddress: getAccountAddress(state)
 })
 
