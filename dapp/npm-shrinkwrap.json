@@ -14275,7 +14275,34 @@
           "integrity": "sha512-oqsQXzu+ejJACVHy864WwIyw+oB21nw/pI65/sD95Zi98+/HQzFfNcIFneF1NC4bVF3VNX4YHTNq2I2o97LAiA==",
           "requires": {
             "underscore": "1.9.1",
-            "web3-core-helpers": "1.2.1"
+            "web3-core-helpers": "1.2.1",
+            "websocket": "github:web3-js/WebSocket-Node#polyfill/globalThis"
+          },
+          "dependencies": {
+            "debug": {
+              "version": "2.6.9",
+              "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz",
+              "integrity": "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==",
+              "requires": {
+                "ms": "2.0.0"
+              }
+            },
+            "nan": {
+              "version": "2.14.0",
+              "resolved": "https://registry.npmjs.org/nan/-/nan-2.14.0.tgz",
+              "integrity": "sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg=="
+            },
+            "websocket": {
+              "version": "github:web3-js/WebSocket-Node#905deb4812572b344f5801f8c9ce8bb02799d82e",
+              "from": "github:web3-js/WebSocket-Node#polyfill/globalThis",
+              "requires": {
+                "debug": "^2.2.0",
+                "es5-ext": "^0.10.50",
+                "nan": "^2.14.0",
+                "typedarray-to-buffer": "^3.1.5",
+                "yaeti": "^0.0.6"
+              }
+            }
           }
         },
         "web3-shh": {
@@ -14317,7 +14344,7 @@
         },
         "websocket": {
           "version": "https://registry.npmjs.org/websocket/-/websocket-1.0.29.tgz",
-          "from": "websocket@1.0.29",
+          "integrity": "sha512-WhU8jKXC8sTh6ocLSqpZRlOKMNYGwUvjA5+XcIgIk/G3JCaDfkZUr0zA19sVSxJ0TEvm0i5IBzr54RZC4vzW7g==",
           "requires": {
             "debug": "^2.2.0",
             "gulp": "^4.0.2",
@@ -14970,13 +14997,14 @@
       }
     },
     "@portis/web3": {
-      "version": "2.0.0-beta.31",
-      "resolved": "https://registry.npmjs.org/@portis/web3/-/web3-2.0.0-beta.31.tgz",
-      "integrity": "sha512-eK7h1bk1gacYqBFy+o8XYkQC3Ur0YO9HvLErEU7GclOCqqcJaVeF4C6koOw4PGsmy5ttU1ezSGGkrA693oCfzA==",
+      "version": "2.0.0-beta.48",
+      "resolved": "https://registry.npmjs.org/@portis/web3/-/web3-2.0.0-beta.48.tgz",
+      "integrity": "sha512-1pZpCYpddPRHI4fvPr/pDl3+g+IzqzfUwOvviP+KM5e+9EFBmCk5YH7WYyo3cG042mFqmIkNna1sqrLDpelZJw==",
       "requires": {
         "@portis/web3-provider-engine": "1.0.10",
         "ethereumjs-util": "5.2.0",
-        "penpal": "3.0.7"
+        "penpal": "3.0.7",
+        "pocket-js-core": "0.0.3"
       }
     },
     "@portis/web3-provider-engine": {
@@ -15009,11 +15037,11 @@
       },
       "dependencies": {
         "async": {
-          "version": "2.6.2",
-          "resolved": "https://registry.npmjs.org/async/-/async-2.6.2.tgz",
-          "integrity": "sha512-H1qVYh1MYhEEFLsP97cVKqCGo7KfCyTt6uEWqsTBr9SO84oK9Uwbyd/yCW+6rKJLHksBNUVWZDAjfS+Ccx0Bbg==",
+          "version": "2.6.3",
+          "resolved": "https://registry.npmjs.org/async/-/async-2.6.3.tgz",
+          "integrity": "sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==",
           "requires": {
-            "lodash": "^4.17.11"
+            "lodash": "^4.17.14"
           }
         },
         "ethereum-common": {
@@ -15032,6 +15060,11 @@
             "ethereumjs-util": "^5.0.0",
             "merkle-patricia-tree": "^2.1.2"
           }
+        },
+        "lodash": {
+          "version": "4.17.15",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz",
+          "integrity": "sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A=="
         },
         "readable-stream": {
           "version": "2.3.6",
@@ -15916,6 +15949,38 @@
       "version": "1.8.0",
       "resolved": "https://registry.npmjs.org/aws4/-/aws4-1.8.0.tgz",
       "integrity": "sha512-ReZxvNHIOv88FlT7rxcXIIC0fPt4KZqZbOlivyWtXLt8ESx84zd3kMC6iK5jVeS2qt+g7ftS7ye4fi06X5rtRQ=="
+    },
+    "axios": {
+      "version": "0.18.1",
+      "resolved": "https://registry.npmjs.org/axios/-/axios-0.18.1.tgz",
+      "integrity": "sha512-0BfJq4NSfQXd+SkFdrvFbG7addhYSBA2mQwISr46pD6E5iqkWg02RAs8vyTT/j0RTnoYmeXauBuSv1qKwR179g==",
+      "requires": {
+        "follow-redirects": "1.5.10",
+        "is-buffer": "^2.0.2"
+      },
+      "dependencies": {
+        "debug": {
+          "version": "3.1.0",
+          "resolved": "https://registry.npmjs.org/debug/-/debug-3.1.0.tgz",
+          "integrity": "sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==",
+          "requires": {
+            "ms": "2.0.0"
+          }
+        },
+        "follow-redirects": {
+          "version": "1.5.10",
+          "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.5.10.tgz",
+          "integrity": "sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==",
+          "requires": {
+            "debug": "=3.1.0"
+          }
+        },
+        "is-buffer": {
+          "version": "2.0.4",
+          "resolved": "https://registry.npmjs.org/is-buffer/-/is-buffer-2.0.4.tgz",
+          "integrity": "sha512-Kq1rokWXOPXWuaMAqZiJW4XxsmD9zGx9q4aePabbn3qCRGedtH7Cm+zV8WETitMfu1wdh+Rvd6w5egwSngUX2A=="
+        }
+      }
     },
     "babel-code-frame": {
       "version": "6.26.0",
@@ -20313,11 +20378,11 @@
       },
       "dependencies": {
         "async": {
-          "version": "2.6.2",
-          "resolved": "https://registry.npmjs.org/async/-/async-2.6.2.tgz",
-          "integrity": "sha512-H1qVYh1MYhEEFLsP97cVKqCGo7KfCyTt6uEWqsTBr9SO84oK9Uwbyd/yCW+6rKJLHksBNUVWZDAjfS+Ccx0Bbg==",
+          "version": "2.6.3",
+          "resolved": "https://registry.npmjs.org/async/-/async-2.6.3.tgz",
+          "integrity": "sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==",
           "requires": {
-            "lodash": "^4.17.11"
+            "lodash": "^4.17.14"
           }
         },
         "ethereum-common": {
@@ -20405,6 +20470,11 @@
               }
             }
           }
+        },
+        "lodash": {
+          "version": "4.17.15",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz",
+          "integrity": "sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A=="
         }
       }
     },
@@ -29585,6 +29655,14 @@
       "resolved": "https://registry.npmjs.org/pluralize/-/pluralize-7.0.0.tgz",
       "integrity": "sha512-ARhBOdzS3e41FbkW/XWrTEtukqqLoK5+Z/4UeDaLuSW+39JPeFgs4gCGqsrJHVZX0fUrx//4OF0K1CUGwlIFow==",
       "dev": true
+    },
+    "pocket-js-core": {
+      "version": "0.0.3",
+      "resolved": "https://registry.npmjs.org/pocket-js-core/-/pocket-js-core-0.0.3.tgz",
+      "integrity": "sha512-OUTEvEVutdjLT6YyldvAlSebpBueUUWg2XKxGNt5u3QqrmLpBOOBmdDnGMNJ+lEwXtko+JqgwFq+HTi4g1QDVg==",
+      "requires": {
+        "axios": "^0.18.0"
+      }
     },
     "popper.js": {
       "version": "1.15.0",

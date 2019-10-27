@@ -38,7 +38,6 @@ const Users = ({
   accountAddress,
   signatureNeeded,
   transactionStatus,
-  onlyOnFuse,
   fetchEntities,
   fetchUsersEntities,
   importExistingEntity,
@@ -52,7 +51,7 @@ const Users = ({
   transactionData,
   entityAdded
 }) => {
-  useSwitchNetwork(networkType, 'users list')
+  useSwitchNetwork('fuse', { featureName: 'users list' })
   const { communityAddress, isClosed } = community
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
@@ -264,24 +263,7 @@ const Users = ({
     }
   ], [isAdmin])
 
-  // const importExisting = () => {
-  //   // const { loadModal, importExistingEntity, community: { communityAddress, isClosed }, onlyOnFuse } = props
-  //   onlyOnFuse(() => loadModal(IMPORT_EXISTING_ENTITY, {
-  //     submitEntity: (data) => importExistingEntity(data.account, communityAddress, isClosed)
-  //   }))
-  // }
-
-  // const renderTransactionStatus = () => {
-  //   if (signatureNeeded || transactionStatus === PENDING || fetchEntities) {
-  //     return (
-  //       <div className='entities__loader'>
-  //         <Loader color='#3a3269' className='loader' />
-  //       </div>
-  //     )
-  //   }
-  // }
-
-  const handleAddUser = () => onlyOnFuse(loadAddUserModal)
+  const handleAddUser = () => loadAddUserModal()
 
   const loadAddUserModal = (isJoin) => {
     const submitEntity = isJoin ? joinCommunity : addEntity
@@ -292,20 +274,15 @@ const Users = ({
     })
   }
 
-  const handleJoinCommunity = () =>
-    onlyOnFuse(() => loadAddUserModal(true))
+  const handleJoinCommunity = () => loadAddUserModal(true)
 
-  const handleRemoveEntity = (account) =>
-    onlyOnFuse(() => removeEntity(account))
+  const handleRemoveEntity = (account) => removeEntity(account)
 
-  const handleAddAdminRole = (account) =>
-    onlyOnFuse(() => addAdminRole(account))
+  const handleAddAdminRole = (account) => addAdminRole(account)
 
-  const handleRemoveAdminRole = (account) =>
-    onlyOnFuse(() => removeAdminRole(account))
+  const handleRemoveAdminRole = (account) => removeAdminRole(account)
 
-  const handleConfirmUser = (account) =>
-    onlyOnFuse(() => confirmUser(account))
+  const handleConfirmUser = (account) => confirmUser(account)
 
   const renderTable = () => {
     return (

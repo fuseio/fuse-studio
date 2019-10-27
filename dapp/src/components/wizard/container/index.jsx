@@ -8,7 +8,6 @@ import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 import TransactionButton from 'components/common/TransactionButton'
 import { PENDING, FAILURE, REQUEST } from 'actions/constants'
-import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
 const validations = {
   0: ['communityName', 'communityType', 'existingToken', 'email'],
@@ -57,16 +56,6 @@ class Wizard extends React.Component {
     }))
   }
 
-  onlyOnForeign = (successFunc) => {
-    const { networkType } = this.props
-    if (networkType === 'ropsten' || networkType === 'main') {
-      successFunc()
-    } else {
-      const { loadModal } = this.props
-      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: ['ropsten', 'mainnet'] })
-    }
-  }
-
   previous = () =>
     this.setState(state => ({
       page: Math.max(state.page - 1, 0)
@@ -113,7 +102,7 @@ class Wizard extends React.Component {
         <div className='issuance__wizard__buttons'>
           {!isLastPage && !isSubmitStep && page < 4 && (
             <div className='grid-x align-center next'>
-              <button disabled={this.stepValidator(validations[page], errors)} onClick={() => this.onlyOnForeign(() => this.next(values))} type='button' className='button button--normal'>Next</button>
+              <button disabled={this.stepValidator(validations[page], errors)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
             </div>
           )}
           {isSubmitStep && (

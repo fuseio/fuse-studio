@@ -43,20 +43,9 @@ const PluginsItems = ([
 const Plugins = ({
   loadModal,
   addCommunityPlugins,
-  community,
-  networkType,
-  changeNetwork,
-  isPortis,
-  homeNetwork
+  community
 }) => {
-  useEffect(() => {
-    if (isPortis && networkType !== homeNetwork) {
-      changeNetwork(homeNetwork)
-    }
-    return () => { }
-  }, [isPortis, networkType])
-
-  useSwitchNetwork(networkType)
+  useSwitchNetwork('fuse', { featureName: 'plug-ins' })
   const { plugins } = community
 
   const showInfoModal = (key, props) => {

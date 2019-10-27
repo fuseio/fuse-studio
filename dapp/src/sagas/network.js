@@ -17,7 +17,6 @@ import { apiCall, tryTakeEvery } from './utils'
 
 function * getNetworkTypeInternal (web3) {
   const networkId = yield web3.eth.net.getId()
-  debugger
   const networkType = networkIdToName[networkId]
   return { networkId, networkType }
 }

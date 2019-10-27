@@ -83,26 +83,6 @@ class DashboardLayout extends Component {
     }
   }
 
-  onlyOnFuse = (successFunc) => {
-    debugger
-    return this.onlyOnNetwork(successFunc, 'fuse')
-  }
-
-  onlyOnNetwork = (successFunc, network) => {
-    debugger
-    const { networkType, isPortis } = this.props
-    if (networkType === network) {
-      successFunc()
-    } else if (isPortis) {
-      const { changeNetwork } = this.props
-      changeNetwork(network)
-      successFunc()
-    } else {
-      const { loadModal } = this.props
-      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [network] })
-    }
-  }
-
   onSetSidebarOpen = open => this.setState({ open })
 
   render () {
@@ -200,7 +180,6 @@ class DashboardLayout extends Component {
                         tokenAddress={foreignToken.address}
                         networkType={networkType}
                         accountAddress={accountAddress}
-                        onlyOnNetwork={this.onlyOnNetwork}
                         tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
                       />
                     )}
@@ -225,7 +204,6 @@ class DashboardLayout extends Component {
                     path={`${match.path}/merchants`}
                     render={() => (
                       <Businesses
-                        onlyOnFuse={this.onlyOnFuse}
                         community={community}
                         isAdmin={isAdmin}
                         networkType={networkType}
@@ -234,7 +212,7 @@ class DashboardLayout extends Component {
                   />
                 )}
                 <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} />} />
-                <Route path={`${match.path}/users`} render={() => <Users onlyOnFuse={this.onlyOnFuse} networkType={networkType} community={community} />} />
+                <Route path={`${match.path}/users`} render={() => <Users networkType={networkType} community={community} />} />
                 <Route
                   path={`${match.path}/transfer/:sendTo?`}
                   render={() => (
@@ -245,7 +223,7 @@ class DashboardLayout extends Component {
                     />
                   )}
                 />
-                <Route exact path={`${match.path}/:success?`} render={() => <Dashboard onlyOnFuse={this.onlyOnFuse} {...this.props} />} />
+                <Route exact path={`${match.path}/:success?`} render={() => <Dashboard {...this.props} />} />
               </Switch>
             </div>
           </div>

@@ -24,14 +24,12 @@ import capitalize from 'lodash/capitalize'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
 const Businesses = ({
-  networkType,
   businesses,
   community,
   isAdmin,
   fetchEntities,
   accountAddress,
   entityAdded,
-  onlyOnFuse,
   fetchBusinessesEntities,
   loadModal,
   addEntity,
@@ -39,7 +37,7 @@ const Businesses = ({
   metadata,
   removeEntity
 }) => {
-  useSwitchNetwork(networkType, 'business list')
+  useSwitchNetwork('fuse', { featureName: 'business list' })
   const { communityAddress, isClosed } = community
   const [data, setData] = useState(null)
   const [search, setSearch] = useState('')
@@ -208,10 +206,9 @@ const Businesses = ({
     }
   ], [isAdmin])
 
-  const handleAddBusiness = () => onlyOnFuse(loadAddBusinessModal)
+  const handleAddBusiness = () => loadAddBusinessModal(false)
 
-  const handleJoinCommunity = () =>
-    onlyOnFuse(() => loadAddBusinessModal(true))
+  const handleJoinCommunity = () => loadAddBusinessModal(true)
 
   const loadAddBusinessModal = (isJoin) => {
     const submitEntity = isJoin ? joinCommunity : addEntity
@@ -222,8 +219,7 @@ const Businesses = ({
     })
   }
 
-  const handleRemoveEntity = (account) =>
-    onlyOnFuse(() => removeEntity(account))
+  const handleRemoveEntity = (account) => removeEntity(account)
 
   // TODO - multi-selection
   // const toggleRow = (rowData) => {

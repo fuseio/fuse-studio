@@ -41,7 +41,7 @@ const JoinBonus = ({
     return () => { }
   }, [isPortis, networkType])
 
-  useSwitchNetwork(networkType, 'join bonus')
+  useSwitchNetwork('fuse', { featureName: 'join bonus' })
 
   const funderAccount = useSelector(getFunderAccount)
   const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[tokenOfCommunityOnCurrentSide]

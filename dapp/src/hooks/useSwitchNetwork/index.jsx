@@ -4,16 +4,16 @@ import { SWITCH_NETWORK } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'
 import { changeNetwork } from 'actions/network'
 
-const useSwitchNetwork = (tmp, pluginName) => {
+const useSwitchNetwork = (desiredNetworkType, modalProps) => {
   const dispatch = useDispatch()
   const { networkType, isPortis } = useSelector(state => state.network)
-
+  const desiredNetworkTypeArray = Array.isArray(desiredNetworkType) ? desiredNetworkType : [desiredNetworkType]
   useEffect(() => {
-    if (networkType !== 'fuse') {
+    if (!desiredNetworkTypeArray.includes(networkType)) {
       if (isPortis) {
-        dispatch(changeNetwork('fuse'))
+        dispatch(changeNetwork(desiredNetworkType))
       } else {
-        dispatch(loadModal(SWITCH_NETWORK, { pluginName }))
+        dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType, ...modalProps }))
       }
     }
     return () => {}
