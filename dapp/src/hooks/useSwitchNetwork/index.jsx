@@ -11,7 +11,7 @@ const useSwitchNetwork = (desiredNetworkType, modalProps) => {
   useEffect(() => {
     if (!desiredNetworkTypeArray.includes(networkType)) {
       if (isPortis) {
-        dispatch(changeNetwork(desiredNetworkType))
+        dispatch(changeNetwork(desiredNetworkTypeArray[0]))
       } else {
         dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType, ...modalProps }))
       }
