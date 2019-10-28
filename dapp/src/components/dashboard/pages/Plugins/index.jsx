@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import Plugin from 'components/dashboard/components/Plugin'
 import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
-import { addCommunityPlugins } from 'actions/community'
+import { addCommunityPlugin } from 'actions/community'
 import isEmpty from 'lodash/isEmpty'
 import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
@@ -22,7 +22,7 @@ import Coindirect from 'images/coindirect.png'
 import Carbon from 'images/carbon.png'
 import Wyre from 'images/wyre.png'
 
-const pluginItems = ([
+const generalPlugins = ([
   {
     title: 'Business list',
     coverImage: BusinessList,
@@ -80,12 +80,11 @@ const onRampPluginItems = ([
 
 const Plugins = ({
   loadModal,
-  addCommunityPlugins,
+  addCommunityPlugin,
   community
 }) => {
   useSwitchNetwork('fuse', { featureName: 'plug-ins' })
   const { plugins } = community
-
   const showInfoModal = (key, props) => {
     loadModal(PLUGIN_INFO_MODAL, {
       ...props,
@@ -104,15 +103,16 @@ const Plugins = ({
   const addPlugin = (plugin) => {
     const { communityAddress } = community
     handleTracker(plugin)
-    addCommunityPlugins(communityAddress, plugin)
+    addCommunityPlugin(communityAddress, plugin)
   }
 
-  const togglePlugin = (key, plugins) => {
-    if (key === 'joinBonus' && !isEmpty(plugins && plugins[key])) {
-      return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true, joinInfo: null } })
-    }
+  const togglePlugin = (name) => {
+    return { name }
+    // if (key === 'joinBonus' && !isEmpty(plugins && plugins[key])) {
+    //   return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true, joinInfo: null } })
+    // }
 
-    return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true } })
+    // return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true } })
   }
 
   return (
@@ -131,7 +131,7 @@ const Plugins = ({
           <h5 className='plugins__items__title'>Choose plug-in you want to add</h5>
           <div className='plugins__items'>
             {
-              pluginItems.map(({
+              generalPlugins.map(({
                 title,
                 coverImage,
                 disabled,
@@ -146,9 +146,9 @@ const Plugins = ({
                     subTitle={subTitle}
                     disabled={disabled}
                     title={title}
-                    hasPlugin={plugins && plugins[key] ? plugins[key].isActive : false}
+                    hasPlugin={plugins && !!plugins[key]}
                     image={coverImage}
-                    managePlugin={() => addPlugin(togglePlugin(key, plugins))}
+                    managePlugin={() => addPlugin(togglePlugin(key))}
                   />
                 )
               })
@@ -174,7 +174,7 @@ const Plugins = ({
                     subTitle={subTitle}
                     disabled={disabled}
                     title={title}
-                    hasPlugin={plugins && plugins[key] ? plugins[key].isActive : false}
+                    hasPlugin={plugins && !!plugins[key]}
                     image={coverImage}
                     managePlugin={() => addPlugin(togglePlugin(key, plugins))}
                   />
@@ -194,7 +194,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   loadModal,
-  addCommunityPlugins
+  addCommunityPlugin
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Plugins)

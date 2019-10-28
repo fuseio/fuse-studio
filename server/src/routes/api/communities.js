@@ -3,7 +3,7 @@ const router = require('express').Router()
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
 
-const makePlugin = (plugin) => {
+const makePlugin = ({ plugin }) => {
   const { name } = plugin
   const defaultProps = { name, isActive: false }
   if (config.has(`plugins.${name}.args`)) {
@@ -30,6 +30,13 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
   const { communityAddress } = req.params
   const plugin = makePlugin(req.body)
   const community = await Community.findOneAndUpdate({ communityAddress }, { $set: { [`plugins.${plugin.name}`]: plugin } }, { new: true })
+  return res.json({ data: community })
+})
+
+router.put('/:communityAddress/plugins', async (req, res, next) => {
+  const { communityAddress } = req.params
+  const { isActive, name } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, { $set: { [`plugins.${name}.isActive`]: isActive } }, { new: true })
   return res.json({ data: community })
 })
 

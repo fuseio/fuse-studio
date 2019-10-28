@@ -171,6 +171,34 @@ const allPlugins = {
     url: (match) => `${match}/bonus`,
     icon: JoinBonusIcon,
     selectedIcon: JoinBonusYellowIcon
+  },
+  moonpay: {
+    name: 'Moonpay',
+    path: '/moonpay',
+    url: (match) => `${match}/moonpay`,
+    icon: JoinBonusIcon,
+    selectedIcon: JoinBonusYellowIcon
+  },
+  ramp: {
+    name: 'Ramp',
+    path: '/ramp',
+    url: (match) => `${match}/ramp`,
+    icon: JoinBonusIcon,
+    selectedIcon: JoinBonusYellowIcon
+  },
+  coindirect: {
+    name: 'Coindirect',
+    path: '/coindirect',
+    url: (match) => `${match}/coindirect`,
+    icon: JoinBonusIcon,
+    selectedIcon: JoinBonusYellowIcon
+  },
+  wyre: {
+    name: 'Wyre',
+    path: '/wyre',
+    url: (match) => `${match}/wyre`,
+    icon: JoinBonusIcon,
+    selectedIcon: JoinBonusYellowIcon
   }
 }
 

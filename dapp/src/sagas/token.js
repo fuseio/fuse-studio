@@ -6,7 +6,7 @@ import { balanceOfToken } from 'actions/accounts'
 import { DEPLOY_BRIDGE } from 'actions/bridge'
 import { ADD_USER } from 'actions/user'
 import { fetchMetadata } from 'actions/metadata'
-import { ADD_COMMUNITY_PLUGINS, TOGGLE_JOIN_BONUS } from 'actions/community'
+import { ADD_COMMUNITY_PLUGINS, ADD_COMMUNITY_PLUGIN, TOGGLE_JOIN_BONUS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -17,7 +17,8 @@ import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import { getWeb3 } from 'services/web3'
 import {
   fetchCommunity as fetchCommunityApi,
-  addCommunityPlugins as addCommunityPluginsApi
+  addCommunityPlugins as addCommunityPluginsApi,
+  addCommunityPlugin as addCommunityPluginApi
 } from 'services/api/community'
 import { ADD_ENTITY, REMOVE_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
@@ -263,6 +264,18 @@ function * addCommunityPlugins ({ communityAddress, plugins }) {
   })
 }
 
+function * addCommunityPlugin ({ communityAddress, plugin }) {
+  const { data: { plugins } } = yield apiCall(addCommunityPluginApi, { communityAddress, plugin })
+
+  yield put({
+    type: ADD_COMMUNITY_PLUGIN.SUCCESS,
+    communityAddress,
+    response: {
+      plugins
+    }
+  })
+}
+
 function * watchPluginsChanges () {
   const communityAddress = yield select(getCommunityAddress)
   yield put(actions.fetchCommunity(communityAddress))
@@ -323,6 +336,7 @@ function * watchCommunities ({ response }) {
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(ADD_COMMUNITY_PLUGINS, addCommunityPlugins, 1),
+    tryTakeEvery(ADD_COMMUNITY_PLUGIN, addCommunityPlugin, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN, transferToken, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN_TO_FUNDER, transferTokenToFunder, 1),
     tryTakeEvery(actions.MINT_TOKEN, mintToken, 1),
@@ -331,7 +345,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
-    takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
+    takeEvery([ADD_COMMUNITY_PLUGIN.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchFetchCommunity),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
