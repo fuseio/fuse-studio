@@ -123,8 +123,8 @@ const Plugins = ({
 
   const handleTracker = (plugin) => {
     if (window && window.analytics) {
-      const pluginsValues = Object.values(plugin)[0]
-      window.analytics.track(`${upperFirst(lowerCase(upperCase(Object.keys(plugin))))} ${pluginsValues.isActive ? 'added' : 'removed'}`)
+      const { name } = plugin
+      window.analytics.track(`${upperFirst(lowerCase(upperCase(name)))} ${plugin.isRemoved ? 'removed' : 'added'}`)
     }
   }
 
