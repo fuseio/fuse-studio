@@ -106,8 +106,13 @@ const Plugins = ({
     addCommunityPlugin(communityAddress, plugin)
   }
 
-  const togglePlugin = (name) => {
-    return { name }
+  const togglePlugin = (key) => {
+    if (plugins && !plugins[key]) {
+      return { name: key }
+    } else {
+      return { name: key, isActive: false }
+    }
+    // return { name: key }
     // if (key === 'joinBonus' && !isEmpty(plugins && plugins[key])) {
     //   return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true, joinInfo: null } })
     // }
