@@ -2,14 +2,14 @@ const config = require('config')
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
+const lodash = require('lodash')
 
 const makePlugin = ({ plugin }) => {
   const { name } = plugin
-  const defaultProps = { name, isActive: false }
   if (config.has(`plugins.${name}.args`)) {
-    return { ...defaultProps, ...config.get(`plugins.${name}.args`), ...plugin }
+    return { name, ...config.get(`plugins.${name}.args`), ...plugin }
   } else {
-    return { ...defaultProps, ...plugin }
+    return { name, ...plugin }
   }
 }
 
@@ -22,59 +22,16 @@ const makePlugin = ({ plugin }) => {
  * @apiParamExample {json} Request-Example:
  *   {
  *      "name": "joinBonus",
- *      "hasTransferToFunder": false
+ *      "isActive": false
  *    }
  */
 
 router.post('/:communityAddress/plugins', async (req, res, next) => {
   const { communityAddress } = req.params
   const plugin = makePlugin(req.body)
-  const community = await Community.findOneAndUpdate({ communityAddress }, { $set: { [`plugins.${plugin.name}`]: plugin } }, { new: true })
-  return res.json({ data: community })
-})
+  const fields = lodash.fromPairs(lodash.toPairs(plugin).map(([key, value]) => [`plugins.${plugin.name}.${key}`, value]))
+  const community = await Community.findOneAndUpdate({ communityAddress }, fields, { new: true })
 
-router.put('/:communityAddress/plugins', async (req, res, next) => {
-  const { communityAddress } = req.params
-  const { isActive, name } = req.body
-  const community = await Community.findOneAndUpdate({ communityAddress }, { $set: { [`plugins.${name}.isActive`]: isActive } }, { new: true })
-  return res.json({ data: community })
-})
-
-/**
- * @api {post} /communities/:communityAddress Add plugins to community
- * @apiName AddPlugins
- * @apiGroup Community
- * @apiParam {String} communityAddress Community address
- * @apiParam {Object} plugins The plugins (with arguments)
- * @apiParamExample {json} Request-Example:
- *     {
- *       "plugins": {
- *          "businessList": {
- *              "isActive": true,
- *           },
- *          "joinBonus": {
- *              "isActive": false,
- *              "hasTransferToFunder": false
- *          },
- *       }
- *     }
- *
- */
-router.post('/:communityAddress', async (req, res, next) => {
-  const { communityAddress } = req.params
-  const { plugins } = req.body
-  const { plugins: oldPlugins } = await Community.findOne({ communityAddress })
-  const newPlugins = Object.keys(plugins).reduce((newPlugins, pluginName) => ({
-    ...oldPlugins,
-    ...newPlugins,
-    [pluginName]: oldPlugins && oldPlugins[pluginName] ? {
-      ...oldPlugins[pluginName],
-      ...plugins[pluginName]
-    } : {
-      ...plugins[pluginName]
-    }
-  }), {})
-  const community = await Community.findOneAndUpdate({ communityAddress }, { plugins: { ...newPlugins } }, { new: true })
   return res.json({ data: community })
 })
 

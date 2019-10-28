@@ -4,7 +4,6 @@ import Plugin from 'components/dashboard/components/Plugin'
 import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
 import { addCommunityPlugin } from 'actions/community'
-import isEmpty from 'lodash/isEmpty'
 import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
 import upperFirst from 'lodash/upperFirst'
@@ -48,35 +47,64 @@ const generalPlugins = ([
 const onRampPluginItems = ([
   {
     title: 'Moonpay',
-    subTitle: ' | Top up account!',
+    subTitle: ' | Top up account',
     coverImage: Moonpay,
     key: 'moonpay'
   },
   {
     title: 'Ramp',
-    subTitle: ' | Top up account!',
+    subTitle: ' | Top up account',
     coverImage: Ramp,
     key: 'ramp'
   },
   {
     title: 'Coindirect',
-    subTitle: ' | Top up account!',
+    subTitle: ' | Top up account',
     coverImage: Coindirect,
     key: 'coindirect'
   },
   {
     title: 'Carbon',
-    subTitle: ' | Top up account!',
+    subTitle: ' | Top up account',
     coverImage: Carbon,
     key: 'carbon'
   },
   {
     title: 'Wyre',
-    subTitle: ' | Top up account!',
+    subTitle: ' | Top up account',
     coverImage: Wyre,
     key: 'wyre'
   }
 ])
+
+const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin, togglePlugin }) => <div className='plugins__items__wrapper'>
+  <h5 className='plugins__items__title'>{pluginTile}</h5>
+  <div className='plugins__items'>
+    {
+      pluginList.map(({
+        title,
+        coverImage,
+        disabled,
+        subTitle,
+        modalCoverPhoto,
+        key
+      }) => {
+        return (
+          <Plugin
+            showInfoModal={() => showInfoModal(key, { title, coverImage: modalCoverPhoto, disabled })}
+            key={title}
+            subTitle={subTitle}
+            disabled={disabled}
+            title={title}
+            hasPlugin={plugins && plugins[key] && !plugins[key].isRemoved}
+            image={coverImage}
+            managePlugin={() => addPlugin(togglePlugin(key, plugins))}
+          />
+        )
+      })
+    }
+  </div>
+</div>
 
 const Plugins = ({
   loadModal,
@@ -107,17 +135,20 @@ const Plugins = ({
   }
 
   const togglePlugin = (key) => {
-    if (plugins && !plugins[key]) {
-      return { name: key }
+    const plugin = { name: key }
+    if (key === 'businessList') {
+      plugin.isActive = true
     } else {
-      return { name: key, isActive: false }
+      plugin.isActive = false
     }
-    // return { name: key }
-    // if (key === 'joinBonus' && !isEmpty(plugins && plugins[key])) {
-    //   return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true, joinInfo: null } })
-    // }
-
-    // return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true } })
+    if (plugins) {
+      if (plugins[key] && plugins[key].isRemoved) {
+        plugin.isRemoved = false
+      } else if (plugins[key] && !plugins[key].isRemoved) {
+        plugin.isRemoved = true
+      }
+    }
+    return plugin
   }
 
   return (
@@ -132,74 +163,16 @@ const Plugins = ({
           </div>
           <div className='plugins__puzzle'><img src={Puzzle} /></div>
         </div>
-        <div className='plugins__items__wrapper'>
-          <h5 className='plugins__items__title'>Choose plug-in you want to add</h5>
-          <div className='plugins__items'>
-            {
-              generalPlugins.map(({
-                title,
-                coverImage,
-                disabled,
-                subTitle,
-                modalCoverPhoto,
-                key
-              }) => {
-                return (
-                  <Plugin
-                    showInfoModal={() => showInfoModal(key, { title, coverImage: modalCoverPhoto, disabled })}
-                    key={title}
-                    subTitle={subTitle}
-                    disabled={disabled}
-                    title={title}
-                    hasPlugin={plugins && !!plugins[key]}
-                    image={coverImage}
-                    managePlugin={() => addPlugin(togglePlugin(key))}
-                  />
-                )
-              })
-            }
-          </div>
-        </div>
-        <div className='plugins__items__wrapper'>
-          <h5 className='plugins__items__title'>Fiat On-ramp</h5>
-          <div className='plugins__items'>
-            {
-              onRampPluginItems.map(({
-                title,
-                coverImage,
-                disabled,
-                subTitle,
-                modalCoverPhoto,
-                key
-              }) => {
-                return (
-                  <Plugin
-                    showInfoModal={() => showInfoModal(key, { title, coverImage: modalCoverPhoto, disabled })}
-                    key={title}
-                    subTitle={subTitle}
-                    disabled={disabled}
-                    title={title}
-                    hasPlugin={plugins && !!plugins[key]}
-                    image={coverImage}
-                    managePlugin={() => addPlugin(togglePlugin(key, plugins))}
-                  />
-                )
-              })
-            }
-          </div>
-        </div>
+        <PluginList pluginList={generalPlugins} pluginTile={'Choose plug-in you want to add'} plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
+        <PluginList pluginList={onRampPluginItems} pluginTile='Fiat On-ramp' plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
       </div>
     </div>
   )
 }
-
-const mapStateToProps = (state) => ({
-  homeNetwork: state.network.homeNetwork
-})
 
 const mapDispatchToProps = {
   loadModal,
   addCommunityPlugin
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Plugins)
+export default connect(null, mapDispatchToProps)(Plugins)

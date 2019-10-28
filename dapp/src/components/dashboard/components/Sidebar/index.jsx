@@ -18,6 +18,8 @@ import MintBurnYellowIcon from 'images/mint-burn-selected.svg'
 import MintBurnIcon from 'images/mint-burn.svg'
 // import SettingsIcon from 'images/settings.svg'
 import UsersIcon from 'images/user_list.svg'
+import DollarIcon from 'images/dollar_symbol.svg'
+import DollarYellowIcon from 'images/dollar_symbol_yellow.svg'
 import UsersYellowIcon from 'images/user_list_yellow.svg'
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
@@ -174,31 +176,31 @@ const allPlugins = {
   },
   moonpay: {
     name: 'Moonpay',
-    path: '/moonpay',
-    url: (match) => `${match}/moonpay`,
-    icon: JoinBonusIcon,
-    selectedIcon: JoinBonusYellowIcon
+    path: '/onramp/moonpay',
+    url: (match) => `${match}/onramp/moonpay`,
+    icon: DollarIcon,
+    selectedIcon: DollarYellowIcon
   },
   ramp: {
     name: 'Ramp',
-    path: '/ramp',
-    url: (match) => `${match}/ramp`,
-    icon: JoinBonusIcon,
-    selectedIcon: JoinBonusYellowIcon
+    path: '/onramp/ramp',
+    url: (match) => `${match}/onramp/ramp`,
+    icon: DollarIcon,
+    selectedIcon: DollarYellowIcon
   },
   coindirect: {
     name: 'Coindirect',
-    path: '/coindirect',
-    url: (match) => `${match}/coindirect`,
-    icon: JoinBonusIcon,
-    selectedIcon: JoinBonusYellowIcon
+    path: '/onramp/coindirect',
+    url: (match) => `${match}/onramp/coindirect`,
+    icon: DollarIcon,
+    selectedIcon: DollarYellowIcon
   },
   wyre: {
     name: 'Wyre',
-    path: '/wyre',
-    url: (match) => `${match}/wyre`,
-    icon: JoinBonusIcon,
-    selectedIcon: JoinBonusYellowIcon
+    path: '/onramp/wyre',
+    url: (match) => `${match}/onramp/wyre`,
+    icon: DollarIcon,
+    selectedIcon: DollarYellowIcon
   }
 }
 
@@ -209,32 +211,34 @@ const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLo
 
   useEffect(() => {
     setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
-    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
     return () => {}
   }, [])
 
   useEffect(() => {
-    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
     return () => {}
   }, [plugins])
 
   useEffect(() => {
     setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
-    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && pluginKey.isActive)).sort())
+    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
     return () => {}
   }, [isAdmin, tokenType])
 
   useEffect(() => {
     const paramsArr = location.pathname.split('/')
     const lastItem = paramsArr[paramsArr.length - 1]
-    if ((communityAddress !== lastItem) && lastItem !== 'justCreated') {
+    if (paramsArr[paramsArr.length - 2] === 'onramp') {
+      setPath(`/${paramsArr[paramsArr.length - 2]}/${lastItem}`)
+    } else if ((communityAddress !== lastItem) && lastItem !== 'justCreated') {
       setPath(`/${lastItem}`)
     } else {
       setPath('')
     }
     return () => {}
   }, [location.pathname])
-
+  
   return (
     <aside className='sidebar'>
       <div className='item' style={{ cursor: 'pointer' }}>
@@ -263,7 +267,7 @@ const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLo
               </div>
               {
                 addedPlugins.map((plugin) => {
-                  if (plugin && allPlugins[plugin]) {
+                  if (plugin && allPlugins[plugin] && !allPlugins[plugin].isRemoved) {
                     const {
                       name,
                       path,

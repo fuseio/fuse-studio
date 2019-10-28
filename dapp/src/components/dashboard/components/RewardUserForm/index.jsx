@@ -35,8 +35,8 @@ class RewardUserForm extends Component {
 
   onSubmit = (values) => {
     const { amount, message } = values
-    const { addCommunityPlugins, communityAddress } = this.props
-    addCommunityPlugins(communityAddress, { joinBonus: { joinInfo: { message, amount } } })
+    const { addCommunityPlugin, communityAddress } = this.props
+    addCommunityPlugin(communityAddress, { name: 'joinBonus', joinInfo: { message, amount: amount.toString() } })
   }
 
   renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
