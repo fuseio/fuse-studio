@@ -6,7 +6,7 @@ import { balanceOfToken } from 'actions/accounts'
 import { DEPLOY_BRIDGE } from 'actions/bridge'
 import { ADD_USER } from 'actions/user'
 import { fetchMetadata } from 'actions/metadata'
-import { ADD_COMMUNITY_PLUGINS, TOGGLE_JOIN_BONUS } from 'actions/community'
+import { ADD_COMMUNITY_PLUGIN, TOGGLE_JOIN_BONUS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -17,7 +17,7 @@ import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import { getWeb3 } from 'services/web3'
 import {
   fetchCommunity as fetchCommunityApi,
-  addCommunityPlugins as addCommunityPluginsApi
+  addCommunityPlugin as addCommunityPluginApi
 } from 'services/api/community'
 import { ADD_ENTITY, REMOVE_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
@@ -251,14 +251,14 @@ function * watchFetchCommunity ({ response }) {
   }
 }
 
-function * addCommunityPlugins ({ communityAddress, plugins }) {
-  const { data: { plugins: newPlugins } } = yield apiCall(addCommunityPluginsApi, { communityAddress, plugins })
+function * addCommunityPlugin ({ communityAddress, plugin }) {
+  const { data: { plugins } } = yield apiCall(addCommunityPluginApi, { communityAddress, plugin })
 
   yield put({
-    type: ADD_COMMUNITY_PLUGINS.SUCCESS,
+    type: ADD_COMMUNITY_PLUGIN.SUCCESS,
     communityAddress,
     response: {
-      newPlugins
+      plugins
     }
   })
 }
@@ -276,27 +276,27 @@ function * transferTokenToFunder ({ tokenAddress, value }) {
   })
 }
 
-function * toggleJoinBonus ({ toSend }) {
+function * toggleJoinBonus ({ isActive }) {
   const accountAddress = yield select(getAccountAddress)
   const communityAddress = yield select(getCommunityAddress)
   const web3 = yield getWeb3()
   const networkVersion = getNetworkVersion(web3)
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
-  if (toSend) {
+  if (isActive) {
     const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
     const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
     const transactionPromise = method.send({ from: accountAddress })
     const action = ADD_ENTITY
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-    yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { toSend } } })
+    yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
   } else {
     const accountAddress = yield select(getAccountAddress)
     const method = CommunityContract.methods.removeEntity(funderAddress)
     const transactionPromise = method.send({ from: accountAddress })
     const action = REMOVE_ENTITY
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-    yield apiCall(addCommunityPluginsApi, { communityAddress, plugins: { joinBonus: { toSend, joinInfo: null } } })
+    yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
   }
 
   yield put({
@@ -322,7 +322,7 @@ function * watchCommunities ({ response }) {
 
 export default function * tokenSaga () {
   yield all([
-    tryTakeEvery(ADD_COMMUNITY_PLUGINS, addCommunityPlugins, 1),
+    tryTakeEvery(ADD_COMMUNITY_PLUGIN, addCommunityPlugin, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN, transferToken, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN_TO_FUNDER, transferTokenToFunder, 1),
     tryTakeEvery(actions.MINT_TOKEN, mintToken, 1),
@@ -331,7 +331,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
-    takeEvery([ADD_COMMUNITY_PLUGINS.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
+    takeEvery([ADD_COMMUNITY_PLUGIN.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchFetchCommunity),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),

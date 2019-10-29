@@ -1,53 +1,37 @@
+const config = require('config')
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
+const lodash = require('lodash')
+
+const makePlugin = ({ plugin }) => {
+  const { name } = plugin
+  if (config.has(`plugins.${name}.args`)) {
+    return { name, ...config.get(`plugins.${name}.args`), ...plugin }
+  } else {
+    return { name, ...plugin }
+  }
+}
 
 /**
- * @apiDefine Add Plugins
- * @apiSuccess {Boolean} isClosed
- * @apiSuccess {Object} plugins
- * @apiSuccess {String} communityAddress
- * @apiSuccess {String} homeTokenAddress
- * @apiSuccess {String} foreignTokenAddress
- * @apiSuccess {String} foreignBridgeAddress
- * @apiSuccess {String} homeBridgeAddress
- */
-
-/**
- * @api {post} /communities/:communityAddress Add plugins to community
+ * @api {post} /communities/:communityAddress/plugins Add plugins to community
  * @apiName AddPlugins
  * @apiGroup Community
  * @apiParam {String} communityAddress Community address
  * @apiParam {Object} plugins The plugins (with arguments)
  * @apiParamExample {json} Request-Example:
- *     {
- *       "plugins": {
- *          "businessList": {
- *              "isActive": true,
- *           },
- *          "joinBonus": {
- *              "isActive": false,
- *              "hasTransferToFunder": false
- *          },
- *       }
- *     }
- *
+ *   {
+ *      "name": "joinBonus",
+ *      "isActive": false
+ *    }
  */
-router.post('/:communityAddress', async (req, res, next) => {
+
+router.post('/:communityAddress/plugins', async (req, res, next) => {
   const { communityAddress } = req.params
-  const { plugins } = req.body
-  const { plugins: oldPlugins } = await Community.findOne({ communityAddress })
-  const newPlugins = Object.keys(plugins).reduce((newPlugins, pluginName) => ({
-    ...oldPlugins,
-    ...newPlugins,
-    [pluginName]: oldPlugins && oldPlugins[pluginName] ? {
-      ...oldPlugins[pluginName],
-      ...plugins[pluginName]
-    } : {
-      ...plugins[pluginName]
-    }
-  }), {})
-  const community = await Community.findOneAndUpdate({ communityAddress }, { plugins: { ...newPlugins } }, { new: true })
+  const plugin = makePlugin(req.body)
+  const fields = lodash.fromPairs(lodash.toPairs(plugin).map(([key, value]) => [`plugins.${plugin.name}.${key}`, value]))
+  const community = await Community.findOneAndUpdate({ communityAddress }, fields, { new: true })
+
   return res.json({ data: community })
 })
 

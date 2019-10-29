@@ -67,9 +67,39 @@
       }
     }
   },
-  "moonpay": {
-    "webhook": {
-      "secret": "COMMUNITY_MOONPAY_WEBHOOK_SECRET"
+  "plugins": {
+    "moonpay": {
+      "webhook": {
+        "secret": "COMMUNITY_PLUGINS_MOONPAY_WEBHOOK_SECRET"
+      },
+      "args": {
+        "__name": "COMMUNITY_PLUGINS_MOONPAY_ARGS",
+        "__format": "json"
+      }
+    },
+    "carbon": {
+      "args": {
+        "__name": "COMMUNITY_PLUGINS_CARBON_ARGS",
+        "__format": "json"
+      }
+    },
+    "wyre": {
+      "args": {
+        "__name": "COMMUNITY_PLUGINS_WYRE_ARGS",
+        "__format": "json"
+      }
+    },
+    "coindirect": {
+      "args": {
+        "__name": "COMMUNITY_PLUGINS_COINDIRECT_ARGS",
+        "__format": "json"
+      }
+    },
+    "ramp": {
+      "args": {
+        "__name": "COMMUNITY_PLUGINS_RAMP_ARGS",
+        "__format": "json"
+      }
     }
   }
 }

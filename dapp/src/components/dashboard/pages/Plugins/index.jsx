@@ -1,23 +1,27 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import Plugin from 'components/dashboard/components/Plugin'
+import { loadModal } from 'actions/ui'
+import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
+import { addCommunityPlugin } from 'actions/community'
+import upperCase from 'lodash/upperCase'
+import lowerCase from 'lodash/lowerCase'
+import upperFirst from 'lodash/upperFirst'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
+import Puzzle from 'images/puzzle.svg'
 import JoinBonus from 'images/join_bonus.png'
 import JoinBonusBig from 'images/join_bonus_big.png'
 import BusinessList from 'images/business_list.png'
 import BusinessListBig from 'images/business_list_big.png'
 import Bounty from 'images/bounty.png'
 import BountyBig from 'images/bounty_big.png'
-import { loadModal } from 'actions/ui'
-import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
-import { addCommunityPlugins } from 'actions/community'
-import isEmpty from 'lodash/isEmpty'
-import upperCase from 'lodash/upperCase'
-import lowerCase from 'lodash/lowerCase'
-import upperFirst from 'lodash/upperFirst'
-import Puzzle from 'images/puzzle.svg'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
+import Moonpay from 'images/moonpay.png'
+import Ramp from 'images/ramp.png'
+import Coindirect from 'images/coindirect.png'
+import Carbon from 'images/carbon.png'
+import Wyre from 'images/wyre.png'
 
-const PluginsItems = ([
+const generalPlugins = ([
   {
     title: 'Business list',
     coverImage: BusinessList,
@@ -40,14 +44,75 @@ const PluginsItems = ([
   }
 ])
 
+const onRampPluginItems = ([
+  {
+    title: 'Moonpay',
+    subTitle: ' | Top up account',
+    coverImage: Moonpay,
+    key: 'moonpay'
+  },
+  {
+    title: 'Ramp',
+    subTitle: ' | Top up account',
+    coverImage: Ramp,
+    key: 'ramp'
+  },
+  {
+    title: 'Coindirect',
+    subTitle: ' | Top up account',
+    coverImage: Coindirect,
+    key: 'coindirect'
+  },
+  {
+    title: 'Carbon',
+    subTitle: ' | Top up account',
+    coverImage: Carbon,
+    key: 'carbon'
+  },
+  {
+    title: 'Wyre',
+    subTitle: ' | Top up account',
+    coverImage: Wyre,
+    key: 'wyre'
+  }
+])
+
+const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin, togglePlugin }) => <div className='plugins__items__wrapper'>
+  <h5 className='plugins__items__title'>{pluginTile}</h5>
+  <div className='plugins__items'>
+    {
+      pluginList.map(({
+        title,
+        coverImage,
+        disabled,
+        subTitle,
+        modalCoverPhoto,
+        key
+      }) => {
+        return (
+          <Plugin
+            showInfoModal={() => showInfoModal(key, { title, coverImage: modalCoverPhoto, disabled })}
+            key={title}
+            subTitle={subTitle}
+            disabled={disabled}
+            title={title}
+            hasPlugin={plugins && plugins[key] && !plugins[key].isRemoved}
+            image={coverImage}
+            managePlugin={() => addPlugin(togglePlugin(key, plugins))}
+          />
+        )
+      })
+    }
+  </div>
+</div>
+
 const Plugins = ({
   loadModal,
-  addCommunityPlugins,
+  addCommunityPlugin,
   community
 }) => {
   useSwitchNetwork('fuse', { featureName: 'plug-ins' })
   const { plugins } = community
-
   const showInfoModal = (key, props) => {
     loadModal(PLUGIN_INFO_MODAL, {
       ...props,
@@ -58,23 +123,32 @@ const Plugins = ({
 
   const handleTracker = (plugin) => {
     if (window && window.analytics) {
-      const pluginsValues = Object.values(plugin)[0]
-      window.analytics.track(`${upperFirst(lowerCase(upperCase(Object.keys(plugin))))} ${pluginsValues.isActive ? 'added' : 'removed'}`)
+      const { name } = plugin
+      window.analytics.track(`${upperFirst(lowerCase(upperCase(name)))} ${plugin.isRemoved ? 'removed' : 'added'}`)
     }
   }
 
   const addPlugin = (plugin) => {
     const { communityAddress } = community
     handleTracker(plugin)
-    addCommunityPlugins(communityAddress, plugin)
+    addCommunityPlugin(communityAddress, plugin)
   }
 
-  const togglePlugin = (key, plugins) => {
-    if (key === 'joinBonus' && !isEmpty(plugins && plugins[key])) {
-      return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true, joinInfo: null } })
+  const togglePlugin = (key) => {
+    const plugin = { name: key }
+    if (key === 'businessList') {
+      plugin.isActive = true
+    } else {
+      plugin.isActive = false
     }
-
-    return ({ [key]: { isActive: plugins && plugins[key] ? !plugins[key].isActive : true } })
+    if (plugins) {
+      if (plugins[key] && plugins[key].isRemoved) {
+        plugin.isRemoved = false
+      } else if (plugins[key] && !plugins[key].isRemoved) {
+        plugin.isRemoved = true
+      }
+    }
+    return plugin
   }
 
   return (
@@ -89,46 +163,16 @@ const Plugins = ({
           </div>
           <div className='plugins__puzzle'><img src={Puzzle} /></div>
         </div>
-        <div className='plugins__items__wrapper'>
-          <h5 className='plugins__items__title'>Choose plug-in you want to add</h5>
-          <div className='plugins__items'>
-            {
-              PluginsItems.map(({
-                title,
-                coverImage,
-                disabled,
-                subTitle,
-                modalCoverPhoto,
-                key
-              }) => {
-                return (
-                  <Plugin
-                    showInfoModal={() => showInfoModal(key, { title, coverImage: modalCoverPhoto, disabled })}
-                    key={title}
-                    subTitle={subTitle}
-                    disabled={disabled}
-                    title={title}
-                    hasPlugin={plugins && plugins[key] ? plugins[key].isActive : false}
-                    image={coverImage}
-                    managePlugin={() => addPlugin(togglePlugin(key, plugins))}
-                  />
-                )
-              })
-            }
-          </div>
-        </div>
+        <PluginList pluginList={generalPlugins} pluginTile={'Choose plug-in you want to add'} plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
+        <PluginList pluginList={onRampPluginItems} pluginTile='Fiat On-ramp' plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
       </div>
     </div>
   )
 }
 
-const mapStateToProps = (state) => ({
-  homeNetwork: state.network.homeNetwork
-})
-
 const mapDispatchToProps = {
   loadModal,
-  addCommunityPlugins
+  addCommunityPlugin
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Plugins)
+export default connect(null, mapDispatchToProps)(Plugins)

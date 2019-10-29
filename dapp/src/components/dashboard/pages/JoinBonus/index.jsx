@@ -8,7 +8,7 @@ import { FAILURE, SUCCESS } from 'actions/constants'
 import { toWei } from 'web3-utils'
 import { getFunderAccount, getBalances } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
-import { addCommunityPlugins, toggleJoinBonus } from 'actions/community'
+import { addCommunityPlugin, toggleJoinBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import get from 'lodash/get'
@@ -25,7 +25,7 @@ const JoinBonus = ({
   transferSuccess,
   transferTokenToFunder,
   balanceOfToken,
-  addCommunityPlugins,
+  addCommunityPlugin,
   clearTransactionStatus,
   balances,
   tokenOfCommunityOnCurrentSide,
@@ -49,7 +49,7 @@ const JoinBonus = ({
   const { plugins, communityAddress } = community
 
   const { joinBonus } = plugins
-  const { toSend } = joinBonus
+  const { isActive } = joinBonus
 
   const [transferMessage, setTransferMessage] = useState(false)
 
@@ -115,11 +115,11 @@ const JoinBonus = ({
             initialValues={{
               message: get(joinBonus, 'joinInfo.message', ''),
               amount: get(joinBonus, 'joinInfo.amount', ''),
-              activated: toSend || false
+              activated: isActive || false
             }}
             communityAddress={communityAddress}
             toggleJoinBonus={toggleJoinBonus}
-            addCommunityPlugins={addCommunityPlugins}
+            addCommunityPlugin={addCommunityPlugin}
           />
         </div>
       </div>
@@ -137,7 +137,7 @@ const mapDispatchToState = {
   transferTokenToFunder,
   clearTransactionStatus,
   balanceOfToken,
-  addCommunityPlugins,
+  addCommunityPlugin,
   toggleJoinBonus,
   loadModal
 }

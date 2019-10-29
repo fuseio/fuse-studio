@@ -7,12 +7,12 @@ import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
+import OnRampPage from 'components/dashboard/pages/OnRamp'
 import { fetchCommunity } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { Route, Switch } from 'react-router-dom'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
-import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
@@ -157,7 +157,7 @@ class DashboardLayout extends Component {
             <NavBar withLogo={false} />
             <div className='content'>
               <Switch>
-                {get(plugins, 'joinBonus.isActive', false) && (
+                {!get(plugins, 'joinBonus.isRemoved', false) && (
                   <Route path={`${match.path}/bonus`}
                     render={() => (
                       <JoinBonusPage
@@ -171,6 +171,15 @@ class DashboardLayout extends Component {
                     )}
                   />
                 )}
+                <Route path={`${match.path}/onramp/:name`}
+                  render={({ match }) => (
+                    <OnRampPage
+                      match={match}
+                      community={community}
+                      plugin={get(community, `plugins.${match.params.name}`, {})}
+                    />
+                  )}
+                />
                 {isAdmin && tokenType === 'mintableBurnable' && (
                   <Route
                     path={`${match.path}/mintBurn`}
