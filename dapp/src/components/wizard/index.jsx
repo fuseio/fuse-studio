@@ -36,6 +36,9 @@ const WizardPage = ({
   getNetworkType
 }) => {
   useEffect(() => {
+    if (window && window.analytics) {
+      window.analytics.track('Wizard init')
+    }
     getNetworkType(true)
   }, [])
 

@@ -238,7 +238,7 @@ const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLo
     }
     return () => {}
   }, [location.pathname])
-  
+
   return (
     <aside className='sidebar'>
       <div className='item' style={{ cursor: 'pointer' }}>
