@@ -36,6 +36,9 @@ const HomePage = ({
         setClicked
       })
     } else {
+      if (window && window.analytics) {
+        window.analytics.track('Launch community button pressed')
+      }
       history.push('/view/issuance')
     }
   }
