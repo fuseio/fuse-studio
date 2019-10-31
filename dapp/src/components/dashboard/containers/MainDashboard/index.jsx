@@ -56,14 +56,14 @@ class DashboardLayout extends Component {
     }
 
     if (prevProps.isAdmin !== this.props.isAdmin) {
-      const { accountAddress, isAdmin, networkType, location } = this.props
+      const { accountAddress, isAdmin, networkType, location, communityAddress } = this.props
       const { analytics } = window
       if (isAdmin) {
         if (location.pathname.includes('/justCreated')) {
           analytics.reset()
         }
 
-        analytics.identify(`${accountAddress}`, { role: 'admin' })
+        analytics.identify(`${accountAddress}`, { role: 'admin', communityAddress })
 
         if (networkType === 'fuse') {
           analytics.identify(`${accountAddress}`, {
@@ -157,7 +157,7 @@ class DashboardLayout extends Component {
             <NavBar withLogo={false} />
             <div className='content'>
               <Switch>
-                {!get(plugins, 'joinBonus.isRemoved', false) && (
+                {!get(plugins, 'joinBonus.isRemoved', false) && isAdmin && (
                   <Route path={`${match.path}/bonus`}
                     render={() => (
                       <JoinBonusPage
