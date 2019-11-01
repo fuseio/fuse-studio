@@ -76,6 +76,12 @@ const WizardPage = ({
       ? { isDefault: true, image: images && images[chosen] && images[chosen].blob }
       : { image: images && images[chosen] && images[chosen].blob }
 
+    if (adminAddress) {
+      window.analytics.identify(adminAddress, {
+        email
+      })
+    }
+
     if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }

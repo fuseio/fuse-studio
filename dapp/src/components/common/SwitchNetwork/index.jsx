@@ -6,10 +6,10 @@ import capitalize from 'lodash/capitalize'
 
 const renderNetworks = (networks) => networks.map(capitalize).reduce((prev, curr) => [prev, ' or ', curr])
 
-const SwitchNetwork = ({ contentStyles, featureName = 'that page', desiredNetworkType = 'fuse' }) => {
+const SwitchNetwork = ({ hideModal, contentStyles, featureName = 'that page', desiredNetworkType = 'fuse' }) => {
   const desiredNetworkTypeArray = Array.isArray(desiredNetworkType) ? desiredNetworkType : [desiredNetworkType]
   return (
-    <Modal className='switch__network'>
+    <Modal className='switch__network' hasCloseBtn onClose={hideModal}>
       <h3 className='switch__network__title'>Switch to {renderNetworks(desiredNetworkTypeArray)} Network to use {featureName}</h3>
       <div className='switch__network__content' style={{ ...contentStyles }}>
         <div className='switch__network__text'>
@@ -17,10 +17,18 @@ const SwitchNetwork = ({ contentStyles, featureName = 'that page', desiredNetwor
         </div>
         {
           desiredNetworkTypeArray.includes('fuse')
-            ? <Fragment>
-              <div className='switch__network__image'><img src={ChangeNetwork} /></div>
-              <div className='switch__network__text'><a target='_blank' href='https://docs.fusenet.io/the-fuse-studio/how-to-add-fuse-to-your-metamask'>Click here</a> to learn how to add Fuse to your Metamask</div>
-            </Fragment> : <div className='switch__network__image'><img src={WrongNetwork} /></div>
+            ? (
+              <Fragment>
+                <div className='switch__network__image'><img src={ChangeNetwork} /></div>
+                <div className='switch__network__text'><a target='_blank' href='https://docs.fusenet.io/the-fuse-studio/how-to-add-fuse-to-your-metamask'>Click here</a> to learn how to add Fuse to your Metamask</div>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <div className='switch__network__image'>
+                  <img src={WrongNetwork} />
+                </div>
+              </Fragment>
+            )
         }
       </div>
     </Modal>

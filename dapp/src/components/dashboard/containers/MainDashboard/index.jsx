@@ -154,7 +154,7 @@ class DashboardLayout extends Component {
               </Sidebar>
           }
           <div className='content__container'>
-            <NavBar withLogo={false} />
+            <NavBar withLogo={false} foreignNetwork={foreignToken && foreignToken.networkType} />
             <div className='content'>
               <Switch>
                 {!get(plugins, 'joinBonus.isRemoved', false) && isAdmin && (

@@ -74,7 +74,7 @@
     @include block(symbol) {
       margin-left: 3px;
       color: $color-dark;
-      font-size: 10px;
+      font-size: 0.625em;
     }
   }
 }

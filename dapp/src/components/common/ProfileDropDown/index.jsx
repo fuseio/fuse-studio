@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome'
 import { formatAddress, formatWei } from 'utils/format'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import { fetchCommunities, fetchBalances, balanceOfToken } from 'actions/accounts'
+import { changeNetwork } from 'actions/network'
 import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
@@ -14,11 +15,13 @@ import ArrowTiny from 'images/arrow_tiny.svg'
 import { getNetworkSide } from 'selectors/network'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
+import { convertNetworkName } from 'utils/network'
+import { SWITCH_NETWORK } from 'constants/uiConstants'
+import { loadModal } from 'actions/ui'
+import capitalize from 'lodash/capitalize'
 
 const mapStateToNativeBalanceProps = (state) => ({
-  account: getAccount(state),
-  isPortis: state.network.isPortis,
-  isMetaMask: state.network.isMetaMask
+  account: getAccount(state)
 })
 
 const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
@@ -174,7 +177,12 @@ const ProfileDropDown = ({
   communities,
   history,
   fetchCommunities,
-  balanceOfToken
+  balanceOfToken,
+  changeNetwork,
+  isPortis,
+  isMetaMask,
+  loadModal,
+  foreignNetwork
 }) => {
   if (!accountAddress) return null
 
@@ -202,6 +210,44 @@ const ProfileDropDown = ({
     history.push(`/view/community/${communityAddress}`)
   }
 
+  const loadSwitchModal = (desired) => {
+    loadModal(SWITCH_NETWORK, { desiredNetworkType: [desired] })
+  }
+
+  const toggleNetwork = () => {
+    const network = networkType === 'fuse'
+      ? CONFIG.env === 'qa'
+        ? 'ropsten' : 'main'
+      : networkType === 'ropsten'
+        ? 'main' : 'ropsten'
+    changeNetwork(network)
+  }
+
+  const switchNetwork = () => {
+    if (isPortis) {
+      if (foreignNetwork) {
+        if (foreignNetwork === networkType) {
+          changeNetwork('fuse')
+        } else {
+          changeNetwork(foreignNetwork)
+        }
+      } else {
+        toggleNetwork()
+      }
+    } else if (isMetaMask) {
+      if (foreignNetwork) {
+        if (foreignNetwork === networkType) {
+          loadSwitchModal('fuse')
+        } else {
+          loadSwitchModal(foreignNetwork)
+        }
+      } else {
+        const desired = convertNetworkName(networkType === 'ropsten' ? 'main' : 'ropsten')
+        loadSwitchModal(desired)
+      }
+    }
+  }
+
   return (
     <div className='profile grid-y'>
       <div className='profile__account grid-x cell small-8 align-middle align-center'>
@@ -215,7 +261,13 @@ const ProfileDropDown = ({
           </CopyToClipboard>
         </div>}
       </div>
-      <NativeBalance />
+      <div className='profile__communities grid-y'>
+        <p className='profile__switch' onClick={switchNetwork}>
+          <FontAwesome name='exchange-alt' />
+          <span>Switch to {capitalize(convertNetworkName((foreignNetwork === networkType ? 'fuse' : foreignNetwork) || (networkType === 'ropsten' ? 'main' : 'ropsten')))} network</span>
+        </p>
+      </div>
+      <NativeBalance isMetaMask={isMetaMask} isPortis={isPortis} />
       <InnerCommunities
         showDashboard={showDashboard}
         communities={communitiesIOwn}
@@ -249,13 +301,17 @@ const mapStateToProps = (state) => ({
   metadata: state.entities.metadata,
   communities: state.entities.communities,
   networkType: state.network.networkType,
-  balances: getBalances(state)
+  balances: getBalances(state),
+  isPortis: state.network.isPortis,
+  isMetaMask: state.network.isMetaMask
 })
 
 const mapDispatchToProps = {
   fetchCommunities,
   fetchBalances,
-  balanceOfToken
+  balanceOfToken,
+  changeNetwork,
+  loadModal
 }
 
 export default withRouter(connect(

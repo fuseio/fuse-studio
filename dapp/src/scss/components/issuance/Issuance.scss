@@ -93,7 +93,7 @@
     }
 
     .fa {
-      font-size: 20px;
+      font-size: 1.250em;
       color: $color-dark-gray;
     }
     @include element(logo) {
@@ -212,7 +212,7 @@
 
         @include breakpoint(small only) {
           margin-bottom: 1em;
-          font-size: 20px;
+          font-size: 1.250em;
         }
       }
 
@@ -448,7 +448,7 @@
 
         @include breakpoint(small only) {
           margin-bottom: 1em;
-          font-size: 20px;
+          font-size: 1.250em;
         }
       }
 

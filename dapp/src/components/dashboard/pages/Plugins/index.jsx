@@ -98,7 +98,7 @@ const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin,
             title={title}
             hasPlugin={plugins && plugins[key] && !plugins[key].isRemoved}
             image={coverImage}
-            managePlugin={() => addPlugin(togglePlugin(key, plugins))}
+            managePlugin={() => addPlugin(togglePlugin(key))}
           />
         )
       })
@@ -117,7 +117,7 @@ const Plugins = ({
     loadModal(PLUGIN_INFO_MODAL, {
       ...props,
       hasPlugin: plugins && plugins[key] ? plugins[key] : false,
-      managePlugin: () => addPlugin(togglePlugin(key, plugins))
+      managePlugin: () => addPlugin(togglePlugin(key))
     })
   }
 

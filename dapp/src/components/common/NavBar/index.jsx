@@ -60,10 +60,10 @@ class NavBar extends Component {
   }
 
   render () {
-    const { withLogo, networkType, accountAddress, getNetworkType } = this.props
+    const { withLogo, networkType, accountAddress, getNetworkType, foreignNetwork } = this.props
     const { isHelpOpen, isProfileOpen } = this.state
     return (
-      <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })} style={{ width: (this.state.scrollTop > 70 && !isMobileOnly) && !withLogo ? '80%' : null }}>
+      <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })} >
         { (withLogo || (isMobileOnly && this.state.scrollTop > 70)) && <div className='navbar__logo'><Logo onClick={this.goToHome} isBlue={this.state.scrollTop < 70} /></div> }
         <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
           <div
@@ -99,7 +99,7 @@ class NavBar extends Component {
                 <span className='icon'><img src={WalletIcon} /></span>
                 <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
                 <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                  <ProfileDropDown />
+                  <ProfileDropDown foreignNetwork={foreignNetwork} />
                 </div>
               </div>
             ) : (

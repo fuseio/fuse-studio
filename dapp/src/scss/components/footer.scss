@@ -40,7 +40,7 @@
   }
 
   @include element(item) {
-    font-size: 10px;
+    font-size: 0.625em;
     line-height: 1.4;
     color: $color-black; 
 

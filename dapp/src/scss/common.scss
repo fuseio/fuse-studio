@@ -570,7 +570,7 @@
     @include xy-grid(vertical, false);
     @include flex-align(center, middle);
     color: $color-gray;
-    font-size: 20px;
+    font-size: 1.250em;
     line-height: 1.6;
 
     span:nth-child(2) {
@@ -729,7 +729,7 @@
   }
 
   @include element(title) {
-    font-size: 20px;
+    font-size: 1.250em;
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: 0.5px;
@@ -761,7 +761,7 @@
 
   @include element(icon) {
     margin: 1em auto;
-    font-size: 20px;
+    font-size: 1.250em;
   }
 
   @include element(loader) {
@@ -822,7 +822,7 @@
   justify-content: center;
   &-text {
     color: $color-white;
-    font-size: 20px;
+    font-size: 1.250em;
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: 0.5px;
