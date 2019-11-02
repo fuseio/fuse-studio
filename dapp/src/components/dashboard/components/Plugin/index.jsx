@@ -13,7 +13,7 @@ const Plugin = ({
   managePlugin
 }) => {
   return (
-    <div className='plugin-card'>
+    <div className='plugin-card cell small-24 medium-8'>
       <div className='plugin-card__image'>
         <div className='plugin-card__image__container'>
           <img src={image} />

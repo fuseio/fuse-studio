@@ -79,7 +79,7 @@ const onRampPluginItems = ([
 
 const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin, togglePlugin }) => <div className='plugins__items__wrapper'>
   <h5 className='plugins__items__title'>{pluginTile}</h5>
-  <div className='plugins__items'>
+  <div className='grid-x grid-margin-x grid-margin-y'>
     {
       pluginList.map(({
         title,
