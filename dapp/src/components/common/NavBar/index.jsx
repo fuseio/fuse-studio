@@ -58,8 +58,21 @@ const NavBar = ({
 
   const chooseProvider = () => {
     if (!accountAddress) {
+      if (window && window.analytics) {
+        window.analytics.track('Connect wallet clicked - not connected')
+      }
       loadModal(CHOOSE_PROVIDER)
     }
+  }
+
+  const openProfile = (e) => {
+    e.stopPropagation()
+    setProfileOpen(!isProfileOpen)
+  }
+
+  const openHelp = (e) => {
+    e.stopPropagation()
+    setHelpOpen(!isHelpOpen)
   }
 
   return (
@@ -69,10 +82,7 @@ const NavBar = ({
         <div
           className='navbar__links__help'
           ref={helpRef}
-          onClick={(e) => {
-            e.stopPropagation()
-            setHelpOpen(!isHelpOpen)
-          }}
+          onClick={openHelp}
         >
           <span className='icon'><img src={HelpIcon} /></span>
           <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
@@ -91,10 +101,7 @@ const NavBar = ({
             <div
               className='navbar__links__wallet'
               ref={profileRef}
-              onClick={(e) => {
-                e.stopPropagation()
-                setProfileOpen(!isProfileOpen)
-              }}
+              onClick={openProfile}
             >
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>

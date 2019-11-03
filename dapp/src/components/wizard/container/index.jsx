@@ -9,6 +9,12 @@ import FontAwesome from 'react-fontawesome'
 import TransactionButton from 'components/common/TransactionButton'
 import { PENDING, FAILURE, REQUEST } from 'actions/constants'
 
+const nextStepEvents = {
+  0: 'Next step - 1',
+  1: 'Next step - 2',
+  2: 'Next step - 3'
+}
+
 const validations = {
   0: ['communityName', 'communityType', 'existingToken', 'email'],
   1: ['totalSupply', 'communitySymbol', 'images.chosen']
@@ -54,6 +60,9 @@ class Wizard extends React.Component {
       page: Math.min(state.page + 1, this.props.children.length - 1),
       values
     }))
+    if (window && window.analytics) {
+      window.analytics.track(nextStepEvents[this.state.page])
+    }
   }
 
   previous = () =>
@@ -67,6 +76,9 @@ class Wizard extends React.Component {
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
     if (isSubmitStep) {
+      if (window && window.analytics) {
+        window.analytics.track('Issue pressed')
+      }
       return submitHandler(values, bag)
     } else {
       bag.setTouched({})

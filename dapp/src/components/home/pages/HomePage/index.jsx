@@ -13,17 +13,23 @@ import GiftIcon from 'images/gift.svg'
 import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
-import { CHOOSE_PROVIDER } from 'constants/uiConstants'
+import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
 
 const HomePage = ({
   history,
   loadModal,
-  accountAddress
+  accountAddress,
+  networkType,
+  homeNetwork
 }) => {
   const [isClicked, setClicked] = useState(false)
   useEffect(() => {
     if (accountAddress && isClicked) {
-      history.push('/view/issuance')
+      if (networkType === homeNetwork) {
+        loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'] })
+      } else {
+        history.push('/view/issuance')
+      }
     }
     return () => { }
   }, [accountAddress])
@@ -32,6 +38,9 @@ const HomePage = ({
 
   const showIssuance = () => {
     if (!accountAddress) {
+      if (window && window.analytics) {
+        window.analytics.track('Launch community button pressed - not connected')
+      }
       loadModal(CHOOSE_PROVIDER, {
         setClicked
       })
@@ -39,7 +48,11 @@ const HomePage = ({
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed')
       }
-      history.push('/view/issuance')
+      if (networkType === homeNetwork) {
+        loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'] })
+      } else {
+        history.push('/view/issuance')
+      }
     }
   }
 
@@ -100,7 +113,9 @@ const HomePage = ({
 }
 
 const mapStateToProps = (state) => ({
-  accountAddress: state.network.accountAddress
+  accountAddress: state.network.accountAddress,
+  networkType: state.network.networkType,
+  homeNetwork: state.network.homeNetwork
 })
 
 const mapDispatchToProps = {

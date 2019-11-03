@@ -26,7 +26,9 @@ const ChooseProviderModal = ({
   }
 
   const handleConnectWallet = () => {
-    setClicked(true)
+    if (setClicked) {
+      setClicked(true)
+    }
     getNetworkType(true)
     hideModal()
   }

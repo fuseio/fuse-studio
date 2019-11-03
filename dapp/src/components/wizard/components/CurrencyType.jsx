@@ -60,6 +60,9 @@ const CurrencyType = ({ networkType, formik }) => {
                   onChange={val => {
                     setFieldValue('communityType', val)
                     setFieldValue('existingToken', '')
+                    if (window && window.analytics) {
+                      window.analytics.track(`New currency - ${val.label}`)
+                    }
                   }}
                   className={classNames('attributes__options__select', { 'attributes__options__select--selected': communityType })}
                   classNamePrefix='attributes__options__select__prefix'
@@ -81,6 +84,9 @@ const CurrencyType = ({ networkType, formik }) => {
                   setFieldValue('existingToken', val)
                   setFieldValue('totalSupply', '')
                   setFieldValue('communityType', '')
+                  if (window && window.analytics) {
+                    window.analytics.track(`Existing currency - ${val.label}`)
+                  }
                 }}
                 className={classNames('attributes__options__select', { 'attributes__options__select--selected': existingToken })}
                 classNamePrefix='attributes__options__select__prefix'

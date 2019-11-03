@@ -20,7 +20,12 @@ const TotalSupply = ({ formik }) => {
                 type='number'
                 placeholder='...'
                 autoComplete='off'
-                onChange={handleChange}
+                onChange={event => {
+                  handleChange(event)
+                  if (window && window.analytics) {
+                    window.analytics.track('Filling total supply')
+                  }
+                }}
               />
             </div>
           )}
