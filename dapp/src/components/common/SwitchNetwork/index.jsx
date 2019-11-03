@@ -1,8 +1,10 @@
 import React, { Fragment } from 'react'
 import Modal from 'components/common/Modal'
 import ChangeNetwork from 'images/change_network.png'
-import WrongNetwork from 'images/wrong_network.svg'
 import capitalize from 'lodash/capitalize'
+import SwitchToMainnetLarge from 'images/switchToMainnet-13@3x.png'
+import SwitchToMainnetMedium from 'images/switchToMainnet-13@2x.png'
+import SwitchToMainnetSmall from 'images/switchToMainnet-13.png'
 
 const renderNetworks = (networks) => networks.map(capitalize).reduce((prev, curr) => [prev, ' or ', curr])
 
@@ -25,7 +27,7 @@ const SwitchNetwork = ({ hideModal, contentStyles, featureName = 'that page', de
             ) : (
               <Fragment>
                 <div className='switch__network__image'>
-                  <img src={WrongNetwork} />
+                  <img srcSet={`${SwitchToMainnetSmall} 300w, ${SwitchToMainnetMedium} 768w, ${SwitchToMainnetLarge} 1280w`} />
                 </div>
               </Fragment>
             )
