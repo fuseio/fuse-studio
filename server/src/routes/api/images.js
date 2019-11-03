@@ -9,13 +9,7 @@ const upload = multer()
 
 router.get('/:hash', async (req, res) => {
   const hash = req.params.hash
-  return request.get(`${urlBase}/image/${hash}`, (error, response, body) => {
-    if (error) {
-      throw error
-    }
-    return res.set('Content-Type', 'image')
-      .send(body)
-  })
+  return res.redirect(`${urlBase}/image/${hash}`)
 })
 
 router.post('/', upload.single('image'), async (req, res) => {
