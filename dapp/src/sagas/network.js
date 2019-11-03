@@ -144,7 +144,7 @@ function * changeNetwork ({ networkType }) {
   portis.changeNetwork(toLongName(networkType))
   yield call(getNetworkType, true)
   const foreignNetwork = yield select(state => state.network.foreignNetwork)
-  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : networkType })
+  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : networkType, networkType })
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
