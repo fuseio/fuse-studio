@@ -6,10 +6,18 @@ import { isNetworkSupported } from 'utils/network'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { withMaybe } from 'utils/components'
 import { getAccountAddress } from 'selectors/accounts'
+import { loadState } from 'utils/storage'
 
 class Web3 extends Component {
   connectToNetwork = () => {
-    this.props.getNetworkType()
+    const networkState = loadState('state.network')
+    const { getNetworkType } = this.props
+    const { networkType } = networkState
+    if (networkType) {
+      getNetworkType(true)
+    } else {
+      getNetworkType()
+    }
     // TODO: Move this to getNetworkType saga after redux-saga 1.0.0 upgrade
     if (window.ethereum && window.ethereum.on) {
       window.ethereum.on('accountsChanged', (accounts) => {
