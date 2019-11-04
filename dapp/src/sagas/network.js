@@ -71,6 +71,9 @@ function * getNetworkType ({ enableProvider }) {
       } })
 
     if (enableProvider) {
+      yield put({
+        type: actions.GETTING_ACCOUNT_ADDRESS.REQUEST
+      })
       const accountAddress = yield getAccountAddress(web3)
       if (accountAddress) {
         const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
@@ -78,6 +81,9 @@ function * getNetworkType ({ enableProvider }) {
           yield put(balanceOfFuse(accountAddress))
         }
       }
+      yield put({
+        type: actions.GETTING_ACCOUNT_ADDRESS.SUCCESS
+      })
     }
 
     if (!isNetworkSupported(networkType)) {

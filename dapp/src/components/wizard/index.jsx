@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
@@ -33,7 +33,8 @@ const WizardPage = ({
   loadModal,
   history,
   communityAddress,
-  getNetworkType
+  getNetworkType,
+  homeNetwork
 }) => {
   useEffect(() => {
     if (window && window.analytics) {
@@ -42,7 +43,16 @@ const WizardPage = ({
     getNetworkType(true)
   }, [])
 
-  useSwitchNetwork(['ropsten', 'mainnet'], { featureName: 'Wizard' })
+  const desiredNetworkType = useMemo(() => {
+    if (networkType === homeNetwork) {
+      return ['ropsten', 'mainnet']
+    } else {
+      const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
+      return [networkType, secondDesired]
+    }
+  }, [])
+
+  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
 
   const setIssuanceTransaction = (values) => {
     const {
@@ -207,6 +217,7 @@ const WizardPage = ({
 const mapStateToProps = (state) => ({
   ...state.screens.issuance,
   foreignNetwork: state.network.foreignNetwork,
+  homeNetwork: state.network.homeNetwork,
   adminAddress: getAccountAddress(state)
 })
 

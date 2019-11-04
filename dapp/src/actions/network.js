@@ -1,6 +1,7 @@
 import { requestAction, createRequestTypes } from './utils'
 
 export const GET_NETWORK_TYPE = createRequestTypes('GET_NETWORK_TYPE')
+export const GETTING_ACCOUNT_ADDRESS = createRequestTypes('GETTING_ACCOUNT_ADDRESS')
 export const GET_BLOCK_NUMBER = createRequestTypes('GET_BLOCK_NUMBER')
 
 export const CHANGE_NETWORK = createRequestTypes('CHANGE_NETWORK')

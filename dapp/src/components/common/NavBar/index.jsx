@@ -22,6 +22,7 @@ const NavBar = ({
   getNetworkType,
   foreignNetwork,
   loadModal,
+  connectingToAccount,
   withLogo = true
 }) => {
   const [isHelpOpen, setHelpOpen] = useState(false)
@@ -109,6 +110,13 @@ const NavBar = ({
                 <ProfileDropDown foreignNetwork={foreignNetwork} />
               </div>
             </div>
+          ) : connectingToAccount ? (
+            <div className='navbar__links__wallet navbar__connecting'>
+              <span>Connecting to wallet</span>
+              <span className='animate'>.</span>
+              <span className='animate'>.</span>
+              <span className='animate'>.</span>
+            </div>
           ) : (
             <div className='navbar__links__wallet' onClick={chooseProvider}>
               <span className='icon'><img src={WalletIcon} /></span>
@@ -122,7 +130,8 @@ const NavBar = ({
 }
 
 const mapStateToProps = (state) => ({
-  accountAddress: state.network.accountAddress
+  accountAddress: state.network.accountAddress,
+  connectingToAccount: state.network.connectingToAccount
 })
 
 const mapDispatchToProps = {
