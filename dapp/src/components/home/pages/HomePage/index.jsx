@@ -14,13 +14,15 @@ import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
+import { changeNetwork } from 'actions/network'
 
 const HomePage = ({
   history,
   loadModal,
   accountAddress,
   networkType,
-  homeNetwork
+  homeNetwork,
+  changeNetwork
 }) => {
   const [isClicked, setClicked] = useState(false)
   useEffect(() => {
@@ -49,7 +51,8 @@ const HomePage = ({
         window.analytics.track('Launch community button pressed')
       }
       if (networkType === homeNetwork) {
-        loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'] })
+        history.push('/view/issuance')
+        changeNetwork(CONFIG.env === 'qa' ? 'ropsten' : 'main')
       } else {
         history.push('/view/issuance')
       }
@@ -119,7 +122,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  loadModal
+  loadModal,
+  changeNetwork
 }
 
 export default withRouter(withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage)))
