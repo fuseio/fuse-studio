@@ -12,8 +12,7 @@ class Web3 extends Component {
   connectToNetwork = () => {
     const networkState = loadState('state.network')
     const { getNetworkType } = this.props
-    const { networkType } = networkState
-    if (networkType) {
+    if (networkState && networkState.networkType) {
       getNetworkType(true)
     } else {
       getNetworkType()

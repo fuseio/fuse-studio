@@ -52,7 +52,7 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
           <h5 className='profile__card__title'>Ethereum Network</h5>
           <p className='profile__card__balance'>
             <span>Balance:&nbsp;</span>
-            <span>{formatWei(account.foreign, 2) || 0}&nbsp;</span>
+            <span>{account && account.foreign ? formatWei((account.foreign), 2) : 0}&nbsp;</span>
             <span>ETH</span>
           </p>
         </div>
@@ -65,7 +65,7 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
           <h5 className='profile__card__title'>Fuse Network</h5>
           <p className='profile__card__balance'>
             <span>Balance:&nbsp;</span>
-            <span>{formatWei(account.home, 2) || 0}&nbsp;</span>
+            <span>{account && account.home ? formatWei((account && account.home), 2) : 0}&nbsp;</span>
             <span>FUSE</span>
           </p>
         </div>
