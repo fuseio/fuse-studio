@@ -34,9 +34,9 @@ class DashboardLayout extends Component {
 
   componentDidMount () {
     const { fetchCommunity, communityAddress, fetchEntities, getNetworkType } = this.props
-    getNetworkType(true)
     fetchCommunity(communityAddress)
     fetchEntities(communityAddress)
+    getNetworkType(true)
   }
 
   componentWillUnmount () {

@@ -51,15 +51,15 @@ function * deduceBridgeSides (networkType) {
   }
 }
 
-function * getNetworkType ({ enableProvider }) {
+function * getNetworkType ({ enableProvider, provider }) {
   try {
-    const web3 = yield getWeb3()
+    const web3 = yield getWeb3({ provider })
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const bridgeSides = yield deduceBridgeSides(networkType)
 
     const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
     const isPortis = get(window.ethereum, 'isPortis', false) || get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
-
+    console.log({ isMetaMask, isPortis })
     yield put({
       type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {

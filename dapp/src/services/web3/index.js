@@ -7,24 +7,24 @@ import { loadState } from 'utils/storage'
 
 let givenWeb3
 
-export const getWeb3Instance = () => {
+export const getWeb3Instance = (provider) => {
   if (givenWeb3) {
     return givenWeb3
   }
-  givenWeb3 = new Web3(initializeProvider())
+  givenWeb3 = new Web3(initializeProvider({ provider }))
   return givenWeb3
 }
 
-export const getWeb3 = ({ bridgeType } = {}) => {
+export const getWeb3 = ({ bridgeType, provider } = {}) => {
   if (!bridgeType) {
-    return getWeb3Instance()
+    return getWeb3Instance(provider)
   }
   if (bridgeType === 'home' && isFuse(window.ethereum)) {
-    return getWeb3Instance()
+    return getWeb3Instance(provider)
   }
 
   if (bridgeType === 'foreign' && !isFuse(window.ethereum)) {
-    return getWeb3Instance()
+    return getWeb3Instance(provider)
   }
   const web3 = web3ByBridge[bridgeType]
   return web3

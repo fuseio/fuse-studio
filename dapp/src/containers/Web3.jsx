@@ -37,7 +37,7 @@ class Web3 extends Component {
         }
       }, 100)
     } else {
-      this.connectToNetwork()
+      // this.connectToNetwork()
     }
   }
 
@@ -67,7 +67,7 @@ const withNetwork = (Component) => {
     networkType: state.network.networkType
   })
 
-  const ConnectedComponent = connect(mapStateToProps)(withMaybe(props => props.networkType)(Component))
+  const ConnectedComponent = connect(mapStateToProps)(Component)
   return ConnectedComponent
 }
 

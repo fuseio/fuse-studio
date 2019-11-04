@@ -1133,35 +1133,34 @@
   @include element(options) {
     @include xy-grid();
     margin-top: 4em;
-  }
 
-  @include element(metamask) {
-    @include xy-grid(vertical);
-    @include flex-align(null, middle);
-    margin-right: 3em;
-    > img {
-      width: 64px;
-      height: 59px;
-      margin-bottom: 1em;
+    > div:not(:first-child) {
+      margin-top: 2em;
     }
   }
 
-  @include element(portis) {
-    @include xy-grid(vertical);
-    @include flex-align(null, middle);
+  @include element(item) {
 
-    > img {
+    @include element(title) {
+      font-size: 1.125em;
+      color: $color-light-dark;
+      margin-bottom: 0.5em;
+    }
+
+    @include element(text) {
+      color: $color-gray;
+    }
+
+    img {
       width: 64px;
       height: 59px;
-      margin-bottom: 1em;
     }
   }
 
   @include element(button) {
-    margin-top: 4em;
     min-width: 145px;
 
-    span {
+    span.animate {
       animation-name: blink;
       animation-duration: 1.4s;
       animation-iteration-count: infinite;

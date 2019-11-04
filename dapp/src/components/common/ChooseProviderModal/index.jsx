@@ -25,43 +25,44 @@ const ChooseProviderModal = ({
     hideModal()
   }
 
-  const handleConnectWallet = () => {
+  const handleConnectWallet = (provider) => {
     if (setClicked) {
       setClicked(true)
     }
-    getNetworkType(true)
+    getNetworkType(true, provider)
     hideModal()
   }
 
   return (
     <Modal hasCloseBtn className='choose_provider__wrapper' onClose={() => handleClose()}>
       <div className='choose_provider'>
-        <h2 className='choose_provider__title'>Getting started! <img src={Missile} /></h2>
+        <h2 className='choose_provider__title'>Getting stated on Fuse! <img src={Missile} /></h2>
         <p className='choose_provider__text'>
-          In order to start the wizard you will need an Ethereum account with some ETH for funding
-          (click <a href='https://docs.fusenet.io/the-fuse-studio/getting-started' target='_blank' rel='noopener noreferrer'>here</a> for a guide).
+        In order to use the Fuse platform you will need to connect an Ethereum wallet choose one of the supported wallets to connect to your account:
         </p>
 
-        <div className='choose_provider__options'>
-          <div className='choose_provider__metamask'>
-            <img src={MetamaskIcon} />
-            <span>Metamask</span>
+        <div className='choose_provider__options grid-x'>
+          <div className='choose_provider__item cell medium-24'>
+            <div className='choose_provider__item__title cell small-24'>Browser wallet</div>
+            <div className='cell small-24 grid-x align-middle'>
+              <div className='cell small-4'><img src={MetamaskIcon} /></div>
+              <p className='cell small-10 choose_provider__item__text'>Self custodian browser extension based wallet</p>
+              <button className='choose_provider__button button button--normal cell' onClick={() => handleConnectWallet('metamask')}><span>Connect metamask</span></button>
+            </div>
           </div>
-          <div className='choose_provider__portis'>
-            <img src={PortisIcon} />
-            <span>Portis</span>
+          <div className='choose_provider__item cell medium-24'>
+            <div className='choose_provider__item__title cell small-24'>Portis wallet</div>
+            <div className='cell small-24 grid-x align-middle'>
+              <div className='cell small-4'><img src={PortisIcon} /></div>
+              <p className='cell small-10 choose_provider__item__text'>Create your new account or login</p>
+              <button className='choose_provider__button button button--normal cell' onClick={() => handleConnectWallet('portis')}><span>Connect Portis</span></button>
+            </div>
           </div>
         </div>
 
-        <button className='choose_provider__button button button--normal' disabled={!to} onClick={handleConnectWallet}>Connect {!to
-          ? (
-            <React.Fragment>
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
-            </React.Fragment>
-          ) : to
-        }</button>
+        <div className='choose_provider__text'>
+          Need help? or (click <a href='https://docs.fusenet.io/the-fuse-studio/getting-started' target='_blank' rel='noopener noreferrer'>here</a> for a guide).
+        </div>
       </div>
     </Modal>
   )
