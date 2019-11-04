@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { withRouter } from 'react-router-dom'
 import Modal from 'components/common/Modal'
 import ChangeNetwork from 'images/change_network.png'
 import capitalize from 'lodash/capitalize'
@@ -8,10 +9,25 @@ import SwitchToMainnetSmall from 'images/switchToMainnet-13.png'
 
 const renderNetworks = (networks) => networks.map(capitalize).reduce((prev, curr) => [prev, ' or ', curr])
 
-const SwitchNetwork = ({ hideModal, contentStyles, featureName = 'that page', desiredNetworkType = 'fuse' }) => {
+const SwitchNetwork = ({
+  history,
+  hideModal,
+  contentStyles,
+  featureName = 'that page',
+  desiredNetworkType = 'fuse',
+  goBack = true
+}) => {
   const desiredNetworkTypeArray = Array.isArray(desiredNetworkType) ? desiredNetworkType : [desiredNetworkType]
+
+  const onClose = () => {
+    hideModal()
+    if (goBack) {
+      history.goBack()
+    }
+  }
+
   return (
-    <Modal className='switch__network' hasCloseBtn onClose={hideModal}>
+    <Modal className='switch__network' hasCloseBtn onClose={onClose}>
       <h3 className='switch__network__title'>Switch to {renderNetworks(desiredNetworkTypeArray)} Network to use {featureName}</h3>
       <div className='switch__network__content' style={{ ...contentStyles }}>
         <div className='switch__network__text'>
@@ -37,4 +53,4 @@ const SwitchNetwork = ({ hideModal, contentStyles, featureName = 'that page', de
   )
 }
 
-export default SwitchNetwork
+export default withRouter(SwitchNetwork)

@@ -52,7 +52,7 @@ const WizardPage = ({
     }
   }, [])
 
-  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
+  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard', goBack: false })
 
   const setIssuanceTransaction = (values) => {
     const {
