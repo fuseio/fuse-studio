@@ -112,7 +112,7 @@ const NavBar = ({
             </div>
           ) : connectingToAccount ? (
             <div className='navbar__links__wallet navbar__connecting'>
-              <span>Connecting to wallet</span>
+              <span className='navbar__links__wallet__text'>Connecting to wallet</span>
               <span className='animate'>.</span>
               <span className='animate'>.</span>
               <span className='animate'>.</span>
