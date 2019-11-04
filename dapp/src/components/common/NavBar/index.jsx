@@ -107,7 +107,7 @@ const NavBar = ({
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
               <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                <ProfileDropDown foreignNetwork={foreignNetwork} />
+                <ProfileDropDown foreignNetwork={foreignNetwork === 'mainnet' ? 'main' : foreignNetwork} />
               </div>
             </div>
           ) : connectingToAccount ? (
