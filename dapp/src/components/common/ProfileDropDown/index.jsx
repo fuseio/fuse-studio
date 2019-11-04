@@ -97,7 +97,7 @@ const ProfileCard = ({
       <div className='profile__card__logo'>
         <CommunityLogo
           symbol={symbol}
-          isDaiToken={entity.token && entity.token.symbol === 'DAI'}
+          // isDaiToken={entity.token && entity.token.symbol === 'DAI'}
           imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
           isSmall
           metadata={metadata}

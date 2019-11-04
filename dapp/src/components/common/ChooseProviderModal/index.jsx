@@ -13,13 +13,13 @@ const ChooseProviderModal = ({
   isPortis,
   setClicked
 }) => {
-  const to = useMemo(() => {
-    if (isMetaMask) {
-      return 'Metamask'
-    } else if (isPortis) {
-      return 'Portis'
-    }
-  }, [isPortis, isMetaMask])
+  // const to = useMemo(() => {
+  //   if (isMetaMask) {
+  //     return 'Metamask'
+  //   } else if (isPortis) {
+  //     return 'Portis'
+  //   }
+  // }, [isPortis, isMetaMask])
 
   const handleClose = () => {
     hideModal()
@@ -44,17 +44,17 @@ const ChooseProviderModal = ({
         <div className='choose_provider__options grid-x'>
           <div className='choose_provider__item cell medium-24'>
             <div className='choose_provider__item__title cell small-24'>Browser wallet</div>
-            <div className='cell small-24 grid-x align-middle'>
+            <div className='choose_provider__item__box cell small-24 grid-x align-middle align-justify'>
               <div className='cell small-4'><img src={MetamaskIcon} /></div>
-              <p className='cell small-10 choose_provider__item__text'>Self custodian browser extension based wallet</p>
-              <button className='choose_provider__button button button--normal cell' onClick={() => handleConnectWallet('metamask')}><span>Connect metamask</span></button>
+              <p className='cell small-10 choose_provider__item__text'>Self custody browser extension based wallet</p>
+              <button className='choose_provider__button button button--normal cell' disabled={window && window.ethereum && !window.ethereum.isMetaMask} onClick={() => handleConnectWallet('metamask')}><span>{window && window.ethereum && !window.ethereum.isMetaMask ? 'Not detected' : 'Connect Metamask'}</span></button>
             </div>
           </div>
           <div className='choose_provider__item cell medium-24'>
             <div className='choose_provider__item__title cell small-24'>Portis wallet</div>
-            <div className='cell small-24 grid-x align-middle'>
+            <div className='choose_provider__item__box cell small-24 grid-x align-middle align-justify'>
               <div className='cell small-4'><img src={PortisIcon} /></div>
-              <p className='cell small-10 choose_provider__item__text'>Create your new account or login</p>
+              <p className='cell small-10 choose_provider__item__text'>Create your new account or login using your phone</p>
               <button className='choose_provider__button button button--normal cell' onClick={() => handleConnectWallet('portis')}><span>Connect Portis</span></button>
             </div>
           </div>

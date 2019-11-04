@@ -10,12 +10,12 @@ class JoinCommunity extends Component {
     joinCommunity(communityAddress, { ...data, type: 'user' })
   }
 
-  componentDidUpdate (prepProps, prevState) {
-    if (this.props.isBoxConnected && (!prepProps.join && this.props.join)) {
+  componentDidUpdate (prevProps) {
+    if (this.props.isBoxConnected && (!prevProps.join && this.props.join)) {
       window.location.replace(window.location.origin)
     }
 
-    if (this.props.isBoxConnected && (!prepProps.join && this.props.join === false)) {
+    if (this.props.isBoxConnected && (!prevProps.join && this.props.join === false)) {
       window.location.replace(window.location.origin)
     }
   }

@@ -30,7 +30,7 @@ const Community = memo(({
     <div className='community' onClick={handleClick}>
       <div className='community__logo'>
         <CommunityLogo
-          isDaiToken={isDaiToken(networkType, token)}
+          // isDaiToken={isDaiToken(networkType, token)}
           symbol={symbol}
           imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
           metadata={metadata}

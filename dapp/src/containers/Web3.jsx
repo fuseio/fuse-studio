@@ -37,7 +37,7 @@ class Web3 extends Component {
         }
       }, 100)
     } else {
-      // this.connectToNetwork()
+      this.connectToNetwork()
     }
   }
 

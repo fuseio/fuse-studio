@@ -40,7 +40,7 @@ const WizardPage = ({
     if (window && window.analytics) {
       window.analytics.track('Wizard init')
     }
-    getNetworkType(true)
+    // getNetworkType(true)
   }, [])
 
   const desiredNetworkType = useMemo(() => {

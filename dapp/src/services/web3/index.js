@@ -8,11 +8,12 @@ import { loadState } from 'utils/storage'
 let givenWeb3
 
 export const getWeb3Instance = (provider) => {
-  if (givenWeb3) {
-    return givenWeb3
-  }
-  givenWeb3 = new Web3(initializeProvider({ provider }))
-  return givenWeb3
+  // if (givenWeb3) {
+  //   return givenWeb3
+  // }
+  // givenWeb3 = new Web3(initializeProvider({ provider }))
+  // return givenWeb3
+  return new Web3(initializeProvider({ provider }))
 }
 
 export const getWeb3 = ({ bridgeType, provider } = {}) => {
@@ -42,7 +43,7 @@ export function get3box ({ accountAddress }) {
 const networkState = loadState('state.network') || CONFIG.web3.bridge.network
 const { foreignNetwork } = networkState
 
-const foreignProviderUrl = getProviderUrl(foreignNetwork)
+const foreignProviderUrl = getProviderUrl((networkState && networkState.networkType) || foreignNetwork)
 
 export const homeWeb3 = new Web3(CONFIG.web3.fuseProvider)
 export const foreignWeb3 = new Web3(foreignProviderUrl)

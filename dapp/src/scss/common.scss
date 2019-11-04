@@ -1132,7 +1132,7 @@
 
   @include element(options) {
     @include xy-grid();
-    margin-top: 4em;
+    margin-top: 2em;
 
     > div:not(:first-child) {
       margin-top: 2em;
@@ -1140,7 +1140,7 @@
   }
 
   @include element(item) {
-
+    font-size: 0.9em;
     @include element(title) {
       font-size: 1.125em;
       color: $color-light-dark;
@@ -1149,6 +1149,14 @@
 
     @include element(text) {
       color: $color-gray;
+    }
+
+    @include element(box) {
+      padding: 10px;
+
+      &:hover {
+        background-color: rgba(195, 195, 195, 0.14);
+      }
     }
 
     img {

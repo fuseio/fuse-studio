@@ -65,7 +65,6 @@ const MintBurn = ({
   symbol,
   networkType,
   balances,
-  tokenNetworkType,
   tokenAddress,
   isMinting,
   isBurning,
@@ -130,7 +129,7 @@ const MintBurn = ({
             error={error}
             balance={balance ? formatWei(balance, 0) : 0}
             handleMintOrBurnClick={mintHandler}
-            tokenNetworkType={tokenNetworkType}
+            tokenNetworkType={foreignNetwork}
             symbol={symbol}
             actionType='mint'
             accountAddress={accountAddress}
@@ -152,7 +151,7 @@ const MintBurn = ({
             error={error}
             balance={balance ? formatWei(balance, 0) : 0}
             handleMintOrBurnClick={burnHandler}
-            tokenNetworkType={tokenNetworkType}
+            tokenNetworkType={foreignNetwork}
             symbol={symbol}
             actionType='burn'
             accountAddress={accountAddress}

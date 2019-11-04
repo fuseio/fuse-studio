@@ -10,7 +10,7 @@ import { balanceOfFuse } from 'actions/accounts'
 import { loadModal } from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
-import { saveState } from 'utils/storage'
+import { saveState, loadState } from 'utils/storage'
 import { processTransactionHash } from 'services/api/misc'
 import { getNetworkSide } from 'selectors/network'
 import { apiCall, tryTakeEvery } from './utils'
@@ -53,13 +53,21 @@ function * deduceBridgeSides (networkType) {
 
 function * getNetworkType ({ enableProvider, provider }) {
   try {
+    const loadedProvider = loadState('state.provider')
+      ? loadState('state.provider')
+      : window && window.ethereum
+        ? { provider: 'metamask' }
+        : { provider: 'portis' }
+    if (!provider) {
+      provider = loadedProvider && loadedProvider.provider
+    }
     const web3 = yield getWeb3({ provider })
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const bridgeSides = yield deduceBridgeSides(networkType)
 
-    const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
+    const isMetaMask = get(window.ethereum, 'isMetaMask', false) || get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
     const isPortis = get(window.ethereum, 'isPortis', false) || get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
-    console.log({ isMetaMask, isPortis })
+
     yield put({
       type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
@@ -82,7 +90,11 @@ function * getNetworkType ({ enableProvider, provider }) {
         }
       }
       yield put({
-        type: actions.GETTING_ACCOUNT_ADDRESS.SUCCESS
+        type: actions.GETTING_ACCOUNT_ADDRESS.SUCCESS,
+        response: {
+          isMetaMask,
+          isPortis
+        }
       })
     }
 
@@ -146,6 +158,16 @@ function * watchGetNetworkTypeSuccess ({ response }) {
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
+function * watchGettingAccountAddress ({ response }) {
+  const { isMetaMask, isPortis } = response
+  const provider = isPortis
+    ? 'portis'
+    : isMetaMask
+      ? 'metamask'
+      : 'portis'
+  saveState('state.provider', { provider })
+}
+
 function * changeNetwork ({ networkType }) {
   portis.changeNetwork(toLongName(networkType))
   yield call(getNetworkType, true)
@@ -174,6 +196,7 @@ export default function * web3Saga () {
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),
     takeEvery(actions.CHANGE_NETWORK.REQUEST, changeNetwork),
     takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess),
+    takeEvery(actions.GETTING_ACCOUNT_ADDRESS.SUCCESS, watchGettingAccountAddress),
     tryTakeEvery(actions.SEND_TRANSACTION_HASH, sendTransactionHash, 1)
   ])
 }

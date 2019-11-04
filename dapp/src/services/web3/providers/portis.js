@@ -4,7 +4,7 @@ import { loadState } from 'utils/storage'
 
 export let portis
 
-export const getProvider = () => {
+export const getProvider = (override) => {
   const networkState = loadState('state.network') || CONFIG.web3.bridge.network
   const { foreignNetwork } = networkState
 
@@ -13,5 +13,6 @@ export const getProvider = () => {
   // if (!window.ethereum) {
   window.ethereum = portis.provider
   // }
+
   return portis.provider
 }

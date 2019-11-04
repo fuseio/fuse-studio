@@ -16,7 +16,7 @@ import Businesses from 'components/dashboard/pages/Businesses'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
-import { getForeignNetwork, getBridgeStatus } from 'selectors/network'
+import { getBridgeStatus } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress, getBalances } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
@@ -34,9 +34,9 @@ class DashboardLayout extends Component {
 
   componentDidMount () {
     const { fetchCommunity, communityAddress, fetchEntities, getNetworkType } = this.props
+    // getNetworkType(true)
     fetchCommunity(communityAddress)
     fetchEntities(communityAddress)
-    getNetworkType(true)
   }
 
   componentWillUnmount () {
@@ -250,7 +250,6 @@ const mapStateToProps = (state, { match }) => ({
   isPortis: state.network.isPortis,
   community: state.entities.communities[match.params.address],
   communityAddress: match.params.address,
-  tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
   isAdmin: checkIsAdmin(state),
   balances: getBalances(state),
