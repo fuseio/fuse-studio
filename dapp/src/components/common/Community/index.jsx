@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import identity from 'lodash/identity'
 // import { formatWei } from 'utils/format'
 import CommunityLogo from 'components/common/CommunityLogo'
-import { isDaiToken } from 'constants/existingTokens'
+// import { isDaiToken } from 'constants/existingTokens'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 

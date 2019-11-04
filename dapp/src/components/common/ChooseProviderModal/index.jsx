@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import Modal from 'components/common/Modal'
 import Missile from 'images/missile.svg'
@@ -13,14 +13,6 @@ const ChooseProviderModal = ({
   isPortis,
   setClicked
 }) => {
-  // const to = useMemo(() => {
-  //   if (isMetaMask) {
-  //     return 'Metamask'
-  //   } else if (isPortis) {
-  //     return 'Portis'
-  //   }
-  // }, [isPortis, isMetaMask])
-
   const handleClose = () => {
     hideModal()
   }

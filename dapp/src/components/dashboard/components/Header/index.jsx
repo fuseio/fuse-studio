@@ -1,7 +1,7 @@
 import React from 'react'
 import { isMobileOnly } from 'react-device-detect'
 import CommunityLogo from 'components/common/CommunityLogo'
-import { isDaiToken } from 'constants/existingTokens'
+// import { isDaiToken } from 'constants/existingTokens'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
