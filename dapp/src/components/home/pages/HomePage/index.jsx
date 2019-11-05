@@ -28,7 +28,7 @@ const HomePage = ({
   useEffect(() => {
     if (accountAddress && isClicked) {
       if (networkType === homeNetwork) {
-        loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'] })
+        loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'], goBack: false })
       } else {
         history.push('/view/issuance')
       }
