@@ -32,7 +32,7 @@
     }
 
     @include element(members) {
-      font-size: 10px; 
+      font-size: 0.625em; 
 
       > span {
         margin-left: 5px;

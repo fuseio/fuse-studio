@@ -30,7 +30,14 @@ const FeaturedCommunities = memo(({
     return () => { }
   }, [account])
 
-  const showDashboard = (communityAddress) => {
+  const showDashboard = (communityAddress, name) => {
+    if (window && window.analytics) {
+      if (name) {
+        window.analytics.track(`Clicked on featured community - ${name}`)
+      } else {
+        window.analytics.track(`Clicked on featured community`)
+      }
+    }
     history.push(`/view/community/${communityAddress}`)
   }
 
@@ -58,7 +65,6 @@ const FeaturedCommunities = memo(({
           return (
             <div className='cell medium-12' key={index}>
               <Community
-                networkType={networkType}
                 token={{ ...token, communityAddress }}
                 metadata={{
                   ...metadata[token.tokenURI],
@@ -81,7 +87,7 @@ const FeaturedCommunities = memo(({
                     ...metadata[token.tokenURI],
                     ...metadata[community.communityURI]
                   }}
-                  showDashboard={() => showDashboard(address)}
+                  showDashboard={() => showDashboard(address, community.name)}
                   community={community}
                 />
               </div>

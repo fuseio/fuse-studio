@@ -159,7 +159,7 @@ const getSideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
   }
 ])
 
-const allPlugins = {
+const allPlugins = (isAdmin) => isAdmin ? ({
   businessList: {
     name: 'Business list',
     path: '/merchants',
@@ -202,7 +202,15 @@ const allPlugins = {
     icon: DollarIcon,
     selectedIcon: DollarYellowIcon
   }
-}
+}) : ({
+  businessList: {
+    name: 'Business list',
+    path: '/merchants',
+    url: (match) => `${match}/merchants`,
+    icon: BusinessIcon,
+    selectedIcon: BusinessYellowIcon
+  }
+})
 
 const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLogo, plugins, tokenType, location }) => {
   const [currentPath, setPath] = useState('')
@@ -267,14 +275,15 @@ const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLo
               </div>
               {
                 addedPlugins.map((plugin) => {
-                  if (plugin && allPlugins[plugin] && !allPlugins[plugin].isRemoved) {
+                  const allPlugins1 = allPlugins(isAdmin)
+                  if (plugin && allPlugins1[plugin] && !allPlugins1[plugin].isRemoved) {
                     const {
                       name,
                       path,
                       url,
                       icon,
                       selectedIcon
-                    } = allPlugins[plugin]
+                    } = allPlugins1[plugin]
                     return (
                       <Link
                         key={name}

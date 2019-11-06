@@ -11,6 +11,7 @@ import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
 import Header from 'components/dashboard/components/Header'
+import { getForeignNetwork } from 'selectors/network'
 
 class Dashboard extends Component {
   state = {
@@ -20,9 +21,11 @@ class Dashboard extends Component {
     lastAction: {}
   }
 
-  componentDidMount () {
-    if (this.props.networkType !== 'fuse' && this.props.tokenNetworkType !== this.props.networkType) {
-      this.props.loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [this.props.tokenNetworkType], handleClose: this.showHomePage })
+  componentDidUpdate (prevProps) {
+    const { networkType, tokenNetworkType } = this.props
+    if ((!prevProps.tokenNetworkType && (prevProps.tokenNetworkType !== networkType)) && (networkType !== 'fuse')) {
+      const { loadModal } = this.props
+      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [tokenNetworkType], handleClose: this.showHomePage })
     }
   }
 
@@ -138,6 +141,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  tokenNetworkType: getForeignNetwork(state),
   ...state.screens.token,
   ...getTransaction(state, state.screens.token.transactionHash)
 })

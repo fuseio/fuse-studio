@@ -16,7 +16,7 @@ import Businesses from 'components/dashboard/pages/Businesses'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
-import { getForeignNetwork, getBridgeStatus } from 'selectors/network'
+import { getBridgeStatus } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import { getAccountAddress, getBalances } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
@@ -33,8 +33,7 @@ class DashboardLayout extends Component {
   }
 
   componentDidMount () {
-    const { fetchCommunity, communityAddress, fetchEntities, getNetworkType } = this.props
-    getNetworkType(true)
+    const { fetchCommunity, communityAddress, fetchEntities } = this.props
     fetchCommunity(communityAddress)
     fetchEntities(communityAddress)
   }
@@ -56,14 +55,14 @@ class DashboardLayout extends Component {
     }
 
     if (prevProps.isAdmin !== this.props.isAdmin) {
-      const { accountAddress, isAdmin, networkType, location } = this.props
+      const { accountAddress, isAdmin, networkType, location, communityAddress } = this.props
       const { analytics } = window
       if (isAdmin) {
         if (location.pathname.includes('/justCreated')) {
           analytics.reset()
         }
 
-        analytics.identify(`${accountAddress}`, { role: 'admin' })
+        analytics.identify(`${accountAddress}`, { role: 'admin', communityAddress })
 
         if (networkType === 'fuse') {
           analytics.identify(`${accountAddress}`, {
@@ -154,10 +153,10 @@ class DashboardLayout extends Component {
               </Sidebar>
           }
           <div className='content__container'>
-            <NavBar withLogo={false} />
+            <NavBar withLogo={false} foreignNetwork={foreignToken && foreignToken.networkType} />
             <div className='content'>
               <Switch>
-                {!get(plugins, 'joinBonus.isRemoved', false) && (
+                {!get(plugins, 'joinBonus.isRemoved', false) && isAdmin && (
                   <Route path={`${match.path}/bonus`}
                     render={() => (
                       <JoinBonusPage
@@ -250,7 +249,6 @@ const mapStateToProps = (state, { match }) => ({
   isPortis: state.network.isPortis,
   community: state.entities.communities[match.params.address],
   communityAddress: match.params.address,
-  tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
   isAdmin: checkIsAdmin(state),
   balances: getBalances(state),

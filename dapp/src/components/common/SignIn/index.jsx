@@ -16,8 +16,8 @@ class SignInLayout extends Component {
     }
   }
 
-  componentDidUpdate (prepProps, prevState) {
-    if (!prepProps.isBoxConnected && this.props.isBoxConnected && this.props.isMobileApp) {
+  componentDidUpdate (prevProps) {
+    if (!prevProps.isBoxConnected && this.props.isBoxConnected && this.props.isMobileApp) {
       window.location.replace(window.location.origin)
     }
   }

@@ -66,16 +66,6 @@ function * subscribeUser ({ user }) {
   saveState('subscribe', true)
 }
 
-// function * isUserExists ({ accountAddress }) {
-//   const response = yield apiCall(api.isUserExists, { accountAddress })
-
-//   yield put({
-//     type: actions.IS_USER_EXISTS.SUCCESS,
-//     accountAddress,
-//     response
-//   })
-// }
-
 function * isUserExists ({ accountAddress }) {
   const response = yield apiCall(isUserProfileExists, { accountAddress })
 

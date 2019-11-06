@@ -570,7 +570,7 @@
     @include xy-grid(vertical, false);
     @include flex-align(center, middle);
     color: $color-gray;
-    font-size: 20px;
+    font-size: 1.250em;
     line-height: 1.6;
 
     span:nth-child(2) {
@@ -729,7 +729,7 @@
   }
 
   @include element(title) {
-    font-size: 20px;
+    font-size: 1.250em;
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: 0.5px;
@@ -761,7 +761,7 @@
 
   @include element(icon) {
     margin: 1em auto;
-    font-size: 20px;
+    font-size: 1.250em;
   }
 
   @include element(loader) {
@@ -822,7 +822,7 @@
   justify-content: center;
   &-text {
     color: $color-white;
-    font-size: 20px;
+    font-size: 1.250em;
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: 0.5px;
@@ -1100,7 +1100,12 @@
 
     @include breakpoint(medium up) {
       width: 619px !important;
+      max-height: 90%;
       padding: 2em !important;
+    }
+
+    @include breakpoint(medium down) {
+      height: 90% !important;
     }
   }
 
@@ -1119,11 +1124,15 @@
   }
 
   @include element(text) {
-    font-size: 1.125em;
+    font-size: 1em;
     line-height: 1.33;
     letter-spacing: -0.39px;
     color: $color-gray;
     margin-top: 2em;
+
+    @include modifier(smaller) {
+      font-size: smaller;
+    }
 
     > a:hover {
       text-decoration: underline;
@@ -1132,36 +1141,43 @@
 
   @include element(options) {
     @include xy-grid();
-    margin-top: 4em;
-  }
+    margin-top: 2em;
 
-  @include element(metamask) {
-    @include xy-grid(vertical);
-    @include flex-align(null, middle);
-    margin-right: 3em;
-    > img {
-      width: 64px;
-      height: 59px;
-      margin-bottom: 1em;
+    > div:not(:first-child) {
+      margin-top: 2em;
     }
   }
 
-  @include element(portis) {
-    @include xy-grid(vertical);
-    @include flex-align(null, middle);
+  @include element(item) {
+    font-size: 0.9em;
+    @include element(title) {
+      font-size: 1.125em;
+      color: $color-light-dark;
+      margin-bottom: 0.5em;
+    }
 
-    > img {
+    @include element(text) {
+      color: $color-gray;
+    }
+
+    @include element(box) {
+      padding: 10px;
+
+      &:hover {
+        background-color: rgba(195, 195, 195, 0.14);
+      }
+    }
+
+    img {
       width: 64px;
       height: 59px;
-      margin-bottom: 1em;
     }
   }
 
   @include element(button) {
-    margin-top: 4em;
     min-width: 145px;
 
-    span {
+    span.animate {
       animation-name: blink;
       animation-duration: 1.4s;
       animation-iteration-count: infinite;

@@ -34,6 +34,9 @@ const Contracts = ({
                                 onChange={e => {
                                   setFieldValue('isOpen', e.target.checked)
                                   e.preventDefault()
+                                  if (window && window.analytics) {
+                                    window.analytics.track(`Community status - ${e.target.checked ? 'open' : 'close'}`)
+                                  }
                                 }}
                                 {...field}
                               />

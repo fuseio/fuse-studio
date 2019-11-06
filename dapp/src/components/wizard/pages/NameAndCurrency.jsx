@@ -1,6 +1,5 @@
 import React from 'react'
 import CurrencyType from '../components/CurrencyType'
-// import { isMobileOnly } from 'react-device-detect'
 import TextField from '@material-ui/core/TextField'
 import { Field } from 'formik'
 import { nameToSymbol } from 'utils/format'
@@ -19,6 +18,9 @@ const NameAndCurrency = ({ networkType }) => {
               {...field}
               onChange={event => {
                 handleChange(event)
+                if (window && window.analytics) {
+                  window.analytics.track('Filling community name')
+                }
                 setFieldValue('communitySymbol', nameToSymbol(event.target.value))
               }}
               type='search'
@@ -51,9 +53,15 @@ const NameAndCurrency = ({ networkType }) => {
         <p className='name__text' style={{ marginBottom: '1em' }}>Leave us your mail and we will notify you with all the essential information</p>
         <Field
           name='email'
-          render={({ field }) => (
+          render={({ field, form: { handleChange } }) => (
             <TextField
               {...field}
+              onChange={event => {
+                if (window && window.analytics) {
+                  window.analytics.track('Filling email')
+                }
+                handleChange(event)
+              }}
               type='email'
               placeholder='Insert mail'
               classes={{
@@ -92,7 +100,6 @@ const NameAndCurrency = ({ networkType }) => {
           </div>
         </div>
       </div>
-      {/* {isMobileOnly && <div className='line' ><hr /></div>} */}
     </div>
   )
 }

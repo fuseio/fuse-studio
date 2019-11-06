@@ -13,7 +13,7 @@ const FeaturedCommunity = memo(({
           <img alt='cover photo' src={community.coverPhoto ? `${CONFIG.ipfsProxy.urlBase}/image/${community.coverPhoto}` : CommunityPlaceholderImage} />
         </div>
         <div className='featured__logo'>
-          <img alt='logo photo' src={`${CONFIG.ipfsProxy.urlBase}/image/${metadata && metadata.image}`} />
+          <img alt='logo photo' src={metadata && metadata.image && `${CONFIG.ipfsProxy.urlBase}/image/${metadata && metadata.image}`} />
         </div>
       </div>
       <div className='featured__content'>

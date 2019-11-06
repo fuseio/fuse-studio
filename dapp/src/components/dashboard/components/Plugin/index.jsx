@@ -10,18 +10,21 @@ const Plugin = ({
   disabled,
   showInfoModal,
   subTitle,
-  managePlugin
+  managePlugin,
+  modifier,
+  text
 }) => {
   return (
-    <div className='plugin-card'>
-      <div className='plugin-card__image'>
+    <div className='plugin-card cell small-24 medium-8'>
+      <div className={classNames('plugin-card__image', { 'plugin-card__image--fiat': modifier })}>
         <div className='plugin-card__image__container'>
           <img src={image} />
         </div>
       </div>
-      <div className={classNames('plugin-card__content', { 'plugin-card__content--disabled': disabled })}>
-        <h2 className='plugin-card__title'>{title} <span>{subTitle}</span></h2>
-        <div className='plugin-card__actions'>
+      <div className={classNames('plugin-card__content grid-y align-justify', { 'plugin-card__content--fiat': modifier, 'plugin-card__content--disabled': disabled })}>
+        <h2 className='plugin-card__title cell small-24'>{title} <span>{subTitle}</span></h2>
+        {text && <p className='plugin-card__text cell small-24'>{text}</p>}
+        <div className='plugin-card__actions cell small-24'>
           <span className='plugin-card__learn' onClick={showInfoModal}>LEARN MORE</span>
           <button disabled={disabled} className={classNames('plugin-card__btn', { 'plugin-card__btn--add': !hasPlugin }, { 'plugin-card__btn--remove': hasPlugin })} onClick={managePlugin}>
             {!hasPlugin ? (

@@ -93,16 +93,16 @@
       font-weight: 500;
       line-height: 1.44;
       color: $color-gray; 
-      margin-bottom: 0.6em;
+      margin: 0.6em 0;
     }
   }
 }
 
 @include block(plugin-card) {
   display: block;
-  width: 30%;
-  min-width: 30%;
-  min-height: 14.4em;
+  // width: 30%;
+  // min-width: 30%;
+  // min-height: 14.4em;
   font-size: 16px;
   border-radius: 8px;
   background-color: $color-white;
@@ -118,6 +118,10 @@
     width: 100%;
     padding-top: 137 / 302 * 100%;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+
+    @include modifier(fiat) {
+      padding-top: 90 / 275 * 100%;
+    }
 
     @include element(container) {
       position: absolute;
@@ -135,7 +139,10 @@
 
   @include element(content) {
     padding: 1.125em;
-    height: 100%;
+    
+    @include modifier(fiat) {
+      min-height: 9.2em;
+    }
 
     @include modifier(disabled) {
       opacity: .4;
@@ -154,10 +161,16 @@
     }
   }
 
+  @include element(text) {
+    font-size: 0.750em;
+    line-height: 1.5;
+    color: $color-gray;
+  }
+
   @include element(actions) {
     @include xy-grid(horizontal, false);
     @include flex-align(right, middle);
-    margin-top: 1em;
+    // margin-top: 1em;
   }
 
   @include element(learn) {

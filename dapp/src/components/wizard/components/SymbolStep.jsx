@@ -23,6 +23,9 @@ const SymbolStep = ({ formik }) => {
               defaultValue={communityType ? communitySymbol : existingToken.symbol}
               onChange={(event) => {
                 setFieldValue('communitySymbol', event.target.value)
+                if (window && window.analytics) {
+                  window.analytics.track('Filling symbol')
+                }
               }}
             />
           )}

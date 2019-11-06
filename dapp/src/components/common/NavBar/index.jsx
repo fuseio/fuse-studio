@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { connect } from 'react-redux'
 import Logo from 'components/common/Logo'
 import HelpIcon from 'images/help.svg'
@@ -12,119 +12,131 @@ import { withNetwork } from 'containers/Web3'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
 import { getNetworkType } from 'actions/network'
+import { loadModal } from 'actions/ui'
+import { CHOOSE_PROVIDER } from 'constants/uiConstants'
 
-class NavBar extends Component {
-  state = {
-    scrollTop: 0,
-    isHelpOpen: false,
-    isProfileOpen: false,
-    isNotificationOpen: false
-  }
-  componentDidMount () {
-    document.addEventListener('scroll', this.handleScroll)
-    document.addEventListener('click', this.handleClickOutside)
-  }
+const NavBar = ({
+  history,
+  accountAddress,
+  networkType,
+  getNetworkType,
+  foreignNetwork,
+  loadModal,
+  connectingToAccount,
+  withLogo = true
+}) => {
+  const [isHelpOpen, setHelpOpen] = useState(false)
+  const [isProfileOpen, setProfileOpen] = useState(false)
+  const [scrollTop, setScrollTop] = useState(false)
+  const helpRef = useRef(null)
+  const profileRef = useRef(null)
 
-  componentWillUnmount () {
-    document.removeEventListener('scroll', this.handleScroll)
-    document.removeEventListener('click', this.handleClickOutside)
-  }
-
-  handleScroll = (event) => {
+  const handleScroll = useCallback(event => {
     let lastScrollY = window.scrollY
-    this.setState({ scrollTop: lastScrollY })
-  }
+    setScrollTop(lastScrollY)
+  }, [])
 
-  handleClickOutside = (event) => {
-    if (this.dropdownHelpRef && !this.dropdownHelpRef.contains(event.target)) {
-      this.setState({ isHelpOpen: false })
+  const handleClickOutside = useCallback(event => {
+    if (helpRef && helpRef.current && !helpRef.current.contains(event.target)) {
+      setHelpOpen(false)
     }
 
-    if (this.dropdownProfile && !this.dropdownProfile.contains(event.target)) {
-      this.setState({ isProfileOpen: false })
+    if (profileRef && profileRef.current && !profileRef.current.contains(event.target)) {
+      setProfileOpen(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('scroll', handleScroll)
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('scroll', handleScroll)
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [handleScroll, handleClickOutside])
+
+  const goToHome = () => history.push('/')
+
+  const chooseProvider = () => {
+    if (!accountAddress) {
+      if (window && window.analytics) {
+        window.analytics.track('Connect wallet clicked - not connected')
+      }
+      loadModal(CHOOSE_PROVIDER)
     }
   }
 
-  setDropdownHelpRef = (node) => {
-    this.dropdownHelpRef = node
+  const openProfile = (e) => {
+    e.stopPropagation()
+    setProfileOpen(!isProfileOpen)
   }
 
-  setDropdownProfileRef = (node) => {
-    this.dropdownProfile = node
+  const openHelp = (e) => {
+    e.stopPropagation()
+    setHelpOpen(!isHelpOpen)
   }
 
-  goToHome = () => {
-    const { history } = this.props
-
-    history.push('/')
-  }
-
-  render () {
-    const { withLogo, networkType, accountAddress, getNetworkType } = this.props
-    const { isHelpOpen, isProfileOpen } = this.state
-    return (
-      <div className={classNames('navbar', { 'navbar--scroll': this.state.scrollTop > 70 })} style={{ width: (this.state.scrollTop > 70 && !isMobileOnly) && !withLogo ? '80%' : null }}>
-        { (withLogo || (isMobileOnly && this.state.scrollTop > 70)) && <div className='navbar__logo'><Logo onClick={this.goToHome} isBlue={this.state.scrollTop < 70} /></div> }
-        <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
-          <div
-            className='navbar__links__help'
-            ref={this.setDropdownHelpRef}
-            onClick={(e) => {
-              e.stopPropagation()
-              this.setState({ isHelpOpen: !isHelpOpen })
-            }}
-          >
-            <span className='icon'><img src={HelpIcon} /></span>
-            <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
-              <ul className='drop__options'>
-                <li className='drop__options__item'><a href='https://docs.fusenet.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer'>FAQ</a></li>
-                <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'>Github</a></li>
-                <li className='drop__options__item'><a href='mailto:hello@fuse.io'>Contact us</a></li>
-              </ul>
-            </div>
+  return (
+    <div className={classNames('navbar', { 'navbar--scroll': scrollTop > 70 })} >
+      { (withLogo || (isMobileOnly && scrollTop > 70)) && <div className='navbar__logo'><Logo onClick={goToHome} isBlue={scrollTop < 70} /></div> }
+      <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
+        <div
+          className='navbar__links__help'
+          ref={helpRef}
+          onClick={openHelp}
+        >
+          <span className='icon'><img src={HelpIcon} /></span>
+          <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
+            <ul className='drop__options'>
+              <li className='drop__options__item'><a href='https://docs.fusenet.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer'>FAQ</a></li>
+              <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'>Github</a></li>
+              <li className='drop__options__item'><a href='mailto:hello@fuse.io'>Contact us</a></li>
+            </ul>
           </div>
-          <div className='navbar__links__notification'>
-            <span className='icon'><img src={NotificationIcon} /></span>
-          </div>
-          {
-            accountAddress ? (
-              <div
-                className='navbar__links__wallet'
-                ref={this.setDropdownProfileRef}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  this.setState({ isProfileOpen: !isProfileOpen })
-                }}
-              >
-                <span className='icon'><img src={WalletIcon} /></span>
-                <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
-                <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                  <ProfileDropDown />
-                </div>
-              </div>
-            ) : (
-              <div className='navbar__links__wallet' onClick={() => getNetworkType(true)}>
-                <span className='icon'><img src={WalletIcon} /></span>
-                <span className='navbar__links__wallet__text'>Connect wallet</span>
-              </div>
-            )
-          }
         </div>
+        <div className='navbar__links__notification'>
+          <span className='icon'><img src={NotificationIcon} /></span>
+        </div>
+        {
+          accountAddress ? (
+            <div
+              className='navbar__links__wallet'
+              ref={profileRef}
+              onClick={openProfile}
+            >
+              <span className='icon'><img src={WalletIcon} /></span>
+              <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
+              <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
+                <ProfileDropDown foreignNetwork={foreignNetwork === 'mainnet' ? 'main' : foreignNetwork} />
+              </div>
+            </div>
+          ) : connectingToAccount ? (
+            <div className='navbar__links__wallet navbar__connecting'>
+              <span className='navbar__links__wallet__text'>Connecting to wallet</span>
+              <span className='animate'>.</span>
+              <span className='animate'>.</span>
+              <span className='animate'>.</span>
+            </div>
+          ) : (
+            <div className='navbar__links__wallet' onClick={chooseProvider}>
+              <span className='icon'><img src={WalletIcon} /></span>
+              <span className='navbar__links__wallet__text'>Connect wallet</span>
+            </div>
+          )
+        }
       </div>
-    )
-  }
-}
-
-NavBar.defaultProps = {
-  withLogo: true
+    </div>
+  )
 }
 
 const mapStateToProps = (state) => ({
-  accountAddress: state.network && state.network.accountAddress
+  accountAddress: state.network.accountAddress,
+  connectingToAccount: state.network.connectingToAccount
 })
 
 const mapDispatchToProps = {
-  getNetworkType
+  getNetworkType,
+  loadModal
 }
 
 export default withRouter(withNetwork((connect(mapStateToProps, mapDispatchToProps)(NavBar))))

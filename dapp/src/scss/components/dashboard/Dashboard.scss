@@ -10,6 +10,22 @@
       position: relative;
       @include xy-grid();
     }
+
+    .navbar--scroll {
+      width: 80%;
+
+      @include breakpoint(small only) {
+        width: 100%;
+      }
+
+      @include breakpoint(xxlarge up) {
+        width: 82.5%;
+      }
+
+      @include breakpoint(1800) {
+        width: 85%;
+      }
+    }
   }
 
   @include block(hamburger) {
@@ -19,7 +35,7 @@
 
     .fa {
       z-index: 100;
-      font-size: 20px;
+      font-size: 1.250em;
       color: $color-white;
     }
   }
@@ -82,7 +98,7 @@
       @include xy-grid();
       @include flex-align(justify, middle);
       padding: 20px 20px 10px;
-      font-size: 10px;
+      font-size: 0.625em;
 
       @include block(title) {
         color: rgba(214, 214, 214, 0.6)
@@ -97,7 +113,7 @@
       display: block;
       padding-left: 20px;
       padding-top: 20px;
-      font-size: 10px;
+      font-size: 0.625em;
       color: rgba(214, 214, 214, 0.6)
     }
   }
@@ -165,7 +181,7 @@
 
       @include element(title) {
         color: $color-gray;
-        font-size: 20px;
+        font-size: 1.250em;
         margin-bottom: 10px;
         font-weight: 500;
       }

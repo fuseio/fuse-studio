@@ -94,6 +94,9 @@ const LogosOptions = ({
       setImages: (values) => {
         formik.setFieldValue('images.custom', values)
         formik.setFieldValue('images.chosen', 'custom')
+        if (window && window.analytics) {
+          window.analytics.track(`Choose logo - custom`)
+        }
       }
     })
   }
@@ -107,6 +110,9 @@ const LogosOptions = ({
             return (
               <div onClick={() => {
                 setFieldValue('images.chosen', 'defaultOne')
+                if (window && window.analytics) {
+                  window.analytics.track(`Choose logo - defaultOne`)
+                }
               }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultOne' })}>
                 <CommunityLogo
                   metadata={{
@@ -127,6 +133,9 @@ const LogosOptions = ({
                 return (
                   <div onClick={() => {
                     setFieldValue('images.chosen', 'defaultTwo')
+                    if (window && window.analytics) {
+                      window.analytics.track(`Choose logo - defaultTwo`)
+                    }
                   }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultTwo' })}>
                     <CommunityLogo
                       symbol={communitySymbol}

@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
-import { getNetworkType } from 'actions/network'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
@@ -33,16 +32,26 @@ const WizardPage = ({
   loadModal,
   history,
   communityAddress,
-  getNetworkType
+  homeNetwork
 }) => {
   useEffect(() => {
     if (window && window.analytics) {
       window.analytics.track('Wizard init')
     }
-    getNetworkType(true)
   }, [])
 
-  useSwitchNetwork(['ropsten', 'mainnet'], { featureName: 'Wizard' })
+  const desiredNetworkType = useMemo(() => {
+    if (!networkType) {
+      return ['mainnet', 'ropsten']
+    } else if (networkType === homeNetwork) {
+      return ['ropsten', 'mainnet']
+    } else {
+      const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
+      return [networkType, secondDesired]
+    }
+  }, [])
+
+  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
 
   const setIssuanceTransaction = (values) => {
     const {
@@ -75,6 +84,12 @@ const WizardPage = ({
     const metadata = chosen !== 'custom' && !existingToken
       ? { isDefault: true, image: images && images[chosen] && images[chosen].blob }
       : { image: images && images[chosen] && images[chosen].blob }
+
+    if (adminAddress) {
+      window.analytics.identify(adminAddress, {
+        email
+      })
+    }
 
     if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
@@ -201,6 +216,7 @@ const WizardPage = ({
 const mapStateToProps = (state) => ({
   ...state.screens.issuance,
   foreignNetwork: state.network.foreignNetwork,
+  homeNetwork: state.network.homeNetwork,
   adminAddress: getAccountAddress(state)
 })
 
@@ -209,8 +225,7 @@ const mapDispatchToProps = {
   fetchDeployProgress,
   deployExistingToken,
   clearTransaction,
-  loadModal,
-  getNetworkType
+  loadModal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WizardPage)

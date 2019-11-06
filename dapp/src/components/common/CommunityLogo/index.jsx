@@ -21,8 +21,7 @@ const CommunityLogo = ({
   symbol,
   imageUrl,
   isSmall = false,
-  isBig = false,
-  isDaiToken = false
+  isBig = false
 }) => {
   const wrapperClasses = classNames(`logo-circle__outer`,
     { 'logo-circle__outer--normal': !isSmall && !isBig },
@@ -43,13 +42,12 @@ const CommunityLogo = ({
             <img
               className='logo-circle__inner'
               alt='Community Logo'
-              src={(!isDaiToken
-                ? (getImages()[(metadata && metadata.communityLogo)] || tokenOne)
-                : getDaiIcons()[(metadata && metadata.communityLogo)])}
+              src={((getImages()[(metadata && metadata.communityLogo)] || tokenOne) ||
+                 getDaiIcons()[(metadata && metadata.communityLogo)])}
             />
           ) : <Loader color='#4a687b' className='logo-img' />
       }
-      {!isDaiToken && ((metadata && metadata.isDefault) || (metadata && metadata.communityLogo)) && <span className='logo-circle__name'>{symbol}</span>}
+      {((metadata && metadata.isDefault) || (metadata && metadata.communityLogo)) && <span className='logo-circle__name'>{symbol}</span>}
     </div>
   )
 }

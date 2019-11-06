@@ -37,7 +37,14 @@ class Oven extends Component {
   //   }
   // }
 
-  showDashboard = (communityAddress) => {
+  showDashboard = (communityAddress, name) => {
+    if (window && window.analytics) {
+      if (name) {
+        window.analytics.track(`Clicked on featured community - ${name}`)
+      } else {
+        window.analytics.track(`Clicked on featured community`)
+      }
+    }
     this.props.history.push(`/view/community/${communityAddress}`)
   }
 
