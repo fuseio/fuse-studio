@@ -12,6 +12,7 @@ router.use('/entities', require('./entities'))
 router.use('/profiles', require('./profiles'))
 router.use('/email', require('./email'))
 router.use('/deposits', require('./deposits'))
+router.use('/wallets', require('./wallets'))
 
 router.use(function (err, req, res, next) {
   if (err.name === 'ValidationError') {
