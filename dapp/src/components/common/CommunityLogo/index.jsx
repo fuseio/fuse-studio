@@ -21,7 +21,7 @@ const CommunityLogo = ({
   symbol,
   imageUrl,
   isSmall = false,
-  isBig = false,
+  isBig = false
 }) => {
   const wrapperClasses = classNames(`logo-circle__outer`,
     { 'logo-circle__outer--normal': !isSmall && !isBig },
