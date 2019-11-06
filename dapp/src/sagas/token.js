@@ -308,11 +308,16 @@ function * watchCommunities ({ response }) {
   const { result, entities } = response
   for (let account of result) {
     const entity = entities[account]
-    if (entity.foreignTokenAddress) {
+    if (entity && entity.foreignTokenAddress) {
       yield put(actions.fetchToken(entity.foreignTokenAddress))
-    } else if (entity && entity.community) {
-      yield put(actions.fetchToken(entity.community.foreignTokenAddress))
+    }
 
+    if (entity && entity.communityURI) {
+      yield put(fetchMetadata(entity.communityURI))
+    }
+
+    if (entity && entity.community) {
+      yield put(actions.fetchToken(entity.community.foreignTokenAddress))
       if (entity.community && entity.community.communityURI) {
         yield put(fetchMetadata(entity.community.communityURI))
       }

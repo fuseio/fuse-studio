@@ -14,7 +14,7 @@
     "bridge": {
       "network": {
         "homeNetwork": "fuse",
-        "foreignNetwork": "main"
+        "foreignNetwork": "ropsten"
       }
     }
   },
