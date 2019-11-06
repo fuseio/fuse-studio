@@ -36,7 +36,7 @@ const HomePage = ({
     return () => { }
   }, [accountAddress])
 
-  const [title, setTitle] = useState('Featured communities')
+  const [title, setTitle] = useState('What you can do with Fuse?')
 
   const showIssuance = () => {
     if (!accountAddress) {

@@ -17,7 +17,13 @@ const FeaturedCommunity = memo(({
         </div>
       </div>
       <div className='featured__content'>
-        <h6 className='featured__name'>{community.name}</h6>
+        <h6 className='featured__name'>{community.name}
+          {community && community.subTitle && (
+            <React.Fragment>
+              <br />
+              <span style={{ fontSize: 'smaller' }}>{community.subTitle}</span>
+            </React.Fragment>
+          )}</h6>
       </div>
     </div>
   )
