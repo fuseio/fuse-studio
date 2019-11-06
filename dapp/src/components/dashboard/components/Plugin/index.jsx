@@ -22,7 +22,7 @@ const Plugin = ({
         </div>
       </div>
       <div className={classNames('plugin-card__content grid-y align-justify', { 'plugin-card__content--fiat': modifier, 'plugin-card__content--disabled': disabled })}>
-        <h2 className={classNames('plugin-card__title cell small-24', { 'plugin-card__title--fiat': modifier })}>{title} <span>{subTitle}</span></h2>
+        <h2 className='plugin-card__title cell small-24'>{title} <span>{subTitle}</span></h2>
         {text && <p className='plugin-card__text cell small-24'>{text}</p>}
         <div className='plugin-card__actions cell small-24'>
           <span className='plugin-card__learn' onClick={showInfoModal}>LEARN MORE</span>

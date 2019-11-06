@@ -11,7 +11,7 @@ const blockExplorers = {
 
 export const getBlockExplorerUrl = (networkType) => blockExplorers[networkType]
 
-export const getApiRoot = (networkType) => CONFIG.api.url[networkType === 'fuse' ? 'default' : networkType]
+export const getApiRoot = (networkType) => CONFIG.api.url[networkType]
 
 export const isFuse = (provider) => (get(provider, 'networkVersion', false) || get(provider, 'connection.networkVersion', false)) === String(CONFIG.web3.chainId.fuse)
 

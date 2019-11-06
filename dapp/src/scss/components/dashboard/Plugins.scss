@@ -156,10 +156,6 @@
     letter-spacing: normal;
     color: $color-dark;
 
-    @include modifier(fiat) {
-      font-size: 0.875em;
-    }
-
     > span {
       font-size: 0.7em;
     }

@@ -10,6 +10,26 @@ import { loadState } from 'utils/storage'
 import isEmpty from 'lodash/isEmpty'
 
 class Web3 extends Component {
+  componentDidMount () {
+    const { isMobile } = this.props
+    if (isMobile) {
+      const interval = setInterval(() => {
+        if (window && window.pk) {
+          this.connectToNetwork()
+          clearInterval(interval)
+        }
+      }, 100)
+    } else {
+      this.connectToNetwork()
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.networkType !== this.props.networkType && !isNetworkSupported(nextProps.networkType)) {
+      this.props.loadModal(WRONG_NETWORK_MODAL)
+    }
+  }
+
   connectToNetwork = () => {
     const networkState = loadState('state.network')
     const reconnect = loadState('state.reconnect')
@@ -39,26 +59,6 @@ class Web3 extends Component {
           this.props.checkAccountChanged(accounts[0])
         }
       })
-    }
-  }
-
-  componentDidMount () {
-    const { isMobile } = this.props
-    if (isMobile) {
-      const interval = setInterval(() => {
-        if (window && window.pk) {
-          this.connectToNetwork()
-          clearInterval(interval)
-        }
-      }, 100)
-    } else {
-      this.connectToNetwork()
-    }
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.networkType !== this.props.networkType && !isNetworkSupported(nextProps.networkType)) {
-      this.props.loadModal(WRONG_NETWORK_MODAL)
     }
   }
 

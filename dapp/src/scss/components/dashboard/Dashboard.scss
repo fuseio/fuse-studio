@@ -13,12 +13,17 @@
 
     .navbar--scroll {
       width: 80%;
+
+      @include breakpoint(small only) {
+        width: 100%;
+      }
+
       @include breakpoint(xxlarge up) {
         width: 82.5%;
       }
 
-      @include breakpoint(small only) {
-        width: 100%;
+      @include breakpoint(1800) {
+        width: 85%;
       }
     }
   }

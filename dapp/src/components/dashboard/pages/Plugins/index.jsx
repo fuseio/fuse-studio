@@ -64,7 +64,7 @@ const onRampPluginItems = ([
     subTitle: ' | Top up account',
     coverImage: Coindirect,
     key: 'coindirect',
-    text: ''
+    text: 'Accept credit/debit cards, 2.99% per transaction'
   },
   {
     title: 'Carbon',
