@@ -1,16 +1,13 @@
 import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import identity from 'lodash/identity'
-// import { formatWei } from 'utils/format'
 import CommunityLogo from 'components/common/CommunityLogo'
-// import { isDaiToken } from 'constants/existingTokens'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
 const Community = memo(({
   token = {},
   showDashboard = identity,
-  networkType,
   metadata = {}
 }) => {
   const {
@@ -30,7 +27,6 @@ const Community = memo(({
     <div className='community' onClick={handleClick}>
       <div className='community__logo'>
         <CommunityLogo
-          // isDaiToken={isDaiToken(networkType, token)}
           symbol={symbol}
           imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
           metadata={metadata}

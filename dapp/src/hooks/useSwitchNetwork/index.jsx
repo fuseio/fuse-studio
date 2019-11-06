@@ -13,7 +13,7 @@ const useSwitchNetwork = (desiredNetworkType, modalProps) => {
       if (isPortis) {
         dispatch(changeNetwork(desiredNetworkTypeArray[0]))
       } else {
-        dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType, ...modalProps }))
+        dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType, networkType, ...modalProps }))
       }
     }
     return () => {}

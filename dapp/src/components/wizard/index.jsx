@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
-import { getNetworkType } from 'actions/network'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
@@ -33,18 +32,18 @@ const WizardPage = ({
   loadModal,
   history,
   communityAddress,
-  getNetworkType,
   homeNetwork
 }) => {
   useEffect(() => {
     if (window && window.analytics) {
       window.analytics.track('Wizard init')
     }
-    // getNetworkType(true)
   }, [])
 
   const desiredNetworkType = useMemo(() => {
-    if (networkType === homeNetwork) {
+    if (!networkType) {
+      return ['mainnet', 'ropsten']
+    } else if (networkType === homeNetwork) {
       return ['ropsten', 'mainnet']
     } else {
       const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
@@ -52,7 +51,7 @@ const WizardPage = ({
     }
   }, [])
 
-  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard', goBack: false })
+  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
 
   const setIssuanceTransaction = (values) => {
     const {
@@ -226,8 +225,7 @@ const mapDispatchToProps = {
   fetchDeployProgress,
   deployExistingToken,
   clearTransaction,
-  loadModal,
-  getNetworkType
+  loadModal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WizardPage)

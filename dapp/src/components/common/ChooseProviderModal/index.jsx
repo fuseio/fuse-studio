@@ -5,12 +5,11 @@ import Missile from 'images/missile.svg'
 import PortisIcon from 'images/portis_icon.svg'
 import MetamaskIcon from 'images/metamask.png'
 import { getNetworkType } from 'actions/network'
+import { saveState } from 'utils/storage'
 
 const ChooseProviderModal = ({
   hideModal,
   getNetworkType,
-  isMetaMask,
-  isPortis,
   setClicked
 }) => {
   const handleClose = () => {
@@ -21,14 +20,15 @@ const ChooseProviderModal = ({
     if (setClicked) {
       setClicked(true)
     }
+    saveState('state.provider', { provider })
     getNetworkType(true, provider)
     hideModal()
   }
 
   return (
-    <Modal hasCloseBtn className='choose_provider__wrapper' onClose={() => handleClose()}>
+    <Modal hasCloseBtn className='choose_provider__wrapper' onClose={handleClose}>
       <div className='choose_provider'>
-        <h2 className='choose_provider__title'>Getting stated on Fuse! <img src={Missile} /></h2>
+        <h2 className='choose_provider__title'>Getting started on Fuse! <img src={Missile} /></h2>
         <p className='choose_provider__text'>
         In order to use the Fuse platform you will need to connect an Ethereum wallet choose one of the supported wallets to connect to your account:
         </p>
@@ -52,7 +52,7 @@ const ChooseProviderModal = ({
           </div>
         </div>
 
-        <div className='choose_provider__text'>
+        <div className='choose_provider__text choose_provider__text--smaller'>
           Need help? or (click <a href='https://docs.fusenet.io/the-fuse-studio/getting-started' target='_blank' rel='noopener noreferrer'>here</a> for a guide).
         </div>
       </div>

@@ -7,19 +7,34 @@ import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { withMaybe } from 'utils/components'
 import { getAccountAddress } from 'selectors/accounts'
 import { loadState } from 'utils/storage'
+import isEmpty from 'lodash/isEmpty'
 
 class Web3 extends Component {
   connectToNetwork = () => {
     const networkState = loadState('state.network')
+    const reconnect = loadState('state.reconnect')
+    const loadedProvider = (!isEmpty(loadState('state.provider')) && loadState('state.provider'))
+      ? loadState('state.provider')
+      : window && window.ethereum
+        ? { provider: 'metamask' }
+        : { provider: 'portis' }
     const { getNetworkType } = this.props
     if (networkState && networkState.networkType) {
-      getNetworkType(true)
+      getNetworkType(true, loadedProvider.provider)
     } else {
-      getNetworkType()
+      getNetworkType(reconnect, loadedProvider.provider)
     }
     // TODO: Move this to getNetworkType saga after redux-saga 1.0.0 upgrade
     if (window.ethereum && window.ethereum.on) {
       window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts[0]) {
+          this.props.checkAccountChanged(accounts[0])
+        }
+      })
+    }
+
+    if (window.portis && window.portis.on) {
+      window.portis.on('accountsChanged', (accounts) => {
         if (accounts[0]) {
           this.props.checkAccountChanged(accounts[0])
         }

@@ -49,31 +49,36 @@ const onRampPluginItems = ([
     title: 'Moonpay',
     subTitle: ' | Top up account',
     coverImage: Moonpay,
-    key: 'moonpay'
+    key: 'moonpay',
+    text: 'Accept credit/debit cards, 4.5% per transaction'
   },
   {
     title: 'Ramp',
     subTitle: ' | Top up account',
     coverImage: Ramp,
-    key: 'ramp'
+    key: 'ramp',
+    text: 'Europe wire transfer (SEPA)'
   },
   {
     title: 'Coindirect',
     subTitle: ' | Top up account',
     coverImage: Coindirect,
-    key: 'coindirect'
+    key: 'coindirect',
+    text: ''
   },
   {
     title: 'Carbon',
     subTitle: ' | Top up account',
     coverImage: Carbon,
-    key: 'carbon'
+    key: 'carbon',
+    text: 'Accept credit/debitc cards, ACH, SEPA'
   },
   {
     title: 'Wyre',
     subTitle: ' | Top up account',
     coverImage: Wyre,
-    key: 'wyre'
+    key: 'wyre',
+    text: 'Accept credit/debit cards, ACH'
   }
 ])
 
@@ -87,10 +92,13 @@ const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin,
         disabled,
         subTitle,
         modalCoverPhoto,
-        key
+        key,
+        text
       }) => {
         return (
           <Plugin
+            text={text}
+            modifier={pluginTile.includes('Fiat')}
             showInfoModal={() => showInfoModal(key, { title, coverImage: modalCoverPhoto, disabled })}
             key={title}
             subTitle={subTitle}

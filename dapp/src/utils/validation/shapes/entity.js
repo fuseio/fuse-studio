@@ -1,15 +1,5 @@
 import { object, string, mixed } from 'yup'
 
-// TODO - implement file validation
-// const SUPPORTED_FORMATS = [
-//   'image/jpg',
-//   'image/jpeg',
-//   'image/gif',
-//   'image/png'
-// ]
-
-// const FILE_SIZE = 2500000
-
 export default object().noUnknown(false).shape({
   name: string().normalize().label('Name').required(),
   address: string().normalize(),

@@ -97,7 +97,6 @@ const ProfileCard = ({
       <div className='profile__card__logo'>
         <CommunityLogo
           symbol={symbol}
-          // isDaiToken={entity.token && entity.token.symbol === 'DAI'}
           imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
           isSmall
           metadata={metadata}
@@ -216,7 +215,7 @@ const ProfileDropDown = ({
 
   const toggleNetwork = () => {
     const network = networkType === 'fuse'
-      ? CONFIG.env === 'qa'
+      ? (CONFIG.env === 'qa' || CONFIG.env === 'production')
         ? 'ropsten' : 'main'
       : networkType === 'ropsten'
         ? 'main' : 'ropsten'

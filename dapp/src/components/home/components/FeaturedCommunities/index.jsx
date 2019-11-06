@@ -65,7 +65,6 @@ const FeaturedCommunities = memo(({
           return (
             <div className='cell medium-12' key={index}>
               <Community
-                networkType={networkType}
                 token={{ ...token, communityAddress }}
                 metadata={{
                   ...metadata[token.tokenURI],

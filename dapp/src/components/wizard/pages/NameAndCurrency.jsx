@@ -1,6 +1,5 @@
 import React from 'react'
 import CurrencyType from '../components/CurrencyType'
-// import { isMobileOnly } from 'react-device-detect'
 import TextField from '@material-ui/core/TextField'
 import { Field } from 'formik'
 import { nameToSymbol } from 'utils/format'
@@ -101,7 +100,6 @@ const NameAndCurrency = ({ networkType }) => {
           </div>
         </div>
       </div>
-      {/* {isMobileOnly && <div className='line' ><hr /></div>} */}
     </div>
   )
 }

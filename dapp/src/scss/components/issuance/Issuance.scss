@@ -149,9 +149,8 @@
 
   @include element(wizard) {
     padding-bottom: 100px;
-    @include breakpoint(medium up) {
-      // margin-top: 2em;
-    }
+    @include breakpoint(medium up) { }
+
     @include breakpoint(medium down) {
       margin-top: 7em;
     }

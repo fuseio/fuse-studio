@@ -92,7 +92,6 @@ export default ({
               {/* {addresses.map(address =>
                 <div className='medium-12 large-8 small-24 cell' key={address}>
                   <Community
-                    networkType={networkType}
                     token={tokens[address]}
                     metadata={metadata[tokens[address].tokenURI]}
                     history={history}

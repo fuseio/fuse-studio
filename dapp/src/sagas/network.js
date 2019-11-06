@@ -2,6 +2,7 @@ import get from 'lodash/get'
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
+import isEmpty from 'lodash/isEmpty'
 import { getWeb3 } from 'services/web3'
 import { portis } from 'services/web3/providers/portis'
 import { isNetworkSupported, toLongName } from 'utils/network'
@@ -22,11 +23,23 @@ function * getNetworkTypeInternal (web3) {
 }
 
 export function * getAccountAddress (web3) {
-  if (window.ethereum && window.ethereum.enable) {
+  if ((window.ethereum && window.ethereum.enable) || (portis && portis.provider)) {
     try {
-      const enableResponse = yield window.ethereum.enable()
-      if (enableResponse) {
-        return web3.utils.toChecksumAddress(enableResponse[0])
+      const loadedProvider = (!isEmpty(loadState('state.provider')) && loadState('state.provider'))
+        ? loadState('state.provider')
+        : window && window.ethereum
+          ? { provider: 'metamask' }
+          : { provider: 'portis' }
+      if (loadedProvider && loadedProvider.provider === 'metamask') {
+        const enableResponse = yield window.ethereum.enable()
+        if (enableResponse) {
+          return web3.utils.toChecksumAddress(enableResponse[0])
+        }
+      } else {
+        const enableResponse = yield portis.provider.enable()
+        if (enableResponse) {
+          return web3.utils.toChecksumAddress(enableResponse[0])
+        }
       }
     } catch (error) {
       console.log(error)
@@ -53,20 +66,11 @@ function * deduceBridgeSides (networkType) {
 
 function * getNetworkType ({ enableProvider, provider }) {
   try {
-    const loadedProvider = loadState('state.provider')
-      ? loadState('state.provider')
-      : window && window.ethereum
-        ? { provider: 'metamask' }
-        : { provider: 'portis' }
-    if (!provider) {
-      provider = loadedProvider && loadedProvider.provider
-    }
     const web3 = yield getWeb3({ provider })
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const bridgeSides = yield deduceBridgeSides(networkType)
-
-    const isMetaMask = get(window.ethereum, 'isMetaMask', false) || get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
-    const isPortis = get(window.ethereum, 'isPortis', false) || get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
+    const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
+    const isPortis = get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
 
     yield put({
       type: actions.GET_NETWORK_TYPE.SUCCESS,
@@ -92,8 +96,7 @@ function * getNetworkType ({ enableProvider, provider }) {
       yield put({
         type: actions.GETTING_ACCOUNT_ADDRESS.SUCCESS,
         response: {
-          isMetaMask,
-          isPortis
+          provider
         }
       })
     }
@@ -159,13 +162,9 @@ function * watchGetNetworkTypeSuccess ({ response }) {
 }
 
 function * watchGettingAccountAddress ({ response }) {
-  const { isMetaMask, isPortis } = response
-  const provider = isPortis
-    ? 'portis'
-    : isMetaMask
-      ? 'metamask'
-      : 'portis'
+  const { provider } = response
   saveState('state.provider', { provider })
+  saveState('state.reconnect', true)
 }
 
 function * changeNetwork ({ networkType }) {

@@ -52,7 +52,7 @@ const HomePage = ({
       }
       if (networkType === homeNetwork) {
         history.push('/view/issuance')
-        changeNetwork(CONFIG.env === 'qa' ? 'ropsten' : 'main')
+        changeNetwork('ropsten')
       } else {
         history.push('/view/issuance')
       }

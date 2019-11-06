@@ -1100,7 +1100,12 @@
 
     @include breakpoint(medium up) {
       width: 619px !important;
+      max-height: 90%;
       padding: 2em !important;
+    }
+
+    @include breakpoint(medium down) {
+      height: 90% !important;
     }
   }
 
@@ -1119,11 +1124,15 @@
   }
 
   @include element(text) {
-    font-size: 1.125em;
+    font-size: 1em;
     line-height: 1.33;
     letter-spacing: -0.39px;
     color: $color-gray;
     margin-top: 2em;
+
+    @include modifier(smaller) {
+      font-size: smaller;
+    }
 
     > a:hover {
       text-decoration: underline;

@@ -2,17 +2,20 @@ import Web3 from 'web3'
 import Box from '3box'
 import { isFuse, getProviderUrl } from 'utils/network'
 import initializeProvider from './providers'
-
+import isEmpty from 'lodash/isEmpty'
 import { loadState } from 'utils/storage'
 
 let givenWeb3
 
 export const getWeb3Instance = (provider) => {
-  // if (givenWeb3) {
-  //   return givenWeb3
-  // }
-  // givenWeb3 = new Web3(initializeProvider({ provider }))
-  // return givenWeb3
+  const loadedProvider = (!isEmpty(loadState('state.provider')) && loadState('state.provider'))
+    ? loadState('state.provider')
+    : window && window.ethereum
+      ? { provider: 'metamask' }
+      : { provider: 'portis' }
+  if (!provider) {
+    provider = loadedProvider && loadedProvider.provider
+  }
   return new Web3(initializeProvider({ provider }))
 }
 

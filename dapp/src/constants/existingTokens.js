@@ -3,7 +3,7 @@ import UsdcIcon from 'images/usdc.png'
 import TetherIcon from 'images/tether.png'
 import isEmpty from 'lodash/isEmpty'
 
-export const existingTokens = (networkType) => ([
+export const existingTokens = (networkType) => networkType ? ([
   {
     label: 'DAI',
     symbol: 'DAI',
@@ -25,7 +25,7 @@ export const existingTokens = (networkType) => ([
     isDisabled: false,
     icon: TetherIcon
   }
-])
+]) : ([])
 
 export const isDaiToken = (networkType, token) => {
   if (!token) {
