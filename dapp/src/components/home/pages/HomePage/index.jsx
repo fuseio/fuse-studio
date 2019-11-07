@@ -104,7 +104,7 @@ const HomePage = ({
               </ContentBox>
             </div>
             <div className='cell medium-24 large-12'>
-              <ContentBox title={`FAQ’S`} action={gotToFaqs} actionTitle='Learn more'>
+              <ContentBox title={`FAQ’S`} action={gotToFaqs} actionTitle='Read faq'>
                 <Faqs />
               </ContentBox>
             </div>

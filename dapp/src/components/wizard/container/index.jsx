@@ -17,7 +17,8 @@ const nextStepEvents = {
 
 const validations = {
   0: ['communityName', 'communityType', 'existingToken', 'email'],
-  1: ['totalSupply', 'communitySymbol', 'images.chosen']
+  1: ['totalSupply', 'communitySymbol', 'images.chosen'],
+  2: ['isOpen']
 }
 
 const getStep = (communityType) => (['Name & currency', communityType ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary'])
@@ -56,13 +57,24 @@ class Wizard extends React.Component {
   }
 
   next = values => {
+    const trackProps = validations[this.state.page].reduce((acc, key) => {
+      acc = `${values[key]}` ? {
+        ...acc,
+        [key]: get(values, `${key}.value`)
+          ? `${get(values, `${key}.value`)}`
+          : get(values, key)
+      } : {
+        ...acc
+      }
+      return acc
+    }, {})
+    if (window && window.analytics) {
+      window.analytics.track(nextStepEvents[this.state.page], { ...trackProps })
+    }
     this.setState(state => ({
       page: Math.min(state.page + 1, this.props.children.length - 1),
       values
     }))
-    if (window && window.analytics) {
-      window.analytics.track(nextStepEvents[this.state.page])
-    }
   }
 
   previous = () =>

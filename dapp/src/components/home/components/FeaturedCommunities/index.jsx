@@ -55,7 +55,7 @@ const FeaturedCommunities = memo(({
   if (!isEmpty(communitiesIOwn)) {
     setTitle('My communities')
   } else {
-    setTitle('Featured communities')
+    setTitle('What you can do with Fuse?')
   }
 
   return (
