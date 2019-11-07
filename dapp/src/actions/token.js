@@ -34,7 +34,7 @@ export const BURN_TOKEN = createTransactionRequestTypes('BURN_TOKEN')
 
 export const fetchTokens = (networkType, page) => tokenAction(FETCH_TOKENS.REQUEST, { networkType, page })
 export const fetchTokensByOwner = (networkType, owner) => tokenAction(FETCH_TOKENS_BY_OWNER.REQUEST, { networkType, owner })
-export const fetchFeaturedCommunities = (accountAddress) => communitiesAction(FETCH_FEATURED_COMMUNITIES.REQUEST, { accountAddress })
+export const fetchFeaturedCommunities = () => communitiesAction(FETCH_FEATURED_COMMUNITIES.REQUEST)
 
 export const fetchToken = (tokenAddress) => tokenAction(FETCH_TOKEN.REQUEST, { tokenAddress })
 export const fetchTokenTotalSupply = (tokenAddress, options) => requestAction(FETCH_TOKEN_TOTAL_SUPPLY, { tokenAddress, options })

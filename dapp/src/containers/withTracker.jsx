@@ -12,13 +12,13 @@ const withTracker = (WrappedComponent, options = {}) => {
     if (window.analytics) {
       let pageName = ''
       if (page.includes('communities')) {
-        pageName = 'Communities page'
+        pageName = 'Communities'
       }
       if (page.includes('/community')) {
-        pageName = 'Community page'
+        pageName = 'Community'
       }
       if (page === '/') {
-        pageName = 'Home page'
+        pageName = 'Home'
       }
       window.analytics.page(pageName)
       ReactGA.pageview(pageName)

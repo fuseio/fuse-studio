@@ -6,6 +6,7 @@ import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
+import isEmpty from 'lodash/isEmpty'
 
 class Oven extends Component {
   constructor (props) {
@@ -15,7 +16,11 @@ class Oven extends Component {
   }
 
   componentDidMount () {
-    this.props.fetchFeaturedCommunities()
+    const { featuredCommunities } = this.props
+    if (isEmpty(featuredCommunities)) {
+      const { fetchFeaturedCommunities } = this.props
+      fetchFeaturedCommunities()
+    }
     // if (this.props.networkType !== 'fuse') {
     //   this.props.fetchFuseToken()
     // }
@@ -59,6 +64,7 @@ class Oven extends Component {
 }
 
 const mapStateToProps = state => ({
+  featuredCommunities: state.accounts.featuredCommunities,
   tokens: state.entities.tokens,
   communities: state.entities.communities,
   metadata: state.entities.metadata,
