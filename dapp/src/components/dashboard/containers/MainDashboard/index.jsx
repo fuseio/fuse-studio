@@ -57,6 +57,12 @@ class DashboardLayout extends Component {
     if (prevProps.isAdmin !== this.props.isAdmin) {
       const { accountAddress, isAdmin, networkType, location, communityAddress } = this.props
       const { analytics } = window
+      if (!accountAddress) {
+        analytics.identify({
+          subscriptionStatus: 'inactive'
+        })
+      }
+
       if (isAdmin) {
         if (location.pathname.includes('/justCreated')) {
           analytics.reset()

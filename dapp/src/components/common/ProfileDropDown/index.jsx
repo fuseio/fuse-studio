@@ -30,14 +30,18 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
   isPortis
 }) => {
   useEffect(() => {
+    const { analytics } = window
     if (account && account.accountAddress) {
-      const { analytics } = window
       analytics.identify(account.accountAddress,
         isPortis ? {
           provider: 'Portis'
         } : isMetaMask ? {
           provider: 'Metamask'
         } : null)
+    } else {
+      analytics.identify({
+        subscriptionStatus: 'inactive'
+      })
     }
   }, [account])
 

@@ -40,6 +40,12 @@ const WizardPage = ({
     }
   }, [])
 
+  useEffect(() => {
+    window.analytics.identify({
+      subscriptionStatus: 'inactive'
+    })
+  }, [])
+
   const desiredNetworkType = useMemo(() => {
     if (!networkType) {
       return ['mainnet', 'ropsten']
