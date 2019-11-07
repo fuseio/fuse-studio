@@ -26,7 +26,9 @@ const FeaturedCommunities = memo(({
 }) => {
   useEffect(() => {
     fetchFeaturedCommunities(account)
-    fetchCommunities(account)
+    if (account) {
+      fetchCommunities(account)
+    }
     return () => { }
   }, [account])
 
