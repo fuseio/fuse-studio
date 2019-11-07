@@ -34,6 +34,7 @@ const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
     if (account && account.accountAddress) {
       analytics.identify(account.accountAddress,
         isPortis ? {
+          subscriptionStatus: 'active',
           provider: 'Portis'
         } : isMetaMask ? {
           provider: 'Metamask'
