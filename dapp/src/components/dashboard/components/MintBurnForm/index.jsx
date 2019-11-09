@@ -39,7 +39,7 @@ export default class MintBurnForm extends PureComponent {
 
     const amount = actionType === 'mint' ? mintAmount : burnAmount
     handleMintOrBurnClick(amount)
-    formikBag.resetForm()
+    formikBag.resetForm(this.initialValues)
   }
 
   transactionConfirmed = (actionType) => {
@@ -144,6 +144,9 @@ export default class MintBurnForm extends PureComponent {
                       shrink: true,
                       className: 'user-form__field__label'
                     }}
+                    inputProps={{
+                      value: values.mintAmount
+                    }}
                   />
                   <ErrorMessage name='mintAmount' render={msg => <div className='input-error'>{msg}</div>} />
                 </div>
@@ -162,6 +165,9 @@ export default class MintBurnForm extends PureComponent {
                     margin='none'
                     error={errors && errors.burnAmount && touched.burnAmount && true}
                     onChange={handleChange}
+                    inputProps={{
+                      value: values.burnAmount
+                    }}
                     InputProps={{
                       classes: {
                         underline: 'user-form__field__underline',

@@ -57,19 +57,21 @@ class Wizard extends React.Component {
   }
 
   next = values => {
-    const trackProps = validations[this.state.page].reduce((acc, key) => {
-      acc = `${values[key]}` ? {
-        ...acc,
-        [key]: get(values, `${key}.value`)
-          ? `${get(values, `${key}.value`)}`
-          : get(values, key)
-      } : {
-        ...acc
+    if (validations[this.state.page]) {
+      const trackProps = validations[this.state.page].reduce((acc, key) => {
+        acc = `${values[key]}` ? {
+          ...acc,
+          [key]: get(values, `${key}.value`)
+            ? `${get(values, `${key}.value`)}`
+            : get(values, key)
+        } : {
+          ...acc
+        }
+        return acc
+      }, {})
+      if (window && window.analytics) {
+        window.analytics.track(nextStepEvents[this.state.page], { ...trackProps })
       }
-      return acc
-    }, {})
-    if (window && window.analytics) {
-      window.analytics.track(nextStepEvents[this.state.page], { ...trackProps })
     }
     this.setState(state => ({
       page: Math.min(state.page + 1, this.props.children.length - 1),
