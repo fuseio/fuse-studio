@@ -27,11 +27,27 @@
   }
 
   @include element(account) {
-    padding: 10px;
     text-align: center;
     @include element(avatar) {
       .fa {
         font-size: 50px;
+      }
+    }
+
+    @include element(logout) {
+      margin-top: 10px;
+      height: 14px;
+      line-height: 0.88;
+      letter-spacing: normal;
+      color: $color-light-blue;
+
+      > span {
+        font-size: x-small;
+      }
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
       }
     }
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import * as Sentry from '@sentry/browser';
 import Modal from 'components/common/Modal'
 import ModalBody from 'components/common/ModalBody'
 import CloseButton from 'images/x.png'
@@ -10,6 +11,11 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch (error, info) {
+    Sentry.withScope((scope) => {
+      scope.setExtras(info)
+      const eventId = Sentry.captureException(error)
+      this.setState({ eventId })
+    })
     this.setState({ hasError: true, error })
   }
 

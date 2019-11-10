@@ -14,6 +14,7 @@ import Layout from 'components/common/Layout'
 import HomePage from 'components/home/pages/HomePage'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Footer from 'components/common/Footer'
+import ErrorBoundary from 'components/common/ErrorBoundary'
 
 const Root = ({ store, history }) => {
   return (
@@ -21,18 +22,20 @@ const Root = ({ store, history }) => {
       <ConnectedRouter history={history}>
         <BrowserRouter>
           <ScrollToTopController>
-            <Layout>
-              <Web3 isMobile={history.location.search.includes('isMobile')} />
-              <Switch>
-                <Route exact path='/' component={HomePage} />
-                <Route path='/view/issuance' component={withTracker(withNetwork(Wizard))} />
-                <Route path='/view/communities' component={withTracker(withNetwork(Oven))} />
-                <Route path='/view/community/:address' component={withTracker(withNetwork(DashboardLayout))} />
-                <Route path='/view/sign/:isMobileApp?' component={withTracker(withNetwork(SignInProvider))} />
-                <Route path='/view/join/:address' component={withTracker(withNetwork(JoinProvider))} />
-              </Switch>
-              <Footer />
-            </Layout>
+            <ErrorBoundary>
+              <Layout>
+                <Web3 isMobile={history.location.search.includes('isMobile')} />
+                <Switch>
+                  <Route exact path='/' component={HomePage} />
+                  <Route path='/view/issuance' component={withTracker(withNetwork(Wizard))} />
+                  <Route path='/view/communities' component={withTracker(withNetwork(Oven))} />
+                  <Route path='/view/community/:address' component={withTracker(withNetwork(DashboardLayout))} />
+                  <Route path='/view/sign/:isMobileApp?' component={withTracker(withNetwork(SignInProvider))} />
+                  <Route path='/view/join/:address' component={withTracker(withNetwork(JoinProvider))} />
+                </Switch>
+                <Footer />
+              </Layout>
+            </ErrorBoundary>
           </ScrollToTopController>
         </BrowserRouter>
       </ConnectedRouter>

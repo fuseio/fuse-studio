@@ -19,6 +19,7 @@ import { convertNetworkName } from 'utils/network'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'
 import capitalize from 'lodash/capitalize'
+import { loadState, saveState } from 'utils/storage'
 
 const mapStateToNativeBalanceProps = (state) => ({
   account: getAccount(state)
@@ -197,6 +198,8 @@ const ProfileDropDown = ({
     return () => { }
   }, [accountAddress])
 
+  const currentProvider = React.useMemo(() => loadState('state.provider'), [])
+
   let filteredCommunities = []
   if (communitiesKeys) {
     filteredCommunities = communitiesKeys
@@ -246,10 +249,16 @@ const ProfileDropDown = ({
           loadSwitchModal(foreignNetwork)
         }
       } else {
-        const desired = convertNetworkName(networkType === 'ropsten' ? 'main' : 'ropsten')
+        const desired = networkType === 'ropsten' ? 'main' : 'ropsten'
         loadSwitchModal(desired)
       }
     }
+  }
+
+  const logout = () => {
+    saveState('state.provider', {})
+    saveState('state.reconnect', false)
+    window.location.reload()
   }
 
   return (
@@ -258,12 +267,17 @@ const ProfileDropDown = ({
         <div className='profile__account__avatar cell small-24'>
           <img src={Avatar} />
         </div>
-        {accountAddress && <div className='cell small-24 profile__account__address grid-x align-middle align-center'>
+        <div className='cell small-24 profile__account__address grid-x align-middle align-center'>
           <span>{formatAddress(accountAddress)}</span>
           <CopyToClipboard text={accountAddress}>
             <FontAwesome name='clone' />
           </CopyToClipboard>
-        </div>}
+        </div>
+        {currentProvider && currentProvider.provider && (
+          <div onClick={logout} className='cell small-24 profile__account__logout grid-x align-middle align-center'>
+            <span>Log out from {currentProvider.provider}</span>
+          </div>
+        )}
       </div>
       <div className='profile__communities grid-y'>
         <p className='profile__switch' onClick={switchNetwork}>
