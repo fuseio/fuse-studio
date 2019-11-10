@@ -36,13 +36,11 @@
     
 		@include breakpoint(medium up) {
       max-height: 90%;
-      overflow-y: auto;
     } 
    
 		@include breakpoint(small down) {
       width: 90%;
       height: 90%;
-      overflow-y: auto;
 		}
 
     @include element(close) {

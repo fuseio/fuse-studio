@@ -10,9 +10,9 @@ import SwitchToRopsten from 'images/Switch_To_Ropsten.png'
 const switchImages = {
   fuse: {
     ropsten: RopstenToFuse,
-    mainnet: MainToFuse
+    main: MainToFuse
   },
-  mainnet: SwitchToMain,
+  main: SwitchToMain,
   ropsten: SwitchToRopsten
 }
 

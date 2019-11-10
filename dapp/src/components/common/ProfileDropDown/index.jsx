@@ -215,7 +215,7 @@ const ProfileDropDown = ({
   }
 
   const loadSwitchModal = (desired) => {
-    loadModal(SWITCH_NETWORK, { desiredNetworkType: [desired], goBack: false })
+    loadModal(SWITCH_NETWORK, { desiredNetworkType: [desired], networkType, goBack: false })
   }
 
   const toggleNetwork = () => {

@@ -36,24 +36,24 @@ const ChooseProviderModal = ({
         <div className='choose_provider__options grid-x'>
           <div className='choose_provider__item cell medium-24'>
             <div className='choose_provider__item__title cell small-24'>Browser wallet</div>
-            <div className='choose_provider__item__box cell small-24 grid-x align-middle align-justify'>
-              <div className='cell small-4'><img src={MetamaskIcon} /></div>
-              <p className='cell small-10 choose_provider__item__text'>Self custody browser extension based wallet</p>
-              <button className='choose_provider__button button button--normal cell' disabled={window && window.ethereum && !window.ethereum.isMetaMask} onClick={() => handleConnectWallet('metamask')}><span>{window && window.ethereum && !window.ethereum.isMetaMask ? 'Not detected' : 'Connect Metamask'}</span></button>
+            <div className='choose_provider__item__box cell medium-4 small-24 grid-x align-middle align-justify'>
+              <a href='https://metamask.io/' target='_blank' rel='noopener noreferrer' className='cell medium-4 small-5'><img src={MetamaskIcon} /></a>
+              <p className='cell medium-10 small-16 choose_provider__item__text'>Self custody browser extension based wallet</p>
+              <button className='choose_provider__button button button--normal cell medium-8 small-24' disabled={window && window.ethereum && !window.ethereum.isMetaMask} onClick={() => handleConnectWallet('metamask')}><span>{window && window.ethereum && !window.ethereum.isMetaMask ? 'Not detected' : 'Connect Metamask'}</span></button>
             </div>
           </div>
           <div className='choose_provider__item cell medium-24'>
             <div className='choose_provider__item__title cell small-24'>Portis wallet</div>
-            <div className='choose_provider__item__box cell small-24 grid-x align-middle align-justify'>
-              <div className='cell small-4'><img src={PortisIcon} /></div>
-              <p className='cell small-10 choose_provider__item__text'>Create your new account or login using your phone</p>
-              <button className='choose_provider__button button button--normal cell' onClick={() => handleConnectWallet('portis')}><span>Connect Portis</span></button>
+            <div className='choose_provider__item__box cell medium-4 small-24 grid-x align-middle align-justify'>
+              <a href='https://www.portis.io/' target='_blank' rel='noopener noreferrer' className='cell medium-4 small-5'><img src={PortisIcon} /></a>
+              <p className='cell medium-10 small-16 choose_provider__item__text'>Create your new account or login using your phone</p>
+              <button className='choose_provider__button button button--normal cell medium-8 small-24' onClick={() => handleConnectWallet('portis')}><span>Connect Portis</span></button>
             </div>
           </div>
         </div>
 
         <div className='choose_provider__text choose_provider__text--smaller'>
-          Need help? or (click <a href='https://docs.fusenet.io/the-fuse-studio/getting-started' target='_blank' rel='noopener noreferrer'>here</a> for a guide).
+          Need help? click <a href='https://docs.fusenet.io/the-fuse-studio/getting-started' target='_blank' rel='noopener noreferrer'>here</a> for a guide
         </div>
       </div>
     </Modal>
