@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/browser'
 import Modal from 'components/common/Modal'
 import ModalBody from 'components/common/ModalBody'
 import CloseButton from 'images/x.png'
