@@ -18,7 +18,8 @@ export function * transactionFlow ({ transactionPromise, action, confirmationsLi
     )
     transactionPromise.on('error', (error) => {
       const rejected = 'User denied transaction signature'
-      if (error.includes(rejected) || error.message.includes(rejected)) {
+      if (((typeof error === 'string') && (error.includes(rejected))) ||
+        ((typeof error.message === 'string') && error.message.includes(rejected))) {
         if (error.error) {
           error.error = rejected
           reject(error)
