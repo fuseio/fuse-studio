@@ -45,11 +45,22 @@ module.exports = {
         HomeBridgeFactory: '0xb895638fb3870AD5832402a5BcAa64A044687db0',
         BridgeMapper: '0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66'
       },
+      sharedAddresses: {
+        WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
+        walletModules: {
+          GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
+          LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',
+          RecoveryManager: '0xAC4F70025d0671F88309Db0E588E0565bEFd1f35',
+          ApprovedTransfer: '0x04E92d2ffBb51d53379b4754b3b92f879838902A',
+          TransferManager: '0x8527a2d3d5aC0411933d663b4dcE275a5b7f39D8',
+          TokenExchanger: '0x16127Bbec8d9A24a0801f7B945A18D077f2c629b'
+        }
+      },
       addresses: defer(function () {
         if (this.network.foreign.name === 'mainnet') {
-          return this.network.home.addressesMainnet
+          return { ...this.network.home.sharedAddresses, ...this.network.home.addressesMainnet }
         } else {
-          return this.network.home.addressesRopsten
+          return { ...this.network.home.sharedAddresses, ...this.network.home.addressesRopsten }
         }
       })
     },
@@ -65,12 +76,10 @@ module.exports = {
         return `https://${this.network.foreign.name}.infura.io/v3/${this.network.foreign.apiKey}`
       }),
       addressesMainnet: {
-        FuseToken: '0xcd975c581AA0b83a8dE39035325BF44556517367',
         TokenFactory: '0xB2100946628D3e45FF94971b35508AfCBBc87432',
         ForeignBridgeFactory: '0xaC116929b2baB59D05a1Da99303e7CAEd100ECC9'
       },
       addressesRopsten: {
-        FuseToken: '0xcd975c581AA0b83a8dE39035325BF44556517367',
         TokenFactory: '0x6004EAdF0aD3aCd568F354CA7E2b410bA0080E98',
         ForeignBridgeFactory: '0xABBf5D8599B2Eb7b4e1D25a1Fd737FF1987655aD'
       },

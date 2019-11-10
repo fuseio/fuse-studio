@@ -5,6 +5,19 @@
       "addressesRopsten": {
         "TokenFactory": "0xA6D0f4552cf5237987F46095875fC64b006E7bda"
       }
+    },
+    "home": {
+      "sharedAddresses": {
+        "WalletFactory": "0x841C3F8138315EB5008dB8BB1457B58a8bF53bac",
+        "walletModules": {
+          "GuardianManager": "0x5C485e2785251168846756D0A3A6Cfeb85A810Fe",
+          "LockManager": "0xe4F584Bf2a5A8DADA389cfBFC2dE2Bb0f47a66e6",
+          "RecoveryManager": "0x3D7746C816fA011A7C6d876a48D7ae0ff0532F6f",
+          "ApprovedTransfer": "0xD75AEad3975724BE7709C7519f1601F7fe173d5E",
+          "TransferManager": "0xBbE1EcEE01bBa382088E243624aE69C4D7F378A8",
+          "TokenExchanger": "0xe9A473d4736F3F6FDc541420581050Bd91F126A8"
+        }
+      }
     }
   },
   "api": {
