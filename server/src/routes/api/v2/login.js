@@ -12,7 +12,7 @@ const client = require('twilio')(config.get('twilio.accountSid'), config.get('tw
  *
  * @apiParam {String} phoneNumber User phone number
  *
- * @apiSuccess {String} response status - ok
+ * @apiSuccess {String} response Response status - ok
  */
 router.post('/request', async (req, res) => {
   const { phoneNumber } = req.body

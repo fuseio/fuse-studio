@@ -7,6 +7,9 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Request a verification code](#Request-a-verification-code)
 	- [Verify user phone number](#Verify-user-phone-number)
 	
+- [Wallet](#Wallet)
+	- [Create wallet contract for user](#Create-wallet-contract-for-user)
+	
 
 # <a name='Login'></a> Login
 
@@ -28,7 +31,7 @@ POST /login/request
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| response | `String` | <p>status - ok</p> |
+| response | `String` | <p>Response status - ok</p> |
 ## <a name='Verify-user-phone-number'></a> Verify user phone number
 [Back to top](#top)
 
@@ -49,3 +52,24 @@ POST /login/verify
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | token | `String` | <p>JWT token</p> |
+# <a name='Wallet'></a> Wallet
+
+## <a name='Create-wallet-contract-for-user'></a> Create wallet contract for user
+[Back to top](#top)
+
+<p>Creates wallet contract for the user</p>
+
+```
+POST /wallet/:accountAddress
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| accountAddress | `String` | <p>User account address</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| response | `String` | <p>Response status - ok</p> |

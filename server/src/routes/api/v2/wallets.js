@@ -4,27 +4,23 @@ const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 /**
- * @api {post} /wallet Create
- * @apiName Request
- * @apiGroup Login
- * @apiDescription Request a verification code to user's phone number
+ * @api {post} /wallet/:accountAddress Create wallet contract for user
+ * @apiName CreateWallet
+ * @apiGroup Wallet
+ * @apiDescription Creates wallet contract for the user
  *
- * @apiParam {String} phoneNumber User phone number
+ * @apiParam {String} accountAddress User account address
  *
- * @apiSuccess {String} response status - ok
+ * @apiSuccess {String} response Response status - ok
  */
 router.post('/:accountAddress', auth.required, async (req, res, next) => {
-  // TODO: Map phoneNumer to account (mongo)
-  const { accountAddress } = req.body
+  const { accountAddress } = req.params
   const { phoneNumber } = req.user
   new UserWallet({ phoneNumber, accountAddress }).save()
 
-  const job = await agenda.now('createWallet', { owner: accountAddress })
+  await agenda.now('createWallet', { owner: accountAddress })
 
-  job.run((err, job) => {
-    debugger
-  })
-  return res.json({ job: job.attrs })
+  return res.json({ response: 'ok' })
 })
 
 module.exports = router
