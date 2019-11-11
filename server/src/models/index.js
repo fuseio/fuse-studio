@@ -5,6 +5,7 @@ require('./Transfer')
 require('./Deposit')
 require('./Entity')
 require('./Profile')
+require('./UserWallet')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')

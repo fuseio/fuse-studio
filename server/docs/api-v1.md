@@ -58,7 +58,7 @@ GET /bridges/:homeTokenAddress
 
 
 ```
-POST /communities/:communityAddress
+POST /communities/:communityAddress/plugins
 ```
 
 ### Parameter Parameters
@@ -72,16 +72,9 @@ POST /communities/:communityAddress
 
 ```json
 {
-  "plugins": {
-     "businessList": {
-         "isActive": true,
-      },
-     "joinBonus": {
-         "isActive": false,
-         "hasTransferToFunder": false
-     },
-  }
-}
+   "name": "joinBonus",
+   "isActive": false
+ }
 ```
 
 ## <a name=''></a> 
@@ -243,7 +236,7 @@ GET /tokens/:address
 | networkType | `String` | <p>The network of the token (body parameter)</p> |
 
 ### Examples
-Adding DAI token on mainnet
+Adding DAI token on mainnet:
 
 ```
 POST /tokens/0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359

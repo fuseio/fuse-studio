@@ -127,6 +127,8 @@ module.exports = {
   funder: {
     urlBase: 'https://funder-qa.fusenet.io/api/'
   },
+  twilio: {
+  },
   plugins: {
     moonpay: {
       currencies: {

@@ -67,6 +67,11 @@
       }
     }
   },
+  "twilio": {
+    "accountSid": "COMMUNITY_TWILIO_ACCOUNT_SID",
+    "serviceSid": "COMMUNITY_TWILIO_SERVICE_SID",
+    "authToken": "COMMUNITY_TWILIO_AUTH_TOKEN"
+  },
   "plugins": {
     "moonpay": {
       "webhook": {
