@@ -8,7 +8,7 @@
     "dev": "nodemon --trace-warnings ./src/app.js",
     "debug": "node --inspect --trace-warnings ./src/app.js",
     "debug-brk": "node --inspect-brk --trace-warnings ./src/app.js",
-    "doc:v1": "apidoc -c src/routes/api/v2 -i src/routes/api/v1 -o docs/api/v1 && apidoc-markdown -p docs/api/v1 -o docs/api-v1.md",
+    "doc:v1": "apidoc -c src/routes/api/v1 -i src/routes/api/v1 -o docs/api/v1 && apidoc-markdown -p docs/api/v1 -o docs/api-v1.md",
     "doc:v2": "apidoc -c src/routes/api/v2 -i src/routes/api/v2 -o docs/api/v2 && apidoc-markdown -p docs/api/v2 -o docs/api-v2.md",
     "lint": "standard",
     "lint-fix": "standard --fix"

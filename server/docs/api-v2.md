@@ -9,6 +9,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	
 - [Wallet](#Wallet)
 	- [Create wallet contract for user](#Create-wallet-contract-for-user)
+	- [Fetch user wallet](#Fetch-user-wallet)
 	
 
 # <a name='Login'></a> Login
@@ -62,6 +63,10 @@ POST /login/verify
 ```
 POST /wallet/:accountAddress
 ```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
 
 ### Parameter Parameters
 | Name     | Type       | Description                           |
@@ -73,3 +78,22 @@ POST /wallet/:accountAddress
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | response | `String` | <p>Response status - ok</p> |
+## <a name='Fetch-user-wallet'></a> Fetch user wallet
+[Back to top](#top)
+
+<p>Fetches user's wallet address</p>
+
+```
+POST /wallet/
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Object` | <p>User waller object</p> |
