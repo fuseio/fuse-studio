@@ -47,7 +47,7 @@ const CurrencyType = ({ networkType, formik }) => {
   return (
     <div className='attributes__currency'>
       <h3 className='attributes__title'>
-        Currency Type
+        Currency Type<span style={{ fontSize: 'smaller', fontWeight: '400' }}> | choose one of the options</span>
       </h3>
       <div className='attributes__types'>
         <Field
@@ -74,6 +74,7 @@ const CurrencyType = ({ networkType, formik }) => {
             )
           }}
         />
+        <p className='attributes__or'>OR</p>
         <Field
           name='existingToken'
           render={({ field, form: { setFieldValue } }) => (
