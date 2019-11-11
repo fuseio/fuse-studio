@@ -18,7 +18,14 @@ const UserWallet = mongoose.model('UserWallet')
 router.post('/:accountAddress', auth.required, async (req, res, next) => {
   const { accountAddress } = req.params
   const { phoneNumber } = req.user
-  new UserWallet({ phoneNumber, accountAddress }).save()
+  const userWallet = await UserWallet.findOne({ phoneNumber })
+  if (!userWallet) {
+    await new UserWallet({ phoneNumber, accountAddress }).save()
+  } else if (userWallet.walletAddress) {
+    const msg = `User ${phoneNumber} already has wallet account: ${userWallet.walletAddress}`
+    console.log(msg)
+    return res.status(400).json({ error: msg })
+  }
 
   await agenda.now('createWallet', { owner: accountAddress })
 
