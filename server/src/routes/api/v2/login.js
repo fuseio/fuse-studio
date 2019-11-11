@@ -27,7 +27,7 @@ router.post('/request', async (req, res) => {
     res.json({ response: 'ok' })
   } catch (e) {
     console.error('Got an error from Twilio:', e.code, e.message)
-    res.status(400).json({ error: e.message }).error()
+    res.status(400).json({ error: e.message })
   }
 })
 
@@ -61,7 +61,7 @@ router.post('/verify', async (req, res) => {
     })
     res.json({ token })
   } else {
-    res.json({ error: 'Wrong SMS code' })
+    res.status(400).json({ error: 'Wrong SMS code' })
   }
 })
 
