@@ -48,6 +48,7 @@ const Users = ({
   addAdminRole,
   removeAdminRole,
   confirmUser,
+  userJustAdded,
   transactionData,
   entityAdded
 }) => {
@@ -178,7 +179,7 @@ const Users = ({
       setTimeout(() => {
         loadModal(ENTITY_ADDED_MODAL, {
           type: 'users',
-          name: !isEmpty(data) ? data[0].name[0].name : ''
+          name: userJustAdded
         })
       }, 1000)
     }

@@ -49,7 +49,7 @@ export default (state = initialState, action) => {
         usersResults: state.usersResults.filter(val => val !== account)
       }
     case ADD_ENTITY.REQUEST:
-      return { ...state, signatureNeeded: true, showTransactionMessage: true }
+      return { ...state, signatureNeeded: true, showTransactionMessage: true, [`${action.entityType}JustAdded`]: action.data.name }
     case ADD_ENTITY.FAILURE:
       return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), signatureNeeded: false }
     case ADD_ENTITY.PENDING:
