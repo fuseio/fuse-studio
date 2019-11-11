@@ -40,7 +40,7 @@
    
 		@include breakpoint(small down) {
       width: 90%;
-      height: 90%;
+      max-height: 90%;
 		}
 
     @include element(close) {

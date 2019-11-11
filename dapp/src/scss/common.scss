@@ -1104,7 +1104,6 @@
     }
 
     @include breakpoint(medium down) {
-      height: 95% !important;
       padding: 1em 1.2em !important;
     }
   }
@@ -1114,9 +1113,9 @@
     line-height: 0.67;
     letter-spacing: -0.65px;
 		color: $color-light-dark;
-    
+    margin-top: 1em;
+
     @include breakpoint(medium up) {
-      margin-top: 1em;
       font-size: 1.875em;
     }
     
@@ -1227,6 +1226,10 @@
 
   @include element(button) {
     min-width: 145px;
+
+    @include breakpoint(medium down) {
+      margin-top: 1em;
+    }
 
     span.animate {
       animation-name: blink;
