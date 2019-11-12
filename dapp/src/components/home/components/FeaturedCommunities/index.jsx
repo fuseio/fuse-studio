@@ -96,7 +96,7 @@ const FeaturedCommunities = memo(({
             )
           }
         }) : [1, 2, 3, 4].map((img, index) =>
-          <div key={index} className='medium-12 cell'><img src={CommunityPlaceholderImage} /></div>
+          <div key={index} className='cell medium-12 small-24'><img src={CommunityPlaceholderImage} /></div>
         )
       }
     </div>

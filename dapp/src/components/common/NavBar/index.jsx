@@ -33,6 +33,8 @@ const NavBar = ({
 
   const handleScroll = useCallback(event => {
     let lastScrollY = window.scrollY
+    setProfileOpen(false)
+    setHelpOpen(false)
     setScrollTop(lastScrollY)
   }, [])
 

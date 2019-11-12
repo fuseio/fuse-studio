@@ -26,6 +26,7 @@ import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork, getNetworkType } from 'actions/network'
 import get from 'lodash/get'
+import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
 class DashboardLayout extends Component {
   state = {
@@ -48,6 +49,23 @@ class DashboardLayout extends Component {
       this.onSetSidebarOpen(false)
       fetchCommunity(communityAddress)
       fetchEntities(communityAddress)
+    }
+
+    if (((this.props.isPortis) || (this.props.isMetaMask)) &&
+      ((!prevProps.foreignToken) &&
+        this.props.foreignToken && this.props.foreignToken.networkType &&
+        ((this.props.foreignToken && this.props.foreignToken.networkType) !== this.props.networkType))) {
+      const { loadModal, isMetaMask, isPortis, foreignToken } = this.props
+      const wrongNetworkText = isMetaMask
+        ? `Switch to ${foreignToken.networkType} through Metamask. `
+        : isPortis
+          ? `Switch to ${foreignToken.networkType} through your wallet on the upper right part of the Studio.`
+          : `Switch to ${foreignToken.networkType}.`
+      loadModal(WRONG_NETWORK_MODAL, {
+        body: <p>{wrongNetworkText} <br /> This community is issued on {foreignToken.networkType}. you need to switch to {foreignToken.networkType} to view it</p>,
+        supportedNetworks: [foreignToken.networkType, 'Fuse'],
+        handleClose: this.showHomePage
+      })
     }
 
     if (this.props.location.pathname !== prevProps.location.pathname) {
@@ -248,6 +266,7 @@ class DashboardLayout extends Component {
 }
 
 const mapStateToProps = (state, { match }) => ({
+  isMetaMask: state.network.isMetaMask,
   accountAddress: getAccountAddress(state),
   networkType: state.network.networkType,
   homeToken: getHomeTokenByCommunityAddress(state, match.params.address),

@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux'
+import * as Sentry from '@sentry/browser'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware, { END } from 'redux-saga'
 import { createBrowserHistory } from 'history'
@@ -7,7 +8,11 @@ import createRootReducer from '../reducers'
 
 export default function configureStore (initialState) {
   const history = createBrowserHistory()
-  const sagaMiddleware = createSagaMiddleware()
+  const sagaMiddleware = createSagaMiddleware({
+    onError: (error, sec) => {
+      Sentry.captureException(error)
+    }
+  })
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
   const store = createStore(
     createRootReducer(history),

@@ -134,7 +134,7 @@
         }
   
         @include block(more) {
-  
+          font-size: 16px;
           position: absolute;
           display: none;
           right: 8px;

@@ -140,10 +140,13 @@
         @include xy-grid();
         @include flex-align(spaced, middle);
         padding: 0 15px;
-        width: 170px;
         height: 33px;
         border-radius: 16.3px;
         background-color: $color-white;
+
+        .icon {
+          margin-right: 5px;
+        }
       }
 
       @include breakpoint(small down) {
@@ -153,6 +156,8 @@
         border-radius: 50%;
         background-color: $color-white;
         font-size: 0.762em;
+        min-width: 40px;
+        min-height: 40px;
       }
 
       @include element(text) {

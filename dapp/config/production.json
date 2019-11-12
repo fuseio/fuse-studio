@@ -39,5 +39,9 @@
   "debugTrace": false,
   "ipfsProxy": {
     "urlBase": "https://ipfs-proxy.fusenet.io/api"
+  },
+  "sentry": {
+    "key": "24bb2594d71c47489e029add66203eae",
+    "project": "1815168"
   }
 }

@@ -56,10 +56,11 @@ class Wizard extends React.Component {
     }
   }
 
-  next = values => {
+  next = (values) => {
     if (validations[this.state.page]) {
-      const trackProps = validations[this.state.page].reduce((acc, key) => {
-        acc = `${values[key]}` ? {
+      const currentStepFields = validations[this.state.page]
+      const trackProps = currentStepFields.reduce((acc, key) => {
+        acc = values[key] ? {
           ...acc,
           [key]: get(values, `${key}.value`)
             ? `${get(values, `${key}.value`)}`

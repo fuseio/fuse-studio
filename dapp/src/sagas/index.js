@@ -7,6 +7,7 @@ import communityEntitiesSaga from './communityEntities'
 import tokenSaga from './token'
 import userSaga from './user'
 import bridgeSaga from './bridge'
+import errorSaga from './error'
 
 export default function * rootSaga () {
   yield all([
@@ -16,6 +17,7 @@ export default function * rootSaga () {
     fork(communityEntitiesSaga),
     fork(tokenSaga),
     fork(userSaga),
-    fork(bridgeSaga)
+    fork(bridgeSaga),
+    fork(errorSaga)
   ])
 }

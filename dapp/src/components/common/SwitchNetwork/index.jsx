@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import { withRouter } from 'react-router-dom'
 import Modal from 'components/common/Modal'
+import { convertNetworkName } from 'utils/network'
 import capitalize from 'lodash/capitalize'
 import RopstenToFuse from 'images/Ropsten_To_Fuse.png'
 import MainToFuse from 'images/Main_To_Fuse.png'
@@ -10,13 +11,13 @@ import SwitchToRopsten from 'images/Switch_To_Ropsten.png'
 const switchImages = {
   fuse: {
     ropsten: RopstenToFuse,
-    mainnet: MainToFuse
+    main: MainToFuse
   },
-  mainnet: SwitchToMain,
+  main: SwitchToMain,
   ropsten: SwitchToRopsten
 }
 
-const renderNetworks = (networks) => networks.map(capitalize).reduce((prev, curr) => [prev, ' or ', curr])
+const renderNetworks = (networks) => networks.map((network) => capitalize(convertNetworkName(network))).reduce((prev, curr) => [prev, ' or ', curr])
 
 const SwitchNetwork = ({
   history,

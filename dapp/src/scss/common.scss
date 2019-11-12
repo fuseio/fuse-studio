@@ -1104,21 +1104,35 @@
     }
 
     @include breakpoint(medium down) {
-      height: 90% !important;
+      padding: 1em 1.2em !important;
     }
   }
 
   @include element(title) {
-    font-size: 1.875em;
     font-weight: 500;
     line-height: 0.67;
     letter-spacing: -0.65px;
 		color: $color-light-dark;
-		margin-top: 1em;
+    margin-top: 1em;
+
+    @include breakpoint(medium up) {
+      font-size: 1.875em;
+    }
+    
+    @include breakpoint(medium down) {
+      font-size: 1.2em;
+    }
 
     > img {
-      width: 45px;
-      height: 45px;
+      @include breakpoint(medium up) {
+        width: 45px;
+        height: 45px;
+      }
+      
+      @include breakpoint(medium down) {
+        width: 35px;
+        height: 35px;
+      }
     }
   }
 
@@ -1128,6 +1142,11 @@
     letter-spacing: -0.39px;
     color: $color-gray;
     margin-top: 2em;
+
+    @include breakpoint(medium down) {
+      margin-top: 1em;
+    }
+
 
     @include modifier(smaller) {
       font-size: smaller;
@@ -1140,10 +1159,23 @@
 
   @include element(options) {
     @include xy-grid();
-    margin-top: 2em;
+    
+    @include breakpoint(medium up) {
+      margin-top: 2em;
+    }
+    
+    @include breakpoint(medium down) {
+      margin-top: .4em;
+    }
 
     > div:not(:first-child) {
-      margin-top: 2em;
+      @include breakpoint(medium up) {
+        margin-top: 2em;
+      }
+      
+      @include breakpoint(medium down) {
+        margin-top: .4em;
+      }
     }
   }
 
@@ -1152,7 +1184,14 @@
     @include element(title) {
       font-size: 1.125em;
       color: $color-light-dark;
-      margin-bottom: 0.5em;
+
+      @include breakpoint(medium up) {
+        margin-bottom: 0.5em;
+      }
+      
+      @include breakpoint(medium down) {
+        margin-top: .4em;
+      }
     }
 
     @include element(text) {
@@ -1160,7 +1199,19 @@
     }
 
     @include element(box) {
-      padding: 10px;
+
+      @include breakpoint(medium up) {
+        padding: 10px;
+      }
+      
+      @include breakpoint(medium down) {
+        margin-top: .4em;
+
+        > div, p {
+          margin: 0.7em 0;
+        }
+      }
+      
 
       &:hover {
         background-color: rgba(195, 195, 195, 0.14);
@@ -1175,6 +1226,10 @@
 
   @include element(button) {
     min-width: 145px;
+
+    @include breakpoint(medium down) {
+      margin-top: 1em;
+    }
 
     span.animate {
       animation-name: blink;

@@ -6,6 +6,7 @@ import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clea
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import WizardShape from 'utils/validation/shapes/wizard'
+import * as Sentry from '@sentry/browser'
 
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
@@ -94,6 +95,9 @@ const WizardPage = ({
     if (adminAddress) {
       window.analytics.identify(adminAddress, {
         email
+      })
+      Sentry.configureScope((scope) => {
+        scope.setUser({ email })
       })
     }
 

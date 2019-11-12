@@ -4,7 +4,7 @@ import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import isEmpty from 'lodash/isEmpty'
 import { getWeb3 } from 'services/web3'
-import { portis } from 'services/web3/providers/portis'
+import { portis, getProvider as getPortisProvider } from 'services/web3/providers/portis'
 import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse } from 'actions/accounts'
@@ -22,6 +22,13 @@ function * getNetworkTypeInternal (web3) {
   return { networkId, networkType }
 }
 
+const enabler = function * (web3) {
+  const enableResponse = yield web3.enable()
+  if (enableResponse) {
+    return toChecksumAddress(enableResponse[0])
+  }
+}
+
 export function * getAccountAddress (web3) {
   if ((window.ethereum && window.ethereum.enable) || (portis && portis.provider)) {
     try {
@@ -31,22 +38,28 @@ export function * getAccountAddress (web3) {
           ? { provider: 'metamask' }
           : { provider: 'portis' }
       if (loadedProvider && loadedProvider.provider === 'metamask') {
-        const enableResponse = yield window.ethereum.enable()
-        if (enableResponse) {
-          return web3.utils.toChecksumAddress(enableResponse[0])
-        }
-      } else {
-        const enableResponse = yield portis.provider.enable()
-        if (enableResponse) {
-          return web3.utils.toChecksumAddress(enableResponse[0])
+        const accountAddress = yield enabler(window.ethereum)
+        return accountAddress
+      } else if (loadedProvider && loadedProvider.provider === 'portis') {
+        if (portis && portis.provider) {
+          const accountAddress = yield enabler(portis.provider)
+          return accountAddress
+        } else {
+          getPortisProvider()
+          const accountAddress = yield enabler(portis.provider)
+          return accountAddress
         }
       }
     } catch (error) {
       console.log(error)
+      yield put({
+        type: 'ERROR',
+        error
+      })
       return null
     }
   }
-  return web3.utils.toChecksumAddress(web3.eth.defaultAccount)
+  return toChecksumAddress(web3.eth.defaultAccount)
 }
 
 function * deduceBridgeSides (networkType) {
@@ -88,17 +101,17 @@ function * getNetworkType ({ enableProvider, provider }) {
       })
       const accountAddress = yield getAccountAddress(web3)
       if (accountAddress) {
+        yield put({
+          type: actions.GETTING_ACCOUNT_ADDRESS.SUCCESS,
+          response: {
+            provider
+          }
+        })
         const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
         if (!isChanged) {
           yield put(balanceOfFuse(accountAddress))
         }
       }
-      yield put({
-        type: actions.GETTING_ACCOUNT_ADDRESS.SUCCESS,
-        response: {
-          provider
-        }
-      })
     }
 
     if (!isNetworkSupported(networkType)) {
@@ -112,6 +125,10 @@ function * getNetworkType ({ enableProvider, provider }) {
       throw new Error('This network is not supported')
     }
   } catch (error) {
+    yield put({
+      type: 'ERROR',
+      error
+    })
     yield put(loadModal(WRONG_NETWORK_MODAL))
     yield put({ type: actions.GET_NETWORK_TYPE.FAILURE, error })
   }

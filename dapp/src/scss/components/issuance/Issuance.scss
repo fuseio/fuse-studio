@@ -527,7 +527,7 @@
             @include element(control) {
               border: none;
               height: 100%;
-              font-size: 0.875em;
+              font-size: 0.775em;
               border-radius: 5px !important;
               box-shadow: 0 0 6px 0 #cbcbcb !important;
               border: 1px solid transparent;
@@ -600,6 +600,11 @@
             }
           }
         }
+      }
+
+      @include element(or) {
+        font-size: 0.775em;
+        color: $color-gray;
       }
 
       @include element(types) {
