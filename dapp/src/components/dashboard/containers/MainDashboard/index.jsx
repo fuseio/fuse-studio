@@ -237,7 +237,7 @@ class DashboardLayout extends Component {
                     )}
                   />
                 )}
-                {get(plugins, 'businessList.isActive', false) && (
+                {!get(plugins, 'businessList.isRemoved', false) && (
                   <Route
                     exact
                     path={`${match.path}/merchants`}
