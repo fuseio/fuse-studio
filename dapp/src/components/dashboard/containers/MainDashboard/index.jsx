@@ -51,6 +51,13 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
+    if (this.props.accountAddress !== prevProps.accountAddress) {
+      const { fetchCommunity, communityAddress, fetchEntities } = this.props
+      this.onSetSidebarOpen(false)
+      fetchCommunity(communityAddress)
+      fetchEntities(communityAddress)
+    }
+
     if (((this.props.isPortis) || (this.props.isMetaMask)) &&
       ((!prevProps.foreignToken) &&
         this.props.foreignToken && this.props.foreignToken.networkType &&

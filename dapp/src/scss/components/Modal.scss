@@ -33,11 +33,7 @@
     background-color: $color-white;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 		padding: 2em;
-    
-		@include breakpoint(medium up) {
-      max-height: 90%;
-    } 
-   
+
 		@include breakpoint(small down) {
       width: 90%;
       max-height: 90%;
