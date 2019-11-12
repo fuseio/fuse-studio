@@ -45,8 +45,8 @@ export function * getAccountAddress (web3) {
           const accountAddress = yield enabler(portis.provider)
           return accountAddress
         } else {
-          getPortisProvider()
-          const accountAddress = yield enabler(portis.provider)
+          const web3 = getPortisProvider()
+          const accountAddress = yield enabler(web3)
           return accountAddress
         }
       }
@@ -79,7 +79,8 @@ function * deduceBridgeSides (networkType) {
 
 function * getNetworkType ({ enableProvider, provider }) {
   try {
-    const web3 = yield getWeb3({ provider })
+    const reset = !!provider
+    const web3 = yield getWeb3({ provider, reset })
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const bridgeSides = yield deduceBridgeSides(networkType)
     const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)

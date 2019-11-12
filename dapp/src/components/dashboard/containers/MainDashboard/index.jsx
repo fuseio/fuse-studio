@@ -54,7 +54,7 @@ class DashboardLayout extends Component {
     if (((this.props.isPortis) || (this.props.isMetaMask)) &&
       ((!prevProps.foreignToken) &&
         this.props.foreignToken && this.props.foreignToken.networkType &&
-        ((this.props.foreignToken && this.props.foreignToken.networkType) !== this.props.networkType))) {
+        ((this.props.foreignToken && this.props.foreignToken.networkType) !== this.props.networkType)) && this.props.networkType !== 'fuse') {
       const { loadModal, isMetaMask, isPortis, foreignToken } = this.props
       const wrongNetworkText = isMetaMask
         ? `Switch to ${foreignToken.networkType} through Metamask. `
@@ -64,7 +64,7 @@ class DashboardLayout extends Component {
       loadModal(WRONG_NETWORK_MODAL, {
         body: <p>{wrongNetworkText} <br /> This community is issued on {foreignToken.networkType}. you need to switch to {foreignToken.networkType} to view it</p>,
         supportedNetworks: [foreignToken.networkType, 'Fuse'],
-        handleClose: this.showHomePage
+        handleClose: () => this.props.history.push('/')
       })
     }
 
