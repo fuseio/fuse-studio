@@ -28,6 +28,7 @@ export function * transactionFlow ({ transactionPromise, action, confirmationsLi
           reject(err)
         }
       }
+      reject(error)
     })
   })
   if (abiName) {

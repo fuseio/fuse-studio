@@ -77,10 +77,29 @@ function * deduceBridgeSides (networkType) {
   }
 }
 
+function * connectToWallet ({ web3, provider }) {
+  const accountAddress = yield getAccountAddress(web3)
+  if (accountAddress) {
+    yield put({
+      type: actions.CONNECT_TO_WALLET.SUCCESS,
+      response: {
+        provider
+      }
+    })
+    const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
+    if (!isChanged) {
+      yield put(balanceOfFuse(accountAddress))
+    }
+  } else {
+    yield put({
+      type: actions.CONNECT_TO_WALLET.FAILURE
+    })
+  }
+}
+
 function * getNetworkType ({ enableProvider, provider }) {
   try {
-    const reset = !!provider
-    const web3 = yield getWeb3({ provider, reset })
+    const web3 = yield getWeb3({ provider })
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const bridgeSides = yield deduceBridgeSides(networkType)
     const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
@@ -97,22 +116,7 @@ function * getNetworkType ({ enableProvider, provider }) {
       } })
 
     if (enableProvider) {
-      yield put({
-        type: actions.GETTING_ACCOUNT_ADDRESS.REQUEST
-      })
-      const accountAddress = yield getAccountAddress(web3)
-      if (accountAddress) {
-        yield put({
-          type: actions.GETTING_ACCOUNT_ADDRESS.SUCCESS,
-          response: {
-            provider
-          }
-        })
-        const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
-        if (!isChanged) {
-          yield put(balanceOfFuse(accountAddress))
-        }
-      }
+      yield put(actions.connectToWallet(web3, provider))
     }
 
     if (!isNetworkSupported(networkType)) {
@@ -179,7 +183,7 @@ function * watchGetNetworkTypeSuccess ({ response }) {
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
-function * watchGettingAccountAddress ({ response }) {
+function * watchConnectToWallet ({ response }) {
   const { provider } = response
   saveState('state.provider', { provider })
   saveState('state.reconnect', true)
@@ -208,12 +212,13 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
+    takeEvery(actions.CONNECT_TO_WALLET.REQUEST, connectToWallet),
     takeEvery(actions.CHECK_ACCOUNT_CHANGED.REQUEST, checkAccountChanged),
     takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices),
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),
     takeEvery(actions.CHANGE_NETWORK.REQUEST, changeNetwork),
     takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess),
-    takeEvery(actions.GETTING_ACCOUNT_ADDRESS.SUCCESS, watchGettingAccountAddress),
+    takeEvery(actions.CONNECT_TO_WALLET.SUCCESS, watchConnectToWallet),
     tryTakeEvery(actions.SEND_TRANSACTION_HASH, sendTransactionHash, 1)
   ])
 }

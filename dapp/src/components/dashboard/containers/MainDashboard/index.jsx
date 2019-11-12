@@ -24,7 +24,7 @@ import { getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
-import { changeNetwork, getNetworkType } from 'actions/network'
+import { changeNetwork } from 'actions/network'
 import get from 'lodash/get'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
@@ -286,8 +286,7 @@ const mapDispatchToProps = {
   fetchCommunity,
   loadModal,
   fetchEntities,
-  changeNetwork,
-  getNetworkType
+  changeNetwork
 }
 
 export default connect(
