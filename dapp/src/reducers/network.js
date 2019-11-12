@@ -21,6 +21,8 @@ export default (state = initialState, action) => {
       return { ...state, connectingToWallet: true }
     case network.CONNECT_TO_WALLET.SUCCESS:
       return { ...state, connectingToWallet: false }
+    case network.CONNECT_TO_WALLET.FAILURE:
+      return { ...state, connectingToWallet: false }
     case network.CHECK_ACCOUNT_CHANGED.SUCCESS:
       return { ...state, ...action.response }
     case network.ACCOUNT_LOGGED_OUT:

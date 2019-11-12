@@ -31,32 +31,23 @@ const enabler = function * (web3) {
 
 export function * getAccountAddress (web3) {
   if ((window.ethereum && window.ethereum.enable) || (portis && portis.provider)) {
-    try {
-      const loadedProvider = (!isEmpty(loadState('state.provider')) && loadState('state.provider'))
-        ? loadState('state.provider')
-        : window && window.ethereum
-          ? { provider: 'metamask' }
-          : { provider: 'portis' }
-      if (loadedProvider && loadedProvider.provider === 'metamask') {
-        const accountAddress = yield enabler(window.ethereum)
+    const loadedProvider = (!isEmpty(loadState('state.provider')) && loadState('state.provider'))
+      ? loadState('state.provider')
+      : window && window.ethereum
+        ? { provider: 'metamask' }
+        : { provider: 'portis' }
+    if (loadedProvider && loadedProvider.provider === 'metamask') {
+      const accountAddress = yield enabler(window.ethereum)
+      return accountAddress
+    } else if (loadedProvider && loadedProvider.provider === 'portis') {
+      if (portis && portis.provider) {
+        const accountAddress = yield enabler(portis.provider)
         return accountAddress
-      } else if (loadedProvider && loadedProvider.provider === 'portis') {
-        if (portis && portis.provider) {
-          const accountAddress = yield enabler(portis.provider)
-          return accountAddress
-        } else {
-          const web3 = getPortisProvider()
-          const accountAddress = yield enabler(web3)
-          return accountAddress
-        }
+      } else {
+        const web3 = getPortisProvider()
+        const accountAddress = yield enabler(web3)
+        return accountAddress
       }
-    } catch (error) {
-      console.log(error)
-      yield put({
-        type: 'ERROR',
-        error
-      })
-      return null
     }
   }
   return toChecksumAddress(web3.eth.defaultAccount)
@@ -78,8 +69,8 @@ function * deduceBridgeSides (networkType) {
 }
 
 function * connectToWallet ({ web3, provider }) {
-  const accountAddress = yield getAccountAddress(web3)
-  if (accountAddress) {
+  try {
+    const accountAddress = yield getAccountAddress(web3)
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,
       response: {
@@ -90,7 +81,7 @@ function * connectToWallet ({ web3, provider }) {
     if (!isChanged) {
       yield put(balanceOfFuse(accountAddress))
     }
-  } else {
+  } catch (error) {
     yield put({
       type: actions.CONNECT_TO_WALLET.FAILURE
     })
