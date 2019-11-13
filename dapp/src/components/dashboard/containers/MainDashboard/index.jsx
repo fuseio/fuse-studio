@@ -58,19 +58,24 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
-    if (((this.props.isPortis) || (this.props.isMetaMask)) &&
-      ((!prevProps.foreignToken) &&
-        this.props.foreignToken && this.props.foreignToken.networkType &&
-        ((this.props.foreignToken && this.props.foreignToken.networkType) !== this.props.networkType)) && this.props.networkType !== 'fuse') {
-      const { loadModal, isMetaMask, isPortis, foreignToken } = this.props
+    if ((this.props.isPortis || this.props.isMetaMask) &&
+      !prevProps.foreignToken &&
+        !this.props.foreignToken &&
+        !prevProps.homeToken &&
+        !this.props.homeToken &&
+        !prevProps.community &&
+        !this.props.community &&
+        this.props.networkType !== 'fuse') {
+      const { loadModal, isMetaMask, isPortis, networkType } = this.props
+      const desired = networkType === 'ropsten' ? 'main' : 'ropsten'
       const wrongNetworkText = isMetaMask
-        ? `Switch to ${foreignToken.networkType} through Metamask. `
+        ? `Switch to ${desired} through Metamask. `
         : isPortis
-          ? `Switch to ${foreignToken.networkType} through your wallet on the upper right part of the Studio.`
-          : `Switch to ${foreignToken.networkType}.`
+          ? `Switch to ${desired} through your wallet on the upper right part of the Studio.`
+          : `Switch to ${desired}.`
       loadModal(WRONG_NETWORK_MODAL, {
-        body: <p>{wrongNetworkText} <br /> This community is issued on {foreignToken.networkType}. you need to switch to {foreignToken.networkType} to view it</p>,
-        supportedNetworks: [foreignToken.networkType, 'Fuse'],
+        body: <p>{wrongNetworkText} <br /> This community is issued on {desired}. you need to switch to {desired} to view it</p>,
+        supportedNetworks: [desired, 'Fuse'],
         handleClose: () => this.props.history.push('/')
       })
     }
