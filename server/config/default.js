@@ -53,7 +53,8 @@ module.exports = {
           RecoveryManager: '0xAC4F70025d0671F88309Db0E588E0565bEFd1f35',
           ApprovedTransfer: '0x04E92d2ffBb51d53379b4754b3b92f879838902A',
           TransferManager: '0x8527a2d3d5aC0411933d663b4dcE275a5b7f39D8',
-          TokenExchanger: '0x16127Bbec8d9A24a0801f7B945A18D077f2c629b'
+          TokenExchanger: '0x16127Bbec8d9A24a0801f7B945A18D077f2c629b',
+          CommunityManager: '0x42616C787e3D75aC29b9dCAB35131b585Eaa9837'
         }
       },
       addresses: defer(function () {
