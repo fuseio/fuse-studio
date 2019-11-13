@@ -18,7 +18,8 @@
           "RecoveryManager": "0x3D7746C816fA011A7C6d876a48D7ae0ff0532F6f",
           "ApprovedTransfer": "0xD75AEad3975724BE7709C7519f1601F7fe173d5E",
           "TransferManager": "0xBbE1EcEE01bBa382088E243624aE69C4D7F378A8",
-          "TokenExchanger": "0xe9A473d4736F3F6FDc541420581050Bd91F126A8"
+          "TokenExchanger": "0xe9A473d4736F3F6FDc541420581050Bd91F126A8",
+          "CommunityManager": "0x306BB3f40BEa3710cAc4BD9F1Ef052aD999d7233"
         }
       }
     }
