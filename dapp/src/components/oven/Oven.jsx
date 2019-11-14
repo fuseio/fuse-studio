@@ -7,6 +7,9 @@ import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
 import NavBar from 'components/common/NavBar'
 import isEmpty from 'lodash/isEmpty'
+import { push } from 'connected-react-router'
+import { withNetwork } from 'containers/Web3'
+import withTracker from 'containers/withTracker'
 
 class Oven extends Component {
   constructor (props) {
@@ -46,11 +49,9 @@ class Oven extends Component {
     if (window && window.analytics) {
       if (name) {
         window.analytics.track(`Clicked on featured community - ${name}`)
-      } else {
-        window.analytics.track(`Clicked on featured community`)
       }
     }
-    this.props.history.push(`/view/community/${communityAddress}`)
+    this.props.push(`/view/community/${communityAddress}`)
   }
 
   getScrollParent = () => this.myRef.current
@@ -79,10 +80,11 @@ const mapDispatchToProps = {
   fetchTokensByOwner,
   loadModal,
   fetchFuseToken,
-  fetchFeaturedCommunities
+  fetchFeaturedCommunities,
+  push
 }
 
-export default connect(
+export default withTracker(withNetwork(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Oven)
+)(Oven)))

@@ -7,7 +7,7 @@ import { transferToken, clearTransactionStatus } from 'actions/token'
 import capitalize from 'lodash/capitalize'
 import Message from 'components/common/SignMessage'
 import { FAILURE, SUCCESS } from 'actions/constants'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import { getBalances } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
 

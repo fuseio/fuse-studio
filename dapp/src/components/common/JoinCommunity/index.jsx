@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { withNetwork, withAccount, withBox } from 'containers/Web3'
 import { connect } from 'react-redux'
 import { joinCommunity } from 'actions/communityEntities'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 
 class JoinCommunity extends Component {
   componentDidMount () {

@@ -4,16 +4,16 @@ import { fetchTokens, fetchTokensByOwner, fetchFuseToken, fetchFeaturedCommuniti
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 import isEmpty from 'lodash/isEmpty'
 import { fetchCommunities } from 'actions/accounts'
 import Community from 'components/common/Community'
 import FeaturedCommunity from 'components/common/FeaturedCommunity'
+import { push } from 'connected-react-router'
 
 const FeaturedCommunities = memo(({
   metadata,
-  networkType,
   account,
   history,
   communitiesKeys,
@@ -22,7 +22,8 @@ const FeaturedCommunities = memo(({
   tokens,
   fetchCommunities,
   fetchFeaturedCommunities,
-  featuredCommunities
+  featuredCommunities,
+  push
 }) => {
   useEffect(() => {
     fetchFeaturedCommunities()
@@ -36,11 +37,9 @@ const FeaturedCommunities = memo(({
     if (window && window.analytics) {
       if (name) {
         window.analytics.track(`Clicked on featured community - ${name}`)
-      } else {
-        window.analytics.track(`Clicked on featured community`)
       }
     }
-    history.push(`/view/community/${communityAddress}`)
+    push(`/view/community/${communityAddress}`)
   }
 
   let filteredCommunities = []
@@ -81,6 +80,7 @@ const FeaturedCommunities = memo(({
         }) : !isEmpty(featuredCommunities) ? featuredCommunities.map((address, index) => {
           const token = tokens[communities[address].foreignTokenAddress]
           const community = communities[address]
+          console.log({ community })
           if (token && community) {
             return (
               <div className='cell medium-12 small-24' key={address}>
@@ -133,7 +133,8 @@ const mapDispatchToProps = {
   loadModal,
   fetchFuseToken,
   fetchCommunities,
-  fetchFeaturedCommunities
+  fetchFeaturedCommunities,
+  push
 }
 
 export default withRouter(

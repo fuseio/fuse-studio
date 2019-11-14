@@ -23,9 +23,10 @@ import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
 import sortBy from 'lodash/sortBy'
 import Avatar from 'images/avatar.svg'
-import { Link, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import { getForeignNetwork } from 'selectors/network'
+import { push } from 'connected-react-router'
 
 const Users = ({
   networkType,
@@ -50,7 +51,8 @@ const Users = ({
   confirmUser,
   userJustAdded,
   transactionData,
-  entityAdded
+  entityAdded,
+  push
 }) => {
   useSwitchNetwork('fuse', { featureName: 'users list' })
   const { communityAddress, isClosed } = community
@@ -241,7 +243,7 @@ const Users = ({
                     hasAdminRole && isApproved && (
                       <ul className='more__options'>
                         <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                        <Link className='more__options__item' to={`${currentUrl}/transfer/${account}`}>Transfer tokens to user</Link>
+                        <li className='more__options__item' onClick={() => goToPage(`${currentUrl}/transfer/${account}`)}>Transfer tokens to user</li>
                         <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
                       </ul>
                     )
@@ -250,7 +252,7 @@ const Users = ({
                     !hasAdminRole && isApproved && (
                       <ul className='more__options'>
                         <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                        <Link className='more__options__item' to={`${currentUrl}/transfer/${account}`}>Transfer tokens to user</Link>
+                        <li className='more__options__item' onClick={() => goToPage(`${currentUrl}/transfer/${account}`)}>Transfer tokens to user</li>
                         <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
                       </ul>
                     )
@@ -284,6 +286,10 @@ const Users = ({
   const handleRemoveAdminRole = (account) => removeAdminRole(account)
 
   const handleConfirmUser = (account) => confirmUser(account)
+
+  const goToPage = (path) => {
+    push(path)
+  }
 
   const renderTable = () => {
     return (
@@ -345,6 +351,7 @@ const mapStateToProps = (state, { match: { url: currentUrl } }) => ({
 })
 
 const mapDispatchToProps = {
+  push,
   joinCommunity,
   addEntity,
   confirmUser,

@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { signIn, create3boxProfile } from 'actions/accounts'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 
 class SignInLayout extends Component {
   componentDidMount () {

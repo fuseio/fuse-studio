@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import Modal from 'components/common/Modal'
 import { convertNetworkName } from 'utils/network'
 import capitalize from 'lodash/capitalize'

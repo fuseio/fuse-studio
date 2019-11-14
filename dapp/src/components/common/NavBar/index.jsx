@@ -7,12 +7,13 @@ import WalletIcon from 'images/fuse-wallet.svg'
 import classNames from 'classnames'
 import ProfileDropDown from './../ProfileDropDown'
 import { isMobileOnly } from 'react-device-detect'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import { withNetwork } from 'containers/Web3'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
 import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER } from 'constants/uiConstants'
+import { push } from 'connected-react-router'
 
 const NavBar = ({
   history,
@@ -20,6 +21,7 @@ const NavBar = ({
   networkType,
   foreignNetwork,
   loadModal,
+  push,
   connectingToWallet,
   withLogo = true
 }) => {
@@ -55,7 +57,7 @@ const NavBar = ({
     }
   }, [handleScroll, handleClickOutside])
 
-  const goToHome = () => history.push('/')
+  const goToHome = () => push('/')
 
   const chooseProvider = () => {
     if (!accountAddress) {
@@ -88,6 +90,7 @@ const NavBar = ({
           <span className='icon'><img src={HelpIcon} /></span>
           <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
             <ul className='drop__options'>
+              <li className='drop__options__item'><a href='https://fuse.io' target='_blank' rel='noopener noreferrer'>Website</a></li>
               <li className='drop__options__item'><a href='https://docs.fusenet.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer'>FAQ</a></li>
               <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'>Github</a></li>
               <li className='drop__options__item'><a href='mailto:hello@fuse.io'>Contact us</a></li>
@@ -135,7 +138,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  loadModal
+  loadModal,
+  push
 }
 
 export default withRouter(withNetwork((connect(mapStateToProps, mapDispatchToProps)(NavBar))))
