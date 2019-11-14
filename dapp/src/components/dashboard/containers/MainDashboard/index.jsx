@@ -59,15 +59,10 @@ class DashboardLayout extends Component {
     }
 
     if ((this.props.isPortis || this.props.isMetaMask) &&
-      !prevProps.foreignToken &&
-        !this.props.foreignToken &&
-        !prevProps.homeToken &&
-        !this.props.homeToken &&
-        !prevProps.community &&
-        !this.props.community &&
-        this.props.networkType !== 'fuse') {
+        (!prevProps.community && !this.props.community) &&
+        (this.props.networkType && this.props.networkType !== 'fuse')) {
       const { loadModal, isMetaMask, isPortis, networkType } = this.props
-      const desired = networkType === 'ropsten' ? 'main' : 'ropsten'
+      const desired = networkType === 'main' ? 'ropsten' : 'main'
       const wrongNetworkText = isMetaMask
         ? `Switch to ${desired} through Metamask. `
         : isPortis
