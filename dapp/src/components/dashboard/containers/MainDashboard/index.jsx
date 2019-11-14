@@ -43,7 +43,7 @@ class DashboardLayout extends Component {
     window.analytics.reset()
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate (prevProps, prevState) {
     if (this.props.communityAddress !== prevProps.communityAddress) {
       const { fetchCommunity, communityAddress, fetchEntities } = this.props
       this.onSetSidebarOpen(false)
@@ -58,7 +58,10 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
-    if ((this.props.isPortis || this.props.isMetaMask) &&
+    if ((!prevState.error) &&
+        (this.props.isPortis || this.props.isMetaMask) &&
+        (!prevProps.foreignToken && !this.props.foreignToken) &&
+        (!prevProps.homeToken && !this.props.homeToken) &&
         (!prevProps.community && !this.props.community) &&
         (this.props.networkType && this.props.networkType !== 'fuse')) {
       const { loadModal, isMetaMask, isPortis, networkType } = this.props
@@ -73,6 +76,7 @@ class DashboardLayout extends Component {
         supportedNetworks: [desired, 'Fuse'],
         handleClose: () => this.props.history.push('/')
       })
+      this.setState({ error: true })
     }
 
     if (this.props.location.pathname !== prevProps.location.pathname) {

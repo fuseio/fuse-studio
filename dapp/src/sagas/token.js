@@ -265,21 +265,23 @@ function * watchFetchCommunity ({ response }) {
   const { entities } = response
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
-      const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
-      const accountAddress = yield select(getAccountAddress)
+      if (entities && entities[communityAddress]) {
+        const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
+        const accountAddress = yield select(getAccountAddress)
 
-      if (entities[communityAddress] && entities[communityAddress].communityURI) {
-        yield put(fetchMetadata(entities[communityAddress].communityURI))
+        if (entities[communityAddress] && entities[communityAddress].communityURI) {
+          yield put(fetchMetadata(entities[communityAddress].communityURI))
+        }
+
+        yield all([
+          put(actions.fetchToken(homeTokenAddress)),
+          put(actions.fetchToken(foreignTokenAddress)),
+          put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
+          put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
+          put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
+          put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
+        ])
       }
-
-      yield all([
-        put(actions.fetchToken(homeTokenAddress)),
-        put(actions.fetchToken(foreignTokenAddress)),
-        put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-        put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
-        put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
-        put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
-      ])
     }
   }
 }
