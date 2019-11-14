@@ -25,7 +25,7 @@ const Plugin = ({
         <h2 className='plugin-card__title cell small-24'>{title} <span>{subTitle}</span></h2>
         {text && <p className='plugin-card__text cell small-24'>{text}</p>}
         <div className='plugin-card__actions cell small-24'>
-          <span className='plugin-card__learn' onClick={showInfoModal}>LEARN MORE</span>
+          <button disabled={disabled} className='plugin-card__learn' onClick={showInfoModal}>LEARN MORE</button>
           <button disabled={disabled} className={classNames('plugin-card__btn', { 'plugin-card__btn--add': !hasPlugin }, { 'plugin-card__btn--remove': hasPlugin })} onClick={managePlugin}>
             {!hasPlugin ? (
               <React.Fragment>

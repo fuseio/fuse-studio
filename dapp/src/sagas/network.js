@@ -31,32 +31,23 @@ const enabler = function * (web3) {
 
 export function * getAccountAddress (web3) {
   if ((window.ethereum && window.ethereum.enable) || (portis && portis.provider)) {
-    try {
-      const loadedProvider = (!isEmpty(loadState('state.provider')) && loadState('state.provider'))
-        ? loadState('state.provider')
-        : window && window.ethereum
-          ? { provider: 'metamask' }
-          : { provider: 'portis' }
-      if (loadedProvider && loadedProvider.provider === 'metamask') {
-        const accountAddress = yield enabler(window.ethereum)
+    const loadedProvider = (!isEmpty(loadState('state.provider')) && loadState('state.provider'))
+      ? loadState('state.provider')
+      : window && window.ethereum
+        ? { provider: 'metamask' }
+        : { provider: 'portis' }
+    if (loadedProvider && loadedProvider.provider === 'metamask') {
+      const accountAddress = yield enabler(window.ethereum)
+      return accountAddress
+    } else if (loadedProvider && loadedProvider.provider === 'portis') {
+      if (portis && portis.provider) {
+        const accountAddress = yield enabler(portis.provider)
         return accountAddress
-      } else if (loadedProvider && loadedProvider.provider === 'portis') {
-        if (portis && portis.provider) {
-          const accountAddress = yield enabler(portis.provider)
-          return accountAddress
-        } else {
-          getPortisProvider()
-          const accountAddress = yield enabler(portis.provider)
-          return accountAddress
-        }
+      } else {
+        const web3 = getPortisProvider()
+        const accountAddress = yield enabler(web3)
+        return accountAddress
       }
-    } catch (error) {
-      console.log(error)
-      yield put({
-        type: 'ERROR',
-        error
-      })
-      return null
     }
   }
   return toChecksumAddress(web3.eth.defaultAccount)
@@ -74,6 +65,26 @@ function * deduceBridgeSides (networkType) {
       foreignNetwork: networkType,
       homeNetwork: 'fuse'
     }
+  }
+}
+
+function * connectToWallet ({ web3, provider }) {
+  try {
+    const accountAddress = yield getAccountAddress(web3)
+    yield put({
+      type: actions.CONNECT_TO_WALLET.SUCCESS,
+      response: {
+        provider
+      }
+    })
+    const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
+    if (!isChanged) {
+      yield put(balanceOfFuse(accountAddress))
+    }
+  } catch (error) {
+    yield put({
+      type: actions.CONNECT_TO_WALLET.FAILURE
+    })
   }
 }
 
@@ -96,22 +107,7 @@ function * getNetworkType ({ enableProvider, provider }) {
       } })
 
     if (enableProvider) {
-      yield put({
-        type: actions.GETTING_ACCOUNT_ADDRESS.REQUEST
-      })
-      const accountAddress = yield getAccountAddress(web3)
-      if (accountAddress) {
-        yield put({
-          type: actions.GETTING_ACCOUNT_ADDRESS.SUCCESS,
-          response: {
-            provider
-          }
-        })
-        const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
-        if (!isChanged) {
-          yield put(balanceOfFuse(accountAddress))
-        }
-      }
+      yield put(actions.connectToWallet(web3, provider))
     }
 
     if (!isNetworkSupported(networkType)) {
@@ -178,7 +174,7 @@ function * watchGetNetworkTypeSuccess ({ response }) {
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
-function * watchGettingAccountAddress ({ response }) {
+function * watchConnectToWallet ({ response }) {
   const { provider } = response
   saveState('state.provider', { provider })
   saveState('state.reconnect', true)
@@ -207,12 +203,13 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
+    takeEvery(actions.CONNECT_TO_WALLET.REQUEST, connectToWallet),
     takeEvery(actions.CHECK_ACCOUNT_CHANGED.REQUEST, checkAccountChanged),
     takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices),
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),
     takeEvery(actions.CHANGE_NETWORK.REQUEST, changeNetwork),
     takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess),
-    takeEvery(actions.GETTING_ACCOUNT_ADDRESS.SUCCESS, watchGettingAccountAddress),
+    takeEvery(actions.CONNECT_TO_WALLET.SUCCESS, watchConnectToWallet),
     tryTakeEvery(actions.SEND_TRANSACTION_HASH, sendTransactionHash, 1)
   ])
 }

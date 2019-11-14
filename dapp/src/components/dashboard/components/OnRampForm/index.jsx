@@ -16,6 +16,9 @@ const onRampPlugins = {
   },
   wyre: {
     website: 'https://www.sendwyre.com/'
+  },
+  coindirect: {
+    website: 'https://www.coindirect.com/'
   }
 }
 
@@ -48,7 +51,7 @@ class OnRampForm extends Component {
     addCommunityPlugin(communityAddress, { name: plugin.name, isActive })
   }
 
-  renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
+  renderForm = ({ handleSubmit, values, handleChange }) => {
     const { isActive } = values
     const { plugin } = this.props
     const name = capitalize(plugin.name)

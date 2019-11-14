@@ -11,7 +11,6 @@ import { withRouter } from 'react-router-dom'
 import { withNetwork } from 'containers/Web3'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
-import { getNetworkType } from 'actions/network'
 import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER } from 'constants/uiConstants'
 
@@ -19,10 +18,9 @@ const NavBar = ({
   history,
   accountAddress,
   networkType,
-  getNetworkType,
   foreignNetwork,
   loadModal,
-  connectingToAccount,
+  connectingToWallet,
   withLogo = true
 }) => {
   const [isHelpOpen, setHelpOpen] = useState(false)
@@ -112,7 +110,7 @@ const NavBar = ({
                 <ProfileDropDown foreignNetwork={foreignNetwork === 'mainnet' ? 'main' : foreignNetwork} />
               </div>
             </div>
-          ) : connectingToAccount ? (
+          ) : connectingToWallet ? (
             <div className='navbar__links__wallet navbar__connecting'>
               <span className='navbar__links__wallet__text'>Connecting to wallet</span>
               <span className='animate'>.</span>
@@ -133,11 +131,10 @@ const NavBar = ({
 
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
-  connectingToAccount: state.network.connectingToAccount
+  connectingToWallet: state.network.connectingToWallet
 })
 
 const mapDispatchToProps = {
-  getNetworkType,
   loadModal
 }
 

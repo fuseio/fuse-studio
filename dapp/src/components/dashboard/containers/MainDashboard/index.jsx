@@ -24,7 +24,7 @@ import { getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
-import { changeNetwork, getNetworkType } from 'actions/network'
+import { changeNetwork } from 'actions/network'
 import get from 'lodash/get'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 
@@ -43,7 +43,7 @@ class DashboardLayout extends Component {
     window.analytics.reset()
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate (prevProps, prevState) {
     if (this.props.communityAddress !== prevProps.communityAddress) {
       const { fetchCommunity, communityAddress, fetchEntities } = this.props
       this.onSetSidebarOpen(false)
@@ -51,21 +51,32 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
-    if (((this.props.isPortis) || (this.props.isMetaMask)) &&
-      ((!prevProps.foreignToken) &&
-        this.props.foreignToken && this.props.foreignToken.networkType &&
-        ((this.props.foreignToken && this.props.foreignToken.networkType) !== this.props.networkType))) {
-      const { loadModal, isMetaMask, isPortis, foreignToken } = this.props
+    if (this.props.accountAddress !== prevProps.accountAddress) {
+      const { fetchCommunity, communityAddress, fetchEntities } = this.props
+      this.onSetSidebarOpen(false)
+      fetchCommunity(communityAddress)
+      fetchEntities(communityAddress)
+    }
+
+    if ((!prevState.error) &&
+        (this.props.isPortis || this.props.isMetaMask) &&
+        (!prevProps.foreignToken && !this.props.foreignToken) &&
+        (!prevProps.homeToken && !this.props.homeToken) &&
+        (!prevProps.community && !this.props.community) &&
+        (this.props.networkType && this.props.networkType !== 'fuse')) {
+      const { loadModal, isMetaMask, isPortis, networkType } = this.props
+      const desired = networkType === 'main' ? 'ropsten' : 'main'
       const wrongNetworkText = isMetaMask
-        ? `Switch to ${foreignToken.networkType} through Metamask. `
+        ? `Switch to ${desired} through Metamask. `
         : isPortis
-          ? `Switch to ${foreignToken.networkType} through your wallet on the upper right part of the Studio.`
-          : `Switch to ${foreignToken.networkType}.`
+          ? `Switch to ${desired} through your wallet on the upper right part of the Studio.`
+          : `Switch to ${desired}.`
       loadModal(WRONG_NETWORK_MODAL, {
-        body: <p>{wrongNetworkText} <br /> This community is issued on {foreignToken.networkType}. you need to switch to {foreignToken.networkType} to view it</p>,
-        supportedNetworks: [foreignToken.networkType, 'Fuse'],
-        handleClose: this.showHomePage
+        body: <p>{wrongNetworkText} <br /> This community is issued on {desired}. you need to switch to {desired} to view it</p>,
+        supportedNetworks: [desired, 'Fuse'],
+        handleClose: () => this.props.history.push('/')
       })
+      this.setState({ error: true })
     }
 
     if (this.props.location.pathname !== prevProps.location.pathname) {
@@ -230,7 +241,7 @@ class DashboardLayout extends Component {
                     )}
                   />
                 )}
-                {get(plugins, 'businessList.isActive', false) && (
+                {!get(plugins, 'businessList.isRemoved', false) && (
                   <Route
                     exact
                     path={`${match.path}/merchants`}
@@ -286,8 +297,7 @@ const mapDispatchToProps = {
   fetchCommunity,
   loadModal,
   fetchEntities,
-  changeNetwork,
-  getNetworkType
+  changeNetwork
 }
 
 export default connect(

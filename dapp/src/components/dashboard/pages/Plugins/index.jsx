@@ -26,13 +26,16 @@ const generalPlugins = ([
     title: 'Business list',
     coverImage: BusinessList,
     modalCoverPhoto: BusinessListBig,
-    key: 'businessList'
+    key: 'businessList',
+    content: `The business list allows to add new businesses to the community contract with all the meta-data of the business. After adding a business trough the interface your users will see the business list on their phone after switching to your community.`
   },
   {
     title: 'Join bonus',
     coverImage: JoinBonus,
     modalCoverPhoto: JoinBonusBig,
-    key: 'joinBonus'
+    key: 'joinBonus',
+    content: `The join bonus is contract of a funder account that rewards your new users with your token. The join bonus adds a new funder account address in your user list and opens a new menu item on the left where you can send the funder some tokens and turn it on by choosing the text, amount and activating the plug-in.
+    Then your users can get the bonus after installing the Fuse app and joining your community.`
   },
   {
     title: 'Bounty',
@@ -50,69 +53,86 @@ const onRampPluginItems = ([
     subTitle: ' | Top up account',
     coverImage: Moonpay,
     key: 'moonpay',
-    text: 'Accept credit/debit cards, 4.5% per transaction'
+    text: 'Accept credit/debit cards, 4.5% per transaction',
+    website: 'https://www.moonpay.io/'
   },
   {
     title: 'Ramp',
     subTitle: ' | Top up account',
     coverImage: Ramp,
     key: 'ramp',
-    text: 'Europe wire transfer (SEPA)'
+    text: 'Europe wire transfer (SEPA)',
+    website: 'https://instant.ramp.network/'
   },
   {
     title: 'Coindirect',
     subTitle: ' | Top up account',
     coverImage: Coindirect,
     key: 'coindirect',
-    text: 'Accept credit/debit cards, 2.99% per transaction'
+    text: 'Accept credit/debit cards, 2.99% per transaction',
+    website: 'https://www.coindirect.com/'
   },
   {
     title: 'Carbon',
     subTitle: ' | Top up account',
     coverImage: Carbon,
     key: 'carbon',
-    text: 'Accept credit/debitc cards, ACH, SEPA'
+    text: 'Accept credit/debitc cards, ACH, SEPA',
+    website: 'https://www.carbon.money/'
   },
   {
     title: 'Wyre',
     subTitle: ' | Top up account',
     coverImage: Wyre,
     key: 'wyre',
-    text: 'Accept credit/debit cards, ACH'
+    text: 'Accept credit/debit cards, ACH',
+    website: 'https://www.sendwyre.com/'
   }
 ])
 
-const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin, togglePlugin }) => <div className='plugins__items__wrapper'>
-  <h5 className='plugins__items__title'>{pluginTile}</h5>
-  <div className='grid-x grid-margin-x grid-margin-y'>
-    {
-      pluginList.map(({
-        title,
-        coverImage,
-        disabled,
-        subTitle,
-        modalCoverPhoto,
-        key,
-        text
-      }) => {
-        return (
-          <Plugin
-            text={text}
-            modifier={pluginTile.includes('Fiat')}
-            showInfoModal={() => showInfoModal(key, { title, coverImage: modalCoverPhoto, disabled })}
-            key={title}
-            subTitle={subTitle}
-            disabled={disabled}
-            title={title}
-            hasPlugin={plugins && plugins[key] && !plugins[key].isRemoved}
-            image={coverImage}
-            managePlugin={() => addPlugin(togglePlugin(key))}
-          />
-        )
-      })
-    }
-  </div>
-</div>
+const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin, togglePlugin }) => {
+  return (
+    <div className='plugins__items__wrapper'>
+      <h5 className='plugins__items__title'>{pluginTile}</h5>
+      <div className='grid-x grid-margin-x grid-margin-y'>
+        {
+          pluginList.map(({
+            title,
+            coverImage,
+            disabled,
+            subTitle,
+            modalCoverPhoto,
+            key,
+            text,
+            content,
+            website
+          }) => {
+            return (
+              <Plugin
+                text={text}
+                modifier={pluginTile.includes('Fiat')}
+                key={title}
+                subTitle={subTitle}
+                disabled={disabled}
+                title={title}
+                hasPlugin={plugins && plugins[key] && !plugins[key].isRemoved}
+                image={coverImage}
+                managePlugin={() => addPlugin(togglePlugin(key))}
+                showInfoModal={() => showInfoModal(key, {
+                  coverImage: modalCoverPhoto,
+                  title,
+                  disabled,
+                  content,
+                  website
+                })}
+              />
+            )
+          })
+        }
+      </div>
+    </div>
+  )
+}
 
 const Plugins = ({
   loadModal,
@@ -124,6 +144,7 @@ const Plugins = ({
   const showInfoModal = (key, props) => {
     loadModal(PLUGIN_INFO_MODAL, {
       ...props,
+      pluginName: key,
       hasPlugin: plugins && plugins[key] ? plugins[key] : false,
       managePlugin: () => addPlugin(togglePlugin(key))
     })

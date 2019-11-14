@@ -13,7 +13,7 @@
   display: block;
   width: 49.688em;
   min-width: 18.875em;
-  min-height: 27.25em;
+  // min-height: 27.25em;
   max-height: 37.25em;
   font-size: 16px;
   border-radius: 5px;
@@ -70,6 +70,14 @@
     line-height: 1.54;
     letter-spacing: normal;
     color: $color-gray;
+
+    a {
+      color: $color-light-blue;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   @include element(btn) {

@@ -25,6 +25,10 @@ export const getWeb3Instance = (provider) => {
 }
 
 export const getWeb3 = ({ bridgeType, provider } = {}) => {
+  if (provider) {
+    givenWeb3 = null
+  }
+
   if (!bridgeType) {
     return getWeb3Instance(provider)
   }

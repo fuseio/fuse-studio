@@ -170,7 +170,6 @@
   @include element(actions) {
     @include xy-grid(horizontal, false);
     @include flex-align(right, middle);
-    // margin-top: 1em;
   }
 
   @include element(learn) {
@@ -183,6 +182,11 @@
     white-space: nowrap;
 
     &:hover {
+      &[disabled] {
+        cursor: not-allowed;
+        text-decoration: none;
+      }
+
       text-decoration: underline;
       cursor: pointer;
     }

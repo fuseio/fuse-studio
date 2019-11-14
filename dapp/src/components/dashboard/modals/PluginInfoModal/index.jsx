@@ -4,13 +4,23 @@ import RemoveIcon from 'images/remove.svg'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 
+const Content = ({ name, website }) => {
+  if (!name || !website) return null
+  return (
+    <p className='plugin-info__text'>This plug-in inserts a link on the app menu that opens a page that allows users to top up their account using {name}. {name} allows you to accept credit/debit cards at a 4.5% per transaction. Get more info on the {name} website: <a target='_blank' rel='noopener noreferrer' href={website}>{website}</a></p>
+  )
+}
+
 const PluginInfoModal = ({
   hideModal,
   coverImage,
   title,
   hasPlugin,
   disabled,
-  managePlugin
+  managePlugin,
+  pluginName,
+  website,
+  content
 }) => {
   const handleClick = () => {
     managePlugin()
@@ -19,14 +29,17 @@ const PluginInfoModal = ({
 
   return (
     <Modal whiteClose hasCloseBtn className='plugin-info' onClose={hideModal}>
-      <div className='plugin-info__image'>
-        <div className='plugin-info__image__container'>
-          <img src={coverImage} />
+      {coverImage && (
+        <div className='plugin-info__image'>
+          <div className='plugin-info__image__container'>
+            <img src={coverImage} />
+          </div>
         </div>
-      </div>
+      )}
       <div className='plugin-info__content'>
         <h2 className='plugin-info__title'>{title}</h2>
-        <p className='plugin-info__text'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi distinctio sed corporis? Quia laboriosam hic sequi ab omnis officiis harum, perspiciatis doloremque laborum aliquid enim error praesentium dolorem aut magnam?</p>
+        <Content name={pluginName} website={website} content={content} />
+        {content && <p className='plugin-info__text'>{content}</p>}
         <button
           disabled={disabled}
           className={classNames('plugin-info__btn', { 'plugin-card__btn--add': !hasPlugin }, { 'plugin-card__btn--remove': hasPlugin })}

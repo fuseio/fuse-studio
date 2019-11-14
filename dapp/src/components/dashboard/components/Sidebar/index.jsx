@@ -212,7 +212,16 @@ const allPlugins = (isAdmin) => isAdmin ? ({
   }
 })
 
-const Sidebar = ({ communityAddress, communityName, match, isAdmin, isGradientLogo, plugins, tokenType, location }) => {
+const Sidebar = ({
+  communityAddress,
+  communityName,
+  match,
+  isAdmin,
+  isGradientLogo,
+  plugins,
+  tokenType,
+  location
+}) => {
   const [currentPath, setPath] = useState('')
   const [sideBarItems, setSideBarItems] = useState([])
   const [addedPlugins, setAddedPlugins] = useState([])

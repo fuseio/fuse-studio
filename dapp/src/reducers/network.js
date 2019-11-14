@@ -17,10 +17,12 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case network.GETTING_ACCOUNT_ADDRESS.REQUEST:
-      return { ...state, connectingToAccount: true }
-    case network.GETTING_ACCOUNT_ADDRESS.SUCCESS:
-      return { ...state, connectingToAccount: false }
+    case network.CONNECT_TO_WALLET.REQUEST:
+      return { ...state, connectingToWallet: true }
+    case network.CONNECT_TO_WALLET.SUCCESS:
+      return { ...state, connectingToWallet: false }
+    case network.CONNECT_TO_WALLET.FAILURE:
+      return { ...state, connectingToWallet: false }
     case network.CHECK_ACCOUNT_CHANGED.SUCCESS:
       return { ...state, ...action.response }
     case network.ACCOUNT_LOGGED_OUT:
