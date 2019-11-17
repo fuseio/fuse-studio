@@ -1,7 +1,6 @@
 import DaiIcon from 'images/dai.png'
 import UsdcIcon from 'images/usdc.png'
 import TetherIcon from 'images/tether.png'
-import isEmpty from 'lodash/isEmpty'
 
 export const existingTokens = (networkType) => networkType ? ([
   {

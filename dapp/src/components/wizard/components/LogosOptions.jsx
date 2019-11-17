@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { isMobileOnly } from 'react-device-detect'
 import classNames from 'classnames'
