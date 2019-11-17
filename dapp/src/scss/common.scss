@@ -591,12 +591,12 @@
   border-radius: 10px;
   color: $color-dark;
   text-align: center;
-  width: 520px;
   margin: 1em auto auto;
 
-  @include breakpoint(small down) {
-    padding: 20px 30px;
+  @include breakpoint(medium up) {
+    width: 520px;
   }
+
 
   @include element(title) {
     font-size: 1.875em;

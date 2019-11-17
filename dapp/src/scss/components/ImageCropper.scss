@@ -39,6 +39,11 @@ $drag-handle-border: 1px solid rgba(255, 255, 255, 0.7) !default;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    @include breakpoint(medium down) {
+      width: 91%;
+      height: 100%;
+    }
   }
 
   &__title {
@@ -79,6 +84,7 @@ $drag-handle-border: 1px solid rgba(255, 255, 255, 0.7) !default;
         &:first-child{
           color: $color-gray;
           background-color: #ececec;
+          margin-right: 1em;
         }
   
         &:last-child {

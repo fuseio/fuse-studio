@@ -183,7 +183,7 @@ const WizardPage = ({
           <NameAndCurrencyStep networkType={networkType} />
         </Wizard.Page>
         <Wizard.Page>
-          <DetailsStep networkType={networkType} />
+          <DetailsStep />
         </Wizard.Page>
         <Wizard.Page>
           <ContractsStep />
