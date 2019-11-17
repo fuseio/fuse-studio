@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 
 const ScrollToTopController = ({ children, location: { pathname } }) => {
   React.useEffect(() => {

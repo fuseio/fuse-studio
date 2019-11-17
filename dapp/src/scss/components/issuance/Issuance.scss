@@ -153,6 +153,9 @@
 
     @include breakpoint(medium down) {
       margin-top: 7em;
+      padding: 0 1em;
+
+
     }
 
     @include modifier(opacity) {
@@ -199,6 +202,12 @@
           @include xy-grid(vertical, false);
           @include flex-align(spaced, middle);
         }
+
+        @include breakpoint(medium down) {
+          > *:not(:last-child) {
+            margin: 1em 0;
+          }
+        }
       }
 
       @include element(title) {
@@ -210,7 +219,7 @@
         padding-bottom: 1em;
 
         @include breakpoint(small only) {
-          margin-bottom: 1em;
+          // margin-bottom: 1em;
           font-size: 1.250em;
         }
       }
@@ -374,7 +383,7 @@
       }
 
       @include breakpoint(small down) {
-        margin: 32px 0 0;
+        margin-top: 2em;
       }
 
       @include element(title) {
@@ -446,7 +455,7 @@
         color: $color-dark;
 
         @include breakpoint(small only) {
-          margin-bottom: 1em;
+          // margin-bottom: 1em;
           font-size: 1.250em;
         }
       }
@@ -470,12 +479,16 @@
           margin: 2rem 0;
         }
 
+        @include breakpoint(medium down) {
+          margin-top: 1em;
+        }
+
         @include modifier(supply) {
         }
 
         @include modifier(long-height) {
-          min-height: 180px;
-          margin: 0;
+          min-height: 210px;
+          margin-top: 2em;
         }
 
         @include xy-grid(vertical);
@@ -616,7 +629,7 @@
         @include breakpoint(small down) {
           @include xy-grid(vertical);
           @include flex-align(spaced, middle);
-          > div {
+          > div, p {
             margin-bottom: 1em;
           }
         }
@@ -811,10 +824,6 @@
       }
 
       @include element(supply) {
-        @include breakpoint(small down) {
-          width: 75%;
-        }
-
         @include element(input) {
           input {
             width: 100%;
@@ -868,9 +877,9 @@
       @include element(wrapper) {
         @include xy-grid(vertical);
         @include flex-align(center, middle);
-        padding: 0 10px;
-
+        
         @include breakpoint(medium up) {
+          padding: 0 10px;
           max-width: 620px;
           margin: auto;
         }
@@ -880,10 +889,6 @@
         @include xy-grid(vertical, false);
         @include flex-align(center, top);
         width: 100%;
-
-        @include breakpoint(small down) {
-          width: 85%;
-        }
       }
 
       @include element(title) {
@@ -895,8 +900,8 @@
         text-align: center;
         width: 100%;
 
-        @include breakpoint(small) {
-          margin-bottom: 1em;
+        @include breakpoint(medium down) {
+          margin: 1em 0;
         }
       }
 
@@ -1056,10 +1061,6 @@
           min-height: 350px;
           @include xy-grid(vertical);
           @include flex-align(spaced, middle);
-        }
-
-        @include breakpoint(small down) {
-          width: 90%;
         }
 
         div.status.status--radius-all > div.status__button > button {
@@ -1245,6 +1246,10 @@
         margin-top: -2em;
         margin-bottom: 3em;
         text-align: center;
+
+        @include breakpoint(medium down) {
+          margin-top: 1em;
+        }
       }
 
       @include element(wrapper) {
@@ -1356,6 +1361,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+
+      @include breakpoint(medium down) {
+        margin: 2em 0 5em;
+      }
     }
 
     @include element(back) {

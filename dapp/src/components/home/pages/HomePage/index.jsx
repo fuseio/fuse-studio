@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import ContentBox from 'components/home/components/ContentBox'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import Faqs from 'components/home/components/Faq'
@@ -14,15 +14,14 @@ import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
-import { changeNetwork } from 'actions/network'
+import { push } from 'connected-react-router'
 
 const HomePage = ({
-  history,
   loadModal,
   accountAddress,
   networkType,
   homeNetwork,
-  changeNetwork
+  push
 }) => {
   const [isClicked, setClicked] = useState(false)
   useEffect(() => {
@@ -30,7 +29,7 @@ const HomePage = ({
       if (networkType === homeNetwork) {
         loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'], goBack: false })
       } else {
-        history.push('/view/issuance')
+        push('/view/issuance')
       }
     }
     return () => { }
@@ -50,12 +49,7 @@ const HomePage = ({
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed')
       }
-      if (networkType === homeNetwork) {
-        history.push('/view/issuance')
-        changeNetwork('ropsten')
-      } else {
-        history.push('/view/issuance')
-      }
+      push('/view/issuance')
     }
   }
 
@@ -64,7 +58,7 @@ const HomePage = ({
   }
 
   const showCommunities = () => {
-    history.push('/view/communities')
+    push('/view/communities')
   }
 
   return (
@@ -123,7 +117,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   loadModal,
-  changeNetwork
+  push
 }
 
 export default withRouter(withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage)))

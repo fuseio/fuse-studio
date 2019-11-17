@@ -7,7 +7,10 @@ import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import WizardShape from 'utils/validation/shapes/wizard'
 import * as Sentry from '@sentry/browser'
+import { push } from 'connected-react-router'
 
+import { withNetwork } from 'containers/Web3'
+import withTracker from 'containers/withTracker'
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
 import NameAndCurrencyStep from 'components/wizard/pages/NameAndCurrency'
@@ -31,9 +34,9 @@ const WizardPage = ({
   createTokenSignature,
   clearTransaction,
   loadModal,
-  history,
   communityAddress,
-  homeNetwork
+  homeNetwork,
+  push
 }) => {
   useEffect(() => {
     if (window && window.analytics) {
@@ -116,7 +119,7 @@ const WizardPage = ({
   }
 
   const goToDashboard = () => {
-    history.push(`/view/community/${communityAddress}/justCreated`)
+    push(`/view/community/${communityAddress}/justCreated`)
   }
 
   const transactionDenied = () => {
@@ -126,6 +129,7 @@ const WizardPage = ({
   return (
     <Fragment>
       <Wizard
+        push={push}
         networkType={networkType}
         loadModal={loadModal}
         transactionStatus={transactionStatus}
@@ -179,7 +183,7 @@ const WizardPage = ({
           <NameAndCurrencyStep networkType={networkType} />
         </Wizard.Page>
         <Wizard.Page>
-          <DetailsStep networkType={networkType} />
+          <DetailsStep />
         </Wizard.Page>
         <Wizard.Page>
           <ContractsStep />
@@ -235,7 +239,8 @@ const mapDispatchToProps = {
   fetchDeployProgress,
   deployExistingToken,
   clearTransaction,
-  loadModal
+  loadModal,
+  push
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WizardPage)
+export default withTracker(withNetwork(connect(mapStateToProps, mapDispatchToProps)(WizardPage)))

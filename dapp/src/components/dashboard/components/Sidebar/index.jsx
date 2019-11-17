@@ -22,9 +22,10 @@ import DollarIcon from 'images/dollar_symbol.svg'
 import DollarYellowIcon from 'images/dollar_symbol_yellow.svg'
 import UsersYellowIcon from 'images/user_list_yellow.svg'
 import classNames from 'classnames'
-import { Link } from 'react-router-dom'
 import isEmpty from 'lodash/isEmpty'
 import pickBy from 'lodash/pickBy'
+import { push } from 'connected-react-router'
+import { connect } from 'react-redux'
 
 const getSideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
   {
@@ -220,7 +221,8 @@ const Sidebar = ({
   isGradientLogo,
   plugins,
   tokenType,
-  location
+  location,
+  push
 }) => {
   const [currentPath, setPath] = useState('')
   const [sideBarItems, setSideBarItems] = useState([])
@@ -256,12 +258,16 @@ const Sidebar = ({
     return () => {}
   }, [location.pathname])
 
+  const goToPage = (path) => {
+    push(path)
+  }
+
   return (
     <aside className='sidebar'>
       <div className='item' style={{ cursor: 'pointer' }}>
-        <Link to='/'>
+        <span onClick={() => goToPage('/')}>
           <Logo isGradientLogo={isGradientLogo} />
-        </Link>
+        </span>
       </div>
       {sideBarItems.map(({ icon, name, url, style, path, selectedIcon, CustomElement, moreIcon }) => {
         if (path === '/plugins' && !isEmpty(addedPlugins)) {
@@ -274,11 +280,13 @@ const Sidebar = ({
                 <span className='title'>Plugins</span>
                 {
                   isAdmin && (
-                    <Link
+                    <div
                       className='manage'
-                      to={url(match)}
-                      onClick={() => setPath(path)}
-                    >Manage</Link>
+                      onClick={() => {
+                        goToPage(url(match))
+                        setPath(path)
+                      }}
+                    >Manage</div>
                   )
                 }
               </div>
@@ -294,15 +302,17 @@ const Sidebar = ({
                       selectedIcon
                     } = allPlugins1[plugin]
                     return (
-                      <Link
+                      <div
                         key={name}
-                        to={url(match)}
-                        onClick={() => setPath(path)}
+                        onClick={() => {
+                          goToPage(url(match))
+                          setPath(path)
+                        }}
                         className={classNames('item item--hover', { 'item--home': currentPath === path })}
                       >
                         <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
                         <span className='item__text'>{name}</span>
-                      </Link>
+                      </div>
                     )
                   }
                 })
@@ -312,30 +322,35 @@ const Sidebar = ({
         } else if (CustomElement) {
           return (
             <CustomElement key={name} style={style}>
-              <Link
+              <div
                 key={name}
                 to={url(match)}
-                onClick={() => setPath(path)}
+                onClick={() => {
+                  goToPage(url(match))
+                  setPath(path)
+                }}
                 className={classNames('item item--hover', { 'item--home': currentPath === path })}
               >
                 <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
                 <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
-              </Link>
+              </div>
             </CustomElement>
           )
         } else {
           return (
-            <Link
+            <div
               key={name}
               style={style}
-              to={url(match)}
-              onClick={() => setPath(path)}
+              onClick={() => {
+                goToPage(url(match))
+                setPath(path)
+              }}
               className={classNames('item item--hover', { 'item--home': currentPath === path })}
             >
               <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
               <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
               {moreIcon && <img src={currentPath === path ? moreIcon.AddYellowIcon : moreIcon.AddIcon} /> }
-            </Link>
+            </div>
           )
         }
       })}
@@ -343,4 +358,4 @@ const Sidebar = ({
   )
 }
 
-export default Sidebar
+export default connect(null, { push })(Sidebar)

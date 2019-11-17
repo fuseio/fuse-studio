@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
 import { Formik } from 'formik'
-import { withRouter } from 'react-router-dom'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import Logo from 'components/common/Logo'
@@ -151,14 +150,14 @@ class Wizard extends React.Component {
   }
 
   render () {
-    const { history } = this.props
+    const { push } = this.props
     const { page, values, validationSchema } = this.state
 
     return (
       <Fragment>
         <div className='issuance__wrapper'>
           <div className='issuance__header grid-x align-justify'>
-            <div onClick={() => history.push('/')} className='issuance__header__logo align-self-middle grid-x align-middle'>
+            <div onClick={() => push('/')} className='issuance__header__logo align-self-middle grid-x align-middle'>
               <Logo isGradientLogo />
             </div>
             <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
@@ -173,7 +172,7 @@ class Wizard extends React.Component {
               </div>
             </div>
             <div
-              onClick={() => history.push('/')}
+              onClick={() => push('/')}
               className='issuance__header__close align-self-middle grid-x align-middle align-right'>
               <FontAwesome name='times' />
             </div>
@@ -193,4 +192,4 @@ class Wizard extends React.Component {
   }
 }
 
-export default withRouter(Wizard)
+export default Wizard

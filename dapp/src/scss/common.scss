@@ -82,9 +82,12 @@
   flex-direction: column;
   text-align: start;
   background: $color-white;
-  width: 427px !important;
-  height: 562px !important;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
+
+  @include breakpoint(medium up) {
+    width: 427px !important;
+    height: 562px !important;
+  }
 
   @include element(content) {
     @include xy-grid();
@@ -117,14 +120,16 @@
   }
 
   @include element(image) {
-    height: 60%;
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
 
-    > img {
-      width: auto;
-      height: 100%;
+    @include breakpoint(medium up) {     
+      height: 60%;
+      display: flex;
+      justify-content: center;
+      margin: 0 auto;
+  
+      > img {
+        width: auto;
+      }
     }
   }
 }
@@ -591,12 +596,12 @@
   border-radius: 10px;
   color: $color-dark;
   text-align: center;
-  width: 520px;
   margin: 1em auto auto;
 
-  @include breakpoint(small down) {
-    padding: 20px 30px;
+  @include breakpoint(medium up) {
+    width: 520px;
   }
+
 
   @include element(title) {
     font-size: 1.875em;

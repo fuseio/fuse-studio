@@ -10,7 +10,7 @@ import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
 import OnRampPage from 'components/dashboard/pages/OnRamp'
 import { fetchCommunity } from 'actions/token'
 import { loadModal } from 'actions/ui'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
 import Sidebar from 'react-sidebar'
@@ -27,6 +27,9 @@ import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
 import get from 'lodash/get'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+import { push } from 'connected-react-router'
+import { withNetwork } from 'containers/Web3'
+import withTracker from 'containers/withTracker'
 
 class DashboardLayout extends Component {
   state = {
@@ -74,7 +77,7 @@ class DashboardLayout extends Component {
       loadModal(WRONG_NETWORK_MODAL, {
         body: <p>{wrongNetworkText} <br /> This community is issued on {desired}. you need to switch to {desired} to view it</p>,
         supportedNetworks: [desired, 'Fuse'],
-        handleClose: () => this.props.history.push('/')
+        handleClose: () => this.props.push('/')
       })
       this.setState({ error: true })
     }
@@ -297,10 +300,11 @@ const mapDispatchToProps = {
   fetchCommunity,
   loadModal,
   fetchEntities,
-  changeNetwork
+  changeNetwork,
+  push
 }
 
-export default connect(
+export default withTracker(withNetwork(connect(
   mapStateToProps,
   mapDispatchToProps
-)(DashboardLayout)
+)(DashboardLayout)))

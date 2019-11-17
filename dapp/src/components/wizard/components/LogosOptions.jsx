@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { isMobileOnly } from 'react-device-detect'
 import classNames from 'classnames'
@@ -102,66 +102,68 @@ const LogosOptions = ({
   }
 
   const items = React.useMemo(() => {
-    return (
-      <Fragment>
-        <Field
-          name='images.defaultOne'
-          render={({ field, form: { setFieldValue } }) => {
-            return (
-              <div onClick={() => {
-                setFieldValue('images.chosen', 'defaultOne')
-                if (window && window.analytics) {
-                  window.analytics.track(`Choose logo - defaultOne`)
-                }
-              }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultOne' })}>
-                <CommunityLogo
-                  metadata={{
-                    isDefault: communityType && communityType.value && communityType.label
-                  }}
-                  symbol={communitySymbol}
-                  imageUrl={field && field.value && field.value.croppedImageUrl}
-                />
-              </div>
-            )
-          }}
-        />
-        {
-          imagesValues && imagesValues.defaultTwo && imagesValues.defaultTwo.croppedImageUrl ? (
-            <Field
-              name='images.defaultTwo'
-              render={({ field, form: { setFieldValue } }) => {
-                return (
-                  <div onClick={() => {
-                    setFieldValue('images.chosen', 'defaultTwo')
-                    if (window && window.analytics) {
-                      window.analytics.track(`Choose logo - defaultTwo`)
-                    }
-                  }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultTwo' })}>
-                    <CommunityLogo
-                      symbol={communitySymbol}
-                      imageUrl={field && field.value && field.value.croppedImageUrl}
-                      metadata={{
-                        isDefault: communityType && communityType.value && communityType.label
-                      }}
-                    />
-                  </div>
-                )
+    let options = []
+    options.push(<Field
+      key='defaultOne'
+      name='images.defaultOne'
+      render={({ field, form: { setFieldValue } }) => {
+        return (
+          <div onClick={() => {
+            setFieldValue('images.chosen', 'defaultOne')
+            if (window && window.analytics) {
+              window.analytics.track(`Choose logo - defaultOne`)
+            }
+          }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultOne' })}>
+            <CommunityLogo
+              metadata={{
+                isDefault: communityType && communityType.value && communityType.label
               }}
+              symbol={communitySymbol}
+              imageUrl={field && field.value && field.value.croppedImageUrl}
             />
-          ) : null
-        }
-        <label
-          htmlFor='logoUpload'
-          className={classNames({
-            'attributes__logos__item': true,
-            'attributes__logos__item--chosen': chosen === 'custom'
-          })}
-        >
-          <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
-          <img style={{ borderRadius: '50%', maxWidth: '60px' }} src={(custom && custom.croppedImageUrl) || UploadImage} />
-        </label>
-      </Fragment>
-    )
+          </div>
+        )
+      }}
+    />)
+
+    if (imagesValues && imagesValues.defaultTwo && imagesValues.defaultTwo.croppedImageUrl) {
+      options.push(<Field
+        key='defaultTwo'
+        name='images.defaultTwo'
+        render={({ field, form: { setFieldValue } }) => {
+          return (
+            <div onClick={() => {
+              setFieldValue('images.chosen', 'defaultTwo')
+              if (window && window.analytics) {
+                window.analytics.track(`Choose logo - defaultTwo`)
+              }
+            }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultTwo' })}>
+              <CommunityLogo
+                symbol={communitySymbol}
+                imageUrl={field && field.value && field.value.croppedImageUrl}
+                metadata={{
+                  isDefault: communityType && communityType.value && communityType.label
+                }}
+              />
+            </div>
+          )
+        }}
+      />)
+    }
+
+    options.push(<label
+      key='custom'
+      htmlFor='logoUpload'
+      className={classNames({
+        'attributes__logos__item': true,
+        'attributes__logos__item--chosen': chosen === 'custom'
+      })}
+    >
+      <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
+      <img style={{ borderRadius: '50%', maxWidth: '60px' }} src={(custom && custom.croppedImageUrl) || UploadImage} />
+    </label>)
+
+    return options
   }, [imagesValues])
 
   return (
