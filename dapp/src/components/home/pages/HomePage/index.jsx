@@ -14,16 +14,13 @@ import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
-import { changeNetwork } from 'actions/network'
 import { push } from 'connected-react-router'
 
 const HomePage = ({
-  history,
   loadModal,
   accountAddress,
   networkType,
   homeNetwork,
-  changeNetwork,
   push
 }) => {
   const [isClicked, setClicked] = useState(false)
@@ -52,12 +49,7 @@ const HomePage = ({
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed')
       }
-      if (networkType === homeNetwork) {
-        push('/view/issuance')
-        changeNetwork('ropsten')
-      } else {
-        push('/view/issuance')
-      }
+      push('/view/issuance')
     }
   }
 
@@ -125,7 +117,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   loadModal,
-  changeNetwork,
   push
 }
 
