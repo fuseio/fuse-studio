@@ -45,10 +45,16 @@ const WizardPage = ({
   }, [])
 
   useEffect(() => {
-    window.analytics.identify({
-      subscriptionStatus: 'inactive'
-    })
-  }, [])
+    if (adminAddress) {
+      window.analytics.identify(adminAddress, {
+        subscriptionStatus: 'active'
+      })
+    } else {
+      window.analytics.identify({
+        subscriptionStatus: 'inactive'
+      })
+    }
+  }, [adminAddress])
 
   const desiredNetworkType = useMemo(() => {
     if (!networkType) {
@@ -130,6 +136,7 @@ const WizardPage = ({
     <Fragment>
       <Wizard
         push={push}
+        adminAddress={adminAddress}
         networkType={networkType}
         loadModal={loadModal}
         transactionStatus={transactionStatus}
