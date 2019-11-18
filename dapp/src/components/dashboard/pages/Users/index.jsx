@@ -229,35 +229,33 @@ const Users = ({
             <div className='table__body__cell__more'>
               <div className='table__body__cell__more__toggler'><FontAwesome name='ellipsis-v' /></div>
               <div className='more' onClick={e => e.stopPropagation()}>
-                <ul className='more__options'>
-                  {
-                    !isApproved && !hasAdminRole && (
-                      <ul className='more__options'>
-                        <li className='more__options__item' onClick={() => handleConfirmUser(account)}>Confirm</li>
-                        <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
-                        <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                      </ul>
-                    )
-                  }
-                  {
-                    hasAdminRole && isApproved && (
-                      <ul className='more__options'>
-                        <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                        <li className='more__options__item' onClick={() => goToPage(`${currentUrl}/transfer/${account}`)}>Transfer tokens to user</li>
-                        <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
-                      </ul>
-                    )
-                  }
-                  {
-                    !hasAdminRole && isApproved && (
-                      <ul className='more__options'>
-                        <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                        <li className='more__options__item' onClick={() => goToPage(`${currentUrl}/transfer/${account}`)}>Transfer tokens to user</li>
-                        <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
-                      </ul>
-                    )
-                  }
-                </ul>
+                {
+                  !isApproved && !hasAdminRole && (
+                    <ul className='more__options'>
+                      <li className='more__options__item' onClick={() => handleConfirmUser(account)}>Confirm</li>
+                      <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
+                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                    </ul>
+                  )
+                }
+                {
+                  hasAdminRole && isApproved && (
+                    <ul className='more__options'>
+                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                      <li className='more__options__item' onClick={() => goToPage(`${currentUrl}/transfer/${account}`)}>Transfer tokens to user</li>
+                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
+                    </ul>
+                  )
+                }
+                {
+                  !hasAdminRole && isApproved && (
+                    <ul className='more__options'>
+                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                      <li className='more__options__item' onClick={() => goToPage(`${currentUrl}/transfer/${account}`)}>Transfer tokens to user</li>
+                      <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
+                    </ul>
+                  )
+                }
               </div>
             </div>
           ) : null
