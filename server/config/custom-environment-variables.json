@@ -46,7 +46,8 @@
       "listId": "COMMUNITY_MAIL_SENDGRID_LIST_ID",
       "templates": {
         "welcome": "COMMUNITY_MAIL_SENDGRID_TEMPLATES_WELCOME",
-        "communityLaunched": "COMMUNITY_MAIL_SENDGRID_TEMPLATES_COMMUNITY_LAUNCHED"
+        "communityLaunched": "COMMUNITY_MAIL_SENDGRID_TEMPLATES_COMMUNITY_LAUNCHED",
+        "clientCreatedCommunity": "COMMUNITY_MAIL_SENDGRID_TEMPLATES_CLIENT_CREATED_COMMUNITY"
       }
     }
   },
