@@ -80,7 +80,6 @@ const FeaturedCommunities = memo(({
         }) : !isEmpty(featuredCommunities) ? featuredCommunities.map((address, index) => {
           const token = tokens[communities[address].foreignTokenAddress]
           const community = communities[address]
-          console.log({ community })
           if (token && community) {
             return (
               <div className='cell medium-12 small-24' key={address}>
