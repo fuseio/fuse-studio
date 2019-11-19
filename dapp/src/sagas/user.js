@@ -47,7 +47,7 @@ function * signUpUser ({ email, subscribe }) {
   const accountAddress = yield select(getAccountAddress)
   try {
     const network = yield select(state => state.network)
-    const provider = network.isMetaMask ? 'metamask' : network.isPortis ? 'portis' : null
+    const provider = network.isMetaMask ? 'metamask' : network.isPortis ? 'portis' : 'unknown'
 
     const response = yield apiCall(api.signUpUser,
       { user: { accountAddress, email, provider, subscribe, source: 'studio' } }, { v2: true })
