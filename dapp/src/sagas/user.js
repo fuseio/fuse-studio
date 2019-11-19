@@ -1,4 +1,4 @@
-import { all, call, put, select } from 'redux-saga/effects'
+import { all, put, select } from 'redux-saga/effects'
 
 import { apiCall, tryTakeEvery } from './utils'
 import * as actions from 'actions/user'
@@ -43,22 +43,31 @@ export function * login () {
   }
 }
 
-function * addUser ({ user, tokenAddress }) {
-  yield call(login)
-
+function * signUpUser ({ email, subscribe }) {
   const accountAddress = yield select(getAccountAddress)
-  const response = yield apiCall(api.addUser,
-    { user: { ...user, accountAddress }, tokenAddress }, { auth: true })
+  try {
+    const network = yield select(state => state.network)
+    const provider = network.isMetaMask ? 'metamask' : network.isPortis ? 'portis' : 'unknown'
 
-  const { data } = response
-  yield put({
-    type: actions.ADD_USER.SUCCESS,
-    user,
-    tokenAddress,
-    response: {
-      data
-    }
-  })
+    const response = yield apiCall(api.signUpUser,
+      { user: { accountAddress, email, provider, subscribe, source: 'studio' } }, { v2: true })
+
+    const { data } = response
+    yield put({
+      type: actions.SIGN_UP_USER.SUCCESS,
+      accountAddress,
+      response: {
+        data
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    yield put({
+      type: actions.SIGN_UP_USER.FAILURE,
+      accountAddress,
+      error
+    })
+  }
 }
 
 function * subscribeUser ({ user }) {
@@ -79,7 +88,7 @@ function * isUserExists ({ accountAddress }) {
 export default function * userSaga () {
   yield all([
     tryTakeEvery(actions.LOGIN, login, 1),
-    tryTakeEvery(actions.ADD_USER, addUser, 1),
+    tryTakeEvery(actions.SIGN_UP_USER, signUpUser, 1),
     tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1),
     tryTakeEvery(actions.SEND_EMAIL, subscribeUser, 1)
   ])

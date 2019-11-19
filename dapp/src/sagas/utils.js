@@ -46,8 +46,14 @@ export const tryTakeLatestWithDebounce = (action, saga, timeout = CONFIG.ui.debo
   takeLatest(action.REQUEST, tryCatchWithDebounce(action, saga, 500))
 
 export function * apiCall (apiFunc, params, options = {}) {
-  const networkType = (options && options.networkType) ? options.networkType : yield select(getForeignNetwork)
-  const apiRoot = getApiRoot(networkType)
+  let apiRoot
+  if (options.v2) {
+    apiRoot = CONFIG.api.v2.url
+  } else {
+    const networkType = (options && options.networkType) ? options.networkType : yield select(getForeignNetwork)
+    apiRoot = getApiRoot(networkType)
+  }
+
   if (options.auth) {
     const { authToken } = yield select(getAccount)
     return yield call(apiFunc, apiRoot, { ...params, authToken })
