@@ -4,7 +4,6 @@ import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { DEPLOY_BRIDGE } from 'actions/bridge'
-import { ADD_USER } from 'actions/user'
 import { fetchMetadata } from 'actions/metadata'
 import { ADD_COMMUNITY_PLUGIN, TOGGLE_JOIN_BONUS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
@@ -117,6 +116,7 @@ function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
 function * deployChosenContracts ({ response: { steps, receipt } }) {
   const foreignTokenAddress = receipt.events.TokenCreated.returnValues.token
   const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, { steps: { ...steps, bridge: { args: { foreignTokenAddress } } } })
+
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,
     response: {
@@ -384,7 +384,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),
     tryTakeEvery(actions.FETCH_TOKEN_PROGRESS, fetchTokenProgress, 1),
-    takeEvery([DEPLOY_BRIDGE.SUCCESS, ADD_USER.SUCCESS], fetchTokenProgress),
+    takeEvery(DEPLOY_BRIDGE.SUCCESS, fetchTokenProgress),
     takeEvery([actions.MINT_TOKEN.SUCCESS, actions.BURN_TOKEN.SUCCESS], watchTokenChanges),
     takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),

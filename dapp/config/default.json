@@ -75,7 +75,10 @@
     },
     "timeout": 3000,
     "retryTimeout": 500,
-    "retryCount": 5
+    "retryCount": 5,
+    "v2": {
+      "url": "http://localhost:3000/api/v2"
+    }
   },
   "reactGA": {
     "trackingId": "UA-145420511-2",

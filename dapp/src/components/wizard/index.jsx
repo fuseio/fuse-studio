@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
+import { signUpUser } from 'actions/user'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import WizardShape from 'utils/validation/shapes/wizard'
@@ -27,6 +28,7 @@ import useSwitchNetwork from 'hooks/useSwitchNetwork'
 const WizardPage = ({
   deployExistingToken,
   createTokenWithMetadata,
+  signUpUser,
   adminAddress,
   networkType,
   transactionStatus,
@@ -116,6 +118,8 @@ const WizardPage = ({
       }
       createTokenWithMetadata(tokenData, metadata, communityType.value, steps)
     }
+
+    signUpUser(email, subscribe)
   }
 
   const goToDashboard = () => {
@@ -238,6 +242,7 @@ const mapDispatchToProps = {
   createTokenWithMetadata,
   fetchDeployProgress,
   deployExistingToken,
+  signUpUser,
   clearTransaction,
   loadModal,
   push
