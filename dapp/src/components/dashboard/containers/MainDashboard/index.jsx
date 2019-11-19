@@ -258,7 +258,7 @@ class DashboardLayout extends Component {
                   />
                 )}
                 <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} />} />
-                <Route path={`${match.path}/users`} render={() => <Users networkType={networkType} community={community} />} />
+                <Route path={`${match.path}/users`} render={() => <Users isAdmin={isAdmin} networkType={networkType} community={community} />} />
                 <Route
                   path={`${match.path}/transfer/:sendTo?`}
                   render={() => (

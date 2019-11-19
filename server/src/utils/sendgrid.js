@@ -2,7 +2,7 @@ const client = require('@services/sendgrid')
 const config = require('config')
 const { capitalize } = require('lodash')
 
-const createMailRequest = ({ to, from, templateId, templateData }) => {
+const createMailRequest = ({ to, from, templateId, templateData, bcc }) => {
   return {
     method: 'POST',
     url: '/v3/mail/send',
@@ -14,6 +14,7 @@ const createMailRequest = ({ to, from, templateId, templateData }) => {
               'email': to
             }
           ],
+          'bcc': bcc,
           'dynamic_template_data': templateData
         }
       ],
@@ -50,10 +51,13 @@ const sendInfoMail = async (user, { networkType, communityName, communityAddress
     communityAddress
   }
 
+  const managers = (config.get('mail.managers') || []).map((email) => ({ email }))
+
   const request = createMailRequest({
     to: user.email,
     from: config.get('mail.supportAddress'),
     templateId: config.get('mail.sendgrid.templates.communityLaunched'),
+    bcc: managers,
     templateData
   })
 

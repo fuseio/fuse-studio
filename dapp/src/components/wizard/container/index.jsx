@@ -57,8 +57,14 @@ class Wizard extends React.Component {
 
   next = (values) => {
     if (validations[this.state.page]) {
+      const { adminAddress } = this.props
       const currentStepFields = validations[this.state.page]
       const trackProps = currentStepFields.reduce((acc, key) => {
+        if (key === 'email' && values[key] && adminAddress) {
+          window.analytics.identify(adminAddress, {
+            email: values[key]
+          })
+        }
         acc = values[key] ? {
           ...acc,
           [key]: get(values, `${key}.value`)
