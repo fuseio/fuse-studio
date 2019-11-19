@@ -2,7 +2,7 @@ const client = require('@services/sendgrid')
 const config = require('config')
 const { capitalize } = require('lodash')
 
-const createMailRequest = ({ to, from, templateId, templateData }) => {
+const createMailRequest = ({ to, from, templateId, templateData, bcc }) => {
   return {
     method: 'POST',
     url: '/v3/mail/send',
@@ -14,6 +14,7 @@ const createMailRequest = ({ to, from, templateId, templateData }) => {
               'email': to
             }
           ],
+          'bcc': bcc,
           'dynamic_template_data': templateData
         }
       ],
@@ -50,37 +51,13 @@ const sendInfoMail = async (user, { networkType, communityName, communityAddress
     communityAddress
   }
 
+  const managers = (config.get('managers') || []).map((email) => ({ email }))
+
   const request = createMailRequest({
     to: user.email,
     from: config.get('mail.supportAddress'),
     templateId: config.get('mail.sendgrid.templates.communityLaunched'),
-    templateData
-  })
-
-  const [response] = await client.request(request)
-  if (response.statusCode >= 400) {
-    throw Error(`Cannot send welcome email to ${user.email}`)
-  }
-}
-
-const sendToManager = async (user, { owner, email }, { networkType, communityName, communityAddress }) => {
-  const env = config.get('env')
-  const API_ROOT = 'https://studio{env}{networkType}.fusenet.io/view/community/'
-  const domain = API_ROOT.replace('{env}', env === 'qa' ? '-qa' : '').replace('{networkType}', networkType === 'ropsten' ? '-ropsten' : '')
-  const templateData = {
-    communityName,
-    networkType: capitalize(networkType),
-    communityLink: domain + communityAddress + '/justCreated',
-    fuseExplorer: 'https://explorer.fusenet.io/address/' + communityAddress + '/transactions',
-    communityAddress,
-    owner,
-    email
-  }
-
-  const request = createMailRequest({
-    to: user.email,
-    from: config.get('mail.supportAddress'),
-    templateId: config.get('mail.sendgrid.templates.clientCreatedCommunity'),
+    bcc: managers,
     templateData
   })
 
@@ -117,6 +94,5 @@ const subscribeUser = async (user) => {
 module.exports = {
   sendWelcomeMail,
   subscribeUser,
-  sendInfoMail,
-  sendToManager
+  sendInfoMail
 }

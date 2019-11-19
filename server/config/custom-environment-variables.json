@@ -73,6 +73,10 @@
     "serviceSid": "COMMUNITY_TWILIO_SERVICE_SID",
     "authToken": "COMMUNITY_TWILIO_AUTH_TOKEN"
   },
+  "managers": {
+    "__name": "MANAGERS",
+    "__format": "json"
+  },
   "plugins": {
     "moonpay": {
       "webhook": {
