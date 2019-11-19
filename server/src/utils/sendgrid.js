@@ -51,7 +51,7 @@ const sendInfoMail = async (user, { networkType, communityName, communityAddress
     communityAddress
   }
 
-  const managers = (config.get('managers') || []).map((email) => ({ email }))
+  const managers = (config.get('mail.managers') || []).map((email) => ({ email }))
 
   const request = createMailRequest({
     to: user.email,

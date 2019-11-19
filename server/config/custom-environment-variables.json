@@ -40,6 +40,10 @@
     }
   },
   "mail": {
+    "managers": {
+      "__name": "MANAGERS",
+      "__format": "json"
+    },
     "supportAddress": "COMMUNITY_MAIL_SUPPORT_ADDRESS",
     "sendgrid": {
       "apiKey": "COMMUNITY_MAIL_SENDGRID_API_KEY",
@@ -72,10 +76,6 @@
     "accountSid": "COMMUNITY_TWILIO_ACCOUNT_SID",
     "serviceSid": "COMMUNITY_TWILIO_SERVICE_SID",
     "authToken": "COMMUNITY_TWILIO_AUTH_TOKEN"
-  },
-  "managers": {
-    "__name": "MANAGERS",
-    "__format": "json"
   },
   "plugins": {
     "moonpay": {
