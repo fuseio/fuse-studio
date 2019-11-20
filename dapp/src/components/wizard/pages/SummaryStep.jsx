@@ -30,7 +30,7 @@ const SummaryStep = ({
             <CommunityLogo
               imageUrl={images && images[chosen] && images[chosen].croppedImageUrl}
               metadata={{
-                isDefault: communityType && communityType.value && communityType.label
+                isDefault: chosen !== 'custom'
               }}
               symbol={communitySymbol}
             />
