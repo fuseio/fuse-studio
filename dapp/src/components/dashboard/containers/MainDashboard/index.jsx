@@ -61,7 +61,7 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
-    if ((!prevState.error) &&
+    if ((!prevState.error && !prevProps.networkType) &&
         (this.props.isPortis || this.props.isMetaMask) &&
         (!prevProps.foreignToken && !this.props.foreignToken) &&
         (!prevProps.homeToken && !this.props.homeToken) &&
@@ -193,84 +193,86 @@ class DashboardLayout extends Component {
           <div className='content__container'>
             <NavBar withLogo={false} foreignNetwork={foreignToken && foreignToken.networkType} />
             <div className='content'>
-              <Switch>
-                {!get(plugins, 'joinBonus.isRemoved', false) && isAdmin && (
-                  <Route path={`${match.path}/bonus`}
-                    render={() => (
-                      <JoinBonusPage
-                        isPortis={isPortis}
-                        changeNetwork={changeNetwork}
-                        symbol={symbol}
+              <div className='content__wrapper'>
+                <Switch>
+                  {!get(plugins, 'joinBonus.isRemoved', false) && isAdmin && (
+                    <Route path={`${match.path}/bonus`}
+                      render={() => (
+                        <JoinBonusPage
+                          isPortis={isPortis}
+                          changeNetwork={changeNetwork}
+                          symbol={symbol}
+                          community={community}
+                          networkType={networkType}
+                          tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+                        />
+                      )}
+                    />
+                  )}
+                  <Route path={`${match.path}/onramp/:name`}
+                    render={({ match }) => (
+                      <OnRampPage
+                        match={match}
                         community={community}
+                        plugin={get(community, `plugins.${match.params.name}`, {})}
+                      />
+                    )}
+                  />
+                  {isAdmin && tokenType === 'mintableBurnable' && (
+                    <Route
+                      path={`${match.path}/mintBurn`}
+                      render={() => (
+                        <MintBurnPage
+                          symbol={symbol}
+                          tokenAddress={foreignToken.address}
+                          networkType={networkType}
+                          accountAddress={accountAddress}
+                          tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+                        />
+                      )}
+                    />
+                  )}
+                  {isAdmin && (
+                    <Route
+                      path={`${match.path}/plugins`}
+                      render={() => (
+                        <PluginsPage
+                          isPortis={isPortis}
+                          changeNetwork={changeNetwork}
+                          community={community}
+                          networkType={networkType}
+                        />
+                      )}
+                    />
+                  )}
+                  {!get(plugins, 'businessList.isRemoved', false) && (
+                    <Route
+                      exact
+                      path={`${match.path}/merchants`}
+                      render={() => (
+                        <Businesses
+                          community={community}
+                          isAdmin={isAdmin}
+                          networkType={networkType}
+                        />
+                      )}
+                    />
+                  )}
+                  <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} />} />
+                  <Route path={`${match.path}/users`} render={() => <Users isAdmin={isAdmin} networkType={networkType} community={community} />} />
+                  <Route
+                    path={`${match.path}/transfer/:sendTo?`}
+                    render={() => (
+                      <TransferPage
+                        symbol={symbol}
                         networkType={networkType}
                         tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
                       />
                     )}
                   />
-                )}
-                <Route path={`${match.path}/onramp/:name`}
-                  render={({ match }) => (
-                    <OnRampPage
-                      match={match}
-                      community={community}
-                      plugin={get(community, `plugins.${match.params.name}`, {})}
-                    />
-                  )}
-                />
-                {isAdmin && tokenType === 'mintableBurnable' && (
-                  <Route
-                    path={`${match.path}/mintBurn`}
-                    render={() => (
-                      <MintBurnPage
-                        symbol={symbol}
-                        tokenAddress={foreignToken.address}
-                        networkType={networkType}
-                        accountAddress={accountAddress}
-                        tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
-                      />
-                    )}
-                  />
-                )}
-                {isAdmin && (
-                  <Route
-                    path={`${match.path}/plugins`}
-                    render={() => (
-                      <PluginsPage
-                        isPortis={isPortis}
-                        changeNetwork={changeNetwork}
-                        community={community}
-                        networkType={networkType}
-                      />
-                    )}
-                  />
-                )}
-                {!get(plugins, 'businessList.isRemoved', false) && (
-                  <Route
-                    exact
-                    path={`${match.path}/merchants`}
-                    render={() => (
-                      <Businesses
-                        community={community}
-                        isAdmin={isAdmin}
-                        networkType={networkType}
-                      />
-                    )}
-                  />
-                )}
-                <Route path={`${match.path}/wallet`} render={() => <WhiteLabelWallet value={qrValue} />} />
-                <Route path={`${match.path}/users`} render={() => <Users isAdmin={isAdmin} networkType={networkType} community={community} />} />
-                <Route
-                  path={`${match.path}/transfer/:sendTo?`}
-                  render={() => (
-                    <TransferPage
-                      symbol={symbol}
-                      networkType={networkType}
-                      tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
-                    />
-                  )}
-                />
-                <Route exact path={`${match.path}/:success?`} render={() => <Dashboard {...this.props} />} />
-              </Switch>
+                  <Route exact path={`${match.path}/:success?`} render={() => <Dashboard {...this.props} />} />
+                </Switch>
+              </div>
             </div>
           </div>
         </div>
