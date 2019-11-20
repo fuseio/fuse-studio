@@ -1,7 +1,7 @@
 {
   "env": "production",
   "web3": {
-    "fuseProvider": "https://rpc.fusenet.io",
+    "fuseProvider": "https://rpc.fuse.io",
     "addresses": {
       "ropsten": {
         "FuseToken": "0xEc304De130dA3afbD2F60C7aa6C5485e30239372",
@@ -41,7 +41,7 @@
   },
   "debugTrace": false,
   "ipfsProxy": {
-    "urlBase": "https://ipfs-proxy.fusenet.io/api"
+    "urlBase": "https://ipfs-proxy.fuse.io/api"
   },
   "sentry": {
     "key": "24bb2594d71c47489e029add66203eae",

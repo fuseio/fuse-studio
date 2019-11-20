@@ -1,7 +1,7 @@
 {
   "env": "qa",
   "web3": {
-    "fuseProvider": "https://rpc.fusenet.io"
+    "fuseProvider": "https://rpc.fuse.io"
   },
   "api": {
     "auth": {
@@ -24,6 +24,6 @@
     }
   },
   "ipfsProxy": {
-    "urlBase": "https://ipfs-proxy-qa.fusenet.io/api"
+    "urlBase": "https://ipfs-proxy-qa.fuse.io/api"
   }
 }

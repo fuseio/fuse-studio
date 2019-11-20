@@ -67,7 +67,7 @@ class Bridge extends Component {
 
     loadModal(SHOW_MORE_MODAL, {
       name: convertNetworkName(bridgeStatus[side].network),
-      network: bridgeStatus[side].network !== 'fuse' ? `https://api.infura.io/v1/jsonrpc/${bridgeStatus[side].network}` : 'https://rpc.fusenet.io',
+      network: bridgeStatus[side].network !== 'fuse' ? `https://api.infura.io/v1/jsonrpc/${bridgeStatus[side].network}` : 'https://rpc.fuse.io',
       homeTokenAddress,
       foreignTokenAddress,
       homeBridgeAddress,
