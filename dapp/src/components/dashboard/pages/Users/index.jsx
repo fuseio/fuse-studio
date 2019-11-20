@@ -29,12 +29,8 @@ import { getForeignNetwork } from 'selectors/network'
 import { push } from 'connected-react-router'
 
 const Users = ({
-  networkType,
-  currentUrl,
   users,
   isAdmin,
-  history,
-  network,
   community,
   accountAddress,
   signatureNeeded,
@@ -242,7 +238,7 @@ const Users = ({
                   hasAdminRole && isApproved && (
                     <ul className='more__options'>
                       <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                      <li className='more__options__item' onClick={() => goToPage(`${currentUrl}/transfer/${account}`)}>Transfer tokens to user</li>
+                      <li className='more__options__item' onClick={() => push(`transfer/${account}`)}>Transfer tokens to user</li>
                       <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
                     </ul>
                   )
@@ -251,7 +247,7 @@ const Users = ({
                   !hasAdminRole && isApproved && (
                     <ul className='more__options'>
                       <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                      <li className='more__options__item' onClick={() => goToPage(`${currentUrl}/transfer/${account}`)}>Transfer tokens to user</li>
+                      <li className='more__options__item' onClick={() => push(`transfer/${account}`)}>Transfer tokens to user</li>
                       <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
                     </ul>
                   )
@@ -284,10 +280,6 @@ const Users = ({
   const handleRemoveAdminRole = (account) => removeAdminRole(account)
 
   const handleConfirmUser = (account) => confirmUser(account)
-
-  const goToPage = (path) => {
-    push(path)
-  }
 
   const renderTable = () => {
     return (
@@ -339,9 +331,7 @@ const Users = ({
   )
 }
 
-const mapStateToProps = (state, { match: { url: currentUrl } }) => ({
-  currentUrl,
-  network: state.network,
+const mapStateToProps = (state) => ({
   users: getUsersEntities(state),
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
