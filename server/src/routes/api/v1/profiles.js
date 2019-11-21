@@ -12,9 +12,9 @@ router.put('/:account', async (req, res) => {
   try {
     profile = await new Profile({ account: web3Utils.toChecksumAddress(account), publicData }).save()
   } catch (error) {
-    profile = await Profile.findOneAndUpdate({ account }, { publicData }, { new: true })
+    profile = await Profile.findOneAndUpdate({ account: web3Utils.toChecksumAddress(account) }, { publicData }, { new: true })
   }
-  await Entity.updateMany({ account }, { profile: profile._id })
+  await Entity.updateMany({ account: web3Utils.toChecksumAddress(account) }, { profile: profile._id })
 
   return res.json({ data: profile })
 })
