@@ -76,6 +76,13 @@ module.exports = {
       timeoutBlocks: 200,
     },
 
+    fuse: {
+      provider: () => new HDWalletProvider(mnemonic, `https://rpc.fuse.io`),
+      network_id: 122,
+      gas: 8000000,
+      timeoutBlocks: 200
+    }
+
     // Useful for private networks
     // private: {
       // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
