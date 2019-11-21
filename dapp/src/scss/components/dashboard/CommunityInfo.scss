@@ -227,6 +227,7 @@ $csspieheight: 100px;
 
     @include modifier(spaced) {
       margin-left: 5px;
+      font-size: 16px;
     }
 
     .fa-clone {
