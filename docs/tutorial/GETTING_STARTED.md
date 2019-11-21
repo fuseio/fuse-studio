@@ -1,5 +1,7 @@
+# Getting started with Fuse Studio API.
+In this guide you're gonna learn how to interact programmatically with the Fuse Studio API on the Fuse Network. You're going to issue your own token and launch a community, editing token permissions (like minting), and adding entities - users and business to your community. You can view how each step is affecting you community in the Fuse Studio DApp, after the community is issued open https://studio-qa.fuse.io/view/community/{youCommunityAddress} is your browser.
 
-# Prerequisites
+## Prerequisites
   
 - Install nodejs, I advise to install node v10 because [experimental-repl-await](https://nodejs.org/api/cli.html#cli_experimental_repl_await) flag that allow to use `await` not in a function. 
 - Install dependencies:
@@ -24,13 +26,13 @@ const Web3 = require('web3')
 const ethUtils = require('ethereumjs-util')
 const request = require('request-promise-native')
 
-const web3 = new Web3('https://rpc.fusenet.io')
+const web3 = new Web3('https://rpc.fuse.io')
 web3.eth.accounts.wallet.add(ethUtils.addHexPrefix(pk))
 const contractOptions = {
   transactionConfirmationBlocks: 2 
 } // contract options to use on Fuse network.
 
-const apiUrl = 'https://studio-qa-ropsten.fusenet.io/api/v1' // we'll use our QA server. Ropsten means that the Fuse network is connected to Ethereum Ropsten (might be irelevant)
+const apiUrl = 'https://studio-qa-ropsten.fuse.io/api/v1' // we'll use our QA server. Ropsten means that the Fuse network is connected to Ethereum Ropsten (might be irelevant)
 
 // This function submits a contract method on the Fuse chain, and updated studio backend about the transaction result
 let send = async (method) => {
@@ -60,9 +62,9 @@ let send = async (method) => {
 
   ```
 
-# Launching a Community
+## Launching a Community
 
-## Creating a Token
+### Creating a Token
 Sardex can do the issuance themselves and send the token address to fuse-studio. On the other hand we can do the issuance to lower friction.
 - Issue a mintable/burnable token with zero supply:
 ```js
@@ -91,7 +93,7 @@ tokenAddress = await issueToken(tokenName, tokenSymbol, initialSupply)
 const tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress, contractOptions)
 ```
 
-## Launching and configuring the community 
+### Launching and configuring the community 
 - After the token is created, you should launch the community with that token. 
 ```js
   const response = await request({
@@ -121,19 +123,19 @@ curl -X POST -d '{
     }
   }
   
-' https://studio-qa-ropsten.fusenet.io/api/v1/communities/{communityAddress}
+' https://studio-qa-ropsten.fuse.io/api/v1/communities/{communityAddress}
 
-## Expiration Feature
+### Expiration Feature
 Basically Should be part of the token contract. ERC721 with transfer rules based on the blocknumbers. We can use our own tranfer rules and roles to customise this.
 
 
-# Actor Representation and Rights:
+## Actor Representation and Rights:
 
-## PK and account address.
+### PK and account address.
 See the `Prerequisites` section.
 
 
-## Minting permissions
+### Minting permissions
 - Community launcher should give permissions to issuers to issue tokens.
 ```js
 
@@ -145,13 +147,13 @@ send(tokenContract.methods.renounceMinter())
 ```
 
 
-## Distributors (Operators) right to move funds
+### Distributors (Operators) right to move funds
 
 There's two models for distributors to get the tokens. push and pull.
 - push: the issuer sends tokens to distributors accounts
 - pull: the distibutors pull money from some account they have special rights to access. It can be a multisig, or they just have an approval to move issuer's funds.
 
-## Distributors (Operators) right to add business and users
+### Distributors (Operators) right to add business and users
 
 - The community launcher have to make the distributors admins of the community. Then the distributors can add more entities to the community.
 ```js
@@ -174,7 +176,7 @@ const addEntity = async (communityAddress, entityAddress, role) => {
 await addEntity(communityAddress, distributorAddress, roles.ADMIN_ROLE)
 ```
 
-# Issuance
+## Issuance
 - Minting of ERC20 tokens:
 ```js
 await send(tokenContract.methods.mint(accountAddress, amount)) 
@@ -198,9 +200,9 @@ await send(tokenContract.methods.mint(accountAddress, tokenIds, blockNumber, val
 ```
 The problem is that the `tokenIds` should be given as an array not used tokenIds. Why not to keep the tokenId counter in the contract and let the contract allocate the ids?
 
-# Onboarding
+## Onboarding
 
-## Generating an Ethereum account
+### Generating an Ethereum account
 ```js
 const { generate } = require('ethereumjs-wallet')
 const wallet = generate()
@@ -208,7 +210,7 @@ const entityAddress = wallet.getAddressString()
 const entityPrivateKey = wallet.getPrivateKeyString()
 ```
 
-## Adding businesses or users to the community by the community admins
+### Adding businesses or users to the community by the community admins
 
 - Adding user to community
 ```js
