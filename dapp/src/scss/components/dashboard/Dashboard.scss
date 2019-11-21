@@ -124,7 +124,7 @@
         margin: 4em auto 3em;
       }
   
-      @include breakpoint(xxlarge) {
+      @include breakpoint(2000) {
         width: 70%;
         margin: 4em auto 3em;
       }
@@ -379,12 +379,6 @@
         @include element(deploy-btn) {
           display: block;
         }          
-      }
-    }
-
-    @include element(tabs) {
-			@include breakpoint(medium up) {
-        margin-top: 2em;
       }
     }
   }

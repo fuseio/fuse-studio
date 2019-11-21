@@ -349,7 +349,7 @@ const Sidebar = ({
             >
               <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
               <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
-              {moreIcon && <img src={currentPath === path ? moreIcon.AddYellowIcon : moreIcon.AddIcon} /> }
+              <div style={{ marginLeft: 'auto' }}>{moreIcon && <img src={currentPath === path ? moreIcon.AddYellowIcon : moreIcon.AddIcon} /> }</div>
             </div>
           )
         }

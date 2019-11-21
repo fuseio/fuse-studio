@@ -22,6 +22,7 @@ $csspieheight: 100px;
 
     @include breakpoint(medium up) {
       min-height: 271px;
+      margin-top: 2em;
     }
 
     @include breakpoint(small down) {
@@ -30,22 +31,27 @@ $csspieheight: 100px;
   }
 
   @include element(general) {
+    position: relative;
     @include breakpoint(medium up) {
-      flex-basis: 55%;
-    }
-  }
-
-  @include element(line) {
-    border: solid 1px #dadada;
-    
-    @include breakpoint(medium up) {
-      margin: 0 1.5em;
-      width: 1px;			
+      flex: .5;
     }
 
-    @include breakpoint(medium down) {
-      height: 2px;
-      margin: 1.5em 0;
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      right: 0;
+      @include breakpoint(medium up) {
+        top: 0;
+        border-right: solid 1px #dadada;
+        height: 100%;
+      }
+
+      @include breakpoint(medium down) {
+        bottom: 0;
+        border-bottom: solid 1px #dadada;
+        width: 100%;
+      }
     }
   }
 
@@ -66,7 +72,7 @@ $csspieheight: 100px;
 
   @include element(supply_pie) {
     @include xy-grid(vertical, false);
-    @include flex-align(null, middle);
+    @include flex-align(justify, middle);
     position: relative;
     font-size: 0.750em;
     color: #a4a4a4;
@@ -75,7 +81,6 @@ $csspieheight: 100px;
       font-weight: 500;
       color: $color-light-dark;
       display: inline-block;
-      height: 27px;
       margin-right: 5px;
     }
 
@@ -95,8 +100,13 @@ $csspieheight: 100px;
     }
   
     @include breakpoint(medium up) {
-      flex-basis: 35%;
+      flex: .5;
     }
+
+    @include breakpoint(medium down) {
+      margin-top: 2em;
+    }
+
 
     @include block(pie) {
 
@@ -168,8 +178,8 @@ $csspieheight: 100px;
     }
 
     @include block(total__sides) {
-      margin-top: auto;
       > p {
+        line-height: 2.1;
         white-space: nowrap;
       }
     }

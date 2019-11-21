@@ -32,8 +32,12 @@ import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
 
 class DashboardLayout extends Component {
-  state = {
-    open: false
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      open: false
+    }
   }
 
   componentDidMount () {

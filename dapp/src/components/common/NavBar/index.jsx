@@ -16,7 +16,6 @@ import { CHOOSE_PROVIDER } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 
 const NavBar = ({
-  history,
   accountAddress,
   networkType,
   foreignNetwork,
