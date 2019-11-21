@@ -1,7 +1,7 @@
 {
   "env": "qa",
   "web3": {
-    "fuseProvider": "https://rpc.fusenet.io",
+    "fuseProvider": "https://rpc.fuse.io",
     "supportedNetworks": ["main", "ropsten", "fuse"],
     "portis": {
     },

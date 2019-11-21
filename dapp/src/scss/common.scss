@@ -86,7 +86,7 @@
 
   @include breakpoint(medium up) {
     width: 427px !important;
-    height: 562px !important;
+    min-height: 65% !important;
   }
 
   @include element(content) {

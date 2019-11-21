@@ -53,7 +53,7 @@ const ChooseProviderModal = ({
         </div>
 
         <div className='choose_provider__text choose_provider__text--smaller'>
-          Need help? click <a href='https://docs.fusenet.io/the-fuse-studio/getting-started' target='_blank' rel='noopener noreferrer'>here</a> for a guide
+          Need help? click <a href='https://docs.fuse.io/the-fuse-studio/getting-started' target='_blank' rel='noopener noreferrer'>here</a> for a guide
         </div>
       </div>
     </Modal>

@@ -53,8 +53,6 @@ class Bridge extends Component {
       loadModal,
       bridgeStatus,
       tokenName,
-      balances,
-      homeNetwork,
       community
     } = this.props
 
@@ -67,15 +65,12 @@ class Bridge extends Component {
 
     loadModal(SHOW_MORE_MODAL, {
       name: convertNetworkName(bridgeStatus[side].network),
-      network: bridgeStatus[side].network !== 'fuse' ? `https://api.infura.io/v1/jsonrpc/${bridgeStatus[side].network}` : 'https://rpc.fusenet.io',
+      network: bridgeStatus[side].network !== 'fuse' ? `https://api.infura.io/v1/jsonrpc/${bridgeStatus[side].network}` : CONFIG.web3.fuseProvider,
       homeTokenAddress,
       foreignTokenAddress,
       homeBridgeAddress,
       foreignBridgeAddress,
-      tokenName,
-      tokenAmount: balances[homeNetwork === bridgeStatus[side].network ? homeTokenAddress : foreignTokenAddress]
-        ? formatWei(balances[homeNetwork === bridgeStatus[side].network ? homeTokenAddress : foreignTokenAddress])
-        : 0
+      tokenName
     })
   }
 

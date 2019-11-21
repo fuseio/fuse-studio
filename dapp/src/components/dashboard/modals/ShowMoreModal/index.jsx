@@ -4,7 +4,7 @@ import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { formatAddress } from 'utils/format'
 
-export default ({ hideModal, name, network, tokenName, tokenAmount, foreignTokenAddress, homeTokenAddress, homeBridgeAddress, foreignBridgeAddress }) => {
+export default ({ hideModal, name, network, tokenName, foreignTokenAddress, homeTokenAddress, homeBridgeAddress, foreignBridgeAddress }) => {
   return (
     <Modal className='show-more__wrapper' onClose={hideModal} hasCloseBtn>
       <div className='show-more'>

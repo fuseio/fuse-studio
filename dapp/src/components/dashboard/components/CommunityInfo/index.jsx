@@ -85,7 +85,6 @@ const CommunityInfo = ({
           </TitleValue>
         </div>
       </div>
-      <div className='community_info__line' />
       <div className='community_info__supply_pie'>
         <div className='pie__wrapper--container'>
           <div className='pie__wrapper'>
@@ -94,10 +93,10 @@ const CommunityInfo = ({
           </div>
         </div>
         <div className='grid-y total__sides'>
-          <h6>
+          <p>
             <span className='title'>Total supply</span>
             {formatWei(totalSupply, 0)} <small>{symbol}</small>
-          </h6>
+          </p>
           <p>
             <span className='dot dot--fuse' />
             <span className='title'>Supply on Fuse:</span>

@@ -16,7 +16,6 @@ import { CHOOSE_PROVIDER } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 
 const NavBar = ({
-  history,
   accountAddress,
   networkType,
   foreignNetwork,
@@ -91,7 +90,7 @@ const NavBar = ({
           <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
             <ul className='drop__options'>
               <li className='drop__options__item'><a href='https://fuse.io' target='_blank' rel='noopener noreferrer'>Website</a></li>
-              <li className='drop__options__item'><a href='https://docs.fusenet.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer'>FAQ</a></li>
+              <li className='drop__options__item'><a href='https://docs.fuse.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer'>FAQ</a></li>
               <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'>Github</a></li>
               <li className='drop__options__item'><a href='mailto:hello@fuse.io'>Contact us</a></li>
             </ul>

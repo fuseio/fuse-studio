@@ -54,7 +54,7 @@ const HomePage = ({
   }
 
   const gotToFaqs = () => {
-    window.open('https://docs.fusenet.io/the-fuse-studio/faq', '_blank', 'noopener')
+    window.open('https://docs.fuse.io/the-fuse-studio/faq', '_blank', 'noopener')
   }
 
   const showCommunities = () => {

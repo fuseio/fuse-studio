@@ -105,16 +105,14 @@ class Dashboard extends Component {
           networkType={networkType}
           token={foreignToken}
         />
-        <div className='content__tabs'>
-          <CommunityInfo
-            tokensTotalSupplies={totalSupply}
-            foreignToken={foreignToken}
-            loadQrModal={this.loadQrModal}
-            communityAddress={communityAddress}
-            homeTokenAddress={homeTokenAddress}
-            foreignTokenAddress={foreignTokenAddress}
-          />
-        </div>
+        <CommunityInfo
+          tokensTotalSupplies={totalSupply}
+          foreignToken={foreignToken}
+          loadQrModal={this.loadQrModal}
+          communityAddress={communityAddress}
+          homeTokenAddress={homeTokenAddress}
+          foreignTokenAddress={foreignTokenAddress}
+        />
         {
           homeBridgeAddress && foreignBridgeAddress && (
             <div className='content__bridge'>
