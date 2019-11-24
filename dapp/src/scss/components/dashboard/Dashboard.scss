@@ -103,6 +103,11 @@
 
       @include block(manage) {
         color: #d6d6d6;
+
+        &:hover {
+          text-decoration: underline;
+          cursor: pointer;
+        }
       }
     }
 
