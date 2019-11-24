@@ -11,21 +11,15 @@ const User = mongoose.model('User')
 
 const generateSignatureData = require('@utils/auth').generateSignatureData
 
-router.post('/', auth.required, async (req, res) => {
-  const user = new User(req.body.user)
-  // const { tokenAddress } = req.body
-  const results = await user.save()
+router.post('/', async (req, res) => {
+  const user = await new User(req.body.user).save()
 
-  // const token = await Token.findOne({ address: tokenAddress })
-  // sendgridUtils.sendWelcomeMail(user, token.toJSON())
-
-  if (user.subscribe) {
+  if (req.body.subscribe) {
     sendgridUtils.subscribeUser(user)
   }
 
   res.json({
-    object: 'user',
-    data: results
+    data: user
   })
 })
 
