@@ -41,13 +41,13 @@ const sendWelcomeMail = async (user) => {
 
 const sendInfoMail = async (user, { networkType, communityName, communityAddress }) => {
   const env = config.get('env')
-  const API_ROOT = 'https://studio{env}{networkType}.fusenet.io/view/community/'
+  const API_ROOT = 'https://studio{env}{networkType}.fuse.io/view/community/'
   const domain = API_ROOT.replace('{env}', env === 'qa' ? '-qa' : '').replace('{networkType}', networkType === 'ropsten' ? '-ropsten' : '')
   const templateData = {
     communityName,
     networkType: capitalize(networkType),
     communityLink: domain + communityAddress + '/justCreated',
-    fuseExplorer: 'https://explorer.fusenet.io/address/' + communityAddress + '/transactions',
+    fuseExplorer: 'https://explorer.fuse.io/address/' + communityAddress + '/transactions',
     communityAddress
   }
 

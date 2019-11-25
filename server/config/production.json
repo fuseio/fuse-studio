@@ -34,6 +34,6 @@
     "debug": false
   },
   "funder": {
-    "urlBase": "https://funder.fusenet.io/api/"
+    "urlBase": "https://funder.fuse.io/api/"
   }
 }
