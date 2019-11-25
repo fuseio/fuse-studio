@@ -47,6 +47,7 @@ module.exports = {
       },
       sharedAddresses: {
         WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
+        CommunityFactory: '0x5E853EDAEE70BD635d02CC0169Cf97083DE3436D',
         walletModules: {
           GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
           LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',

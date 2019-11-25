@@ -15,7 +15,7 @@ contract CommunityTransferManager is
   event RuleAdded(bytes32 fromMask, bytes32 toMask, bool isMax, uint256 amount);
   event RuleRemoved(uint256 index, bytes32 fromMask, bytes32 toMask, bool isMax, uint256 amount);
 
-  constructor (string _name) Community(_name) public {}
+  constructor (string _name, address _admin) Community(_name, _admin) public {}
 
   /**
    * @dev Whitelist type transfer logic, Should be pluggable in the future.

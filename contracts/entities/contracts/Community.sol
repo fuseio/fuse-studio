@@ -10,10 +10,10 @@ contract Community {
     bytes32 public constant userMask = bytes32(1);
     bytes32 public constant adminMask = bytes32(2);
 
-    constructor (string _name) public {
+    constructor (string _name, address _admin) public {
         name = _name;
         entitiesList = new EntitiesList();
-        entitiesList.addEntity(msg.sender, userMask | adminMask);
+        entitiesList.addEntity(_admin, userMask | adminMask);
     }
 
     function setEntitiesList(address _entitiesList) public onlyAdmin {

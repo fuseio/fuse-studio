@@ -33,7 +33,7 @@ module.exports = {
     },
 
     fuse: {
-      provider: () => createProvider('http://rpc.fuse.io'),
+      provider: () => createProvider('https://rpc.fuse.io'),
       network_id: '*',
       gas: 6721975,
       gasPrice: 1000000000

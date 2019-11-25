@@ -33,24 +33,24 @@ contract('Community', (accounts) => {
   }
 
   beforeEach(async () => {
-    community = await Community.new('My Community')
+    community = await Community.new('My Community', owner)
     entitiesList = await EntitiesList.at(await community.entitiesList())
   })
 
   describe('#constructor', () => {
     it('community got correct name', async () => {
-      community = await Community.new('My Community')
+      community = await Community.new('My Community', owner)
       assert.equal('My Community', await community.name())
     })
 
     it('can create community without name', async () => {
-      community = await Community.new('')
+      community = await Community.new('', owner)
       assert.equal('', await community.name())
     })
 
     it('creator is admin of the community', async () => {
       const entity = { roles: ADMIN_ROLE }
-      community = await Community.new('My Community')
+      community = await Community.new('My Community', owner)
 
       await validateEntity(owner, entity)
     })
