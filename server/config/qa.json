@@ -12,7 +12,7 @@
     "home": {
       "sharedAddresses": {
         "WalletFactory": "0xf25280D6cfbdF29a5F9bB206aa5A71dBD1f76FA2",
-        "CommunityFactory": "0x5E853EDAEE70BD635d02CC0169Cf97083DE3436D",
+        "CommunityFactory": "0x037Fe3AfDc9174F7a0da6F72Fbd87ef9f930B2a7",
         "walletModules": {
           "GuardianManager": "0x9C1422A9b643531430114965De0152E94f0cB77F",
           "LockManager": "0x322946550d30d5B50073BCE686637d099Bc7648C",
