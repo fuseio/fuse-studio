@@ -60,6 +60,7 @@ const CurrencyType = ({ networkType, formik }) => {
                   onChange={val => {
                     setFieldValue('communityType', val)
                     setFieldValue('existingToken', '')
+                    setFieldValue('communitySymbol', '')
                     if (window && window.analytics) {
                       window.analytics.track(`New currency - ${val.label}`)
                     }
@@ -85,6 +86,7 @@ const CurrencyType = ({ networkType, formik }) => {
                   setFieldValue('existingToken', val)
                   setFieldValue('totalSupply', '')
                   setFieldValue('communityType', '')
+                  setFieldValue('communitySymbol', val.symbol)
                   if (window && window.analytics) {
                     window.analytics.track(`Existing currency - ${val.label}`)
                   }

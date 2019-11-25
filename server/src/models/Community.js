@@ -10,7 +10,8 @@ const CommunitySchema = new Schema({
   isClosed: { type: Boolean, default: false },
   plugins: { type: Object },
   name: { type: String, required: [true, "can't be blank"] },
-  communityURI: { type: String }
+  communityURI: { type: String },
+  coverPhoto: { type: String }
 }, { timestamp: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })

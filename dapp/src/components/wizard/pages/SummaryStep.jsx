@@ -1,12 +1,26 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import CommunityLogo from 'components/common/CommunityLogo'
 import { connect, getIn } from 'formik'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
 const SummaryStep = ({
   networkType,
-  formik
+  formik,
+  homeNetwork
 }) => {
+  const desiredNetworkType = useMemo(() => {
+    if (!networkType) {
+      return ['mainnet', 'ropsten']
+    } else if (networkType === homeNetwork) {
+      return ['ropsten', 'mainnet']
+    } else {
+      const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
+      return [networkType, secondDesired]
+    }
+  }, [])
+
+  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
   const contracts = getIn(formik.values, 'contracts')
   const communitySymbol = getIn(formik.values, 'communitySymbol')
   const totalSupply = getIn(formik.values, 'totalSupply')
@@ -30,7 +44,7 @@ const SummaryStep = ({
             <CommunityLogo
               imageUrl={images && images[chosen] && images[chosen].croppedImageUrl}
               metadata={{
-                isDefault: chosen !== 'custom'
+                isDefault: chosen !== 'custom' && !existingToken
               }}
               symbol={communitySymbol}
             />

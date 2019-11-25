@@ -15,9 +15,8 @@ const nextStepEvents = {
 }
 
 const validations = {
-  0: ['communityName', 'communityType', 'existingToken', 'email'],
-  1: ['totalSupply', 'communitySymbol', 'images.chosen'],
-  2: ['isOpen']
+  0: ['communityName', 'email'],
+  1: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
 }
 
 const getStep = (communityType) => (['Name & currency', communityType ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary'])
@@ -114,7 +113,7 @@ class Wizard extends React.Component {
     return false
   }
 
-  renderForm = ({ values, handleSubmit, errors, isValid }) => {
+  renderForm = ({ values, handleSubmit, errors, isValid, touched }) => {
     const { children, transactionStatus, createTokenSignature } = this.props
     const { page } = this.state
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
@@ -126,14 +125,14 @@ class Wizard extends React.Component {
 
     return (
       <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
-        { page < 3 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
+        {page < 2 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
         {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
-        {page === 4 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
+        {page === 3 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>
           {!isLastPage && !isSubmitStep && page < 4 && (
             <div className='grid-x align-center next'>
-              <button disabled={this.stepValidator(validations[page], errors)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
+              <button disabled={this.stepValidator(validations[page], errors) || isEmpty(touched)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
             </div>
           )}
           {isSubmitStep && (

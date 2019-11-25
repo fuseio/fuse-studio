@@ -212,7 +212,6 @@
 
       @include element(title) {
         font-size: 0.938em;
-        font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
         color: $color-dark;
@@ -335,8 +334,7 @@
           color: $color-dark;
           height: 40px;
           border-radius: 5px;
-          box-shadow: 0 0 6px 0 #cbcbcb;
-          border: 1px solid transparent;
+          border: solid 1px $color-light-gray;
 
           &::placeholder {
             color: #92a1ac;
@@ -379,7 +377,7 @@
       @include flex-align(spaced, null);
       @include breakpoint(medium up) {
         min-height: 80px;
-        margin: 3em 0;
+        margin-top: 1em;
       }
 
       @include breakpoint(small down) {
@@ -388,7 +386,6 @@
 
       @include element(title) {
         font-size: 0.938em;
-        font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
         color: $color-dark;
@@ -417,8 +414,7 @@
           color: $color-dark;
           height: 40px;
           border-radius: 5px;
-          box-shadow: 0 0 6px 0 #cbcbcb;
-          border: solid 1px transparent;
+          border: solid 1px $color-light-gray;
 
           &::placeholder {
             color: rgba(0, 0, 0, 0.3);
@@ -449,10 +445,11 @@
 
       @include element(title) {
         font-size: 0.938em;
-        font-weight: bold;
+        // font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
         color: $color-dark;
+        margin-bottom: 1em;
 
         @include breakpoint(small only) {
           // margin-bottom: 1em;
@@ -463,9 +460,6 @@
       @include element(currency) {
         width: 100%;
 
-        @include breakpoint(medium up) {
-          padding-bottom: 3em;
-        }
 
         .attributes__title {
           padding-bottom: 1em;
@@ -484,11 +478,6 @@
         }
 
         @include modifier(supply) {
-        }
-
-        @include modifier(long-height) {
-          min-height: 210px;
-          margin-top: 2em;
         }
 
         @include xy-grid(vertical);
@@ -510,6 +499,7 @@
           display: inline-block;
           width: 100%;
           height: 52px;
+          border: solid 1px $color-light-gray;
 
           @include modifier(selected) {
             border: solid 1px $color-dark;
@@ -525,12 +515,14 @@
 
           > div {
             border-color: transparent !important;
+            box-shadow: none !important;
           }
 
           @include element(prefix) {
             @include element(placeholder) {
               color: #92a1ac !important;
               text-align: center !important;
+              white-space: nowrap;
             }
 
             @include element(single-value) {
@@ -542,8 +534,7 @@
               height: 100%;
               font-size: 0.775em;
               border-radius: 5px !important;
-              box-shadow: 0 0 6px 0 #cbcbcb !important;
-              border: 1px solid transparent;
+              border: 1px solid transparent !important;
 
 
               @include modifier(menu-is-open) {
@@ -635,7 +626,7 @@
         }
         @include element(item) {
           border-radius: 5px;
-          box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+          box-shadow: 0 0 8px 0 rgba(70, 36, 36, 0.04);
           border: 2px solid rgba(226, 226, 226, 0.49);
           width: 200px;
           height: 145px;
@@ -790,13 +781,13 @@
             margin-bottom: 1em;
           }
         }
+
         @include element(item) {
           border-radius: 5px;
           box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
           border: 2px solid rgba(226, 226, 226, 0.49);
           display: flex;
           flex-direction: column;
-
           text-transform: capitalize;
           align-items: center;
           font-weight: 500;
@@ -833,8 +824,7 @@
             color: $color-dark;
             height: 40px;
             border-radius: 5px;
-            box-shadow: 0 0 6px 0 #cbcbcb;
-            border: solid 1px transparent;
+            border: solid 1px $color-light-gray;
 
             &::placeholder {
               color: rgba(0, 0, 0, 0.3);
@@ -873,184 +863,158 @@
       }
     }
 
-    @include block(contracts) {
-      @include element(wrapper) {
-        @include xy-grid(vertical);
-        @include flex-align(center, middle);
-        
-        @include breakpoint(medium up) {
-          padding: 0 10px;
-          max-width: 620px;
-          margin: auto;
-        }
+    @include block(cover_photo) {
+      width: 100%;
+
+      @include breakpoint(medium up) {
+        margin: 2rem 0;
       }
 
-      @include element(options) {
-        @include xy-grid(vertical, false);
-        @include flex-align(center, top);
-        width: 100%;
+      @include breakpoint(medium down) {
+        margin-top: 1em;
       }
 
       @include element(title) {
-        font-size: 18px;
-        font-weight: bold;
+        font-size: 0.938em;
+        // font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
         color: $color-dark;
-        text-align: center;
-        width: 100%;
 
-        @include breakpoint(medium down) {
-          margin: 1em 0;
+        @include breakpoint(small only) {
+          font-size: 1.250em;
         }
       }
 
-      @include element(item) {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
+      @include element(label) {
+        cursor: pointer;
+        width: 100%;
         position: relative;
+        border-radius: 5px;
+        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+        border: 2px solid rgba(226, 226, 226, 0.49);
+        height: 150px;
+        display: block;
+        margin-top: 1em;
+      }
+    }
 
-        @include breakpoint(medium) {
-          font-size: 16px;
-          margin: 16px 0;
-        }
+    @include block(close_open_community) {
+      @include xy-grid(horizontal, false);
+      @include flex-align(null, middle);
+      padding-top: 1em;
 
-        @include breakpoint(small) {
-          font-size: 0.75em;
-          margin: 8px 0;
-        }
-
-        @include block(icon) {
-          display: inline-block;
-          width: 55px;
-          margin-right: 5px;
-          align-self: flex-start;
-
-          @include breakpoint(small down) {
-            height: min-content;
-            width: 100px;
-          }
-
-          > img {
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
-            width: 100%;
-          }
-        }
-
-        @include block(content) {
-          display: block;
-          margin-left: 10px;
-          flex: 1 1 auto;
-          @include xy-grid(vertical);
-          color: $color-dark;
-
-          @include element(title) {
-            font-weight: 500;
-            font-size: 14px;
-
-            @include breakpoint(small) {
-              font-size: 14px;
-            }
-          }
-
-          @include element(text) {
-            color: $color-gray;
-            line-height: 1.25;
-            font-size: 0.75em;
-          }
-
-          @include element(toggle) {
-            @include xy-grid(horizontal, false);
-            @include flex-align(null, middle);
-            padding-top: 1em;
-
-            @include element(text) {
-              font-size: 0.75em;
-              margin-left: 5px;
-              color: rgba(13, 45, 69, 0.5);
-              > span {
-                &:first-child {
-                  font-weight: bold;
-                  color: $color-dark;
-                }
-              }
-            }
-
-            @include block(toggle) {
-              max-height: 18px;
-              position: relative;
-              height: 100%;
-              display: inline-block;
-
-              @include breakpoint(small only) {
-                margin-bottom: auto;
-              }
-
-              > input {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                cursor: pointer;
-                opacity: 0;
-              }
-
-              .toggle {
-                &-wrapper {
-                  width: 34px;
-                  height: 18px;
-                  background-color: $color-disabled;
-                  border-radius: 10px;
-                  position: relative;
-                }
-
-                &:hover {
-                  cursor: pointer;
-                }
-
-                display: block;
-                position: absolute;
-                width: 14px;
-                border-radius: 50%;
-                height: 14px;
-                background: $color-white;
-                top: 2px;
-                left: 2px;
-                border: 1px solid $color-disabled;
-                -webkit-transition: all 0.2s ease;
-                -moz-transition: all 0.2s ease;
-                -ms-transition: all 0.2s ease;
-                -o-transition: all 0.2s ease;
-                transition: all 0.2s ease;
-                text-align: center;
-              }
-
-              .toggle:before {
-                content: "";
-                color: $color-white;
-                text-shadow: 1px 1px $color-black;
-                font-family: tahoma;
-                font-size: 0.688em;
-              }
-              > input:checked ~ .toggle-wrapper {
-                background: $color-fuse_gradient;
-                .toggle {
-                  left: 18px;
-                  border-color: $color-fuse;
-                }
-              }
-
-              input:checked + .toggle:before {
-                content: "";
-              }
-            }
+      @include element(text) {
+        font-size: 0.75em;
+        margin-left: 5px;
+        color: rgba(13, 45, 69, 0.5);
+        > span {
+          &:first-child {
+            font-weight: bold;
+            color: $color-dark;
           }
         }
       }
     }
+
+    @include block(plugins_step) { 
+      @include element(item) {
+      }
+
+      @include element(title) {
+        margin-right: 1em;
+        flex: .6;
+      }
+
+      @include element(toggle) {
+        flex: .1;
+        @include xy-grid(horizontal, false);
+        @include flex-align(null, middle);
+        padding-top: 1em;
+
+        @include element(text) {
+          font-size: 0.75em;
+          margin-left: 5px;
+          color: rgba(13, 45, 69, 0.5);
+          > span {
+            &:first-child {
+              font-weight: bold;
+              color: $color-dark;
+            }
+          }
+        }
+
+      }
+    }
+
+    @include block(toggle) {
+      max-height: 18px;
+      position: relative;
+      height: 100%;
+      display: inline-block;
+
+      @include breakpoint(small only) {
+        margin-bottom: auto;
+      }
+
+      > input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        opacity: 0;
+      }
+
+      .toggle {
+        &-wrapper {
+          width: 34px;
+          height: 18px;
+          background-color: $color-disabled;
+          border-radius: 10px;
+          position: relative;
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        display: block;
+        position: absolute;
+        width: 14px;
+        border-radius: 50%;
+        height: 14px;
+        background: $color-white;
+        top: 2px;
+        left: 2px;
+        border: 1px solid $color-disabled;
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+        text-align: center;
+      }
+
+      .toggle:before {
+        content: "";
+        color: $color-white;
+        text-shadow: 1px 1px $color-black;
+        font-family: tahoma;
+        font-size: 0.688em;
+      }
+      > input:checked ~ .toggle-wrapper {
+        background: $color-fuse_gradient;
+        .toggle {
+          left: 18px;
+          border-color: $color-fuse;
+        }
+      }
+
+      input:checked + .toggle:before {
+        content: "";
+      }
+    }
+
 
     @include block(summary-step) {
       @include element(wrapper) {

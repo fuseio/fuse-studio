@@ -34,6 +34,10 @@ export default object().noUnknown(false).shape({
     }),
     chosen: string().required()
   }),
+  coverPhoto: object().noUnknown(false).shape({
+    blob: mixed(),
+    croppedImageUrl: string()
+  }),
   contracts: object().noUnknown(false).shape({
     community: object().noUnknown(false).shape({
       checked: boolean()
@@ -49,6 +53,29 @@ export default object().noUnknown(false).shape({
     }),
     email: object().noUnknown(false).shape({
       checked: boolean()
+    })
+  }),
+  plugins: object().noUnknown(false).shape({
+    businessList: object().noUnknown(false).shape({
+      isActive: boolean()
+    }),
+    joinBonus: object().noUnknown(false).shape({
+      isActive: boolean()
+    }),
+    moonpay: object().noUnknown(false).shape({
+      isActive: boolean()
+    }),
+    ramp: object().noUnknown(false).shape({
+      isActive: boolean()
+    }),
+    coindirect: object().noUnknown(false).shape({
+      isActive: boolean()
+    }),
+    carbon: object().noUnknown(false).shape({
+      isActive: boolean()
+    }),
+    wyre: object().noUnknown(false).shape({
+      isActive: boolean()
     })
   })
 })

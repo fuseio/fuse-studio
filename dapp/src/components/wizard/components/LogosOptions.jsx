@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { isMobileOnly } from 'react-device-detect'
 import classNames from 'classnames'
@@ -63,7 +63,7 @@ const LogosOptions = ({
     img.src = image
   }
 
-  const setDefaultImages = () => {
+  const setDefaultImages = useCallback(() => {
     if (existingToken && existingToken.label && existingToken.value) {
       const { symbol } = existingToken
       imageConverter(TokenIcons[symbol], 'images.defaultOne')
@@ -72,11 +72,11 @@ const LogosOptions = ({
       imageConverter(TokenIcons[1], 'images.defaultOne')
       imageConverter(TokenIcons[2], 'images.defaultTwo')
     }
-  }
+  }, [communitySymbol, existingToken])
 
-  React.useMemo(() => {
+  useEffect(() => {
     setDefaultImages()
-  }, [])
+  }, [setDefaultImages])
 
   const onSelectFile = e => {
     if (e.target.files && e.target.files.length > 0) {
@@ -167,7 +167,7 @@ const LogosOptions = ({
   }, [imagesValues])
 
   return (
-    <div className='attributes__attribute attributes__attribute--long-height'>
+    <div className='attributes__attribute'>
       <h3 className='attributes__title'>
         Community Logo
       </h3>

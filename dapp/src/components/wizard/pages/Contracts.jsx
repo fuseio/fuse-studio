@@ -3,8 +3,7 @@ import { connect, Field, getIn } from 'formik'
 import ContractsType from 'constants/contractsType'
 
 const Contracts = ({
-  formik,
-  ...props
+  formik
 }) => {
   const isOpen = getIn(formik.values, 'isOpen')
   return (
