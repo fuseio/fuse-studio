@@ -9,6 +9,7 @@
     "home": {
       "sharedAddresses": {
         "WalletFactory": "0x841C3F8138315EB5008dB8BB1457B58a8bF53bac",
+        "CommunityFactory": "0x0F7bD61dE50Aa24A4c4C6bd2111E54Cae92bf33a",
         "walletModules": {
           "GuardianManager": "0x5C485e2785251168846756D0A3A6Cfeb85A810Fe",
           "LockManager": "0xe4F584Bf2a5A8DADA389cfBFC2dE2Bb0f47a66e6",
