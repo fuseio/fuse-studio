@@ -65,26 +65,26 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
-    if ((!prevState.error && !prevProps.networkType) &&
-        (this.props.isPortis || this.props.isMetaMask) &&
-        (!prevProps.foreignToken && !this.props.foreignToken) &&
-        (!prevProps.homeToken && !this.props.homeToken) &&
-        (!prevProps.community && !this.props.community) &&
-        (this.props.networkType && this.props.networkType !== 'fuse')) {
-      const { loadModal, isMetaMask, isPortis, networkType } = this.props
-      const desired = networkType === 'main' ? 'ropsten' : 'main'
-      const wrongNetworkText = isMetaMask
-        ? `Switch to ${desired} through Metamask. `
-        : isPortis
-          ? `Switch to ${desired} through your wallet on the upper right part of the Studio.`
-          : `Switch to ${desired}.`
-      loadModal(WRONG_NETWORK_MODAL, {
-        body: <p>{wrongNetworkText} <br /> This community is issued on {desired}. you need to switch to {desired} to view it</p>,
-        supportedNetworks: [desired, 'Fuse'],
-        handleClose: () => this.props.push('/')
-      })
-      this.setState({ error: true })
-    }
+    // if ((!prevState.error && !prevProps.networkType) &&
+    //     (this.props.isPortis || this.props.isMetaMask) &&
+    //     (!prevProps.foreignToken && !this.props.foreignToken) &&
+    //     (!prevProps.homeToken && !this.props.homeToken) &&
+    //     (!prevProps.community && !this.props.community) &&
+    //     (this.props.networkType && this.props.networkType !== 'fuse')) {
+    //   const { loadModal, isMetaMask, isPortis, networkType } = this.props
+    //   const desired = networkType === 'main' ? 'ropsten' : 'main'
+    //   const wrongNetworkText = isMetaMask
+    //     ? `Switch to ${desired} through Metamask. `
+    //     : isPortis
+    //       ? `Switch to ${desired} through your wallet on the upper right part of the Studio.`
+    //       : `Switch to ${desired}.`
+    //   loadModal(WRONG_NETWORK_MODAL, {
+    //     body: <p>{wrongNetworkText} <br /> This community is issued on {desired}. you need to switch to {desired} to view it</p>,
+    //     supportedNetworks: [desired, 'Fuse'],
+    //     handleClose: () => this.props.push('/')
+    //   })
+    //   this.setState({ error: true })
+    // }
 
     if (this.props.location.pathname !== prevProps.location.pathname) {
       this.onSetSidebarOpen(false)
