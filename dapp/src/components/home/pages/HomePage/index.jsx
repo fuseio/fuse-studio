@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router'
 import ContentBox from 'components/home/components/ContentBox'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
@@ -12,22 +12,45 @@ import arrowImage from 'images/arrow_1.svg'
 import GiftIcon from 'images/gift.svg'
 import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
+import { loadModal } from 'actions/ui'
+import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 
 const HomePage = ({
+  loadModal,
   accountAddress,
+  networkType,
+  homeNetwork,
   push
 }) => {
+  const [isClicked, setClicked] = useState(false)
+  useEffect(() => {
+    if (accountAddress && isClicked) {
+      if (networkType === homeNetwork) {
+        loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'], goBack: false })
+      } else {
+        push('/view/issuance')
+      }
+    }
+    return () => { }
+  }, [accountAddress])
+
   const [title, setTitle] = useState('What you can do with Fuse?')
 
   const showIssuance = () => {
-    const { analytics } = window
     if (!accountAddress) {
-      analytics.track('Launch community button pressed - not connected')
+      if (window && window.analytics) {
+        window.analytics.track('Launch community button pressed - not connected')
+      }
+      loadModal(CHOOSE_PROVIDER, {
+        setClicked
+      })
     } else {
-      window.analytics.track('Launch community button pressed')
+      if (window && window.analytics) {
+        window.analytics.track('Launch community button pressed')
+      }
+      push('/view/issuance')
     }
-    push('/view/issuance')
   }
 
   const gotToFaqs = () => {
@@ -87,10 +110,13 @@ const HomePage = ({
 }
 
 const mapStateToProps = (state) => ({
-  accountAddress: state.network.accountAddress
+  accountAddress: state.network.accountAddress,
+  networkType: state.network.networkType,
+  homeNetwork: state.network.homeNetwork
 })
 
 const mapDispatchToProps = {
+  loadModal,
   push
 }
 

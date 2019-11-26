@@ -76,15 +76,9 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
     ).send({
       from: accountAddress
     })
-    try {
-      const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
-      return receipt
-    } catch (error) {
-      yield put({
-        type: 'ERROR',
-        error
-      })
-    }
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
+
+    return receipt
   } else if (tokenType === 'mintableBurnable') {
     const transactionPromise = TokenFactoryContract.methods.createMintableBurnableToken(
       name,
@@ -94,15 +88,9 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
     ).send({
       from: accountAddress
     })
-    try {
-      const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
-      return receipt
-    } catch (error) {
-      yield put({
-        type: 'ERROR',
-        error
-      })
-    }
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
+
+    return receipt
   }
 }
 

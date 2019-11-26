@@ -7,6 +7,7 @@ require('./Entity')
 require('./Profile')
 require('./UserWallet')
 require('./User')
+require('./Wizard')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')

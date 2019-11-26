@@ -1,12 +1,15 @@
 import React, { Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Formik } from 'formik'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import inRange from 'lodash/inRange'
 import Logo from 'components/common/Logo'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 import TransactionButton from 'components/common/TransactionButton'
-import { PENDING, FAILURE, REQUEST } from 'actions/constants'
+import { PENDING, FAILURE, REQUEST, SUCCESS } from 'actions/constants'
+import { saveWizardProgress } from 'actions/user'
 
 const nextStepEvents = {
   0: 'Next step - 1',
@@ -55,6 +58,8 @@ class Wizard extends React.Component {
   }
 
   next = (values) => {
+    const { saveWizardProgress } = this.props
+    saveWizardProgress(values)
     if (validations[this.state.page]) {
       const { adminAddress } = this.props
       const currentStepFields = validations[this.state.page]
@@ -90,7 +95,7 @@ class Wizard extends React.Component {
     }))
 
   onSubmit = (values, bag) => {
-    const { children, submitHandler } = this.props
+    const { children, submitHandler, saveWizardProgress } = this.props
     const { page } = this.state
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
@@ -98,6 +103,7 @@ class Wizard extends React.Component {
       if (window && window.analytics) {
         window.analytics.track('Issue pressed')
       }
+      saveWizardProgress({ ...values, isSubmit: true })
       return submitHandler(values, bag)
     } else {
       bag.setTouched({})
@@ -120,7 +126,7 @@ class Wizard extends React.Component {
       setNextStep: () => this.next(values),
       previous: () => this.previous()
     })
-    const isLastPage = page === React.Children.count(children) - 1
+    const isLastPage = page === React.Children.count(children) - 3
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
     return (
@@ -140,7 +146,7 @@ class Wizard extends React.Component {
               <TransactionButton disabled={!isValid} clickHandler={handleSubmit} type='submit' frontText='ISSUE' />
             </div>
           )}
-          {page > 0 && !isLastPage && ((transactionStatus !== PENDING) && (transactionStatus !== REQUEST)) && (
+          {inRange(page, 1, 3) && ((transactionStatus !== PENDING) && (transactionStatus !== SUCCESS) && (transactionStatus !== REQUEST)) && (
             <button
               type='button'
               className='issuance__wizard__back'
@@ -197,4 +203,8 @@ class Wizard extends React.Component {
   }
 }
 
-export default Wizard
+const mapDispatchToProps = {
+  saveWizardProgress
+}
+
+export default connect(null, mapDispatchToProps)(Wizard)

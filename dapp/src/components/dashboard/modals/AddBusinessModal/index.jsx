@@ -1,10 +1,10 @@
 import React from 'react'
 import Modal from 'components/common/Modal'
-import BusinessForm from '../../components/BusinessForm'
+import BusinessForm from 'components/dashboard/components/BusinessForm'
 import TransactionMessage from 'components/common/TransactionMessage'
 import { connect } from 'react-redux'
 
-const AddBusinessModal = ({ hideModal, isJoin, showTransactionMessage, signatureNeeded, submitEntity, entity, transactionData }) => {
+const AddBusinessModal = ({ hideModal, isJoin, showTransactionMessage, signatureNeeded, submitEntity, entity }) => {
   const handleSubmitEntity = (...args) => {
     submitEntity(...args)
   }

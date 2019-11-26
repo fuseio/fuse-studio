@@ -22,6 +22,7 @@ import Congratulations from 'components/wizard/components/Congratulations'
 
 import contractIcon from 'images/contract.svg'
 import BridgeIcon from 'images/Bridge.svg'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
 const WizardPage = ({
   deployExistingToken,
@@ -38,6 +39,19 @@ const WizardPage = ({
   homeNetwork,
   push
 }) => {
+  const desiredNetworkType = useMemo(() => {
+    if (!networkType) {
+      return ['mainnet', 'ropsten']
+    } else if (networkType === homeNetwork) {
+      return ['ropsten', 'mainnet']
+    } else {
+      const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
+      return [networkType, secondDesired]
+    }
+  }, [])
+
+  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
+
   useEffect(() => {
     if (window && window.analytics) {
       window.analytics.track('Wizard init')
