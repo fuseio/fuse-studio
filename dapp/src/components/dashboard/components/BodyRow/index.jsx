@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
-import { formatAddress } from 'utils/format'
+import { addressShortener } from 'utils/format'
 
 export default ({
   row,
@@ -63,7 +63,7 @@ export default ({
               id === 'account'
                 ? (
                   <React.Fragment>
-                    {formatAddress(value)}
+                    {addressShortener(value)}
                     <CopyToClipboard text={value}>
                       <FontAwesome name='clone' />
                     </CopyToClipboard>

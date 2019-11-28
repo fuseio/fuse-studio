@@ -15,7 +15,18 @@ import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 
+import { useWeb3Auth } from 'hooks/useWeb3Auth'
+
+import Web3connect from 'web3connect'
+import { connectWeb3 } from 'actions/network'
+
+import useWeb3Connect from 'hooks/useWeb3Connect'
+import WalletConnectProvider from '@walletconnect/web3-provider'
+import Portis from '@portis/web3'
+import Fortmatic from 'fortmatic'
+
 const NavBar = ({
+  connectWeb3,
   accountAddress,
   networkType,
   foreignNetwork,
@@ -58,14 +69,14 @@ const NavBar = ({
 
   const goToHome = () => push('/')
 
-  const chooseProvider = () => {
-    if (!accountAddress) {
-      if (window && window.analytics) {
-        window.analytics.track('Connect wallet clicked - not connected')
-      }
-      loadModal(CHOOSE_PROVIDER)
-    }
-  }
+  // const chooseProvider = () => {
+  //   if (!accountAddress) {
+  //     if (window && window.analytics) {
+  //       window.analytics.track('Connect wallet clicked - not connected')
+  //     }
+  //     loadModal(CHOOSE_PROVIDER)
+  //   }
+  // }
 
   const openProfile = (e) => {
     e.stopPropagation()
@@ -77,9 +88,42 @@ const NavBar = ({
     setHelpOpen(!isHelpOpen)
   }
 
+  const web3Auth = useWeb3Auth()
+  const webConnectOptions = {
+    // network: 'ropsten',
+    providerOptions: {
+      walletconnect: {
+        package: WalletConnectProvider, // required
+        options: {
+          infuraId: CONFIG.web3.apiKey // required
+        }
+      },
+      portis: {
+        package: Portis, // required
+        options: {
+          id: CONFIG.web3.portis.id // required
+        }
+      },
+      fortmatic: {
+        package: Fortmatic, // required
+        options: {
+          key: CONFIG.web3.fortmatic.id // required
+        }
+      }
+    }
+  }
+
+  const onConnectCallback = async (response) => {
+    const { web3, provider, accounts } = await web3Auth.signIn(response)
+    console.log({ tempst: Web3connect.getProviderInfo(provider) })
+    connectWeb3(web3, accounts[0])
+  }
+
+  const web3connect = useWeb3Connect(webConnectOptions, onConnectCallback)
+
   return (
     <div className={classNames('navbar', { 'navbar--scroll': scrollTop > 70 })} >
-      { (withLogo || (isMobileOnly && scrollTop > 70)) && <div className='navbar__logo'><Logo onClick={goToHome} isBlue={scrollTop < 70} /></div> }
+      {(withLogo || (isMobileOnly && scrollTop > 70)) && <div className='navbar__logo'><Logo onClick={goToHome} isBlue={scrollTop < 70} /></div>}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
         <div
           className='navbar__links__help'
@@ -120,7 +164,7 @@ const NavBar = ({
               <span className='animate'>.</span>
             </div>
           ) : (
-            <div className='navbar__links__wallet' onClick={chooseProvider}>
+            <div className='navbar__links__wallet' onClick={() => web3connect.toggleModal()}>
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>Connect wallet</span>
             </div>
@@ -138,7 +182,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   loadModal,
-  push
+  push,
+  connectWeb3
 }
 
 export default withRouter(withNetwork((connect(mapStateToProps, mapDispatchToProps)(NavBar))))

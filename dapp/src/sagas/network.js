@@ -22,37 +22,6 @@ function * getNetworkTypeInternal (web3) {
   return { networkId, networkType }
 }
 
-const enabler = function * (web3) {
-  const enableResponse = yield web3.enable()
-  if (enableResponse) {
-    return toChecksumAddress(enableResponse[0])
-  }
-}
-
-export function * getAccountAddress (web3) {
-  if ((window.ethereum && window.ethereum.enable) || (portis && portis.provider)) {
-    const loadedProvider = (!isEmpty(loadState('state.provider')) && loadState('state.provider'))
-      ? loadState('state.provider')
-      : window && window.ethereum
-        ? { provider: 'metamask' }
-        : { provider: 'portis' }
-    if (loadedProvider && loadedProvider.provider === 'metamask') {
-      const accountAddress = yield enabler(window.ethereum)
-      return accountAddress
-    } else if (loadedProvider && loadedProvider.provider === 'portis') {
-      if (portis && portis.provider) {
-        const accountAddress = yield enabler(portis.provider)
-        return accountAddress
-      } else {
-        const web3 = getPortisProvider()
-        const accountAddress = yield enabler(web3)
-        return accountAddress
-      }
-    }
-  }
-  return toChecksumAddress(web3.eth.defaultAccount)
-}
-
 function * deduceBridgeSides (networkType) {
   if (networkType === 'fuse') {
     const foreignNetwork = yield select(state => state.network.foreignNetwork)
@@ -68,13 +37,13 @@ function * deduceBridgeSides (networkType) {
   }
 }
 
-function * connectToWallet ({ web3, provider }) {
+function * connectToWallet ({ accountAddress, web3 }) {
   try {
-    const accountAddress = yield getAccountAddress(web3)
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,
+      accountAddress,
       response: {
-        provider
+        web3
       }
     })
     const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
@@ -88,14 +57,13 @@ function * connectToWallet ({ web3, provider }) {
   }
 }
 
-function * getNetworkType ({ enableProvider, provider }) {
+function * getNetworkType ({ web3 }) {
   try {
-    const web3 = yield getWeb3({ provider })
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
+
     const bridgeSides = yield deduceBridgeSides(networkType)
     const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
     const isPortis = get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
-
     yield put({
       type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
@@ -105,10 +73,6 @@ function * getNetworkType ({ enableProvider, provider }) {
         isPortis,
         ...bridgeSides
       } })
-
-    if (enableProvider) {
-      yield put(actions.connectToWallet(web3, provider))
-    }
 
     if (!isNetworkSupported(networkType)) {
       yield put({
@@ -174,11 +138,11 @@ function * watchGetNetworkTypeSuccess ({ response }) {
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
-function * watchConnectToWallet ({ response }) {
-  const { provider } = response
-  saveState('state.provider', { provider })
-  saveState('state.reconnect', true)
-}
+// function * watchConnectToWallet ({ response }) {
+//   const { provider } = response
+//   saveState('state.provider', { provider })
+//   saveState('state.reconnect', true)
+// }
 
 function * changeNetwork ({ networkType }) {
   portis.changeNetwork(toLongName(networkType))
@@ -200,6 +164,14 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
   })
 }
 
+function * connectToProvider ({ web3, accountAddress }) {
+  yield put(actions.connectToWallet(accountAddress, web3))
+  yield call(getNetworkType, { web3 })
+  yield put({
+    type: actions.WEB3_CONNECTED.SUCCESS
+  })
+}
+
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
@@ -209,7 +181,9 @@ export default function * web3Saga () {
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),
     takeEvery(actions.CHANGE_NETWORK.REQUEST, changeNetwork),
     takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess),
-    takeEvery(actions.CONNECT_TO_WALLET.SUCCESS, watchConnectToWallet),
+    // takeEvery(actions.CONNECT_TO_WALLET.SUCCESS, watchConnectToWallet),
+    takeEvery(actions.WEB3_CONNECTED.REQUEST, connectToProvider),
     tryTakeEvery(actions.SEND_TRANSACTION_HASH, sendTransactionHash, 1)
+    // WEB3_DISCONNECTED
   ])
 }

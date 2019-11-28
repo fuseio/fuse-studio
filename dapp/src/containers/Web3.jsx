@@ -11,6 +11,7 @@ import isEmpty from 'lodash/isEmpty'
 
 class Web3 extends PureComponent {
   componentDidMount () {
+    this.connectToNetwork()
     const { isMobile } = this.props
     if (isMobile) {
       const interval = setInterval(() => {

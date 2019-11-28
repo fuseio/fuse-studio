@@ -16,7 +16,12 @@ import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 
 function * fetchTokenTotalSupply ({ tokenAddress, options }) {
-  const web3 = yield getWeb3(options)
+  const accountAddress = yield select(state => state.network.accountAddress)
+  console.log({ accountAddress })
+  const web3 = yield select(state => state.accounts[accountAddress].web3)
+  console.log({ web3 })
+  // throw new Error(web3)
+  // const web3 = yield getWeb3(options)
   const basicTokenContract = new web3.eth.Contract(BasicTokenABI, tokenAddress)
   const totalSupply = yield call(basicTokenContract.methods.totalSupply().call)
 

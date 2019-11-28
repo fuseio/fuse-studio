@@ -12,7 +12,7 @@ import ProfileCard from 'components/common/ProfileCard'
 import { getBalances } from 'selectors/accounts'
 import { getNetworkSide } from 'selectors/network'
 import { convertNetworkName } from 'utils/network'
-import { formatAddress, formatWei } from 'utils/format'
+import { addressShortener, formatWei } from 'utils/format'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
 import { loadState, saveState } from 'utils/storage'
 import { changeNetwork } from 'actions/network'
@@ -163,7 +163,7 @@ const ProfileDropDown = ({
           <img src={Avatar} />
         </div>
         <div className='cell small-24 profile__account__address grid-x align-middle align-center'>
-          <span>{formatAddress(accountAddress)}</span>
+          <span>{addressShortener(accountAddress)}</span>
           <CopyToClipboard text={accountAddress}>
             <FontAwesome name='clone' />
           </CopyToClipboard>
