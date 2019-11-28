@@ -192,15 +192,8 @@ function * transferToken ({ tokenAddress, to, value }) {
     from: accountAddress
   })
 
-  try {
-    const action = actions.TRANSFER_TOKEN
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
-  }
+  const action = actions.TRANSFER_TOKEN
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
 }
 
 function * mintToken ({ tokenAddress, value }) {
@@ -213,15 +206,8 @@ function * mintToken ({ tokenAddress, value }) {
     from: accountAddress
   })
 
-  try {
-    const action = actions.MINT_TOKEN
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
-  }
+  const action = actions.MINT_TOKEN
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
 }
 
 function * burnToken ({ tokenAddress, value }) {
@@ -234,15 +220,8 @@ function * burnToken ({ tokenAddress, value }) {
     from: accountAddress
   })
 
-  try {
-    const action = actions.BURN_TOKEN
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
-  }
+  const action = actions.BURN_TOKEN
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
 }
 
 function * watchTokenChanges ({ response }) {
@@ -306,32 +285,25 @@ function * toggleJoinBonus ({ isActive }) {
   const networkVersion = getNetworkVersion(web3)
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
 
-  try {
-    if (isActive) {
-      const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
-      const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
-      const transactionPromise = method.send({ from: accountAddress })
-      const action = ADD_ENTITY
-      yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-      yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
-    } else {
-      const accountAddress = yield select(getAccountAddress)
-      const method = CommunityContract.methods.removeEntity(funderAddress)
-      const transactionPromise = method.send({ from: accountAddress })
-      const action = REMOVE_ENTITY
-      yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-      yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
-    }
-
-    yield put({
-      type: TOGGLE_JOIN_BONUS.SUCCESS
-    })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
+  if (isActive) {
+    const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
+    const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
+    const transactionPromise = method.send({ from: accountAddress })
+    const action = ADD_ENTITY
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+    yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
+  } else {
+    const accountAddress = yield select(getAccountAddress)
+    const method = CommunityContract.methods.removeEntity(funderAddress)
+    const transactionPromise = method.send({ from: accountAddress })
+    const action = REMOVE_ENTITY
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+    yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
   }
+
+  yield put({
+    type: TOGGLE_JOIN_BONUS.SUCCESS
+  })
 }
 
 function * watchCommunities ({ response }) {

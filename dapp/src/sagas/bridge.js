@@ -40,14 +40,7 @@ function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, c
   })
 
   const action = actions.TRANSFER_TO_HOME
-  try {
-    yield call(transactionFlow, { transactionPromise, action, confirmationsLimit })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
-  }
+  yield call(transactionFlow, { transactionPromise, action, confirmationsLimit })
 }
 
 function * transferToForeign ({ homeTokenAddress, homeBridgeAddress, value, confirmationsLimit }) {
@@ -60,14 +53,7 @@ function * transferToForeign ({ homeTokenAddress, homeBridgeAddress, value, conf
   })
 
   const action = actions.TRANSFER_TO_FOREIGN
-  try {
-    yield call(transactionFlow, { transactionPromise, action, confirmationsLimit })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
-  }
+  yield call(transactionFlow, { transactionPromise, action, confirmationsLimit })
 }
 
 const getRelayEventByTransactionHash = (events, transactionHash) => {
