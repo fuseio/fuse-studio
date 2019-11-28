@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactCrop from 'react-image-crop'
 import Modal from 'components/common/Modal'
+import { createObjectURL } from 'utils/images'
 
 export default class ImageCropper extends Component {
   state = {
@@ -59,7 +60,7 @@ export default class ImageCropper extends Component {
         }
         blob.name = fileName
         window.URL.revokeObjectURL(this.fileUrl)
-        this.fileUrl = window.URL.createObjectURL(blob)
+        this.fileUrl = createObjectURL(blob)
         resolve({
           croppedImageUrl: this.fileUrl,
           blob

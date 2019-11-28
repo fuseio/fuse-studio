@@ -1,0 +1,241 @@
+@include block(templates) {
+  border-radius: 10px;
+  display: flex;
+  flex-flow: column wrap;
+  padding: 25px;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+  background-color: $color-white;
+  height: 100%;
+
+  @include element(list) {
+    height: 90%;
+  }
+
+  @include element(title) {
+    font-size: 1.5em;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    margin-bottom: 1em;
+    letter-spacing: 0.5px;
+    color: $color-primary-dark;
+  }
+
+  @include block(item) {
+    border-radius: 5px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+    background-color: $color-white;
+
+    @include element(image) {
+      position: relative;
+      width: 100%;
+      padding-top: 110px;
+
+      @include element(container) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    @include element(content) {
+      min-height: 4em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+    }
+
+    @include block(custom) {
+      cursor: pointer;
+      height: 100%;
+      @include element(title) {
+        font-size: 0.875em;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        text-align: center;
+        color: #696969;
+        margin-bottom: 1em;
+      }
+    }
+
+    @include element(name) {
+      font-size: 1em;
+      font-weight: 500;
+      letter-spacing: normal;
+      color: #696969;
+      margin-bottom: 0.5em;
+      white-space: nowrap;
+    }
+
+    @include element(button) {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 30px;
+      border-radius: 3px;
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
+      border: solid 1px #ebebeb;
+      background-color: $color-white;
+      font-size: 0.688em;
+      text-align: center;
+      color: #868686;
+
+      &:hover {
+        background-color: #f4f4f4;
+      }
+    }
+  }
+}
+
+@include block(template_modal) {
+  width: 75% !important;
+  padding: 0 !important;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+  background-color: #ffffff;
+  text-align: initial;
+
+  @include element(banner) {
+    @include element(image) {
+      position: relative;
+      width: 100%;
+      padding-top: 18%;
+
+      @include element(container) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    @include element(logo) {
+      position: absolute;
+      left: 2em;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      top: 1em;
+      color: white;
+      height: 70%;
+
+      > img {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  }
+
+  @include block(side_image) {
+    position: absolute;
+    top: 20%;
+    right: 1em;
+    width: 50%;
+    height: 85%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top;
+  }
+
+  @include element(title) {
+    font-size: 1.875em;
+    font-weight: 500;
+    line-height: 0.87;
+    letter-spacing: normal;
+    color: $color-white;
+  }
+
+  @include block(content) {
+    @include breakpoint(medium down) {
+    }
+
+    @include breakpoint(medium up) {
+      flex: 0.5;
+    }
+    @include element(wrapper) {
+      color: $color-gray;
+      font-size: 0.8em;
+      padding: 2.5em;
+      display: flex;
+      flex-flow: row;
+      position: relative;
+    }
+
+    @include element(button) {
+      margin-top: 3em;
+      @include breakpoint(medium up) {
+        min-width: 300px;
+        width: 70%;
+      }
+      @include breakpoint(medium down) {
+        width: 85%;
+      }
+
+      > button {
+        background: $color-fuse_gradient;
+        color: $color-dark;
+        font-weight: bold;
+        text-align: center;
+        height: 45px;
+        width: 100%;
+        border-radius: 30.5px;
+        border: none;
+        font-size: 16px;
+
+        &:hover {
+          background: $color-fuse;
+        }
+      }
+    }
+
+    @include block(text) {
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+    }
+
+    @include block(title) {
+      color: #919191;
+      padding: 2em 0 1em;
+    }
+
+    @include block(attributes) {
+      @include block(item) {
+        font-size: 1em;
+        font-weight: 500;
+        padding: 8px 0;
+        display: flex;
+
+        &:before {
+          content: "";
+          display: inline-block;
+          background-image: url(../../assets/images/check.svg);
+          width: 20px;
+          background-repeat: no-repeat;
+          margin-right: 7px;
+        }
+      }
+    }
+  }
+}

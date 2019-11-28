@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect, getIn } from 'formik'
+import { createObjectURL } from 'utils/images'
 
 const CoverPhoto = ({
   formik
@@ -9,7 +10,7 @@ const CoverPhoto = ({
   const onSelectFile = async (event) => {
     const image = event.target.files[0]
     window.URL.revokeObjectURL(image)
-    const croppedImageUrl = window.URL.createObjectURL(image)
+    const croppedImageUrl = createObjectURL(image)
     formik.setFieldValue('coverPhoto', {
       croppedImageUrl,
       blob: image

@@ -120,13 +120,13 @@ class Wizard extends React.Component {
   }
 
   renderForm = ({ values, handleSubmit, errors, isValid, touched }) => {
-    const { children, transactionStatus, createTokenSignature } = this.props
+    const { children, transactionStatus, createTokenSignature, adminAddress } = this.props
     const { page } = this.state
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
       setNextStep: () => this.next(values),
       previous: () => this.previous()
     })
-    const isLastPage = page === React.Children.count(children) - 3
+    // const isLastPage = page === React.Children.count(children) - 3
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
     return (
@@ -136,14 +136,14 @@ class Wizard extends React.Component {
         {page === 3 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>
-          {!isLastPage && !isSubmitStep && page < 4 && (
+          {page < 2 && (
             <div className='grid-x align-center next'>
               <button disabled={this.stepValidator(validations[page], errors) || isEmpty(touched)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
             </div>
           )}
           {isSubmitStep && (
             <div className='grid-x align-center summary-step__issue'>
-              <TransactionButton disabled={!isValid} clickHandler={handleSubmit} type='submit' frontText='ISSUE' />
+              <TransactionButton disabled={!isValid || !adminAddress} clickHandler={handleSubmit} type='submit' frontText='ISSUE' />
             </div>
           )}
           {inRange(page, 1, 3) && ((transactionStatus !== PENDING) && (transactionStatus !== SUCCESS) && (transactionStatus !== REQUEST)) && (

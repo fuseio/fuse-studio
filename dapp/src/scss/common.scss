@@ -31,12 +31,6 @@
     }
   }
 
-  @include element(images) {
-    position: relative;
-    width: 100%;
-    height: 85px;
-  }
-
   @include element(cover) {
     width: 100%;
     height: 100%;

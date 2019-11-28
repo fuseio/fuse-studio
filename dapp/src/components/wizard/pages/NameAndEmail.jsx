@@ -1,11 +1,14 @@
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
-import { Field } from 'formik'
+import { connect, getIn, Field } from 'formik'
 import { nameToSymbol } from 'utils/format'
 import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
 
-const NameAndCurrency = () => {
+const NameAndCurrency = ({
+  formik
+}) => {
+  const existingToken = getIn(formik.values, 'existingToken')
   return (
     <div className='name__wrapper'>
       <div className='name'>
@@ -20,7 +23,9 @@ const NameAndCurrency = () => {
                 if (window && window.analytics) {
                   window.analytics.track('Filling community name')
                 }
-                setFieldValue('communitySymbol', nameToSymbol(event.target.value))
+                if (!existingToken) {
+                  setFieldValue('communitySymbol', nameToSymbol(event.target.value))
+                }
               }}
               type='search'
               placeholder='Name your community'
@@ -100,4 +105,4 @@ const NameAndCurrency = () => {
   )
 }
 
-export default NameAndCurrency
+export default connect(NameAndCurrency)

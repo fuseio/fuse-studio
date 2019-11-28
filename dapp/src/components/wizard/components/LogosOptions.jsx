@@ -13,6 +13,7 @@ import tokenOne from 'images/CoinIcon1.svg'
 import tokenTwo from 'images/CoinIcon2.svg'
 import dai from 'images/dai.png'
 import usdc from 'images/usdc.png'
+import { createObjectURL } from 'utils/images'
 
 const TokenIcons = {
   1: tokenOne,
@@ -47,7 +48,7 @@ const LogosOptions = ({
           blob.name = 'newFile.jpeg'
           let croppedImageUrl
           window.URL.revokeObjectURL(croppedImageUrl)
-          croppedImageUrl = window.URL.createObjectURL(blob)
+          croppedImageUrl = createObjectURL(blob)
           formik.setFieldValue(field, {
             croppedImageUrl: canvas.toDataURL(),
             blob
