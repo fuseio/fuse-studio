@@ -19,7 +19,8 @@ const createMailRequest = ({ to, from, templateId, templateData, bcc }) => {
         }
       ],
       'from': {
-        'email': from
+        'email': from,
+        'name': 'Fuse.io'
       },
       'template_id': templateId
     }
