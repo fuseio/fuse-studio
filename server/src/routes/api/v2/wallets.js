@@ -18,7 +18,7 @@ const UserWallet = mongoose.model('UserWallet')
 router.post('/:accountAddress', auth.required, async (req, res, next) => {
   const { accountAddress } = req.params
   const { phoneNumber } = req.user
-  const userWallet = await UserWallet.findOne({ phoneNumber })
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
   if (!userWallet) {
     await new UserWallet({ phoneNumber, accountAddress }).save()
   } else if (userWallet.walletAddress) {
