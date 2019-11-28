@@ -43,7 +43,7 @@ router.post('/request', async (req, res) => {
  * @apiSuccess {String} token JWT token
  */
 router.post('/verify', async (req, res) => {
-  const { phoneNumber, code } = req.body
+  const { phoneNumber, accountAddress, code } = req.body
 
   const response = await client.verify.services(config.get('twilio.serviceSid'))
     .verificationChecks
@@ -56,7 +56,7 @@ router.post('/verify', async (req, res) => {
     const secret = config.get('api.secret')
     const expiresIn = config.get('api.tokenExpiresIn')
 
-    const token = jwt.sign({ phoneNumber }, secret, {
+    const token = jwt.sign({ phoneNumber, accountAddress }, secret, {
       expiresIn
     })
     res.json({ token })
