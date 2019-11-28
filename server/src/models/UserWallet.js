@@ -7,7 +7,7 @@ const UserWalletSchema = new Schema({
   walletAddress: { type: String }
 }, { timestamps: true })
 
-UserWalletSchema.index({ phoneNumber: 1 }, { unique: true })
+UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1 }, { unique: true })
 
 const UserWallet = mongoose.model('UserWallet', UserWalletSchema)
 
