@@ -15,9 +15,8 @@ const UserWallet = mongoose.model('UserWallet')
  *
  * @apiSuccess {String} response Response status - ok
  */
-router.post('/:accountAddress', auth.required, async (req, res, next) => {
-  const { accountAddress } = req.params
-  const { phoneNumber } = req.user
+router.post('/', auth.required, async (req, res, next) => {
+  const { phoneNumber, accountAddress } = req.user
   const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
   if (!userWallet) {
     await new UserWallet({ phoneNumber, accountAddress }).save()
@@ -43,8 +42,8 @@ router.post('/:accountAddress', auth.required, async (req, res, next) => {
  * @apiSuccess {Object} data User waller object
  */
 router.get('/', auth.required, async (req, res, next) => {
-  const { phoneNumber } = req.user
-  const userWallet = await UserWallet.findOne({ phoneNumber })
+  const { phoneNumber, accountAddress } = req.user
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
 
   return res.json({ data: userWallet })
 })
