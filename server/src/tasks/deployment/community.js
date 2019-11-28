@@ -1,7 +1,7 @@
 const config = require('config')
 const { handleReceipt } = require('@handlers/receipts')
 const CommunityTransferManagerABI = require('@fuse/entities-contracts/build/abi/CommunityTransferManagerWithEvents')
-const CommunityFactoryABI = require('@fuse/entities-contracts/build/abi/CommunityFactory')
+const CommunityFactoryABI = require('@fuse/entities-contracts/build/abi/CommunityFactoryWithEvents')
 
 const { roles: { ADMIN_ROLE, APPROVED_ROLE, EMPTY_ROLE } } = require('@fuse/roles')
 
@@ -14,6 +14,11 @@ const deployCommunity = async ({ home: { createContract, createMethod, send, fro
   })
 
   const communityAddress = receipt.events.CommunityCreated.returnValues.community
+
+  // quick fix to index the EntityAdded event in the correct way
+  receipt.to = communityAddress
+  await handleReceipt(receipt)
+
   const transferManagerContract = createContract(CommunityTransferManagerABI, communityAddress)
   const communityMethods = []
 
