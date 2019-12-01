@@ -46,6 +46,7 @@ POST /login/verify
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | phoneNumber | `String` | <p>User phone number</p> |
+| User | `accountAddress` | <p>account address</p> |
 | code | `String` | <p>SMS code recieved to user phone number</p> |
 
 
@@ -68,10 +69,6 @@ POST /wallet/:accountAddress
 |---------|-----------|--------------------------------------|
 | Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
 
-### Parameter Parameters
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| accountAddress | `String` | <p>User account address</p> |
 
 
 ### Success 200

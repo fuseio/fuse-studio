@@ -38,6 +38,7 @@ router.post('/request', async (req, res) => {
  * @apiDescription Verify user phone number by SMS verification code
  *
  * @apiParam {String} phoneNumber User phone number
+ * @apiParam {accountAddress} User account address
  * @apiParam {String} code SMS code recieved to user phone number
  *
  * @apiSuccess {String} token JWT token
