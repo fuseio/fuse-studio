@@ -10,7 +10,6 @@ const UserWallet = mongoose.model('UserWallet')
  * @apiGroup Wallet
  * @apiDescription Creates wallet contract for the user
  *
- * @apiParam {String} accountAddress User account address
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
  * @apiSuccess {String} response Response status - ok
