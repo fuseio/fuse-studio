@@ -1,4 +1,4 @@
-const BasicTokenAbi = require('@fuse/token-factory-contracts/build/abi/BasicToken')
+const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const { handleReceipt } = require('@handlers/receipts')
 
 const transferOwnership = async ({ home: { createContract, createMethod, send, from } }, communityProgress) => {

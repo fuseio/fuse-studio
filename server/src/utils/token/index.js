@@ -1,6 +1,6 @@
 const { inspect } = require('util')
 const foreign = require('@services/web3/foreign')
-const BasicTokenAbi = require('@fuse/token-factory-contracts/build/abi/BasicToken')
+const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 
 const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
   const tokenContractInstance = new web3.eth.Contract(BasicTokenAbi, address)
