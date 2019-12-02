@@ -1,4 +1,4 @@
-FROM colucom/nodejs:8.12.0
+FROM node:10.17.0
 USER root
 
 COPY . .
@@ -8,7 +8,7 @@ ARG COMMUNITY_WEB3_API_KEY
 ARG NODE_ENV
 ARG NODE_CONFIG_ENV
 
-RUN rm -rf node_modules && rm package-lock.json
+RUN rm -rf node_modules
 
 RUN cd @fuse/roles && npm install
 
