@@ -1,7 +1,7 @@
 const config = require('config')
 const { handleReceipt } = require('@handlers/receipts')
-const CommunityTransferManagerABI = require('@fuse/entities-contracts/build/abi/CommunityTransferManagerWithEvents')
-const CommunityFactoryABI = require('@fuse/entities-contracts/build/abi/CommunityFactoryWithEvents')
+const CommunityTransferManagerABI = require('@fuse/entities-contracts/abi/CommunityTransferManagerWithEvents')
+const CommunityFactoryABI = require('@fuse/entities-contracts/abi/CommunityFactoryWithEvents')
 
 const { roles: { ADMIN_ROLE, APPROVED_ROLE, EMPTY_ROLE } } = require('@fuse/roles')
 

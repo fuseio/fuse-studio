@@ -11,7 +11,7 @@ import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
 import { createUsersMetadata } from 'sagas/metadata'
 import { separateData } from 'utils/3box'
 import { isUserExists } from 'actions/user'
-import BasicTokenABI from '@fuse/token-factory-contracts/build/abi/BasicToken'
+import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 
 const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 

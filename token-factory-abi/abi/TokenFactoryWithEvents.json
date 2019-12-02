@@ -1,0 +1,186 @@
+[
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "issuer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "tokenType",
+                "type": "uint8"
+            }
+        ],
+        "name": "TokenCreated",
+        "type": "event"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "name": "initialSupply",
+                "type": "uint256"
+            },
+            {
+                "name": "tokenURI",
+                "type": "string"
+            }
+        ],
+        "name": "createBasicToken",
+        "outputs": [
+            {
+                "name": "tokenAddress",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "name": "initialSupply",
+                "type": "uint256"
+            },
+            {
+                "name": "tokenURI",
+                "type": "string"
+            }
+        ],
+        "name": "createMintableBurnableToken",
+        "outputs": [
+            {
+                "name": "tokenAddress",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "tokenURI",
+                "type": "string"
+            }
+        ],
+        "name": "TokenURIChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "from",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "value",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "name": "Transfer",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "from",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "value",
+                "type": "uint256"
+            }
+        ],
+        "name": "Transfer",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "spender",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "value",
+                "type": "uint256"
+            }
+        ],
+        "name": "Approval",
+        "type": "event"
+    }
+]
