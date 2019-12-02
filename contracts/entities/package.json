@@ -30,7 +30,7 @@
     "truffle": "^5.0.14",
     "truffle-assertions": "^0.9.0",
     "truffle-hdwallet-provider": "^1.0.8",
-    "@fuse/contract-utils": "../../packages/contract-utils"
+    "@fuse/contract-utils": "../../@fuse/contract-utils"
   },
   "devDependencies": {
     "solc": "^0.4.24",
