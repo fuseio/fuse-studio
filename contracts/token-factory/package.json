@@ -22,7 +22,7 @@
     "truffle": "^5.0.1",
     "truffle-hdwallet-provider": "^1.0.6",
     "openzeppelin-solidity": "^2.2.0",
-    "@fuse/contract-utils": "../../packages/contract-utils"
+    "@fuse/contract-utils": "../../@fuse/contract-utils"
   },
   "devDependencies": {
     "truffle-assertions": "^0.7.2"

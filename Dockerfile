@@ -10,13 +10,9 @@ ARG NODE_CONFIG_ENV
 
 RUN rm -rf node_modules && rm package-lock.json
 
-RUN cd packages/roles && npm install
+RUN cd @fuse/roles && npm install
 
-RUN cd packages/contract-utils && npm install
-
-RUN cd contracts/entities && npm install && npm run build
-
-RUN cd contracts/token-factory  && npm install && npm run build
+RUN cd @fuse/contract-utils && npm install
 
 RUN export NODE_ENV=qa && cd dapp && npm install && npm run build && cp dist/* ../server/public
 
