@@ -38,11 +38,28 @@ router.post('/', auth.required, async (req, res, next) => {
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
- * @apiSuccess {Object} data User waller object
+ * @apiSuccess {Object} data User wallet object
  */
 router.get('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
   const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
+
+  return res.json({ data: userWallet })
+})
+
+/**
+ * @api {get} /wallets/:phoneNumber Fetch latest wallet by phone number
+ * @apiName FetchWalletByPhoneNumber
+ * @apiGroup Wallet
+ * @apiDescription Fetches latest wallet created by phone number
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {Object} data Wallet object
+ */
+router.get('/:phoneNumber', auth.required, async (req, res, next) => {
+  const { phoneNumber } = req.params
+  const userWallet = await UserWallet.findOne({ phoneNumber }).sort({ createdAt: -1 })
 
   return res.json({ data: userWallet })
 })
