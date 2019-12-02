@@ -3,10 +3,12 @@ import { connect, Field, getIn } from 'formik'
 import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
 import upperFirst from 'lodash/upperFirst'
+import pluginsIcons from 'constants/pluginsIcons'
 
 const PluginItem = memo(({ pluginName, isActive }) => {
   return (
     <div className='plugins_step__item grid-x align-middle cell small-24 medium-12'>
+      <img src={pluginsIcons[pluginName]} style={{ width: '15px', height: '15px', marginRight: '10px' }} />
       <div className='plugins_step__title'>{upperFirst(lowerCase(upperCase(pluginName)))}</div>
       <Field
         name='isOpen'

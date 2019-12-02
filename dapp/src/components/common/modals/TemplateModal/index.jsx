@@ -2,7 +2,8 @@ import React from 'react'
 import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
 import Modal from 'components/common/Modal'
-import BackgroundTemplate from 'images/background__template.png'
+import ApiIcon from 'images/API_icon.svg'
+import MobileIcon from 'images/mobile-wallet.svg'
 
 const TemplateModal = ({
   hideModal,
@@ -18,7 +19,7 @@ const TemplateModal = ({
     'Join Bonus'
   ],
   attributesTitle = `The Community currency  consists of the following modules on Fuse:`,
-  text
+  Text
 }) => {
   const useTemplate = () => {
     hideModal()
@@ -26,19 +27,22 @@ const TemplateModal = ({
   }
 
   return (
-    <Modal whiteClose hasCloseBtn className='template_modal' onClose={hideModal}>
-      <div className='template_modal__banner__image'>
-        <div className='template_modal__banner__image__container'>
-          <img src={BackgroundTemplate} />
-        </div>
-        <div className='template_modal__banner__logo'>
-          <img className='template_modal__logo' src={logo} />
-          <div className='template_modal__title'>{title}</div>
-        </div>
-      </div>
+    <Modal hasCloseBtn className='template_modal' onClose={hideModal}>
       <div className='content__wrapper grid-y'>
         <div className='content'>
-          <div className='text'>{text}</div>
+          <div className='template_modal__logo'><img className='' src={logo} /></div>
+          <div className='template_modal__title'>{title}</div>
+          <Text />
+          <div className='icons'>
+            <div className='icon'>
+              <img src={MobileIcon} />
+              <span>Mobile wallet</span>
+            </div>
+            <div className='icon'>
+              <img src={ApiIcon} />
+              <span>API</span>
+            </div>
+          </div>
           <div className='title'>{attributesTitle}</div>
           <ul className='attributes'>
             {attributes.map((attribute, index) => <li key={index} className='item'>{attribute}</li>)}
@@ -47,8 +51,10 @@ const TemplateModal = ({
             <button onClick={useTemplate}>Use this template</button>
           </div>
         </div>
+        <div className='side_image'>
+          <img src={sideImage} />
+        </div>
       </div>
-      <div className='side_image' style={{ backgroundImage: `url(${sideImage})` }} />>
     </Modal>
   )
 }

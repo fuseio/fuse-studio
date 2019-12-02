@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
-import { isMobileOnly } from 'react-device-detect'
+// import { isMobileOnly } from 'react-device-detect'
 import classNames from 'classnames'
 import CommunityLogo from 'components/common/CommunityLogo'
-import Carousel from 'components/common/Carousel'
-import UploadImage from 'images/upload_picture.svg'
+// import Carousel from 'components/common/Carousel'
+// import UploadImage from 'images/upload_picture.svg'
 import { loadModal, hideModal } from 'actions/ui'
 import { IMAGE_CROPPER_MODAL } from 'constants/uiConstants'
 import { connect as connectFormik, getIn, Field } from 'formik'
@@ -13,6 +13,7 @@ import tokenOne from 'images/CoinIcon1.svg'
 import tokenTwo from 'images/CoinIcon2.svg'
 import dai from 'images/dai.png'
 import usdc from 'images/usdc.png'
+import cameraIcon from 'images/camara.svg'
 import { createObjectURL } from 'utils/images'
 
 const TokenIcons = {
@@ -68,12 +69,14 @@ const LogosOptions = ({
     if (existingToken && existingToken.label && existingToken.value) {
       const { symbol } = existingToken
       imageConverter(TokenIcons[symbol], 'images.defaultOne')
-      formik.setFieldValue('images.defaultTwo', '')
     } else {
-      imageConverter(TokenIcons[1], 'images.defaultOne')
-      imageConverter(TokenIcons[2], 'images.defaultTwo')
+      imageConverter(TokenIcons[2], 'images.defaultOne')
     }
   }, [communitySymbol, existingToken])
+
+  useEffect(() => {
+    setDefaultImages()
+  }, [])
 
   useEffect(() => {
     setDefaultImages()
@@ -102,87 +105,37 @@ const LogosOptions = ({
     })
   }
 
-  const items = React.useMemo(() => {
-    let options = []
-    options.push(<Field
-      key='defaultOne'
-      name='images.defaultOne'
-      render={({ field, form: { setFieldValue } }) => {
-        return (
-          <div onClick={() => {
-            setFieldValue('images.chosen', 'defaultOne')
-            if (window && window.analytics) {
-              window.analytics.track(`Choose logo - defaultOne`)
-            }
-          }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultOne' })}>
-            <CommunityLogo
-              metadata={{
-                isDefault: communityType && communityType.value && communityType.label
-              }}
-              symbol={communitySymbol}
-              imageUrl={field && field.value && field.value.croppedImageUrl}
-            />
-          </div>
-        )
-      }}
-    />)
-
-    if (imagesValues && imagesValues.defaultTwo && imagesValues.defaultTwo.croppedImageUrl) {
-      options.push(<Field
-        key='defaultTwo'
-        name='images.defaultTwo'
+  return (
+    <div className='attributes__attribute cell medium-8'>
+      <h3 className='attributes__title'>
+        Community Logo
+      </h3>
+      <Field
+        key='defaultOne'
+        name='images.defaultOne'
         render={({ field, form: { setFieldValue } }) => {
           return (
             <div onClick={() => {
-              setFieldValue('images.chosen', 'defaultTwo')
+              setFieldValue('images.chosen', 'defaultOne')
               if (window && window.analytics) {
-                window.analytics.track(`Choose logo - defaultTwo`)
+                window.analytics.track(`Choose logo - defaultOne`)
               }
-            }} className={classNames('attributes__logos__item', { 'attributes__logos__item--chosen': chosen === 'defaultTwo' })}>
+            }} className={classNames('attributes__logo', { 'attributes__logo--chosen': chosen === 'defaultOne' })}>
+              <label htmlFor='logoUpload' className='use_custom'>
+                <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
+                <img src={cameraIcon} />
+              </label>
               <CommunityLogo
-                symbol={communitySymbol}
-                imageUrl={field && field.value && field.value.croppedImageUrl}
                 metadata={{
                   isDefault: communityType && communityType.value && communityType.label
                 }}
+                symbol={communitySymbol}
+                imageUrl={(custom && custom.croppedImageUrl) || (field && field.value && field.value.croppedImageUrl)}
               />
             </div>
           )
         }}
-      />)
-    }
-
-    options.push(<label
-      key='custom'
-      htmlFor='logoUpload'
-      className={classNames({
-        'attributes__logos__item': true,
-        'attributes__logos__item--chosen': chosen === 'custom'
-      })}
-    >
-      <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
-      <img style={{ borderRadius: '50%', maxWidth: '60px' }} src={(custom && custom.croppedImageUrl) || UploadImage} />
-    </label>)
-
-    return options
-  }, [imagesValues])
-
-  return (
-    <div className='attributes__attribute'>
-      <h3 className='attributes__title'>
-        Community Logo
-      </h3>
-      <div className='attributes__logos'>
-        {
-          isMobileOnly ? (
-            <Carousel>
-              {items}
-            </Carousel>
-          ) : (
-            items
-          )
-        }
-      </div>
+      />
     </div>
   )
 }

@@ -22,7 +22,7 @@ const validations = {
   1: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
 }
 
-const getStep = (communityType) => (['Name & currency', communityType ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary'])
+const wizardSteps = ['Community name', 'Setup', 'Summary']
 
 const StepsIndicator = ({ steps, activeStep }) => {
   return steps.map((item, index) => {
@@ -131,9 +131,10 @@ class Wizard extends React.Component {
 
     return (
       <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
-        {page < 2 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
-        {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
+        {page === 0 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
+        {page === 1 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} community</h1>}
         {page === 3 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
+        {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>
           {page < 2 && (
@@ -173,10 +174,10 @@ class Wizard extends React.Component {
             </div>
             <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
               <div className='grid-y cell auto'>
-                <h4 className='issuance__header__current'>{getStep(values.communityType)[page] || getStep(values.communityType)[page - 1]}</h4>
+                <h4 className='issuance__header__current'>{wizardSteps[page] || wizardSteps[page - 1]}</h4>
                 <div className='grid-x align-center'>
                   <StepsIndicator
-                    steps={getStep(values.communityType)}
+                    steps={wizardSteps}
                     activeStep={page}
                   />
                 </div>

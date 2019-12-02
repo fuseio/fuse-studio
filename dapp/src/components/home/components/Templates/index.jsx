@@ -30,7 +30,9 @@ const Templates = ({
     <div className='templates'>
       <div className='templates__title'>TEMPLATES</div>
       <div className='templates__list grid-x grid-margin-x grid-margin-y'>
-        {templatesOptions.map((item, index) => <TemplateItem showIssuance={showIssuance} key={index} {...item} />)}
+        {templatesOptions.map((item, index) => {
+          return <TemplateItem key={index} showIssuance={showIssuance} {...item} />
+        })}
         <div onClick={showIssuance} className='item cell medium-12 small-24'>
           <div className='custom grid-y align-center align-middle'>
             <h6 className='custom__title'>Create a <br /> Custom Community</h6>

@@ -93,7 +93,7 @@
     }
 
     .fa {
-      font-size: 1.250em;
+      font-size: 1.25em;
       color: $color-dark-gray;
     }
     @include element(logo) {
@@ -118,7 +118,7 @@
     @include element(current) {
       text-transform: uppercase;
       text-align: center;
-      color: $color-fuse;
+      color: $color-dark-gray;
       font-size: 0.688em;
       font-weight: 500;
       font-style: normal;
@@ -149,13 +149,12 @@
 
   @include element(wizard) {
     padding-bottom: 100px;
-    @include breakpoint(medium up) { }
+    @include breakpoint(medium up) {
+    }
 
     @include breakpoint(medium down) {
       margin-top: 7em;
       padding: 0 1em;
-
-
     }
 
     @include modifier(opacity) {
@@ -167,6 +166,10 @@
       font-size: 1.875em;
       text-align: center;
       color: $color-dark;
+
+      @include breakpoint(medium down) {
+        margin-bottom: 1em;
+      }
 
       @include breakpoint(medium up) {
         padding-top: 30px;
@@ -216,10 +219,11 @@
         text-transform: capitalize;
         color: $color-dark;
         padding-bottom: 1em;
+        font-weight: bold;
 
         @include breakpoint(small only) {
           // margin-bottom: 1em;
-          font-size: 1.250em;
+          font-size: 1.25em;
         }
       }
 
@@ -385,6 +389,7 @@
       }
 
       @include element(title) {
+        font-weight: 500;
         font-size: 0.938em;
         line-height: 1.29;
         text-transform: capitalize;
@@ -430,7 +435,20 @@
       }
     }
 
+    @include block (use_custom) {
+      position: absolute;
+      right: 7px;
+      top: 2px;
+      cursor: pointer;
+
+      > img {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
     @include block(attributes) {
+      position: relative;
       margin: 0 auto;
       @include breakpoint(medium up) {
         max-width: 620px;
@@ -445,7 +463,7 @@
 
       @include element(title) {
         font-size: 0.938em;
-        // font-weight: bold;
+        font-weight: 500;
         line-height: 1.29;
         text-transform: capitalize;
         color: $color-dark;
@@ -453,14 +471,14 @@
 
         @include breakpoint(small only) {
           // margin-bottom: 1em;
-          font-size: 1.250em;
+          font-size: 1.25em;
         }
       }
 
       @include element(currency) {
         width: 100%;
-
-
+        margin-bottom: 1em;
+        
         .attributes__title {
           padding-bottom: 1em;
         }
@@ -468,9 +486,9 @@
 
       @include element(attribute) {
         min-height: 80px;
-        width: 100%;
+
         @include breakpoint(medium up) {
-          margin: 2rem 0;
+          // margin: 2rem 0;
         }
 
         @include breakpoint(medium down) {
@@ -535,7 +553,6 @@
               border-radius: 5px !important;
               border: 1px solid transparent !important;
 
-
               @include modifier(menu-is-open) {
                 font-weight: 500;
                 color: $color-dark;
@@ -570,7 +587,6 @@
               }
             }
 
-            @include element(dropdown-indicator) { }
 
             @include element(menu-list) {
               color: $color-dark;
@@ -766,50 +782,34 @@
         }
       }
 
-      @include element(logos) {
-        @include breakpoint(medium up) {
-          @include xy-grid(horizontal, false);
-          @include flex-align(justify, middle);
+      @include element(logo) {
+        border-radius: 5px;
+        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+        border: 2px solid rgba(226, 226, 226, 0.49);
+        display: flex;
+        flex-direction: column;
+        text-transform: capitalize;
+        align-items: center;
+        font-weight: 500;
+        color: $color-dark;
+        justify-content: space-evenly;
+        position: relative;
+
+        @include breakpoint(medium) {
+          width: 160px;
+          height: 145px;
         }
 
-        @include breakpoint(small down) {
-          @include xy-grid(vertical, false);
-          @include flex-align(spaced, middle);
-          width: 100%;
-          > div:not(:last-child) {
-            margin-bottom: 1em;
-          }
+        @include breakpoint(small) {
+          width: 140px;
+          height: 115px;
         }
-
-        @include element(item) {
-          border-radius: 5px;
-          box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
-          border: 2px solid rgba(226, 226, 226, 0.49);
-          display: flex;
-          flex-direction: column;
-          text-transform: capitalize;
-          align-items: center;
-          font-weight: 500;
-          color: $color-dark;
-          justify-content: space-evenly;
-          position: relative;
-
-          @include breakpoint(medium) {
-            width: 160px;
-            height: 145px;
-          }
-
-          @include breakpoint(small) {
-            width: 140px;
-            height: 115px;
-          }
-          &:hover {
-            border: solid 2px rgba(74, 104, 123, 0.3);
-            cursor: pointer;
-          }
-          @include modifier(chosen) {
-            border: solid 2px rgba(74, 104, 123, 0.3);
-          }
+        &:hover {
+          border: solid 2px rgba(74, 104, 123, 0.3);
+          cursor: pointer;
+        }
+        @include modifier(chosen) {
+          border: solid 2px rgba(74, 104, 123, 0.3);
         }
       }
 
@@ -863,11 +863,8 @@
     }
 
     @include block(cover_photo) {
+      position: relative;
       width: 100%;
-
-      @include breakpoint(medium up) {
-        margin: 2rem 0;
-      }
 
       @include breakpoint(medium down) {
         margin-top: 1em;
@@ -881,7 +878,7 @@
         color: $color-dark;
 
         @include breakpoint(small only) {
-          font-size: 1.250em;
+          font-size: 1.25em;
         }
       }
 
@@ -892,17 +889,27 @@
         border-radius: 5px;
         box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
         border: 2px solid rgba(226, 226, 226, 0.49);
-        height: 150px;
+        height: 145px;
         display: block;
         margin-top: 1em;
       }
     }
 
     @include block(close_open_community) {
-      @include xy-grid(horizontal, false);
-      @include flex-align(null, middle);
+      @include xy-grid(vertical);
       padding-top: 1em;
 
+      @include element(title) {
+        font-size: 0.938em;
+        line-height: 1.29;
+        text-transform: capitalize;
+        color: $color-dark;
+        margin-bottom: 1em;
+
+        @include breakpoint(small only) {
+          font-size: 1.25em;
+        }
+      }
       @include element(text) {
         font-size: 0.75em;
         margin-left: 5px;
@@ -916,17 +923,18 @@
       }
     }
 
-    @include block(plugins_step) { 
+    @include block(plugins_step) {
       @include element(item) {
       }
 
       @include element(title) {
         margin-right: 1em;
-        flex: .6;
+        flex: 0.6;
+        color: $color-dark;
       }
 
       @include element(toggle) {
-        flex: .1;
+        flex: 0.1;
         @include xy-grid(horizontal, false);
         @include flex-align(null, middle);
         padding-top: 1em;
@@ -942,7 +950,6 @@
             }
           }
         }
-
       }
     }
 
@@ -950,7 +957,7 @@
       max-height: 18px;
       position: relative;
       height: 100%;
-      display: inline-block;
+      display: flex;
 
       @include breakpoint(small only) {
         margin-bottom: auto;
@@ -1014,7 +1021,6 @@
       }
     }
 
-
     @include block(summary-step) {
       @include element(wrapper) {
         position: relative;
@@ -1059,32 +1065,36 @@
         }
       }
 
+      @include element(images) {
+        position: relative;
+        width: 100%;
+        max-height: 160px;
+        margin-bottom: 50px;
+
+        > img {
+          width: 100%;
+          height: 100%;
+          max-height: inherit;
+        }
+      }
+
       @include element(logo) {
-        margin: auto 0;
-        @include xy-grid(vertical);
-        @include flex-align(justify, middle);
-        margin-bottom: 20px;
+        border-radius: 999em;
+        width: 70px;
+        height: 70px;
+        background-color: $color-white;
+        line-height: 0;
+        border: 2px solid #fff;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.41);
+        position: absolute;
+        left: 30px;
+        bottom: -15px;
 
-        @include breakpoint(medium) {
-        }
-
-        @include block(communityName) {
-          text-overflow: ellipsis;
-          overflow: hidden;
-          width: 108px;
-          height: 1.2em;
-          white-space: nowrap;
-          margin-top: 10px;
-          @include breakpoint(small down) {
-            margin-bottom: 10px;
-          }
-        }
-
-        > span {
-          font-size: 14px;
-          color: $color-dark;
-          font-weight: 500;
-          text-align: center;
+        > img {
+          border-radius: 999em;
+          height: 100%;
+          width: 100%;	
+          margin: 0;
         }
       }
 
