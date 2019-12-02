@@ -210,11 +210,7 @@ const BridgeContainer = memo((props) => {
     />
   )
 }, (prevProps, nextProps) => {
-  if (prevProps.balances[prevProps.community.homeTokenAddress] !== nextProps.balances[nextProps.community.homeTokenAddress]) {
-    return false
-  } else if (prevProps.balances[prevProps.community.foreignTokenAddress] !== nextProps.balances[nextProps.community.foreignTokenAddress]) {
-    return false
-  } else if (prevProps.transactionStatus !== nextProps.transactionStatus) {
+  if (prevProps.transactionStatus !== nextProps.transactionStatus) {
     return false
   } else if (prevProps.relayEvent !== nextProps.relayEvent) {
     return false
