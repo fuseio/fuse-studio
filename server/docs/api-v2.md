@@ -10,6 +10,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 - [Wallet](#Wallet)
 	- [Create wallet contract for user](#Create-wallet-contract-for-user)
 	- [Fetch user wallet](#Fetch-user-wallet)
+	- [Fetch latest wallet by phone number](#Fetch-latest-wallet-by-phone-number)
 	
 
 # <a name='Login'></a> Login
@@ -93,4 +94,23 @@ POST /wallet/
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| data | `Object` | <p>User waller object</p> |
+| data | `Object` | <p>User wallet object</p> |
+## <a name='Fetch-latest-wallet-by-phone-number'></a> Fetch latest wallet by phone number
+[Back to top](#top)
+
+<p>Fetches latest wallet created by phone number</p>
+
+```
+GET /wallets/:phoneNumber
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Object` | <p>Wallet object</p> |
