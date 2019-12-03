@@ -16,6 +16,7 @@ import { CHOOSE_PROVIDER } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 
 import { useWeb3Auth } from 'hooks/useWeb3Auth'
+import useOutsideClick from 'hooks/useOutsideClick'
 
 import Web3connect from 'web3connect'
 import { connectWeb3 } from 'actions/network'
@@ -41,6 +42,18 @@ const NavBar = ({
   const helpRef = useRef(null)
   const profileRef = useRef(null)
 
+  useOutsideClick(profileRef, () => {
+    if (isProfileOpen) {
+      setProfileOpen(false)
+    }
+  })
+
+  useOutsideClick(helpRef, () => {
+    if (isHelpOpen) {
+      setHelpOpen(false)
+    }
+  })
+
   const handleScroll = useCallback(event => {
     let lastScrollY = window.scrollY
     setProfileOpen(false)
@@ -48,24 +61,12 @@ const NavBar = ({
     setScrollTop(lastScrollY)
   }, [])
 
-  const handleClickOutside = useCallback(event => {
-    if (helpRef && helpRef.current && !helpRef.current.contains(event.target)) {
-      setHelpOpen(false)
-    }
-
-    if (profileRef && profileRef.current && !profileRef.current.contains(event.target)) {
-      setProfileOpen(false)
-    }
-  }, [])
-
   useEffect(() => {
     document.addEventListener('scroll', handleScroll)
-    document.addEventListener('click', handleClickOutside)
     return () => {
       document.removeEventListener('scroll', handleScroll)
-      document.removeEventListener('click', handleClickOutside)
     }
-  }, [handleScroll, handleClickOutside])
+  }, [handleScroll])
 
   const goToHome = () => push('/')
 
