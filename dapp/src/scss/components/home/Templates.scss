@@ -25,6 +25,7 @@
   }
 
   @include block(item) {
+    min-height: 190px;
     border-radius: 5px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
     background-color: $color-white;
@@ -163,10 +164,13 @@
       color: $color-gray;
       align-items: center;
       font-size: 0.8em;
-      padding: 4em 5em;
       display: flex;
       flex-flow: row;
       position: relative;
+
+      @include breakpoint(medium up) {
+        padding: 4em 5em;
+      }
     }
 
     @include element(button) {
