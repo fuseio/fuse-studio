@@ -1,3 +1,4 @@
+const config = require('config')
 const router = require('express').Router()
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
@@ -21,7 +22,6 @@ router.post('/', auth.required, async (req, res, next) => {
     await new UserWallet({ phoneNumber, accountAddress }).save()
   } else if (userWallet.walletAddress) {
     const msg = `User ${phoneNumber} already has wallet account: ${userWallet.walletAddress}`
-    console.log(msg)
     return res.status(400).json({ error: msg })
   }
 
@@ -62,6 +62,33 @@ router.get('/:phoneNumber', auth.required, async (req, res, next) => {
   const userWallet = await UserWallet.findOne({ phoneNumber }).sort({ createdAt: -1 })
 
   return res.json({ data: userWallet })
+})
+
+/**
+ * @api {post} /wallets/invite/:phoneNumber Create wallet for phone number
+ * @apiName WalletInvite
+ * @apiGroup Wallet
+ * @apiDescription Creates wallet contract for phone number, owned by the server until claimed by the user
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {String} response Response status - ok
+ */
+router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
+  const { phoneNumber } = req.params
+  const accountAddress = config.get('network.home.addresses.MultiSigWallet')
+
+  const userWallet = await UserWallet.findOne({ phoneNumber })
+  if (!userWallet) {
+    await new UserWallet({ phoneNumber, accountAddress }).save()
+  } else if (userWallet.walletAddress) {
+    const msg = `User ${phoneNumber} already has wallet account: ${userWallet.walletAddress}`
+    return res.status(400).json({ error: msg })
+  }
+
+  await agenda.now('createWallet', { owner: accountAddress })
+
+  return res.json({ response: 'ok' })
 })
 
 module.exports = router
