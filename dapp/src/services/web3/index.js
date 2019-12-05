@@ -24,16 +24,19 @@ export const getWeb3Instance = (provider) => {
   // return givenWeb3
 }
 
-export const getWeb3 = ({ provider } = {}) => {
-  // if (givenWeb3) {
-  //   givenWeb3 = null
-  // }
-  givenWeb3 = new Web3(provider)
-  // if (!bridgeType) {
-  //   return getWeb3Instance(provider)
-  // }
-  // const web3 = web3ByBridge[bridgeType]
-  return givenWeb3
+export const getWeb3 = ({ provider, bridgeType } = {}) => {
+  console.log({ provider, bridgeType })
+  if (bridgeType) {
+    return web3ByBridge[bridgeType]
+  }
+ 
+  if (givenWeb3) return givenWeb3
+  if (provider) {
+    givenWeb3 = new Web3(provider)
+    return givenWeb3
+  }
+  // // const web3 = web3ByBridge[bridgeType]
+  // return givenWeb3
 }
 
 let box = null

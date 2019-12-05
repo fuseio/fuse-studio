@@ -37,8 +37,12 @@ function * deduceBridgeSides (networkType) {
   }
 }
 
-function * connectToWallet ({ accountAddress, web3 }) {
+function * connectToWallet ({ provider }) {
   try {
+    const web3 = yield getWeb3({ provider })
+    const accounts = yield web3.eth.getAccounts()
+    const accountAddress = accounts[0]
+    yield call(getNetworkType, { web3 })
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,
       accountAddress,
@@ -164,14 +168,6 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
   })
 }
 
-function * connectToProvider ({ web3, accountAddress }) {
-  yield put(actions.connectToWallet(accountAddress, web3))
-  yield call(getNetworkType, { web3 })
-  yield put({
-    type: actions.WEB3_CONNECTED.SUCCESS
-  })
-}
-
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.GET_NETWORK_TYPE.REQUEST, getNetworkType),
@@ -182,7 +178,7 @@ export default function * web3Saga () {
     takeEvery(actions.CHANGE_NETWORK.REQUEST, changeNetwork),
     takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess),
     // takeEvery(actions.CONNECT_TO_WALLET.SUCCESS, watchConnectToWallet),
-    takeEvery(actions.WEB3_CONNECTED.REQUEST, connectToProvider),
+    // takeEvery(actions.WEB3_CONNECTED.REQUEST, connectToProvider),
     tryTakeEvery(actions.SEND_TRANSACTION_HASH, sendTransactionHash, 1)
     // WEB3_DISCONNECTED
   ])

@@ -15,16 +15,16 @@ import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 
-import { useWeb3Auth } from 'hooks/useWeb3Auth'
+// import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import useOutsideClick from 'hooks/useOutsideClick'
 
-import Web3connect from 'web3connect'
+// import Web3connect from 'web3connect'
 import { connectWeb3 } from 'actions/network'
 
-import useWeb3Connect from 'hooks/useWeb3Connect'
-import WalletConnectProvider from '@walletconnect/web3-provider'
-import Portis from '@portis/web3'
-import Fortmatic from 'fortmatic'
+// import useWeb3Connect from 'hooks/useWeb3Connect'
+// import WalletConnectProvider from '@walletconnect/web3-provider'
+// import Portis from '@portis/web3'
+// import Fortmatic from 'fortmatic'
 
 const NavBar = ({
   connectWeb3,
@@ -34,6 +34,7 @@ const NavBar = ({
   loadModal,
   push,
   connectingToWallet,
+  handleConnectWallet,
   withLogo = true
 }) => {
   const [isHelpOpen, setHelpOpen] = useState(false)
@@ -89,39 +90,6 @@ const NavBar = ({
     setHelpOpen(!isHelpOpen)
   }
 
-  const web3Auth = useWeb3Auth()
-  const webConnectOptions = {
-    // network: 'ropsten',
-    providerOptions: {
-      walletconnect: {
-        package: WalletConnectProvider, // required
-        options: {
-          infuraId: CONFIG.web3.apiKey // required
-        }
-      },
-      portis: {
-        package: Portis, // required
-        options: {
-          id: CONFIG.web3.portis.id // required
-        }
-      },
-      fortmatic: {
-        package: Fortmatic, // required
-        options: {
-          key: CONFIG.web3.fortmatic.id // required
-        }
-      }
-    }
-  }
-
-  const onConnectCallback = async (response) => {
-    const { web3, provider, accounts } = await web3Auth.signIn(response)
-    console.log({ tempst: Web3connect.getProviderInfo(provider) })
-    connectWeb3(web3, accounts[0])
-  }
-
-  const web3connect = useWeb3Connect(webConnectOptions, onConnectCallback)
-
   return (
     <div className={classNames('navbar', { 'navbar--scroll': scrollTop > 70 })} >
       {(withLogo || (isMobileOnly && scrollTop > 70)) && <div className='navbar__logo'><Logo onClick={goToHome} isBlue={scrollTop < 70} /></div>}
@@ -165,7 +133,7 @@ const NavBar = ({
               <span className='animate'>.</span>
             </div>
           ) : (
-            <div className='navbar__links__wallet' onClick={() => web3connect.toggleModal()}>
+            <div className='navbar__links__wallet' onClick={() => handleConnectWallet()}>
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>Connect wallet</span>
             </div>

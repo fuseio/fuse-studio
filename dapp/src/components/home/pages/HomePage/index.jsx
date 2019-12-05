@@ -82,7 +82,7 @@ const HomePage = ({
 
   return (
     <div className='home_page'>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-bottom'>
           <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>
