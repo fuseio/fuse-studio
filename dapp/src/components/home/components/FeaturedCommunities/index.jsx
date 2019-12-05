@@ -66,7 +66,6 @@ const FeaturedCommunities = memo(({
               const { communityAddress } = community
               return (
                 <div className='cell medium-12 small-24' key={index}>
-                  /> */}
                   <FeaturedCommunity
                     metadata={{
                       ...metadata[token.tokenURI],
