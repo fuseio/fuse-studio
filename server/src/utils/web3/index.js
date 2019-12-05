@@ -152,15 +152,15 @@ const sha3 = (input) => {
 }
 
 const signMultiSigHash = (walletAddr, destinationAddr, value, data, nonce) => {
-  let input  = '0x' + [
-      '0x19',
-      '0x00',
-      walletAddr,
-      destinationAddr,
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(value), 32),
-      data,
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(nonce), 32)
-  ].map(hex => hex.slice(2)).join("")
+  let input = '0x' + [
+    '0x19',
+    '0x00',
+    walletAddr,
+    destinationAddr,
+    ethers.utils.hexZeroPad(ethers.utils.hexlify(value), 32),
+    data,
+    ethers.utils.hexZeroPad(ethers.utils.hexlify(nonce), 32)
+  ].map(hex => hex.slice(2)).join('')
 
   return sha3(input)
 }
@@ -179,10 +179,48 @@ const signMultiSig = async (web3, account, multiSigContract, contractAddress, da
   return signature.signature
 }
 
+// const signRelayHash = (from, to, value, data, nonce, gasPrice, gasLimit) => {
+//   let input = '0x' + [
+//       '0x19',
+//       '0x00',
+//       from,
+//       to,
+//       ethers.utils.hexZeroPad(ethers.utils.hexlify(value), 32),
+//       data,
+//       ethers.utils.hexZeroPad(ethers.utils.hexlify(nonce), 32),
+//       ethers.utils.hexZeroPad(ethers.utils.hexlify(gasPrice), 32),
+//       ethers.utils.hexZeroPad(ethers.utils.hexlify(gasLimit), 32)
+//   ].map(hex => hex.slice(2)).join("")
+
+//   return sha3(input)
+// }
+
+// const signRelay = async (web3, from, to, value, data, nonce, gasLimit, gasPrice) => {
+//   // Get the sign Hash
+//   const hash = await signRelayHash(from, to, value, data, nonce, gasLimit, gasPrice)
+//   console.log({ hash })
+
+//   // Get the off chain signature
+//   const signHashBuffer = Buffer.from(hash.slice(2), 'hex')
+//   console.log({ signHashBuffer })
+//   const signature = web3.eth.accounts.sign(signHashBuffer, '0x55F1EBEF7EB3009088418DE43A93A53910F85E36FCE999A9E844E132AA566466')
+//   console.log({ signature })
+
+//   return signature.signature
+// }
+
+// const getNonceForRelay = async(web3) => {
+//   let block = await web3.eth.getBlockNumber();
+//   let timestamp = (new Date()).getTime();
+//   return '0x' + ethers.utils.hexZeroPad(ethers.utils.hexlify(block), 16).slice(2) + ethers.utils.hexZeroPad(ethers.utils.hexlify(timestamp), 16).slice(2);
+// }
+
 module.exports = {
   createWeb3,
   generateSignature,
+  // getNonceForRelay,
   signMultiSig,
+  // signRelay,
   createContract,
   createMethod,
   send,
