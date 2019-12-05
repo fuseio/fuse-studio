@@ -11,6 +11,7 @@ import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
 import Header from 'components/dashboard/components/Header'
+import { push } from 'connected-react-router'
 import { getForeignNetwork } from 'selectors/network'
 
 class Dashboard extends Component {
@@ -30,7 +31,7 @@ class Dashboard extends Component {
   }
 
   showHomePage = () => {
-    this.props.history.push('/')
+    this.props.push('/')
   }
 
   handleMintOrBurnClick = (actionType, amount) => {
@@ -151,7 +152,8 @@ const mapDispatchToProps = {
   transferToken,
   mintToken,
   burnToken,
-  clearTransactionStatus
+  clearTransactionStatus,
+  push
 }
 
 export default connect(

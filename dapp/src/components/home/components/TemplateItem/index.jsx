@@ -5,7 +5,7 @@ import { loadModal } from 'actions/ui'
 
 import TemplateArrow from 'images/template_arrow.svg'
 
-const TemplateItem = ({ showIssuance, title, image, hasSet, modalProps, key }) => {
+const TemplateItem = ({ showIssuance, title, image, hasSet, modalProps }) => {
   const dispatch = useDispatch()
 
   const showInfoModal = () => {

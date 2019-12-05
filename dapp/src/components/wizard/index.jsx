@@ -197,14 +197,13 @@ const WizardPage = ({
 
     const chosenPlugins = Object.keys(plugins)
       .filter((pluginName) => plugins[pluginName].isActive)
-      .reduce((newPlugins, pluginName) => {
-        return {
-          ...newPlugins,
-          [pluginName]: {
-            isActive: plugins[pluginName].isActive
-          }
+      .reduce((newPlugins, name) => ({
+        ...newPlugins,
+        [name]: {
+          isActive: plugins[name].isActive,
+          name
         }
-      }, {})
+      }), {})
 
     const steps = Object.keys(contracts)
       .filter((contractName) => contracts[contractName].checked)

@@ -284,19 +284,16 @@ function * toggleJoinBonus ({ isActive }) {
   const web3 = yield getWeb3()
   const networkVersion = getNetworkVersion(web3)
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
-
+  const action = isActive ? ADD_ENTITY : REMOVE_ENTITY
   if (isActive) {
     const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
     const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
     const transactionPromise = method.send({ from: accountAddress })
-    const action = ADD_ENTITY
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
     yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
   } else {
-    const accountAddress = yield select(getAccountAddress)
     const method = CommunityContract.methods.removeEntity(funderAddress)
     const transactionPromise = method.send({ from: accountAddress })
-    const action = REMOVE_ENTITY
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
     yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
   }

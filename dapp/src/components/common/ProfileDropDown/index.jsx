@@ -9,7 +9,6 @@ import CommunityLogo from 'components/common/CommunityLogo'
 import Avatar from 'images/avatar.svg'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
-import { withRouter } from 'react-router'
 import { getBalances, getAccount } from 'selectors/accounts'
 import ArrowTiny from 'images/arrow_tiny.svg'
 import { getNetworkSide } from 'selectors/network'
@@ -20,6 +19,7 @@ import { SWITCH_NETWORK } from 'constants/uiConstants'
 import { loadModal } from 'actions/ui'
 import capitalize from 'lodash/capitalize'
 import { loadState, saveState } from 'utils/storage'
+import { push } from 'connected-react-router'
 
 const mapStateToNativeBalanceProps = (state) => ({
   account: getAccount(state)
@@ -180,14 +180,14 @@ const ProfileDropDown = ({
   accountAddress,
   communitiesKeys,
   communities,
-  history,
   fetchCommunities,
   balanceOfToken,
   changeNetwork,
   isPortis,
   isMetaMask,
   loadModal,
-  foreignNetwork
+  foreignNetwork,
+  push
 }) => {
   if (!accountAddress) return null
 
@@ -214,7 +214,7 @@ const ProfileDropDown = ({
   }
 
   const showDashboard = (communityAddress) => {
-    history.push(`/view/community/${communityAddress}`)
+    push(`/view/community/${communityAddress}`)
   }
 
   const loadSwitchModal = (desired) => {
@@ -329,10 +329,11 @@ const mapDispatchToProps = {
   fetchBalances,
   balanceOfToken,
   changeNetwork,
-  loadModal
+  loadModal,
+  push
 }
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProfileDropDown))
+)(ProfileDropDown)

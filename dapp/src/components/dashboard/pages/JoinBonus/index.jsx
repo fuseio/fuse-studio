@@ -5,13 +5,18 @@ import { connect, useSelector } from 'react-redux'
 import { transferTokenToFunder, clearTransactionStatus } from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { FAILURE, SUCCESS } from 'actions/constants'
-import { toWei } from 'web3-utils'
+import { toWei, toChecksumAddress } from 'web3-utils'
 import { getFunderAccount, getBalances } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
 import { addCommunityPlugin, toggleJoinBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import get from 'lodash/get'
+import { fetchEntity as fetchEntityApi } from 'services/api/entities'
+import { getApiRoot } from 'utils/network'
+import isEmpty from 'lodash/isEmpty'
+import { checkIsFunderPartOfCommunity } from 'selectors/entities'
+
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
 const JoinBonus = ({
@@ -32,8 +37,11 @@ const JoinBonus = ({
   toggleJoinBonus,
   isPortis,
   changeNetwork,
-  homeNetwork
+  homeNetwork,
+  isFunderPartOfCommunity
 }) => {
+  console.log({ isFunderPartOfCommunity })
+  const [isFunderAdded, setFunderStatus] = React.useState(isFunderPartOfCommunity)
   useEffect(() => {
     if (isPortis && networkType !== homeNetwork) {
       changeNetwork(homeNetwork)
@@ -49,7 +57,6 @@ const JoinBonus = ({
   const { plugins, communityAddress } = community
 
   const { joinBonus } = plugins
-  const { isActive } = joinBonus
 
   const [transferMessage, setTransferMessage] = useState(false)
 
@@ -57,6 +64,17 @@ const JoinBonus = ({
     balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
     return () => {}
   }, [])
+
+  useEffect(() => {
+    setFunderStatus(isFunderPartOfCommunity)
+  }, [isFunderPartOfCommunity])
+
+  useEffect(() => {
+    (async function checkIfFunderAddedToCommunity () {
+      const { data } = await fetchEntityApi(getApiRoot(networkType), { communityAddress, account: toChecksumAddress(funderAddress) })
+      setFunderStatus(!isEmpty(data))
+    })()
+  }, [networkType, communityAddress])
 
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
@@ -111,11 +129,12 @@ const JoinBonus = ({
             funderBalance={funderBalance ? formatWei(funderBalance, 0) : 0}
           />
           <RewardUserForm
+            networkType={networkType}
             hasFunderBalance={funderBalance}
             initialValues={{
               message: get(joinBonus, 'joinInfo.message', ''),
               amount: get(joinBonus, 'joinInfo.amount', ''),
-              activated: isActive || false
+              activated: isFunderAdded
             }}
             communityAddress={communityAddress}
             toggleJoinBonus={toggleJoinBonus}
@@ -130,7 +149,8 @@ const JoinBonus = ({
 const mapStateToProps = (state) => ({
   ...state.screens.token,
   homeNetwork: state.network.homeNetwork,
-  balances: getBalances(state)
+  balances: getBalances(state),
+  isFunderPartOfCommunity: checkIsFunderPartOfCommunity(state)
 })
 
 const mapDispatchToState = {

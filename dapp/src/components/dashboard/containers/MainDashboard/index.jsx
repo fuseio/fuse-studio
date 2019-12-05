@@ -26,22 +26,26 @@ import { fetchEntities } from 'actions/communityEntities'
 import SignIn from 'components/common/SignIn'
 import { changeNetwork } from 'actions/network'
 import get from 'lodash/get'
-// import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
+import { fetchCommunity as fetchCommunityApi } from 'services/api/community'
+import { getApiRoot } from 'utils/network'
 
 class DashboardLayout extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      open: false
+      open: false,
+      foreignNetwork: ''
     }
   }
 
   componentDidMount () {
     const { fetchCommunity, communityAddress, fetchEntities } = this.props
+    this.checkWhereCommunityIssued()
     fetchCommunity(communityAddress)
     fetchEntities(communityAddress)
   }
@@ -65,26 +69,23 @@ class DashboardLayout extends Component {
       fetchEntities(communityAddress)
     }
 
-    // if ((!prevState.error && !prevProps.networkType) &&
-    //     (this.props.isPortis || this.props.isMetaMask) &&
-    //     (!prevProps.foreignToken && !this.props.foreignToken) &&
-    //     (!prevProps.homeToken && !this.props.homeToken) &&
-    //     (!prevProps.community && !this.props.community) &&
-    //     (this.props.networkType && this.props.networkType !== 'fuse')) {
-    //   const { loadModal, isMetaMask, isPortis, networkType } = this.props
-    //   const desired = networkType === 'main' ? 'ropsten' : 'main'
-    //   const wrongNetworkText = isMetaMask
-    //     ? `Switch to ${desired} through Metamask. `
-    //     : isPortis
-    //       ? `Switch to ${desired} through your wallet on the upper right part of the Studio.`
-    //       : `Switch to ${desired}.`
-    //   loadModal(WRONG_NETWORK_MODAL, {
-    //     body: <p>{wrongNetworkText} <br /> This community is issued on {desired}. you need to switch to {desired} to view it</p>,
-    //     supportedNetworks: [desired, 'Fuse'],
-    //     handleClose: () => this.props.push('/')
-    //   })
-    //   this.setState({ error: true })
-    // }
+    if (this.state.foreignNetwork && (!prevState.error && !prevState.foreignNetwork) &&
+      (this.props.networkType !== 'fuse' && this.props.networkType && this.props.networkType !== this.state.foreignNetwork)
+    ) {
+      const { loadModal, isMetaMask, isPortis } = this.props
+      const desired = this.state.foreignNetwork
+      const wrongNetworkText = isMetaMask
+        ? `Switch to ${desired} through Metamask. `
+        : isPortis
+          ? `Switch to ${desired} through your wallet on the upper right part of the Studio.`
+          : `Switch to ${desired}.`
+      loadModal(WRONG_NETWORK_MODAL, {
+        body: <p>{wrongNetworkText} <br /> This community is issued on {desired}. you need to switch to {desired} to view it</p>,
+        supportedNetworks: [desired, 'Fuse'],
+        handleClose: () => this.props.push('/')
+      })
+      this.setState({ error: true })
+    }
 
     if (this.props.location.pathname !== prevProps.location.pathname) {
       this.onSetSidebarOpen(false)
@@ -93,11 +94,6 @@ class DashboardLayout extends Component {
     if (prevProps.isAdmin !== this.props.isAdmin) {
       const { accountAddress, isAdmin, networkType, location, communityAddress } = this.props
       const { analytics } = window
-      if (!accountAddress) {
-        analytics.identify({
-          subscriptionStatus: 'inactive'
-        })
-      }
 
       if (isAdmin) {
         if (location.pathname.includes('/justCreated')) {
@@ -122,6 +118,18 @@ class DashboardLayout extends Component {
         })
       }
     }
+  }
+
+  checkWhereCommunityIssued = async () => {
+    const { communityAddress } = this.props
+    const communityRopsten = await fetchCommunityApi(getApiRoot('ropsten'), { communityAddress })
+    const communityMain = await fetchCommunityApi(getApiRoot('main'), { communityAddress })
+    const foreignNetwork = communityRopsten
+      ? 'ropsten'
+      : communityMain
+        ? 'main'
+        : 'ropsten'
+    this.setState({ foreignNetwork })
   }
 
   onSetSidebarOpen = open => this.setState({ open })
