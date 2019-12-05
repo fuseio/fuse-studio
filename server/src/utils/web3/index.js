@@ -1,5 +1,6 @@
 const Web3 = require('web3')
 const ethUtils = require('ethereumjs-util')
+const ethers = require('ethers')
 const config = require('config')
 const { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
 const { inspect } = require('util')
@@ -143,9 +144,45 @@ const generateSignature = async (method, methodArguments, privateKey) => {
   return ethUtils.toRpcSig(vrs.v, vrs.r, vrs.s)
 }
 
+const sha3 = (input) => {
+  if (ethers.utils.isHexString(input)) {
+    return ethers.utils.keccak256(input)
+  }
+  return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(input))
+}
+
+const signMultiSigHash = (walletAddr, destinationAddr, value, data, nonce) => {
+  let input  = '0x' + [
+      '0x19',
+      '0x00',
+      walletAddr,
+      destinationAddr,
+      ethers.utils.hexZeroPad(ethers.utils.hexlify(value), 32),
+      data,
+      ethers.utils.hexZeroPad(ethers.utils.hexlify(nonce), 32)
+  ].map(hex => hex.slice(2)).join("")
+
+  return sha3(input)
+}
+
+const signMultiSig = async (web3, account, multiSigContract, contractAddress, data) => {
+  // Get the nonce
+  const nonce = (await multiSigContract.methods.nonce().call()).toNumber()
+
+  // Get the sign Hash
+  let hash = signMultiSigHash(multiSigContract.address, contractAddress, 0, data, nonce)
+
+  // Get the off chain signature
+  const signHashBuffer = Buffer.from(hash.slice(2), 'hex')
+  const signature = web3.eth.accounts.sign(signHashBuffer, getPrivateKey(account))
+
+  return signature.signature
+}
+
 module.exports = {
   createWeb3,
   generateSignature,
+  signMultiSig,
   createContract,
   createMethod,
   send,

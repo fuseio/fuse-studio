@@ -58,6 +58,7 @@
     "debug": "2.6.9",
     "eth-sig-util": "^2.1.1",
     "ethereumjs-wallet": "^0.6.3",
+    "ethers": "^4.0.40",
     "express": "4.16.3",
     "express-async-errors": "^2.1.2",
     "express-jwt": "^5.3.1",

@@ -36,7 +36,7 @@ module.exports = {
           transactionPollingTimeout: 30
         }
       },
-      provider: 'https://rpc.fusenet.io',
+      provider: 'https://rpc.fuse.io',
       addressesMainnet: {
         HomeBridgeFactory: '0xFbf20Fa994A577439Cd0b6033Db373f7a995E147',
         BridgeMapper: '0x89b98bB511A41FeF73b388cF8C052221f42cd44f'
@@ -48,6 +48,7 @@ module.exports = {
       sharedAddresses: {
         WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
         CommunityFactory: '0x5E853EDAEE70BD635d02CC0169Cf97083DE3436D',
+        MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
         walletModules: {
           GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
           LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',
@@ -55,7 +56,8 @@ module.exports = {
           ApprovedTransfer: '0x04E92d2ffBb51d53379b4754b3b92f879838902A',
           TransferManager: '0x8527a2d3d5aC0411933d663b4dcE275a5b7f39D8',
           TokenExchanger: '0x16127Bbec8d9A24a0801f7B945A18D077f2c629b',
-          CommunityManager: '0x42616C787e3D75aC29b9dCAB35131b585Eaa9837'
+          CommunityManager: '0x42616C787e3D75aC29b9dCAB35131b585Eaa9837',
+          WalletOwnershipManager: '0x7C38a5E6c0822623392847f6B827E8ADd75130ae'
         }
       },
       addresses: defer(function () {
