@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import ContentBox from 'components/home/components/ContentBox'
+// import ContentBox from 'components/home/components/ContentBox'
 import Templates from 'components/home/components/Templates'
 import Faqs from 'components/home/components/Faq'
 import personImage from 'images/person.png'
@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
+import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 
 const HomePage = ({
   loadModal,
@@ -51,14 +52,6 @@ const HomePage = ({
     }
   }
 
-  const gotToFaqs = () => {
-    window.open('https://docs.fuse.io/the-fuse-studio/faq', '_blank', 'noopener')
-  }
-
-  // const showCommunities = () => {
-  //   push('/view/communities')
-  // }
-
   return (
     <div className='home_page'>
       <NavBar />
@@ -93,10 +86,9 @@ const HomePage = ({
             <div className='cell medium-24 large-12 template'>
               <Templates />
             </div>
-            <div className='cell medium-24 large-12'>
-              <ContentBox title={`FAQ’S`} action={gotToFaqs} actionTitle='Read faq'>
-                <Faqs />
-              </ContentBox>
+            <div className='cell medium-24 large-12 home_page__faqAndRecent'>
+              <Faqs />
+              <FeaturedCommunities />
             </div>
           </div>
         </div>

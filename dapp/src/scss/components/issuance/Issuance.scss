@@ -842,24 +842,6 @@
           margin-top: 2em;
         }
       }
-
-      @include element(progress) {
-        @include xy-grid();
-        @include flex-align(center, middle);
-        margin: 1em 0;
-        @include element(item) {
-          @include xy-cell(shrink);
-          height: 15px;
-          width: 15px;
-          background-color: $color-dark-gray;
-          border-radius: 50%;
-          display: inline-block;
-
-          @include modifier(active) {
-            background-color: $color-fuse;
-          }
-        }
-      }
     }
 
     @include block(cover_photo) {
