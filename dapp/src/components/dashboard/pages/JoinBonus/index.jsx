@@ -40,7 +40,6 @@ const JoinBonus = ({
   homeNetwork,
   isFunderPartOfCommunity
 }) => {
-  console.log({ isFunderPartOfCommunity })
   const [isFunderAdded, setFunderStatus] = React.useState(isFunderPartOfCommunity)
   useEffect(() => {
     if (isPortis && networkType !== homeNetwork) {

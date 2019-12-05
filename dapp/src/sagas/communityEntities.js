@@ -190,7 +190,6 @@ function * removeEntity ({ account }) {
 }
 
 function * watchEntityChanges ({ response }) {
-  console.log({ response })
   const communityAddress = yield select(getCommunityAddress)
   const { data } = response
 
