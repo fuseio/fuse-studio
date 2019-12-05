@@ -7,7 +7,7 @@ const PREV = 'PREV'
 
 const initialState = { pos: 0, sliding: undefined, dir: NEXT }
 
-function reducer (state, { type, numItems, index }) {
+function reducer (state, { type, numItems }) {
   switch (type) {
     case 'reset':
       return initialState
@@ -22,13 +22,6 @@ function reducer (state, { type, numItems, index }) {
       return {
         ...state,
         dir: NEXT,
-        sliding: true,
-        pos: state.pos === numItems - 1 ? 0 : state.pos + 1
-      }
-    case 'CUSTOM':
-      return {
-        ...state,
-        dir: 'CUSTOM',
         sliding: true,
         pos: state.pos === numItems - 1 ? 0 : state.pos + 1
       }
