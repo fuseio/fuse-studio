@@ -144,7 +144,14 @@ const generateSignature = async (method, methodArguments, privateKey) => {
   return ethUtils.toRpcSig(vrs.v, vrs.r, vrs.s)
 }
 
-const signHash = (walletAddr, destinationAddr, value, data, nonce) => {
+const sha3 = (input) => {
+  if (ethers.utils.isHexString(input)) {
+    return ethers.utils.keccak256(input)
+  }
+  return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(input))
+}
+
+const signMultiSigHash = (walletAddr, destinationAddr, value, data, nonce) => {
   let input  = '0x' + [
       '0x19',
       '0x00',
@@ -155,16 +162,7 @@ const signHash = (walletAddr, destinationAddr, value, data, nonce) => {
       ethers.utils.hexZeroPad(ethers.utils.hexlify(nonce), 32)
   ].map(hex => hex.slice(2)).join("")
 
-  let signHash = sha3(input)
-
-  return signHash
-}
-
-const sha3 = (input) => {
-  if (ethers.utils.isHexString(input)) {
-    return ethers.utils.keccak256(input)
-  }
-  return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(input))
+  return sha3(input)
 }
 
 const signMultiSig = async (web3, account, multiSigContract, contractAddress, data) => {
@@ -172,9 +170,9 @@ const signMultiSig = async (web3, account, multiSigContract, contractAddress, da
   const nonce = (await multiSigContract.methods.nonce().call()).toNumber()
 
   // Get the sign Hash
-  let hash = signHash(multiSigContract.address, contractAddress, 0, data, nonce)
+  let hash = signMultiSigHash(multiSigContract.address, contractAddress, 0, data, nonce)
 
-  // // Get the off chain signature
+  // Get the off chain signature
   const signHashBuffer = Buffer.from(hash.slice(2), 'hex')
   const signature = web3.eth.accounts.sign(signHashBuffer, getPrivateKey(account))
 
