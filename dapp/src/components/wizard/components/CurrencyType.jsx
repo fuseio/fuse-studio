@@ -6,6 +6,7 @@ import { Field, connect, getIn } from 'formik'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
 import classNames from 'classnames'
+import { nameToSymbol } from 'utils/format'
 
 const Option = (props) => {
   const { children, className, cx, isDisabled, isFocused, isSelected, innerRef, innerProps, data } = props
@@ -42,6 +43,7 @@ const Option = (props) => {
 
 const CurrencyType = ({ networkType, formik }) => {
   const communityType = getIn(formik.values, 'communityType')
+  const communityName = getIn(formik.values, 'communityName')
   const existingToken = getIn(formik.values, 'existingToken')
 
   return (
@@ -60,6 +62,7 @@ const CurrencyType = ({ networkType, formik }) => {
                   onChange={val => {
                     setFieldValue('communityType', val)
                     setFieldValue('existingToken', '')
+                    setFieldValue('communitySymbol', nameToSymbol(communityName))
                     if (window && window.analytics) {
                       window.analytics.track(`New currency - ${val.label}`)
                     }
@@ -85,6 +88,7 @@ const CurrencyType = ({ networkType, formik }) => {
                   setFieldValue('existingToken', val)
                   setFieldValue('totalSupply', '')
                   setFieldValue('communityType', '')
+                  setFieldValue('communitySymbol', val.symbol)
                   if (window && window.analytics) {
                     window.analytics.track(`Existing currency - ${val.label}`)
                   }

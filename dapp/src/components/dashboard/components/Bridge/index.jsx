@@ -1,4 +1,4 @@
-import React, { Component, memo } from 'react'
+import React, { Component } from 'react'
 import Balance from 'components/dashboard/components/Balance'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -174,7 +174,7 @@ Bridge.propTypes = {
   networkType: PropTypes.string
 }
 
-const BridgeContainer = memo((props) => {
+const BridgeContainer = (props) => {
   const {
     relayEvent,
     transactionStatus,
@@ -209,23 +209,7 @@ const BridgeContainer = memo((props) => {
       waitingForRelayEvent={getTransferStatus() === 'WAITING FOR BRIDGE'}
     />
   )
-}, (prevProps, nextProps) => {
-  if (prevProps.balances[prevProps.community.homeTokenAddress] !== nextProps.balances[nextProps.community.homeTokenAddress]) {
-    return false
-  } else if (prevProps.balances[prevProps.community.foreignTokenAddress] !== nextProps.balances[nextProps.community.foreignTokenAddress]) {
-    return false
-  } else if (prevProps.transactionStatus !== nextProps.transactionStatus) {
-    return false
-  } else if (prevProps.relayEvent !== nextProps.relayEvent) {
-    return false
-  } else if (prevProps.confirmationsLimit !== nextProps.confirmationsLimit) {
-    return false
-  } else if (prevProps.confirmationNumber !== nextProps.confirmationNumber) {
-    return false
-  }
-
-  return true
-})
+}
 
 const mapStateToProps = (state) => ({
   ...state.screens.bridge,

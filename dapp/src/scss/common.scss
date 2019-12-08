@@ -31,12 +31,6 @@
     }
   }
 
-  @include element(images) {
-    position: relative;
-    width: 100%;
-    height: 85px;
-  }
-
   @include element(cover) {
     width: 100%;
     height: 100%;
@@ -74,6 +68,52 @@
     font-size: 0.875em;
     font-weight: 500;
     color: #6a6a6a;
+  }
+}
+
+@include block(featured__carousel) {
+  margin: 1em 0;
+
+  @include element(wrapper) {
+    @include xy-grid(vertical);
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-radius: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+    background-color: $color-white;
+
+    @include breakpoint(medium down) {
+      margin-top: 1em;
+    }
+  }
+
+  @include element(title) {
+    font-size: 18px;
+    color: $color-dark;
+    font-weight: 500;
+  }
+
+  @include element(progress) {
+    @include xy-grid();
+    @include flex-align(center, middle);
+    margin-top: 0.8em;
+    @include element(item) {
+      flex: 0 0 auto;
+      width: auto;
+      margin-right: 0.325rem;
+      margin-left: 0.325rem;
+      height: 8px;
+      width: 8px;
+      background-color: #d8d8d8;
+      border-radius: 50%;
+      display: inline-block;
+
+      @include modifier(active) {
+        background-color: #849eae;
+      }
+    }
   }
 }
 
@@ -120,13 +160,12 @@
   }
 
   @include element(image) {
-
-    @include breakpoint(medium up) {     
+    @include breakpoint(medium up) {
       height: 60%;
       display: flex;
       justify-content: center;
       margin: 0 auto;
-  
+
       > img {
         width: auto;
       }
@@ -196,7 +235,7 @@
     margin: auto;
 
     @include breakpoint(small only) {
-     margin-top: 2em;
+      margin-top: 2em;
     }
   }
 
@@ -287,7 +326,7 @@
         .fa-clone {
           margin-left: 10px;
           font-weight: 400;
-          font-size: 0.750em;
+          font-size: 0.75em;
           color: $color-light-gray;
           &:hover {
             cursor: pointer;
@@ -419,7 +458,6 @@
   @include element(name) {
     @extend %logo-symbol;
     color: $color-dark;
-    
   }
 }
 
@@ -574,7 +612,7 @@
     @include xy-grid(vertical, false);
     @include flex-align(center, middle);
     color: $color-gray;
-    font-size: 1.250em;
+    font-size: 1.25em;
     line-height: 1.6;
 
     span:nth-child(2) {
@@ -601,7 +639,6 @@
   @include breakpoint(medium up) {
     width: 520px;
   }
-
 
   @include element(title) {
     font-size: 1.875em;
@@ -733,7 +770,7 @@
   }
 
   @include element(title) {
-    font-size: 1.250em;
+    font-size: 1.25em;
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: 0.5px;
@@ -765,7 +802,7 @@
 
   @include element(icon) {
     margin: 1em auto;
-    font-size: 1.250em;
+    font-size: 1.25em;
   }
 
   @include element(loader) {
@@ -826,7 +863,7 @@
   justify-content: center;
   &-text {
     color: $color-white;
-    font-size: 1.250em;
+    font-size: 1.25em;
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: 0.5px;
@@ -1006,7 +1043,7 @@
       padding-top: 1em;
 
       @include element(text) {
-        font-size: 0.750em;
+        font-size: 0.75em;
         margin-left: 5px;
         > span {
           &:first-child {
@@ -1117,13 +1154,13 @@
     font-weight: 500;
     line-height: 0.67;
     letter-spacing: -0.65px;
-		color: $color-light-dark;
+    color: $color-light-dark;
     margin-top: 1em;
 
     @include breakpoint(medium up) {
       font-size: 1.875em;
     }
-    
+
     @include breakpoint(medium down) {
       font-size: 1.2em;
     }
@@ -1133,7 +1170,7 @@
         width: 45px;
         height: 45px;
       }
-      
+
       @include breakpoint(medium down) {
         width: 35px;
         height: 35px;
@@ -1152,7 +1189,6 @@
       margin-top: 1em;
     }
 
-
     @include modifier(smaller) {
       font-size: smaller;
     }
@@ -1164,22 +1200,22 @@
 
   @include element(options) {
     @include xy-grid();
-    
+
     @include breakpoint(medium up) {
       margin-top: 2em;
     }
-    
+
     @include breakpoint(medium down) {
-      margin-top: .4em;
+      margin-top: 0.4em;
     }
 
     > div:not(:first-child) {
       @include breakpoint(medium up) {
         margin-top: 2em;
       }
-      
+
       @include breakpoint(medium down) {
-        margin-top: .4em;
+        margin-top: 0.4em;
       }
     }
   }
@@ -1193,9 +1229,9 @@
       @include breakpoint(medium up) {
         margin-bottom: 0.5em;
       }
-      
+
       @include breakpoint(medium down) {
-        margin-top: .4em;
+        margin-top: 0.4em;
       }
     }
 
@@ -1204,19 +1240,18 @@
     }
 
     @include element(box) {
-
       @include breakpoint(medium up) {
         padding: 10px;
       }
-      
-      @include breakpoint(medium down) {
-        margin-top: .4em;
 
-        > div, p {
+      @include breakpoint(medium down) {
+        margin-top: 0.4em;
+
+        > div,
+        p {
           margin: 0.7em 0;
         }
       }
-      
 
       &:hover {
         background-color: rgba(195, 195, 195, 0.14);
@@ -1248,6 +1283,73 @@
         animation-delay: 0.4s;
       }
     }
+  }
+}
+
+@include block(accordion) {
+  margin: 0 auto;
+  @include breakpoint(medium up) {
+    max-width: 620px;
+  }
+
+  @include breakpoint(medium only) {
+    max-width: 70%;
+  }
+
+  > .accordion__item:not(:first-child) {
+    margin-top: 1em;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+
+  @include element(item) {
+  }
+
+  @include element(button) {
+    color: #0d2d45;
+    cursor: pointer;
+    font-weight: bold !important;
+
+    @include modifier(sub-title) {
+      font-size: 0.875em !important;
+      line-height: 1.93;
+      color: #868686;
+    }
+  }
+
+  @include element(panel) {
+    display: flex;
+    flex-direction: column;
+    animation: fadein 0.35s ease-in;
+  }
+
+  @include element(heading) {
+    border-radius: 10px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+  }
+}
+
+@include block(ExpansionPanelSummary) {
+  @include modifier(first) {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+  }
+
+  @include modifier(last) {
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+  }
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
 

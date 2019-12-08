@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router'
-import ContentBox from 'components/home/components/ContentBox'
-import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
+// import ContentBox from 'components/home/components/ContentBox'
+import Templates from 'components/home/components/Templates'
 import Faqs from 'components/home/components/Faq'
 import personImage from 'images/person.png'
 import groupImageMobile from 'images/group_mobile.png'
@@ -15,6 +14,7 @@ import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
+import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 
 const HomePage = ({
   loadModal,
@@ -24,6 +24,7 @@ const HomePage = ({
   push
 }) => {
   const [isClicked, setClicked] = useState(false)
+
   useEffect(() => {
     if (accountAddress && isClicked) {
       if (networkType === homeNetwork) {
@@ -34,8 +35,6 @@ const HomePage = ({
     }
     return () => { }
   }, [accountAddress])
-
-  const [title, setTitle] = useState('What you can do with Fuse?')
 
   const showIssuance = () => {
     if (!accountAddress) {
@@ -53,14 +52,6 @@ const HomePage = ({
     }
   }
 
-  const gotToFaqs = () => {
-    window.open('https://docs.fuse.io/the-fuse-studio/faq', '_blank', 'noopener')
-  }
-
-  const showCommunities = () => {
-    push('/view/communities')
-  }
-
   return (
     <div className='home_page'>
       <NavBar />
@@ -71,10 +62,17 @@ const HomePage = ({
             <p className='home_page__text'>
               Finish the community wizard on<br /> mainnet and <span>get rewarded 100<br /> Fuse tokens <img src={GiftIcon} /></span>
             </p>
-            <div className='home_page__button'><button onClick={showIssuance}>
-              Launch your community
-              <span style={{ marginLeft: '5px' }}><img src={arrowImage} alt='arrow' /></span>
-            </button></div>
+            <div className='home_page__button'>
+              <button onClick={showIssuance}>
+                Launch your community
+                <span style={{ marginLeft: '5px' }}>
+                  <img src={arrowImage} alt='arrow' />
+                </span>
+              </button>
+            </div>
+            <div className='home_page__text--choose'>
+              Or, choose a template:
+            </div>
           </div>
           <div className='home_page__image home_page__image--second cell large-12 medium-12 small-18'>
             <img src={personImage} />
@@ -85,22 +83,12 @@ const HomePage = ({
       <div className='home_page__faq'>
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
-            <div className='cell medium-24 large-12'>
-              <ContentBox
-                withDecoration={!isMobileOnly}
-                subTitleAction={showCommunities}
-                action={showIssuance}
-                title={title}
-                subTitle='Explore'
-                actionTitle='Launch your community'
-              >
-                <FeaturedCommunities setTitle={setTitle} />
-              </ContentBox>
+            <div className='cell medium-24 large-12 template'>
+              <Templates />
             </div>
-            <div className='cell medium-24 large-12'>
-              <ContentBox title={`FAQ’S`} action={gotToFaqs} actionTitle='Read faq'>
-                <Faqs />
-              </ContentBox>
+            <div className='cell medium-24 large-12 home_page__faqAndRecent'>
+              <Faqs />
+              <FeaturedCommunities />
             </div>
           </div>
         </div>
@@ -120,4 +108,4 @@ const mapDispatchToProps = {
   push
 }
 
-export default withRouter(withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage)))
+export default withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage))

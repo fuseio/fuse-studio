@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { hideModal } from 'actions/ui'
 import LoginModal from 'components/common/LoginModal'
 import ImageCropperModal from 'components/common/ImageCropper'
+import TemplateModal from 'components/common/modals/TemplateModal'
 import WrongNetworkModal from 'components/common/WrongNetworkModal'
 import ErrorBoundary from 'components/common/ErrorBoundary'
 import EmailModal from 'components/common/EmailModal'
@@ -36,7 +37,8 @@ import {
   PLUGIN_INFO_MODAL,
   EMAIL_MODAL,
   SWITCH_NETWORK,
-  CHOOSE_PROVIDER
+  CHOOSE_PROVIDER,
+  TEMPLATE_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -60,14 +62,14 @@ const MODAL_COMPONENTS = {
   [PLUGIN_INFO_MODAL]: PluginInfoModal,
   [EMAIL_MODAL]: EmailModal,
   [SWITCH_NETWORK]: SwitchNetwork,
-  [CHOOSE_PROVIDER]: ChooseProviderModal
+  [CHOOSE_PROVIDER]: ChooseProviderModal,
+  [TEMPLATE_MODAL]: TemplateModal
 }
 
 const ModalContainer = (props) => {
   if (!props.modalType) {
     return null
   }
-
   const ModalType = MODAL_COMPONENTS[props.modalType]
   return renderModal(ModalType, { ...props.modalProps, hideModal: props.hideModal })
 }

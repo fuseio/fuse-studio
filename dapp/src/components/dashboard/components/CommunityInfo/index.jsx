@@ -34,7 +34,7 @@ const CommunityInfo = ({
   const type = tokenType === 'mintableBurnable'
     ? 'Mintable burnable token'
     : tokenType === 'basic'
-      ? 'One time issuer token'
+      ? 'One time issued token'
       : 'Imported'
 
   let totalSupply = 0

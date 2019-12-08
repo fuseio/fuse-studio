@@ -111,7 +111,7 @@ module.exports = {
   },
   explorer: {
     fuse: {
-      urlBase: 'https://explorer.fusenet.io/api'
+      urlBase: 'https://explorer.fuse.io/api'
     }
   },
   agenda: {
@@ -129,7 +129,7 @@ module.exports = {
     }
   },
   funder: {
-    urlBase: 'https://funder-qa.fusenet.io/api/'
+    urlBase: 'https://funder-qa.fuse.io/api/'
   },
   twilio: {
   },

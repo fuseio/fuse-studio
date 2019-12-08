@@ -1,12 +1,15 @@
 import React, { Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Formik } from 'formik'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import inRange from 'lodash/inRange'
 import Logo from 'components/common/Logo'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 import TransactionButton from 'components/common/TransactionButton'
-import { PENDING, FAILURE, REQUEST } from 'actions/constants'
+import { PENDING, FAILURE, REQUEST, SUCCESS } from 'actions/constants'
+import { saveWizardProgress } from 'actions/user'
 
 const nextStepEvents = {
   0: 'Next step - 1',
@@ -15,12 +18,11 @@ const nextStepEvents = {
 }
 
 const validations = {
-  0: ['communityName', 'communityType', 'existingToken', 'email'],
-  1: ['totalSupply', 'communitySymbol', 'images.chosen'],
-  2: ['isOpen']
+  0: ['communityName', 'email'],
+  1: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
 }
 
-const getStep = (communityType) => (['Name & currency', communityType ? 'Symbol and logo' : 'Attributes', 'Contracts', 'Summary'])
+const wizardSteps = ['Community name', 'Setup', 'Summary']
 
 const StepsIndicator = ({ steps, activeStep }) => {
   return steps.map((item, index) => {
@@ -56,6 +58,8 @@ class Wizard extends React.Component {
   }
 
   next = (values) => {
+    const { saveWizardProgress } = this.props
+    saveWizardProgress(values)
     if (validations[this.state.page]) {
       const { adminAddress } = this.props
       const currentStepFields = validations[this.state.page]
@@ -91,7 +95,7 @@ class Wizard extends React.Component {
     }))
 
   onSubmit = (values, bag) => {
-    const { children, submitHandler } = this.props
+    const { children, submitHandler, saveWizardProgress } = this.props
     const { page } = this.state
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
@@ -99,6 +103,7 @@ class Wizard extends React.Component {
       if (window && window.analytics) {
         window.analytics.track('Issue pressed')
       }
+      saveWizardProgress({ ...values, isSubmit: true })
       return submitHandler(values, bag)
     } else {
       bag.setTouched({})
@@ -114,34 +119,35 @@ class Wizard extends React.Component {
     return false
   }
 
-  renderForm = ({ values, handleSubmit, errors, isValid }) => {
-    const { children, transactionStatus, createTokenSignature } = this.props
+  renderForm = ({ values, handleSubmit, errors, isValid, touched }) => {
+    const { children, transactionStatus, createTokenSignature, adminAddress } = this.props
     const { page } = this.state
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
       setNextStep: () => this.next(values),
       previous: () => this.previous()
     })
-    const isLastPage = page === React.Children.count(children) - 1
+
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
     return (
       <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
-        { page < 3 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
+        {page === 0 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
+        {page === 1 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} community</h1>}
+        {page === 3 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
         {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
-        {page === 4 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>
-          {!isLastPage && !isSubmitStep && page < 4 && (
+          {page < 2 && (
             <div className='grid-x align-center next'>
-              <button disabled={this.stepValidator(validations[page], errors)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
+              <button disabled={this.stepValidator(validations[page], errors) || isEmpty(touched)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
             </div>
           )}
           {isSubmitStep && (
             <div className='grid-x align-center summary-step__issue'>
-              <TransactionButton disabled={!isValid} clickHandler={handleSubmit} type='submit' frontText='ISSUE' />
+              <TransactionButton disabled={!isValid || !adminAddress} clickHandler={handleSubmit} type='submit' frontText='ISSUE' />
             </div>
           )}
-          {page > 0 && !isLastPage && ((transactionStatus !== PENDING) && (transactionStatus !== REQUEST)) && (
+          {inRange(page, 1, 3) && ((transactionStatus !== PENDING) && (transactionStatus !== SUCCESS) && (transactionStatus !== REQUEST)) && (
             <button
               type='button'
               className='issuance__wizard__back'
@@ -168,10 +174,10 @@ class Wizard extends React.Component {
             </div>
             <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
               <div className='grid-y cell auto'>
-                <h4 className='issuance__header__current'>{getStep(values.communityType)[page] || getStep(values.communityType)[page - 1]}</h4>
+                <h4 className='issuance__header__current'>{wizardSteps[page] || wizardSteps[page - 1]}</h4>
                 <div className='grid-x align-center'>
                   <StepsIndicator
-                    steps={getStep(values.communityType)}
+                    steps={wizardSteps}
                     activeStep={page}
                   />
                 </div>
@@ -198,4 +204,8 @@ class Wizard extends React.Component {
   }
 }
 
-export default Wizard
+const mapDispatchToProps = {
+  saveWizardProgress
+}
+
+export default connect(null, mapDispatchToProps)(Wizard)

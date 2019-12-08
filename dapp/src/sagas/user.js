@@ -70,6 +70,29 @@ function * signUpUser ({ email, subscribe }) {
   }
 }
 
+function * saveWizardProgress ({ formData }) {
+  const accountAddress = yield select(getAccountAddress)
+  try {
+    const response = yield apiCall(api.saveWizardProgress, { accountAddress, formData })
+    const { data } = response
+    yield put({
+      type: actions.SAVE_WIZARD_PROGRESS.SUCCESS,
+      accountAddress,
+      response: {
+        data
+      }
+    })
+  } catch (error) {
+    yield put({
+      type: actions.SAVE_WIZARD_PROGRESS.FAILURE,
+      accountAddress,
+      response: {
+        error
+      }
+    })
+  }
+}
+
 function * subscribeUser ({ user }) {
   yield apiCall(api.subscribeUser, { user: { ...user } })
   saveState('subscribe', true)
@@ -89,6 +112,7 @@ export default function * userSaga () {
   yield all([
     tryTakeEvery(actions.LOGIN, login, 1),
     tryTakeEvery(actions.SIGN_UP_USER, signUpUser, 1),
+    tryTakeEvery(actions.SAVE_WIZARD_PROGRESS, saveWizardProgress, 1),
     tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1),
     tryTakeEvery(actions.SEND_EMAIL, subscribeUser, 1)
   ])

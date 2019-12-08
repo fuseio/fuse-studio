@@ -11,7 +11,6 @@ class RewardUserForm extends Component {
     this.initialValues = {
       message: '',
       amount: '',
-      activated: false,
       ...this.props.initialValues
     }
 
@@ -27,7 +26,6 @@ class RewardUserForm extends Component {
       this.initialValues = {
         message: '',
         amount: '',
-        activated: false,
         ...this.props.initialValues
       }
     }

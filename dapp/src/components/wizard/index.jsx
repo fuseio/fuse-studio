@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo } from 'react'
+import React, { Fragment, useEffect, useMemo, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
@@ -10,20 +10,57 @@ import WizardShape from 'utils/validation/shapes/wizard'
 import * as Sentry from '@sentry/browser'
 import { push } from 'connected-react-router'
 
+import CommunityTypes from 'constants/communityTypes'
+import { existingTokens } from 'constants/existingTokens'
+import { loadState } from 'utils/storage'
+
 import { withNetwork } from 'containers/Web3'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import withTracker from 'containers/withTracker'
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
-import NameAndCurrencyStep from 'components/wizard/pages/NameAndCurrency'
+import NameAndEmail from 'components/wizard/pages/NameAndEmail'
 import DetailsStep from 'components/wizard/pages/DetailsStep'
-import ContractsStep from 'components/wizard/pages/Contracts'
 import SummaryStep from 'components/wizard/pages/SummaryStep'
 import DeployProgressStep from 'components/wizard/pages/DeployProgress'
 import Congratulations from 'components/wizard/components/Congratulations'
 
 import contractIcon from 'images/contract.svg'
 import BridgeIcon from 'images/Bridge.svg'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
+
+const getInitialValues = (templateId, networkType) => {
+  const networkState = loadState('state.network') || CONFIG.web3.bridge.network
+  const { foreignNetwork } = networkState
+  switch (templateId) {
+    case '1':
+      return {
+        plugins: {
+          businessList: {
+            isActive: true
+          },
+          joinBonus: {
+            isActive: true
+          }
+        },
+        existingToken: existingTokens(networkType || foreignNetwork)[0],
+        communitySymbol: existingTokens(networkType || foreignNetwork)[0].symbol
+      }
+    case '2':
+      return {
+        plugins: {
+          businessList: {
+            isActive: true
+          },
+          joinBonus: {
+            isActive: true
+          }
+        },
+        communityType: CommunityTypes[0]
+      }
+    default:
+      return {}
+  }
+}
 
 const WizardPage = ({
   deployExistingToken,
@@ -38,8 +75,22 @@ const WizardPage = ({
   loadModal,
   communityAddress,
   homeNetwork,
-  push
+  push,
+  templateId
 }) => {
+  const desiredNetworkType = useMemo(() => {
+    if (!networkType) {
+      return ['mainnet', 'ropsten']
+    } else if (networkType === homeNetwork) {
+      return ['ropsten', 'mainnet']
+    } else {
+      const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
+      return [networkType, secondDesired]
+    }
+  }, [])
+
+  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
+
   useEffect(() => {
     if (window && window.analytics) {
       window.analytics.track('Wizard init')
@@ -58,18 +109,75 @@ const WizardPage = ({
     }
   }, [adminAddress])
 
-  const desiredNetworkType = useMemo(() => {
-    if (!networkType) {
-      return ['mainnet', 'ropsten']
-    } else if (networkType === homeNetwork) {
-      return ['ropsten', 'mainnet']
-    } else {
-      const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
-      return [networkType, secondDesired]
-    }
-  }, [])
+  const initialTemplateValues = useCallback(getInitialValues(templateId, networkType), [templateId, networkType])
 
-  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
+  const initialValues = useMemo(() => {
+    const { plugins, communityType, existingToken, communitySymbol } = initialTemplateValues
+    return {
+      communityName: '',
+      communitySymbol: communitySymbol || '',
+      totalSupply: '',
+      communityType: communityType || undefined,
+      existingToken: existingToken || undefined,
+      isOpen: true,
+      subscribe: true,
+      email: '',
+      coverPhoto: {},
+      images: {
+        chosen: 'defaultOne'
+      },
+      contracts: {
+        community: {
+          label: 'Members list',
+          checked: true,
+          key: 'community',
+          icon: contractIcon
+        },
+        bridge: {
+          label: 'Bridge to fuse',
+          checked: true,
+          key: 'bridge',
+          icon: BridgeIcon
+        },
+        transferOwnership: {
+          checked: true,
+          key: 'transferOwnership'
+        },
+        funder: {
+          checked: true,
+          key: 'funder'
+        },
+        email: {
+          checked: true,
+          key: 'email'
+        }
+      },
+      plugins: {
+        businessList: {
+          isActive: false
+        },
+        joinBonus: {
+          isActive: false
+        },
+        moonpay: {
+          isActive: false
+        },
+        ramp: {
+          isActive: false
+        },
+        coindirect: {
+          isActive: false
+        },
+        carbon: {
+          isActive: false
+        },
+        wyre: {
+          isActive: false
+        },
+        ...plugins
+      }
+    }
+  }, [initialTemplateValues])
 
   const setIssuanceTransaction = (values) => {
     const {
@@ -82,8 +190,20 @@ const WizardPage = ({
       images,
       existingToken,
       email,
-      subscribe
+      subscribe,
+      plugins,
+      coverPhoto
     } = values
+
+    const chosenPlugins = Object.keys(plugins)
+      .filter((pluginName) => plugins[pluginName].isActive)
+      .reduce((newPlugins, name) => ({
+        ...newPlugins,
+        [name]: {
+          isActive: plugins[name].isActive,
+          name
+        }
+      }), {})
 
     const steps = Object.keys(contracts)
       .filter((contractName) => contracts[contractName].checked)
@@ -92,7 +212,7 @@ const WizardPage = ({
         [contracts[contractName].key]: contracts[contractName].key === 'bridge'
           ? { args: { foreignTokenAddress: null } }
           : contracts[contractName].key === 'community'
-            ? { args: { isClosed: !isOpen, name: communityName, adminAddress } }
+            ? { args: { isClosed: !isOpen, name: communityName, adminAddress, plugins: chosenPlugins } }
             : contracts[contractName].key === 'email'
               ? { args: { email, subscribe } }
               : {}
@@ -100,8 +220,8 @@ const WizardPage = ({
 
     const { chosen } = images
     const metadata = chosen !== 'custom' && !existingToken
-      ? { isDefault: true, image: images && images[chosen] && images[chosen].blob }
-      : { image: images && images[chosen] && images[chosen].blob }
+      ? { isDefault: true, image: images && images[chosen] && images[chosen].blob, coverPhoto: coverPhoto.blob }
+      : { image: images && images[chosen] && images[chosen].blob, coverPhoto: coverPhoto.blob }
 
     if (adminAddress) {
       window.analytics.identify(adminAddress, {
@@ -146,61 +266,20 @@ const WizardPage = ({
         transactionStatus={transactionStatus}
         createTokenSignature={createTokenSignature}
         validationSchema={WizardShape}
-        initialValues={{
-          communityName: '',
-          communitySymbol: '',
-          totalSupply: '',
-          communityType: undefined,
-          existingToken: undefined,
-          isOpen: true,
-          images: {
-            chosen: ''
-          },
-          email: '',
-          subscribe: true,
-          contracts: {
-            community: {
-              label: 'Members list',
-              checked: true,
-              key: 'community',
-              icon: contractIcon
-            },
-            bridge: {
-              label: 'Bridge to fuse',
-              checked: true,
-              key: 'bridge',
-              icon: BridgeIcon
-            },
-            transferOwnership: {
-              checked: true,
-              key: 'transferOwnership'
-            },
-            funder: {
-              checked: true,
-              key: 'funder'
-            },
-            email: {
-              checked: true,
-              key: 'email'
-            }
-          }
-        }}
+        initialValues={initialValues}
         submitHandler={(values, actions) => {
           setIssuanceTransaction(values)
           actions.setSubmitting(false)
         }}
       >
         <Wizard.Page>
-          <NameAndCurrencyStep networkType={networkType} />
+          <NameAndEmail />
         </Wizard.Page>
         <Wizard.Page>
-          <DetailsStep />
-        </Wizard.Page>
-        <Wizard.Page>
-          <ContractsStep />
+          <DetailsStep networkType={networkType} />
         </Wizard.Page>
         <Wizard.Page isSubmitStep={Boolean(true).toString()}>
-          <SummaryStep networkType={networkType} />
+          <SummaryStep homeNetwork={homeNetwork} networkType={networkType} />
         </Wizard.Page>
         <Wizard.Page>
           <DeployProgressStep />
@@ -238,7 +317,8 @@ const WizardPage = ({
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, { match }) => ({
+  templateId: match.params.templateId,
   ...state.screens.issuance,
   foreignNetwork: state.network.foreignNetwork,
   homeNetwork: state.network.homeNetwork,

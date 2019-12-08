@@ -4,7 +4,7 @@
   "description": "The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. Learn more on https://github.com/fuseio/fuse-studio.",
   "title": "Fuse Studio REST API",
   "url" : "https://github.com/fuseio/fuse-studio",
-  "sampleUrl": "https://studio-qa-ropsten.fusenet.io/api/v1",
+  "sampleUrl": "https://studio-qa-ropsten.fuse.io/api/v1",
   "template": {
   	"withCompare": true,
   	"withGenerator": true

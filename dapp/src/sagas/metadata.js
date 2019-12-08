@@ -33,11 +33,20 @@ function * fetchMetadata ({ tokenURI }) {
 
 export function * createMetadata ({ metadata }) {
   let imageHash
+  let coverPhotoHash
   if (metadata && metadata.image) {
     const { hash } = yield apiCall(imageUpload, { image: metadata.image })
     imageHash = hash
   }
-  const { data, hash } = yield apiCall(metadataApi.createMetadata, { metadata: imageHash ? { ...metadata, image: imageHash } : metadata })
+
+  if (metadata && metadata.coverPhoto) {
+    const { hash } = yield apiCall(imageUpload, { image: metadata.coverPhoto })
+    coverPhotoHash = hash
+  }
+
+  let newData = imageHash ? { ...metadata, image: imageHash } : metadata
+  newData = coverPhotoHash ? { ...newData, coverPhoto: coverPhotoHash } : newData
+  const { data, hash } = yield apiCall(metadataApi.createMetadata, { metadata: { ...newData } })
   yield put({
     type: actions.CREATE_METADATA.SUCCESS,
     response: {

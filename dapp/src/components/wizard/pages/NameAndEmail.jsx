@@ -1,12 +1,14 @@
 import React from 'react'
-import CurrencyType from '../components/CurrencyType'
 import TextField from '@material-ui/core/TextField'
-import { Field } from 'formik'
+import { connect, getIn, Field } from 'formik'
 import { nameToSymbol } from 'utils/format'
 import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
 
-const NameAndCurrency = ({ networkType }) => {
+const NameAndCurrency = ({
+  formik
+}) => {
+  const existingToken = getIn(formik.values, 'existingToken')
   return (
     <div className='name__wrapper'>
       <div className='name'>
@@ -21,7 +23,9 @@ const NameAndCurrency = ({ networkType }) => {
                 if (window && window.analytics) {
                   window.analytics.track('Filling community name')
                 }
-                setFieldValue('communitySymbol', nameToSymbol(event.target.value))
+                if (!existingToken) {
+                  setFieldValue('communitySymbol', nameToSymbol(event.target.value))
+                }
               }}
               type='search'
               placeholder='Name your community'
@@ -42,9 +46,6 @@ const NameAndCurrency = ({ networkType }) => {
           )}
         />
       </div>
-      <CurrencyType
-        networkType={networkType}
-      />
       <div className='name' style={{ padding: '0' }}>
         <h3 className='name__title' style={{ paddingBottom: '.2em' }}>Email <FontAwesome data-tip style={{ fontSize: '0.750em' }} data-for='email' name='info-circle' /></h3>
         <ReactTooltip className='tooltip__content' id='email' place='bottom' effect='solid'>
@@ -104,4 +105,4 @@ const NameAndCurrency = ({ networkType }) => {
   )
 }
 
-export default NameAndCurrency
+export default connect(NameAndCurrency)

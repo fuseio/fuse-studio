@@ -8,9 +8,10 @@ import { withRouter } from 'react-router'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 import isEmpty from 'lodash/isEmpty'
 import { fetchCommunities } from 'actions/accounts'
-import Community from 'components/common/Community'
 import FeaturedCommunity from 'components/common/FeaturedCommunity'
 import { push } from 'connected-react-router'
+import Carousel from 'components/common/Carousel'
+import arrow from 'images/arrow_3.svg'
 
 const FeaturedCommunities = memo(({
   metadata,
@@ -18,7 +19,6 @@ const FeaturedCommunities = memo(({
   history,
   communitiesKeys,
   communities,
-  setTitle,
   tokens,
   fetchCommunities,
   fetchFeaturedCommunities,
@@ -49,57 +49,63 @@ const FeaturedCommunities = memo(({
       .filter(obj => !!obj)
   }
 
-  let communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 4)
-
-  if (!isEmpty(communitiesIOwn)) {
-    setTitle('My communities')
-  } else {
-    setTitle('What you can do with Fuse?')
+  const showCommunities = () => {
+    push('/view/communities')
   }
 
+  let communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 4)
+
   return (
-    <div className='grid-x align-justify grid-margin-x grid-margin-y'>
-      {
-        !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
-          const { community, token } = entity
-          const { communityAddress } = community
-          return (
-            <div className='cell medium-12' key={index}>
-              <Community
-                token={{ ...token, communityAddress }}
-                metadata={{
-                  ...metadata[token.tokenURI],
-                  ...metadata[community.communityURI]
-                }}
-                history={history}
-                account={account}
-                showDashboard={showDashboard}
-              />
-            </div>
-          )
-        }) : !isEmpty(featuredCommunities) ? featuredCommunities.map((address, index) => {
-          const token = tokens[communities[address].foreignTokenAddress]
-          const community = communities[address]
-          if (token && community) {
-            return (
-              <div className='cell medium-12 small-24' key={address}>
-                <FeaturedCommunity
-                  metadata={{
-                    ...metadata[token.tokenURI],
-                    ...metadata[community.communityURI]
-                  }}
-                  showDashboard={() => showDashboard(address, community.name)}
-                  community={community}
-                />
+    <div className='featured__carousel__wrapper grid-x align-justify'>
+      <h3 className='featured__carousel__title'>Recent communities</h3>
+      <div className='featured__carousel'>
+        <Carousel>
+          {
+            !isEmpty(communitiesIOwn) ? communitiesIOwn.slice(0, 4).map((entity, index) => {
+              const { community, token } = entity
+              const { communityAddress } = community
+              return (
+                <div className='cell medium-12 small-24' key={index}>
+                  <FeaturedCommunity
+                    accountAddress={account}
+                    metadata={{
+                      ...metadata[token.tokenURI],
+                      ...metadata[community.communityURI]
+                    }}
+                    showDashboard={() => showDashboard(communityAddress)}
+                    community={community}
+                  />
+                </div>
+              )
+            }) : !isEmpty(featuredCommunities) ? featuredCommunities.map((address, index) => {
+              const token = tokens[communities[address].foreignTokenAddress]
+              const community = communities[address]
+              if (token && community) {
+                return (
+                  <div className='cell medium-12 small-24' key={address}>
+                    <FeaturedCommunity
+                      accountAddress={account}
+                      metadata={{
+                        ...metadata[token.tokenURI],
+                        ...metadata[community.communityURI]
+                      }}
+                      showDashboard={() => showDashboard(address, community.name)}
+                      community={community}
+                    />
+                  </div>
+                )
+              }
+            }) : [1, 2, 3, 4].map((img, index) =>
+              <div key={index} className='cell medium-12 small-24'>
+                <img style={{ width: '100%', height: '100%' }} src={CommunityPlaceholderImage} />
               </div>
             )
           }
-        }) : [1, 2, 3, 4].map((img, index) =>
-          <div key={index} className='cell medium-12 small-24'>
-            <img style={{ width: '100%', height: '100%' }} src={CommunityPlaceholderImage} />
-          </div>
-        )
-      }
+        </Carousel>
+      </div>
+      <div onClick={showCommunities} className='faq__action'>
+        Learn more&nbsp;<img src={arrow} alt='arrow' />
+      </div>
     </div>
   )
 }, (prevProps, nextProps) => {

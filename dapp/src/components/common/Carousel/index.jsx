@@ -1,6 +1,6 @@
 import React, { useReducer, Children } from 'react'
 import classNames from 'classnames'
-import { Swipeable } from 'react-swipeable'
+import { useSwipeable } from 'react-swipeable'
 
 const NEXT = 'NEXT'
 const PREV = 'PREV'
@@ -36,7 +36,7 @@ const getOrder = ({ index, pos, numItems }) => {
   return index - pos < 0 ? numItems - Math.abs(index - pos) : index - pos
 }
 
-export default ({ children, showProgress = true }) => {
+const Carousel = ({ children, showProgress = true }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const numItems = Children.count(children)
 
@@ -47,44 +47,42 @@ export default ({ children, showProgress = true }) => {
     }, 50)
   }
 
-  const config = {
-    onSwipedLeft: () => slide(PREV),
-    onSwipedRight: () => slide(NEXT),
+  const handlers = useSwipeable({
+    onSwipedLeft: () => slide(NEXT),
+    onSwipedRight: () => slide(PREV),
     preventDefaultTouchmoveEvent: true,
-    trackMouse: true,
-    rotationAngle: 180
-  }
+    trackMouse: true
+  })
 
-  const check = () => {
+  const getTransform = () => {
     const { sliding, dir } = state
 
     if (!sliding) {
-      return 'translateX(calc(30% - 20px))'
+      return 'translateX(calc(-26% - 20px))'
     }
 
     if (dir === PREV) {
-      return 'translateX(calc(2 * (-30% - 20px)))'
+      return 'translateX(calc(2 * (-26% - 20px)))'
     }
+
     return 'translateX(0%)'
   }
 
   return (
-    <Swipeable {...config} style={{ width: '100%', overflow: 'hidden' }}>
+    <div {...handlers} style={{ width: '100%', overflow: 'hidden' }}>
       <div
         style={{
           display: 'flex',
           transition: state.sliding ? 'none' : 'transform 1s ease',
-          transform: check()
+          transform: getTransform()
         }}
       >
         {Children.map(children, (child, index) => (
           <div
             style={{
-              flexBasis: '30%',
-              marginRight: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              flex: '1 0 100%',
+              flexBasis: '50%',
+              margin: '0.6em',
               order: getOrder({ index: index, pos: state.pos, numItems })
             }}
             key={index}
@@ -95,11 +93,11 @@ export default ({ children, showProgress = true }) => {
       </div>
       {
         showProgress && (
-          <div className='attributes__progress'>
+          <div className='featured__carousel__progress'>
             {
               Children.map(children, (item, index) => {
-                const classes = classNames('attributes__progress__item', {
-                  'attributes__progress__item--active': index === state.pos
+                const classes = classNames('featured__carousel__progress__item', {
+                  'featured__carousel__progress__item--active': index === state.pos
                 })
                 return (
                   <span key={item} className={classes} />
@@ -109,6 +107,8 @@ export default ({ children, showProgress = true }) => {
           </div>
         )
       }
-    </Swipeable>
+    </div>
   )
 }
+
+export default Carousel

@@ -1,7 +1,12 @@
 import React from 'react'
-import FontAwesome from 'react-fontawesome'
 import CommunityLogo from 'components/common/CommunityLogo'
+import FontAwesome from 'react-fontawesome'
 import { connect, getIn } from 'formik'
+import pickBy from 'lodash/pickBy'
+import pluginsIcons from 'constants/pluginsIcons'
+import upperCase from 'lodash/upperCase'
+import lowerCase from 'lodash/lowerCase'
+import upperFirst from 'lodash/upperFirst'
 
 const SummaryStep = ({
   networkType,
@@ -10,11 +15,16 @@ const SummaryStep = ({
   const contracts = getIn(formik.values, 'contracts')
   const communitySymbol = getIn(formik.values, 'communitySymbol')
   const totalSupply = getIn(formik.values, 'totalSupply')
-  const communityName = getIn(formik.values, 'communityName')
   const isOpen = getIn(formik.values, 'isOpen')
   const communityType = getIn(formik.values, 'communityType')
   const existingToken = getIn(formik.values, 'existingToken')
   const images = getIn(formik.values, 'images')
+  const plugins = getIn(formik.values, 'plugins')
+  const coverPhoto = getIn(formik.values, 'coverPhoto')
+
+  const pluginsSelected = React.useMemo(() => {
+    return Object.keys(pickBy(plugins, { isActive: true }))
+  }, [])
 
   const { chosen } = images
 
@@ -26,17 +36,18 @@ const SummaryStep = ({
     <div className='summary-step'>
       <div className='summary-step__wrapper'>
         <div className='summary-step__inner'>
-          <div className='summary-step__logo'>
-            <CommunityLogo
-              imageUrl={images && images[chosen] && images[chosen].croppedImageUrl}
-              metadata={{
-                isDefault: chosen !== 'custom'
-              }}
-              symbol={communitySymbol}
-            />
-            <span className='communityName'>{communityName} coin</span>
+          <div className='summary-step__images'>
+            <img alt='cover photo' src={(coverPhoto && coverPhoto.croppedImageUrl)} />
+            <div className='summary-step__logo'>
+              <CommunityLogo
+                imageUrl={images && images[chosen] && images[chosen].croppedImageUrl}
+                metadata={{
+                  isDefault: chosen !== 'custom' && !existingToken
+                }}
+                symbol={communitySymbol}
+              />
+            </div>
           </div>
-          <hr className='summary-step__line' />
           <div className='summary-step__content'>
             <div className='summary-step__content__item'>
               <h4 className='summary-step__content__title'>Currency type</h4>
@@ -54,7 +65,6 @@ const SummaryStep = ({
             <div className='summary-step__content__item'>
               <h4 className='summary-step__content__title'>Contracts</h4>
               <div className='summary-step__content__contracts'>
-
                 {
                   contractsItems.map(({ icon, label }) => label && (
                     <div key={label} className='summary-step__content__contracts__item'>
@@ -69,6 +79,21 @@ const SummaryStep = ({
                           <span className='summary-step__content__contracts__small'>Close community</span>
                         )
                       }
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+            <div className='summary-step__content__item'>
+              <h4 className='summary-step__content__title'>Plugins</h4>
+              <div className='summary-step__content__contracts'>
+                {
+                  pluginsSelected.map((name) => name && (
+                    <div key={name} className='summary-step__content__contracts__item'>
+                      <span className='summary-step__content__contracts__icon'>
+                        <img src={pluginsIcons[name]} />
+                        {upperFirst(lowerCase(upperCase(name)))}
+                      </span>
                     </div>
                   ))
                 }

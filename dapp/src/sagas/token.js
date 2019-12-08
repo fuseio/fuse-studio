@@ -76,15 +76,9 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
     ).send({
       from: accountAddress
     })
-    try {
-      const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
-      return receipt
-    } catch (error) {
-      yield put({
-        type: 'ERROR',
-        error
-      })
-    }
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
+
+    return receipt
   } else if (tokenType === 'mintableBurnable') {
     const transactionPromise = TokenFactoryContract.methods.createMintableBurnableToken(
       name,
@@ -94,23 +88,19 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
     ).send({
       from: accountAddress
     })
-    try {
-      const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
-      return receipt
-    } catch (error) {
-      yield put({
-        type: 'ERROR',
-        error
-      })
-    }
+    const receipt = yield transactionFlow({ transactionPromise, action: actions.CREATE_TOKEN, sendReceipt: true, abiName: 'TokenFactory' })
+
+    return receipt
   }
 }
 
 function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
   const { hash } = yield call(createMetadata, { metadata })
   const tokenURI = `ipfs://${hash}`
+  const communityURI = `ipfs://${hash}`
+  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
   const receipt = yield call(createToken, { ...tokenData, tokenURI, tokenType })
-  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps }))
+  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps: newSteps }))
 }
 
 function * deployChosenContracts ({ response: { steps, receipt } }) {
@@ -204,15 +194,8 @@ function * transferToken ({ tokenAddress, to, value }) {
     from: accountAddress
   })
 
-  try {
-    const action = actions.TRANSFER_TOKEN
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
-  }
+  const action = actions.TRANSFER_TOKEN
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress })
 }
 
 function * mintToken ({ tokenAddress, value }) {
@@ -225,15 +208,8 @@ function * mintToken ({ tokenAddress, value }) {
     from: accountAddress
   })
 
-  try {
-    const action = actions.MINT_TOKEN
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
-  }
+  const action = actions.MINT_TOKEN
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
 }
 
 function * burnToken ({ tokenAddress, value }) {
@@ -246,15 +222,8 @@ function * burnToken ({ tokenAddress, value }) {
     from: accountAddress
   })
 
-  try {
-    const action = actions.BURN_TOKEN
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
-  }
+  const action = actions.BURN_TOKEN
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
 }
 
 function * watchTokenChanges ({ response }) {
@@ -317,33 +286,23 @@ function * toggleJoinBonus ({ isActive }) {
   const web3 = yield getWeb3()
   const networkVersion = getNetworkVersion(web3)
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
-
-  try {
-    if (isActive) {
-      const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
-      const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
-      const transactionPromise = method.send({ from: accountAddress })
-      const action = ADD_ENTITY
-      yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-      yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
-    } else {
-      const accountAddress = yield select(getAccountAddress)
-      const method = CommunityContract.methods.removeEntity(funderAddress)
-      const transactionPromise = method.send({ from: accountAddress })
-      const action = REMOVE_ENTITY
-      yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-      yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
-    }
-
-    yield put({
-      type: TOGGLE_JOIN_BONUS.SUCCESS
-    })
-  } catch (error) {
-    yield put({
-      type: 'ERROR',
-      error
-    })
+  const action = isActive ? ADD_ENTITY : REMOVE_ENTITY
+  if (isActive) {
+    const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
+    const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
+    const transactionPromise = method.send({ from: accountAddress })
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+    yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
+  } else {
+    const method = CommunityContract.methods.removeEntity(funderAddress)
+    const transactionPromise = method.send({ from: accountAddress })
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
+    yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
   }
+
+  yield put({
+    type: TOGGLE_JOIN_BONUS.SUCCESS
+  })
 }
 
 function * watchCommunities ({ response }) {

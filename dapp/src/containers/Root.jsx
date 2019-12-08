@@ -23,7 +23,7 @@ const Root = ({ store, history }) => {
               <Web3 isMobile={history.location.search.includes('isMobile')} />
               <Switch>
                 <Route exact path='/' component={props => <HomePage {...props} />} />
-                <Route path='/view/issuance' component={props => <Wizard {...props} />} />
+                <Route path='/view/issuance/:templateId?' component={props => <Wizard {...props} />} />
                 <Route path='/view/communities' component={props => <Oven {...props} />} />
                 <Route path='/view/community/:address' component={props => <DashboardLayout {...props} />} />
               </Switch>

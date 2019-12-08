@@ -1,9 +1,21 @@
 @include block(faq) {
-  @include xy-grid(vertical);
-  @include flex-align(null, null);
+  display: flex;
+  align-items: center;
   font-size: 16px;
   line-height: 25px;
   padding: 5px 0px;
+  width: 100%;
+
+  @include element(wrapper) {
+    @include xy-grid(vertical);
+    border-radius: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+    background-color: $color-white;
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
 
   @include element(title) {
     font-weight: 500;
@@ -13,19 +25,36 @@
   @include element(content) {
     color: #808080;
     text-overflow: ellipsis;
-    overflow: hidden; 
+    overflow: hidden;
     width: 100%;
-    font-size: 0.750em;
+    font-size: 0.75em;
     white-space: nowrap;
     line-height: 1.67;
   }
 
   @include element(read) {
     color: #808080;
-    font-size: 0.750em;
+    font-size: 0.75em;
     &:hover {
       text-decoration: underline;
       cursor: pointer;
+    }
+  }
+
+  @include element(action) {
+    font-size: 16px;    
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    color: $color-dark;
+    margin-top: 10px;
+
+    @include breakpoint(medium down) {
+      margin-top: 1em;      
+    }
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 }
