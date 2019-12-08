@@ -1062,22 +1062,15 @@
 
       @include element(logo) {
         border-radius: 999em;
-        width: 70px;
-        height: 70px;
+        width: 64px;
+        height: 64px;
         background-color: $color-white;
         line-height: 0;
         border: 2px solid #fff;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.41);
         position: absolute;
         left: 30px;
-        bottom: -15px;
-
-        > img {
-          border-radius: 999em;
-          height: 100%;
-          width: 100%;	
-          margin: 0;
-        }
+        bottom: -25px;
       }
 
       @include element(content) {
@@ -1125,7 +1118,7 @@
           @include element(small) {
             display: inline-block;
             font-size: 10.5px;
-            padding-left: 13px;
+            padding-left: 2.7em;
           }
         }
 

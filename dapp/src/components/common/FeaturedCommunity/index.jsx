@@ -22,10 +22,11 @@ const FeaturedCommunity = memo(({
     if (accountAddress) {
       balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
       balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-      fetchMetadata(communityURI)
-      fetchToken(homeTokenAddress)
-      fetchToken(foreignTokenAddress)
     }
+
+    fetchMetadata(communityURI)
+    fetchToken(homeTokenAddress)
+    fetchToken(foreignTokenAddress)
   }, [])
 
   return (
@@ -68,6 +69,9 @@ const FeaturedCommunity = memo(({
     return false
   }
   if (prevProps.metadata !== nextProps.metadata) {
+    return false
+  }
+  if (prevProps.accountAddress !== nextProps.accountAddress) {
     return false
   }
   return true

@@ -126,7 +126,7 @@ class Wizard extends React.Component {
       setNextStep: () => this.next(values),
       previous: () => this.previous()
     })
-    // const isLastPage = page === React.Children.count(children) - 3
+
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
     return (

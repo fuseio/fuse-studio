@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react'
+import React from 'react'
+import CommunityLogo from 'components/common/CommunityLogo'
 import FontAwesome from 'react-fontawesome'
-// import CommunityLogo from 'components/common/CommunityLogo'
 import { connect, getIn } from 'formik'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import pickBy from 'lodash/pickBy'
 import pluginsIcons from 'constants/pluginsIcons'
 import upperCase from 'lodash/upperCase'
@@ -11,25 +10,11 @@ import upperFirst from 'lodash/upperFirst'
 
 const SummaryStep = ({
   networkType,
-  formik,
-  homeNetwork
+  formik
 }) => {
-  const desiredNetworkType = useMemo(() => {
-    if (!networkType) {
-      return ['mainnet', 'ropsten']
-    } else if (networkType === homeNetwork) {
-      return ['ropsten', 'mainnet']
-    } else {
-      const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
-      return [networkType, secondDesired]
-    }
-  }, [])
-
-  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
   const contracts = getIn(formik.values, 'contracts')
-  // const communitySymbol = getIn(formik.values, 'communitySymbol')
+  const communitySymbol = getIn(formik.values, 'communitySymbol')
   const totalSupply = getIn(formik.values, 'totalSupply')
-  // const communityName = getIn(formik.values, 'communityName')
   const isOpen = getIn(formik.values, 'isOpen')
   const communityType = getIn(formik.values, 'communityType')
   const existingToken = getIn(formik.values, 'existingToken')
@@ -54,18 +39,15 @@ const SummaryStep = ({
           <div className='summary-step__images'>
             <img alt='cover photo' src={(coverPhoto && coverPhoto.croppedImageUrl)} />
             <div className='summary-step__logo'>
-              <img src={images && images[chosen] && images[chosen].croppedImageUrl} />
-              {/* <CommunityLogo
+              <CommunityLogo
                 imageUrl={images && images[chosen] && images[chosen].croppedImageUrl}
                 metadata={{
                   isDefault: chosen !== 'custom' && !existingToken
                 }}
                 symbol={communitySymbol}
-              /> */}
-              {/* <span className='communityName'>{communityName} coin</span> */}
+              />
             </div>
           </div>
-          {/* <hr className='summary-step__line' /> */}
           <div className='summary-step__content'>
             <div className='summary-step__content__item'>
               <h4 className='summary-step__content__title'>Currency type</h4>

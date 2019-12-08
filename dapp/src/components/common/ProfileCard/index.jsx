@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, memo } from 'react'
 import { connect } from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
@@ -10,7 +10,7 @@ import { balanceOfToken } from 'actions/accounts'
 
 import CommunityLogo from 'components/common/CommunityLogo'
 
-const ProfileCard = ({
+const ProfileCard = memo(({
   entity,
   metadata,
   balance,
@@ -25,8 +25,11 @@ const ProfileCard = ({
   const { communityURI, homeTokenAddress, foreignTokenAddress, communityAddress } = community
 
   useEffect(() => {
-    balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
-    balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+    if (accountAddress) {
+      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+    }
+
     fetchMetadata(communityURI)
     fetchToken(homeTokenAddress)
     fetchToken(foreignTokenAddress)
@@ -56,7 +59,24 @@ const ProfileCard = ({
       </div>
     </div>
   )
-}
+}, (prevProps, nextProps) => {
+  if (prevProps.entity !== nextProps.entity) {
+    return false
+  }
+  if (prevProps.metadata !== nextProps.metadata) {
+    return false
+  }
+  if (prevProps.balance !== nextProps.balance) {
+    return false
+  }
+  if (prevProps.balance !== nextProps.balance) {
+    return false
+  }
+  if (prevProps.accountAddress !== nextProps.accountAddress) {
+    return false
+  }
+  return true
+})
 
 export default connect(null, {
   fetchMetadata,

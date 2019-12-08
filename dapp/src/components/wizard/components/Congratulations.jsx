@@ -1,10 +1,8 @@
 import React, { Fragment } from 'react'
-import Box from 'images/box.svg'
-// import confe from 'images/confe.svg'
-// import confeRight from 'images/confe_right.svg'
-
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
+
+import Box from 'images/box.svg'
 
 const Congratulations = ({ goToDashboard }) => {
   const { width, height } = useWindowSize()
@@ -18,11 +16,6 @@ const Congratulations = ({ goToDashboard }) => {
         <div className='congratulation__title'>
           Congratulations!
         </div>
-        {/* <div className='congratulation__sub-title'>
-          <img src={confe} />
-          On the birth of your community!
-          <img src={confeRight} />
-        </div> */}
         <p className='congratulation__fuse-text'>You have been awarded with 10 Fuse tokens on the Fuse Network
           <small>(<a target='_blank' rel='noopener noreferrer' href='https://docs.fuse.io/the-fuse-chain/fuse-token'>What's that?</a>)</small>
         </p>
