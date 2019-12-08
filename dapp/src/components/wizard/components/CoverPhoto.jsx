@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect, getIn } from 'formik'
 import { createObjectURL } from 'utils/images'
 import cameraIcon from 'images/camara.svg'
+import DefaultCover from 'images/default_cover.png'
 
 const CoverPhoto = ({
   formik
@@ -17,6 +18,40 @@ const CoverPhoto = ({
       blob: image
     })
   }
+
+  const imageConverter = (image, field) => {
+    let img = new window.Image()
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0)
+      return new Promise(resolve => {
+        canvas.toBlob(blob => {
+          blob.name = 'newFile.jpeg'
+          let croppedImageUrl
+          window.URL.revokeObjectURL(croppedImageUrl)
+          croppedImageUrl = createObjectURL(blob)
+          formik.setFieldValue(field, {
+            croppedImageUrl: canvas.toDataURL(),
+            blob
+          })
+          resolve({
+            croppedImageUrl,
+            blob
+          })
+        }, 'image/jpeg')
+      })
+    }
+
+    img.src = image
+  }
+
+  useEffect(() => {
+    imageConverter(DefaultCover, 'coverPhoto')
+  }, [])
 
   return (
     <div className='cover_photo cell large-auto'>

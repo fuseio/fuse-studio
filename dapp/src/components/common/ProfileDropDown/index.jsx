@@ -1,127 +1,25 @@
 import React, { useEffect } from 'react'
+import isEmpty from 'lodash/isEmpty'
+import capitalize from 'lodash/capitalize'
 import { connect, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
-import { formatAddress, formatWei } from 'utils/format'
-import CopyToClipboard from 'components/common/CopyToClipboard'
-import { fetchCommunities, fetchBalances, balanceOfToken } from 'actions/accounts'
-import { changeNetwork } from 'actions/network'
-import CommunityLogo from 'components/common/CommunityLogo'
-import Avatar from 'images/avatar.svg'
-import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
-import { getBalances, getAccount } from 'selectors/accounts'
-import ArrowTiny from 'images/arrow_tiny.svg'
-import { getNetworkSide } from 'selectors/network'
-import MainnetLogo from 'images/Mainnet.svg'
-import FuseLogo from 'images/fuseLogo.svg'
-import { convertNetworkName } from 'utils/network'
-import { SWITCH_NETWORK } from 'constants/uiConstants'
-import { loadModal } from 'actions/ui'
-import capitalize from 'lodash/capitalize'
-import { loadState, saveState } from 'utils/storage'
 import { push } from 'connected-react-router'
 
-const mapStateToNativeBalanceProps = (state) => ({
-  account: getAccount(state)
-})
+import CopyToClipboard from 'components/common/CopyToClipboard'
+import NativeBalance from 'components/common/NativeBalance'
+import ProfileCard from 'components/common/ProfileCard'
 
-const NativeBalance = connect(mapStateToNativeBalanceProps, null)(({
-  account,
-  isMetaMask,
-  isPortis
-}) => {
-  useEffect(() => {
-    const { analytics } = window
-    if (account && account.accountAddress) {
-      analytics.identify(account.accountAddress,
-        isPortis ? {
-          subscriptionStatus: 'active',
-          provider: 'Portis'
-        } : isMetaMask ? {
-          provider: 'Metamask'
-        } : null)
-    } else {
-      analytics.identify({
-        subscriptionStatus: 'inactive'
-      })
-    }
-  }, [account])
+import { getBalances } from 'selectors/accounts'
+import { getNetworkSide } from 'selectors/network'
+import { convertNetworkName } from 'utils/network'
+import { formatAddress, formatWei } from 'utils/format'
+import { SWITCH_NETWORK } from 'constants/uiConstants'
+import { loadState, saveState } from 'utils/storage'
+import { changeNetwork } from 'actions/network'
+import { loadModal } from 'actions/ui'
+import { fetchCommunities, fetchBalances } from 'actions/accounts'
 
-  return (
-    <div className='profile__communities grid-y'>
-      <span>My balance</span>
-      <div className='profile__card grid-x cell align-middle'>
-        <div className='profile__card__logo'>
-          <img src={MainnetLogo} />
-        </div>
-        <div className='cell auto grid-y profile__card__content'>
-          <h5 className='profile__card__title'>Ethereum Network</h5>
-          <p className='profile__card__balance'>
-            <span>Balance:&nbsp;</span>
-            <span>{account && account.foreign ? formatWei((account.foreign), 2) : 0}&nbsp;</span>
-            <span>ETH</span>
-          </p>
-        </div>
-      </div>
-      <div className='profile__card grid-x cell align-middle'>
-        <div className='profile__card__logo'>
-          <img src={FuseLogo} />
-        </div>
-        <div className='cell auto grid-y profile__card__content'>
-          <h5 className='profile__card__title'>Fuse Network</h5>
-          <p className='profile__card__balance'>
-            <span>Balance:&nbsp;</span>
-            <span>{account && account.home ? formatWei((account && account.home), 2) : 0}&nbsp;</span>
-            <span>FUSE</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-})
-
-const ProfileCard = ({
-  entity,
-  metadata,
-  balance,
-  balanceOfToken,
-  showDashboard,
-  accountAddress
-}) => {
-  const { token, community } = entity
-  const { name, symbol } = token
-  const { homeTokenAddress, foreignTokenAddress, communityAddress } = community
-
-  useEffect(() => {
-    balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
-    balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-    return () => { }
-  }, [])
-
-  return (
-    <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
-      <div className='profile__card__logo'>
-        <CommunityLogo
-          symbol={symbol}
-          imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
-          isSmall
-          metadata={metadata}
-        />
-      </div>
-      <div className='cell auto grid-y profile__card__content'>
-        <h5 className='profile__card__title'>{name}</h5>
-        <p className='profile__card__balance'>
-          <span>Balance:&nbsp;</span>
-          <span>{balance}&nbsp;</span>
-          <span>{symbol}</span>
-        </p>
-      </div>
-      <div className='profile__card__arrow'>
-        <img src={ArrowTiny} />
-      </div>
-    </div>
-  )
-}
+import Avatar from 'images/avatar.svg'
 
 const InnerCommunities = ({
   fetchBalances,
@@ -131,7 +29,6 @@ const InnerCommunities = ({
   networkType,
   metadata,
   showDashboard,
-  balanceOfToken,
   title
 }) => {
   if (isEmpty(communities) || isEmpty(communities.filter(({ entity }) => entity))) return null
@@ -158,7 +55,6 @@ const InnerCommunities = ({
             <ProfileCard
               key={index}
               balance={balance || 0}
-              balanceOfToken={balanceOfToken}
               entity={entity}
               metadata={{ ...metadata[token.tokenURI], ...metadata[community && community.communityURI] }}
               showDashboard={showDashboard}
@@ -181,7 +77,6 @@ const ProfileDropDown = ({
   communitiesKeys,
   communities,
   fetchCommunities,
-  balanceOfToken,
   changeNetwork,
   isPortis,
   isMetaMask,
@@ -291,7 +186,6 @@ const ProfileDropDown = ({
         communities={communitiesIOwn}
         networkType={networkType}
         accountAddress={accountAddress}
-        balanceOfToken={balanceOfToken}
         metadata={metadata}
         balances={balances}
         fetchBalances={fetchBalances}
@@ -303,7 +197,6 @@ const ProfileDropDown = ({
         communities={communitiesIPartOf}
         networkType={networkType}
         accountAddress={accountAddress}
-        balanceOfToken={balanceOfToken}
         metadata={metadata}
         fetchBalances={fetchBalances}
         balances={balances}
@@ -327,7 +220,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   fetchCommunities,
   fetchBalances,
-  balanceOfToken,
   changeNetwork,
   loadModal,
   push

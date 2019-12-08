@@ -67,6 +67,7 @@ const FeaturedCommunities = memo(({
               return (
                 <div className='cell medium-12 small-24' key={index}>
                   <FeaturedCommunity
+                    accountAddress={account}
                     metadata={{
                       ...metadata[token.tokenURI],
                       ...metadata[community.communityURI]
@@ -83,6 +84,7 @@ const FeaturedCommunities = memo(({
                 return (
                   <div className='cell medium-12 small-24' key={address}>
                     <FeaturedCommunity
+                      accountAddress={account}
                       metadata={{
                         ...metadata[token.tokenURI],
                         ...metadata[community.communityURI]

@@ -97,8 +97,10 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
 function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
   const { hash } = yield call(createMetadata, { metadata })
   const tokenURI = `ipfs://${hash}`
+  const communityURI = `ipfs://${hash}`
+  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
   const receipt = yield call(createToken, { ...tokenData, tokenURI, tokenType })
-  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps }))
+  yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps: newSteps }))
 }
 
 function * deployChosenContracts ({ response: { steps, receipt } }) {
@@ -303,27 +305,6 @@ function * toggleJoinBonus ({ isActive }) {
   })
 }
 
-function * watchCommunities ({ response }) {
-  const { result, entities } = response
-  for (let account of result) {
-    const entity = entities[account]
-    if (entity && entity.foreignTokenAddress) {
-      yield put(actions.fetchToken(entity.foreignTokenAddress))
-    }
-
-    if (entity && entity.communityURI) {
-      yield put(fetchMetadata(entity.communityURI))
-    }
-
-    if (entity && entity.community) {
-      yield put(actions.fetchToken(entity.community.foreignTokenAddress))
-      if (entity.community && entity.community.communityURI) {
-        yield put(fetchMetadata(entity.community.communityURI))
-      }
-    }
-  }
-}
-
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(ADD_COMMUNITY_PLUGIN, addCommunityPlugin, 1),
@@ -347,7 +328,6 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),
     tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
     tryTakeEvery(TOGGLE_JOIN_BONUS, toggleJoinBonus, 1),
-    tryTakeEvery(actions.FETCH_FEATURED_COMMUNITIES, fetchFeaturedCommunities),
-    takeEvery(action => /^(FETCH_FEATURED_COMMUNITIES|FETCH_COMMUNITIES).*SUCCESS/.test(action.type), watchCommunities)
+    tryTakeEvery(actions.FETCH_FEATURED_COMMUNITIES, fetchFeaturedCommunities)
   ])
 }
