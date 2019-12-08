@@ -64,7 +64,7 @@ POST /login/verify
 <p>Creates wallet contract for the user</p>
 
 ```
-POST /wallet/:accountAddress
+POST /wallet/
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -83,7 +83,7 @@ POST /wallet/:accountAddress
 <p>Fetches user's wallet address</p>
 
 ```
-POST /wallet/
+GET /wallet/
 ```
 ### Headers
 | Name    | Type      | Description                          |

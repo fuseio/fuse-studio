@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 
 /**
- * @api {post} /wallet/:accountAddress Create wallet contract for user
+ * @api {post} /wallet/ Create wallet contract for user
  * @apiName CreateWallet
  * @apiGroup Wallet
  * @apiDescription Creates wallet contract for the user
@@ -35,7 +35,7 @@ router.post('/', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {post} /wallet/ Fetch user wallet
+ * @api {get} /wallet/ Fetch user wallet
  * @apiName FetchWallet
  * @apiGroup Wallet
  * @apiDescription Fetches user's wallet address
