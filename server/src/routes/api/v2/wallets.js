@@ -17,20 +17,20 @@ const UserWallet = mongoose.model('UserWallet')
  */
 router.post('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
-  const userWallet = await UserWallet.findOne({ phoneNumber })
-  if (!userWallet) {
-    await new UserWallet({ phoneNumber, accountAddress }).save()
-    await agenda.now('createWallet', { owner: accountAddress })
-  } else if (userWallet.walletAddress) {
-    if (userWallet.accountAddress === config.get('network.home.addresses.MultiSigWallet')) {
-      console.log(`User ${phoneNumber} already has wallet account: ${userWallet.walletAddress} owned by MultiSig - need to setOwner`)
-      await agenda.now('setWalletOwner', { walletAddress: userWallet.walletAddress, newOwner: accountAddress })
-    } else {
-      const msg = `User ${phoneNumber} already has wallet account: ${userWallet.walletAddress}`
+  const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
+  if (transferOwnerWallet) {
+    console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
+    await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress })
+  } else {
+    const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
+    if (userWallet) {
+      const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress}`
       return res.status(400).json({ error: msg })
+    } else {
+      await new UserWallet({ phoneNumber, accountAddress }).save()
+      await agenda.now('createWallet', { owner: accountAddress })
     }
   }
-
   return res.json({ response: 'ok' })
 })
 
