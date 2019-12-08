@@ -152,15 +152,15 @@ const sha3 = (input) => {
 }
 
 const signMultiSigHash = (walletAddr, destinationAddr, value, data, nonce) => {
-  let input  = '0x' + [
-      '0x19',
-      '0x00',
-      walletAddr,
-      destinationAddr,
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(value), 32),
-      data,
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(nonce), 32)
-  ].map(hex => hex.slice(2)).join("")
+  let input = '0x' + [
+    '0x19',
+    '0x00',
+    walletAddr,
+    destinationAddr,
+    ethers.utils.hexZeroPad(ethers.utils.hexlify(value), 32),
+    data,
+    ethers.utils.hexZeroPad(ethers.utils.hexlify(nonce), 32)
+  ].map(hex => hex.slice(2)).join('')
 
   return sha3(input)
 }
