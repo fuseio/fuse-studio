@@ -75,15 +75,9 @@ const DashboardLayout = memo((props) => {
 
   useEffect(() => {
     if (!loading) {
-      if (error) {
-        console.log({ error })
-      }
-      if (!isEmpty(data)) {
+      if (!isEmpty(data) && !error) {
         const { tokens } = data
-        console.log({ tokens })
-        
         const { originNetwork } = tokens[0]
-        console.log({ originNetwork })
         setOriginNetwork(originNetwork)
       }
     }
@@ -137,7 +131,6 @@ const DashboardLayout = memo((props) => {
 
   useEffect(() => {
     if (communityAddress) {
-      console.log({ communityAddress })
       fetchCommunity(communityAddress)
       fetchEntities(communityAddress)
     }
