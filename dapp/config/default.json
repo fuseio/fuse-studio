@@ -78,6 +78,9 @@
     "retryCount": 5,
     "v2": {
       "url": "http://localhost:3000/api/v2"
+    },
+    "graph": {
+      "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse-qa"
     }
   },
   "reactGA": {

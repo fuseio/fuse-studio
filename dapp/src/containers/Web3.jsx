@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { getNetworkType, checkAccountChanged } from 'actions/network'
 import { loadModal } from 'actions/ui'
@@ -9,7 +9,7 @@ import { getAccountAddress } from 'selectors/accounts'
 import { loadState } from 'utils/storage'
 import isEmpty from 'lodash/isEmpty'
 
-class Web3 extends Component {
+class Web3 extends PureComponent {
   componentDidMount () {
     const { isMobile } = this.props
     if (isMobile) {
@@ -24,8 +24,8 @@ class Web3 extends Component {
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.networkType !== this.props.networkType && !isNetworkSupported(nextProps.networkType)) {
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.networkType !== this.props.networkType && !isNetworkSupported(this.props.networkType)) {
       this.props.loadModal(WRONG_NETWORK_MODAL)
     }
   }
