@@ -1,8 +1,4 @@
 @include block (home_page) {
-  // @include breakpoint(xxlarge up) {
-  //   min-height: 100vh;
-  // }
-  // position: relative;
   &:before {
     content: "";
     display: block;

@@ -55,7 +55,8 @@ const getInitialValues = (templateId, networkType) => {
             isActive: true
           }
         },
-        communityType: CommunityTypes[0]
+        communityType: CommunityTypes[0],
+        totalSupply: 1000
       }
     default:
       return {}
@@ -79,10 +80,11 @@ const WizardPage = ({
   templateId
 }) => {
   const desiredNetworkType = useMemo(() => {
+    const desiredNetworks = ['ropsten', 'mainnet']
     if (!networkType) {
-      return ['mainnet', 'ropsten']
+      return desiredNetworks
     } else if (networkType === homeNetwork) {
-      return ['ropsten', 'mainnet']
+      return desiredNetworks
     } else {
       const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
       return [networkType, secondDesired]
@@ -112,11 +114,17 @@ const WizardPage = ({
   const initialTemplateValues = useCallback(getInitialValues(templateId, networkType), [templateId, networkType])
 
   const initialValues = useMemo(() => {
-    const { plugins, communityType, existingToken, communitySymbol } = initialTemplateValues
+    const {
+      plugins,
+      communityType,
+      existingToken,
+      communitySymbol,
+      totalSupply
+    } = initialTemplateValues
     return {
       communityName: '',
       communitySymbol: communitySymbol || '',
-      totalSupply: '',
+      totalSupply: totalSupply || '',
       communityType: communityType || undefined,
       existingToken: existingToken || undefined,
       isOpen: true,

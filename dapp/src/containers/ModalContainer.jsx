@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { hideModal } from 'actions/ui'
-import LoginModal from 'components/common/LoginModal'
 import ImageCropperModal from 'components/common/ImageCropper'
 import TemplateModal from 'components/common/modals/TemplateModal'
 import WrongNetworkModal from 'components/common/WrongNetworkModal'
@@ -22,7 +21,6 @@ import SwitchNetwork from 'components/common/SwitchNetwork'
 import ChooseProviderModal from 'components/common/ChooseProviderModal'
 
 import {
-  LOGIN_MODAL,
   WRONG_NETWORK_MODAL,
   ADD_BUSINESS_MODAL,
   BUSINESS_LIST_MODAL,
@@ -47,7 +45,6 @@ const renderModal = (modalComponent, props) =>
   </ErrorBoundary>
 
 const MODAL_COMPONENTS = {
-  [LOGIN_MODAL]: LoginModal,
   [WRONG_NETWORK_MODAL]: WrongNetworkModal,
   [ADD_BUSINESS_MODAL]: AddBusinessModal,
   [BUSINESS_LIST_MODAL]: BusinessListModal,

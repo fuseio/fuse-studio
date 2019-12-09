@@ -5,11 +5,11 @@ import arrow from 'images/arrow_3.svg'
 export default () => {
   return (
     <div className='faq__wrapper'>
-      {FAQ.map(({ question }, index) => {
+      {FAQ.map(({ question, link }, index) => {
         return (
           <div className='faq' key={index}>
             <h4 className='faq__title'>Q:&nbsp;&nbsp;</h4>
-            <p className='faq__content'>{question}</p>
+            <a className='faq__content' href={link} target='_blank' rel='noopener noreferrer'>{question}</a>
             <br />
           </div>
         )

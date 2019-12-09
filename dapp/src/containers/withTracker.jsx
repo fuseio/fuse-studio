@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { hideModal } from 'actions/ui'
 import ReactGA from 'services/ga'
@@ -25,17 +25,16 @@ const withTracker = (WrappedComponent, options = {}) => {
     }
   }
 
-  const Tracker = class extends Component {
+  const Tracker = class extends PureComponent {
     componentDidMount () {
       const page = this.props.location.pathname
       trackPage(page)
     }
 
-    componentWillReceiveProps (nextProps) {
-      const currentPage = this.props.location.pathname
-      const nextPage = nextProps.location.pathname
-
-      if (currentPage !== nextPage) {
+    componentDidUpdate (prevProps) {
+      const prevPage = prevProps.router.location.pathname
+      const nextPage = this.props.router.location.pathname
+      if (prevPage !== nextPage) {
         trackPage(nextPage)
 
         if (this.props.modalType) {
@@ -50,6 +49,7 @@ const withTracker = (WrappedComponent, options = {}) => {
   }
 
   const mapStateToProps = (state) => ({
+    router: state.router,
     ...state.ui
   })
 
