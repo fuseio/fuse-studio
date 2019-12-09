@@ -78,8 +78,6 @@ const DashboardLayout = memo((props) => {
       if (!isEmpty(data) && !error) {
         const { tokens } = data
         const { originNetwork } = tokens[0]
-        console.log({ originNetwork: originNetwork === 'mainnet' ? 'main' : originNetwork })
-
         setOriginNetwork(originNetwork === 'mainnet' ? 'main' : originNetwork)
       }
     }
