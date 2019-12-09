@@ -104,7 +104,7 @@ const FeaturedCommunities = memo(({
         </Carousel>
       </div>
       <div onClick={showCommunities} className='faq__action'>
-        Learn more&nbsp;<img src={arrow} alt='arrow' />
+        Explore&nbsp;<img src={arrow} alt='arrow' />
       </div>
     </div>
   )

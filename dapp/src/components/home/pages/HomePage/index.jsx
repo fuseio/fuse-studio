@@ -24,7 +24,7 @@ const HomePage = ({
   push
 }) => {
   const [isClicked, setClicked] = useState(false)
-
+  const [path, setPath] = useState('/view/issuance')
   useEffect(() => {
     if (accountAddress && isClicked) {
       if (networkType === homeNetwork) {
@@ -45,10 +45,7 @@ const HomePage = ({
         setClicked
       })
     } else {
-      if (window && window.analytics) {
-        window.analytics.track('Launch community button pressed')
-      }
-      push('/view/issuance')
+      push(path || '/view/issuance')
     }
   }
 
@@ -63,7 +60,10 @@ const HomePage = ({
               Finish the community wizard on<br /> mainnet and <span>get rewarded 100<br /> Fuse tokens <img src={GiftIcon} /></span>
             </p>
             <div className='home_page__button'>
-              <button onClick={showIssuance}>
+              <button onClick={() => {
+                window.analytics.track('Launch community button pressed')
+                showIssuance()
+              }}>
                 Launch your community
                 <span style={{ marginLeft: '5px' }}>
                   <img src={arrowImage} alt='arrow' />
@@ -84,7 +84,7 @@ const HomePage = ({
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
             <div className='cell medium-24 large-12 template'>
-              <Templates />
+              <Templates setPath={setPath} showIssuance={showIssuance} />
             </div>
             <div className='cell medium-24 large-12 home_page__faqAndRecent'>
               <Faqs />

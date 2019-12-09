@@ -167,7 +167,7 @@ class BusinessForm extends Component {
 
         </div>
         <div className='grid-y' style={{ marginTop: '20px' }}>
-          <h2 className='user-form__label'>Business type</h2>
+          <h2 className='user-form__label'>Business type <span>*</span></h2>
           <Select
             name='type'
             className='user-form__field__select'
@@ -187,6 +187,7 @@ class BusinessForm extends Component {
             <TextField
               label='Ethereum account'
               name='account'
+              required
               type='search'
               fullWidth
               value={values.account}

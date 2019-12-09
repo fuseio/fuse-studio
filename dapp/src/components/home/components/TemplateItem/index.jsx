@@ -5,15 +5,16 @@ import { loadModal } from 'actions/ui'
 
 import TemplateArrow from 'images/template_arrow.svg'
 
-const TemplateItem = ({ showIssuance, title, image, hasSet, modalProps }) => {
+const TemplateItem = ({ setPath, showIssuance, title, image, hasSet, modalProps }) => {
   const dispatch = useDispatch()
 
   const showInfoModal = () => {
-    dispatch(loadModal(TEMPLATE_MODAL, { showIssuance, title, ...modalProps }))
+    window.analytics.track(`TEMPLATE MODAL - User click on ${title}`)
+    dispatch(loadModal(TEMPLATE_MODAL, { setPath, showIssuance, title, ...modalProps }))
   }
 
   return (
-    <div className='item cell medium-12 small-24'>
+    <div onClick={showInfoModal} className='item cell medium-12 small-24'>
       <div className='item__image'>
         <div className='item__image__container'>
           {

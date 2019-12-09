@@ -30,6 +30,10 @@
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
     background-color: $color-white;
 
+    &:hover { 
+      cursor: pointer;
+    }
+
     @include element(image) {
       position: relative;
       width: 100%;
