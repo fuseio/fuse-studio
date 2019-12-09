@@ -1,6 +1,4 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
-// import { Provider } from 'react-redux'
 import { Switch, Route } from 'react-router'
 import Oven from 'components/oven/Oven'
 import Wizard from 'components/wizard'

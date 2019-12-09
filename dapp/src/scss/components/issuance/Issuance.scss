@@ -222,7 +222,6 @@
         font-weight: bold;
 
         @include breakpoint(small only) {
-          // margin-bottom: 1em;
           font-size: 1.25em;
         }
       }
@@ -470,7 +469,6 @@
         margin-bottom: 1em;
 
         @include breakpoint(small only) {
-          // margin-bottom: 1em;
           font-size: 1.25em;
         }
       }
@@ -488,7 +486,6 @@
         min-height: 80px;
 
         @include breakpoint(medium up) {
-          // margin: 2rem 0;
         }
 
         @include breakpoint(medium down) {
@@ -854,7 +851,6 @@
 
       @include element(title) {
         font-size: 0.938em;
-        // font-weight: bold;
         line-height: 1.29;
         text-transform: capitalize;
         color: $color-dark;

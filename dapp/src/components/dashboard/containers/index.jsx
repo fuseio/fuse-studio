@@ -147,7 +147,7 @@ const DashboardLayout = memo((props) => {
       {accountAddress ? <SignIn accountAddress={accountAddress} /> : undefined}
       {
         (!community || !foreignToken || !homeToken) ? (
-          // TODO - ADD LOADED HERE
+          // TODO - ADD LOADER HERE
           <div>loading...</div>
         ) : (
           <div className='container'>
