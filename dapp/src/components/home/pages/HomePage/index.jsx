@@ -161,8 +161,7 @@ const mapStateToProps = (state) => ({
   homeNetwork: state.network.homeNetwork,
   metadata: state.entities.metadata,
   communities: state.entities.communities,
-  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
-
+  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities
 })
 
 const mapDispatchToProps = {
