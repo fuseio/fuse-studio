@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import FuseLoader from 'images/loader-fuse.gif'
 import ErrorIssuance from 'images/error_issuance.svg'
 
-export default ({ message, clickHandler, isOpen, isDark = false, subTitle = 'Waiting for signing', radiusAll = false, issue = false }) => {
+export default ({ message, clickHandler, isOpen, isDark = false, subTitle = 'Please sign with your wallet', radiusAll = false, issue = false }) => {
   if (!isOpen) {
     return null
   }
