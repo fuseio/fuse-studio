@@ -1,4 +1,4 @@
-import React, { useEffect, memo, useState } from 'react'
+import React, { useEffect, memo, useState, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { fetchFeaturedCommunities } from 'actions/token'
 import { withRouter } from 'react-router'
@@ -20,6 +20,7 @@ const FeaturedCommunities = memo(({
   showDashboard
 }) => {
   const [value, onChange] = useState(0)
+
   useEffect(() => {
     fetchFeaturedCommunities()
     return () => { }
@@ -29,7 +30,7 @@ const FeaturedCommunities = memo(({
     push('/view/communities')
   }
 
-  const slides = React.useMemo(() => {
+  const slides = useMemo(() => {
     if (!isEmpty(featuredCommunities)) {
       return featuredCommunities.map((address) => {
         const token = tokens[communities[address].foreignTokenAddress]
@@ -69,7 +70,6 @@ const FeaturedCommunities = memo(({
           centered
           infinite
           draggable
-          autoPlay={2000}
           animationSpeed={1000}
           slidesPerPage={2}
         >{slides}</Carousel>

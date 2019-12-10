@@ -1367,9 +1367,6 @@
   }
 }
 
-/* variables */
-$dots-color: black;
-
 .BrainhubCarousel__dots {
   display: flex;
   justify-content: center;
@@ -1398,12 +1395,12 @@ $dots-color: black;
     &:before {
       content: '';
       display: block;
-      width: 5px;
-      height: 5px;
+      width: 8.5px;
+      height: 8.5px;
       border-radius: 50%;
       padding: 0;
       border: none;
-      background: $dots-color;
+      background: #849eae;
     }
   }
 
