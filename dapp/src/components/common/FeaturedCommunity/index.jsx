@@ -4,13 +4,16 @@ import { fetchToken } from 'actions/token'
 import { fetchMetadata } from 'actions/metadata'
 import { balanceOfToken } from 'actions/accounts'
 
+import CommunityLogo from 'components/common/CommunityLogo'
+
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 
 const FeaturedCommunity = memo(({
   accountAddress,
   community,
   showDashboard,
-  metadata
+  metadata,
+  symbol
 }) => {
   const {
     communityURI,
@@ -50,7 +53,13 @@ const FeaturedCommunity = memo(({
           }
         </div>
         <div className='featured__logo'>
-          <img alt='logo photo' src={metadata && metadata.image && `${CONFIG.ipfsProxy.urlBase}/image/${metadata && metadata.image}`} />
+          <CommunityLogo
+            imageUrl={metadata && metadata.image && `${CONFIG.ipfsProxy.urlBase}/image/${metadata && metadata.image}`}
+            metadata={{
+              isDefault: metadata && metadata.isDefault
+            }}
+            symbol={symbol}
+          />
         </div>
       </div>
       <div className='featured__content'>

@@ -70,8 +70,13 @@
     }
 
     @include block(custom) {
-      cursor: pointer;
       height: 100%;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #F5F5F5;
+      }
+
       @include element(title) {
         font-size: 0.875em;
         font-weight: 500;

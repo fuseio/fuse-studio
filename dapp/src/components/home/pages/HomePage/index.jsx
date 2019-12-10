@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-// import ContentBox from 'components/home/components/ContentBox'
+import isEmpty from 'lodash/isEmpty'
 import Templates from 'components/home/components/Templates'
 import Faqs from 'components/home/components/Faq'
 import personImage from 'images/person.png'
@@ -15,12 +15,18 @@ import { loadModal } from 'actions/ui'
 import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
+import FeaturedCommunity from 'components/common/FeaturedCommunity'
+import { fetchCommunities } from 'actions/accounts'
 
 const HomePage = ({
   loadModal,
   accountAddress,
   networkType,
   homeNetwork,
+  communitiesKeys,
+  communities,
+  metadata,
+  fetchCommunities,
   push
 }) => {
   const [isClicked, setClicked] = useState(false)
@@ -32,6 +38,13 @@ const HomePage = ({
       } else {
         push('/view/issuance')
       }
+    }
+    return () => { }
+  }, [accountAddress])
+
+  useEffect(() => {
+    if (accountAddress) {
+      fetchCommunities(accountAddress)
     }
     return () => { }
   }, [accountAddress])
@@ -48,6 +61,24 @@ const HomePage = ({
       push(path || '/view/issuance')
     }
   }
+
+  let filteredCommunities = []
+  if (communitiesKeys) {
+    filteredCommunities = communitiesKeys
+      .map((communityAddress) => communities[communityAddress])
+      .filter(obj => !!obj)
+  }
+
+  const showDashboard = (communityAddress, name) => {
+    if (window && window.analytics) {
+      if (name) {
+        window.analytics.track(`Clicked on featured community - ${name}`)
+      }
+    }
+    push(`/view/community/${communityAddress}`)
+  }
+
+  let communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 4)
 
   return (
     <div className='home_page'>
@@ -83,12 +114,39 @@ const HomePage = ({
       <div className='home_page__faq'>
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
-            <div className='cell medium-24 large-12 template'>
-              <Templates setPath={setPath} showIssuance={showIssuance} />
+            <div className='cell medium-24 large-12'>
+              {
+                accountAddress && !isEmpty(communitiesIOwn) ? (
+                  <Templates title='My communities'>
+                    {
+                      communitiesIOwn.slice(0, 4).map((entity, index) => {
+                        const { community, token } = entity
+                        const { communityAddress } = community
+                        return (
+                          <div className='cell medium-12 small-24' key={index}>
+                            <FeaturedCommunity
+                              accountAddress={accountAddress}
+                              symbol={token && token.symbol}
+                              metadata={{
+                                ...metadata[token.tokenURI],
+                                ...metadata[community.communityURI]
+                              }}
+                              showDashboard={() => showDashboard(communityAddress)}
+                              community={community}
+                            />
+                          </div>
+                        )
+                      })
+                    }
+                  </Templates>
+                ) : (
+                  <Templates setPath={setPath} showIssuance={showIssuance} />
+                )
+              }
             </div>
-            <div className='cell medium-24 large-12 home_page__faqAndRecent'>
+            <div className='cell medium-24 large-12 home_page__faqAndRecent grid-y grid-margin-y'>
               <Faqs />
-              <FeaturedCommunities />
+              <FeaturedCommunities accountAddress={accountAddress} showDashboard={showDashboard} />
             </div>
           </div>
         </div>
@@ -100,12 +158,16 @@ const HomePage = ({
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
   networkType: state.network.networkType,
-  homeNetwork: state.network.homeNetwork
+  homeNetwork: state.network.homeNetwork,
+  metadata: state.entities.metadata,
+  communities: state.entities.communities,
+  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities
 })
 
 const mapDispatchToProps = {
   loadModal,
-  push
+  push,
+  fetchCommunities
 }
 
 export default withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage))

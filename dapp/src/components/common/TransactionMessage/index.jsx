@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import FuseLoader from 'images/loader-fuse.gif'
 
-export default ({ title, message = 'Pending', clickHandler, isOpen, isDark = true, subTitle = 'Waiting for signing', radiusAll = true }) => {
+export default ({ title, message = 'Pending', clickHandler, isOpen, isDark = true, subTitle = 'Please sign with your wallet', radiusAll = true }) => {
   if (!isOpen) {
     return null
   }

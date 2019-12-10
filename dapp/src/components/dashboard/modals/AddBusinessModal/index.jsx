@@ -17,7 +17,7 @@ const AddBusinessModal = ({ hideModal, isJoin, showTransactionMessage, signature
     <Modal hasCloseBtn className='user-form__modal' onClose={hideModal}>
       <TransactionMessage
         title={isJoin ? 'Joining the list' : 'Adding business to list'}
-        message={signatureNeeded ? 'Waiting for signing' : 'Pending'}
+        message={signatureNeeded ? 'Please sign with your wallet' : 'Pending'}
         isOpen={showTransactionMessage}
         isDark
       />
