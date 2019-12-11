@@ -8,13 +8,14 @@ import { push } from 'connected-react-router'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import NativeBalance from 'components/common/NativeBalance'
 import ProfileCard from 'components/common/ProfileCard'
+import { withAccount } from 'containers/Web3'
 
-import { getBalances } from 'selectors/accounts'
+import { getBalances, getProviderInfo } from 'selectors/accounts'
 import { getNetworkSide } from 'selectors/network'
 import { convertNetworkName } from 'utils/network'
 import { addressShortener, formatWei } from 'utils/format'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
-import { loadState, saveState } from 'utils/storage'
+import { saveState } from 'utils/storage'
 import { changeNetwork } from 'actions/network'
 import { loadModal } from 'actions/ui'
 import { fetchCommunities, fetchBalances } from 'actions/accounts'
@@ -78,22 +79,18 @@ const ProfileDropDown = ({
   communities,
   fetchCommunities,
   changeNetwork,
-  isPortis,
-  isMetaMask,
   loadModal,
   foreignNetwork,
-  push
+  push,
+  providerInfo,
+  handleLogOut
 }) => {
-  if (!accountAddress) return null
-
   useEffect(() => {
     if (accountAddress) {
       fetchCommunities(accountAddress)
     }
     return () => { }
   }, [accountAddress])
-
-  const currentProvider = React.useMemo(() => loadState('state.provider'), [])
 
   let filteredCommunities = []
   if (communitiesKeys) {
@@ -126,17 +123,7 @@ const ProfileDropDown = ({
   }
 
   const switchNetwork = () => {
-    if (isPortis) {
-      if (foreignNetwork) {
-        if (foreignNetwork === networkType) {
-          changeNetwork('fuse')
-        } else {
-          changeNetwork(foreignNetwork)
-        }
-      } else {
-        toggleNetwork()
-      }
-    } else if (isMetaMask) {
+    if (providerInfo.type === 'injected') {
       if (foreignNetwork) {
         if (foreignNetwork === networkType) {
           loadSwitchModal('fuse')
@@ -147,12 +134,23 @@ const ProfileDropDown = ({
         const desired = networkType === 'ropsten' ? 'main' : 'ropsten'
         loadSwitchModal(desired)
       }
+    } else if (providerInfo.type === 'web') {
+      if (foreignNetwork) {
+        if (foreignNetwork === networkType) {
+          changeNetwork('fuse')
+        } else {
+          changeNetwork(foreignNetwork)
+        }
+      } else {
+        toggleNetwork()
+      }
     }
   }
 
   const logout = () => {
-    saveState('state.provider', {})
-    saveState('state.reconnect', false)
+    // saveState('state.provider', {})
+    saveState('state.defaultWallet', '')
+    handleLogOut()
     window.location.reload()
   }
 
@@ -168,11 +166,9 @@ const ProfileDropDown = ({
             <FontAwesome name='clone' />
           </CopyToClipboard>
         </div>
-        {currentProvider && currentProvider.provider && (
-          <div onClick={logout} className='cell small-24 profile__account__logout grid-x align-middle align-center'>
-            <span>Log out from {currentProvider.provider}</span>
-          </div>
-        )}
+        <div onClick={logout} className='cell small-24 profile__account__logout grid-x align-middle align-center'>
+          <span>Log out from {providerInfo.name}</span>
+        </div>
       </div>
       <div className='profile__communities grid-y'>
         <p className='profile__switch' onClick={switchNetwork}>
@@ -180,7 +176,7 @@ const ProfileDropDown = ({
           <span>Switch to {capitalize(convertNetworkName((foreignNetwork === networkType ? 'fuse' : foreignNetwork) || (networkType === 'ropsten' ? 'main' : 'ropsten')))} network</span>
         </p>
       </div>
-      <NativeBalance isMetaMask={isMetaMask} isPortis={isPortis} />
+      <NativeBalance />
       <InnerCommunities
         showDashboard={showDashboard}
         communities={communitiesIOwn}
@@ -206,15 +202,13 @@ const ProfileDropDown = ({
 }
 
 const mapStateToProps = (state) => ({
-  accountAddress: state.network && state.network.accountAddress,
   communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
+  providerInfo: getProviderInfo(state),
   tokens: state.entities.tokens,
   metadata: state.entities.metadata,
   communities: state.entities.communities,
   networkType: state.network.networkType,
-  balances: getBalances(state),
-  isPortis: state.network.isPortis,
-  isMetaMask: state.network.isMetaMask
+  balances: getBalances(state)
 })
 
 const mapDispatchToProps = {
@@ -225,7 +219,7 @@ const mapDispatchToProps = {
   push
 }
 
-export default connect(
+export default withAccount(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProfileDropDown)
+)(ProfileDropDown))

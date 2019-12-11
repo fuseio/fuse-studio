@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import Logo from 'components/common/Logo'
 import PluginIcon from 'images/plugin.svg'
 import JoinBonusIcon from 'images/join_bonus.svg'
@@ -213,12 +213,11 @@ const allPlugins = (isAdmin) => isAdmin ? ({
   }
 })
 
-const Sidebar = ({
+const Sidebar = memo(({
   communityAddress,
   communityName,
   match,
   isAdmin,
-  isGradientLogo,
   plugins,
   tokenType,
   location,
@@ -265,9 +264,7 @@ const Sidebar = ({
   return (
     <aside className='sidebar'>
       <div className='item' style={{ cursor: 'pointer' }}>
-        <span onClick={() => goToPage('/')}>
-          <Logo isGradientLogo={isGradientLogo} />
-        </span>
+        <Logo showHomePage={() => goToPage('/')} isGradientLogo />
       </div>
       {sideBarItems.map(({ icon, name, url, style, path, selectedIcon, CustomElement, moreIcon }) => {
         if (path === '/plugins' && !isEmpty(addedPlugins)) {
@@ -356,6 +353,24 @@ const Sidebar = ({
       })}
     </aside>
   )
-}
+}, (prevProps, nextProps) => {
+  if (prevProps.communityAddress !== nextProps.communityAddress) {
+    return false
+  } else if (prevProps.communityName !== nextProps.communityName) {
+    return false
+  } else if (prevProps.match !== nextProps.match) {
+    return false
+  } else if (prevProps.isAdmin !== nextProps.isAdmin) {
+    return false
+  } else if (prevProps.plugins !== nextProps.plugins) {
+    return false
+  } else if (prevProps.tokenType !== nextProps.tokenType) {
+    return false
+  } else if (prevProps.location !== nextProps.location) {
+    return false
+  }
+
+  return true
+})
 
 export default connect(null, { push })(Sidebar)

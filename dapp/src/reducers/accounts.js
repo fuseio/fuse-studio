@@ -28,7 +28,7 @@ const handlers = {
   [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
   [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) }),
   [IS_USER_EXISTS.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
-  [CONNECT_TO_WALLET.SUCCESS]: (state, action) => ({ ...state, web3: action.response.web3 })
+  [CONNECT_TO_WALLET.SUCCESS]: (state, action) => ({ ...state, providerInfo: { ...action.response.providerInfo } })
 }
 
 export default (state = {}, action) => {
@@ -39,6 +39,10 @@ export default (state = {}, action) => {
 
   if (action.type === FETCH_FEATURED_COMMUNITIES.SUCCESS) {
     return { ...state, featuredCommunities: [...action.response.result] }
+  }
+
+  if (action.type === actions.GET_INITIAL_ADDRESS.SUCCESS) {
+    return { ...state, ...actions.response }
   }
   return state
 }

@@ -58,7 +58,7 @@ class Oven extends Component {
 
   render = () => (
     <div className='communities' ref={this.myRef}>
-      {/* <NavBar /> */}
+      <NavBar logout={this.props.logout} web3connect={this.props.web3connect} />
       <CommunitiesList getScrollParent={this.getScrollParent} {...this.props} showDashboard={this.showDashboard} />
     </div>
   )

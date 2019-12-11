@@ -35,18 +35,9 @@ const JoinBonus = ({
   balances,
   tokenOfCommunityOnCurrentSide,
   toggleJoinBonus,
-  isPortis,
-  changeNetwork,
-  homeNetwork,
   isFunderPartOfCommunity
 }) => {
   const [isFunderAdded, setFunderStatus] = React.useState(isFunderPartOfCommunity)
-  useEffect(() => {
-    if (isPortis && networkType !== homeNetwork) {
-      changeNetwork(homeNetwork)
-    }
-    return () => { }
-  }, [isPortis, networkType])
 
   useSwitchNetwork('fuse', { featureName: 'join bonus' })
 
@@ -147,7 +138,6 @@ const JoinBonus = ({
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
-  homeNetwork: state.network.homeNetwork,
   balances: getBalances(state),
   isFunderPartOfCommunity: checkIsFunderPartOfCommunity(state)
 })

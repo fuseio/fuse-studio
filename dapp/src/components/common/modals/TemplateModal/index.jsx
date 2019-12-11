@@ -25,7 +25,7 @@ const TemplateModal = ({
   const useTemplate = () => {
     hideModal()
     window.analytics.track(`USE TEMPLATE - User picked ${title}`)
-    setPath(`/view/issuance${templateId}`)
+    setPath(`/view/issuance/${String(Number(templateId))}`)
     showIssuance()
   }
 

@@ -12,16 +12,13 @@ import { createUsersMetadata } from 'sagas/metadata'
 import { separateData } from 'utils/3box'
 import { isUserExists } from 'actions/user'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
+import { loadState } from 'utils/storage'
+// import Box from '3box'
 
 const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 
 function * fetchTokenTotalSupply ({ tokenAddress, options }) {
-  const accountAddress = yield select(state => state.network.accountAddress)
-  console.log({ accountAddress })
-  const web3 = yield select(state => state.accounts[accountAddress].web3)
-  console.log({ web3 })
-  // throw new Error(web3)
-  // const web3 = yield getWeb3(options)
+  const web3 = yield getWeb3(options)
   const basicTokenContract = new web3.eth.Contract(BasicTokenABI, tokenAddress)
   const totalSupply = yield call(basicTokenContract.methods.totalSupply().call)
 
@@ -123,6 +120,19 @@ function * watchBalanceOfToken ({ response }) {
   yield put(actions.balanceOfToken(response.tokenAddress, accountAddress))
 }
 
+function * initialAddress () {
+  const rawAddress = loadState('state.userEthAddress')
+  const currentAddress = rawAddress && rawAddress.toLowerCase()
+
+  yield put({
+    type: actions.GET_INITIAL_ADDRESS.SUCCESS,
+    currentAddress,
+    response: {
+      currentAddress
+    }
+  })
+}
+
 export default function * accountsSaga () {
   yield all([
     tryTakeEvery(actions.BALANCE_OF_TOKEN, balanceOfToken),
@@ -134,6 +144,7 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
     tryTakeEvery(actions.SIGN_IN, signIn, 1),
     tryTakeEvery(actions.CREATE_3BOX_PROFILE, create3boxProfile, 1),
-    tryTakeEvery(FETCH_TOKEN_TOTAL_SUPPLY, fetchTokenTotalSupply)
+    tryTakeEvery(FETCH_TOKEN_TOTAL_SUPPLY, fetchTokenTotalSupply),
+    tryTakeEvery(actions.GET_INITIAL_ADDRESS, initialAddress)
   ])
 }

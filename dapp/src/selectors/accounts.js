@@ -11,6 +11,12 @@ export const getAccount = createSelector(
   (accountAddress, accounts) => accounts[accountAddress] || initialAccount
 )
 
+export const getProviderInfo = createSelector(
+  getAccountAddress,
+  state => state.accounts,
+  (accountAddress, accounts) => (accounts[accountAddress] && accounts[accountAddress].providerInfo) || initialAccount
+)
+
 export const getFunderAccount = createSelector(
   state => state.accounts,
   (accounts) => (accounts && accounts[funderAddress]) || null

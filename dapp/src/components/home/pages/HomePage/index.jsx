@@ -27,7 +27,9 @@ const HomePage = ({
   communities,
   metadata,
   fetchCommunities,
-  push
+  web3connect,
+  push,
+  logout
 }) => {
   const [isClicked, setClicked] = useState(false)
   const [path, setPath] = useState('/view/issuance')
@@ -54,9 +56,7 @@ const HomePage = ({
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')
       }
-      loadModal(CHOOSE_PROVIDER, {
-        setClicked
-      })
+      web3connect.toggleModal()
     } else {
       push(path || '/view/issuance')
     }
@@ -82,7 +82,7 @@ const HomePage = ({
 
   return (
     <div className='home_page'>
-      {/* <NavBar /> */}
+      <NavBar logout={logout} web3connect={web3connect} />
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-bottom'>
           <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>

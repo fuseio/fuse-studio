@@ -1,7 +1,4 @@
 import React, { useState, useContext, createContext } from 'react'
-import { getWeb3 } from 'services/web3'
-
-// import Web3 from 'web3'
 
 export const web3AuthContext = createContext({
   provider: null
@@ -16,10 +13,9 @@ const useWeb3ProvideAuth = () => {
       // const accounts = await web3.eth.getAccounts()
       // web3AuthObject = {
       //   provider
-      //   // web3,
-      //   // accounts
+      //   web3,
+      //   accounts
       // }
-      // getWeb3(provider)
       web3AuthObject = { provider }
       return web3AuthObject
     }

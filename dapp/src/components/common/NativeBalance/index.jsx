@@ -1,25 +1,20 @@
 import React, { useEffect } from 'react'
 import { formatWei } from 'utils/format'
 import { connect } from 'react-redux'
-import { getAccount } from 'selectors/accounts'
+import { getAccount, getProviderInfo } from 'selectors/accounts'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
 
 const NativeBalance = ({
   account,
-  isMetaMask,
-  isPortis
+  providerInfo
 }) => {
   useEffect(() => {
     const { analytics } = window
     if (account && account.accountAddress) {
-      analytics.identify(account.accountAddress,
-        isPortis ? {
-          subscriptionStatus: 'active',
-          provider: 'Portis'
-        } : isMetaMask ? {
-          provider: 'Metamask'
-        } : null)
+      analytics.identify(account.accountAddress, {
+        provider: providerInfo.name
+      })
     } else {
       analytics.identify({
         subscriptionStatus: 'inactive'
@@ -61,7 +56,8 @@ const NativeBalance = ({
 }
 
 const mapState = (state) => ({
-  account: getAccount(state)
+  account: getAccount(state),
+  providerInfo: getProviderInfo(state)
 })
 
 export default connect(mapState, null)(NativeBalance)

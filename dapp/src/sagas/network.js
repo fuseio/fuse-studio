@@ -1,17 +1,16 @@
 import get from 'lodash/get'
+import Web3connect from 'web3connect'
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
-import isEmpty from 'lodash/isEmpty'
 import { getWeb3 } from 'services/web3'
-import { portis, getProvider as getPortisProvider } from 'services/web3/providers/portis'
 import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse } from 'actions/accounts'
 import { loadModal } from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
-import { saveState, loadState } from 'utils/storage'
+import { saveState } from 'utils/storage'
 import { processTransactionHash } from 'services/api/misc'
 import { getNetworkSide } from 'selectors/network'
 import { apiCall, tryTakeEvery } from './utils'
@@ -40,6 +39,7 @@ function * deduceBridgeSides (networkType) {
 function * connectToWallet ({ provider }) {
   try {
     const web3 = yield getWeb3({ provider })
+    const providerInfo = Web3connect.getProviderInfo(provider)
     const accounts = yield web3.eth.getAccounts()
     const accountAddress = accounts[0]
     yield call(getNetworkType, { web3 })
@@ -47,7 +47,7 @@ function * connectToWallet ({ provider }) {
       type: actions.CONNECT_TO_WALLET.SUCCESS,
       accountAddress,
       response: {
-        web3
+        providerInfo
       }
     })
     const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
@@ -64,17 +64,16 @@ function * connectToWallet ({ provider }) {
 function * getNetworkType ({ web3 }) {
   try {
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
-
     const bridgeSides = yield deduceBridgeSides(networkType)
-    const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
-    const isPortis = get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
+    // const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
+    // const isPortis = get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
     yield put({
       type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
         networkId,
-        isMetaMask,
-        isPortis,
+        // isMetaMask,
+        // isPortis,
         ...bridgeSides
       } })
 
@@ -89,12 +88,12 @@ function * getNetworkType ({ web3 }) {
       throw new Error('This network is not supported')
     }
   } catch (error) {
+    yield put(loadModal(WRONG_NETWORK_MODAL))
+    yield put({ type: actions.GET_NETWORK_TYPE.FAILURE, error })
     yield put({
       type: 'ERROR',
       error
     })
-    yield put(loadModal(WRONG_NETWORK_MODAL))
-    yield put({ type: actions.GET_NETWORK_TYPE.FAILURE, error })
   }
 }
 
@@ -142,17 +141,17 @@ function * watchGetNetworkTypeSuccess ({ response }) {
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
-// function * watchConnectToWallet ({ response }) {
-//   const { provider } = response
-//   saveState('state.provider', { provider })
-//   saveState('state.reconnect', true)
-// }
+function * watchConnectToWallet ({ response, accountAddress }) {
+  const { providerInfo } = response
+  const { name } = providerInfo
+  saveState('state.userEthAddress', accountAddress)
+  saveState('state.defaultWallet', name)
+}
 
 function * changeNetwork ({ networkType }) {
-  portis.changeNetwork(toLongName(networkType))
-  yield call(getNetworkType, true)
   const foreignNetwork = yield select(state => state.network.foreignNetwork)
-  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : networkType, networkType })
+  const currentNetwork = toLongName(networkType)
+  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : currentNetwork, networkType: currentNetwork })
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
@@ -177,9 +176,7 @@ export default function * web3Saga () {
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),
     takeEvery(actions.CHANGE_NETWORK.REQUEST, changeNetwork),
     takeEvery(actions.GET_NETWORK_TYPE.SUCCESS, watchGetNetworkTypeSuccess),
-    // takeEvery(actions.CONNECT_TO_WALLET.SUCCESS, watchConnectToWallet),
-    // takeEvery(actions.WEB3_CONNECTED.REQUEST, connectToProvider),
+    takeEvery(actions.CONNECT_TO_WALLET.SUCCESS, watchConnectToWallet),
     tryTakeEvery(actions.SEND_TRANSACTION_HASH, sendTransactionHash, 1)
-    // WEB3_DISCONNECTED
   ])
 }

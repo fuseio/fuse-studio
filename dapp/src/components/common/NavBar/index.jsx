@@ -11,30 +11,18 @@ import { withRouter } from 'react-router'
 import { withNetwork } from 'containers/Web3'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
-import { loadModal } from 'actions/ui'
-import { CHOOSE_PROVIDER } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 
-// import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import useOutsideClick from 'hooks/useOutsideClick'
 
-// import Web3connect from 'web3connect'
-import { connectWeb3 } from 'actions/network'
-
-// import useWeb3Connect from 'hooks/useWeb3Connect'
-// import WalletConnectProvider from '@walletconnect/web3-provider'
-// import Portis from '@portis/web3'
-// import Fortmatic from 'fortmatic'
-
 const NavBar = ({
-  connectWeb3,
   accountAddress,
   networkType,
   foreignNetwork,
-  loadModal,
   push,
   connectingToWallet,
-  handleConnectWallet,
+  logout,
+  web3connect,
   withLogo = true
 }) => {
   const [isHelpOpen, setHelpOpen] = useState(false)
@@ -69,8 +57,6 @@ const NavBar = ({
     }
   }, [handleScroll])
 
-  const goToHome = () => push('/')
-
   // const chooseProvider = () => {
   //   if (!accountAddress) {
   //     if (window && window.analytics) {
@@ -92,7 +78,7 @@ const NavBar = ({
 
   return (
     <div className={classNames('navbar', { 'navbar--scroll': scrollTop > 70 })} >
-      {(withLogo || (isMobileOnly && scrollTop > 70)) && <div className='navbar__logo'><Logo onClick={goToHome} isBlue={scrollTop < 70} /></div>}
+      {(withLogo || (isMobileOnly && scrollTop > 70)) && <div className='navbar__logo'><Logo showHomePage={() => push('/')} isBlue={scrollTop < 70} /></div>}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
         <div
           className='navbar__links__help'
@@ -122,7 +108,7 @@ const NavBar = ({
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
               <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                <ProfileDropDown foreignNetwork={foreignNetwork === 'mainnet' ? 'main' : foreignNetwork} />
+                <ProfileDropDown handleLogOut={() => logout()} foreignNetwork={foreignNetwork === 'mainnet' ? 'main' : foreignNetwork} />
               </div>
             </div>
           ) : connectingToWallet ? (
@@ -133,7 +119,7 @@ const NavBar = ({
               <span className='animate'>.</span>
             </div>
           ) : (
-            <div className='navbar__links__wallet' onClick={() => handleConnectWallet()}>
+            <div className='navbar__links__wallet' onClick={() => web3connect.toggleModal()}>
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>Connect wallet</span>
             </div>
@@ -146,13 +132,12 @@ const NavBar = ({
 
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
-  connectingToWallet: state.network.connectingToWallet
+  connectingToWallet: state.network.connectingToWallet,
+  networkType: state.network.networkType
 })
 
 const mapDispatchToProps = {
-  loadModal,
-  push,
-  connectWeb3
+  push
 }
 
-export default withRouter(withNetwork((connect(mapStateToProps, mapDispatchToProps)(NavBar))))
+export default withRouter((connect(mapStateToProps, mapDispatchToProps)(NavBar)))

@@ -70,6 +70,7 @@ const FeaturedCommunities = memo(({
           centered
           infinite
           draggable
+          onChange={onChange}
           animationSpeed={1000}
           slidesPerPage={2}
         >{slides}</Carousel>

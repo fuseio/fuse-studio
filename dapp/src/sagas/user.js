@@ -7,6 +7,7 @@ import * as api from 'services/api/user'
 import { isUserProfileExists } from 'services/api/profiles'
 import { generateSignatureData } from 'utils/web3'
 import { saveState } from 'utils/storage'
+import get from 'lodash/get'
 
 export function * login () {
   const accountAddress = yield select(getAccountAddress)
@@ -46,9 +47,9 @@ export function * login () {
 function * signUpUser ({ email, subscribe }) {
   const accountAddress = yield select(getAccountAddress)
   try {
-    const network = yield select(state => state.network)
-    const provider = network.isMetaMask ? 'metamask' : network.isPortis ? 'portis' : 'unknown'
-
+    const accounts = yield select(state => state.accounts)
+    const userInfo = accounts[accountAddress]
+    const provider = get(userInfo, 'providerInfo.name').toLowerCase()
     const response = yield apiCall(api.signUpUser,
       { user: { accountAddress, email, provider, subscribe, source: 'studio' } }, { v2: true })
 
