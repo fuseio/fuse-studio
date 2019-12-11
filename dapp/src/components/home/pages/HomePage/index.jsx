@@ -12,7 +12,7 @@ import GiftIcon from 'images/gift.svg'
 import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
 import { loadModal } from 'actions/ui'
-import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
+// import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import FeaturedCommunity from 'components/common/FeaturedCommunity'
@@ -31,18 +31,18 @@ const HomePage = ({
   push,
   logout
 }) => {
-  const [isClicked, setClicked] = useState(false)
+  // const [isClicked, setClicked] = useState(false)
   const [path, setPath] = useState('/view/issuance')
-  useEffect(() => {
-    if (accountAddress && isClicked) {
-      if (networkType === homeNetwork) {
-        loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'], goBack: false })
-      } else {
-        push('/view/issuance')
-      }
-    }
-    return () => { }
-  }, [accountAddress])
+  // useEffect(() => {
+  //   if (accountAddress && isClicked) {
+  //     if (networkType === homeNetwork) {
+  //       loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'], goBack: false })
+  //     } else {
+  //       push('/view/issuance')
+  //     }
+  //   }
+  //   return () => { }
+  // }, [accountAddress])
 
   useEffect(() => {
     if (accountAddress) {

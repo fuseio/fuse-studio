@@ -8,7 +8,6 @@ import classNames from 'classnames'
 import ProfileDropDown from './../ProfileDropDown'
 import { isMobileOnly } from 'react-device-detect'
 import { withRouter } from 'react-router'
-import { withNetwork } from 'containers/Web3'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
 import { push } from 'connected-react-router'
@@ -140,4 +139,4 @@ const mapDispatchToProps = {
   push
 }
 
-export default withRouter((connect(mapStateToProps, mapDispatchToProps)(NavBar)))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar))

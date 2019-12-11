@@ -1,4 +1,3 @@
-import get from 'lodash/get'
 import Web3connect from 'web3connect'
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
