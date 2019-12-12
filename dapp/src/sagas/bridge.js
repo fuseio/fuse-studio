@@ -1,11 +1,10 @@
 import { call, all, put, select, delay, takeEvery } from 'redux-saga/effects'
 
-import { apiCall, createEntityPut, tryTakeEvery } from './utils'
+import { tryTakeEvery } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
 import { getBlockNumber } from 'selectors/network'
 import { transactionFlow } from './transaction'
 import * as actions from 'actions/bridge'
-import * as api from 'services/api/token'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getWeb3 } from 'services/web3'
 import BasicForeignBridgeABI from 'constants/abi/BasicForeignBridge'
@@ -14,21 +13,6 @@ import { getCommunityAddress } from 'selectors/entities'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchTokenTotalSupply, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
-
-const entityPut = createEntityPut(actions.entityName)
-
-export function * deployBridge ({ foreignTokenAddress }) {
-  const response = yield apiCall(api.deployBridge, { foreignTokenAddress })
-
-  yield entityPut({
-    type: actions.DEPLOY_BRIDGE.SUCCESS,
-    tokenAddress: foreignTokenAddress,
-    response: {
-      ...response.data,
-      foreignTokenAddress
-    }
-  })
-}
 
 function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, confirmationsLimit }) {
   const accountAddress = yield select(getAccountAddress)
@@ -127,7 +111,6 @@ function * watchBridgeTransfers () {
 
 export default function * bridgeSaga () {
   yield all([
-    tryTakeEvery(actions.DEPLOY_BRIDGE, deployBridge, 1),
     tryTakeEvery(actions.TRANSFER_TO_HOME, transferToHome, 1),
     tryTakeEvery(actions.TRANSFER_TO_FOREIGN, transferToForeign, 1),
     tryTakeEvery(actions.WATCH_FOREIGN_BRIDGE, watchForeignBridge, 1),

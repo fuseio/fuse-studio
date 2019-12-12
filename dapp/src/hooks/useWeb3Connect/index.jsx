@@ -11,13 +11,11 @@ const useWeb3Connect = (options, connectCallback) => {
     providerOptions
   })
 
-  // subscribe to connect
   web3Connect.on('connect', async (response) => {
     await setProvider(response)
     await connectCallback(response)
   })
 
-  // subscribe to close
   web3Connect.on('close', () => { })
 
   const toggleModal = () => {

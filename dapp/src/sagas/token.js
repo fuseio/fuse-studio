@@ -3,7 +3,6 @@ import BasicToken from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
-import { DEPLOY_BRIDGE } from 'actions/bridge'
 import { fetchMetadata } from 'actions/metadata'
 import { ADD_COMMUNITY_PLUGIN, TOGGLE_JOIN_BONUS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
@@ -343,7 +342,6 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),
     tryTakeEvery(actions.FETCH_TOKEN_PROGRESS, fetchTokenProgress, 1),
-    takeEvery(DEPLOY_BRIDGE.SUCCESS, fetchTokenProgress),
     takeEvery([actions.MINT_TOKEN.SUCCESS, actions.BURN_TOKEN.SUCCESS], watchTokenChanges),
     takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),

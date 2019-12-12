@@ -7,7 +7,7 @@ import inRange from 'lodash/inRange'
 import omit from 'lodash/omit'
 import Logo from 'components/common/Logo'
 import classNames from 'classnames'
-import FontAwesome from 'react-fontawesome'
+import ExitIcon from 'images/exit_icon.svg'
 import TransactionButton from 'components/common/TransactionButton'
 import { PENDING, FAILURE, REQUEST, SUCCESS } from 'actions/constants'
 import { saveWizardProgress } from 'actions/user'
@@ -187,7 +187,7 @@ class Wizard extends React.Component {
             <div
               onClick={() => push('/')}
               className='issuance__header__close align-self-middle grid-x align-middle align-right'>
-              <FontAwesome name='times' />
+              <img src={ExitIcon} />
             </div>
           </div>
           <Formik

@@ -13,7 +13,6 @@ import { separateData } from 'utils/3box'
 import { isUserExists } from 'actions/user'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { loadState } from 'utils/storage'
-// import Box from '3box'
 
 const fetchCommunities = createEntitiesFetch(actions.FETCH_COMMUNITIES, fetchCommunitiesApi)
 

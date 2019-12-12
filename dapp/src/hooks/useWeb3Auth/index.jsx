@@ -9,13 +9,6 @@ const useWeb3ProvideAuth = () => {
   const signIn = async (provider) => {
     let web3AuthObject
     if (provider) {
-      // const web3 = new Web3(provider)
-      // const accounts = await web3.eth.getAccounts()
-      // web3AuthObject = {
-      //   provider
-      //   web3,
-      //   accounts
-      // }
       web3AuthObject = { provider }
       return web3AuthObject
     }
@@ -34,6 +27,4 @@ export function Web3ProvideAuth ({ children }) {
   return <web3AuthContext.Provider value={web3Auth}>{children}</web3AuthContext.Provider>
 }
 
-// Hook for child components to get the auth object ...
-// ... and re-render when it changes.
 export const useWeb3Auth = () => useContext(web3AuthContext)

@@ -148,7 +148,6 @@ const ProfileDropDown = ({
   }
 
   const logout = () => {
-    // saveState('state.provider', {})
     saveState('state.defaultWallet', '')
     handleLogOut()
     window.location.reload()

@@ -104,9 +104,6 @@ const DashboardLayout = memo((props) => {
   useEffect(() => {
     if (isAdmin) {
       window.analytics.identify(`${accountAddress}`, { role: 'admin', communityAddress })
-      if (location.pathname.includes('/justCreated')) {
-        window.analytics.reset()
-      }
 
       if (networkType === 'fuse') {
         window.analytics.identify(`${accountAddress}`, {
@@ -118,7 +115,6 @@ const DashboardLayout = memo((props) => {
         })
       }
     } else {
-      window.analytics.reset()
       window.analytics.identify(`${accountAddress}`, {
         role: 'user'
       })

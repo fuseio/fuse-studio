@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Balance from 'components/dashboard/components/Balance'
+import Message from 'components/common/SignMessage'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
@@ -31,7 +32,7 @@ class Bridge extends Component {
     }
 
     if (!this.props.transferStatus && prevProps.transferStatus) {
-      this.setState({ transferAmount: 0 })
+      this.setState({ transferAmount: '' })
     }
   }
 
@@ -88,7 +89,8 @@ class Bridge extends Component {
       tokenOfCommunityOnCurrentSide,
       isAdmin,
       community,
-      waitingForRelayEvent
+      waitingForRelayEvent,
+      bridgeSignature
     } = this.props
 
     const {
@@ -139,6 +141,8 @@ class Bridge extends Component {
             openModal={() => this.openModal('to')}
           />
         </div>
+
+        <Message isOpen={bridgeSignature} isDark />
         {
           waitingForConfirmation
             ? (

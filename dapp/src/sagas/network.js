@@ -37,6 +37,7 @@ function * deduceBridgeSides (networkType) {
 
 function * connectToWallet ({ provider }) {
   try {
+    saveState('state.reconnect', true)
     const web3 = yield getWeb3({ provider })
     const providerInfo = Web3connect.getProviderInfo(provider)
     const accounts = yield web3.eth.getAccounts()
@@ -64,15 +65,11 @@ function * getNetworkType ({ web3 }) {
   try {
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const bridgeSides = yield deduceBridgeSides(networkType)
-    // const isMetaMask = get(web3.currentProvider, 'isMetaMask', false) || get(web3.currentProvider.connection, 'isMetaMask', false)
-    // const isPortis = get(web3.currentProvider, 'isPortis', false) || get(web3.currentProvider.connection, 'isPortis', false)
     yield put({
       type: actions.GET_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
         networkId,
-        // isMetaMask,
-        // isPortis,
         ...bridgeSides
       } })
 

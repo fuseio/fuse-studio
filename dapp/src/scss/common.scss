@@ -80,7 +80,6 @@
   margin-top: 1em;
 
   @include element(wrapper) {
-    // @include xy-grid(vertical);
     padding-top: 25px;
     padding-bottom: 25px;
     border-radius: 10px;

@@ -1,19 +1,13 @@
-// SASS variables for normal drag handle and bar size.
-// Override in your scss file by setting these variables FIRST, then including this file.
 $drag-handle-width: 10px !default;
 $drag-handle-height: 10px !default;
 $drag-bar-size: 6px !default;
 
-// Query to kick us into "mobile" mode with larger drag handles/bars.
-// See: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer
 $mobile-media-query: '(pointer: coarse)' !default;
 
-// Mobile handle/bar sizes.  Override as above.
 $drag-handle-mobile-width: $drag-handle-width + 10 !default;
 $drag-handle-mobile-height: $drag-handle-height + 10 !default;
 $drag-bar-mobile-size: $drag-bar-size + 10 !default;
 
-// Handle color/border.
 $drag-handle-background-colour: rgba(0, 0, 0, 0.2) !default;
 $drag-handle-border: 1px solid rgba(255, 255, 255, 0.7) !default;
 

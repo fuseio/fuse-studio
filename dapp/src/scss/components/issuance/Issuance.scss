@@ -106,13 +106,7 @@
     @include element(close) {
       padding-right: 20px;
       flex-basis: 10%;
-      .fa {
-        cursor: pointer;
-
-        &:hover {
-          color: $color-fuse;
-        }
-      }
+      cursor: pointer;
     }
 
     @include element(current) {
@@ -337,13 +331,13 @@
           color: $color-dark;
           height: 40px;
           border-radius: 5px;
-          border: solid 1px $color-light-gray;
+          border: solid 2px $color-lighter-gray;
 
           &::placeholder {
             color: #92a1ac;
           }
           &:focus {
-            border: solid 1px $color-dark;
+            border-color: $color-light-gray;
           }
         }
 
@@ -418,13 +412,13 @@
           color: $color-dark;
           height: 40px;
           border-radius: 5px;
-          border: solid 1px $color-light-gray;
+          border: solid 2px $color-lighter-gray;
 
           &::placeholder {
             color: rgba(0, 0, 0, 0.3);
           }
           &:focus {
-            border: solid 1px $color-dark;
+            border-color: $color-light-gray;
           }
 
           &:disabled {
@@ -434,7 +428,7 @@
       }
     }
 
-    @include block (use_custom) {
+    @include block(use_custom) {
       position: absolute;
       right: 7px;
       top: 2px;
@@ -476,7 +470,7 @@
       @include element(currency) {
         width: 100%;
         margin-bottom: 1em;
-        
+
         .attributes__title {
           padding-bottom: 1em;
         }
@@ -514,22 +508,11 @@
           display: inline-block;
           width: 100%;
           height: 52px;
-          border: solid 1px $color-light-gray;
 
           @include modifier(selected) {
-            border: solid 1px $color-dark;
-          }
-
-          &:focus {
-            border: solid 1px $color-dark;
-          }
-
-          &:hover {
-            border: solid 1px $color-dark;
-          }
-
-          > div {
-            border-color: transparent !important;
+            > div {
+              border-color: $color-light-gray !important;
+            }
           }
 
           @include element(prefix) {
@@ -548,7 +531,16 @@
               height: 100%;
               font-size: 0.775em;
               border-radius: 5px !important;
-              border: 1px solid transparent !important;
+              box-shadow: 0 0 0 0 $color-lighter-gray !important;
+              border: 2px solid $color-lighter-gray !important;
+
+              &:focus {
+                border: solid 2px $color-light-gray !important;
+              }
+
+              &:hover {
+                border: solid 2px $color-light-gray !important;
+              }
 
               @include modifier(menu-is-open) {
                 font-weight: 500;
@@ -583,7 +575,6 @@
                 background-color: rgba(10, 117, 134, 0.08) !important;
               }
             }
-
 
             @include element(menu-list) {
               color: $color-dark;
@@ -632,14 +623,15 @@
         @include breakpoint(small down) {
           @include xy-grid(vertical);
           @include flex-align(spaced, middle);
-          > div, p {
+          > div,
+          p {
             margin-bottom: 1em;
           }
         }
         @include element(item) {
           border-radius: 5px;
           box-shadow: 0 0 8px 0 rgba(70, 36, 36, 0.04);
-          border: 2px solid rgba(226, 226, 226, 0.49);
+          border: 2px solid $color-lighter-gray;
           width: 200px;
           height: 145px;
           display: flex;
@@ -782,7 +774,7 @@
       @include element(logo) {
         border-radius: 5px;
         box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
-        border: 2px solid rgba(226, 226, 226, 0.49);
+        border: 2px solid $color-lighter-gray;
         display: flex;
         flex-direction: column;
         text-transform: capitalize;
@@ -820,13 +812,13 @@
             color: $color-dark;
             height: 40px;
             border-radius: 5px;
-            border: solid 1px $color-light-gray;
+            border: solid 2px $color-lighter-gray;
 
             &::placeholder {
               color: rgba(0, 0, 0, 0.3);
             }
             &:focus {
-              border: solid 1px $color-dark;
+              border-color: $color-light-gray;
             }
           }
         }
@@ -866,7 +858,7 @@
         position: relative;
         border-radius: 5px;
         box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
-        border: 2px solid rgba(226, 226, 226, 0.49);
+        border: 2px solid $color-lighter-gray;
         height: 145px;
         display: block;
         margin-top: 1em;

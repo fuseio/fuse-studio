@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import TemplateItem from 'components/home/components/TemplateItem'
-// import AddIcon from 'images/add_icon.svg'
-import FontAwesome from 'react-fontawesome'
+import PlusIcon from 'images/plug_icon.svg'
 import templatesOptions from 'constants/templates'
 
 const Templates = ({
@@ -27,8 +26,8 @@ const Templates = ({
               }} className='item cell medium-12 small-24'>
                 <div className='custom grid-y align-center align-middle'>
                   <h6 className='custom__title'>Create a <br /> Custom Community</h6>
-                  {/* <img src={AddIcon} /> */}
-                  <FontAwesome name='plus-circle' style={{ fontSize: '60px', color: '#c5d1d8' }} />
+                  <img src={PlusIcon} />
+                  {/* <FontAwesome name='plus-circle' style={{ fontSize: '60px', color: '#c5d1d8' }} /> */}
                 </div>
               </div>
             </Fragment>

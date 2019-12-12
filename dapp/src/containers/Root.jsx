@@ -9,27 +9,23 @@ import Layout from 'components/common/Layout'
 import HomePage from 'components/home/pages/HomePage'
 import Footer from 'components/common/Footer'
 
-import { getInitialAddress } from 'actions/accounts'
 import { connectToWallet } from 'actions/network'
 import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import { getForeignNetwork } from 'selectors/network'
 import { toLongName } from 'utils/network'
-import { loadState } from 'utils/storage'
+import { loadState, saveState } from 'utils/storage'
 
 import useWeb3Connect from 'hooks/useWeb3Connect'
 import useDefaultWallet from 'hooks/useDefaultWallet'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Portis from '@portis/web3'
+// import Torus from '@toruslabs/torus-embed'
 // import Fortmatic from 'fortmatic'
 
 const Root = ({
   connectToWallet,
-  getInitialAddress,
   defaultNetwork
 }) => {
-  // useEffect(() => {
-  //   getInitialAddress()
-  // }, [])
   const networkState = React.useMemo(() => loadState('state.network'), [])
   const networkToConnectTo = (networkState && networkState.networkType && toLongName(networkState.networkType)) || toLongName(defaultNetwork)
 
@@ -53,6 +49,16 @@ const Root = ({
           id: CONFIG.web3.portis.id
         }
       }
+      // TODO - add more providers
+      // torus: {
+      //   package: Torus, // required
+      //   options: {
+      //     enableLogging: CONFIG.env !== 'production',
+      //     buttonPosition: 'top-right',
+      //     buildEnv: CONFIG.env === 'production' ? 'production' : 'development',
+      //     showTorusButton: true
+      //   }
+      // }
       // fortmatic: {
       //   package: Fortmatic,
       //   options: {
@@ -63,6 +69,7 @@ const Root = ({
   }
 
   const defaultWallet = useMemo(() => loadState('state.defaultWallet'), [])
+  const reconnect = useMemo(() => loadState('state.reconnect'), [])
 
   const checkInjected = useMemo(() => Web3connect.checkInjectedProviders(), [])
 
@@ -74,7 +81,7 @@ const Root = ({
 
     if (defaultWallet && connectTo) {
       autoLogin(defaultWallet)
-    } else if (checkInjected.injectedAvailable) {
+    } else if (checkInjected.injectedAvailable && reconnect) {
       autoLogin('metamask')
     }
 
@@ -87,6 +94,7 @@ const Root = ({
   }
 
   const logout = () => {
+    saveState('state.reconnect', false)
     web3Auth.signOut()
   }
 
@@ -110,8 +118,7 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = {
-  connectToWallet,
-  getInitialAddress
+  connectToWallet
 }
 
 export default connect(mapState, mapDispatch)(Root)
