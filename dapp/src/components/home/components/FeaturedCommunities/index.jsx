@@ -54,7 +54,7 @@ const FeaturedCommunities = memo(({
       })
     } else {
       return [1, 2, 3, 4].map((item) =>
-        <div key={item} className='cell medium-12 small-24'>
+        <div key={item} style={{ width: '90%' }}>
           <img style={{ width: '100%', height: '145px' }} src={CommunityPlaceholderImage} />
         </div>
       )
@@ -70,10 +70,19 @@ const FeaturedCommunities = memo(({
           centered
           infinite
           draggable
+          onChange={onChange}
           animationSpeed={1000}
           slidesPerPage={2}
+          breakpoints={{
+            1000: {
+              slidesPerPage: 2
+            },
+            800: {
+              slidesPerPage: 1
+            }
+          }}
         >{slides}</Carousel>
-        <Dots value={value} onChange={onChange} number={4} />
+        <Dots value={value} onChange={onChange} number={React.Children.count(slides)} />
       </div>
       <div onClick={showCommunities} className='faq__action'>
         Explore&nbsp;<img src={arrow} alt='arrow' />

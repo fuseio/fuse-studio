@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import CommunityLogo from 'components/common/CommunityLogo'
 import { loadModal, hideModal } from 'actions/ui'
 import { IMAGE_CROPPER_MODAL } from 'constants/uiConstants'
@@ -30,7 +29,7 @@ const LogosOptions = ({
   const communitySymbol = getIn(formik.values, 'communitySymbol')
   const existingToken = getIn(formik.values, 'existingToken')
 
-  const { chosen, custom } = imagesValues
+  const { custom } = imagesValues
 
   const imageConverter = (image, field) => {
     let img = new window.Image()
@@ -110,18 +109,13 @@ const LogosOptions = ({
       <Field
         key='defaultOne'
         name='images.defaultOne'
-        render={({ field, form: { setFieldValue } }) => {
+        render={({ field }) => {
           return (
-            <div onClick={() => {
-              setFieldValue('images.chosen', 'defaultOne')
-              if (window && window.analytics) {
-                window.analytics.track(`Choose logo - defaultOne`)
-              }
-            }} className={classNames('attributes__logo', { 'attributes__logo--chosen': chosen === 'defaultOne' })}>
-              <label htmlFor='logoUpload' className='use_custom'>
+            <label htmlFor='logoUpload' className='attributes__logo'>
+              <div className='use_custom'>
                 <input id='logoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={onSelectFile} />
                 <img src={cameraIcon} />
-              </label>
+              </div>
               <CommunityLogo
                 metadata={{
                   isDefault: communityType && communityType.value && communityType.label
@@ -129,7 +123,7 @@ const LogosOptions = ({
                 symbol={communitySymbol}
                 imageUrl={(custom && custom.croppedImageUrl) || (field && field.value && field.value.croppedImageUrl)}
               />
-            </div>
+            </label>
           )
         }}
       />

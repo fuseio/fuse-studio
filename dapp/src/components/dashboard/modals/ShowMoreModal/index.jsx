@@ -2,7 +2,7 @@ import React from 'react'
 import Modal from 'components/common/Modal'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
-import { formatAddress } from 'utils/format'
+import { addressShortener } from 'utils/format'
 
 export default ({ hideModal, name, network, tokenName, foreignTokenAddress, homeTokenAddress, homeBridgeAddress, foreignBridgeAddress }) => {
   return (
@@ -23,7 +23,7 @@ export default ({ hideModal, name, network, tokenName, foreignTokenAddress, home
           <div className='show-more__content__item'>
             <span>Token foreign address</span>
             <span className='address'>
-              {formatAddress(foreignTokenAddress)}
+              {addressShortener(foreignTokenAddress)}
               <CopyToClipboard text={foreignTokenAddress}>
                 <FontAwesome name='clone' />
               </CopyToClipboard>
@@ -32,7 +32,7 @@ export default ({ hideModal, name, network, tokenName, foreignTokenAddress, home
           <div className='show-more__content__item'>
             <span>Token home address</span>
             <span className='address'>
-              {formatAddress(homeTokenAddress)}
+              {addressShortener(homeTokenAddress)}
               <CopyToClipboard text={homeTokenAddress}>
                 <FontAwesome name='clone' />
               </CopyToClipboard>
@@ -41,7 +41,7 @@ export default ({ hideModal, name, network, tokenName, foreignTokenAddress, home
           <div className='show-more__content__item'>
             <span>Bridge foreign address</span>
             <span className='address'>
-              {formatAddress(foreignBridgeAddress)}
+              {addressShortener(foreignBridgeAddress)}
               <CopyToClipboard text={foreignBridgeAddress}>
                 <FontAwesome name='clone' />
               </CopyToClipboard>
@@ -50,7 +50,7 @@ export default ({ hideModal, name, network, tokenName, foreignTokenAddress, home
           <div className='show-more__content__item'>
             <span>Bridge home address</span>
             <span className='address'>
-              {formatAddress(homeBridgeAddress)}
+              {addressShortener(homeBridgeAddress)}
               <CopyToClipboard text={homeBridgeAddress}>
                 <FontAwesome name='clone' />
               </CopyToClipboard>

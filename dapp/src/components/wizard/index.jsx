@@ -293,7 +293,7 @@ const WizardPage = ({
           <DeployProgressStep />
         </Wizard.Page>
         <Wizard.Page>
-          <Congratulations goToDashboard={goToDashboard} />
+          <Congratulations networkType={networkType} goToDashboard={goToDashboard} />
         </Wizard.Page>
       </Wizard>
 

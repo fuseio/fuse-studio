@@ -4,9 +4,10 @@ import { Formik } from 'formik'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import inRange from 'lodash/inRange'
+import omit from 'lodash/omit'
 import Logo from 'components/common/Logo'
 import classNames from 'classnames'
-import FontAwesome from 'react-fontawesome'
+import ExitIcon from 'images/exit_icon.svg'
 import TransactionButton from 'components/common/TransactionButton'
 import { PENDING, FAILURE, REQUEST, SUCCESS } from 'actions/constants'
 import { saveWizardProgress } from 'actions/user'
@@ -59,7 +60,7 @@ class Wizard extends React.Component {
 
   next = (values) => {
     const { saveWizardProgress } = this.props
-    saveWizardProgress(values)
+    saveWizardProgress(omit(values, ['images', 'coverPhoto']))
     if (validations[this.state.page]) {
       const { adminAddress } = this.props
       const currentStepFields = validations[this.state.page]
@@ -103,7 +104,7 @@ class Wizard extends React.Component {
       if (window && window.analytics) {
         window.analytics.track('Issue pressed')
       }
-      saveWizardProgress({ ...values, isSubmit: true })
+      saveWizardProgress({ ...omit(values, ['images', 'coverPhoto']), isSubmit: true })
       return submitHandler(values, bag)
     } else {
       bag.setTouched({})
@@ -169,8 +170,8 @@ class Wizard extends React.Component {
       <Fragment>
         <div className='issuance__wrapper'>
           <div className='issuance__header grid-x align-justify'>
-            <div onClick={() => push('/')} className='issuance__header__logo align-self-middle grid-x align-middle'>
-              <Logo isGradientLogo />
+            <div className='issuance__header__logo align-self-middle grid-x align-middle'>
+              <Logo showHomePage={() => push('/')} isGradientLogo />
             </div>
             <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
               <div className='grid-y cell auto'>
@@ -186,7 +187,7 @@ class Wizard extends React.Component {
             <div
               onClick={() => push('/')}
               className='issuance__header__close align-self-middle grid-x align-middle align-right'>
-              <FontAwesome name='times' />
+              <img src={ExitIcon} />
             </div>
           </div>
           <Formik

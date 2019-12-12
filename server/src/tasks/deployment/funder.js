@@ -3,11 +3,11 @@ const config = require('config')
 
 const funder = async (networks, communityProgress) => {
   const { adminAddress: accountAddress } = communityProgress.steps.community.args
-  const { foreignTokenAddress: tokenAddress } = communityProgress.steps.bridge.args
+  const { homeTokenAddress: tokenAddress } = communityProgress.steps.bridge.results
   const options = {
     method: 'POST',
     uri: `${config.get('funder.urlBase')}fund/native`,
-    body: { accountAddress, tokenAddress },
+    body: { accountAddress, tokenAddress, networkType: config.get('network.foreign.name') },
     json: true
   }
 

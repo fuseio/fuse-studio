@@ -11,36 +11,22 @@ import arrowImage from 'images/arrow_1.svg'
 import GiftIcon from 'images/gift.svg'
 import withTracker from 'containers/withTracker'
 import { connect } from 'react-redux'
-import { loadModal } from 'actions/ui'
-import { CHOOSE_PROVIDER, SWITCH_NETWORK } from 'constants/uiConstants'
 import { push } from 'connected-react-router'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import FeaturedCommunity from 'components/common/FeaturedCommunity'
 import { fetchCommunities } from 'actions/accounts'
 
 const HomePage = ({
-  loadModal,
   accountAddress,
-  networkType,
-  homeNetwork,
   communitiesKeys,
   communities,
   metadata,
   fetchCommunities,
-  push
+  web3connect,
+  push,
+  logout
 }) => {
-  const [isClicked, setClicked] = useState(false)
   const [path, setPath] = useState('/view/issuance')
-  useEffect(() => {
-    if (accountAddress && isClicked) {
-      if (networkType === homeNetwork) {
-        loadModal(SWITCH_NETWORK, { desiredNetworkType: ['ropsten', 'mainnet'], goBack: false })
-      } else {
-        push('/view/issuance')
-      }
-    }
-    return () => { }
-  }, [accountAddress])
 
   useEffect(() => {
     if (accountAddress) {
@@ -54,9 +40,7 @@ const HomePage = ({
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')
       }
-      loadModal(CHOOSE_PROVIDER, {
-        setClicked
-      })
+      web3connect.toggleModal()
     } else {
       push(path || '/view/issuance')
     }
@@ -82,7 +66,7 @@ const HomePage = ({
 
   return (
     <div className='home_page'>
-      <NavBar />
+      <NavBar logout={logout} web3connect={web3connect} />
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-bottom'>
           <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>
@@ -157,15 +141,12 @@ const HomePage = ({
 
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
-  networkType: state.network.networkType,
-  homeNetwork: state.network.homeNetwork,
   metadata: state.entities.metadata,
   communities: state.entities.communities,
   communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities
 })
 
 const mapDispatchToProps = {
-  loadModal,
   push,
   fetchCommunities
 }

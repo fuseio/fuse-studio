@@ -1,7 +1,7 @@
 import React from 'react'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
-import { formatWei, formatAddress } from 'utils/format'
+import { formatWei, addressShortener } from 'utils/format'
 import { BigNumber } from 'bignumber.js'
 
 const percentOnSide = (total, homeTokenBalance, foreignTokenBalance) => {
@@ -67,7 +67,7 @@ const CommunityInfo = ({
           </TitleValue>
           <TitleValue title='Currency address'>
             <div className='grid-x'>
-              <span>{formatAddress(address)}</span>
+              <span>{addressShortener(address)}</span>
               <CopyToClipboard text={address}>
                 <div className='copy'><FontAwesome name='clone' /></div>
               </CopyToClipboard>
@@ -76,7 +76,7 @@ const CommunityInfo = ({
           </TitleValue>
           <TitleValue title='Community address'>
             <div className='grid-x'>
-              <span>{formatAddress(communityAddress)}</span>
+              <span>{addressShortener(communityAddress)}</span>
               <CopyToClipboard text={communityAddress}>
                 <div className='copy'><FontAwesome name='clone' /></div>
               </CopyToClipboard>

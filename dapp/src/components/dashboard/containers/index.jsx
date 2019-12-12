@@ -10,7 +10,7 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 
 import { getBridgeStatus } from 'selectors/network'
-import { getAccountAddress, getBalances } from 'selectors/accounts'
+import { getAccountAddress, getBalances, getProviderInfo } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import { getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
@@ -60,13 +60,13 @@ const DashboardLayout = memo((props) => {
     tokenOfCommunityOnCurrentSide,
     location,
     communityAddress,
-    isPortis,
-    changeNetwork,
     homeToken,
     fetchEntities,
     push,
-    isMetaMask,
-    loadModal
+    providerInfo,
+    loadModal,
+    web3connect,
+    logout
   } = props
   const [open, onSetSidebarOpen] = useState(false)
   const [originNetwork, setOriginNetwork] = useState(false)
@@ -87,9 +87,9 @@ const DashboardLayout = memo((props) => {
     if (originNetwork) {
       if (networkType !== 'fuse' && networkType && networkType !== originNetwork) {
         const desired = originNetwork
-        const wrongNetworkText = isMetaMask
+        const wrongNetworkText = providerInfo.type === 'injected'
           ? `Switch to ${desired} through Metamask. `
-          : isPortis
+          : providerInfo.type === 'web'
             ? `Switch to ${desired} through your wallet on the upper right part of the Studio.`
             : `Switch to ${desired}.`
         loadModal(WRONG_NETWORK_MODAL, {
@@ -104,9 +104,6 @@ const DashboardLayout = memo((props) => {
   useEffect(() => {
     if (isAdmin) {
       window.analytics.identify(`${accountAddress}`, { role: 'admin', communityAddress })
-      if (location.pathname.includes('/justCreated')) {
-        window.analytics.reset()
-      }
 
       if (networkType === 'fuse') {
         window.analytics.identify(`${accountAddress}`, {
@@ -118,7 +115,6 @@ const DashboardLayout = memo((props) => {
         })
       }
     } else {
-      window.analytics.reset()
       window.analytics.identify(`${accountAddress}`, {
         role: 'user'
       })
@@ -156,7 +152,6 @@ const DashboardLayout = memo((props) => {
                 ? <SidebarContent
                   plugins={community && community.plugins}
                   isAdmin={isAdmin}
-                  isGradientLogo
                   communityName={community.name}
                   match={match.url}
                   tokenType={foreignToken && foreignToken.tokenType}
@@ -168,7 +163,6 @@ const DashboardLayout = memo((props) => {
                     <SidebarContent
                       plugins={community && community.plugins}
                       isAdmin={isAdmin}
-                      isGradientLogo
                       communityName={community.name}
                       match={match.url}
                       tokenType={foreignToken && foreignToken.tokenType}
@@ -187,7 +181,7 @@ const DashboardLayout = memo((props) => {
                 </Sidebar>
             }
             <div className='content__container'>
-              <NavBar withLogo={false} foreignNetwork={foreignToken && foreignToken.networkType} />
+              <NavBar logout={logout} web3connect={web3connect} withLogo={false} foreignNetwork={foreignToken && foreignToken.networkType} />
               <div className='content'>
                 <div className='content__wrapper'>
                   <Switch>
@@ -195,8 +189,6 @@ const DashboardLayout = memo((props) => {
                       <Route path={`${match.path}/bonus`}
                         render={() => (
                           <JoinBonusPage
-                            isPortis={isPortis}
-                            changeNetwork={changeNetwork}
                             symbol={foreignToken && foreignToken.symbol}
                             community={community}
                             networkType={networkType}
@@ -232,12 +224,7 @@ const DashboardLayout = memo((props) => {
                       <Route
                         path={`${match.path}/plugins`}
                         render={() => (
-                          <PluginsPage
-                            isPortis={isPortis}
-                            changeNetwork={changeNetwork}
-                            community={community}
-                            networkType={networkType}
-                          />
+                          <PluginsPage community={community} />
                         )}
                       />
                     )}
@@ -283,8 +270,6 @@ const DashboardLayout = memo((props) => {
     return false
   } else if (prevProps.communityAddress !== nextProps.communityAddress) {
     return false
-  } else if (prevProps.isPortis !== nextProps.isPortis) {
-    return false
   } else if (prevProps.networkType !== nextProps.networkType) {
     return false
   } else if (prevProps.community !== nextProps.community) {
@@ -293,18 +278,20 @@ const DashboardLayout = memo((props) => {
     return false
   } else if (prevProps.match !== nextProps.match) {
     return false
+  } else if (prevProps.dashboard !== nextProps.dashboard) {
+    return false
+  } else if (prevProps.providerInfo !== nextProps.providerInfo) {
+    return false
   }
 
   return true
 })
 
 const mapStateToProps = (state, { match }) => ({
-  isMetaMask: state.network.isMetaMask,
   accountAddress: getAccountAddress(state),
   networkType: state.network.networkType,
   homeToken: getHomeTokenByCommunityAddress(state, match.params.address),
   foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
-  isPortis: state.network.isPortis,
   community: state.entities.communities[match.params.address],
   communityAddress: match.params.address,
   metadata: state.entities.metadata,
@@ -312,7 +299,8 @@ const mapStateToProps = (state, { match }) => ({
   balances: getBalances(state),
   bridgeStatus: getBridgeStatus(state),
   dashboard: state.screens.dashboard,
-  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, state.entities.communities[match.params.address])
+  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, state.entities.communities[match.params.address]),
+  providerInfo: getProviderInfo(state)
 })
 
 const mapDispatchToProps = {

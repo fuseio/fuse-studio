@@ -1,7 +1,7 @@
 import * as actions from 'actions/accounts'
 import { LOGIN, IS_USER_EXISTS } from 'actions/user'
 import { FETCH_FEATURED_COMMUNITIES } from 'actions/token'
-import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
+import { CHECK_ACCOUNT_CHANGED, CONNECT_TO_WALLET } from 'actions/network'
 import pick from 'lodash/pick'
 
 export const initialAccount = {
@@ -27,7 +27,8 @@ const handlers = {
   },
   [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
   [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) }),
-  [IS_USER_EXISTS.SUCCESS]: (state, action) => ({ ...state, ...action.response })
+  [IS_USER_EXISTS.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
+  [CONNECT_TO_WALLET.SUCCESS]: (state, action) => ({ ...state, providerInfo: { ...action.response.providerInfo } })
 }
 
 export default (state = {}, action) => {
@@ -38,6 +39,10 @@ export default (state = {}, action) => {
 
   if (action.type === FETCH_FEATURED_COMMUNITIES.SUCCESS) {
     return { ...state, featuredCommunities: [...action.response.result] }
+  }
+
+  if (action.type === actions.GET_INITIAL_ADDRESS.SUCCESS) {
+    return { ...state, ...actions.response }
   }
   return state
 }

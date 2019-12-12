@@ -33,10 +33,11 @@ export default ({ message, clickHandler, isOpen, isDark = false, subTitle = 'Ple
                 subTitle && (
                   <div className='status__sub-title status__sub-title--white'>
                     <div className='status__title status__title--white'>
-                      {message}
-                      <p className='status__loader'>
-                        <span>.</span><span>.</span><span>.</span>
-                      </p>
+                      {message && (
+                        <p className='status__loader'>
+                          <span>.</span><span>.</span><span>.</span>
+                        </p>
+                      )}
                     </div>
                     {subTitle}
                     <div className='status__loader__img'>
@@ -71,10 +72,11 @@ export default ({ message, clickHandler, isOpen, isDark = false, subTitle = 'Ple
           ) : (
             <Fragment>
               <div className='status__title status__title--white'>
-                {message}
-                <p className='status__loader'>
-                  <span>.</span><span>.</span><span>.</span>
-                </p>
+                {message && (
+                  <p className='status__loader'>
+                    <span>.</span><span>.</span><span>.</span>
+                  </p>
+                )}
               </div>
               {
                 subTitle && (

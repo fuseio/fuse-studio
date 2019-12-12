@@ -4,17 +4,17 @@ import 'utils/validation/yup'
 import React from 'react'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom'
-import { ConnectedRouter } from 'connected-react-router'
-import * as Sentry from '@sentry/browser'
 import { ApolloProvider } from '@apollo/react-hooks'
 import ApolloClient from 'apollo-boost'
+import * as Sentry from '@sentry/browser'
+import { ConnectedRouter } from 'connected-react-router'
 
+import ErrorBoundary from 'components/common/ErrorBoundary'
+import ScrollToTopController from 'containers/ScrollToTopController'
+import { Web3ProvideAuth } from 'hooks/useWeb3Auth'
 import Root from 'containers/Root'
 import configureStore from 'store/configureStore'
 import rootSaga from 'sagas/index'
-
-import ScrollToTopController from 'containers/ScrollToTopController'
-import ErrorBoundary from 'components/common/ErrorBoundary'
 
 Sentry.init({ dsn: `https://${CONFIG.sentry.key}@sentry.io/${CONFIG.sentry.project}` })
 
@@ -30,11 +30,12 @@ ReactDOM.render(
       <ConnectedRouter history={history}>
         <ScrollToTopController>
           <ErrorBoundary>
-            <Root history={history} />
+            <Web3ProvideAuth>
+              <Root />
+            </Web3ProvideAuth>
           </ErrorBoundary>
         </ScrollToTopController>
       </ConnectedRouter>
     </ApolloProvider>
   </Provider>,
-  document.getElementById('root')
-)
+  document.getElementById('root'))
