@@ -55,14 +55,10 @@ const useTabsStyles = makeStyles(theme => ({
     minHeight: '80px',
     borderTopLeftRadius: '10px',
     borderTopRightRadius: '10px'
-    // paddingTop: '20px'
   },
   indicator: {
     backgroundColor: ' #052235'
-  },
-  // flexContainer: {
-  //   justifyContent: 'space-between'
-  // }
+  }
 }))
 
 const useTabStyles = makeStyles(theme => ({
