@@ -124,7 +124,9 @@ const DetailsStep = ({
           aria-controls='panel1a-content'
           id='panel1a-header'
         >
-          <Typography component='div' className='accordion__button'>Plugins</Typography>
+          <Typography component='div' className='accordion__button'>
+            Plugins <a target='_blank' rel='noopener noreferrer' href='https://medium.com/fusenet/how-to-add-functionality-to-your-community-introducing-plug-ins-209933e5c4ed'>(What this?)</a>
+          </Typography>
           <Typography component='div' className='accordion__button--sub-title'>({countOfSelectedPlugins} selected)</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className='accordion__panel'>

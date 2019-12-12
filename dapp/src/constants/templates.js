@@ -29,10 +29,10 @@ export default [
         </div>
       ),
       attributes: [
-        'Issue your own mintable burnable token + stable coin',
-        'Wallet',
-        'Merchants and suppliers',
-        'DAI integration',
+        'Issue your own mintable burnable token',
+        'Stable coin',
+        'Custom Wallet',
+        'Business list',
         'Join Bonus'
       ]
     }
@@ -55,9 +55,9 @@ export default [
       ),
       attributes: [
         'Issue your own mintable burnable token',
-        'Wallet',
+        'Custom Wallet',
         'Invite community admins',
-        'Merchants and suppliers',
+        'Business list',
         'Join Bonus'
       ]
     }
@@ -78,10 +78,10 @@ export default [
         </div>
       ),
       attributes: [
-        'Dai native currency',
-        'Wallet',
+        'DAI stable coin',
         'Loyalty points',
-        'Merchants and suppliers',
+        'Custom Wallet',
+        'Business list',
         'Join Bonus'
       ]
     }
