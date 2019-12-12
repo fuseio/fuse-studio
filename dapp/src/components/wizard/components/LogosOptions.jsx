@@ -29,7 +29,7 @@ const LogosOptions = ({
   const communitySymbol = getIn(formik.values, 'communitySymbol')
   const existingToken = getIn(formik.values, 'existingToken')
 
-  const { chosen, custom } = imagesValues
+  const { custom } = imagesValues
 
   const imageConverter = (image, field) => {
     let img = new window.Image()

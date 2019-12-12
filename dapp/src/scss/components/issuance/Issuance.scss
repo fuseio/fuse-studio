@@ -797,9 +797,6 @@
           border: solid 2px rgba(74, 104, 123, 0.3);
           cursor: pointer;
         }
-        @include modifier(chosen) {
-          border: solid 2px rgba(74, 104, 123, 0.3);
-        }
       }
 
       @include element(supply) {
