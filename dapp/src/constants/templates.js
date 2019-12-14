@@ -42,7 +42,7 @@ export default [
   {
     title: 'Issue a community currency',
     Image: () => (
-      <img alt='cover photo' sizes='(max-width:800px) 30vw,  600px' 
+      <img alt='cover photo' sizes='(max-width:800px) 30vw,  600px'
         srcSet={`${CommunityCurrency} 300w, ${CommunityCurrency1} 768w, ${CommunityCurrency1} 1280w, ${CommunityCurrency1} 3200w`} />
     ),
     modalProps: {
