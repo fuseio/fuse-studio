@@ -81,7 +81,7 @@
     min-height: 80px;
     max-height: 80px;
     height: 100%;
-    background-image: url(../../assets/images/header.jpg);
+    background-image: url(/assets/images/header.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     max-width: 100%;
@@ -134,7 +134,7 @@
       @include breakpoint(medium down) {
         position: absolute;
         top: 80px;
-        background-image: url(../../assets/images/header.jpg);
+        background-image: url(/assets/images/header.jpg);
         background-repeat: no-repeat;
         background-size: cover;
       }

@@ -1,6 +1,4 @@
-import 'babel-polyfill'
 import 'utils/validation/yup'
-
 import React from 'react'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom'

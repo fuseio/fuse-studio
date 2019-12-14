@@ -30,7 +30,7 @@
   @include modifier(scroll) {
     position: fixed;
     top: 0;
-    background-image: url(../../assets/images/header.jpg);
+    background-image: url(/assets/images/header.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     z-index: 11;

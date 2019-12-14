@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { WRONG_NETWORK_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
-import { deployBridge } from 'actions/bridge'
 import { getTransaction } from 'selectors/transaction'
 import Bridge from 'components/dashboard/components/Bridge'
 import CommunityInfo from 'components/dashboard/components/CommunityInfo'
@@ -155,7 +154,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   loadModal,
   hideModal,
-  deployBridge,
   transferToken,
   mintToken,
   burnToken,
