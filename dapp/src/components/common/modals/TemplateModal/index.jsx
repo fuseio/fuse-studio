@@ -11,7 +11,6 @@ const TemplateModal = ({
   sideImage,
   title,
   templateId,
-  setPath,
   showIssuance,
   attributes = [
     'Issue your own mintable burnable token',
@@ -25,8 +24,7 @@ const TemplateModal = ({
   const useTemplate = () => {
     hideModal()
     window.analytics.track(`USE TEMPLATE - User picked ${title}`)
-    setPath(`/view/issuance/${String(Number(templateId))}`)
-    showIssuance()
+    showIssuance(templateId)
   }
 
   return (

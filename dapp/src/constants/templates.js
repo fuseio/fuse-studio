@@ -16,8 +16,10 @@ import sideImage from 'images/wheels4u-community page.png'
 export default [
   {
     title: 'Create P2P marketplace',
-    hasSet: true,
-    image: `${P2PMarketPlace} 300w, ${P2PMarketPlace1} 768w, ${P2PMarketPlace2} 1280w, ${P2PMarketPlace2} 3200w`,
+    Image: () => (
+      <img alt='cover photo' sizes='(max-width:800px) 30vw,  600px'
+        srcSet={`${P2PMarketPlace} 300w, ${P2PMarketPlace1} 768w, ${P2PMarketPlace2} 1280w, ${P2PMarketPlace2} 3200w`} />
+    ),
     modalProps: {
       templateId: 1,
       logo: P2PLogo,
@@ -39,8 +41,10 @@ export default [
   },
   {
     title: 'Issue a community currency',
-    hasSet: true,
-    image: `${CommunityCurrency} 300w, ${CommunityCurrency1} 768w, ${CommunityCurrency1} 1280w, ${P2PMarketPlace2} 3200w`,
+    Image: () => (
+      <img alt='cover photo' sizes='(max-width:800px) 30vw,  600px' 
+        srcSet={`${CommunityCurrency} 300w, ${CommunityCurrency1} 768w, ${CommunityCurrency1} 1280w, ${CommunityCurrency1} 3200w`} />
+    ),
     modalProps: {
       templateId: 2,
       logo: CommunityCurrencyLogo,
@@ -64,8 +68,10 @@ export default [
   },
   {
     title: 'Create a loyalty wallet',
-    hasSet: true,
-    image: `${LoyalyWallet} 300w, ${LoyalyWallet2} 768w, ${LoyalyWallet2} 1280w, ${P2PMarketPlace2} 3200w`,
+    Image: () => (
+      <img alt='cover photo' sizes='(max-width:800px) 30vw,  600px'
+        srcSet={`${LoyalyWallet} 300w, ${LoyalyWallet2} 768w, ${LoyalyWallet2} 1280w, ${LoyalyWallet2} 3200w`} />
+    ),
     modalProps: {
       templateId: 1,
       logo: LoyaltyWallet,

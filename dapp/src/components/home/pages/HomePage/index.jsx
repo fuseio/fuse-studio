@@ -87,7 +87,6 @@ const HomePage = ({
 }) => {
   const [value, setValue] = useState(0)
   const [valueSpinner, onChangeSpinner] = useState(0)
-  const [path, setPath] = useState('/view/issuance')
 
   const tabsClasses = useTabsStyles()
   const tabClasses = useTabStyles()
@@ -99,14 +98,15 @@ const HomePage = ({
     return () => { }
   }, [accountAddress])
 
-  const showIssuance = () => {
+  const showIssuance = (templateId) => {
     if (!accountAddress) {
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')
       }
       web3connect.toggleModal()
     } else {
-      push(path || '/view/issuance')
+      const path = templateId ? `/view/issuance/${templateId}` : '/view/issuance'
+      push(path)
     }
   }
 
@@ -188,9 +188,6 @@ const HomePage = ({
                 </span>
               </button>
             </div>
-            <div className='home_page__text--choose'>
-              Or, choose a template:
-            </div>
           </div>
           <div className='home_page__image home_page__image--second cell large-12 medium-12 small-18'>
             <img src={personImage} />
@@ -240,11 +237,11 @@ const HomePage = ({
                       <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                      <Templates setPath={setPath} showIssuance={showIssuance} />
+                      <Templates showIssuance={showIssuance} />
                     </TabPanel>
                   </div>
                 ) : (
-                  <Templates withDecoration setPath={setPath} showIssuance={showIssuance} />
+                  <Templates withDecoration showIssuance={showIssuance} />
                 )
               }
             </div>

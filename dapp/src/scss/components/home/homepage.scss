@@ -150,12 +150,6 @@
       min-width: 400px;
     }
 
-    @include modifier(choose) {
-      font-size: 0.875em;
-      padding: 1em 0;
-      padding-left: 2.9em;
-    }
-
     > span {
       font-weight: bold;
       color: $color-dark;
