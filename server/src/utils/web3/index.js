@@ -68,7 +68,7 @@ const TRANSACTION_HASH_IMPORTED = 'Node error: {"code":-32010,"message":"Transac
 const TRANSACTION_HASH_TOO_LOW = 'Node error: {"code":-32010,"message":"Transaction nonce is too low. Try incrementing the nonce."}'
 const TRANSACTION_TIMEOUT = 'Error: Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
 
-const send = async ({ web3, bridgeType, address }, method, options) => {
+const send = async ({ web3, bridgeType, address }, method, options, handlers) => {
   const doSend = async (retry) => {
     let transactionHash
     const methodName = getMethodName(method)
@@ -78,6 +78,9 @@ const send = async ({ web3, bridgeType, address }, method, options) => {
     const promise = method.send({ ...methodParams })
     promise.on('transactionHash', (hash) => {
       transactionHash = hash
+      if (handlers.transactionHash) {
+        handlers.transactionHash(hash)
+      }
     })
 
     try {
