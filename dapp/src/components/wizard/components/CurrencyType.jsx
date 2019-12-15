@@ -49,7 +49,7 @@ const CurrencyType = ({ networkType, formik }) => {
   return (
     <div className='attributes__currency'>
       <h3 className='attributes__title'>
-        Currency Type<span style={{ fontSize: 'smaller', fontWeight: '400' }}> | choose one of the options</span>
+        Currency type<span style={{ fontSize: 'smaller', fontWeight: '400' }}> | Choose one of the options</span>
       </h3>
       <div className='attributes__types'>
         <Field

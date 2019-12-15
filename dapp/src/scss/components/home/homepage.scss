@@ -150,12 +150,6 @@
       min-width: 400px;
     }
 
-    @include modifier(choose) {
-      font-size: 0.875em;
-      padding: 1em 0;
-      padding-left: 2.9em;
-    }
-
     > span {
       font-weight: bold;
       color: $color-dark;
@@ -195,5 +189,17 @@
       flex-direction: column;
       justify-content: space-between;
     }
+  }
+
+  @include element(tabs) {
+    @include breakpoint (medium up) {
+      min-height: 550px;
+      max-height: 550px;
+    }
+
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+    background-color: #fff;
   }
 }

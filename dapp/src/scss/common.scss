@@ -87,7 +87,7 @@
     padding-right: 25px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
     background-color: $color-white;
-    margin-top: 10px;
+    margin-bottom: 10px;
 
     @include breakpoint(medium down) {
       margin-top: 1em;
@@ -95,7 +95,7 @@
   }
 
   @include element(title) {
-    font-size: 18px;
+    font-size: 1.125em;
     color: $color-dark;
     font-weight: 500;
   }
@@ -790,7 +790,7 @@
   }
 
   @include element(sub-title) {
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: normal;
     margin-top: 15px;
     text-align: center;
@@ -889,7 +889,7 @@
   }
   &-confirmation {
     color: $color-white;
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: normal;
     margin-top: 15px;
   }
@@ -1315,6 +1315,12 @@
     color: #0d2d45;
     cursor: pointer;
     font-weight: bold !important;
+
+    > a {
+      font-size: 0.875em !important;
+      font-weight: 400;
+      color: #868686;
+    }
 
     @include modifier(sub-title) {
       font-size: 0.875em !important;

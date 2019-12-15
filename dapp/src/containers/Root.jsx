@@ -104,7 +104,7 @@ const Root = ({
     <Layout>
       <Switch>
         <Route exact path='/' component={props => <HomePage logout={logout} web3connect={web3connect} {...props} />} />
-        <Route path='/view/issuance' component={props => <Wizard logout={logout} web3connect={web3connect} {...props} />} />
+        <Route path='/view/issuance/:templateId?' component={props => <Wizard logout={logout} web3connect={web3connect} {...props} />} />
         <Route path='/view/communities' component={props => <Oven logout={logout} web3connect={web3connect} {...props} />} />
         <Route path='/view/community/:address' component={props => <DashboardLayout logout={logout} web3connect={web3connect} {...props} />} />
       </Switch>

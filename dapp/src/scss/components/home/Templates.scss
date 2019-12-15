@@ -1,14 +1,16 @@
 @include block(templates) {
-  @include breakpoint (medium up) {
-    padding: 25px;
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
-    background-color: $color-white;
+  @include element(decoration) {
+    @include breakpoint (medium up) {
+      padding: 25px;
+      box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+      background-color: $color-white;
+    }
+  
+    border-radius: 10px;
+    display: flex;
+    flex-flow: column wrap;
+    height: 100%;
   }
-
-  border-radius: 10px;
-  display: flex;
-  flex-flow: column wrap;
-  height: 100%;
 
   @include element(list) {
     height: 90%;
@@ -39,7 +41,7 @@
       width: 100%;
       
       @include breakpoint (medium up) {
-        padding-top: 110px;
+        padding-top: 100px;
       }
 
       @include breakpoint (medium down) {
