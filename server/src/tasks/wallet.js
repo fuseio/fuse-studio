@@ -7,6 +7,7 @@ const homeAddresses = config.get('network.home.addresses')
 const { withAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
+const Contact = mongoose.model('Contact')
 
 const createWallet = withAccount(async (account, { owner, ens = '' }, job) => {
   const { createContract, createMethod, send } = createNetwork('home', account)
@@ -24,7 +25,8 @@ const createWallet = withAccount(async (account, { owner, ens = '' }, job) => {
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
-  await UserWallet.findOneAndUpdate({ accountAddress: owner }, { walletAddress })
+  const userWallet = await UserWallet.findOneAndUpdate({ accountAddress: owner }, { walletAddress })
+  await Contact.findOneAndUpdate({ phoneNumber: userWallet.phoneNumber }, { walletAddress, state: 'NEW' })
   return receipt
 })
 

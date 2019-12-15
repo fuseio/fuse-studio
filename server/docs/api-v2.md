@@ -3,6 +3,10 @@
 
 The Fuse Studio V2 REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. Learn more on https://github.com/fuseio/fuse-studio.
 
+- [Contacts](#Contacts)
+	- [Acknowledge contacts list sync with nonce](#Acknowledge-contacts-list-sync-with-nonce)
+	- [Sync contacts list](#Sync-contacts-list)
+	
 - [Login](#Login)
 	- [Request a verification code](#Request-a-verification-code)
 	- [Verify user phone number](#Verify-user-phone-number)
@@ -14,6 +18,51 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	
 
+# <a name='Contacts'></a> Contacts
+
+## <a name='Acknowledge-contacts-list-sync-with-nonce'></a> Acknowledge contacts list sync with nonce
+[Back to top](#top)
+
+<p>Acknowledge contacts list sync with nonce</p>
+
+```
+POST /contacts/:nonce
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| response | `String` | <p>Response status - ok</p> |
+## <a name='Sync-contacts-list'></a> Sync contacts list
+[Back to top](#top)
+
+<p>Sync contacts list</p>
+
+```
+POST /contacts/
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| contacts | `String[]` | <p>phone numbers list</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| new | `Object[]` | <p>contacts list (phoneNumber, account)</p> |
+| nonce | `Number` |  |
 # <a name='Login'></a> Login
 
 ## <a name='Request-a-verification-code'></a> Request a verification code
@@ -64,7 +113,7 @@ POST /login/verify
 <p>Creates wallet contract for the user</p>
 
 ```
-POST /wallet/
+POST /wallets/
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -83,7 +132,7 @@ POST /wallet/
 <p>Fetches user's wallet address</p>
 
 ```
-GET /wallet/
+GET /wallets/
 ```
 ### Headers
 | Name    | Type      | Description                          |
