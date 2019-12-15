@@ -2,6 +2,9 @@ const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+
+// const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
+
 const webpack = require('webpack')
 const config = require('config')
 
@@ -37,6 +40,7 @@ module.exports = {
     ]
   },
   plugins: [
+    // new DuplicatePackageCheckerPlugin(),
     new FriendlyErrorsWebpackPlugin(),
     new HtmlWebPackPlugin({
       template: './src/index.html',
@@ -57,7 +61,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        use: 'babel-loader',
+        use: ['babel-loader'],
         exclude: /node_modules/
       },
       {
@@ -65,22 +69,17 @@ module.exports = {
         use: [loaders.styleLoader(), loaders.cssLoader(), loaders.postcssLoader()]
       },
       {
-        test: /\.(scss|sass)$/,
+        test: /\.scss$/,
         include: [path.resolve(paths.PATH_SRC, 'scss', 'main.scss')],
         use: [MiniCssExtractPlugin.loader, loaders.cssLoader(), loaders.postcssLoader(), loaders.sassLoader()]
       },
       {
-        test: /\.(woff|woff2|ttf|eot|svg|gif|png|jpg|jpeg|webp|ico)$/,
-        use: [loaders.fileLoader()]
+        test: /\.(woff|woff2|ttf|eot|svg|gif|png|jpe?g|webp|ico)$/,
+        use: [loaders.fileLoader(), loaders.imageWebpackLoader()]
       },
       {
         test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: { minimize: true }
-          }
-        ]
+        use: [loaders.htmlLoader()]
       }
     ]
   }
