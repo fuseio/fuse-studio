@@ -5,7 +5,7 @@ const auth = require('@routes/auth')
 
 router.get('/:id', auth.required, async (req, res) => {
   const jobs = await agenda.jobs({ _id: mongoose.Types.ObjectId(req.params.id) })
-  res.json(jobs[0])
+  res.json({ data: jobs[0] })
 })
 
 module.exports = router
