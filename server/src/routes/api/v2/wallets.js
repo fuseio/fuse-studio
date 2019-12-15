@@ -20,7 +20,8 @@ router.post('/', auth.required, async (req, res, next) => {
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
-    await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress })
+    const job = await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress })
+    return res.json({ job: job.attrs })
   } else {
     const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
     if (userWallet) {
@@ -28,10 +29,10 @@ router.post('/', auth.required, async (req, res, next) => {
       return res.status(400).json({ error: msg })
     } else {
       await new UserWallet({ phoneNumber, accountAddress }).save()
-      await agenda.now('createWallet', { owner: accountAddress })
+      const job = await agenda.now('createWallet', { owner: accountAddress })
+      return res.json({ job: job.attrs })
     }
   }
-  return res.json({ response: 'ok' })
 })
 
 /**

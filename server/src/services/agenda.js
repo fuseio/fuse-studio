@@ -9,7 +9,7 @@ const getConfig = (taskName) => config.has(`agenda.tasks.${taskName}`) ? config.
 Object.entries(tasks).forEach(([taskName, task]) => {
   const runJob = async (job, done) => {
     try {
-      job.attrs.data ? await task(job.attrs.data) : await task()
+      job.attrs.data ? await task(job.attrs.data, job) : await task(job)
     } catch (err) {
       console.log({ err })
       return done(err)
