@@ -78,7 +78,7 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
     const promise = method.send({ ...methodParams })
     promise.on('transactionHash', (hash) => {
       transactionHash = hash
-      if (handlers.transactionHash) {
+      if (handlers && handlers.transactionHash) {
         handlers.transactionHash(hash)
       }
     })
