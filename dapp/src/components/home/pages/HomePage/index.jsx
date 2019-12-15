@@ -110,20 +110,13 @@ const HomePage = ({
     }
   }
 
-  const communitiesIOwnT = React.useMemo(() => {
+  const communitiesIOwn = React.useMemo(() => {
     if (!isEmpty(communitiesKeys) && !isEmpty(communities)) {
       return communitiesKeys
         .map((communityAddress) => communities[communityAddress])
         .filter(obj => !!obj).filter(({ isAdmin, token }) => isAdmin && token)
     }
   }, [communitiesKeys, communities])
-
-  // let filteredCommunities = []
-  // if (communitiesKeys) {
-  //   filteredCommunities = communitiesKeys
-  //     .map((communityAddress) => communities[communityAddress])
-  //     .filter(obj => !!obj)
-  // }
 
   const showDashboard = (communityAddress, name) => {
     if (window && window.analytics) {
@@ -134,11 +127,9 @@ const HomePage = ({
     push(`/view/community/${communityAddress}`)
   }
 
-  // let communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token)
-
   const slides = React.useMemo(() => {
-    if (!isEmpty(communitiesIOwnT)) {
-      const myCommunities = communitiesIOwnT.map((entity, index) => {
+    if (!isEmpty(communitiesIOwn)) {
+      const myCommunities = communitiesIOwn.map((entity, index) => {
         const { community, token } = entity
         const { communityAddress } = community
         return (
@@ -163,7 +154,7 @@ const HomePage = ({
       ))
       return myCommunitiesList
     }
-  }, [communitiesIOwnT])
+  }, [communitiesIOwn])
 
   const handleChange = (event, newValue) => setValue(newValue)
 
@@ -199,51 +190,45 @@ const HomePage = ({
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
             <div className='cell medium-24 large-12'>
-              {
-                accountAddress && !isEmpty(communitiesIOwnT) ? (
-                  <div className='home_page__tabs'>
-                    <Tabs
-                      classes={tabsClasses}
-                      value={value}
-                      onChange={handleChange}
-                      variant='scrollable'
-                      scrollButtons='on'
-                      indicatorColor='primary'
-                      textColor='inherit'
-                    >
-                      <Tab label='My communities' classes={tabClasses} {...a11yProps(0)} />
-                      <Tab label='Templates' classes={tabClasses} {...a11yProps(1)} />
-                    </Tabs>
-                    <TabPanel value={value} index={0}>
-                      <Carousel
-                        value={valueSpinner}
-                        centered
-                        infinite
-                        draggable
-                        onChange={onChangeSpinner}
-                        animationSpeed={1000}
-                        slidesPerPage={1}
-                        breakpoints={{
-                          1000: {
-                            slidesPerPage: 2
-                          },
-                          800: {
-                            slidesPerPage: 1
-                          }
-                        }}
-                      >
-                        {slides}
-                      </Carousel>
-                      <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                      <Templates showIssuance={showIssuance} />
-                    </TabPanel>
-                  </div>
-                ) : (
-                  <Templates withDecoration showIssuance={showIssuance} />
-                )
-              }
+              <div className='home_page__tabs'>
+                <Tabs
+                  classes={tabsClasses}
+                  value={value}
+                  onChange={handleChange}
+                  variant='scrollable'
+                  scrollButtons='on'
+                  indicatorColor='primary'
+                  textColor='inherit'
+                >
+                  <Tab label='Templates' classes={tabClasses} {...a11yProps(0)} />
+                  <Tab disabled={isEmpty(communitiesIOwn)} label='My communities' classes={tabClasses} {...a11yProps(1)} />
+                </Tabs>
+                <TabPanel value={value} index={0}>
+                  <Templates showIssuance={showIssuance} />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                  <Carousel
+                    value={valueSpinner}
+                    centered
+                    infinite
+                    draggable
+                    onChange={onChangeSpinner}
+                    animationSpeed={1000}
+                    slidesPerPage={1}
+                    breakpoints={{
+                      1000: {
+                        slidesPerPage: 2
+                      },
+                      800: {
+                        slidesPerPage: 1
+                      }
+                    }}
+                  >
+                    {slides}
+                  </Carousel>
+                  <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />
+                </TabPanel>
+              </div>
             </div>
             <div className='cell medium-24 large-12 home_page__faqAndRecent grid-y grid-margin-y'>
               <FeaturedCommunities accountAddress={accountAddress} showDashboard={showDashboard} />
