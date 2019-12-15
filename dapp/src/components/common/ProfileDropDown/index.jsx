@@ -10,7 +10,7 @@ import NativeBalance from 'components/common/NativeBalance'
 import ProfileCard from 'components/common/ProfileCard'
 import { withAccount } from 'containers/Web3'
 
-import { getBalances, getProviderInfo } from 'selectors/accounts'
+import { getBalances, getProviderInfo, getCommunitiesKeys } from 'selectors/accounts'
 import { getNetworkSide } from 'selectors/network'
 import { convertNetworkName } from 'utils/network'
 import { addressShortener, formatWei } from 'utils/format'
@@ -92,18 +92,17 @@ const ProfileDropDown = ({
     return () => { }
   }, [accountAddress])
 
-  let filteredCommunities = []
-  if (communitiesKeys) {
-    filteredCommunities = communitiesKeys
+  const communitiesIOwn = React.useMemo(() => {
+    return communitiesKeys
       .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj)
-  }
-  let communitiesIOwn
-  let communitiesIPartOf
-  if (communities && typeof filteredCommunities.filter === 'function') {
-    communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
-    communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
-  }
+      .filter(obj => !!obj).filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
+  }, [communitiesKeys])
+
+  const communitiesIPartOf = React.useMemo(() => {
+    return communitiesKeys
+      .map((communityAddress) => communities[communityAddress])
+      .filter(obj => !!obj).filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
+  }, [communitiesKeys])
 
   const showDashboard = (communityAddress) => {
     push(`/view/community/${communityAddress}`)
@@ -201,7 +200,7 @@ const ProfileDropDown = ({
 }
 
 const mapStateToProps = (state) => ({
-  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
+  communitiesKeys: getCommunitiesKeys(state),
   providerInfo: getProviderInfo(state),
   tokens: state.entities.tokens,
   metadata: state.entities.metadata,

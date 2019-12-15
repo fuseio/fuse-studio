@@ -7,7 +7,7 @@ import templatesOptions from 'constants/templates'
 const Templates = ({
   showIssuance,
   children,
-  title = 'TEMPLATES',
+  title = 'What can you do with Fuse?',
   withDecoration = false
 }) => {
   return (
