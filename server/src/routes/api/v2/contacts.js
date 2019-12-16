@@ -22,22 +22,22 @@ const { concat, compact, indexOf } = require('lodash')
 router.post('/', auth.required, async (req, res) => {
   const { phoneNumber, accountAddress } = req.user
   const { contacts } = req.body
-  const contactsUserWallets = await UserWallet.find({ phoneNumber: {$in: contacts} })
   const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress }).populate('contacts')
   const userWalletContactIds = userWallet.contacts.map(obj => obj._id)
   const userWalletContactPhoneNumbers = userWallet.contacts.map(obj => obj.phoneNumber)
   const nonce = (new Date()).getTime()
 
-  const newContactIds = compact(await Promise.all(contactsUserWallets.map(contactUserWallet => {
+  const newContactIds = compact(await Promise.all(contacts.map(phoneNumber => {
     return new Promise(async (resolve, reject) => {
-      if (indexOf(userWalletContactPhoneNumbers, contactUserWallet.phoneNumber) >= 0) {
+      if (indexOf(userWalletContactPhoneNumbers, phoneNumber) >= 0) {
         return resolve()
       }
+      let contactUserWallet = await UserWallet.findOne({ phoneNumber: phoneNumber })
       let contact = await new Contact({
         userWallet: ObjectId(userWallet._id),
         phoneNumber,
         walletAddress: contactUserWallet && contactUserWallet.walletAddress,
-        state: contactUserWallet ? 'NEW' : 'EMPTY',
+        state: contactUserWallet && contactUserWallet.walletAddress ? 'NEW' : 'EMPTY',
         nonce
       }).save()
       resolve(contact._id)
