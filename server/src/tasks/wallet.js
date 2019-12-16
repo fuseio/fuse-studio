@@ -26,7 +26,7 @@ const createWallet = withAccount(async (account, { owner, ens = '' }, job) => {
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
   const userWallet = await UserWallet.findOneAndUpdate({ accountAddress: owner }, { walletAddress })
-  await Contact.findOneAndUpdate({ phoneNumber: userWallet.phoneNumber }, { walletAddress, state: 'NEW' })
+  await Contact.updateMany({ phoneNumber: userWallet.phoneNumber }, { walletAddress, state: 'NEW' })
   return receipt
 })
 
