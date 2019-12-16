@@ -1,6 +1,7 @@
 import { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { getNetworkType, checkAccountChanged } from 'actions/network'
+import { checkNetworkType, checkAccountChanged } from 'actions/network'
+import { getCurrentNetworkType } from 'selectors/network'
 import { loadModal } from 'actions/ui'
 import { isNetworkSupported } from 'utils/network'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
@@ -39,11 +40,11 @@ class Web3 extends PureComponent {
       : window && window.ethereum
         ? { provider: 'metamask' }
         : { provider: 'portis' }
-    const { getNetworkType } = this.props
+    const { checkNetworkType } = this.props
     if (networkState && networkState.networkType) {
-      getNetworkType(true, loadedProvider.provider)
+      checkNetworkType(true, loadedProvider.provider)
     } else {
-      getNetworkType(reconnect, loadedProvider.provider)
+      checkNetworkType(reconnect, loadedProvider.provider)
     }
     // TODO: Move this to getNetworkType saga after redux-saga 1.0.0 upgrade
     if (window.ethereum && window.ethereum.on) {
@@ -67,11 +68,11 @@ class Web3 extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  networkType: state.network.networkType
+  networkType: getCurrentNetworkType(state)
 })
 
 const mapDispatchToProps = {
-  getNetworkType,
+  checkNetworkType,
   checkAccountChanged,
   loadModal
 }
@@ -80,7 +81,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Web3)
 
 const withNetwork = (Component) => {
   const mapStateToProps = (state) => ({
-    networkType: state.network.networkType
+    networkType: getCurrentNetworkType(state)
   })
 
   const ConnectedComponent = connect(mapStateToProps)(Component)

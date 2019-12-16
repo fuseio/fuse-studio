@@ -21,16 +21,16 @@ const FeaturedCommunity = memo(({
     foreignTokenAddress
   } = community
 
-  useEffect(() => {
-    if (accountAddress) {
-      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
-      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-    }
+  // useEffect(() => {
+  //   if (accountAddress) {
+  //     balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
+  //     balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
+  //   }
 
-    fetchMetadata(communityURI)
-    fetchToken(homeTokenAddress)
-    fetchToken(foreignTokenAddress)
-  }, [])
+  //   fetchMetadata(communityURI)
+  //   fetchToken(homeTokenAddress)
+  //   fetchToken(foreignTokenAddress)
+  // }, [])
 
   return (
     <div className='featured' onClick={showDashboard}>

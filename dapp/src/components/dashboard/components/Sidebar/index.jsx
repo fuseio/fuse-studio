@@ -1,255 +1,52 @@
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import Logo from 'components/common/Logo'
-import PluginIcon from 'images/plugin.svg'
-import JoinBonusIcon from 'images/join_bonus.svg'
-import JoinBonusYellowIcon from 'images/join_bonus_selected.svg'
-import AddIcon from 'images/add-selected.png'
-import AddYellowIcon from 'images/add-selected.svg'
-import PluginYellowIcon from 'images/plugin-selected.svg'
-import HomeIcon from 'images/home.svg'
-import HomeYellowIcon from 'images/home_yellow.svg'
-import WalletIcon from 'images/wallet_new.svg'
-import WalletYellowIcon from 'images/wallet_new_yellow.svg'
-import BusinessIcon from 'images/business_list.svg'
-import BusinessYellowIcon from 'images/business_list_yellow.svg'
-import TransferIcon from 'images/transfer.svg'
-import TransferYellowIcon from 'images/transfer-selected.svg'
-import MintBurnYellowIcon from 'images/mint-burn-selected.svg'
-import MintBurnIcon from 'images/mint-burn.svg'
-// import SettingsIcon from 'images/settings.svg'
-import UsersIcon from 'images/user_list.svg'
-import DollarIcon from 'images/dollar_symbol.svg'
-import DollarYellowIcon from 'images/dollar_symbol_yellow.svg'
-import UsersYellowIcon from 'images/user_list_yellow.svg'
-import classNames from 'classnames'
+import { useParams } from 'react-router'
+import SideBarItems from 'constants/sideBarItems'
+import allPlugins from 'constants/plugins'
+
 import isEmpty from 'lodash/isEmpty'
 import pickBy from 'lodash/pickBy'
 import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
 
-const getSideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
-  {
-    name: 'community',
-    path: '',
-    url: (match) => `${match}`,
-    icon: HomeIcon,
-    style: !hasPlugins ? {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
-    } : {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
-      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: HomeYellowIcon
-  },
-  {
-    name: 'Plug-in store',
-    path: '/plugins',
-    url: (match) => `${match}/plugins`,
-    icon: PluginIcon,
-    style: {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
-      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: PluginYellowIcon,
-    moreIcon: {
-      AddIcon,
-      AddYellowIcon
-    }
-  },
-  {
-    name: 'Users list',
-    path: '/users',
-    url: (match) => `${match}/users`,
-    icon: UsersIcon,
-    selectedIcon: UsersYellowIcon
-  },
-  {
-    name: 'White label wallet',
-    path: '/wallet',
-    url: (match) => `${match}/wallet`,
-    icon: WalletIcon,
-    selectedIcon: WalletYellowIcon
-  },
-  {
-    name: 'Transfer',
-    path: '/transfer',
-    url: (match) => `${match}/transfer`,
-    icon: TransferIcon,
-    style: {
-      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: TransferYellowIcon
-  },
-  tokenType === 'mintableBurnable' && {
-    name: 'Mint / Burn',
-    path: '/mintBurn',
-    url: (match) => `${match}/mintBurn`,
-    icon: MintBurnIcon,
-    style: {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: MintBurnYellowIcon,
-    CustomElement: ({ children }) => (
-      <div>
-        <span className='admin-title'>Admin tools</span>
-        {children}
-      </div>
-    )
-  }
-  // TODO - Settings page
-  // ,
-  // {
-  //   name: 'Settings',
-  //   path: '/settings',
-  //   url: (match) => `${match}/settings`,
-  //   icon: SettingsIcon,
-  //   selectedIcon: SettingsIcon
-  // }
-]) : ([
-  {
-    name: 'community',
-    path: '',
-    url: (match) => `${match}`,
-    icon: HomeIcon,
-    style: !hasPlugins ? {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
-    } : {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
-      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: HomeYellowIcon
-  },
-  {
-    name: 'Plug-in store',
-    path: '/plugins',
-    url: (match) => `${match}/plugins`,
-    icon: PluginIcon,
-    style: {
-      borderTop: '.5px solid rgba(222, 222, 222, 0.2)',
-      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: PluginYellowIcon,
-    moreIcon: {
-      AddIcon,
-      AddYellowIcon
-    }
-  },
-  {
-    name: 'Users list',
-    path: '/users',
-    url: (match) => `${match}/users`,
-    icon: UsersIcon,
-    selectedIcon: UsersYellowIcon
-  },
-  {
-    name: 'White label wallet',
-    path: '/wallet',
-    url: (match) => `${match}/wallet`,
-    icon: WalletIcon,
-    selectedIcon: WalletYellowIcon
-  },
-  {
-    name: 'Transfer',
-    path: '/transfer',
-    url: (match) => `${match}/transfer`,
-    icon: TransferIcon,
-    style: {
-      borderBottom: '.5px solid rgba(222, 222, 222, 0.2)'
-    },
-    selectedIcon: TransferYellowIcon
-  }
-])
+import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { getCurrentCommunity } from 'selectors/dashboard'
 
-const allPlugins = (isAdmin) => isAdmin ? ({
-  businessList: {
-    name: 'Business list',
-    path: '/merchants',
-    url: (match) => `${match}/merchants`,
-    icon: BusinessIcon,
-    selectedIcon: BusinessYellowIcon
-  },
-  joinBonus: {
-    name: 'Join bonus',
-    path: '/bonus',
-    url: (match) => `${match}/bonus`,
-    icon: JoinBonusIcon,
-    selectedIcon: JoinBonusYellowIcon
-  },
-  moonpay: {
-    name: 'Moonpay',
-    path: '/onramp/moonpay',
-    url: (match) => `${match}/onramp/moonpay`,
-    icon: DollarIcon,
-    selectedIcon: DollarYellowIcon
-  },
-  ramp: {
-    name: 'Ramp',
-    path: '/onramp/ramp',
-    url: (match) => `${match}/onramp/ramp`,
-    icon: DollarIcon,
-    selectedIcon: DollarYellowIcon
-  },
-  coindirect: {
-    name: 'Coindirect',
-    path: '/onramp/coindirect',
-    url: (match) => `${match}/onramp/coindirect`,
-    icon: DollarIcon,
-    selectedIcon: DollarYellowIcon
-  },
-  wyre: {
-    name: 'Wyre',
-    path: '/onramp/wyre',
-    url: (match) => `${match}/onramp/wyre`,
-    icon: DollarIcon,
-    selectedIcon: DollarYellowIcon
-  }
-}) : ({
-  businessList: {
-    name: 'Business list',
-    path: '/merchants',
-    url: (match) => `${match}/merchants`,
-    icon: BusinessIcon,
-    selectedIcon: BusinessYellowIcon
-  }
-})
+import MenuItem from './MenuItem'
 
-const Sidebar = memo(({
-  communityAddress,
-  communityName,
+const Sidebar = ({
   match,
   isAdmin,
-  plugins,
-  tokenType,
+  token,
   location,
-  push
+  push,
+  community
 }) => {
+  const { address: communityAddress } = useParams()
   const [currentPath, setPath] = useState('')
   const [sideBarItems, setSideBarItems] = useState([])
   const [addedPlugins, setAddedPlugins] = useState([])
 
   useEffect(() => {
-    setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
-    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
+    if (!isEmpty(community && community.plugins)) {
+      setAddedPlugins(Object.keys(pickBy(community && community.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
+    }
     return () => {}
-  }, [])
+  }, [community])
 
   useEffect(() => {
-    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
+    setSideBarItems(SideBarItems(isAdmin, !isEmpty(community && community.plugins), token && token.tokenType).filter(Boolean))
+    setAddedPlugins(Object.keys(pickBy(community && community.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
     return () => {}
-  }, [plugins])
-
-  useEffect(() => {
-    setSideBarItems(getSideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
-    setAddedPlugins(Object.keys(pickBy(plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
-    return () => {}
-  }, [isAdmin, tokenType])
+  }, [isAdmin, token.tokenType])
 
   useEffect(() => {
     const paramsArr = location.pathname.split('/')
     const lastItem = paramsArr[paramsArr.length - 1]
     if (paramsArr[paramsArr.length - 2] === 'onramp') {
       setPath(`/${paramsArr[paramsArr.length - 2]}/${lastItem}`)
-    } else if ((communityAddress !== lastItem) && lastItem !== 'justCreated') {
+    } else if (((communityAddress) !== lastItem) && lastItem !== 'justCreated') {
       setPath(`/${lastItem}`)
     } else {
       setPath('')
@@ -266,111 +63,123 @@ const Sidebar = memo(({
       <div className='item' style={{ cursor: 'pointer' }}>
         <Logo showHomePage={() => goToPage('/')} isGradientLogo />
       </div>
-      {sideBarItems.map(({ icon, name, url, style, path, selectedIcon, CustomElement, moreIcon }) => {
-        if (path === '/plugins' && !isEmpty(addedPlugins)) {
-          return (
-            <div
-              key={name}
-              style={{ ...style, paddingTop: '10px', paddingBottom: '10px' }}
-            >
-              <div className='plugin__header'>
-                <span className='title'>Plugins</span>
-                {
-                  isAdmin && (
-                    <div
-                      className='manage'
-                      onClick={() => {
+      {
+        !community ? (
+          null
+        ) : (
+          <Fragment>
+            {sideBarItems.map(({
+              icon,
+              name,
+              url,
+              style,
+              path,
+              selectedIcon,
+              CustomElement,
+              moreIcon
+            }) => {
+              if (path === '/plugins' && !isEmpty(addedPlugins)) {
+                return (
+                  <div
+                    key={name}
+                    style={{ ...style, paddingTop: '10px', paddingBottom: '10px' }}
+                  >
+                    <div className='plugin__header'>
+                      <span className='title'>Plugins</span>
+                      {
+                        isAdmin && (
+                          <div
+                            className='manage'
+                            onClick={() => {
+                              goToPage(url(match))
+                              setPath(path)
+                            }}
+                          >Manage</div>
+                        )
+                      }
+                    </div>
+                    {
+                      addedPlugins.map((plugin) => {
+                        const allPlugins1 = allPlugins(isAdmin)
+                        if (plugin && allPlugins1[plugin] && !allPlugins1[plugin].isRemoved) {
+                          const {
+                            name,
+                            path,
+                            url,
+                            icon,
+                            selectedIcon
+                          } = allPlugins1[plugin]
+                          return (
+                            <MenuItem
+                              key={name}
+                              isCurrentPath={currentPath === path}
+                              // path={path}
+                              icon={icon}
+                              selectedIcon={selectedIcon}
+                              name={name}
+                              viewPage={() => {
+                                goToPage(url(match))
+                                setPath(path)
+                              }}
+                            />
+                          )
+                        }
+                      })
+                    }
+                  </div>
+                )
+              } else if (CustomElement) {
+                return (
+                  <CustomElement key={name} style={style}>
+                    <MenuItem
+                      key={name}
+                      isCurrentPath={currentPath === path}
+                      // currentPath={currentPath}
+                      // path={path}
+                      name={name}
+                      icon={icon}
+                      selectedIcon={selectedIcon}
+                      viewPage={() => {
                         goToPage(url(match))
                         setPath(path)
                       }}
-                    >Manage</div>
-                  )
-                }
-              </div>
-              {
-                addedPlugins.map((plugin) => {
-                  const allPlugins1 = allPlugins(isAdmin)
-                  if (plugin && allPlugins1[plugin] && !allPlugins1[plugin].isRemoved) {
-                    const {
-                      name,
-                      path,
-                      url,
-                      icon,
-                      selectedIcon
-                    } = allPlugins1[plugin]
-                    return (
-                      <div
-                        key={name}
-                        onClick={() => {
-                          goToPage(url(match))
-                          setPath(path)
-                        }}
-                        className={classNames('item item--hover', { 'item--home': currentPath === path })}
-                      >
-                        <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
-                        <span className='item__text'>{name}</span>
-                      </div>
-                    )
-                  }
-                })
+                    />
+                  </CustomElement>
+                )
+              } else {
+                return (
+                  <MenuItem
+                    key={name}
+                    style={style}
+                    isCurrentPath={currentPath === path}
+                    // currentPath={currentPath}
+                    // path={path}
+                    icon={icon}
+                    name={name}
+                    selectedIcon={selectedIcon}
+                    moreIcon={moreIcon}
+                    communityName={community && community.name}
+                    viewPage={() => {
+                      goToPage(url(match))
+                      setPath(path)
+                    }}
+                  />
+                )
               }
-            </div>
-          )
-        } else if (CustomElement) {
-          return (
-            <CustomElement key={name} style={style}>
-              <div
-                key={name}
-                to={url(match)}
-                onClick={() => {
-                  goToPage(url(match))
-                  setPath(path)
-                }}
-                className={classNames('item item--hover', { 'item--home': currentPath === path })}
-              >
-                <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
-                <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
-              </div>
-            </CustomElement>
-          )
-        } else {
-          return (
-            <div
-              key={name}
-              style={style}
-              onClick={() => {
-                goToPage(url(match))
-                setPath(path)
-              }}
-              className={classNames('item item--hover', { 'item--home': currentPath === path })}
-            >
-              <span className='item__icon'><img src={currentPath === path ? selectedIcon : icon} /></span>
-              <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
-              <div style={{ marginLeft: 'auto' }}>{moreIcon && <img src={currentPath === path ? moreIcon.AddYellowIcon : moreIcon.AddIcon} /> }</div>
-            </div>
-          )
-        }
-      })}
+            })}
+          </Fragment>
+        )
+      }
     </aside>
   )
-}, (prevProps, nextProps) => {
-  if (prevProps.communityAddress !== nextProps.communityAddress) {
-    return false
-  } else if (prevProps.communityName !== nextProps.communityName) {
-    return false
-  } else if (prevProps.match !== nextProps.match) {
-    return false
-  } else if (prevProps.isAdmin !== nextProps.isAdmin) {
-    return false
-  } else if (prevProps.plugins !== nextProps.plugins) {
-    return false
-  } else if (prevProps.tokenType !== nextProps.tokenType) {
-    return false
-  } else if (prevProps.location !== nextProps.location) {
-    return false
-  }
+}
 
-  return true
+const mapState = (state) => ({
+  isAdmin: checkIsAdmin(state),
+  community: getCurrentCommunity(state, getCommunityAddress(state)),
+  token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { tokenType: '' }
 })
 
-export default connect(null, { push })(Sidebar)
+export default connect(mapState, {
+  push
+})(Sidebar)

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { getAddresses, getNetworkType } from 'selectors/network'
+import { getAddresses, getCurrentNetworkType } from 'selectors/network'
 import { initialAccount } from 'reducers/accounts'
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
@@ -54,7 +54,7 @@ export const getAccountTokens = createSelector(
 )
 
 export const getFuseBalance = createSelector(
-  getNetworkType,
+  getCurrentNetworkType,
   getAddresses,
   getAccount,
   (network, addresses, account) => network === 'fuse'

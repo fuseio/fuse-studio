@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect, useSelector } from 'react-redux'
 import { getAccountAddress } from 'selectors/accounts'
-import { getBusinessesEntities } from 'selectors/entities'
+import { getBusinessesEntities, checkIsAdmin, getCommunityAddress } from 'selectors/entities'
 import {
   addEntity,
   fetchBusinessesEntities,
@@ -22,10 +22,12 @@ import { getForeignNetwork } from 'selectors/network'
 import get from 'lodash/get'
 import capitalize from 'lodash/capitalize'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
+import { useParams } from 'react-router'
+import { getCurrentCommunity } from 'selectors/dashboard'
 
 const Businesses = ({
   businesses,
-  community,
+  isClosed,
   isAdmin,
   fetchEntities,
   accountAddress,
@@ -38,8 +40,8 @@ const Businesses = ({
   metadata,
   removeEntity
 }) => {
+  const { address: communityAddress } = useParams()
   useSwitchNetwork('fuse', { featureName: 'business list' })
-  const { communityAddress, isClosed } = community
   const [data, setData] = useState(null)
   const [search, setSearch] = useState('')
   const apiRoot = getApiRoot(useSelector(getForeignNetwork))
@@ -286,7 +288,9 @@ const mapStateToProps = (state) => ({
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
-  metadata: state.entities.metadata
+  metadata: state.entities.metadata,
+  isClosed: getCurrentCommunity(state, getCommunityAddress(state)) ? getCurrentCommunity(state, getCommunityAddress(state)).isClosed : false,
+  isAdmin: checkIsAdmin(state)
 })
 
 const mapDispatchToProps = {

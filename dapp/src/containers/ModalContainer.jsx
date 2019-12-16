@@ -18,7 +18,6 @@ import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
 import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEntity'
 import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
 import SwitchNetwork from 'components/common/SwitchNetwork'
-import ChooseProviderModal from 'components/common/ChooseProviderModal'
 
 import {
   WRONG_NETWORK_MODAL,
@@ -35,7 +34,6 @@ import {
   PLUGIN_INFO_MODAL,
   EMAIL_MODAL,
   SWITCH_NETWORK,
-  CHOOSE_PROVIDER,
   TEMPLATE_MODAL
 } from 'constants/uiConstants'
 
@@ -59,7 +57,6 @@ const MODAL_COMPONENTS = {
   [PLUGIN_INFO_MODAL]: PluginInfoModal,
   [EMAIL_MODAL]: EmailModal,
   [SWITCH_NETWORK]: SwitchNetwork,
-  [CHOOSE_PROVIDER]: ChooseProviderModal,
   [TEMPLATE_MODAL]: TemplateModal
 }
 

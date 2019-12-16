@@ -11,7 +11,7 @@ import ProfileCard from 'components/common/ProfileCard'
 import { withAccount } from 'containers/Web3'
 
 import { getBalances, getProviderInfo, getCommunitiesKeys } from 'selectors/accounts'
-import { getNetworkSide } from 'selectors/network'
+import { getNetworkSide, getCurrentNetworkType } from 'selectors/network'
 import { convertNetworkName } from 'utils/network'
 import { addressShortener, formatWei } from 'utils/format'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
@@ -77,7 +77,6 @@ const ProfileDropDown = ({
   accountAddress,
   communitiesKeys,
   communities,
-  fetchCommunities,
   changeNetwork,
   loadModal,
   foreignNetwork,
@@ -85,24 +84,17 @@ const ProfileDropDown = ({
   providerInfo,
   handleLogOut
 }) => {
-  useEffect(() => {
-    if (accountAddress) {
-      fetchCommunities(accountAddress)
-    }
-    return () => { }
-  }, [accountAddress])
-
   const communitiesIOwn = React.useMemo(() => {
     return communitiesKeys
       .map((communityAddress) => communities[communityAddress])
       .filter(obj => !!obj).filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
-  }, [communitiesKeys])
+  }, [communitiesKeys, communities])
 
   const communitiesIPartOf = React.useMemo(() => {
     return communitiesKeys
       .map((communityAddress) => communities[communityAddress])
       .filter(obj => !!obj).filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
-  }, [communitiesKeys])
+  }, [communitiesKeys, communities])
 
   const showDashboard = (communityAddress) => {
     push(`/view/community/${communityAddress}`)
@@ -205,7 +197,7 @@ const mapStateToProps = (state) => ({
   tokens: state.entities.tokens,
   metadata: state.entities.metadata,
   communities: state.entities.communities,
-  networkType: state.network.networkType,
+  networkType: getCurrentNetworkType(state),
   balances: getBalances(state)
 })
 

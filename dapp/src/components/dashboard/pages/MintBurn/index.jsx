@@ -10,7 +10,7 @@ import MintBurnForm from 'components/dashboard/components/MintBurnForm'
 import { mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { toWei } from 'web3-utils'
 import Message from 'components/common/SignMessage'
-import { getForeignNetwork } from 'selectors/network'
+import { getForeignNetwork, getHomeNetworkType } from 'selectors/network'
 import { getBalances } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
@@ -170,7 +170,7 @@ const MintBurn = ({
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
-  homeNetwork: state.network.homeNetwork,
+  homeNetwork: getHomeNetworkType(state),
   balances: getBalances(state)
 })
 

@@ -13,6 +13,7 @@ import ReactTooltip from 'react-tooltip'
 import Header from 'components/dashboard/components/Header'
 import { push } from 'connected-react-router'
 import { getForeignNetwork } from 'selectors/network'
+import SignIn from 'components/common/SignIn'
 
 class Dashboard extends Component {
   state = {
@@ -81,54 +82,50 @@ class Dashboard extends Component {
       foreignToken,
       accountAddress,
       dashboard,
-      bridgeStatus,
       metadata,
       networkType,
       tokenOfCommunityOnCurrentSide,
-      isAdmin
+      isAdmin,
+      loading
     } = this.props
 
-    const { communityAddress, homeTokenAddress, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress, isClosed } = community
-    const { totalSupply } = dashboard
-
-    const { symbol, tokenAddress } = foreignToken
     return (
-      <React.Fragment>
+      !loading && <React.Fragment>
+        <SignIn accountAddress={accountAddress} />
         <Header
           metadata={{
-            ...metadata[foreignToken.tokenURI],
-            ...metadata[community.communityURI]
+            ...metadata[foreignToken && foreignToken.tokenURI],
+            ...metadata[community && community.communityURI]
           }}
-          tokenAddress={tokenAddress}
-          isClosed={isClosed}
-          communityURI={community.communityURI}
-          name={community.name}
+          tokenAddress={foreignToken && foreignToken.tokenAddress}
+          isClosed={community && community.isClosed}
+          communityURI={community && community.communityURI}
+          name={community && community.name}
           networkType={networkType}
           token={foreignToken}
         />
         <CommunityInfo
-          tokensTotalSupplies={totalSupply}
+          tokensTotalSupplies={dashboard && dashboard.totalSupply}
           foreignToken={foreignToken}
           loadQrModal={this.loadQrModal}
-          communityAddress={communityAddress}
-          homeTokenAddress={homeTokenAddress}
-          foreignTokenAddress={foreignTokenAddress}
+          communityAddress={community && community.communityAddress}
+          homeTokenAddress={community && community.homeTokenAddress}
+          foreignTokenAddress={community && community.foreignTokenAddress}
         />
         {
-          homeBridgeAddress && foreignBridgeAddress && (
+          (community && community.homeBridgeAddress) && (community && community.foreignBridgeAddress) && (
             <div className='content__bridge'>
               <h3 className='content__bridge__title'>Bridge <FontAwesome style={{ fontSize: '60%' }} data-tip data-for='bridge' name='info-circle' /></h3>
               <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
                 <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
               </ReactTooltip>
               <Bridge
-                symbol={symbol}
+                symbol={foreignToken && foreignToken.symbol}
                 tokenName={community.name}
                 isAdmin={isAdmin}
                 community={community}
-                bridgeStatus={bridgeStatus}
                 accountAddress={accountAddress}
-                communityAddress={communityAddress}
+                communityAddress={community && community.communityAddress}
                 tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
               />
             </div>

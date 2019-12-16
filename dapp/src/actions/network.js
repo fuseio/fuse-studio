@@ -1,6 +1,6 @@
 import { requestAction, createRequestTypes } from './utils'
 
-export const GET_NETWORK_TYPE = createRequestTypes('GET_NETWORK_TYPE')
+export const CHECK_NETWORK_TYPE = createRequestTypes('CHECK_NETWORK_TYPE')
 export const CONNECT_TO_WALLET = createRequestTypes('CONNECT_TO_WALLET')
 
 export const GET_BLOCK_NUMBER = createRequestTypes('GET_BLOCK_NUMBER')
@@ -15,7 +15,7 @@ export const FETCH_GAS_PRICES = createRequestTypes('FETCH_GAS_PRICES')
 
 export const SEND_TRANSACTION_HASH = createRequestTypes('SEND_TRANSACTION_HASH')
 
-export const getNetworkType = (enableProvider, provider) => requestAction(GET_NETWORK_TYPE, { provider, enableProvider })
+export const checkNetworkType = (enableProvider, provider) => requestAction(CHECK_NETWORK_TYPE, { provider, enableProvider })
 export const connectToWallet = (provider) => requestAction(CONNECT_TO_WALLET, { provider })
 export const getBlockNumber = (networkType, bridgeType) => requestAction(GET_BLOCK_NUMBER, { networkType, bridgeType })
 

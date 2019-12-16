@@ -6,7 +6,6 @@ import Faqs from 'components/home/components/Faq'
 import personImage from 'images/person.png'
 import groupImageMobile from 'images/group_mobile.png'
 import groupImage from 'images/group_image.png'
-import NavBar from 'components/common/NavBar'
 import { isMobileOnly } from 'react-device-detect'
 import arrowImage from 'images/arrow_1.svg'
 import GiftIcon from 'images/gift.svg'
@@ -83,8 +82,7 @@ const HomePage = ({
   metadata,
   fetchCommunities,
   web3connect,
-  push,
-  logout
+  push
 }) => {
   const [value, setValue] = useState(0)
   const [valueSpinner, onChangeSpinner] = useState(0)
@@ -115,7 +113,7 @@ const HomePage = ({
     return communitiesKeys
       .map((communityAddress) => communities[communityAddress])
       .filter(obj => !!obj).filter(({ isAdmin, token }) => isAdmin && token)
-  }, [communitiesKeys])
+  }, [communitiesKeys, communities])
 
   const showDashboard = (communityAddress, name) => {
     if (window && window.analytics) {
@@ -132,7 +130,7 @@ const HomePage = ({
         const { community, token } = entity
         const { communityAddress } = community
         return (
-          <div className='cell medium-12 small-24' key={index}>
+          <div className='cell medium-12 small-24' key={community && community.name}>
             <FeaturedCommunity
               accountAddress={accountAddress}
               symbol={token && token.symbol}
@@ -140,14 +138,15 @@ const HomePage = ({
                 ...metadata[token.tokenURI],
                 ...metadata[community.communityURI]
               }}
+              tokenURI={token && token.tokenURI}
               showDashboard={() => showDashboard(communityAddress)}
               community={community}
             />
           </div>
         )
       })
-      const myCommunitiesList = toMatrix(myCommunities, 4).map((items) => (
-        <div style={{ width: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
+      const myCommunitiesList = toMatrix(myCommunities, 4).map((items, index) => (
+        <div style={{ width: '100%' }} key={index} className='grid-x grid-margin-x grid-margin-y'>
           {items}
         </div>
       ))
@@ -159,7 +158,6 @@ const HomePage = ({
 
   return (
     <div className='home_page'>
-      <NavBar logout={logout} web3connect={web3connect} />
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-bottom'>
           <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>

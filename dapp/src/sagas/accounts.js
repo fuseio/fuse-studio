@@ -2,7 +2,7 @@ import { all, put, call, takeEvery, select } from 'redux-saga/effects'
 
 import * as actions from 'actions/accounts'
 import { tryTakeEvery, createEntitiesFetch } from './utils'
-import { getAddress, getNetworkType } from 'selectors/network'
+import { getAddress, getCurrentNetworkType } from 'selectors/network'
 import { CHECK_ACCOUNT_CHANGED } from 'actions/network'
 import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN, FETCH_TOKEN_TOTAL_SUPPLY } from 'actions/token'
 import { getWeb3, get3box } from 'services/web3'
@@ -56,7 +56,7 @@ function * balanceOfNative ({ accountAddress, options }) {
 }
 
 function * balanceOfFuse ({ accountAddress }) {
-  const networkType = yield select(getNetworkType)
+  const networkType = yield select(getCurrentNetworkType)
   if (networkType === 'fuse') {
     yield call(balanceOfNative, { accountAddress })
   } else {

@@ -16,6 +16,7 @@ import { loadModal } from 'actions/ui'
 import { SHOW_MORE_MODAL } from 'constants/uiConstants'
 import FuseLoader from 'images/loader-fuse.gif'
 import { formatWei } from 'utils/format'
+import { getBridgeStatus, getHomeNetworkType } from 'selectors/network'
 
 class Bridge extends Component {
   state = {
@@ -217,8 +218,9 @@ const BridgeContainer = (props) => {
 
 const mapStateToProps = (state) => ({
   ...state.screens.bridge,
-  homeNetwork: state.network.homeNetwork,
+  homeNetwork: getHomeNetworkType(state),
   balances: getBalances(state),
+  bridgeStatus: getBridgeStatus(state),
   ...getTransaction(state, state.screens.bridge.transactionHash)
 })
 

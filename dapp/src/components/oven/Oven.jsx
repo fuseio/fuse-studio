@@ -5,7 +5,6 @@ import { fetchTokens, fetchTokensByOwner, fetchFuseToken, fetchFeaturedCommuniti
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
-import NavBar from 'components/common/NavBar'
 import isEmpty from 'lodash/isEmpty'
 import { push } from 'connected-react-router'
 import { withNetwork } from 'containers/Web3'
@@ -58,7 +57,6 @@ class Oven extends Component {
 
   render = () => (
     <div className='communities' ref={this.myRef}>
-      <NavBar logout={this.props.logout} web3connect={this.props.web3connect} />
       <CommunitiesList getScrollParent={this.getScrollParent} {...this.props} showDashboard={this.showDashboard} />
     </div>
   )
@@ -71,7 +69,6 @@ const mapStateToProps = state => ({
   metadata: state.entities.metadata,
   account: getAccountAddress(state),
   foreignNetwork: getForeignNetwork(state),
-  networkType: state.network.networkType,
   ...state.screens.oven
 })
 

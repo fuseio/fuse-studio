@@ -3,8 +3,8 @@ import QRCode from 'qrcode.react'
 import AppleDownload from 'images/apple.svg'
 import GoogleDownload from 'images/google.svg'
 
-export default ({ value }) => {
-  if (!value) return null
+export default ({ value, fetchCommunityData }) => {
+  if (!value || fetchCommunityData) return null
 
   return (
     <Fragment>

@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
       return { ...state, ...action.response }
     case network.ACCOUNT_LOGGED_OUT:
       return { ...state, ...action.response }
-    case network.GET_NETWORK_TYPE.SUCCESS:
+    case network.CHECK_NETWORK_TYPE.SUCCESS:
       return { ...state, ...action.response }
     case network.FETCH_GAS_PRICES.SUCCESS:
       return { ...state, ...action.response }

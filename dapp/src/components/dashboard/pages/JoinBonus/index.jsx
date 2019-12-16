@@ -35,7 +35,8 @@ const JoinBonus = ({
   balances,
   tokenOfCommunityOnCurrentSide,
   toggleJoinBonus,
-  isFunderPartOfCommunity
+  isFunderPartOfCommunity,
+  fetchCommunityData
 }) => {
   const [isFunderAdded, setFunderStatus] = React.useState(isFunderPartOfCommunity)
 
@@ -99,7 +100,7 @@ const JoinBonus = ({
   const balance = balances[tokenOfCommunityOnCurrentSide]
 
   return (
-    <div className='join_bonus__wrapper'>
+    !fetchCommunityData && <div className='join_bonus__wrapper'>
       <div className='join_bonus'>
         <h2 className='join_bonus__main-title join_bonus__main-title--white'>Join bonus</h2>
         <div style={{ position: 'relative' }}>

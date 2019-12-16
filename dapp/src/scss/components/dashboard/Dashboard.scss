@@ -6,22 +6,6 @@
       position: relative;
       @include xy-grid();
     }
-
-    .navbar--scroll {
-      width: 80%;
-
-      @include breakpoint(small only) {
-        width: 100%;
-      }
-
-      @include breakpoint(xxlarge up) {
-        width: 82.5%;
-      }
-
-      @include breakpoint(1800) {
-        width: 85%;
-      }
-    }
   }
 
   @include block(hamburger) {
@@ -41,6 +25,7 @@
     box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
     height: auto;
     background-color: #051926;
+    width: 100%;
     
     @include breakpoint(xxlarge up) {
       flex-basis: 15%;

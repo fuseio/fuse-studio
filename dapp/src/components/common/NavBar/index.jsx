@@ -1,18 +1,19 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, { useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import Logo from 'components/common/Logo'
 import HelpIcon from 'images/help.svg'
 import NotificationIcon from 'images/notification.svg'
 import WalletIcon from 'images/fuse-wallet.svg'
 import classNames from 'classnames'
-import ProfileDropDown from './../ProfileDropDown'
+import ProfileDropDown from 'components/common/ProfileDropDown'
 import { isMobileOnly } from 'react-device-detect'
 import { withRouter } from 'react-router'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
 import { push } from 'connected-react-router'
-
+import { useWindowScroll } from 'react-use'
 import useOutsideClick from 'hooks/useOutsideClick'
+import { getCurrentNetworkType } from 'selectors/network'
 
 const NavBar = ({
   accountAddress,
@@ -22,11 +23,12 @@ const NavBar = ({
   connectingToWallet,
   logout,
   web3connect,
+  modifier,
   withLogo = true
 }) => {
+  const { y: scrollY } = useWindowScroll()
   const [isHelpOpen, setHelpOpen] = useState(false)
   const [isProfileOpen, setProfileOpen] = useState(false)
-  const [scrollTop, setScrollTop] = useState(false)
   const helpRef = useRef(null)
   const profileRef = useRef(null)
 
@@ -42,29 +44,6 @@ const NavBar = ({
     }
   })
 
-  const handleScroll = useCallback(event => {
-    let lastScrollY = window.scrollY
-    setProfileOpen(false)
-    setHelpOpen(false)
-    setScrollTop(lastScrollY)
-  }, [])
-
-  useEffect(() => {
-    document.addEventListener('scroll', handleScroll)
-    return () => {
-      document.removeEventListener('scroll', handleScroll)
-    }
-  }, [handleScroll])
-
-  // const chooseProvider = () => {
-  //   if (!accountAddress) {
-  //     if (window && window.analytics) {
-  //       window.analytics.track('Connect wallet clicked - not connected')
-  //     }
-  //     loadModal(CHOOSE_PROVIDER)
-  //   }
-  // }
-
   const openProfile = (e) => {
     e.stopPropagation()
     setProfileOpen(!isProfileOpen)
@@ -75,9 +54,13 @@ const NavBar = ({
     setHelpOpen(!isHelpOpen)
   }
 
+  const isGreaterThen70 = () => scrollY > 70
+
   return (
-    <div className={classNames('navbar', { 'navbar--scroll': scrollTop > 70 })} >
-      {(withLogo || (isMobileOnly && scrollTop > 70)) && <div className='navbar__logo'><Logo showHomePage={() => push('/')} isBlue={scrollTop < 70} /></div>}
+    <div className={classNames('navbar', { 'navbar--scroll': isGreaterThen70(), 'navbar--short': modifier })} >
+      {(withLogo || (isMobileOnly && isGreaterThen70())) && <div className='navbar__logo'>
+        <Logo showHomePage={() => push('/')} isBlue={!isGreaterThen70()} />
+      </div>}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
         <div
           className='navbar__links__help'
@@ -132,7 +115,7 @@ const NavBar = ({
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
   connectingToWallet: state.network.connectingToWallet,
-  networkType: state.network.networkType
+  networkType: getCurrentNetworkType(state)
 })
 
 const mapDispatchToProps = {

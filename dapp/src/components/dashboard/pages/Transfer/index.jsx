@@ -10,6 +10,7 @@ import { FAILURE, SUCCESS } from 'actions/constants'
 import { withRouter } from 'react-router'
 import { getBalances } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
+import { getHomeNetworkType } from 'selectors/network'
 
 const Transfer = ({
   sendTo,
@@ -24,7 +25,8 @@ const Transfer = ({
   transactionStatus,
   transferSuccess,
   clearTransactionStatus,
-  tokenOfCommunityOnCurrentSide
+  tokenOfCommunityOnCurrentSide,
+  loading
 }) => {
   const [transferMessage, setTransferMessage] = useState(false)
 
@@ -48,7 +50,7 @@ const Transfer = ({
   }
 
   return (
-    <Fragment>
+    !loading && <Fragment>
       <div className='transfer__header'>
         <h2 className='transfer__header__title'>Transfer</h2>
       </div>
@@ -82,7 +84,7 @@ const Transfer = ({
 const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   sendTo: match.params.sendTo,
-  homeNetwork: state.network.homeNetwork,
+  homeNetwork: getHomeNetworkType(state),
   balances: getBalances(state)
 })
 

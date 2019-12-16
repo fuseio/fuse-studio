@@ -28,6 +28,7 @@ const SwitchNetwork = ({
   desiredNetworkType = 'fuse',
   goBack = true
 }) => {
+  const fallbackNetwork = networkType || desiredNetworkType === 'fuse' ? 'ropsten' : 'main'
   const desiredNetworkTypeArray = Array.isArray(desiredNetworkType) ? desiredNetworkType : [desiredNetworkType]
 
   const onClose = () => {
@@ -48,7 +49,7 @@ const SwitchNetwork = ({
           desiredNetworkTypeArray.includes('fuse')
             ? (
               <Fragment>
-                <div className='switch__network__image'><img src={switchImages[desiredNetworkTypeArray[0]][networkType]} /></div>
+                <div className='switch__network__image'><img src={switchImages[desiredNetworkTypeArray[0]][networkType || fallbackNetwork]} /></div>
                 <div className='switch__network__text'>
                   <a target='_blank' href='https://docs.fuse.io/the-fuse-studio/how-to-add-fuse-to-your-metamask'>Click here</a> to learn how to add Fuse to your Metamask
                 </div>

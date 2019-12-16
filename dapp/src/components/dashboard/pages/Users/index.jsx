@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { connect, useSelector } from 'react-redux'
 import { getAccountAddress } from 'selectors/accounts'
-import { getUsersEntities } from 'selectors/entities'
+import { getUsersEntities, checkIsAdmin } from 'selectors/entities'
 import {
   addEntity,
   fetchUsersEntities,
@@ -23,7 +23,7 @@ import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
 import sortBy from 'lodash/sortBy'
 import Avatar from 'images/avatar.svg'
-import { withRouter } from 'react-router'
+import { withRouter, useParams } from 'react-router'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import { getForeignNetwork } from 'selectors/network'
 import { push } from 'connected-react-router'
@@ -48,10 +48,12 @@ const Users = ({
   userJustAdded,
   transactionData,
   entityAdded,
-  push
+  push,
+  fetchCommunityData
 }) => {
+  const { address: communityAddress } = useParams()
   useSwitchNetwork('fuse', { featureName: 'users list' })
-  const { communityAddress, isClosed } = community
+  // const { communityAddress, isClosed } = community
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
   const apiRoot = getApiRoot(useSelector(getForeignNetwork))
@@ -71,6 +73,7 @@ const Users = ({
     if (search) {
       fetchData()
     }
+
     return () => {}
   }, [search, fetchEntities])
 
@@ -161,7 +164,7 @@ const Users = ({
         account,
         status: hasAdminRole
           ? 'Community admin'
-          : !isClosed
+          : (community && !community.isClosed)
             ? 'Community user'
             : isApproved
               ? 'Community user'
@@ -267,7 +270,7 @@ const Users = ({
     loadModal(ADD_USER_MODAL, {
       isJoin,
       entity: isJoin ? { account: accountAddress } : undefined,
-      submitEntity: (data) => submitEntity(communityAddress, { ...data }, isClosed, 'user')
+      submitEntity: (data) => submitEntity((communityAddress), { ...data }, (community && community.isClosed), 'user')
     })
   }
 
@@ -320,7 +323,7 @@ const Users = ({
   }
 
   return (
-    <Fragment>
+    !fetchCommunityData && <Fragment>
       <div className='entities__header'>
         <h2 className='entities__header__title'>Users list</h2>
       </div>
@@ -335,6 +338,7 @@ const mapStateToProps = (state) => ({
   users: getUsersEntities(state),
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
+  isAdmin: checkIsAdmin(state),
   transactionData: getTransaction(state, state.screens.communityEntities.transactionHash)
 })
 

@@ -44,6 +44,7 @@ const FeaturedCommunities = memo(({
                   ...metadata[token.tokenURI],
                   ...metadata[community.communityURI]
                 }}
+                tokenURI={token && token.tokenURI}
                 symbol={token && token.symbol}
                 showDashboard={() => showDashboard(address, community.name)}
                 community={community}

@@ -13,6 +13,7 @@ import { push } from 'connected-react-router'
 import CommunityTypes from 'constants/communityTypes'
 import { existingTokens } from 'constants/existingTokens'
 import { loadState } from 'utils/storage'
+import { getHomeNetworkType, getForeignNetwork } from 'selectors/network'
 
 import { withNetwork } from 'containers/Web3'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
@@ -328,8 +329,8 @@ const WizardPage = ({
 const mapStateToProps = (state, { match }) => ({
   templateId: match.params.templateId,
   ...state.screens.issuance,
-  foreignNetwork: state.network.foreignNetwork,
-  homeNetwork: state.network.homeNetwork,
+  foreignNetwork: getForeignNetwork(state),
+  homeNetwork: getHomeNetworkType(state),
   adminAddress: getAccountAddress(state)
 })
 

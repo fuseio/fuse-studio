@@ -82,6 +82,7 @@ export default ({
                             ...metadata[token.tokenURI],
                             ...metadata[community.communityURI]
                           }}
+                          tokenURI={token && token.tokenURI}
                           showDashboard={() => showDashboard(address, community.name)}
                           community={community}
                         />

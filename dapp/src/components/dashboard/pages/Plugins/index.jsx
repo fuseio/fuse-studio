@@ -137,7 +137,8 @@ const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin,
 const Plugins = ({
   loadModal,
   addCommunityPlugin,
-  community
+  community,
+  fetchCommunityData
 }) => {
   useSwitchNetwork('fuse', { featureName: 'plug-ins' })
   const { plugins } = community
@@ -181,7 +182,7 @@ const Plugins = ({
   }
 
   return (
-    <div className='plugins'>
+    !fetchCommunityData && <div className='plugins'>
       <h2 className='plugins__title'>Plugins</h2>
       <div className='plugins__wrapper'>
         <div className='plugins__content__wrapper'>
