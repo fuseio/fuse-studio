@@ -45,7 +45,7 @@ router.post('/', auth.required, async (req, res) => {
   const userWalletContacts = concat(userWalletContactIds, newContactIds)
   await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { contacts: userWalletContacts })
   const newContacts = await Contact.find({ userWallet: userWallet._id, state: 'NEW' }, { _id: 0, phoneNumber: 1, walletAddress: 1 })
-  res.send({ newContacts, nonce })
+  res.send( { data: { newContacts, nonce } })
 })
 
 /**
@@ -61,11 +61,8 @@ router.post('/', auth.required, async (req, res) => {
 router.post('/:nonce', auth.required, async (req, res) => {
   const { phoneNumber, accountAddress } = req.user
   const { nonce } = req.params
-  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress }).populate('contacts')
-  const contacts = await Contact.find({ userWallet: ObjectId(userWallet._id), nonce })
-  await Promise.all(contacts.map(contact => {
-    return Contact.findOneAndUpdate({ _id: ObjectId(contact._id) }, { state: 'SYNCED' })
-  }))
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
+  await Contact.updateMany({ userWallet: ObjectId(userWallet._id), nonce }, { state: 'SYNCED' })
   res.send({ response: 'ok' })
 })
 
