@@ -135,7 +135,8 @@ const DashboardLayout = memo((props) => {
   const qrValue = JSON.stringify({
     tokenAddress: community && community.homeTokenAddress,
     originNetwork: foreignToken && foreignToken.networkType,
-    env: CONFIG.env
+    env: CONFIG.env,
+    communityAddress
   })
 
   return (

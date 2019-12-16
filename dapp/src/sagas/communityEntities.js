@@ -38,22 +38,14 @@ function * toggleCommunityMode ({ communityAddress, isClosed }) {
   const web3 = yield getWeb3()
   const networkVersion = getNetworkVersion(web3)
   const CommunityContract = new web3.eth.Contract(CommunityTransferManagerABI, communityAddress, getOptions(networkVersion))
+  const method = !isClosed
+    ? CommunityContract.methods.addRule(roles.APPROVED_ROLE, roles.APPROVED_ROLE)
+    : CommunityContract.methods.removeRule(0)
 
-  if (!isClosed) {
-    const method = CommunityContract.methods.addRule(roles.APPROVED_ROLE, roles.APPROVED_ROLE)
-    const transactionPromise = method.send({
-      from: accountAddress
-    })
-    const action = actions.TOGGLE_COMMUNITY_MODE
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'CommunityTransferManager' })
-  } else {
-    const method = CommunityContract.methods.removeRule(0)
-    const transactionPromise = method.send({
-      from: accountAddress
-    })
-    const action = actions.TOGGLE_COMMUNITY_MODE
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'CommunityTransferManager' })
-  }
+  const transactionPromise = method.send({
+    from: accountAddress
+  })
+  yield call(transactionFlow, { transactionPromise, action: actions.TOGGLE_COMMUNITY_MODE, sendReceipt: true, abiName: 'CommunityTransferManager' })
 }
 
 function * addAdminRole ({ account }) {
@@ -96,26 +88,46 @@ function deriveEntityData (type, isClosed) {
   }
 }
 
+function * checkIsCommunityMember ({ communityAddress, account }) {
+  const memberData = yield apiCall(entitiesApi.fetchEntity, { communityAddress, account })
+  return memberData && memberData.data
+}
+
 function * addEntity ({ communityAddress, data, isClosed, entityType }) {
-  if (entityType === 'business') {
+  const isCommunityMember = yield call(checkIsCommunityMember, { communityAddress, account: data.account })
+  if (entityType === 'business' && isCommunityMember) {
+    const accountAddress = yield select(getAccountAddress)
+    const web3 = yield getWeb3()
+    const networkVersion = getNetworkVersion(web3)
+    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
+    const method = CommunityContract.methods.addEnitityRoles(data.account, roles.BUSINESS_ROLE)
+    const transactionPromise = method.send({
+      from: accountAddress
+    })
+    const action = actions.ADD_ENTITY
     yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
   } else {
-    yield call(metadataHandler, { communityAddress, data })
+    if (entityType === 'business') {
+      yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+    } else {
+      yield call(metadataHandler, { communityAddress, data })
+    }
+
+    const { entityRoles } = deriveEntityData(entityType, isClosed)
+
+    const accountAddress = yield select(getAccountAddress)
+    const web3 = yield getWeb3()
+    const networkVersion = getNetworkVersion(web3)
+    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
+
+    const method = CommunityContract.methods.addEntity(data.account, entityRoles)
+    const transactionPromise = method.send({
+      from: accountAddress
+    })
+    const action = actions.ADD_ENTITY
+    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
   }
-
-  const { entityRoles } = deriveEntityData(entityType, isClosed)
-
-  const accountAddress = yield select(getAccountAddress)
-  const web3 = yield getWeb3()
-  const networkVersion = getNetworkVersion(web3)
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
-
-  const method = CommunityContract.methods.addEntity(data.account, entityRoles)
-  const transactionPromise = method.send({
-    from: accountAddress
-  })
-  const action = actions.ADD_ENTITY
-  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
 }
 
 function * metadataHandler ({ communityAddress, data }) {
@@ -255,6 +267,6 @@ export default function * communityEntitiesSaga () {
     tryTakeEvery(actions.JOIN_COMMUNITY, joinCommunity, 1),
     tryTakeEvery(actions.IMPORT_EXISTING_ENTITY, importExistingEntity, 1),
     tryTakeEvery(actions.UPLOAD_IMAGE, uploadImage, 1),
-    takeEvery(action => /^(CREATE_METADATA|ADD_ENTITY|REMOVE_ENTITY|ADD_ADMIN_ROLE|REMOVE_ADMIN_ROLE|CONFIRM_USER).*SUCCESS/.test(action.type), watchEntityChanges)
+    takeEvery(action => /^(ADD_ENTITY|REMOVE_ENTITY|ADD_ADMIN_ROLE|REMOVE_ADMIN_ROLE|CONFIRM_USER).*SUCCESS/.test(action.type), watchEntityChanges)
   ])
 }
