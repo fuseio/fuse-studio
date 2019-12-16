@@ -151,7 +151,7 @@ router.get('/:communityAddress', async (req, res, next) => {
 
   if (withMetadata) {
     const metadatas = await Promise.all(results.map(result => result.uri ? metadataUtils.getMetadata(result.uri.split('://')[1]).catch(console.error) : null))
-    results = results.map((result, index) => ({ ...result.toObject(), metadata: metadatas[index] && metadatas[index].data }))
+    results = results.map((result, index) => ({ ...result.toObject(), metadata: (metadatas[index] && metadatas[index].data) || {} }))
   }
 
   const pageCount = Math.ceil(itemCount / req.query.limit)
