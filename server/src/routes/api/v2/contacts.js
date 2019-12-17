@@ -27,7 +27,7 @@ router.post('/', auth.required, async (req, res) => {
   const userWalletContactPhoneNumbers = userWallet.contacts.map(obj => obj.phoneNumber)
   const nonce = (new Date()).getTime()
 
-  const newContactIds = compact(await Promise.all(contacts.map(phoneNumber => {
+  compact(await Promise.all(contacts.map(phoneNumber => {
     return new Promise(async (resolve, reject) => {
       if (indexOf(userWalletContactPhoneNumbers, phoneNumber) >= 0) {
         return resolve()
@@ -36,14 +36,15 @@ router.post('/', auth.required, async (req, res) => {
       let contact = await new Contact({
         userWallet: ObjectId(userWallet._id),
         phoneNumber,
-        walletAddress: contactUserWallet && contactUserWallet.walletAddress,
-        state: contactUserWallet && contactUserWallet.walletAddress ? 'NEW' : 'EMPTY',
+        walletAddress: contactUserWallet?.walletAddress,
+        state: contactUserWallet?.walletAddress? ? 'NEW' : 'EMPTY',
         nonce
       }).save()
+      userWalletContactIds.push(contact._id)
       resolve(contact._id)
     })
   })))
-  await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { contacts: concat(userWalletContactIds, newContactIds) })
+  await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { contacts: userWalletContactIds })
   const newContacts = await Contact.find({ userWallet: userWallet._id, state: 'NEW' }, { _id: 0, phoneNumber: 1, walletAddress: 1 })
   res.send( { data: { newContacts, nonce } })
 })
