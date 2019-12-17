@@ -4,7 +4,7 @@ const { ObjectId } = mongoose.Types
 const auth = require('@routes/auth')
 const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
-const { concat, compact, indexOf } = require('lodash')
+const { compact, indexOf } = require('lodash')
 
 /**
  * @api {post} /contacts/ Sync contacts list
@@ -36,8 +36,8 @@ router.post('/', auth.required, async (req, res) => {
       let contact = await new Contact({
         userWallet: ObjectId(userWallet._id),
         phoneNumber,
-        walletAddress: contactUserWallet?.walletAddress,
-        state: contactUserWallet?.walletAddress? ? 'NEW' : 'EMPTY',
+        walletAddress: contactUserWallet && contactUserWallet.walletAddress,
+        state: contactUserWallet && contactUserWallet.walletAddress ? 'NEW' : 'EMPTY',
         nonce
       }).save()
       userWalletContactIds.push(contact._id)
@@ -46,7 +46,7 @@ router.post('/', auth.required, async (req, res) => {
   })))
   await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { contacts: userWalletContactIds })
   const newContacts = await Contact.find({ userWallet: userWallet._id, state: 'NEW' }, { _id: 0, phoneNumber: 1, walletAddress: 1 })
-  res.send( { data: { newContacts, nonce } })
+  res.send({ data: { newContacts, nonce } })
 })
 
 /**
