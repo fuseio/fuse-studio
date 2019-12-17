@@ -5,15 +5,18 @@ import { formatWei } from 'utils/format'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
 import MintBurnForm from 'components/dashboard/components/MintBurnForm'
 import { mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { toWei } from 'web3-utils'
 import Message from 'components/common/SignMessage'
-import { getForeignNetwork, getHomeNetworkType } from 'selectors/network'
-import { getBalances } from 'selectors/accounts'
+import { getForeignNetwork, getHomeNetworkType, getCurrentNetworkType } from 'selectors/network'
+import { getBalances, getAccountAddress } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
+import { getCommunityAddress } from 'selectors/entities'
+import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -62,10 +65,9 @@ const useTabStyles = makeStyles(theme => ({
 
 const MintBurn = ({
   error,
-  symbol,
+  token: { symbol, address: tokenAddress },
   networkType,
   balances,
-  tokenAddress,
   isMinting,
   isBurning,
   mintToken,
@@ -83,7 +85,6 @@ const MintBurn = ({
   const [mintMessage, setMintMessage] = useState(false)
   const [burnMessage, setBurnMessage] = useState(false)
   const foreignNetwork = useSelector(getForeignNetwork)
-
   const balance = balances[tokenOfCommunityOnCurrentSide]
 
   useSwitchNetwork(foreignNetwork, { featureName: 'mint or burn' })
@@ -171,7 +172,11 @@ const MintBurn = ({
 const mapStateToProps = (state) => ({
   ...state.screens.token,
   homeNetwork: getHomeNetworkType(state),
-  balances: getBalances(state)
+  accountAddress: getAccountAddress(state),
+  networkType: getCurrentNetworkType(state),
+  balances: getBalances(state),
+  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state, getCommunityAddress(state))),
+  token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { symbol: '', address: '' }
 })
 
 const mapDispatchToProps = {

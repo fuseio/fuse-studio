@@ -8,7 +8,6 @@ class SignInLayout extends Component {
     const { createNew, accountAddress } = this.props
 
     if (accountAddress) {
-      console.log({ accountAddress })
       if (createNew) {
         const { create3boxProfile, data } = this.props
         create3boxProfile(accountAddress, data)

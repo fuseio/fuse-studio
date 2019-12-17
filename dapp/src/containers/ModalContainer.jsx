@@ -12,8 +12,6 @@ import AddBusinessModal from 'components/dashboard/modals/AddBusinessModal'
 import AddUserModal from 'components/dashboard/modals/AddUserModal'
 import EntityAddedModal from 'components/dashboard/modals/EntityAddedModal'
 import BusinessListModal from 'components/dashboard/modals/BusinessListModal'
-import BridgeModal from 'components/dashboard/modals/BridgeModal'
-import NoDataAboutOwnerModal from 'components/dashboard/modals/NoDataAboutOwnerModal'
 import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
 import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEntity'
 import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
@@ -23,8 +21,6 @@ import {
   WRONG_NETWORK_MODAL,
   ADD_BUSINESS_MODAL,
   BUSINESS_LIST_MODAL,
-  BRIDGE_MODAL,
-  NO_DATA_ABOUT_OWNER_MODAL,
   SHOW_MORE_MODAL,
   QR_MODAL,
   ADD_USER_MODAL,
@@ -46,8 +42,6 @@ const MODAL_COMPONENTS = {
   [WRONG_NETWORK_MODAL]: WrongNetworkModal,
   [ADD_BUSINESS_MODAL]: AddBusinessModal,
   [BUSINESS_LIST_MODAL]: BusinessListModal,
-  [BRIDGE_MODAL]: BridgeModal,
-  [NO_DATA_ABOUT_OWNER_MODAL]: NoDataAboutOwnerModal,
   [SHOW_MORE_MODAL]: ShowMoreModal,
   [QR_MODAL]: QrModal,
   [ADD_USER_MODAL]: AddUserModal,

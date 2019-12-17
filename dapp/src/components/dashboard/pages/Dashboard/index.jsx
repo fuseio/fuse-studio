@@ -14,6 +14,10 @@ import Header from 'components/dashboard/components/Header'
 import { push } from 'connected-react-router'
 import { getForeignNetwork } from 'selectors/network'
 import SignIn from 'components/common/SignIn'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
+import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
+import { getAccountAddress } from 'selectors/accounts'
 
 class Dashboard extends Component {
   state = {
@@ -85,12 +89,11 @@ class Dashboard extends Component {
       metadata,
       networkType,
       tokenOfCommunityOnCurrentSide,
-      isAdmin,
-      loading
+      isAdmin
     } = this.props
 
     return (
-      !loading && <React.Fragment>
+      (community && foreignToken) ? <React.Fragment>
         <SignIn accountAddress={accountAddress} />
         <Header
           metadata={{
@@ -131,13 +134,20 @@ class Dashboard extends Component {
             </div>
           )
         }
-      </React.Fragment>
+      </React.Fragment> : <div />
     )
   }
 }
 
 const mapStateToProps = (state) => ({
   tokenNetworkType: getForeignNetwork(state),
+  metadata: state.entities.metadata,
+  isAdmin: checkIsAdmin(state),
+  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state, getCommunityAddress(state))),
+  accountAddress: getAccountAddress(state),
+  community: getCurrentCommunity(state, getCommunityAddress(state)),
+  foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)),
+  dashboard: state.screens.dashboard,
   ...state.screens.token,
   ...getTransaction(state, state.screens.token.transactionHash)
 })

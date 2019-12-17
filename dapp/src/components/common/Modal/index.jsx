@@ -22,6 +22,7 @@ const Modal = ({
 
   const listenKeyboard = (event) => {
     if (event.key === 'Escape' || event.keyCode === 27) {
+      onDialogClick()
       onClose()
     }
   }
@@ -31,8 +32,8 @@ const Modal = ({
   return (
     <div className='modal'>
       <div className='overlay' />
-      <div className='modal__container' onClick={onClose}>
-        <div className={classNames('modal__content', className)} onClick={onDialogClick}>
+      <div className='modal__container'>
+        <div className={classNames('modal__content', className)}>
           {
             hasCloseBtn && (
               <div className='modal__content__close' onClick={onClose}>

@@ -10,8 +10,6 @@ import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import arrow from 'images/arrow_3.svg'
 
 const FeaturedCommunities = memo(({
-  metadata,
-  accountAddress,
   communities,
   tokens,
   fetchFeaturedCommunities,
@@ -39,13 +37,7 @@ const FeaturedCommunities = memo(({
           return (
             <div style={{ width: '90%' }} key={address}>
               <FeaturedCommunity
-                accountAddress={accountAddress}
-                metadata={{
-                  ...metadata[token.tokenURI],
-                  ...metadata[community.communityURI]
-                }}
-                tokenURI={token && token.tokenURI}
-                symbol={token && token.symbol}
+                token={token}
                 showDashboard={() => showDashboard(address, community.name)}
                 community={community}
               />
@@ -95,8 +87,6 @@ const FeaturedCommunities = memo(({
     return false
   } else if (prevProps.communities !== nextProps.communities) {
     return false
-  } else if (prevProps.metadata !== nextProps.metadata) {
-    return false
   } else if (prevProps.featuredCommunities !== nextProps.featuredCommunities) {
     return false
   }
@@ -105,7 +95,6 @@ const FeaturedCommunities = memo(({
 
 const mapStateToProps = state => ({
   tokens: state.entities.tokens,
-  metadata: state.entities.metadata,
   communities: state.entities.communities,
   featuredCommunities: state.accounts.featuredCommunities
 })

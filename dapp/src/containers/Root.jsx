@@ -83,7 +83,7 @@ const Root = ({
         const provider = await useDefaultWallet(defaultOne, connectTo)
         connectToWallet(provider)
       } catch (error) {
-        console.log({ error })
+        // console.log({ error })
       }
     }
 

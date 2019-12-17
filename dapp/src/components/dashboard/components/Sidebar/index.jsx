@@ -113,7 +113,6 @@ const Sidebar = ({
                             <MenuItem
                               key={name}
                               isCurrentPath={currentPath === path}
-                              // path={path}
                               icon={icon}
                               selectedIcon={selectedIcon}
                               name={name}
@@ -134,8 +133,6 @@ const Sidebar = ({
                     <MenuItem
                       key={name}
                       isCurrentPath={currentPath === path}
-                      // currentPath={currentPath}
-                      // path={path}
                       name={name}
                       icon={icon}
                       selectedIcon={selectedIcon}
@@ -152,8 +149,6 @@ const Sidebar = ({
                     key={name}
                     style={style}
                     isCurrentPath={currentPath === path}
-                    // currentPath={currentPath}
-                    // path={path}
                     icon={icon}
                     name={name}
                     selectedIcon={selectedIcon}
@@ -176,6 +171,7 @@ const Sidebar = ({
 
 const mapState = (state) => ({
   isAdmin: checkIsAdmin(state),
+  location: state.router.location,
   community: getCurrentCommunity(state, getCommunityAddress(state)),
   token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { tokenType: '' }
 })

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router'
 import RewardUserForm from 'components/dashboard/components/RewardUserForm'
 import TransferToFunderForm from 'components/dashboard/components/TransferToFunderForm'
 import { connect, useSelector } from 'react-redux'
@@ -15,7 +16,10 @@ import get from 'lodash/get'
 import { fetchEntity as fetchEntityApi } from 'services/api/entities'
 import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
-import { checkIsFunderPartOfCommunity } from 'selectors/entities'
+import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
+import { getCurrentNetworkType } from 'selectors/network'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
+import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
@@ -23,7 +27,7 @@ const JoinBonus = ({
   error,
   networkType,
   community,
-  symbol,
+  token: { symbol },
   transactionStatus,
   transferSignature,
   isTransfer,
@@ -35,9 +39,9 @@ const JoinBonus = ({
   balances,
   tokenOfCommunityOnCurrentSide,
   toggleJoinBonus,
-  isFunderPartOfCommunity,
-  fetchCommunityData
+  isFunderPartOfCommunity
 }) => {
+  const { address: communityAddress } = useParams()
   const [isFunderAdded, setFunderStatus] = React.useState(isFunderPartOfCommunity)
 
   useSwitchNetwork('fuse', { featureName: 'join bonus' })
@@ -45,7 +49,7 @@ const JoinBonus = ({
   const funderAccount = useSelector(getFunderAccount)
   const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[tokenOfCommunityOnCurrentSide]
 
-  const { plugins, communityAddress } = community
+  const { plugins } = community
 
   const { joinBonus } = plugins
 
@@ -100,7 +104,7 @@ const JoinBonus = ({
   const balance = balances[tokenOfCommunityOnCurrentSide]
 
   return (
-    !fetchCommunityData && <div className='join_bonus__wrapper'>
+    community ? <div className='join_bonus__wrapper'>
       <div className='join_bonus'>
         <h2 className='join_bonus__main-title join_bonus__main-title--white'>Join bonus</h2>
         <div style={{ position: 'relative' }}>
@@ -133,14 +137,18 @@ const JoinBonus = ({
           />
         </div>
       </div>
-    </div>
+    </div> : <div />
   )
 }
 
 const mapStateToProps = (state) => ({
   ...state.screens.token,
   balances: getBalances(state),
-  isFunderPartOfCommunity: checkIsFunderPartOfCommunity(state)
+  isFunderPartOfCommunity: checkIsFunderPartOfCommunity(state),
+  networkType: getCurrentNetworkType(state),
+  community: getCurrentCommunity(state, getCommunityAddress(state)),
+  token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { symbol: '' },
+  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state, getCommunityAddress(state)))
 })
 
 const mapDispatchToState = {

@@ -10,13 +10,15 @@ import { FAILURE, SUCCESS } from 'actions/constants'
 import { withRouter } from 'react-router'
 import { getBalances } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
-import { getHomeNetworkType } from 'selectors/network'
+import { getCurrentNetworkType, getHomeNetworkType } from 'selectors/network'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
+import { getCommunityAddress } from 'selectors/entities'
+import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
 
 const Transfer = ({
   sendTo,
   error,
-  token,
-  symbol,
+  token: { symbol },
   balances,
   networkType,
   isTransfer,
@@ -85,7 +87,10 @@ const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   sendTo: match.params.sendTo,
   homeNetwork: getHomeNetworkType(state),
-  balances: getBalances(state)
+  balances: getBalances(state),
+  networkType: getCurrentNetworkType(state),
+  token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { symbol: '' },
+  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state, getCommunityAddress(state)))
 })
 
 const mapDispatchToProps = {

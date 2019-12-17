@@ -33,9 +33,9 @@ const SwitchNetwork = ({
 
   const onClose = () => {
     hideModal()
-    if (goBack) {
-      history.goBack()
-    }
+    // if (goBack) {
+    //   history.goBack()
+    // }
   }
 
   return (
