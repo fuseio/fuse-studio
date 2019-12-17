@@ -2,9 +2,17 @@ const config = require('config')
 const { withAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
 const homeAddresses = config.get('network.home.addresses')
-const request = require('request-promise-native')
+// const request = require('request-promise-native')
 
-const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule, args }, job) => {
+function getSigFromMethodData () {
+
+}
+
+function getMethodBySig () {
+
+}
+
+const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule }, job) => {
   const { web3, createContract, createMethod, send } = createNetwork('home', account)
   const ABI = require(`@constants/abi/${walletModule}`)
   const contract = createContract(ABI, homeAddresses.walletModules[walletModule])
@@ -18,15 +26,16 @@ const relay = withAccount(async (account, { walletAddress, methodData, nonce, ga
     }
   })
   console.log({ methodData })
-  console.log({ args })
   const { success, wallet, signedHash } = receipt.events.TransactionExecuted.returnValues
   if (success) {
     console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
     if (walletModule === 'CommunityManager') {
       console.log(`Requesting token funding for walltet $wallet`)
-      const methodAbi = getMethod()
+      const sig = getSigFromMethodData(methodData)
+      const methodAbi = getMethodBySig(ABI, sig)
       const parsedArguments = web3.eth.abi.decodeParameters(methodAbi.inputs)
       const communityAddress = parsedArguments._community
+      console.log({ communityAddress })
       // request.post(`${config.get('funder.urlBase')}fund/token`, {
       //   json: true,
       //   body: { accountAddress: walletAddress, tokenAddress, networkType: config.get('network.foreign.name') }
