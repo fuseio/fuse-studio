@@ -19,6 +19,7 @@ import ModalContainer from 'containers/ModalContainer'
 import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import useWeb3Connect from 'hooks/useWeb3Connect'
 import useDefaultWallet from 'hooks/useDefaultWallet'
+import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
 import { toLongName } from 'utils/network'
 import { loadState, saveState } from 'utils/storage'
@@ -103,7 +104,7 @@ const Root = ({
 
   const isInCommunityPage = location.pathname.includes('/community/')
 
-  const isInIssuancePage = location.pathname.includes('/issuance/')
+  const isInIssuancePage = location.pathname.includes('/issuance')
 
   const logout = () => {
     saveState('state.reconnect', false)
@@ -129,6 +130,7 @@ const Root = ({
 
 const mapState = (state) => ({
   defaultNetwork: getForeignNetwork(state),
+  accountAddress: getAccountAddress(state),
   ...state.router
 })
 

@@ -77,7 +77,7 @@ const FeaturedCommunities = memo(({
         >{slides}</Carousel>
         <Dots value={value} onChange={onChange} number={React.Children.count(slides)} />
       </div>
-      <div onClick={showCommunities} className='faq__action'>
+      <div onClick={showCommunities} className='featured__carousel__action'>
         Explore&nbsp;<img src={arrow} alt='arrow' />
       </div>
     </div>

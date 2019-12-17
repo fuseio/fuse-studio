@@ -5,7 +5,7 @@ import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 } from 'services/web3'
 import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
-import { balanceOfFuse } from 'actions/accounts'
+import { balanceOfFuse, fetchCommunities } from 'actions/accounts'
 import { loadModal } from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
@@ -140,6 +140,7 @@ function * watchCheckNetworkTypeSuccess ({ response }) {
 function * watchConnectToWallet ({ response, accountAddress }) {
   const { providerInfo } = response
   const { name } = providerInfo
+  yield put(fetchCommunities(accountAddress))
   saveState('state.userEthAddress', accountAddress)
   saveState('state.defaultWallet', name)
 }

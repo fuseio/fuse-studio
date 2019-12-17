@@ -18,7 +18,7 @@ import { SWITCH_NETWORK } from 'constants/uiConstants'
 import { saveState } from 'utils/storage'
 import { changeNetwork } from 'actions/network'
 import { loadModal } from 'actions/ui'
-import { fetchCommunities, fetchBalances } from 'actions/accounts'
+import { fetchBalances } from 'actions/accounts'
 
 import Avatar from 'images/avatar.svg'
 
@@ -202,7 +202,6 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  fetchCommunities,
   fetchBalances,
   changeNetwork,
   loadModal,

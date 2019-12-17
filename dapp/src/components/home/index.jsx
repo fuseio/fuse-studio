@@ -1,95 +1,29 @@
-import React, { useState, useEffect } from 'react'
-
+import React from 'react'
+import { push } from 'connected-react-router'
+import { isMobileOnly } from 'react-device-detect'
+import { connect } from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
+
+import withTracker from 'containers/withTracker'
 import Templates from 'components/home/components/Templates'
 import Tabs from 'components/home/components/Tabs'
 import Faqs from 'components/home/components/Faq'
+import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
+
 import personImage from 'images/person.png'
 import groupImageMobile from 'images/group_mobile.png'
 import groupImage from 'images/group_image.png'
-import { isMobileOnly } from 'react-device-detect'
 import arrowImage from 'images/arrow_1.svg'
 import GiftIcon from 'images/gift.svg'
-import withTracker from 'containers/withTracker'
-import { connect } from 'react-redux'
-import { push } from 'connected-react-router'
-import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
-// import FeaturedCommunity from 'components/common/FeaturedCommunity'
-import { fetchCommunities } from 'actions/accounts'
+
 import { getCommunitiesKeys } from 'selectors/accounts'
-
-// import Tabs from '@material-ui/core/Tabs'
-// import Tab from '@material-ui/core/Tab'
-// import Typography from '@material-ui/core/Typography'
-// import { makeStyles } from '@material-ui/styles'
-
-// const toMatrix = (arr, width) =>
-//   arr.reduce((rows, key, index) => (index % width === 0 ? rows.push([key])
-//     : rows[rows.length - 1].push(key)) && rows, [])
-
-// const a11yProps = (index) => ({
-//   id: `scrollable-force-tab-${index}`,
-//   'aria-controls': `scrollable-force-tabpanel-${index}`
-// })
-
-// const TabPanel = (props) => {
-//   const { children, value, index, ...other } = props
-
-//   return (
-//     <Typography
-//       component='div'
-//       role='tabpanel'
-//       hidden={value !== index}
-//       id={`scrollable-force-tabpanel-${index}`}
-//       aria-labelledby={`scrollable-force-tab-${index}`}
-//       {...other}
-//     >
-//       <div style={{ padding: '40px 25px' }}>{children}</div>
-//     </Typography>
-//   )
-// }
-
-// const useTabsStyles = makeStyles(theme => ({
-//   root: {
-//     backgroundColor: '#f8f8f8',
-//     alignItems: 'center',
-//     minHeight: '80px',
-//     borderTopLeftRadius: '10px',
-//     borderTopRightRadius: '10px'
-//   },
-//   indicator: {
-//     backgroundColor: ' #052235'
-//   }
-// }))
-
-// const useTabStyles = makeStyles(theme => ({
-//   root: {
-//     fontSize: '1.1em',
-//     fontFamily: `'Gotham SSm A', 'Gotham SSm B', 'icomoon'`,
-//     fontWeight: '500'
-//   },
-//   textColorPrimary: {
-//     color: '#a4a4a4 !important'
-//   },
-//   selected: {
-//     color: '#25435a !important'
-//   }
-// }))
 
 const HomePage = ({
   accountAddress,
   web3connect,
-  fetchCommunities,
   push,
   communitiesKeys
 }) => {
-  useEffect(() => {
-    if (accountAddress) {
-      fetchCommunities(accountAddress)
-    }
-    return () => { }
-  }, [accountAddress])
-
   const showIssuance = (templateId) => {
     if (!accountAddress) {
       if (window && window.analytics) {
@@ -167,8 +101,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  push,
-  fetchCommunities
+  push
 }
 
 export default withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage))
