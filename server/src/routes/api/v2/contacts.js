@@ -32,16 +32,30 @@ router.post('/', auth.required, async (req, res) => {
       if (indexOf(userWalletContactPhoneNumbers, phoneNumber) >= 0) {
         return resolve()
       }
-      let contactUserWallet = await UserWallet.findOne({ phoneNumber: phoneNumber })
-      let contact = await new Contact({
-        userWallet: ObjectId(userWallet._id),
-        phoneNumber,
-        walletAddress: contactUserWallet && contactUserWallet.walletAddress,
-        state: contactUserWallet && contactUserWallet.walletAddress ? 'NEW' : 'EMPTY',
-        nonce
-      }).save()
-      userWalletContactIds.push(contact._id)
-      resolve(contact._id)
+      let contactUserWallets = await UserWallet.find({ phoneNumber })
+      if (contactUserWallets.length === 0) {
+        let contact = await new Contact({
+          userWallet: ObjectId(userWallet._id),
+          phoneNumber,
+          nonce
+        }).save()
+        userWalletContactIds.push(contact._id)
+        return resolve()
+      }
+      await Promise.all(contactUserWallets.map(contactUserWallet => {
+        return new Promise(async (resolve, reject) => {
+          let contact = await new Contact({
+            userWallet: ObjectId(userWallet._id),
+            phoneNumber,
+            walletAddress: contactUserWallet && contactUserWallet.walletAddress,
+            state: contactUserWallet && contactUserWallet.walletAddress ? 'NEW' : 'EMPTY',
+            nonce
+          }).save()
+          userWalletContactIds.push(contact._id)
+          resolve()
+        })
+      }))
+      resolve()
     })
   })))
   await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { contacts: userWalletContactIds })
