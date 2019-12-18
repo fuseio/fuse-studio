@@ -29,8 +29,8 @@ const TemplateModal = ({
 
   return (
     <Modal hasCloseBtn className='template_modal' onClose={hideModal}>
-      <div className='content__wrapper grid-y'>
-        <div className='content'>
+      <div className='content__wrapper grid-x'>
+        <div className='content cell medium-10 small-24'>
           <div className='template_modal__logo'><img className='' src={logo} /></div>
           <div className='template_modal__title'>{title}</div>
           <Text />
@@ -52,7 +52,7 @@ const TemplateModal = ({
             <button onClick={useTemplate}>Use this template</button>
           </div>
         </div>
-        <div className='side_image'>
+        <div className='side_image cell medium-10 show-for-medium'>
           <img src={sideImage} />
         </div>
       </div>

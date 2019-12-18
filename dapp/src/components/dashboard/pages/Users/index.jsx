@@ -1,8 +1,15 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
-import FontAwesome from 'react-fontawesome'
+import { push } from 'connected-react-router'
+import dotsIcon from 'images/dots.svg'
+import isEmpty from 'lodash/isEmpty'
+import { withRouter, useParams } from 'react-router'
 import { connect, useSelector } from 'react-redux'
-import { getAccountAddress } from 'selectors/accounts'
-import { getUsersEntities } from 'selectors/entities'
+import sortBy from 'lodash/sortBy'
+
+import MyTable from 'components/dashboard/components/Table'
+import { useFetch } from 'hooks/useFetch'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
+
 import {
   addEntity,
   fetchUsersEntities,
@@ -15,18 +22,16 @@ import {
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
-import isEmpty from 'lodash/isEmpty'
 import { getTransaction } from 'selectors/transaction'
-import MyTable from 'components/dashboard/components/Table'
-import AddBusiness from 'images/add_business.svg'
-import { useFetch } from 'hooks/useFetch'
+
 import { getApiRoot } from 'utils/network'
-import sortBy from 'lodash/sortBy'
-import Avatar from 'images/avatar.svg'
-import { withRouter } from 'react-router'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import { getForeignNetwork } from 'selectors/network'
-import { push } from 'connected-react-router'
+import { getCurrentCommunity } from 'selectors/dashboard'
+import { getAccountAddress } from 'selectors/accounts'
+import { getUsersEntities, checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+
+import AddBusiness from 'images/add_business.svg'
+import Avatar from 'images/avatar.svg'
 
 const Users = ({
   users,
@@ -50,8 +55,9 @@ const Users = ({
   entityAdded,
   push
 }) => {
+  console.log({ isAdmin })
+  const { address: communityAddress } = useParams()
   useSwitchNetwork('fuse', { featureName: 'users list' })
-  const { communityAddress, isClosed } = community
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
   const apiRoot = getApiRoot(useSelector(getForeignNetwork))
@@ -161,7 +167,7 @@ const Users = ({
         account,
         status: hasAdminRole
           ? 'Community admin'
-          : !isClosed
+          : (community && !community.isClosed)
             ? 'Community user'
             : isApproved
               ? 'Community user'
@@ -223,7 +229,9 @@ const Users = ({
         return (
           isAdmin ? (
             <div className='table__body__cell__more'>
-              <div className='table__body__cell__more__toggler'><FontAwesome name='ellipsis-v' /></div>
+              <div className='table__body__cell__more__toggler'>
+                <img src={dotsIcon} />
+              </div>
               <div className='more' onClick={e => e.stopPropagation()}>
                 {
                   !isApproved && !hasAdminRole && (
@@ -267,7 +275,7 @@ const Users = ({
     loadModal(ADD_USER_MODAL, {
       isJoin,
       entity: isJoin ? { account: accountAddress } : undefined,
-      submitEntity: (data) => submitEntity(communityAddress, { ...data }, isClosed, 'user')
+      submitEntity: (data) => submitEntity((communityAddress), { ...data }, (community && community.isClosed), 'user')
     })
   }
 
@@ -335,6 +343,8 @@ const mapStateToProps = (state) => ({
   users: getUsersEntities(state),
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
+  isAdmin: checkIsAdmin(state),
+  community: getCurrentCommunity(state, getCommunityAddress(state)),
   transactionData: getTransaction(state, state.screens.communityEntities.transactionHash)
 })
 

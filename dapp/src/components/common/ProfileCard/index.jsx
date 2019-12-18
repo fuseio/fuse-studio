@@ -21,7 +21,7 @@ const ProfileCard = memo(({
   accountAddress
 }) => {
   const { token, community } = entity
-  const { name, symbol } = token
+  const { name, symbol, tokenURI } = token
   const { communityURI, homeTokenAddress, foreignTokenAddress, communityAddress } = community
 
   useEffect(() => {
@@ -31,6 +31,7 @@ const ProfileCard = memo(({
     }
 
     fetchMetadata(communityURI)
+    fetchMetadata(tokenURI)
     fetchToken(homeTokenAddress)
     fetchToken(foreignTokenAddress)
     return () => { }

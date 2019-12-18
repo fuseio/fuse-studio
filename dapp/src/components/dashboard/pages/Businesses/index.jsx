@@ -1,8 +1,14 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
+import { useParams } from 'react-router'
 import FontAwesome from 'react-fontawesome'
 import { connect, useSelector } from 'react-redux'
-import { getAccountAddress } from 'selectors/accounts'
-import { getBusinessesEntities } from 'selectors/entities'
+import isEmpty from 'lodash/isEmpty'
+import sortBy from 'lodash/sortBy'
+import get from 'lodash/get'
+import capitalize from 'lodash/capitalize'
+import MyTable from 'components/dashboard/components/Table'
+import { useFetch } from 'hooks/useFetch'
+import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import {
   addEntity,
   fetchBusinessesEntities,
@@ -12,20 +18,19 @@ import {
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_BUSINESS_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import { getTransaction } from 'selectors/transaction'
-import MyTable from 'components/dashboard/components/Table'
-import AddBusiness from 'images/add_business.svg'
-import { useFetch } from 'hooks/useFetch'
 import { getApiRoot } from 'utils/network'
-import isEmpty from 'lodash/isEmpty'
-import sortBy from 'lodash/sortBy'
+
 import { getForeignNetwork } from 'selectors/network'
-import get from 'lodash/get'
-import capitalize from 'lodash/capitalize'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
+import { getCurrentCommunity } from 'selectors/dashboard'
+import { getAccountAddress } from 'selectors/accounts'
+import { getBusinessesEntities, checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+
+import dotsIcon from 'images/dots.svg'
+import AddBusiness from 'images/add_business.svg'
 
 const Businesses = ({
   businesses,
-  community,
+  isClosed,
   isAdmin,
   fetchEntities,
   accountAddress,
@@ -38,8 +43,8 @@ const Businesses = ({
   metadata,
   removeEntity
 }) => {
+  const { address: communityAddress } = useParams()
   useSwitchNetwork('fuse', { featureName: 'business list' })
-  const { communityAddress, isClosed } = community
   const [data, setData] = useState(null)
   const [search, setSearch] = useState('')
   const apiRoot = getApiRoot(useSelector(getForeignNetwork))
@@ -192,7 +197,9 @@ const Businesses = ({
         return (
           isAdmin ? (
             <div className='table__body__cell__more'>
-              <div className='table__body__cell__more__toggler'><FontAwesome name='ellipsis-v' /></div>
+              <div className='table__body__cell__more__toggler'>
+                <img src={dotsIcon} />
+              </div>
               <div className='more' onClick={e => e.stopPropagation()}>
                 <ul className='more__options'>
                   <li className='more__options__item' onClick={() => handleRemoveEntity(rowInfo.row.original.account)}>
@@ -286,7 +293,9 @@ const mapStateToProps = (state) => ({
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
-  metadata: state.entities.metadata
+  metadata: state.entities.metadata,
+  isClosed: getCurrentCommunity(state, getCommunityAddress(state)) ? getCurrentCommunity(state, getCommunityAddress(state)).isClosed : false,
+  isAdmin: checkIsAdmin(state)
 })
 
 const mapDispatchToProps = {

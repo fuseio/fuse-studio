@@ -9,6 +9,7 @@ import deployProgressSteps from 'constants/deployProgressSteps'
 import FinishIssuance from 'images/finish_issuance.svg'
 import { getTransaction } from 'selectors/transaction'
 import { connect as connectFormik, getIn } from 'formik'
+import { withNetwork } from 'containers/Web3'
 
 class DeployProgress extends PureComponent {
   state = {
@@ -158,12 +159,11 @@ class DeployProgress extends PureComponent {
 
 const mapStateToProps = (state) => ({
   transactionHash: get(getTransaction(state, state.screens.issuance.transactionHash), 'transactionHash'),
-  ...state.screens.issuance,
-  networkType: state.network.networkType
+  ...state.screens.issuance
 })
 
 const mapDispatchToProps = {
   fetchDeployProgress
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(connectFormik(DeployProgress))
+export default connect(mapStateToProps, mapDispatchToProps)(connectFormik(withNetwork(DeployProgress)))

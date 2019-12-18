@@ -10,15 +10,15 @@ import NativeBalance from 'components/common/NativeBalance'
 import ProfileCard from 'components/common/ProfileCard'
 import { withAccount } from 'containers/Web3'
 
-import { getBalances, getProviderInfo } from 'selectors/accounts'
-import { getNetworkSide } from 'selectors/network'
+import { getBalances, getProviderInfo, getCommunitiesKeys } from 'selectors/accounts'
+import { getNetworkSide, getCurrentNetworkType } from 'selectors/network'
 import { convertNetworkName } from 'utils/network'
 import { addressShortener, formatWei } from 'utils/format'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
 import { saveState } from 'utils/storage'
 import { changeNetwork } from 'actions/network'
 import { loadModal } from 'actions/ui'
-import { fetchCommunities, fetchBalances } from 'actions/accounts'
+import { fetchBalances } from 'actions/accounts'
 
 import Avatar from 'images/avatar.svg'
 
@@ -77,7 +77,6 @@ const ProfileDropDown = ({
   accountAddress,
   communitiesKeys,
   communities,
-  fetchCommunities,
   changeNetwork,
   loadModal,
   foreignNetwork,
@@ -85,25 +84,17 @@ const ProfileDropDown = ({
   providerInfo,
   handleLogOut
 }) => {
-  useEffect(() => {
-    if (accountAddress) {
-      fetchCommunities(accountAddress)
-    }
-    return () => { }
-  }, [accountAddress])
-
-  let filteredCommunities = []
-  if (communitiesKeys) {
-    filteredCommunities = communitiesKeys
+  const communitiesIOwn = React.useMemo(() => {
+    return communitiesKeys
       .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj)
-  }
-  let communitiesIOwn
-  let communitiesIPartOf
-  if (communities && typeof filteredCommunities.filter === 'function') {
-    communitiesIOwn = filteredCommunities.filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
-    communitiesIPartOf = filteredCommunities.filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
-  }
+      .filter(obj => !!obj).filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
+  }, [communitiesKeys, communities])
+
+  const communitiesIPartOf = React.useMemo(() => {
+    return communitiesKeys
+      .map((communityAddress) => communities[communityAddress])
+      .filter(obj => !!obj).filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
+  }, [communitiesKeys, communities])
 
   const showDashboard = (communityAddress) => {
     push(`/view/community/${communityAddress}`)
@@ -201,17 +192,16 @@ const ProfileDropDown = ({
 }
 
 const mapStateToProps = (state) => ({
-  communitiesKeys: state.accounts && state.accounts[state.network && state.network.accountAddress] && state.accounts[state.network && state.network.accountAddress].communities,
+  communitiesKeys: getCommunitiesKeys(state),
   providerInfo: getProviderInfo(state),
   tokens: state.entities.tokens,
   metadata: state.entities.metadata,
   communities: state.entities.communities,
-  networkType: state.network.networkType,
+  networkType: getCurrentNetworkType(state),
   balances: getBalances(state)
 })
 
 const mapDispatchToProps = {
-  fetchCommunities,
   fetchBalances,
   changeNetwork,
   loadModal,

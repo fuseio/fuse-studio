@@ -5,7 +5,8 @@
       box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
       background-color: $color-white;
     }
-  
+    max-height: 500px;
+    min-height: 500px;
     border-radius: 10px;
     display: flex;
     flex-flow: column wrap;
@@ -27,7 +28,6 @@
   }
 
   @include block(item) {
-    min-height: 190px;
     border-radius: 5px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
     background-color: $color-white;
@@ -41,7 +41,7 @@
       width: 100%;
       
       @include breakpoint (medium up) {
-        padding-top: 100px;
+        padding-top: 90px;
       }
 
       @include breakpoint (medium down) {
@@ -63,12 +63,11 @@
     }
 
     @include element(content) {
-      min-height: 4em;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 10px;
+      padding-bottom: 10px;
     }
 
     @include block(custom) {
@@ -97,12 +96,12 @@
       font-weight: 500;
       letter-spacing: normal;
       color: #696969;
-      margin-bottom: 1em;
+      margin: 0.7em 0;
       white-space: nowrap;
     }
 
     @include element(button) {
-      width: 100%;
+      width: 90%;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -129,7 +128,8 @@
   text-align: initial;
   @include breakpoint(medium up) {
     padding: 0 !important;
-    width: 85% !important;
+    width: 90% !important;
+    max-height: 90%;
   }
 
   @include breakpoint(2000) {
@@ -175,17 +175,14 @@
       color: $color-gray;
       align-items: center;
       font-size: 0.8em;
-      display: flex;
-      flex-flow: row;
       position: relative;
-
       @include breakpoint(medium up) {
         padding: 4em 5em;
       }
     }
 
     @include element(button) {
-      margin-top: 3em;
+      margin-top: 1.5em;
 
       @include breakpoint(medium up) {
         min-width: 300px;
@@ -249,7 +246,13 @@
       display: flex;
       padding: 2em 0;
       @include block(icon) {
-        flex: 0.3;
+        @include breakpoint(large up) {
+          flex: 0.3;
+        }
+
+        @include breakpoint(medium down) {
+          flex: 0.5;
+        }
         > img {
           margin-right: 5px;
           width: 21px;

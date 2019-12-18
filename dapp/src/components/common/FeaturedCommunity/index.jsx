@@ -1,37 +1,15 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo } from 'react'
 import { connect } from 'react-redux'
-import { fetchToken } from 'actions/token'
-import { fetchMetadata } from 'actions/metadata'
-import { balanceOfToken } from 'actions/accounts'
 
 import CommunityLogo from 'components/common/CommunityLogo'
-
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 
 const FeaturedCommunity = memo(({
-  accountAddress,
   community,
   showDashboard,
-  metadata,
-  symbol
+  token,
+  metadata
 }) => {
-  const {
-    communityURI,
-    homeTokenAddress,
-    foreignTokenAddress
-  } = community
-
-  useEffect(() => {
-    if (accountAddress) {
-      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
-      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-    }
-
-    fetchMetadata(communityURI)
-    fetchToken(homeTokenAddress)
-    fetchToken(foreignTokenAddress)
-  }, [])
-
   return (
     <div className='featured' onClick={showDashboard}>
       <div className='featured__image'>
@@ -58,7 +36,7 @@ const FeaturedCommunity = memo(({
             metadata={{
               isDefault: metadata && metadata.isDefault
             }}
-            symbol={symbol}
+            symbol={token && token.symbol}
           />
         </div>
       </div>
@@ -80,14 +58,14 @@ const FeaturedCommunity = memo(({
   if (prevProps.metadata !== nextProps.metadata) {
     return false
   }
-  if (prevProps.accountAddress !== nextProps.accountAddress) {
-    return false
-  }
   return true
 })
 
-export default connect(null, {
-  fetchMetadata,
-  fetchToken,
-  balanceOfToken
-})(FeaturedCommunity)
+const mapState = (state, { token, community }) => ({
+  metadata: {
+    ...state.entities.metadata[token && token.tokenURI],
+    ...state.entities.metadata[community && community.communityURI]
+  }
+})
+
+export default connect(mapState, null)(FeaturedCommunity)

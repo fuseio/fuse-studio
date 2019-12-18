@@ -1,16 +1,7 @@
 import { createSelector } from 'reselect'
 import { getBridgeStatus } from 'selectors/network'
 
-export const getToken = (state, address) => {
-  if (address) {
-    const { communities, tokens } = getTokenUtil(state)
-    if (communities && tokens) {
-      if (communities[address] && communities[address].foreignTokenAddress && tokens[communities[address].foreignTokenAddress]) {
-        return tokens[communities[address].foreignTokenAddress]
-      }
-    }
-  }
-}
+const getCommunities = state => state.entities.communities
 
 export const getTokenAddressOfByNetwork = (state, community) => {
   if (community) {
@@ -18,6 +9,14 @@ export const getTokenAddressOfByNetwork = (state, community) => {
     const { homeNetwork, bridgeStatus } = getInfo(state)
     return homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress
   }
+}
+
+export const getCurrentCommunity = (state, communityAddress) => {
+  if (communityAddress) {
+    const communities = getCommunities(state)
+    return communities[communityAddress]
+  }
+  return null
 }
 
 export const getInfo = createSelector(

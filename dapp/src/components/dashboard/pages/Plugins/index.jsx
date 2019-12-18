@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { useParams } from 'react-router'
 import Plugin from 'components/dashboard/components/Plugin'
 import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
@@ -20,6 +21,8 @@ import Ramp from 'images/ramp.png'
 import Coindirect from 'images/coindirect.png'
 import Carbon from 'images/carbon.png'
 import Wyre from 'images/wyre.png'
+import { getCurrentCommunity } from 'selectors/dashboard'
+import { getCommunityAddress } from 'selectors/entities'
 
 const generalPlugins = ([
   {
@@ -139,6 +142,7 @@ const Plugins = ({
   addCommunityPlugin,
   community
 }) => {
+  const { address: communityAddress } = useParams()
   useSwitchNetwork('fuse', { featureName: 'plug-ins' })
   const { plugins } = community
   const showInfoModal = (key, props) => {
@@ -158,7 +162,6 @@ const Plugins = ({
   }
 
   const addPlugin = (plugin) => {
-    const { communityAddress } = community
     handleTracker(plugin)
     addCommunityPlugin(communityAddress, plugin)
   }
@@ -181,7 +184,7 @@ const Plugins = ({
   }
 
   return (
-    <div className='plugins'>
+    community ? <div className='plugins'>
       <h2 className='plugins__title'>Plugins</h2>
       <div className='plugins__wrapper'>
         <div className='plugins__content__wrapper'>
@@ -195,13 +198,17 @@ const Plugins = ({
         <PluginList pluginList={generalPlugins} pluginTile={'Choose plug-in you want to add'} plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
         <PluginList pluginList={onRampPluginItems} pluginTile='Fiat On-ramp' plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
       </div>
-    </div>
+    </div> : <div />
   )
 }
+
+const mapStateToProps = (state) => ({
+  community: getCurrentCommunity(state, getCommunityAddress(state))
+})
 
 const mapDispatchToProps = {
   loadModal,
   addCommunityPlugin
 }
 
-export default connect(null, mapDispatchToProps)(Plugins)
+export default connect(mapStateToProps, mapDispatchToProps)(Plugins)

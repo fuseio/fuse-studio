@@ -30,10 +30,9 @@ const CommunityInfo = ({
   foreignTokenAddress,
   tokensTotalSupplies
 }) => {
-  const { symbol, tokenType, address } = foreignToken
-  const type = tokenType === 'mintableBurnable'
+  const type = foreignToken && foreignToken.tokenType === 'mintableBurnable'
     ? 'Mintable burnable token'
-    : tokenType === 'basic'
+    : foreignToken && foreignToken.tokenType === 'basic'
       ? 'One time issued token'
       : 'Imported'
 
@@ -61,17 +60,21 @@ const CommunityInfo = ({
       <div className='community_info__general'>
         <h3 className='community_info__title'>General information</h3>
         <div className='community_info__content'>
-          <TitleValue title='Currency' symbol={symbol} tokenType={`(${type})`} />
+          <TitleValue
+            title='Currency'
+            symbol={foreignToken && foreignToken.symbol}
+            tokenType={`(${type})`}
+          />
           <TitleValue title='Total entities'>
             <span>0</span>
           </TitleValue>
           <TitleValue title='Currency address'>
             <div className='grid-x'>
-              <span>{addressShortener(address)}</span>
-              <CopyToClipboard text={address}>
+              <span>{addressShortener(foreignToken && foreignToken.address)}</span>
+              <CopyToClipboard text={foreignToken && foreignToken.address}>
                 <div className='copy'><FontAwesome name='clone' /></div>
               </CopyToClipboard>
-              <div className='copy copy--spaced' onClick={() => loadQrModal(address)}><FontAwesome name='qrcode' /></div>
+              <div className='copy copy--spaced' onClick={() => loadQrModal(foreignToken && foreignToken.address)}><FontAwesome name='qrcode' /></div>
             </div>
           </TitleValue>
           <TitleValue title='Community address'>
@@ -95,17 +98,17 @@ const CommunityInfo = ({
         <div className='grid-y total__sides'>
           <p>
             <span className='title'>Total supply</span>
-            {formatWei(totalSupply, 0)} <small>{symbol}</small>
+            {formatWei(totalSupply, 0)} <small>{foreignToken && foreignToken.symbol}</small>
           </p>
           <p>
             <span className='dot dot--fuse' />
             <span className='title'>Supply on Fuse:</span>
-            {formatWei(homeTokenSupply, 0)} <small>{symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
+            {formatWei(homeTokenSupply, 0)} <small>{foreignToken && foreignToken.symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
           </p>
           <p>
             <span className='dot dot--main' />
             <span className='title'>Supply on Ethereum:</span>
-            {formatWei(foreignTokenSupply, 0)} <small>{symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
+            {formatWei(foreignTokenSupply, 0)} <small>{foreignToken && foreignToken.symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
           </p>
         </div>
       </div>

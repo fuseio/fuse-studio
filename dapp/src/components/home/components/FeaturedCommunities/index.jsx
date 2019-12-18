@@ -10,8 +10,6 @@ import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import arrow from 'images/arrow_3.svg'
 
 const FeaturedCommunities = memo(({
-  metadata,
-  accountAddress,
   communities,
   tokens,
   fetchFeaturedCommunities,
@@ -39,12 +37,7 @@ const FeaturedCommunities = memo(({
           return (
             <div style={{ width: '90%' }} key={address}>
               <FeaturedCommunity
-                accountAddress={accountAddress}
-                metadata={{
-                  ...metadata[token.tokenURI],
-                  ...metadata[community.communityURI]
-                }}
-                symbol={token && token.symbol}
+                token={token}
                 showDashboard={() => showDashboard(address, community.name)}
                 community={community}
               />
@@ -63,7 +56,12 @@ const FeaturedCommunities = memo(({
 
   return (
     <div className='featured__carousel__wrapper'>
-      <h3 className='featured__carousel__title'>Featured communities</h3>
+      <div className='grid-x align-justify align-middle'>
+        <h3 className='featured__carousel__title'>Featured communities</h3>
+        <div onClick={showCommunities} className='featured__carousel__action'>
+          Explore&nbsp;<img src={arrow} alt='arrow' />
+        </div>
+      </div>
       <div className='featured__carousel'>
         <Carousel
           value={value}
@@ -84,17 +82,12 @@ const FeaturedCommunities = memo(({
         >{slides}</Carousel>
         <Dots value={value} onChange={onChange} number={React.Children.count(slides)} />
       </div>
-      <div onClick={showCommunities} className='faq__action'>
-        Explore&nbsp;<img src={arrow} alt='arrow' />
-      </div>
     </div>
   )
 }, (prevProps, nextProps) => {
   if (prevProps.accountAddress !== nextProps.accountAddress) {
     return false
   } else if (prevProps.communities !== nextProps.communities) {
-    return false
-  } else if (prevProps.metadata !== nextProps.metadata) {
     return false
   } else if (prevProps.featuredCommunities !== nextProps.featuredCommunities) {
     return false
@@ -104,7 +97,6 @@ const FeaturedCommunities = memo(({
 
 const mapStateToProps = state => ({
   tokens: state.entities.tokens,
-  metadata: state.entities.metadata,
   communities: state.entities.communities,
   featuredCommunities: state.accounts.featuredCommunities
 })

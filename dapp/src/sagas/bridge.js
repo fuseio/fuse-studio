@@ -2,7 +2,7 @@ import { call, all, put, select, delay, takeEvery } from 'redux-saga/effects'
 
 import { tryTakeEvery } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
-import { getBlockNumber } from 'selectors/network'
+import { getBlockNumber, getForeignNetwork } from 'selectors/network'
 import { transactionFlow } from './transaction'
 import * as actions from 'actions/bridge'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
@@ -62,7 +62,7 @@ function * pollForBridgeEvent ({ bridgeContract, transactionHash, fromBlock, eve
 }
 
 function * watchForeignBridge ({ foreignBridgeAddress, transactionHash }) {
-  const foreignNetwork = yield select(state => state.network.foreignNetwork)
+  const foreignNetwork = yield select(getForeignNetwork)
   const fromBlock = yield select(getBlockNumber, foreignNetwork)
   const options = { bridgeType: 'foreign' }
   const web3 = yield getWeb3(options)

@@ -1,5 +1,7 @@
-.id {
-	height: 100%;
-	display: flex;
-	flex-direction: column;
+@include block(root) {
+  @include element(wrapper) {
+    @include breakpoint(medium down) {
+      -webkit-overflow-scrolling: touch;
+    }
+  }
 }

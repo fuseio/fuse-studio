@@ -77,11 +77,7 @@ export default ({
                     return (
                       <div className='medium-12 large-8 small-24 cell' key={address}>
                         <FeaturedCommunity
-                          accountAddress={account}
-                          metadata={{
-                            ...metadata[token.tokenURI],
-                            ...metadata[community.communityURI]
-                          }}
+                          token={token}
                           showDashboard={() => showDashboard(address, community.name)}
                           community={community}
                         />

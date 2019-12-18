@@ -1,13 +1,36 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import QRCode from 'qrcode.react'
+
+import { getCurrentCommunity } from 'selectors/dashboard'
+import { getHomeTokenByCommunityAddress } from 'selectors/token'
+import { getCommunityAddress } from 'selectors/entities'
+
 import AppleDownload from 'images/apple.svg'
 import GoogleDownload from 'images/google.svg'
 
-export default ({ value }) => {
-  if (!value) return null
+const WhiteLabelWallet = ({ community, homeToken }) => {
+  const [branchLink, setBranchLink] = useState(false)
+  useEffect(() => {
+    if (community && community.communityAddress && homeToken && homeToken.owner) {
+      window.branch.link({
+        community_id: community.communityAddress,
+        link_createor: homeToken.owner,
+        marketing_title: 'switch community',
+        marketing: 'true',
+        campaign: 'manager_add',
+        channel: 'studio',
+        feature: 'switch_community'
+      }, (err, link) => {
+        if (!err) {
+          setBranchLink(link)
+        }
+      })
+    }
+  }, [community, homeToken])
 
   return (
-    <Fragment>
+    branchLink && <Fragment>
       <div className='qr-code__header'><h2 className='qr-code__header__title'>White label wallet</h2></div>
       <div className='qr-code__wrapper'>
         <div className='qr-code'>
@@ -23,10 +46,17 @@ export default ({ value }) => {
             <li>Scan this QR code to switch to the community you created!</li>
           </ol>
           <div className='qr-code__image'>
-            <QRCode size={150} value={value} />
+            <QRCode size={150} value={branchLink} />
           </div>
         </div>
       </div>
     </Fragment>
   )
 }
+
+const mapState = (state) => ({
+  community: getCurrentCommunity(state, getCommunityAddress(state)),
+  homeToken: getHomeTokenByCommunityAddress(state, getCommunityAddress(state)) || { owner: '' }
+})
+
+export default connect(mapState, null)(WhiteLabelWallet)

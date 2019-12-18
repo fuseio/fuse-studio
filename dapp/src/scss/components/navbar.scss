@@ -9,6 +9,24 @@
   color: $color-dark;
   z-index: 99;
 
+  @include modifier(short) {
+    width: 80%;
+    right: 0;
+
+    @include breakpoint(small only) {
+      width: 100%;
+    }
+
+    @include breakpoint(xxlarge up) {
+      width: 82.5%;
+    }
+
+    @include breakpoint(1800) {
+      width: 85%;
+    }
+  }
+
+
   @include modifier(scroll) {
     position: fixed;
     top: 0;
