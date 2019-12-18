@@ -20,6 +20,9 @@ module.exports = {
   ipfsProxy: {
     urlBase: 'http://localhost:4000/api'
   },
+  graph: {
+    url: 'https://graph.fuse.io/subgraphs/name/fuseio/fuse-qa'
+  },
   network: {
     misc: {
       pageSize: 1000,
