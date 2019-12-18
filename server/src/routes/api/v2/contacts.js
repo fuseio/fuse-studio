@@ -23,15 +23,25 @@ router.post('/', auth.required, async (req, res) => {
   const { phoneNumber, accountAddress } = req.user
   const { contacts } = req.body
   const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress }).populate('contacts')
+  const phoneNumbersToContacts = userWallet.contacts.reduce((map, obj) => {
+    map[obj.phoneNumber] = obj
+    return map
+  }, {})
   const userWalletContactIds = userWallet.contacts.map(obj => obj._id)
   const userWalletContactPhoneNumbers = userWallet.contacts.map(obj => obj.phoneNumber)
   const nonce = (new Date()).getTime()
 
   compact(await Promise.all(contacts.map(phoneNumber => {
     return new Promise(async (resolve, reject) => {
-      if (indexOf(userWalletContactPhoneNumbers, phoneNumber) >= 0) {
-        return resolve()
+      let contact = phoneNumbersToContacts[phoneNumber]
+      if (contact && contact.state == 'SYNCED') {
+        contact.state = 'NEW'
+        await contact.save()
       }
+      if (contact) {
+        resolve()
+      }
+
       let contactUserWallets = await UserWallet.find({ phoneNumber })
       if (contactUserWallets.length === 0) {
         let contact = await new Contact({
