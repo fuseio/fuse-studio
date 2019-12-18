@@ -14,17 +14,19 @@ import { push } from 'connected-react-router'
 import { useWindowScroll } from 'react-use'
 import useOutsideClick from 'hooks/useOutsideClick'
 import { getCurrentNetworkType } from 'selectors/network'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
+import { getCommunityAddress } from 'selectors/entities'
 
 const NavBar = ({
   accountAddress,
   networkType,
-  foreignNetwork,
   push,
   connectingToWallet,
   logout,
   web3connect,
   modifier,
-  withLogo = true
+  withLogo = true,
+  foreignToken
 }) => {
   const { y: scrollY } = useWindowScroll()
   const [isHelpOpen, setHelpOpen] = useState(false)
@@ -90,7 +92,7 @@ const NavBar = ({
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
               <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                <ProfileDropDown handleLogOut={() => logout()} foreignNetwork={foreignNetwork === 'mainnet' ? 'main' : foreignNetwork} />
+                <ProfileDropDown handleLogOut={() => logout()} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
               </div>
             </div>
           ) : connectingToWallet ? (
@@ -115,7 +117,8 @@ const NavBar = ({
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
   connectingToWallet: state.network.connectingToWallet,
-  networkType: getCurrentNetworkType(state)
+  networkType: getCurrentNetworkType(state),
+  foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { networkType: '' }
 })
 
 const mapDispatchToProps = {
