@@ -60,8 +60,7 @@ const Root = ({
       //   options: {
       //     enableLogging: CONFIG.env !== 'production',
       //     buttonPosition: 'top-right',
-      //     buildEnv: CONFIG.env === 'production' ? 'production' : 'development',
-      //     showTorusButton: true
+      //     buildEnv: CONFIG.env === 'production' ? 'production' : 'development'
       //   }
       // }
       // fortmatic: {

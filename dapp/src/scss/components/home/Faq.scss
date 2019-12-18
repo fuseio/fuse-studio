@@ -15,7 +15,10 @@
     background-color: $color-white;
     padding-top: 25px;
     padding-bottom: 25px;
-    margin-top: 10px;
+
+    > div:first-child {
+      margin-bottom: 1.2em;
+    }
   }
 
   @include element(title) {
@@ -24,7 +27,7 @@
 
     @include modifier (main) {
       font-size: 1.125em;
-      padding-bottom: .5em;
+      // padding-bottom: .5em;
     }
   }
 
@@ -48,16 +51,11 @@
   }
 
   @include element(action) {
-    font-size: 16px;    
+    font-size: 1.025em;
     cursor: pointer;
     display: inline-block;
-    font-weight: bold;
+    font-weight: 500;
     color: $color-dark;
-    margin-top: 10px;
-
-    @include breakpoint(medium down) {
-      margin-top: 1em;      
-    }
 
     &:hover {
       text-decoration: underline;

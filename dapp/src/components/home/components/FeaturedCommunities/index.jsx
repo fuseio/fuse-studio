@@ -56,7 +56,12 @@ const FeaturedCommunities = memo(({
 
   return (
     <div className='featured__carousel__wrapper'>
-      <h3 className='featured__carousel__title'>Featured communities</h3>
+      <div className='grid-x align-justify align-middle'>
+        <h3 className='featured__carousel__title'>Featured communities</h3>
+        <div onClick={showCommunities} className='featured__carousel__action'>
+          Explore&nbsp;<img src={arrow} alt='arrow' />
+        </div>
+      </div>
       <div className='featured__carousel'>
         <Carousel
           value={value}
@@ -76,9 +81,6 @@ const FeaturedCommunities = memo(({
           }}
         >{slides}</Carousel>
         <Dots value={value} onChange={onChange} number={React.Children.count(slides)} />
-      </div>
-      <div onClick={showCommunities} className='featured__carousel__action'>
-        Explore&nbsp;<img src={arrow} alt='arrow' />
       </div>
     </div>
   )

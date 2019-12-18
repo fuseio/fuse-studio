@@ -120,19 +120,18 @@
 
         @include element(toggler) {
           margin-left: auto;
-        }
-  
-        &:hover {
-          .more {
-            display: flex;
+
+          &:hover {
+            cursor: pointer;
           }
         }
-
-        .fa {
-          color: $color-dark-gray;
-          cursor: pointer;
-        }
   
+        // &:hover {
+        //   .more {
+        //     display: flex;
+        //   }
+        // }
+
         @include block(more) {
           font-size: 16px;
           position: absolute;

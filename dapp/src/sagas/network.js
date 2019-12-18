@@ -14,8 +14,16 @@ import { processTransactionHash } from 'services/api/misc'
 import { getNetworkSide, getForeignNetwork } from 'selectors/network'
 import { apiCall, tryTakeEvery } from './utils'
 
+const cb = (error, result) => {
+  if (!error) {
+    // console.log(result)
+  } else {
+    console.log(error.code)
+  }
+}
+
 function * getNetworkTypeInternal (web3) {
-  const networkId = yield web3.eth.net.getId()
+  const networkId = yield web3.eth.net.getId(cb)
   const networkType = networkIdToName[networkId]
   return { networkId, networkType }
 }
@@ -40,7 +48,7 @@ function * connectToWallet ({ provider }) {
     saveState('state.reconnect', true)
     const web3 = yield getWeb3({ provider })
     const providerInfo = Web3connect.getProviderInfo(provider)
-    const accounts = yield web3.eth.getAccounts()
+    const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
     yield call(checkNetworkType, { web3 })
     yield put({

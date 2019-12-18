@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import { push } from 'connected-react-router'
-import FontAwesome from 'react-fontawesome'
+import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
 import { withRouter, useParams } from 'react-router'
 import { connect, useSelector } from 'react-redux'
@@ -55,6 +55,7 @@ const Users = ({
   entityAdded,
   push
 }) => {
+  console.log({ isAdmin })
   const { address: communityAddress } = useParams()
   useSwitchNetwork('fuse', { featureName: 'users list' })
   const [data, setData] = useState([])
@@ -228,7 +229,9 @@ const Users = ({
         return (
           isAdmin ? (
             <div className='table__body__cell__more'>
-              <div className='table__body__cell__more__toggler'><FontAwesome name='ellipsis-v' /></div>
+              <div className='table__body__cell__more__toggler'>
+                <img src={dotsIcon} />
+              </div>
               <div className='more' onClick={e => e.stopPropagation()}>
                 {
                   !isApproved && !hasAdminRole && (

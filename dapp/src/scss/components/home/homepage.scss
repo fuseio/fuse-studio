@@ -193,8 +193,8 @@
 
   @include element(tabs) {
     @include breakpoint (medium up) {
-      min-height: 550px;
-      max-height: 550px;
+      min-height: 500px;
+      max-height: 500px;
     }
 
     height: 100%;

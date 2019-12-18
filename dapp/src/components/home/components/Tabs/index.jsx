@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { connect } from 'react-redux'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles, withStyles } from '@material-ui/styles'
 import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import isEmpty from 'lodash/isEmpty'
 
@@ -21,7 +21,11 @@ const a11yProps = (index) => ({
   'aria-controls': `scrollable-force-tabpanel-${index}`
 })
 
-const TabPanel = (props) => {
+const TabPanel = withStyles({
+  root: {
+    fontFamily: `'Gotham SSm A', 'Gotham SSm B', 'icomoon'`
+  }
+})((props) => {
   const { children, value, index, ...other } = props
 
   return (
@@ -33,14 +37,15 @@ const TabPanel = (props) => {
       aria-labelledby={`scrollable-force-tab-${index}`}
       {...other}
     >
-      <div style={{ padding: '40px 25px' }}>{children}</div>
+      {children}
     </Typography>
   )
-}
+})
 
 const useTabsStyles = makeStyles(theme => ({
   root: {
     backgroundColor: '#f8f8f8',
+    fontFamily: `'Gotham SSm A', 'Gotham SSm B', 'icomoon'`,
     alignItems: 'center',
     minHeight: '80px',
     borderTopLeftRadius: '10px',
@@ -65,7 +70,7 @@ const useTabStyles = makeStyles(theme => ({
   }
 }))
 
-const TabsWrapper = ({
+const TabsWrapper = memo(({
   communitiesKeys,
   communities,
   showIssuance,
@@ -124,33 +129,43 @@ const TabsWrapper = ({
         <Tab label='Templates' classes={tabClasses} {...a11yProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <Carousel
-          value={valueSpinner}
-          centered
-          infinite
-          draggable
-          onChange={onChangeSpinner}
-          animationSpeed={1000}
-          slidesPerPage={1}
-          breakpoints={{
-            1000: {
-              slidesPerPage: 2
-            },
-            800: {
-              slidesPerPage: 1
-            }
-          }}
-        >
-          {slides}
-        </Carousel>
-        <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />
+        <div style={{ padding: '40px 25px' }}>
+          <Carousel
+            value={valueSpinner}
+            centered
+            infinite
+            draggable
+            onChange={onChangeSpinner}
+            animationSpeed={1000}
+            slidesPerPage={1}
+            breakpoints={{
+              1000: {
+                slidesPerPage: 2
+              },
+              800: {
+                slidesPerPage: 1
+              }
+            }}
+          >
+            {slides}
+          </Carousel>
+          <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />
+        </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Templates showIssuance={showIssuance} />
+        <div style={{ padding: '25px' }}><Templates showIssuance={showIssuance} /></div>
       </TabPanel>
     </div>
   )
-}
+}, (prevProps, nextProps) => {
+  if (prevProps.communitiesKeys !== nextProps.communitiesKeys) {
+    return false
+  } else if (prevProps.communities !== nextProps.communities) {
+    return false
+  }
+
+  return true
+})
 
 const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
