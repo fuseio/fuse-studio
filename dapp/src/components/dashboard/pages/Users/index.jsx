@@ -55,7 +55,6 @@ const Users = ({
   entityAdded,
   push
 }) => {
-  console.log({ isAdmin })
   const { address: communityAddress } = useParams()
   useSwitchNetwork('fuse', { featureName: 'users list' })
   const [data, setData] = useState([])

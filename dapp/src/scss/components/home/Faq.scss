@@ -16,6 +16,10 @@
     padding-top: 25px;
     padding-bottom: 25px;
 
+    @include breakpoint(medium down) {
+      margin-top: 1em;
+    }
+
     > div:first-child {
       margin-bottom: 1.2em;
     }
