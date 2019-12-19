@@ -65,25 +65,25 @@ const DashboardLayout = (props) => {
   const [open, onSetSidebarOpen] = useState(false)
   const [originNetwork, setOriginNetwork] = useState(false)
   const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
-  const [branchLink, setBranchLink] = useState(false)
+  // const [branchLink, setBranchLink] = useState(false)
 
-  useEffect(() => {
-    if (community && community.communityAddress && homeToken && homeToken.owner) {
-      window.branch.link({
-        community_id: community.communityAddress,
-        link_createor: homeToken.owner,
-        marketing_title: 'switch community',
-        marketing: 'true',
-        campaign: 'manager_add',
-        channel: 'studio',
-        feature: 'switch_community'
-      }, (err, link) => {
-        if (!err) {
-          setBranchLink(link)
-        }
-      })
-    }
-  }, [community, homeToken])
+  // useEffect(() => {
+  //   if (community && community.communityAddress && homeToken && homeToken.owner) {
+  //     window.branch.link({
+  //       community_id: community.communityAddress,
+  //       link_createor: homeToken.owner,
+  //       marketing_title: 'switch community',
+  //       marketing: 'true',
+  //       campaign: 'manager_add',
+  //       channel: 'studio',
+  //       feature: 'switch_community'
+  //     }, (err, link) => {
+  //       if (!err) {
+  //         setBranchLink(link)
+  //       }
+  //     })
+  //   }
+  // }, [community, homeToken])
 
   useEffect(() => {
     if (isMobile) {
@@ -141,6 +141,13 @@ const DashboardLayout = (props) => {
       })
     }
   }, [isAdmin])
+
+  const qrValue = JSON.stringify({
+    tokenAddress: community && community.homeTokenAddress,
+    originNetwork: foreignToken && foreignToken.networkType,
+    env: CONFIG.env,
+    communityAddress
+  })
 
   return (
     <div className='dashboard'>
@@ -207,7 +214,7 @@ const DashboardLayout = (props) => {
                 )}
 
                 <Route exact path={`${match.path}/wallet`}>
-                  <WhiteLabelWallet value={branchLink} />
+                  <WhiteLabelWallet value={qrValue} />
                 </Route>
 
                 <Route exact path={`${match.path}/users`}>
