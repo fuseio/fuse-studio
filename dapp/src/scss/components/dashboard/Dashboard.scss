@@ -28,8 +28,13 @@
       background-color: #051926;
       box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
 
-      @include breakpoint(xxlarge up) {
-        width: 15%;
+      @include breakpoint(small down) {
+        height: auto;
+      }
+
+      @include breakpoint(medium down) {
+        flex-basis: 20%;
+        height: 100%;
       }
 
       @include breakpoint(medium up) {
@@ -46,16 +51,9 @@
         box-sizing: content-box;
       }
 
-      @include breakpoint(medium down) {
-        flex-basis: 20%;
-        box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
-        height: 100%;
+      @include breakpoint(xxlarge up) {
+        width: 15%;
       }
-
-      @include breakpoint(small down) {
-        height: auto;
-      }
-
     }
     
     @include block(item) {
