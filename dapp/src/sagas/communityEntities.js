@@ -94,8 +94,10 @@ function * checkIsCommunityMember ({ communityAddress, account }) {
 }
 
 function * addEntity ({ communityAddress, data, isClosed, entityType }) {
+  const action = actions.ADD_ENTITY
   const isCommunityMember = yield call(checkIsCommunityMember, { communityAddress, account: data.account })
   if (entityType === 'business' && isCommunityMember) {
+    yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
     const accountAddress = yield select(getAccountAddress)
     const web3 = yield getWeb3()
     const networkVersion = getNetworkVersion(web3)
@@ -104,7 +106,7 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
     const transactionPromise = method.send({
       from: accountAddress
     })
-    const action = actions.ADD_ENTITY
+
     yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
   } else {
@@ -125,7 +127,6 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
     const transactionPromise = method.send({
       from: accountAddress
     })
-    const action = actions.ADD_ENTITY
     yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
   }
 }
