@@ -15,17 +15,11 @@ const FeaturedCommunity = memo(({
       <div className='featured__image'>
         <div className='featured__image__container'>
           {
-            community.featured && (
+            community.featured && community.coverPhoto ? (
               <img alt='cover photo' src={community.coverPhoto ? `${CONFIG.ipfsProxy.urlBase}/image/${community.coverPhoto}` : CommunityPlaceholderImage} />
-            )
-          }
-          {
-            metadata && metadata.coverPhoto && typeof metadata.coverPhoto === 'string' && (
+            ) : metadata && metadata.coverPhoto && typeof metadata.coverPhoto === 'string' ? (
               <img alt='cover photo' src={metadata.coverPhoto ? `${CONFIG.ipfsProxy.urlBase}/image/${metadata.coverPhoto}` : CommunityPlaceholderImage} />
-            )
-          }
-          {
-            metadata && metadata.coverPhoto && typeof metadata.coverPhoto !== 'string' && !community.featured && (
+            ) : (
               <img alt='cover photo' src={CommunityPlaceholderImage} />
             )
           }

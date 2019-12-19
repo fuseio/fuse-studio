@@ -1,5 +1,3 @@
-@import "./Donut.scss";
-
 @include block(dashboard) {
   @include block(container) {
     @include breakpoint(large) {
@@ -21,18 +19,41 @@
   }
 
   @include block(sidebar) {
-    flex-basis: 20%;
-    box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
-    height: auto;
-    background-color: #051926;
-    width: 100%;
-    
-    @include breakpoint(xxlarge up) {
-      flex-basis: 15%;
+
+    > div:last-child {
+      padding-bottom: 50px;
     }
 
-    @include breakpoint(medium down) {
-      height: 100%;
+    @include element(container) {
+      background-color: #051926;
+      box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
+
+      @include breakpoint(small down) {
+        height: auto;
+      }
+
+      @include breakpoint(medium down) {
+        flex-basis: 20%;
+        height: 100%;
+      }
+
+      @include breakpoint(medium up) {
+        margin: 0;
+        padding: 0;
+        width: 20%;
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+        top: 0;
+        left: 0;
+        overflow-y: scroll;
+        padding-right: 16px;
+        box-sizing: content-box;
+      }
+
+      @include breakpoint(xxlarge up) {
+        width: 15%;
+      }
     }
     
     @include block(item) {
@@ -132,6 +153,24 @@
 
     @include element(container) {
       background-color: #f5f5f5;
+      @include breakpoint(medium up) {
+        position: relative;
+        width: 100%;
+        margin-left: 20%;
+        min-height: 100vh;
+        height: 100%;
+      }
+
+      @include breakpoint(medium down) {
+        height: auto;
+        position: relative;
+        width: 100%;
+
+        // flex-basis: 20%;
+        // box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
+        // height: auto;
+      }
+
       &:before {
         content: "";
         display: block;
@@ -144,19 +183,10 @@
         background-size: cover;
       }
 
-      @include breakpoint(large up) {
-        position: relative;
-        height: 100vh;
-        width: 100%;
-        flex: 1;
-        overflow-y: scroll;
+      @include breakpoint(xxlarge up) {
+        margin-left: 15%;
       }
 
-      @include breakpoint(large down) {
-        min-height: 100vh;
-        height: 100vh;
-        overflow-y: scroll;
-      }
 
       @include breakpoint(small only) {
         height: auto;

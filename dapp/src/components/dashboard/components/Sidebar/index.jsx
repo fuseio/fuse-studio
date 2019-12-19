@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import Logo from 'components/common/Logo'
 import { useParams } from 'react-router'
 import SideBarItems from 'constants/sideBarItems'
@@ -32,13 +32,13 @@ const Sidebar = ({
     if (!isEmpty(community && community.plugins)) {
       setAddedPlugins(Object.keys(pickBy(community && community.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
     }
-    return () => {}
+    return () => { }
   }, [community])
 
   useEffect(() => {
     setSideBarItems(SideBarItems(isAdmin, !isEmpty(community && community.plugins), token && token.tokenType).filter(Boolean))
     setAddedPlugins(Object.keys(pickBy(community && community.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
-    return () => {}
+    return () => { }
   }, [isAdmin, token.tokenType])
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const Sidebar = ({
     } else {
       setPath('')
     }
-    return () => {}
+    return () => { }
   }, [location.pathname])
 
   const goToPage = (path) => {
@@ -59,112 +59,110 @@ const Sidebar = ({
   }
 
   return (
-    <aside className='sidebar'>
-      <div className='item' style={{ cursor: 'pointer' }}>
-        <Logo showHomePage={() => goToPage('/')} isGradientLogo />
-      </div>
-      {
-        !community ? (
-          null
-        ) : (
-          <Fragment>
-            {sideBarItems.map(({
-              icon,
-              name,
-              url,
-              style,
-              path,
-              selectedIcon,
-              CustomElement,
-              moreIcon
-            }) => {
-              if (path === '/plugins' && !isEmpty(addedPlugins)) {
-                return (
-                  <div
-                    key={name}
-                    style={{ ...style, paddingTop: '10px', paddingBottom: '10px' }}
-                  >
-                    <div className='plugin__header'>
-                      <span className='title'>Plugins</span>
-                      {
-                        isAdmin && (
-                          <div
-                            className='manage'
-                            onClick={() => {
+    <aside className='sidebar__container'>
+      <div className='sidebar'>
+        <div className='item' style={{ cursor: 'pointer' }}>
+          <Logo showHomePage={() => goToPage('/')} isGradientLogo />
+        </div>
+        {
+          !community ? (
+            null
+          ) : sideBarItems.map(({
+            icon,
+            name,
+            url,
+            style,
+            path,
+            selectedIcon,
+            CustomElement,
+            moreIcon
+          }) => {
+            if (path === '/plugins' && !isEmpty(addedPlugins)) {
+              return (
+                <div
+                  key={name}
+                  style={{ ...style, paddingTop: '10px', paddingBottom: '10px' }}
+                >
+                  <div className='plugin__header'>
+                    <span className='title'>Plugins</span>
+                    {
+                      isAdmin && (
+                        <div
+                          className='manage'
+                          onClick={() => {
+                            goToPage(url(match))
+                            setPath(path)
+                          }}
+                        >Manage</div>
+                      )
+                    }
+                  </div>
+                  {
+                    addedPlugins.map((plugin) => {
+                      const allPlugins1 = allPlugins(isAdmin)
+                      if (plugin && allPlugins1[plugin] && !allPlugins1[plugin].isRemoved) {
+                        const {
+                          name,
+                          path,
+                          url,
+                          icon,
+                          selectedIcon
+                        } = allPlugins1[plugin]
+                        return (
+                          <MenuItem
+                            key={name}
+                            isCurrentPath={currentPath === path}
+                            icon={icon}
+                            selectedIcon={selectedIcon}
+                            name={name}
+                            viewPage={() => {
                               goToPage(url(match))
                               setPath(path)
                             }}
-                          >Manage</div>
+                          />
                         )
                       }
-                    </div>
-                    {
-                      addedPlugins.map((plugin) => {
-                        const allPlugins1 = allPlugins(isAdmin)
-                        if (plugin && allPlugins1[plugin] && !allPlugins1[plugin].isRemoved) {
-                          const {
-                            name,
-                            path,
-                            url,
-                            icon,
-                            selectedIcon
-                          } = allPlugins1[plugin]
-                          return (
-                            <MenuItem
-                              key={name}
-                              isCurrentPath={currentPath === path}
-                              icon={icon}
-                              selectedIcon={selectedIcon}
-                              name={name}
-                              viewPage={() => {
-                                goToPage(url(match))
-                                setPath(path)
-                              }}
-                            />
-                          )
-                        }
-                      })
-                    }
-                  </div>
-                )
-              } else if (CustomElement) {
-                return (
-                  <CustomElement key={name} style={style}>
-                    <MenuItem
-                      key={name}
-                      isCurrentPath={currentPath === path}
-                      name={name}
-                      icon={icon}
-                      selectedIcon={selectedIcon}
-                      viewPage={() => {
-                        goToPage(url(match))
-                        setPath(path)
-                      }}
-                    />
-                  </CustomElement>
-                )
-              } else {
-                return (
+                    })
+                  }
+                </div>
+              )
+            } else if (CustomElement) {
+              return (
+                <CustomElement key={name} style={style}>
                   <MenuItem
                     key={name}
-                    style={style}
                     isCurrentPath={currentPath === path}
-                    icon={icon}
                     name={name}
+                    icon={icon}
                     selectedIcon={selectedIcon}
-                    moreIcon={moreIcon}
-                    communityName={community && community.name}
                     viewPage={() => {
                       goToPage(url(match))
                       setPath(path)
                     }}
                   />
-                )
-              }
-            })}
-          </Fragment>
-        )
-      }
+                </CustomElement>
+              )
+            } else {
+              return (
+                <MenuItem
+                  key={name}
+                  style={style}
+                  isCurrentPath={currentPath === path}
+                  icon={icon}
+                  name={name}
+                  selectedIcon={selectedIcon}
+                  moreIcon={moreIcon}
+                  communityName={community && community.name}
+                  viewPage={() => {
+                    goToPage(url(match))
+                    setPath(path)
+                  }}
+                />
+              )
+            }
+          })
+        }
+      </div>
     </aside>
   )
 }

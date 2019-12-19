@@ -65,6 +65,25 @@ const DashboardLayout = (props) => {
   const [open, onSetSidebarOpen] = useState(false)
   const [originNetwork, setOriginNetwork] = useState(false)
   const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
+  // const [branchLink, setBranchLink] = useState(false)
+
+  // useEffect(() => {
+  //   if (community && community.communityAddress && homeToken && homeToken.owner) {
+  //     window.branch.link({
+  //       community_id: community.communityAddress,
+  //       link_createor: homeToken.owner,
+  //       marketing_title: 'switch community',
+  //       marketing: 'true',
+  //       campaign: 'manager_add',
+  //       channel: 'studio',
+  //       feature: 'switch_community'
+  //     }, (err, link) => {
+  //       if (!err) {
+  //         setBranchLink(link)
+  //       }
+  //     })
+  //   }
+  // }, [community, homeToken])
 
   useEffect(() => {
     if (isMobile) {
@@ -94,7 +113,8 @@ const DashboardLayout = (props) => {
       if (networkType !== 'fuse' && networkType && networkType !== originNetwork) {
         const desired = originNetwork
         loadModal(WRONG_NETWORK_MODAL, {
-          body: <p>You need to switch network to view this community <br /> This community is issued on {desired}. Switch to {desired} through {providerInfo.name} to view it</p>,
+          body: <p>You need to switch network to view this community <br /> This community is issued on {desired === 'main' ? 'mainnet' : desired}.
+           Switch to {desired === 'main' ? 'mainnet' : desired} through {providerInfo.name} to view it</p>,
           supportedNetworks: [desired, homeNetwork],
           handleClose: () => push('/')
         })
@@ -125,7 +145,8 @@ const DashboardLayout = (props) => {
   const qrValue = JSON.stringify({
     tokenAddress: community && community.homeTokenAddress,
     originNetwork: foreignToken && foreignToken.networkType,
-    env: CONFIG.env
+    env: CONFIG.env,
+    communityAddress
   })
 
   return (

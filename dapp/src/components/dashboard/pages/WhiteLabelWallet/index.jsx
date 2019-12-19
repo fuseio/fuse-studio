@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import QRCode from 'qrcode.react'
 
@@ -9,28 +9,9 @@ import { getCommunityAddress } from 'selectors/entities'
 import AppleDownload from 'images/apple.svg'
 import GoogleDownload from 'images/google.svg'
 
-const WhiteLabelWallet = ({ community, homeToken }) => {
-  const [branchLink, setBranchLink] = useState(false)
-  useEffect(() => {
-    if (community && community.communityAddress && homeToken && homeToken.owner) {
-      window.branch.link({
-        community_id: community.communityAddress,
-        link_createor: homeToken.owner,
-        marketing_title: 'switch community',
-        marketing: 'true',
-        campaign: 'manager_add',
-        channel: 'studio',
-        feature: 'switch_community'
-      }, (err, link) => {
-        if (!err) {
-          setBranchLink(link)
-        }
-      })
-    }
-  }, [community, homeToken])
-
+const WhiteLabelWallet = ({ value }) => {
   return (
-    branchLink && <Fragment>
+    value && <Fragment>
       <div className='qr-code__header'><h2 className='qr-code__header__title'>White label wallet</h2></div>
       <div className='qr-code__wrapper'>
         <div className='qr-code'>
@@ -46,7 +27,7 @@ const WhiteLabelWallet = ({ community, homeToken }) => {
             <li>Scan this QR code to switch to the community you created!</li>
           </ol>
           <div className='qr-code__image'>
-            <QRCode size={150} value={branchLink} />
+            <QRCode size={150} value={value} />
           </div>
         </div>
       </div>
