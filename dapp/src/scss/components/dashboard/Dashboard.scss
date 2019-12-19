@@ -20,6 +20,10 @@
 
   @include block(sidebar) {
 
+    > div:last-child {
+      padding-bottom: 50px;
+    }
+
     @include element(container) {
       background-color: #051926;
       box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
