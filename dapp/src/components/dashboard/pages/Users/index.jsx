@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
-import { withRouter, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { connect, useSelector } from 'react-redux'
 import sortBy from 'lodash/sortBy'
 
@@ -251,6 +251,16 @@ const Users = ({
                   )
                 }
                 {
+                  hasAdminRole && !isApproved && (
+                    <ul className='more__options'>
+                      <li className='more__options__item' onClick={() => handleConfirmUser(account)}>Confirm</li>
+                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                      <li className='more__options__item' onClick={() => push(`transfer/${account}`)}>Transfer tokens to user</li>
+                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
+                    </ul>
+                  )
+                }
+                {
                   !hasAdminRole && isApproved && (
                     <ul className='more__options'>
                       <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
@@ -361,4 +371,4 @@ const mapDispatchToProps = {
   importExistingEntity
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Users))
+export default connect(mapStateToProps, mapDispatchToProps)(Users)
