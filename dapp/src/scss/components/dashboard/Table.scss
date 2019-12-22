@@ -120,17 +120,13 @@
 
         @include element(toggler) {
           margin-left: auto;
-
-          &:hover {
-            cursor: pointer;
-          }
         }
   
-        // &:hover {
-        //   .more {
-        //     display: flex;
-        //   }
-        // }
+        &:hover {
+          .more {
+            display: flex;
+          }
+        }
 
         @include block(more) {
           font-size: 16px;

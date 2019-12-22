@@ -78,7 +78,7 @@ const sideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
     },
     selectedIcon: MintBurnYellowIcon,
     CustomElement: ({ children }) => (
-      <div>
+      <div style={{ paddingBottom: '3em' }}>
         <span className='admin-title'>Admin tools</span>
         {children}
       </div>

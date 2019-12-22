@@ -615,9 +615,8 @@
 }
 
 @include block(entity_added) {
-  width: 572px !important;
-  height: 321px !important;
   border-radius: 3px;
+  padding: 3em !important;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   background-color: $color-white;
   @include xy-grid(vertical, false);
@@ -631,6 +630,7 @@
     font-size: 24px;
     font-weight: 500;
     color: #052235;
+    margin-bottom: 1.2em;
   }
 
   @include element(body) {

@@ -179,9 +179,15 @@
     @include element(wrapper) {
       color: $color-gray;
       align-items: center;
-      font-size: 0.8em;
       position: relative;
+
       @include breakpoint(medium up) {
+        font-size: 0.65em;
+        padding: 4em;
+      }
+
+      @include breakpoint(xxlarge up) {
+        font-size: 0.8em;
         padding: 4em 5em;
       }
     }
@@ -249,7 +255,7 @@
     @include block(icons) {
       display: flex;
       display: flex;
-      padding: 2em 0;
+      padding: 1.65em 0;
       @include block(icon) {
         @include breakpoint(large up) {
           flex: 0.3;
