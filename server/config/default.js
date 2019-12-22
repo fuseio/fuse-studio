@@ -135,6 +135,11 @@ module.exports = {
     urlBase: 'https://funder-qa.fuse.io/api/'
   },
   twilio: {
+    inviteTxt: 'Hi, a friend has invited you to Fuse'
+  },
+  branch: {
+    urlBase: 'https://api2.branch.io/v1/',
+    key: 'key_live_aaSvQXmuELUQfsYeG4UfWemnqEiq04hr'
   },
   plugins: {
     moonpay: {

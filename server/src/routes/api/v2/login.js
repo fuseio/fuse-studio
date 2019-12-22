@@ -1,8 +1,7 @@
 const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
-
-const client = require('twilio')(config.get('twilio.accountSid'), config.get('twilio.authToken'))
+const twilio = require('@utils/twilio')
 
 /**
  * @api {post} /login/request Request a verification code
@@ -17,13 +16,7 @@ const client = require('twilio')(config.get('twilio.accountSid'), config.get('tw
 router.post('/request', async (req, res) => {
   const { phoneNumber } = req.body
   try {
-    await client.verify.services(config.get('twilio.serviceSid'))
-      .verifications
-      .create({
-        to: phoneNumber,
-        channel: 'sms'
-      })
-
+    await twilio.verify({ phoneNumber })
     res.json({ response: 'ok' })
   } catch (e) {
     console.error('Got an error from Twilio:', e.code, e.message)
@@ -46,12 +39,7 @@ router.post('/request', async (req, res) => {
 router.post('/verify', async (req, res) => {
   const { phoneNumber, accountAddress, code } = req.body
 
-  const response = await client.verify.services(config.get('twilio.serviceSid'))
-    .verificationChecks
-    .create({
-      to: phoneNumber,
-      code
-    })
+  const response = await twilio.verifyCheck({ phoneNumber, code })
 
   if (response.status === 'approved') {
     const secret = config.get('api.secret')
