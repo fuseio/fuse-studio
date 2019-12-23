@@ -177,6 +177,10 @@ POST /wallets/invite/:phoneNumber
 |---------|-----------|--------------------------------------|
 | Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
 
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>community address</p> |
 
 
 ### Success 200

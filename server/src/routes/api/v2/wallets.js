@@ -77,10 +77,13 @@ router.get('/:phoneNumber', auth.required, async (req, res, next) => {
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
+ * @apiParam {String} communityAddress community address
+ *
  * @apiSuccess {String} response Response status - ok
  */
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber } = req.params
+  const { communityAddress } = req.body
   const accountAddress = config.get('network.home.addresses.MultiSigWallet')
 
   const userWallet = await UserWallet.findOne({ phoneNumber })
@@ -91,9 +94,9 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     return res.status(400).json({ error: msg })
   }
 
-  await agenda.now('createWallet', { owner: accountAddress })
+  const job = await agenda.now('createWallet', { owner: accountAddress, communityAddress })
 
-  return res.json({ response: 'ok' })
+  return res.json({ job: job.attrs })
 })
 
 module.exports = router
