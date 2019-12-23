@@ -10897,7 +10897,7 @@
         "hapi-pino": "^6.0.0",
         "human-to-milliseconds": "^1.0.0",
         "interface-datastore": "~0.6.0",
-        "ipfs-bitswap": "~0.24.1",
+        "ipfs-bitswap": "~0.26.1",
         "ipfs-block": "~0.8.1",
         "ipfs-block-service": "~0.15.1",
         "ipfs-http-client": "^32.0.0",
@@ -11054,8 +11054,8 @@
       }
     },
     "ipfs-bitswap": {
-      "version": "0.24.1",
-      "resolved": "https://registry.npmjs.org/ipfs-bitswap/-/ipfs-bitswap-0.24.1.tgz",
+      "version": "0.26.1",
+      "resolved": "https://registry.npmjs.org/ipfs-bitswap/-/ipfs-bitswap-0.26.1.tgz",
       "integrity": "sha512-fqnqCgeyHb0CO12uptBbDNGMSV4aOz4xi2Fc+OcyBb7bgLa7GcBuMi01iaFnwqPcz9BQSKvZKNMP+Vx+OZusNA==",
       "requires": {
         "async": "^2.6.1",
@@ -14711,8 +14711,8 @@
       "dev": true
     },
     "multicodec": {
-      "version": "0.5.7",
-      "resolved": "https://registry.npmjs.org/multicodec/-/multicodec-0.5.7.tgz",
+      "version": "0.5.6",
+      "resolved": "https://registry.npmjs.org/multicodec/-/multicodec-0.5.6.tgz",
       "integrity": "sha512-PscoRxm3f+88fAtELwUnZxGDkduE2HD9Q6GHUOywQLjOGT/HAdhjLDYNZ1e7VR0s0TP0EwZ16LNUTFpoBGivOA==",
       "requires": {
         "varint": "^5.0.0"
