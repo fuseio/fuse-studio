@@ -47,7 +47,7 @@ router.post('/', auth.required, async (req, res, next) => {
  */
 router.get('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
-  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
 
   return res.json({ data: userWallet })
 })
@@ -64,7 +64,7 @@ router.get('/', auth.required, async (req, res, next) => {
  */
 router.get('/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber } = req.params
-  const userWallet = await UserWallet.findOne({ phoneNumber }).sort({ createdAt: -1 })
+  const userWallet = await UserWallet.findOne({ phoneNumber }, { contacts: 0 }).sort({ createdAt: -1 })
 
   return res.json({ data: userWallet })
 })

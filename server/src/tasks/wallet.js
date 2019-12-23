@@ -35,6 +35,7 @@ const createWallet = withAccount(async (account, { owner, communityAddress, ens 
 
   if (communityAddress) {
     const { url } = await branch.createDeepLink({ communityAddress })
+    console.log(`Created branch deep link ${url}`)
     twilio.createMessage({ to: userWallet.phoneNumber, body: `${config.get('twilio.inviteTxt')}\n${url}` })
   }
   return receipt
