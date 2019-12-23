@@ -46,8 +46,7 @@ function fileLoader (options = {}) {
   return {
     loader: 'file-loader',
     options: merge({
-      name: '[path][name].[ext]',
-      context: paths.PATH_SRC
+      name: '[path][name].[ext]'
     }, options)
   }
 }
