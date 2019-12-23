@@ -2,7 +2,7 @@ const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
-
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 // const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
 
 const webpack = require('webpack')
@@ -10,6 +10,8 @@ const config = require('config')
 
 const loaders = require('./tools/loaders')
 const paths = require('./tools/paths')
+
+const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = {
   entry: [
@@ -41,6 +43,7 @@ module.exports = {
   },
   plugins: [
     // new DuplicatePackageCheckerPlugin(),
+    new ProgressBarPlugin(),
     new FriendlyErrorsWebpackPlugin(),
     new HtmlWebPackPlugin({
       template: './src/index.html',
@@ -48,14 +51,17 @@ module.exports = {
     }),
     new webpack.DefinePlugin({ CONFIG: JSON.stringify(config) }),
     new MiniCssExtractPlugin({
-      filename: '[name].[hash].css',
-      chunkFilename: '[name].[hash].chunk.css'
+      filename: devMode ? '[name].css' : '[name].[hash].css',
+      chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
     })
   ],
   optimization: {
     splitChunks: {
       chunks: 'all'
     }
+  },
+  performance: {
+    hints: devMode ? 'warning' : false
   },
   module: {
     rules: [
@@ -65,17 +71,17 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.css$/,
-        use: [loaders.styleLoader(), loaders.cssLoader(), loaders.postcssLoader()]
-      },
-      {
-        test: /\.scss$/,
+        test: /\.(sa|sc|c)ss$/,
         include: [path.resolve(paths.PATH_SRC, 'scss', 'main.scss')],
-        use: [MiniCssExtractPlugin.loader, loaders.cssLoader(), loaders.postcssLoader(), loaders.sassLoader()]
+        use: [loaders.miniCssExtractPluginLoader({ hmr: devMode }), loaders.cssLoader(), loaders.postcssLoader(), loaders.sassLoader()]
       },
       {
-        test: /\.(woff|woff2|ttf|eot|svg|gif|png|jpe?g|webp|ico)$/,
+        test: /\.(woff|woff2|ttf|eot|svg|webp|ico)$/,
         use: [loaders.fileLoader(), loaders.imageWebpackLoader()]
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [loaders.urlLoader()]
       },
       {
         test: /\.html$/,

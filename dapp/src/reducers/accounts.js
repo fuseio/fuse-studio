@@ -42,7 +42,7 @@ export default (state = {}, action) => {
   }
 
   if (action.type === actions.GET_INITIAL_ADDRESS.SUCCESS) {
-    return { ...state, ...actions.response }
+    return { ...state, ...action.response }
   }
   return state
 }

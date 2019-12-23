@@ -103,9 +103,7 @@ $drag-handle-border: 1px solid rgba(255, 255, 255, 0.7) !default;
     /* autoprefixer: off */
     display: block;
     max-width: 100%;
-    max-height: -webkit-fill-available;
-    max-height: -moz-available;
-    max-height: fill-available;
+    max-height: stretch;
     touch-action: manipulation;
   }
 

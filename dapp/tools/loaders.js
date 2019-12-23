@@ -1,4 +1,5 @@
 const merge = require('webpack-merge')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const paths = require('./paths')
 
 function sassLoader (options = {}) {
@@ -67,6 +68,15 @@ function htmlLoader (options) {
   }
 }
 
+function urlLoader (options) {
+  return {
+    loader: 'url-loader',
+    options: merge({
+      limit: 25000
+    }, options)
+  }
+}
+
 function imageWebpackLoader (options = {}) {
   return {
     loader: 'image-webpack-loader',
@@ -92,6 +102,15 @@ function imageWebpackLoader (options = {}) {
   }
 }
 
+function miniCssExtractPluginLoader (options = {}) {
+  return {
+    loader: MiniCssExtractPlugin.loader,
+    options: merge({
+      hmr: true
+    }, options)
+  }
+}
+
 module.exports = {
   sassLoader,
   postcssLoader,
@@ -100,5 +119,7 @@ module.exports = {
   fileLoader,
   styleLoader,
   htmlLoader,
-  imageWebpackLoader
+  imageWebpackLoader,
+  urlLoader,
+  miniCssExtractPluginLoader
 }
