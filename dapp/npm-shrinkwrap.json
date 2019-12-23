@@ -14711,9 +14711,9 @@
       "dev": true
     },
     "multicodec": {
-      "version": "0.5.7",
-      "resolved": "https://registry.npmjs.org/multicodec/-/multicodec-0.5.7.tgz",
-      "integrity": "sha512-PscoRxm3f+88fAtELwUnZxGDkduE2HD9Q6GHUOywQLjOGT/HAdhjLDYNZ1e7VR0s0TP0EwZ16LNUTFpoBGivOA==",
+      "version": "0.5.6",
+      "resolved": "https://registry.npmjs.org/multicodec/-/multicodec-0.5.6.tgz",
+      "integrity": "sha512-YQthT12rnqyAosc+xSprD3JpmrfxXYABM9FEFw7oVxTonsWmIYng1iIppqpIfGBFZ3YKMgJKx6UTREuv91EcKw==",
       "requires": {
         "varint": "^5.0.0"
       }
