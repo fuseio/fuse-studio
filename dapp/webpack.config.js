@@ -52,7 +52,7 @@ module.exports = {
     new webpack.DefinePlugin({ CONFIG: JSON.stringify(config) }),
     new MiniCssExtractPlugin({
       filename: devMode ? '[name].css' : '[name].[hash].css',
-      chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+      chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
     })
   ],
   optimization: {
