@@ -7,6 +7,7 @@ const metadataUtils = require('@utils/metadata')
 const Community = mongoose.model('Community')
 const Token = mongoose.model('Token')
 const { sortBy, keyBy } = require('lodash')
+const { toChecksumAddress } = require('web3-utils')
 
 const withCommunities = async (entities) => {
   const communityAddresses = entities.map(token => token.communityAddress)
@@ -103,7 +104,7 @@ router.get('/:communityAddress/:account', async (req, res, next) => {
 })
 
 const getQueryFilter = ({ query: { type }, params: { communityAddress } }) =>
-  type ? { type, communityAddress } : { communityAddress }
+  type ? { type, communityAddress: toChecksumAddress(communityAddress) } : { communityAddress: toChecksumAddress(communityAddress) }
 
 const getQuerySearch = ({ query: { search } }) => ({ search })
 
