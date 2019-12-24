@@ -93,29 +93,30 @@ function * checkIsCommunityMember ({ communityAddress, account }) {
   return memberData && memberData.data
 }
 
+function * addToUserBusinessRole ({ communityAddress, data }) {
+  yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+  const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
+  const networkVersion = getNetworkVersion(web3)
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
+  const method = CommunityContract.methods.addEnitityRoles(data.account, roles.BUSINESS_ROLE)
+  const transactionPromise = method.send({
+    from: accountAddress
+  })
+
+  yield call(transactionFlow, { transactionPromise, action: actions.ADD_ENTITY, sendReceipt: true, abiName: 'Community' })
+}
+
 function * addEntity ({ communityAddress, data, isClosed, entityType }) {
   const action = actions.ADD_ENTITY
   const isCommunityMember = yield call(checkIsCommunityMember, { communityAddress, account: data.account })
   if (entityType === 'business' && isCommunityMember) {
-    yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
-    const accountAddress = yield select(getAccountAddress)
-    const web3 = yield getWeb3()
-    const networkVersion = getNetworkVersion(web3)
-    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
-    const method = CommunityContract.methods.addEnitityRoles(data.account, roles.BUSINESS_ROLE)
-    const transactionPromise = method.send({
-      from: accountAddress
-    })
-
-    yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
+    yield call(addToUserBusinessRole, { communityAddress, data })
   } else {
-    if (entityType === 'business') {
-      yield call(createBusinessMetadata, { communityAddress, accountAddress: data.account, metadata: data })
-    } else {
-      yield call(metadataHandler, { communityAddress, data })
-    }
-
+    const createMetadataFunc = entityType === 'business'
+      ? createBusinessMetadata
+      : createUsersMetadata
+    yield call(createMetadataFunc, { communityAddress, accountAddress: data.account, metadata: data })
     const { entityRoles } = deriveEntityData(entityType, isClosed)
 
     const accountAddress = yield select(getAccountAddress)
@@ -131,44 +132,9 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
   }
 }
 
-function * metadataHandler ({ communityAddress, data }) {
-  const getImageHash = async (image) => {
-    const formData = new window.FormData()
-    formData.append('path', new window.Blob([image]))
-    const response = await fetchPic(formData)
-    const { Hash } = await response.json()
-    return [{ '@type': 'ImageObject', contentUrl: { '/': Hash } }]
-  }
-
-  let image
-  let coverPhoto
-
-  if (data.image) {
-    image = yield getImageHash(data.image)
-  }
-
-  if (data.coverPhoto) {
-    coverPhoto = yield getImageHash(data.coverPhoto)
-  }
-
-  if (image || coverPhoto) {
-    let newData = image ? { ...data, image } : data
-    newData = coverPhoto ? { ...newData, coverPhoto } : newData
-    yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: { ...newData } })
-  } else {
-    yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: data })
-  }
-}
-
-const fetchPic = buffer => window.fetch('https://ipfs.infura.io:5001/api/v0/add', {
-  method: 'post',
-  'Content-Type': 'multipart/form-data',
-  body: buffer
-})
-
 function * joinCommunity ({ communityAddress, data }) {
   const accountAddress = yield select(getAccountAddress)
-  yield call(metadataHandler, { communityAddress, data })
+  yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: data })
 
   const web3 = yield getWeb3()
   const networkVersion = getNetworkVersion(web3)
