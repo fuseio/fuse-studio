@@ -30,8 +30,13 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
   job.attrs.data.walletAddress = walletAddress
   job.save()
 
+  if (!phoneNumber) {
+    const userWallet = await findOne({ accountAddress: owner })
+    phoneNumber = userWallet.phoneNumber
+  }
+
   await UserWallet.findOneAndUpdate({ accountAddress: owner, phoneNumber }, { walletAddress })
-  await Contact.updateMany({ phoneNumber: phoneNumber }, { walletAddress, state: 'NEW' })
+  await Contact.updateMany({ phoneNumber }, { walletAddress, state: 'NEW' })
 
   if (communityAddress) {
     const { url } = await branch.createDeepLink({ communityAddress })
