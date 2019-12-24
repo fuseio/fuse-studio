@@ -1,4 +1,4 @@
-import Web3connect from 'web3connect'
+import last from 'lodash/last'
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
@@ -9,6 +9,7 @@ import { balanceOfFuse, fetchCommunities } from 'actions/accounts'
 import { loadModal } from 'actions/ui'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
+import providers from 'constants/providers'
 import { saveState } from 'utils/storage'
 import { processTransactionHash } from 'services/api/misc'
 import { getNetworkSide, getForeignNetwork } from 'selectors/network'
@@ -43,11 +44,31 @@ function * deduceBridgeSides (networkType) {
   }
 }
 
+export function getProviderInfo (provider) {
+  let result = {
+    name: 'Web3',
+    type: 'injected',
+    check: 'isWeb3',
+    styled: {
+      noShadow: false
+    }
+  }
+
+  if (provider) {
+    const matches = providers.filter(_provider => provider[_provider.check])
+    if (!!matches && matches.length) {
+      result = last(matches)
+    }
+  }
+
+  return result
+}
+
 function * connectToWallet ({ provider }) {
   try {
     saveState('state.reconnect', true)
     const web3 = yield getWeb3({ provider })
-    const providerInfo = Web3connect.getProviderInfo(provider)
+    const providerInfo = getProviderInfo(provider)
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
     yield call(checkNetworkType, { web3 })
@@ -147,10 +168,10 @@ function * watchCheckNetworkTypeSuccess ({ response }) {
 
 function * watchConnectToWallet ({ response, accountAddress }) {
   const { providerInfo } = response
-  const { name } = providerInfo
+  const { check } = providerInfo
   yield put(fetchCommunities(accountAddress))
   saveState('state.userEthAddress', accountAddress)
-  saveState('state.defaultWallet', name)
+  saveState('state.defaultWallet', check.substring(2))
 }
 
 function * changeNetwork ({ networkType }) {

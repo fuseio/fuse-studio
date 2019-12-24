@@ -1,7 +1,7 @@
 import Web3Connect from 'web3connect'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Portis from '@portis/web3'
-// import Torus from '@toruslabs/torus-embed'
+import Torus from '@toruslabs/torus-embed'
 // import Fortmatic from 'fortmatic'
 // import Authereum from "authereum"
 
@@ -46,14 +46,15 @@ const useDefaultWallet = async (defaultWallet, network) => {
       //   })
       //   break
 
-      // case 'torus':
-      //   provider = await Web3Connect.ConnectToTorus(Torus, {
-      //     enableLogging: CONFIG.env !== 'production',
-      //     buttonPosition: 'top-right',
-      //     buildEnv: CONFIG.env === 'production' ? 'production' : 'development',
-      //     showTorusButton: true
-      //   })
-      //   break
+    case 'torus':
+      provider = await Web3Connect.ConnectToTorus(Torus, {
+        enableLogging: CONFIG.env !== 'production',
+        buttonPosition: 'top-right',
+        buildEnv: CONFIG.env === 'production' ? 'production' : 'development',
+        showTorusButton: true,
+        network
+      })
+      break
 
     default:
       provider = await Web3Connect.ConnectToInjected()
