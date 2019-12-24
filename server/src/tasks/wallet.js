@@ -11,7 +11,7 @@ const Contact = mongoose.model('Contact')
 const branch = require('@utils/branch')
 const twilio = require('@utils/twilio')
 
-const createWallet = withAccount(async (account, { owner, communityAddress, ens = '' }, job) => {
+const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '' }, job) => {
   const { createContract, createMethod, send } = createNetwork('home', account)
   const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
   const method = createMethod(walletFactory, 'createWallet', owner, Object.values(homeAddresses.walletModules), ens)
@@ -30,13 +30,13 @@ const createWallet = withAccount(async (account, { owner, communityAddress, ens 
   job.attrs.data.walletAddress = walletAddress
   job.save()
 
-  const userWallet = await UserWallet.findOneAndUpdate({ accountAddress: owner }, { walletAddress })
-  await Contact.updateMany({ phoneNumber: userWallet.phoneNumber }, { walletAddress, state: 'NEW' })
+  await UserWallet.findOneAndUpdate({ accountAddress: owner, phoneNumber }, { walletAddress })
+  await Contact.updateMany({ phoneNumber: phoneNumber }, { walletAddress, state: 'NEW' })
 
   if (communityAddress) {
     const { url } = await branch.createDeepLink({ communityAddress })
     console.log(`Created branch deep link ${url}`)
-    twilio.createMessage({ to: userWallet.phoneNumber, body: `${config.get('twilio.inviteTxt')}\n${url}` })
+    twilio.createMessage({ to: phoneNumber, body: `${config.get('twilio.inviteTxt')}\n${url}` })
   }
   return receipt
 })
