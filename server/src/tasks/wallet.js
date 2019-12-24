@@ -38,7 +38,7 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
 
   const userWallet = await UserWallet.findOneAndUpdate(cond, { walletAddress })
   phoneNumber = userWallet.phoneNumber
-  
+
   await Contact.updateMany({ phoneNumber }, { walletAddress, state: 'NEW' })
 
   if (communityAddress) {
