@@ -93,9 +93,38 @@ export function * createBusinessMetadata ({ communityAddress, accountAddress, me
   }
 }
 
+const fetchPic = buffer => window.fetch('https://ipfs.infura.io:5001/api/v0/add', {
+  method: 'post',
+  'Content-Type': 'multipart/form-data',
+  body: buffer
+})
+
 export function * createUsersMetadata ({ accountAddress, metadata }) {
   const box = yield get3box({ accountAddress })
-  const { publicData, privateData } = separateData(metadata)
+
+  const getImageHash = async (image) => {
+    const formData = new window.FormData()
+    formData.append('path', new window.Blob([image]))
+    const response = await fetchPic(formData)
+    const { Hash } = await response.json()
+    return [{ '@type': 'ImageObject', contentUrl: { '/': Hash } }]
+  }
+
+  let image
+  let coverPhoto
+
+  if (metadata.image) {
+    image = yield getImageHash(metadata.image)
+  }
+
+  if (metadata.coverPhoto) {
+    coverPhoto = yield getImageHash(metadata.coverPhoto)
+  }
+
+  let newMetadata
+  newMetadata = image ? { ...metadata, image } : metadata
+  newMetadata = coverPhoto ? { ...newMetadata, coverPhoto } : newMetadata
+  const { publicData, privateData } = separateData(newMetadata)
   const publicFields = Object.keys(publicData)
   const publicValues = Object.values(publicData)
   yield box.public.setMultiple(publicFields, publicValues)

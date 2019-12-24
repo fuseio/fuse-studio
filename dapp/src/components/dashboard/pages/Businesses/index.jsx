@@ -77,63 +77,25 @@ const Businesses = ({
   useEffect(() => {
     if (!isEmpty(response)) {
       const { data: listData } = response
-      setData(sortBy(listData.map(({ profile, account, uri }) => {
+      setData(sortBy(listData.map(({ account, uri }) => {
         return {
-          name: profile && profile.publicData
-            ? profile.publicData.name
-              ? [
-                {
-                  name: profile.publicData.name,
-                  image: profile.publicData &&
-                    profile.publicData.image
-                    ? <div
-                      style={{
-                        backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
-                        width: '36px',
-                        height: '36px',
-                        backgroundSize: 'contain',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'center'
-                      }}
-                    />
-                    : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
-                }
-              ]
-              : [
-                {
-                  name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
-                  image: profile.publicData &&
-                    profile.publicData.image
-                    ? <div
-                      style={{
-                        backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
-                        width: '36px',
-                        height: '36px',
-                        backgroundSize: 'contain',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'center'
-                      }}
-                    />
-                    : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
-                }
-              ]
-            : [
-              {
-                name: get(metadata[uri], 'name', ''),
-                image: get(metadata[uri], 'image')
-                  ? <div
-                    style={{
-                      backgroundImage: `url(${CONFIG.ipfsProxy.urlBase}/image/${get(metadata[uri], 'image')}`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
-              }
-            ],
+          name: [
+            {
+              name: get(metadata[uri], 'name', ''),
+              image: get(metadata[uri], 'image')
+                ? <div
+                  style={{
+                    backgroundImage: `url(${CONFIG.ipfsProxy.urlBase}/image/${get(metadata[uri], 'image')}`,
+                    width: '36px',
+                    height: '36px',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                  }}
+                />
+                : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
+            }
+          ],
           type: get(metadata[uri], 'type', '') ? capitalize(get(metadata[uri], 'type')) : '', // type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
           address: get(metadata[uri], 'address', '') ? capitalize(get(metadata[uri], 'address')) : '', // profile && profile.publicData ? profile.publicData.address : '',
           account
