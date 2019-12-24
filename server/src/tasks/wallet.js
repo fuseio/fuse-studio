@@ -30,12 +30,15 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
   job.attrs.data.walletAddress = walletAddress
   job.save()
 
-  if (!phoneNumber) {
-    const userWallet = await findOne({ accountAddress: owner })
-    phoneNumber = userWallet.phoneNumber
+  let cond = { accountAddress: owner }
+
+  if (phoneNumber) {
+    cond.phoneNumber = phoneNumber
   }
 
-  await UserWallet.findOneAndUpdate({ accountAddress: owner, phoneNumber }, { walletAddress })
+  const userWallet = await UserWallet.findOneAndUpdate(cond, { walletAddress })
+  phoneNumber = userWallet.phoneNumber
+  
   await Contact.updateMany({ phoneNumber }, { walletAddress, state: 'NEW' })
 
   if (communityAddress) {
