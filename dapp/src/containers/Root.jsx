@@ -4,7 +4,7 @@ import Web3connect from 'web3connect'
 import { Switch, Route } from 'react-router'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Portis from '@portis/web3'
-// import Torus from '@toruslabs/torus-embed'
+import Torus from '@toruslabs/torus-embed'
 // import Fortmatic from 'fortmatic'
 
 import Oven from 'components/oven/Oven'
@@ -36,7 +36,7 @@ const Root = ({
 
   const connectTo = networkToConnectTo === 'fuse' ? {
     nodeUrl: CONFIG.web3.fuseProvider,
-    chainId: 122
+    chainId: CONFIG.web3.chainId.fuse
   } : networkToConnectTo
   const web3Auth = useWeb3Auth()
   const webConnectOptions = {
@@ -53,16 +53,15 @@ const Root = ({
         options: {
           id: CONFIG.web3.portis.id
         }
+      },
+      torus: {
+        package: Torus, // required
+        options: {
+          enableLogging: CONFIG.env !== 'production',
+          buttonPosition: 'top-right',
+          buildEnv: CONFIG.env === 'production' ? 'production' : 'development'
+        }
       }
-      // TODO - add more providers
-      // torus: {
-      //   package: Torus, // required
-      //   options: {
-      //     enableLogging: CONFIG.env !== 'production',
-      //     buttonPosition: 'top-right',
-      //     buildEnv: CONFIG.env === 'production' ? 'production' : 'development'
-      //   }
-      // }
       // fortmatic: {
       //   package: Fortmatic,
       //   options: {
