@@ -3,6 +3,9 @@ const router = require('express').Router()
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
 const lodash = require('lodash')
+const branch = require('@utils/branch')
+const twilio = require('@utils/twilio')
+const sendgridUtils = require('@utils/sendgrid')
 
 const makePlugin = ({ plugin }) => {
   const { name } = plugin
@@ -33,6 +36,36 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
   const community = await Community.findOneAndUpdate({ communityAddress }, fields, { new: true })
 
   return res.json({ data: community })
+})
+
+/**
+ * @api {post} /communities/:communityAddress/invite Invite a user to community
+ * @apiName InviteUser
+ * @apiGroup Community
+ * @apiParam {String} communityAddress Community address
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "phoneNumber": {{userPhoneNumber}},
+ *   }
+ *
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "email": {{userEmail}},
+ *   }
+ *
+ */
+
+router.post('/:communityAddress/invite', async (req, res, next) => {
+  const { communityAddress } = req.params
+  const { phoneNumber, email } = req.body
+  const { url } = await branch.createDeepLink({ communityAddress })
+  if (email) {
+    sendgridUtils.sendUserInvitationToCommunity({ email, url })
+    res.send({ response: 'ok' })
+  } else if (phoneNumber) {
+    twilio.createMessage({ to: phoneNumber, body: `${config.get('twilio.inviteTxt')}\n${url}` })
+    res.send({ response: 'ok' })
+  }
 })
 
 /**

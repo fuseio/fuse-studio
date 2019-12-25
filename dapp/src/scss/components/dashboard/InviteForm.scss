@@ -1,0 +1,165 @@
+@include block(invite) {
+  @include xy-grid(vertical);
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: $color-white;
+  margin-top: 3em;
+
+  @include breakpoint(large) {
+    padding: 2em 3em;
+  }
+
+  @include breakpoint(medium down) {
+    padding: 1.5em;
+  }
+
+  @include breakpoint(small only) {
+    padding: 1em 3em;
+  }
+
+  @include element (wrapper) {
+    @include breakpoint(large) {
+      width: 40%;    
+    }
+  
+    @include breakpoint(medium down) {
+      width: 100%;
+    }
+  }
+
+  @include element(title) {
+    font-size: 1.125em;
+    font-weight: 500;
+    line-height: 1.11;
+    color: $color-dark;
+  }
+
+  @include element(containerOuter) {
+    .hidden:nth-child(1):checked ~ .highlight {
+      transform: translateY(0);
+    }
+    .hidden:nth-child(3):checked ~ .highlight {
+      transform: translateY(50px);
+    }
+    .hidden:nth-child(5):checked ~ .highlight {
+      transform: translateY(100px);
+    }
+    .hidden:nth-child(1):checked + .entry .circle {
+      // border-color: #4d98ef;
+    }
+    .hidden:nth-child(3):checked + .entry .circle {
+      // border-color: #4d98ef;
+    }
+    .hidden:nth-child(5):checked + .entry .circle {
+      // border-color: #4d98ef;
+    }
+    .check:checked ~ .containerOuter .overlay {
+      background: #ecf0f4;
+    }
+
+    @include block(containerInner) {
+      position: relative;
+      overflow: hidden;
+      height: 120px;
+      margin: 2em 0 0;
+    }
+
+    @include block(hidden) {
+      display: none;
+    }
+
+    @include block(entry) {
+      height: 25px;
+      position: absolute;
+      // width: 160px;
+
+      &:nth-child(2) {
+        left: 8px;
+        top: 8px;
+      }
+      &:nth-child(4) {
+        left: 8px;
+        top: 58px;
+      }
+      &:nth-child(6) {
+        left: 8px;
+        top: 108px;
+      }
+    }
+
+    @include block(circle) {
+      border: solid 1px #d3d3d3;
+      background-color: #f9f9f9;
+      border-radius: 50%;
+      cursor: pointer;
+      height: 24px;
+      position: absolute;
+      transition: border-color 300ms;
+      width: 24px;
+    }
+
+    @include block(entry-label) {
+      cursor: pointer;
+      padding-left: 40px;
+      user-select: none;
+      -moz-user-select: none;
+      color: #919191;
+      font-size: 15px;
+      margin-top: 3px;
+    }
+
+    @include block(highlight) {
+      background-color: #4a687b;
+      border-radius: 50%;
+      height: 14px;
+      left: 13px;
+      pointer-events: none;
+      position: absolute;
+      top: 13px;
+      transition: transform 400ms cubic-bezier(0.175, 0.885, 0.32, 1.2);
+      transform: translateY(-50px);
+      width: 14px;
+    }
+  }
+
+  @include element(text) {
+    max-width: 294px;
+    height: 40px;
+    font-size: 11px;
+    line-height: 1.36;
+    color: $color-gray;
+    padding-bottom: 1em;
+  }
+
+  @include element(email_field) {
+    padding-bottom: 1em;
+    > input {
+      width: 100%;
+      background-color: $color-white;
+      padding: 0 16px;
+      font-size: 0.938em;
+      color: $color-dark;
+      height: 40px;
+      border-radius: 5px;
+      border: solid 2px $color-lighter-gray;
+
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.3);
+      }
+      &:focus {
+        border-color: $color-light-gray;
+      }
+    }
+  }
+
+  @include element(phone_field) {
+    position: relative;
+    padding-bottom: 1em;
+  }
+
+  @include element(resend) {
+    font-size: 10px;
+    line-height: 1.5;
+    color: $color-gray;
+  }
+}
