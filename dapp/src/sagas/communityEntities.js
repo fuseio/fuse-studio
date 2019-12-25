@@ -1,6 +1,8 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 
 import * as actions from 'actions/communityEntities'
+import { INVITE_USER_TO_COMMUNITY } from 'actions/community'
+import { inviteUserToCommunity as inviteUserToCommunityApi } from 'services/api/community'
 import { createEntitiesFetch, tryTakeEvery, apiCall } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
 import { getCommunityAddress } from 'selectors/entities'
@@ -214,6 +216,10 @@ function * uploadImage ({ image }) {
   return data.json()
 }
 
+function * inviteUserToCommunity ({ communityAddress, email, phoneNumber }) {
+  yield apiCall(inviteUserToCommunityApi, { communityAddress, email, phoneNumber })
+}
+
 const fetchEntities = createEntitiesFetch(actions.FETCH_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchUsersEntities = createEntitiesFetch(actions.FETCH_USERS_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchBusinessesEntities = createEntitiesFetch(actions.FETCH_BUSINESSES_ENTITIES, entitiesApi.fetchCommunityEntities)
@@ -221,6 +227,7 @@ const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchE
 
 export default function * communityEntitiesSaga () {
   yield all([
+    tryTakeEvery(INVITE_USER_TO_COMMUNITY, inviteUserToCommunity, 1),
     tryTakeEvery(actions.ADD_ENTITY, addEntity, 1),
     tryTakeEvery(actions.TOGGLE_COMMUNITY_MODE, toggleCommunityMode, 1),
     tryTakeEvery(actions.REMOVE_ENTITY, removeEntity, 1),

@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import QRCode from 'qrcode.react'
 
+import InvaiteForm from 'components/dashboard/components/InvaiteForm'
+
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getHomeTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
@@ -9,10 +11,12 @@ import { getCommunityAddress } from 'selectors/entities'
 import AppleDownload from 'images/apple.svg'
 import GoogleDownload from 'images/google.svg'
 
-const WhiteLabelWallet = ({ value }) => {
+const WhiteLabelWallet = ({ value, communityAddress }) => {
   return (
     value && <Fragment>
-      <div className='qr-code__header'><h2 className='qr-code__header__title'>White label wallet</h2></div>
+      <div className='qr-code__header'>
+        <h2 className='qr-code__header__title'>White label wallet</h2>
+      </div>
       <div className='qr-code__wrapper'>
         <div className='qr-code'>
           <ol className='qr-code__steps'>
@@ -31,11 +35,13 @@ const WhiteLabelWallet = ({ value }) => {
           </div>
         </div>
       </div>
+      <InvaiteForm communityAddress={communityAddress} />
     </Fragment>
   )
 }
 
 const mapState = (state) => ({
+  communityAddress: getCommunityAddress(state),
   community: getCurrentCommunity(state, getCommunityAddress(state)),
   homeToken: getHomeTokenByCommunityAddress(state, getCommunityAddress(state)) || { owner: '' }
 })

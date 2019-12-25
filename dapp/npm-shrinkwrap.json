@@ -9951,6 +9951,11 @@
         "minimatch": "~3.0.2"
       }
     },
+    "google-libphonenumber": {
+      "version": "3.2.6",
+      "resolved": "https://registry.npmjs.org/google-libphonenumber/-/google-libphonenumber-3.2.6.tgz",
+      "integrity": "sha512-6QCQAaKJlSd/1dUqvdQf7zzfb3uiZHsG8yhCfOdCVRfMuPZ/VDIEB47y5SYwjPQJPs7ebfW5jj6PeobB9JJ4JA=="
+    },
     "got": {
       "version": "9.6.0",
       "resolved": "https://registry.npmjs.org/got/-/got-9.6.0.tgz",
@@ -14088,10 +14093,25 @@
       "resolved": "https://registry.npmjs.org/lodash.map/-/lodash.map-4.6.0.tgz",
       "integrity": "sha1-dx7Hg540c9nEzeKLGTlMNWL09tM="
     },
+    "lodash.memoize": {
+      "version": "4.1.2",
+      "resolved": "https://registry.npmjs.org/lodash.memoize/-/lodash.memoize-4.1.2.tgz",
+      "integrity": "sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4="
+    },
     "lodash.pullat": {
       "version": "4.6.0",
       "resolved": "https://registry.npmjs.org/lodash.pullat/-/lodash.pullat-4.6.0.tgz",
       "integrity": "sha1-vfrPDiCf0n+WXnEfplp3SoTTAmE="
+    },
+    "lodash.reduce": {
+      "version": "4.6.0",
+      "resolved": "https://registry.npmjs.org/lodash.reduce/-/lodash.reduce-4.6.0.tgz",
+      "integrity": "sha1-8atrg5KZrUj3hKu/R2WW8DuRTTs="
+    },
+    "lodash.startswith": {
+      "version": "4.2.1",
+      "resolved": "https://registry.npmjs.org/lodash.startswith/-/lodash.startswith-4.2.1.tgz",
+      "integrity": "sha1-xZjErc4YiiflMUVzHNxsDnF3YAw="
     },
     "lodash.throttle": {
       "version": "4.1.1",
@@ -17338,6 +17358,26 @@
       "version": "3.0.4",
       "resolved": "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz",
       "integrity": "sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA=="
+    },
+    "react-phone-input-2": {
+      "version": "2.11.0",
+      "resolved": "https://registry.npmjs.org/react-phone-input-2/-/react-phone-input-2-2.11.0.tgz",
+      "integrity": "sha512-UUGe7PEyUbUc3UFFvpjYeCpKGgbypcTXsrgZenMhnxvR2F4QqqDvvnNjH5FdGb5Y6c2VRVSrajnZxXOUZ+jBJg==",
+      "requires": {
+        "classnames": "^2.2.6",
+        "lodash.debounce": "^4.0.8",
+        "lodash.memoize": "^4.1.2",
+        "lodash.reduce": "^4.6.0",
+        "lodash.startswith": "^4.2.1",
+        "prop-types": "^15.7.2"
+      },
+      "dependencies": {
+        "lodash.debounce": {
+          "version": "4.0.8",
+          "resolved": "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz",
+          "integrity": "sha1-gteb/zCmfEAF/9XiUVMArZyk168="
+        }
+      }
     },
     "react-pure-render": {
       "version": "1.0.2",
