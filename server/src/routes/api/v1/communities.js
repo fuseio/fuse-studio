@@ -39,13 +39,13 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
 })
 
 /**
- * @api {post} /communities
- * @apiName Invite a user to community
+ * @api {post} /communities/:communityAddress/invite Invite a user to community
+ * @apiName InviteUser
  * @apiGroup Community
- *
+ * @apiParam {String} communityAddress Community address
  * @apiParamExample {json} Request-Example:
  *   {
- *      "phoneNumber": {{usePhoneNumber}},
+ *      "phoneNumber": {{userPhoneNumber}},
  *   }
  *
  * @apiParamExample {json} Request-Example:
@@ -54,6 +54,7 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
  *   }
  *
  */
+
 router.post('/:communityAddress/invite', async (req, res, next) => {
   const { communityAddress } = req.params
   const { phoneNumber, email } = req.body
