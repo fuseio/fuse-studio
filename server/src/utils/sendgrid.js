@@ -92,8 +92,42 @@ const subscribeUser = async (user) => {
   console.log(`User ${user.email} subscribed to mail list`)
 }
 
+const sendUserInventionToCommunity = async ({ email, url }) => {
+  const request = {
+    method: 'POST',
+    url: '/v3/mail/send',
+    body: {
+      'personalizations': [
+        {
+          'to': [{ 'email': email }],
+          'subject': 'Invention to community in Fuse'
+        }
+      ],
+      'from': {
+        'email': config.get('mail.supportAddress'),
+        'name': 'Fuse.io'
+      },
+      'content': [
+        {
+          'type': 'text/plain',
+          'value': `
+            ${config.get('twilio.inviteTxt')}
+            ${url}
+          `
+        }
+      ]
+    }
+  }
+  const [response] = await client.request(request)
+  if (response.statusCode >= 400) {
+    throw Error(`Cannot send invention to email - ${email}`)
+  }
+  console.log(`send invention to email - ${email}`)
+}
+
 module.exports = {
   sendWelcomeMail,
   subscribeUser,
-  sendInfoMail
+  sendInfoMail,
+  sendUserInventionToCommunity
 }
