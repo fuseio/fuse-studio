@@ -49,18 +49,18 @@ module.exports = {
         BridgeMapper: '0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66'
       },
       sharedAddresses: {
-        WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
+        WalletFactory: '0xa7c4381482974Dfa7115728723E684fEAf569f34',
         CommunityFactory: '0x5E853EDAEE70BD635d02CC0169Cf97083DE3436D',
-        MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
+        MultiSigWallet: '0xcdaC5808C030aDF0365066E348e2bc7F7e62f9cD',
         walletModules: {
-          GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
-          LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',
-          RecoveryManager: '0xAC4F70025d0671F88309Db0E588E0565bEFd1f35',
-          ApprovedTransfer: '0x04E92d2ffBb51d53379b4754b3b92f879838902A',
-          TransferManager: '0x8527a2d3d5aC0411933d663b4dcE275a5b7f39D8',
-          TokenExchanger: '0x16127Bbec8d9A24a0801f7B945A18D077f2c629b',
-          CommunityManager: '0x42616C787e3D75aC29b9dCAB35131b585Eaa9837',
-          WalletOwnershipManager: '0x7C38a5E6c0822623392847f6B827E8ADd75130ae'
+          GuardianManager: '0xdB0DBa0e819B6813C97B4D4defD664B67012fA8C',
+          LockManager: '0xC999068333bE858291A8f5E13DB43612F67689bb',
+          RecoveryManager: '0xa4D6ed042480a2B7E31a1754Ac83c48E2AFF347F',
+          ApprovedTransfer: '0x34CADc1Db60e55edB8d9adC56616c07d74E89171',
+          TransferManager: '0xAA9DFdb49eDa2Cd2d05312286f5E5E17aEd2Cb6D',
+          TokenExchanger: '0x993AB36a4D7915abf6d966ED5e9D1DE9afa7c2bA',
+          CommunityManager: '0xFEBdd95338AE3dAfe114a4242Ef9a7A8072f73d4',
+          WalletOwnershipManager: '0x4E18A4D2510f0a12cA2F10059f51E0a41E46f843'
         }
       },
       addresses: defer(function () {
