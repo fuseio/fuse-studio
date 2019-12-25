@@ -218,6 +218,9 @@ function * uploadImage ({ image }) {
 
 function * inviteUserToCommunity ({ communityAddress, email, phoneNumber }) {
   yield apiCall(inviteUserToCommunityApi, { communityAddress, email, phoneNumber })
+  yield put({
+    type: actions.INVITE_USER_TO_COMMUNITY.SUCCESS
+  })
 }
 
 const fetchEntities = createEntitiesFetch(actions.FETCH_ENTITIES, entitiesApi.fetchCommunityEntities)
