@@ -59,7 +59,7 @@ router.post('/:communityAddress/invite', async (req, res, next) => {
   const { phoneNumber, email } = req.body
   const { url } = await branch.createDeepLink({ communityAddress })
   if (email) {
-    sendgridUtils.sendUserInventionToCommunity({ email, url })
+    sendgridUtils.sendUserInvitationToCommunity({ email, url })
     res.send({ response: 'ok' })
   } else if (phoneNumber) {
     twilio.createMessage({ to: phoneNumber, body: `${config.get('twilio.inviteTxt')}\n${url}` })

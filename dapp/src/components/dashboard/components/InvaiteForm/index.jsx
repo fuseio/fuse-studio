@@ -11,7 +11,7 @@ class Invite extends Component {
     super(props)
 
     this.initialValues = {
-      inventionType: 'email',
+      invitationType: 'email',
       email: '',
       phoneNumber: ''
     }
@@ -26,9 +26,9 @@ class Invite extends Component {
   }
 
   renderForm = ({ values, handleSubmit, errors, isValid, touched }) => {
-    const { inventionType } = values
-    const isSMS = inventionType === 'sms'
-    const isEMAIL = inventionType === 'email'
+    const { invitationType } = values
+    const isSMS = invitationType === 'sms'
+    const isEMAIL = invitationType === 'email'
     return (
       <form onSubmit={handleSubmit} className='invite'>
         <div className='invite__wrapper'>
@@ -36,10 +36,10 @@ class Invite extends Component {
           <div className='invite__containerOuter'>
             <div className='containerInner'>
               <Field
-                name='inventionType'
+                name='invitationType'
                 render={({ field, form: { setFieldValue } }) => (
                   <Fragment>
-                    <input {...field} type='radio' value='sms' checked={isSMS} onChange={() => setFieldValue('inventionType', 'sms')} className='hidden' id='input1' />
+                    <input {...field} type='radio' value='sms' checked={isSMS} onChange={() => setFieldValue('invitationType', 'sms')} className='hidden' id='input1' />
                     <label className='entry' for='input1'>
                       <div className='circle' />
                       <div className='entry-label'>Text message (SMS)</div>
@@ -48,10 +48,10 @@ class Invite extends Component {
                 )}
               />
               <Field
-                name='inventionType'
+                name='invitationType'
                 render={({ field, form: { setFieldValue } }) => (
                   <Fragment>
-                    <input {...field} type='radio' checked={isEMAIL} onChange={() => setFieldValue('inventionType', 'email')} value='email' className='hidden' id='input2' />
+                    <input {...field} type='radio' checked={isEMAIL} onChange={() => setFieldValue('invitationType', 'email')} value='email' className='hidden' id='input2' />
                     <label className='entry' for='input2'>
                       <div className='circle' />
                       <div className='entry-label'>Email</div>

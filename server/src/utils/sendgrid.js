@@ -92,7 +92,7 @@ const subscribeUser = async (user) => {
   console.log(`User ${user.email} subscribed to mail list`)
 }
 
-const sendUserInventionToCommunity = async ({ email, url }) => {
+const sendUserInvitationToCommunity = async ({ email, url }) => {
   const request = {
     method: 'POST',
     url: '/v3/mail/send',
@@ -100,7 +100,7 @@ const sendUserInventionToCommunity = async ({ email, url }) => {
       'personalizations': [
         {
           'to': [{ 'email': email }],
-          'subject': 'Invention to community in Fuse'
+          'subject': 'Invitation to community in Fuse'
         }
       ],
       'from': {
@@ -120,14 +120,14 @@ const sendUserInventionToCommunity = async ({ email, url }) => {
   }
   const [response] = await client.request(request)
   if (response.statusCode >= 400) {
-    throw Error(`Cannot send invention to email - ${email}`)
+    throw Error(`Cannot send invitation to email - ${email}`)
   }
-  console.log(`send invention to email - ${email}`)
+  console.log(`send invitation to email - ${email}`)
 }
 
 module.exports = {
   sendWelcomeMail,
   subscribeUser,
   sendInfoMail,
-  sendUserInventionToCommunity
+  sendUserInvitationToCommunity
 }
