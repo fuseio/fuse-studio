@@ -11,7 +11,7 @@ class Invite extends Component {
     super(props)
 
     this.initialValues = {
-      invitationType: 'email',
+      invitationType: 'sms',
       email: '',
       phoneNumber: ''
     }
@@ -19,20 +19,20 @@ class Invite extends Component {
     this.validationSchema = inviteShape
   }
 
-  onSubmit = (values) => {
+  onSubmit = (values, formikBag) => {
     const { inviteUserToCommunity, communityAddress } = this.props
-    console.log({ values, communityAddress })
     inviteUserToCommunity(communityAddress, values)
+    formikBag.renderForm(values)
   }
 
-  renderForm = ({ values, handleSubmit, errors, isValid, touched }) => {
+  renderForm = ({ values, handleSubmit, errors, isValid, touched, isSubmitting }) => {
     const { invitationType } = values
     const isSMS = invitationType === 'sms'
     const isEMAIL = invitationType === 'email'
     return (
       <form onSubmit={handleSubmit} className='invite'>
         <div className='invite__wrapper'>
-          <div className='invite__title'>Invite a friend</div>
+          <div className='invite__title'>Smart invite link</div>
           <div className='invite__containerOuter'>
             <div className='containerInner'>
               <Field
@@ -65,8 +65,7 @@ class Invite extends Component {
           </div>
           <div className='grid-y'>
             <div className='invite__text cell'>
-              {isEMAIL && `We will send an Email with instructions on how to join community`}
-              {isSMS && `We will send an SMS message with instructions on how to join community`}
+              This will send a special link that will automatically switch to your community
             </div>
             {
               isEMAIL && (
@@ -101,8 +100,12 @@ class Invite extends Component {
                 />
               )
             }
-            <button className='button button--normal' disabled={!isValid}>Save</button>
-            {/* <div className='invite__resend'>*Didn't get any message? Resend message</div> */}
+            <button className='button button--normal' disabled={!isValid}>Send</button>
+            {isSubmitting && <div className='invite__resend'>
+              Invitation sent.
+              <br />
+              *Didn't get any message? Resend message
+            </div>}
           </div>
 
         </div>
@@ -118,7 +121,6 @@ class Invite extends Component {
         validationSchema={this.validationSchema}
         render={this.renderForm}
         validateOnChange
-        isInitialValid={false}
       />
     )
   }
