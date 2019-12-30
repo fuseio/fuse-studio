@@ -92,7 +92,6 @@ const Businesses = ({
     }
   }, [updateEntities])
 
-
   useEffect(() => {
     if (entityAdded) {
       setTimeout(() => {
@@ -225,7 +224,7 @@ const Businesses = ({
           placeholder: 'Search a business',
           action: isAdmin ? handleAddBusiness : handleJoinCommunity,
           isAdmin,
-          text: isAdmin ? 'Add business' : 'Join',
+          text: isAdmin ? 'Add business' : 'Join'
           // TODO - search
           // onChange: setSearch
         }}
