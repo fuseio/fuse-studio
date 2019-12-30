@@ -16,6 +16,7 @@ The Fuse Studio REST API for accessing the data and the services of the Fuse net
 	- [Fetch my communities](#Fetch-my-communities)
 	- [Fetch community entities](#Fetch-community-entities)
 	- [Fetch entity](#Fetch-entity)
+	- [Fetch entity metadata](#Fetch-entity-metadata)
 	
 - [Token](#Token)
 	- [Adding new token](#Adding-new-token)
@@ -207,6 +208,33 @@ GET /entities/:communityAddress
 
 ```
 GET /entities/:communityAddress/:account
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Community address</p> |
+| account | `String` | <p>Entity's account address</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| account | `String` | <p>Entity's account on Fuse network</p> |
+| communityAddress | `String` | <p>Community address of the entity</p> |
+| uri | `String` | <p>IPFS URI points to entity's metadata</p> |
+| name | `String` | <p>Entity's name</p> |
+| roles | `String` | <p>Entity's role encoded as a byte array</p> |
+| type | `String` | <p>Entity's type</p> |
+| isAdmin | `Boolean` |  |
+| isApproved | `Boolean` |  |
+## <a name='Fetch-entity-metadata'></a> Fetch entity metadata
+[Back to top](#top)
+
+<p>Entity is an account on the Fuse network. It can have variety of roles like user, admin, business, or custom defined role.</p>
+
+```
+GET /entities/metadata/:communityAddress/:account
 ```
 
 ### Parameter Parameters
