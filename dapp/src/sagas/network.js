@@ -66,11 +66,20 @@ export function getProviderInfo (provider) {
 
 function * connectToWallet ({ provider }) {
   try {
+    if (provider.isMetaMask) {
+      // provider.autoRefreshOnNetworkChange = false
+    }
+
     saveState('state.reconnect', true)
     const web3 = yield getWeb3({ provider })
     const providerInfo = getProviderInfo(provider)
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
+
+    // provider.on('networkChanged', (chainId) => {
+    //   debugger
+    //   yield call(checkNetworkType, { web3 })
+    // })
     yield call(checkNetworkType, { web3 })
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,
