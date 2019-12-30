@@ -93,8 +93,9 @@ const TabsWrapper = memo(({
       const myCommunities = communitiesIOwn.map((entity, index) => {
         const { community, token } = entity
         const { communityAddress } = community
+
         return (
-          <div className='cell medium-12 small-24' key={community && community.name}>
+          <div className='cell medium-12 small-24' key={communityAddress}>
             <FeaturedCommunity
               token={token}
               showDashboard={() => showDashboard(communityAddress)}
