@@ -5,6 +5,7 @@ import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import { Route, Switch, useParams } from 'react-router'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 import { push } from 'connected-react-router'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
@@ -18,7 +19,6 @@ import { fetchCommunity } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
 import { changeNetwork } from 'actions/network'
-import get from 'lodash/get'
 import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
@@ -114,7 +114,7 @@ const DashboardLayout = (props) => {
         const desired = originNetwork
         loadModal(WRONG_NETWORK_MODAL, {
           body: <p>You need to switch network to view this community <br /> This community is issued on {desired === 'main' ? 'mainnet' : desired}.
-           Switch to {desired === 'main' ? 'mainnet' : desired} through {providerInfo.name} to view it</p>,
+            Switch to {desired === 'main' ? 'mainnet' : desired} through {providerInfo.name} to view it</p>,
           supportedNetworks: [desired, homeNetwork],
           handleClose: () => push('/')
         })

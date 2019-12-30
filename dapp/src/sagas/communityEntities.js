@@ -178,12 +178,13 @@ function * watchEntityChanges ({ response }) {
     const { type } = data
     if (type === 'user') {
       yield put(actions.fetchUsersEntities(communityAddress))
-    } else if (type === 'business') {
-      yield put(actions.fetchBusinessesEntities(communityAddress))
     }
+    //  else if (type === 'business') {
+    // yield put(actions.fetchBusinessesEntities(communityAddress))
+    // }
   } else {
     yield put(actions.fetchUsersEntities(communityAddress))
-    yield put(actions.fetchBusinessesEntities(communityAddress))
+    // yield put(actions.fetchBusinessesEntities(communityAddress))
   }
 }
 
@@ -227,6 +228,7 @@ const fetchEntities = createEntitiesFetch(actions.FETCH_ENTITIES, entitiesApi.fe
 const fetchUsersEntities = createEntitiesFetch(actions.FETCH_USERS_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchBusinessesEntities = createEntitiesFetch(actions.FETCH_BUSINESSES_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchEntity)
+const fetchEntityMetadata = createEntitiesFetch(actions.FETCH_ENTITY_METADATA, entitiesApi.fetchEntityMetadata)
 
 export default function * communityEntitiesSaga () {
   yield all([
@@ -238,6 +240,7 @@ export default function * communityEntitiesSaga () {
     tryTakeEvery(actions.FETCH_USERS_ENTITIES, fetchUsersEntities, 1),
     tryTakeEvery(actions.FETCH_BUSINESSES_ENTITIES, fetchBusinessesEntities, 1),
     tryTakeEvery(actions.FETCH_ENTITY, fetchEntity, 1),
+    tryTakeEvery(actions.FETCH_ENTITY_METADATA, fetchEntityMetadata, 1),
     tryTakeEvery(actions.ADD_ADMIN_ROLE, addAdminRole, 1),
     tryTakeEvery(actions.REMOVE_ADMIN_ROLE, removeAdminRole, 1),
     tryTakeEvery(actions.CONFIRM_USER, confirmUser, 1),

@@ -1,91 +1,122 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import { useParams } from 'react-router'
 import FontAwesome from 'react-fontawesome'
-import { connect, useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
-import sortBy from 'lodash/sortBy'
 import get from 'lodash/get'
 import capitalize from 'lodash/capitalize'
+import { toChecksumAddress } from 'web3-utils'
+import gql from 'graphql-tag'
+import { useLazyQuery } from '@apollo/react-hooks'
+
 import MyTable from 'components/dashboard/components/Table'
-import { useFetch } from 'hooks/useFetch'
 import useSwitchNetwork from 'hooks/useSwitchNetwork'
+
 import {
   addEntity,
-  fetchBusinessesEntities,
   removeEntity,
-  joinCommunity
+  joinCommunity,
+  fetchEntityMetadata
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_BUSINESS_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import { getTransaction } from 'selectors/transaction'
-import { getApiRoot } from 'utils/network'
 
-import { getForeignNetwork } from 'selectors/network'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
-import { getBusinessesEntities, checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
 
 import dotsIcon from 'images/dots.svg'
-import AddBusiness from 'images/add_business.svg'
+// import AddBusiness from 'images/add_business.svg'
+
+const GET_COMMUNITY = (address) => {
+  return gql`
+  {
+    communities (where: {address: "${address}"}) {
+      entitiesList {
+        id
+        communityEntities {
+          address
+          isAdmin
+          isApproved
+          isUser
+          isBusiness
+        }
+      }
+    }
+  }
+`
+}
 
 const Businesses = ({
-  businesses,
   isClosed,
   isAdmin,
-  fetchEntities,
   accountAddress,
   entityAdded,
   businessJustAdded,
-  fetchBusinessesEntities,
   loadModal,
   addEntity,
   joinCommunity,
-  metadata,
-  removeEntity
+  removeEntity,
+  businessesMetadata,
+  fetchEntityMetadata,
+  updateEntities
 }) => {
   const { address: communityAddress } = useParams()
   useSwitchNetwork('fuse', { featureName: 'business list' })
   const [data, setData] = useState(null)
-  const [search, setSearch] = useState('')
-  const apiRoot = getApiRoot(useSelector(getForeignNetwork))
-  let url = `${apiRoot}/entities/${communityAddress}?type=business`
-
-  if (search) {
-    url = `${url}&search=${search}`
-  }
-
-  const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
+  const [businesses, setBusinesses] = useState([])
+  const [fetchEntitiesFromGraph, { loading }] = useLazyQuery(GET_COMMUNITY(communityAddress), {
+    fetchPolicy: 'network-only',
+    onCompleted: (data) => {
+      const { communities } = data
+      const { communityEntities } = communities[0].entitiesList
+      const businesses = communityEntities.filter(entity => entity.isBusiness)
+      console.log({ newBusiness: businesses })
+      businesses.forEach(({ address }) => {
+        fetchEntityMetadata(toChecksumAddress(communityAddress), toChecksumAddress(address))
+      })
+      setBusinesses(businesses)
+    }
+  })
 
   useEffect(() => {
-    if (fetchEntities === false) {
-      fetchData()
-    }
-
-    if (search) {
-      fetchData()
-    }
-    return () => {}
-  }, [search, fetchEntities])
+    fetchEntitiesFromGraph()
+  }, [])
 
   useEffect(() => {
-    if (communityAddress) {
-      fetchBusinessesEntities(communityAddress)
+    if (updateEntities) {
+      setTimeout(() => {
+        fetchEntitiesFromGraph()
+      }, 2000)
     }
-    return () => {}
-  }, [communityAddress])
+  }, [updateEntities])
+
 
   useEffect(() => {
-    if (!isEmpty(response)) {
-      const { data: listData } = response
-      setData(sortBy(listData.map(({ account, uri }) => {
+    if (entityAdded) {
+      setTimeout(() => {
+        loadModal(ENTITY_ADDED_MODAL, {
+          type: 'business',
+          name: businessJustAdded
+        })
+      }, 2500)
+    }
+    return () => { }
+  }, [entityAdded])
+
+  useEffect(() => {
+    if (!isEmpty(businesses)) {
+      const data = businesses.map(({ address }) => {
+        const checkSumAddress = toChecksumAddress(address)
         return {
           name: [
             {
-              name: get(metadata[uri], 'name', ''),
-              image: get(metadata[uri], 'image')
+              name: get(businessesMetadata[checkSumAddress], 'name', ''),
+              image: get(businessesMetadata[checkSumAddress], 'image')
                 ? <div
                   style={{
-                    backgroundImage: `url(${CONFIG.ipfsProxy.urlBase}/image/${get(metadata[uri], 'image')}`,
+                    backgroundImage: `url(${CONFIG.ipfsProxy.urlBase}/image/${get(businessesMetadata[checkSumAddress], 'image')}`,
                     width: '36px',
                     height: '36px',
                     backgroundSize: 'contain',
@@ -96,28 +127,15 @@ const Businesses = ({
                 : <FontAwesome style={{ fontSize: '36px' }} name='bullseye' />
             }
           ],
-          type: get(metadata[uri], 'type', '') ? capitalize(get(metadata[uri], 'type')) : '', // type: profile && profile.publicData ? capitalize(profile.publicData.type) : '',
-          address: get(metadata[uri], 'address', '') ? capitalize(get(metadata[uri], 'address')) : '', // profile && profile.publicData ? profile.publicData.address : '',
-          account
+          type: capitalize(get(businessesMetadata[checkSumAddress], 'type', '')),
+          address: capitalize(get(businessesMetadata[checkSumAddress], 'address', '')),
+          account: address
         }
-      }), ['updatedAt']).reverse())
+      })
+      setData(data)
     }
-    return () => {}
-  }, [response, metadata])
-
-  useEffect(() => {
-    if (entityAdded) {
-      setTimeout(() => {
-        loadModal(ENTITY_ADDED_MODAL, {
-          type: 'business',
-          name: businessJustAdded
-        })
-      }, 2000)
-    }
-    return () => {}
-  }, [entityAdded])
-
-  const tableData = useMemo(() => data, [data])
+    return () => { }
+  }, [businesses, businessesMetadata])
 
   const columns = useMemo(() => [
     {
@@ -176,9 +194,13 @@ const Businesses = ({
     }
   ], [isAdmin])
 
+  const tableData = useMemo(() => data || [], [data])
+
   const handleAddBusiness = () => loadAddBusinessModal(false)
 
   const handleJoinCommunity = () => loadAddBusinessModal(true)
+
+  const handleRemoveEntity = (account) => removeEntity(account)
 
   const loadAddBusinessModal = (isJoin) => {
     const submitEntity = isJoin ? joinCommunity : addEntity
@@ -189,8 +211,6 @@ const Businesses = ({
     })
   }
 
-  const handleRemoveEntity = (account) => removeEntity(account)
-
   // TODO - multi-selection
   // const toggleRow = (rowData) => {
   //   const checkbox = data.find(({ account }) => account === rowData.account).checkbox
@@ -199,7 +219,6 @@ const Businesses = ({
   // }
 
   const renderTable = () => {
-    if (!data) return null
     return (
       <MyTable
         addActionProps={{
@@ -207,35 +226,36 @@ const Businesses = ({
           action: isAdmin ? handleAddBusiness : handleJoinCommunity,
           isAdmin,
           text: isAdmin ? 'Add business' : 'Join',
-          onChange: setSearch
+          // TODO - search
+          // onChange: setSearch
         }}
         data={tableData}
         justAdded={entityAdded}
         loading={loading}
         columns={columns}
-        pageCount={response && response.pageCount ? response.pageCount : 0}
+        pageCount={0}
       />
     )
   }
 
-  const renderContent = () => {
-    if (businesses && businesses.length) {
-      return renderTable()
-    } else {
-      return (
-        <div className='entities__empty-list'>
-          <img src={AddBusiness} />
-          <div className='entities__empty-list__title'>Add a business to your List!</div>
-          <button
-            className='entities__empty-list__btn'
-            onClick={handleAddBusiness}
-          >
-            Add business
-          </button>
-        </div>
-      )
-    }
-  }
+  // const renderContent = () => {
+  //   if (data && data.length) {
+  //     return renderTable()
+  //   } else {
+  //     return (
+  //       <div className='entities__empty-list'>
+  //         <img src={AddBusiness} />
+  //         <div className='entities__empty-list__title'>Add a business to your List!</div>
+  //         <button
+  //           className='entities__empty-list__btn'
+  //           onClick={handleAddBusiness}
+  //         >
+  //           Add business
+  //         </button>
+  //       </div>
+  //     )
+  //   }
+  // }
 
   return (
     <Fragment>
@@ -243,7 +263,7 @@ const Businesses = ({
         <h2 className='entities__header__title'>Business List</h2>
       </div>
       <div className='entities__wrapper'>
-        {renderContent()}
+        {renderTable()}
       </div>
     </Fragment>
   )
@@ -251,13 +271,14 @@ const Businesses = ({
 
 const mapStateToProps = (state) => ({
   network: state.network,
-  businesses: getBusinessesEntities(state),
+  communityEntitiesMetaData: state.entities.communityEntities,
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
-  metadata: state.entities.metadata,
+  businessesMetadata: state.entities.businesses,
   isClosed: getCurrentCommunity(state, getCommunityAddress(state)) ? getCurrentCommunity(state, getCommunityAddress(state)).isClosed : false,
-  isAdmin: checkIsAdmin(state)
+  isAdmin: checkIsAdmin(state),
+  updateEntities: state.screens.communityEntities.updateEntities
 })
 
 const mapDispatchToProps = {
@@ -265,8 +286,8 @@ const mapDispatchToProps = {
   removeEntity,
   loadModal,
   hideModal,
-  fetchBusinessesEntities,
-  joinCommunity
+  joinCommunity,
+  fetchEntityMetadata
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Businesses)

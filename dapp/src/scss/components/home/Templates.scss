@@ -45,7 +45,7 @@
       width: 100%;
       
       @include breakpoint (medium up) {
-        padding-top: 90px;
+        padding-top: 100px;
       }
 
       @include breakpoint (medium down) {
@@ -97,11 +97,11 @@
     }
 
     @include element(name) {
-      font-size: 1em;
+      font-size: .8em;
       font-weight: 500;
       letter-spacing: normal;
       color: #696969;
-      margin: 0.7em 0;
+      line-height: 3;
       white-space: nowrap;
     }
 
