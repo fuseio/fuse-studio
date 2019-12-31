@@ -40,7 +40,7 @@ class Invite extends Component {
                 render={({ field, form: { setFieldValue } }) => (
                   <Fragment>
                     <input {...field} type='radio' value='sms' checked={isSMS} onChange={() => setFieldValue('invitationType', 'sms')} className='hidden' id='input1' />
-                    <label className='entry' for='input1'>
+                    <label className='entry' htmlFor='input1'>
                       <div className='circle' />
                       <div className='entry-label'>Text message (SMS)</div>
                     </label>
@@ -52,7 +52,7 @@ class Invite extends Component {
                 render={({ field, form: { setFieldValue } }) => (
                   <Fragment>
                     <input {...field} type='radio' checked={isEMAIL} onChange={() => setFieldValue('invitationType', 'email')} value='email' className='hidden' id='input2' />
-                    <label className='entry' for='input2'>
+                    <label className='entry' htmlFor='input2'>
                       <div className='circle' />
                       <div className='entry-label'>Email</div>
                     </label>

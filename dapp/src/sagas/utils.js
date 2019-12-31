@@ -64,7 +64,7 @@ export function * apiCall (apiFunc, params, options = {}) {
 export const entityKeys = {
   tokens: 'address',
   partners: 'name',
-  businesses: 'hash',
+  businesses: 'account',
   bridges: 'foreignTokenAddress',
   communityEntities: 'account',
   communities: 'communityAddress'

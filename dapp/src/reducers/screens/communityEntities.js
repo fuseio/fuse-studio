@@ -45,6 +45,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.response,
+        updateEntities: true,
         merchantsResults: state.merchantsResults.filter(val => val !== account),
         usersResults: state.usersResults.filter(val => val !== account)
       }
@@ -55,7 +56,7 @@ export default (state = initialState, action) => {
     case ADD_ENTITY.PENDING:
       return { ...state, transactionHash: action.response.transactionHash, signatureNeeded: false }
     case ADD_ENTITY.SUCCESS:
-      return { ...state, fetchEntities: true, showTransactionMessage: false, entityAdded: true }
+      return { ...state, updateEntities: true, fetchEntities: true, showTransactionMessage: false, entityAdded: true }
     case EDIT_ENTITY.PENDING:
       return { ...state, editTransactionHash: action.response.transactionHash }
     case FETCH_USERS_ENTITIES.REQUEST:
@@ -68,7 +69,7 @@ export default (state = initialState, action) => {
     case FETCH_BUSINESSES_ENTITIES.REQUEST:
       return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), fetchEntities: true }
     case FETCH_BUSINESSES_ENTITIES.SUCCESS:
-      return { ...state, merchantsResults: [...action.response.result], fetchEntities: false }
+      return { ...state, updateEntities: false, merchantsResults: [...action.response.result], fetchEntities: false }
     case JOIN_COMMUNITY.SUCCESS:
       return { ...state, join: true }
     case JOIN_COMMUNITY.FAILURE:

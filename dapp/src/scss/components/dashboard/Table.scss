@@ -70,7 +70,9 @@
 
   @include element(body) {
     height: 283px;
-
+    overflow-y: auto;
+    overflow-x: hidden;
+    
     @include element(row) {
       position: relative;
       height: 47px;

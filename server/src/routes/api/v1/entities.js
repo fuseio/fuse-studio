@@ -103,6 +103,23 @@ router.get('/:communityAddress/:account', async (req, res, next) => {
   return res.json({ data: entity })
 })
 
+/**
+ * @api {get} /entities/metadata/:communityAddress/:account Fetch entity metadata
+ * @apiName GetEntityMetadata
+ * @apiGroup Entity
+ *
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {String} account Entity's account address
+ *
+ * @apiUse EntityData
+ */
+router.get('/metadata/:communityAddress/:account', async (req, res, next) => {
+  const { account, communityAddress } = req.params
+  const entity = await Entity.findOne({ account, communityAddress })
+  const metadata = await metadataUtils.getMetadata(entity.uri.split('://')[1])
+  return res.json({ ...metadata })
+})
+
 const getQueryFilter = ({ query: { type }, params: { communityAddress } }) =>
   type ? { type, communityAddress: toChecksumAddress(communityAddress) } : { communityAddress: toChecksumAddress(communityAddress) }
 

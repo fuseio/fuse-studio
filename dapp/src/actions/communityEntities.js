@@ -1,8 +1,10 @@
 import { action, createEntityAction, createTransactionRequestTypes, createRequestTypes } from './utils'
 
 export const entityName = 'communityEntities'
+export const entityBusinesses = 'businesses'
 
 const entitiesAction = createEntityAction(entityName)
+const entitiesBusinessesAction = createEntityAction(entityBusinesses)
 
 export const FETCH_ENTITIES = createRequestTypes('FETCH_ENTITIES')
 export const FETCH_USERS_ENTITIES = createRequestTypes('FETCH_USERS_ENTITIES')
@@ -17,6 +19,7 @@ export const REMOVE_ADMIN_ROLE = createTransactionRequestTypes('REMOVE_ADMIN_ROL
 export const CONFIRM_USER = createTransactionRequestTypes('CONFIRM_USER')
 
 export const FETCH_ENTITY = createRequestTypes('FETCH_ENTITY')
+export const FETCH_ENTITY_METADATA = createRequestTypes('FETCH_ENTITY_METADATA')
 export const JOIN_COMMUNITY = createRequestTypes('JOIN_COMMUNITY')
 export const IMPORT_EXISTING_ENTITY = createRequestTypes('IMPORT_EXISTING_ENTITY')
 export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
@@ -26,6 +29,7 @@ export const fetchUsersEntities = (communityAddress, entityType = 'user') => ent
 export const fetchBusinessesEntities = (communityAddress, entityType = 'business') => entitiesAction(FETCH_BUSINESSES_ENTITIES.REQUEST, { communityAddress, entityType })
 
 export const fetchEntity = (communityAddress, account) => entitiesAction(FETCH_ENTITY.REQUEST, { communityAddress, account })
+export const fetchEntityMetadata = (communityAddress, account) => entitiesBusinessesAction(FETCH_ENTITY_METADATA.REQUEST, { communityAddress, account })
 
 export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType })
 export const removeEntity = (account) => action(REMOVE_ENTITY.REQUEST, { account })
