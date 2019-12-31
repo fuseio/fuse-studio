@@ -69,8 +69,7 @@ const Businesses = ({
   const [fetchEntitiesFromGraph, { loading }] = useLazyQuery(GET_COMMUNITY(communityAddress), {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      const { communities } = data
-      const { communityEntities } = communities[0].entitiesList
+      const communityEntities = get(data, 'communities[0].entitiesList.communityEntities', [])
       const businesses = communityEntities.filter(entity => entity.isBusiness)
       businesses.forEach(({ address }) => {
         fetchEntityMetadata(toChecksumAddress(communityAddress), toChecksumAddress(address))
