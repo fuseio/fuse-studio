@@ -72,7 +72,6 @@ const Businesses = ({
       const { communities } = data
       const { communityEntities } = communities[0].entitiesList
       const businesses = communityEntities.filter(entity => entity.isBusiness)
-      console.log({ newBusiness: businesses })
       businesses.forEach(({ address }) => {
         fetchEntityMetadata(toChecksumAddress(communityAddress), toChecksumAddress(address))
       })
