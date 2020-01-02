@@ -101,9 +101,10 @@ const DashboardLayout = (props) => {
   useEffect(() => {
     if (!loading) {
       if (!isEmpty(data) && !error) {
-        const { tokens } = data
-        const { originNetwork } = tokens[0]
-        setOriginNetwork(originNetwork === 'mainnet' ? 'main' : originNetwork)
+        const originNetwork = get(data, 'data.tokens[0].originNetwork', '')
+        if (originNetwork) {
+          setOriginNetwork(originNetwork === 'mainnet' ? 'main' : originNetwork)
+        }
       }
     }
   }, [data, loading, error])
