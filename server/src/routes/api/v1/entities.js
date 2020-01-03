@@ -115,7 +115,7 @@ router.get('/:communityAddress/:account', async (req, res, next) => {
  */
 router.get('/metadata/:communityAddress/:account', async (req, res, next) => {
   const { account, communityAddress } = req.params
-  const entity = await Entity.findOne({ account, communityAddress })
+  const entity = await Entity.findOne({ account: toChecksumAddress(account), communityAddress: toChecksumAddress(communityAddress) })
   const uri = get(entity, 'uri', false)
   if (uri) {
     const metadata = await metadataUtils.getMetadata(entity.uri.split('://')[1])
