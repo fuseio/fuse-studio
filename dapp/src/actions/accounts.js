@@ -28,8 +28,5 @@ export const getInitialAddress = () => action(GET_INITIAL_ADDRESS.REQUEST)
 export const signIn = (accountAddress) => action(SIGN_IN.REQUEST, { accountAddress })
 export const create3boxProfile = (accountAddress, data) => action(CREATE_3BOX_PROFILE.REQUEST, { accountAddress, data })
 
-export const actionPostponed = (accountAddress, postponed) => action(POSTPONE_ACTION, { accountAddress, postponed })
 export const postponedActionExecuted = (accountAddress, postponed) => action(EXECUTE_POSTPONED_ACTION, { accountAddress, postponed })
-
-
 export const postponeAction = (accountAddress, postponed) => action(POSTPONE_ACTION.REQUEST, { accountAddress, postponed })

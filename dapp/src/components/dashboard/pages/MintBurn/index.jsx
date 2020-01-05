@@ -82,7 +82,7 @@ const MintBurn = ({
   const [mintMessage, setMintMessage] = useState(false)
   const [burnMessage, setBurnMessage] = useState(false)
   const foreignNetwork = useSelector(getForeignNetwork)
-  
+
   const balance = balances[tokenAddress]
 
   const mintHandler = (amount) => {
