@@ -8,7 +8,6 @@ import sortBy from 'lodash/sortBy'
 
 import MyTable from 'components/dashboard/components/Table'
 import { useFetch } from 'hooks/useFetch'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
 
 import {
   addEntity,
@@ -56,7 +55,6 @@ const Users = ({
   push
 }) => {
   const { address: communityAddress } = useParams()
-  useSwitchNetwork('fuse', { featureName: 'users list' })
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
   const apiRoot = getApiRoot(useSelector(getForeignNetwork))

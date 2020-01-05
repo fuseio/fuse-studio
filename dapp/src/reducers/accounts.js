@@ -8,7 +8,8 @@ export const initialAccount = {
   balances: {},
   transactions: {},
   tokens: [],
-  communities: []
+  communities: [],
+  postponed: []
 }
 
 const handlers = {
@@ -28,7 +29,9 @@ const handlers = {
   [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
   [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) }),
   [IS_USER_EXISTS.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
-  [CONNECT_TO_WALLET.SUCCESS]: (state, action) => ({ ...state, providerInfo: { ...action.response.providerInfo } })
+  [CONNECT_TO_WALLET.SUCCESS]: (state, action) => ({ ...state, providerInfo: { ...action.response.providerInfo } }),
+  [actions.POSTPONE_ACTION.SUCCESS]: (state, action) => ({ ...state, postponed: [...state, action.postponed] }),
+  [actions.EXECUTE_POSTPONED_ACTION]: (state, action) => ({ ...state, postponed: state.postponed.filter(postponedAction => postponedAction !== action.postponed) })
 }
 
 export default (state = {}, action) => {
@@ -44,5 +47,6 @@ export default (state = {}, action) => {
   if (action.type === actions.GET_INITIAL_ADDRESS.SUCCESS) {
     return { ...state, ...actions.response }
   }
+
   return state
 }

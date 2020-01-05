@@ -2,6 +2,7 @@ import { createStore, applyMiddleware } from 'redux'
 import * as Sentry from '@sentry/browser'
 import createSagaMiddleware, { END } from 'redux-saga'
 import { createBrowserHistory } from 'history'
+import { postponeMiddleware } from '../middleware/postpone'
 import { routerMiddleware } from 'connected-react-router'
 
 import createRootReducer from '../reducers'
@@ -19,6 +20,7 @@ export default function configureStore (initialState) {
     initialState,
     applyMiddleware(
       routerMiddleware(history),
+      postponeMiddleware,
       sagaMiddleware
     )
   )

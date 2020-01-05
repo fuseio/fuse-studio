@@ -1,5 +1,5 @@
 import last from 'lodash/last'
-import { all, call, put, takeEvery, select } from 'redux-saga/effects'
+import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effects'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 } from 'services/web3'
@@ -14,6 +14,7 @@ import { saveState } from 'utils/storage'
 import { processTransactionHash } from 'services/api/misc'
 import { getNetworkSide, getForeignNetwork } from 'selectors/network'
 import { apiCall, tryTakeEvery } from './utils'
+import { eventChannel } from 'redux-saga'
 
 const cb = (error, result) => {
   if (!error) {
@@ -64,13 +65,35 @@ export function getProviderInfo (provider) {
   return result
 }
 
+function * watchNetworkChanges (provider) {
+  const chan = eventChannel(emitter => {
+    provider.on('networkChanged', (message) => emitter(message))
+    return () => {
+      provider.close().then(() => console.log('logout'))
+    }
+  })
+  while (true) {
+    const message = yield take(chan)
+    if (!isNaN(message)) {
+      const web3 = yield getWeb3({ provider })
+      yield call(checkNetworkType, { web3 })
+    }
+  }
+}
+
 function * connectToWallet ({ provider }) {
   try {
+    if (provider.isMetaMask) {
+      provider.autoRefreshOnNetworkChange = false
+    }
+
     saveState('state.reconnect', true)
     const web3 = yield getWeb3({ provider })
     const providerInfo = getProviderInfo(provider)
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
+
+    yield fork(watchNetworkChanges, provider)
     yield call(checkNetworkType, { web3 })
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,

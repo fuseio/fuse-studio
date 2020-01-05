@@ -8,7 +8,6 @@ import { addCommunityPlugin } from 'actions/community'
 import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
 import upperFirst from 'lodash/upperFirst'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import Puzzle from 'images/puzzle.svg'
 import JoinBonus from 'images/join_bonus.png'
 import JoinBonusBig from 'images/join_bonus_big.png'
@@ -143,7 +142,6 @@ const Plugins = ({
   community
 }) => {
   const { address: communityAddress } = useParams()
-  useSwitchNetwork('fuse', { featureName: 'plug-ins' })
   const { plugins } = community
   const showInfoModal = (key, props) => {
     loadModal(PLUGIN_INFO_MODAL, {

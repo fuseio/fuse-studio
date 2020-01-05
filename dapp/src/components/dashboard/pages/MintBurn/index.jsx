@@ -13,10 +13,8 @@ import Message from 'components/common/SignMessage'
 import { getForeignNetwork, getHomeNetworkType, getCurrentNetworkType } from 'selectors/network'
 import { getBalances, getAccountAddress } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
-import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -76,8 +74,7 @@ const MintBurn = ({
   burnSignature,
   accountAddress,
   transactionStatus,
-  clearTransactionStatus,
-  tokenOfCommunityOnCurrentSide
+  clearTransactionStatus
 }) => {
   const tabsClasses = useTabsStyles()
   const tabClasses = useTabStyles()
@@ -85,16 +82,15 @@ const MintBurn = ({
   const [mintMessage, setMintMessage] = useState(false)
   const [burnMessage, setBurnMessage] = useState(false)
   const foreignNetwork = useSelector(getForeignNetwork)
-  const balance = balances[tokenOfCommunityOnCurrentSide]
 
-  useSwitchNetwork(foreignNetwork, { featureName: 'mint or burn' })
+  const balance = balances[tokenAddress]
 
   const mintHandler = (amount) => {
-    mintToken(tokenAddress, toWei(String(amount)))
+    mintToken(tokenAddress, toWei(String(amount)), { desiredNetworkType: foreignNetwork })
   }
 
   const burnHandler = (amount) => {
-    burnToken(tokenAddress, toWei(String(amount)))
+    burnToken(tokenAddress, toWei(String(amount)), { desiredNetworkType: foreignNetwork })
   }
 
   const handleChange = (event, newValue) => setValue(newValue)
@@ -123,7 +119,7 @@ const MintBurn = ({
         <TabPanel value={value} index={0}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 0) : 0}</span>
+            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 0) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
@@ -145,7 +141,7 @@ const MintBurn = ({
         <TabPanel value={value} index={1}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 0) : 0}</span>
+            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 0) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
@@ -175,7 +171,6 @@ const mapStateToProps = (state) => ({
   accountAddress: getAccountAddress(state),
   networkType: getCurrentNetworkType(state),
   balances: getBalances(state),
-  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state, getCommunityAddress(state))),
   token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { symbol: '', address: '' }
 })
 

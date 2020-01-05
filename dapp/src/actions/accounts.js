@@ -14,6 +14,9 @@ export const ADD_USER = createRequestTypes('ADD_USER')
 export const SIGN_IN = createRequestTypes('SIGN_IN')
 export const CREATE_3BOX_PROFILE = createRequestTypes('CREATE_3BOX_PROFILE')
 
+export const POSTPONE_ACTION = createRequestTypes('POSTPONE_ACTION')
+export const EXECUTE_POSTPONED_ACTION = 'EXECUTE_POSTPONED_ACTION'
+
 export const balanceOfToken = (tokenAddress, accountAddress, options) => action(BALANCE_OF_TOKEN.REQUEST, { tokenAddress, accountAddress, options })
 export const balanceOfNative = (accountAddress, options) => action(BALANCE_OF_NATIVE.REQUEST, { accountAddress, options })
 export const balanceOfFuse = (accountAddress) => action(BALANCE_OF_FUSE.REQUEST, { accountAddress })
@@ -24,3 +27,6 @@ export const fetchCommunities = (accountAddress) => communitiesAction(FETCH_COMM
 export const getInitialAddress = () => action(GET_INITIAL_ADDRESS.REQUEST)
 export const signIn = (accountAddress) => action(SIGN_IN.REQUEST, { accountAddress })
 export const create3boxProfile = (accountAddress, data) => action(CREATE_3BOX_PROFILE.REQUEST, { accountAddress, data })
+
+export const postponedActionExecuted = (accountAddress, postponed) => action(EXECUTE_POSTPONED_ACTION, { accountAddress, postponed })
+export const postponeAction = (accountAddress, postponed) => action(POSTPONE_ACTION.REQUEST, { accountAddress, postponed })

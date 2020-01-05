@@ -16,7 +16,6 @@ import { loadState } from 'utils/storage'
 import { getHomeNetworkType, getForeignNetwork } from 'selectors/network'
 
 import { withNetwork } from 'containers/Web3'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import withTracker from 'containers/withTracker'
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
@@ -77,23 +76,10 @@ const WizardPage = ({
   loadModal,
   communityAddress,
   homeNetwork,
+  foreignNetwork,
   push,
   templateId
 }) => {
-  const desiredNetworkType = useMemo(() => {
-    const desiredNetworks = ['ropsten', 'mainnet']
-    if (!networkType) {
-      return desiredNetworks
-    } else if (networkType === homeNetwork) {
-      return desiredNetworks
-    } else {
-      const secondDesired = networkType === 'ropsten' ? 'mainnet' : 'ropsten'
-      return [networkType, secondDesired]
-    }
-  }, [])
-
-  useSwitchNetwork(desiredNetworkType, { featureName: 'Wizard' })
-
   useEffect(() => {
     if (window && window.analytics) {
       window.analytics.track('Wizard init')
@@ -251,7 +237,7 @@ const WizardPage = ({
         symbol: communitySymbol,
         totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
       }
-      createTokenWithMetadata(tokenData, metadata, communityType.value, steps)
+      createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: foreignNetwork })
     }
 
     signUpUser(email, subscribe)
@@ -271,6 +257,7 @@ const WizardPage = ({
         push={push}
         adminAddress={adminAddress}
         networkType={networkType}
+        foreignNetwork={foreignNetwork}
         loadModal={loadModal}
         transactionStatus={transactionStatus}
         createTokenSignature={createTokenSignature}
@@ -288,7 +275,7 @@ const WizardPage = ({
           <DetailsStep networkType={networkType} />
         </Wizard.Page>
         <Wizard.Page isSubmitStep={Boolean(true).toString()}>
-          <SummaryStep homeNetwork={homeNetwork} networkType={networkType} />
+          <SummaryStep foreignNetwork={foreignNetwork} />
         </Wizard.Page>
         <Wizard.Page>
           <DeployProgressStep />

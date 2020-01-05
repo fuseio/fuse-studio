@@ -6,10 +6,12 @@ import pickBy from 'lodash/pickBy'
 import pluginsIcons from 'constants/pluginsIcons'
 import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
+import capitalize from 'lodash/capitalize'
 import upperFirst from 'lodash/upperFirst'
+import { toLongName } from 'utils/network'
 
 const SummaryStep = ({
-  networkType,
+  foreignNetwork,
   formik
 }) => {
   const contracts = getIn(formik.values, 'contracts')
@@ -103,7 +105,7 @@ const SummaryStep = ({
         </div>
 
         <div className='summary-step__text'>
-          <span><FontAwesome name='info-circle' /> Your coin will be issued on the Ethereum {networkType}</span>
+          <span><FontAwesome name='info-circle' /> Your coin will be issued on the Ethereum {capitalize(toLongName(foreignNetwork))}</span>
           <br />
           <span>After published a bridge will allow you to start using your coin on the Fuse-chain!</span>
         </div>
