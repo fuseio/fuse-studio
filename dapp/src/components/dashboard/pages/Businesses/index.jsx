@@ -8,10 +8,7 @@ import capitalize from 'lodash/capitalize'
 import { toChecksumAddress } from 'web3-utils'
 import gql from 'graphql-tag'
 import { useLazyQuery } from '@apollo/react-hooks'
-
 import MyTable from 'components/dashboard/components/Table'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
-
 import {
   addEntity,
   removeEntity,
@@ -25,9 +22,9 @@ import { getTransaction } from 'selectors/transaction'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import TransactionMessage from 'components/common/TransactionMessage'
 
 import dotsIcon from 'images/dots.svg'
-// import AddBusiness from 'images/add_business.svg'
 
 const GET_COMMUNITY = (address) => {
   return gql`
@@ -60,10 +57,11 @@ const Businesses = ({
   removeEntity,
   businessesMetadata,
   fetchEntityMetadata,
-  updateEntities
+  updateEntities,
+  signatureNeeded,
+  showTransactionMessage
 }) => {
   const { address: communityAddress } = useParams()
-  useSwitchNetwork('fuse', { featureName: 'business list' })
   const [data, setData] = useState(null)
   const [businesses, setBusinesses] = useState([])
   const [fetchEntitiesFromGraph, { loading }] = useLazyQuery(GET_COMMUNITY(communityAddress), {
@@ -77,6 +75,8 @@ const Businesses = ({
       setBusinesses(businesses)
     }
   })
+
+  const [isJoin, setIsJoin] = useState(false)
 
   useEffect(() => {
     fetchEntitiesFromGraph()
@@ -201,6 +201,7 @@ const Businesses = ({
 
   const loadAddBusinessModal = (isJoin) => {
     const submitEntity = isJoin ? joinCommunity : addEntity
+    setIsJoin(isJoin)
     loadModal(ADD_BUSINESS_MODAL, {
       isJoin,
       entity: isJoin ? { account: accountAddress } : undefined,
@@ -261,6 +262,12 @@ const Businesses = ({
       </div>
       <div className='entities__wrapper'>
         {renderTable()}
+        <TransactionMessage
+          title={isJoin ? 'Joining the list' : 'Adding business to list'}
+          message={signatureNeeded ? 'Please sign with your wallet' : 'Pending'}
+          isOpen={showTransactionMessage}
+          isDark
+        />
       </div>
     </Fragment>
   )

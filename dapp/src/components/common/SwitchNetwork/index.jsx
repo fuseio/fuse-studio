@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { withRouter } from 'react-router'
+import { useSelector } from 'react-redux'
 import Modal from 'components/common/Modal'
 import { convertNetworkName } from 'utils/network'
 import capitalize from 'lodash/capitalize'
@@ -20,14 +21,13 @@ const switchImages = {
 const renderNetworks = (networks) => networks.map((network) => capitalize(convertNetworkName(network))).reduce((prev, curr) => [prev, ' or ', curr])
 
 const SwitchNetwork = ({
-  history,
   hideModal,
-  networkType,
   contentStyles,
   featureName = 'that page',
   desiredNetworkType = 'fuse',
   goBack = true
 }) => {
+  const { networkType } = useSelector(state => state.network)
   const fallbackNetwork = networkType || desiredNetworkType === 'fuse' ? 'ropsten' : 'main'
   const desiredNetworkTypeArray = Array.isArray(desiredNetworkType) ? desiredNetworkType : [desiredNetworkType]
 
@@ -37,6 +37,13 @@ const SwitchNetwork = ({
     //   history.goBack()
     // }
   }
+
+  useEffect(() => {
+    if (desiredNetworkTypeArray.includes(networkType)) {
+      hideModal()
+    }
+    return () => { }
+  }, [networkType])
 
   return (
     <Modal className='switch__network' hasCloseBtn onClose={onClose}>

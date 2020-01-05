@@ -182,7 +182,9 @@ const DashboardLayout = (props) => {
               <Switch>
                 {!get(community && community.plugins, 'joinBonus.isRemoved', false) && isAdmin && (
                   <Route exact path={`${match.path}/bonus`}>
-                    <JoinBonusPage />
+                    <JoinBonusPage
+                      match={match}
+                    />
                   </Route>
                 )}
 

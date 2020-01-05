@@ -24,6 +24,8 @@ export const JOIN_COMMUNITY = createRequestTypes('JOIN_COMMUNITY')
 export const IMPORT_EXISTING_ENTITY = createRequestTypes('IMPORT_EXISTING_ENTITY')
 export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
 
+const options = { desiredNetworkType: 'fuse' }
+
 export const fetchEntities = (communityAddress) => entitiesAction(FETCH_ENTITIES.REQUEST, { communityAddress })
 export const fetchUsersEntities = (communityAddress, entityType = 'user') => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress, entityType })
 export const fetchBusinessesEntities = (communityAddress, entityType = 'business') => entitiesAction(FETCH_BUSINESSES_ENTITIES.REQUEST, { communityAddress, entityType })
@@ -31,14 +33,14 @@ export const fetchBusinessesEntities = (communityAddress, entityType = 'business
 export const fetchEntity = (communityAddress, account) => entitiesAction(FETCH_ENTITY.REQUEST, { communityAddress, account })
 export const fetchEntityMetadata = (communityAddress, account) => entitiesBusinessesAction(FETCH_ENTITY_METADATA.REQUEST, { communityAddress, account })
 
-export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType })
-export const removeEntity = (account) => action(REMOVE_ENTITY.REQUEST, { account })
-export const addAdminRole = (account) => action(ADD_ADMIN_ROLE.REQUEST, { account })
-export const removeAdminRole = (account) => action(REMOVE_ADMIN_ROLE.REQUEST, { account })
-export const confirmUser = (account) => action(CONFIRM_USER.REQUEST, { account })
-export const editEntity = (listAddress, hash, data) => action(EDIT_ENTITY.REQUEST, { listAddress, hash, data })
-export const joinCommunity = (communityAddress, data) => action(JOIN_COMMUNITY.REQUEST, { communityAddress, data })
-export const importExistingEntity = (accountAddress, communityAddress, isClosed) => action(IMPORT_EXISTING_ENTITY.REQUEST, { accountAddress, communityAddress, isClosed })
+export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType, options })
+export const removeEntity = (account) => action(REMOVE_ENTITY.REQUEST, { account, options })
+export const addAdminRole = (account) => action(ADD_ADMIN_ROLE.REQUEST, { account, options })
+export const removeAdminRole = (account) => action(REMOVE_ADMIN_ROLE.REQUEST, { account, options })
+export const confirmUser = (account) => action(CONFIRM_USER.REQUEST, { account, options })
+export const editEntity = (listAddress, hash, data) => action(EDIT_ENTITY.REQUEST, { listAddress, hash, data, options })
+export const joinCommunity = (communityAddress, data) => action(JOIN_COMMUNITY.REQUEST, { communityAddress, data, options })
+export const importExistingEntity = (accountAddress, communityAddress, isClosed) => action(IMPORT_EXISTING_ENTITY.REQUEST, { accountAddress, communityAddress, isClosed, options })
 export const uploadImage = (image) => action(UPLOAD_IMAGE.REQUEST, { image })
 
 export const toggleCommunityMode = (communityAddress, isClosed) => action(TOGGLE_COMMUNITY_MODE.REQUEST, { communityAddress, isClosed })

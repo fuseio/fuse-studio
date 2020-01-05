@@ -11,15 +11,14 @@ import { getFunderAccount, getBalances } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
 import { addCommunityPlugin, toggleJoinBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
-import useSwitchNetwork from 'hooks/useSwitchNetwork'
 import get from 'lodash/get'
 import { fetchEntity as fetchEntityApi } from 'services/api/entities'
 import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
 import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
 import { getCurrentNetworkType } from 'selectors/network'
-import { getForeignTokenByCommunityAddress } from 'selectors/token'
-import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
+import { getHomeTokenByCommunityAddress } from 'selectors/token'
+import { getCurrentCommunity } from 'selectors/dashboard'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
@@ -27,7 +26,7 @@ const JoinBonus = ({
   error,
   networkType,
   community,
-  token: { symbol },
+  homeToken,
   transactionStatus,
   transferSignature,
   isTransfer,
@@ -37,17 +36,14 @@ const JoinBonus = ({
   addCommunityPlugin,
   clearTransactionStatus,
   balances,
-  tokenOfCommunityOnCurrentSide,
   toggleJoinBonus,
   isFunderPartOfCommunity
 }) => {
   const { address: communityAddress } = useParams()
   const [isFunderAdded, setFunderStatus] = React.useState(isFunderPartOfCommunity)
 
-  useSwitchNetwork('fuse', { featureName: 'join bonus' })
-
   const funderAccount = useSelector(getFunderAccount)
-  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[tokenOfCommunityOnCurrentSide]
+  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[homeToken.address]
 
   const { plugins } = community
 
@@ -56,7 +52,7 @@ const JoinBonus = ({
   const [transferMessage, setTransferMessage] = useState(false)
 
   useEffect(() => {
-    balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
+    balanceOfToken(homeToken.address, funderAddress)
     return () => {}
   }, [])
 
@@ -75,7 +71,7 @@ const JoinBonus = ({
     if (transactionStatus && transactionStatus === SUCCESS) {
       if (transferSuccess) {
         setTransferMessage(true)
-        balanceOfToken(tokenOfCommunityOnCurrentSide, funderAddress)
+        balanceOfToken(homeToken.address, funderAddress)
       }
     } else if (transactionStatus && transactionStatus === FAILURE) {
       if (transferSuccess === false) {
@@ -86,7 +82,7 @@ const JoinBonus = ({
   }, [transactionStatus])
 
   const transferToFunder = (amount) => {
-    transferTokenToFunder(tokenOfCommunityOnCurrentSide, toWei(String(amount)))
+    transferTokenToFunder(homeToken.address, toWei(String(amount)))
   }
 
   const transactionError = () => {
@@ -101,7 +97,7 @@ const JoinBonus = ({
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
-  const balance = balances[tokenOfCommunityOnCurrentSide]
+  const balance = balances[homeToken.address]
 
   return (
     community ? <div className='join_bonus__wrapper'>
@@ -115,7 +111,7 @@ const JoinBonus = ({
               setTransferMessage(false)
               clearTransactionStatus(null)
             }}
-            symbol={symbol}
+            symbol={homeToken.symbol}
             transactionConfirmed={transactionConfirmed}
             transactionError={transactionError}
             transactionDenied={transactionDenied}
@@ -141,14 +137,13 @@ const JoinBonus = ({
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   balances: getBalances(state),
   isFunderPartOfCommunity: checkIsFunderPartOfCommunity(state),
   networkType: getCurrentNetworkType(state),
   community: getCurrentCommunity(state, getCommunityAddress(state)),
-  token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { symbol: '' },
-  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state, getCommunityAddress(state)))
+  homeToken: getHomeTokenByCommunityAddress(state, match.params.address) || {}
 })
 
 const mapDispatchToState = {

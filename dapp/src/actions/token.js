@@ -43,14 +43,14 @@ export const fetchCommunity = (communityAddress) => communitiesAction(FETCH_COMM
 export const fetchFuseToken = () => tokenAction(FETCH_FUSE_TOKEN.REQUEST)
 
 export const createToken = (tokenData) => requestAction(CREATE_TOKEN, tokenData)
-export const createTokenWithMetadata = (tokenData, metadata, tokenType, steps) => requestAction(CREATE_TOKEN_WITH_METADATA, { tokenData, metadata, tokenType, steps })
+export const createTokenWithMetadata = (tokenData, metadata, tokenType, steps, options) => requestAction(CREATE_TOKEN_WITH_METADATA, { tokenData, metadata, tokenType, steps, options })
 
 export const deployExistingToken = (metadata, steps) => requestAction(DEPLOY_EXISTING_TOKEN, { metadata, steps })
 
-export const transferTokenToFunder = (tokenAddress, value) => requestAction(TRANSFER_TOKEN_TO_FUNDER, { tokenAddress, value })
+export const transferTokenToFunder = (tokenAddress, value) => requestAction(TRANSFER_TOKEN_TO_FUNDER, { tokenAddress, value, options: { desiredNetworkType: 'fuse' } })
 export const transferToken = (tokenAddress, to, value) => requestAction(TRANSFER_TOKEN, { tokenAddress, to, value })
-export const mintToken = (tokenAddress, value) => requestAction(MINT_TOKEN, { tokenAddress, value })
-export const burnToken = (tokenAddress, value) => requestAction(BURN_TOKEN, { tokenAddress, value })
+export const mintToken = (tokenAddress, value, options) => requestAction(MINT_TOKEN, { tokenAddress, value, options })
+export const burnToken = (tokenAddress, value, options) => requestAction(BURN_TOKEN, { tokenAddress, value, options })
 
 export const fetchTokenProgress = (communityAddress) => requestAction(FETCH_TOKEN_PROGRESS, { communityAddress })
 export const fetchDeployProgress = (id) => requestAction(FETCH_DEPLOY_PROGRESS, { id })
