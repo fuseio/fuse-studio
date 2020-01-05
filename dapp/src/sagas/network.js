@@ -178,10 +178,13 @@ function * changeNetwork ({ networkType }) {
   const foreignNetwork = yield select(getForeignNetwork)
   const currentNetwork = toLongName(networkType)
   saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : currentNetwork, networkType: currentNetwork })
+
+  const web3 = yield getWeb3()
+  debugger
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
-  window.location.reload()
+  // window.location.reload()
 }
 
 function * sendTransactionHash ({ transactionHash, abiName }) {
