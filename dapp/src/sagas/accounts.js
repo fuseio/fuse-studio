@@ -136,7 +136,7 @@ function * initialAddress () {
 }
 
 function * postponeAction ({ accountAddress, postponed }) {
-  const providerInfo = select(state => getProviderInfo(state))
+  const providerInfo = yield select(state => getProviderInfo(state))
   const { desiredNetworkType } = postponed.options
 
   if (providerInfo.type === 'web') {
