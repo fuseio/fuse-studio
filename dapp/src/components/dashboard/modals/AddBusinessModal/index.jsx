@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 
 const AddBusinessModal = ({ hideModal, isJoin, submitEntity, entity }) => {
   const handleSubmitEntity = (...args) => {
-    submitEntity(...args)
     hideModal()
+    submitEntity(...args)
   }
 
   return (
