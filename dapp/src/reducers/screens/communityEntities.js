@@ -37,7 +37,7 @@ export default (state = initialState, action) => {
     case REMOVE_ADMIN_ROLE.SUCCESS:
       return { ...state, ...action.response }
     case REMOVE_ENTITY.REQUEST:
-      return { ...state, transactionStatus: REQUEST }
+      return { ...state, transactionStatus: REQUEST, updateEntities: false, signatureNeeded: true, showTransactionMessage: true }
     case REMOVE_ENTITY.PENDING:
       return { ...state, transactionHash: action.response.transactionHash, signatureNeeded: false }
     case REMOVE_ENTITY.SUCCESS:
@@ -50,7 +50,7 @@ export default (state = initialState, action) => {
         usersResults: state.usersResults.filter(val => val !== account)
       }
     case ADD_ENTITY.REQUEST:
-      return { ...state, signatureNeeded: true, showTransactionMessage: true, [`${action.entityType}JustAdded`]: action.data.name }
+      return { ...state, signatureNeeded: true, showTransactionMessage: true, updateEntities: false, [`${action.entityType}JustAdded`]: action.data.name }
     case ADD_ENTITY.FAILURE:
       return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), signatureNeeded: false }
     case ADD_ENTITY.PENDING:

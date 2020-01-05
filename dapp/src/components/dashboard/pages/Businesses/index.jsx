@@ -76,7 +76,7 @@ const Businesses = ({
     }
   })
 
-  const [isJoin, setIsJoin] = useState(false)
+  const [transcactionTitle, setTransactionTitle] = useState()
 
   useEffect(() => {
     fetchEntitiesFromGraph()
@@ -130,6 +130,8 @@ const Businesses = ({
         }
       })
       setData(data)
+    } else {
+      setData([])
     }
     return () => { }
   }, [businesses, businessesMetadata])
@@ -197,11 +199,14 @@ const Businesses = ({
 
   const handleJoinCommunity = () => loadAddBusinessModal(true)
 
-  const handleRemoveEntity = (account) => removeEntity(account)
+  const handleRemoveEntity = (account) => {
+    setTransactionTitle('Removing the business from list')
+    removeEntity(account)
+  }
 
   const loadAddBusinessModal = (isJoin) => {
     const submitEntity = isJoin ? joinCommunity : addEntity
-    setIsJoin(isJoin)
+    setTransactionTitle(isJoin ? 'Joining the list' : 'Adding business to list')
     loadModal(ADD_BUSINESS_MODAL, {
       isJoin,
       entity: isJoin ? { account: accountAddress } : undefined,
@@ -263,7 +268,7 @@ const Businesses = ({
       <div className='entities__wrapper'>
         {renderTable()}
         <TransactionMessage
-          title={isJoin ? 'Joining the list' : 'Adding business to list'}
+          title={transcactionTitle}
           message={signatureNeeded ? 'Please sign with your wallet' : 'Pending'}
           isOpen={showTransactionMessage}
           isDark
