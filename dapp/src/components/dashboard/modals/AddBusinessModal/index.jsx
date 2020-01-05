@@ -3,12 +3,9 @@ import Modal from 'components/common/Modal'
 import BusinessForm from 'components/dashboard/components/BusinessForm'
 import { connect } from 'react-redux'
 
-const AddBusinessModal = ({ hideModal, isJoin, showTransactionMessage, submitEntity, entity }) => {
+const AddBusinessModal = ({ hideModal, isJoin, submitEntity, entity }) => {
   const handleSubmitEntity = (...args) => {
     submitEntity(...args)
-  }
-
-  if (showTransactionMessage === false) {
     hideModal()
   }
 
