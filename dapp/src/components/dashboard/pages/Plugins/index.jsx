@@ -40,6 +40,13 @@ const generalPlugins = ([
     Then your users can get the bonus after installing the Fuse app and joining your community.`
   },
   {
+    title: 'Fiat on ramp',
+    coverImage: Bounty,
+    disabled: false,
+    modalCoverPhoto: BountyBig,
+    key: 'fiat'
+  },
+  {
     title: 'Bounty',
     subTitle: ' | Coming soon!',
     coverImage: Bounty,
