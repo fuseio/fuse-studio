@@ -31,20 +31,8 @@ const Root = ({
   defaultNetwork,
   location
 }) => {
-  // const networkState = React.useMemo(() => {
-  //   let s = loadState('state.network')
-  //   debugger
-  //   return
-  // }, [])
-  // const networkToConnectTo = (networkState && networkState.networkType && toLongName(networkState.networkType)) || toLongName(defaultNetwork)
-
-  // const connectTo = networkToConnectTo === 'fuse' ? {
-  //   nodeUrl: CONFIG.web3.fuseProvider,
-  //   chainId: CONFIG.web3.chainId.fuse
-  // } : networkToConnectTo
   const web3Auth = useWeb3Auth()
   const webConnectOptions = {
-    // network: connectTo,
     providerOptions: {
       walletconnect: {
         package: WalletConnectProvider,

@@ -104,7 +104,6 @@ function * checkNetworkType ({ web3 }) {
       networkId
     }
     if (CONFIG.web3.supportedForeignNetworks.includes(networkType)) {
-      debugger
       const { pathname } = yield select(state => state.router.location)
       if (!pathname.startsWith('/view/community/0x')) {
         response.foreignNetwork = networkType
