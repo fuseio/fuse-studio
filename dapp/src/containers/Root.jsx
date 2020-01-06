@@ -21,7 +21,7 @@ import useWeb3Connect from 'hooks/useWeb3Connect'
 import useDefaultWallet from 'hooks/useDefaultWallet'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
-import { toLongName } from 'utils/network'
+// import { toLongName } from 'utils/network'
 import { loadState, saveState } from 'utils/storage'
 
 import 'scss/main.scss'
@@ -31,16 +31,20 @@ const Root = ({
   defaultNetwork,
   location
 }) => {
-  const networkState = React.useMemo(() => loadState('state.network'), [])
-  const networkToConnectTo = (networkState && networkState.networkType && toLongName(networkState.networkType)) || toLongName(defaultNetwork)
+  // const networkState = React.useMemo(() => {
+  //   let s = loadState('state.network')
+  //   debugger
+  //   return
+  // }, [])
+  // const networkToConnectTo = (networkState && networkState.networkType && toLongName(networkState.networkType)) || toLongName(defaultNetwork)
 
-  const connectTo = networkToConnectTo === 'fuse' ? {
-    nodeUrl: CONFIG.web3.fuseProvider,
-    chainId: CONFIG.web3.chainId.fuse
-  } : networkToConnectTo
+  // const connectTo = networkToConnectTo === 'fuse' ? {
+  //   nodeUrl: CONFIG.web3.fuseProvider,
+  //   chainId: CONFIG.web3.chainId.fuse
+  // } : networkToConnectTo
   const web3Auth = useWeb3Auth()
   const webConnectOptions = {
-    network: connectTo,
+    // network: connectTo,
     providerOptions: {
       walletconnect: {
         package: WalletConnectProvider,
@@ -79,14 +83,14 @@ const Root = ({
   useEffect(() => {
     async function autoLogin (defaultOne = '') {
       try {
-        const provider = await useDefaultWallet(defaultOne, connectTo)
+        const provider = await useDefaultWallet(defaultOne)
         connectToWallet(provider)
       } catch (error) {
         // console.log({ error })
       }
     }
 
-    if (defaultWallet && connectTo) {
+    if (defaultWallet) {
       autoLogin(defaultWallet)
     } else if (checkInjected.injectedAvailable && reconnect) {
       autoLogin('metamask')

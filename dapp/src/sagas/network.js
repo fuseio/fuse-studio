@@ -6,8 +6,8 @@ import { getWeb3 } from 'services/web3'
 import { isNetworkSupported, toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse, fetchCommunities } from 'actions/accounts'
-import { loadModal } from 'actions/ui'
-import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+// import { loadModal } from 'actions/ui'
+// import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
 import providers from 'constants/providers'
 import { saveState } from 'utils/storage'
@@ -136,7 +136,7 @@ function * checkNetworkType ({ web3 }) {
       throw new Error('This network is not supported')
     }
   } catch (error) {
-    yield put(loadModal(WRONG_NETWORK_MODAL))
+    // yield put(loadModal(WRONG_NETWORK_MODAL))
     yield put({ type: actions.CHECK_NETWORK_TYPE.FAILURE, error })
     yield put({
       type: 'ERROR',
@@ -216,10 +216,15 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
   })
 }
 
+// function * getForeignNetwork ({ communityAddress }) {
+
+// }
+
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.CHECK_NETWORK_TYPE.REQUEST, checkNetworkType),
     takeEvery(actions.CONNECT_TO_WALLET.REQUEST, connectToWallet),
+    // takeEvery(actions.GET_FOREIGN_NETWORK, getForeignNetwork),
     takeEvery(actions.CHECK_ACCOUNT_CHANGED.REQUEST, checkAccountChanged),
     takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices),
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),

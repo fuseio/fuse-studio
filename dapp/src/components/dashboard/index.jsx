@@ -19,7 +19,7 @@ import { fetchCommunity } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
 import { changeNetwork } from 'actions/network'
-import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+// import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
 
@@ -48,7 +48,7 @@ const DashboardLayout = (props) => {
   const {
     match,
     fetchCommunity,
-    homeNetwork,
+    // homeNetwork,
     foreignToken,
     community,
     networkType,
@@ -56,14 +56,14 @@ const DashboardLayout = (props) => {
     isAdmin,
     location,
     homeToken,
-    fetchEntities,
-    push,
-    providerInfo,
-    loadModal
+    fetchEntities
+    // push,
+    // providerInfo,
+    // loadModal
   } = props
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
-  const [originNetwork, setOriginNetwork] = useState(false)
+  const [setOriginNetwork] = useState(false)
   const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
   // const [branchLink, setBranchLink] = useState(false)
 
@@ -109,19 +109,19 @@ const DashboardLayout = (props) => {
     }
   }, [data, loading, error])
 
-  useEffect(() => {
-    if (originNetwork) {
-      if (networkType !== 'fuse' && networkType && networkType !== originNetwork) {
-        const desired = originNetwork
-        loadModal(WRONG_NETWORK_MODAL, {
-          body: <p>You need to switch network to view this community <br /> This community is issued on {desired === 'main' ? 'mainnet' : desired}.
-            Switch to {desired === 'main' ? 'mainnet' : desired} through {providerInfo.name} to view it</p>,
-          supportedNetworks: [desired, homeNetwork],
-          handleClose: () => push('/')
-        })
-      }
-    }
-  }, [originNetwork])
+  // useEffect(() => {
+  //   if (originNetwork) {
+  //     if (networkType !== 'fuse' && networkType && networkType !== originNetwork) {
+  //       const desired = originNetwork
+  //       loadModal(WRONG_NETWORK_MODAL, {
+  //         body: <p>You need to switch network to view this community <br /> This community is issued on {desired === 'main' ? 'mainnet' : desired}.
+  //           Switch to {desired === 'main' ? 'mainnet' : desired} through {providerInfo.name} to view it</p>,
+  //         supportedNetworks: [desired, homeNetwork],
+  //         handleClose: () => push('/')
+  //       })
+  //     }
+  //   }
+  // }, [originNetwork])
 
   useEffect(() => {
     if (isAdmin) {
