@@ -47,7 +47,6 @@ const DashboardLayout = (props) => {
   const {
     match,
     fetchCommunity,
-    // homeNetwork,
     foreignToken,
     community,
     networkType,
@@ -55,33 +54,12 @@ const DashboardLayout = (props) => {
     isAdmin,
     location,
     homeToken,
-    fetchEntities
-    // push,
-    // providerInfo,
-    // loadModal
+    fetchEntities,
+    setForeignNetwork
   } = props
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
   const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
-  // const [branchLink, setBranchLink] = useState(false)
-
-  // useEffect(() => {
-  //   if (community && community.communityAddress && homeToken && homeToken.owner) {
-  //     window.branch.link({
-  //       community_id: community.communityAddress,
-  //       link_createor: homeToken.owner,
-  //       marketing_title: 'switch community',
-  //       marketing: 'true',
-  //       campaign: 'manager_add',
-  //       channel: 'studio',
-  //       feature: 'switch_community'
-  //     }, (err, link) => {
-  //       if (!err) {
-  //         setBranchLink(link)
-  //       }
-  //     })
-  //   }
-  // }, [community, homeToken])
 
   useEffect(() => {
     if (isMobile) {
@@ -238,7 +216,8 @@ const mapDispatchToProps = {
   fetchCommunity,
   loadModal,
   fetchEntities,
-  push
+  push,
+  setForeignNetwork
 }
 
 export default withTracker(withNetwork(connect(

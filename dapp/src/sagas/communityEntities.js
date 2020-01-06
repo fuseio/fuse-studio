@@ -17,7 +17,7 @@ import { uploadImage as uploadImageApi } from 'services/api/images'
 import omit from 'lodash/omit'
 import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
 import CommunityTransferManagerABI from '@fuse/entities-contracts/abi/CommunityTransferManager'
-import { getWeb3 } from 'services/web3'
+import { getWeb3 } from 'sagas/network'
 import { getOptions, getNetworkVersion } from 'utils/network'
 
 function * confirmUser ({ account }) {

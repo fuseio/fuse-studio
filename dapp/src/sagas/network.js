@@ -2,7 +2,7 @@ import last from 'lodash/last'
 import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effects'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
-import { getWeb3 } from 'services/web3'
+import { getWeb3 as getWeb3Service } from 'services/web3'
 import { toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse, fetchCommunities } from 'actions/accounts'
@@ -24,7 +24,7 @@ const cb = (error, result) => {
 
 function * getNetworkTypeInternal (web3) {
   const networkId = yield web3.eth.net.getId(cb)
-  const networkType = networkIdToName[networkId]
+  const networkType = networkIdToName[networkId] || 'unknown'
   return { networkId, networkType }
 }
 
@@ -58,7 +58,7 @@ function * watchNetworkChanges (provider) {
   while (true) {
     const message = yield take(chan)
     if (!isNaN(message)) {
-      const web3 = yield getWeb3({ provider })
+      const web3 = yield getWeb3Service({ provider })
       yield call(checkNetworkType, { web3 })
     }
   }
@@ -71,7 +71,7 @@ function * connectToWallet ({ provider }) {
     }
 
     saveState('state.reconnect', true)
-    const web3 = yield getWeb3({ provider })
+    const web3 = yield getWeb3Service({ provider })
     const providerInfo = getProviderInfo(provider)
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
@@ -99,13 +99,21 @@ function * connectToWallet ({ provider }) {
 function * checkNetworkType ({ web3 }) {
   try {
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
+    const response = {
+      networkType,
+      networkId
+    }
+    if (CONFIG.web3.supportedForeignNetworks.includes(networkType)) {
+      debugger
+      const { pathname } = yield select(state => state.router.location)
+      if (!pathname.startsWith('/view/community/0x')) {
+        response.foreignNetwork = networkType
+      }
+    }
     yield put({
       type: actions.CHECK_NETWORK_TYPE.SUCCESS,
-      response: {
-        networkType,
-        networkId,
-        foreignNetwork: ['main', 'ropsten'].includes(networkType) ? networkType : undefined
-      } })
+      response
+    })
   } catch (error) {
     yield put({ type: actions.CHECK_NETWORK_TYPE.FAILURE, error })
     yield put({
@@ -184,6 +192,17 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
     transactionHash,
     type: actions.SEND_TRANSACTION_HASH.SUCCESS
   })
+}
+
+export function * getWeb3 ({ bridgeType } = {}) {
+  if (!bridgeType) {
+    return getWeb3Service()
+  } else if (bridgeType === 'home') {
+    return getWeb3Service({ networkType: 'fuse' })
+  } else {
+    const foreignNetwork = yield select(getForeignNetwork)
+    return getWeb3Service({ networkType: foreignNetwork })
+  }
 }
 
 export default function * web3Saga () {

@@ -12,7 +12,7 @@ import { transactionSucceeded } from 'actions/transactions'
 import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './utils'
 import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
-import { getWeb3 } from 'services/web3'
+import { getWeb3 } from 'sagas/network'
 import {
   fetchCommunity as fetchCommunityApi,
   addCommunityPlugin as addCommunityPluginApi
