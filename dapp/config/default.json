@@ -71,9 +71,9 @@
         }
     },
     "url": {
-      "main": "https://studio-qa.fuse.io/api/v1",
-      "ropsten": "https://studio-qa-ropsten.fuse.io/api/v1",
-      "default": "https://studio-qa.fuse.io/api/v1"
+      "main": "http://localhost:3000/api/v1",
+      "ropsten": "http://localhost:3000/api/v1",
+      "default": "http://localhost:3000/api/v1"
     },
     "timeout": 3000,
     "retryTimeout": 500,
@@ -82,7 +82,7 @@
       "url": "http://localhost:3000/api/v2"
     },
     "graph": {
-      "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse-qa"
+      "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse-dev"
     }
   },
   "reactGA": {
@@ -96,7 +96,7 @@
   },
   "debugTrace": true,
   "ipfsProxy": {
-    "urlBase": "https://ipfs-proxy-qa.fuse.io/api"
+    "urlBase": "http://localhost:4000/api"
   },
   "sentry": {
     "key": "e466161467e346d586ae94565d5ae924",

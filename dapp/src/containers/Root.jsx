@@ -21,7 +21,6 @@ import useWeb3Connect from 'hooks/useWeb3Connect'
 import useDefaultWallet from 'hooks/useDefaultWallet'
 import { getAccountAddress } from 'selectors/accounts'
 import { getForeignNetwork } from 'selectors/network'
-// import { toLongName } from 'utils/network'
 import { loadState, saveState } from 'utils/storage'
 
 import 'scss/main.scss'
