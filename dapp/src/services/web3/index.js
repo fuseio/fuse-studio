@@ -1,7 +1,6 @@
 import Web3 from 'web3'
 import Box from '3box'
 import { getProviderUrl } from 'utils/network'
-import { loadState } from 'utils/storage'
 
 let givenWeb3
 
@@ -29,7 +28,7 @@ export function get3box ({ accountAddress }) {
   return Box.openBox(accountAddress, window.ethereum)
 }
 
-const networkState = loadState('state.network') || CONFIG.web3.bridge.network
+const networkState = CONFIG.web3.bridge.network
 const { foreignNetwork } = networkState
 
 const foreignProviderUrl = getProviderUrl(foreignNetwork)

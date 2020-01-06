@@ -1,4 +1,4 @@
-import { requestAction, createRequestTypes } from './utils'
+import { action, requestAction, createRequestTypes } from './utils'
 
 export const CHECK_NETWORK_TYPE = createRequestTypes('CHECK_NETWORK_TYPE')
 export const GET_FOREIGN_NETWORK = createRequestTypes('GET_FOREIGN_NETWORK')
@@ -32,3 +32,4 @@ export const checkAccountChanged = (selectedAddress) => requestAction(CHECK_ACCO
 export const fetchGasPrices = () => requestAction(FETCH_GAS_PRICES)
 
 export const sendTransactionHash = (transactionHash, abiName) => requestAction(SEND_TRANSACTION_HASH, { transactionHash, abiName })
+export const setForeignNetwork = (foreignNetwork) => action(SET_FOREIGN_NETWORK, { foreignNetwork })

@@ -3,11 +3,9 @@ import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effect
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 } from 'services/web3'
-import { isNetworkSupported, toLongName } from 'utils/network'
+import { toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse, fetchCommunities } from 'actions/accounts'
-// import { loadModal } from 'actions/ui'
-// import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
 import { networkIdToName } from 'constants/network'
 import providers from 'constants/providers'
 import { saveState } from 'utils/storage'
@@ -28,21 +26,6 @@ function * getNetworkTypeInternal (web3) {
   const networkId = yield web3.eth.net.getId(cb)
   const networkType = networkIdToName[networkId]
   return { networkId, networkType }
-}
-
-function * deduceBridgeSides (networkType) {
-  if (networkType === 'fuse') {
-    const foreignNetwork = yield select(getForeignNetwork)
-    return {
-      foreignNetwork,
-      homeNetwork: 'fuse'
-    }
-  } else {
-    return {
-      foreignNetwork: networkType,
-      homeNetwork: 'fuse'
-    }
-  }
 }
 
 export function getProviderInfo (provider) {
@@ -116,27 +99,14 @@ function * connectToWallet ({ provider }) {
 function * checkNetworkType ({ web3 }) {
   try {
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
-    const bridgeSides = yield deduceBridgeSides(networkType)
     yield put({
       type: actions.CHECK_NETWORK_TYPE.SUCCESS,
       response: {
         networkType,
         networkId,
-        ...bridgeSides
+        foreignNetwork: ['main', 'ropsten'].includes(networkType) ? networkType : undefined
       } })
-
-    if (!isNetworkSupported(networkType)) {
-      yield put({
-        type: actions.UNSUPPORTED_NETWORK_ERROR,
-        error: {
-          msg: `${networkType} is not supported`,
-          networkType
-        }
-      })
-      throw new Error('This network is not supported')
-    }
   } catch (error) {
-    // yield put(loadModal(WRONG_NETWORK_MODAL))
     yield put({ type: actions.CHECK_NETWORK_TYPE.FAILURE, error })
     yield put({
       type: 'ERROR',
@@ -216,15 +186,10 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
   })
 }
 
-// function * getForeignNetwork ({ communityAddress }) {
-
-// }
-
 export default function * web3Saga () {
   yield all([
     takeEvery(actions.CHECK_NETWORK_TYPE.REQUEST, checkNetworkType),
     takeEvery(actions.CONNECT_TO_WALLET.REQUEST, connectToWallet),
-    // takeEvery(actions.GET_FOREIGN_NETWORK, getForeignNetwork),
     takeEvery(actions.CHECK_ACCOUNT_CHANGED.REQUEST, checkAccountChanged),
     takeEvery(actions.FETCH_GAS_PRICES.REQUEST, fetchGasPrices),
     takeEvery(actions.GET_BLOCK_NUMBER.REQUEST, getBlockNumber),

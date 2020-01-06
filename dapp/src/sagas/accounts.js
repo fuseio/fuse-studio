@@ -69,6 +69,7 @@ function * balanceOfFuse ({ accountAddress }) {
 
 function * fetchBalances ({ accountAddress, tokens }) {
   for (let token of tokens) {
+    debugger
     yield put(actions.balanceOfToken(token.address, accountAddress))
   }
 }
