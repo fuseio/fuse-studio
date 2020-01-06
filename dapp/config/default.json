@@ -3,6 +3,7 @@
   "web3": {
     "fuseProvider": "https://rpc.fuse.io",
     "supportedNetworks": ["main", "ropsten", "fuse"],
+    "supportedForeignNetworks": ["main", "ropsten"],
     "portis": {
     },
     "addresses": {
@@ -46,7 +47,8 @@
       "main": 1,
       "kovan": 2,
       "ropsten": 3,
-      "rinkeby": 4 
+      "rinkeby": 4,
+      "goerli": 5
     },
     "options": {
       "fuse": {

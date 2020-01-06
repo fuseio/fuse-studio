@@ -18,8 +18,7 @@ import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } fro
 import { fetchCommunity } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
-import { changeNetwork } from 'actions/network'
-import { WRONG_NETWORK_MODAL } from 'constants/uiConstants'
+import { setForeignNetwork } from 'actions/network'
 import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
 
@@ -48,7 +47,6 @@ const DashboardLayout = (props) => {
   const {
     match,
     fetchCommunity,
-    homeNetwork,
     foreignToken,
     community,
     networkType,
@@ -57,33 +55,11 @@ const DashboardLayout = (props) => {
     location,
     homeToken,
     fetchEntities,
-    push,
-    providerInfo,
-    loadModal
+    setForeignNetwork
   } = props
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
-  const [originNetwork, setOriginNetwork] = useState(false)
   const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
-  // const [branchLink, setBranchLink] = useState(false)
-
-  // useEffect(() => {
-  //   if (community && community.communityAddress && homeToken && homeToken.owner) {
-  //     window.branch.link({
-  //       community_id: community.communityAddress,
-  //       link_createor: homeToken.owner,
-  //       marketing_title: 'switch community',
-  //       marketing: 'true',
-  //       campaign: 'manager_add',
-  //       channel: 'studio',
-  //       feature: 'switch_community'
-  //     }, (err, link) => {
-  //       if (!err) {
-  //         setBranchLink(link)
-  //       }
-  //     })
-  //   }
-  // }, [community, homeToken])
 
   useEffect(() => {
     if (isMobile) {
@@ -101,27 +77,13 @@ const DashboardLayout = (props) => {
   useEffect(() => {
     if (!loading) {
       if (!isEmpty(data) && !error) {
-        const originNetwork = get(data, 'data.tokens[0].originNetwork', '')
+        const originNetwork = get(data, 'tokens[0].originNetwork', '')
         if (originNetwork) {
-          setOriginNetwork(originNetwork === 'mainnet' ? 'main' : originNetwork)
+          setForeignNetwork(originNetwork === 'mainnet' ? 'main' : originNetwork)
         }
       }
     }
   }, [data, loading, error])
-
-  useEffect(() => {
-    if (originNetwork) {
-      if (networkType !== 'fuse' && networkType && networkType !== originNetwork) {
-        const desired = originNetwork
-        loadModal(WRONG_NETWORK_MODAL, {
-          body: <p>You need to switch network to view this community <br /> This community is issued on {desired === 'main' ? 'mainnet' : desired}.
-            Switch to {desired === 'main' ? 'mainnet' : desired} through {providerInfo.name} to view it</p>,
-          supportedNetworks: [desired, homeNetwork],
-          handleClose: () => push('/')
-        })
-      }
-    }
-  }, [originNetwork])
 
   useEffect(() => {
     if (isAdmin) {
@@ -254,8 +216,8 @@ const mapDispatchToProps = {
   fetchCommunity,
   loadModal,
   fetchEntities,
-  changeNetwork,
-  push
+  push,
+  setForeignNetwork
 }
 
 export default withTracker(withNetwork(connect(

@@ -52,7 +52,7 @@ const JoinBonus = ({
   const [transferMessage, setTransferMessage] = useState(false)
 
   useEffect(() => {
-    balanceOfToken(homeToken.address, funderAddress)
+    balanceOfToken(homeToken.address, funderAddress, { bridgeType: 'home' })
     return () => {}
   }, [])
 
@@ -71,7 +71,7 @@ const JoinBonus = ({
     if (transactionStatus && transactionStatus === SUCCESS) {
       if (transferSuccess) {
         setTransferMessage(true)
-        balanceOfToken(homeToken.address, funderAddress)
+        balanceOfToken(homeToken.address, funderAddress, { bridgeType: 'home' })
       }
     } else if (transactionStatus && transactionStatus === FAILURE) {
       if (transferSuccess === false) {
