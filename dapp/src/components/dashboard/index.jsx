@@ -150,12 +150,10 @@ const DashboardLayout = (props) => {
                   </Route>
                 )}
 
-                <Route exact path={`${match.path}/onramp/:name`}
+                <Route exact path={`${match.path}/onramp`}
                   render={({ match }) => (
                     <OnRampPage
-                      match={match}
                       community={community}
-                      plugin={get(community, `plugins.${match.params.name}`, {})}
                     />
                   )}
                 />

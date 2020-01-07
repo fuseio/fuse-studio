@@ -9,7 +9,17 @@ const sendgridUtils = require('@utils/sendgrid')
 
 const makePlugin = ({ plugin }) => {
   const { name } = plugin
-  if (config.has(`plugins.${name}.args`)) {
+
+  // Onramp is a nested plugin
+  if (name === 'onramp') {
+    const services = lodash.fromPairs(
+      lodash.toPairs(lodash.get(plugin, 'services', {})).map(([key, value]) => [key, config.has(`plugins.${value.name}.args`) ? { ...config.get(`plugins.${value.name}.args`), ...value } : value])
+    )
+    return {
+      ...plugin,
+      services
+    }
+  } if (config.has(`plugins.${name}.args`)) {
     return { name, ...config.get(`plugins.${name}.args`), ...plugin }
   } else {
     return { name, ...plugin }

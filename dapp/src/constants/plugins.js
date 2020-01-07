@@ -20,31 +20,10 @@ const allPlugins = (isAdmin) => isAdmin ? ({
     icon: JoinBonusIcon,
     selectedIcon: JoinBonusYellowIcon
   },
-  moonpay: {
-    name: 'Moonpay',
-    path: '/onramp/moonpay',
-    url: (match) => `${match}/onramp/moonpay`,
-    icon: DollarIcon,
-    selectedIcon: DollarYellowIcon
-  },
-  ramp: {
-    name: 'Ramp',
-    path: '/onramp/ramp',
-    url: (match) => `${match}/onramp/ramp`,
-    icon: DollarIcon,
-    selectedIcon: DollarYellowIcon
-  },
-  coindirect: {
-    name: 'Coindirect',
-    path: '/onramp/coindirect',
-    url: (match) => `${match}/onramp/coindirect`,
-    icon: DollarIcon,
-    selectedIcon: DollarYellowIcon
-  },
-  wyre: {
-    name: 'Wyre',
-    path: '/onramp/wyre',
-    url: (match) => `${match}/onramp/wyre`,
+  onramp: {
+    name: 'Fiat on ramp',
+    path: '/onramp',
+    url: (match) => `${match}/onramp`,
     icon: DollarIcon,
     selectedIcon: DollarYellowIcon
   }

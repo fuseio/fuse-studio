@@ -1,0 +1,102 @@
+@include block(onramp) {
+  @include element(wrapper) {
+    position: relative;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    background: $color-white;
+    border-radius: 5px;
+
+    @include breakpoint(medium up) {
+      min-height: 390px;
+      height: 390px;  
+    }
+  }
+
+  @include element(container) {
+    @include xy-grid();
+    @include flex-align(justify, null);
+    padding-top: 20px;
+
+    @include breakpoint(medium up) {
+      width: 687px;
+      padding: 40px 40px 20px;
+      min-height: 200px;
+    }
+  }
+
+  @include element(header) {
+    @include xy-grid();
+    @include flex-align(justify, middle);
+    color: $color-white;
+
+    @include breakpoint(medium up) {
+      margin-top: 10em;
+      margin-bottom: 1.5em;
+    }
+
+    @include breakpoint(small down) {
+      margin-top: 4em;
+    }
+
+    @include element(title) {
+      font-size: 1.625em;
+      font-weight: 500;
+    }
+
+    @include element(add) {
+      > div {
+        font-size: 0.688em;
+        cursor: pointer;
+          > span {
+          width: 15px;
+          height: 12px;
+          display: inline-block;
+          margin-right: 5px;
+          margin-left: auto;
+
+          .fa {
+            font-size: 14px;
+          }
+
+          > a {
+            height: 100%;
+            width: 100%;
+            display: block;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+          }
+        }
+      }
+    }
+  }
+}
+
+  @include block(plugins_step) {
+    @include element(item) {
+    }
+
+    @include element(title) {
+      margin-right: 1em;
+      flex: 0.6;
+      color: $color-dark;
+    }
+
+    @include element(toggle) {
+      flex: 0.1;
+      @include xy-grid(horizontal, false);
+      @include flex-align(null, middle);
+      padding-top: 1em;
+
+      @include element(text) {
+        font-size: 0.75em;
+        margin-left: 5px;
+        color: rgba(13, 45, 69, 0.5);
+        > span {
+          &:first-child {
+            font-weight: bold;
+            color: $color-dark;
+          }
+        }
+      }
+    }
+  }

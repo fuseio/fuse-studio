@@ -99,15 +99,15 @@ const Sidebar = ({
                   </div>
                   {
                     addedPlugins.map((plugin) => {
-                      const allPlugins1 = allPlugins(isAdmin)
-                      if (plugin && allPlugins1[plugin] && !allPlugins1[plugin].isRemoved) {
+                      const myPlugins = allPlugins(isAdmin)
+                      if (plugin && myPlugins[plugin] && !myPlugins[plugin].isRemoved) {
                         const {
                           name,
                           path,
                           url,
                           icon,
                           selectedIcon
-                        } = allPlugins1[plugin]
+                        } = myPlugins[plugin]
                         return (
                           <MenuItem
                             key={name}
