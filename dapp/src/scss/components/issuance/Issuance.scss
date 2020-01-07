@@ -945,10 +945,10 @@
           background-color: $color-disabled;
           border-radius: 10px;
           position: relative;
-        }
 
-        &:hover {
-          cursor: pointer;
+          &:hover {
+            cursor: pointer;
+          }
         }
 
         display: block;

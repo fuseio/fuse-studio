@@ -13,13 +13,10 @@ import JoinBonus from 'images/join_bonus.png'
 import JoinBonusBig from 'images/join_bonus_big.png'
 import BusinessList from 'images/business_list.png'
 import BusinessListBig from 'images/business_list_big.png'
+import FiatOnRamp from 'images/fiat-on-ramp.png'
+import FiatOnRampBig from 'images/fiat-on-ramp-big.png'
 import Bounty from 'images/bounty.png'
 import BountyBig from 'images/bounty_big.png'
-import Moonpay from 'images/moonpay.png'
-import Ramp from 'images/ramp.png'
-import Coindirect from 'images/coindirect.png'
-import Carbon from 'images/carbon.png'
-import Wyre from 'images/wyre.png'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getCommunityAddress } from 'selectors/entities'
 
@@ -40,55 +37,23 @@ const generalPlugins = ([
     Then your users can get the bonus after installing the Fuse app and joining your community.`
   },
   {
+    title: 'Fiat on ramp',
+    coverImage: FiatOnRamp,
+    disabled: false,
+    modalCoverPhoto: FiatOnRampBig,
+    content: `We have created integration with Coindirect, Moonpay, Carbon, Wyre, Ramp fiat gateways that allow you to embed the relevant payment option
+      (credit/debit cards and banks wires) inside your app and even show several option for your clients to choose from.
+      The integration allows your users to top their account without you holding any custody in the process! Here is how:
+      https://www.youtube.com/watch?v=ShxUIljvfLU&feature=emb_title`,
+    key: 'onramp'
+  },
+  {
     title: 'Bounty',
     subTitle: ' | Coming soon!',
     coverImage: Bounty,
     disabled: true,
     modalCoverPhoto: BountyBig,
     key: 'bounty'
-  }
-])
-
-const onRampPluginItems = ([
-  {
-    title: 'Moonpay',
-    subTitle: ' | Top up account',
-    coverImage: Moonpay,
-    key: 'moonpay',
-    text: 'Accept credit/debit cards, 4.5% per transaction',
-    website: 'https://www.moonpay.io/'
-  },
-  {
-    title: 'Ramp',
-    subTitle: ' | Top up account',
-    coverImage: Ramp,
-    key: 'ramp',
-    text: 'Europe wire transfer (SEPA)',
-    website: 'https://instant.ramp.network/'
-  },
-  {
-    title: 'Coindirect',
-    subTitle: ' | Top up account',
-    coverImage: Coindirect,
-    key: 'coindirect',
-    text: 'Accept credit/debit cards, 2.99% per transaction',
-    website: 'https://www.coindirect.com/'
-  },
-  {
-    title: 'Carbon',
-    subTitle: ' | Top up account',
-    coverImage: Carbon,
-    key: 'carbon',
-    text: 'Accept credit/debitc cards, ACH, SEPA',
-    website: 'https://www.carbon.money/'
-  },
-  {
-    title: 'Wyre',
-    subTitle: ' | Top up account',
-    coverImage: Wyre,
-    key: 'wyre',
-    text: 'Accept credit/debit cards, ACH',
-    website: 'https://www.sendwyre.com/'
   }
 ])
 
@@ -194,7 +159,6 @@ const Plugins = ({
           <div className='plugins__puzzle'><img src={Puzzle} /></div>
         </div>
         <PluginList pluginList={generalPlugins} pluginTile={'Choose plug-in you want to add'} plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
-        <PluginList pluginList={onRampPluginItems} pluginTile='Fiat On-ramp' plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
       </div>
     </div> : <div />
   )
