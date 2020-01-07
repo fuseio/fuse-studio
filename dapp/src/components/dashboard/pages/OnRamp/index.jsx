@@ -70,7 +70,7 @@ const OnRamp = ({
       </div>
       <div className='onramp__wrapper'>
         <div className='onramp__container'>
-          <div>
+          <div className='title'>
           Please select the integration you wish to add to your app.
           The selected option will appear to users on the wallet app
           (after switching to your community)
