@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import { useParams } from 'react-router'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
-import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 import capitalize from 'lodash/capitalize'
 import { toChecksumAddress } from 'web3-utils'
@@ -63,16 +62,21 @@ const Businesses = ({
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState(null)
-  const [businesses, setBusinesses] = useState([])
+  const [businesses, setBusinesses] = useState()
+  const [users, setUsers] = useState([])
+
   const [fetchEntitiesFromGraph, { loading }] = useLazyQuery(GET_COMMUNITY(communityAddress), {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       const communityEntities = get(data, 'communities[0].entitiesList.communityEntities', [])
       const businesses = communityEntities.filter(entity => entity.isBusiness)
+      const users = communityEntities.filter(entity => !entity.isBusiness)
+
       businesses.forEach(({ address }) => {
         fetchEntityMetadata(toChecksumAddress(communityAddress), toChecksumAddress(address))
       })
       setBusinesses(businesses)
+      setUsers(users)
     }
   })
 
@@ -103,7 +107,7 @@ const Businesses = ({
   }, [entityAdded])
 
   useEffect(() => {
-    if (!isEmpty(businesses)) {
+    if (businesses) {
       const data = businesses.map(({ address }) => {
         const checkSumAddress = toChecksumAddress(address)
         return {
@@ -130,8 +134,6 @@ const Businesses = ({
         }
       })
       setData(data)
-    } else {
-      setData([])
     }
     return () => { }
   }, [businesses, businessesMetadata])
@@ -210,6 +212,7 @@ const Businesses = ({
     loadModal(ADD_BUSINESS_MODAL, {
       isJoin,
       entity: isJoin ? { account: accountAddress } : undefined,
+      users,
       submitEntity: (data) => submitEntity(communityAddress, { ...data }, isClosed, 'business')
     })
   }

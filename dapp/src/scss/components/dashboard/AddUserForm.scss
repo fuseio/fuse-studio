@@ -164,6 +164,74 @@
       }
     }
 
+    @include element(creatable-select) {
+      display: inline-block;
+      flex: 1;
+      margin-top: 1em;
+
+      @include element(prefix) {
+        color: #0a7586 !important;
+        font-size: 0.750em;
+        &__control {
+          border: 1px solid #dadada !important;
+          min-height: auto !important;
+          height: 30px !important;
+          border-radius: 0 !important;
+
+          &--is-focused {
+            box-shadow: 0 0 0 1px #052235 !important;
+          }
+        }
+        &__value-container {
+          height: inherit;
+        }
+        &__placeholder,
+        &__single-value {
+          color: #8d95a9 !important;
+          font-size: 0.750em !important;
+        }
+        &__indicator-separator {
+          display: none;
+        }
+        &__menu {
+          border-radius: 0 !important;
+        }
+        &__option {
+          color: #0a7586 !important;
+          font-size: 0.750em !important;
+          text-align: start !important;
+          background-color: $color-white;
+          height: 41px !important;
+          padding-top: 14px !important;
+          color: #a4a4a4 !important;
+          &--is-focused {
+            background-color: #f8f8f8 !important;
+          }
+          &--is-selected {
+            background-color: #f8f8f8 !important;
+          }
+        }
+        &__dropdown-indicator {
+          &::before {
+            content: "";
+            display: block;
+            position: absolute;
+            right: 10px;
+            width: 0;
+            height: 0;
+            top: 13px;
+            border-style: solid;
+            border-color: #8d95a9 transparent transparent transparent;
+            border-width: 6px;
+          }
+          [class^="css"] {
+            display: none;
+          }
+        }
+        
+      }
+    }
+
     @include element(underline) {
       &:before {
         border-bottom: 1px solid #dadada !important;

@@ -10,6 +10,9 @@ import { businessTypes, options } from 'constants/dropdownOptions'
 import FontAwesome from 'react-fontawesome'
 import TextField from '@material-ui/core/TextField'
 import TransactionButton from 'components/common/TransactionButton'
+import CreatableSelect from 'react-select/creatable'
+
+const createUserOptions = (users) => users.map(user => ({ value: user.address, label: user.address }))
 
 class BusinessForm extends Component {
   constructor (props) {
@@ -70,7 +73,7 @@ class BusinessForm extends Component {
   }
 
   renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
-    const { isJoin } = this.props
+    const { isJoin, users } = this.props
     return (
       <form className='user-form' onSubmit={handleSubmit}>
         <h5 className='user-form__title'>
@@ -184,30 +187,17 @@ class BusinessForm extends Component {
         <div className='grid-x align-middle user-form__more-info'>
           <h2 className='user-form__label user-form__label--no-margin'>More info</h2>
           <div className='user-form__field'>
-            <TextField
-              label='Ethereum account'
+            <CreatableSelect
               name='account'
-              required
-              type='search'
-              fullWidth
-              value={values.account}
-              onBlur={() => setFieldTouched('account', true)}
-              error={errors && errors.account && touched.account && true}
-              autoComplete='off'
-              onChange={handleChange}
-              margin='normal'
-              InputProps={{
-                classes: {
-                  root: 'input__root',
-                  focused: '',
-                  error: 'user-form__field__error',
-                  underline: 'user-form__field__underline'
-                }
-              }}
-              InputLabelProps={{
-                classes: {
-                  root: 'user-form__field__label2'
-                }
+              className='user-form__field__creatable-select'
+              classNamePrefix='user-form__field__creatable-select__prefix'
+              error={errors && errors.type && true}
+              options={createUserOptions(users)}
+              placeholder={'Business account*'}
+              formatCreateLabel={(inputValue) => inputValue}
+              onChange={val => {
+                setFieldValue('selectedType', val)
+                setFieldValue('account', val.value)
               }}
             />
           </div>

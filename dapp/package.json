@@ -80,7 +80,7 @@
     "react-phone-input-2": "^2.11.0",
     "react-redux": "^7.1.0",
     "react-router": "^5.1.2",
-    "react-select": "^2.0.0-beta.2",
+    "react-select": "^3.0.8",
     "react-sidebar": "^3.0.2",
     "react-table": "7.0.0-alpha.27",
     "react-tooltip": "^3.11.0",
