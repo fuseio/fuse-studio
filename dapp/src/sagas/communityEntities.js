@@ -19,6 +19,8 @@ import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
 import CommunityTransferManagerABI from '@fuse/entities-contracts/abi/CommunityTransferManager'
 import { getWeb3 } from 'sagas/network'
 import { getOptions, getNetworkVersion } from 'utils/network'
+import gql from 'graphql-tag'
+import { client } from 'services/graphql'
 
 function * confirmUser ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
@@ -90,9 +92,24 @@ function deriveEntityData (type, isClosed) {
   }
 }
 
-function * checkIsCommunityMember ({ communityAddress, account }) {
-  const memberData = yield apiCall(entitiesApi.fetchEntity, { communityAddress, account })
-  return memberData && memberData.data
+const GET_COMMUNITY_ENTITY = (account) => gql`
+  {
+    communityEntities(where:{address: "${account}"}) {
+      address
+      isUser
+      isApproved
+      isAdmin
+      isBusiness
+    }
+  }
+`
+
+function * checkIsCommunityMember ({ account }) {
+  const memberData = yield call(client.query, {
+    fetchPolicy: 'network-only',
+    query: GET_COMMUNITY_ENTITY(account)
+  })
+  return memberData && memberData.data && memberData.data.communityEntities && memberData.data.communityEntities.length > 0
 }
 
 function * addToUserBusinessRole ({ communityAddress, data }) {
