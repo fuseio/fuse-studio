@@ -6,6 +6,7 @@ const lodash = require('lodash')
 const branch = require('@utils/branch')
 const twilio = require('@utils/twilio')
 const sendgridUtils = require('@utils/sendgrid')
+const { toChecksumAddress } = require('web3-utils')
 
 const makePlugin = ({ plugin }) => {
   const { name } = plugin
@@ -115,7 +116,7 @@ router.get('/featured', async (req, res, next) => {
  */
 router.get('/:communityAddress', async (req, res, next) => {
   const { communityAddress } = req.params
-  const community = await Community.findOne({ communityAddress }).lean()
+  const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
   return res.json({ data: community })
 })
 
