@@ -6,7 +6,8 @@ export const businessTypes = () => ([
   { value: 'design', label: 'Design & Home' },
   { value: 'pets', label: 'Pets' },
   { value: 'education', label: 'Education' },
-  { value: 'fashion', label: 'Fashion & Accessories' }
+  { value: 'fashion', label: 'Fashion & Accessories' },
+  { value: 'lifestyle', label: 'Lifestyle' }
 ])
 
 export const options = () => ([
