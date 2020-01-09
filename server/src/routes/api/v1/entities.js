@@ -6,7 +6,7 @@ const Profile = mongoose.model('Profile')
 const metadataUtils = require('@utils/metadata')
 const Community = mongoose.model('Community')
 const Token = mongoose.model('Token')
-const { sortBy, keyBy, get } = require('lodash')
+const { sortBy, keyBy, get, has } = require('lodash')
 const { toChecksumAddress } = require('web3-utils')
 
 const withCommunities = async (entities) => {
@@ -65,11 +65,12 @@ router.get('/account/:account', async (req, res, next) => {
 
 router.put('/:communityAddress/:account', async (req, res) => {
   const { account, communityAddress } = req.params
+
   const { name } = req.body.metadata
   const { hash } = await metadataUtils.createMetadata(req.body.metadata)
 
   const uri = `ipfs://${hash}`
-  const entity = await Entity.findOneAndUpdate({ account, communityAddress }, { uri, name }, { new: true, upsert: true })
+  const entity = await Entity.findOneAndUpdate({ account: toChecksumAddress(account), communityAddress }, { uri, name }, { new: true, upsert: true })
   return res.json({ data: entity })
 })
 
@@ -119,6 +120,13 @@ router.get('/metadata/:communityAddress/:account', async (req, res, next) => {
   const uri = get(entity, 'uri', false)
   if (uri) {
     const metadata = await metadataUtils.getMetadata(entity.uri.split('://')[1])
+    if (has(metadata, 'data.account')) {
+      try {
+        metadata.data.account = toChecksumAddress(metadata.data.account)
+      } catch (e) {
+        console.error(e)
+      }
+    }
     return res.json({ ...metadata })
   }
   return res.json({ data: entity })
