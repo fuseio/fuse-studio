@@ -11,7 +11,7 @@ import { useFetch } from 'hooks/useFetch'
 
 import {
   addEntity,
-  fetchUsersEntities,
+  fetchEntities,
   removeEntity,
   addAdminRole,
   removeAdminRole,
@@ -40,7 +40,6 @@ const Users = ({
   signatureNeeded,
   transactionStatus,
   fetchEntities,
-  fetchUsersEntities,
   importExistingEntity,
   loadModal,
   joinCommunity,
@@ -79,7 +78,7 @@ const Users = ({
 
   useEffect(() => {
     if (communityAddress) {
-      fetchUsersEntities(communityAddress)
+      fetchEntities(communityAddress)
     }
     return () => {}
   }, [communityAddress])
@@ -365,7 +364,7 @@ const mapDispatchToProps = {
   removeEntity,
   loadModal,
   hideModal,
-  fetchUsersEntities,
+  fetchEntities,
   importExistingEntity
 }
 

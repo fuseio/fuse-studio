@@ -15,6 +15,8 @@ import { separateData } from 'utils/3box'
 import { createProfile } from 'services/api/profiles'
 import { uploadImage as uploadImageApi } from 'services/api/images'
 import omit from 'lodash/omit'
+import get from 'lodash/get'
+import keyBy from 'lodash/keyBy'
 import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
 import CommunityTransferManagerABI from '@fuse/entities-contracts/abi/CommunityTransferManager'
 import { getWeb3 } from 'sagas/network'
@@ -192,16 +194,17 @@ function * watchEntityChanges ({ response }) {
   const { data } = response
 
   if (data) {
-    const { type } = data
-    if (type === 'user') {
-      yield put(actions.fetchUsersEntities(communityAddress))
-    }
-    //  else if (type === 'business') {
-    // yield put(actions.fetchBusinessesEntities(communityAddress))
-    // }
-  } else {
-    yield put(actions.fetchUsersEntities(communityAddress))
-    // yield put(actions.fetchBusinessesEntities(communityAddress))
+    yield put(actions.fetchEntities(communityAddress))
+  //   const { type } = data
+  //   if (type === 'user') {
+  //     yield put(actions.fetchUsersEntities(communityAddress))
+  //   }
+  //   //  else if (type === 'business') {
+  //   // yield put(actions.fetchBusinessesEntities(communityAddress))
+  //   // }
+  // } else {
+  //   yield put(actions.fetchUsersEntities(communityAddress))
+  //   // yield put(actions.fetchBusinessesEntities(communityAddress))
   }
 }
 
@@ -241,9 +244,36 @@ function * inviteUserToCommunity ({ communityAddress, email, phoneNumber }) {
   })
 }
 
-const fetchEntities = createEntitiesFetch(actions.FETCH_ENTITIES, entitiesApi.fetchCommunityEntities)
-const fetchUsersEntities = createEntitiesFetch(actions.FETCH_USERS_ENTITIES, entitiesApi.fetchCommunityEntities)
-const fetchBusinessesEntities = createEntitiesFetch(actions.FETCH_BUSINESSES_ENTITIES, entitiesApi.fetchCommunityEntities)
+function * fetchEntities ({ communityAddress }) {
+  const { data } = yield call(entitiesApi.fetchCommunityEntities, { communityAddress })
+  const communityEntities = get(data, 'communities[0].entitiesList.communityEntities', [])
+
+  // const { data, ...metadata } = response
+
+  // const dataArray = Array.isArray(data) ? data : [data]
+  const entities = keyBy(communityEntities, 'address')
+  const result = Object.keys(entities)
+  debugger
+  yield put({
+    entity: 'communityEntities',
+    type: actions.FETCH_ENTITIES.SUCCESS,
+    response: {
+      entities,
+      result
+    } })
+
+  // yield put({
+  //   type: actions.FETCH_ENTITIES.SUCCESS,
+  //   response: {
+  //     communityEntities
+  //   }
+  // })
+
+}
+
+// const fetchEntitiesInternal = createEntitiesFetch(actions.FETCH_ENTITIES, entitiesApi.fetchCommunityEntities)
+// const fetchUsersEntities = createEntitiesFetch(actions.FETCH_USERS_ENTITIES, entitiesApi.fetchCommunityEntities)
+// const fetchBusinessesEntities = createEntitiesFetch(actions.FETCH_BUSINESSES_ENTITIES, entitiesApi.fetchCommunityEntities)
 const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchEntity)
 const fetchEntityMetadata = createEntitiesFetch(actions.FETCH_ENTITY_METADATA, entitiesApi.fetchEntityMetadata)
 
@@ -254,8 +284,8 @@ export default function * communityEntitiesSaga () {
     tryTakeEvery(actions.TOGGLE_COMMUNITY_MODE, toggleCommunityMode, 1),
     tryTakeEvery(actions.REMOVE_ENTITY, removeEntity, 1),
     tryTakeEvery(actions.FETCH_ENTITIES, fetchEntities, 1),
-    tryTakeEvery(actions.FETCH_USERS_ENTITIES, fetchUsersEntities, 1),
-    tryTakeEvery(actions.FETCH_BUSINESSES_ENTITIES, fetchBusinessesEntities, 1),
+    // tryTakeEvery(actions.FETCH_USERS_ENTITIES, fetchUsersEntities, 1),
+    // tryTakeEvery(actions.FETCH_BUSINESSES_ENTITIES, fetchBusinessesEntities, 1),
     tryTakeEvery(actions.FETCH_ENTITY, fetchEntity, 1),
     tryTakeEvery(actions.FETCH_ENTITY_METADATA, fetchEntityMetadata, 1),
     tryTakeEvery(actions.ADD_ADMIN_ROLE, addAdminRole, 1),

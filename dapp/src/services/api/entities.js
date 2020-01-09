@@ -1,11 +1,35 @@
 import request from 'superagent'
+import { gql } from '@apollo/client'
+import { client } from 'services/graphql'
 
-export const fetchCommunityEntities = (apiRoot, { communityAddress, entityType }) => {
-  const path = entityType
-    ? `${apiRoot}/entities/${communityAddress}?type=${entityType}`
-    : `${apiRoot}/entities/${communityAddress}`
-  return request.get(path).then(response => response.body)
+const GET_COMMUNITY = (address) => {
+  return gql`
+    {
+      communities (where: {address: "${address}"}) {
+        entitiesList {
+          id
+          communityEntities {
+            address
+            isAdmin
+            isApproved
+            isUser
+            isBusiness
+          }
+        }
+      }
+    }
+  `
 }
+
+export const fetchCommunityEntities = ({ communityAddress }) => client.query({
+  query: GET_COMMUNITY(communityAddress)
+})
+// export const fetchCommunityEntities = (apiRoot, { communityAddress, entityType }) => {
+//   const path = entityType
+//     ? `${apiRoot}/entities/${communityAddress}?type=${entityType}`
+//     : `${apiRoot}/entities/${communityAddress}`
+//   return request.get(path).then(response => response.body)
+// }
 
 export const createEntitiesMetadata = (apiRoot, { communityAddress, accountAddress, metadata }) =>
   request.put(`${apiRoot}/entities/${communityAddress}/${accountAddress}`)

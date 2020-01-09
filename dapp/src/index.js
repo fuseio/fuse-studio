@@ -4,7 +4,7 @@ import 'utils/validation/yup'
 import React from 'react'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom'
-import { ApolloProvider } from '@apollo/react-hooks'
+import { ApolloProvider } from '@apollo/client'
 import * as Sentry from '@sentry/browser'
 import { ConnectedRouter } from 'connected-react-router'
 

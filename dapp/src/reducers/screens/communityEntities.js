@@ -1,21 +1,21 @@
 import {
   ADD_ENTITY,
   EDIT_ENTITY,
-  FETCH_USERS_ENTITIES,
-  FETCH_BUSINESSES_ENTITIES,
   REMOVE_ENTITY,
   ADD_ADMIN_ROLE,
   REMOVE_ADMIN_ROLE,
   TOGGLE_COMMUNITY_MODE,
-  JOIN_COMMUNITY
+  JOIN_COMMUNITY,
+  FETCH_ENTITIES
 } from 'actions/communityEntities'
 import { REQUEST } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
 import omit from 'lodash/omit'
 
 const initialState = {
-  usersResults: [],
-  merchantsResults: []
+  entitiesAccounts: []
+  // userAccounts: [],
+  // businessesAccounts: []
 }
 
 export default (state = initialState, action) => {
@@ -45,9 +45,9 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.response,
-        updateEntities: true,
-        merchantsResults: state.merchantsResults.filter(val => val !== account),
-        usersResults: state.usersResults.filter(val => val !== account)
+        updateEntities: true
+        // merchantsResults: state.merchantsResults.filter(val => val !== account),
+        // usersResults: state.usersResults.filter(val => val !== account)
       }
     case ADD_ENTITY.REQUEST:
       return { ...state, signatureNeeded: true, showTransactionMessage: true, updateEntities: false, [`${action.entityType}JustAdded`]: action.data.name }
@@ -56,20 +56,15 @@ export default (state = initialState, action) => {
     case ADD_ENTITY.PENDING:
       return { ...state, transactionHash: action.response.transactionHash, signatureNeeded: false }
     case ADD_ENTITY.SUCCESS:
-      return { ...state, updateEntities: true, fetchEntities: true, showTransactionMessage: false, entityAdded: true }
+      return { ...state, updateEntities: true, toFetchEntities: true, showTransactionMessage: false, entityAdded: true }
     case EDIT_ENTITY.PENDING:
       return { ...state, editTransactionHash: action.response.transactionHash }
-    case FETCH_USERS_ENTITIES.REQUEST:
-      return {
-        ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']),
-        fetchEntities: true
-      }
-    case FETCH_USERS_ENTITIES.SUCCESS:
-      return { ...state, usersResults: [...action.response.result], fetchEntities: false }
-    case FETCH_BUSINESSES_ENTITIES.REQUEST:
-      return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), fetchEntities: true }
-    case FETCH_BUSINESSES_ENTITIES.SUCCESS:
-      return { ...state, updateEntities: false, merchantsResults: [...action.response.result], fetchEntities: false }
+    case FETCH_ENTITIES.REQUEST:
+      return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), toFetchEntities: true }
+    case FETCH_ENTITIES.SUCCESS:
+      // const businessesAccounts = action.response.result.filter(account => action.response.entities[account].isBusiness)
+      // const userAccounts = action.response.result.filter(account => action.response.entities[account].isBusiness)
+      return { ...state, updateEntities: false, entitiesAccounts: [...action.response.result], toFetchEntities: false }
     case JOIN_COMMUNITY.SUCCESS:
       return { ...state, join: true }
     case JOIN_COMMUNITY.FAILURE:

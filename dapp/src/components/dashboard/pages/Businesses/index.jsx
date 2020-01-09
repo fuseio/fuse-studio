@@ -6,7 +6,7 @@ import get from 'lodash/get'
 import capitalize from 'lodash/capitalize'
 import { toChecksumAddress } from 'web3-utils'
 import gql from 'graphql-tag'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useLazyQuery } from '@apollo/client'
 import MyTable from 'components/dashboard/components/Table'
 import {
   addEntity,

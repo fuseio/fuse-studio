@@ -27,8 +27,8 @@ export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
 const options = { desiredNetworkType: 'fuse' }
 
 export const fetchEntities = (communityAddress) => entitiesAction(FETCH_ENTITIES.REQUEST, { communityAddress })
-export const fetchUsersEntities = (communityAddress, entityType = 'user') => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress, entityType })
-export const fetchBusinessesEntities = (communityAddress, entityType = 'business') => entitiesAction(FETCH_BUSINESSES_ENTITIES.REQUEST, { communityAddress, entityType })
+// export const fetchUsersEntities = (communityAddress, entityType = 'user') => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress, entityType })
+// export const fetchBusinessesEntities = (communityAddress, entityType = 'business') => entitiesAction(FETCH_BUSINESSES_ENTITIES.REQUEST, { communityAddress, entityType })
 
 export const fetchEntity = (communityAddress, account) => entitiesAction(FETCH_ENTITY.REQUEST, { communityAddress, account })
 export const fetchEntityMetadata = (communityAddress, account) => entitiesBusinessesAction(FETCH_ENTITY_METADATA.REQUEST, { communityAddress, account })
