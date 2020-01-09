@@ -8,8 +8,9 @@
     },
     "home": {
       "sharedAddresses": {
-        "WalletFactory": "0x841C3F8138315EB5008dB8BB1457B58a8bF53bac",
+        "WalletFactory": "0xe02A2163629174937487f994E20214631540fB65",
         "CommunityFactory": "0x0F7bD61dE50Aa24A4c4C6bd2111E54Cae92bf33a",
+        "MultiSigWallet": "0x94AfC8B0c3843Bd2a50f84D3B871aEa920653245",
         "walletModules": {
           "GuardianManager": "0x168CaBbe6422Bd22d0372Ff0C55eA3F75Af5e14F",
           "LockManager": "0xcCbaBE688099E5e7431B6bF49235633455E93066",
