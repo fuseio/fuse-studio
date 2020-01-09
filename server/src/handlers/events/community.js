@@ -37,7 +37,12 @@ const handleEntityRolesUpdated = async (event, receipt) => {
   const { roles, account } = event.returnValues
   const derivedFields = deriveFromRoles(roles)
 
-  return Entity.updateOne({ account, communityAddress }, { ...derivedFields, roles })
+  const profile = await Profile.findOne({ account })
+  if (profile) {
+    return Entity.findOneAndUpdate({ account, communityAddress }, { ...derivedFields, communityAddress, roles, account, profile: profile._id }, { new: true, upsert: true })
+  } else {
+    return Entity.findOneAndUpdate({ account, communityAddress }, { ...derivedFields, communityAddress, roles, account }, { new: true, upsert: true })
+  }
 }
 
 const handleRuleAdded = async (event) => {

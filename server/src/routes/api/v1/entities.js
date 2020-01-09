@@ -121,7 +121,7 @@ router.get('/metadata/:communityAddress/:account', async (req, res, next) => {
     const metadata = await metadataUtils.getMetadata(entity.uri.split('://')[1])
     return res.json({ ...metadata })
   }
-  return res.json({ data: {} })
+  return res.json({ data: entity })
 })
 
 const getQueryFilter = ({ query: { type }, params: { communityAddress } }) =>
