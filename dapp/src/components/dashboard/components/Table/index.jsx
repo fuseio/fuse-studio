@@ -18,9 +18,10 @@ const MyTable = ({
   loading,
   justAdded,
   pageCount,
+  pageSize,
   ...props
 }) => {
-  const state = useTableState({ pageCount })
+  const state = useTableState({ pageCount, pageSize })
 
   const {
     getTableProps,

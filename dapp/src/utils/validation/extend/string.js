@@ -1,5 +1,5 @@
 import { addMethod, string } from 'yup'
-import { isAddress } from 'web3-utils'
+import { isAddress, toChecksumAddress } from 'web3-utils'
 import { PhoneNumberUtil } from 'google-libphonenumber'
 
 const phoneUtil = PhoneNumberUtil.getInstance()
@@ -12,6 +12,17 @@ const isValidCountryCode = (countryCode) =>
 addMethod(string, 'normalize', function yupNormalize () {
   return this.trim().ensure()
 })
+
+addMethod(string, 'toCheckSum', function yupCheckSum (value, originalvalue) {
+  return this.transform(function (value) {
+    return (this.isType(value) && value) ? toChecksumAddress(value) : value
+  })
+})
+
+// addMethod(string, 'toCheckSum', function yupToCheckSum () {
+//   return toChecksumAddress
+
+// })
 
 addMethod(string, 'isAddress', function yupIsAddress (address, message = 'Address is not valid') {
   return this.test({
