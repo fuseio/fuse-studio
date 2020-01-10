@@ -240,6 +240,7 @@ const Businesses = ({
         loading={loading}
         columns={columns}
         pageCount={0}
+        pageSize={50}
       />
     )
   }
