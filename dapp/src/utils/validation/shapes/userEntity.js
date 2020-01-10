@@ -13,6 +13,6 @@ export default object().noUnknown(false).shape({
     value: string()
   }).nullable(true),
   address: string(),
-  account: string().normalize().required().isAddress(),
+  account: string().normalize().required().isAddress().toCheckSum(),
   image: mixed().nullable(true)
 })

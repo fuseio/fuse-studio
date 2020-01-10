@@ -8,7 +8,7 @@ export default object().noUnknown(false).shape({
   website: string().normalize(),
   description: string().normalize().label('Description').max(490),
   type: string().normalize().required(),
-  account: string().normalize().required().isAddress(),
+  account: string().normalize().required().isAddress().toCheckSum(),
   selectedType: object().shape({
     label: string().normalize(),
     value: string().normalize()
