@@ -31,15 +31,28 @@ const Balance = ({
   const { bridge, network } = bridgeSide
   useEffect(() => {
     if (isAdmin) {
-      const { analytics } = window
       if (bridge === 'home' && Number(new BigNumber(balance).div(1e18).toFixed()) > 0) {
-        analytics.identify(accountAddress, {
-          bridgeWasUsed: true
+        window.analytics.track({
+          userId: accountAddress,
+          event: 'Bridge used',
+          properties: {
+            bridgeWasUsed: true
+          }
         })
+        // window.analytics.identify(accountAddress, {
+        //   bridgeWasUsed: true
+        // })
       } else {
-        analytics.identify(accountAddress, {
-          bridgeWasUsed: false
+        window.analytics.track({
+          userId: accountAddress,
+          event: 'Bridge not used',
+          properties: {
+            bridgeWasUsed: false
+          }
         })
+        // window.analytics.identify(accountAddress, {
+        //   bridgeWasUsed: false
+        // })
       }
     }
     return () => { }

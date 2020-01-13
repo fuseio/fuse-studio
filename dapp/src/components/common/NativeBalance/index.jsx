@@ -12,13 +12,25 @@ const NativeBalance = ({
   useEffect(() => {
     const { analytics } = window
     if (account && account.accountAddress) {
-      analytics.identify(account.accountAddress, {
-        provider: providerInfo.name
+      analytics.track({
+        userId: account.accountAddress,
+        properties: {
+          provider: providerInfo.name
+        }
       })
+      // analytics.identify(account.accountAddress, {
+      //   provider: providerInfo.name
+      // })
     } else {
-      analytics.identify({
-        subscriptionStatus: 'inactive'
+      analytics.track({
+        userId: account.accountAddress,
+        properties: {
+          subscriptionStatus: 'inactive'
+        }
       })
+      // analytics.identify({
+      //   subscriptionStatus: 'inactive'
+      // })
     }
   }, [account])
 
