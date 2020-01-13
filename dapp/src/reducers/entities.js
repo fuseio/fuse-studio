@@ -5,6 +5,7 @@ const initialState = {
   metadata: {},
   tokens: {},
   businesses: {},
+  users: {},
   bridges: {},
   communityEntities: {},
   communities: {}

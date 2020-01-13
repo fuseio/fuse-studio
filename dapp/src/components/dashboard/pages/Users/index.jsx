@@ -3,44 +3,43 @@ import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
 import { useParams } from 'react-router'
-import { connect, useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import sortBy from 'lodash/sortBy'
 
 import MyTable from 'components/dashboard/components/Table'
-import { useFetch } from 'hooks/useFetch'
+// import { useFetch } from 'hooks/useFetch'
 
 import {
   addEntity,
-  fetchUsersEntities,
+  fetchEntities,
   removeEntity,
   addAdminRole,
   removeAdminRole,
   confirmUser,
   joinCommunity,
-  importExistingEntity
+  importExistingEntity,
+  fetchUsersMetadata
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import { getTransaction } from 'selectors/transaction'
 
-import { getApiRoot } from 'utils/network'
-import { getForeignNetwork } from 'selectors/network'
+// import { getApiRoot } from 'utils/network'
+// import { getForeignNetwork } from 'selectors/network'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
-import { getUsersEntities, checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
 
 import AddBusiness from 'images/add_business.svg'
 import Avatar from 'images/avatar.svg'
 
 const Users = ({
-  users,
   isAdmin,
   community,
   accountAddress,
   signatureNeeded,
   transactionStatus,
   fetchEntities,
-  fetchUsersEntities,
   importExistingEntity,
   loadModal,
   joinCommunity,
@@ -52,100 +51,82 @@ const Users = ({
   userJustAdded,
   transactionData,
   entityAdded,
-  push
+  push,
+  userAccounts,
+  communityEntities,
+  fetchUsersMetadata,
+  users
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
-  const apiRoot = getApiRoot(useSelector(getForeignNetwork))
-  let url = `${apiRoot}/entities/${communityAddress}?type=user`
+  // const apiRoot = getApiRoot(useSelector(getForeignNetwork))
+  // let url = `${apiRoot}/entities/${communityAddress}?type=user`
 
-  if (search) {
-    url = `${url}&search=${search}`
-  }
+  // if (search) {
+  //   url = `${url}&search=${search}`
+  // }
 
-  const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
+  // const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
+
+  // useEffect(() => {
+  //   if (fetchEntities === false) {
+  //     fetchData()
+  //   }
+
+  //   if (search) {
+  //     fetchData()
+  //   }
+  //   return () => {}
+  // }, [fetchEntities])
+
+  // useEffect(() => {
+  //   if (communityAddress) {
+  //     fetchEntities(communityAddress)
+  //   }
+  //   return () => {}
+  // }, [communityAddress])
 
   useEffect(() => {
-    if (fetchEntities === false) {
-      fetchData()
+    if (userAccounts && userAccounts.length > 0) {
+      fetchUsersMetadata(userAccounts)
     }
-
-    if (search) {
-      fetchData()
-    }
-    return () => {}
-  }, [search, fetchEntities])
+  }, [userAccounts])
 
   useEffect(() => {
-    if (communityAddress) {
-      fetchUsersEntities(communityAddress)
-    }
-    return () => {}
-  }, [communityAddress])
-
-  useEffect(() => {
-    if (!isEmpty(response)) {
-      const { data: listData } = response
-      setData(sortBy(listData.map(({ profile, isAdmin: hasAdminRole, isApproved, account }, index) => ({
+    const userEntities = userAccounts.map(account => communityEntities[account])
+    if (!isEmpty(userEntities)) {
+      debugger
+      const data = userEntities.map(({ isAdmin, isApproved, address }, index) => ({
         isApproved,
-        hasAdminRole,
-        name: profile && profile.publicData
-          ? profile.publicData.name
-            ? [
-              {
-                name: profile.publicData.name,
-                image: profile.publicData &&
-                  profile.publicData.image
-                  ? <div
-                    style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  : <div
-                    style={{
-                      backgroundImage: `url(${Avatar})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-              }
-            ]
-            : [
-              {
-                name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
-                image: profile.publicData &&
-                  profile.publicData.image
-                  ? <div
-                    style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  : <div
-                    style={{
-                      backgroundImage: `url(${Avatar})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-              }
-            ]
+        isAdmin,
+        name: users[address]
+          ? [
+            {
+              name: users[address].name,
+              image: users[address].image
+                ? <div
+                  style={{
+                    backgroundImage: `url(https://ipfs.infura.io/ipfs/${users[address].image.contentUrl['/']})`,
+                    width: '36px',
+                    height: '36px',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                  }}
+                />
+                : <div
+                  style={{
+                    backgroundImage: `url(${Avatar})`,
+                    width: '36px',
+                    height: '36px',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                  }}
+                />
+            }
+          ]
           : [
             {
               name: '',
@@ -161,19 +142,20 @@ const Users = ({
               />
             }
           ],
-        account,
-        status: hasAdminRole
+        address,
+        status: isAdmin
           ? 'Community admin'
           : (community && !community.isClosed)
             ? 'Community user'
             : isApproved
               ? 'Community user'
               : 'Pending user'
-      })), ['updatedAt']).reverse())
+      }), ['updatedAt']).reverse()
+      setData(sortBy(data))
     }
 
     return () => { }
-  }, [response])
+  }, [userAccounts])
 
   useEffect(() => {
     if (entityAdded) {
@@ -216,13 +198,13 @@ const Users = ({
     },
     {
       Header: 'Account ID',
-      accessor: 'account'
+      accessor: 'address'
     },
     {
       id: 'dropdown',
       accessor: '',
       Cell: (rowInfo) => {
-        const { isApproved, hasAdminRole, account } = rowInfo.row.original
+        const { isApproved, hasAdminRole, address } = rowInfo.row.original
         return (
           isAdmin ? (
             <div className='table__body__cell__more'>
@@ -233,37 +215,37 @@ const Users = ({
                 {
                   !isApproved && !hasAdminRole && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleConfirmUser(account)}>Confirm</li>
-                      <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
+                      <li className='more__options__item' onClick={() => handleConfirmUser(address)}>Confirm</li>
+                      <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
+                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
                     </ul>
                   )
                 }
                 {
                   hasAdminRole && isApproved && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                      <li className='more__options__item' onClick={() => push(`transfer/${account}`)}>Transfer tokens to user</li>
-                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
+                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
+                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>
                     </ul>
                   )
                 }
                 {
                   hasAdminRole && !isApproved && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleConfirmUser(account)}>Confirm</li>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                      <li className='more__options__item' onClick={() => push(`transfer/${account}`)}>Transfer tokens to user</li>
-                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(account)}>Remove as admin</li>
+                      <li className='more__options__item' onClick={() => handleConfirmUser(address)}>Confirm</li>
+                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
+                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>
                     </ul>
                   )
                 }
                 {
                   !hasAdminRole && isApproved && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(account)}>Remove</li>
-                      <li className='more__options__item' onClick={() => push(`transfer/${account}`)}>Transfer tokens to user</li>
-                      <li className='more__options__item' onClick={() => handleAddAdminRole(account)}>Make admin</li>
+                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
+                      <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                     </ul>
                   )
                 }
@@ -308,15 +290,14 @@ const Users = ({
         }}
         data={tableData}
         justAdded={entityAdded}
-        loading={loading}
         columns={columns}
-        pageCount={response && response.pageCount ? response.pageCount : 0}
+        pageSize={50}
       />
     )
   }
 
   const renderContent = () => {
-    if (users && users.length) {
+    if (data && data.length > 0) {
       return renderTable()
     } else {
       return (
@@ -347,8 +328,9 @@ const Users = ({
 }
 
 const mapStateToProps = (state) => ({
-  users: getUsersEntities(state),
+  communityEntities: state.entities.communityEntities,
   accountAddress: getAccountAddress(state),
+  users: state.entities.users,
   ...state.screens.communityEntities,
   isAdmin: checkIsAdmin(state),
   community: getCurrentCommunity(state, getCommunityAddress(state)),
@@ -365,8 +347,9 @@ const mapDispatchToProps = {
   removeEntity,
   loadModal,
   hideModal,
-  fetchUsersEntities,
-  importExistingEntity
+  fetchEntities,
+  importExistingEntity,
+  fetchUsersMetadata
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users)

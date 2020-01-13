@@ -6,9 +6,9 @@ import get from 'lodash/get'
 import capitalize from 'lodash/capitalize'
 import { toChecksumAddress } from 'web3-utils'
 import gql from 'graphql-tag'
-import { useLazyQuery } from '@apollo/react-hooks'
 import MyTable from 'components/dashboard/components/Table'
 import {
+  fetchEntities,
   addEntity,
   removeEntity,
   joinCommunity,
@@ -25,24 +25,24 @@ import TransactionMessage from 'components/common/TransactionMessage'
 
 import dotsIcon from 'images/dots.svg'
 
-const GET_COMMUNITY = (address) => {
-  return gql`
-  {
-    communities (where: {address: "${address}"}) {
-      entitiesList {
-        id
-        communityEntities {
-          address
-          isAdmin
-          isApproved
-          isUser
-          isBusiness
-        }
-      }
-    }
-  }
-`
-}
+// const GET_COMMUNITY = (address) => {
+//   return gql`
+//   {
+//     communities (where: {address: "${address}"}) {
+//       entitiesList {
+//         id
+//         communityEntities {
+//           address
+//           isAdmin
+//           isApproved
+//           isUser
+//           isBusiness
+//         }
+//       }
+//     }
+//   }
+// `
+// }
 
 const Businesses = ({
   isClosed,
@@ -58,38 +58,36 @@ const Businesses = ({
   fetchEntityMetadata,
   updateEntities,
   signatureNeeded,
-  showTransactionMessage
+  showTransactionMessage,
+  businessesAccounts,
+  userAccounts,
+  communityEntities
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState(null)
   const [businesses, setBusinesses] = useState()
   const [users, setUsers] = useState([])
 
-  const [fetchEntitiesFromGraph, { loading }] = useLazyQuery(GET_COMMUNITY(communityAddress), {
-    fetchPolicy: 'network-only',
-    onCompleted: (data) => {
-      const communityEntities = get(data, 'communities[0].entitiesList.communityEntities', [])
-      const businesses = communityEntities.filter(entity => entity.isBusiness)
-      const users = communityEntities.filter(entity => !entity.isBusiness)
-
-      businesses.forEach(({ address }) => {
-        fetchEntityMetadata(toChecksumAddress(communityAddress), toChecksumAddress(address))
-      })
-      setBusinesses(businesses)
-      setUsers(users)
-    }
-  })
-
   const [transcactionTitle, setTransactionTitle] = useState()
 
   useEffect(() => {
-    fetchEntitiesFromGraph()
-  }, [])
+    businessesAccounts.forEach((address) => {
+      const checkSumAddress = toChecksumAddress(address)
+      if (!businessesMetadata[checkSumAddress]) {
+        fetchEntityMetadata(toChecksumAddress(communityAddress), toChecksumAddress(address))
+      }
+    })
+    const businessEntities = businessesAccounts.map(account => communityEntities[account])
+    const userEntities = userAccounts.map(account => communityEntities[account]).filter(entity => !entity.isBusiness)
+
+    setBusinesses(businessEntities)
+    setUsers(userEntities)
+  }, [businessesAccounts])
 
   useEffect(() => {
     if (updateEntities) {
       setTimeout(() => {
-        fetchEntitiesFromGraph()
+        fetchEntities()
       }, 2000)
     }
   }, [updateEntities])
@@ -237,7 +235,6 @@ const Businesses = ({
         }}
         data={tableData}
         justAdded={entityAdded}
-        loading={loading}
         columns={columns}
         pageCount={0}
         pageSize={50}
@@ -284,7 +281,7 @@ const Businesses = ({
 
 const mapStateToProps = (state) => ({
   network: state.network,
-  communityEntitiesMetaData: state.entities.communityEntities,
+  communityEntities: state.entities.communityEntities,
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
@@ -300,7 +297,8 @@ const mapDispatchToProps = {
   loadModal,
   hideModal,
   joinCommunity,
-  fetchEntityMetadata
+  fetchEntityMetadata,
+  fetchEntities
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Businesses)
