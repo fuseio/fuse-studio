@@ -88,13 +88,24 @@ const WizardPage = ({
 
   useEffect(() => {
     if (adminAddress) {
-      window.analytics.identify(adminAddress, {
-        subscriptionStatus: 'active'
+      window.analytics.track({
+        userId: adminAddress,
+        properties: {
+          subscriptionStatus: 'active'
+        }
       })
+      // window.analytics.identify(adminAddress, {
+      //   subscriptionStatus: 'active'
+      // })
     } else {
-      window.analytics.identify({
-        subscriptionStatus: 'inactive'
+      window.analytics.track({
+        properties: {
+          subscriptionStatus: 'inactive'
+        }
       })
+      // window.analytics.identify({
+      //   subscriptionStatus: 'inactive'
+      // })
     }
   }, [adminAddress])
 
@@ -219,9 +230,15 @@ const WizardPage = ({
       : { image: images && images[chosen] && images[chosen].blob, coverPhoto: coverPhoto.blob }
 
     if (adminAddress) {
-      window.analytics.identify(adminAddress, {
-        email
+      window.analytics.track({
+        userId: adminAddress,
+        properties: {
+          subscriptionStatus: 'active'
+        }
       })
+      // window.analytics.identify(adminAddress, {
+      //   email
+      // })
       Sentry.configureScope((scope) => {
         scope.setUser({ email })
       })

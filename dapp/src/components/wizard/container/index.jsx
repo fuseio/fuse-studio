@@ -62,14 +62,8 @@ class Wizard extends React.Component {
     const { saveWizardProgress } = this.props
     saveWizardProgress(omit(values, ['images', 'coverPhoto']))
     if (validations[this.state.page]) {
-      const { adminAddress } = this.props
       const currentStepFields = validations[this.state.page]
       const trackProps = currentStepFields.reduce((acc, key) => {
-        if (key === 'email' && values[key] && adminAddress) {
-          window.analytics.identify(adminAddress, {
-            email: values[key]
-          })
-        }
         acc = values[key] ? {
           ...acc,
           [key]: get(values, `${key}.value`)

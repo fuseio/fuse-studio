@@ -6,7 +6,6 @@ import ImageCropperModal from 'components/common/ImageCropper'
 import TemplateModal from 'components/common/modals/TemplateModal'
 import WrongNetworkModal from 'components/common/WrongNetworkModal'
 import ErrorBoundary from 'components/common/ErrorBoundary'
-import EmailModal from 'components/common/EmailModal'
 import QrModal from 'components/common/QrModal'
 import AddBusinessModal from 'components/dashboard/modals/AddBusinessModal'
 import AddUserModal from 'components/dashboard/modals/AddUserModal'
@@ -28,7 +27,6 @@ import {
   ENTITY_ADDED_MODAL,
   IMAGE_CROPPER_MODAL,
   PLUGIN_INFO_MODAL,
-  EMAIL_MODAL,
   SWITCH_NETWORK,
   TEMPLATE_MODAL
 } from 'constants/uiConstants'
@@ -49,7 +47,6 @@ const MODAL_COMPONENTS = {
   [ENTITY_ADDED_MODAL]: EntityAddedModal,
   [IMAGE_CROPPER_MODAL]: ImageCropperModal,
   [PLUGIN_INFO_MODAL]: PluginInfoModal,
-  [EMAIL_MODAL]: EmailModal,
   [SWITCH_NETWORK]: SwitchNetwork,
   [TEMPLATE_MODAL]: TemplateModal
 }
