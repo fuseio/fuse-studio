@@ -17,7 +17,8 @@ import {
   removeAdminRole,
   confirmUser,
   joinCommunity,
-  importExistingEntity
+  importExistingEntity,
+  fetchUsersMetadata
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
@@ -52,7 +53,9 @@ const Users = ({
   entityAdded,
   push,
   userAccounts,
-  communityEntities
+  communityEntities,
+  fetchUsersMetadata,
+  users
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
@@ -77,75 +80,53 @@ const Users = ({
   //   return () => {}
   // }, [fetchEntities])
 
+  // useEffect(() => {
+  //   if (communityAddress) {
+  //     fetchEntities(communityAddress)
+  //   }
+  //   return () => {}
+  // }, [communityAddress])
+
   useEffect(() => {
-    if (communityAddress) {
-      fetchEntities(communityAddress)
+    if (userAccounts && userAccounts.length > 0) {
+      fetchUsersMetadata(userAccounts)
     }
-    return () => {}
-  }, [communityAddress])
+  }, [userAccounts])
 
   useEffect(() => {
     const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(userEntities)) {
-      const data = userEntities.map(({ profile, isAdmin, isApproved, address }, index) => ({
+      debugger
+      const data = userEntities.map(({ isAdmin, isApproved, address }, index) => ({
         isApproved,
         isAdmin,
-        name: profile && profile.publicData
-          ? profile.publicData.name
-            ? [
-              {
-                name: profile.publicData.name,
-                image: profile.publicData &&
-                  profile.publicData.image
-                  ? <div
-                    style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  : <div
-                    style={{
-                      backgroundImage: `url(${Avatar})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-              }
-            ]
-            : [
-              {
-                name: `${profile.publicData.firstName} ${profile.publicData.lastName}`,
-                image: profile.publicData &&
-                  profile.publicData.image
-                  ? <div
-                    style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${profile.publicData.image[0].contentUrl['/']})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  : <div
-                    style={{
-                      backgroundImage: `url(${Avatar})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-              }
-            ]
+        name: users[address]
+          ? [
+            {
+              name: users[address].name,
+              image: users[address].image
+                ? <div
+                  style={{
+                    backgroundImage: `url(https://ipfs.infura.io/ipfs/${users[address].image.contentUrl['/']})`,
+                    width: '36px',
+                    height: '36px',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                  }}
+                />
+                : <div
+                  style={{
+                    backgroundImage: `url(${Avatar})`,
+                    width: '36px',
+                    height: '36px',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                  }}
+                />
+            }
+          ]
           : [
             {
               name: '',
@@ -349,6 +330,7 @@ const Users = ({
 const mapStateToProps = (state) => ({
   communityEntities: state.entities.communityEntities,
   accountAddress: getAccountAddress(state),
+  users: state.entities.users,
   ...state.screens.communityEntities,
   isAdmin: checkIsAdmin(state),
   community: getCurrentCommunity(state, getCommunityAddress(state)),
@@ -366,7 +348,8 @@ const mapDispatchToProps = {
   loadModal,
   hideModal,
   fetchEntities,
-  importExistingEntity
+  importExistingEntity,
+  fetchUsersMetadata
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users)

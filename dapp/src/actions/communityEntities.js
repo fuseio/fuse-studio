@@ -24,14 +24,14 @@ export const JOIN_COMMUNITY = createRequestTypes('JOIN_COMMUNITY')
 export const IMPORT_EXISTING_ENTITY = createRequestTypes('IMPORT_EXISTING_ENTITY')
 export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
 
+export const FETCH_USERS_METADATA = createRequestTypes('FETCH_USERS_METADATA')
 const options = { desiredNetworkType: 'fuse' }
 
 export const fetchEntities = (communityAddress) => entitiesAction(FETCH_ENTITIES.REQUEST, { communityAddress })
-// export const fetchUsersEntities = (communityAddress, entityType = 'user') => entitiesAction(FETCH_USERS_ENTITIES.REQUEST, { communityAddress, entityType })
-// export const fetchBusinessesEntities = (communityAddress, entityType = 'business') => entitiesAction(FETCH_BUSINESSES_ENTITIES.REQUEST, { communityAddress, entityType })
-
 export const fetchEntity = (communityAddress, account) => entitiesAction(FETCH_ENTITY.REQUEST, { communityAddress, account })
 export const fetchEntityMetadata = (communityAddress, account) => entitiesBusinessesAction(FETCH_ENTITY_METADATA.REQUEST, { communityAddress, account })
+
+export const fetchUsersMetadata = (accounts) => entitiesAction(FETCH_USERS_METADATA.REQUEST, { accounts })
 
 export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType, options })
 export const removeEntity = (account) => action(REMOVE_ENTITY.REQUEST, { account, options })
