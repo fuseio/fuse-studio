@@ -9,16 +9,14 @@ import classNames from 'classnames'
 import { nameToSymbol } from 'utils/format'
 
 const Option = (props) => {
-  const { children, className, cx, isDisabled, isFocused, isSelected, innerRef, innerProps, data } = props
+  const { children, className, cx, isDisabled, innerRef, innerProps, data } = props
   return (
     <div
       ref={innerRef}
       className={cx(
         {
           'option-item': true,
-          'option-item--is-disabled': isDisabled,
-          'option-item--is-focused': isFocused,
-          'option-item--is-selected': isSelected
+          'option-item--is-disabled': isDisabled
         },
         className
       )}
