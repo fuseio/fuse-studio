@@ -1,16 +1,15 @@
-const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
-const { handleReceipt } = require('@handlers/receipts')
+const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/MintableBurnableToken')
 const { createNetwork } = require('@utils/web3')
 const { withAccount, lockAccount } = require('@utils/account')
 
-const mint = withAccount(async (account, { bridgeType, from, tokenAddress, amount }, job) => {
+const mint = withAccount(async (account, { bridgeType, tokenAddress, amount }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
-  const tokenContractInstance = createContract(BasicTokenAbi, tokenAddress)
+  const tokenContractInstance = createContract(MintableBurnableTokenAbi, tokenAddress)
 
-  const method = createMethod(tokenContractInstance, 'mint', account, amount)
+  const method = createMethod(tokenContractInstance, 'mint', account.address, amount)
 
-  const receipt = await send(method, {
-    from
+  await send(method, {
+    from: account.address
   }, {
     transactionHash: (hash) => {
       job.attrs.data.txHash = hash
@@ -18,7 +17,7 @@ const mint = withAccount(async (account, { bridgeType, from, tokenAddress, amoun
     }
   })
 
-  await handleReceipt(receipt)
+  // await handleReceipt(receipt)
 }, ({ from }) => {
   return lockAccount({ address: from })
 })

@@ -2,8 +2,11 @@ const router = require('express').Router()
 const { agenda } = require('@services/agenda')
 
 router.post('/mint', async (req, res) => {
-  // res.json({ ok: 1 })
-  const job = await agenda.now('mint', req.body)
+  const { tokenAddress, networkType, amount, from } = req.body
+  if (networkType !== 'fuse') {
+    return res.status(400).send({ error: 'Supported only on Fuse Network' })
+  }
+  const job = await agenda.now('mint', { tokenAddress, bridgeType: 'home', from, amount })
   return res.json({ job: job.attrs })
 })
 
