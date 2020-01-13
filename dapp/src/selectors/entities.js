@@ -30,10 +30,11 @@ export const checkIsAdmin = createSelector(
   getCommunityAddress,
   state => state.entities.communityEntities,
   (accountAddress, communityAddress, communityEntities) => {
-    return (communityEntities[accountAddress] &&
-      communityEntities[accountAddress].communityAddress &&
-      communityEntities[accountAddress].communityAddress === communityAddress &&
-      communityEntities[accountAddress].isAdmin) || false
+    if (accountAddress) {
+      const lowerCaseAddress = accountAddress.toLowerCase()
+      return (communityEntities[lowerCaseAddress] &&
+        communityEntities[lowerCaseAddress].isAdmin) || false
+    }
   }
 )
 

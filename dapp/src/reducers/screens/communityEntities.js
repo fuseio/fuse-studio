@@ -13,9 +13,9 @@ import { LOCATION_CHANGE } from 'connected-react-router'
 import omit from 'lodash/omit'
 
 const initialState = {
-  entitiesAccounts: []
-  // userAccounts: [],
-  // businessesAccounts: []
+  entitiesAccounts: [],
+  userAccounts: [],
+  businessesAccounts: []
 }
 
 export default (state = initialState, action) => {
@@ -62,9 +62,9 @@ export default (state = initialState, action) => {
     case FETCH_ENTITIES.REQUEST:
       return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), toFetchEntities: true }
     case FETCH_ENTITIES.SUCCESS:
-      // const businessesAccounts = action.response.result.filter(account => action.response.entities[account].isBusiness)
-      // const userAccounts = action.response.result.filter(account => action.response.entities[account].isBusiness)
-      return { ...state, updateEntities: false, entitiesAccounts: [...action.response.result], toFetchEntities: false }
+      const businessesAccounts = action.response.result.filter(account => action.response.entities[account].isBusiness)
+      const userAccounts = action.response.result.filter(account => action.response.entities[account].isUser)
+      return { ...state, updateEntities: false, entitiesAccounts: [...action.response.result], businessesAccounts, userAccounts, toFetchEntities: false }
     case JOIN_COMMUNITY.SUCCESS:
       return { ...state, join: true }
     case JOIN_COMMUNITY.FAILURE:

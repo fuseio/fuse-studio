@@ -253,7 +253,7 @@ function * fetchEntities ({ communityAddress }) {
   // const dataArray = Array.isArray(data) ? data : [data]
   const entities = keyBy(communityEntities, 'address')
   const result = Object.keys(entities)
-  debugger
+
   yield put({
     entity: 'communityEntities',
     type: actions.FETCH_ENTITIES.SUCCESS,
