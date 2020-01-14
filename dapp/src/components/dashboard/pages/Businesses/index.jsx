@@ -25,25 +25,6 @@ import TransactionMessage from 'components/common/TransactionMessage'
 
 import dotsIcon from 'images/dots.svg'
 
-// const GET_COMMUNITY = (address) => {
-//   return gql`
-//   {
-//     communities (where: {address: "${address}"}) {
-//       entitiesList {
-//         id
-//         communityEntities {
-//           address
-//           isAdmin
-//           isApproved
-//           isUser
-//           isBusiness
-//         }
-//       }
-//     }
-//   }
-// `
-// }
-
 const Businesses = ({
   isClosed,
   isAdmin,
