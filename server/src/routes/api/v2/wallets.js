@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 
 /**
- * @api {post} /wallets/ Create wallet contract for user
+ * @api {post} api/v2/wallets/ Create wallet contract for user
  * @apiName CreateWallet
  * @apiGroup Wallet
  * @apiDescription Creates wallet contract for the user
@@ -36,7 +36,7 @@ router.post('/', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {get} /wallets/ Fetch user wallet
+ * @api {get} api/v2/wallets/ Fetch user wallet
  * @apiName FetchWallet
  * @apiGroup Wallet
  * @apiDescription Fetches user's wallet address
@@ -53,7 +53,7 @@ router.get('/', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {get} /wallets/:phoneNumber Fetch latest wallet by phone number
+ * @api {get} api/v2/wallets/:phoneNumber Fetch latest wallet by phone number
  * @apiName FetchWalletByPhoneNumber
  * @apiGroup Wallet
  * @apiDescription Fetches latest wallet created by phone number
@@ -70,7 +70,7 @@ router.get('/:phoneNumber', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {post} /wallets/invite/:phoneNumber Create wallet for phone number
+ * @api {post} api/v2/wallets/invite/:phoneNumber Create wallet for phone number
  * @apiName WalletInvite
  * @apiGroup Wallet
  * @apiDescription Creates wallet contract for phone number, owned by the server until claimed by the user
