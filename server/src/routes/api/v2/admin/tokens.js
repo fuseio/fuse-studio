@@ -3,6 +3,22 @@ const { toWei } = require('web3-utils')
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
 
+/**
+ * @api {post} /api/v2/admin/tokens/mint Mint tokens
+ * @apiName Mint
+ * @apiGroup Admin
+ * @apiDescription Start async job of minting tokens
+ * @apiExample: Minting 1.1 tokens on Fuse network
+ *  POST /api/v2/admin/tokens/mint
+ *  body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1' }
+ * @apiParam {String} tokenAddress Token address to mint (body parameter)
+ * @apiParam {String} networkType Token's network (must be Fuse)
+ * @apiParam {String} amount Token amount to mint
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {String} Started job data
+ */
 router.post('/mint', auth.required, async (req, res) => {
   const { isCommunityAdmin, accountAddress } = req.user
   if (!isCommunityAdmin) {
@@ -19,6 +35,22 @@ router.post('/mint', auth.required, async (req, res) => {
   return res.json({ job: job.attrs })
 })
 
+/**
+ * @api {post} /api/v2/admin/tokens/burn Burn tokens
+ * @apiName Burn
+ * @apiGroup Admin
+ * @apiDescription Start async job of burning tokens
+ * @apiExample: Burn 1.1 tokens on Fuse network
+ *  POST /api/v2/admin/tokens/burn
+ *  body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1' }
+ * @apiParam {String} tokenAddress Token address to burn (body parameter)
+ * @apiParam {String} networkType Token's network (must be Fuse)
+ * @apiParam {String} amount Token amount to burn
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {String} Started job data
+ */
 router.post('/burn', auth.required, async (req, res) => {
   const { isCommunityAdmin, accountAddress } = req.user
   if (!isCommunityAdmin) {

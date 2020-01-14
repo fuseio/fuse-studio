@@ -7,7 +7,7 @@ const Contact = mongoose.model('Contact')
 const { compact } = require('lodash')
 
 /**
- * @api {post} /contacts/ Sync contacts list
+ * @api {post} api/v2/contacts/ Sync contacts list
  * @apiName SyncContacts
  * @apiGroup Contacts
  * @apiDescription Sync contacts list
@@ -72,7 +72,7 @@ router.post('/', auth.required, async (req, res) => {
 })
 
 /**
- * @api {post} /contacts/:nonce Acknowledge contacts list sync with nonce
+ * @api {post} /api/v2/contacts/:nonce Acknowledge contacts list sync with nonce
  * @apiName AckSyncContacts
  * @apiGroup Contacts
  * @apiDescription Acknowledge contacts list sync with nonce

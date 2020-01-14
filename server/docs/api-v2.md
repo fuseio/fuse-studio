@@ -1,11 +1,18 @@
 <a name="top"></a>
 # Studio Backend API v2.0.0
 
-The Fuse Studio V2 REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. Learn more on https://github.com/fuseio/fuse-studio.
+The Fuse Studio V2 REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. The backend base URL is https://studio.fuse.io. Learn more on https://github.com/fuseio/fuse-studio
 
+- [Admin](#Admin)
+	- [Burn tokens](#Burn-tokens)
+	- [Mint tokens](#Mint-tokens)
+	
 - [Contacts](#Contacts)
 	- [Acknowledge contacts list sync with nonce](#Acknowledge-contacts-list-sync-with-nonce)
 	- [Sync contacts list](#Sync-contacts-list)
+	
+- [Jobs](#Jobs)
+	- [Fetch job by id](#Fetch-job-by-id)
 	
 - [Login](#Login)
 	- [Request a verification code](#Request-a-verification-code)
@@ -18,6 +25,74 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	
 
+# <a name='Admin'></a> Admin
+
+## <a name='Burn-tokens'></a> Burn tokens
+[Back to top](#top)
+
+<p>Start async job of burning tokens</p>
+
+```
+POST /api/v2/admin/tokens/burn
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| tokenAddress | `String` | <p>Token address to burn (body parameter)</p> |
+| networkType | `String` | <p>Token's network (must be Fuse)</p> |
+| amount | `String` | <p>Token amount to burn</p> |
+
+### Examples
+: Burn 1.1 tokens on Fuse network
+
+```
+POST /api/v2/admin/tokens/burn
+body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1' }
+```
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `String` | <p>job data</p> |
+## <a name='Mint-tokens'></a> Mint tokens
+[Back to top](#top)
+
+<p>Start async job of minting tokens</p>
+
+```
+POST /api/v2/admin/tokens/mint
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| tokenAddress | `String` | <p>Token address to mint (body parameter)</p> |
+| networkType | `String` | <p>Token's network (must be Fuse)</p> |
+| amount | `String` | <p>Token amount to mint</p> |
+
+### Examples
+: Minting 1.1 tokens on Fuse network
+
+```
+POST /api/v2/admin/tokens/mint
+body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1' }
+```
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `String` | <p>job data</p> |
 # <a name='Contacts'></a> Contacts
 
 ## <a name='Acknowledge-contacts-list-sync-with-nonce'></a> Acknowledge contacts list sync with nonce
@@ -26,7 +101,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 <p>Acknowledge contacts list sync with nonce</p>
 
 ```
-POST /contacts/:nonce
+POST /api/v2/contacts/:nonce
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -45,7 +120,7 @@ POST /contacts/:nonce
 <p>Sync contacts list</p>
 
 ```
-POST /contacts/
+POST api/v2/contacts/
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -63,6 +138,27 @@ POST /contacts/
 |:---------|:-----------|:--------------------------------------|
 | new | `Object[]` | <p>contacts list (phoneNumber, account)</p> |
 | nonce | `Number` |  |
+# <a name='Jobs'></a> Jobs
+
+## <a name='Fetch-job-by-id'></a> Fetch job by id
+[Back to top](#top)
+
+<p>Fetches agenda job by job id</p>
+
+```
+GET api/v2/jobs/:jobId
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Object` | <p>User wallet object</p> |
 # <a name='Login'></a> Login
 
 ## <a name='Request-a-verification-code'></a> Request a verification code
@@ -71,7 +167,7 @@ POST /contacts/
 <p>Request a verification code to user's phone number</p>
 
 ```
-POST /login/request
+POST api/v2/login/request
 ```
 
 ### Parameter Parameters
@@ -90,7 +186,7 @@ POST /login/request
 <p>Verify user phone number by SMS verification code</p>
 
 ```
-POST /login/verify
+POST api/v2/login/verify
 ```
 
 ### Parameter Parameters
@@ -113,7 +209,7 @@ POST /login/verify
 <p>Creates wallet contract for the user</p>
 
 ```
-POST /wallets/
+POST api/v2/wallets/
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -132,7 +228,7 @@ POST /wallets/
 <p>Fetches user's wallet address</p>
 
 ```
-GET /wallets/
+GET api/v2/wallets/
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -151,7 +247,7 @@ GET /wallets/
 <p>Fetches latest wallet created by phone number</p>
 
 ```
-GET /wallets/:phoneNumber
+GET api/v2/wallets/:phoneNumber
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -170,7 +266,7 @@ GET /wallets/:phoneNumber
 <p>Creates wallet contract for phone number, owned by the server until claimed by the user</p>
 
 ```
-POST /wallets/invite/:phoneNumber
+POST api/v2/wallets/invite/:phoneNumber
 ```
 ### Headers
 | Name    | Type      | Description                          |

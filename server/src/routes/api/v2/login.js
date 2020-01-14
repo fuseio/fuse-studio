@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const twilio = require('@utils/twilio')
 
 /**
- * @api {post} /login/request Request a verification code
+ * @api {post} api/v2/login/request Request a verification code
  * @apiName Request
  * @apiGroup Login
  * @apiDescription Request a verification code to user's phone number
@@ -25,7 +25,7 @@ router.post('/request', async (req, res) => {
 })
 
 /**
- * @api {post} /login/verify Verify user phone number
+ * @api {post} api/v2/login/verify Verify user phone number
  * @apiName Veify
  * @apiGroup Login
  * @apiDescription Verify user phone number by SMS verification code
