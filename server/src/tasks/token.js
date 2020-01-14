@@ -16,12 +16,29 @@ const mint = withAccount(async (account, { bridgeType, tokenAddress, amount }, j
       job.save()
     }
   })
+}, ({ from }) => {
+  return lockAccount({ address: from })
+})
 
-  // await handleReceipt(receipt)
+const burn = withAccount(async (account, { bridgeType, tokenAddress, amount }, job) => {
+  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+  const tokenContractInstance = createContract(MintableBurnableTokenAbi, tokenAddress)
+
+  const method = createMethod(tokenContractInstance, 'burn', amount)
+
+  await send(method, {
+    from: account.address
+  }, {
+    transactionHash: (hash) => {
+      job.attrs.data.txHash = hash
+      job.save()
+    }
+  })
 }, ({ from }) => {
   return lockAccount({ address: from })
 })
 
 module.exports = {
-  mint
+  mint,
+  burn
 }
