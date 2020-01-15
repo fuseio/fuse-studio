@@ -34,25 +34,19 @@ const Balance = ({
       if (bridge === 'home' && Number(new BigNumber(balance).div(1e18).toFixed()) > 0) {
         window.analytics.track({
           userId: accountAddress,
-          event: 'Bridge used',
-          properties: {
-            bridgeWasUsed: true
-          }
+          event: 'Bridge used'
         })
-        // window.analytics.identify(accountAddress, {
-        //   bridgeWasUsed: true
-        // })
+        window.analytics.identify(accountAddress, {
+          bridgeWasUsed: true
+        })
       } else {
         window.analytics.track({
           userId: accountAddress,
-          event: 'Bridge not used',
-          properties: {
-            bridgeWasUsed: false
-          }
+          event: 'Bridge not used'
         })
-        // window.analytics.identify(accountAddress, {
-        //   bridgeWasUsed: false
-        // })
+        window.analytics.identify(accountAddress, {
+          bridgeWasUsed: false
+        })
       }
     }
     return () => { }

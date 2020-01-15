@@ -46,10 +46,7 @@ const HomePage = ({
         if (accountAddress) {
           window.analytics.track({
             userId: accountAddress,
-            event: `Clicked on featured community - ${name}`,
-            properties: {
-              communities: [...communitiesKeys]
-            }
+            event: `Clicked on featured community - ${name}`
           })
         } else {
           window.analytics.track(`Clicked on featured community - ${name}`)

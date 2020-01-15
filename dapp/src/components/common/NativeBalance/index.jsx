@@ -1,38 +1,28 @@
 import React, { useEffect } from 'react'
 import { formatWei } from 'utils/format'
 import { connect } from 'react-redux'
-import { getAccount, getProviderInfo } from 'selectors/accounts'
+import { getAccount, getProviderInfo, getCommunitiesKeys } from 'selectors/accounts'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
 
 const NativeBalance = ({
   account,
-  providerInfo
+  providerInfo,
+  communitiesKeys
 }) => {
   useEffect(() => {
     const { analytics } = window
     if (account && account.accountAddress) {
-      analytics.track({
-        userId: account.accountAddress,
-        properties: {
-          provider: providerInfo.name
-        }
+      analytics.identify(account.accountAddress, {
+        provider: providerInfo.name,
+        communities: [...communitiesKeys]
       })
-      // analytics.identify(account.accountAddress, {
-      //   provider: providerInfo.name
-      // })
     } else {
-      analytics.track({
-        userId: account.accountAddress,
-        properties: {
-          subscriptionStatus: 'inactive'
-        }
+      analytics.identify({
+        subscriptionStatus: 'inactive'
       })
-      // analytics.identify({
-      //   subscriptionStatus: 'inactive'
-      // })
     }
-  }, [account])
+  }, [account, communitiesKeys])
 
   return (
     <div className='profile__communities grid-y'>
@@ -69,7 +59,8 @@ const NativeBalance = ({
 
 const mapState = (state) => ({
   account: getAccount(state),
-  providerInfo: getProviderInfo(state)
+  providerInfo: getProviderInfo(state),
+  communitiesKeys: getCommunitiesKeys(state)
 })
 
 export default connect(mapState, null)(NativeBalance)
