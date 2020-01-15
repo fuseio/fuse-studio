@@ -90,8 +90,8 @@ const TabsWrapper = memo(({
 
   const slides = React.useMemo(() => {
     if (!isEmpty(communitiesIOwn)) {
-      const myCommunities = communitiesIOwn.map((entity, index) => {
-        const { community, token } = entity
+      const myCommunities = communitiesIOwn.map((community) => {
+        const { token } = community
         const { communityAddress } = community
 
         return (

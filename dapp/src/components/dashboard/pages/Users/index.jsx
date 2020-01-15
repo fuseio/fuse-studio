@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import { useParams } from 'react-router'
 import { connect } from 'react-redux'
 import sortBy from 'lodash/sortBy'
-
+import identity from 'lodash/identity'
 import MyTable from 'components/dashboard/components/Table'
 // import { useFetch } from 'hooks/useFetch'
 
@@ -28,7 +28,7 @@ import { getTransaction } from 'selectors/transaction'
 // import { getForeignNetwork } from 'selectors/network'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
-import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { checkIsAdmin } from 'selectors/entities'
 
 import AddBusiness from 'images/add_business.svg'
 import Avatar from 'images/avatar.svg'
@@ -59,33 +59,6 @@ const Users = ({
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
-  const [search, setSearch] = useState('')
-  // const apiRoot = getApiRoot(useSelector(getForeignNetwork))
-  // let url = `${apiRoot}/entities/${communityAddress}?type=user`
-
-  // if (search) {
-  //   url = `${url}&search=${search}`
-  // }
-
-  // const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
-
-  // useEffect(() => {
-  //   if (fetchEntities === false) {
-  //     fetchData()
-  //   }
-
-  //   if (search) {
-  //     fetchData()
-  //   }
-  //   return () => {}
-  // }, [fetchEntities])
-
-  // useEffect(() => {
-  //   if (communityAddress) {
-  //     fetchEntities(communityAddress)
-  //   }
-  //   return () => {}
-  // }, [communityAddress])
 
   useEffect(() => {
     if (userAccounts && userAccounts.length > 0) {
@@ -96,7 +69,6 @@ const Users = ({
   useEffect(() => {
     const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(userEntities)) {
-      debugger
       const data = userEntities.map(({ isAdmin, isApproved, address }, index) => ({
         isApproved,
         isAdmin,
@@ -285,8 +257,8 @@ const Users = ({
           placeholder: 'Search a user',
           // action: isAdmin ? handleAddUser : handleJoinCommunity,
           isAdmin,
+          onChange: identity
           // text: isAdmin ? 'Add user' : 'Join community',
-          onChange: setSearch
         }}
         data={tableData}
         justAdded={entityAdded}
@@ -333,7 +305,7 @@ const mapStateToProps = (state) => ({
   users: state.entities.users,
   ...state.screens.communityEntities,
   isAdmin: checkIsAdmin(state),
-  community: getCurrentCommunity(state, getCommunityAddress(state)),
+  community: getCurrentCommunity(state),
   transactionData: getTransaction(state, state.screens.communityEntities.transactionHash)
 })
 

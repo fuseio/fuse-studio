@@ -170,7 +170,7 @@ const Sidebar = ({
 const mapState = (state) => ({
   isAdmin: checkIsAdmin(state),
   location: state.router.location,
-  community: getCurrentCommunity(state, getCommunityAddress(state)),
+  community: getCurrentCommunity(state),
   token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { tokenType: '' }
 })
 

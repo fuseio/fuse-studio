@@ -271,7 +271,6 @@ const FETCH_3BOX_PROFILES = gql`
   `
 
 function * fetchUsersMetadata ({ accounts }) {
-  // debugger
   const response = yield call(boxClient.query, {
     fetchPolicy: 'network-only',
     query: FETCH_3BOX_PROFILES,

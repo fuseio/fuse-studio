@@ -17,8 +17,6 @@ import FiatOnRamp from 'images/fiat-on-ramp.png'
 import FiatOnRampBig from 'images/fiat-on-ramp-big.png'
 import Bounty from 'images/bounty.png'
 import BountyBig from 'images/bounty_big.png'
-import { getCurrentCommunity } from 'selectors/dashboard'
-import { getCommunityAddress } from 'selectors/entities'
 
 const generalPlugins = ([
   {
@@ -164,13 +162,9 @@ const Plugins = ({
   )
 }
 
-const mapStateToProps = (state) => ({
-  community: getCurrentCommunity(state, getCommunityAddress(state))
-})
-
 const mapDispatchToProps = {
   loadModal,
   addCommunityPlugin
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Plugins)
+export default connect(null, mapDispatchToProps)(Plugins)

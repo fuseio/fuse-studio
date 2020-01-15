@@ -41,13 +41,10 @@ export default (state = initialState, action) => {
     case REMOVE_ENTITY.PENDING:
       return { ...state, transactionHash: action.response.transactionHash, signatureNeeded: false }
     case REMOVE_ENTITY.SUCCESS:
-      const { receipt: { events: { EntityRemoved: { returnValues: { account } } } } } = action.response
       return {
         ...state,
         ...action.response,
         updateEntities: true
-        // merchantsResults: state.merchantsResults.filter(val => val !== account),
-        // usersResults: state.usersResults.filter(val => val !== account)
       }
     case ADD_ENTITY.REQUEST:
       return { ...state, signatureNeeded: true, showTransactionMessage: true, updateEntities: false, [`${action.entityType}JustAdded`]: action.data.name }

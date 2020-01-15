@@ -22,7 +22,7 @@ const MyTable = ({
   ...props
 }) => {
   const state = useTableState({ pageCount, pageSize })
-  
+
   const {
     getTableProps,
     headerGroups,

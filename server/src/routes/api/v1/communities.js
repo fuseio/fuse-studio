@@ -2,6 +2,8 @@ const config = require('config')
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
+const Entity = mongoose.model('Entity')
+const Token = mongoose.model('Token')
 const lodash = require('lodash')
 const branch = require('@utils/branch')
 const twilio = require('@utils/twilio')
@@ -133,6 +135,47 @@ router.get('/', async (req, res, next) => {
   const { homeTokenAddress } = req.query
   const community = await Community.findOne({ homeTokenAddress }).lean()
   return res.json({ data: community })
+})
+
+const withTokens = async (communities) => {
+  const homeTokenAddresses = communities.map(community => community.homeTokenAddress)
+
+  const tokens = await Token.find({ address: { $in: homeTokenAddresses } })
+
+  const communitiesByTokenAddress = lodash.keyBy(tokens, 'address')
+
+  return communities.map((community) => ({
+    ...community,
+    token: communitiesByTokenAddress[community.homeTokenAddress]
+      ? communitiesByTokenAddress[community.homeTokenAddress]
+      : undefined
+  }))
+}
+
+const getCommunitiesByEntities = (entities) => {
+  const communityAddresses = entities.map(entity => entity.communityAddress)
+  return Community.find({ communityAddress: { $in: communityAddresses } }).sort({ createdAt: -1 })
+}
+/**
+ * @api {get} /communities/account/:account Fetch my communities
+ * @apiDescription Fetching communities I'm part of
+ * @apiName GetCommunitiesIOwn&PartOf
+ * @apiGroup Entity
+ *
+ * @apiParam {String} account address
+ *
+ * @apiSuccess {Object[]} -   List of entities with their communities and tokens
+ */
+router.get('/account/:account', async (req, res, next) => {
+  const { account } = req.params
+
+  const adminEntities = await Entity.find({ account, isAdmin: true }).sort({ blockNumber: -1 })
+  const adminCommunitities = (await getCommunitiesByEntities(adminEntities)).map(community => ({ ...community.toObject(), isAdmin: true }))
+
+  const nonAdminEntities = await Entity.find({ account, isAdmin: false }).sort({ blockNumber: -1 })
+
+  const monAdminCommunitites = await getCommunitiesByEntities(nonAdminEntities)
+  return res.json({ data: await withTokens([...adminCommunitities, ...monAdminCommunitites].reverse()) })
 })
 
 module.exports = router

@@ -15,10 +15,9 @@ import get from 'lodash/get'
 import { fetchEntity as fetchEntityApi } from 'services/api/entities'
 import { getApiRoot } from 'utils/network'
 import isEmpty from 'lodash/isEmpty'
-import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
+import { checkIsFunderPartOfCommunity } from 'selectors/entities'
 import { getCurrentNetworkType } from 'selectors/network'
 import { getHomeTokenByCommunityAddress } from 'selectors/token'
-import { getCurrentCommunity } from 'selectors/dashboard'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
@@ -142,7 +141,6 @@ const mapStateToProps = (state, { match }) => ({
   balances: getBalances(state),
   isFunderPartOfCommunity: checkIsFunderPartOfCommunity(state),
   networkType: getCurrentNetworkType(state),
-  community: getCurrentCommunity(state, getCommunityAddress(state)),
   homeToken: getHomeTokenByCommunityAddress(state, match.params.address) || {}
 })
 
