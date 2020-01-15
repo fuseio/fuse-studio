@@ -86,47 +86,29 @@ const DashboardLayout = (props) => {
 
   useEffect(() => {
     if (isAdmin) {
-      window.analytics.track({
-        userId: accountAddress,
-        properties: {
-          role: 'admin',
-          communityAddress
-        }
-      })
-      // window.analytics.identify(`${accountAddress}`, { role: 'admin', communityAddress })
+      window.analytics.identify(`${accountAddress}`, { role: 'admin', communityAddress })
 
       if (networkType === 'fuse') {
         window.analytics.track({
           userId: accountAddress,
-          event: 'User Switch to fuse network',
-          properties: {
-            switchToFuse: true
-          }
+          event: 'User Switch to fuse network'
         })
-        // window.analytics.identify(`${accountAddress}`, {
-        //   switchToFuse: true
-        // })
+        window.analytics.identify(`${accountAddress}`, {
+          switchToFuse: true
+        })
       } else {
         window.analytics.track({
           userId: accountAddress,
-          event: "User didn't Switch to fuse network",
-          properties: {
-            switchToFuse: false
-          }
+          event: "User didn't Switch to fuse network"
         })
-        // window.analytics.identify(`${accountAddress}`, {
-        //   switchToFuse: false
-        // })
+        window.analytics.identify(`${accountAddress}`, {
+          switchToFuse: false
+        })
       }
     } else {
-      window.analytics.track({
-        properties: {
-          role: 'user'
-        }
+      window.analytics.identify(`${accountAddress}`, {
+        role: 'user'
       })
-      // window.analytics.identify(`${accountAddress}`, {
-      //   role: 'user'
-      // })
     }
   }, [isAdmin])
 

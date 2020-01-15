@@ -88,24 +88,13 @@ const WizardPage = ({
 
   useEffect(() => {
     if (adminAddress) {
-      window.analytics.track({
-        userId: adminAddress,
-        properties: {
-          subscriptionStatus: 'active'
-        }
+      window.analytics.identify(adminAddress, {
+        subscriptionStatus: 'active'
       })
-      // window.analytics.identify(adminAddress, {
-      //   subscriptionStatus: 'active'
-      // })
     } else {
-      window.analytics.track({
-        properties: {
-          subscriptionStatus: 'inactive'
-        }
+      window.analytics.identify({
+        subscriptionStatus: 'inactive'
       })
-      // window.analytics.identify({
-      //   subscriptionStatus: 'inactive'
-      // })
     }
   }, [adminAddress])
 
