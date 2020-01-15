@@ -59,33 +59,6 @@ const Users = ({
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
-  const [search, setSearch] = useState('')
-  // const apiRoot = getApiRoot(useSelector(getForeignNetwork))
-  // let url = `${apiRoot}/entities/${communityAddress}?type=user`
-
-  // if (search) {
-  //   url = `${url}&search=${search}`
-  // }
-
-  // const [response, loading, fetchData] = useFetch(url, { verb: 'get' })
-
-  // useEffect(() => {
-  //   if (fetchEntities === false) {
-  //     fetchData()
-  //   }
-
-  //   if (search) {
-  //     fetchData()
-  //   }
-  //   return () => {}
-  // }, [fetchEntities])
-
-  // useEffect(() => {
-  //   if (communityAddress) {
-  //     fetchEntities(communityAddress)
-  //   }
-  //   return () => {}
-  // }, [communityAddress])
 
   useEffect(() => {
     if (userAccounts && userAccounts.length > 0) {
@@ -285,7 +258,6 @@ const Users = ({
           // action: isAdmin ? handleAddUser : handleJoinCommunity,
           isAdmin,
           // text: isAdmin ? 'Add user' : 'Join community',
-          onChange: setSearch
         }}
         data={tableData}
         justAdded={entityAdded}

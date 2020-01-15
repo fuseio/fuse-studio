@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { createMatchSelector } from 'connected-react-router';
+import { createMatchSelector } from 'connected-react-router'
 import { getBridgeStatus } from 'selectors/network'
 import has from 'lodash/has'
 import get from 'lodash/get'

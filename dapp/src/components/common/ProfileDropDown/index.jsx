@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import isEmpty from 'lodash/isEmpty'
 import capitalize from 'lodash/capitalize'
 import { connect, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'

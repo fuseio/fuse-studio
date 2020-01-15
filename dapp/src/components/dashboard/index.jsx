@@ -208,7 +208,7 @@ const DashboardLayout = (props) => {
                 <Route exact path={`${match.path}/wallet`}>
                   <WhiteLabelWallet value={qrValue} />
                 </Route>
-                
+
                 {community && (
                   <Route exact path={`${match.path}/users`}>
                     <Users />
