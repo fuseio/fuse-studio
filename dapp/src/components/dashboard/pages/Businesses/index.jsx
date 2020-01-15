@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
+import identity from 'lodash/identity'
 import capitalize from 'lodash/capitalize'
 import { toChecksumAddress } from 'web3-utils'
 import MyTable from 'components/dashboard/components/Table'
@@ -209,7 +210,8 @@ const Businesses = ({
           placeholder: 'Search a business',
           action: isAdmin ? handleAddBusiness : handleJoinCommunity,
           isAdmin,
-          text: isAdmin ? 'Add business' : 'Join'
+          text: isAdmin ? 'Add business' : 'Join',
+          onChange: identity
           // TODO - search
           // onChange: setSearch
         }}

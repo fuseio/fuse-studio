@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import { useParams } from 'react-router'
 import { connect } from 'react-redux'
 import sortBy from 'lodash/sortBy'
-
+import identity from 'lodash/identity'
 import MyTable from 'components/dashboard/components/Table'
 // import { useFetch } from 'hooks/useFetch'
 
@@ -256,7 +256,8 @@ const Users = ({
         addActionProps={{
           placeholder: 'Search a user',
           // action: isAdmin ? handleAddUser : handleJoinCommunity,
-          isAdmin
+          isAdmin,
+          onChange: identity
           // text: isAdmin ? 'Add user' : 'Join community',
         }}
         data={tableData}
