@@ -10,7 +10,7 @@ import { push } from 'connected-react-router'
 import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
 
-class Oven extends Component {
+class CommunitiesPage extends Component {
   constructor (props) {
     super(props)
 
@@ -84,4 +84,4 @@ const mapDispatchToProps = {
 export default withTracker(withNetwork(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Oven)))
+)(CommunitiesPage)))

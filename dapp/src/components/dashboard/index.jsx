@@ -167,21 +167,23 @@ const DashboardLayout = (props) => {
           <div className='content'>
             <div className='content__wrapper'>
               <Switch>
-                {!get(community && community.plugins, 'joinBonus.isRemoved', false) && isAdmin && (
+                {get(community, 'community.plugins.joinBonus') && !get(community, 'community.plugins.joinBonus.isRemoved', false) && isAdmin && (
                   <Route exact path={`${match.path}/bonus`}>
                     <JoinBonusPage
                       match={match}
+                      community={community}
                     />
                   </Route>
                 )}
-
-                <Route exact path={`${match.path}/onramp`}
-                  render={({ match }) => (
-                    <OnRampPage
-                      community={community}
-                    />
-                  )}
-                />
+                {community && isAdmin && (
+                  <Route exact path={`${match.path}/onramp`}
+                    render={() => (
+                      <OnRampPage
+                        community={community}
+                      />
+                    )}
+                  />)
+                }
 
                 {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
                   <Route exact path={`${match.path}/mintBurn`}>
@@ -189,9 +191,11 @@ const DashboardLayout = (props) => {
                   </Route>
                 )}
 
-                {isAdmin && (
+                {community && isAdmin && (
                   <Route exact path={`${match.path}/plugins`}>
-                    <PluginsPage />
+                    <PluginsPage
+                      community={community}
+                    />
                   </Route>
                 )}
 
@@ -204,18 +208,24 @@ const DashboardLayout = (props) => {
                 <Route exact path={`${match.path}/wallet`}>
                   <WhiteLabelWallet value={qrValue} />
                 </Route>
+                
+                {community && (
+                  <Route exact path={`${match.path}/users`}>
+                    <Users />
+                  </Route>)
+                }
 
-                <Route exact path={`${match.path}/users`}>
-                  <Users />
-                </Route>
+                {community && (
+                  <Route exact path={`${match.path}/transfer/:sendTo?`}>
+                    <TransferPage />
+                  </Route>)
+                }
 
-                <Route exact path={`${match.path}/transfer/:sendTo?`}>
-                  <TransferPage />
-                </Route>
-
-                <Route exact path={`${match.path}/:success?`}>
-                  <Dashboard />
-                </Route>
+                {community && (
+                  <Route exact path={`${match.path}/:success?`}>
+                    <Dashboard community={community} />
+                  </Route>)
+                }
               </Switch>
             </div>
           </div>
@@ -229,7 +239,7 @@ const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
   homeToken: getHomeTokenByCommunityAddress(state, match.params.address),
   foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
-  community: getCurrentCommunity(state, [match.params.address]),
+  community: getCurrentCommunity(state),
   isAdmin: checkIsAdmin(state),
   homeNetwork: getHomeNetworkType(state),
   providerInfo: getProviderInfo(state)

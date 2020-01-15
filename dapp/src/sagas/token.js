@@ -255,14 +255,12 @@ function * watchFetchCommunity ({ response }) {
 }
 
 function * addCommunityPlugin ({ communityAddress, plugin }) {
-  const { data: { plugins } } = yield apiCall(addCommunityPluginApi, { communityAddress, plugin })
-
+  const { data: community } = yield apiCall(addCommunityPluginApi, { communityAddress, plugin })
   yield put({
     type: ADD_COMMUNITY_PLUGIN.SUCCESS,
     communityAddress,
-    response: {
-      plugins
-    }
+    entity: 'communities',
+    response: community
   })
 }
 
@@ -336,7 +334,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
-    takeEvery([ADD_COMMUNITY_PLUGIN.SUCCESS, actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
+    takeEvery([actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchFetchCommunity),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),

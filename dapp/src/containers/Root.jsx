@@ -7,7 +7,7 @@ import Portis from '@portis/web3'
 import Torus from '@toruslabs/torus-embed'
 // import Fortmatic from 'fortmatic'
 
-import Oven from 'components/oven/Oven'
+import CommunitiesPage from 'components/oven/CommunitiesPage'
 import Wizard from 'components/wizard'
 import Dashboard from 'components/dashboard'
 import HomePage from 'components/home'
@@ -108,7 +108,7 @@ const Root = ({
       <Switch>
         <Route exact path='/' render={props => <HomePage logout={logout} web3connect={web3connect} {...props} />} />
         <Route path='/view/issuance/:templateId?' component={props => <Wizard logout={logout} web3connect={web3connect} {...props} />} />
-        <Route path='/view/communities' component={props => <Oven logout={logout} web3connect={web3connect} {...props} />} />
+        <Route path='/view/communities' component={props => <CommunitiesPage logout={logout} web3connect={web3connect} {...props} />} />
         <Route path='/view/community/:address' component={props => <Dashboard logout={logout} web3connect={web3connect} {...props} />} />
       </Switch>
       <Footer />

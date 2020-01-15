@@ -32,7 +32,9 @@ const InnerCommunities = ({
   showDashboard,
   title
 }) => {
-  if (isEmpty(communities) || isEmpty(communities.filter(({ entity }) => entity))) return null
+  if (!communities) {
+    return null
+  }
 
   useEffect(() => {
     if (communities && accountAddress) {
@@ -46,8 +48,8 @@ const InnerCommunities = ({
     <div className='profile__communities grid-y'>
       <span>{title}</span>
       <div className='grid-y grid-margin-y grid-margin-x'>
-        {communities && communities.map((entity, index) => {
-          const { community, token } = entity
+        {communities && communities.map((community, index) => {
+          const { token } = community
           const { homeTokenAddress, foreignTokenAddress } = community
           const balance = balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress]
             ? formatWei(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress], 2)
@@ -56,7 +58,7 @@ const InnerCommunities = ({
             <ProfileCard
               key={index}
               balance={balance || 0}
-              entity={entity}
+              community={community}
               metadata={{ ...metadata[token.tokenURI], ...metadata[community && community.communityURI] }}
               showDashboard={showDashboard}
               accountAddress={accountAddress}

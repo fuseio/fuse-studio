@@ -1,5 +1,8 @@
 import { createSelector } from 'reselect'
+import { createMatchSelector } from 'connected-react-router';
 import { getBridgeStatus } from 'selectors/network'
+import has from 'lodash/has'
+import get from 'lodash/get'
 
 const getCommunities = state => state.entities.communities
 
@@ -11,13 +14,20 @@ export const getTokenAddressOfByNetwork = (state, community) => {
   }
 }
 
-export const getCurrentCommunity = (state, communityAddress) => {
-  if (communityAddress) {
-    const communities = getCommunities(state)
-    return communities[communityAddress]
+const communityAddressMatchSelector = createMatchSelector({ path: '/view/community/:communityAddress' })
+export const getCommunityAddress = (state) => get(communityAddressMatchSelector(state), 'params.communityAddress')
+
+export const getCurrentCommunity = createSelector(
+  getCommunityAddress,
+  getCommunities,
+  (communityAddress, communities) => {
+    if (communityAddress) {
+      const community = communities[communityAddress]
+      return has(community, 'community') ? community.community : community
+    }
+    return null
   }
-  return null
-}
+)
 
 export const getInfo = createSelector(
   state => state.network.homeNetwork,

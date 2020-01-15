@@ -12,7 +12,7 @@ const CommunitySchema = new Schema({
   name: { type: String, required: [true, "can't be blank"] },
   communityURI: { type: String },
   coverPhoto: { type: String }
-}, { timestamp: true })
+}, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })
 CommunitySchema.index({ homeTokenAddress: 1 }, { unique: true })

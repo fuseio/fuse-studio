@@ -90,7 +90,7 @@ const mapStateToProps = (state, { match }) => ({
   balances: getBalances(state),
   networkType: getCurrentNetworkType(state),
   token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { symbol: '' },
-  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state, getCommunityAddress(state)))
+  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state))
 })
 
 const mapDispatchToProps = {

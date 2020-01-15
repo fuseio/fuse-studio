@@ -28,7 +28,7 @@ import { getTransaction } from 'selectors/transaction'
 // import { getForeignNetwork } from 'selectors/network'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
-import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { checkIsAdmin } from 'selectors/entities'
 
 import AddBusiness from 'images/add_business.svg'
 import Avatar from 'images/avatar.svg'
@@ -96,7 +96,6 @@ const Users = ({
   useEffect(() => {
     const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(userEntities)) {
-      debugger
       const data = userEntities.map(({ isAdmin, isApproved, address }, index) => ({
         isApproved,
         isAdmin,
@@ -333,7 +332,7 @@ const mapStateToProps = (state) => ({
   users: state.entities.users,
   ...state.screens.communityEntities,
   isAdmin: checkIsAdmin(state),
-  community: getCurrentCommunity(state, getCommunityAddress(state)),
+  community: getCurrentCommunity(state),
   transactionData: getTransaction(state, state.screens.communityEntities.transactionHash)
 })
 

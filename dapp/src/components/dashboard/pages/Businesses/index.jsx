@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import get from 'lodash/get'
 import capitalize from 'lodash/capitalize'
 import { toChecksumAddress } from 'web3-utils'
-import gql from 'graphql-tag'
 import MyTable from 'components/dashboard/components/Table'
 import {
   fetchEntities,
@@ -20,7 +19,7 @@ import { getTransaction } from 'selectors/transaction'
 
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
-import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { checkIsAdmin } from 'selectors/entities'
 import TransactionMessage from 'components/common/TransactionMessage'
 
 import dotsIcon from 'images/dots.svg'
@@ -267,7 +266,7 @@ const mapStateToProps = (state) => ({
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
   businessesMetadata: state.entities.businesses,
-  isClosed: getCurrentCommunity(state, getCommunityAddress(state)) ? getCurrentCommunity(state, getCommunityAddress(state)).isClosed : false,
+  isClosed: get(getCurrentCommunity(state), 'isClosed', false),
   isAdmin: checkIsAdmin(state),
   updateEntities: state.screens.communityEntities.updateEntities
 })

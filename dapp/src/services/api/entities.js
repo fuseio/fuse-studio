@@ -43,4 +43,4 @@ export const fetchEntityMetadata = (apiRoot, { communityAddress, account }) =>
   request.get(`${apiRoot}/entities/metadata/${communityAddress}/${account}`).then(response => response.body)
 
 export const fetchCommunities = (apiRoot, { accountAddress }) =>
-  request.get(`${apiRoot}/entities/account/${accountAddress}`).then(response => response.body)
+  request.get(`${apiRoot}/communities/account/${accountAddress}`).then(response => response.body)

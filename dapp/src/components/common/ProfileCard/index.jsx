@@ -11,7 +11,7 @@ import { balanceOfToken } from 'actions/accounts'
 import CommunityLogo from 'components/common/CommunityLogo'
 
 const ProfileCard = memo(({
-  entity,
+  community,
   metadata,
   balance,
   fetchMetadata,
@@ -20,7 +20,7 @@ const ProfileCard = memo(({
   showDashboard,
   accountAddress
 }) => {
-  const { token, community } = entity
+  const { token } = community
   const { name, symbol, tokenURI } = token
   const { communityURI, homeTokenAddress, foreignTokenAddress, communityAddress } = community
 
