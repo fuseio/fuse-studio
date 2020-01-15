@@ -256,7 +256,7 @@ const Users = ({
         addActionProps={{
           placeholder: 'Search a user',
           // action: isAdmin ? handleAddUser : handleJoinCommunity,
-          isAdmin,
+          isAdmin
           // text: isAdmin ? 'Add user' : 'Join community',
         }}
         data={tableData}
