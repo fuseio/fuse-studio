@@ -294,7 +294,7 @@ function * fetchUserWallets ({ accounts }) {
   const { data } = yield call(entitiesApi.fetchUserWallets, { accounts })
   const entities = keyBy(data.wallets.map(entity => ({ ...entity, account: entity.address })), 'address')
   const result = Object.keys(entities)
-  
+
   yield put({
     entity: 'wallets',
     type: actions.FETCH_USER_WALLETS.SUCCESS,

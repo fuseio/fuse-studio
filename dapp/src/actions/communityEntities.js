@@ -1,5 +1,4 @@
 import { action, createEntityAction, createTransactionRequestTypes, createRequestTypes } from './utils'
-import { actions } from 'react-table'
 
 export const entityName = 'communityEntities'
 export const entityBusinesses = 'businesses'
