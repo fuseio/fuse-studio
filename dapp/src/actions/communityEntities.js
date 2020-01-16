@@ -1,4 +1,5 @@
 import { action, createEntityAction, createTransactionRequestTypes, createRequestTypes } from './utils'
+import { actions } from 'react-table'
 
 export const entityName = 'communityEntities'
 export const entityBusinesses = 'businesses'
@@ -24,6 +25,7 @@ export const JOIN_COMMUNITY = createRequestTypes('JOIN_COMMUNITY')
 export const IMPORT_EXISTING_ENTITY = createRequestTypes('IMPORT_EXISTING_ENTITY')
 export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
 
+export const FETCH_USER_WALLETS = createRequestTypes('FETCH_USER_WALLETS')
 export const FETCH_USERS_METADATA = createRequestTypes('FETCH_USERS_METADATA')
 const options = { desiredNetworkType: 'fuse' }
 
@@ -43,4 +45,5 @@ export const joinCommunity = (communityAddress, data) => action(JOIN_COMMUNITY.R
 export const importExistingEntity = (accountAddress, communityAddress, isClosed) => action(IMPORT_EXISTING_ENTITY.REQUEST, { accountAddress, communityAddress, isClosed, options })
 export const uploadImage = (image) => action(UPLOAD_IMAGE.REQUEST, { image })
 
+export const fetchUserWallets = (accounts) => actions(FETCH_USER_WALLETS, { accounts })
 export const toggleCommunityMode = (communityAddress, isClosed) => action(TOGGLE_COMMUNITY_MODE.REQUEST, { communityAddress, isClosed })
