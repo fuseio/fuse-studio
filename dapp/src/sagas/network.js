@@ -178,10 +178,17 @@ function * changeNetwork ({ networkType }) {
   const foreignNetwork = yield select(getForeignNetwork)
   const currentNetwork = toLongName(networkType)
   saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : currentNetwork, networkType: currentNetwork })
+  const web3 = yield getWeb3()
+  const providerInfo = getProviderInfo(web3.currentProvider)
+  if (providerInfo.name === 'Portis') {
+    yield web3.currentProvider._portis.changeNetwork(currentNetwork)
+    yield web3.eth.net.getId()
+    yield call(checkNetworkType, { web3 })
+  }
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
-  window.location.reload()
+  // window.location.reload()
 }
 
 function * sendTransactionHash ({ transactionHash, abiName }) {
