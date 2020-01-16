@@ -290,6 +290,10 @@ function * fetchUsersMetadata ({ accounts }) {
   }
 }
 
+function * fetchUserWallets ({ wallets }) {
+  
+}
+
 const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchEntity)
 const fetchEntityMetadata = createEntitiesFetch(actions.FETCH_ENTITY_METADATA, entitiesApi.fetchEntityMetadata)
 
