@@ -19,16 +19,12 @@ import ModalContainer from 'containers/ModalContainer'
 import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import useWeb3Connect from 'hooks/useWeb3Connect'
 import useDefaultWallet from 'hooks/useDefaultWallet'
-import { getAccountAddress } from 'selectors/accounts'
-import { getForeignNetwork } from 'selectors/network'
 import { loadState, saveState } from 'utils/storage'
 
 import 'scss/main.scss'
 
 const Root = ({
-  connectToWallet,
-  defaultNetwork,
-  location
+  connectToWallet
 }) => {
   const web3Auth = useWeb3Auth()
   const webConnectOptions = {
@@ -76,7 +72,6 @@ const Root = ({
         // console.log({ error })
       }
     }
-
     if (defaultWallet) {
       autoLogin(defaultWallet)
     } else if (checkInjected.injectedAvailable && reconnect) {
@@ -84,16 +79,12 @@ const Root = ({
     }
 
     return () => { }
-  }, [defaultWallet, defaultNetwork])
+  }, [])
 
   const onConnectCallback = async (response) => {
     const { provider } = await web3Auth.signIn(response)
     connectToWallet(provider)
   }
-
-  const isInCommunityPage = location.pathname.includes('/community/')
-
-  const isInIssuancePage = location.pathname.includes('/issuance')
 
   const logout = () => {
     saveState('state.reconnect', false)
@@ -104,7 +95,7 @@ const Root = ({
 
   return (
     <div className='root__wrapper'>
-      {!isInIssuancePage && <NavBar modifier={isInCommunityPage} logout={logout} withLogo={!isInCommunityPage} web3connect={web3connect} />}
+      <NavBar logout={logout} web3connect={web3connect} />
       <Switch>
         <Route exact path='/' render={props => <HomePage logout={logout} web3connect={web3connect} {...props} />} />
         <Route path='/view/issuance/:templateId?' component={props => <Wizard logout={logout} web3connect={web3connect} {...props} />} />
@@ -117,14 +108,8 @@ const Root = ({
   )
 }
 
-const mapState = (state) => ({
-  defaultNetwork: getForeignNetwork(state),
-  accountAddress: getAccountAddress(state),
-  ...state.router
-})
-
 const mapDispatch = {
   connectToWallet
 }
 
-export default connect(mapState, mapDispatch)(Root)
+export default connect(null, mapDispatch)(Root)

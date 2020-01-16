@@ -24,10 +24,19 @@ const NavBar = ({
   connectingToWallet,
   logout,
   web3connect,
-  modifier,
-  withLogo = true,
-  foreignToken
+  foreignToken,
+  location
 }) => {
+  const isInCommunityPage = location.pathname.includes('/community/')
+  const isInIssuancePage = location.pathname.includes('/issuance')
+
+  if (isInIssuancePage) {
+    return null
+  }
+
+  const modifier = isInCommunityPage
+  const withLogo = !isInCommunityPage
+
   const { y: scrollY } = useWindowScroll()
   const [isHelpOpen, setHelpOpen] = useState(false)
   const [isProfileOpen, setProfileOpen] = useState(false)
@@ -118,7 +127,8 @@ const mapStateToProps = (state) => ({
   accountAddress: state.network.accountAddress,
   connectingToWallet: state.network.connectingToWallet,
   networkType: getCurrentNetworkType(state),
-  foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { networkType: '' }
+  foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { networkType: '' },
+  location: state.router.location
 })
 
 const mapDispatchToProps = {
