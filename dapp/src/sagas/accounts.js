@@ -136,11 +136,11 @@ function * initialAddress () {
 }
 
 function * postponeAction ({ accountAddress, postponed }) {
-  const providerInfo = yield select(state => getProviderInfo(state))
+  const providerInfo = select(state => getProviderInfo(state))
   const { desiredNetworkType } = postponed.options
 
   if (providerInfo.type === 'web') {
-    yield put(changeNetwork(postponed.options.desiredNetworkType))
+    yield put(changeNetwork(postponed.options.networkType))
   } else {
     yield put(loadModal(SWITCH_NETWORK, { desiredNetworkType }))
   }
