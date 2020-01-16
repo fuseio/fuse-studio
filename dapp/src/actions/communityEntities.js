@@ -45,5 +45,5 @@ export const joinCommunity = (communityAddress, data) => action(JOIN_COMMUNITY.R
 export const importExistingEntity = (accountAddress, communityAddress, isClosed) => action(IMPORT_EXISTING_ENTITY.REQUEST, { accountAddress, communityAddress, isClosed, options })
 export const uploadImage = (image) => action(UPLOAD_IMAGE.REQUEST, { image })
 
-export const fetchUserWallets = (accounts) => actions(FETCH_USER_WALLETS, { accounts })
+export const fetchUserWallets = (accounts) => action(FETCH_USER_WALLETS.REQUEST, { accounts })
 export const toggleCommunityMode = (communityAddress, isClosed) => action(TOGGLE_COMMUNITY_MODE.REQUEST, { communityAddress, isClosed })

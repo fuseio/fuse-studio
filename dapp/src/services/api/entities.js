@@ -24,7 +24,7 @@ const GET_COMMUNITY = (address) => {
 const FETCH_WALLETS = gql`
   query Wallets($accounts: [String]!)
     {
-      wallets(address_in: $accounts) {
+      wallets(where: {address_in: $accounts}) {
         address,
         owner
       }

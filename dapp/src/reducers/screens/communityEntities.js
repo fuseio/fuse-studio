@@ -6,7 +6,8 @@ import {
   REMOVE_ADMIN_ROLE,
   TOGGLE_COMMUNITY_MODE,
   JOIN_COMMUNITY,
-  FETCH_ENTITIES
+  FETCH_ENTITIES,
+  FETCH_USER_WALLETS
 } from 'actions/communityEntities'
 import { REQUEST } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
@@ -15,7 +16,8 @@ import omit from 'lodash/omit'
 const initialState = {
   entitiesAccounts: [],
   userAccounts: [],
-  businessesAccounts: []
+  businessesAccounts: [],
+  walletAccounts: []
 }
 
 export default (state = initialState, action) => {
@@ -62,6 +64,8 @@ export default (state = initialState, action) => {
       const businessesAccounts = action.response.result.filter(account => action.response.entities[account].isBusiness)
       const userAccounts = action.response.result.filter(account => action.response.entities[account].isUser)
       return { ...state, updateEntities: false, entitiesAccounts: [...action.response.result], businessesAccounts, userAccounts, toFetchEntities: false }
+    case FETCH_USER_WALLETS.SUCCESS:
+      return { ...state, walletAccounts: [...action.response.result] }
     case JOIN_COMMUNITY.SUCCESS:
       return { ...state, join: true }
     case JOIN_COMMUNITY.FAILURE:
