@@ -16,7 +16,10 @@ const useWeb3Connect = (options, connectCallback) => {
     await connectCallback(response)
   })
 
-  web3Connect.on('close', () => { })
+  // web3Connect.on('close', () => {
+  //   debugger
+  //   web3Connect.toggleModal()
+  // })
 
   const toggleModal = () => {
     web3Connect.toggleModal()
