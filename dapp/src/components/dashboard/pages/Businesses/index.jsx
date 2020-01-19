@@ -179,8 +179,6 @@ const Businesses = ({
 
   const handleAddBusiness = () => loadAddBusinessModal(false)
 
-  const handleJoinCommunity = () => loadAddBusinessModal(true)
-
   const handleRemoveEntity = (account) => {
     setTransactionTitle('Removing the business from list')
     removeEntity(account)
@@ -209,9 +207,9 @@ const Businesses = ({
       <MyTable
         addActionProps={{
           placeholder: 'Search a business',
-          action: isAdmin ? handleAddBusiness : handleJoinCommunity,
+          action: isAdmin ? handleAddBusiness : null,
           isAdmin,
-          text: isAdmin ? 'Add business' : 'Join',
+          text: isAdmin ? 'Add business' : null,
           onChange: identity
           // TODO - search
           // onChange: setSearch
