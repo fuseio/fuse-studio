@@ -8,7 +8,8 @@ const initialState = {
   users: {},
   bridges: {},
   communityEntities: {},
-  communities: {}
+  communities: {},
+  wallets: {}
 }
 
 export default (state = initialState, action) => {

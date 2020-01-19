@@ -18,7 +18,8 @@ import {
   confirmUser,
   joinCommunity,
   importExistingEntity,
-  fetchUsersMetadata
+  fetchUsersMetadata,
+  fetchUserWallets
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
@@ -37,10 +38,6 @@ const Users = ({
   isAdmin,
   community,
   accountAddress,
-  signatureNeeded,
-  transactionStatus,
-  fetchEntities,
-  importExistingEntity,
   loadModal,
   joinCommunity,
   addEntity,
@@ -49,12 +46,14 @@ const Users = ({
   removeAdminRole,
   confirmUser,
   userJustAdded,
-  transactionData,
   entityAdded,
   push,
   userAccounts,
   communityEntities,
   fetchUsersMetadata,
+  fetchUserWallets,
+  walletAccounts,
+  userWallets,
   users
 }) => {
   const { address: communityAddress } = useParams()
@@ -63,31 +62,57 @@ const Users = ({
   useEffect(() => {
     if (userAccounts && userAccounts.length > 0) {
       fetchUsersMetadata(userAccounts)
+      fetchUserWallets(userAccounts)
     }
   }, [userAccounts])
 
   useEffect(() => {
+    if (walletAccounts && walletAccounts.length > 0) {
+      const walletOwners = walletAccounts.map(wallet => userWallets[wallet].owner)
+      fetchUsersMetadata(walletOwners)
+    }
+  }, [walletAccounts])
+
+  useEffect(() => {
     const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(userEntities)) {
-      const data = userEntities.map(({ isAdmin, isApproved, address }, index) => ({
-        isApproved,
-        isAdmin,
-        name: users[address]
-          ? [
-            {
-              name: users[address].name,
-              image: users[address].image
-                ? <div
-                  style={{
-                    backgroundImage: `url(https://ipfs.infura.io/ipfs/${users[address].image.contentUrl['/']})`,
-                    width: '36px',
-                    height: '36px',
-                    backgroundSize: 'contain',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center'
-                  }}
-                />
-                : <div
+      const data = userEntities.map(({ isAdmin, isApproved, address }, index) => {
+        const metadataAddress = userWallets[address] ? userWallets[address].owner : address
+        const metadata = users[metadataAddress]
+        return ({
+          isApproved,
+          isAdmin,
+          name: metadata
+            ? [
+              {
+                name: metadata.name,
+                image: metadata.image
+                  ? <div
+                    style={{
+                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${metadata.image.contentUrl['/']})`,
+                      width: '36px',
+                      height: '36px',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+                  : <div
+                    style={{
+                      backgroundImage: `url(${Avatar})`,
+                      width: '36px',
+                      height: '36px',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+              }
+            ]
+            : [
+              {
+                name: '',
+                image: <div
                   style={{
                     backgroundImage: `url(${Avatar})`,
                     width: '36px',
@@ -97,37 +122,23 @@ const Users = ({
                     backgroundPosition: 'center'
                   }}
                 />
-            }
-          ]
-          : [
-            {
-              name: '',
-              image: <div
-                style={{
-                  backgroundImage: `url(${Avatar})`,
-                  width: '36px',
-                  height: '36px',
-                  backgroundSize: 'contain',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center'
-                }}
-              />
-            }
-          ],
-        address,
-        status: isAdmin
-          ? 'Community admin'
-          : (community && !community.isClosed)
-            ? 'Community user'
-            : isApproved
+              }
+            ],
+          address,
+          status: isAdmin
+            ? 'Community admin'
+            : (community && !community.isClosed)
               ? 'Community user'
-              : 'Pending user'
-      }), ['updatedAt']).reverse()
+              : isApproved
+                ? 'Community user'
+                : 'Pending user'
+        })
+      }, ['updatedAt']).reverse()
       setData(sortBy(data))
     }
 
     return () => { }
-  }, [userAccounts])
+  }, [userAccounts, users])
 
   useEffect(() => {
     if (entityAdded) {
@@ -170,7 +181,8 @@ const Users = ({
     },
     {
       Header: 'Account ID',
-      accessor: 'address'
+      accessor: 'address',
+      isEthereumAddress: true
     },
     {
       id: 'dropdown',
@@ -303,6 +315,7 @@ const mapStateToProps = (state) => ({
   communityEntities: state.entities.communityEntities,
   accountAddress: getAccountAddress(state),
   users: state.entities.users,
+  userWallets: state.entities.wallets,
   ...state.screens.communityEntities,
   isAdmin: checkIsAdmin(state),
   community: getCurrentCommunity(state),
@@ -321,7 +334,8 @@ const mapDispatchToProps = {
   hideModal,
   fetchEntities,
   importExistingEntity,
-  fetchUsersMetadata
+  fetchUsersMetadata,
+  fetchUserWallets
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users)

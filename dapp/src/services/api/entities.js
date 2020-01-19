@@ -21,16 +21,24 @@ const GET_COMMUNITY = (address) => {
   `
 }
 
+const FETCH_WALLETS = gql`
+  query Wallets($accounts: [String]!)
+    {
+      wallets(where: {address_in: $accounts}) {
+        address,
+        owner
+      }
+    }
+  `
+
 export const fetchCommunityEntities = ({ communityAddress }) => client.query({
   query: GET_COMMUNITY(communityAddress)
 })
-// export const fetchCommunityEntities = (apiRoot, { communityAddress, entityType }) => {
-//   const path = entityType
-//     ? `${apiRoot}/entities/${communityAddress}?type=${entityType}`
-//     : `${apiRoot}/entities/${communityAddress}`
-//   return request.get(path).then(response => response.body)
-// }
 
+export const fetchUserWallets = ({ accounts }) => client.query({
+  query: FETCH_WALLETS,
+  variables: { accounts }
+})
 export const createEntitiesMetadata = (apiRoot, { communityAddress, accountAddress, metadata }) =>
   request.put(`${apiRoot}/entities/${communityAddress}/${accountAddress}`)
     .send({ metadata })

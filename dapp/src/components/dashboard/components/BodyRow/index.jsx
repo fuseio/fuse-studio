@@ -36,7 +36,7 @@ export default ({
   return (
     <div {...row.getRowProps({ style, className })}>
       {row.cells.map(cell => {
-        const { column: { id }, value } = cell
+        const { column: { id, isEthereumAddress }, value } = cell
         const className = id === 'checkbox' || id === 'dropdown' ? `table__body__cell cell small-2` : `table__body__cell cell small-${Math.ceil(24 / row.cells.length)}`
         if (id === 'name') {
           return (
@@ -60,7 +60,7 @@ export default ({
         return (
           <div {...cell.getCellProps({ className })}>
             {
-              id === 'account'
+              isEthereumAddress
                 ? (
                   <React.Fragment>
                     {addressShortener(value)}
