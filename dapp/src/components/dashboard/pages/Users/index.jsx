@@ -138,7 +138,7 @@ const Users = ({
     }
 
     return () => { }
-  }, [userAccounts])
+  }, [userAccounts, users])
 
   useEffect(() => {
     if (entityAdded) {
@@ -181,7 +181,8 @@ const Users = ({
     },
     {
       Header: 'Account ID',
-      accessor: 'address'
+      accessor: 'address',
+      isEthereumAddress: true
     },
     {
       id: 'dropdown',

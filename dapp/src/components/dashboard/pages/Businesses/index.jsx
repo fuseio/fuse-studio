@@ -148,7 +148,8 @@ const Businesses = ({
     },
     {
       Header: 'Account ID',
-      accessor: 'account'
+      accessor: 'account',
+      isEthereumAddress: true
     },
     {
       id: 'dropdown',
