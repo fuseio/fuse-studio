@@ -31,10 +31,7 @@ const HomePage = ({
       }
       web3connect.toggleModal()
     } else {
-      window.analytics.track({
-        userId: accountAddress,
-        event: 'Launch community button pressed - connected'
-      })
+      window.analytics.track('Launch community button pressed - connected')
       const path = templateId ? `/view/issuance/${templateId}` : '/view/issuance'
       push(path)
     }
@@ -43,14 +40,7 @@ const HomePage = ({
   const showDashboard = (communityAddress, name) => {
     if (window && window.analytics) {
       if (name) {
-        if (accountAddress) {
-          window.analytics.track({
-            userId: accountAddress,
-            event: `Clicked on featured community - ${name}`
-          })
-        } else {
-          window.analytics.track(`Clicked on featured community - ${name}`)
-        }
+        window.analytics.track(`Clicked on featured community`, { name })
       }
     }
     push(`/view/community/${communityAddress}`)

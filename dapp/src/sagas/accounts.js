@@ -165,7 +165,10 @@ function * executePostponedActions () {
   }
 }
 
-function * watchCheckNetworkTypeSuccess () {
+function * watchCheckNetworkTypeSuccess ({ response }) {
+  if (response.networkType === 'fuse') {
+    window.analytics.track('User Switch to fuse network')
+  }
   yield call(executePostponedActions)
 }
 

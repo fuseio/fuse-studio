@@ -77,6 +77,10 @@ class Wizard extends React.Component {
       if (window && window.analytics) {
         window.analytics.track(nextStepEvents[this.state.page], { ...trackProps })
       }
+
+      if (this.state.page === 0 && values.email) {
+        window.analytics.identify({ email: values.email })
+      }
     }
     this.setState(state => ({
       page: Math.min(state.page + 1, this.props.children.length - 1),

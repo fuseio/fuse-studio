@@ -78,6 +78,7 @@ function * connectToWallet ({ provider }) {
 
     yield fork(watchNetworkChanges, provider)
     yield call(checkNetworkType, { web3 })
+
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,
       accountAddress,
@@ -85,7 +86,10 @@ function * connectToWallet ({ provider }) {
         providerInfo
       }
     })
+
+    window.analytics.identify(accountAddress)
     const isChanged = yield call(checkAccountChanged, { selectedAddress: accountAddress })
+
     if (!isChanged) {
       yield put(balanceOfFuse(accountAddress))
     }

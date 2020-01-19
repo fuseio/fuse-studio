@@ -48,7 +48,6 @@ const DashboardLayout = (props) => {
     fetchCommunity,
     foreignToken,
     community,
-    networkType,
     accountAddress,
     isAdmin,
     location,
@@ -86,29 +85,7 @@ const DashboardLayout = (props) => {
 
   useEffect(() => {
     if (isAdmin) {
-      window.analytics.identify(`${accountAddress}`, { role: 'admin', communityAddress })
-
-      if (networkType === 'fuse') {
-        window.analytics.track({
-          userId: accountAddress,
-          event: 'User Switch to fuse network'
-        })
-        window.analytics.identify(`${accountAddress}`, {
-          switchToFuse: true
-        })
-      } else {
-        window.analytics.track({
-          userId: accountAddress,
-          event: "User didn't Switch to fuse network"
-        })
-        window.analytics.identify(`${accountAddress}`, {
-          switchToFuse: false
-        })
-      }
-    } else {
-      window.analytics.identify(`${accountAddress}`, {
-        role: 'user'
-      })
+      window.analytics.identify({ role: 'admin', communityAddress })
     }
   }, [isAdmin])
 
