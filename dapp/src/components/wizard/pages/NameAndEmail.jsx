@@ -20,9 +20,6 @@ const NameAndCurrency = ({
               {...field}
               onChange={event => {
                 handleChange(event)
-                if (window && window.analytics) {
-                  window.analytics.track('Filling community name')
-                }
                 if (!existingToken) {
                   setFieldValue('communitySymbol', nameToSymbol(event.target.value))
                 }
@@ -57,12 +54,7 @@ const NameAndCurrency = ({
           render={({ field, form: { handleChange } }) => (
             <TextField
               {...field}
-              onChange={event => {
-                if (window && window.analytics) {
-                  window.analytics.track('Filling email')
-                }
-                handleChange(event)
-              }}
+              onChange={handleChange}
               type='email'
               placeholder='Insert mail'
               classes={{

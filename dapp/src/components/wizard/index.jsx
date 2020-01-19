@@ -85,19 +85,6 @@ const WizardPage = ({
       window.analytics.track('Wizard init')
     }
   }, [])
-
-  useEffect(() => {
-    if (adminAddress) {
-      window.analytics.identify(adminAddress, {
-        subscriptionStatus: 'active'
-      })
-    } else {
-      window.analytics.identify({
-        subscriptionStatus: 'inactive'
-      })
-    }
-  }, [adminAddress])
-
   const initialTemplateValues = useCallback(getInitialValues(templateId, networkType), [templateId, networkType])
 
   const initialValues = useMemo(() => {
@@ -218,20 +205,9 @@ const WizardPage = ({
       ? { isDefault: true, image: images && images[chosen] && images[chosen].blob, coverPhoto: coverPhoto.blob }
       : { image: images && images[chosen] && images[chosen].blob, coverPhoto: coverPhoto.blob }
 
-    if (adminAddress) {
-      window.analytics.track({
-        userId: adminAddress,
-        properties: {
-          subscriptionStatus: 'active'
-        }
-      })
-      // window.analytics.identify(adminAddress, {
-      //   email
-      // })
-      Sentry.configureScope((scope) => {
-        scope.setUser({ email })
-      })
-    }
+    Sentry.configureScope((scope) => {
+      scope.setUser({ email })
+    })
 
     if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken

@@ -22,7 +22,6 @@ class Invite extends Component {
   onSubmit = (values, formikBag) => {
     const { inviteUserToCommunity, communityAddress } = this.props
     inviteUserToCommunity(communityAddress, values)
-    formikBag.renderForm(values)
   }
 
   renderForm = ({ values, handleSubmit, errors, isValid, touched, isSubmitting }) => {

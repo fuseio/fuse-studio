@@ -240,7 +240,7 @@ function * uploadImage ({ image }) {
 function * inviteUserToCommunity ({ communityAddress, email, phoneNumber }) {
   yield apiCall(inviteUserToCommunityApi, { communityAddress, email, phoneNumber })
   yield put({
-    type: actions.INVITE_USER_TO_COMMUNITY.SUCCESS
+    type: INVITE_USER_TO_COMMUNITY.SUCCESS
   })
 }
 

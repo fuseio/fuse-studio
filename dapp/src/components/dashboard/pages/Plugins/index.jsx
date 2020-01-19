@@ -5,9 +5,6 @@ import Plugin from 'components/dashboard/components/Plugin'
 import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
 import { addCommunityPlugin } from 'actions/community'
-import upperCase from 'lodash/upperCase'
-import lowerCase from 'lodash/lowerCase'
-import upperFirst from 'lodash/upperFirst'
 import Puzzle from 'images/puzzle.svg'
 import JoinBonus from 'images/join_bonus.png'
 import JoinBonusBig from 'images/join_bonus_big.png'
@@ -118,7 +115,7 @@ const Plugins = ({
   const handleTracker = (plugin) => {
     if (window && window.analytics) {
       const { name } = plugin
-      window.analytics.track(`${upperFirst(lowerCase(upperCase(name)))} ${plugin.isRemoved ? 'removed' : 'added'}`)
+      window.analytics.track(`plugin ${plugin.isRemoved ? 'removed' : 'added'}`, { name })
     }
   }
 

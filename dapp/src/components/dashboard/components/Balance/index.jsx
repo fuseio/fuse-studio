@@ -1,5 +1,4 @@
-import React, { useEffect, memo } from 'react'
-import { BigNumber } from 'bignumber.js'
+import React, { memo } from 'react'
 import { convertNetworkName } from 'utils/network'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
@@ -20,37 +19,12 @@ const NetworkLogo = memo(({ network }) => {
 })
 
 const Balance = ({
-  isAdmin,
-  accountAddress,
   bridgeSide,
   symbol,
-  balances,
   openModal,
   balance
 }) => {
-  const { bridge, network } = bridgeSide
-  useEffect(() => {
-    if (isAdmin) {
-      if (bridge === 'home' && Number(new BigNumber(balance).div(1e18).toFixed()) > 0) {
-        window.analytics.track({
-          userId: accountAddress,
-          event: 'Bridge used'
-        })
-        window.analytics.identify(accountAddress, {
-          bridgeWasUsed: true
-        })
-      } else {
-        window.analytics.track({
-          userId: accountAddress,
-          event: 'Bridge not used'
-        })
-        window.analytics.identify(accountAddress, {
-          bridgeWasUsed: false
-        })
-      }
-    }
-    return () => { }
-  }, [bridge, balances])
+  const { network } = bridgeSide
 
   return (
     <div className='bridge'>

@@ -22,9 +22,6 @@ const CurrencySymbol = ({ formik }) => {
               disabled={!communityType}
               onChange={(event) => {
                 setFieldValue('communitySymbol', event.target.value)
-                if (window && window.analytics) {
-                  window.analytics.track('Filling symbol')
-                }
               }}
             />
           )}
