@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import QRCode from 'qrcode.react'
 
-import InvaiteForm from 'components/dashboard/components/InvaiteForm'
+import InviteForm from 'components/dashboard/components/InviteForm'
 
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getHomeTokenByCommunityAddress } from 'selectors/token'
@@ -35,7 +35,7 @@ const WhiteLabelWallet = ({ value, communityAddress }) => {
           </div>
         </div>
       </div>
-      <InvaiteForm communityAddress={communityAddress} />
+      <InviteForm communityAddress={communityAddress} />
     </Fragment>
   )
 }
