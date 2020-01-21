@@ -1,5 +1,5 @@
-import DollarIcon from 'images/dollar_symbol.svg'
-import DollarYellowIcon from 'images/dollar_symbol_yellow.svg'
+import DollarIcon from 'images/fiat-on-ramp-white.svg'
+import DollarYellowIcon from 'images/fiat-on-ramp-selected.svg'
 import JoinBonusIcon from 'images/join_bonus.svg'
 import JoinBonusYellowIcon from 'images/join_bonus_selected.svg'
 import BusinessIcon from 'images/business_list.svg'

@@ -4,7 +4,7 @@ import moonpayIcon from 'images/moonpay.svg'
 import rampIcon from 'images/ramp.svg'
 import joinBonusIcon from 'images/star.svg'
 import wyreIcon from 'images/wyre.svg'
-import dollarIcon from 'images/dollar_symbol.svg'
+import onrampIcon from 'images/fiat-on-ramp.svg'
 
 const pluginsIcons = {
   businessList: contractIcon,
@@ -13,7 +13,7 @@ const pluginsIcons = {
   ramp: rampIcon,
   joinBonus: joinBonusIcon,
   wyre: wyreIcon,
-  onramp: dollarIcon
+  onramp: onrampIcon
 }
 
 export default pluginsIcons
