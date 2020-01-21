@@ -141,19 +141,7 @@ const WizardPage = ({
         joinBonus: {
           isActive: false
         },
-        moonpay: {
-          isActive: false
-        },
-        ramp: {
-          isActive: false
-        },
-        coindirect: {
-          isActive: false
-        },
-        carbon: {
-          isActive: false
-        },
-        wyre: {
+        onramp: {
           isActive: false
         },
         ...plugins

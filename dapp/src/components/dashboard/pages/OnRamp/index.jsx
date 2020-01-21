@@ -10,7 +10,6 @@ import get from 'lodash/get'
 const onRampServices = [
   'moonpay',
   'ramp',
-  'coindirect',
   'carbon',
   'wyre'
 ]
