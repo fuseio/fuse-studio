@@ -6,15 +6,12 @@ import { connect, useSelector } from 'react-redux'
 import { transferTokenToFunder, clearTransactionStatus } from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { FAILURE, SUCCESS } from 'actions/constants'
-import { toWei, toChecksumAddress } from 'web3-utils'
+import { toWei } from 'web3-utils'
 import { getFunderAccount, getBalances } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
-import { addCommunityPlugin, toggleJoinBonus } from 'actions/community'
+import { setJoinBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import get from 'lodash/get'
-import { fetchEntity as fetchEntityApi } from 'services/api/entities'
-import { getApiRoot } from 'utils/network'
-import isEmpty from 'lodash/isEmpty'
 import { checkIsFunderPartOfCommunity } from 'selectors/entities'
 import { getCurrentNetworkType } from 'selectors/network'
 import { getHomeTokenByCommunityAddress } from 'selectors/token'
@@ -32,14 +29,12 @@ const JoinBonus = ({
   transferSuccess,
   transferTokenToFunder,
   balanceOfToken,
-  addCommunityPlugin,
   clearTransactionStatus,
   balances,
-  toggleJoinBonus,
-  isFunderPartOfCommunity
+  isFunderPartOfCommunity,
+  setJoinBonus
 }) => {
   const { address: communityAddress } = useParams()
-  const [isFunderAdded, setFunderStatus] = React.useState(isFunderPartOfCommunity)
 
   const funderAccount = useSelector(getFunderAccount)
   const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[homeToken.address]
@@ -51,20 +46,10 @@ const JoinBonus = ({
   const [transferMessage, setTransferMessage] = useState(false)
 
   useEffect(() => {
-    balanceOfToken(homeToken.address, funderAddress, { bridgeType: 'home' })
-    return () => {}
-  }, [])
-
-  useEffect(() => {
-    setFunderStatus(isFunderPartOfCommunity)
-  }, [isFunderPartOfCommunity])
-
-  useEffect(() => {
-    (async function checkIfFunderAddedToCommunity () {
-      const { data } = await fetchEntityApi(getApiRoot(networkType), { communityAddress, account: toChecksumAddress(funderAddress) })
-      setFunderStatus(!isEmpty(data))
-    })()
-  }, [networkType, communityAddress])
+    if (homeToken && homeToken.address) {
+      balanceOfToken(homeToken.address, funderAddress, { bridgeType: 'home' })
+    }
+  }, [homeToken && homeToken.address])
 
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
@@ -120,15 +105,12 @@ const JoinBonus = ({
           />
           <RewardUserForm
             networkType={networkType}
-            hasFunderBalance={funderBalance}
+            hasFunderBalance={funderBalance && funderBalance !== '0'}
             initialValues={{
-              message: get(joinBonus, 'joinInfo.message', ''),
-              amount: get(joinBonus, 'joinInfo.amount', ''),
-              activated: isFunderAdded
+              amount: get(joinBonus, 'joinInfo.amount', '')
             }}
             communityAddress={communityAddress}
-            toggleJoinBonus={toggleJoinBonus}
-            addCommunityPlugin={addCommunityPlugin}
+            setJoinBonus={setJoinBonus}
           />
         </div>
       </div>
@@ -148,8 +130,7 @@ const mapDispatchToState = {
   transferTokenToFunder,
   clearTransactionStatus,
   balanceOfToken,
-  addCommunityPlugin,
-  toggleJoinBonus,
+  setJoinBonus,
   loadModal
 }
 
