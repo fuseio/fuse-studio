@@ -4,7 +4,7 @@ import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
-import { ADD_COMMUNITY_PLUGIN, TOGGLE_JOIN_BONUS, SET_JOIN_BONUS } from 'actions/community'
+import { ADD_COMMUNITY_PLUGIN, SET_JOIN_BONUS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -332,7 +332,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
-    takeEvery([actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS, TOGGLE_JOIN_BONUS.SUCCESS], watchPluginsChanges),
+    takeEvery([actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS], watchPluginsChanges),
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchFetchCommunity),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
