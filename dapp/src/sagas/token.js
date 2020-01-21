@@ -4,7 +4,7 @@ import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
-import { ADD_COMMUNITY_PLUGIN, TOGGLE_JOIN_BONUS } from 'actions/community'
+import { ADD_COMMUNITY_PLUGIN, TOGGLE_JOIN_BONUS, SET_JOIN_BONUS } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -17,9 +17,9 @@ import {
   fetchCommunity as fetchCommunityApi,
   addCommunityPlugin as addCommunityPluginApi
 } from 'services/api/community'
-import { ADD_ENTITY, REMOVE_ENTITY } from 'actions/communityEntities'
+import { ADD_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
-import { getCommunityAddress } from 'selectors/entities'
+import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
 import get from 'lodash/get'
 import TokenFactoryABI from '@fuse/token-factory-contracts/abi/TokenFactoryWithEvents'
 import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
@@ -277,28 +277,26 @@ function * transferTokenToFunder ({ tokenAddress, value }) {
   })
 }
 
-function * toggleJoinBonus ({ isActive }) {
-  const accountAddress = yield select(getAccountAddress)
+function * setJoinBonus ({ amount }) {
   const communityAddress = yield select(getCommunityAddress)
-  const web3 = yield getWeb3()
-  const networkVersion = getNetworkVersion(web3)
-  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, getOptions(networkVersion))
-  const action = isActive ? ADD_ENTITY : REMOVE_ENTITY
-  if (isActive) {
+  const isMemberOfCommunity = yield select(checkIsFunderPartOfCommunity)
+  if (!isMemberOfCommunity) {
+    const web3 = yield getWeb3()
+    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
     const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
     const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
-    const transactionPromise = method.send({ from: accountAddress })
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-    yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
-  } else {
-    const method = CommunityContract.methods.removeEntity(funderAddress)
-    const transactionPromise = method.send({ from: accountAddress })
-    yield call(transactionFlow, { transactionPromise, action, sendReceipt: true })
-    yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive } })
+    const accountAddress = yield select(getAccountAddress)
+    const transactionPromise = method.send({
+      from: accountAddress
+    })
+    yield call(transactionFlow, { transactionPromise, action: ADD_ENTITY, sendReceipt: true })
+    yield transactionPromise
   }
 
+  yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive: amount > 0, joinInfo: { amount: amount.toString() } } })
+
   yield put({
-    type: TOGGLE_JOIN_BONUS.SUCCESS
+    type: SET_JOIN_BONUS.SUCCESS
   })
 }
 
@@ -344,7 +342,7 @@ export default function * tokenSaga () {
     takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),
     tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
-    tryTakeEvery(TOGGLE_JOIN_BONUS, toggleJoinBonus, 1),
+    tryTakeEvery(SET_JOIN_BONUS, setJoinBonus, 1),
     tryTakeEvery(actions.FETCH_FEATURED_COMMUNITIES, fetchFeaturedCommunities),
     takeEvery(action => /^(FETCH_FEATURED_COMMUNITIES|FETCH_COMMUNITIES).*SUCCESS/.test(action.type), watchCommunities)
   ])

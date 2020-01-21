@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect'
 import { getAccountAddress } from './accounts'
 import sortBy from 'lodash/sortBy'
-import { toChecksumAddress } from 'web3-utils'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
@@ -39,13 +38,9 @@ export const checkIsAdmin = createSelector(
 )
 
 export const checkIsFunderPartOfCommunity = createSelector(
-  getCommunityAddress,
   state => state.entities.communityEntities,
-  (communityAddress, communityEntities) => {
-    const funder = toChecksumAddress(funderAddress)
-    return (communityEntities[funder] &&
-      communityEntities[funder].communityAddress &&
-      communityEntities[funder].communityAddress === communityAddress &&
-      communityEntities[funder]) || false
+  (communityEntities) => {
+    const funder = funderAddress.toLowerCase()
+    return !!communityEntities[funder]
   }
 )
