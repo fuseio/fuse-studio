@@ -30,7 +30,7 @@ class WalletBannerLinkForm extends Component {
     return (
       <form onSubmit={handleSubmit} className='join_bonus__container'>
         <div className='join_bonus__field'>
-          <div className='join_bonus__title' style={{paddingBottom: '1em'}}>Link</div>
+          <div className='join_bonus__title' style={{ paddingBottom: '1em' }}>Link</div>
           <TextField
             type='text'
             name='link'
