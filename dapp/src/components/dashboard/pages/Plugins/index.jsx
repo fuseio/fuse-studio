@@ -14,6 +14,8 @@ import FiatOnRamp from 'images/fiat-on-ramp.png'
 import FiatOnRampBig from 'images/fiat-on-ramp-big.png'
 import Bounty from 'images/bounty.png'
 import BountyBig from 'images/bounty_big.png'
+import WalletBannerLink from 'images/wallet_banner_link.png'
+import WalletBannerLinkBig from 'images/wallet_banner_link_big.png'
 
 const generalPlugins = ([
   {
@@ -41,6 +43,15 @@ const generalPlugins = ([
       The integration allows your users to top their account without you holding any custody in the process! Here is how:
       https://www.youtube.com/watch?v=ShxUIljvfLU&feature=emb_title`,
     key: 'onramp'
+  },
+  {
+    title: 'Wallet banner link',
+    coverImage: WalletBannerLink,
+    disabled: false,
+    modalCoverPhoto: WalletBannerLinkBig,
+    content: `The wallet banner plug-in lets you insert any image with a link to any webpage and it will be shown to all the users that joined your community.
+    For example, if your community has a bulletin board, or a shopping cart, or a Facebook page you can link it here so your users will find it.`,
+    key: 'walletBanner'
   },
   {
     title: 'Bounty',

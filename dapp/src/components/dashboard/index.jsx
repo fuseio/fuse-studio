@@ -31,6 +31,7 @@ import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
 import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
 import OnRampPage from 'components/dashboard/pages/OnRamp'
+import WalletBannerLinkPage from 'components/dashboard/pages/WalletBannerLink'
 
 const GET_COMMUNITY_ORIGIN_NETWORK = (communityAddress) => {
   return gql`
@@ -138,6 +139,17 @@ const DashboardLayout = (props) => {
                   <Route exact path={`${match.path}/onramp`}
                     render={() => (
                       <OnRampPage
+                        community={community}
+                      />
+                    )}
+                  />)
+                }
+
+                {community && isAdmin && (
+                  <Route exact path={`${match.path}/walletbanner`}
+                    render={() => (
+                      <WalletBannerLinkPage
+                        match={match}
                         community={community}
                       />
                     )}

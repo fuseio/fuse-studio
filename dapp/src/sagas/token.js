@@ -4,7 +4,7 @@ import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
-import { ADD_COMMUNITY_PLUGIN, SET_JOIN_BONUS } from 'actions/community'
+import { ADD_COMMUNITY_PLUGIN, SET_JOIN_BONUS, SET_WALLET_BANNER_LINK } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -17,6 +17,7 @@ import {
   fetchCommunity as fetchCommunityApi,
   addCommunityPlugin as addCommunityPluginApi
 } from 'services/api/community'
+import { imageUpload } from 'services/api/images'
 import { ADD_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
 import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
@@ -300,6 +301,20 @@ function * setJoinBonus ({ amount }) {
   })
 }
 
+export function * setWalletBannerLink ({ link, walletBanner }) {
+  const plugin = { name: 'walletBanner', link, isActive: true }
+  if (walletBanner && walletBanner.blob) {
+    const { hash } = yield apiCall(imageUpload, { image: walletBanner.blob })
+    plugin.walletBannerHash = hash
+  }
+  const communityAddress = yield select(getCommunityAddress)
+  yield call(addCommunityPlugin, { communityAddress, plugin })
+
+  yield put({
+    type: SET_WALLET_BANNER_LINK.SUCCESS
+  })
+}
+
 function * watchCommunities ({ response }) {
   const { result, entities } = response
   for (let account of result) {
@@ -324,6 +339,7 @@ function * watchCommunities ({ response }) {
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(ADD_COMMUNITY_PLUGIN, addCommunityPlugin, 1),
+    tryTakeEvery(SET_WALLET_BANNER_LINK, setWalletBannerLink, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN, transferToken, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN_TO_FUNDER, transferTokenToFunder, 1),
     tryTakeEvery(actions.MINT_TOKEN, mintToken, 1),
