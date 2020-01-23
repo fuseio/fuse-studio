@@ -52,7 +52,6 @@ const DashboardLayout = (props) => {
     accountAddress,
     isAdmin,
     location,
-    homeToken,
     fetchEntities,
     setForeignNetwork
   } = props
@@ -67,7 +66,7 @@ const DashboardLayout = (props) => {
   }, [location.pathname])
 
   useEffect(() => {
-    if (communityAddress && accountAddress && (!community || !foreignToken || !homeToken)) {
+    if (communityAddress) {
       fetchCommunity(communityAddress)
       fetchEntities(communityAddress)
     }
