@@ -195,16 +195,6 @@ function * watchEntityChanges ({ response }) {
 
   if (data) {
     yield put(actions.fetchEntities(communityAddress))
-  //   const { type } = data
-  //   if (type === 'user') {
-  //     yield put(actions.fetchUsersEntities(communityAddress))
-  //   }
-  //   //  else if (type === 'business') {
-  //   // yield put(actions.fetchBusinessesEntities(communityAddress))
-  //   // }
-  // } else {
-  //   yield put(actions.fetchUsersEntities(communityAddress))
-  //   // yield put(actions.fetchBusinessesEntities(communityAddress))
   }
 }
 

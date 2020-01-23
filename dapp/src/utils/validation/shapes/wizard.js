@@ -62,19 +62,7 @@ export default object().noUnknown(false).shape({
     joinBonus: object().noUnknown(false).shape({
       isActive: boolean()
     }),
-    moonpay: object().noUnknown(false).shape({
-      isActive: boolean()
-    }),
-    ramp: object().noUnknown(false).shape({
-      isActive: boolean()
-    }),
-    coindirect: object().noUnknown(false).shape({
-      isActive: boolean()
-    }),
-    carbon: object().noUnknown(false).shape({
-      isActive: boolean()
-    }),
-    wyre: object().noUnknown(false).shape({
+    onramp: object().noUnknown(false).shape({
       isActive: boolean()
     })
   })

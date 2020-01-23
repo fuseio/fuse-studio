@@ -11,7 +11,7 @@ export default [
   },
   {
     question: 'How can I integrate credit/debit payments in my community?',
-    answer: `After first launching your community you can add a payment gateway by adding it in the plug-ins page. You will need to switch on the gateway you choose and a "top up" menu item will appear to the users of your community on the mobile app. The payment gateways vary between different jurisdictions and banking integration options like credit/debit cards and wire transfers. Our payment integrations are: Ramp, Coindirect, Moonpay, Carbon and Wyre.`,
+    answer: `After first launching your community you can add a payment gateway by adding it in the plug-ins page. You will need to switch on the gateway you choose and a "top up" menu item will appear to the users of your community on the mobile app. The payment gateways vary between different jurisdictions and banking integration options like credit/debit cards and wire transfers. Our payment integrations are: Ramp, Moonpay, Carbon and Wyre.`,
     link: 'https://docs.fuse.io/the-fuse-studio/faq#how-can-i-integrate-credit-debit-payments-in-my-community'
   }
   // {
