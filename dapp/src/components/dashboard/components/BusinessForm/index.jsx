@@ -34,7 +34,8 @@ class BusinessForm extends Component {
         label: capitalize(get(entity, 'type', ''))
       } : {},
       image: null,
-      coverPhoto: null
+      coverPhoto: null,
+      details: get(entity, 'details', '')
     }
 
     this.validationSchema = entityShape
@@ -167,138 +168,163 @@ class BusinessForm extends Component {
               </div>
             </div>
           </div>
-
         </div>
-        <div className='grid-y' style={{ marginTop: '20px' }}>
-          <h2 className='user-form__label'>Business type <span>*</span></h2>
-          <Select
-            name='type'
-            className='user-form__field__select'
-            classNamePrefix='user-form__field__select__prefix'
-            error={errors && errors.type && true}
-            options={businessTypes()}
-            placeholder={'Choose type'}
-            onChange={val => {
-              setFieldValue('selectedType', val)
-              setFieldValue('type', val.value)
-            }}
-          />
-        </div>
-        <div className='grid-x align-middle user-form__more-info'>
-          <h2 className='user-form__label user-form__label--no-margin'>More info</h2>
-          <div className='user-form__field'>
-            <CreatableSelect
-              name='account'
-              className='user-form__field__creatable-select'
-              classNamePrefix='user-form__field__creatable-select__prefix'
+        <div className='grid-x align-justify' style={{ marginTop: '20px' }}>
+          <div className='cell small-10'>
+            <h2 className='user-form__label'>Business type <span>*</span></h2>
+            <Select
+              name='type'
+              className='user-form__field__select'
+              classNamePrefix='user-form__field__select__prefix'
               error={errors && errors.type && true}
-              options={createUserOptions(users)}
-              placeholder={'Business account*'}
-              formatCreateLabel={(inputValue) => inputValue}
+              options={businessTypes()}
+              placeholder={'Choose type'}
               onChange={val => {
                 setFieldValue('selectedType', val)
-                setFieldValue('account', val.value)
+                setFieldValue('type', val.value)
               }}
             />
           </div>
-          <div className='grid-x align-justify cell'>
-            <div className='cell small-10'>
-              <TextField
-                label='Full address (city & street)'
-                name='address'
-                type='search'
-                className='cell'
-                onChange={handleChange}
-                autoComplete='off'
-                margin='normal'
-                InputProps={{
-                  classes: {
-                    root: 'input__root',
-                    focused: '',
-                    underline: 'user-form__field__underline'
-                  }
-                }}
-                InputLabelProps={{
-                  classes: {
-                    root: 'user-form__field__label2'
-                  }
-                }}
-              />
-            </div>
-            <div className='cell small-10'>
-              <TextField
-                label='Phone'
-                name='phoneNumber'
-                type='search'
-                autoComplete='off'
-                className='cell'
-                onChange={handleChange}
-                margin='normal'
-                InputProps={{
-                  classes: {
-                    root: 'input__root',
-                    focused: '',
-                    underline: 'user-form__field__underline'
-                  }
-                }}
-                InputLabelProps={{
-                  classes: {
-                    root: 'user-form__field__label2'
-                  }
+          <div className='cell small-10'>
+            <h2 className='user-form__label'>Business Account <span>*</span></h2>
+            <div className='user-form__field'>
+              <CreatableSelect
+                name='account'
+                className='user-form__field__select'
+                placeholder={'Choose account'}
+                classNamePrefix='user-form__field__select__prefix'
+                error={errors && errors.type && true}
+                options={createUserOptions(users)}
+                onChange={val => {
+                  setFieldValue('selectedType', val)
+                  setFieldValue('account', val.value)
                 }}
               />
             </div>
           </div>
-          <div className='grid-x align-justify cell'>
-            <div className='cell small-10'>
-              <TextField
-                label='Email'
-                name='email'
-                type='search'
-                className='cell'
-                onChange={handleChange}
-                onBlur={() => setFieldTouched('email', true)}
-                error={errors && errors.email && touched.email && true}
-                autoComplete='off'
-                margin='normal'
-                InputProps={{
-                  classes: {
-                    root: 'input__root',
-                    focused: '',
-                    error: 'user-form__field__error',
-                    underline: 'user-form__field__underline'
-                  }
-                }}
-                InputLabelProps={{
-                  classes: {
-                    root: 'user-form__field__label2'
-                  }
-                }}
-              />
-            </div>
-            <div className='cell small-10'>
-              <TextField
-                label='Website'
-                name='website'
-                type='search'
-                className='cell'
-                onChange={handleChange}
-                autoComplete='off'
-                margin='normal'
-                InputProps={{
-                  classes: {
-                    root: 'input__root',
-                    focused: '',
-                    underline: 'user-form__field__underline'
-                  }
-                }}
-                InputLabelProps={{
-                  classes: {
-                    root: 'user-form__field__label2'
-                  }
-                }}
-              />
-            </div>
+        </div>
+        <div className='grid-x align-justify cell'>
+          <div className='cell small-10'>
+            <TextField
+              label='Full address (city & street)'
+              name='address'
+              type='search'
+              className='cell'
+              onChange={handleChange}
+              autoComplete='off'
+              margin='normal'
+              InputProps={{
+                classes: {
+                  root: 'input__root',
+                  focused: '',
+                  underline: 'user-form__field__underline'
+                }
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: 'user-form__field__label2'
+                }
+              }}
+            />
+          </div>
+          <div className='cell small-10'>
+            <TextField
+              label='Phone'
+              name='phoneNumber'
+              type='search'
+              autoComplete='off'
+              className='cell'
+              onChange={handleChange}
+              margin='normal'
+              InputProps={{
+                classes: {
+                  root: 'input__root',
+                  focused: '',
+                  underline: 'user-form__field__underline'
+                }
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: 'user-form__field__label2'
+                }
+              }}
+            />
+          </div>
+        </div>
+        <div className='grid-x align-justify cell'>
+          <div className='cell small-10'>
+            <TextField
+              label='Email'
+              name='email'
+              type='search'
+              className='cell'
+              onChange={handleChange}
+              onBlur={() => setFieldTouched('email', true)}
+              error={errors && errors.email && touched.email && true}
+              autoComplete='off'
+              margin='normal'
+              InputProps={{
+                classes: {
+                  root: 'input__root',
+                  focused: '',
+                  error: 'user-form__field__error',
+                  underline: 'user-form__field__underline'
+                }
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: 'user-form__field__label2'
+                }
+              }}
+            />
+          </div>
+          <div className='cell small-10'>
+            <TextField
+              label='Website'
+              name='website'
+              type='search'
+              className='cell'
+              onChange={handleChange}
+              autoComplete='off'
+              margin='normal'
+              InputProps={{
+                classes: {
+                  root: 'input__root',
+                  focused: '',
+                  underline: 'user-form__field__underline'
+                }
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: 'user-form__field__label2'
+                }
+              }}
+            />
+          </div>
+          <div className='user-form__field user-form__field--space-bottom'>
+            <TextField
+              label='More details'
+              name='details'
+              type='search'
+              className='cell'
+              onChange={handleChange}
+              autoComplete='off'
+              margin='normal'
+              multiline
+              rows='3'
+              InputProps={{
+                classes: {
+                  root: 'input__root',
+                  focused: '',
+                  underline: 'user-form__field__underline'
+                }
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: 'user-form__field__label2'
+                }
+              }}
+            />
           </div>
         </div>
         <div className='user-form__submit'>

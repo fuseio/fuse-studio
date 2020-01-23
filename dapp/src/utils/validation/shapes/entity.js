@@ -14,5 +14,6 @@ export default object().noUnknown(false).shape({
     value: string().normalize()
   }),
   image: mixed().notRequired(),
-  coverPhoto: mixed().notRequired()
+  coverPhoto: mixed().notRequired(),
+  details: string()
 })
