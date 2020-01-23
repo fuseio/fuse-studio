@@ -241,15 +241,17 @@ function * watchFetchCommunity ({ response }) {
         if (entities[communityAddress] && entities[communityAddress].communityURI) {
           yield put(fetchMetadata(entities[communityAddress].communityURI))
         }
-
-        yield all([
+        const calls = [
           put(actions.fetchToken(homeTokenAddress)),
           put(actions.fetchToken(foreignTokenAddress)),
           put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-          put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
-          put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
-          put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
-        ])
+          put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' }))
+        ]
+        if (accountAddress) {
+          calls.push(put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })))
+          calls.push(put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })))
+        }
+        yield all(calls)
       }
     }
   }
