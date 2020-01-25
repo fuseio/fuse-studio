@@ -11,6 +11,7 @@ import providers from 'constants/providers'
 import { saveState } from 'utils/storage'
 import { processTransactionHash } from 'services/api/misc'
 import { getNetworkSide, getForeignNetwork } from 'selectors/network'
+import { getAccountAddress } from 'selectors/accounts'
 import { apiCall, tryTakeEvery } from './utils'
 import { eventChannel } from 'redux-saga'
 
@@ -64,14 +65,16 @@ function * watchNetworkChanges (provider) {
   }
 }
 
-function * connectToWallet ({ provider }) {
+function * connectToWallet () {
+  debugger
+  const web3 = yield getWeb3Service()
+  const provider = web3.currentProvider
   try {
     if (provider.isMetaMask) {
       provider.autoRefreshOnNetworkChange = false
     }
 
     saveState('state.reconnect', true)
-    const web3 = yield getWeb3Service({ provider })
     const providerInfo = getProviderInfo(provider)
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
@@ -167,6 +170,8 @@ function * getBlockNumber ({ networkType, bridgeType }) {
 
 function * watchCheckNetworkTypeSuccess ({ response }) {
   const { foreignNetwork, homeNetwork } = response
+  const accountAddress = yield select(getAccountAddress)
+  yield put(fetchCommunities(accountAddress))
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
@@ -184,8 +189,14 @@ function * changeNetwork ({ networkType }) {
   saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : currentNetwork, networkType: currentNetwork })
   const web3 = yield getWeb3()
   const providerInfo = getProviderInfo(web3.currentProvider)
+
   if (providerInfo.name === 'Portis') {
     yield web3.currentProvider._portis.changeNetwork(currentNetwork)
+    yield web3.eth.net.getId()
+    yield call(checkNetworkType, { web3 })
+  }
+  if (providerInfo.check === 'isTorus') {
+    yield web3.currentProvider.torus.setProvider({ host: currentNetwork, networkName: currentNetwork })
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }

@@ -20,7 +20,7 @@ import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import useWeb3Connect from 'hooks/useWeb3Connect'
 import useDefaultWallet from 'hooks/useDefaultWallet'
 import { loadState, saveState } from 'utils/storage'
-
+import { getWeb3 } from 'services/web3'
 import 'scss/main.scss'
 
 const Root = ({
@@ -83,7 +83,8 @@ const Root = ({
 
   const onConnectCallback = async (response) => {
     const { provider } = await web3Auth.signIn(response)
-    connectToWallet(provider)
+    getWeb3({ provider })
+    connectToWallet()
   }
 
   const logout = () => {
