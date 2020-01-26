@@ -175,7 +175,7 @@ router.get('/account/:account', async (req, res, next) => {
   const nonAdminEntities = await Entity.find({ account, isAdmin: false }).sort({ blockNumber: -1 })
 
   const monAdminCommunitites = await getCommunitiesByEntities(nonAdminEntities)
-  return res.json({ data: await withTokens([...adminCommunitities, ...monAdminCommunitites].reverse()) })
+  return res.json({ data: await withTokens([...adminCommunitities, ...monAdminCommunitites]) })
 })
 
 module.exports = router
