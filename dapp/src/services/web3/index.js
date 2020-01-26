@@ -33,8 +33,8 @@ export const main = new Web3(getProviderUrl('main'))
 export const ropsten = new Web3(getProviderUrl('ropsten'))
 
 fuse.currentProvider.networkVersion = String(CONFIG.web3.chainId.fuse)
-main.currentProvider.networkVersion = String(CONFIG.web3.chainId['main'])
-ropsten.currentProvider.networkVersion = String(CONFIG.web3.chainId['ropsten'])
+main.currentProvider.networkVersion = String(CONFIG.web3.chainId.main)
+ropsten.currentProvider.networkVersion = String(CONFIG.web3.chainId.ropsten)
 
 const web3ByNetworkType = {
   fuse,

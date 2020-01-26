@@ -196,7 +196,10 @@ function * changeNetwork ({ networkType }) {
     yield call(checkNetworkType, { web3 })
   }
   if (providerInfo.check === 'isTorus') {
-    yield web3.currentProvider.torus.setProvider({ host: currentNetwork, networkName: currentNetwork })
+    yield web3.currentProvider.torus.setProvider({
+      host: currentNetwork === 'fuse' ? CONFIG.web3.fuseProvider : currentNetwork,
+      networkName: currentNetwork,
+      chainId: currentNetwork === 'fuse' ? CONFIG.web3.chainId.fuse : undefined })
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }

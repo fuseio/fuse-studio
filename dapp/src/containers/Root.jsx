@@ -67,11 +67,13 @@ const Root = ({
     async function autoLogin (defaultOne = '') {
       try {
         const provider = await useDefaultWallet(defaultOne)
-        connectToWallet(provider)
+        getWeb3({ provider })
+        connectToWallet()
       } catch (error) {
-        // console.log({ error })
+        console.log({ error })
       }
     }
+    debugger
     if (defaultWallet) {
       autoLogin(defaultWallet)
     } else if (checkInjected.injectedAvailable && reconnect) {
