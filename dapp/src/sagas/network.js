@@ -29,6 +29,16 @@ function * getNetworkTypeInternal (web3) {
   return { networkId, networkType }
 }
 
+const getProviderName = ({ check }) => {
+  if (check === 'isPortis') {
+    return 'portis'
+  } else if (check === 'isTorus') {
+    return 'torus'
+  } else {
+    return 'metamask'
+  }
+}
+
 export function getProviderInfo (provider) {
   let result = {
     name: 'Web3',
@@ -68,13 +78,17 @@ function * watchNetworkChanges (provider) {
 function * connectToWallet () {
   const web3 = yield getWeb3Service()
   const provider = web3.currentProvider
+
   try {
     if (provider.isMetaMask) {
       provider.autoRefreshOnNetworkChange = false
     }
 
-    saveState('state.reconnect', true)
     const providerInfo = getProviderInfo(provider)
+    const latestProvider = getProviderName(providerInfo)
+
+    saveState('state.latestProvider', latestProvider)
+
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
 
@@ -188,13 +202,13 @@ function * changeNetwork ({ networkType }) {
   saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : currentNetwork, networkType: currentNetwork })
   const web3 = yield getWeb3()
   const providerInfo = getProviderInfo(web3.currentProvider)
-
-  if (providerInfo.name === 'Portis') {
+  const providerName = getProviderName(providerInfo)
+  if (providerName === 'portis') {
     yield web3.currentProvider._portis.changeNetwork(currentNetwork)
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }
-  if (providerInfo.check === 'isTorus') {
+  if (providerName === 'torus') {
     yield web3.currentProvider.torus.setProvider({
       host: currentNetwork === 'fuse' ? CONFIG.web3.fuseProvider : currentNetwork,
       networkName: currentNetwork,
