@@ -38,11 +38,6 @@ const useWeb3Connect = ({ latestProvider }, connectCallback) => {
     await connectCallback(response)
   })
 
-  // web3Connect.on('close', () => {
-  //   debugger
-  //   web3Connect.toggleModal()
-  // })
-
   const toggleModal = () => {
     web3Connect.toggleModal()
   }
