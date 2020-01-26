@@ -66,7 +66,6 @@ function * watchNetworkChanges (provider) {
 }
 
 function * connectToWallet () {
-  debugger
   const web3 = yield getWeb3Service()
   const provider = web3.currentProvider
   try {
