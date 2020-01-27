@@ -1,4 +1,4 @@
-import DaiIcon from 'images/dai.png'
+import DaiIcon from 'images/dai.svg'
 import UsdcIcon from 'images/usdc.png'
 import TetherIcon from 'images/tether.png'
 
