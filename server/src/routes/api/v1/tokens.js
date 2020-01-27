@@ -100,7 +100,7 @@ router.get('/:address', async (req, res, next) => {
  * @apiGroup Token
  * @apiDescription Tokens are compatible with the ERC20 standard, and they also can be burnable/mintable. Tokens are an important part of the community economy.
  * @apiExample Adding DAI token on mainnet:
- *  POST /tokens/0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359
+ *  POST /tokens/0x6b175474e89094c44da98b954eedeac495271d0f
  *  body: { networkType: mainnet }
  * @apiParam {String} address Token address to add
  * @apiParam {String} networkType The network of the token (body parameter)
