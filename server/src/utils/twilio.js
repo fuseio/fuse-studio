@@ -41,7 +41,7 @@ const createMessage = ({ to, body }) => {
     body: body
   }, (err, result) => {
     if (err) {
-      throw err
+      console.error(err)
     }
   })
 }
