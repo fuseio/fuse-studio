@@ -24,14 +24,14 @@ router.post('/mint', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount } = req.body
+  const { tokenAddress, networkType, amount, toAddress } = req.body
 
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
 
   const amountInWei = toWei(amount.toString())
-  const job = await agenda.now('mint', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei })
+  const job = await agenda.now('mint', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, toAddress })
   return res.json({ job: job.attrs })
 })
 
