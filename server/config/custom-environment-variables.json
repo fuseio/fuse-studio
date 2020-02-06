@@ -80,10 +80,10 @@
   "plugins": {
     "moonpay": {
       "webhook": {
-        "secret": "COMMUNITY_PLUGINS_MOONPAY_API_SECRET"
+        "secret": "COMMUNITY_PLUGINS_MOONPAY_WEBHOOK_SECRET"
       },
       "api": {
-        "secret": "COMMUNITY_PLUGINS_MOONPAY_WEBHOOK_SECRET"
+        "secret": "COMMUNITY_PLUGINS_MOONPAY_API_SECRET"
       },
       "args": {
         "__name": "COMMUNITY_PLUGINS_MOONPAY_ARGS",

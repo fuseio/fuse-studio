@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 
-const sign = (data) => crypto
-  .createHmac('sha256', 'sk_test_nLyqeKTgttHowWaXYqbmO0753JuH8hS')
+const sign = (data, key) => crypto
+  .createHmac('sha256', key)
   .update(data)
   .digest('base64')
 

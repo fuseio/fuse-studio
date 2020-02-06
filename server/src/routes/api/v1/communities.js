@@ -7,6 +7,7 @@ const Token = mongoose.model('Token')
 const lodash = require('lodash')
 const branch = require('@utils/branch')
 const twilio = require('@utils/twilio')
+const { sign } = require('@utils/crypto')
 const sendgridUtils = require('@utils/sendgrid')
 const { toChecksumAddress } = require('web3-utils')
 
@@ -119,6 +120,27 @@ router.get('/featured', async (req, res, next) => {
 router.get('/:communityAddress', async (req, res, next) => {
   const { communityAddress } = req.params
   const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
+  return res.json({ data: community })
+})
+
+/**
+ * @api {get} /communities/:communityAddress Fetch community with plugins adjusted for the specified account
+ * @apiName GetCommunity
+ * @apiGroup Community
+ *
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {String} accountAddress User account address
+ *
+ * @apiUse CommunityData
+ */
+router.get('/:communityAddress/:accountAddress', async (req, res) => {
+  const { communityAddress, accountAddress } = req.params
+  const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
+  if (lodash.has(community, 'plugins.onramp.services.moonpay.widgetUrl')) {
+    const newWidgetUrl = `${community.plugins.onramp.services.moonpay.widgetUrl}&externalCustomerId=${accountAddress}`
+    const signature = sign(new URL(newWidgetUrl).search, config.get('plugins.moonpay.api.secret'))
+    community.plugins.onramp.services.moonpay.widgetUrl = `${newWidgetUrl}&signature=${encodeURIComponent(signature)}`
+  }
   return res.json({ data: community })
 })
 
