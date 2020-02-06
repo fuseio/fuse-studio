@@ -124,27 +124,6 @@ router.get('/:communityAddress', async (req, res, next) => {
 })
 
 /**
- * @api {get} /communities/:communityAddress Fetch community with plugins adjusted for the specified account
- * @apiName GetCommunity
- * @apiGroup Community
- *
- * @apiParam {String} communityAddress Community address
- * @apiParam {String} accountAddress User account address
- *
- * @apiUse CommunityData
- */
-router.get('/:communityAddress/:accountAddress', async (req, res) => {
-  const { communityAddress, accountAddress } = req.params
-  const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
-  if (lodash.has(community, 'plugins.onramp.services.moonpay.widgetUrl')) {
-    const newWidgetUrl = `${community.plugins.onramp.services.moonpay.widgetUrl}&externalCustomerId=${accountAddress}`
-    const signature = sign(new URL(newWidgetUrl).search, config.get('plugins.moonpay.api.secret'))
-    community.plugins.onramp.services.moonpay.widgetUrl = `${newWidgetUrl}&signature=${encodeURIComponent(signature)}`
-  }
-  return res.json({ data: community })
-})
-
-/**
  * @api {get} /communities
  * @apiName GetCommunities
  * @apiGroup Community
@@ -198,6 +177,27 @@ router.get('/account/:account', async (req, res, next) => {
 
   const monAdminCommunitites = await getCommunitiesByEntities(nonAdminEntities)
   return res.json({ data: await withTokens([...adminCommunitities, ...monAdminCommunitites]) })
+})
+
+/**
+ * @api {get} /communities/:communityAddress Fetch community with plugins adjusted for the specified account
+ * @apiName GetCommunity
+ * @apiGroup Community
+ *
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {String} accountAddress User account address
+ *
+ * @apiUse CommunityData
+ */
+router.get('/:communityAddress/:accountAddress', async (req, res) => {
+  const { communityAddress, accountAddress } = req.params
+  const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
+  if (lodash.has(community, 'plugins.onramp.services.moonpay.widgetUrl')) {
+    const newWidgetUrl = `${community.plugins.onramp.services.moonpay.widgetUrl}&externalCustomerId=${accountAddress}`
+    const signature = sign(new URL(newWidgetUrl).search, config.get('plugins.moonpay.api.secret'))
+    community.plugins.onramp.services.moonpay.widgetUrl = `${newWidgetUrl}&signature=${encodeURIComponent(signature)}`
+  }
+  return res.json({ data: community })
 })
 
 module.exports = router
