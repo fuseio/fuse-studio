@@ -83,7 +83,7 @@ router.get('/:phoneNumber', auth.required, async (req, res, next) => {
  */
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber } = req.params
-  const { communityAddress } = req.body
+  const { communityAddress, name, amount, symbol } = req.body
   const accountAddress = config.get('network.home.addresses.MultiSigWallet')
 
   const userWallet = await UserWallet.findOne({ phoneNumber })
@@ -94,7 +94,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     return res.status(400).json({ error: msg })
   }
 
-  const job = await agenda.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber })
+  const job = await agenda.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, name, amount, symbol })
 
   return res.json({ job: job.attrs })
 })
