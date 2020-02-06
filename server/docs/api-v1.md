@@ -10,6 +10,7 @@ The Fuse Studio REST API for accessing the data and the services of the Fuse net
 	- [Add plugins to community](#Add-plugins-to-community)
 	- [](#)
 	- [Fetch community](#Fetch-community)
+	- [Fetch community with plugins adjusted for the specified account](#Fetch-community-with-plugins-adjusted-for-the-specified-account)
 	- [Invite a user to community](#Invite-a-user-to-community)
 	
 - [Entity](#Entity)
@@ -128,6 +129,32 @@ GET /communities/:communityAddress
 | foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
 | isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
 | plugins | `Object` | <p>Defines the community plugins.</p> |
+## <a name='Fetch-community-with-plugins-adjusted-for-the-specified-account'></a> Fetch community with plugins adjusted for the specified account
+[Back to top](#top)
+
+<p>Community is a set of contracts and services. Members of the community are users of the Fuse network. The community is configured via the plugins.</p>
+
+```
+GET /communities/:communityAddress
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Community address</p> |
+| accountAddress | `String` | <p>User account address</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Address of the community on the Fuse network</p> |
+| homeTokenAddress | `String` | <p>Address of the community token on the Fuse network</p> |
+| foreignTokenAddress | `String` | <p>Address of the community token on the Ethereum network</p> |
+| homeBridgeAddress | `String` | <p>Address of the community bridge on the Fuse network</p> |
+| foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
+| isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
+| plugins | `Object` | <p>Defines the community plugins.</p> |
 ## <a name='Invite-a-user-to-community'></a> Invite a user to community
 [Back to top](#top)
 
@@ -166,7 +193,7 @@ POST /communities/:communityAddress/invite
 <p>Fetching communities I'm part of</p>
 
 ```
-GET /entities/account/:account
+GET /communities/account/:account
 ```
 
 ### Parameter Parameters
