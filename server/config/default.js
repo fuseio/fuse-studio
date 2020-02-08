@@ -136,6 +136,7 @@ module.exports = {
     urlBase: 'https://funder-qa.fuse.io/api/'
   },
   twilio: {
+    inviteTxt: 'Hi, a friend has invited you to Fuse',
     magic: '5555'
   },
   branch: {
