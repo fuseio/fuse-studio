@@ -74,7 +74,7 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
     const methodName = getMethodName(method)
     const nonce = account.nonces[bridgeType]
     console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
-    const methodParams = { gasPrice, ...options, gas, nonce: nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
+    const methodParams = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
     const promise = method.send({ ...methodParams })
     promise.on('transactionHash', (hash) => {
       transactionHash = hash
@@ -115,7 +115,7 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
   }
 
   const from = address
-  const gas = await method.estimateGas({ from })
+  const gas = options.gas || await method.estimateGas({ from })
   const gasPrice = await getGasPrice(bridgeType, web3)
   const account = await Account.findOne({ address })
   for (let i = 0; i < retries; i++) {
