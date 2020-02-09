@@ -38,14 +38,17 @@ class DeployProgress extends PureComponent {
     }
 
     if (this.props.steps !== prevProps.steps) {
-      const { steps, stepErrors, setNextStep } = this.props
+      const { steps, stepErrors, setNextStep, communityAddress } = this.props
       const allDone = Object.values(steps).every(val => val)
       const { done } = steps
       if (allDone && done) {
         clearInterval(this.interval)
         window.analytics.track('A new community has been created', {
           action: 'New community',
-          category: 'Issuance'
+          category: 'Issuance',
+          properties: {
+            communityAddress
+          }
         })
         setTimeout(() => {
           setNextStep()

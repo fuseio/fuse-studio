@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import capitalize from 'lodash/capitalize'
+import isEmpty from 'lodash/isEmpty'
 import { connect, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
 import { push } from 'connected-react-router'
@@ -31,9 +32,7 @@ const InnerCommunities = ({
   showDashboard,
   title
 }) => {
-  if (!communities) {
-    return null
-  }
+  if (isEmpty(communities) || isEmpty(communities.filter(({ token }) => token))) return null
 
   useEffect(() => {
     if (communities && accountAddress) {
