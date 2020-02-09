@@ -19,7 +19,8 @@ const relay = withAccount(async (account, { walletAddress, methodData, nonce, ga
   const contract = createContract(ABI, homeAddresses.walletModules[walletModule])
   const method = createMethod(contract, 'execute', walletAddress, methodData, nonce, signature, gasPrice, gasLimit)
   const receipt = await send(method, {
-    from: account.address
+    from: account.address,
+    gas: 5000000
   }, {
     transactionHash: (hash) => {
       job.attrs.data.txHash = hash
