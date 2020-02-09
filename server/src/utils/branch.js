@@ -7,10 +7,10 @@ const createDeepLink = ({ communityAddress }) => {
       json: true,
       body: {
         'branch_key': config.get('branch.key'),
-        'campaign': 'invite_user',
+        'campaign': 'switch_community',
         'channel': 'mobile',
-        'feature': 'invite_user',
-        'marketing_title': 'invite user',
+        'feature': 'switch_community',
+        'marketing_title': 'admin invite user',
         'marketing': true,
         'data': {
           'community_address': communityAddress
