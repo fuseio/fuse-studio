@@ -358,6 +358,11 @@
       },
       {
         "indexed": false,
+        "name": "_foreignToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "name": "_blockNumber",
         "type": "uint256"
       }
