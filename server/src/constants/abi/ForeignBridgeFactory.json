@@ -469,6 +469,32 @@
     "type": "function"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_foreignBridge",
+        "type": "address"
+      },
+      {
+        "name": "_foreignValidators",
+        "type": "address"
+      },
+      {
+        "name": "_erc20Token",
+        "type": "address"
+      },
+      {
+        "name": "_blockNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "registerForeignBridge",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [],
     "name": "foreignBridgeErcToErcImplementation",
