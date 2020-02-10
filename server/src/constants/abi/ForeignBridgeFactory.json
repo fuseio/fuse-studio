@@ -358,6 +358,11 @@
       },
       {
         "indexed": false,
+        "name": "_foreignToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "name": "_blockNumber",
         "type": "uint256"
       }
@@ -458,6 +463,32 @@
       }
     ],
     "name": "deployForeignBridge",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_foreignBridge",
+        "type": "address"
+      },
+      {
+        "name": "_foreignValidators",
+        "type": "address"
+      },
+      {
+        "name": "_erc20Token",
+        "type": "address"
+      },
+      {
+        "name": "_blockNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "registerForeignBridge",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
