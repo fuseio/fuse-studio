@@ -76,12 +76,13 @@ const Users = ({
   useEffect(() => {
     const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(userEntities)) {
-      const data = userEntities.map(({ isAdmin, isApproved, address }, index) => {
+      const data = userEntities.map(({ isAdmin, isApproved, address, createdAt }) => {
         const metadataAddress = userWallets[address] ? userWallets[address].owner : address
         const metadata = users[metadataAddress]
         return ({
           isApproved,
           isAdmin,
+          createdAt: new Date(createdAt * 1000).toUTCString(),
           name: metadata
             ? [
               {
@@ -183,6 +184,10 @@ const Users = ({
       Header: 'Account ID',
       accessor: 'address',
       isEthereumAddress: true
+    },
+    {
+      Header: 'Date',
+      accessor: 'createdAt'
     },
     {
       id: 'dropdown',
