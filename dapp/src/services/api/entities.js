@@ -13,7 +13,8 @@ const GET_COMMUNITY = (address) => {
             isAdmin
             isApproved
             isUser
-            isBusiness
+            isBusiness,
+            createdAt
           }
         }
       }
