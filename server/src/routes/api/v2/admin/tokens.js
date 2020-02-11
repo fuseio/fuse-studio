@@ -85,7 +85,6 @@ router.post('/burn', auth.required, async (req, res) => {
  * @apiSuccess {String} Started job data
  */
 router.post('/transfer', auth.required, async (req, res) => {
-  res.status(400).send({ error: 'not implemented yet' })
   const { isCommunityAdmin, accountAddress } = req.user
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })

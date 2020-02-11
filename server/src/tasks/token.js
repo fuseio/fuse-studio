@@ -41,11 +41,11 @@ const burn = withAccount(async (account, { bridgeType, tokenAddress, amount }, j
   return lockAccount({ address: from })
 })
 
-const transfer = withAccount(async (account, { bridgeType, tokenAddress, amount, wallet, to }, job) => {
+const adminTransfer = withAccount(async (account, { bridgeType, tokenAddress, amount, wallet, to }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
   const transferManagerContractInstance = createContract(getAbi('TransferManager'), homeAddresses.walletModules.TransferManager)
 
-  const method = createMethod(transferManagerContractInstance, 'transferToken', wallet, tokenAddress, to, amount)
+  const method = createMethod(transferManagerContractInstance, 'transferToken', wallet, tokenAddress, to, amount, '0x')
 
   await send(method, {
     from: account.address
@@ -62,5 +62,5 @@ const transfer = withAccount(async (account, { bridgeType, tokenAddress, amount,
 module.exports = {
   mint,
   burn,
-  transfer
+  adminTransfer
 }
