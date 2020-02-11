@@ -7,7 +7,8 @@ const abiMapping = {
   BasicHomeBridge: () => require('./BasicHomeBridge'),
   Community: () => require('@fuse/entities-contracts/abi/CommunityWithEvents'),
   IRestrictedToken: () => require('./IRestrictedToken'),
-  CommunityTransferManager: () => require('@fuse/entities-contracts/abi/CommunityTransferManager')
+  CommunityTransferManager: () => require('@fuse/entities-contracts/abi/CommunityTransferManager'),
+  TransferManager: () => require('./TransferManager')
 }
 
 const getAbi = (abiName) => {

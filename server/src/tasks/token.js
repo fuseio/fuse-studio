@@ -1,6 +1,9 @@
 const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/MintableBurnableToken')
 const { createNetwork } = require('@utils/web3')
 const { withAccount, lockAccount } = require('@utils/account')
+const { getAbi } = require('@constants/abi')
+const config = require('config')
+const homeAddresses = config.get('network.home.addresses')
 
 const mint = withAccount(async (account, { bridgeType, tokenAddress, amount, toAddress }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
@@ -38,7 +41,26 @@ const burn = withAccount(async (account, { bridgeType, tokenAddress, amount }, j
   return lockAccount({ address: from })
 })
 
+const transfer = withAccount(async (account, { bridgeType, tokenAddress, amount, wallet, to }, job) => {
+  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+  const transferManagerContractInstance = createContract(getAbi('TransferManager'), homeAddresses.walletModules.TransferManager)
+
+  const method = createMethod(transferManagerContractInstance, 'transferToken', wallet, tokenAddress, to, amount)
+
+  await send(method, {
+    from: account.address
+  }, {
+    transactionHash: (hash) => {
+      job.attrs.data.txHash = hash
+      job.save()
+    }
+  })
+}, ({ from }) => {
+  return lockAccount({ address: from })
+})
+
 module.exports = {
   mint,
-  burn
+  burn,
+  transfer
 }

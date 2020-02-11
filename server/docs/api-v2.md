@@ -5,7 +5,9 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 
 - [Admin](#Admin)
 	- [Burn tokens](#Burn-tokens)
+	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	- [Mint tokens](#Mint-tokens)
+	- [Transfer tokens from account](#Transfer-tokens-from-account)
 	
 - [Contacts](#Contacts)
 	- [Acknowledge contacts list sync with nonce](#Acknowledge-contacts-list-sync-with-nonce)
@@ -48,11 +50,42 @@ POST /api/v2/admin/tokens/burn
 | amount | `String` | <p>Token amount to burn</p> |
 
 ### Examples
-: Burn 1.1 tokens on Fuse network
+Burn 1.1 tokens on Fuse network
 
 ```
 POST /api/v2/admin/tokens/burn
 body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1' }
+```
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `String` | <p>job data</p> |
+## <a name='Create-wallet-for-phone-number'></a> Create wallet for phone number
+[Back to top](#top)
+
+<p>Start async job of creating a wallet for phone number (owned by the community admin)</p>
+
+```
+POST /api/v2/admin/wallets/create
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| phoneNumber | `String` | <p>phone number to create a wallet for (body parameter)</p> |
+
+### Examples
+Create wallet for the provided phone number
+
+```
+POST /api/v2/admin/wallets/create
+body: { phoneNumber: '+972546123321' }
 ```
 
 
@@ -81,11 +114,46 @@ POST /api/v2/admin/tokens/mint
 | amount | `String` | <p>Token amount to mint</p> |
 
 ### Examples
-: Minting 1.1 tokens on Fuse network
+Minting 1.1 tokens on Fuse network
 
 ```
 POST /api/v2/admin/tokens/mint
 body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1' }
+```
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `String` | <p>job data</p> |
+## <a name='Transfer-tokens-from-account'></a> Transfer tokens from account
+[Back to top](#top)
+
+<p>Start async job of transferring tokens from account (owned by community admin)</p>
+
+```
+POST /api/v2/admin/tokens/transfer
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| tokenAddress | `String` | <p>Token address to transfer (body parameter)</p> |
+| networkType | `String` | <p>Token's network (must be Fuse)</p> |
+| amount | `String` | <p>Token amount to transfer</p> |
+| from | `String` | <p>account to transfer from</p> |
+| to | `String` | <p>address/account to transfer to</p> |
+
+### Examples
+Transfer 1.1 tokens on Fuse network
+
+```
+POST /api/v2/admin/tokens/transfer
+body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1', from: '0x755c33BE69dD2baB7286E7a2010fc8591AF15a1e', to: '0x5d651E34B6694A8778839441dA954Ece0EA733D8' }
 ```
 
 
