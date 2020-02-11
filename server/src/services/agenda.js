@@ -31,7 +31,7 @@ async function start () {
 
   await agenda.start()
 
-  if (config.get('agenda.startPeriodicTasks')) {
+  if (config.get('agenda.startPeriodicTasks') == true) {
     await agenda.now('processPastBridgeMappingEvents')
     await agenda.now('processPastTokenCreatedEvents')
     await agenda.every('10 minutes', 'processPastTokenCreatedEvents')

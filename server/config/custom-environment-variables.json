@@ -66,6 +66,7 @@
     }
   },
   "agenda": {
+    "startPeriodicTasks": "COMMUNTITY_AGENDA_START_PERIODIC_TASKS",
     "tasks": {
       "deploy": {
         "concurrency": "COMMUNITY_AGENDA_TASKS_DEPLOY_CONCURRENCY"
