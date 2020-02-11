@@ -10,6 +10,7 @@ import FinishIssuance from 'images/finish_issuance.svg'
 import { getTransaction } from 'selectors/transaction'
 import { connect as connectFormik, getIn } from 'formik'
 import { withNetwork } from 'containers/Web3'
+import * as Sentry from '@sentry/browser'
 
 class DeployProgress extends PureComponent {
   state = {
@@ -69,6 +70,7 @@ class DeployProgress extends PureComponent {
             category: 'Issuance',
             action: 'Stop deployment process'
           })
+          Sentry.captureException(error)
         }
         this.setState({ hasErrors: true })
       }
