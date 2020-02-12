@@ -31,6 +31,7 @@ async function start () {
   agenda.on('fail', (error, job) => console.error(`Job ${job.attrs.name} failed. id: ${job.attrs._id}. ${error}`))
 
   await agenda.start()
+
   if (config.get('agenda.startPeriodicTasks') == true) {
     await agenda.now('processPastBridgeMappingEvents')
     await agenda.now('processPastTokenCreatedEvents')
