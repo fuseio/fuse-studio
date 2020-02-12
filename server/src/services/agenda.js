@@ -1,3 +1,4 @@
+/* eslint eqeqeq: "off" */
 const config = require('config')
 const Agenda = require('agenda')
 const tasks = require('@tasks')
