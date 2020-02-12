@@ -1,3 +1,4 @@
+/* eslint eqeqeq: "off" */
 const config = require('config')
 const Agenda = require('agenda')
 const tasks = require('@tasks')
@@ -30,7 +31,6 @@ async function start () {
   agenda.on('fail', (error, job) => console.error(`Job ${job.attrs.name} failed. id: ${job.attrs._id}. ${error}`))
 
   await agenda.start()
-
   if (config.get('agenda.startPeriodicTasks') == true) {
     await agenda.now('processPastBridgeMappingEvents')
     await agenda.now('processPastTokenCreatedEvents')
