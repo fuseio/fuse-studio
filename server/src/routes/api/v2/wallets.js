@@ -4,6 +4,7 @@ const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
+const Invite = mongoose.model('Invite')
 
 /**
  * @api {post} api/v2/wallets/ Create wallet contract for user
@@ -101,7 +102,14 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     bonusType: 'plugins.inviteBonus.inviteInfo'
   }
 
-  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo })
+  await new Invite({
+    inviterPhoneNumber: phoneNumber,
+    inviterWalletAddress: inviterUserWallet.walletAddress,
+    inviteePhoneNumber: req.params.phoneNumber,
+    communityAddress
+  }).save()
+
+  const job = await agenda.now('createWalletLocal', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo })
 
   return res.json({ job: job.attrs })
 })

@@ -8,6 +8,7 @@ const { withAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
+const Invite = mongoose.model('Invite')
 const branch = require('@utils/branch')
 const twilio = require('@utils/twilio')
 const { GraphQLClient } = require('graphql-request')
@@ -51,6 +52,15 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
     const inviteTxt = `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${url}`
     twilio.createMessage({ to: phoneNumber, body: inviteTxt })
 
+    await Invite.findOneAndUpdate({
+      inviterWalletAddress: bonusInfo.receiver,
+      inviteePhoneNumber: phoneNumber
+    }, {
+      inviteeWalletAddress: walletAddress
+    }, {
+      sort: { createdAt: -1 }
+    })
+
     if (bonusInfo) {
       try {
         bonusInfo.bonusId = walletAddress
@@ -68,8 +78,6 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
       }
     }
   }
-
-  // TODO save invite in new DB model
 
   return receipt
 })
