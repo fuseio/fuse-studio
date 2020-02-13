@@ -47,9 +47,7 @@ class DeployProgress extends PureComponent {
         window.analytics.track('A new community has been created', {
           action: 'New community',
           category: 'Issuance',
-          properties: {
-            communityAddress
-          }
+          communityAddress
         })
         setTimeout(() => {
           setNextStep()
