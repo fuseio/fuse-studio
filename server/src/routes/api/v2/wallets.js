@@ -109,7 +109,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     communityAddress
   }).save()
 
-  const job = await agenda.now('createWalletLocal', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo })
+  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo })
 
   return res.json({ job: job.attrs })
 })
