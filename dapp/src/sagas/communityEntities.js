@@ -22,8 +22,8 @@ import CommunityTransferManagerABI from '@fuse/entities-contracts/abi/CommunityT
 import { getWeb3 } from 'sagas/network'
 import { getOptions, getNetworkVersion } from 'utils/network'
 import { gql } from '@apollo/client'
-import { client, boxClient } from 'services/graphql'
-import { getProfiles, getProfile } from '3box/lib/api'
+import { client } from 'services/graphql'
+import { getProfile } from '3box/lib/api'
 
 function * confirmUser ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
