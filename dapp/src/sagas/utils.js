@@ -68,7 +68,8 @@ export const entityKeys = {
   bridges: 'foreignTokenAddress',
   communityEntities: 'account',
   communities: 'communityAddress',
-  wallets: 'address'
+  wallets: 'address',
+  users: 'account'
 }
 
 export const createEntitiesFetch = (action, apiFunc) => function * (params) {

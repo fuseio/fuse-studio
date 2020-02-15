@@ -22,7 +22,8 @@ import CommunityTransferManagerABI from '@fuse/entities-contracts/abi/CommunityT
 import { getWeb3 } from 'sagas/network'
 import { getOptions, getNetworkVersion } from 'utils/network'
 import { gql } from '@apollo/client'
-import { client, boxClient } from 'services/graphql'
+import { client } from 'services/graphql'
+import { getProfile } from '3box/lib/api'
 
 function * confirmUser ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
@@ -249,34 +250,20 @@ function * fetchEntities ({ communityAddress }) {
     } })
 }
 
-const FETCH_3BOX_PROFILES = gql`
-  query Profiles($accounts: [String]!)
-    {
-      profiles(ids: $accounts) {
-        name,
-        eth_address,
-        image
-      }
-    }
-  `
-
-function * fetchUsersMetadata ({ accounts }) {
-  const response = yield call(boxClient.query, {
-    fetchPolicy: 'network-only',
-    query: FETCH_3BOX_PROFILES,
-    variables: { accounts }
-  })
-  if (response.data) {
-    const entities = keyBy(response.data.profiles.map(entity => ({ ...entity, account: entity.eth_address })), 'account')
-    const result = Object.keys(entities)
-
+function * fetchUserMetadata ({ account }) {
+  const userMetadata = yield call(getProfile, account)
+  if (userMetadata && userMetadata.account) {
     yield put({
       entity: 'users',
-      type: actions.FETCH_USERS_METADATA.SUCCESS,
-      response: {
-        entities,
-        result
-      } })
+      type: actions.FETCH_USER_METADATA.SUCCESS,
+      response: userMetadata
+    })
+  }
+}
+
+function * fetchUsersMetadata ({ accounts }) {
+  for (const account of accounts) {
+    yield put(actions.fetchUserMetadata(account))
   }
 }
 
@@ -306,11 +293,10 @@ export default function * communityEntitiesSaga () {
     tryTakeEvery(actions.REMOVE_ENTITY, removeEntity, 1),
     tryTakeEvery(actions.FETCH_ENTITIES, fetchEntities, 1),
     tryTakeEvery(actions.FETCH_USER_WALLETS, fetchUserWallets, 1),
-    // tryTakeEvery(actions.FETCH_USERS_ENTITIES, fetchUsersEntities, 1),
-    // tryTakeEvery(actions.FETCH_BUSINESSES_ENTITIES, fetchBusinessesEntities, 1),
     tryTakeEvery(actions.FETCH_ENTITY, fetchEntity, 1),
     tryTakeEvery(actions.FETCH_ENTITY_METADATA, fetchEntityMetadata, 1),
     tryTakeEvery(actions.FETCH_USERS_METADATA, fetchUsersMetadata, 1),
+    tryTakeEvery(actions.FETCH_USER_METADATA, fetchUserMetadata, 1),
     tryTakeEvery(actions.ADD_ADMIN_ROLE, addAdminRole, 1),
     tryTakeEvery(actions.REMOVE_ADMIN_ROLE, removeAdminRole, 1),
     tryTakeEvery(actions.CONFIRM_USER, confirmUser, 1),
