@@ -169,6 +169,6 @@ module.exports = {
     }
   },
   phoneNumbers: {
-    maxUserWallets: 1
+    maxUserWallets: 5
   }
 }
