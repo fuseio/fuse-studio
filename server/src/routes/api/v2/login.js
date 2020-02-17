@@ -19,7 +19,7 @@ router.post('/request', async (req, res) => {
   const { phoneNumber } = req.body
 
   const isMagic = (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('twilio.magic')))
-  const isTeam = config.get('phoneNumbers.team').split(',').includes(phoneNumber)
+  const isTeam = config.has('phoneNumbers.team') ? config.get('phoneNumbers.team').split(',').includes(phoneNumber) : false
   const numberOfWallets = await UserWallet.find({ phoneNumber }).countDocuments()
 
   if (!isMagic && !isTeam && numberOfWallets > config.get('phoneNumbers.maxUserWallets')) {
