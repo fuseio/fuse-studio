@@ -1,6 +1,7 @@
 const config = require('config')
 const router = require('express').Router()
 const { agenda } = require('@services/agenda')
+const { web3 } = require('@services/web3/home')
 const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
@@ -68,6 +69,40 @@ router.get('/:phoneNumber', auth.required, async (req, res, next) => {
   const userWallet = await UserWallet.findOne({ phoneNumber }, { contacts: 0 }).sort({ createdAt: -1 })
 
   return res.json({ data: userWallet })
+})
+
+/**
+ * @api {get} api/v2/wallets/all/:phoneNumber Fetch all wallets by phone number
+ * @apiName FetchAllWalletsByPhoneNumber
+ * @apiGroup Wallet
+ * @apiDescription Fetches all wallets created by phone number
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {Object} data Array of Wallet objects
+ */
+router.get('/all/:phoneNumber', auth.required, async (req, res, next) => {
+  const { phoneNumber } = req.params
+  const userWallets = await UserWallet.find({ phoneNumber }, { contacts: 0 }).sort({ createdAt: -1 })
+
+  return res.json({ data: userWallets })
+})
+
+/**
+ * @api {get} api/v2/wallets/exists/:walletAddress Check if wallet exists by wallet address
+ * @apiName WalletIsExistByAddress
+ * @apiGroup Wallet
+ * @apiDescription Checks if wallet exists by wallet address
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {Boolean} data True if wallet exists, false otherwide
+ */
+router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
+  const { walletAddress } = req.params
+  const wallet = await UserWallet.findOne({ walletAddress: web3.utils.toChecksumAddress(walletAddress) }, { _id: 1 }).sort({ createdAt: -1 })
+
+  return res.json({ data: !!wallet })
 })
 
 /**
