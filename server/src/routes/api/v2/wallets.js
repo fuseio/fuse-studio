@@ -88,20 +88,20 @@ router.get('/all/:phoneNumber', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {get} api/v2/wallets/:walletAddress Fetch wallet by address
- * @apiName FetchWalletsByAddress
+ * @api {get} api/v2/wallets/exists:walletAddress Check if wallet exists by wallet address
+ * @apiName WalletIsExistByAddress
  * @apiGroup Wallet
- * @apiDescription Fetches wallet by its address
+ * @apiDescription Checks if wallet exists by wallet address
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
- * @apiSuccess {Object} data Wallet object
+ * @apiSuccess {Boolean} data True if wallet exists, false otherwide
  */
-router.get('/address/:walletAddress', auth.required, async (req, res, next) => {
+router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
   const { walletAddress } = req.params
-  const wallet = await UserWallet.findOne({ walletAddress: web3.utils.toChecksumAddress(walletAddress) }, { contacts: 0 }).sort({ createdAt: -1 })
+  const wallet = await UserWallet.findOne({ walletAddress: web3.utils.toChecksumAddress(walletAddress) }, { _id: 1 }).sort({ createdAt: -1 })
 
-  return res.json({ data: wallet })
+  return res.json({ data: !!wallet })
 })
 
 /**

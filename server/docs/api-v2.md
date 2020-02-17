@@ -25,8 +25,8 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Fetch all wallets by phone number](#Fetch-all-wallets-by-phone-number)
 	- [Fetch user wallet](#Fetch-user-wallet)
 	- [Fetch latest wallet by phone number](#Fetch-latest-wallet-by-phone-number)
-	- [Fetch wallet by address](#Fetch-wallet-by-address)
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
+	- [Check if wallet exists by wallet address](#Check-if-wallet-exists-by-wallet-address)
 	
 
 # <a name='Admin'></a> Admin
@@ -349,25 +349,6 @@ GET api/v2/wallets/:phoneNumber
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | data | `Object` | <p>Wallet object</p> |
-## <a name='Fetch-wallet-by-address'></a> Fetch wallet by address
-[Back to top](#top)
-
-<p>Fetches wallet by its address</p>
-
-```
-GET api/v2/wallets/:walletAddress
-```
-### Headers
-| Name    | Type      | Description                          |
-|---------|-----------|--------------------------------------|
-| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
-
-
-
-### Success 200
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| data | `Object` | <p>Wallet object</p> |
 ## <a name='Create-wallet-for-phone-number'></a> Create wallet for phone number
 [Back to top](#top)
 
@@ -391,3 +372,22 @@ POST api/v2/wallets/invite/:phoneNumber
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | response | `String` | <p>Response status - ok</p> |
+## <a name='Check-if-wallet-exists-by-wallet-address'></a> Check if wallet exists by wallet address
+[Back to top](#top)
+
+<p>Checks if wallet exists by wallet address</p>
+
+```
+GET api/v2/wallets/exists:walletAddress
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Boolean` | <p>True if wallet exists, false otherwide</p> |
