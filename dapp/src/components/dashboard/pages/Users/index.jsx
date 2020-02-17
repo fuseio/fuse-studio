@@ -280,7 +280,7 @@ const Users = ({
         data={tableData}
         justAdded={entityAdded}
         columns={columns}
-        pageSize={50}
+        pageSize={100}
       />
     )
   }

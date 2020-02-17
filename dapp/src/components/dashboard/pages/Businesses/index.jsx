@@ -218,7 +218,7 @@ const Businesses = ({
         justAdded={entityAdded}
         columns={columns}
         pageCount={0}
-        pageSize={50}
+        pageSize={100}
       />
     )
   }
