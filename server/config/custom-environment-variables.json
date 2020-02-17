@@ -115,5 +115,9 @@
         "__format": "json"
       }
     }
+  },
+  "phoneNumbers": {
+    "maxUserWallets": "COMMUNITY_MAX_USER_WALLETS_PER_PHONE_NUMBER",
+    "team": "COMMUNITY_TEAM_PHONE_NUMBERS"
   }
 }

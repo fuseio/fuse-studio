@@ -167,5 +167,8 @@ module.exports = {
       args: {
       }
     }
+  },
+  phoneNumbers: {
+    maxUserWallets: 5
   }
 }
