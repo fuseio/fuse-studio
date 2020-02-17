@@ -2,6 +2,8 @@ const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
 const twilio = require('@utils/twilio')
+const mongoose = require('mongoose')
+const UserWallet = mongoose.model('UserWallet')
 
 /**
  * @api {post} api/v2/login/request Request a verification code
@@ -15,6 +17,14 @@ const twilio = require('@utils/twilio')
  */
 router.post('/request', async (req, res) => {
   const { phoneNumber } = req.body
+
+  const isMagic = (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('twilio.magic')))
+  const isTeam = config.get('phoneNumbers.team').split(',').includes(phoneNumber)
+  const numberOfWallets = await UserWallet.find({ phoneNumber }).countDocuments()
+
+  if (!isMagic && !isTeam && numberOfWallets > config.get('phoneNumbers.maxUserWallets')) {
+    return res.status(400).json({ error: 'Too many wallets...' })
+  }
   try {
     await twilio.verify({ phoneNumber })
     res.json({ response: 'ok' })
