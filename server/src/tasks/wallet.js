@@ -8,10 +8,12 @@ const { withAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
+const Invite = mongoose.model('Invite')
 const branch = require('@utils/branch')
 const twilio = require('@utils/twilio')
 
-const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol }, job) => {
+const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo }, job) => {
+  const { agenda } = require('@services/agenda')
   const { createContract, createMethod, send } = createNetwork('home', account)
   const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
   const method = createMethod(walletFactory, 'createWallet', owner, Object.values(homeAddresses.walletModules), ens)
@@ -28,6 +30,14 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
   job.attrs.data.walletAddress = walletAddress
+  if (bonusInfo && communityAddress) {
+    bonusInfo.bonusId = walletAddress
+    const bonusJob = await agenda.now('bonus', { communityAddress, bonusInfo })
+    job.attrs.data.bonusJob = {
+      name: bonusJob.attrs.name,
+      _id: bonusJob.attrs._id.toString()
+    }
+  }
   job.save()
 
   let cond = { accountAddress: owner }
@@ -47,7 +57,17 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
 
     const inviteTxt = `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${url}`
     twilio.createMessage({ to: phoneNumber, body: inviteTxt })
+
+    await Invite.findOneAndUpdate({
+      inviterWalletAddress: bonusInfo.receiver,
+      inviteePhoneNumber: phoneNumber
+    }, {
+      inviteeWalletAddress: walletAddress
+    }, {
+      sort: { createdAt: -1 }
+    })
   }
+
   return receipt
 })
 
