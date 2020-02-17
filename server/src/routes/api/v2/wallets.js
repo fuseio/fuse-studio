@@ -1,10 +1,11 @@
 const config = require('config')
 const router = require('express').Router()
 const { agenda } = require('@services/agenda')
+const { web3 } = require('@services/web3/home')
 const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
-const { web3 } = require('@services/web3/home')
+const Invite = mongoose.model('Invite')
 
 /**
  * @api {post} api/v2/wallets/ Create wallet contract for user
@@ -117,19 +118,33 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
  * @apiSuccess {String} response Response status - ok
  */
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
-  const { phoneNumber } = req.params
-  const { communityAddress, name, amount, symbol } = req.body
-  const accountAddress = config.get('network.home.addresses.MultiSigWallet')
+  const { phoneNumber, accountAddress } = req.user
 
-  const userWallet = await UserWallet.findOne({ phoneNumber })
+  const { communityAddress, name, amount, symbol } = req.body
+  const owner = config.get('network.home.addresses.MultiSigWallet')
+
+  const userWallet = await UserWallet.findOne({ phoneNumber: req.params.phoneNumber })
   if (!userWallet) {
-    await new UserWallet({ phoneNumber, accountAddress }).save()
+    await new UserWallet({ phoneNumber: req.params.phoneNumber, accountAddress: owner }).save()
   } else if (userWallet.walletAddress) {
-    const msg = `User ${phoneNumber} already has wallet account: ${userWallet.walletAddress}`
+    const msg = `User ${req.params.phoneNumber} already has wallet account: ${userWallet.walletAddress}`
     return res.status(400).json({ error: msg })
   }
 
-  const job = await agenda.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, name, amount, symbol })
+  const inviterUserWallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
+  const bonusInfo = {
+    receiver: inviterUserWallet.walletAddress,
+    bonusType: 'plugins.inviteBonus.inviteInfo'
+  }
+
+  await new Invite({
+    inviterPhoneNumber: phoneNumber,
+    inviterWalletAddress: inviterUserWallet.walletAddress,
+    inviteePhoneNumber: req.params.phoneNumber,
+    communityAddress
+  }).save()
+
+  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo })
 
   return res.json({ job: job.attrs })
 })

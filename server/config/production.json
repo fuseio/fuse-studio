@@ -38,5 +38,8 @@
   },
   "funder": {
     "urlBase": "https://funder.fuse.io/api/"
+  },
+  "graph": {
+    "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse"
   }
 }

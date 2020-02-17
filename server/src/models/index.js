@@ -9,6 +9,7 @@ require('./UserWallet')
 require('./User')
 require('./Wizard')
 require('./Contact')
+require('./Invite')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
