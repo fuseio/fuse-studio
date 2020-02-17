@@ -14,6 +14,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Sync contacts list](#Sync-contacts-list)
 	
 - [Jobs](#Jobs)
+	- [Fetch job by correlationId](#Fetch-job-by-correlationId)
 	- [Fetch job by id](#Fetch-job-by-id)
 	
 - [Login](#Login)
@@ -210,6 +211,25 @@ POST api/v2/contacts/
 | nonce | `Number` |  |
 # <a name='Jobs'></a> Jobs
 
+## <a name='Fetch-job-by-correlationId'></a> Fetch job by correlationId
+[Back to top](#top)
+
+<p>Fetches agenda job by job's correlationId</p>
+
+```
+GET api/v2/jobs/correlationId/:correlationId
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Object` | <p>Job object</p> |
 ## <a name='Fetch-job-by-id'></a> Fetch job by id
 [Back to top](#top)
 
@@ -228,7 +248,7 @@ GET api/v2/jobs/:jobId
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| data | `Object` | <p>User wallet object</p> |
+| data | `Object` | <p>Job object</p> |
 # <a name='Login'></a> Login
 
 ## <a name='Request-a-verification-code'></a> Request a verification code

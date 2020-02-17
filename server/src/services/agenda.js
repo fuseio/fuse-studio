@@ -2,6 +2,7 @@
 const config = require('config')
 const Agenda = require('agenda')
 const tasks = require('@tasks')
+const lodash = require('lodash')
 
 const agenda = new Agenda({ db: { address: config.get('mongo.uri'), options: config.get('mongo.options') } })
 
@@ -43,6 +44,20 @@ async function start () {
   }
 
   console.log('Agenda job scheduling is successfully defined')
+}
+
+const now = agenda.now
+
+agenda.now = async (name, data) => {
+  const correlationId = lodash.get(data, 'correlationId')
+  if (correlationId) {
+    const jobs = await agenda.jobs({ 'data.correlationId': correlationId })
+    const savedJob = jobs[0]
+    if (savedJob) {
+      throw Error(`Job with the correlationId ${correlationId} already exists`)
+    }
+  }
+  return now.call(agenda, name, data)
 }
 
 module.exports = {
