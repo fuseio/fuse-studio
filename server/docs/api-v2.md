@@ -378,7 +378,7 @@ POST api/v2/wallets/invite/:phoneNumber
 <p>Checks if wallet exists by wallet address</p>
 
 ```
-GET api/v2/wallets/exists:walletAddress
+GET api/v2/wallets/exists/:walletAddress
 ```
 ### Headers
 | Name    | Type      | Description                          |
