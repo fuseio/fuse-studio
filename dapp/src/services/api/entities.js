@@ -8,7 +8,7 @@ const GET_COMMUNITY = (address) => {
       communities (where: {address: "${address}"}) {
         entitiesList {
           id
-          communityEntities {
+          communityEntities (first: 1000) {
             address
             isAdmin
             isApproved
@@ -25,7 +25,7 @@ const GET_COMMUNITY = (address) => {
 const FETCH_WALLETS = gql`
   query Wallets($accounts: [String]!)
     {
-      wallets(where: {address_in: $accounts}) {
+      wallets(first: 1000, where: {address_in: $accounts}) {
         address,
         owner
       }
