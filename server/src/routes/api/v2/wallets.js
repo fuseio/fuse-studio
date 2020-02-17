@@ -88,7 +88,7 @@ router.get('/all/:phoneNumber', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {get} api/v2/wallets/exists:walletAddress Check if wallet exists by wallet address
+ * @api {get} api/v2/wallets/exists/:walletAddress Check if wallet exists by wallet address
  * @apiName WalletIsExistByAddress
  * @apiGroup Wallet
  * @apiDescription Checks if wallet exists by wallet address
