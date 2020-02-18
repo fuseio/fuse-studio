@@ -6,7 +6,8 @@ const UserWalletSchema = new Schema({
   accountAddress: { type: String, required: [true, "can't be blank"] },
   walletAddress: { type: String },
   firebaseToken: { type: String },
-  contacts: [{ type: Schema.Types.ObjectId, ref: 'Contact' }]
+  contacts: [{ type: Schema.Types.ObjectId, ref: 'Contact' }],
+  backup: { type: Boolean, default: false }
 }, { timestamps: true })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1 })
