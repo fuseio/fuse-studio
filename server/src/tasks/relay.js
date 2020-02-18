@@ -9,7 +9,6 @@ const { admin } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 
 const graphClient = new GraphQLClient(config.get('graph.url'))
-const boxGraphClient = new GraphQLClient(config.get('box.graph.url'))
 const homeAddresses = config.get('network.home.addresses')
 const UserWallet = mongoose.model('UserWallet')
 
@@ -18,13 +17,6 @@ function getParamsFromMethodData (web3, abi, methodName, methodData) {
   const methodSig = web3.eth.abi.encodeFunctionSignature(methodABI)
   const params = web3.eth.abi.decodeParameters(methodABI.inputs, `0x${methodData.replace(methodSig, '')}`)
   return params
-}
-
-const fetchUserProfile = async (accountAddress) => {
-  const query = `{profile(id: "${accountAddress.toLowerCase()}") {name}}`
-  console.log({ query })
-  const { profile } = await boxGraphClient.request(query)
-  return profile
 }
 
 const fetchTokenByCommunity = async (communityAddress) => {
@@ -44,12 +36,11 @@ const notifyReceiver = async ({ senderAddress, receiverAddress, tokenAddress, am
   const firebaseToken = lodash.get(receiverWallet, 'firebaseToken')
   if (firebaseToken) {
     const senderWallet = await UserWallet.findOne({ walletAddress: senderAddress })
-    const { name } = await fetchUserProfile(senderWallet.accountAddress)
     const { symbol } = await fetchToken(tokenAddress)
     const amount = web3Utils.fromWei(String(amountInWei))
     const message = {
       notification: {
-        title: `${name} sent you ${amount} ${symbol}`,
+        title: `You got ${amount} ${symbol}`,
         body: 'Please click on this message to open your Fuse wallet'
       },
       token: firebaseToken
@@ -57,8 +48,9 @@ const notifyReceiver = async ({ senderAddress, receiverAddress, tokenAddress, am
     console.log(`Sending tokens receive push message to ${senderWallet.phoneNumber} via firebase token ${firebaseToken}`)
     admin.messaging().send(message)
   }
-  console.warning(`No firebase token found for ${receiverAddress} wallet address`)
+  console.warn(`No firebase token found for ${receiverAddress} wallet address`)
 }
+
 const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule }, job) => {
   const { web3, createContract, createMethod, send } = createNetwork('home', account)
   const walletABI = require(`@constants/abi/${walletModule}`)
