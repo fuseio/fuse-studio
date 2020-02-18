@@ -1,4 +1,5 @@
 const config = require('config')
+const lodash = require('lodash')
 const { withAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
 const { GraphQLClient } = require('graphql-request')
@@ -8,6 +9,7 @@ const { admin } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 
 const graphClient = new GraphQLClient(config.get('graph.url'))
+const boxGraphClient = new GraphQLClient(config.get('box.graph.url'))
 const homeAddresses = config.get('network.home.addresses')
 const UserWallet = mongoose.model('UserWallet')
 
@@ -16,6 +18,13 @@ function getParamsFromMethodData (web3, abi, methodName, methodData) {
   const methodSig = web3.eth.abi.encodeFunctionSignature(methodABI)
   const params = web3.eth.abi.decodeParameters(methodABI.inputs, `0x${methodData.replace(methodSig, '')}`)
   return params
+}
+
+const fetchUserProfile = async (accountAddress) => {
+  const query = `{profile(id: "${accountAddress.toLowerCase()}") {name}}`
+  console.log({ query })
+  const { profile } = await boxGraphClient.request(query)
+  return profile
 }
 
 const fetchTokenByCommunity = async (communityAddress) => {
@@ -30,28 +39,31 @@ const fetchToken = async (tokenAddress) => {
   return token
 }
 
+const notifyReceiver = async ({ senderAddress, receiverAddress, tokenAddress, amountInWei }) => {
+  const receiverWallet = await UserWallet.findOne({ walletAddress: receiverAddress })
+  const firebaseToken = lodash.get(receiverWallet, 'firebaseToken')
+  if (firebaseToken) {
+    const senderWallet = await UserWallet.findOne({ walletAddress: senderAddress })
+    const { name } = await fetchUserProfile(senderWallet.accountAddress)
+    const { symbol } = await fetchToken(tokenAddress)
+    const amount = web3Utils.fromWei(String(amountInWei))
+    const message = {
+      notification: {
+        title: `${name} sent you ${amount} ${symbol}`,
+        body: 'Please click on this message to open your Fuse wallet'
+      },
+      token: firebaseToken
+    }
+    console.log(`Sending tokens receive push message to ${senderWallet.phoneNumber} via firebase token ${firebaseToken}`)
+    admin.messaging().send(message)
+  }
+  console.warning(`No firebase token found for ${receiverAddress} wallet address`)
+}
 const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule }, job) => {
   const { web3, createContract, createMethod, send } = createNetwork('home', account)
   const walletABI = require(`@constants/abi/${walletModule}`)
   const contract = createContract(walletABI, homeAddresses.walletModules[walletModule])
   const method = createMethod(contract, 'execute', walletAddress, methodData, nonce, signature, gasPrice, gasLimit)
-
-  const { _to, _amount, _token } = getParamsFromMethodData(web3, walletABI, 'transferToken', methodData)
-  const results = await UserWallet.find({ walletAddress: _to }, null, { sort: { createdAt: -1 }, limit: 1 })
-  const firebaseToken = results[0] ? results[0].firebaseToken : null
-  if (firebaseToken) {
-    const { symbol } = await fetchToken(_token)
-    const amount = web3Utils.fromWei(String(_amount))
-    const message = {
-      notification: {
-        title: `Send you ${amount} ${symbol}`,
-        body: 'Please click on this message to open your Fuse wallet'
-      },
-      token: firebaseToken
-    }
-    console.log({ message })
-    admin.messaging().send(message)
-  }
 
   const receipt = await send(method, {
     from: account.address,
@@ -62,7 +74,6 @@ const relay = withAccount(async (account, { walletAddress, methodData, nonce, ga
       job.save()
     }
   })
-
 
   const { success, wallet, signedHash } = receipt.events.TransactionExecuted.returnValues
   if (success) {
@@ -82,20 +93,9 @@ const relay = withAccount(async (account, { walletAddress, methodData, nonce, ga
         console.log(`Error on token funding for wallet: ${wallet}`, e)
       }
     } else if (walletModule === 'TransferManager') {
-      const { _to } = getParamsFromMethodData(web3, walletABI, 'transferToken', methodData)
-      const results = UserWallet.find({ walletAddress: _to }, { sort: { createdAt: -1 }, limit: 1 })
-      const firebaseToken = results[0] ? results[0].firebaseToken : null
-      if (firebaseToken) {
-        // const userWallet = results[0]
-        const message = {
-          notification: {
-            title: 'You got tokens',
-            body: 'Got tokens'
-          },
-          token: firebaseToken
-        }
-        admin.messaging().send(message)
-      }
+      const { _to, _amount, _token, _wallet } = getParamsFromMethodData(web3, walletABI, 'transferToken', methodData)
+      notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount })
+        .catch(console.error)
     }
   } else {
     console.error(`Relay transaction failed from wallet: ${wallet}, signedHash: ${signedHash}`)

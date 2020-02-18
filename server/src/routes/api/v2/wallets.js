@@ -35,6 +35,13 @@ router.post('/', auth.required, async (req, res, next) => {
   }
 })
 
+router.put('/token/:walletAddress', auth.required, async (req, res) => {
+  const { walletAddress } = req.params
+  const { firebaseToken } = req.body
+  const response = await UserWallet.updateOne({ walletAddress }, { firebaseToken })
+  return res.json({ data: response })
+})
+
 /**
  * @api {get} api/v2/wallets/ Fetch user wallet
  * @apiName FetchWallet
@@ -47,7 +54,7 @@ router.post('/', auth.required, async (req, res, next) => {
  */
 router.get('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
-  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0, firebaseToken: 0 })
 
   return res.json({ data: userWallet })
 })
@@ -64,7 +71,7 @@ router.get('/', auth.required, async (req, res, next) => {
  */
 router.get('/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber } = req.params
-  const userWallet = await UserWallet.findOne({ phoneNumber }, { contacts: 0 }).sort({ createdAt: -1 })
+  const userWallet = await UserWallet.findOne({ phoneNumber }, { contacts: 0, firebaseToken: 0 }).sort({ createdAt: -1 })
 
   return res.json({ data: userWallet })
 })
