@@ -23,6 +23,11 @@ module.exports = {
   graph: {
     url: 'https://graph.fuse.io/subgraphs/name/fuseio/fuse-qa'
   },
+  box: {
+    graph: {
+      url: 'https://api.3box.io/graph'
+    }
+  },
   network: {
     misc: {
       pageSize: 1000,
