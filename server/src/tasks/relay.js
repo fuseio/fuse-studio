@@ -35,7 +35,6 @@ const notifyReceiver = async ({ senderAddress, receiverAddress, tokenAddress, am
   const receiverWallet = await UserWallet.findOne({ walletAddress: receiverAddress })
   const firebaseToken = lodash.get(receiverWallet, 'firebaseToken')
   if (firebaseToken) {
-    const senderWallet = await UserWallet.findOne({ walletAddress: senderAddress })
     const { symbol } = await fetchToken(tokenAddress)
     const amount = web3Utils.fromWei(String(amountInWei))
     const message = {
@@ -45,10 +44,11 @@ const notifyReceiver = async ({ senderAddress, receiverAddress, tokenAddress, am
       },
       token: firebaseToken
     }
-    console.log(`Sending tokens receive push message to ${senderWallet.phoneNumber} via firebase token ${firebaseToken}`)
+    console.log(`Sending tokens receive push message to ${receiverWallet.phoneNumber} via firebase token ${firebaseToken}`)
     admin.messaging().send(message)
+  } else {
+    console.warn(`No firebase token found for ${receiverAddress} wallet address`)
   }
-  console.warn(`No firebase token found for ${receiverAddress} wallet address`)
 }
 
 const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule }, job) => {
