@@ -26,6 +26,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Fetch all wallets by phone number](#Fetch-all-wallets-by-phone-number)
 	- [Fetch user wallet](#Fetch-user-wallet)
 	- [Fetch latest wallet by phone number](#Fetch-latest-wallet-by-phone-number)
+	- [Notify server on client wallet backup](#Notify-server-on-client-wallet-backup)
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	- [Check if wallet exists by wallet address](#Check-if-wallet-exists-by-wallet-address)
 	
@@ -311,7 +312,7 @@ POST api/v2/wallets/
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| response | `String` | <p>Response status - ok</p> |
+| Started | `Object` | <p>job data</p> |
 ## <a name='Fetch-all-wallets-by-phone-number'></a> Fetch all wallets by phone number
 [Back to top](#top)
 
@@ -369,6 +370,29 @@ GET api/v2/wallets/:phoneNumber
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | data | `Object` | <p>Wallet object</p> |
+## <a name='Notify-server-on-client-wallet-backup'></a> Notify server on client wallet backup
+[Back to top](#top)
+
+<p>Notify the server that the client has backed up his wallet</p>
+
+```
+POST api/v2/wallets/backup
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>community address</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `Object` | <p>job data</p> |
 ## <a name='Create-wallet-for-phone-number'></a> Create wallet for phone number
 [Back to top](#top)
 
@@ -391,7 +415,7 @@ POST api/v2/wallets/invite/:phoneNumber
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| response | `String` | <p>Response status - ok</p> |
+| Started | `Object` | <p>job data</p> |
 ## <a name='Check-if-wallet-exists-by-wallet-address'></a> Check if wallet exists by wallet address
 [Back to top](#top)
 

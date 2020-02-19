@@ -15,7 +15,7 @@ const Invite = mongoose.model('Invite')
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
- * @apiSuccess {String} response Response status - ok
+ * @apiSuccess {Object} Started job data
  */
 router.post('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
@@ -122,7 +122,7 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
  *
  * @apiParam {String} communityAddress community address
  *
- * @apiSuccess {String} response Response status - ok
+ * @apiSuccess {Object} Started job data
  */
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
@@ -152,6 +152,42 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   }).save()
 
   const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo })
+
+  return res.json({ job: job.attrs })
+})
+
+/**
+ * @api {post} api/v2/wallets/backup Notify server on client wallet backup
+ * @apiName WalletBackup
+ * @apiGroup Wallet
+ * @apiDescription Notify the server that the client has backed up his wallet
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiParam {String} communityAddress community address
+ *
+ * @apiSuccess {Object} Started job data
+ */
+router.post('/backup', auth.required, async (req, res, next) => {
+  const { phoneNumber, accountAddress } = req.user
+  const { communityAddress } = req.body
+
+  const { walletAddress, backup } = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
+
+  if (backup) {
+    const msg = `User ${phoneNumber} already backed up its wallet: ${walletAddress}`
+    return res.status(400).json({ error: msg })
+  }
+
+  const bonusInfo = {
+    receiver: walletAddress,
+    bonusType: 'plugins.backupBonus.backupInfo',
+    bonusId: phoneNumber
+  }
+
+  await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { backup: true })
+
+  const job = await agenda.now('bonus', { communityAddress, bonusInfo })
 
   return res.json({ job: job.attrs })
 })
