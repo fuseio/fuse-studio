@@ -55,7 +55,11 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
     const { url } = await branch.createDeepLink({ communityAddress })
     console.log(`Created branch deep link ${url}`)
 
-    smsProvider.createMessage({ to: phoneNumber, body: `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${url}` })
+    let body = `${config.get('inviteTxt')}\n${url}`
+    if (name && amount && symbol) {
+      body = `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${url}`
+    }
+    smsProvider.createMessage({ to: phoneNumber, body })
 
     await Invite.findOneAndUpdate({
       inviterWalletAddress: bonusInfo.receiver,
