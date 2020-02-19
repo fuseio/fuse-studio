@@ -6,7 +6,7 @@ const Entity = mongoose.model('Entity')
 const Token = mongoose.model('Token')
 const lodash = require('lodash')
 const branch = require('@utils/branch')
-const twilio = require('@utils/twilio')
+const smsProvider = require('@utils/smsProvider')
 const { sign } = require('@utils/crypto')
 const sendgridUtils = require('@utils/sendgrid')
 const { toChecksumAddress } = require('web3-utils')
@@ -77,7 +77,7 @@ router.post('/:communityAddress/invite', async (req, res, next) => {
     sendgridUtils.sendUserInvitationToCommunity({ email, url })
     res.send({ response: 'ok' })
   } else if (phoneNumber) {
-    twilio.createMessage({ to: phoneNumber, body: `${config.get('twilio.inviteTxt')}\n${url}` })
+    smsProvider.createMessage({ to: phoneNumber, body: `${config.get('inviteTxt')}\n${url}` })
     res.send({ response: 'ok' })
   }
 })

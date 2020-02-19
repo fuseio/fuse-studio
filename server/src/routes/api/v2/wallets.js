@@ -139,6 +139,10 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   }
 
   const inviterUserWallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
+  if (!inviterUserWallet) {
+    const msg = `Could not find UserWallet for phoneNumber: ${phoneNumber} and accountAddress: ${accountAddress}`
+    return res.status(400).json({ error: msg })
+  }
   const bonusInfo = {
     receiver: inviterUserWallet.walletAddress,
     bonusType: 'plugins.inviteBonus.inviteInfo'

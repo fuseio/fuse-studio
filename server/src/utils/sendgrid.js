@@ -111,7 +111,7 @@ const sendUserInvitationToCommunity = async ({ email, url }) => {
         {
           'type': 'text/plain',
           'value': `
-            ${config.get('twilio.inviteTxt')}
+            ${config.get('inviteTxt')}
             ${url}
           `
         }
