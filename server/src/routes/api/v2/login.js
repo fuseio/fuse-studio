@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const smsProvider = require('@utils/smsProvider')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
+const { isMagic, isTeam } = require('@utils/smsProvider/common')
 
 /**
  * @api {post} api/v2/login/request Request a verification code
@@ -18,11 +19,9 @@ const UserWallet = mongoose.model('UserWallet')
 router.post('/request', async (req, res) => {
   const { phoneNumber } = req.body
 
-  const isMagic = (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('phoneNumbers.magic')))
-  const isTeam = config.has('phoneNumbers.team') ? config.get('phoneNumbers.team').split(',').includes(phoneNumber) : false
   const numberOfWallets = await UserWallet.find({ phoneNumber }).countDocuments()
 
-  if (!isMagic && !isTeam && numberOfWallets > config.get('phoneNumbers.maxUserWallets')) {
+  if (!isMagic(phoneNumber) && !isTeam(phoneNumber) && numberOfWallets > config.get('phoneNumbers.maxUserWallets')) {
     return res.status(400).json({ error: 'Too many wallets...' })
   }
   try {

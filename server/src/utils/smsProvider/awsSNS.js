@@ -2,6 +2,7 @@ const config = require('config')
 const AWS = require('aws-sdk')
 const mongoose = require('mongoose')
 const PhoneVerification = mongoose.model('PhoneVerification')
+const { isMagic } = require('./common')
 
 AWS.config.update({ region: config.get('aws.sns.region') })
 
@@ -26,7 +27,7 @@ const publishMessage = ({ phoneNumber, body }) => {
 }
 
 const verify = async ({ phoneNumber }) => {
-  if (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('phoneNumbers.magic'))) {
+  if (isMagic(phoneNumber)) {
     console.log(`Using "magic" phoneNumber ${phoneNumber} for verify`)
     return
   }
@@ -45,7 +46,7 @@ const verify = async ({ phoneNumber }) => {
 }
 
 const verifyCheck = async ({ phoneNumber, code }) => {
-  if (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('phoneNumbers.magic'))) {
+  if (isMagic(phoneNumber)) {
     console.log(`Using "magic" phoneNumber ${phoneNumber} for verifyCheck with code ${code}`)
     return code === '111111' ? { status: 'approved' } : {}
   }
@@ -60,7 +61,7 @@ const verifyCheck = async ({ phoneNumber, code }) => {
 }
 
 const createMessage = ({ to, body }) => {
-  if (config.get('env') === 'qa' && to.endsWith(config.get('phoneNumbers.magic'))) {
+  if (isMagic(to)) {
     console.log(`Using "magic" phoneNumber ${to} for createMessage with body ${body}`)
     return
   }
