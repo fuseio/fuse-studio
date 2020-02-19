@@ -12,6 +12,11 @@
        "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
+    },
+    "sns": {
+      "region": "COMMUNITY_AWS_SNS_REGION",
+      "senderId": "COMMUNITY_AWS_SNS_SENDER_ID",
+      "smsType": "COMMUNITY_AWS_SNS_SMS_TYPE"
     }
   },
   "ipfsProxy": {
@@ -120,5 +125,6 @@
   "phoneNumbers": {
     "maxUserWallets": "COMMUNITY_MAX_USER_WALLETS_PER_PHONE_NUMBER",
     "team": "COMMUNITY_TEAM_PHONE_NUMBERS"
-  }
+  },
+  "smsProvider": "COMMUNITY_SMS_PROVIDER"
 }

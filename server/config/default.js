@@ -140,10 +140,6 @@ module.exports = {
   funder: {
     urlBase: 'https://funder-qa.fuse.io/api/'
   },
-  twilio: {
-    inviteTxt: 'Hi, a friend has invited you to Fuse',
-    magic: '5555'
-  },
   branch: {
     urlBase: 'https://api2.branch.io/v1/',
     key: 'key_live_aaSvQXmuELUQfsYeG4UfWemnqEiq04hr'
@@ -173,7 +169,17 @@ module.exports = {
       }
     }
   },
+  inviteTxt: 'Hi, a friend has invited you to Fuse',
+  smsProvider: 'sns',
   phoneNumbers: {
+    magic: '5555',
     maxUserWallets: 5
+  },
+  aws: {
+    sns: {
+      region: 'eu-west-1',
+      senderId: 'Fuse',
+      smsType: 'Promotional'
+    }
   }
 }

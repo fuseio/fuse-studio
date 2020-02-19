@@ -10,7 +10,7 @@ const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
 const Invite = mongoose.model('Invite')
 const branch = require('@utils/branch')
-const twilio = require('@utils/twilio')
+const smsProvider = require('@utils/smsProvider')
 
 const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo }, job) => {
   const { agenda } = require('@services/agenda')
@@ -55,8 +55,7 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
     const { url } = await branch.createDeepLink({ communityAddress })
     console.log(`Created branch deep link ${url}`)
 
-    const inviteTxt = `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${url}`
-    twilio.createMessage({ to: phoneNumber, body: inviteTxt })
+    smsProvider.createMessage({ to: phoneNumber, body: `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${url}` })
 
     await Invite.findOneAndUpdate({
       inviterWalletAddress: bonusInfo.receiver,

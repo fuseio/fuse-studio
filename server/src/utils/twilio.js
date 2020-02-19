@@ -2,7 +2,7 @@ const config = require('config')
 const client = require('twilio')(config.get('twilio.accountSid'), config.get('twilio.authToken'))
 
 const verify = ({ phoneNumber }) => {
-  if (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('twilio.magic'))) {
+  if (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('phoneNumbers.magic'))) {
     console.log(`Using "magic" phoneNumber ${phoneNumber} for verify`)
     return
   }
@@ -16,7 +16,7 @@ const verify = ({ phoneNumber }) => {
 }
 
 const verifyCheck = ({ phoneNumber, code }) => {
-  if (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('twilio.magic'))) {
+  if (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('phoneNumbers.magic'))) {
     console.log(`Using "magic" phoneNumber ${phoneNumber} for verifyCheck with code ${code}`)
     return code === '111111' ? { status: 'approved' } : {}
   }
@@ -30,7 +30,7 @@ const verifyCheck = ({ phoneNumber, code }) => {
 }
 
 const createMessage = ({ to, body }) => {
-  if (config.get('env') === 'qa' && to.endsWith(config.get('twilio.magic'))) {
+  if (config.get('env') === 'qa' && to.endsWith(config.get('phoneNumbers.magic'))) {
     console.log(`Using "magic" phoneNumber ${to} for createMessage with body ${body}`)
     return
   }

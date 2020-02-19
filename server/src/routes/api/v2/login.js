@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
-const twilio = require('@utils/twilio')
+const smsProvider = require('@utils/smsProvider')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 
@@ -18,7 +18,7 @@ const UserWallet = mongoose.model('UserWallet')
 router.post('/request', async (req, res) => {
   const { phoneNumber } = req.body
 
-  const isMagic = (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('twilio.magic')))
+  const isMagic = (config.get('env') === 'qa' && phoneNumber.endsWith(config.get('phoneNumbers.magic')))
   const isTeam = config.has('phoneNumbers.team') ? config.get('phoneNumbers.team').split(',').includes(phoneNumber) : false
   const numberOfWallets = await UserWallet.find({ phoneNumber }).countDocuments()
 
@@ -26,10 +26,10 @@ router.post('/request', async (req, res) => {
     return res.status(400).json({ error: 'Too many wallets...' })
   }
   try {
-    await twilio.verify({ phoneNumber })
+    await smsProvider.verify({ phoneNumber })
     res.json({ response: 'ok' })
   } catch (e) {
-    console.error('Got an error from Twilio:', e.code, e.message)
+    console.error('Got an error from sms provider:', e.code, e.message)
     res.status(400).json({ error: e.message })
   }
 })
@@ -49,7 +49,7 @@ router.post('/request', async (req, res) => {
 router.post('/verify', async (req, res) => {
   const { phoneNumber, accountAddress, code } = req.body
 
-  const response = await twilio.verifyCheck({ phoneNumber, code })
+  const response = await smsProvider.verifyCheck({ phoneNumber, code })
 
   if (response.status === 'approved') {
     const secret = config.get('api.secret')

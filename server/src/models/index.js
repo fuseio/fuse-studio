@@ -10,6 +10,7 @@ require('./User')
 require('./Wizard')
 require('./Contact')
 require('./Invite')
+require('./PhoneVerification')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
