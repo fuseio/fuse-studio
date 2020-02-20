@@ -111,7 +111,7 @@ const sendUserInvitationToCommunity = async ({ email, url }) => {
         {
           'type': 'text/plain',
           'value': `
-            ${config.get('inviteTxt')}
+            ${config.get('inviteTxtEmail')}
             ${url}
           `
         }
