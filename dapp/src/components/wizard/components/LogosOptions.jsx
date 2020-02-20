@@ -62,7 +62,7 @@ const LogosOptions = ({
   }
 
   const setDefaultImages = useCallback(() => {
-    if (existingToken && existingToken.label && existingToken.value) {
+    if (existingToken && existingToken.label && existingToken.value && TokenIcons[existingToken.symbol]) {
       const { symbol } = existingToken
       imageConverter(TokenIcons[symbol], 'images.defaultOne')
     } else {
@@ -118,7 +118,7 @@ const LogosOptions = ({
               </div>
               <CommunityLogo
                 metadata={{
-                  isDefault: communityType && communityType.value && communityType.label
+                  isDefault: (communityType && communityType.value && communityType.label) || (existingToken && existingToken.isCustom)
                 }}
                 symbol={communitySymbol}
                 imageUrl={(custom && custom.croppedImageUrl) || (field && field.value && field.value.croppedImageUrl)}

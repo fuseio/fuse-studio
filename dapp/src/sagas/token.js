@@ -36,6 +36,25 @@ const fetchCommunity = createEntitiesFetch(actions.FETCH_COMMUNITY_DATA, fetchCo
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
 const fetchFeaturedCommunities = createEntitiesFetch(actions.FETCH_FEATURED_COMMUNITIES, api.fetchFeaturedCommunities)
 
+function * fetchTokenFromEthereum ({ tokenAddress }) {
+  const web3 = yield getWeb3()
+  const FuseTokenContract = new web3.eth.Contract(FuseTokenABI, tokenAddress)
+  const calls = {
+    name: call(FuseTokenContract.methods.name().call),
+    symbol: call(FuseTokenContract.methods.symbol().call),
+    totalSupply: call(FuseTokenContract.methods.totalSupply().call)
+  }
+  const response = yield all(calls)
+
+  yield entityPut({ type: actions.FETCH_TOKEN_FROM_ETHEREUM.SUCCESS,
+    address: tokenAddress,
+    response: {
+      ...response,
+      address: tokenAddress
+    }
+  })
+}
+
 function * fetchFuseToken () {
   const tokenAddress = yield select(getAddress, 'FuseToken')
   const web3 = yield getWeb3()
@@ -349,6 +368,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
+    tryTakeEvery(actions.FETCH_TOKEN_FROM_ETHEREUM, fetchTokenFromEthereum, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
     takeEvery([actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS], watchPluginsChanges),
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchFetchCommunity),
