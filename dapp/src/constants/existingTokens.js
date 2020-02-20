@@ -1,6 +1,7 @@
 import DaiIcon from 'images/dai.svg'
 import UsdcIcon from 'images/usdc.png'
 import TetherIcon from 'images/tether.png'
+import BrzIcon from 'images/brz.png'
 
 export const existingTokens = (networkType) => networkType ? ([
   {
@@ -23,5 +24,12 @@ export const existingTokens = (networkType) => networkType ? ([
     value: CONFIG.web3.addresses[networkType].TetherToken,
     isDisabled: false,
     icon: TetherIcon
+  },
+  {
+    label: 'BRZ Token',
+    symbol: 'BRZ',
+    value: CONFIG.web3.addresses[networkType].BrzToken,
+    isDisabled: false,
+    icon: BrzIcon
   }
 ]) : ([])

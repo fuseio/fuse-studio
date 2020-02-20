@@ -9,6 +9,7 @@ import tokenOne from 'images/CoinIcon1.svg'
 import tokenTwo from 'images/CoinIcon2.svg'
 import dai from 'images/dai.svg'
 import usdc from 'images/usdc.png'
+import brz from 'images/brz.png'
 import cameraIcon from 'images/camara.svg'
 import { createObjectURL } from 'utils/images'
 
@@ -17,7 +18,8 @@ const TokenIcons = {
   2: tokenTwo,
   DAI: dai,
   USDC: usdc,
-  USDT: TetherCoin
+  USDT: TetherCoin,
+  BRZ: brz
 }
 
 const LogosOptions = ({
