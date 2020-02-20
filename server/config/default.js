@@ -170,6 +170,7 @@ module.exports = {
     }
   },
   inviteTxt: 'Hi, a friend has invited you to Fuse',
+  inviteTxtEmail: 'Hi, a friend has invited you to Fuse. Please open this link from your mobile device',
   smsProvider: 'sns',
   phoneNumbers: {
     magic: '5555',
