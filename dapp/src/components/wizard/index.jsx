@@ -199,7 +199,7 @@ const WizardPage = ({
 
     if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
-      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress } } }
+      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress, isCustom: existingToken.isCustom } } }
       deployExistingToken(metadata, newSteps)
     } else {
       const tokenData = {
