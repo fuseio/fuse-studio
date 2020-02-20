@@ -202,11 +202,8 @@ const CurrencyType = ({ networkType, formik }) => {
                   if (get(e, 'relatedTarget.id') !== 'customToken') {
                     setMenuIsOpen(false)
                   }
-                  // e.preventDefault()
-                  // e.stopPropagation()
                 }}
                 blurInputOnSelect={false}
-                // menuIsOpen
                 menuIsOpen={menuIsOpen}
                 onChange={val => {
                   setFieldValue('existingToken', val)
