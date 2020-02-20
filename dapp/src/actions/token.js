@@ -15,6 +15,8 @@ export const FETCH_TOKEN = createRequestTypes('FETCH_TOKEN')
 export const FETCH_TOKEN_TOTAL_SUPPLY = createRequestTypes('FETCH_TOKEN_TOTAL_SUPPLY')
 export const FETCH_COMMUNITY_DATA = createRequestTypes('FETCH_COMMUNITY_DATA')
 
+export const FETCH_TOKEN_FROM_ETHEREUM = createRequestTypes('FETCH_TOKEN_FROM_ETHEREUM')
+
 export const FETCH_FUSE_TOKEN = createRequestTypes('FETCH_FUSE_TOKEN')
 
 export const CREATE_TOKEN = createTransactionRequestTypes('CREATE_TOKEN')
@@ -39,6 +41,8 @@ export const fetchFeaturedCommunities = () => communitiesAction(FETCH_FEATURED_C
 export const fetchToken = (tokenAddress) => tokenAction(FETCH_TOKEN.REQUEST, { tokenAddress })
 export const fetchTokenTotalSupply = (tokenAddress, options) => requestAction(FETCH_TOKEN_TOTAL_SUPPLY, { tokenAddress, options })
 export const fetchCommunity = (communityAddress) => communitiesAction(FETCH_COMMUNITY_DATA.REQUEST, { communityAddress })
+
+export const fetchTokenFromEthereum = (tokenAddress) => tokenAction(FETCH_TOKEN_FROM_ETHEREUM.REQUEST, { tokenAddress })
 
 export const fetchFuseToken = () => tokenAction(FETCH_FUSE_TOKEN.REQUEST)
 

@@ -45,6 +45,8 @@ const createNetwork = (bridgeType, account) => {
 
   return {
     from,
+    bridgeType,
+    networkType: config.get(`network.${bridgeType}.name`),
     web3,
     createContract: createContract.bind(null, { web3, bridgeType, address: from }),
     createMethod,
