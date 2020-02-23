@@ -13,7 +13,7 @@ const lockedAccounts = async () => {
   accounts.forEach(account => {
     if (account.lockingTime) {
       const lockingTime = moment(account.lockingTime)
-      if (now.diff(lockingTime, 'minutes') > 10) {
+      if (now.diff(lockingTime, 'minutes') > threshold) {
         notify(`account ${codeBlock}${account.address}${codeBlock} is locked for more than ${codeBlock}${threshold}${codeBlock} minutes`)
       }
     } else {
