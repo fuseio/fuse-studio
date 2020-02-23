@@ -185,5 +185,13 @@ module.exports = {
       senderId: 'Fuse',
       smsType: 'Promotional'
     }
+  },
+  slack: {
+    channel: 'monitor'
+  },
+  alerts: {
+    lockedAccounts: {
+      threshold: 10 // in minutes
+    }
   }
 }

@@ -130,5 +130,13 @@
     "maxUserWallets": "COMMUNITY_MAX_USER_WALLETS_PER_PHONE_NUMBER",
     "team": "COMMUNITY_TEAM_PHONE_NUMBERS"
   },
-  "smsProvider": "COMMUNITY_SMS_PROVIDER"
+  "smsProvider": "COMMUNITY_SMS_PROVIDER",
+  "slack": {
+    "incomingWebhookURL": "COMMUNITY_SLACK_INCOMING_WEBHOOK_URL"
+  },
+  "alerts": {
+    "lockedAccounts": {
+      "threshold": "COMMUNITY_ALERTS_LOCKED_ACCOUNTS_THRESHOLD"
+    }
+  }
 }
