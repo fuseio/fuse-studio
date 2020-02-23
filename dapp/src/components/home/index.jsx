@@ -51,9 +51,9 @@ const HomePage = ({
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-bottom'>
           <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>
-            <h2 className='home_page__title'>Jump start<br /> your economy</h2>
+            <h2 className='home_page__title'>Use the wizard or<br /> choose a template to<br />get started on Fuse</h2>
             <p className='home_page__text'>
-              Finish the community wizard on<br /> mainnet and <span>get rewarded 100<br /> Fuse tokens <img src={GiftIcon} /></span>
+              You need an Ethereum wallet to<br /> start - mainnet fees apply, <br /> Click here to lean how to use <br /> Ropsten for free <img src={GiftIcon} />
             </p>
             <div className='home_page__button'>
               <button onClick={() => {
