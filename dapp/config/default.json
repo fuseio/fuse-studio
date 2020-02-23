@@ -17,7 +17,7 @@
       "main": {
         "FuseToken": "0x4162178B78D6985480A308B2190EE5517460406D",
         "TokenFactory": "0xB2100946628D3e45FF94971b35508AfCBBc87432",
-        "DaiToken": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DaiToken": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
         "UsdToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
         "TetherToken": "0xdAC17F958D2ee523a2206206994597C13D831ec7"
       },
