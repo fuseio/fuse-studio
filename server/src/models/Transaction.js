@@ -34,12 +34,15 @@ module.exports = () => {
   }
 
   transaction.pending = async ({ transactionHash, abiName, bridgeType }) => {
-    return new Transaction({
-      transactionHash,
-      abiName,
-      bridgeType,
-      status: 'PENDING'
-    }).save()
+    const tx = await Transaction.findOne({ transactionHash })
+    if (!tx) {
+      return new Transaction({
+        transactionHash,
+        abiName,
+        bridgeType,
+        status: 'PENDING'
+      }).save()
+    }
   }
 
   transaction.done = ({ transactionHash }) => Transaction.findOneAndUpdate({ transactionHash }, { status: 'DONE' })
