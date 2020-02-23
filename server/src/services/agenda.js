@@ -4,7 +4,7 @@ const Agenda = require('agenda')
 const tasks = require('@tasks')
 const lodash = require('lodash')
 
-const agenda = new Agenda({ db: { address: config.get('mongo.uri'), options: config.get('mongo.options') } })
+const agenda = new Agenda({ ...config.get('agenda.args'), db: { address: config.get('mongo.uri'), options: config.get('mongo.options') } })
 
 const getConfig = (taskName) => config.has(`agenda.tasks.${taskName}`) ? config.get(`agenda.tasks.${taskName}`) : {}
 
