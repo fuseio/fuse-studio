@@ -124,6 +124,9 @@ module.exports = {
     }
   },
   agenda: {
+    args: {
+      maxConcurrency: 5
+    },
     startPeriodicTasks: true,
     tasks: {
       deploy: {

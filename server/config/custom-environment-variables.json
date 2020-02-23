@@ -72,6 +72,10 @@
     }
   },
   "agenda": {
+    "args": {
+        "__name": "COMMUNTITY_AGENDA_ARGS",
+        "__format": "json"
+    },
     "startPeriodicTasks": "COMMUNTITY_AGENDA_START_PERIODIC_TASKS",
     "tasks": {
       "deploy": {
