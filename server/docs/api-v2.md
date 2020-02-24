@@ -52,7 +52,7 @@ POST /api/v2/admin/tokens/burn
 | tokenAddress | `String` | <p>Token address to burn (body parameter)</p> |
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
 | amount | `String` | <p>Token amount to burn</p> |
-| fromAddress | `String` | <p>account to burn from (optional)</p> |
+| from | `String` | <p>account to burn from (optional)</p> |
 
 ### Examples
 Burn 1.1 tokens on Fuse network
