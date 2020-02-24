@@ -97,6 +97,7 @@ const adminTransfer = withAccount(async (account, { bridgeType, tokenAddress, am
 module.exports = {
   mint,
   burn,
+  burnFrom,
   adminApprove,
   adminTransfer
 }
