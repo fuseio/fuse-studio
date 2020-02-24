@@ -46,6 +46,7 @@ router.post('/mint', auth.required, async (req, res) => {
  * @apiParam {String} tokenAddress Token address to burn (body parameter)
  * @apiParam {String} networkType Token's network (must be Fuse)
  * @apiParam {String} amount Token amount to burn
+ * @apiParam {String} fromAddress account to burn from (optional)
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
@@ -56,13 +57,13 @@ router.post('/burn', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount } = req.body
+  const { tokenAddress, networkType, amount, fromAddress } = req.body
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
 
   const amountInWei = toWei(amount)
-  const job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei })
+  const job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, burnFromAddress: fromAddress })
   return res.json({ job: job.attrs })
 })
 

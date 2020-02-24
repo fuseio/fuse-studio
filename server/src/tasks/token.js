@@ -23,11 +23,11 @@ const mint = withAccount(async (account, { bridgeType, tokenAddress, amount, toA
   return lockAccount({ address: from })
 })
 
-const burn = withAccount(async (account, { bridgeType, tokenAddress, amount }, job) => {
+const burn = withAccount(async (account, { bridgeType, tokenAddress, amount, burnFromAddress }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
   const tokenContractInstance = createContract(MintableBurnableTokenAbi, tokenAddress)
 
-  const method = createMethod(tokenContractInstance, 'burn', amount)
+  const method = burnFromAddress ? createMethod(tokenContractInstance, 'burnFrom', burnFromAddress, amount) : createMethod(tokenContractInstance, 'burn', amount)
 
   await send(method, {
     from: account.address
