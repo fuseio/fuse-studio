@@ -146,13 +146,17 @@
     padding: 0 0 1.250em;
     letter-spacing: -0.46px;
     @include breakpoint(medium up) {
-      font-size: 1.313em;
+      font-size: 1.1em;
       min-width: 400px;
     }
 
     > span {
       font-weight: bold;
       color: $color-dark;
+    }
+
+    > a {
+      color: #0064bd;
     }
   }
 
