@@ -59,7 +59,7 @@ const burnFrom = withAccount(async (account, { bridgeType, tokenAddress, amount,
   return lockAccount({ address: from })
 })
 
-const adminApprove = withAccount(async (account, { bridgeType, tokenAddress, wallet, spender, amount }, job) => {
+const adminApprove = withAccount(async (account, { bridgeType, tokenAddress, wallet, spender, amount, burnFromAddress }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
   const transferManagerContractInstance = createContract(getAbi('TransferManager'), homeAddresses.walletModules.TransferManager)
   const method = createMethod(transferManagerContractInstance, 'approveToken', wallet, tokenAddress, spender, amount)
@@ -72,6 +72,13 @@ const adminApprove = withAccount(async (account, { bridgeType, tokenAddress, wal
       job.save()
     }
   })
+
+  const { agenda } = require('@services/agenda')
+  if (burnFromAddress) {
+    const burnJob = await agenda.now('burnFrom', { tokenAddress, bridgeType, from: account.address, amount, burnFromAddress })
+    job.attrs.data.burnJobId = burnJob.attrs._id.toString()
+    job.save()
+  }
 }, ({ from }) => {
   return lockAccount({ address: from })
 })

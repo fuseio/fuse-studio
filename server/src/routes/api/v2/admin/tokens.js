@@ -63,21 +63,13 @@ router.post('/burn', auth.required, async (req, res) => {
   }
 
   const amountInWei = toWei(amount)
+  let job
   if (!from) {
-    const job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei })
-    return res.json({ job: job.attrs })
+    job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei })
+  } else {
+    job = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from })
   }
-  const approveJob = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress })
-  const approveJobId = approveJob.attrs._id.toString()
-  agenda.on('success:adminApprove', async job => {
-    if (job.attrs._id.toString() === approveJobId) {
-      const burnFromJob = await agenda.now('burnFrom', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, burnFromAddress: from })
-      return res.json({ json: burnFromJob.attrs })
-    }
-  })
-  agenda.on('fail:adminApprove', job => {
-    return res.status(400).send({ error: 'approve job failed' })
-  })
+  return res.json({ json: job.attrs })
 })
 
 /**
