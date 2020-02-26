@@ -5,6 +5,7 @@ const smsProvider = require('@utils/smsProvider')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const { isMagic, isTeam } = require('@utils/smsProvider/common')
+const { admin } = require('@services/firebase')
 
 /**
  * @api {post} api/v2/login/request Request a verification code
@@ -35,12 +36,12 @@ router.post('/request', async (req, res) => {
 
 /**
  * @api {post} api/v2/login/verify Verify user phone number
- * @apiName Veify
+ * @apiName Verify
  * @apiGroup Login
  * @apiDescription Verify user phone number by SMS verification code
  *
  * @apiParam {String} phoneNumber User phone number
- * @apiParam {accountAddress} User account address
+ * @apiParam {String} accountAddress User account address
  * @apiParam {String} code SMS code recieved to user phone number
  *
  * @apiSuccess {String} token JWT token
@@ -61,6 +62,34 @@ router.post('/verify', async (req, res) => {
   } else {
     res.status(400).json({ error: 'Wrong SMS code' })
   }
+})
+
+/**
+ * @api {post} api/v2/login/ Login using firebase ID token
+ * @apiName Login
+ * @apiGroup Login
+ * @apiDescription Login using firebase ID token
+ *
+ * @apiParam {String} accountAddress User account address
+ * @apiParam {String} token Firebase ID token
+ *
+ * @apiSuccess {String} token JWT token
+ */
+router.post('/', async (req, res) => {
+  const { accountAddress, token } = req.body
+
+  admin.auth().verifyIdToken(token)
+    .then(decodedToken => {
+      const secret = config.get('api.secret')
+      const expiresIn = config.get('api.tokenExpiresIn')
+      const token = jwt.sign({ phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid }, secret, {
+        expiresIn
+      })
+      res.json({ token })
+    }).catch(err => {
+      console.error('Login error', err)
+      res.status(400).json({ error: 'Login failed' })
+    })
 })
 
 module.exports = router

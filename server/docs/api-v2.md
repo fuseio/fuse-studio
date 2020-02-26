@@ -18,6 +18,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Fetch job by id](#Fetch-job-by-id)
 	
 - [Login](#Login)
+	- [Login using firebase ID token](#Login-using-firebase-ID-token)
 	- [Request a verification code](#Request-a-verification-code)
 	- [Verify user phone number](#Verify-user-phone-number)
 	
@@ -253,6 +254,26 @@ GET api/v2/jobs/:jobId
 | data | `Object` | <p>Job object</p> |
 # <a name='Login'></a> Login
 
+## <a name='Login-using-firebase-ID-token'></a> Login using firebase ID token
+[Back to top](#top)
+
+<p>Login using firebase ID token</p>
+
+```
+POST api/v2/login/
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| accountAddress | `String` | <p>User account address</p> |
+| token | `String` | <p>Firebase ID token</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| token | `String` | <p>JWT token</p> |
 ## <a name='Request-a-verification-code'></a> Request a verification code
 [Back to top](#top)
 
@@ -285,7 +306,7 @@ POST api/v2/login/verify
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | phoneNumber | `String` | <p>User phone number</p> |
-| User | `accountAddress` | <p>account address</p> |
+| accountAddress | `String` | <p>User account address</p> |
 | code | `String` | <p>SMS code recieved to user phone number</p> |
 
 

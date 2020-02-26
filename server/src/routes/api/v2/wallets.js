@@ -176,8 +176,12 @@ router.post('/backup', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
   const { communityAddress } = req.body
 
-  const { walletAddress, backup } = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
-
+  const wallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
+  if (!wallet) {
+    const msg = `User ${phoneNumber} doesn't have a wallet`
+    return res.status(400).json({ error: msg })
+  }
+  const { walletAddress, backup } = wallet
   if (backup) {
     const msg = `User ${phoneNumber} already backed up its wallet: ${walletAddress}`
     return res.status(400).json({ error: msg })
