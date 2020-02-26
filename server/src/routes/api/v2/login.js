@@ -2,9 +2,6 @@ const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
 const smsProvider = require('@utils/smsProvider')
-const mongoose = require('mongoose')
-const UserWallet = mongoose.model('UserWallet')
-const { isMagic, isTeam } = require('@utils/smsProvider/common')
 const { admin } = require('@services/firebase')
 
 /**
@@ -20,11 +17,6 @@ const { admin } = require('@services/firebase')
 router.post('/request', async (req, res) => {
   const { phoneNumber } = req.body
 
-  const numberOfWallets = await UserWallet.find({ phoneNumber }).countDocuments()
-
-  if (!isMagic(phoneNumber) && !isTeam(phoneNumber) && numberOfWallets > config.get('phoneNumbers.maxUserWallets')) {
-    return res.status(400).json({ error: 'Too many wallets...' })
-  }
   try {
     await smsProvider.verify({ phoneNumber })
     res.json({ response: 'ok' })
