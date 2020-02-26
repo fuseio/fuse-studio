@@ -69,19 +69,6 @@ const DashboardLayout = (props) => {
   }, [location.pathname])
 
   useEffect(() => {
-    if (communityAddress) {
-      fetchCommunity(communityAddress)
-      fetchEntities(communityAddress)
-    }
-  }, [communityAddress, accountAddress])
-
-  useEffect(() => {
-    if (communityURI) {
-      fetchMetadata(communityURI)
-    }
-  }, [communityURI])
-
-  useEffect(() => {
     if (!loading) {
       if (!isEmpty(data) && !error) {
         const originNetwork = get(data, 'tokens[0].originNetwork', '')
@@ -91,6 +78,19 @@ const DashboardLayout = (props) => {
       }
     }
   }, [data, loading, error])
+
+  useEffect(() => {
+    if (communityAddress && !loading) {
+      fetchCommunity(communityAddress)
+      fetchEntities(communityAddress)
+    }
+  }, [communityAddress, accountAddress, loading])
+
+  useEffect(() => {
+    if (communityURI) {
+      fetchMetadata(communityURI)
+    }
+  }, [communityURI])
 
   useEffect(() => {
     if (isAdmin) {
