@@ -4,7 +4,7 @@ import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
-import { ADD_COMMUNITY_PLUGIN, SET_JOIN_BONUS, SET_WALLET_BANNER_LINK } from 'actions/community'
+import { ADD_COMMUNITY_PLUGIN, SET_JOIN_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -15,8 +15,12 @@ import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import { getWeb3 } from 'sagas/network'
 import {
   fetchCommunity as fetchCommunityApi,
+  updateCommunityMetadata as updateCommunityMetadataApi,
   addCommunityPlugin as addCommunityPluginApi
 } from 'services/api/community'
+import {
+  createMetadata as createMetadataApi
+} from 'services/api/metadata'
 import { imageUpload } from 'services/api/images'
 import { ADD_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
@@ -286,6 +290,31 @@ function * addCommunityPlugin ({ communityAddress, plugin }) {
   })
 }
 
+function * updateCommunityMetadata ({ communityAddress, metadata: { image, coverPhoto } }) {
+  const { communityURI } = yield select(state => state.entities.communities[communityAddress])
+  const metadata = yield select(state => state.entities.metadata[communityURI])
+  if (image) {
+    const { hash } = yield apiCall(imageUpload, { image: image })
+    metadata.image = hash
+  }
+
+  if (coverPhoto) {
+    const { hash } = yield apiCall(imageUpload, { image: coverPhoto })
+    metadata.coverPhoto = hash
+  }
+  const { hash } = yield apiCall(createMetadataApi, { metadata })
+  const newCommunityURI = `ipfs://${hash}`
+  const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI })
+
+  yield put(fetchMetadata(newCommunityURI))
+  yield put({
+    type: UPDATE_COMMUNITY_METADATA.SUCCESS,
+    communityAddress,
+    entity: 'communities',
+    response: community
+  })
+}
+
 function * watchPluginsChanges () {
   const communityAddress = yield select(getCommunityAddress)
   yield put(actions.fetchCommunity(communityAddress))
@@ -360,6 +389,7 @@ function * watchCommunities ({ response }) {
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(ADD_COMMUNITY_PLUGIN, addCommunityPlugin, 1),
+    tryTakeEvery(UPDATE_COMMUNITY_METADATA, updateCommunityMetadata, 1),
     tryTakeEvery(SET_WALLET_BANNER_LINK, setWalletBannerLink, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN, transferToken, 1),
     tryTakeEvery(actions.TRANSFER_TOKEN_TO_FUNDER, transferTokenToFunder, 1),

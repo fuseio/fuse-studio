@@ -1,5 +1,6 @@
 import React from 'react'
-// import SettingsIcon from 'images/settings.svg'
+import SettingsIcon from 'images/settings.svg'
+import SettingsYellowIcon from 'images/settings-selected.svg'
 import UsersIcon from 'images/user_list.svg'
 import UsersYellowIcon from 'images/user_list_yellow.svg'
 import TransferIcon from 'images/transfer.svg'
@@ -14,6 +15,13 @@ import HomeYellowIcon from 'images/home_yellow.svg'
 import WalletIcon from 'images/wallet_new.svg'
 import WalletYellowIcon from 'images/wallet_new_yellow.svg'
 import PluginIcon from 'images/plugin.svg'
+
+const CustomElement = ({ children }) => (
+  <div>
+    <span className='admin-title'>Admin tools</span>
+    {children}
+  </div>
+)
 
 const sideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
   {
@@ -77,22 +85,17 @@ const sideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
       borderTop: '.5px solid rgba(222, 222, 222, 0.2)'
     },
     selectedIcon: MintBurnYellowIcon,
-    CustomElement: ({ children }) => (
-      <div style={{ paddingBottom: '3em' }}>
-        <span className='admin-title'>Admin tools</span>
-        {children}
-      </div>
-    )
+    group: 'admin',
+    CustomElement
+  },
+  {
+    name: 'Settings',
+    path: '/settings',
+    url: (match) => `${match}/settings`,
+    icon: SettingsIcon,
+    selectedIcon: SettingsYellowIcon,
+    CustomElement: tokenType !== 'mintableBurnable' ? CustomElement : undefined
   }
-  // TODO - Settings page
-  // ,
-  // {
-  //   name: 'Settings',
-  //   path: '/settings',
-  //   url: (match) => `${match}/settings`,
-  //   icon: SettingsIcon,
-  //   selectedIcon: SettingsIcon
-  // }
 ]) : ([
   {
     name: 'community',
