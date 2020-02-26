@@ -178,7 +178,7 @@ module.exports = {
   aws: {
     sns: {
       region: 'eu-west-1',
-      senderId: 'Fuse',
+      senderId: 'Digital Wallet',
       smsType: 'Promotional'
     }
   }
