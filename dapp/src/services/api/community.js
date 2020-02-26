@@ -9,6 +9,11 @@ export const addCommunityPlugin = (apiRoot, { communityAddress, plugin }) =>
     .send({ plugin })
     .then(response => response.body)
 
+export const updateCommunityMetadata = (apiRoot, { communityAddress, communityURI }) =>
+  request.put(`${apiRoot}/communities/${communityAddress}`)
+    .send({ communityURI })
+    .then(response => response.body)
+
 export const inviteUserToCommunity = (apiRoot, { communityAddress, email, phoneNumber }) =>
   request.post(`${apiRoot}/communities/${communityAddress}/invite`)
     .send({ email, phoneNumber })

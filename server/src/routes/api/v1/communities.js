@@ -53,6 +53,25 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
 })
 
 /**
+ * @api {put} /communities/:communityAddress Update community metadata
+ * @apiName UpdateCommunity
+ * @apiGroup Community
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {Object} community metadata to update
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "communityURI": "ipfs://hash",
+ *    }
+ */
+
+router.put('/:communityAddress', async (req, res) => {
+  const { communityAddress } = req.params
+  const { communityURI } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, { communityURI }, { new: true })
+  return res.json({ data: community })
+})
+
+/**
  * @api {post} /communities/:communityAddress/invite Invite a user to community
  * @apiName InviteUser
  * @apiGroup Community

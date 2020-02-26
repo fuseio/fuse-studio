@@ -3,7 +3,7 @@ import { connect, getIn } from 'formik'
 import { createObjectURL } from 'utils/images'
 import cameraIcon from 'images/camara.svg'
 import DefaultCover from 'images/default_cover.png'
-
+import isEmpty from 'lodash/isEmpty'
 const CoverPhoto = ({
   formik
 }) => {
@@ -20,6 +20,10 @@ const CoverPhoto = ({
   }
 
   const imageConverter = (image, field) => {
+    if (coverPhoto && !isEmpty(coverPhoto)) {
+      return
+    }
+
     let img = new window.Image()
 
     img.onload = () => {
@@ -66,7 +70,7 @@ const CoverPhoto = ({
           <img src={cameraIcon} />
         </div>
         <input accept='image/*' name='coverPhoto' id='coverPhotoUpload' type='file' style={{ opacity: '0', display: 'none' }} onChange={event => onSelectFile(event)} />
-        <img style={{ maxHeight: '100%', maxWidth: '100%', width: '100%', height: '100%' }} src={(coverPhoto && coverPhoto.croppedImageUrl)} />
+        <img style={{ maxHeight: '100%', maxWidth: '100%', width: '100%', height: '100%' }} src={(coverPhoto && coverPhoto.croppedImageUrl) ? coverPhoto.croppedImageUrl : coverPhoto} />
       </label>
     </div>
   )

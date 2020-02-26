@@ -15,6 +15,7 @@ import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchCommunity } from 'actions/token'
+import { fetchMetadata } from 'actions/metadata'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
 import { setForeignNetwork } from 'actions/network'
@@ -26,6 +27,7 @@ import Dashboard from 'components/dashboard/pages/Dashboard'
 import WhiteLabelWallet from 'components/dashboard/pages/WhiteLabelWallet'
 import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
+import SettingsPage from 'components/dashboard/pages/Settings'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
@@ -58,6 +60,7 @@ const DashboardLayout = (props) => {
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
   const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
+  const communityURI = community && community.communityURI
 
   useEffect(() => {
     if (isMobile) {
@@ -71,6 +74,12 @@ const DashboardLayout = (props) => {
       fetchEntities(communityAddress)
     }
   }, [communityAddress, accountAddress])
+
+  useEffect(() => {
+    if (communityURI) {
+      fetchMetadata(communityURI)
+    }
+  }, [communityURI])
 
   useEffect(() => {
     if (!loading) {
@@ -158,6 +167,14 @@ const DashboardLayout = (props) => {
                 {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
                   <Route exact path={`${match.path}/mintBurn`}>
                     <MintBurnPage />
+                  </Route>
+                )}
+
+                {isAdmin && (
+                  <Route exact path={`${match.path}/settings`}>
+                    <SettingsPage
+                      community={community}
+                    />
                   </Route>
                 )}
 
