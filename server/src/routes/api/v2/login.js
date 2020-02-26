@@ -41,7 +41,7 @@ router.post('/request', async (req, res) => {
  * @apiDescription Verify user phone number by SMS verification code
  *
  * @apiParam {String} phoneNumber User phone number
- * @apiParam {accountAddress} User account address
+ * @apiParam {String} accountAddress User account address
  * @apiParam {String} code SMS code recieved to user phone number
  *
  * @apiSuccess {String} token JWT token
@@ -70,7 +70,7 @@ router.post('/verify', async (req, res) => {
  * @apiGroup Login
  * @apiDescription Login using firebase ID token
  *
- * @apiParam {accountAddress} User account address
+ * @apiParam {String} accountAddress User account address
  * @apiParam {String} token Firebase ID token
  *
  * @apiSuccess {String} token JWT token
