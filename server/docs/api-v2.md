@@ -266,7 +266,7 @@ POST api/v2/login/
 ### Parameter Parameters
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| User | `accountAddress` | <p>account address</p> |
+| accountAddress | `String` | <p>User account address</p> |
 | token | `String` | <p>Firebase ID token</p> |
 
 
@@ -306,7 +306,7 @@ POST api/v2/login/verify
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | phoneNumber | `String` | <p>User phone number</p> |
-| User | `accountAddress` | <p>account address</p> |
+| accountAddress | `String` | <p>User account address</p> |
 | code | `String` | <p>SMS code recieved to user phone number</p> |
 
 
