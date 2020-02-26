@@ -6,6 +6,7 @@ const IRestrictedTokenABI = require('@constants/abi/IRestrictedToken')
 const foreignAddressess = config.get('network.foreign.addresses')
 const homeAddresses = config.get('network.home.addresses')
 const { generateSignature } = require('@utils/web3')
+const { fetchTokenData } = require('@utils/token')
 const { handleReceipt } = require('@handlers/receipts')
 const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
@@ -105,10 +106,14 @@ async function addBridgeMapping (
 
 async function deployBridge ({ home, foreign }, communityProgress) {
   const { communityAddress } = communityProgress.steps.community.results
-  const { foreignTokenAddress } = communityProgress.steps.bridge.args
+  const { foreignTokenAddress, isCustom } = communityProgress.steps.bridge.args
   const { name } = communityProgress.steps.community.args
 
-  const token = await Token.findOne({ address: foreignTokenAddress })
+  let token = await Token.findOne({ address: foreignTokenAddress })
+  if (isCustom && !token) {
+    const tokenData = await fetchTokenData(foreignTokenAddress, {}, foreign.web3)
+    token = await new Token({ address: foreignTokenAddress, networkType: foreign.networkType, tokenType: 'custom', ...tokenData }).save()
+  }
 
   const [deployForeignBridgeResponse, deployHomeBridgeResponse] = await Promise.all([
     deployForeignBridge(token, foreign),

@@ -14,7 +14,7 @@ import personImage from 'images/person.png'
 import groupImageMobile from 'images/group_mobile.png'
 import groupImage from 'images/group_image.png'
 import arrowImage from 'images/arrow_1.svg'
-import GiftIcon from 'images/gift.svg'
+import GoIcon from 'images/go.svg'
 
 import { getCommunitiesKeys } from 'selectors/accounts'
 
@@ -51,9 +51,9 @@ const HomePage = ({
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-bottom'>
           <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>
-            <h2 className='home_page__title'>Jump start<br /> your economy</h2>
+            <h2 className='home_page__title'>Use the wizard or<br /> choose a template to<br />get started on Fuse</h2>
             <p className='home_page__text'>
-              Finish the community wizard on<br /> mainnet and <span>get rewarded 100<br /> Fuse tokens <img src={GiftIcon} /></span>
+              You need an Ethereum wallet to<br /> start - mainnet fees apply, <br /><a target='_blank' href='https://docs.fuse.io/the-fuse-studio/getting-started/using-the-studio-for-free-on-ropsten'> Click here to learn how to use <br /> Ropsten for free </a><img src={GoIcon} />
             </p>
             <div className='home_page__button'>
               <button onClick={() => {

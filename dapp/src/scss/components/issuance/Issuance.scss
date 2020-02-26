@@ -526,6 +526,77 @@
               color: $color-dark;
             }
 
+            @include element(group) {
+              display: inline !important;
+
+              @include block(customToken) {
+                @include xy-grid(vertical);
+                @include flex-align(spaced, null);
+                @include breakpoint(medium up) {
+                  margin-top: 1em;
+                }
+          
+                @include breakpoint(small down) {
+                  margin-top: 2em;
+                }
+          
+                @include element(title) {
+                  font-weight: 500;
+                  font-size: 0.938em;
+                  line-height: 1.29;
+                  text-transform: capitalize;
+                  color: $color-dark;
+          
+                  @include breakpoint(small only) {
+                    margin-bottom: 1em;
+                  }
+          
+                  @include modifier(name) {
+                    font-weight: normal;
+                    color: $color-dark-gray;
+                  }
+                }
+
+                @include element(field) {
+
+                  > div:first-child {
+                    display: inline-block;
+                    width: 80%;
+                    height: 100%;
+                    padding: 0px 10px;
+                  }
+          
+                  input {
+                    width: 100%;
+                    background-color: $color-white;
+                    padding: 0 16px;
+                    font-size: 0.938em;
+                    color: $color-dark;
+                    height: 40px;
+                    border-radius: 5px;
+                    border: solid 2px $color-lighter-gray;
+          
+                    &::placeholder {
+                      color: rgba(0, 0, 0, 0.3);
+                    }
+                    &:focus {
+                      border-color: $color-light-gray;
+                    }
+          
+                    &:disabled {
+                      cursor: not-allowed;
+                    }
+                  }
+                }
+
+                @include element(button) {
+                  width: 20%;
+                  height: 100%;
+                  display: inline-block;
+                }
+              }
+            }
+
             @include element(control) {
               border: none;
               height: 100%;

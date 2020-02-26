@@ -19,11 +19,6 @@ addMethod(string, 'toCheckSum', function yupCheckSum (value, originalvalue) {
   })
 })
 
-// addMethod(string, 'toCheckSum', function yupToCheckSum () {
-//   return toChecksumAddress
-
-// })
-
 addMethod(string, 'isAddress', function yupIsAddress (address, message = 'Address is not valid') {
   return this.test({
     name: 'some',

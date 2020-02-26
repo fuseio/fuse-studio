@@ -124,6 +124,9 @@ module.exports = {
     }
   },
   agenda: {
+    args: {
+      maxConcurrency: 5
+    },
     startPeriodicTasks: true,
     tasks: {
       deploy: {
@@ -170,6 +173,7 @@ module.exports = {
     }
   },
   inviteTxt: 'Hi, a friend has invited you to Fuse',
+  inviteTxtEmail: 'Hi, a friend has invited you to Fuse. Please open this link from your mobile device',
   smsProvider: 'sns',
   phoneNumbers: {
     magic: '5555',
@@ -180,6 +184,14 @@ module.exports = {
       region: 'eu-west-1',
       senderId: 'Digital Wallet',
       smsType: 'Promotional'
+    }
+  },
+  slack: {
+    channel: 'monitor'
+  },
+  alerts: {
+    lockedAccounts: {
+      threshold: 10 // in minutes
     }
   }
 }

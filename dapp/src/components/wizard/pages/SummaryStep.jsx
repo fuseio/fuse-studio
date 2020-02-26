@@ -44,7 +44,7 @@ const SummaryStep = ({
               <CommunityLogo
                 imageUrl={images && images[chosen] && images[chosen].croppedImageUrl}
                 metadata={{
-                  isDefault: chosen !== 'custom' && !existingToken
+                  isDefault: chosen !== 'custom' && (!existingToken || existingToken.isCustom)
                 }}
                 symbol={communitySymbol}
               />

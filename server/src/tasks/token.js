@@ -41,6 +41,48 @@ const burn = withAccount(async (account, { bridgeType, tokenAddress, amount }, j
   return lockAccount({ address: from })
 })
 
+const burnFrom = withAccount(async (account, { bridgeType, tokenAddress, amount, burnFromAddress }, job) => {
+  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+  const tokenContractInstance = createContract(MintableBurnableTokenAbi, tokenAddress)
+
+  const method = createMethod(tokenContractInstance, 'burnFrom', burnFromAddress, amount)
+
+  await send(method, {
+    from: account.address
+  }, {
+    transactionHash: (hash) => {
+      job.attrs.data.txHash = hash
+      job.save()
+    }
+  })
+}, ({ from }) => {
+  return lockAccount({ address: from })
+})
+
+const adminApprove = withAccount(async (account, { bridgeType, tokenAddress, wallet, spender, amount, burnFromAddress }, job) => {
+  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+  const transferManagerContractInstance = createContract(getAbi('TransferManager'), homeAddresses.walletModules.TransferManager)
+  const method = createMethod(transferManagerContractInstance, 'approveToken', wallet, tokenAddress, spender, amount)
+
+  await send(method, {
+    from: account.address
+  }, {
+    transactionHash: (hash) => {
+      job.attrs.data.txHash = hash
+      job.save()
+    }
+  })
+
+  const { agenda } = require('@services/agenda')
+  if (burnFromAddress) {
+    const burnJob = await agenda.now('burnFrom', { tokenAddress, bridgeType, from: account.address, amount, burnFromAddress })
+    job.attrs.data.burnJobId = burnJob.attrs._id.toString()
+    job.save()
+  }
+}, ({ from }) => {
+  return lockAccount({ address: from })
+})
+
 const adminTransfer = withAccount(async (account, { bridgeType, tokenAddress, amount, wallet, to }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
   const transferManagerContractInstance = createContract(getAbi('TransferManager'), homeAddresses.walletModules.TransferManager)
@@ -62,5 +104,7 @@ const adminTransfer = withAccount(async (account, { bridgeType, tokenAddress, am
 module.exports = {
   mint,
   burn,
+  burnFrom,
+  adminApprove,
   adminTransfer
 }

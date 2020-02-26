@@ -4,7 +4,7 @@ const Agenda = require('agenda')
 const tasks = require('@tasks')
 const lodash = require('lodash')
 
-const agenda = new Agenda({ db: { address: config.get('mongo.uri'), options: config.get('mongo.options') } })
+const agenda = new Agenda({ ...config.get('agenda.args'), db: { address: config.get('mongo.uri'), options: config.get('mongo.options') } })
 
 const getConfig = (taskName) => config.has(`agenda.tasks.${taskName}`) ? config.get(`agenda.tasks.${taskName}`) : {}
 
@@ -39,6 +39,7 @@ async function start () {
     await agenda.every('10 minutes', 'processPastTokenCreatedEvents')
     await agenda.every('1 minute', 'proccessPendingTransactions')
     await agenda.every('1 minute', 'startTransfers')
+    await agenda.every('1 hour', 'lockedAccounts')
 
     await agenda.now('proccessPendingTransactions')
   }
