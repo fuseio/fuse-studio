@@ -266,9 +266,8 @@ POST api/v2/login/
 ### Parameter Parameters
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| phoneNumber | `String` | <p>User phone number</p> |
 | User | `accountAddress` | <p>account address</p> |
-| idToken | `String` | <p>Firebase ID token</p> |
+| token | `String` | <p>Firebase ID token</p> |
 
 
 ### Success 200

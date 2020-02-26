@@ -70,23 +70,19 @@ router.post('/verify', async (req, res) => {
  * @apiGroup Login
  * @apiDescription Login using firebase ID token
  *
- * @apiParam {String} phoneNumber User phone number
  * @apiParam {accountAddress} User account address
- * @apiParam {String} idToken Firebase ID token
+ * @apiParam {String} token Firebase ID token
  *
  * @apiSuccess {String} token JWT token
  */
 router.post('/', async (req, res) => {
-  const { phoneNumber, accountAddress, idToken } = req.body
+  const { accountAddress, token } = req.body
 
-  admin.auth().verifyIdToken(idToken)
+  admin.auth().verifyIdToken(token)
     .then(decodedToken => {
-      console.log({ decodedToken })
-      // TODO what's in the decodedToken ?!
       const secret = config.get('api.secret')
       const expiresIn = config.get('api.tokenExpiresIn')
-
-      const token = jwt.sign({ phoneNumber, accountAddress }, secret, {
+      const token = jwt.sign({ phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid }, secret, {
         expiresIn
       })
       res.json({ token })
