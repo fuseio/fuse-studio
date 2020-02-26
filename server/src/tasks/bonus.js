@@ -15,7 +15,7 @@ const bonus = withAccount(async (account, { communityAddress, bonusInfo }, job) 
     const originNetwork = tokens[0].originNetwork
     request.post(`${config.get('funder.urlBase')}bonus/token`, {
       json: true,
-      body: { accountAddress: bonusInfo.receiver, tokenAddress, originNetwork, bonusInfo }
+      body: { phoneNumber: bonusInfo.phoneNumber, accountAddress: bonusInfo.receiver, tokenAddress, originNetwork, bonusInfo }
     }, (err, response, body) => {
       if (err) {
         console.error(`Error on token bonus for wallet: ${bonusInfo.receiver}`, err)

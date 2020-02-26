@@ -144,6 +144,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     return res.status(400).json({ error: msg })
   }
   const bonusInfo = {
+    phoneNumber,
     receiver: inviterUserWallet.walletAddress,
     bonusType: 'plugins.inviteBonus.inviteInfo'
   }
@@ -188,6 +189,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
   }
 
   const bonusInfo = {
+    phoneNumber,
     receiver: walletAddress,
     bonusType: 'plugins.backupBonus.backupInfo',
     bonusId: phoneNumber
