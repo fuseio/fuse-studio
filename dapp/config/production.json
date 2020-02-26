@@ -42,7 +42,7 @@
       "testMode": false
     }
   },
-  "debugTrace": true,
+  "debugTrace": false,
   "ipfsProxy": {
     "urlBase": "https://ipfs-proxy.fuse.io/api"
   },
