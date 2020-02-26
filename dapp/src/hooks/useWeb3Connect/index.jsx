@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import Web3Connect from 'web3connect'
-import Portis from '@portis/web3'
+// import Portis from '@portis/web3'
 import Torus from '@toruslabs/torus-embed'
 
 const providerOptions = {
   metamask: {
   },
-  portis: {
-    package: Portis,
-    options: {
-      id: CONFIG.web3.portis.id
-    }
-  },
+  // portis: {
+  //   package: Portis,
+  //   options: {
+  //     id: CONFIG.web3.portis.id
+  //   }
+  // },
   torus: {
     package: Torus, // required
     options: {
