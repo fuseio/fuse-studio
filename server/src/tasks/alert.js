@@ -13,7 +13,7 @@ const lockedAccounts = async () => {
   const now = moment()
   const threshold = config.get('alerts.lockedAccounts.threshold')
   const network = config.get('network.foreign.name')
-  const msgPrefix = `*${environment.toUpperCase()}-${network.toUpperCase}*`
+  const msgPrefix = `*${environment.toUpperCase()}-${network.toUpperCase()}*`
   let msg
   accounts.forEach(account => {
     if (account.lockingTime) {
