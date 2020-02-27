@@ -77,9 +77,10 @@ const relay = withAccount(async (account, { walletAddress, methodData, nonce, ga
         const token = await fetchTokenByCommunity(params._community)
         const tokenAddress = web3.utils.toChecksumAddress(token.address)
         const { originNetwork } = token
+        const { phoneNumber } = await UserWallet.findOne({ walletAddress })
         request.post(`${config.get('funder.urlBase')}fund/token`, {
           json: true,
-          body: { accountAddress: walletAddress, tokenAddress, originNetwork }
+          body: { phoneNumber, accountAddress: walletAddress, tokenAddress, originNetwork }
         }, (err, response, body) => {
           if (err) {
             console.error(`Error on token funding for wallet: ${wallet}`, err)
