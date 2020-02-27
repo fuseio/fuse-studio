@@ -81,7 +81,7 @@ const Users = ({
         const metadata = users[metadataAddress]
         return ({
           isApproved,
-          isAdmin,
+          hasAdminRole: isAdmin,
           createdAt: new Date(createdAt * 1000).toUTCString(),
           name: metadata
             ? [
@@ -214,9 +214,9 @@ const Users = ({
                 {
                   hasAdminRole && isApproved && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
-                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>}
                     </ul>
                   )
                 }
@@ -224,16 +224,16 @@ const Users = ({
                   hasAdminRole && !isApproved && (
                     <ul className='more__options'>
                       <li className='more__options__item' onClick={() => handleConfirmUser(address)}>Confirm</li>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
-                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>}
                     </ul>
                   )
                 }
                 {
                   !hasAdminRole && isApproved && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
                       <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                     </ul>
