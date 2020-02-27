@@ -16,6 +16,8 @@ import useOutsideClick from 'hooks/useOutsideClick'
 import { getCurrentNetworkType } from 'selectors/network'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
+import { loadModal } from 'actions/ui'
+import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
 
 const NavBar = ({
   accountAddress,
@@ -25,7 +27,8 @@ const NavBar = ({
   logout,
   web3connect,
   foreignToken,
-  location
+  location,
+  loadModal
 }) => {
   const isInCommunityPage = location.pathname.includes('/community/')
   const isInIssuancePage = location.pathname.includes('/issuance')
@@ -63,6 +66,10 @@ const NavBar = ({
   const openHelp = (e) => {
     e.stopPropagation()
     setHelpOpen(!isHelpOpen)
+  }
+
+  const handleConnect = (e) => {
+    loadModal(WEB3_CONNECT_MODAL, { web3connect })
   }
 
   const isGreaterThen70 = () => scrollY > 70
@@ -112,7 +119,7 @@ const NavBar = ({
               <span className='animate'>.</span>
             </div>
           ) : (
-            <div className='navbar__links__wallet' onClick={() => web3connect.toggleModal()}>
+            <div className='navbar__links__wallet' onClick={handleConnect}>
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>Connect wallet</span>
             </div>
@@ -132,7 +139,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  push
+  push,
+  loadModal
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar))

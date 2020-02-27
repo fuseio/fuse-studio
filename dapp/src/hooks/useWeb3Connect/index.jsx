@@ -42,7 +42,7 @@ const useWeb3Connect = ({ latestProvider }, connectCallback) => {
     web3Connect.toggleModal()
   }
 
-  return { provider, toggleModal }
+  return { provider, toggleModal, core: web3Connect }
 }
 
 export default useWeb3Connect
