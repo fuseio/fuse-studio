@@ -207,6 +207,7 @@ const Users = ({
                       <li className='more__options__item' onClick={() => handleConfirmUser(address)}>Confirm</li>
                       <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                       <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
                     </ul>
                   )
                 }
@@ -240,7 +241,21 @@ const Users = ({
                 }
               </div>
             </div>
-          ) : null
+          ) : (<div className='table__body__cell__more'>
+            <div className='table__body__cell__more__toggler'>
+              <img src={dotsIcon} />
+            </div>
+            <div className='more' onClick={e => e.stopPropagation()}>
+              {
+                !isApproved && !hasAdminRole && (
+                  <ul className='more__options'>
+                    <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
+                  </ul>
+                )
+              }
+            </div>
+          </div>
+          )
         )
       }
     }
