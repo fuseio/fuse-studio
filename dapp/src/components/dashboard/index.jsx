@@ -32,6 +32,8 @@ import PluginsPage from 'components/dashboard/pages/Plugins'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
 import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
+import InviteBonusPage from 'components/dashboard/pages/InviteBonus'
+import BackupBonusPage from 'components/dashboard/pages/BackupBonus'
 import OnRampPage from 'components/dashboard/pages/OnRamp'
 import WalletBannerLinkPage from 'components/dashboard/pages/WalletBannerLink'
 
@@ -143,6 +145,25 @@ const DashboardLayout = (props) => {
                     />
                   </Route>
                 )}
+
+                {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
+                  <Route exact path={`${match.path}/invite-bonus`}>
+                    <InviteBonusPage
+                      match={match}
+                      community={community}
+                    />
+                  </Route>
+                )}
+
+                {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
+                  <Route exact path={`${match.path}/backup-bonus`}>
+                    <BackupBonusPage
+                      match={match}
+                      community={community}
+                    />
+                  </Route>
+                )}
+
                 {community && isAdmin && (
                   <Route exact path={`${match.path}/onramp`}
                     render={() => (

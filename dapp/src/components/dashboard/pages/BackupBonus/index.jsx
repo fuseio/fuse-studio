@@ -18,7 +18,7 @@ import { getHomeTokenByCommunityAddress } from 'selectors/token'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
-const JoinBonus = ({
+const BackupBonus = ({
   error,
   networkType,
   community,
@@ -40,7 +40,7 @@ const JoinBonus = ({
 
   const { plugins } = community
 
-  const { joinBonus } = plugins
+  const { backupBonus } = plugins
 
   const [transferMessage, setTransferMessage] = useState(false)
 
@@ -85,7 +85,7 @@ const JoinBonus = ({
   return (
     community ? <div className='join_bonus__wrapper'>
       <div className='join_bonus'>
-        <h2 className='join_bonus__main-title join_bonus__main-title--white'>Join bonus</h2>
+        <h2 className='join_bonus__main-title join_bonus__main-title--white'>Backup bonus</h2>
         <div style={{ position: 'relative' }}>
           <TransferToFunderForm
             isTransfer={isTransfer}
@@ -106,11 +106,11 @@ const JoinBonus = ({
             networkType={networkType}
             hasFunderBalance={funderBalance && funderBalance !== '0'}
             initialValues={{
-              amount: get(joinBonus, 'joinInfo.amount', '')
+              amount: get(backupBonus, 'backupInfo.amount', '')
             }}
             communityAddress={communityAddress}
-            setBonus={(amount) => setBonus('joinBonus', amount)}
-            text='How much tokens you want to reward new user community?'
+            setBonus={(amount) => setBonus('backupBonus', amount)}
+            text='How much tokens you want to reward for backup?'
           />
         </div>
       </div>
@@ -134,4 +134,4 @@ const mapDispatchToState = {
   loadModal
 }
 
-export default connect(mapStateToProps, mapDispatchToState)(JoinBonus)
+export default connect(mapStateToProps, mapDispatchToState)(BackupBonus)
