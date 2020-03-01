@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="44px" viewBox="0 0 28 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>icons8-ethereum</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New-studio-home-page-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Fuse-connect-wallet" transform="translate(-621.000000, -649.000000)" fill-rule="nonzero">
+            <g id="icons8-ethereum" transform="translate(621.000000, 649.000000)">
+                <polygon id="Path" fill="#9FA8DA" points="0 22 14 0 28 22 14 30"></polygon>
+                <polygon id="Path" fill="#7986CB" points="14 0 28 22 14 30"></polygon>
+                <polygon id="Path" fill="#9FA8DA" points="0 25 14 33 28 25 14 44"></polygon>
+                <path d="M14,33 L28,25 L14,44 L14,33 Z M0,22 L14,16 L28,22 L14,30 L0,22 Z" id="Shape" fill="#7986CB"></path>
+                <polygon id="Path" fill="#5C6BC0" points="14 16 28 22 14 30"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

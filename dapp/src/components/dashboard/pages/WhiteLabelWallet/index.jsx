@@ -9,7 +9,7 @@ import { getHomeTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
 
 import AppleDownload from 'images/apple.svg'
-import GoogleDownload from 'images/google.svg'
+import GoogleDownload from 'images/google-play.svg'
 
 const WhiteLabelWallet = ({ value, communityAddress }) => {
   return (
