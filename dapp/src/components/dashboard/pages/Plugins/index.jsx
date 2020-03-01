@@ -8,12 +8,14 @@ import { addCommunityPlugin } from 'actions/community'
 import Puzzle from 'images/puzzle.svg'
 import JoinBonus from 'images/join_bonus.png'
 import JoinBonusBig from 'images/join_bonus_big.png'
+import BackupBonus from 'images/backup_bonus.png'
+import BackupBonusBig from 'images/backup-bonus-big.png'
+import InviteBonus from 'images/invite_bonus.png'
+import InviteBonusBig from 'images/invite-bonus-big.png'
 import BusinessList from 'images/business_list.png'
 import BusinessListBig from 'images/business_list_big.png'
 import FiatOnRamp from 'images/fiat-on-ramp.png'
 import FiatOnRampBig from 'images/fiat-on-ramp-big.png'
-import Bounty from 'images/bounty.png'
-import BountyBig from 'images/bounty_big.png'
 import WalletBannerLink from 'images/wallet_banner_link.png'
 import WalletBannerLinkBig from 'images/wallet_banner_link_big.png'
 
@@ -26,12 +28,37 @@ const generalPlugins = ([
     content: `The business list allows to add new businesses to the community contract with all the meta-data of the business. After adding a business trough the interface your users will see the business list on their phone after switching to your community.`
   },
   {
+    title: 'Wallet banner link',
+    coverImage: WalletBannerLink,
+    disabled: false,
+    modalCoverPhoto: WalletBannerLinkBig,
+    content: `The wallet banner plug-in lets you insert any image with a link to any webpage and it will be shown to all the users that joined your community.
+    For example, if your community has a bulletin board, or a shopping cart, or a Facebook page you can link it here so your users will find it.`,
+    key: 'walletBanner'
+  },
+  {
     title: 'Join bonus',
     coverImage: JoinBonus,
     modalCoverPhoto: JoinBonusBig,
     key: 'joinBonus',
     content: `The join bonus is contract of a funder account that rewards your new users with your token. The join bonus adds a new funder account address in your user list and opens a new menu item on the left where you can send the funder some tokens and turn it on by choosing the text, amount and activating the plug-in.
     Then your users can get the bonus after installing the Fuse app and joining your community.`
+  },
+  {
+    title: 'Backup bonus',
+    coverImage: BackupBonus,
+    modalCoverPhoto: BackupBonusBig,
+    key: 'backupBonus',
+    content: `The backup bonus is contract of a funder account that rewards your users for backuping their mnemonic. The backup bonus adds a new funder account address in your user list and opens a new menu item on the left where you can send the funder some tokens and turn it on by choosing the text, amount and activating the plug-in.
+    Then your users can get the bonus after joining your community and backuping their mnemonic.`
+  },
+  {
+    title: 'Invite bonus',
+    coverImage: InviteBonus,
+    modalCoverPhoto: InviteBonusBig,
+    key: 'inviteBonus',
+    content: `The invite bonus is contract of a funder account that rewards your new users with your token. The invite bonus adds a new funder account address in your user list and opens a new menu item on the left where you can send the funder some tokens and turn it on by choosing the text, amount and activating the plug-in.
+    Then your users can get the bonus after installing joining your community and inviting their friend to the community.`
   },
   {
     title: 'Fiat on ramp',
@@ -43,23 +70,6 @@ const generalPlugins = ([
       The integration allows your users to top their account without you holding any custody in the process! Here is how:
       https://www.youtube.com/watch?v=ShxUIljvfLU&feature=emb_title`,
     key: 'onramp'
-  },
-  {
-    title: 'Wallet banner link',
-    coverImage: WalletBannerLink,
-    disabled: false,
-    modalCoverPhoto: WalletBannerLinkBig,
-    content: `The wallet banner plug-in lets you insert any image with a link to any webpage and it will be shown to all the users that joined your community.
-    For example, if your community has a bulletin board, or a shopping cart, or a Facebook page you can link it here so your users will find it.`,
-    key: 'walletBanner'
-  },
-  {
-    title: 'Bounty',
-    subTitle: ' | Coming soon!',
-    coverImage: Bounty,
-    disabled: true,
-    modalCoverPhoto: BountyBig,
-    key: 'bounty'
   }
 ])
 

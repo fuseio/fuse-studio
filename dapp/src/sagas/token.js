@@ -4,7 +4,7 @@ import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
-import { ADD_COMMUNITY_PLUGIN, SET_JOIN_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA } from 'actions/community'
+import { ADD_COMMUNITY_PLUGIN, SET_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -328,7 +328,7 @@ function * transferTokenToFunder ({ tokenAddress, value }) {
   })
 }
 
-function * setJoinBonus ({ amount }) {
+function * setBonus ({ amount, bonusType }) {
   const communityAddress = yield select(getCommunityAddress)
   const isMemberOfCommunity = yield select(checkIsFunderPartOfCommunity)
   if (!isMemberOfCommunity) {
@@ -344,12 +344,21 @@ function * setJoinBonus ({ amount }) {
     yield transactionPromise
   }
 
-  yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: 'joinBonus', isActive: amount > 0, joinInfo: { amount: amount.toString() } } })
+  const infoFieldsMapping = {
+    inviteBonus: 'inviteInfo',
+    backupBonus: 'backupInfo',
+    joinBonus: 'joinInfo'
+  }
+
+  const infoField = infoFieldsMapping[bonusType]
+
+  yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: bonusType, isActive: amount > 0, [infoField]: { amount: amount.toString() } } })
 
   yield put({
-    type: SET_JOIN_BONUS.SUCCESS
+    type: SET_BONUS.SUCCESS
   })
 }
+
 
 export function * setWalletBannerLink ({ link, walletBanner }) {
   const plugin = { name: 'walletBanner', link, isActive: true }
@@ -410,7 +419,7 @@ export default function * tokenSaga () {
     takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),
     tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
-    tryTakeEvery(SET_JOIN_BONUS, setJoinBonus, 1),
+    tryTakeEvery(SET_BONUS, setBonus, 1),
     tryTakeEvery(actions.FETCH_FEATURED_COMMUNITIES, fetchFeaturedCommunities),
     takeEvery(action => /^(FETCH_FEATURED_COMMUNITIES|FETCH_COMMUNITIES).*SUCCESS/.test(action.type), watchCommunities)
   ])

@@ -22,6 +22,20 @@ const allPlugins = (isAdmin) => isAdmin ? ({
     icon: JoinBonusIcon,
     selectedIcon: JoinBonusYellowIcon
   },
+  backupBonus: {
+    name: 'Backup bonus',
+    path: '/backup-bonus',
+    url: (match) => `${match}/backup-bonus`,
+    icon: JoinBonusIcon,
+    selectedIcon: JoinBonusYellowIcon
+  },
+  inviteBonus: {
+    name: 'Invite bonus',
+    path: '/invite-bonus',
+    url: (match) => `${match}/invite-bonus`,
+    icon: JoinBonusIcon,
+    selectedIcon: JoinBonusYellowIcon
+  },
   onramp: {
     name: 'Fiat on ramp',
     path: '/onramp',
