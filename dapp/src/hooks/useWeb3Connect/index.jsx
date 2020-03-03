@@ -22,10 +22,6 @@ const providerOptions = {
   }
 }
 
-// const getProviderOptions = (latestProvider) => latestProvider && providerOptions[latestProvider]
-//   ? { [latestProvider]: providerOptions[latestProvider], disableInjectedProvider: latestProvider !== 'metamask' }
-//   : providerOptions
-
 const useWeb3Connect = (connectCallback) => {
   const [provider, setProvider] = useState()
 
