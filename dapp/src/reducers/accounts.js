@@ -42,7 +42,6 @@ export default (state = {}, action) => {
   }
 
   if (action.type === FETCH_FEATURED_COMMUNITIES.SUCCESS) {
-    // debugger
     return { ...state, featuredCommunities: union(state.featuredCommunities, action.response.result) }
   }
 
