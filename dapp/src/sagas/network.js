@@ -85,9 +85,6 @@ function * connectToWallet () {
     }
 
     const providerInfo = getProviderInfo(provider)
-    const latestProvider = getProviderName(providerInfo)
-
-    saveState('state.latestProvider', latestProvider)
 
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
