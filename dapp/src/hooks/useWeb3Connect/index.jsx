@@ -22,15 +22,16 @@ const providerOptions = {
   }
 }
 
-const getProviderOptions = (latestProvider) => latestProvider && providerOptions[latestProvider]
-  ? { [latestProvider]: providerOptions[latestProvider], disableInjectedProvider: latestProvider !== 'metamask' }
-  : providerOptions
+// const getProviderOptions = (latestProvider) => latestProvider && providerOptions[latestProvider]
+//   ? { [latestProvider]: providerOptions[latestProvider], disableInjectedProvider: latestProvider !== 'metamask' }
+//   : providerOptions
 
-const useWeb3Connect = ({ latestProvider }, connectCallback) => {
+const useWeb3Connect = (connectCallback) => {
   const [provider, setProvider] = useState()
 
   const web3Connect = new Web3Connect.Core({
-    providerOptions: getProviderOptions(latestProvider)
+    providerOptions,
+    cacheProvider: true
   })
 
   web3Connect.on('connect', async (response) => {
