@@ -3,6 +3,7 @@ import { LOGIN, IS_USER_EXISTS } from 'actions/user'
 import { FETCH_FEATURED_COMMUNITIES } from 'actions/token'
 import { CHECK_ACCOUNT_CHANGED, CONNECT_TO_WALLET } from 'actions/network'
 import pick from 'lodash/pick'
+import union from 'lodash/union'
 
 export const initialAccount = {
   balances: {},
@@ -41,7 +42,7 @@ export default (state = {}, action) => {
   }
 
   if (action.type === FETCH_FEATURED_COMMUNITIES.SUCCESS) {
-    return { ...state, featuredCommunities: [...action.response.result] }
+    return { ...state, featuredCommunities: union(state.featuredCommunities, action.response.result) }
   }
 
   if (action.type === actions.GET_INITIAL_ADDRESS.SUCCESS) {

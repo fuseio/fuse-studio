@@ -7,7 +7,6 @@ import { connect } from 'react-redux'
 import sortBy from 'lodash/sortBy'
 import identity from 'lodash/identity'
 import MyTable from 'components/dashboard/components/Table'
-// import { useFetch } from 'hooks/useFetch'
 
 import {
   addEntity,
@@ -25,8 +24,6 @@ import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import { getTransaction } from 'selectors/transaction'
 
-// import { getApiRoot } from 'utils/network'
-// import { getForeignNetwork } from 'selectors/network'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'

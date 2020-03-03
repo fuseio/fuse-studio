@@ -20,7 +20,8 @@ const FeaturedCommunities = memo(({
   const [value, onChange] = useState(0)
 
   useEffect(() => {
-    fetchFeaturedCommunities()
+    fetchFeaturedCommunities({ networkType: 'main' })
+    fetchFeaturedCommunities({ networkType: 'ropsten' })
     return () => { }
   }, [])
 
@@ -94,6 +95,8 @@ const FeaturedCommunities = memo(({
   }
   return true
 })
+
+FeaturedCommunities.displayName = 'FeaturedCommunities'
 
 const mapStateToProps = state => ({
   tokens: state.entities.tokens,

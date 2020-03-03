@@ -78,7 +78,7 @@ export const createEntitiesFetch = (action, apiFunc) => function * (params) {
     throw Error(`No entity name given for action ${action.REQUEST}`)
   }
 
-  const response = yield apiCall(apiFunc, params)
+  const response = yield apiCall(apiFunc, params, params.options)
 
   const { data, ...metadata } = response
 
