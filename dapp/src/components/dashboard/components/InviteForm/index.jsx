@@ -31,7 +31,7 @@ class Invite extends Component {
     return (
       <form onSubmit={handleSubmit} className='invite'>
         <div className='invite__wrapper'>
-          <div className='invite__title'>Smart invite link</div>
+          <div className='invite__title'>Get a smart invite link to your phone</div>
           <div className='invite__containerOuter'>
             <div className='containerInner'>
               <Field
