@@ -199,8 +199,6 @@
 }
 
 @include block(qr-code) {
-  @include xy-grid();
-  @include flex-align(justify, middle);
   border-radius: 5px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   background-color: $color-white;
@@ -220,6 +218,11 @@
   @include element(wrapper) {
   }
 
+  @include element(main) {
+    @include xy-grid();
+    @include flex-align(justify, middle);
+  }
+
   @include element(steps) {
     list-style-type: decimal;
 
@@ -234,6 +237,12 @@
         }
       }
     }
+  }
+
+  @include element (desc) {
+    color: $color-dark;
+    padding-top: 20px;
+    font-weight: 500;
   }
 
   @include element(header) {
