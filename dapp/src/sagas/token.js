@@ -379,7 +379,7 @@ function * watchCommunities ({ response }) {
   for (let account of result) {
     const entity = entities[account]
     if (entity && entity.foreignTokenAddress) {
-      yield put(actions.fetchToken(entity.foreignTokenAddress))
+      yield put(actions.fetchToken(entity.foreignTokenAddress, entity.originNetwork && { networkType: entity.originNetwork }))
     }
 
     if (entity && entity.communityURI) {
