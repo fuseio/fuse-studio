@@ -12,7 +12,7 @@ const UserWalletSchema = new Schema({
   walletFactoryCurrentAddress: { type: String },
   walletImplementationOriginalAddress: { type: String },
   walletImplementationCurrentAddress: { type: String },
-  walletModules: [{ type: Object }],
+  walletModules: { type: Object },
   salt: { type: String, default: null },
   networks: [{ type: String }]
 }, { timestamps: true })

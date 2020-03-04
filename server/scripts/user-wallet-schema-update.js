@@ -16,18 +16,19 @@ const homeAddresses = config.get('network.home.addresses')
 run()
 
 async function run () {
-  const userWallets = await UserWallet.find()
-  console.log(`found ${userWallets.length} user wallets`)
-  userWallets.forEach(async wallet => {
-    await UserWallet.findOneAndUpdate({
-      _id: mongoose.Types.ObjectId(wallet._id)
-    }, {
+  await UserWallet.updateMany(
+    { }, {
       walletFactoryOriginalAddress: homeAddresses.WalletFactory,
       walletFactoryCurrentAddress: homeAddresses.WalletFactory,
       walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
       walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
       walletModules: homeAddresses.walletModules,
       networks: ['fuse']
+    }, err => {
+      if (err) {
+        console.error(err)
+      } else {
+        console.log('done')
+      }
     })
-  })
 }
