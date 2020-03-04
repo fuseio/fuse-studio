@@ -9,6 +9,7 @@
     "home": {
       "sharedAddresses": {
         "WalletFactory": "0xe02A2163629174937487f994E20214631540fB65",
+        "WalletImplementation": "0xBe724f65dfc1fF16a6607C920948267453837c0D",
         "CommunityFactory": "0x0F7bD61dE50Aa24A4c4C6bd2111E54Cae92bf33a",
         "MultiSigWallet": "0x94AfC8B0c3843Bd2a50f84D3B871aEa920653245",
         "walletModules": {

@@ -1,4 +1,5 @@
 const config = require('config')
+const homeAddresses = config.get('network.home.addresses')
 const router = require('express').Router()
 const { agenda } = require('@services/agenda')
 const { web3 } = require('@services/web3/home')
@@ -30,7 +31,16 @@ router.post('/', auth.required, async (req, res, next) => {
       const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress}`
       return res.status(400).json({ error: msg })
     } else {
-      await new UserWallet({ phoneNumber, accountAddress }).save()
+      await new UserWallet({
+        phoneNumber,
+        accountAddress,
+        walletFactoryOriginalAddress: homeAddresses.WalletFactory,
+        walletFactoryCurrentAddress: homeAddresses.WalletFactory,
+        walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
+        walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+        walletModules: homeAddresses.walletModules,
+        networks: ['fuse']
+      }).save()
       const job = await agenda.now('createWallet', { owner: accountAddress })
       return res.json({ job: job.attrs })
     }
@@ -132,7 +142,16 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
 
   const userWallet = await UserWallet.findOne({ phoneNumber: req.params.phoneNumber })
   if (!userWallet) {
-    await new UserWallet({ phoneNumber: req.params.phoneNumber, accountAddress: owner }).save()
+    await new UserWallet({
+      phoneNumber: req.params.phoneNumber,
+      accountAddress: owner,
+      walletFactoryOriginalAddress: homeAddresses.WalletFactory,
+      walletFactoryCurrentAddress: homeAddresses.WalletFactory,
+      walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
+      walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+      walletModules: homeAddresses.walletModules,
+      networks: ['fuse']
+    }).save()
   } else if (userWallet.walletAddress) {
     const msg = `User ${req.params.phoneNumber} already has wallet account: ${userWallet.walletAddress}`
     return res.status(400).json({ error: msg })

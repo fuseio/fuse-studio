@@ -1,3 +1,5 @@
+const config = require('config')
+const homeAddresses = config.get('network.home.addresses')
 const router = require('express').Router()
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
@@ -27,7 +29,16 @@ router.post('/create', auth.required, async (req, res) => {
   }
   const { phoneNumber } = req.body
 
-  await new UserWallet({ phoneNumber, accountAddress }).save()
+  await new UserWallet({
+    phoneNumber,
+    accountAddress,
+    walletFactoryOriginalAddress: homeAddresses.WalletFactory,
+    walletFactoryCurrentAddress: homeAddresses.WalletFactory,
+    walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
+    walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+    walletModules: homeAddresses.walletModules,
+    networks: ['fuse']
+  }).save()
 
   const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber })
 
