@@ -8,10 +8,15 @@ const initAdmin = async () => {
   admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(SecretString))
   })
+  const { RoostSecretString } = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdRoost }).promise()
+  roostAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(RoostSecretString))
+  }, "Roost")
 }
 
 initAdmin()
 
 module.exports = {
-  admin
+  admin,
+  roostAdmin
 }
