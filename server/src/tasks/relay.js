@@ -5,7 +5,7 @@ const { createNetwork } = require('@utils/web3')
 const { GraphQLClient } = require('graphql-request')
 const request = require('request-promise-native')
 const mongoose = require('mongoose')
-const { admin } = require('@services/firebase')
+const { getAdmin } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 
 const graphClient = new GraphQLClient(config.get('graph.url'))
@@ -31,7 +31,7 @@ const fetchToken = async (tokenAddress) => {
   return token
 }
 
-const notifyReceiver = async ({ senderAddress, receiverAddress, tokenAddress, amountInWei }) => {
+const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName }) => {
   const receiverWallet = await UserWallet.findOne({ walletAddress: receiverAddress })
   const firebaseToken = lodash.get(receiverWallet, 'firebaseToken')
   if (firebaseToken) {
@@ -45,13 +45,13 @@ const notifyReceiver = async ({ senderAddress, receiverAddress, tokenAddress, am
       token: firebaseToken
     }
     console.log(`Sending tokens receive push message to ${receiverWallet.phoneNumber} via firebase token ${firebaseToken}`)
-    admin.messaging().send(message)
+    getAdmin(appName).messaging().send(message)
   } else {
     console.warn(`No firebase token found for ${receiverAddress} wallet address`)
   }
 }
 
-const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule }, job) => {
+const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule, appName }, job) => {
   const { web3, createContract, createMethod, send } = createNetwork('home', account)
   const walletABI = require(`@constants/abi/${walletModule}`)
   const contract = createContract(walletABI, homeAddresses.walletModules[walletModule])
@@ -98,7 +98,7 @@ const relay = withAccount(async (account, { walletAddress, methodData, nonce, ga
       }
     } else if (walletModule === 'TransferManager') {
       const { _to, _amount, _token, _wallet } = getParamsFromMethodData(web3, walletABI, 'transferToken', methodData)
-      notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount })
+      notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount, appName })
         .catch(console.error)
     }
   } else {

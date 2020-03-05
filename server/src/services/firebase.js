@@ -18,7 +18,15 @@ const initAdmin = async () => {
 
 initAdmin()
 
+const getAdmin = (appName) => {
+  if (appName === 'Roost') {
+    return roostAdmin
+  } else {
+    return admin
+  }
+}
 module.exports = {
   admin,
+  getAdmin,
   roostAdmin
 }
