@@ -2,7 +2,7 @@ const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
 const smsProvider = require('@utils/smsProvider')
-const { admin , roostAdmin } = require('@services/firebase')
+const { getAdmin } = require('@services/firebase')
 
 /**
  * @api {post} api/v2/login/request Request a verification code
@@ -68,13 +68,13 @@ router.post('/verify', async (req, res) => {
  * @apiSuccess {String} token JWT token
  */
 router.post('/', async (req, res) => {
-  const { accountAddress, token , appName} = req.body
-  const manager = appName == "Roost" ? roostAdmin : admin
+  const { accountAddress, token, appName } = req.body
+  const manager = getAdmin(appName)
   manager.auth().verifyIdToken(token)
     .then(decodedToken => {
       const secret = config.get('api.secret')
       const expiresIn = config.get('api.tokenExpiresIn')
-      const token = jwt.sign({ phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid }, secret, {
+      const token = jwt.sign({ phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid, appName }, secret, {
         expiresIn
       })
       res.json({ token })
