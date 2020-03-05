@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
 import { transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
+import { joinCommunity } from 'actions/communityEntities'
 import { WRONG_NETWORK_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
@@ -79,6 +80,11 @@ class Dashboard extends Component {
       return {}
     }
   }
+  handleJoinCommunity = () => {
+    this.props.push(`${this.props.pathname}/users`)
+    debugger
+    this.props.joinCommunity(this.props.community.communityAddress)
+  }
 
   render () {
     const {
@@ -106,6 +112,7 @@ class Dashboard extends Component {
           name={community && community.name}
           networkType={networkType}
           token={foreignToken}
+          handleJoinCommunity={this.handleJoinCommunity}
         />
         <CommunityInfo
           tokensTotalSupplies={dashboard && dashboard.totalSupply}
@@ -148,7 +155,8 @@ const mapStateToProps = (state) => ({
   foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)),
   dashboard: state.screens.dashboard,
   ...state.screens.token,
-  ...getTransaction(state, state.screens.token.transactionHash)
+  ...getTransaction(state, state.screens.token.transactionHash),
+  pathname: state.router.location.pathname
 })
 
 const mapDispatchToProps = {
@@ -159,7 +167,8 @@ const mapDispatchToProps = {
   mintToken,
   burnToken,
   clearTransactionStatus,
-  push
+  push,
+  joinCommunity
 }
 
 export default connect(

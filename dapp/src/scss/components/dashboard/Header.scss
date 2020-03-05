@@ -79,6 +79,14 @@
         width: 2px;
       }
     }
-    
+  }
+
+  @include element(button) {
+    margin-left: auto;
+    > button {
+      background-color: $color-light-dark;
+      color: $color-white;
+      padding: 10px;
+    }
   }
 }

@@ -156,7 +156,9 @@ function * addEntity ({ communityAddress, data, isClosed, entityType }) {
 
 function * joinCommunity ({ communityAddress, data }) {
   const accountAddress = yield select(getAccountAddress)
-  yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+  if (data) {
+    yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+  }
 
   const web3 = yield getWeb3()
   const networkVersion = getNetworkVersion(web3)
