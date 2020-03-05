@@ -9,7 +9,8 @@
     "secrets": {
       "secretId": "COMMUNITY_AWS_SECRET_ID",
       "firebaseSecretId": "COMMUNITY_AWS_FIREBASE_SECRET_ID",
-       "manager": {
+      "firebaseSecretIdRoost": "COMMUNITY_AWS_FIREBASE_SECRET_ID_ROOST",
+      "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
     },
