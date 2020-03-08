@@ -18907,6 +18907,11 @@
         "symbol-observable": "^1.2.0"
       }
     },
+    "redux-catch": {
+      "version": "1.3.1",
+      "resolved": "https://registry.npmjs.org/redux-catch/-/redux-catch-1.3.1.tgz",
+      "integrity": "sha1-QDd3Yy5JXeOK2wlTwh9Eu6nR3gg="
+    },
     "redux-devtools": {
       "version": "3.5.0",
       "resolved": "https://registry.npmjs.org/redux-devtools/-/redux-devtools-3.5.0.tgz",
