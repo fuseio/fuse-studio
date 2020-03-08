@@ -49,7 +49,7 @@ const Businesses = ({
   const [businesses, setBusinesses] = useState()
   const [users, setUsers] = useState([])
 
-  const [transcactionTitle, setTransactionTitle] = useState()
+  const [transactionTitle, setTransactionTitle] = useState()
 
   useEffect(() => {
     businessesAccounts.forEach((address) => {
@@ -250,7 +250,7 @@ const Businesses = ({
       <div className='entities__wrapper'>
         {renderTable()}
         <TransactionMessage
-          title={transcactionTitle}
+          title={transactionTitle}
           message={signatureNeeded ? 'Please sign with your wallet' : 'Pending'}
           isOpen={showTransactionMessage}
           isDark

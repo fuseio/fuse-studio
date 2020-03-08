@@ -83,10 +83,17 @@
 
   @include element(button) {
     margin-left: auto;
+    margin-top: auto;
+
     > button {
       background-color: $color-light-dark;
       color: $color-white;
       padding: 10px;
+      font-size: 0.85em;
+
+      > img {
+        padding-right: 5px;
+      }
     }
   }
 }

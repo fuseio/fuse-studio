@@ -16,7 +16,7 @@ import { push } from 'connected-react-router'
 import { getForeignNetwork } from 'selectors/network'
 import SignIn from 'components/common/SignIn'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
-import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { getEntity, getCommunityAddress } from 'selectors/entities'
 import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 
@@ -82,7 +82,6 @@ class Dashboard extends Component {
   }
   handleJoinCommunity = () => {
     this.props.push(`${this.props.pathname}/users`)
-    debugger
     this.props.joinCommunity(this.props.community.communityAddress)
   }
 
@@ -95,8 +94,9 @@ class Dashboard extends Component {
       metadata,
       networkType,
       tokenOfCommunityOnCurrentSide,
-      isAdmin
+      userEntity
     } = this.props
+    const isAdmin = userEntity && userEntity.isAdmin
 
     return (
       (community && foreignToken) ? <React.Fragment>
@@ -112,7 +112,7 @@ class Dashboard extends Component {
           name={community && community.name}
           networkType={networkType}
           token={foreignToken}
-          handleJoinCommunity={this.handleJoinCommunity}
+          handleJoinCommunity={userEntity ? undefined : this.handleJoinCommunity}
         />
         <CommunityInfo
           tokensTotalSupplies={dashboard && dashboard.totalSupply}
@@ -149,7 +149,7 @@ class Dashboard extends Component {
 const mapStateToProps = (state) => ({
   tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
-  isAdmin: checkIsAdmin(state),
+  userEntity: getEntity(state),
   tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state)),
   accountAddress: getAccountAddress(state),
   foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)),

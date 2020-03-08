@@ -1,6 +1,7 @@
 import React from 'react'
 import { isMobileOnly } from 'react-device-detect'
 import CommunityLogo from 'components/common/CommunityLogo'
+import PlusIcon from 'images/plus.svg'
 
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
@@ -23,9 +24,13 @@ export default ({ isClosed, token, metadata, name, handleJoinCommunity }) => {
           <span className='name__status'>{isClosed ? 'Close' : 'Open'} community</span>
         </div>
       </div>
-      <div className='community_header__button'>
-        <button onClick={handleJoinCommunity}>Join comminity</button>
-      </div>
+      {
+        handleJoinCommunity
+          ? <div className='community_header__button'>
+            <button onClick={handleJoinCommunity}><img src={PlusIcon} />Join comminity</button>
+          </div>
+          : null
+      }
     </div>
   )
 }
