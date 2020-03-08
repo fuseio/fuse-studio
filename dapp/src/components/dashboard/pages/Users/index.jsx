@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import sortBy from 'lodash/sortBy'
 import identity from 'lodash/identity'
 import MyTable from 'components/dashboard/components/Table'
+import TransactionMessage from 'components/common/TransactionMessage'
 
 import {
   addEntity,
@@ -51,7 +52,9 @@ const Users = ({
   fetchUserWallets,
   walletAccounts,
   userWallets,
-  users
+  users,
+  showTransactionMessage,
+  signatureNeeded
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
@@ -323,6 +326,12 @@ const Users = ({
       </div>
       <div className='entities__wrapper'>
         {renderContent()}
+        <TransactionMessage
+          title={'Joining Community'}
+          message={signatureNeeded ? 'Please sign with your wallet' : 'Pending'}
+          isOpen={showTransactionMessage}
+          isDark
+        />
       </div>
     </Fragment>
   )
@@ -334,6 +343,7 @@ const mapStateToProps = (state) => ({
   users: state.entities.users,
   userWallets: state.entities.wallets,
   ...state.screens.communityEntities,
+  ...getTransaction(state, state.screens.communityEntities.transactionHash),
   isAdmin: checkIsAdmin(state),
   community: getCurrentCommunity(state),
   transactionData: getTransaction(state, state.screens.communityEntities.transactionHash)

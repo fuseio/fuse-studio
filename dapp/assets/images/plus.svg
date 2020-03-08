@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <g id="community-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="community-page-new" transform="translate(-1285.000000, -141.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="icons8-add-(1)" transform="translate(1285.000000, 141.000000)">
+                <path d="M7.5,0 C3.358125,0 0,3.358125 0,7.5 C0,11.641875 3.358125,15 7.5,15 C11.641875,15 15,11.641875 15,7.5 C15,3.358125 11.641875,0 7.5,0 Z M10.625,8.125 L8.125,8.125 L8.125,10.625 C8.125,10.970625 7.845,11.25 7.5,11.25 C7.155,11.25 6.875,10.970625 6.875,10.625 L6.875,8.125 L4.375,8.125 C4.03,8.125 3.75,7.845625 3.75,7.5 C3.75,7.154375 4.03,6.875 4.375,6.875 L6.875,6.875 L6.875,4.375 C6.875,4.029375 7.155,3.75 7.5,3.75 C7.845,3.75 8.125,4.029375 8.125,4.375 L8.125,6.875 L10.625,6.875 C10.97,6.875 11.25,7.154375 11.25,7.5 C11.25,7.845625 10.97,8.125 10.625,8.125 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>
