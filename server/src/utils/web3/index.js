@@ -184,6 +184,10 @@ const signMultiSig = async (web3, account, multiSigContract, contractAddress, da
   return signature.signature
 }
 
+const generateSalt = () => {
+  return ethers.utils.bigNumberify(ethers.utils.randomBytes(32)).toHexString()
+}
+
 module.exports = {
   createWeb3,
   generateSignature,
@@ -191,5 +195,6 @@ module.exports = {
   createContract,
   createMethod,
   send,
-  createNetwork
+  createNetwork,
+  generateSalt
 }

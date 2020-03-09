@@ -11,12 +11,14 @@ const Contact = mongoose.model('Contact')
 const Invite = mongoose.model('Invite')
 const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
+const { generateSalt } = require('@utils/web3')
 
 const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo }, job) => {
   const { agenda } = require('@services/agenda')
+  const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
   const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
-  const method = createMethod(walletFactory, 'createWallet', owner, Object.values(homeAddresses.walletModules), ens)
+  const method = createMethod(walletFactory, 'createCounterfactualWallet', owner, Object.values(homeAddresses.walletModules), ens, salt)
 
   const receipt = await send(method, {
     from: account.address
@@ -46,7 +48,7 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
     cond.phoneNumber = phoneNumber
   }
 
-  const userWallet = await UserWallet.findOneAndUpdate(cond, { walletAddress })
+  const userWallet = await UserWallet.findOneAndUpdate(cond, { walletAddress, salt })
   phoneNumber = userWallet.phoneNumber
 
   await Contact.updateMany({ phoneNumber }, { walletAddress, state: 'NEW' })
