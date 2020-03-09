@@ -77,7 +77,8 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
 const setWalletOwner = withAccount(async (account, { walletAddress, newOwner }, job) => {
   const { createContract, createMethod, send, web3 } = createNetwork('home', account)
 
-  const walletOwnershipManager = createContract(WalletOwnershipManagerABI, config.get('network.home.addresses.walletModules.WalletOwnershipManager'))
+  const userWallet = await UserWallet.findOne({ walletAddress })
+  const walletOwnershipManager = createContract(WalletOwnershipManagerABI, userWallet.walletModules.WalletOwnershipManager)
   const setOwnerMethod = createMethod(walletOwnershipManager, 'setOwner', walletAddress, newOwner)
   const setOwnerMethodData = setOwnerMethod.encodeABI()
 

@@ -2,8 +2,8 @@ const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/Mint
 const { createNetwork } = require('@utils/web3')
 const { withAccount, lockAccount } = require('@utils/account')
 const { getAbi } = require('@constants/abi')
-const config = require('config')
-const homeAddresses = config.get('network.home.addresses')
+const mongoose = require('mongoose')
+const UserWallet = mongoose.model('UserWallet')
 
 const mint = withAccount(async (account, { bridgeType, tokenAddress, amount, toAddress }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
@@ -61,7 +61,8 @@ const burnFrom = withAccount(async (account, { bridgeType, tokenAddress, amount,
 
 const adminApprove = withAccount(async (account, { bridgeType, tokenAddress, wallet, spender, amount, burnFromAddress }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
-  const transferManagerContractInstance = createContract(getAbi('TransferManager'), homeAddresses.walletModules.TransferManager)
+  const userWallet = await UserWallet.findOne({ walletAddress: wallet })
+  const transferManagerContractInstance = createContract(getAbi('TransferManager'), userWallet.walletModules.TransferManager)
   const method = createMethod(transferManagerContractInstance, 'approveToken', wallet, tokenAddress, spender, amount)
 
   await send(method, {
@@ -85,7 +86,8 @@ const adminApprove = withAccount(async (account, { bridgeType, tokenAddress, wal
 
 const adminTransfer = withAccount(async (account, { bridgeType, tokenAddress, amount, wallet, to }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
-  const transferManagerContractInstance = createContract(getAbi('TransferManager'), homeAddresses.walletModules.TransferManager)
+  const userWallet = await UserWallet.findOne({ walletAddress: wallet })
+  const transferManagerContractInstance = createContract(getAbi('TransferManager'), userWallet.walletModules.TransferManager)
 
   const method = createMethod(transferManagerContractInstance, 'transferToken', wallet, tokenAddress, to, amount, '0x')
 
