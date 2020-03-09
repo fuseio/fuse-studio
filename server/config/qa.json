@@ -11,19 +11,19 @@
   "network": {
     "home": {
       "sharedAddresses": {
-        "WalletFactory": "0x71E4dc26518Bb7bD0331d925bb020A9B50eCE6Ca",
-        "WalletImplementation": "0xA40019de14A9E7e5A1E049807C3cA182d06fc5c1",
+        "WalletFactory": "0x452cC4A5eA05824952E11D198bE900a64eBb9C28",
+        "WalletImplementation": "0x4A62d33Ac76ddDf8a22b73B37af002fb8Cf8FE31",
         "CommunityFactory": "0x037Fe3AfDc9174F7a0da6F72Fbd87ef9f930B2a7",
         "MultiSigWallet": "0xe281a67AcEcb9add734FfF426Ba9F83B7ffF1d62",
         "walletModules": {
-          "GuardianManager": "0x7D9CD8b208eEb00F1Ecf5f2592A7BC3E05F32102",
-          "LockManager": "0xAEc18F7f4eFA9D7858E50D8A28c4225E63b129f9",
-          "RecoveryManager": "0x9b6C333455B9942D7600CF19196215a1B9e84B4C",
-          "ApprovedTransfer": "0x3221b3DBFB4FD62E8f8B91Cc1BBA3F613862aA85",
-          "TransferManager": "0x5472F98b5A043F115eD5079810c0e8dc54304736",
-          "TokenExchanger": "0x6DABE328d33A262723E67ae7617646042E582dC3",
-          "CommunityManager": "0xE47204f722F1B0a1113C1fBAd772626A9621E61E",
-          "WalletOwnershipManager": "0x09E48506abd546C0a890556177eE93F30D31cB7f"
+          "GuardianManager": "0x16A8eaC4F2B68d6d13474001B72973c0abAe446B",
+          "LockManager": "0xD5D036D059597bF9281d138C4588231668EE2778",
+          "RecoveryManager": "0x2f15Eb8DffDFf7aE6317c44E8a018E8e39c2376B",
+          "ApprovedTransfer": "0xEA18c485F1e5f6D1BFF615e09D5CE5690Ef4b8dF",
+          "TransferManager": "0xB5a31BB903a2a34d8492c094496e4BDBEF9500A1",
+          "TokenExchanger": "0x72625Ff96C0F6962b718E2C9c6750cc221d93C1c",
+          "CommunityManager": "0x543Fca79C29ad3C8E13D6bfa8aca30579cF43718",
+          "WalletOwnershipManager": "0xC3d028419455bb2ee4f169e1453Db161Fd8DB955"
         }
       }
     }
