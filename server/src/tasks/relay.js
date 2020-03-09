@@ -9,7 +9,6 @@ const { getAdmin } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 
 const graphClient = new GraphQLClient(config.get('graph.url'))
-const homeAddresses = config.get('network.home.addresses')
 const UserWallet = mongoose.model('UserWallet')
 
 function getParamsFromMethodData (web3, abi, methodName, methodData) {
@@ -54,7 +53,8 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
 const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule, appName }, job) => {
   const { web3, createContract, createMethod, send } = createNetwork('home', account)
   const walletABI = require(`@constants/abi/${walletModule}`)
-  const contract = createContract(walletABI, homeAddresses.walletModules[walletModule])
+  const userWallet = await UserWallet.findOne({ walletAddress })
+  const contract = createContract(walletABI, userWallet.walletModules[walletModule])
   const method = createMethod(contract, 'execute', walletAddress, methodData, nonce, signature, gasPrice, gasLimit)
 
   const receipt = await send(method, {
