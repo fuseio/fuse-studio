@@ -27,7 +27,7 @@ router.post('/create', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { phoneNumber } = req.body
+  const { phoneNumber, correlationId } = req.body
 
   await new UserWallet({
     phoneNumber,
@@ -40,7 +40,7 @@ router.post('/create', auth.required, async (req, res) => {
     networks: ['fuse']
   }).save()
 
-  const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber })
+  const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId })
 
   return res.json({ job: job.attrs })
 })
