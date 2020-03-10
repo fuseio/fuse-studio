@@ -12,6 +12,7 @@ module.exports = (mongoose) => {
     symbol: { type: String, required: [true, "can't be blank"] },
     tokenURI: { type: String },
     totalSupply: { type: mongoose.Types.Decimal128, required: [true, "can't be blank"] },
+    decimals: { type: Number, default: 18 },
     owner: { type: String },
     factoryAddress: { type: String },
     blockNumber: { type: Number },
