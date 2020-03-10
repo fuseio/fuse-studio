@@ -20,10 +20,11 @@ const Invite = mongoose.model('Invite')
  */
 router.post('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
+  const { correlationId } = req.body
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
-    const job = await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress })
+    const job = await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress, correlationId })
     return res.json({ job: job.attrs })
   } else {
     const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
@@ -41,7 +42,7 @@ router.post('/', auth.required, async (req, res, next) => {
         walletModules: homeAddresses.walletModules,
         networks: ['fuse']
       }).save()
-      const job = await agenda.now('createWallet', { owner: accountAddress })
+      const job = await agenda.now('createWallet', { owner: accountAddress, correlationId })
       return res.json({ job: job.attrs })
     }
   }
@@ -137,7 +138,7 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
 
-  const { communityAddress, name, amount, symbol } = req.body
+  const { communityAddress, name, amount, symbol, correlationId } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
 
   const userWallet = await UserWallet.findOne({ phoneNumber: req.params.phoneNumber })
@@ -175,7 +176,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     communityAddress
   }).save()
 
-  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo })
+  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo, correlationId })
 
   return res.json({ job: job.attrs })
 })
@@ -194,7 +195,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
  */
 router.post('/backup', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
-  const { communityAddress } = req.body
+  const { communityAddress, correlationId } = req.body
 
   const wallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
   if (!wallet) {
@@ -216,7 +217,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
 
   await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { backup: true })
 
-  const job = await agenda.now('bonus', { communityAddress, bonusInfo })
+  const job = await agenda.now('bonus', { communityAddress, bonusInfo, correlationId })
 
   return res.json({ job: job.attrs })
 })
