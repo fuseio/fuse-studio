@@ -12,8 +12,6 @@ const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
 const { setLengthLeft } = require('ethereumjs-util')
 
-const TOKEN_DECIMALS = 18
-
 async function deployForeignBridge (token, { web3, createContract, createMethod, from, send }) {
   console.log('Deploying foreign bridge using factory')
   const foreignFactory = createContract(ForeignBridgeFactoryABI, foreignAddressess.ForeignBridgeFactory)
@@ -40,7 +38,7 @@ async function deployHomeBridge (token, { createContract, createMethod, from, se
 
   const homeFactory = createContract(HomeBridgeFactoryABI, homeAddresses.HomeBridgeFactory)
 
-  const method = createMethod(homeFactory, 'deployHomeBridge', token.name, token.symbol, TOKEN_DECIMALS)
+  const method = createMethod(homeFactory, 'deployHomeBridge', token.name, token.symbol, token.decimals)
 
   const receipt = await send(method, {
     from
@@ -118,7 +116,7 @@ async function deployBridge ({ home, foreign }, communityProgress) {
   const [deployForeignBridgeResponse, deployHomeBridgeResponse] = await Promise.all([
     deployForeignBridge(token, foreign),
     deployHomeBridge(
-      { name, symbol: token.symbol },
+      { name, symbol: token.symbol, decimals: token.decimals },
       home
     )
   ])
