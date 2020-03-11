@@ -1,14 +1,13 @@
 import React, { Fragment, useState } from 'react'
 import { connect, useSelector } from 'react-redux'
 import capitalize from 'lodash/capitalize'
-import { formatWei } from 'utils/format'
+import { formatWei, toWei } from 'utils/format'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/styles'
 import MintBurnForm from 'components/dashboard/components/MintBurnForm'
 import { mintToken, burnToken, clearTransactionStatus } from 'actions/token'
-import { toWei } from 'web3-utils'
 import Message from 'components/common/SignMessage'
 import { getForeignNetwork, getHomeNetworkType, getCurrentNetworkType } from 'selectors/network'
 import { getBalances, getAccountAddress } from 'selectors/accounts'
@@ -63,8 +62,7 @@ const useTabStyles = makeStyles(theme => ({
 
 const MintBurn = ({
   error,
-  token: { symbol, address: tokenAddress },
-  networkType,
+  token: { symbol, address: tokenAddress, decimals },
   balances,
   isMinting,
   isBurning,
@@ -86,11 +84,11 @@ const MintBurn = ({
   const balance = balances[tokenAddress]
 
   const mintHandler = (amount) => {
-    mintToken(tokenAddress, toWei(String(amount)), { desiredNetworkType: foreignNetwork })
+    mintToken(tokenAddress, toWei(String(amount), decimals), { desiredNetworkType: foreignNetwork })
   }
 
   const burnHandler = (amount) => {
-    burnToken(tokenAddress, toWei(String(amount)), { desiredNetworkType: foreignNetwork })
+    burnToken(tokenAddress, toWei(String(amount), decimals), { desiredNetworkType: foreignNetwork })
   }
 
   const handleChange = (event, newValue) => setValue(newValue)
@@ -119,12 +117,12 @@ const MintBurn = ({
         <TabPanel value={value} index={0}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 0) : 0}</span>
+            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 0, decimals) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
             error={error}
-            balance={balance ? formatWei(balance, 0) : 0}
+            balance={balance ? formatWei(balance, 0, decimals) : 0}
             handleMintOrBurnClick={mintHandler}
             tokenNetworkType={foreignNetwork}
             symbol={symbol}

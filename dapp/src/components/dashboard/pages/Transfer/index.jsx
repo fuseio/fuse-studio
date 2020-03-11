@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { toWei } from 'web3-utils'
-import { formatWei } from 'utils/format'
+import { formatWei, toWei } from 'utils/format'
 import TransferForm from 'components/dashboard/components/TransferForm'
 import { transferToken, clearTransactionStatus } from 'actions/token'
 import capitalize from 'lodash/capitalize'
@@ -18,7 +17,7 @@ import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashb
 const Transfer = ({
   sendTo,
   error,
-  token: { symbol },
+  token: { symbol, decimals },
   balances,
   networkType,
   isTransfer,
@@ -48,7 +47,7 @@ const Transfer = ({
   const balance = balances[tokenOfCommunityOnCurrentSide]
 
   const handleTransfer = ({ to: toField, amount }) => {
-    transferToken(tokenOfCommunityOnCurrentSide, toField, toWei(String(amount)))
+    transferToken(tokenOfCommunityOnCurrentSide, toField, toWei(String(amount), decimals))
   }
 
   return (
@@ -63,13 +62,13 @@ const Transfer = ({
 
         <div className='transfer__balance'>
           <span className='title'>My Balance: </span>
-          <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 0) : 0}</span>
+          <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 0, decimals) : 0}</span>
           <small className='symbol'>{symbol}</small>
         </div>
         <TransferForm
           error={error}
           sendTo={sendTo}
-          balance={balance ? formatWei(balance, 0) : 0}
+          balance={balance ? formatWei(balance, 0, decimals) : 0}
           transferMessage={transferMessage}
           transactionStatus={transactionStatus}
           closeMessage={() => {

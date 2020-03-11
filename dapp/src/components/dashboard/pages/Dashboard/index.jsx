@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
 import { transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
 import { joinCommunity } from 'actions/communityEntities'
@@ -38,22 +37,6 @@ class Dashboard extends Component {
 
   showHomePage = () => {
     this.props.push('/')
-  }
-
-  handleMintOrBurnClick = (actionType, amount) => {
-    const { burnToken, mintToken, token: { address: tokenAddress } } = this.props
-    if (actionType === 'mint') {
-      mintToken(tokenAddress, toWei(String(amount)))
-    } else {
-      burnToken(tokenAddress, toWei(String(amount)))
-    }
-
-    this.setState({ ...this.state, lastAction: { actionType, mintBurnAmount: amount } })
-  }
-
-  handleTransfer = ({ to: toField, amount }) => {
-    const { transferToken, token: { address: tokenAddress } } = this.props
-    transferToken(tokenAddress, toField, toWei(String(amount)))
   }
 
   loadQrModal = (value) => {
@@ -131,6 +114,7 @@ class Dashboard extends Component {
               </ReactTooltip>
               <Bridge
                 symbol={foreignToken && foreignToken.symbol}
+                decimals={foreignToken && foreignToken.decimals}
                 tokenName={community.name}
                 isAdmin={isAdmin}
                 community={community}
