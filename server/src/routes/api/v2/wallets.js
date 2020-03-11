@@ -67,7 +67,8 @@ router.put('/token/:walletAddress', auth.required, async (req, res) => {
  */
 router.get('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
-  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0, firebaseToken: 0 })
+  const network = req.query.network || 'fuse'
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, networks: network }, { contacts: 0, firebaseToken: 0 })
 
   return res.json({ data: userWallet })
 })
