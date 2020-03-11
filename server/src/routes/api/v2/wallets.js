@@ -35,10 +35,12 @@ router.post('/', auth.required, async (req, res, next) => {
       await new UserWallet({
         phoneNumber,
         accountAddress,
+        walletOwnerOriginalAddress: accountAddress,
         walletFactoryOriginalAddress: homeAddresses.WalletFactory,
         walletFactoryCurrentAddress: homeAddresses.WalletFactory,
         walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
         walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+        walletModulesOriginal: homeAddresses.walletModules,
         walletModules: homeAddresses.walletModules,
         networks: ['fuse']
       }).save()
@@ -147,10 +149,12 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     await new UserWallet({
       phoneNumber: req.params.phoneNumber,
       accountAddress: owner,
+      walletOwnerOriginalAddress: owner,
       walletFactoryOriginalAddress: homeAddresses.WalletFactory,
       walletFactoryCurrentAddress: homeAddresses.WalletFactory,
       walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
       walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+      walletModulesOriginal: homeAddresses.walletModules,
       walletModules: homeAddresses.walletModules,
       networks: ['fuse']
     }).save()

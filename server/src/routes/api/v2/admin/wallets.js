@@ -32,10 +32,12 @@ router.post('/create', auth.required, async (req, res) => {
   await new UserWallet({
     phoneNumber,
     accountAddress,
+    walletOwnerOriginalAddress: accountAddress,
     walletFactoryOriginalAddress: homeAddresses.WalletFactory,
     walletFactoryCurrentAddress: homeAddresses.WalletFactory,
     walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
     walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+    walletModulesOriginal: homeAddresses.walletModules,
     walletModules: homeAddresses.walletModules,
     networks: ['fuse']
   }).save()

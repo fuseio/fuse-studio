@@ -8,10 +8,12 @@ const UserWalletSchema = new Schema({
   firebaseToken: { type: String },
   contacts: [{ type: Schema.Types.ObjectId, ref: 'Contact' }],
   backup: { type: Boolean, default: false },
+  walletOwnerOriginalAddress: { type: String },
   walletFactoryOriginalAddress: { type: String },
   walletFactoryCurrentAddress: { type: String },
   walletImplementationOriginalAddress: { type: String },
   walletImplementationCurrentAddress: { type: String },
+  walletModulesOriginal: { type: Object },
   walletModules: { type: Object },
   salt: { type: String, default: null },
   networks: [{ type: String }]
