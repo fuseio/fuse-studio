@@ -235,6 +235,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
  */
 router.post('/foreign', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
+  const { correlationId } = req.body
   const network = config.get('network.foreign.name')
 
   const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
@@ -246,7 +247,7 @@ router.post('/foreign', auth.required, async (req, res, next) => {
     const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress} on ${network}`
     return res.status(400).json({ error: msg })
   }
-  const job = await agenda.now('createForeignWallet', { userWallet })
+  const job = await agenda.now('createForeignWallet', { userWallet, correlationId })
   return res.json({ job: job.attrs })
 })
 
