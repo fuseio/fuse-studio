@@ -100,7 +100,33 @@ const setWalletOwner = withAccount(async (account, { walletAddress, newOwner }, 
   return receipt
 })
 
+const createForeignWallet = withAccount(async (account, { userWallet, ens = '' }, job) => {
+  const { createContract, createMethod, send } = createNetwork('foreign', account)
+  const owner = userWallet.accountAddress
+  const walletFactory = createContract(WalletFactoryABI, userWallet.walletFactoryCurrentAddress)
+  const method = createMethod(walletFactory, 'createCounterfactualWallet', owner, Object.values(userWallet.walletModules), ens, userWallet.salt)
+
+  const receipt = await send(method, {
+    from: account.address
+  }, {
+    transactionHash: (hash) => {
+      job.attrs.data.txHash = hash
+      job.save()
+    }
+  })
+
+  const walletAddress = receipt.events.WalletCreated.returnValues._wallet
+  console.log(`Created wallet contract ${walletAddress} for account ${owner}`)
+  userWallet.networks.push(config.get('network.foreign.name'))
+  job.save()
+
+  await UserWallet.findOneAndUpdate({ walletAddress }, { networks: userWallet.networks })
+
+  return receipt
+})
+
 module.exports = {
   createWallet,
+  createForeignWallet,
   setWalletOwner
 }
