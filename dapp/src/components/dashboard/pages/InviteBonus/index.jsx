@@ -6,9 +6,8 @@ import { connect, useSelector } from 'react-redux'
 import { transferTokenToFunder, clearTransactionStatus } from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { FAILURE, SUCCESS } from 'actions/constants'
-import { toWei } from 'web3-utils'
 import { getFunderAccount, getBalances } from 'selectors/accounts'
-import { formatWei } from 'utils/format'
+import { formatWei, toWei } from 'utils/format'
 import { setBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import get from 'lodash/get'
@@ -65,7 +64,7 @@ const InviteBonus = ({
   }, [transactionStatus])
 
   const transferToFunder = (amount) => {
-    transferTokenToFunder(homeToken.address, toWei(String(amount)))
+    transferTokenToFunder(homeToken.address, toWei(String(amount, homeToken.decimals)))
   }
 
   const transactionError = () => {
@@ -98,9 +97,9 @@ const InviteBonus = ({
             transactionConfirmed={transactionConfirmed}
             transactionError={transactionError}
             transactionDenied={transactionDenied}
-            balance={balance ? formatWei(balance, 0) : 0}
+            balance={balance ? formatWei(balance, 0, homeToken.decimals) : 0}
             transferToFunder={transferToFunder}
-            funderBalance={funderBalance ? formatWei(funderBalance, 0) : 0}
+            funderBalance={funderBalance ? formatWei(funderBalance, 0, homeToken.decimals) : 0}
           />
           <RewardUserForm
             networkType={networkType}

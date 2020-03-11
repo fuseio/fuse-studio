@@ -4,7 +4,6 @@ import Message from 'components/common/SignMessage'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
-import { toWei } from 'web3-utils'
 import * as actions from 'actions/bridge'
 import { getBlockNumber } from 'actions/network'
 import { getBalances } from 'selectors/accounts'
@@ -15,7 +14,7 @@ import { getTransaction } from 'selectors/transaction'
 import { loadModal } from 'actions/ui'
 import { SHOW_MORE_MODAL } from 'constants/uiConstants'
 import FuseLoader from 'images/loader-fuse.gif'
-import { formatWei } from 'utils/format'
+import { formatWei, toWei } from 'utils/format'
 import { getBridgeStatus, getHomeNetworkType } from 'selectors/network'
 
 class Bridge extends Component {
@@ -40,7 +39,7 @@ class Bridge extends Component {
   setTransferAmount = (e) => this.setState({ transferAmount: e.target.value })
 
   handleTransfer = () => {
-    const value = toWei(this.state.transferAmount)
+    const value = toWei(this.state.transferAmount, this.props.decimals)
     if (this.props.bridgeStatus.to.bridge === 'home') {
       this.props.transferToHome(this.props.community.foreignTokenAddress, this.props.community.foreignBridgeAddress, value)
     } else {
@@ -83,6 +82,7 @@ class Bridge extends Component {
       bridgeStatus,
       accountAddress,
       symbol,
+      decimals,
       transferStatus,
       waitingForConfirmation,
       confirmationNumber,
@@ -104,7 +104,7 @@ class Bridge extends Component {
     } = this.state
 
     const balance = balances[tokenOfCommunityOnCurrentSide]
-    const formatted = formatWei(balance, 2)
+    const formatted = formatWei(balance, 2, decimals)
 
     return (
       <div className='content__bridge__wrapper'>
@@ -113,6 +113,7 @@ class Bridge extends Component {
             isAdmin={isAdmin}
             accountAddress={accountAddress}
             symbol={symbol}
+            decimals={decimals}
             balance={balances[homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress]}
             bridgeSide={bridgeStatus.from}
             openModal={() => this.openModal('from')}
@@ -125,7 +126,7 @@ class Bridge extends Component {
               <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={this.setTransferAmount} disabled={transferStatus} />
               <div className='bridge__transfer__form__currency'>{symbol}</div>
             </div>
-            <button disabled={transferStatus || !Number(transferAmount) || !accountAddress || BigNumber(transferAmount).multipliedBy(1e18).isGreaterThan(new BigNumber(balance))}
+            <button disabled={transferStatus || !Number(transferAmount) || !accountAddress || BigNumber(transferAmount).multipliedBy(10 ** decimals).isGreaterThan(new BigNumber(balance))}
               className='bridge__transfer__form__btn' onClick={this.handleTransfer}>
               {transferStatus || `Transfer to ${bridgeStatus.to.network}`}
             </button>
@@ -137,6 +138,7 @@ class Bridge extends Component {
             isAdmin={isAdmin}
             accountAddress={accountAddress}
             symbol={symbol}
+            decimals={decimals}
             balance={balances[homeNetwork === bridgeStatus.to.network ? homeTokenAddress : foreignTokenAddress]}
             bridgeSide={bridgeStatus.to}
             openModal={() => this.openModal('to')}

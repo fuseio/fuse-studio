@@ -50,7 +50,7 @@ const InnerCommunities = ({
           const { token } = community
           const { homeTokenAddress, foreignTokenAddress } = community
           const balance = balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress]
-            ? formatWei(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress], 2)
+            ? formatWei(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress], 2, token.decimals)
             : 0
           return (
             <ProfileCard
