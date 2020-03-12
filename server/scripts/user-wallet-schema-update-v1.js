@@ -29,6 +29,7 @@ async function run () {
         console.error(err)
       } else {
         console.log('done')
+        process.exit(0)
       }
     })
 }

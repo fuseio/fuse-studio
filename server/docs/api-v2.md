@@ -24,6 +24,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	
 - [Wallet](#Wallet)
 	- [Create wallet contract for user](#Create-wallet-contract-for-user)
+	- [Create wallet contract for user on Ethereum](#Create-wallet-contract-for-user-on-Ethereum)
 	- [Fetch all wallets by phone number](#Fetch-all-wallets-by-phone-number)
 	- [Fetch user wallet](#Fetch-user-wallet)
 	- [Fetch latest wallet by phone number](#Fetch-latest-wallet-by-phone-number)
@@ -323,6 +324,25 @@ POST api/v2/login/verify
 
 ```
 POST api/v2/wallets/
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `Object` | <p>job data</p> |
+## <a name='Create-wallet-contract-for-user-on-Ethereum'></a> Create wallet contract for user on Ethereum
+[Back to top](#top)
+
+<p>Creates wallet contract for the user on Ethereum</p>
+
+```
+POST api/v2/wallets/foreign
 ```
 ### Headers
 | Name    | Type      | Description                          |
