@@ -16,7 +16,8 @@ const UserWalletSchema = new Schema({
   walletModulesOriginal: { type: Object },
   walletModules: { type: Object },
   salt: { type: String, default: null },
-  networks: [{ type: String }]
+  networks: [{ type: String }],
+  identifier: { type: String }
 }, { timestamps: true })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1 })
