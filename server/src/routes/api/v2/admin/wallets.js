@@ -29,7 +29,7 @@ router.post('/create', auth.required, async (req, res) => {
   }
   const { phoneNumber, correlationId } = req.body
 
-  await new UserWallet({
+  const userWallet = await new UserWallet({
     phoneNumber,
     accountAddress,
     walletOwnerOriginalAddress: accountAddress,
@@ -42,7 +42,7 @@ router.post('/create', auth.required, async (req, res) => {
     networks: ['fuse']
   }).save()
 
-  const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId })
+  const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id })
 
   return res.json({ job: job.attrs })
 })
