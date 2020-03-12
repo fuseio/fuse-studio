@@ -14,17 +14,22 @@ const UserWallet = mongoose.model('UserWallet')
 run()
 
 async function run () {
-  UserWallet.find()
-    .then(userWallets => {
-       userWallets.forEach(userWallet => {
-         userWallet.walletOwnerOriginalAddress = userWallet.accountAddress
-         userWallet.walletModulesOriginal = userWallet.walletModules
-         userWallet.save()
-       })
-       console.log('done')
-       process.exit(0)
-    })
-    .catch(errors => {
-      console.error({ errors })
-    })
+  const userWallets = await UserWallet.find()
+  console.log(`found ${userWallets.length} user wallets`)
+  await Promise.all(userWallets.map(async (userWallet) => {
+    const { _id, accountAddress, walletModules } = userWallet
+    console.log({ _id, accountAddress, walletModules })
+    await UserWallet.findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(_id)
+      },
+      {
+        walletOwnerOriginalAddress: accountAddress,
+        walletModulesOriginal: walletModules
+      }
+    )
+  }))
+
+  console.log('done')
+  process.exit(0)
 }
