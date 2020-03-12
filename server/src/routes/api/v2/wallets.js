@@ -27,12 +27,12 @@ router.post('/', auth.required, async (req, res, next) => {
     const job = await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress, correlationId })
     return res.json({ job: job.attrs })
   } else {
-    const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
+    let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
     if (userWallet) {
       const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress}`
       return res.status(400).json({ error: msg })
     } else {
-      await new UserWallet({
+      userWallet = await new UserWallet({
         phoneNumber,
         accountAddress,
         walletOwnerOriginalAddress: accountAddress,
@@ -44,7 +44,7 @@ router.post('/', auth.required, async (req, res, next) => {
         walletModules: homeAddresses.walletModules,
         networks: ['fuse']
       }).save()
-      const job = await agenda.now('createWallet', { owner: accountAddress, correlationId })
+      const job = await agenda.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id})
       return res.json({ job: job.attrs })
     }
   }
@@ -144,9 +144,9 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const { communityAddress, name, amount, symbol, correlationId } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
 
-  const userWallet = await UserWallet.findOne({ phoneNumber: req.params.phoneNumber })
+  let userWallet = await UserWallet.findOne({ phoneNumber: req.params.phoneNumber })
   if (!userWallet) {
-    await new UserWallet({
+    userWallet = await new UserWallet({
       phoneNumber: req.params.phoneNumber,
       accountAddress: owner,
       walletOwnerOriginalAddress: owner,
@@ -181,7 +181,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     communityAddress
   }).save()
 
-  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo, correlationId })
+  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id })
 
   return res.json({ job: job.attrs })
 })

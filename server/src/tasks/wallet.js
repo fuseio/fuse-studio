@@ -13,7 +13,7 @@ const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
 const { generateSalt } = require('@utils/web3')
 
-const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo }, job) => {
+const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id }, job) => {
   const { agenda } = require('@services/agenda')
   const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
@@ -42,10 +42,16 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
   }
   job.save()
 
-  let cond = { accountAddress: owner }
+  let cond
 
-  if (phoneNumber) {
-    cond.phoneNumber = phoneNumber
+  if (_id) {
+    cond = { _id }
+  } else {
+    cond = { accountAddress: owner }
+
+    if (phoneNumber) {
+      cond.phoneNumber = phoneNumber
+    }
   }
 
   const userWallet = await UserWallet.findOneAndUpdate(cond, { walletAddress, salt })
