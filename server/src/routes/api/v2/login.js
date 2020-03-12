@@ -68,13 +68,13 @@ router.post('/verify', async (req, res) => {
  * @apiSuccess {String} token JWT token
  */
 router.post('/', async (req, res) => {
-  const { accountAddress, token, appName } = req.body
+  const { accountAddress, token, identifier, appName } = req.body
   const manager = getAdmin(appName)
   manager.auth().verifyIdToken(token)
     .then(decodedToken => {
       const secret = config.get('api.secret')
       const expiresIn = config.get('api.tokenExpiresIn')
-      const token = jwt.sign({ phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid, appName }, secret, {
+      const token = jwt.sign({ phoneNumber: decodedToken.phone_number, accountAddress, identifier, uid: decodedToken.uid, appName }, secret, {
         expiresIn
       })
       res.json({ token })

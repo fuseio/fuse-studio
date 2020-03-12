@@ -19,7 +19,7 @@ const Invite = mongoose.model('Invite')
  * @apiSuccess {Object} Started job data
  */
 router.post('/', auth.required, async (req, res, next) => {
-  const { phoneNumber, accountAddress } = req.user
+  const { phoneNumber, accountAddress, identifier } = req.user
   const { correlationId } = req.body
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
@@ -42,7 +42,8 @@ router.post('/', auth.required, async (req, res, next) => {
         walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
         walletModulesOriginal: homeAddresses.walletModules,
         walletModules: homeAddresses.walletModules,
-        networks: ['fuse']
+        networks: ['fuse'],
+        identifier
       }).save()
       const job = await agenda.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id})
       return res.json({ job: job.attrs })
@@ -139,7 +140,7 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
  * @apiSuccess {Object} Started job data
  */
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
-  const { phoneNumber, accountAddress } = req.user
+  const { phoneNumber, accountAddress, identifier } = req.user
 
   const { communityAddress, name, amount, symbol, correlationId } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
@@ -170,6 +171,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   }
   const bonusInfo = {
     phoneNumber,
+    identifier,
     receiver: inviterUserWallet.walletAddress,
     bonusType: 'plugins.inviteBonus.inviteInfo'
   }
@@ -199,7 +201,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
  * @apiSuccess {Object} Started job data
  */
 router.post('/backup', auth.required, async (req, res, next) => {
-  const { phoneNumber, accountAddress } = req.user
+  const { phoneNumber, accountAddress, identifier } = req.user
   const { communityAddress, correlationId } = req.body
 
   const wallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
@@ -215,6 +217,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
 
   const bonusInfo = {
     phoneNumber,
+    identifier,
     receiver: walletAddress,
     bonusType: 'plugins.backupBonus.backupInfo',
     bonusId: phoneNumber

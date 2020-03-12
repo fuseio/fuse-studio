@@ -50,7 +50,7 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
   }
 }
 
-const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule, appName }, job) => {
+const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule, identifier, appName }, job) => {
   const { web3, createContract, createMethod, send } = createNetwork('home', account)
   const walletABI = require(`@constants/abi/${walletModule}`)
   const userWallet = await UserWallet.findOne({ walletAddress })
@@ -80,7 +80,7 @@ const relay = withAccount(async (account, { walletAddress, methodData, nonce, ga
         const { phoneNumber } = await UserWallet.findOne({ walletAddress })
         request.post(`${config.get('funder.urlBase')}fund/token`, {
           json: true,
-          body: { phoneNumber, accountAddress: walletAddress, tokenAddress, originNetwork }
+          body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork }
         }, (err, response, body) => {
           if (err) {
             console.error(`Error on token funding for wallet: ${wallet}`, err)
