@@ -74,9 +74,11 @@ router.post('/', async (req, res) => {
     .then(decodedToken => {
       const secret = config.get('api.secret')
       const expiresIn = config.get('api.tokenExpiresIn')
-      const token = jwt.sign({ phoneNumber: decodedToken.phone_number, accountAddress, identifier, uid: decodedToken.uid, appName }, secret, {
-        expiresIn
-      })
+      const data = { phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid, appName }
+      if (identifier) {
+        data.identifier = identifier
+      }
+      const token = jwt.sign(data, secret, { expiresIn })
       res.json({ token })
     }).catch(err => {
       console.error('Login error', err)
