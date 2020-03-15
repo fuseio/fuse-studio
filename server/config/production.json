@@ -31,7 +31,8 @@
     "foreign": {
       "addressesRopsten": {
         "TokenFactory": "0xA6D0f4552cf5237987F46095875fC64b006E7bda"
-      }
+      },
+      "allowedTokensToRelay": "0x6B175474E89094C44Da98b954EedeAC495271d0F"
     }
   },
   "mongo": {
