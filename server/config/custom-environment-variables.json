@@ -34,7 +34,8 @@
     "foreign": {
       "apiKey": "COMMUNITY_WEB3_API_KEY",
       "name": "COMMUNITY_WEB3_NETWORK",
-      "gasStation": "COMMUNITY_WEB3_GAS_STATION"
+      "gasStation": "COMMUNITY_WEB3_GAS_STATION",
+      "allowedTokensToRelay": "COMMUNITY_FOREIGN_TOKENS_ALLOWED_TO_RELAY"
     }
   },
   "mongo": {
