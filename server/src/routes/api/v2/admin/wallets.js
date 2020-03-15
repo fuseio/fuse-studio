@@ -27,25 +27,26 @@ router.post('/create', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { phoneNumber, correlationId } = req.body
-
-  const userWallet = await new UserWallet({
-    phoneNumber,
-    accountAddress,
-    walletOwnerOriginalAddress: accountAddress,
-    walletFactoryOriginalAddress: homeAddresses.WalletFactory,
-    walletFactoryCurrentAddress: homeAddresses.WalletFactory,
-    walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
-    walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
-    walletModulesOriginal: homeAddresses.walletModules,
-    walletModules: homeAddresses.walletModules,
-    networks: ['fuse'],
-    identifier
-  }).save()
-
-  const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id })
-
-  return res.json({ job: job.attrs })
+  try {
+    const { phoneNumber, correlationId } = req.body
+    const userWallet = await new UserWallet({
+      phoneNumber,
+      accountAddress,
+      walletOwnerOriginalAddress: accountAddress,
+      walletFactoryOriginalAddress: homeAddresses.WalletFactory,
+      walletFactoryCurrentAddress: homeAddresses.WalletFactory,
+      walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
+      walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+      walletModulesOriginal: homeAddresses.walletModules,
+      walletModules: homeAddresses.walletModules,
+      networks: ['fuse'],
+      identifier
+    }).save()
+    const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id })
+    return res.json({ job: job.attrs })
+  } catch (err) {
+    return res.status(400).send({ error: err })
+  }
 })
 
 module.exports = router

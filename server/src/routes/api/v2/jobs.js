@@ -15,6 +15,9 @@ const auth = require('@routes/auth')
  */
 router.get('/correlationId/:correlationId', auth.required, async (req, res) => {
   const jobs = await agenda.jobs({ 'data.correlationId': req.params.correlationId })
+  if (!jobs || jobs.length === 0 || !jobs[0]) {
+    return res.status(404).json({ error: 'Job not found' })
+  }
   res.json({ data: jobs[0] })
 })
 
@@ -30,6 +33,9 @@ router.get('/correlationId/:correlationId', auth.required, async (req, res) => {
  */
 router.get('/:id', auth.required, async (req, res) => {
   const jobs = await agenda.jobs({ _id: mongoose.Types.ObjectId(req.params.id) })
+  if (!jobs || jobs.length === 0 || !jobs[0]) {
+    return res.status(404).json({ error: 'Job not found' })
+  }
   res.json({ data: jobs[0] })
 })
 
