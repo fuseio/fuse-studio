@@ -25,14 +25,16 @@ router.post('/mint', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
   const { tokenAddress, networkType, amount, toAddress, correlationId } = req.body
-
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
-
-  const amountInWei = toWei(amount.toString())
-  const job = await agenda.now('mint', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, toAddress, correlationId })
-  return res.json({ job: job.attrs })
+  try {
+    const amountInWei = toWei(amount.toString())
+    const job = await agenda.now('mint', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, toAddress, correlationId })
+    return res.json({ job: job.attrs })
+  } catch (err) {
+    return res.status(400).send({ error: err })
+  }
 })
 
 /**
@@ -61,15 +63,18 @@ router.post('/burn', auth.required, async (req, res) => {
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
-
-  const amountInWei = toWei(amount)
-  let job
-  if (!from) {
-    job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, correlationId })
-  } else {
-    job = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId })
+  try {
+    const amountInWei = toWei(amount)
+    let job
+    if (!from) {
+      job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, correlationId })
+    } else {
+      job = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId })
+    }
+    return res.json({ json: job.attrs })
+  } catch (err) {
+    return res.status(400).send({ error: err })
   }
-  return res.json({ json: job.attrs })
 })
 
 /**
@@ -99,9 +104,13 @@ router.post('/transfer', auth.required, async (req, res) => {
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
-  const amountInWei = toWei(amount)
-  const job = await agenda.now('adminTransfer', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, to, correlationId })
-  return res.json({ job: job.attrs })
+  try {
+    const amountInWei = toWei(amount)
+    const job = await agenda.now('adminTransfer', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, to, correlationId })
+    return res.json({ job: job.attrs })
+  } catch (err) {
+    return res.status(400).send({ error: err })
+  }
 })
 
 module.exports = router
