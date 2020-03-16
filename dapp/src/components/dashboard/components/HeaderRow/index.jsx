@@ -15,8 +15,8 @@ export default ({
               {column.render('Header')}
             </span>
             <span className='table__header__cell__sort'>
-              {column.sorted
-                ? (column.sortedDesc
+              {column.isSorted
+                ? (column.isSortedDesc
                   ? <FontAwesome name='arrow-down' />
                   : <FontAwesome name='arrow-up' />)
                 : ''}
