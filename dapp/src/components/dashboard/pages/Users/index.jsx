@@ -82,7 +82,7 @@ const Users = ({
         return ({
           isApproved,
           hasAdminRole: isAdmin,
-          createdAt: new Date(createdAt * 1000).toUTCString(),
+          createdAt: new Date(createdAt * 1000),
           name: metadata
             ? [
               {
@@ -187,7 +187,9 @@ const Users = ({
     },
     {
       Header: 'Date',
-      accessor: 'createdAt'
+      accessor: 'createdAt',
+      sortType: 'datetime',
+      Cell: ({ cell: { value } }) => value.toUTCString()
     },
     {
       id: 'dropdown',
