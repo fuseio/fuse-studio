@@ -113,7 +113,7 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
       if (errorHandlers.hasOwnProperty(errorMessage)) {
         return errorHandlers[errorMessage]()
       } else {
-        console.log('No error handler, using the default one.')
+        console.log('No error handler found, using the default one.')
         return updateNonce()
       }
     }
