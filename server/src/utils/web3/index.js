@@ -93,7 +93,9 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
       console.error(error)
 
       const updateNonce = async () => {
+        console.log('updating the nonce')
         const nonce = await web3.eth.getTransactionCount(from)
+        console.log(`new nonce is ${nonce}`)
         account.nonces[bridgeType] = nonce
       }
 
@@ -111,6 +113,7 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
       if (errorHandlers.hasOwnProperty(errorMessage)) {
         return errorHandlers[errorMessage]()
       } else {
+        console.log('No error handler, using the default one.')
         return updateNonce()
       }
     }
