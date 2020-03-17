@@ -19,6 +19,7 @@
         "walletModules": {
           "ApprovedTransfer": "0x2cbE5fE3d259313F25Ac2Dd10FAB8B851561F366",
           "CommunityManager": "0x0D4926876ba1ada6E9b542e018eBeD517FFc8050",
+          "DAIPointsManager": "0x602C6FbF83f5B758365DB51f38D311B09657f72c",
           "GuardianManager": "0x4777f535a4496Bb64dC51C48b33201FeD893d100",
           "LockManager": "0x8221d124f8255f61fC5f1dbb2382364B53355574",
           "RecoveryManager": "0xcB4606396746Cd62Ac9ea9Cc0fCc5B16BE73E7aF",
