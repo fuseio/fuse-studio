@@ -286,6 +286,7 @@ function * fetchUserWallets ({ accounts }) {
 
 const fetchEntity = createEntitiesFetch(actions.FETCH_ENTITY, entitiesApi.fetchEntity)
 const fetchEntityMetadata = createEntitiesFetch(actions.FETCH_ENTITY_METADATA, entitiesApi.fetchEntityMetadata)
+const fetchUserNames = createEntitiesFetch(actions.FETCH_USER_WALLETS, entitiesApi.fetchUserNames)
 
 export default function * communityEntitiesSaga () {
   yield all([
@@ -295,6 +296,7 @@ export default function * communityEntitiesSaga () {
     tryTakeEvery(actions.REMOVE_ENTITY, removeEntity, 1),
     tryTakeEvery(actions.FETCH_ENTITIES, fetchEntities, 1),
     tryTakeEvery(actions.FETCH_USER_WALLETS, fetchUserWallets, 1),
+    tryTakeEvery(actions.FETCH_USER_NAMES, fetchUserNames, 1),
     tryTakeEvery(actions.FETCH_ENTITY, fetchEntity, 1),
     tryTakeEvery(actions.FETCH_ENTITY_METADATA, fetchEntityMetadata, 1),
     tryTakeEvery(actions.FETCH_USERS_METADATA, fetchUsersMetadata, 1),
