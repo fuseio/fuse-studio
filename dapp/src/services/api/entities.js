@@ -40,6 +40,12 @@ export const fetchUserWallets = ({ accounts }) => client.query({
   query: FETCH_WALLETS,
   variables: { accounts }
 })
+
+export const fetchUserNames = (apiRoot, { accounts }) =>
+  request.post(`${apiRoot}/users/getnames`)
+    .send({ accounts })
+    .then(response => ({ data: response.body.data.map(entity => ({ ...entity, account: entity.accountAddress })) }))
+
 export const createEntitiesMetadata = (apiRoot, { communityAddress, accountAddress, metadata }) =>
   request.put(`${apiRoot}/entities/${communityAddress}/${accountAddress}`)
     .send({ metadata })

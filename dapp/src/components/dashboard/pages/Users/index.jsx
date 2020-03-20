@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
+import { toChecksumAddress } from 'web3-utils'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
@@ -19,7 +20,8 @@ import {
   joinCommunity,
   importExistingEntity,
   fetchUsersMetadata,
-  fetchUserWallets
+  fetchUserWallets,
+  fetchUserNames
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
@@ -50,6 +52,7 @@ const Users = ({
   communityEntities,
   fetchUsersMetadata,
   fetchUserWallets,
+  fetchUserNames,
   walletAccounts,
   userWallets,
   users,
@@ -68,15 +71,15 @@ const Users = ({
 
   useEffect(() => {
     if (walletAccounts && walletAccounts.length > 0) {
-      const walletOwners = walletAccounts.map(wallet => userWallets[wallet].owner)
-      fetchUsersMetadata(walletOwners)
+      const walletOwners = walletAccounts.map(wallet => toChecksumAddress(userWallets[wallet].owner))
+      fetchUserNames(walletOwners)
     }
   }, [walletAccounts])
 
   useEffect(() => {
     const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(userEntities)) {
-      const data = userEntities.map(({ isAdmin, isApproved, address, createdAt }) => {
+      const data = userEntities.map(({ isAdmin, isApproved, address, createdAt, displayName }) => {
         const metadataAddress = userWallets[address] ? userWallets[address].owner : address
         const metadata = users[metadataAddress]
         return ({
@@ -112,7 +115,7 @@ const Users = ({
             ]
             : [
               {
-                name: '',
+                name: displayName,
                 image: <div
                   style={{
                     backgroundImage: `url(${Avatar})`,
@@ -364,7 +367,8 @@ const mapDispatchToProps = {
   fetchEntities,
   importExistingEntity,
   fetchUsersMetadata,
-  fetchUserWallets
+  fetchUserWallets,
+  fetchUserNames
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users)
