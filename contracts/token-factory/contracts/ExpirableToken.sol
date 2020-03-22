@@ -10,6 +10,10 @@ contract ExpirableToken is MintableBurnableToken {
          _expiryTime = expiryTime;
   }
 
+  function expiryTime() public view returns (uint256) {
+      return _expiryTime;
+  }
+
   function _transfer(address sender, address recipient, uint256 amount) internal {
     require(block.timestamp < _expiryTime, "expiry time has passed");
     super._transfer(sender, recipient, amount);
