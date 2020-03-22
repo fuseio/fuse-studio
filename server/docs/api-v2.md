@@ -5,6 +5,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 
 - [Admin](#Admin)
 	- [Burn tokens](#Burn-tokens)
+	- [Create token](#Create-token)
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	- [Mint tokens](#Mint-tokens)
 	- [Transfer tokens from account](#Transfer-tokens-from-account)
@@ -62,6 +63,43 @@ Burn 1.1 tokens on Fuse network
 ```
 POST /api/v2/admin/tokens/burn
 body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1' }
+```
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `String` | <p>job data</p> |
+## <a name='Create-token'></a> Create token
+[Back to top](#top)
+
+<p>Start async job of creating a token</p>
+
+```
+POST /api/v2/admin/tokens/create
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| name | `String` | <p>Token name</p> |
+| symbol | `String` | <p>Token symbol</p> |
+| initialSupply | `String` | <p>Token initial supply (in ETH)</p> |
+| uri | `String` | <p>Token URI (metadata)</p> |
+| expiryTimestamp | `String` | <p>Token expiry timestamp (after which cannot be transferred)</p> |
+| spendabilityIds | `String` | <p>Token spendability ids (array)</p> |
+| networkType | `String` | <p>Token's network (must be Fuse)</p> |
+
+### Examples
+Create a token on Fuse network
+
+```
+POST /api/v2/admin/tokens/create
+body: { name: 'MyCoolToken', symbol: 'MCT', initialSupply: '100', uri: 'ipfs://hash', expiryTimestamp: 1584867609179, spendabilityIds: ['...'], networkType: 'fuse' }
 ```
 
 

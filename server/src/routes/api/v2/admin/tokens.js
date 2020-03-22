@@ -4,6 +4,42 @@ const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
 
 /**
+ * @api {post} /api/v2/admin/tokens/create Create token
+ * @apiName Create
+ * @apiGroup Admin
+ * @apiDescription Start async job of creating a token
+ * @apiExample Create a token on Fuse network
+ *  POST /api/v2/admin/tokens/create
+ *  body: { name: 'MyCoolToken', symbol: 'MCT', initialSupply: '100', uri: 'ipfs://hash', expiryTimestamp: 1584867609179, spendabilityIds: ['...'], networkType: 'fuse' }
+ * @apiParam {String} name Token name
+ * @apiParam {String} symbol Token symbol
+ * @apiParam {String} initialSupply Token initial supply (in ETH)
+ * @apiParam {String} uri Token URI (metadata)
+ * @apiParam {String} expiryTimestamp Token expiry timestamp (after which cannot be transferred)
+ * @apiParam {String} spendabilityIds Token spendability ids (array)
+ * @apiParam {String} networkType Token's network (must be Fuse)
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {String} Started job data
+ */
+router.post('/create', auth.required, async (req, res) => {
+  const { isCommunityAdmin, accountAddress } = req.user
+  if (!isCommunityAdmin) {
+    return res.status(400).send({ error: 'The user is not a community admin' })
+  }
+  const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, networkType } = req.body
+  if (networkType !== 'fuse') {
+    return res.status(400).send({ error: 'Supported only on Fuse Network' })
+  }
+  try {
+    // TODO
+  } catch (err) {
+    return res.status(400).send({ error: err })
+  }
+})
+
+/**
  * @api {post} /api/v2/admin/tokens/mint Mint tokens
  * @apiName Mint
  * @apiGroup Admin

@@ -2,9 +2,10 @@ pragma solidity ^0.5.2;
 
 import './BasicToken.sol';
 import './MintableBurnableToken.sol';
+import './ExpirableToken.sol';
 
 contract TokenFactory {
-  enum TokenType {Basic, MintableBurnable}
+  enum TokenType {Basic, MintableBurnable, ExpirableToken}
 
   event TokenCreated(address indexed token, address indexed issuer, TokenType tokenType);
 
@@ -37,5 +38,22 @@ contract TokenFactory {
 
       tokenAddress = address(token);
       emit TokenCreated(tokenAddress, msg.sender, TokenType.MintableBurnable);
+    }
+
+  function createExpirableToken(string memory name, string memory symbol, uint256 initialSupply, string memory tokenURI, uint256 expiryTime) public
+    returns (address tokenAddress) {
+      require(bytes(name).length != 0);
+      require(bytes(symbol).length != 0);
+      require(expiryTime > block.timestamp, "expiry time is before current time");
+
+      ExpirableToken token = new ExpirableToken(name, symbol, initialSupply, tokenURI, expiryTime);
+
+      token.transfer(msg.sender, initialSupply);
+      token.transferOwnership(msg.sender);
+      token.addMinter(msg.sender);
+      token.renounceMinter();
+
+      tokenAddress = address(token);
+      emit TokenCreated(tokenAddress, msg.sender, TokenType.ExpirableToken);
     }
 }
