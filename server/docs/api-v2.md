@@ -90,7 +90,7 @@ POST /api/v2/admin/tokens/create
 | symbol | `String` | <p>Token symbol</p> |
 | initialSupply | `String` | <p>Token initial supply (in ETH)</p> |
 | uri | `String` | <p>Token URI (metadata)</p> |
-| expiryTimestamp | `String` | <p>Token expiry timestamp (after which cannot be transferred)</p> |
+| expiryTimestamp | `String` | <p>Token expiry timestamp after which cannot transfer (Unix epoch time)</p> |
 | spendabilityIds | `String` | <p>Token spendability ids (array)</p> |
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
 

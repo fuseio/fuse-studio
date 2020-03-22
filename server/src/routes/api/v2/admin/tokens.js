@@ -15,7 +15,7 @@ const auth = require('@routes/auth')
  * @apiParam {String} symbol Token symbol
  * @apiParam {String} initialSupply Token initial supply (in ETH)
  * @apiParam {String} uri Token URI (metadata)
- * @apiParam {String} expiryTimestamp Token expiry timestamp (after which cannot be transferred)
+ * @apiParam {String} expiryTimestamp Token expiry timestamp after which cannot transfer (Unix epoch time)
  * @apiParam {String} spendabilityIds Token spendability ids (array)
  * @apiParam {String} networkType Token's network (must be Fuse)
  *
