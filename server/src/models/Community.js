@@ -7,6 +7,7 @@ const CommunitySchema = new Schema({
   foreignTokenAddress: { type: String },
   homeBridgeAddress: { type: String },
   foreignBridgeAddress: { type: String },
+  secondaryTokenAddress: { type: String },
   isClosed: { type: Boolean, default: false },
   plugins: { type: Object },
   name: { type: String, required: [true, "can't be blank"] },
