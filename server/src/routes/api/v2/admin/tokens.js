@@ -33,7 +33,8 @@ router.post('/create', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
   try {
-    // TODO
+    const job = await agenda.now('createToken', { bridgeType: 'home', from: accountAddress, name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds })
+    return res.json({ job: job.attrs })
   } catch (err) {
     return res.status(400).send({ error: err })
   }

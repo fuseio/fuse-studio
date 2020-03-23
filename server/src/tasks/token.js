@@ -1,9 +1,27 @@
 const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/MintableBurnableToken')
+const ExpirableTokenAbi = require('@fuse/token-factory-contracts/abi/ExpirableToken')
 const { createNetwork } = require('@utils/web3')
 const { withAccount, lockAccount } = require('@utils/account')
 const { getAbi } = require('@constants/abi')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
+
+const createToken = withAccount(async (account, { bridgeType, name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds }, job) => {
+  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+  const tokenContractInstance = createContract(ExpirableTokenAbi)
+  const method = createMethod(tokenContractInstance, 'deploy', name, symbol, initialSupply, uri, expiryTimestamp)
+  await send(method, {
+    from: account.address
+  }, {
+    transactionHash: (hash) => {
+      job.attrs.data.txHash = hash
+      job.save()
+    }
+  })
+  // TODO
+}, ({ from }) => {
+  return lockAccount({ address: from })
+})
 
 const mint = withAccount(async (account, { bridgeType, tokenAddress, amount, toAddress }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
@@ -104,6 +122,7 @@ const adminTransfer = withAccount(async (account, { bridgeType, tokenAddress, am
 })
 
 module.exports = {
+  createToken,
   mint,
   burn,
   burnFrom,
