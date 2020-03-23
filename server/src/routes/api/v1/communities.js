@@ -10,6 +10,8 @@ const smsProvider = require('@utils/smsProvider')
 const { sign } = require('@utils/crypto')
 const sendgridUtils = require('@utils/sendgrid')
 const { toChecksumAddress } = require('web3-utils')
+const { getWeb3 } = require('@services/web3')
+const { fetchTokenData } = require('@utils/token')
 
 const makePlugin = ({ plugin }) => {
   const { name } = plugin
@@ -66,8 +68,21 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
 
 router.put('/:communityAddress', async (req, res) => {
   const { communityAddress } = req.params
-  const { communityURI } = req.body
-  const community = await Community.findOneAndUpdate({ communityAddress }, { communityURI }, { new: true })
+  const { communityURI, description } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description }, lodash.identity), { new: true })
+  return res.json({ data: community })
+})
+
+router.put('/:communityAddress/secondary', async (req, res) => {
+  const { communityAddress } = req.params
+  const { networkType, tokenType, secondaryTokenAddress } = req.body
+  const token = await Token.findOne({ address: secondaryTokenAddress })
+  if (!token) {
+    const web3 = getWeb3({ networkType })
+    const tokenData = await fetchTokenData(secondaryTokenAddress, {}, web3)
+    await new Token({ address: secondaryTokenAddress, networkType, tokenType, ...tokenData }).save()
+  }
+  const community = await Community.findOneAndUpdate({ communityAddress }, { secondaryTokenAddress }, { new: true })
   return res.json({ data: community })
 })
 

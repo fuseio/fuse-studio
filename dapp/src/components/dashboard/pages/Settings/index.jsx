@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { updateCommunityMetadata } from 'actions/community'
+import { updateCommunityMetadata, setSecondaryToken } from 'actions/community'
 import { getBalances, getAccountAddress } from 'selectors/accounts'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
@@ -10,6 +10,7 @@ const Settings = ({
   community,
   token,
   communityMetadata,
+  setSecondaryToken,
   updateCommunityMetadata
 }) => {
   return (
@@ -25,6 +26,7 @@ const Settings = ({
               communityMetadata={communityMetadata}
               token={token}
               updateCommunityMetadata={updateCommunityMetadata}
+              setSecondaryToken={setSecondaryToken}
             />
           }
         </div>
@@ -37,12 +39,13 @@ const mapStateToProps = (state, { community }) => ({
   ...state.screens.token,
   accountAddress: getAccountAddress(state),
   balances: getBalances(state),
-  communityMetadata: state.entities.metadata[community.communityURI],
+  communityMetadata: community ? state.entities.metadata[community.communityURI] : {},
   token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state))
 })
 
 const mapDispatchToProps = {
-  updateCommunityMetadata
+  updateCommunityMetadata,
+  setSecondaryToken
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings)

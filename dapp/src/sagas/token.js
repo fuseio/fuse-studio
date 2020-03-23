@@ -4,7 +4,7 @@ import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
-import { ADD_COMMUNITY_PLUGIN, SET_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA } from 'actions/community'
+import { ADD_COMMUNITY_PLUGIN, SET_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA, SET_SECONDARY_TOKEN } from 'actions/community'
 import { createMetadata } from 'sagas/metadata'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/token'
@@ -16,7 +16,8 @@ import { getWeb3 } from 'sagas/network'
 import {
   fetchCommunity as fetchCommunityApi,
   updateCommunityMetadata as updateCommunityMetadataApi,
-  addCommunityPlugin as addCommunityPluginApi
+  addCommunityPlugin as addCommunityPluginApi,
+  setSecondaryToken as setSecondaryTokenApi
 } from 'services/api/community'
 import {
   createMetadata as createMetadataApi
@@ -26,6 +27,7 @@ import { ADD_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
 import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import TokenFactoryABI from '@fuse/token-factory-contracts/abi/TokenFactoryWithEvents'
 import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
 import { getOptions, getNetworkVersion } from 'utils/network'
@@ -290,25 +292,41 @@ function * addCommunityPlugin ({ communityAddress, plugin }) {
   })
 }
 
-function * updateCommunityMetadata ({ communityAddress, metadata: { image, coverPhoto } }) {
+function * updateCommunityMetadata ({ communityAddress, metadata: { image, coverPhoto }, description }) {
   const { communityURI } = yield select(state => state.entities.communities[communityAddress])
   const metadata = yield select(state => state.entities.metadata[communityURI])
+  let isMetadataUpdated = false
   if (image) {
     const { hash } = yield apiCall(imageUpload, { image: image })
     metadata.image = hash
+    isMetadataUpdated = true
   }
 
   if (coverPhoto) {
     const { hash } = yield apiCall(imageUpload, { image: coverPhoto })
     metadata.coverPhoto = hash
+    isMetadataUpdated = true
   }
-  const { hash } = yield apiCall(createMetadataApi, { metadata })
-  const newCommunityURI = `ipfs://${hash}`
-  const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI })
+  let newCommunityURI
+  if (isMetadataUpdated) {
+    const { hash } = yield apiCall(createMetadataApi, { metadata })
+    newCommunityURI = `ipfs://${hash}`
+  }
+  const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI || undefined, description })
 
   yield put(fetchMetadata(newCommunityURI))
   yield put({
     type: UPDATE_COMMUNITY_METADATA.SUCCESS,
+    communityAddress,
+    entity: 'communities',
+    response: community
+  })
+}
+
+function * setSecondaryToken ({ communityAddress, secondaryTokenAddress }) {
+  const { data: community } = yield apiCall(setSecondaryTokenApi, { communityAddress, secondaryTokenAddress, networkType: 'fuse', tokenType: 'basic' })
+  yield put({
+    type: SET_SECONDARY_TOKEN.SUCCESS,
     communityAddress,
     entity: 'communities',
     response: community
@@ -420,6 +438,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),
     tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
     tryTakeEvery(SET_BONUS, setBonus, 1),
+    tryTakeEvery(SET_SECONDARY_TOKEN, setSecondaryToken, 1),
     tryTakeEvery(actions.FETCH_FEATURED_COMMUNITIES, fetchFeaturedCommunities),
     takeEvery(action => /^(FETCH_FEATURED_COMMUNITIES|FETCH_COMMUNITIES).*SUCCESS/.test(action.type), watchCommunities)
   ])
