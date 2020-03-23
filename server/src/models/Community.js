@@ -12,7 +12,8 @@ const CommunitySchema = new Schema({
   plugins: { type: Object },
   name: { type: String, required: [true, "can't be blank"] },
   communityURI: { type: String },
-  coverPhoto: { type: String }
+  coverPhoto: { type: String },
+  description: { type: String }
 }, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })
