@@ -63,6 +63,10 @@ module.exports = (mongoose) => {
     return Token.updateOne({ address }, { $inc: { totalSupply: negatedValue } })
   }
 
+  token.getBySpendability = (networkType, ids, order) => {
+    return Token.find({ networkType, spendabilityIds: { $in: ids } }, { _id: 0, address: 1 }).sort({ spendabilityIds: order })
+  }
+
   token.getModel = () => {
     return Token
   }

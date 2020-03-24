@@ -188,6 +188,8 @@ POST /api/v2/admin/tokens/transfer
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | tokenAddress | `String` | <p>Token address to transfer (body parameter)</p> |
+| spendabilityIds | `String` | <p>Token spendability ids (comma-seperated list) - if sent, no need for tokenAddress</p> |
+| spendabilityOrder | `String` | <p>Token spendability order (asc/desc)</p> |
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
 | amount | `String` | <p>Token amount to transfer</p> |
 | from | `String` | <p>account to transfer from</p> |

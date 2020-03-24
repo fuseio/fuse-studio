@@ -143,11 +143,20 @@ const adminTransfer = withAccount(async (account, { bridgeType, tokenAddress, am
   return lockAccount({ address: from })
 })
 
+const adminSpendabilityTransfer = withAccount(async (account, { bridgeType, tokenAddresses, amount, wallet, to }, job) => {
+  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+  const userWallet = await UserWallet.findOne({ walletAddress: wallet })
+  // TODO
+}, ({ from }) => {
+  return lockAccount({ address: from })
+})
+
 module.exports = {
   createToken,
   mint,
   burn,
   burnFrom,
   adminApprove,
-  adminTransfer
+  adminTransfer,
+  adminSpendabilityTransfer
 }
