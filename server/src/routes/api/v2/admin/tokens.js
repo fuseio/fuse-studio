@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { toWei } = require('web3-utils')
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
+const moment = require('moment')
 
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
@@ -10,13 +11,13 @@ const auth = require('@routes/auth')
  * @apiDescription Start async job of creating a token
  * @apiExample Create a token on Fuse network
  *  POST /api/v2/admin/tokens/create
- *  body: { name: 'MyCoolToken', symbol: 'MCT', initialSupply: '100', uri: 'ipfs://hash', expiryTimestamp: 1584867609179, spendabilityIds: ['...'], networkType: 'fuse' }
+ *  body: { name: 'MyCoolToken', symbol: 'MCT', initialSupply: '100', uri: 'ipfs://hash', expiryTimestamp: 1585036857, spendabilityIds: 'a,b,c', networkType: 'fuse' }
  * @apiParam {String} name Token name
  * @apiParam {String} symbol Token symbol
  * @apiParam {String} initialSupply Token initial supply (in ETH)
  * @apiParam {String} uri Token URI (metadata)
- * @apiParam {String} expiryTimestamp Token expiry timestamp after which cannot transfer (Unix epoch time)
- * @apiParam {String} spendabilityIds Token spendability ids (array)
+ * @apiParam {String} expiryTimestamp Token expiry timestamp after which cannot transfer (Unix epoch time - in seconds)
+ * @apiParam {String} spendabilityIds Token spendability ids (comma-seperated list)
  * @apiParam {String} networkType Token's network (must be Fuse)
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
@@ -32,8 +33,27 @@ router.post('/create', auth.required, async (req, res) => {
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
+  if (!name) {
+    return res.status(400).send({ error: 'Missing name' })
+  }
+  if (!symbol) {
+    return res.status(400).send({ error: 'Missing symbol' })
+  }
+  const initialSupplyInWei = toWei((initialSupply || 0).toString())
+  const tokenURI = uri || ''
+  if (!expiryTimestamp) {
+    return res.status(400).send({ error: 'Missing expiryTimestamp' })
+  }
+  const now = moment().unix()
+  if (expiryTimestamp < now) {
+    return res.status(400).send({ error: 'Invalid expiryTimestamp - before current time' })
+  }
+  const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
+  if (!spendabilityIdsArr.length) {
+    return res.status(400).send({ error: 'Missing spendabilityIds' })
+  }
   try {
-    const job = await agenda.now('createToken', { bridgeType: 'home', from: accountAddress, name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds })
+    const job = await agenda.now('createToken', { bridgeType: 'home', from: accountAddress, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr })
     return res.json({ job: job.attrs })
   } catch (err) {
     return res.status(400).send({ error: err })

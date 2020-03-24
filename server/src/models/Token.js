@@ -17,7 +17,8 @@ module.exports = (mongoose) => {
     factoryAddress: { type: String },
     blockNumber: { type: Number },
     tokenType: { type: String, required: [true, "can't be blank"] },
-    networkType: { type: String }
+    networkType: { type: String },
+    spendabilityIds: [{ type: String }]
   }, { timestamps: true })
 
   TokenSchema.index({ address: 1 })

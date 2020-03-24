@@ -7,7 +7,8 @@ contract ExpirableToken is MintableBurnableToken {
 
   constructor (string memory name, string memory symbol, uint256 initialSupply, string memory tokenURI, uint256 expiryTime) public
      MintableBurnableToken(name, symbol, initialSupply, tokenURI) {
-         _expiryTime = expiryTime;
+        require(expiryTime > block.timestamp, "expiry time is before current time");
+        _expiryTime = expiryTime;
   }
 
   function expiryTime() public view returns (uint256) {

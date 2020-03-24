@@ -1,16 +1,17 @@
 const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/MintableBurnableToken')
 const ExpirableTokenAbi = require('@fuse/token-factory-contracts/abi/ExpirableToken')
+const ExpirableTokenBytecode = require('@fuse/token-factory-contracts/build/ExpirableToken')
 const { createNetwork } = require('@utils/web3')
 const { withAccount, lockAccount } = require('@utils/account')
 const { getAbi } = require('@constants/abi')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
+const Token = mongoose.model('Token')
 
-const createToken = withAccount(async (account, { bridgeType, name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds }, job) => {
-  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
-  const tokenContractInstance = createContract(ExpirableTokenAbi)
-  const method = createMethod(tokenContractInstance, 'deploy', name, symbol, initialSupply, uri, expiryTimestamp)
-  await send(method, {
+const createToken = withAccount(async (account, { bridgeType, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr }, job) => {
+  const { createContract, createMethod, send, web3 } = createNetwork(bridgeType, account)
+  const method = createMethod(createContract(ExpirableTokenAbi), 'deploy', { data: ExpirableTokenBytecode.bytecode, arguments: [name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp] })
+  const receipt = await send(method, {
     from: account.address
   }, {
     transactionHash: (hash) => {
@@ -18,7 +19,28 @@ const createToken = withAccount(async (account, { bridgeType, name, symbol, init
       job.save()
     }
   })
-  // TODO
+  const tokenAddress = receipt.options.address
+  const { blockNumber } = await web3.eth.getTransaction(job.attrs.data.txHash)
+
+  job.attrs.data.tokenAddress = tokenAddress
+  job.attrs.data.blockNumber = blockNumber
+  job.save()
+
+  const token = await new Token({
+    address: tokenAddress,
+    name,
+    symbol,
+    tokenURI,
+    totalSupply: initialSupplyInWei,
+    owner: account.address,
+    blockNumber,
+    tokenType: 'expirable',
+    networkType: bridgeType,
+    spendabilityIds: spendabilityIdsArr
+  }).save()
+
+  job.attrs.data.token = token
+  job.save()
 }, ({ from }) => {
   return lockAccount({ address: from })
 })
