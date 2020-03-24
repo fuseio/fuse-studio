@@ -86,9 +86,15 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
     })
 
     try {
-      const receipt = await promise
-      console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
-      return { receipt }
+      if (methodName === 'deploy') {
+        const contract = await promise
+        console.log(`[${bridgeType}] method ${methodName} succeeded ${contract.options.address}`)
+        return { receipt: contract }
+      } else {
+        const receipt = await promise
+        console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
+        return { receipt }
+      }
     } catch (error) {
       console.error(error)
 
