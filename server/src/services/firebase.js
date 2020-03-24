@@ -3,6 +3,8 @@ const AWS = require('aws-sdk')
 const config = require('config')
 
 let roostAdmin
+let localDolarAdmin
+let localPayAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -10,10 +12,22 @@ const initAdmin = async () => {
   admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(SecretString))
   })
-  const response = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdRoost }).promise()
+  const roostResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdRoost }).promise()
   roostAdmin = admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(response.SecretString))
+    credential: admin.credential.cert(JSON.parse(roostResponse.SecretString))
   }, 'Roost')
+
+  const localDolarResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdLocalDolarMX }).promise()
+
+  localDolarAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(localDolarResponse.SecretString))
+  }, 'LocalDollarMX')
+
+  const localPayResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdLocalPay }).promise()
+
+  localPayAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(localPayResponse.SecretString))
+  }, 'LocalPay')
 }
 
 initAdmin()
@@ -21,12 +35,15 @@ initAdmin()
 const getAdmin = (appName) => {
   if (appName === 'Roost') {
     return roostAdmin
+  } else if (appName === 'LocalDolarMX') {
+    return localDolarAdmin
+  } else if (appName === 'LocalPay') {
+    return localPayAdmin
   } else {
     return admin
   }
 }
 module.exports = {
   admin,
-  getAdmin,
-  roostAdmin
+  getAdmin
 }
