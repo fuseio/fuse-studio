@@ -9,9 +9,9 @@ export const addCommunityPlugin = (apiRoot, { communityAddress, plugin }) =>
     .send({ plugin })
     .then(response => response.body)
 
-export const updateCommunityMetadata = (apiRoot, { communityAddress, communityURI, description }) =>
+export const updateCommunityMetadata = (apiRoot, { communityAddress, ...fields }) =>
   request.put(`${apiRoot}/communities/${communityAddress}`)
-    .send({ communityURI, description })
+    .send({ ...fields })
     .then(response => response.body)
 
 export const setSecondaryToken = (apiRoot, { communityAddress, secondaryTokenAddress, networkType, tokenType }) =>

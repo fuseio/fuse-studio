@@ -12,6 +12,7 @@ The Fuse Studio REST API for accessing the data and the services of the Fuse net
 	- [Fetch community with plugins adjusted for the specified account](#Fetch-community-with-plugins-adjusted-for-the-specified-account)
 	- [Fetch community](#Fetch-community)
 	- [Invite a user to community](#Invite-a-user-to-community)
+	- [Set secondary token for the community](#Set-secondary-token-for-the-community)
 	- [Update community metadata](#Update-community-metadata)
 	
 - [Entity](#Entity)
@@ -184,6 +185,33 @@ POST /communities/:communityAddress/invite
 {
    "email": {{userEmail}},
 }
+```
+
+## <a name='Set-secondary-token-for-the-community'></a> Set secondary token for the community
+[Back to top](#top)
+
+
+
+```
+PUT /communities/:communityAddress/secondary
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| secondaryTokenAddress | `String` | <p>Address of the secondary token</p> |
+| networkType | `String` | <p>Token's network type</p> |
+| tokenType | `String` | <p>Token's network type</p> |
+
+### Param Examples
+`json` - Request-Example:
+
+```json
+{
+   "secondaryTokenAddress": "0xd6aab51d1343dcbee9b47e6fef8ba4469cf3dbde",
+   "networkType": "fuse",
+   "tokenType": "basic"
+ }
 ```
 
 ## <a name='Update-community-metadata'></a> Update community metadata

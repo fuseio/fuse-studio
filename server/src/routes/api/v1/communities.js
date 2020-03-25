@@ -68,10 +68,25 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
 
 router.put('/:communityAddress', async (req, res) => {
   const { communityAddress } = req.params
-  const { communityURI, description } = req.body
-  const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description }, lodash.identity), { new: true })
+  const { communityURI, description, webUrl } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description, webUrl }, lodash.identity), { new: true })
   return res.json({ data: community })
 })
+
+/**
+ * @api {put} /communities/:communityAddress/secondary Set secondary token for the community
+ * @apiName SetSecondaryToken
+ * @apiGroup Community
+ * @apiParam {String} secondaryTokenAddress Address of the secondary token
+ * @apiParam {String} networkType Token's network type
+ * @apiParam {String} tokenType Token's network type
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "secondaryTokenAddress": "0xd6aab51d1343dcbee9b47e6fef8ba4469cf3dbde",
+ *      "networkType": "fuse",
+ *      "tokenType": "basic"
+ *    }
+ */
 
 router.put('/:communityAddress/secondary', async (req, res) => {
   const { communityAddress } = req.params

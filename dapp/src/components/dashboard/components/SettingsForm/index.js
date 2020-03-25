@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/styles'
 import get from 'lodash/get'
+import set from 'lodash/set'
 import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
 
@@ -84,6 +85,32 @@ class SettingsForm extends Component {
               </div>
             </Typography>
           </ExpansionPanelDetails>
+          <ExpansionPanelDetails className='accordion__panel'>
+            <Typography component='div'>
+              <div className='grid-x field'>
+                <h3 className='field__title'>Community Webpage URL</h3>
+                <TextField
+                  name='webUrl'
+                  fullWidth
+                  value={values.webUrl}
+                  type='string'
+                  autoComplete='off'
+                  margin='none'
+                  onChange={handleChange}
+                  InputProps={{
+                    classes: {
+                      underline: 'user-form__field__underline',
+                      error: 'user-form__field__error'
+                    }
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                    className: 'user-form__field__label'
+                  }}
+                />
+              </div>
+            </Typography>
+          </ExpansionPanelDetails>
           <div className='join_bonus__actions'>
             <button className='button button--normal join_bonus__button' disabled={!isValid}>Save</button>
           </div>
@@ -94,15 +121,22 @@ class SettingsForm extends Component {
 
   onSubmit = (values, formikBag) => {
     const { updateCommunityMetadata, setSecondaryToken, community } = this.props
-    const metadata = {}
+    const fields = {
+    }
     if (get(values, 'images.custom.blob')) {
-      metadata.image = get(values, 'images.custom.blob')
+      set(fields, 'metadata.image', get(values, 'images.custom.blob'))
     }
     if (get(values, 'coverPhoto.blob')) {
-      metadata.coverPhoto = get(values, 'coverPhoto.blob')
+      set(fields, 'metadata.coverPhoto', get(values, 'coverPhoto.blob'))
     }
-    if (!isEmpty(metadata) || community.description !== values.description) {
-      updateCommunityMetadata(community.communityAddress, metadata, values.description)
+    if (community.description !== values.description) {
+      fields.description = values.description
+    }
+    if (community.webUrl !== values.webUrl) {
+      fields.webUrl = values.webUrl
+    }
+    if (!isEmpty(fields)) {
+      updateCommunityMetadata(community.communityAddress, fields)
     }
 
     if (values.secondaryTokenAddress && community.secondaryTokenAddress !== toChecksumAddress(values.secondaryTokenAddress)) {
@@ -112,7 +146,7 @@ class SettingsForm extends Component {
   }
 
   render = () => {
-    const { isClosed, secondaryTokenAddress, description } = this.props.community
+    const { isClosed, secondaryTokenAddress, description, webUrl } = this.props.community
     const { symbol } = this.props.token
     const { coverPhoto, image, isDefault } = this.props.communityMetadata
     const initialValues = {
@@ -129,7 +163,8 @@ class SettingsForm extends Component {
       },
       communitySymbol: symbol,
       secondaryTokenAddress,
-      description
+      description,
+      webUrl
     }
     return (
       <Formik
