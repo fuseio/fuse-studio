@@ -27,7 +27,6 @@ import { ADD_ENTITY } from 'actions/communityEntities'
 import { roles, combineRoles } from '@fuse/roles'
 import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
 import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
 import TokenFactoryABI from '@fuse/token-factory-contracts/abi/TokenFactoryWithEvents'
 import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
 import { getOptions, getNetworkVersion } from 'utils/network'
@@ -292,27 +291,27 @@ function * addCommunityPlugin ({ communityAddress, plugin }) {
   })
 }
 
-function * updateCommunityMetadata ({ communityAddress, metadata: { image, coverPhoto }, description }) {
+function * updateCommunityMetadata ({ communityAddress, fields: { metadata, ...rest } }) {
   const { communityURI } = yield select(state => state.entities.communities[communityAddress])
-  const metadata = yield select(state => state.entities.metadata[communityURI])
+  const currentMetadata = yield select(state => state.entities.metadata[communityURI])
   let isMetadataUpdated = false
-  if (image) {
-    const { hash } = yield apiCall(imageUpload, { image: image })
-    metadata.image = hash
+  if (get(metadata, 'image')) {
+    const { hash } = yield apiCall(imageUpload, { image: get(metadata, 'image') })
+    currentMetadata.image = hash
     isMetadataUpdated = true
   }
 
-  if (coverPhoto) {
-    const { hash } = yield apiCall(imageUpload, { image: coverPhoto })
-    metadata.coverPhoto = hash
+  if (get(metadata, 'coverPhoto')) {
+    const { hash } = yield apiCall(imageUpload, { image: get(metadata, 'coverPhoto') })
+    currentMetadata.coverPhoto = hash
     isMetadataUpdated = true
   }
   let newCommunityURI
   if (isMetadataUpdated) {
-    const { hash } = yield apiCall(createMetadataApi, { metadata })
+    const { hash } = yield apiCall(createMetadataApi, { metadata: currentMetadata })
     newCommunityURI = `ipfs://${hash}`
   }
-  const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI || undefined, description })
+  const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI, ...rest })
 
   yield put(fetchMetadata(newCommunityURI))
   yield put({

@@ -9,7 +9,7 @@ export const SET_WALLET_BANNER_LINK = createTransactionRequestTypes('SET_WALLET_
 
 export const inviteUserToCommunity = (communityAddress, options) => requestAction(INVITE_USER_TO_COMMUNITY, { communityAddress, ...options })
 export const addCommunityPlugin = (communityAddress, plugin) => action(ADD_COMMUNITY_PLUGIN.REQUEST, { communityAddress, plugin })
-export const updateCommunityMetadata = (communityAddress, metadata, description) => requestAction(UPDATE_COMMUNITY_METADATA, { communityAddress, metadata, description })
+export const updateCommunityMetadata = (communityAddress, fields) => requestAction(UPDATE_COMMUNITY_METADATA, { communityAddress, fields })
 const options = { desiredNetworkType: 'fuse' }
 export const setSecondaryToken = (communityAddress, secondaryTokenAddress) => requestAction(SET_SECONDARY_TOKEN, { communityAddress, secondaryTokenAddress })
 export const setBonus = (bonusType, amount) => action(SET_BONUS.REQUEST, { amount, bonusType, options })
