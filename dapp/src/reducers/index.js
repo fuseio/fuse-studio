@@ -7,6 +7,7 @@ import errors from './errors'
 import screens from './screens'
 import entities from './entities'
 import transactions from './transactions'
+import user from './user'
 
 const createRootReducer = (history) => combineReducers({
   ui,
@@ -16,7 +17,8 @@ const createRootReducer = (history) => combineReducers({
   accounts,
   router: connectRouter(history),
   transactions,
-  entities
+  entities,
+  user
 })
 
 export default createRootReducer
