@@ -5,7 +5,7 @@ module.exports = {
   api: {
     allowCors: true,
     secret: 'secret',
-    tokenExpiresIn: '7d',
+    tokenExpiresIn: '30d',
     port: 3000,
     auth: {
       domain: {
@@ -14,6 +14,10 @@ module.exports = {
           return this.network.foreign.name === 'mainnet' ? 1 : 3
         }),
         version: 1
+      },
+      google: {
+        baseUrl: 'https://oauth2.googleapis.com/',
+        clientId: '35920459637-u2pvmrs28odma6sa2aepclhk91tv9d86.apps.googleusercontent.com'
       }
     }
   },
