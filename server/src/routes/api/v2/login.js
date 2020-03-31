@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken')
 const smsProvider = require('@utils/smsProvider')
 const { getAdmin } = require('@services/firebase')
 
+const secret = config.get('api.secret')
+const expiresIn = config.get('api.tokenExpiresIn')
+
 /**
  * @api {post} api/v2/login/request Request a verification code
  * @apiName Request
@@ -44,9 +47,6 @@ router.post('/verify', async (req, res) => {
   const response = await smsProvider.verifyCheck({ phoneNumber, code })
 
   if (response.status === 'approved') {
-    const secret = config.get('api.secret')
-    const expiresIn = config.get('api.tokenExpiresIn')
-
     const token = jwt.sign({ phoneNumber, accountAddress }, secret, {
       expiresIn
     })
@@ -72,8 +72,6 @@ router.post('/', async (req, res) => {
   const manager = getAdmin(appName)
   manager.auth().verifyIdToken(token)
     .then(decodedToken => {
-      const secret = config.get('api.secret')
-      const expiresIn = config.get('api.tokenExpiresIn')
       const data = { phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid, appName }
       if (identifier) {
         data.identifier = identifier
@@ -84,6 +82,34 @@ router.post('/', async (req, res) => {
       console.error('Login error', err)
       res.status(400).json({ error: 'Login failed' })
     })
+})
+
+const request = require('request-promise-native')
+const mongoose = require('mongoose')
+const User = mongoose.model('User')
+
+router.post('/google', async (req, res) => {
+  const { tokenId } = req.body
+  const { email, aud, sub, name } = await request.get(
+    `/tokeninfo?id_token=${tokenId}`,
+    { baseUrl: config.get('api.auth.google.baseUrl'), json: true })
+  if (aud !== config.get('api.auth.google.clientId')) {
+    console.warn(`Wrong token aud for token id ${tokenId}`)
+    return res.send({
+      error: 'Wrong token aud'
+    }).status(400)
+  }
+
+  let user = await User.findOne({ externalId: tokenId })
+
+  if (!user) {
+    user = await User({ email, externalId: sub, displayName: name, source: 'studio' }).save()
+  }
+
+  const token = jwt.sign({ email, id: user._id }, secret, {
+    expiresIn
+  })
+  res.json({ token })
 })
 
 module.exports = router

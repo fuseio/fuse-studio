@@ -5,40 +5,19 @@ import * as actions from 'actions/user'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/user'
 import { isUserProfileExists } from 'services/api/profiles'
-import { generateSignatureData } from 'utils/web3'
 import { saveState } from 'utils/storage'
 import get from 'lodash/get'
 
-export function * login () {
-  const accountAddress = yield select(getAccountAddress)
-  const chainId = yield select(state => state.network.networkId)
+export function * login ({ tokenId }) {
+  const { token } = yield apiCall(api.login, { tokenId }, { v2: true })
+  if (token) {
+    saveState('state.user', { jwtToken: token, isAuthenticated: true })
 
-  const date = new Date().toUTCString()
-
-  const signatureData = generateSignatureData({ accountAddress, date, chainId })
-  const promise = new Promise((resolve, reject) => {
-    window.ethereum.sendAsync(
-      {
-        method: 'eth_signTypedData_v3',
-        params: [accountAddress, JSON.stringify(signatureData)],
-        from: accountAddress
-      },
-      (error, { result }) => {
-        if (error) {
-          return reject(error)
-        }
-        return resolve(result)
-      }
-    )
-  })
-  const signature = yield promise
-  if (signature) {
-    const response = yield apiCall(api.login, { accountAddress, signature, date })
     yield put({
       type: actions.LOGIN.SUCCESS,
-      accountAddress,
       response: {
-        authToken: response.token
+        jwtToken: token,
+        isAuthenticated: true
       }
     })
   }

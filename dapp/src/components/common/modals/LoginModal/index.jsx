@@ -1,21 +1,26 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import Modal from 'components/common/Modal'
 import GoogleLogin from 'react-google-login'
+import { login } from 'actions/user'
 
-const responseGoogle = (response) => {
-  debugger
-  console.log(response);
-}
+const { clientId } = CONFIG.api.auth.google
 
 export default ({ hideModal }) => {
+  const dispatch = useDispatch()
+
+  const handleLogin = ({ tokenId }) => {
+    dispatch(login(tokenId))
+    hideModal()
+  }
+
   return (
     <Modal onClose={hideModal}>
-      <div>
+      <div style={{ padding: 20 }}>
         <GoogleLogin
-          clientId="35920459637-u2pvmrs28odma6sa2aepclhk91tv9d86.apps.googleusercontent.com"
-          buttonText="Login"
-          onSuccess={responseGoogle}
-          onFailure={responseGoogle}
+          clientId={clientId}
+          buttonText='Login'
+          onSuccess={handleLogin}
           cookiePolicy={'single_host_origin'}
         />
       </div>

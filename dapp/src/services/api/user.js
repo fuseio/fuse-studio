@@ -1,8 +1,8 @@
 import request from 'superagent'
 
-export const login = (apiRoot, { accountAddress, signature, date }) =>
-  request.post(`${apiRoot}/users/login/${accountAddress}`)
-    .send({ signature, date })
+export const login = (apiRoot, { tokenId }) =>
+  request.post(`${apiRoot}/login/google/`)
+    .send({ tokenId })
     .then(response => response.body)
 
 export const saveWizardProgress = (apiRoot, { accountAddress, formData }) =>
