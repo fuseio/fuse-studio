@@ -91,7 +91,7 @@ const User = mongoose.model('User')
 router.post('/google', async (req, res) => {
   const { tokenId } = req.body
   const { email, aud, sub, name } = await request.get(
-    `/tokeninfo?id_token=${tokenId}`,
+    `/tokeninfo?id_token=${tokenId}&scope=profile`,
     { baseUrl: config.get('api.auth.google.baseUrl'), json: true })
   if (aud !== config.get('api.auth.google.clientId')) {
     console.warn(`Wrong token aud for token id ${tokenId}`)
@@ -100,7 +100,7 @@ router.post('/google', async (req, res) => {
     }).status(400)
   }
 
-  let user = await User.findOne({ externalId: tokenId })
+  let user = await User.findOne({ externalId: sub })
 
   if (!user) {
     user = await User({ email, externalId: sub, displayName: name, source: 'studio' }).save()
