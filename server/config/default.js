@@ -16,7 +16,6 @@ module.exports = {
         version: 1
       },
       google: {
-        baseUrl: 'https://oauth2.googleapis.com/',
         clientId: '35920459637-u2pvmrs28odma6sa2aepclhk91tv9d86.apps.googleusercontent.com'
       }
     }
