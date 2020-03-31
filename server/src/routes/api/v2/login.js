@@ -3,9 +3,15 @@ const config = require('config')
 const jwt = require('jsonwebtoken')
 const smsProvider = require('@utils/smsProvider')
 const { getAdmin } = require('@services/firebase')
+const mongoose = require('mongoose')
+const { OAuth2Client } = require('google-auth-library')
 
+const clientId = config.get('api.auth.google.clientId')
 const secret = config.get('api.secret')
 const expiresIn = config.get('api.tokenExpiresIn')
+
+const User = mongoose.model('User')
+const client = new OAuth2Client(clientId)
 
 /**
  * @api {post} api/v2/login/request Request a verification code
@@ -84,22 +90,15 @@ router.post('/', async (req, res) => {
     })
 })
 
-const request = require('request-promise-native')
-const mongoose = require('mongoose')
-const User = mongoose.model('User')
-
 router.post('/google', async (req, res) => {
   const { tokenId } = req.body
-  const { email, aud, sub, name } = await request.get(
-    `/tokeninfo?id_token=${tokenId}&scope=profile`,
-    { baseUrl: config.get('api.auth.google.baseUrl'), json: true })
-  if (aud !== config.get('api.auth.google.clientId')) {
-    console.warn(`Wrong token aud for token id ${tokenId}`)
-    return res.send({
-      error: 'Wrong token aud'
-    }).status(400)
-  }
 
+  const ticket = await client.verifyIdToken({
+    idToken: tokenId,
+    audience: clientId
+  })
+
+  const { email, sub, name } = ticket.getPayload()
   let user = await User.findOne({ externalId: sub })
 
   if (!user) {
