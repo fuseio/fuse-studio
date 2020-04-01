@@ -4,6 +4,7 @@ import Logo from 'components/common/Logo'
 import HelpIcon from 'images/help.svg'
 import NotificationIcon from 'images/notification.svg'
 import WalletIcon from 'images/fuse-wallet.svg'
+import LoginIcon from 'images/login.svg'
 import classNames from 'classnames'
 import ProfileDropDown from 'components/common/ProfileDropDown'
 import { isMobileOnly } from 'react-device-detect'
@@ -17,7 +18,7 @@ import { getCurrentNetworkType } from 'selectors/network'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
 import { loadModal } from 'actions/ui'
-import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
+import { WEB3_CONNECT_MODAL, LOGIN_MODAL } from 'constants/uiConstants'
 
 const NavBar = ({
   accountAddress,
@@ -28,7 +29,8 @@ const NavBar = ({
   web3connect,
   foreignToken,
   location,
-  loadModal
+  loadModal,
+  isLoggedIn
 }) => {
   const isInCommunityPage = location.pathname.includes('/community/')
   const isInIssuancePage = location.pathname.includes('/issuance')
@@ -72,6 +74,10 @@ const NavBar = ({
     loadModal(WEB3_CONNECT_MODAL, { web3connect })
   }
 
+  const handleLogin = (e) => {
+    loadModal(LOGIN_MODAL, { web3connect })
+  }
+
   const isGreaterThen70 = () => scrollY > 70
 
   return (
@@ -99,29 +105,36 @@ const NavBar = ({
           <span className='icon'><img src={NotificationIcon} /></span>
         </div>
         {
-          accountAddress ? (
-            <div
-              className='navbar__links__wallet'
-              ref={profileRef}
-              onClick={openProfile}
-            >
-              <span className='icon'><img src={WalletIcon} /></span>
-              <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
-              <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                <ProfileDropDown handleLogOut={() => logout()} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
+          isLoggedIn ? (
+            accountAddress ? (
+              <div
+                className='navbar__links__wallet'
+                ref={profileRef}
+                onClick={openProfile}
+              >
+                <span className='icon'><img src={WalletIcon} /></span>
+                <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
+                <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
+                  <ProfileDropDown handleLogOut={() => logout()} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
+                </div>
               </div>
-            </div>
-          ) : connectingToWallet ? (
-            <div className='navbar__links__wallet navbar__connecting'>
-              <span className='navbar__links__wallet__text'>Connecting to wallet</span>
-              <span className='animate'>.</span>
-              <span className='animate'>.</span>
-              <span className='animate'>.</span>
-            </div>
+            ) : connectingToWallet ? (
+              <div className='navbar__links__wallet navbar__connecting'>
+                <span className='navbar__links__wallet__text'>Connecting to wallet</span>
+                <span className='animate'>.</span>
+                <span className='animate'>.</span>
+                <span className='animate'>.</span>
+              </div>
+            ) : (
+              <div className='navbar__links__wallet' onClick={handleConnect}>
+                <span className='icon'><img src={WalletIcon} /></span>
+                <span className='navbar__links__wallet__text'>Connect wallet</span>
+              </div>
+            )
           ) : (
-            <div className='navbar__links__wallet' onClick={handleConnect}>
-              <span className='icon'><img src={WalletIcon} /></span>
-              <span className='navbar__links__wallet__text'>Connect wallet</span>
+            <div className='navbar__links__wallet' onClick={handleLogin}>
+              <span className='icon'><img src={LoginIcon} /></span>
+              <span className='navbar__links__wallet__text'>Login</span>
             </div>
           )
         }
@@ -135,7 +148,8 @@ const mapStateToProps = (state) => ({
   connectingToWallet: state.network.connectingToWallet,
   networkType: getCurrentNetworkType(state),
   foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { networkType: '' },
-  location: state.router.location
+  location: state.router.location,
+  isLoggedIn: state.user.isLoggedIn
 })
 
 const mapDispatchToProps = {

@@ -11,13 +11,13 @@ import get from 'lodash/get'
 export function * login ({ tokenId }) {
   const { token } = yield apiCall(api.login, { tokenId }, { v2: true })
   if (token) {
-    saveState('state.user', { jwtToken: token, isAuthenticated: true })
+    saveState('state.user', { jwtToken: token, isLoggedIn: true })
 
     yield put({
       type: actions.LOGIN.SUCCESS,
       response: {
         jwtToken: token,
-        isAuthenticated: true
+        isLoggedIn: true
       }
     })
   }

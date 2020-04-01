@@ -1,9 +1,9 @@
 const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 const smsProvider = require('@utils/smsProvider')
 const { getAdmin } = require('@services/firebase')
-const mongoose = require('mongoose')
 const { OAuth2Client } = require('google-auth-library')
 
 const clientId = config.get('api.auth.google.clientId')
