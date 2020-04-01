@@ -50,13 +50,13 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
   }
 }
 
-const relay = withAccount(async (account, { walletAddress, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName }, job) => {
+const relay = withAccount(async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletABI = require(`@constants/abi/${walletModule}`)
 
   if (walletModule === 'TransferManager' && networkType === 'foreign' && config.has('network.foreign.allowedTokensToRelay')) {
-    const { _token } = getParamsFromMethodData(web3, walletABI, 'transferToken', methodData)
+    const { _token } = getParamsFromMethodData(web3, walletABI, methodName, methodData)
     if (!config.get('network.foreign.allowedTokensToRelay').split(',').includes(_token)) {
       throw Error(`Token ${_token} is not allowed to transfer using relay on foreign network`)
     }
@@ -105,8 +105,8 @@ const relay = withAccount(async (account, { walletAddress, methodData, nonce, ga
       } catch (e) {
         console.log(`Error on token funding for wallet: ${wallet}`, e)
       }
-    } else if (walletModule === 'TransferManager') {
-      const { _to, _amount, _token, _wallet } = getParamsFromMethodData(web3, walletABI, 'transferToken', methodData)
+    } else if (walletModule === 'TransferManager' && methodName === 'transferToken') {
+      const { _to, _amount, _token, _wallet } = getParamsFromMethodData(web3, walletABI, methodName, methodData)
       notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount, appName })
         .catch(console.error)
     }
