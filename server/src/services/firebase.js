@@ -48,8 +48,7 @@ const getAdmin = (appName) => {
     return localPayAdmin
   } else if (appName === 'WEPY') {
     return wepyAdmin
-  } 
-  else {
+  } else {
     return admin
   }
 }
