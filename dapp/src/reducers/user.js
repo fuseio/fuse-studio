@@ -4,7 +4,7 @@ import { loadState } from 'utils/storage'
 const loadedState = loadState('state.user')
 
 const initialState = {
-  isAuthenticated: false,
+  isLoggedIn: false,
   ...loadedState
 }
 

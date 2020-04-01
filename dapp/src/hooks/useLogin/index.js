@@ -8,7 +8,7 @@ const useLogin = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!user.isAuthenticated) {
+    if (!user.isLoggedIn) {
       dispatch(loadModal(LOGIN_MODAL))
     }
   }, [])

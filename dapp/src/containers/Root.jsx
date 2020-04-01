@@ -13,7 +13,6 @@ import { connectToWallet } from 'actions/network'
 import ModalContainer from 'containers/ModalContainer'
 import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import useWeb3Connect from 'hooks/useWeb3Connect'
-import useLogin from 'hooks/useLogin'
 import { getWeb3 } from 'services/web3'
 import 'scss/main.scss'
 
@@ -39,16 +38,6 @@ const Root = ({
       web3connect.core.connect()
     }
   }, [])
-
-  useLogin()
-
-  // const user = useSelector(state => state.user)
-
-  // useEffect(() => {
-  //   if (!user.isAuthenticated) {
-
-  //   }
-  // }, [])
 
   return (
     <div className='root__wrapper'>
