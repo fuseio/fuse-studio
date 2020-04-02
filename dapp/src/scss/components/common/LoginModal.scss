@@ -1,13 +1,12 @@
 @include block(login-modal) {
-  width: 220px;
+  width: 100%;
 
   @include element(title) {
-    font-size: 1.1em;
     font-weight: bold;
     color: #42687d;
     background-color: #f4f4f4;
     padding: 15px 0px;
-    margin-top: 10px;
+    text-align: center;
   }
 
   @include element(button) {
@@ -15,7 +14,10 @@
     flex-direction: row;
     background-color: #42687d;
     padding: 10px 5px;
-    margin: 20px 0px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
 
     img { 
       padding: 5px;
@@ -36,6 +38,8 @@
 
   @include element(bottom) {
     font-size: 0.7em;
+    text-align: center;
+    margin: 10px;
     a {
       color: #1457ff;
     }
