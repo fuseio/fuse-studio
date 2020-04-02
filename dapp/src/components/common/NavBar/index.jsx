@@ -7,6 +7,7 @@ import WalletIcon from 'images/fuse-wallet.svg'
 import LoginIcon from 'images/login.svg'
 import classNames from 'classnames'
 import ProfileDropDown from 'components/common/ProfileDropDown'
+import LoginDropDown from 'components/common/LoginDropDown'
 import { isMobileOnly } from 'react-device-detect'
 import { withRouter } from 'react-router'
 import capitalize from 'lodash/capitalize'
@@ -18,7 +19,7 @@ import { getCurrentNetworkType } from 'selectors/network'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
 import { loadModal } from 'actions/ui'
-import { WEB3_CONNECT_MODAL, LOGIN_MODAL } from 'constants/uiConstants'
+import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
 
 const NavBar = ({
   accountAddress,
@@ -45,12 +46,19 @@ const NavBar = ({
   const { y: scrollY } = useWindowScroll()
   const [isHelpOpen, setHelpOpen] = useState(false)
   const [isProfileOpen, setProfileOpen] = useState(false)
+  const [isLoginOpen, setLoginOpen] = useState(false)
   const helpRef = useRef(null)
   const profileRef = useRef(null)
 
   useOutsideClick(profileRef, () => {
     if (isProfileOpen) {
       setProfileOpen(false)
+    }
+  })
+
+  useOutsideClick(profileRef, () => {
+    if (isLoginOpen) {
+      setLoginOpen(false)
     }
   })
 
@@ -75,7 +83,8 @@ const NavBar = ({
   }
 
   const handleLogin = (e) => {
-    loadModal(LOGIN_MODAL, { web3connect })
+    e.stopPropagation()
+    setLoginOpen(!isLoginOpen)
   }
 
   const isGreaterThen70 = () => scrollY > 70
@@ -135,6 +144,9 @@ const NavBar = ({
             <div className='navbar__links__wallet' onClick={handleLogin}>
               <span className='icon'><img src={LoginIcon} /></span>
               <span className='navbar__links__wallet__text'>Login</span>
+              <div className={classNames('drop drop--profile', { 'drop--show': isLoginOpen })}>
+                <LoginDropDown />
+              </div>
             </div>
           )
         }
