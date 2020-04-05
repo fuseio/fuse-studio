@@ -8,7 +8,7 @@ export const IS_USER_EXISTS = createRequestTypes('IS_USER_EXISTS')
 export const SEND_EMAIL = createRequestTypes('SEND_EMAIL')
 export const SAVE_WIZARD_PROGRESS = createRequestTypes('SAVE_WIZARD_PROGRESS')
 
-export const login = () => requestAction(LOGIN)
+export const login = (tokenId) => requestAction(LOGIN, { tokenId })
 export const logout = () => requestAction(LOGOUT)
 
 export const signUpUser = (email, subscribe) => requestAction(SIGN_UP_USER, { email, subscribe })
