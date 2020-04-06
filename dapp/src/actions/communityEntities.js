@@ -36,7 +36,7 @@ export const fetchEntityMetadata = (communityAddress, account) => entitiesBusine
 
 export const fetchUsersMetadata = (accounts) => entitiesAction(FETCH_USERS_METADATA.REQUEST, { accounts })
 export const fetchUserMetadata = (account) => entitiesAction(FETCH_USER_METADATA.REQUEST, { account })
-export const fetchUserNames = (accounts) => entitiesAction(FETCH_USER_NAMES.REQUEST, { accounts, options: { v2: true } })
+export const fetchUserNames = (accounts) => createEntityAction('users')(FETCH_USER_NAMES.REQUEST, { accounts, options: { v2: true } })
 
 export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType, options })
 export const removeEntity = (account) => action(REMOVE_ENTITY.REQUEST, { account, options })
