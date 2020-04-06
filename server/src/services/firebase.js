@@ -37,7 +37,7 @@ const initAdmin = async () => {
     credential: admin.credential.cert(JSON.parse(wepyResponse.SecretString))
   }, 'WEPY')
 
-  const supervecinaResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdSupervecinay }).promise()
+  const supervecinaResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdSupervecina }).promise()
 
   supervecinaAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(supervecinaResponse.SecretString))
