@@ -6,6 +6,7 @@ let roostAdmin
 let localDolarAdmin
 let localPayAdmin
 let wepyAdmin
+let supervecinaAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -35,6 +36,14 @@ const initAdmin = async () => {
   wepyAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(wepyResponse.SecretString))
   }, 'WEPY')
+
+  const supervecinaResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdSupervecina }).promise()
+
+  supervecinaAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(supervecinaResponse.SecretString))
+  }, 'Supervecina')
+
+  
 }
 
 initAdmin()
@@ -48,6 +57,8 @@ const getAdmin = (appName) => {
     return localPayAdmin
   } else if (appName === 'WEPY') {
     return wepyAdmin
+  } else if (appName === 'Supervecina') {
+    return supervecinaAdmin
   } else {
     return admin
   }
