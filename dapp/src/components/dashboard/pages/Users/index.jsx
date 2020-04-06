@@ -71,7 +71,7 @@ const Users = ({
 
   useEffect(() => {
     if (walletAccounts && walletAccounts.length > 0) {
-      const walletOwners = walletAccounts.map(wallet => toChecksumAddress(userWallets[wallet].owner))
+      const walletOwners = walletAccounts.filter(wallet => userWallets[wallet] && userWallets[wallet].owner).map(wallet => userWallets[wallet].owner)
       fetchUserNames(walletOwners)
     }
   }, [walletAccounts])
@@ -89,7 +89,7 @@ const Users = ({
           name: metadata
             ? [
               {
-                name: metadata.name,
+                name: metadata.name || metadata.displayName,
                 image: metadata.image
                   ? <div
                     style={{
