@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { push } from 'connected-react-router'
+import classNames from 'classnames'
 
 import { withAccount } from 'containers/Web3'
 
@@ -22,7 +23,7 @@ const LoginDropDown = () => {
 
   const renderButton = ({ onClick, disabled }) => {
     return <div>
-      <button className='login-modal__button' onClick={onClick} disabled={disabled}>
+      <button className={classNames({ 'login-modal__button': true, 'login-modal__disabled': disabled })} onClick={onClick} disabled={disabled}>
         <img src={GoogleIcon} />
         <div>Sign in  with Google</div>
       </button>

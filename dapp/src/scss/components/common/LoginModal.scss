@@ -9,6 +9,11 @@
     text-align: center;
   }
 
+  @include element(disabled) {
+    background-color: grey !important;
+    cursor: initial !important;
+  }
+
   @include element(button) {
     display: flex;
     flex-direction: row;
@@ -18,6 +23,7 @@
     margin-right: auto;
     margin-top: 20px;
     margin-bottom: 20px;
+    cursor: pointer;
 
     img { 
       padding: 5px;
