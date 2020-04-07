@@ -8,7 +8,7 @@ const AccountSchema = new Schema({
   isLocked: { type: Boolean, default: false },
   lockingTime: { type: Date },
   role: { type: String, default: '*' }
-})
+}, { timestamps: true })
 
 AccountSchema.index({ address: 1 }, { unique: true })
 

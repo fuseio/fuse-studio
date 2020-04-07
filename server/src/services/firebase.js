@@ -42,8 +42,6 @@ const initAdmin = async () => {
   supervecinaAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(supervecinaResponse.SecretString))
   }, 'Supervecina')
-
-  
 }
 
 initAdmin()

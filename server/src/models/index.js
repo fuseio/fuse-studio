@@ -11,6 +11,8 @@ require('./Wizard')
 require('./Contact')
 require('./Invite')
 require('./PhoneVerification')
+require('./BridgedToken')
+require('./CommunityDetail')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
