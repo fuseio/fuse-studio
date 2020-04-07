@@ -68,6 +68,9 @@
         "domain": {
           "name": "Fuse Studio Dev",
           "version": 1
+        },
+        "google": {
+          "clientId": "35920459637-u2pvmrs28odma6sa2aepclhk91tv9d86.apps.googleusercontent.com"  
         }
     },
     "url": {

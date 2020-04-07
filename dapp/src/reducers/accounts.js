@@ -21,9 +21,6 @@ const handlers = {
   [actions.BALANCE_OF_NATIVE.SUCCESS]: (state, action) => {
     return { ...state, ...action.response }
   },
-  [LOGIN.SUCCESS]: (state, action) => {
-    return { ...state, ...action.response }
-  },
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {
     return { ...state, communities: action.response.result }
   },
