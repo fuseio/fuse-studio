@@ -64,6 +64,7 @@
     "express-jwt": "^5.3.1",
     "express-paginate": "^1.0.0",
     "firebase-admin": "^8.9.2",
+    "google-auth-library": "^6.0.0",
     "graphql-request": "^1.8.2",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.13",

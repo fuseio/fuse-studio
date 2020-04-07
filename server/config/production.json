@@ -6,6 +6,9 @@
       "domain": {
         "name": "Fuse Studio Prod",
         "version": 1
+      },
+      "google": {
+        "clientId": "863692183597-5a2qh3gfjgkktcr3547ci1vhj8uf3huo.apps.googleusercontent.com"
       }
     }
   },

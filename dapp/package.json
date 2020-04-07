@@ -76,6 +76,7 @@
     "react-dom": "^16.8.5",
     "react-fontawesome": "^1.6.1",
     "react-ga": "^2.5.3",
+    "react-google-login": "^5.1.2",
     "react-image-crop": "^8.2.1",
     "react-infinite-scroller": "^1.2.2",
     "react-phone-input-2": "^2.11.0",
