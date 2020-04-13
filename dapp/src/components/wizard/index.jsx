@@ -210,7 +210,7 @@ const WizardPage = ({
       createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: foreignNetwork })
     }
 
-    // signUpUser(email, subscribe)
+    signUpUser(email, subscribe)
   }
 
   const goToDashboard = () => {

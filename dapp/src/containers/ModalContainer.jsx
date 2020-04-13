@@ -16,7 +16,6 @@ import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEnti
 import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
 import SwitchNetwork from 'components/common/SwitchNetwork'
 import Web3ConnectModal from 'components/common/modals/Web3ConnectModal'
-import LoginModal from 'components/common/modals/LoginModal'
 
 import {
   WRONG_NETWORK_MODAL,
@@ -31,8 +30,7 @@ import {
   PLUGIN_INFO_MODAL,
   SWITCH_NETWORK,
   TEMPLATE_MODAL,
-  WEB3_CONNECT_MODAL,
-  LOGIN_MODAL
+  WEB3_CONNECT_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -53,8 +51,7 @@ const MODAL_COMPONENTS = {
   [PLUGIN_INFO_MODAL]: PluginInfoModal,
   [SWITCH_NETWORK]: SwitchNetwork,
   [TEMPLATE_MODAL]: TemplateModal,
-  [WEB3_CONNECT_MODAL]: Web3ConnectModal,
-  [LOGIN_MODAL]: LoginModal
+  [WEB3_CONNECT_MODAL]: Web3ConnectModal
 }
 
 const ModalContainer = (props) => {
