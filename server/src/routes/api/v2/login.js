@@ -1,17 +1,8 @@
 const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
 const smsProvider = require('@utils/smsProvider')
 const { getAdmin } = require('@services/firebase')
-const { OAuth2Client } = require('google-auth-library')
-
-const clientId = config.get('api.auth.google.clientId')
-const secret = config.get('api.secret')
-const expiresIn = config.get('api.tokenExpiresIn')
-
-const User = mongoose.model('User')
-const client = new OAuth2Client(clientId)
 
 /**
  * @api {post} api/v2/login/request Request a verification code
@@ -53,6 +44,9 @@ router.post('/verify', async (req, res) => {
   const response = await smsProvider.verifyCheck({ phoneNumber, code })
 
   if (response.status === 'approved') {
+    const secret = config.get('api.secret')
+    const expiresIn = config.get('api.tokenExpiresIn')
+
     const token = jwt.sign({ phoneNumber, accountAddress }, secret, {
       expiresIn
     })
@@ -78,6 +72,8 @@ router.post('/', async (req, res) => {
   const manager = getAdmin(appName)
   manager.auth().verifyIdToken(token)
     .then(decodedToken => {
+      const secret = config.get('api.secret')
+      const expiresIn = config.get('api.tokenExpiresIn')
       const data = { phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid, appName }
       if (identifier) {
         data.identifier = identifier
@@ -88,27 +84,6 @@ router.post('/', async (req, res) => {
       console.error('Login error', err)
       res.status(400).json({ error: 'Login failed' })
     })
-})
-
-router.post('/google', async (req, res) => {
-  const { tokenId } = req.body
-
-  const ticket = await client.verifyIdToken({
-    idToken: tokenId,
-    audience: clientId
-  })
-
-  const { email, sub, name } = ticket.getPayload()
-  let user = await User.findOne({ externalId: sub })
-
-  if (!user) {
-    user = await User({ email, externalId: sub, displayName: name, source: 'studio' }).save()
-  }
-
-  const token = jwt.sign({ email, id: user._id }, secret, {
-    expiresIn
-  })
-  res.json({ token })
 })
 
 module.exports = router

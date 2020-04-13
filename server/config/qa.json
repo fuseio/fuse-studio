@@ -5,9 +5,6 @@
       "domain": {
         "name": "Fuse Studio QA",
         "version": 1
-      },
-      "google": {
-        "clientId": "863692183597-d6v6b780o3dbccfraduah5sp795k5699.apps.googleusercontent.com"
       }
     }
   },
