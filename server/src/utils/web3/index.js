@@ -116,6 +116,7 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
         [TRANSACTION_TIMEOUT]: updateNonce
       }
       const errorMessage = error.message || error.error
+      console.error(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce} failed with ${errorMessage}`)
       if (errorHandlers.hasOwnProperty(errorMessage)) {
         return errorHandlers[errorMessage]()
       } else {
