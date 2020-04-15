@@ -14,6 +14,8 @@
       "firebaseSecretIdLocalPay": "COMMUNITY_AWS_FIREBASE_SECRET_ID_LOCAL_PAY",
       "firebaseSecretIdWepy": "COMMUNITY_AWS_FIREBASE_SECRET_ID_WEPY",
       "firebaseSecretIdSupervecina": "COMMUNITY_AWS_FIREBASE_SECRET_ID_SUPERVECINA",
+      "firebaseSecretIdFarmlyledger": "COMMUNITY_AWS_FIREBASE_SECRET_ID_FARMLYLEDGER",
+      "firebaseSecretIdBIM": "COMMUNITY_AWS_FIREBASE_SECRET_ID_BIM",
       "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
