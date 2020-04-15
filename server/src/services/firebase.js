@@ -7,6 +7,8 @@ let localDolarAdmin
 let localPayAdmin
 let wepyAdmin
 let supervecinaAdmin
+let farmlyledgerAdmin
+let bimAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -43,6 +45,20 @@ const initAdmin = async () => {
     credential: admin.credential.cert(JSON.parse(supervecinaResponse.SecretString))
   }, 'Supervecina')
 
+
+  const farmlyledgerResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdFarmlyledger }).promise()
+
+  farmlyledgerAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(farmlyledgerResponse.SecretString))
+  }, 'FarmlyLedger')
+
+
+  const bimResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdBIM }).promise()
+
+  bimAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(bimResponse.SecretString))
+  }, 'BIM')
+
   
 }
 
@@ -59,6 +75,10 @@ const getAdmin = (appName) => {
     return wepyAdmin
   } else if (appName === 'Supervecina') {
     return supervecinaAdmin
+  } else if (appName === 'FarmlyLedger') {
+    return farmlyledgerAdmin
+  } else if (appName === 'BIM') {
+    return bimAdmin
   } else {
     return admin
   }
