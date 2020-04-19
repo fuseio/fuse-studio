@@ -1,16 +1,6 @@
 import React from 'react'
-import { connect, useDispatch } from 'react-redux'
-import { push } from 'connected-react-router'
+import { useDispatch } from 'react-redux'
 import classNames from 'classnames'
-
-import { withAccount } from 'containers/Web3'
-
-import { getBalances, getProviderInfo, getCommunitiesKeys } from 'selectors/accounts'
-import { getCurrentNetworkType } from 'selectors/network'
-import { changeNetwork } from 'actions/network'
-import { loadModal } from 'actions/ui'
-import { fetchBalances } from 'actions/accounts'
-
 import GoogleLogin from 'react-google-login'
 import GoogleIcon from 'images/google.svg'
 
@@ -51,24 +41,4 @@ const LoginDropDown = () => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  communitiesKeys: getCommunitiesKeys(state),
-  providerInfo: getProviderInfo(state),
-  tokens: state.entities.tokens,
-  metadata: state.entities.metadata,
-  communities: state.entities.communities,
-  networkType: getCurrentNetworkType(state),
-  balances: getBalances(state)
-})
-
-const mapDispatchToProps = {
-  fetchBalances,
-  changeNetwork,
-  loadModal,
-  push
-}
-
-export default withAccount(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginDropDown))
+export default LoginDropDown

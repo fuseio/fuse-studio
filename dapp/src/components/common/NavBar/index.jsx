@@ -49,6 +49,7 @@ const NavBar = ({
   const [isLoginOpen, setLoginOpen] = useState(false)
   const helpRef = useRef(null)
   const profileRef = useRef(null)
+  const loginRef = useRef(null)
 
   useOutsideClick(profileRef, () => {
     if (isProfileOpen) {
@@ -56,7 +57,7 @@ const NavBar = ({
     }
   })
 
-  useOutsideClick(profileRef, () => {
+  useOutsideClick(loginRef, () => {
     if (isLoginOpen) {
       setLoginOpen(false)
     }
@@ -141,7 +142,7 @@ const NavBar = ({
               </div>
             )
           ) : (
-            <div className='navbar__links__wallet' onClick={handleLogin}>
+            <div ref={loginRef} className='navbar__links__wallet' onClick={handleLogin}>
               <span className='icon'><img src={LoginIcon} /></span>
               <span className='navbar__links__wallet__text'>Login</span>
               <div className={classNames('drop drop--profile', { 'drop--show': isLoginOpen })}>
