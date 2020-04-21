@@ -162,7 +162,7 @@ export default function * apiSaga () {
     tryTakeEvery(actions.FETCH_METADATA, fetchMetadata, 1),
     tryTakeEvery(actions.CREATE_METADATA, createMetadata, 1),
     takeEvery(action => /^FETCH_TOKENS.*SUCCESS/.test(action.type), watchTokensFetched),
-    takeEvery(action => /^(FETCH_BUSINESS|FETCH_USER|FETCH_ENTITY).*SUCCESS/.test(action.type), watchEntitiesFetched),
+    takeEvery(action => /^(FETCH_BUSINESS|FETCH_ENTITY).*SUCCESS/.test(action.type), watchEntitiesFetched),
     takeEvery(FETCH_TOKEN.SUCCESS, watchTokensFetched)
   ])
 }

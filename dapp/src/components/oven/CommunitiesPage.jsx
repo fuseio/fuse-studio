@@ -21,28 +21,10 @@ class CommunitiesPage extends Component {
     const { featuredCommunities } = this.props
     if (isEmpty(featuredCommunities)) {
       const { fetchFeaturedCommunities } = this.props
-      fetchFeaturedCommunities()
+      fetchFeaturedCommunities({ networkType: 'main' })
+      fetchFeaturedCommunities({ networkType: 'ropsten' })
     }
-    // if (this.props.networkType !== 'fuse') {
-    //   this.props.fetchFuseToken()
-    // }
-    // if (this.props.account) {
-    //   const { networkType } = this.props
-    //   this.props.fetchTokensByOwner(networkType, this.props.account)
-    // }
   }
-
-  // componentDidUpdate (prevProps) {
-  //   if (this.props.account && !prevProps.account) {
-  //     const { networkType } = this.props
-  //     this.props.fetchTokensByOwner(networkType, this.props.account)
-  //   }
-
-  //   if (!isEqual(this.props.account, prevProps.account)) {
-  //     const { networkType } = this.props
-  //     this.props.fetchTokensByOwner(networkType, this.props.account)
-  //   }
-  // }
 
   showDashboard = (communityAddress, name) => {
     if (window && window.analytics) {

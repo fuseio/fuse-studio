@@ -13,7 +13,6 @@ import { connectToWallet } from 'actions/network'
 import ModalContainer from 'containers/ModalContainer'
 import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import useWeb3Connect from 'hooks/useWeb3Connect'
-import { loadState, saveState } from 'utils/storage'
 import { getWeb3 } from 'services/web3'
 import 'scss/main.scss'
 
@@ -22,8 +21,6 @@ const Root = ({
 }) => {
   const web3Auth = useWeb3Auth()
 
-  const latestProvider = useMemo(() => loadState('state.latestProvider'), [])
-
   const onConnectCallback = async (response) => {
     const { provider } = await web3Auth.signIn(response)
     getWeb3({ provider })
@@ -31,17 +28,16 @@ const Root = ({
   }
 
   const logout = () => {
-    saveState('state.latestProvider', null)
     web3Auth.signOut()
   }
 
-  const web3connect = useWeb3Connect({ latestProvider }, onConnectCallback)
+  const web3connect = useWeb3Connect(onConnectCallback)
 
   useEffect(() => {
-    if (latestProvider) {
-      web3connect.toggleModal()
+    if (web3connect.core.cachedProvider) {
+      web3connect.core.connect()
     }
-  }, [latestProvider])
+  }, [])
 
   return (
     <div className='root__wrapper'>

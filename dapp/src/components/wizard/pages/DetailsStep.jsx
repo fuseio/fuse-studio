@@ -13,7 +13,7 @@ import CurrencySymbol from 'components/wizard/components/CurrencySymbol'
 import CurrencyType from 'components/wizard/components/CurrencyType'
 import Plugins from 'components/wizard/components/Plugins'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
-import CommunityStatus from 'components/wizard/components/CommunityStatus'
+// import CommunityStatus from 'components/wizard/components/CommunityStatus'
 
 import CaretDown from 'images/drop-down.svg'
 
@@ -110,7 +110,7 @@ const DetailsStep = ({
               <LogosOptions />
               <CoverPhoto />
             </div>
-            <CommunityStatus />
+            {/* <CommunityStatus /> */}
           </Typography>
         </ExpansionPanelDetails>
       </ExpansionPanel>

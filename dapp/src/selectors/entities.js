@@ -37,6 +37,18 @@ export const checkIsAdmin = createSelector(
   }
 )
 
+export const getEntity = createSelector(
+  getAccountAddress,
+  getCommunityAddress,
+  state => state.entities.communityEntities,
+  (accountAddress, communityAddress, communityEntities) => {
+    if (accountAddress) {
+      const lowerCaseAddress = accountAddress.toLowerCase()
+      return communityEntities[lowerCaseAddress]
+    }
+  }
+)
+
 export const checkIsFunderPartOfCommunity = createSelector(
   state => state.entities.communityEntities,
   (communityEntities) => {

@@ -1,3 +1,5 @@
+const config = require('config')
+const homeAddresses = config.get('network.home.addresses')
 const router = require('express').Router()
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
@@ -21,17 +23,30 @@ const UserWallet = mongoose.model('UserWallet')
  * @apiSuccess {String} Started job data
  */
 router.post('/create', auth.required, async (req, res) => {
-  const { isCommunityAdmin, accountAddress } = req.user
+  const { isCommunityAdmin, accountAddress, identifier } = req.user
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { phoneNumber } = req.body
-
-  await new UserWallet({ phoneNumber, accountAddress }).save()
-
-  const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber })
-
-  return res.json({ job: job.attrs })
+  try {
+    const { phoneNumber, correlationId } = req.body
+    const userWallet = await new UserWallet({
+      phoneNumber,
+      accountAddress,
+      walletOwnerOriginalAddress: accountAddress,
+      walletFactoryOriginalAddress: homeAddresses.WalletFactory,
+      walletFactoryCurrentAddress: homeAddresses.WalletFactory,
+      walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
+      walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+      walletModulesOriginal: homeAddresses.walletModules,
+      walletModules: homeAddresses.walletModules,
+      networks: ['fuse'],
+      identifier
+    }).save()
+    const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id })
+    return res.json({ job: job.attrs })
+  } catch (err) {
+    return res.status(400).send({ error: err })
+  }
 })
 
 module.exports = router

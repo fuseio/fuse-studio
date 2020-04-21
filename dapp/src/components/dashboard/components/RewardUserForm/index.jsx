@@ -30,18 +30,18 @@ class RewardUserForm extends Component {
 
   onSubmit = (values, formikBag) => {
     const { amount } = values
-    const { setJoinBonus } = this.props
-    setJoinBonus(amount)
+    const { setBonus } = this.props
+    setBonus(amount)
     formikBag.resetForm({ amount })
   }
 
   renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
     const { amount } = values
-    const { hasFunderBalance } = this.props
+    const { hasFunderBalance, text } = this.props
 
     return (
       <form onSubmit={handleSubmit} className={classNames('join_bonus__container', { 'join_bonus__container--opacity': !hasFunderBalance })}>
-        <p className='join_bonus__title'>How much fuse tokens you want to reward new user community?</p>
+        <p className='join_bonus__title'>{text}</p>
         <div className='join_bonus__field'>
           <TextField
             type='number'

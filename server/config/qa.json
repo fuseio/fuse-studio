@@ -11,18 +11,20 @@
   "network": {
     "home": {
       "sharedAddresses": {
-        "WalletFactory": "0x71E4dc26518Bb7bD0331d925bb020A9B50eCE6Ca",
         "CommunityFactory": "0x77AFAC90657d2946F87d00E49A56C4F3aB39a7b2",
-        "MultiSigWallet": "0xe281a67AcEcb9add734FfF426Ba9F83B7ffF1d62",
+        "MultiSigWallet": "0x687774De802c37c1F960aE547b5b39bA113B8136",
+        "WalletFactory": "0x5ab9d138f6FdBB1FFEFceFC693d125dE30765579",
+        "WalletImplementation": "0x556942e1c5936BB7f32D273D919D5ea3bdAa533a",
         "walletModules": {
-          "GuardianManager": "0x7D9CD8b208eEb00F1Ecf5f2592A7BC3E05F32102",
-          "LockManager": "0xAEc18F7f4eFA9D7858E50D8A28c4225E63b129f9",
-          "RecoveryManager": "0x9b6C333455B9942D7600CF19196215a1B9e84B4C",
-          "ApprovedTransfer": "0x3221b3DBFB4FD62E8f8B91Cc1BBA3F613862aA85",
-          "TransferManager": "0x5472F98b5A043F115eD5079810c0e8dc54304736",
-          "TokenExchanger": "0x6DABE328d33A262723E67ae7617646042E582dC3",
-          "CommunityManager": "0xE47204f722F1B0a1113C1fBAd772626A9621E61E",
-          "WalletOwnershipManager": "0x09E48506abd546C0a890556177eE93F30D31cB7f"
+          "ApprovedTransfer": "0xdC3321F6df4De89EE4C275Ec8E999dd21C818420",
+          "CommunityManager": "0x3Ae358554CEAD619C93E653F1dE52c0895AA07e2",
+          "DAIPointsManager": "0x4f1D78CFe11DA9EDdc15CEf36818c82DdFb6Bd57",
+          "GuardianManager": "0x7B0b061a38919bd49Def88968A2749F17110Be78",
+          "LockManager": "0x50a92A7E524E417a76a8A8FE5397004037598B5E",
+          "RecoveryManager": "0x8E9ac8Ab2bd439D0019379BD0637C67A7c8fCcD0",
+          "TokenExchanger": "0x9A11056BfCcA81ea048cfE03A05352FbF66E39a1",
+          "TransferManager": "0x7c9bC18C1B1a3D75f1be5DB5722fd406a36DB791",
+          "WalletOwnershipManager": "0x564Ad8BfF06884fe8A4fD25Ff728012ad6781892"
         }
       }
     }

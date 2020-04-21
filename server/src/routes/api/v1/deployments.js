@@ -16,10 +16,10 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-  const { steps } = req.body
+  const { steps, correlationId } = req.body
   const communityProgress = await new CommunityProgress({ steps }).save()
 
-  agenda.now('deploy', { communityProgressId: communityProgress._id })
+  agenda.now('deploy', { communityProgressId: communityProgress._id, correlationId })
   return res.json({ data: communityProgress })
 })
 

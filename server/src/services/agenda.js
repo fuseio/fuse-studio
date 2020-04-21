@@ -2,8 +2,9 @@
 const config = require('config')
 const Agenda = require('agenda')
 const tasks = require('@tasks')
+const lodash = require('lodash')
 
-const agenda = new Agenda({ db: { address: config.get('mongo.uri'), options: config.get('mongo.options') } })
+const agenda = new Agenda({ ...config.get('agenda.args'), db: { address: config.get('mongo.uri'), options: config.get('mongo.options') } })
 
 const getConfig = (taskName) => config.has(`agenda.tasks.${taskName}`) ? config.get(`agenda.tasks.${taskName}`) : {}
 
@@ -38,11 +39,26 @@ async function start () {
     await agenda.every('10 minutes', 'processPastTokenCreatedEvents')
     await agenda.every('1 minute', 'proccessPendingTransactions')
     await agenda.every('1 minute', 'startTransfers')
+    await agenda.every('1 hour', 'lockedAccounts')
 
     await agenda.now('proccessPendingTransactions')
   }
 
   console.log('Agenda job scheduling is successfully defined')
+}
+
+const now = agenda.now
+
+agenda.now = async (name, data) => {
+  const correlationId = lodash.get(data, 'correlationId')
+  if (correlationId) {
+    const jobs = await agenda.jobs({ 'data.correlationId': correlationId })
+    const savedJob = jobs[0]
+    if (savedJob) {
+      throw Error(`Job with the correlationId ${correlationId} already exists`)
+    }
+  }
+  return now.call(agenda, name, data)
 }
 
 module.exports = {

@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import Web3Connect from 'web3connect'
-import Portis from '@portis/web3'
+// import Portis from '@portis/web3'
 import Torus from '@toruslabs/torus-embed'
 
 const providerOptions = {
   metamask: {
   },
-  portis: {
-    package: Portis,
-    options: {
-      id: CONFIG.web3.portis.id
-    }
-  },
+  // portis: {
+  //   package: Portis,
+  //   options: {
+  //     id: CONFIG.web3.portis.id
+  //   }
+  // },
   torus: {
     package: Torus, // required
     options: {
@@ -22,15 +22,12 @@ const providerOptions = {
   }
 }
 
-const getProviderOptions = (latestProvider) => latestProvider && providerOptions[latestProvider]
-  ? { [latestProvider]: providerOptions[latestProvider], disableInjectedProvider: latestProvider !== 'metamask' }
-  : providerOptions
-
-const useWeb3Connect = ({ latestProvider }, connectCallback) => {
+const useWeb3Connect = (connectCallback) => {
   const [provider, setProvider] = useState()
 
   const web3Connect = new Web3Connect.Core({
-    providerOptions: getProviderOptions(latestProvider)
+    providerOptions,
+    cacheProvider: true
   })
 
   web3Connect.on('connect', async (response) => {
@@ -42,7 +39,7 @@ const useWeb3Connect = ({ latestProvider }, connectCallback) => {
     web3Connect.toggleModal()
   }
 
-  return { provider, toggleModal }
+  return { provider, toggleModal, core: web3Connect }
 }
 
 export default useWeb3Connect

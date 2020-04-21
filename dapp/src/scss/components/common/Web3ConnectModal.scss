@@ -1,0 +1,37 @@
+
+@include block(wallet-modal) {
+  min-width: 500px;
+  color: #7A7A7A;
+
+  @include element(title) {
+    font-size: 1.1em;
+  }
+
+  @include element(providers-list) {
+    padding: 70px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  @include element(provider) {
+    cursor: pointer;
+    flex-direction: column;
+    display: flex;
+
+    > img {
+      margin: 10px;
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  @include element(explanation) {
+    font-size: 0.8em;
+    display: flex;
+
+    a {
+      color: #0082FF;
+    }
+  }
+}

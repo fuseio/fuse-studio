@@ -8,9 +8,22 @@
   "aws": {
     "secrets": {
       "secretId": "COMMUNITY_AWS_SECRET_ID",
-       "manager": {
+      "firebaseSecretId": "COMMUNITY_AWS_FIREBASE_SECRET_ID",
+      "firebaseSecretIdRoost": "COMMUNITY_AWS_FIREBASE_SECRET_ID_ROOST",
+      "firebaseSecretIdLocalDolarMX": "COMMUNITY_AWS_FIREBASE_SECRET_ID_LOCAL_DOLAR_MX",
+      "firebaseSecretIdLocalPay": "COMMUNITY_AWS_FIREBASE_SECRET_ID_LOCAL_PAY",
+      "firebaseSecretIdWepy": "COMMUNITY_AWS_FIREBASE_SECRET_ID_WEPY",
+      "firebaseSecretIdSupervecina": "COMMUNITY_AWS_FIREBASE_SECRET_ID_SUPERVECINA",
+      "firebaseSecretIdFarmlyledger": "COMMUNITY_AWS_FIREBASE_SECRET_ID_FARMLYLEDGER",
+      "firebaseSecretIdBIM": "COMMUNITY_AWS_FIREBASE_SECRET_ID_BIM",
+      "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
+    },
+    "sns": {
+      "region": "COMMUNITY_AWS_SNS_REGION",
+      "senderId": "COMMUNITY_AWS_SNS_SENDER_ID",
+      "smsType": "COMMUNITY_AWS_SNS_SMS_TYPE"
     }
   },
   "ipfsProxy": {
@@ -27,7 +40,8 @@
     "foreign": {
       "apiKey": "COMMUNITY_WEB3_API_KEY",
       "name": "COMMUNITY_WEB3_NETWORK",
-      "gasStation": "COMMUNITY_WEB3_GAS_STATION"
+      "gasStation": "COMMUNITY_WEB3_GAS_STATION",
+      "allowedTokensToRelay": "COMMUNITY_FOREIGN_TOKENS_ALLOWED_TO_RELAY"
     }
   },
   "mongo": {
@@ -66,6 +80,10 @@
     }
   },
   "agenda": {
+    "args": {
+        "__name": "COMMUNTITY_AGENDA_ARGS",
+        "__format": "json"
+    },
     "startPeriodicTasks": "COMMUNTITY_AGENDA_START_PERIODIC_TASKS",
     "tasks": {
       "deploy": {
@@ -114,6 +132,19 @@
         "__name": "COMMUNITY_PLUGINS_RAMP_ARGS",
         "__format": "json"
       }
+    }
+  },
+  "phoneNumbers": {
+    "maxUserWallets": "COMMUNITY_MAX_USER_WALLETS_PER_PHONE_NUMBER",
+    "team": "COMMUNITY_TEAM_PHONE_NUMBERS"
+  },
+  "smsProvider": "COMMUNITY_SMS_PROVIDER",
+  "slack": {
+    "incomingWebhookURL": "COMMUNITY_SLACK_INCOMING_WEBHOOK_URL"
+  },
+  "alerts": {
+    "lockedAccounts": {
+      "threshold": "COMMUNITY_ALERTS_LOCKED_ACCOUNTS_THRESHOLD"
     }
   }
 }

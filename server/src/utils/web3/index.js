@@ -45,6 +45,8 @@ const createNetwork = (bridgeType, account) => {
 
   return {
     from,
+    bridgeType,
+    networkType: config.get(`network.${bridgeType}.name`),
     web3,
     createContract: createContract.bind(null, { web3, bridgeType, address: from }),
     createMethod,
@@ -84,14 +86,22 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
     })
 
     try {
-      const receipt = await promise
-      console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
-      return { receipt }
+      if (methodName === 'deploy') {
+        const contract = await promise
+        console.log(`[${bridgeType}] method ${methodName} succeeded ${contract.options.address}`)
+        return { receipt: contract }
+      } else {
+        const receipt = await promise
+        console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
+        return { receipt }
+      }
     } catch (error) {
       console.error(error)
 
       const updateNonce = async () => {
+        console.log('updating the nonce')
         const nonce = await web3.eth.getTransactionCount(from)
+        console.log(`new nonce is ${nonce}`)
         account.nonces[bridgeType] = nonce
       }
 
@@ -106,9 +116,11 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
         [TRANSACTION_TIMEOUT]: updateNonce
       }
       const errorMessage = error.message || error.error
+      console.error(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce} failed with ${errorMessage}`)
       if (errorHandlers.hasOwnProperty(errorMessage)) {
         return errorHandlers[errorMessage]()
       } else {
+        console.log('No error handler found, using the default one.')
         return updateNonce()
       }
     }
@@ -182,6 +194,10 @@ const signMultiSig = async (web3, account, multiSigContract, contractAddress, da
   return signature.signature
 }
 
+const generateSalt = () => {
+  return ethers.utils.bigNumberify(ethers.utils.randomBytes(32)).toHexString()
+}
+
 module.exports = {
   createWeb3,
   generateSignature,
@@ -189,5 +205,6 @@ module.exports = {
   createContract,
   createMethod,
   send,
-  createNetwork
+  createNetwork,
+  generateSalt
 }

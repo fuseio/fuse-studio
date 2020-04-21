@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
+import { toChecksumAddress } from 'web3-utils'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
@@ -7,7 +8,7 @@ import { connect } from 'react-redux'
 import sortBy from 'lodash/sortBy'
 import identity from 'lodash/identity'
 import MyTable from 'components/dashboard/components/Table'
-// import { useFetch } from 'hooks/useFetch'
+import TransactionMessage from 'components/common/TransactionMessage'
 
 import {
   addEntity,
@@ -19,14 +20,13 @@ import {
   joinCommunity,
   importExistingEntity,
   fetchUsersMetadata,
-  fetchUserWallets
+  fetchUserWallets,
+  fetchUserNames
 } from 'actions/communityEntities'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import { getTransaction } from 'selectors/transaction'
 
-// import { getApiRoot } from 'utils/network'
-// import { getForeignNetwork } from 'selectors/network'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
@@ -52,9 +52,12 @@ const Users = ({
   communityEntities,
   fetchUsersMetadata,
   fetchUserWallets,
+  fetchUserNames,
   walletAccounts,
   userWallets,
-  users
+  users,
+  showTransactionMessage,
+  signatureNeeded
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
@@ -68,25 +71,25 @@ const Users = ({
 
   useEffect(() => {
     if (walletAccounts && walletAccounts.length > 0) {
-      const walletOwners = walletAccounts.map(wallet => userWallets[wallet].owner)
-      fetchUsersMetadata(walletOwners)
+      const walletOwners = walletAccounts.filter(wallet => userWallets[wallet] && userWallets[wallet].owner).map(wallet => userWallets[wallet].owner)
+      fetchUserNames(walletOwners)
     }
   }, [walletAccounts])
 
   useEffect(() => {
     const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(userEntities)) {
-      const data = userEntities.map(({ isAdmin, isApproved, address, createdAt }) => {
+      const data = userEntities.map(({ isAdmin, isApproved, address, createdAt, displayName }) => {
         const metadataAddress = userWallets[address] ? userWallets[address].owner : address
         const metadata = users[metadataAddress]
         return ({
           isApproved,
-          isAdmin,
-          createdAt: new Date(createdAt * 1000).toUTCString(),
+          hasAdminRole: isAdmin,
+          createdAt: new Date(createdAt * 1000),
           name: metadata
             ? [
               {
-                name: metadata.name,
+                name: metadata.name || metadata.displayName,
                 image: metadata.image
                   ? <div
                     style={{
@@ -112,7 +115,7 @@ const Users = ({
             ]
             : [
               {
-                name: '',
+                name: displayName,
                 image: <div
                   style={{
                     backgroundImage: `url(${Avatar})`,
@@ -187,7 +190,9 @@ const Users = ({
     },
     {
       Header: 'Date',
-      accessor: 'createdAt'
+      accessor: 'createdAt',
+      sortType: 'datetime',
+      Cell: ({ cell: { value } }) => value.toUTCString()
     },
     {
       id: 'dropdown',
@@ -207,15 +212,16 @@ const Users = ({
                       <li className='more__options__item' onClick={() => handleConfirmUser(address)}>Confirm</li>
                       <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                       <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
                     </ul>
                   )
                 }
                 {
                   hasAdminRole && isApproved && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
-                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>}
                     </ul>
                   )
                 }
@@ -223,16 +229,16 @@ const Users = ({
                   hasAdminRole && !isApproved && (
                     <ul className='more__options'>
                       <li className='more__options__item' onClick={() => handleConfirmUser(address)}>Confirm</li>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
-                      <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>}
                     </ul>
                   )
                 }
                 {
                   !hasAdminRole && isApproved && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
                       <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                     </ul>
@@ -240,7 +246,21 @@ const Users = ({
                 }
               </div>
             </div>
-          ) : null
+          ) : (<div className='table__body__cell__more'>
+            <div className='table__body__cell__more__toggler'>
+              <img src={dotsIcon} />
+            </div>
+            <div className='more' onClick={e => e.stopPropagation()}>
+              {
+                !isApproved && !hasAdminRole && (
+                  <ul className='more__options'>
+                    <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
+                  </ul>
+                )
+              }
+            </div>
+          </div>
+          )
         )
       }
     }
@@ -280,7 +300,7 @@ const Users = ({
         data={tableData}
         justAdded={entityAdded}
         columns={columns}
-        pageSize={50}
+        pageSize={100}
       />
     )
   }
@@ -311,6 +331,12 @@ const Users = ({
       </div>
       <div className='entities__wrapper'>
         {renderContent()}
+        <TransactionMessage
+          title={'Joining Community'}
+          message={signatureNeeded ? 'Please sign with your wallet' : 'Pending'}
+          isOpen={showTransactionMessage}
+          isDark
+        />
       </div>
     </Fragment>
   )
@@ -322,6 +348,7 @@ const mapStateToProps = (state) => ({
   users: state.entities.users,
   userWallets: state.entities.wallets,
   ...state.screens.communityEntities,
+  ...getTransaction(state, state.screens.communityEntities.transactionHash),
   isAdmin: checkIsAdmin(state),
   community: getCurrentCommunity(state),
   transactionData: getTransaction(state, state.screens.communityEntities.transactionHash)
@@ -340,7 +367,8 @@ const mapDispatchToProps = {
   fetchEntities,
   importExistingEntity,
   fetchUsersMetadata,
-  fetchUserWallets
+  fetchUserWallets,
+  fetchUserNames
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users)

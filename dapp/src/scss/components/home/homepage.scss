@@ -120,8 +120,8 @@
 
     >img {
       &:nth-of-type(1) {
-        height: 130px;
-        width: 65px;
+        height: 100px;
+        width: 50px;
         margin-right: 2em;
       }
     }
@@ -133,7 +133,7 @@
     line-height: 1.14;
     padding-bottom: .4em;
     @include breakpoint(medium up) {
-      font-size: 2.750em;
+      font-size: 1.75em;
     }
 
     @include breakpoint(medium down) {
@@ -146,13 +146,17 @@
     padding: 0 0 1.250em;
     letter-spacing: -0.46px;
     @include breakpoint(medium up) {
-      font-size: 1.313em;
+      font-size: 1.1em;
       min-width: 400px;
     }
 
     > span {
       font-weight: bold;
       color: $color-dark;
+    }
+
+    > a {
+      color: #0082FF;
     }
   }
 

@@ -86,9 +86,8 @@ const MyTable = ({
       </div>
       <div className='table__pagination__wrapper'>
         <div className='table__pagination'>
-          <p>Rows per page:</p>
+          <p>Rows per page: {pageSize}</p>
           <select
-            disabled
             defaultValue={pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0

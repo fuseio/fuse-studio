@@ -15,8 +15,10 @@ const handleBridgeMappingUpdatedEvent = async (event) => {
 
   // TODO
   // temporal fix: add tokenURI to the contract on Fuse
-  const { tokenURI } = await Token.findOne({ address: foreignTokenAddress }, { tokenURI: 1 })
-  await Token.findOneAndUpdate({ address: homeTokenAddress }, { tokenURI })
+  const token = await Token.findOne({ address: foreignTokenAddress }, { tokenURI: 1 })
+  if (token.tokenURI) {
+    await Token.findOneAndUpdate({ address: homeTokenAddress }, { tokenURI: token.tokenURI })
+  }
 
   return new Bridge({
     foreignTokenAddress,

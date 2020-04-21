@@ -15,6 +15,7 @@ import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchCommunity } from 'actions/token'
+import { fetchMetadata } from 'actions/metadata'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
 import { setForeignNetwork } from 'actions/network'
@@ -26,10 +27,13 @@ import Dashboard from 'components/dashboard/pages/Dashboard'
 import WhiteLabelWallet from 'components/dashboard/pages/WhiteLabelWallet'
 import TransferPage from 'components/dashboard/pages/Transfer'
 import MintBurnPage from 'components/dashboard/pages/MintBurn'
+import SettingsPage from 'components/dashboard/pages/Settings'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
 import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
+import InviteBonusPage from 'components/dashboard/pages/InviteBonus'
+import BackupBonusPage from 'components/dashboard/pages/BackupBonus'
 import OnRampPage from 'components/dashboard/pages/OnRamp'
 import WalletBannerLinkPage from 'components/dashboard/pages/WalletBannerLink'
 
@@ -58,19 +62,13 @@ const DashboardLayout = (props) => {
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
   const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
+  const communityURI = community && community.communityURI
 
   useEffect(() => {
     if (isMobile) {
       onSetSidebarOpen(false)
     }
   }, [location.pathname])
-
-  useEffect(() => {
-    if (communityAddress) {
-      fetchCommunity(communityAddress)
-      fetchEntities(communityAddress)
-    }
-  }, [communityAddress, accountAddress])
 
   useEffect(() => {
     if (!loading) {
@@ -82,6 +80,19 @@ const DashboardLayout = (props) => {
       }
     }
   }, [data, loading, error])
+
+  useEffect(() => {
+    if (communityAddress && !loading) {
+      fetchCommunity(communityAddress)
+      fetchEntities(communityAddress)
+    }
+  }, [communityAddress, accountAddress, loading])
+
+  useEffect(() => {
+    if (communityURI) {
+      fetchMetadata(communityURI)
+    }
+  }, [communityURI])
 
   useEffect(() => {
     if (isAdmin) {
@@ -134,6 +145,25 @@ const DashboardLayout = (props) => {
                     />
                   </Route>
                 )}
+
+                {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
+                  <Route exact path={`${match.path}/invite-bonus`}>
+                    <InviteBonusPage
+                      match={match}
+                      community={community}
+                    />
+                  </Route>
+                )}
+
+                {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
+                  <Route exact path={`${match.path}/backup-bonus`}>
+                    <BackupBonusPage
+                      match={match}
+                      community={community}
+                    />
+                  </Route>
+                )}
+
                 {community && isAdmin && (
                   <Route exact path={`${match.path}/onramp`}
                     render={() => (
@@ -158,6 +188,14 @@ const DashboardLayout = (props) => {
                 {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
                   <Route exact path={`${match.path}/mintBurn`}>
                     <MintBurnPage />
+                  </Route>
+                )}
+
+                {isAdmin && (
+                  <Route exact path={`${match.path}/settings`}>
+                    <SettingsPage
+                      community={community}
+                    />
                   </Route>
                 )}
 

@@ -1,4 +1,5 @@
 const BigNumber = require('bignumber.js')
+const moment = require('moment')
 
 const transform = (doc, ret, options) => ({ ...ret, totalSupply: doc.totalSupply ? doc.totalSupply.toString() : undefined })
 
@@ -12,11 +13,14 @@ module.exports = (mongoose) => {
     symbol: { type: String, required: [true, "can't be blank"] },
     tokenURI: { type: String },
     totalSupply: { type: mongoose.Types.Decimal128, required: [true, "can't be blank"] },
+    decimals: { type: Number, default: 18 },
     owner: { type: String },
     factoryAddress: { type: String },
     blockNumber: { type: Number },
     tokenType: { type: String, required: [true, "can't be blank"] },
-    networkType: { type: String }
+    networkType: { type: String },
+    expiryTimestamp: { type: Number },
+    spendabilityIds: [{ type: String }]
   }, { timestamps: true })
 
   TokenSchema.index({ address: 1 })
@@ -59,6 +63,11 @@ module.exports = (mongoose) => {
   token.burnTokens = (address, value) => {
     const negatedValue = new BigNumber(value).negated().toString()
     return Token.updateOne({ address }, { $inc: { totalSupply: negatedValue } })
+  }
+
+  token.getBySpendability = (networkType, ids, order) => {
+    const now = moment().unix()
+    return Token.find({ networkType, expiryTimestamp: { $gt: now }, spendabilityIds: { $in: ids } }, { _id: 0, address: 1 }).sort({ spendabilityIds: order })
   }
 
   token.getModel = () => {

@@ -9,7 +9,7 @@ const createMailRequest = ({ to, from, templateId, templateData, bcc }) => {
     body: {
       'personalizations': [
         {
-          'to': [
+          'to': Array.isArray(to) ? to : [
             {
               'email': to
             }
@@ -68,6 +68,27 @@ const sendInfoMail = async (user, { networkType, communityName, communityAddress
   }
 }
 
+const notifyManagers = async ({ communityName, networkType }) => {
+  const managers = (config.get('mail.managers') || []).map((email) => ({ email }))
+
+  const templateData = {
+    communityName,
+    networkType: capitalize(networkType)
+  }
+
+  const request = createMailRequest({
+    to: managers,
+    from: config.get('mail.supportAddress'),
+    templateId: config.get('mail.sendgrid.templates.communityLaunched'),
+    templateData
+  })
+
+  const [response] = await client.request(request)
+  if (response.statusCode >= 400) {
+    console.error(`Cannot send welcome email to ${managers}`)
+  }
+}
+
 const subscribeUser = async (user) => {
   const listId = config.get('mail.sendgrid.listId')
   const request = {
@@ -111,7 +132,7 @@ const sendUserInvitationToCommunity = async ({ email, url }) => {
         {
           'type': 'text/plain',
           'value': `
-            ${config.get('twilio.inviteTxt')}
+            ${config.get('inviteTxtEmail')}
             ${url}
           `
         }
@@ -129,5 +150,6 @@ module.exports = {
   sendWelcomeMail,
   subscribeUser,
   sendInfoMail,
+  notifyManagers,
   sendUserInvitationToCommunity
 }

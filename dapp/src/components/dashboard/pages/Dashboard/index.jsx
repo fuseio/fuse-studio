@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { toWei } from 'web3-utils'
 import { connect } from 'react-redux'
 import { transferToken, mintToken, burnToken, clearTransactionStatus } from 'actions/token'
+import { joinCommunity } from 'actions/communityEntities'
 import { WRONG_NETWORK_MODAL, QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { deployBridge } from 'actions/bridge'
@@ -15,7 +15,7 @@ import { push } from 'connected-react-router'
 import { getForeignNetwork } from 'selectors/network'
 import SignIn from 'components/common/SignIn'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
-import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
+import { getEntity, getCommunityAddress } from 'selectors/entities'
 import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 
@@ -37,22 +37,6 @@ class Dashboard extends Component {
 
   showHomePage = () => {
     this.props.push('/')
-  }
-
-  handleMintOrBurnClick = (actionType, amount) => {
-    const { burnToken, mintToken, token: { address: tokenAddress } } = this.props
-    if (actionType === 'mint') {
-      mintToken(tokenAddress, toWei(String(amount)))
-    } else {
-      burnToken(tokenAddress, toWei(String(amount)))
-    }
-
-    this.setState({ ...this.state, lastAction: { actionType, mintBurnAmount: amount } })
-  }
-
-  handleTransfer = ({ to: toField, amount }) => {
-    const { transferToken, token: { address: tokenAddress } } = this.props
-    transferToken(tokenAddress, toField, toWei(String(amount)))
   }
 
   loadQrModal = (value) => {
@@ -79,6 +63,10 @@ class Dashboard extends Component {
       return {}
     }
   }
+  handleJoinCommunity = () => {
+    this.props.push(`${this.props.pathname}/users`)
+    this.props.joinCommunity(this.props.community.communityAddress)
+  }
 
   render () {
     const {
@@ -89,8 +77,9 @@ class Dashboard extends Component {
       metadata,
       networkType,
       tokenOfCommunityOnCurrentSide,
-      isAdmin
+      userEntity
     } = this.props
+    const isAdmin = userEntity && userEntity.isAdmin
 
     return (
       (community && foreignToken) ? <React.Fragment>
@@ -106,6 +95,7 @@ class Dashboard extends Component {
           name={community && community.name}
           networkType={networkType}
           token={foreignToken}
+          handleJoinCommunity={userEntity ? undefined : this.handleJoinCommunity}
         />
         <CommunityInfo
           tokensTotalSupplies={dashboard && dashboard.totalSupply}
@@ -124,6 +114,7 @@ class Dashboard extends Component {
               </ReactTooltip>
               <Bridge
                 symbol={foreignToken && foreignToken.symbol}
+                decimals={foreignToken && foreignToken.decimals}
                 tokenName={community.name}
                 isAdmin={isAdmin}
                 community={community}
@@ -142,13 +133,14 @@ class Dashboard extends Component {
 const mapStateToProps = (state) => ({
   tokenNetworkType: getForeignNetwork(state),
   metadata: state.entities.metadata,
-  isAdmin: checkIsAdmin(state),
+  userEntity: getEntity(state),
   tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state)),
   accountAddress: getAccountAddress(state),
   foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)),
   dashboard: state.screens.dashboard,
   ...state.screens.token,
-  ...getTransaction(state, state.screens.token.transactionHash)
+  ...getTransaction(state, state.screens.token.transactionHash),
+  pathname: state.router.location.pathname
 })
 
 const mapDispatchToProps = {
@@ -159,7 +151,8 @@ const mapDispatchToProps = {
   mintToken,
   burnToken,
   clearTransactionStatus,
-  push
+  push,
+  joinCommunity
 }
 
 export default connect(

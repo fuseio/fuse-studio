@@ -26,6 +26,8 @@ export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
 
 export const FETCH_USER_WALLETS = createRequestTypes('FETCH_USER_WALLETS')
 export const FETCH_USERS_METADATA = createRequestTypes('FETCH_USERS_METADATA')
+export const FETCH_USER_METADATA = createRequestTypes('FETCH_USER_METADATA')
+export const FETCH_USER_NAMES = createRequestTypes('FETCH_USER_NAMES')
 const options = { desiredNetworkType: 'fuse' }
 
 export const fetchEntities = (communityAddress) => entitiesAction(FETCH_ENTITIES.REQUEST, { communityAddress })
@@ -33,6 +35,8 @@ export const fetchEntity = (communityAddress, account) => entitiesAction(FETCH_E
 export const fetchEntityMetadata = (communityAddress, account) => entitiesBusinessesAction(FETCH_ENTITY_METADATA.REQUEST, { communityAddress, account })
 
 export const fetchUsersMetadata = (accounts) => entitiesAction(FETCH_USERS_METADATA.REQUEST, { accounts })
+export const fetchUserMetadata = (account) => entitiesAction(FETCH_USER_METADATA.REQUEST, { account })
+export const fetchUserNames = (accounts) => createEntityAction('users')(FETCH_USER_NAMES.REQUEST, { accounts, options: { v2: true } })
 
 export const addEntity = (communityAddress, data, isClosed, entityType) => action(ADD_ENTITY.REQUEST, { communityAddress, data, isClosed, entityType, options })
 export const removeEntity = (account) => action(REMOVE_ENTITY.REQUEST, { account, options })

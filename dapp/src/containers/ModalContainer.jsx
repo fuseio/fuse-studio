@@ -15,6 +15,7 @@ import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
 import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEntity'
 import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
 import SwitchNetwork from 'components/common/SwitchNetwork'
+import Web3ConnectModal from 'components/common/modals/Web3ConnectModal'
 
 import {
   WRONG_NETWORK_MODAL,
@@ -28,7 +29,8 @@ import {
   IMAGE_CROPPER_MODAL,
   PLUGIN_INFO_MODAL,
   SWITCH_NETWORK,
-  TEMPLATE_MODAL
+  TEMPLATE_MODAL,
+  WEB3_CONNECT_MODAL
 } from 'constants/uiConstants'
 
 const renderModal = (modalComponent, props) =>
@@ -48,7 +50,8 @@ const MODAL_COMPONENTS = {
   [IMAGE_CROPPER_MODAL]: ImageCropperModal,
   [PLUGIN_INFO_MODAL]: PluginInfoModal,
   [SWITCH_NETWORK]: SwitchNetwork,
-  [TEMPLATE_MODAL]: TemplateModal
+  [TEMPLATE_MODAL]: TemplateModal,
+  [WEB3_CONNECT_MODAL]: Web3ConnectModal
 }
 
 const ModalContainer = (props) => {

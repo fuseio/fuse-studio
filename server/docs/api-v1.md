@@ -9,9 +9,11 @@ The Fuse Studio REST API for accessing the data and the services of the Fuse net
 - [Community](#Community)
 	- [Add plugins to community](#Add-plugins-to-community)
 	- [](#)
-	- [Fetch community](#Fetch-community)
 	- [Fetch community with plugins adjusted for the specified account](#Fetch-community-with-plugins-adjusted-for-the-specified-account)
+	- [Fetch community](#Fetch-community)
 	- [Invite a user to community](#Invite-a-user-to-community)
+	- [Set secondary token for the community](#Set-secondary-token-for-the-community)
+	- [Update community metadata](#Update-community-metadata)
 	
 - [Entity](#Entity)
 	- [Fetch my communities](#Fetch-my-communities)
@@ -104,31 +106,6 @@ GET /communities
 | foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
 | isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
 | plugins | `Object` | <p>Defines the community plugins.</p> |
-## <a name='Fetch-community'></a> Fetch community
-[Back to top](#top)
-
-<p>Community is a set of contracts and services. Members of the community are users of the Fuse network. The community is configured via the plugins.</p>
-
-```
-GET /communities/:communityAddress
-```
-
-### Parameter Parameters
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| communityAddress | `String` | <p>Community address</p> |
-
-
-### Success 200
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| communityAddress | `String` | <p>Address of the community on the Fuse network</p> |
-| homeTokenAddress | `String` | <p>Address of the community token on the Fuse network</p> |
-| foreignTokenAddress | `String` | <p>Address of the community token on the Ethereum network</p> |
-| homeBridgeAddress | `String` | <p>Address of the community bridge on the Fuse network</p> |
-| foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
-| isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
-| plugins | `Object` | <p>Defines the community plugins.</p> |
 ## <a name='Fetch-community-with-plugins-adjusted-for-the-specified-account'></a> Fetch community with plugins adjusted for the specified account
 [Back to top](#top)
 
@@ -143,6 +120,31 @@ GET /communities/:communityAddress
 |:---------|:-----------|:--------------------------------------|
 | communityAddress | `String` | <p>Community address</p> |
 | accountAddress | `String` | <p>User account address</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Address of the community on the Fuse network</p> |
+| homeTokenAddress | `String` | <p>Address of the community token on the Fuse network</p> |
+| foreignTokenAddress | `String` | <p>Address of the community token on the Ethereum network</p> |
+| homeBridgeAddress | `String` | <p>Address of the community bridge on the Fuse network</p> |
+| foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
+| isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
+| plugins | `Object` | <p>Defines the community plugins.</p> |
+## <a name='Fetch-community'></a> Fetch community
+[Back to top](#top)
+
+<p>Community is a set of contracts and services. Members of the community are users of the Fuse network. The community is configured via the plugins.</p>
+
+```
+GET /communities/:communityAddress
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Community address</p> |
 
 
 ### Success 200
@@ -183,6 +185,57 @@ POST /communities/:communityAddress/invite
 {
    "email": {{userEmail}},
 }
+```
+
+## <a name='Set-secondary-token-for-the-community'></a> Set secondary token for the community
+[Back to top](#top)
+
+
+
+```
+PUT /communities/:communityAddress/secondary
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| secondaryTokenAddress | `String` | <p>Address of the secondary token</p> |
+| networkType | `String` | <p>Token's network type</p> |
+| tokenType | `String` | <p>Token's network type</p> |
+
+### Param Examples
+`json` - Request-Example:
+
+```json
+{
+   "secondaryTokenAddress": "0xd6aab51d1343dcbee9b47e6fef8ba4469cf3dbde",
+   "networkType": "fuse",
+   "tokenType": "basic"
+ }
+```
+
+## <a name='Update-community-metadata'></a> Update community metadata
+[Back to top](#top)
+
+
+
+```
+PUT /communities/:communityAddress
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Community address</p> |
+| community | `Object` | <p>metadata to update</p> |
+
+### Param Examples
+`json` - Request-Example:
+
+```json
+{
+   "communityURI": "ipfs://hash",
+ }
 ```
 
 # <a name='Entity'></a> Entity

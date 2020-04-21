@@ -8,7 +8,8 @@ const abiMapping = {
   Community: () => require('@fuse/entities-contracts/abi/CommunityWithEvents'),
   IRestrictedToken: () => require('./IRestrictedToken'),
   CommunityTransferManager: () => require('@fuse/entities-contracts/abi/CommunityTransferManager'),
-  TransferManager: () => require('./TransferManager')
+  TransferManager: () => require('./TransferManager'),
+  ExpirableToken: () => require('@fuse/token-factory-contracts/abi/ExpirableToken')
 }
 
 const getAbi = (abiName) => {

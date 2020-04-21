@@ -6,10 +6,12 @@ const Entity = mongoose.model('Entity')
 const Token = mongoose.model('Token')
 const lodash = require('lodash')
 const branch = require('@utils/branch')
-const twilio = require('@utils/twilio')
+const smsProvider = require('@utils/smsProvider')
 const { sign } = require('@utils/crypto')
 const sendgridUtils = require('@utils/sendgrid')
 const { toChecksumAddress } = require('web3-utils')
+const { getWeb3 } = require('@services/web3')
+const { fetchTokenData } = require('@utils/token')
 
 const makePlugin = ({ plugin }) => {
   const { name } = plugin
@@ -53,6 +55,53 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
 })
 
 /**
+ * @api {put} /communities/:communityAddress Update community metadata
+ * @apiName UpdateCommunity
+ * @apiGroup Community
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {Object} community metadata to update
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "communityURI": "ipfs://hash",
+ *    }
+ */
+
+router.put('/:communityAddress', async (req, res) => {
+  const { communityAddress } = req.params
+  const { communityURI, description, webUrl } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description, webUrl }, lodash.identity), { new: true })
+  return res.json({ data: community })
+})
+
+/**
+ * @api {put} /communities/:communityAddress/secondary Set secondary token for the community
+ * @apiName SetSecondaryToken
+ * @apiGroup Community
+ * @apiParam {String} secondaryTokenAddress Address of the secondary token
+ * @apiParam {String} networkType Token's network type
+ * @apiParam {String} tokenType Token's network type
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "secondaryTokenAddress": "0xd6aab51d1343dcbee9b47e6fef8ba4469cf3dbde",
+ *      "networkType": "fuse",
+ *      "tokenType": "basic"
+ *    }
+ */
+
+router.put('/:communityAddress/secondary', async (req, res) => {
+  const { communityAddress } = req.params
+  const { networkType, tokenType, secondaryTokenAddress } = req.body
+  const token = await Token.findOne({ address: secondaryTokenAddress })
+  if (!token) {
+    const web3 = getWeb3({ networkType })
+    const tokenData = await fetchTokenData(secondaryTokenAddress, {}, web3)
+    await new Token({ address: secondaryTokenAddress, networkType, tokenType, ...tokenData }).save()
+  }
+  const community = await Community.findOneAndUpdate({ communityAddress }, { secondaryTokenAddress }, { new: true })
+  return res.json({ data: community })
+})
+
+/**
  * @api {post} /communities/:communityAddress/invite Invite a user to community
  * @apiName InviteUser
  * @apiGroup Community
@@ -77,7 +126,7 @@ router.post('/:communityAddress/invite', async (req, res, next) => {
     sendgridUtils.sendUserInvitationToCommunity({ email, url })
     res.send({ response: 'ok' })
   } else if (phoneNumber) {
-    twilio.createMessage({ to: phoneNumber, body: `${config.get('twilio.inviteTxt')}\n${url}` })
+    smsProvider.createMessage({ to: phoneNumber, body: `${config.get('inviteTxt')}\n${url}` })
     res.send({ response: 'ok' })
   }
 })

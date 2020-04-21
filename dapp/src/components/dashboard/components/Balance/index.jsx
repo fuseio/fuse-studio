@@ -21,6 +21,7 @@ const NetworkLogo = memo(({ network }) => {
 const Balance = ({
   bridgeSide,
   symbol,
+  decimals,
   openModal,
   balance
 }) => {
@@ -32,7 +33,7 @@ const Balance = ({
       <div className='bridge__title'>{convertNetworkName(network)}</div>
       <div className='bridge__text'>
         <div>Balance</div>
-        <span>{balance ? formatWei(balance, 2) : 0} <small>{symbol}</small>
+        <span>{balance ? formatWei(balance, 2, decimals) : 0} <small>{symbol}</small>
         </span>
       </div>
       <button className='bridge__more' onClick={openModal}>Show more</button>

@@ -5,6 +5,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 
 - [Admin](#Admin)
 	- [Burn tokens](#Burn-tokens)
+	- [Create token](#Create-token)
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	- [Mint tokens](#Mint-tokens)
 	- [Transfer tokens from account](#Transfer-tokens-from-account)
@@ -14,17 +15,23 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Sync contacts list](#Sync-contacts-list)
 	
 - [Jobs](#Jobs)
+	- [Fetch job by correlationId](#Fetch-job-by-correlationId)
 	- [Fetch job by id](#Fetch-job-by-id)
 	
 - [Login](#Login)
+	- [Login using firebase ID token](#Login-using-firebase-ID-token)
 	- [Request a verification code](#Request-a-verification-code)
 	- [Verify user phone number](#Verify-user-phone-number)
 	
 - [Wallet](#Wallet)
 	- [Create wallet contract for user](#Create-wallet-contract-for-user)
+	- [Create wallet contract for user on Ethereum](#Create-wallet-contract-for-user-on-Ethereum)
+	- [Fetch all wallets by phone number](#Fetch-all-wallets-by-phone-number)
 	- [Fetch user wallet](#Fetch-user-wallet)
 	- [Fetch latest wallet by phone number](#Fetch-latest-wallet-by-phone-number)
+	- [Notify server on client wallet backup](#Notify-server-on-client-wallet-backup)
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
+	- [Check if wallet exists by wallet address](#Check-if-wallet-exists-by-wallet-address)
 	
 
 # <a name='Admin'></a> Admin
@@ -48,6 +55,7 @@ POST /api/v2/admin/tokens/burn
 | tokenAddress | `String` | <p>Token address to burn (body parameter)</p> |
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
 | amount | `String` | <p>Token amount to burn</p> |
+| from | `String` | <p>account to burn from (optional)</p> |
 
 ### Examples
 Burn 1.1 tokens on Fuse network
@@ -55,6 +63,43 @@ Burn 1.1 tokens on Fuse network
 ```
 POST /api/v2/admin/tokens/burn
 body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse', amount: '1.1' }
+```
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `String` | <p>job data</p> |
+## <a name='Create-token'></a> Create token
+[Back to top](#top)
+
+<p>Start async job of creating a token</p>
+
+```
+POST /api/v2/admin/tokens/create
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| name | `String` | <p>Token name</p> |
+| symbol | `String` | <p>Token symbol</p> |
+| initialSupply | `String` | <p>Token initial supply (in ETH)</p> |
+| uri | `String` | <p>Token URI (metadata)</p> |
+| expiryTimestamp | `String` | <p>Token expiry timestamp after which cannot transfer (Unix epoch time - in seconds)</p> |
+| spendabilityIds | `String` | <p>Token spendability ids (comma-seperated list)</p> |
+| networkType | `String` | <p>Token's network (must be Fuse)</p> |
+
+### Examples
+Create a token on Fuse network
+
+```
+POST /api/v2/admin/tokens/create
+body: { name: 'MyCoolToken', symbol: 'MCT', initialSupply: '100', uri: 'ipfs://hash', expiryTimestamp: 1585036857, spendabilityIds: 'a,b,c', networkType: 'fuse' }
 ```
 
 
@@ -143,6 +188,8 @@ POST /api/v2/admin/tokens/transfer
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | tokenAddress | `String` | <p>Token address to transfer (body parameter)</p> |
+| spendabilityIds | `String` | <p>Token spendability ids (comma-seperated list) - if sent, no need for tokenAddress</p> |
+| spendabilityOrder | `String` | <p>Token spendability order (asc/desc)</p> |
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
 | amount | `String` | <p>Token amount to transfer</p> |
 | from | `String` | <p>account to transfer from</p> |
@@ -208,6 +255,25 @@ POST api/v2/contacts/
 | nonce | `Number` |  |
 # <a name='Jobs'></a> Jobs
 
+## <a name='Fetch-job-by-correlationId'></a> Fetch job by correlationId
+[Back to top](#top)
+
+<p>Fetches agenda job by job's correlationId</p>
+
+```
+GET api/v2/jobs/correlationId/:correlationId
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Object` | <p>Job object</p> |
 ## <a name='Fetch-job-by-id'></a> Fetch job by id
 [Back to top](#top)
 
@@ -226,9 +292,29 @@ GET api/v2/jobs/:jobId
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| data | `Object` | <p>User wallet object</p> |
+| data | `Object` | <p>Job object</p> |
 # <a name='Login'></a> Login
 
+## <a name='Login-using-firebase-ID-token'></a> Login using firebase ID token
+[Back to top](#top)
+
+<p>Login using firebase ID token</p>
+
+```
+POST api/v2/login/
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| accountAddress | `String` | <p>User account address</p> |
+| token | `String` | <p>Firebase ID token</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| token | `String` | <p>JWT token</p> |
 ## <a name='Request-a-verification-code'></a> Request a verification code
 [Back to top](#top)
 
@@ -261,7 +347,7 @@ POST api/v2/login/verify
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | phoneNumber | `String` | <p>User phone number</p> |
-| User | `accountAddress` | <p>account address</p> |
+| accountAddress | `String` | <p>User account address</p> |
 | code | `String` | <p>SMS code recieved to user phone number</p> |
 
 
@@ -289,7 +375,45 @@ POST api/v2/wallets/
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| response | `String` | <p>Response status - ok</p> |
+| Started | `Object` | <p>job data</p> |
+## <a name='Create-wallet-contract-for-user-on-Ethereum'></a> Create wallet contract for user on Ethereum
+[Back to top](#top)
+
+<p>Creates wallet contract for the user on Ethereum</p>
+
+```
+POST api/v2/wallets/foreign
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `Object` | <p>job data</p> |
+## <a name='Fetch-all-wallets-by-phone-number'></a> Fetch all wallets by phone number
+[Back to top](#top)
+
+<p>Fetches all wallets created by phone number</p>
+
+```
+GET api/v2/wallets/all/:phoneNumber
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Object` | <p>Array of Wallet objects</p> |
 ## <a name='Fetch-user-wallet'></a> Fetch user wallet
 [Back to top](#top)
 
@@ -328,6 +452,29 @@ GET api/v2/wallets/:phoneNumber
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | data | `Object` | <p>Wallet object</p> |
+## <a name='Notify-server-on-client-wallet-backup'></a> Notify server on client wallet backup
+[Back to top](#top)
+
+<p>Notify the server that the client has backed up his wallet</p>
+
+```
+POST api/v2/wallets/backup
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>community address</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `Object` | <p>job data</p> |
 ## <a name='Create-wallet-for-phone-number'></a> Create wallet for phone number
 [Back to top](#top)
 
@@ -350,4 +497,23 @@ POST api/v2/wallets/invite/:phoneNumber
 ### Success 200
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
-| response | `String` | <p>Response status - ok</p> |
+| Started | `Object` | <p>job data</p> |
+## <a name='Check-if-wallet-exists-by-wallet-address'></a> Check if wallet exists by wallet address
+[Back to top](#top)
+
+<p>Checks if wallet exists by wallet address</p>
+
+```
+GET api/v2/wallets/exists/:walletAddress
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Boolean` | <p>True if wallet exists, false otherwide</p> |

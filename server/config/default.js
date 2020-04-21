@@ -23,6 +23,11 @@ module.exports = {
   graph: {
     url: 'https://graph.fuse.io/subgraphs/name/fuseio/fuse-qa'
   },
+  box: {
+    graph: {
+      url: 'https://api.3box.io/graph'
+    }
+  },
   network: {
     misc: {
       pageSize: 1000,
@@ -50,6 +55,7 @@ module.exports = {
       },
       sharedAddresses: {
         WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
+        WalletImplementation: '0x1DA43F87611B7FFDb104D125389E14313e053A3A',
         CommunityFactory: '0x5E853EDAEE70BD635d02CC0169Cf97083DE3436D',
         MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
         walletModules: {
@@ -119,6 +125,9 @@ module.exports = {
     }
   },
   agenda: {
+    args: {
+      maxConcurrency: 5
+    },
     startPeriodicTasks: true,
     tasks: {
       deploy: {
@@ -134,10 +143,6 @@ module.exports = {
   },
   funder: {
     urlBase: 'https://funder-qa.fuse.io/api/'
-  },
-  twilio: {
-    inviteTxt: 'Hi, a friend has invited you to Fuse',
-    magic: '5555'
   },
   branch: {
     urlBase: 'https://api2.branch.io/v1/',
@@ -166,6 +171,28 @@ module.exports = {
     ramp: {
       args: {
       }
+    }
+  },
+  inviteTxt: 'Hi, a friend has invited you to Fuse',
+  inviteTxtEmail: 'Hi, a friend has invited you to Fuse. Please open this link from your mobile device',
+  smsProvider: 'sns',
+  phoneNumbers: {
+    magic: '5555',
+    maxUserWallets: 5
+  },
+  aws: {
+    sns: {
+      region: 'eu-west-1',
+      senderId: 'Wallet',
+      smsType: 'Promotional'
+    }
+  },
+  slack: {
+    channel: 'monitor'
+  },
+  alerts: {
+    lockedAccounts: {
+      threshold: 10 // in minutes
     }
   }
 }

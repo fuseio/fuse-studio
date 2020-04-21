@@ -8,7 +8,7 @@ const GET_COMMUNITY = (address) => {
       communities (where: {address: "${address}"}) {
         entitiesList {
           id
-          communityEntities {
+          communityEntities (first: 1000) {
             address
             isAdmin
             isApproved
@@ -25,7 +25,7 @@ const GET_COMMUNITY = (address) => {
 const FETCH_WALLETS = gql`
   query Wallets($accounts: [String]!)
     {
-      wallets(where: {address_in: $accounts}) {
+      wallets(first: 1000, where: {address_in: $accounts}) {
         address,
         owner
       }
@@ -40,6 +40,12 @@ export const fetchUserWallets = ({ accounts }) => client.query({
   query: FETCH_WALLETS,
   variables: { accounts }
 })
+
+export const fetchUserNames = (apiRoot, { accounts }) =>
+  request.post(`${apiRoot}/users/getnames`)
+    .send({ accounts })
+    .then(response => ({ data: response.body.data.map(entity => ({ ...entity, account: entity.accountAddress, address: entity.accountAddress })) }))
+
 export const createEntitiesMetadata = (apiRoot, { communityAddress, accountAddress, metadata }) =>
   request.put(`${apiRoot}/entities/${communityAddress}/${accountAddress}`)
     .send({ metadata })

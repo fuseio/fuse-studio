@@ -19,7 +19,7 @@
 
   @include element (wrapper) {
     @include breakpoint(large) {
-      width: 40%;    
+      width: 50%;    
     }
   
     @include breakpoint(medium down) {

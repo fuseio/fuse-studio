@@ -15,4 +15,11 @@ router.post('/', async (req, res) => {
   })
 })
 
+router.post('/getnames', async (req, res) => {
+  const users = await User.find({ accountAddress: req.body.accounts }, { displayName: 1, accountAddress: 1 })
+  res.json({
+    data: users
+  })
+})
+
 module.exports = router

@@ -9,6 +9,8 @@ import Templates from 'components/home/components/Templates'
 import Tabs from 'components/home/components/Tabs'
 import Faqs from 'components/home/components/Faq'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
+import { loadModal } from 'actions/ui'
+import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
 
 import personImage from 'images/person.png'
 import groupImageMobile from 'images/group_mobile.png'
@@ -22,14 +24,15 @@ const HomePage = ({
   accountAddress,
   web3connect,
   push,
-  communitiesKeys
+  communitiesKeys,
+  loadModal
 }) => {
   const showIssuance = (templateId) => {
     if (!accountAddress) {
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')
       }
-      web3connect.toggleModal()
+      loadModal(WEB3_CONNECT_MODAL, { web3connect })
     } else {
       window.analytics.track('Launch community button pressed - connected')
       const path = templateId ? `/view/issuance/${templateId}` : '/view/issuance'
@@ -50,10 +53,10 @@ const HomePage = ({
     <div className='home_page'>
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-bottom'>
-          <div className='home_page__content cell medium-12 large-9' style={{ height: '50%' }}>
-            <h2 className='home_page__title'>Jump start<br /> your economy</h2>
+          <div className='home_page__content cell medium-12 large-9' style={{ height: '50%', paddingBottom: '50px' }}>
+            <h2 className='home_page__title'>Welcome to fuse studio</h2>
             <p className='home_page__text'>
-              Finish the community wizard on<br /> mainnet and <span>get rewarded 100<br /> Fuse tokens <img src={GiftIcon} /></span>
+              Use the wizard or choose from a template below <br />  and get some Fuse tokens to start exploring the features <img src={GiftIcon} />
             </p>
             <div className='home_page__button'>
               <button onClick={() => {
@@ -101,7 +104,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  push
+  push,
+  loadModal
 }
 
 export default withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage))

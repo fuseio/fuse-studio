@@ -68,7 +68,8 @@ export const entityKeys = {
   bridges: 'foreignTokenAddress',
   communityEntities: 'account',
   communities: 'communityAddress',
-  wallets: 'address'
+  wallets: 'address',
+  users: 'account'
 }
 
 export const createEntitiesFetch = (action, apiFunc) => function * (params) {
@@ -77,7 +78,7 @@ export const createEntitiesFetch = (action, apiFunc) => function * (params) {
     throw Error(`No entity name given for action ${action.REQUEST}`)
   }
 
-  const response = yield apiCall(apiFunc, params)
+  const response = yield apiCall(apiFunc, params, params.options)
 
   const { data, ...metadata } = response
 
