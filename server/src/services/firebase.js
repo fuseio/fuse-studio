@@ -22,44 +22,34 @@ const initAdmin = async () => {
   }, 'Roost')
 
   const localDolarResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdLocalDolarMX }).promise()
-
   localDolarAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(localDolarResponse.SecretString))
   }, 'LocalDollarMX')
 
   const localPayResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdLocalPay }).promise()
-
   localPayAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(localPayResponse.SecretString))
   }, 'LocalPay')
 
   const wepyResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdWepy }).promise()
-
   wepyAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(wepyResponse.SecretString))
   }, 'WEPY')
 
   const supervecinaResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdSupervecina }).promise()
-
   supervecinaAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(supervecinaResponse.SecretString))
   }, 'Supervecina')
 
-
   const farmlyledgerResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdFarmlyledger }).promise()
-
   farmlyledgerAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(farmlyledgerResponse.SecretString))
   }, 'FarmlyLedger')
 
-
   const bimResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdBIM }).promise()
-
   bimAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(bimResponse.SecretString))
   }, 'BIM')
-
-  
 }
 
 initAdmin()
