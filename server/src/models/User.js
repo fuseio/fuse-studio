@@ -4,6 +4,7 @@ const { Schema } = mongoose
 
 const UserSchema = new Schema({
   email: { type: String, required: [true, "can't be blank"], validate: [ validator.isEmail, 'invalid email' ] },
+  accountId: { type: Schema.Types.ObjectId, ref: 'Account' },
   accountAddress: { type: String },
   provider: { type: String },
   source: { type: String, required: true },

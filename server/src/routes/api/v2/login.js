@@ -2,6 +2,7 @@ const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
+const { createAccountWithRole } = require('@utils/account')
 const smsProvider = require('@utils/smsProvider')
 const { getAdmin } = require('@services/firebase')
 const { OAuth2Client } = require('google-auth-library')
@@ -102,12 +103,16 @@ router.post('/google', async (req, res) => {
   let user = await User.findOne({ externalId: sub })
 
   if (!user) {
-    user = await User({ email, externalId: sub, displayName: name, source: 'studio' }).save()
+    const { accountId, accountAddress } = await createAccountWithRole('communityAdmin')
+    user = await User({ email, accountId, accountAddress, source: 'studio', displayName: name, externalId: sub }).save()
   }
 
-  const token = jwt.sign({ email, id: user._id }, secret, {
-    expiresIn
-  })
+  if (!user.accountId) {
+    const { accountId, accountAddress } = await createAccountWithRole('communityAdmin')
+    user = await User.findOneAndUpdate({ externalId: sub }, { accountId, accountAddress })
+  }
+
+  const token = jwt.sign({ email, id: user._id, accountAddress: user.accountAddress }, secret, { expiresIn })
   res.json({ token })
 })
 
