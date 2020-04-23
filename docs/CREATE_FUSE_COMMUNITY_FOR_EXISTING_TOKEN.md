@@ -115,15 +115,8 @@ You can find the community in the `communities` table in the DB as well as on th
 ```
 
 ### Register the existing token to the graph
-Call `registerToken(address _community, address _token)` on the `CommunityFactoryV2` contract from its owner account (which is the multiple-bridge owner account).
+Call `registerToken(address _community, address _token)` on the `CommunityFactoryV2` contract from its owner account (which is the multiple-bridge owner account) using the following data:
 
-###### production addresses
-```
-CommunityFactoryV2: 0x27AfFd11168101F5CAb54bbFF8D4D35a799Fb67C
-Owner: 				0x618C439aDFcCB5a049981290c0eb9202b85eF9F2
-```
-
-###### data to send
 ```
 4739f7e5000000000000000000000000<community address>000000000000000000000000<token address>
 ```
