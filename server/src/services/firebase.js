@@ -9,6 +9,8 @@ let wepyAdmin
 let supervecinaAdmin
 let farmlyledgerAdmin
 let bimAdmin
+let bit2cAdmin
+let localChampionsAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -50,6 +52,16 @@ const initAdmin = async () => {
   bimAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(bimResponse.SecretString))
   }, 'BIM')
+
+  const bit2cResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdBit2C }).promise()
+  bit2cAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(bit2cResponse.SecretString))
+  }, 'Bit2C')
+
+  const localChampionsResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdLocalChampions }).promise()
+  localChampionsResponse = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(localChampionsResponse.SecretString))
+  }, 'LocalChampions')
 }
 
 initAdmin()
@@ -69,6 +81,10 @@ const getAdmin = (appName) => {
     return farmlyledgerAdmin
   } else if (appName === 'BIM') {
     return bimAdmin
+  } else if (appName === 'Bit2C') {
+    return bit2cAdmin
+  } else if (appName === 'LocalChampions') {
+    return localChampionsAdmin
   } else {
     return admin
   }

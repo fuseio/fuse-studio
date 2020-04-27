@@ -16,6 +16,8 @@
       "firebaseSecretIdSupervecina": "COMMUNITY_AWS_FIREBASE_SECRET_ID_SUPERVECINA",
       "firebaseSecretIdFarmlyledger": "COMMUNITY_AWS_FIREBASE_SECRET_ID_FARMLYLEDGER",
       "firebaseSecretIdBIM": "COMMUNITY_AWS_FIREBASE_SECRET_ID_BIM",
+      "firebaseSecretIdBit2C": "COMMUNITY_AWS_FIREBASE_SECRET_ID_BIT2C",
+      "firebaseSecretIdLocalChampions": "COMMUNITY_AWS_FIREBASE_SECRET_ID_LOCAL_CHAMPIONS",
       "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
