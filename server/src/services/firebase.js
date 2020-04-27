@@ -59,7 +59,7 @@ const initAdmin = async () => {
   }, 'Bit2C')
 
   const localChampionsResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdLocalChampions }).promise()
-  localChampionsResponse = admin.initializeApp({
+  localChampionsAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(localChampionsResponse.SecretString))
   }, 'LocalChampions')
 }
