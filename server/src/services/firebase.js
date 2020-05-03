@@ -91,7 +91,7 @@ const getAdmin = (appName) => {
     return bit2cAdmin
   } else if (appName === 'LocalChampions') {
     return localChampionsAdmin
-  } else if (appName === 'SeedBed') {
+  } else if (appName === 'Seedbed') {
     return seedbedAdmin
   } else {
     return admin
