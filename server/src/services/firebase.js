@@ -11,6 +11,7 @@ let farmlyledgerAdmin
 let bimAdmin
 let bit2cAdmin
 let localChampionsAdmin
+let seedbedAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -62,6 +63,11 @@ const initAdmin = async () => {
   localChampionsAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(localChampionsResponse.SecretString))
   }, 'LocalChampions')
+
+  const seedBedResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdSeedbed }).promise()
+  seedbedAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(seedBedResponse.SecretString))
+  }, 'Seedbed')
 }
 
 initAdmin()
@@ -85,6 +91,8 @@ const getAdmin = (appName) => {
     return bit2cAdmin
   } else if (appName === 'LocalChampions') {
     return localChampionsAdmin
+  } else if (appName === 'SeedBed') {
+    return seedbedAdmin
   } else {
     return admin
   }

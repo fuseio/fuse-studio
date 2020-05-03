@@ -18,6 +18,7 @@
       "firebaseSecretIdBIM": "COMMUNITY_AWS_FIREBASE_SECRET_ID_BIM",
       "firebaseSecretIdBit2C": "COMMUNITY_AWS_FIREBASE_SECRET_ID_BIT2C",
       "firebaseSecretIdLocalChampions": "COMMUNITY_AWS_FIREBASE_SECRET_ID_LOCAL_CHAMPIONS",
+      "firebaseSecretIdSeedbed": "COMMUNITY_AWS_FIREBASE_SECRET_ID_SEEDBED",
       "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
