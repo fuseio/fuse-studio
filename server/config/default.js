@@ -156,6 +156,10 @@ module.exports = {
       args: {
       }
     },
+    transak: {
+      args: {
+      }
+    },
     carbon: {
       args: {
       }

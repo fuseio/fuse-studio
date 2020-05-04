@@ -112,6 +112,17 @@
         "__format": "json"
       }
     },
+    "transak": {
+      "api": {
+        "key": "COMMUNITY_PLUGINS_TRANSAK_API_KEY",
+        "secret": "COMMUNITY_PLUGINS_TRANSAK_API_SECRET",
+        "urlBase": "COMMUNITY_PLUGINS_TRANSAK_API_URL_BASE"
+      },
+      "args": {
+        "__name": "COMMUNITY_PLUGINS_TRANSAK_ARGS",
+        "__format": "json"
+      }
+    },
     "carbon": {
       "args": {
         "__name": "COMMUNITY_PLUGINS_CARBON_ARGS",
