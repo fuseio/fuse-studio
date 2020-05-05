@@ -31,7 +31,7 @@ router.post('/create', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, networkType } = req.body
+  const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, networkType, correlationId } = req.body
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
@@ -55,7 +55,7 @@ router.post('/create', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'Missing spendabilityIds' })
   }
   try {
-    const job = await agenda.now('createToken', { bridgeType: 'home', from: accountAddress, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr })
+    const job = await agenda.now('createToken', { bridgeType: 'home', from: accountAddress, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr, correlationId })
     return res.json({ job: job.attrs })
   } catch (err) {
     return res.status(400).send({ error: err })
