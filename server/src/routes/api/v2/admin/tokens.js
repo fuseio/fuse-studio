@@ -73,6 +73,7 @@ router.post('/create', auth.required, async (req, res) => {
  * @apiParam {String} tokenAddress Token address to mint (body parameter)
  * @apiParam {String} networkType Token's network (must be Fuse)
  * @apiParam {String} amount Token amount to mint
+ * @apiParam {String} toAddress account to transfer to
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
@@ -151,7 +152,7 @@ router.post('/burn', auth.required, async (req, res) => {
  * @apiParam {String} networkType Token's network (must be Fuse)
  * @apiParam {String} amount Token amount to transfer
  * @apiParam {String} from account to transfer from
- * @apiParam {String} to address/account to transfer to
+ * @apiParam {String} to address to transfer to
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
