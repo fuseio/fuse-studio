@@ -25,7 +25,9 @@ const makePlugin = ({ plugin }) => {
       ...plugin,
       services
     }
-  } if (config.has(`plugins.${name}.args`)) {
+  }
+
+  if (config.has(`plugins.${name}.args`)) {
     return { name, ...config.get(`plugins.${name}.args`), ...plugin }
   } else {
     return { name, ...plugin }
@@ -245,6 +247,9 @@ router.get('/:communityAddress/:accountAddress', async (req, res) => {
     const newWidgetUrl = `${community.plugins.onramp.services.moonpay.widgetUrl}&externalCustomerId=${accountAddress}`
     const signature = sign(new URL(newWidgetUrl).search, config.get('plugins.moonpay.api.secret'))
     community.plugins.onramp.services.moonpay.widgetUrl = `${newWidgetUrl}&signature=${encodeURIComponent(signature)}`
+  }
+  if (lodash.has(community, 'plugins.onramp.services.transak.widgetUrl') && config.has('plugins.transak.api.secret')) {
+    community.plugins.onramp.services.transak.widgetUrl = `${community.plugins.onramp.services.transak.widgetUrl}&partnerCustomerId=${accountAddress}`
   }
   return res.json({ data: community })
 })

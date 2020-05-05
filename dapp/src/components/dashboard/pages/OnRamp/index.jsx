@@ -8,6 +8,7 @@ import upperFirst from 'lodash/upperFirst'
 import get from 'lodash/get'
 
 const onRampServices = [
+  'transak',
   'moonpay',
   'ramp',
   'carbon',

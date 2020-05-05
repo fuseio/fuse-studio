@@ -10,6 +10,7 @@ const pluginsIcons = {
   businessList: contractIcon,
   carbon: carbonIcon,
   moonpay: moonpayIcon,
+  transak: onrampIcon, // TODO - transak icon
   ramp: rampIcon,
   joinBonus: joinBonusIcon,
   wyre: wyreIcon,
