@@ -20,9 +20,9 @@ const { compact } = require('lodash')
  * @apiSuccess {Number} nonce
  */
 router.post('/', auth.required, async (req, res) => {
-  const { phoneNumber, accountAddress } = req.user
+  const { phoneNumber, accountAddress, appName } = req.user
   const { contacts } = req.body
-  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress }).populate('contacts')
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName }).populate('contacts')
   const phoneNumbersToContacts = userWallet.contacts.reduce((map, obj) => {
     map[obj.phoneNumber] = obj
     return map
@@ -40,7 +40,7 @@ router.post('/', auth.required, async (req, res) => {
       if (contact) {
         resolve()
       }
-      let contactUserWallets = await UserWallet.find({ phoneNumber })
+      let contactUserWallets = await UserWallet.find({ phoneNumber, appName })
       if (contactUserWallets.length === 0) {
         let contact = await new Contact({
           userWallet: ObjectId(userWallet._id),
@@ -66,7 +66,7 @@ router.post('/', auth.required, async (req, res) => {
       resolve()
     })
   })))
-  await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { contacts: userWalletContactIds })
+  await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress, appName }, { contacts: userWalletContactIds })
   const newContacts = await Contact.find({ userWallet: userWallet._id, state: 'NEW' }, { _id: 0, phoneNumber: 1, walletAddress: 1 })
   res.send({ data: { newContacts, nonce } })
 })
@@ -82,9 +82,9 @@ router.post('/', auth.required, async (req, res) => {
  * @apiSuccess {String} response Response status - ok
  */
 router.post('/:nonce', auth.required, async (req, res) => {
-  const { phoneNumber, accountAddress } = req.user
+  const { phoneNumber, accountAddress, appName } = req.user
   const { nonce } = req.params
-  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
   await Contact.updateMany({ userWallet: ObjectId(userWallet._id), nonce }, { state: 'SYNCED' })
   res.send({ response: 'ok' })
 })

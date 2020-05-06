@@ -23,7 +23,7 @@ const UserWallet = mongoose.model('UserWallet')
  * @apiSuccess {String} Started job data
  */
 router.post('/create', auth.required, async (req, res) => {
-  const { isCommunityAdmin, accountAddress, identifier } = req.user
+  const { isCommunityAdmin, accountAddress, identifier, appName } = req.user
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
@@ -40,7 +40,8 @@ router.post('/create', auth.required, async (req, res) => {
       walletModulesOriginal: homeAddresses.walletModules,
       walletModules: homeAddresses.walletModules,
       networks: ['fuse'],
-      identifier
+      identifier,
+      appName
     }).save()
     const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id })
     return res.json({ job: job.attrs })
