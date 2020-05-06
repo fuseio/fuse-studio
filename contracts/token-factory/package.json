@@ -11,6 +11,7 @@
     "build": "truffle compile && npm run abi",
     "compile": "truffle compile",
     "abi": "node_modules/@fuse/contract-utils/bin/abi.js $PWD && node ./scripts/extendAbi.js",
+    "flatten": "scripts/flatten.sh",
     "deploy-dev": "truffle migrate --network development",
     "deploy-ropsten": "truffle migrate --network ropsten",
     "deploy-fuse": "truffle migrate --network fuse",
@@ -25,6 +26,7 @@
     "@fuse/contract-utils": "../../@fuse/contract-utils"
   },
   "devDependencies": {
-    "truffle-assertions": "^0.7.2"
+    "truffle-assertions": "^0.7.2",
+    "truffle-flattener": "^1.4.4"
   }
 }
