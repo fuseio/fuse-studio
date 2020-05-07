@@ -73,7 +73,7 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
 
     let body = `${config.get('inviteTxt')}\n${deepLinkUrl}`
     if (name && amount && symbol) {
-      body = `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${deepLink}`
+      body = `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${deepLinkUrl}`
     }
     smsProvider.createMessage({ to: phoneNumber, body })
 
