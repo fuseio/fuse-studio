@@ -11,6 +11,7 @@ require('./Wizard')
 require('./Contact')
 require('./Invite')
 require('./PhoneVerification')
+require('./Fork')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')

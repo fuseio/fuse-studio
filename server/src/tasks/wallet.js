@@ -9,11 +9,12 @@ const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
 const Invite = mongoose.model('Invite')
+const Fork = mongoose.model('Fork')
 const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
 const { generateSalt } = require('@utils/web3')
 
-const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id }, job) => {
+const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
   const { agenda } = require('@services/agenda')
   const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
@@ -60,12 +61,19 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
   await Contact.updateMany({ phoneNumber }, { walletAddress, state: 'NEW' })
 
   if (communityAddress) {
-    const { url } = await branch.createDeepLink({ communityAddress })
-    console.log(`Created branch deep link ${url}`)
+    let deepLinkUrl
+    if (!appName) {
+      const { url } = await branch.createDeepLink({ communityAddress })
+      deepLinkUrl = url
+    } else {
+      const forkData = await Fork.findOne({ appName })
+      deepLinkUrl = forkData.deepLinkUrl
+    }
+    console.log(`Created branch deep link ${deepLinkUrl}`)
 
-    let body = `${config.get('inviteTxt')}\n${url}`
+    let body = `${config.get('inviteTxt')}\n${deepLinkUrl}`
     if (name && amount && symbol) {
-      body = `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${url}`
+      body = `${name} sent you ${amount} ${symbol}! Click here to redeem:\n${deepLinkUrl}`
     }
     smsProvider.createMessage({ to: phoneNumber, body })
 

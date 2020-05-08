@@ -17,10 +17,11 @@ const UserWalletSchema = new Schema({
   walletModules: { type: Object },
   salt: { type: String, default: null },
   networks: [{ type: String }],
-  identifier: { type: String }
+  identifier: { type: String },
+  appName: { type: String }
 }, { timestamps: true })
 
-UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1 })
+UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
 
 const UserWallet = mongoose.model('UserWallet', UserWalletSchema)
 

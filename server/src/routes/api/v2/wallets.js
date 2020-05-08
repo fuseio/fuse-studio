@@ -19,7 +19,7 @@ const Invite = mongoose.model('Invite')
  * @apiSuccess {Object} Started job data
  */
 router.post('/', auth.required, async (req, res, next) => {
-  const { phoneNumber, accountAddress, identifier } = req.user
+  const { phoneNumber, accountAddress, identifier, appName } = req.user
   const { correlationId } = req.body
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
@@ -43,7 +43,8 @@ router.post('/', auth.required, async (req, res, next) => {
         walletModulesOriginal: homeAddresses.walletModules,
         walletModules: homeAddresses.walletModules,
         networks: ['fuse'],
-        identifier
+        identifier,
+        appName
       }).save()
       const job = await agenda.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id })
       return res.json({ job: job.attrs })
@@ -87,8 +88,9 @@ router.get('/', auth.required, async (req, res, next) => {
  * @apiSuccess {Object} data Wallet object
  */
 router.get('/:phoneNumber', auth.required, async (req, res, next) => {
+  const { appName } = req.user
   const { phoneNumber } = req.params
-  const userWallet = await UserWallet.findOne({ phoneNumber }, { contacts: 0, firebaseToken: 0 }).sort({ createdAt: -1 })
+  const userWallet = await UserWallet.findOne({ phoneNumber, appName }, { contacts: 0, firebaseToken: 0 }).sort({ createdAt: -1 })
 
   return res.json({ data: userWallet })
 })
@@ -140,7 +142,7 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
  * @apiSuccess {Object} Started job data
  */
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
-  const { phoneNumber, accountAddress, identifier } = req.user
+  const { phoneNumber, accountAddress, identifier, appName } = req.user
 
   const { communityAddress, name, amount, symbol, correlationId } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
@@ -157,7 +159,8 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
       walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
       walletModulesOriginal: homeAddresses.walletModules,
       walletModules: homeAddresses.walletModules,
-      networks: ['fuse']
+      networks: ['fuse'],
+      appName
     }).save()
   } else if (userWallet.walletAddress) {
     const msg = `User ${req.params.phoneNumber} already has wallet account: ${userWallet.walletAddress}`
@@ -180,10 +183,11 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     inviterPhoneNumber: phoneNumber,
     inviterWalletAddress: inviterUserWallet.walletAddress,
     inviteePhoneNumber: req.params.phoneNumber,
-    communityAddress
+    communityAddress,
+    appName
   }).save()
 
-  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id })
+  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName })
 
   return res.json({ job: job.attrs })
 })

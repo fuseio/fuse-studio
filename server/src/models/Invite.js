@@ -6,7 +6,8 @@ const InviteSchema = new Schema({
   inviterWalletAddress: { type: String, required: [true, "can't be blank"] },
   inviteePhoneNumber: { type: String, required: [true, "can't be blank"] },
   inviteeWalletAddress: { type: String },
-  communityAddress: { type: String }
+  communityAddress: { type: String },
+  appName: { type: String }
 }, { timestamps: true })
 
 InviteSchema.index({ inviterPhoneNumber: 1, inviteePhoneNumber: 1 })
