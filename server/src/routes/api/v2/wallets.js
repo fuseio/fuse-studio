@@ -27,7 +27,7 @@ router.post('/', auth.required, async (req, res, next) => {
     const job = await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress, correlationId })
     return res.json({ job: job.attrs })
   } else {
-    let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
+    let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
     if (userWallet) {
       const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress}`
       return res.status(400).json({ error: msg })
@@ -146,8 +146,11 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
 
   const { communityAddress, name, amount, symbol, correlationId } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
-
-  let userWallet = await UserWallet.findOne({ phoneNumber: req.params.phoneNumber })
+  const query = { phoneNumber: req.params.phoneNumber }
+  if (appName) {
+    query.appName = appName
+  }
+  let userWallet = await UserWallet.findOne(query)
   if (!userWallet) {
     const newUser = {
       phoneNumber: req.params.phoneNumber,
@@ -170,7 +173,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     return res.status(400).json({ error: msg })
   }
 
-  const inviterUserWallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
+  const inviterUserWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName }, { contacts: 0 })
   if (!inviterUserWallet) {
     const msg = `Could not find UserWallet for phoneNumber: ${phoneNumber} and accountAddress: ${accountAddress}`
     return res.status(400).json({ error: msg })
