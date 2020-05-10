@@ -149,6 +149,8 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const query = { phoneNumber: req.params.phoneNumber }
   if (appName) {
     query.appName = appName
+  } else {
+    query.appName = { '$exists': false }
   }
   let userWallet = await UserWallet.findOne(query)
   if (!userWallet) {
