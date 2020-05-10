@@ -149,7 +149,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
 
   let userWallet = await UserWallet.findOne({ phoneNumber: req.params.phoneNumber })
   if (!userWallet) {
-    userWallet = await new UserWallet({
+    const newUser = {
       phoneNumber: req.params.phoneNumber,
       accountAddress: owner,
       walletOwnerOriginalAddress: owner,
@@ -159,9 +159,12 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
       walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
       walletModulesOriginal: homeAddresses.walletModules,
       walletModules: homeAddresses.walletModules,
-      networks: ['fuse'],
-      appName
-    }).save()
+      networks: ['fuse']
+    }
+    if (appName) {
+      newUser.appName = appName
+    }
+    userWallet = await new UserWallet(newUser).save()
   } else if (userWallet.walletAddress) {
     const msg = `User ${req.params.phoneNumber} already has wallet account: ${userWallet.walletAddress}`
     return res.status(400).json({ error: msg })
