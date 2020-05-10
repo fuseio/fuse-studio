@@ -159,8 +159,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
       walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
       walletModulesOriginal: homeAddresses.walletModules,
       walletModules: homeAddresses.walletModules,
-      networks: ['fuse'],
-      appName
+      networks: ['fuse']
     }
     if (appName) {
       newUser.appName = appName
