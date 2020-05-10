@@ -146,7 +146,13 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
 
   const { communityAddress, name, amount, symbol, correlationId } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
-  let userWallet = await UserWallet.findOne({ phoneNumber: req.params.phoneNumber, appName })
+  const query = { phoneNumber: req.params.phoneNumber }
+  if (appName) {
+    query.appName = appName
+  } else {
+    query.appName = { '$exists': false }
+  }
+  let userWallet = await UserWallet.findOne(query)
   if (!userWallet) {
     const newUser = {
       phoneNumber: req.params.phoneNumber,
