@@ -12,6 +12,7 @@ let bimAdmin
 let bit2cAdmin
 let localChampionsAdmin
 let seedbedAdmin
+let digitalRandAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -68,6 +69,11 @@ const initAdmin = async () => {
   seedbedAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(seedBedResponse.SecretString))
   }, 'Seedbed')
+
+  const digitalRandResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdDigitalRand }).promise()
+  digitalRandAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(digitalRandResponse.SecretString))
+  }, 'DigitalRand')
 }
 
 initAdmin()
@@ -93,6 +99,8 @@ const getAdmin = (appName) => {
     return localChampionsAdmin
   } else if (appName === 'Seedbed') {
     return seedbedAdmin
+  } else if (appName === 'DigitalRand') {
+    return digitalRandAdmin
   } else {
     return admin
   }
