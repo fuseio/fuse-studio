@@ -53,7 +53,8 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
       try {
         const { communityAddress } = await fetchCommunityAddressByTokenAddress(tokenAddress)
         message.data = {
-          communityAddress
+          communityAddress,
+          click_action: 'FLUTTER_NOTIFICATION_CLICK'
         }
       } catch (error) {
         console.log(`Error while fetching community address for ${tokenAddress} from the graph ${error}`)
