@@ -24,6 +24,12 @@ const fetchTokenByCommunity = async (communityAddress) => {
   return tokens[0]
 }
 
+const fetchCommunityAddressByTokenAddress = async (tokenAddress) => {
+  const query = `{tokens(where: {address: "${tokenAddress}"}) {communityAddress}}`
+  const { tokens } = await graphClient.request(query)
+  return tokens[0]
+}
+
 const fetchToken = async (tokenAddress) => {
   const query = `{token(id: "${tokenAddress.toLowerCase()}") {symbol, name}}`
   const { token } = await graphClient.request(query)
@@ -42,6 +48,16 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
         body: 'Please click on this message to open your Fuse wallet'
       },
       token: firebaseToken
+    }
+    if (!appName) {
+      try {
+        const { communityAddress } = await fetchCommunityAddressByTokenAddress(tokenAddress)
+        message.data = {
+          communityAddress
+        }
+      } catch (error) {
+        console.log(`Error while fetching community address for ${tokenAddress} from the graph ${error}`)
+      }
     }
     console.log(`Sending tokens receive push message to ${receiverWallet.phoneNumber} via firebase token ${firebaseToken}`)
     getAdmin(appName).messaging().send(message)
