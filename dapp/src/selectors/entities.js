@@ -27,12 +27,14 @@ export const getBusinessesEntities = createSelector(
 export const checkIsAdmin = createSelector(
   getAccountAddress,
   getCommunityAddress,
+  state => state.entities.communities,
   state => state.entities.communityEntities,
-  (accountAddress, communityAddress, communityEntities) => {
+  (accountAddress, communityAddress, communities, communityEntities) => {
     if (accountAddress) {
       const lowerCaseAddress = accountAddress.toLowerCase()
       return (communityEntities[lowerCaseAddress] &&
-        communityEntities[lowerCaseAddress].isAdmin) || false
+        communityEntities[lowerCaseAddress].isAdmin) || (communities[communityAddress] &&
+        communities[communityAddress].isAdmin) || false
     }
   }
 )

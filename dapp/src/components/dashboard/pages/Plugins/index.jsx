@@ -65,7 +65,7 @@ const generalPlugins = ([
     coverImage: FiatOnRamp,
     disabled: false,
     modalCoverPhoto: FiatOnRampBig,
-    content: `We have created integration with Moonpay, Carbon, Wyre, Ramp fiat gateways that allow you to embed the relevant payment option
+    content: `We have created integration with Moonpay, Transak, fiat gateways that allow you to embed the relevant payment option
       (credit/debit cards and banks wires) inside your app and even show several option for your clients to choose from.
       The integration allows your users to top their account without you holding any custody in the process! Here is how:
       https://www.youtube.com/watch?v=ShxUIljvfLU&feature=emb_title`,

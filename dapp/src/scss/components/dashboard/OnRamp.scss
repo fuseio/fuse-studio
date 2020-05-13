@@ -12,13 +12,11 @@
   }
 
   @include element(container) {
-    @include xy-grid();
-    @include flex-align(justify, null);
+    @include xy-grid(vertical);
     padding-top: 20px;
 
     @include breakpoint(medium up) {
-      width: 687px;
-      padding: 40px 40px 20px;
+      padding: 40px;
       min-height: 200px;
     }
 
@@ -27,6 +25,8 @@
     }
 
     @include block(plugins_step) {
+      width: 90%;
+      position: relative;
       @include element(item) {
       }
     
