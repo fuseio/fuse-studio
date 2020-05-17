@@ -198,5 +198,6 @@ module.exports = {
     lockedAccounts: {
       threshold: 10 // in minutes
     }
-  }
+  },
+  daipCommunityAddress: '0xc036118695Eff203b00B74B5a3ef8c3fA808E09B'
 }

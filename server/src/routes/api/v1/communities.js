@@ -244,12 +244,12 @@ router.get('/:communityAddress/:accountAddress', async (req, res) => {
   const { communityAddress, accountAddress } = req.params
   const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
   if (lodash.has(community, 'plugins.onramp.services.moonpay.widgetUrl') && config.has('plugins.moonpay.api.secret')) {
-    const newWidgetUrl = `${community.plugins.onramp.services.moonpay.widgetUrl}&externalCustomerId=${accountAddress}`
+    const newWidgetUrl = `${community.plugins.onramp.services.moonpay.widgetUrl}&externalCustomerId=${accountAddress}_${communityAddress}`
     const signature = sign(new URL(newWidgetUrl).search, config.get('plugins.moonpay.api.secret'))
     community.plugins.onramp.services.moonpay.widgetUrl = `${newWidgetUrl}&signature=${encodeURIComponent(signature)}`
   }
   if (lodash.has(community, 'plugins.onramp.services.transak.widgetUrl') && config.has('plugins.transak.api.secret')) {
-    community.plugins.onramp.services.transak.widgetUrl = `${community.plugins.onramp.services.transak.widgetUrl}&partnerCustomerId=${accountAddress}`
+    community.plugins.onramp.services.transak.widgetUrl = `${community.plugins.onramp.services.transak.widgetUrl}&partnerCustomerId=${accountAddress}_${communityAddress}`
   }
   return res.json({ data: community })
 })
