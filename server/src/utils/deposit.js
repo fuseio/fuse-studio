@@ -14,7 +14,12 @@ const makeDeposit = async (deposit) => {
     amount
   } = deposit
   console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
-  const { foreignBridgeAddress, foreignTokenAddress, homeTokenAddress } = await Community.findOne({ communityAddress })
+  const community = await Community.findOne({ communityAddress })
+  if (!community) {
+    console.error(`[makeDeposit] could not find community ${communityAddress}`)
+    return
+  }
+  const { foreignBridgeAddress, foreignTokenAddress, homeTokenAddress } = community
   console.log(`[makeDeposit] foreignBridgeAddress: ${foreignBridgeAddress}, foreignTokenAddress: ${foreignTokenAddress}, homeTokenAddress: ${homeTokenAddress}`)
 
   await new Deposit(deposit).save()
