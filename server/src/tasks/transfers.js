@@ -6,6 +6,7 @@ const { createNetwork } = require('@utils/web3')
 const { getNetwork } = require('@services/web3')
 const utils = require('@utils/token')
 const { handleReceipt } = require('@handlers/receipts')
+const { getAbi } = require('@constants/abi')
 
 const transfer = withAccount(async (account, { transferId }) => {
   const transferDoc = await Transfer.findById(transferId)
@@ -40,6 +41,24 @@ const transfer = withAccount(async (account, { transferId }) => {
   return account
 })
 
+const getDAIPointsToAddress = withAccount(async (account, { bridgeType, tokenAddress, amount, recipient }, job) => {
+  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+  const tokenContractInstance = createContract(getAbi('DAIPoints'), tokenAddress)
+
+  const method = createMethod(tokenContractInstance, 'getDAIPointsToAddress', amount, recipient)
+
+  await send(method, {
+    from: account.address
+  }, {
+    transactionHash: (hash) => {
+      job.attrs.data.txHash = hash
+      job.save()
+    }
+  })
+}, ({ from }) => {
+  return lockAccount({ address: from })
+})
+
 const startTransfers = async () => {
   const { agenda } = require('@services/agenda')
   const transfers = await Transfer.find({ status: 'WAITING' })
@@ -56,5 +75,6 @@ const startTransfers = async () => {
 
 module.exports = {
   startTransfers,
-  transfer
+  transfer,
+  getDAIPointsToAddress
 }

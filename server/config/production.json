@@ -44,5 +44,13 @@
   },
   "graph": {
     "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse"
-  }
+  },
+  "plugins": {
+    "moonpay": {
+      "currencies": {
+        "0c9480ef-2fab-4d31-9037-da4b29ecc16f": "0x6B175474E89094C44Da98b954EedeAC495271d0F"
+      }
+    }
+  },
+  "daipCommunityAddress": "0x07E81226F4C80Bf457ab8102D61Bf9D5df6E5E0B"
 }

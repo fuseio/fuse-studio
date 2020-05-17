@@ -54,13 +54,15 @@ router.post('/moonpay', moonpayAuthCheck, async (req, res) => {
     const tokenAddress = currencies[currencyId]
     console.log(`[deposit-moonpay] currencyId: ${currencyId}, cryptoTransactionId: ${cryptoTransactionId}, baseCurrencyAmount: ${baseCurrencyAmount}, walletAddress: ${walletAddress}, id: ${id}, externalCustomerId: ${externalCustomerId}, tokenAddress: ${tokenAddress}`)
     if (!tokenAddress) {
-      throw new Error(`The currency type ${currencyId} is not supported. Cannot process transaction ${cryptoTransactionId} from account ${externalCustomerId}`)
+      throw new Error(`The currency type ${currencyId} is not supported. Cannot process transaction ${cryptoTransactionId} from externalCustomerId ${externalCustomerId} (accountAddress_communityAddress)`)
     }
     console.log(`[deposit-moonpay] before makeDeposit`)
+    const [customerAddress, communityAddress] = externalCustomerId.split('_')
     await makeDeposit({
       transactionHash: cryptoTransactionId,
       walletAddress,
-      customerAddress: externalCustomerId,
+      customerAddress,
+      communityAddress,
       tokenAddress,
       amount: web3Utils.toWei(String(baseCurrencyAmount)),
       externalId: id,
@@ -83,10 +85,12 @@ router.post('/transak', transakAuthCheck, async (req, res) => {
       const url = `${config.get('plugins.transak.api.urlBase')}/crypto-currencies?filter=${filter}`
       const response = await request.get(url)
       const cryptoCurrencyData = JSON.parse(response)
+      const [customerAddress, communityAddress] = partnerCustomerId.split('_')
       await makeDeposit({
         transactionHash,
         walletAddress,
-        customerAddress: partnerCustomerId,
+        customerAddress,
+        communityAddress,
         tokenAddress: cryptoCurrencyData.address,
         amount: web3Utils.toWei(String(cryptoAmount)),
         externalId: id,
