@@ -9,7 +9,8 @@ const abiMapping = {
   IRestrictedToken: () => require('./IRestrictedToken'),
   CommunityTransferManager: () => require('@fuse/entities-contracts/abi/CommunityTransferManager'),
   TransferManager: () => require('./TransferManager'),
-  ExpirableToken: () => require('@fuse/token-factory-contracts/abi/ExpirableToken')
+  ExpirableToken: () => require('@fuse/token-factory-contracts/abi/ExpirableToken'),
+  DAIPoints: () => require('./DAIPoints')
 }
 
 const getAbi = (abiName) => {

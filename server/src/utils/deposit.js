@@ -13,12 +13,12 @@ const makeDeposit = async (deposit) => {
     tokenAddress,
     amount
   } = deposit
-  const { foreignBridgeAddress, homeTokenAddress } = await Community.findOne({ communityAddress })
+  const { foreignBridgeAddress, foreignTokenAddress, homeTokenAddress } = await Community.findOne({ communityAddress })
 
   await new Deposit(deposit).save()
 
   if (communityAddress === config.get('daipCommunityAddress')) {
-    // TODO special flow
+    agenda.now('getDAIPointsToAddress', { from: walletAddress, tokenAddress: foreignTokenAddress, amount, recipient: customerAddress, bridgeType: 'foreign' })
   } else {
     const transferToHome = await new Transfer({
       from: walletAddress,
