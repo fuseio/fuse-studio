@@ -42,6 +42,7 @@ const transfer = withAccount(async (account, { transferId }) => {
 })
 
 const getDAIPointsToAddress = withAccount(async (account, { bridgeType, tokenAddress, amount, recipient }, job) => {
+  console.log(`[getDAIPointsToAddress] bridgeType: ${bridgeType}, tokenAddress: ${tokenAddress}, amount: ${amount}, recipient: ${recipient}`)
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
   const tokenContractInstance = createContract(getAbi('DAIPoints'), tokenAddress)
 

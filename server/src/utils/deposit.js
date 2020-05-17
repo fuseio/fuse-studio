@@ -13,13 +13,18 @@ const makeDeposit = async (deposit) => {
     tokenAddress,
     amount
   } = deposit
+  console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
   const { foreignBridgeAddress, foreignTokenAddress, homeTokenAddress } = await Community.findOne({ communityAddress })
+  console.log(`[makeDeposit] foreignBridgeAddress: ${foreignBridgeAddress}, foreignTokenAddress: ${foreignTokenAddress}, homeTokenAddress: ${homeTokenAddress}`)
 
   await new Deposit(deposit).save()
+  console.log(`[makeDeposit] after save()`)
 
   if (communityAddress === config.get('daipCommunityAddress')) {
+    console.log(`[makeDeposit] is DAIp community`)
     agenda.now('getDAIPointsToAddress', { from: walletAddress, tokenAddress: foreignTokenAddress, amount, recipient: customerAddress, bridgeType: 'foreign' })
   } else {
+    console.log(`[makeDeposit] is not DAIp community`)
     const transferToHome = await new Transfer({
       from: walletAddress,
       to: foreignBridgeAddress,
@@ -28,6 +33,7 @@ const makeDeposit = async (deposit) => {
       bridgeType: 'foreign',
       status: 'READY'
     }).save()
+    console.log(`[makeDeposit] after transferToHome save()`)
 
     await new Transfer({
       from: walletAddress,
@@ -37,6 +43,7 @@ const makeDeposit = async (deposit) => {
       bridgeType: 'home',
       status: 'WAITING'
     }).save()
+    console.log(`[makeDeposit] after transferToCustomer save()`)
 
     agenda.now('transfer', { transferId: transferToHome._id })
   }
