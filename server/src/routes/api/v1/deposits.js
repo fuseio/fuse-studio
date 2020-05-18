@@ -49,10 +49,10 @@ router.post('/moonpay', moonpayAuthCheck, async (req, res) => {
   const currencies = config.get('plugins.moonpay.currencies')
   console.log(`[deposit-moonpay] currencies: ${JSON.stringify(currencies)}`)
   if (type === 'transaction_updated' && status === 'completed') {
-    const { currencyId, cryptoTransactionId, baseCurrencyAmount, walletAddress, id } = req.body.data
+    const { currencyId, cryptoTransactionId, quoteCurrencyAmount, walletAddress, id } = req.body.data
     const { externalCustomerId } = req.body
     const tokenAddress = currencies[currencyId]
-    console.log(`[deposit-moonpay] currencyId: ${currencyId}, cryptoTransactionId: ${cryptoTransactionId}, baseCurrencyAmount: ${baseCurrencyAmount}, walletAddress: ${walletAddress}, id: ${id}, externalCustomerId: ${externalCustomerId}, tokenAddress: ${tokenAddress}`)
+    console.log(`[deposit-moonpay] currencyId: ${currencyId}, cryptoTransactionId: ${cryptoTransactionId}, quoteCurrencyAmount: ${quoteCurrencyAmount}, walletAddress: ${walletAddress}, id: ${id}, externalCustomerId: ${externalCustomerId}, tokenAddress: ${tokenAddress}`)
     if (!tokenAddress) {
       throw new Error(`The currency type ${currencyId} is not supported. Cannot process transaction ${cryptoTransactionId} from externalCustomerId ${externalCustomerId} (accountAddress_communityAddress)`)
     }
@@ -64,7 +64,7 @@ router.post('/moonpay', moonpayAuthCheck, async (req, res) => {
       customerAddress,
       communityAddress,
       tokenAddress,
-      amount: web3Utils.toWei(String(baseCurrencyAmount)),
+      amount: web3Utils.toWei(String(quoteCurrencyAmount)),
       externalId: id,
       provider: 'moonpay'
     })
