@@ -49,7 +49,8 @@ const getDAIPointsToAddress = withAccount(async (account, { bridgeType, tokenAdd
   const method = createMethod(tokenContractInstance, 'getDAIPointsToAddress', amount, recipient)
 
   await send(method, {
-    from: account.address
+    from: account.address,
+    gas: 1000000
   }, {
     transactionHash: (hash) => {
       job.attrs.data.txHash = hash
