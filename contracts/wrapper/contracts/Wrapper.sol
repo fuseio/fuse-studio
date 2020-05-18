@@ -11,22 +11,25 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 contract Wrapper is Ownable {
   using SafeMath for uint256;
 
-  function transferWithFee(address _token, address _recipient, uint256 _amount, address _feeRecipient, uint256 _feeAmount, bytes memory _data) public {
+  function transferWithFee(address _token, address _recipient, uint256 _amount, address _feeRecipient, uint256 _feeAmount) public {
     uint256 totalAmount = _amount.add(_feeAmount);
     require(IERC20(_token).transferFrom(msg.sender, address(this), totalAmount), "transferWithFee/in");
     require(IERC20(_token).transfer(_feeRecipient, _feeAmount), "transferWithFee/fee");
-    if (_data.length > 0) {
-      require(IERC20(_token).approve(address(_recipient), _amount), "transferWithFee/approve");
-      (bool success,) = address(_recipient).call(_data);
-      require (success, "transferWithFee/call");
-    } else {
-      require(IERC20(_token).transfer(_recipient, _amount), "transferWithFee/transfer");
-    }
+    require(IERC20(_token).transfer(_recipient, _amount), "transferWithFee/transfer");
+  }
+
+  function transferAndCallWithFee(address _token, address _recipient, uint256 _amount, address _feeRecipient, uint256 _feeAmount, bytes memory _data) public {
+    uint256 totalAmount = _amount.add(_feeAmount);
+    require(IERC20(_token).transferFrom(msg.sender, address(this), totalAmount), "transferWithFee/in");
+    require(IERC20(_token).transfer(_feeRecipient, _feeAmount), "transferWithFee/fee");
+    require(IERC20(_token).approve(_recipient, _amount), "transferWithFee/approve");
+    (bool success,) = address(_recipient).call(_data);
+    require (success, "transferWithFee/call");
   }
 
   function approveContractAndCallAnotherContract(address _token, uint256 _amount, address _contractToApprove, address _contractToCall, bytes memory _data) public {
     require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "approveContractAndCallAnotherContract/in");
-    require(IERC20(_token).approve(address(_contractToApprove), _amount), "approveContractAndCallAnotherContract/approve");
+    require(IERC20(_token).approve(_contractToApprove, _amount), "approveContractAndCallAnotherContract/approve");
     (bool success,) = address(_contractToCall).call(_data);
     require (success, "approveContractAndCallAnotherContract/call");
   }
