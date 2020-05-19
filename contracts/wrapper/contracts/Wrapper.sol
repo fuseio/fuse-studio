@@ -23,14 +23,7 @@ contract Wrapper is Ownable {
     require(IERC20(_token).transferFrom(msg.sender, address(this), totalAmount), "transferWithFee/in");
     require(IERC20(_token).transfer(_feeRecipient, _feeAmount), "transferWithFee/fee");
     require(IERC20(_token).approve(_recipient, _amount), "transferWithFee/approve");
-    (bool success,) = address(_recipient).call(_data);
+    (bool success,) = _recipient.call(_data);
     require (success, "transferWithFee/call");
-  }
-
-  function approveContractAndCallAnotherContract(address _token, uint256 _amount, address _contractToApprove, address _contractToCall, bytes memory _data) public {
-    require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "approveContractAndCallAnotherContract/in");
-    require(IERC20(_token).approve(_contractToApprove, _amount), "approveContractAndCallAnotherContract/approve");
-    (bool success,) = address(_contractToCall).call(_data);
-    require (success, "approveContractAndCallAnotherContract/call");
   }
 }
