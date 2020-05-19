@@ -63,18 +63,5 @@ contract('Wrapper', (accounts) => {
       feeAmount.should.be.bignumber.equal(await token.balanceOf(chad))
       toBN(0).should.be.bignumber.equal(await token.balanceOf(wrapper.address))
     })
-
-    it('approveContractAndCallAnotherContract', async () => {
-      const mockContract = await ContractMock.new()
-
-      // generate data
-      const data = mockContract.contract.methods.method(token.address, bob, amount.toString()).encodeABI()
-
-      // alice calls contract, with data transfer amount to bob
-      await wrapper.approveContractAndCallAnotherContract(token.address, totalAmount, mockContract.address, mockContract.address, data, { from: alice }).should.be.fulfilled
-      toBN(0).should.be.bignumber.equal(await token.balanceOf(alice))
-      amount.should.be.bignumber.equal(await token.balanceOf(bob))
-      totalAmount.sub(amount).should.be.bignumber.equal(await token.balanceOf(wrapper.address))
-    })
   })
 })
