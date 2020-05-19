@@ -30,13 +30,18 @@ const moonpayAuthCheck = (req, res, next) => {
 }
 
 const transakAuthCheck = (req, res, next) => {
+  console.log(`[deposit-transakAuthCheck] req.body: ${JSON.stringify(req.body)}`)
   try {
     if (!req.body || !req.body.data) {
+      console.log(`[deposit-transakAuthCheck] no data`)
       throw new Error('Transak auth check failed - no data')
     }
+    console.log(`[deposit-transakAuthCheck] before jwt verify`)
     req.body.data = jwt.verify(req.body.data, config.get('plugins.transak.api.secret'))
+    console.log(`[deposit-transakAuthCheck] after jwt verify`)
     return next()
   } catch (err) {
+    console.log(`[deposit-transakAuthCheck] catch: ${JSON.stringify(err)}`)
     throw new Error(`Transak auth check failed - ${err}`)
   }
 }
@@ -77,15 +82,24 @@ router.post('/moonpay', moonpayAuthCheck, async (req, res) => {
 })
 
 router.post('/transak', transakAuthCheck, async (req, res) => {
+  console.log(`[deposit-transak] req.body: ${JSON.stringify(req.body)}`)
   const { eventID, webhookData } = req.body.data
+  console.log(`[deposit-transak] eventID: ${eventID}, webhookData: ${JSON.stringify(webhookData)}`)
   if (eventID === 'ORDER_COMPLETED' && webhookData.status === 'COMPLETED') {
     const { id, walletAddress, transactionHash, partnerCustomerId, cryptoAmount, cryptocurrency } = webhookData
+    console.log(`[deposit-transak] id: ${id}, walletAddress: ${walletAddress}, transactionHash: ${transactionHash}, partnerCustomerId: ${partnerCustomerId}, cryptoAmount: ${cryptoAmount}, cryptocurrency: ${cryptocurrency}`)
     try {
+      console.log(`[deposit-transak] try`)
       const filter = encodeURIComponent(`{"where":{"symbol":"${cryptocurrency}"}}`)
+      console.log(`[deposit-transak] filter: ${filter}`)
       const url = `${config.get('plugins.transak.api.urlBase')}/crypto-currencies?filter=${filter}`
+      console.log(`[deposit-transak] url: ${url}`)
       const response = await request.get(url)
+      console.log(`[deposit-transak] response: ${JSON.stringify(response)}`)
       const cryptoCurrencyData = JSON.parse(response)
+      console.log(`[deposit-transak] cryptoCurrencyData: ${JSON.stringify(cryptoCurrencyData)}`)
       const [customerAddress, communityAddress] = partnerCustomerId.split('_')
+      console.log(`[deposit-moonpay] before makeDeposit`)
       await makeDeposit({
         transactionHash,
         walletAddress,
@@ -96,11 +110,14 @@ router.post('/transak', transakAuthCheck, async (req, res) => {
         externalId: id,
         provider: 'transak'
       })
+      console.log(`[deposit-moonpay] after makeDeposit`)
       return res.json({ response: 'job started' })
     } catch (err) {
+      console.log(`[deposit-transak] catch: ${JSON.stringify(err)}`)
       console.error(`Transak deposit failed`, err)
     }
   } else {
+    console.log(`[deposit-transak] reached else`)
     return res.json({})
   }
 })
