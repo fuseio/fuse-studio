@@ -103,7 +103,7 @@ const isAllowedToRelay = async (web3, walletModule, walletModuleABI, methodName,
     : isAllowedToRelayHome(web3, walletModule, walletModuleABI, methodName, methodData)
 }
 
-const relay = withAccount(async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName }, job) => {
+const relay = withAccount(async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
@@ -161,6 +161,14 @@ const relay = withAccount(async (account, { walletAddress, methodName, methodDat
         const { _to, _amount, _token, _wallet } = getParamsFromMethodData(web3, walletModuleABI, 'transferToken', methodData)
         notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount, appName })
           .catch(console.error)
+      }
+
+      if (nextRelays && nextRelays.length > 0) {
+        const { agenda } = require('@services/agenda')
+        const nextToRelay = nextRelays.shift()
+        const nextRelayJob = await agenda.now('relay', { ...nextToRelay, identifier, appName, nextRelays })
+        job.attrs.data.nextRealyJobId = nextRelayJob.attrs._id.toString()
+        job.save()
       }
     } else {
       console.error(`Relay transaction failed from wallet: ${wallet}, signedHash: ${signedHash}`)
