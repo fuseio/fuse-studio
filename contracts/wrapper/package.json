@@ -1,0 +1,34 @@
+{
+  "name": "wrapper-contract",
+  "version": "1.0.0",
+  "description": "Fuse wrapper contract",
+  "main": "",
+  "scripts": {
+    "test": "scripts/test.sh",
+    "compile": "node_modules/.bin/truffle compile",
+    "flatten": "scripts/flatten.sh",
+    "abi": "scripts/abi.sh",
+    "deploy:mainnet": "node_modules/.bin/truffle migrate --reset --network mainnet",
+    "deploy:ropsten": "node_modules/.bin/truffle migrate --reset --network ropsten",
+    "deploy:fuse": "node_modules/.bin/truffle migrate --reset --network fuse",
+    "deploy:local": "node_modules/.bin/truffle migrate --reset --network local"
+  },
+  "author": "Lior Rabin",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "openzeppelin-solidity": "^2.2.0",
+    "truffle-hdwallet-provider": "^1.0.17"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bn": "^0.2.0",
+    "eth-gas-reporter": "^0.2.14",
+    "ganache-cli": "^6.8.2",
+    "node-jq": "^1.11.0",
+    "truffle": "^5.1.10",
+    "truffle-assertions": "^0.9.2",
+    "truffle-flattener": "^1.4.2"
+  }
+}
