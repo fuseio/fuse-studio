@@ -129,7 +129,7 @@ router.post('/burn', auth.required, async (req, res) => {
     if (!from) {
       job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, correlationId })
     } else {
-      job = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId })
+      job = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
     }
     return res.json({ json: job.attrs })
   } catch (err) {
@@ -189,7 +189,7 @@ router.post('/transfer', auth.required, async (req, res) => {
         return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
       }
       const tokenAddresses = tokens.map(t => t.address)
-      const job = await agenda.now('adminSpendabilityTransfer', { tokenAddresses, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, to, correlationId })
+      const job = await agenda.now('adminSpendabilityTransfer', { tokenAddresses, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, to, correlationId: `${correlationId}-1` })
       return res.json({ job: job.attrs })
     } catch (err) {
       return res.status(400).send({ error: err })
