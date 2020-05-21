@@ -97,7 +97,7 @@ const isAllowedToRelayHome = async (web3, walletModule, walletModuleABI, methodN
     console.log(`[isAllowedToRelayHome] token: ${_token}, to: ${_to}`)
     const community = await Community.findOne({ homeTokenAddress: _token })
     console.log(`[isAllowedToRelayHome] community: ${JSON.stringify(community)}`)
-    if (lodash.has(community, 'plugins.fee.bridgeToForeign')) {
+    if (community && community.plugins && community.plugins.fee && community.plugins.fee.bridgeToForeign) {
       console.log(`[isAllowedToRelayHome] community has "plugins.fee.bridgeToForeign"`)
       const { isActive } = community.plugins.fee.bridgeToForeign
       console.log(`[isAllowedToRelayHome] plugins.fee.bridgeToForeign.isActive: ${isActive}`)
@@ -105,6 +105,8 @@ const isAllowedToRelayHome = async (web3, walletModule, walletModuleABI, methodN
         console.log(`[isAllowedToRelayHome] FALSE`)
         isAllowed = false
       }
+    } else {
+      console.log(`[isAllowedToRelayHome] community does not have "plugins.fee.bridgeToForeign"`)
     }
   }
   console.log(`[isAllowedToRelayHome] RETURN ${isAllowed}`)
