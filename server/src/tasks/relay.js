@@ -71,8 +71,11 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
 const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
   console.log(`[isAllowedToRelayForeign] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
   let isAllowed = true
-  if (walletModule === 'TransferManager' && methodName !== 'approveTokenAndCallContract') {
+  if (walletModule !== 'TransferManager') {
     console.log(`[isAllowedToRelayForeign] FALSE (#1)`)
+    isAllowed = false
+  } else if (methodName !== 'approveTokenAndCallContract') {
+    console.log(`[isAllowedToRelayForeign] FALSE (#2)`)
     isAllowed = false
   } else {
     console.log(`[isAllowedToRelayForeign] reached else`)
@@ -80,7 +83,7 @@ const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, meth
     console.log(`[isAllowedToRelayForeign] token: ${_token}`)
     if (config.has('network.foreign.allowedTokensToRelay') && !config.get('network.foreign.allowedTokensToRelay').split(',').includes(_token)) {
       console.error(`[isAllowedToRelayForeign] Token ${_token} is not allowed to be relayed on foreign network`)
-      console.log(`[isAllowedToRelayForeign] FALSE (#2)`)
+      console.log(`[isAllowedToRelayForeign] FALSE (#3)`)
       isAllowed = false
     }
   }
