@@ -69,35 +69,48 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
 }
 
 const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
+  console.log(`[isAllowedToRelayForeign] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
   if (walletModule === 'TransferManager' && methodName !== 'approveTokenAndCallContract') {
+    console.log(`[isAllowedToRelayForeign] RETURN FALSE (#1)`)
     return false
   } else {
+    console.log(`[isAllowedToRelayForeign] reached else`)
     const { _token } = getParamsFromMethodData(web3, walletModuleABI, methodName, methodData)
+    console.log(`[isAllowedToRelayForeign] token: ${_token}`)
     if (config.has('network.foreign.allowedTokensToRelay') && !config.get('network.foreign.allowedTokensToRelay').split(',').includes(_token)) {
-      console.error(`Token ${_token} is not allowed to be relayed on foreign network`)
+      console.error(`[isAllowedToRelayForeign] Token ${_token} is not allowed to be relayed on foreign network`)
+      console.log(`[isAllowedToRelayForeign] RETURN FALSE (#2)`)
       return false
     }
   }
+  console.log(`[isAllowedToRelayForeign] RETURN TRUE`)
   return true
 }
 
 const isAllowedToRelayHome = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
+  console.log(`[isAllowedToRelayHome] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
   if (walletModule === 'TransferManager') {
+    console.log(`[isAllowedToRelayHome] TransferManager`)
     const { _token, _to } = getParamsFromMethodData(web3, walletModuleABI, methodName, methodData)
+    console.log(`[isAllowedToRelayHome] token: ${_token}, to: ${_to}`)
     const community = await Community.findOne({ homeTokenAddress: _token })
+    console.log(`[isAllowedToRelayHome] community: ${JSON.stringify(community)}`)
     if (lodash.has(community, 'plugins.fee.bridgeToForeign')) {
+      console.log(`[isAllowedToRelayHome] community has "plugins.fee.bridgeToForeign"`)
       const { isActive } = community.plugins.fee.bridgeToForeign
-      if (isActive) {
-        if (methodName === 'transferToken' && _to === community.homeBridgeAddress) {
-          return false
-        }
+      console.log(`[isAllowedToRelayHome] plugins.fee.bridgeToForeign.isActive: ${isActive}`)
+      if (isActive && methodName === 'transferToken' && _to === community.homeBridgeAddress) {
+        console.log(`[isAllowedToRelayHome] FALSE`)
+        return false
       }
     }
   }
+  console.log(`[isAllowedToRelayHome] FALSE`)
   return true
 }
 
 const isAllowedToRelay = async (web3, walletModule, walletModuleABI, methodName, methodData, networkType) => {
+  console.log(`[isAllowedToRelay] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}, networkType: ${networkType}`)
   return networkType === 'foreign'
     ? isAllowedToRelayForeign(web3, walletModule, walletModuleABI, methodName, methodData)
     : isAllowedToRelayHome(web3, walletModule, walletModuleABI, methodName, methodData)
@@ -108,7 +121,9 @@ const relay = withAccount(async (account, { walletAddress, methodName, methodDat
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
 
+  console.log(`before isAllowedToRelay`)
   const allowedToRelay = await isAllowedToRelay(web3, walletModule, walletModuleABI, methodName, methodData, networkType)
+  console.log(`isAllowedToRelay: ${allowedToRelay}`)
   if (allowedToRelay) {
     const userWallet = await UserWallet.findOne({ walletAddress })
     const contract = createContract(walletModuleABI, userWallet.walletModules[walletModule])
