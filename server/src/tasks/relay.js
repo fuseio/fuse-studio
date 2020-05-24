@@ -68,27 +68,27 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
 }
 
 const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
+  const allowedModules = ['TransferManager', 'DAIPointsManager']
   console.log(`[isAllowedToRelayForeign] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
   let isAllowed = true
-  if (walletModule !== 'TransferManager') {
-    console.log(`[isAllowedToRelayForeign] FALSE (#1)`)
+  if (!allowedModules.includes(walletModule)) {
+    console.log(`[isAllowedToRelayForeign] FALSE`)
     isAllowed = false
-  } else {
-    const { _token } = getParamsFromMethodData(web3, walletModuleABI, methodName, methodData)
-    console.log(`[isAllowedToRelayForeign] token: ${_token}`)
-    if (config.has('network.foreign.allowedTokensToRelay') && !config.get('network.foreign.allowedTokensToRelay').split(',').includes(_token)) {
-      console.error(`[isAllowedToRelayForeign] Token ${_token} is not allowed to be relayed on foreign network`)
-      console.log(`[isAllowedToRelayForeign] FALSE (#2)`)
-      isAllowed = false
-    }
   }
+  // TODO add more validations
   console.log(`[isAllowedToRelayForeign] RETURN ${isAllowed}`)
   return isAllowed
 }
 
 const isAllowedToRelayHome = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
+  const allowedModules = ['TransferManager', 'CommunityManager']
   console.log(`[isAllowedToRelayHome] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
   let isAllowed = true
+  if (!allowedModules.includes(walletModule)) {
+    console.log(`[isAllowedToRelayHome] FALSE`)
+    isAllowed = false
+  }
+  // TODO add more validations
   console.log(`[isAllowedToRelayHome] RETURN ${isAllowed}`)
   return isAllowed
 }
