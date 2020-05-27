@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
 const UserWallet = mongoose.model('UserWallet')
 const request = require('request-promise-native')
+const Promise = require('bluebird')
 
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
@@ -244,8 +245,15 @@ router.get('/expired', auth.required, async (req, res) => {
     if (token.expiryTimestamp > now) {
       throw new Error(`Token ${tokenAddress} is not expired yet (expiry at ${token.expiryTimestamp})`)
     }
-    const data = await Promise.all(wallets.map(wallet => getAccountTokenList(wallet, [tokenAddress])))
-    return data
+    const result = await Promise.map(wallets, wallet => {
+      return new Promise(resolve => {
+        getAccountTokenList(wallet, [tokenAddress])
+          .then(result => {
+            resolve(result)
+          })
+      })
+    }, { concurrency: 10 })
+    return result
   }
 
   async function expiredBySpendabilityId (spendabilityId, wallets) {
@@ -259,8 +267,15 @@ router.get('/expired', auth.required, async (req, res) => {
     if (!expiredTokens || !expiredTokens.length) {
       throw new Error(`Could not find expired tokens for spendabilityId: ${spendabilityId}`)
     }
-    const data = await Promise.all(wallets.map(wallet => getAccountTokenList(wallet, expiredTokens)))
-    return data
+    const result = await Promise.map(wallets, wallet => {
+      return new Promise(resolve => {
+        getAccountTokenList(wallet, expiredTokens)
+          .then(result => {
+            resolve(result)
+          })
+      })
+    }, { concurrency: 10 })
+    return result
   }
 
   async function getAccountTokenList (address, tokens) {
