@@ -4,7 +4,8 @@ const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
 const moment = require('moment')
 const mongoose = require('mongoose')
-const token = mongoose.token
+const Token = mongoose.model('Token')
+const UserWallet = mongoose.model('UserWallet')
 
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
@@ -184,7 +185,7 @@ router.post('/transfer', auth.required, async (req, res) => {
       if (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc')) {
         return res.status(400).send({ error: 'Missing spendabilityOrder' })
       }
-      const tokens = await token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
+      const tokens = await mongoose.token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
       if (!tokens || !tokens.length) {
         return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
       }
@@ -194,6 +195,66 @@ router.post('/transfer', auth.required, async (req, res) => {
     } catch (err) {
       return res.status(400).send({ error: err })
     }
+  }
+})
+
+/**
+ * @api {post} /api/v2/admin/tokens/expired Get expired by wallet/token/spendabilityId
+ * @apiName Expired
+ * @apiGroup Admin
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ */
+router.get('/expired', auth.required, async (req, res) => {
+  const { isCommunityAdmin, accountAddress } = req.user
+  if (!isCommunityAdmin) {
+    return res.status(400).send({ error: 'The user is not a community admin' })
+  }
+  const { networkType, walletAddress, tokenAddress, spendabilityId } = req.body
+  console.log(`/admin/tokens/expired`, { networkType, walletAddress, tokenAddress, spendabilityId })
+  if (networkType !== 'fuse') {
+    return res.status(400).send({ error: 'Supported only on Fuse Network' })
+  }
+  try {
+    let result
+    const wallets = walletAddress ? [await UserWallet.findOne({ walletAddress })] : await UserWallet.find({ walletOwnerOriginalAddress: accountAddress }, { _id: 0, walletAddress: 1 })
+    if (!wallets || wallets.length === 0) {
+      return res.status(400).send({ error: 'Wallets not found' })
+    }
+    if (tokenAddress) {
+      result = await expiredByToken(tokenAddress, wallets)
+    } else if (spendabilityId) {
+      result = await expiredBySpendabilityId(spendabilityId, wallets)
+    } else {
+      return res.status(400).send({ error: 'Missing tokenAddress/spendabilityId' })
+    }
+    res.json({ result })
+  } catch (err) {
+    return res.status(400).send({ error: err })
+  }
+
+  async function expiredByToken (tokenAddress, wallets) {
+    console.log(`/admin/tokens/expired -> expiredByToken`, tokenAddress, wallets)
+    const now = moment().unix()
+    const token = await mongoose.token.getByAddress(tokenAddress)
+    if (token.expiryTimestamp > now) {
+      throw new Error(`Token ${tokenAddress} is not expired yet (expiry at ${token.expiryTimestamp})`)
+    }
+    // TODO return wallets with balance over zero for the token
+  }
+
+  async function expiredBySpendabilityId (spendabilityId, wallets) {
+    console.log(`/admin/tokens/expired -> expiredBySpendabilityId`, spendabilityId, wallets)
+    const now = moment().unix()
+    const tokens = await Token.find({ networkType: 'home', spendabilityIds: spendabilityId }, { _id: 0, address: 1, expiryTimestamp: 1 })
+    if (!tokens || !tokens.length) {
+      throw new Error(`Could not find tokens for spendabilityId: ${spendabilityId}`)
+    }
+    const expiredTokens = tokens.filter(t => t.expiryTimestamp < now).map(t => t.address)
+    if (!expiredTokens || !expiredTokens.length) {
+      throw new Error(`Could not find expired tokens for spendabilityId: ${spendabilityId}`)
+    }
+    // TODO return wallets with balance over zero for the expired tokens
   }
 })
 
