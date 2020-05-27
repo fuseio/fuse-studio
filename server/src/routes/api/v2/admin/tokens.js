@@ -1,3 +1,4 @@
+const config = require('config')
 const router = require('express').Router()
 const { toWei } = require('web3-utils')
 const { agenda } = require('@services/agenda')
@@ -6,6 +7,7 @@ const moment = require('moment')
 const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
 const UserWallet = mongoose.model('UserWallet')
+const request = require('request-promise-native')
 
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
@@ -217,7 +219,8 @@ router.get('/expired', auth.required, async (req, res) => {
   }
   try {
     let result
-    const wallets = walletAddress ? [await UserWallet.findOne({ walletAddress })] : await UserWallet.find({ walletOwnerOriginalAddress: accountAddress }, { _id: 0, walletAddress: 1 })
+    let wallets = walletAddress ? [await UserWallet.findOne({ walletAddress })] : await UserWallet.find({ walletOwnerOriginalAddress: accountAddress }, { _id: 0, walletAddress: 1 })
+    wallets = wallets.filter(wallet => wallet.walletAddress).map(wallet => wallet.walletAddress)
     if (!wallets || wallets.length === 0) {
       return res.status(400).send({ error: 'Wallets not found' })
     }
@@ -228,6 +231,7 @@ router.get('/expired', auth.required, async (req, res) => {
     } else {
       return res.status(400).send({ error: 'Missing tokenAddress/spendabilityId' })
     }
+    result = result.filter(obj => obj.data && obj.data.length)
     res.json({ result })
   } catch (err) {
     return res.status(400).send({ error: err })
@@ -240,7 +244,8 @@ router.get('/expired', auth.required, async (req, res) => {
     if (token.expiryTimestamp > now) {
       throw new Error(`Token ${tokenAddress} is not expired yet (expiry at ${token.expiryTimestamp})`)
     }
-    // TODO return wallets with balance over zero for the token
+    const data = await Promise.all(wallets.map(wallet => getAccountTokenList(wallet, [tokenAddress])))
+    return data
   }
 
   async function expiredBySpendabilityId (spendabilityId, wallets) {
@@ -254,7 +259,22 @@ router.get('/expired', auth.required, async (req, res) => {
     if (!expiredTokens || !expiredTokens.length) {
       throw new Error(`Could not find expired tokens for spendabilityId: ${spendabilityId}`)
     }
-    // TODO return wallets with balance over zero for the expired tokens
+    const data = await Promise.all(wallets.map(wallet => getAccountTokenList(wallet, expiredTokens)))
+    return data
+  }
+
+  async function getAccountTokenList (address, tokens) {
+    try {
+      console.log(`/admin/tokens/expired -> getAccountTokenList`, address)
+      const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokenlist&address=${address}`)
+      const data = JSON.parse(res)
+      const accountTokens = data.result.filter(obj => obj.balance !== '0' && tokens.includes(obj.contractAddress)).map(obj => {
+        return { tokenAddress: obj.contractAddress, balance: obj.balance }
+      })
+      return { wallet: address, data: accountTokens }
+    } catch (err) {
+      throw err
+    }
   }
 })
 
