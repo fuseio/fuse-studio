@@ -188,7 +188,7 @@ router.post('/transfer', auth.required, async (req, res) => {
       if (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc')) {
         return res.status(400).send({ error: 'Missing spendabilityOrder' })
       }
-      const tokens = await mongoose.token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
+      const tokens = await Token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
       if (!tokens || !tokens.length) {
         return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
       }
@@ -241,7 +241,7 @@ router.get('/expired', auth.required, async (req, res) => {
   async function expiredByToken (tokenAddress, wallets) {
     console.log(`/admin/tokens/expired -> expiredByToken`, tokenAddress, wallets)
     const now = moment().unix()
-    const token = await mongoose.token.getByAddress(tokenAddress)
+    const token = await Token.getByAddress(tokenAddress)
     if (token.expiryTimestamp > now) {
       throw new Error(`Token ${tokenAddress} is not expired yet (expiry at ${token.expiryTimestamp})`)
     }
