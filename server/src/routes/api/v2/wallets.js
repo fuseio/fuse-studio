@@ -90,7 +90,7 @@ router.get('/', auth.required, async (req, res, next) => {
 router.get('/:phoneNumber', auth.required, async (req, res, next) => {
   const { appName } = req.user
   const { phoneNumber } = req.params
-  const userWallet = await UserWallet.findOne({ phoneNumber, appName }, { contacts: 0, firebaseToken: 0 }).sort({ createdAt: -1 })
+  const userWallet = await UserWallet.findOne({ phoneNumber, appName }, { contacts: 0, firebaseToken: 0 }).sort({ updatedAt: -1 })
 
   return res.json({ data: userWallet })
 })
@@ -107,7 +107,7 @@ router.get('/:phoneNumber', auth.required, async (req, res, next) => {
  */
 router.get('/all/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber } = req.params
-  const userWallets = await UserWallet.find({ phoneNumber }, { contacts: 0 }).sort({ createdAt: -1 })
+  const userWallets = await UserWallet.find({ phoneNumber }, { contacts: 0 }).sort({ updatedAt: -1 })
 
   return res.json({ data: userWallets })
 })
