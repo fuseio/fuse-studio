@@ -188,7 +188,7 @@ router.post('/transfer', auth.required, async (req, res) => {
       if (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc')) {
         return res.status(400).send({ error: 'Missing spendabilityOrder' })
       }
-      const tokens = await Token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
+      const tokens = await mongoose.token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
       if (!tokens || !tokens.length) {
         return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
       }
@@ -205,6 +205,14 @@ router.post('/transfer', auth.required, async (req, res) => {
  * @api {get} /api/v2/admin/tokens/expired Get expired by wallet/token/spendabilityId
  * @apiName Expired
  * @apiGroup Admin
+ * @apiDescription Get expired balance for one/multiple wallets by token or spendabilityId
+ * @apiExample
+ *  GET /api/v2/admin/tokens/expired
+ *  body: { walletAddress: '0x755c33BE69dD2baB7286E7a2010fc8591AF15a1e', tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse' }
+ * @apiParam {String} walletAddress
+ * @apiParam {String} tokenAddress
+ * @apiParam {String} spendabilityId
+ * @apiParam {String} networkType Token's network (must be Fuse)
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  */
@@ -241,7 +249,7 @@ router.get('/expired', auth.required, async (req, res) => {
   async function expiredByToken (tokenAddress, wallets) {
     console.log(`/admin/tokens/expired -> expiredByToken`, tokenAddress, wallets)
     const now = moment().unix()
-    const token = await Token.getByAddress(tokenAddress)
+    const token = await mongoose.token.getByAddress(tokenAddress)
     if (token.expiryTimestamp > now) {
       throw new Error(`Token ${tokenAddress} is not expired yet (expiry at ${token.expiryTimestamp})`)
     }
@@ -297,6 +305,14 @@ router.get('/expired', auth.required, async (req, res) => {
  * @api {get} /api/v2/admin/tokens/burnEvents Get burn events
  * @apiName BurnEvents
  * @apiGroup Admin
+ * @apiDescription Get burn events created by admin
+ * @apiExample
+ *  GET /api/v2/admin/tokens/burnEvents
+ *  body: { fromWallet: '0x755c33BE69dD2baB7286E7a2010fc8591AF15a1e', networkType: 'fuse' }
+ * @apiParam {String} fromWallet
+ * @apiParam {String} startTime
+ * @apiParam {String} endTime
+ * @apiParam {String} networkType Token's network (must be Fuse)
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  */

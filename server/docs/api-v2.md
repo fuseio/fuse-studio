@@ -5,8 +5,10 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 
 - [Admin](#Admin)
 	- [Burn tokens](#Burn-tokens)
+	- [Get burn events](#Get-burn-events)
 	- [Create token](#Create-token)
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
+	- [Get expired by wallet/token/spendabilityId](#Get-expired-by-wallet/token/spendabilityId)
 	- [Mint tokens](#Mint-tokens)
 	- [Transfer tokens from account](#Transfer-tokens-from-account)
 	
@@ -15,8 +17,8 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Sync contacts list](#Sync-contacts-list)
 	
 - [Jobs](#Jobs)
-	- [Fetch job by correlationId](#Fetch-job-by-correlationId)
 	- [Fetch job by id](#Fetch-job-by-id)
+	- [Fetch job by correlationId](#Fetch-job-by-correlationId)
 	
 - [Login](#Login)
 	- [Login using firebase ID token](#Login-using-firebase-ID-token)
@@ -70,6 +72,36 @@ body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType:
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | Started | `String` | <p>job data</p> |
+## <a name='Get-burn-events'></a> Get burn events
+[Back to top](#top)
+
+<p>Get burn events created by admin</p>
+
+```
+GET /api/v2/admin/tokens/burnEvents
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| fromWallet | `String` |  |
+| startTime | `String` |  |
+| endTime | `String` |  |
+| networkType | `String` | <p>Token's network (must be Fuse)</p> |
+
+### Examples
+GET /api/v2/admin/tokens/burnEvents
+
+```
+GET /api/v2/admin/tokens/burnEvents
+body: { fromWallet: '0x755c33BE69dD2baB7286E7a2010fc8591AF15a1e', networkType: 'fuse' }
+```
+
+
 ## <a name='Create-token'></a> Create token
 [Back to top](#top)
 
@@ -138,6 +170,36 @@ body: { phoneNumber: '+972546123321' }
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | Started | `String` | <p>job data</p> |
+## <a name='Get-expired-by-wallet/token/spendabilityId'></a> Get expired by wallet/token/spendabilityId
+[Back to top](#top)
+
+<p>Get expired balance for one/multiple wallets by token or spendabilityId</p>
+
+```
+GET /api/v2/admin/tokens/expired
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| walletAddress | `String` |  |
+| tokenAddress | `String` |  |
+| spendabilityId | `String` |  |
+| networkType | `String` | <p>Token's network (must be Fuse)</p> |
+
+### Examples
+GET /api/v2/admin/tokens/expired
+
+```
+GET /api/v2/admin/tokens/expired
+body: { walletAddress: '0x755c33BE69dD2baB7286E7a2010fc8591AF15a1e', tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse' }
+```
+
+
 ## <a name='Mint-tokens'></a> Mint tokens
 [Back to top](#top)
 
@@ -256,13 +318,13 @@ POST api/v2/contacts/
 | nonce | `Number` |  |
 # <a name='Jobs'></a> Jobs
 
-## <a name='Fetch-job-by-correlationId'></a> Fetch job by correlationId
+## <a name='Fetch-job-by-id'></a> Fetch job by id
 [Back to top](#top)
 
-<p>Fetches agenda job by job's correlationId</p>
+<p>Fetches agenda job by job id</p>
 
 ```
-GET api/v2/jobs/correlationId/:correlationId
+GET api/v2/jobs/:jobId
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -275,13 +337,13 @@ GET api/v2/jobs/correlationId/:correlationId
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | data | `Object` | <p>Job object</p> |
-## <a name='Fetch-job-by-id'></a> Fetch job by id
+## <a name='Fetch-job-by-correlationId'></a> Fetch job by correlationId
 [Back to top](#top)
 
-<p>Fetches agenda job by job id</p>
+<p>Fetches agenda job by job's correlationId</p>
 
 ```
-GET api/v2/jobs/:jobId
+GET api/v2/jobs/correlationId/:correlationId
 ```
 ### Headers
 | Name    | Type      | Description                          |
