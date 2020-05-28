@@ -8,7 +8,14 @@ const isTeam = (phoneNumber) => {
   return config.has('phoneNumbers.team') ? config.get('phoneNumbers.team').split(',').includes(phoneNumber) : false
 }
 
+const isBlocked = (phoneNumber) => {
+  const blockedPrefixes = (config.has('phoneNumbers.blockedPrefixes') && config.get('phoneNumbers.blockedPrefixes').split(',')) || []
+  const isBlocked = blockedPrefixes.filter(bp => phoneNumber.startsWith(bp)).length > 0
+  return isBlocked
+}
+
 module.exports = {
   isMagic,
-  isTeam
+  isTeam,
+  isBlocked
 }

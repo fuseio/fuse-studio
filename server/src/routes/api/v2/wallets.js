@@ -7,6 +7,7 @@ const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
+const { isBlocked } = require('@utils/smsProvider/common')
 
 /**
  * @api {post} api/v2/wallets/ Create wallet contract for user
@@ -20,6 +21,9 @@ const Invite = mongoose.model('Invite')
  */
 router.post('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier, appName } = req.user
+  if (isBlocked(phoneNumber)) {
+    return res.status(400).json({ error: `${phoneNumber} is blocked` })
+  }
   const { correlationId } = req.body
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
@@ -44,7 +48,8 @@ router.post('/', auth.required, async (req, res, next) => {
         walletModules: homeAddresses.walletModules,
         networks: ['fuse'],
         identifier,
-        appName
+        appName,
+        ip: req.clientIp
       }).save()
       const job = await agenda.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id })
       return res.json({ job: job.attrs })
@@ -143,10 +148,13 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
  */
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier, appName } = req.user
-
+  const invitedPhoneNumber = req.params.phoneNumber
+  if (isBlocked(invitedPhoneNumber)) {
+    return res.status(400).json({ error: `${phoneNumber} is blocked` })
+  }
   const { communityAddress, name, amount, symbol, correlationId } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
-  const query = { phoneNumber: req.params.phoneNumber }
+  const query = { phoneNumber: invitedPhoneNumber }
   if (appName) {
     query.appName = appName
   } else {
@@ -155,7 +163,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   let userWallet = await UserWallet.findOne(query)
   if (!userWallet) {
     const newUser = {
-      phoneNumber: req.params.phoneNumber,
+      phoneNumber: invitedPhoneNumber,
       accountAddress: owner,
       walletOwnerOriginalAddress: owner,
       walletFactoryOriginalAddress: homeAddresses.WalletFactory,
@@ -171,7 +179,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     }
     userWallet = await new UserWallet(newUser).save()
   } else if (userWallet.walletAddress) {
-    const msg = `User ${req.params.phoneNumber} already has wallet account: ${userWallet.walletAddress}`
+    const msg = `User ${invitedPhoneNumber} already has wallet account: ${userWallet.walletAddress}`
     return res.status(400).json({ error: msg })
   }
 
@@ -190,12 +198,12 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   await new Invite({
     inviterPhoneNumber: phoneNumber,
     inviterWalletAddress: inviterUserWallet.walletAddress,
-    inviteePhoneNumber: req.params.phoneNumber,
+    inviteePhoneNumber: invitedPhoneNumber,
     communityAddress,
     appName
   }).save()
 
-  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: req.params.phoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName })
+  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName })
 
   return res.json({ job: job.attrs })
 })
@@ -214,6 +222,9 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
  */
 router.post('/backup', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier } = req.user
+  if (isBlocked(phoneNumber)) {
+    return res.status(400).json({ error: `${phoneNumber} is blocked` })
+  }
   const { communityAddress, correlationId } = req.body
 
   const wallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
@@ -254,6 +265,9 @@ router.post('/backup', auth.required, async (req, res, next) => {
  */
 router.post('/foreign', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
+  if (isBlocked(phoneNumber)) {
+    return res.status(400).json({ error: `${phoneNumber} is blocked` })
+  }
   const { correlationId } = req.body
   const network = config.get('network.foreign.name')
 

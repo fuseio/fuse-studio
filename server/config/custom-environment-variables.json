@@ -151,7 +151,8 @@
   },
   "phoneNumbers": {
     "maxUserWallets": "COMMUNITY_MAX_USER_WALLETS_PER_PHONE_NUMBER",
-    "team": "COMMUNITY_TEAM_PHONE_NUMBERS"
+    "team": "COMMUNITY_TEAM_PHONE_NUMBERS",
+    "blockedPrefixes": "COMMUNITY_BLOCKED_PHONE_NUMBER_PREFIXES"
   },
   "smsProvider": "COMMUNITY_SMS_PROVIDER",
   "slack": {

@@ -18,7 +18,8 @@ const UserWalletSchema = new Schema({
   salt: { type: String, default: null },
   networks: [{ type: String }],
   identifier: { type: String },
-  appName: { type: String }
+  appName: { type: String },
+  ip: { type: String }
 }, { timestamps: true })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
