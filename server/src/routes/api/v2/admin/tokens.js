@@ -1,10 +1,14 @@
+const config = require('config')
 const router = require('express').Router()
 const { toWei } = require('web3-utils')
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
 const moment = require('moment')
 const mongoose = require('mongoose')
-const token = mongoose.token
+const Token = mongoose.model('Token')
+const UserWallet = mongoose.model('UserWallet')
+const request = require('request-promise-native')
+const Promise = require('bluebird')
 
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
@@ -184,7 +188,7 @@ router.post('/transfer', auth.required, async (req, res) => {
       if (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc')) {
         return res.status(400).send({ error: 'Missing spendabilityOrder' })
       }
-      const tokens = await token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
+      const tokens = await mongoose.token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
       if (!tokens || !tokens.length) {
         return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
       }
@@ -195,6 +199,163 @@ router.post('/transfer', auth.required, async (req, res) => {
       return res.status(400).send({ error: err })
     }
   }
+})
+
+/**
+ * @api {get} /api/v2/admin/tokens/expired Get expired by wallet/token/spendabilityId
+ * @apiName Expired
+ * @apiGroup Admin
+ * @apiDescription Get expired balance for one/multiple wallets by token or spendabilityId
+ * @apiExample
+ *  GET /api/v2/admin/tokens/expired
+ *  body: { walletAddress: '0x755c33BE69dD2baB7286E7a2010fc8591AF15a1e', tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType: 'fuse' }
+ * @apiParam {String} walletAddress
+ * @apiParam {String} tokenAddress
+ * @apiParam {String} spendabilityId
+ * @apiParam {String} networkType Token's network (must be Fuse)
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ */
+router.get('/expired', auth.required, async (req, res) => {
+  const { isCommunityAdmin, accountAddress } = req.user
+  if (!isCommunityAdmin) {
+    return res.status(400).send({ error: 'The user is not a community admin' })
+  }
+  const { networkType, walletAddress, tokenAddress, spendabilityId } = req.body
+  console.log(`/admin/tokens/expired`, { networkType, walletAddress, tokenAddress, spendabilityId })
+  if (networkType !== 'fuse') {
+    return res.status(400).send({ error: 'Supported only on Fuse Network' })
+  }
+  try {
+    let result
+    let wallets = walletAddress ? [await UserWallet.findOne({ walletAddress })] : await UserWallet.find({ walletOwnerOriginalAddress: accountAddress }, { _id: 0, walletAddress: 1 })
+    wallets = wallets.filter(wallet => wallet.walletAddress).map(wallet => wallet.walletAddress)
+    if (!wallets || wallets.length === 0) {
+      return res.status(400).send({ error: 'Wallets not found' })
+    }
+    if (tokenAddress) {
+      result = await expiredByToken(tokenAddress, wallets)
+    } else if (spendabilityId) {
+      result = await expiredBySpendabilityId(spendabilityId, wallets)
+    } else {
+      return res.status(400).send({ error: 'Missing tokenAddress/spendabilityId' })
+    }
+    result = result.filter(obj => obj.data && obj.data.length)
+    return res.json({ result })
+  } catch (err) {
+    return res.status(400).send({ error: err })
+  }
+
+  async function expiredByToken (tokenAddress, wallets) {
+    console.log(`/admin/tokens/expired -> expiredByToken`, tokenAddress, wallets)
+    const now = moment().unix()
+    const token = await mongoose.token.getByAddress(tokenAddress)
+    if (token.expiryTimestamp > now) {
+      throw new Error(`Token ${tokenAddress} is not expired yet (expiry at ${token.expiryTimestamp})`)
+    }
+    const result = await Promise.map(wallets, wallet => {
+      return new Promise(resolve => {
+        getAccountTokenList(wallet, [tokenAddress])
+          .then(result => {
+            resolve(result)
+          })
+      })
+    }, { concurrency: 10 })
+    return result
+  }
+
+  async function expiredBySpendabilityId (spendabilityId, wallets) {
+    console.log(`/admin/tokens/expired -> expiredBySpendabilityId`, spendabilityId, wallets)
+    const now = moment().unix()
+    const tokens = await Token.find({ networkType: 'home', spendabilityIds: spendabilityId }, { _id: 0, address: 1, expiryTimestamp: 1 })
+    if (!tokens || !tokens.length) {
+      throw new Error(`Could not find tokens for spendabilityId: ${spendabilityId}`)
+    }
+    const expiredTokens = tokens.filter(t => t.expiryTimestamp < now).map(t => t.address)
+    if (!expiredTokens || !expiredTokens.length) {
+      throw new Error(`Could not find expired tokens for spendabilityId: ${spendabilityId}`)
+    }
+    const result = await Promise.map(wallets, wallet => {
+      return new Promise(resolve => {
+        getAccountTokenList(wallet, expiredTokens)
+          .then(result => {
+            resolve(result)
+          })
+      })
+    }, { concurrency: 10 })
+    return result
+  }
+
+  async function getAccountTokenList (address, tokens) {
+    try {
+      console.log(`/admin/tokens/expired -> getAccountTokenList`, address)
+      const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokenlist&address=${address}`)
+      const data = JSON.parse(res)
+      const accountTokens = data.result.filter(obj => obj.balance !== '0' && tokens.includes(obj.contractAddress)).map(obj => {
+        return { tokenAddress: obj.contractAddress, balance: obj.balance }
+      })
+      return { wallet: address, data: accountTokens }
+    } catch (err) {
+      throw err
+    }
+  }
+})
+
+/**
+ * @api {get} /api/v2/admin/tokens/burnEvents Get burn events
+ * @apiName BurnEvents
+ * @apiGroup Admin
+ * @apiDescription Get burn events created by admin
+ * @apiExample
+ *  GET /api/v2/admin/tokens/burnEvents
+ *  body: { fromWallet: '0x755c33BE69dD2baB7286E7a2010fc8591AF15a1e', networkType: 'fuse' }
+ * @apiParam {String} fromWallet
+ * @apiParam {String} startTime
+ * @apiParam {String} endTime
+ * @apiParam {String} networkType Token's network (must be Fuse)
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ */
+router.get('/burnEvents', auth.required, async (req, res) => {
+  const { isCommunityAdmin, accountAddress } = req.user
+  if (!isCommunityAdmin) {
+    return res.status(400).send({ error: 'The user is not a community admin' })
+  }
+  const { networkType, fromWallet, startTime, endTime } = req.body
+  console.log(`/admin/tokens/expired`, { networkType, fromWallet, startTime, endTime })
+  if (networkType !== 'fuse') {
+    return res.status(400).send({ error: 'Supported only on Fuse Network' })
+  }
+  const filter = { name: 'burnFrom', 'data.from': accountAddress }
+  if (fromWallet) {
+    filter['data.burnFromAddress'] = fromWallet
+  }
+  if (startTime) {
+    filter.lastFinishedAt = { $gt: moment(parseInt(startTime)).unix() }
+  }
+  if (endTime) {
+    filter.lastFinishedAt = { $lt: moment(parseInt(endTime)).unix() }
+  }
+  const jobs = await agenda.jobs(filter)
+  if (!jobs || jobs.length === 0 || !jobs[0]) {
+    return res.status(404).json({ error: 'No burn events found' })
+  }
+  const result = await Promise.map(jobs, job => {
+    return new Promise(async resolve => {
+      const token = await Token.findOne({ address: job.attrs.data.tokenAddress }, { _id: 0, spendabilityIds: 1, expiryTimestamp: 1 })
+      resolve({
+        fromWallet: job.attrs.data.burnFromAddress,
+        tokenAddress: job.attrs.data.tokenAddress,
+        spendabilityIds: token && token.spendabilityIds,
+        amount: job.attrs.data.amount,
+        timestamp: job.attrs.lastRunAt,
+        expired: token && token.expiryTimestamp && moment(token.expiryTimestamp).lt(job.attrs.lastRunAt),
+        txHash: job.attrs.data.txHash,
+        correlationId: job.attrs.data.correlationId
+      })
+    })
+  }, { concurrency: 10 })
+  return res.json({ result })
 })
 
 module.exports = router
