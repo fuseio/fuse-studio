@@ -202,7 +202,7 @@ router.post('/transfer', auth.required, async (req, res) => {
 })
 
 /**
- * @api {post} /api/v2/admin/tokens/expired Get expired by wallet/token/spendabilityId
+ * @api {get} /api/v2/admin/tokens/expired Get expired by wallet/token/spendabilityId
  * @apiName Expired
  * @apiGroup Admin
  *
@@ -233,7 +233,7 @@ router.get('/expired', auth.required, async (req, res) => {
       return res.status(400).send({ error: 'Missing tokenAddress/spendabilityId' })
     }
     result = result.filter(obj => obj.data && obj.data.length)
-    res.json({ result })
+    return res.json({ result })
   } catch (err) {
     return res.status(400).send({ error: err })
   }
@@ -291,6 +291,55 @@ router.get('/expired', auth.required, async (req, res) => {
       throw err
     }
   }
+})
+
+/**
+ * @api {get} /api/v2/admin/tokens/burnEvents Get burn events
+ * @apiName BurnEvents
+ * @apiGroup Admin
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ */
+router.get('/burnEvents', auth.required, async (req, res) => {
+  const { isCommunityAdmin, accountAddress } = req.user
+  if (!isCommunityAdmin) {
+    return res.status(400).send({ error: 'The user is not a community admin' })
+  }
+  const { networkType, fromWallet, startTime, endTime } = req.body
+  console.log(`/admin/tokens/expired`, { networkType, fromWallet, startTime, endTime })
+  if (networkType !== 'fuse') {
+    return res.status(400).send({ error: 'Supported only on Fuse Network' })
+  }
+  const filter = { name: 'burnFrom', 'data.from': accountAddress }
+  if (fromWallet) {
+    filter['data.burnFromAddress'] = fromWallet
+  }
+  if (startTime) {
+    filter.lastFinishedAt = { $gt: moment(parseInt(startTime)).unix() }
+  }
+  if (endTime) {
+    filter.lastFinishedAt = { $lt: moment(parseInt(endTime)).unix() }
+  }
+  const jobs = await agenda.jobs(filter)
+  if (!jobs || jobs.length === 0 || !jobs[0]) {
+    return res.status(404).json({ error: 'No burn events found' })
+  }
+  const result = await Promise.map(jobs, job => {
+    return new Promise(async resolve => {
+      const token = await Token.findOne({ address: job.attrs.data.tokenAddress }, { _id: 0, spendabilityIds: 1, expiryTimestamp: 1 })
+      resolve({
+        fromWallet: job.attrs.data.burnFromAddress,
+        tokenAddress: job.attrs.data.tokenAddress,
+        spendabilityIds: token && token.spendabilityIds,
+        amount: job.attrs.data.amount,
+        timestamp: job.attrs.lastRunAt,
+        expired: token && token.expiryTimestamp && moment(token.expiryTimestamp).lt(job.attrs.lastRunAt),
+        txHash: job.attrs.data.txHash,
+        correlationId: job.attrs.data.correlationId
+      })
+    })
+  }, { concurrency: 10 })
+  return res.json({ result })
 })
 
 module.exports = router
