@@ -10,6 +10,7 @@ const util = require('util')
 const config = require('config')
 const initSecrets = require('@utils/awsSecrets')
 require('express-async-errors')
+const requestIp = require('request-ip')
 
 async function initConfig () {
   await initSecrets(config)
@@ -37,6 +38,8 @@ async function init () {
   app.use(bodyParser.json())
 
   app.use(paginate.middleware(10, 50))
+
+  app.use(requestIp.mw())
 
   app.use(express.static(path.join(__dirname, '../public')))
 

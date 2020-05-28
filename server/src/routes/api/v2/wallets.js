@@ -48,7 +48,8 @@ router.post('/', auth.required, async (req, res, next) => {
         walletModules: homeAddresses.walletModules,
         networks: ['fuse'],
         identifier,
-        appName
+        appName,
+        ip: req.clientIp
       }).save()
       const job = await agenda.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id })
       return res.json({ job: job.attrs })
