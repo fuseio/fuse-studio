@@ -202,7 +202,7 @@ router.post('/transfer', auth.required, async (req, res) => {
 })
 
 /**
- * @api {get} /api/v2/admin/tokens/expired Get expired by wallet/token/spendabilityId
+ * @api {post} /api/v2/admin/tokens/expired Get expired by wallet/token/spendabilityId
  * @apiName Expired
  * @apiGroup Admin
  * @apiDescription Get expired balance for one/multiple wallets by token or spendabilityId
@@ -216,7 +216,7 @@ router.post('/transfer', auth.required, async (req, res) => {
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  */
-router.get('/expired', auth.required, async (req, res) => {
+router.post('/expired', auth.required, async (req, res) => {
   const { isCommunityAdmin, accountAddress } = req.user
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
@@ -302,7 +302,7 @@ router.get('/expired', auth.required, async (req, res) => {
 })
 
 /**
- * @api {get} /api/v2/admin/tokens/burnEvents Get burn events
+ * @api {post} /api/v2/admin/tokens/burnEvents Get burn events
  * @apiName BurnEvents
  * @apiGroup Admin
  * @apiDescription Get burn events created by admin
@@ -316,7 +316,7 @@ router.get('/expired', auth.required, async (req, res) => {
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  */
-router.get('/burnEvents', auth.required, async (req, res) => {
+router.post('/burnEvents', auth.required, async (req, res) => {
   const { isCommunityAdmin, accountAddress } = req.user
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })

@@ -78,7 +78,7 @@ body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', networkType:
 <p>Get burn events created by admin</p>
 
 ```
-GET /api/v2/admin/tokens/burnEvents
+POST /api/v2/admin/tokens/burnEvents
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -176,7 +176,7 @@ body: { phoneNumber: '+972546123321' }
 <p>Get expired balance for one/multiple wallets by token or spendabilityId</p>
 
 ```
-GET /api/v2/admin/tokens/expired
+POST /api/v2/admin/tokens/expired
 ```
 ### Headers
 | Name    | Type      | Description                          |
