@@ -152,6 +152,9 @@ const adminSpendabilityTransfer = withAccount(async (account, { bridgeType, toke
     let balance = await fetchBalance({ createContract }, tokenAddress, wallet)
     return { tokenAddress, balance }
   }))).filter(obj => !obj.balance.isZero())
+  if (balancesData.length === 0) {
+    throw new Error(`No balances for ${wallet}`)
+  }
   let total = new BigNumber(amount)
   let i = 0
   let jobs = []
