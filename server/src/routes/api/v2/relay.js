@@ -8,7 +8,7 @@ router.post('/', auth.required, async (req, res) => {
     const job = await agenda.now('relay', { ...req.body, identifier, appName })
     return res.json({ job: job.attrs })
   } catch (err) {
-    return res.status(400).send({ error: err })
+    return res.status(400).send({ error: err.message })
   }
 })
 
@@ -24,7 +24,7 @@ router.post('/multi', auth.required, async (req, res) => {
     return res.json({ job: job.attrs })
   } catch (err) {
     console.error(err)
-    return res.status(400).send({ error: err })
+    return res.status(400).send({ error: err.message })
   }
 })
 

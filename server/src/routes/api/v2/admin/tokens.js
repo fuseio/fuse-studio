@@ -62,7 +62,7 @@ router.post('/create', auth.required, async (req, res) => {
     const job = await agenda.now('createToken', { bridgeType: 'home', from: accountAddress, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr, correlationId })
     return res.json({ job: job.attrs })
   } catch (err) {
-    return res.status(400).send({ error: err })
+    return res.status(400).send({ error: err.message })
   }
 })
 
@@ -97,7 +97,7 @@ router.post('/mint', auth.required, async (req, res) => {
     const job = await agenda.now('mint', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, toAddress, correlationId })
     return res.json({ job: job.attrs })
   } catch (err) {
-    return res.status(400).send({ error: err })
+    return res.status(400).send({ error: err.message })
   }
 })
 
@@ -137,7 +137,7 @@ router.post('/burn', auth.required, async (req, res) => {
     }
     return res.json({ json: job.attrs })
   } catch (err) {
-    return res.status(400).send({ error: err })
+    return res.status(400).send({ error: err.message })
   }
 })
 
@@ -177,7 +177,7 @@ router.post('/transfer', auth.required, async (req, res) => {
       const job = await agenda.now('adminTransfer', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, to, correlationId })
       return res.json({ job: job.attrs })
     } catch (err) {
-      return res.status(400).send({ error: err })
+      return res.status(400).send({ error: err.message })
     }
   } else {
     try {
@@ -196,7 +196,7 @@ router.post('/transfer', auth.required, async (req, res) => {
       const job = await agenda.now('adminSpendabilityTransfer', { tokenAddresses, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, to, correlationId: `${correlationId}-1` })
       return res.json({ job: job.attrs })
     } catch (err) {
-      return res.status(400).send({ error: err })
+      return res.status(400).send({ error: err.message })
     }
   }
 })
@@ -243,7 +243,7 @@ router.post('/expired', auth.required, async (req, res) => {
     result = result.filter(obj => obj.data && obj.data.length)
     return res.json({ result })
   } catch (err) {
-    return res.status(400).send({ error: err })
+    return res.status(400).send({ error: err.message })
   }
 
   async function expiredByToken (tokenAddress, wallets) {

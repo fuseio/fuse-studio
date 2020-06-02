@@ -46,7 +46,7 @@ router.post('/create', auth.required, async (req, res) => {
     const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id })
     return res.json({ job: job.attrs })
   } catch (err) {
-    return res.status(400).send({ error: err })
+    return res.status(400).send({ error: err.message })
   }
 })
 
