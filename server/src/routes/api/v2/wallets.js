@@ -7,7 +7,6 @@ const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
-const { isBlocked } = require('@utils/smsProvider/common')
 
 /**
  * @api {post} api/v2/wallets/ Create wallet contract for user
@@ -21,9 +20,6 @@ const { isBlocked } = require('@utils/smsProvider/common')
  */
 router.post('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier, appName } = req.user
-  if (isBlocked(phoneNumber)) {
-    return res.status(400).json({ error: `${phoneNumber} is blocked` })
-  }
   const { correlationId } = req.body
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
@@ -149,9 +145,6 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier, appName } = req.user
   const invitedPhoneNumber = req.params.phoneNumber
-  if (isBlocked(invitedPhoneNumber)) {
-    return res.status(400).json({ error: `${phoneNumber} is blocked` })
-  }
   const { communityAddress, name, amount, symbol, correlationId } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
   const query = { phoneNumber: invitedPhoneNumber }
@@ -222,9 +215,6 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
  */
 router.post('/backup', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier } = req.user
-  if (isBlocked(phoneNumber)) {
-    return res.status(400).json({ error: `${phoneNumber} is blocked` })
-  }
   const { communityAddress, correlationId } = req.body
 
   const wallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
@@ -265,9 +255,6 @@ router.post('/backup', auth.required, async (req, res, next) => {
  */
 router.post('/foreign', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
-  if (isBlocked(phoneNumber)) {
-    return res.status(400).json({ error: `${phoneNumber} is blocked` })
-  }
   const { correlationId } = req.body
   const network = config.get('network.foreign.name')
 
