@@ -11,24 +11,24 @@ export default ({ hideModal, web3connect }) => {
   }
 
   return (
-    <Modal onClose={hideModal}>
+    <Modal onClose={hideModal} hasCloseBtn>
       <div className='wallet-modal'>
         <div className='wallet-modal__title'>Choose your Ethereum wallet to get started:</div>
         <div className='wallet-modal__providers-list'>
-          <div className='wallet-modal__provider' onClick={createHandleProvider('injected')}>
+          <div className='wallet-modal__provider grid-y align-middle' onClick={createHandleProvider('injected')}>
             <img src={MetamaskIcon} />
             MetaMask
           </div>
-          <div className='wallet-modal__provider' onClick={createHandleProvider('torus')}>
+          <div className='wallet-modal__provider grid-y align-middle' onClick={createHandleProvider('torus')}>
             <img src={GoogleIcon} />
             Torus
           </div>
         </div>
-        <div className='wallet-modal__explanation'>
+        <div className='wallet-modal__explanation grid-x align-middle'>
           <div>
             <img src={EtherIcon} />
           </div>
-          <div>
+          <div style={{ marginLeft: '1em' }}>
             The Studio deploys communities on Ethereum mainnet by default <br />
             (You can test also test in Testnet to avoid feed - <a target='_blank' href='https://docs.fuse.io/the-fuse-studio/how-to-add-fuse-to-your-metamask'>Learn here how</a>)
           </div>

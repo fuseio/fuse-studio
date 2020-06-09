@@ -43,6 +43,30 @@ const NameAndCurrency = ({
           )}
         />
       </div>
+      <div className='name' style={{ padding: '0 0 60px' }}>
+        <h3 className='name__title'>Add community description</h3>
+        <Field
+          name='description'
+          render={({ field, form: { setFieldValue, handleChange } }) => (
+            <TextField
+              {...field}
+              multiline
+              placeholder='Add description'
+              rows={4}
+              variant='filled'
+              classes={{
+                root: 'name__textarea'
+              }}
+              fullWidth
+              InputProps={{
+                classes: {
+                  underline: 'name__field--underline',
+                  error: 'name__field--error'
+                }
+              }}
+            />
+          )} />
+      </div>
       <div className='name' style={{ padding: '0' }}>
         <h3 className='name__title' style={{ paddingBottom: '.2em' }}>Email <FontAwesome data-tip style={{ fontSize: '0.750em' }} data-for='email' name='info-circle' /></h3>
         <ReactTooltip className='tooltip__content' id='email' place='bottom' effect='solid'>

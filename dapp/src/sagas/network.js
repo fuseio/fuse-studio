@@ -5,7 +5,7 @@ import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 as getWeb3Service } from 'services/web3'
 import { toLongName } from 'utils/network'
 import * as actions from 'actions/network'
-import { balanceOfFuse, fetchCommunities } from 'actions/accounts'
+import { balanceOfFuse, balanceOfNative, fetchCommunities } from 'actions/accounts'
 import { networkIdToName } from 'constants/network'
 import providers from 'constants/providers'
 import { saveState } from 'utils/storage'
@@ -130,6 +130,10 @@ function * checkNetworkType ({ web3 }) {
       type: actions.CHECK_NETWORK_TYPE.SUCCESS,
       response
     })
+    const accountAddress = yield select(state => state.network.accountAddress)
+    yield put(balanceOfFuse(accountAddress))
+    yield put(balanceOfNative(accountAddress, { bridgeType: 'home' }))
+    yield put(balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
   } catch (error) {
     yield put({ type: actions.CHECK_NETWORK_TYPE.FAILURE, error })
     yield put({

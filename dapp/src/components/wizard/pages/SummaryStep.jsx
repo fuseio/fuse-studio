@@ -8,6 +8,7 @@ import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
 import capitalize from 'lodash/capitalize'
 import upperFirst from 'lodash/upperFirst'
+import isEmpty from 'lodash/isEmpty'
 import { toLongName } from 'utils/network'
 
 const SummaryStep = ({
@@ -86,21 +87,25 @@ const SummaryStep = ({
                 }
               </div>
             </div>
-            <div className='summary-step__content__item'>
-              <h4 className='summary-step__content__title'>Plugins</h4>
-              <div className='summary-step__content__contracts'>
-                {
-                  pluginsSelected.map((name) => name && (
-                    <div key={name} className='summary-step__content__contracts__item'>
-                      <span className='summary-step__content__contracts__icon'>
-                        <img src={pluginsIcons[name]} />
-                        {upperFirst(lowerCase(upperCase(name)))}
-                      </span>
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
+            {
+              pluginsSelected && !isEmpty(pluginsSelected) && (
+                <div className='summary-step__content__item'>
+                  <h4 className='summary-step__content__title'>Plugins</h4>
+                  <div className='summary-step__content__contracts'>
+                    {
+                      pluginsSelected.map((name) => name && (
+                        <div key={name} className='summary-step__content__contracts__item'>
+                          <span className='summary-step__content__contracts__icon'>
+                            <img src={pluginsIcons[name]} />
+                            {upperFirst(lowerCase(upperCase(name)))}
+                          </span>
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
+              )
+            }
           </div>
         </div>
 
