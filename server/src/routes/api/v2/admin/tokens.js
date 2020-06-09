@@ -9,6 +9,7 @@ const Token = mongoose.model('Token')
 const UserWallet = mongoose.model('UserWallet')
 const request = require('request-promise-native')
 const Promise = require('bluebird')
+const { toChecksumAddress } = require('web3-utils')
 
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
@@ -342,7 +343,7 @@ router.post('/burnEvents', auth.required, async (req, res) => {
   }
   const result = await Promise.map(jobs, job => {
     return new Promise(async resolve => {
-      const token = await Token.findOne({ address: job.attrs.data.tokenAddress }, { _id: 0, spendabilityIds: 1, expiryTimestamp: 1 })
+      const token = await Token.findOne({ address: toChecksumAddress(job.attrs.data.tokenAddress) }, { _id: 0, spendabilityIds: 1, expiryTimestamp: 1 })
       resolve({
         fromWallet: job.attrs.data.burnFromAddress,
         tokenAddress: job.attrs.data.tokenAddress,
