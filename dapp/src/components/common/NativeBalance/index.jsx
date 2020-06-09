@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { getAccount, getProviderInfo, getCommunitiesKeys } from 'selectors/accounts'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuseLogo.svg'
+import { withNetwork } from 'containers/Web3'
 
 const NativeBalance = ({
   account,
@@ -63,4 +64,4 @@ const mapState = (state) => ({
   communitiesKeys: getCommunitiesKeys(state)
 })
 
-export default connect(mapState, null)(NativeBalance)
+export default withNetwork(connect(mapState, null)(NativeBalance))

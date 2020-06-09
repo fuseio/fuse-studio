@@ -376,7 +376,6 @@ function * setBonus ({ amount, bonusType }) {
   })
 }
 
-
 export function * setWalletBannerLink ({ link, walletBanner }) {
   const plugin = { name: 'walletBanner', link, isActive: true }
   if (walletBanner && walletBanner.blob) {

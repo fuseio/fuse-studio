@@ -7,9 +7,13 @@ import { connect as connectFormik, getIn, Field } from 'formik'
 import TetherCoin from 'images/tether_logo.svg'
 import tokenOne from 'images/CoinIcon1.svg'
 import tokenTwo from 'images/CoinIcon2.svg'
-import dai from 'images/dai.svg'
-import usdc from 'images/usdc.png'
+import dai from 'images/dai_logo.png'
+import usdc from 'images/usdc_logo.png'
 import cameraIcon from 'images/camara.svg'
+import EursTokenIcon from 'images/eurs_token.png'
+import DigitalRandIcon from 'images/digital_rand_logo.png'
+import RupiahIcon from 'images/rupiah_logo.png'
+import TrustIcon from 'images/trust_token_logo.png'
 import { createObjectURL } from 'utils/images'
 
 const TokenIcons = {
@@ -17,7 +21,11 @@ const TokenIcons = {
   2: tokenTwo,
   DAI: dai,
   USDC: usdc,
-  USDT: TetherCoin
+  USDT: TetherCoin,
+  TUSD: TrustIcon,
+  EURS: EursTokenIcon,
+  DZAR: DigitalRandIcon,
+  IDRT: RupiahIcon
 }
 
 const LogosOptions = ({
@@ -80,6 +88,7 @@ const LogosOptions = ({
 
   const onSelectFile = e => {
     if (e.target.files && e.target.files.length > 0) {
+      console.log(e.target.files)
       const reader = new window.FileReader()
       reader.addEventListener('load', () => {
         openImageCropper(reader.result)

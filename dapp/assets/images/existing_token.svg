@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ether</title>
+    <defs>
+        <linearGradient x1="57.8668965%" y1="17.3200665%" x2="70.978918%" y2="72.3461456%" id="linearGradient-1">
+            <stop stop-color="#25435A" offset="0%"></stop>
+            <stop stop-color="#052235" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Wizard-new-flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="currency-" transform="translate(-750.000000, -404.000000)" fill-rule="nonzero">
+            <g id="ether" transform="translate(750.000000, 404.000000)">
+                <circle id="Ellipse_328" fill="url(#linearGradient-1)" cx="26.733861" cy="26.733861" r="26.733861"></circle>
+                <g id="Group_3626" transform="translate(14.447277, 7.654742)">
+                    <g id="Group_3625">
+                        <polygon id="Path_3814" fill="#FFFFFF" points="0.17982657 18.3332388 11.8464622 0 23.5130978 18.3332388 11.8464622 24.9998419"></polygon>
+                        <polygon id="Path_3815" fill="#BEBEBE" points="11.8464622 0 23.5130978 18.3332388 11.8464622 24.9998419"></polygon>
+                        <polygon id="Path_3816" fill="#FFFFFF" points="0.17982657 20.8332016 11.8464622 27.4998048 23.5130978 20.8332016 11.8464622 36.6664775"></polygon>
+                        <path d="M11.8464622,27.4999115 L23.5130978,20.8333083 L11.8464622,36.6665843 L11.8464622,27.4999115 Z M11.8464622,13.3333131 L23.5130978,18.3332388 L11.8464622,24.9999487 L11.8464622,13.3333131 Z" id="Path_3817" fill="#BEBEBE"></path>
+                        <polygon id="Path_3818" fill="#9A9A9A" points="11.8464622 13.3333131 23.5130978 18.3332388 11.8464622 24.9999487"></polygon>
+                        <polygon id="Path_3819" fill="#BEBEBE" points="11.8469958 25.0006957 0 18.2822257 11.8469958 13.3516693"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

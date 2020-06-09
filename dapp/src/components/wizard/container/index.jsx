@@ -11,30 +11,31 @@ import ExitIcon from 'images/exit_icon.svg'
 import TransactionButton from 'components/common/TransactionButton'
 import { PENDING, FAILURE, REQUEST, SUCCESS } from 'actions/constants'
 import { saveWizardProgress } from 'actions/user'
+import { getAccount } from 'selectors/accounts'
 
 const nextStepEvents = {
   0: 'Next step - 1',
   1: 'Next step - 2',
-  2: 'Next step - 3'
+  2: 'Next step - 3',
+  3: 'Next step - 4'
 }
 
 const validations = {
-  0: ['communityName', 'email'],
-  1: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
+  0: ['communityName', 'description', 'email'],
+  1: ['network', 'hasBalance'],
+  2: ['currency'],
+  3: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
 }
 
-const wizardSteps = ['Community name', 'Setup', 'Summary']
+const wizardSteps = ['Community name', 'Network', 'Currency', 'Set up', 'Summary']
 
 const StepsIndicator = ({ steps, activeStep }) => {
-  return steps.map((item, index) => {
-    const stepsClassStyle = classNames('cell large-2 medium-2 small-4 step', {
+  return steps.map((item, index) => (
+    <div key={index} className={classNames('cell large-2 medium-2 small-4 step', {
       [`step--active`]: index === activeStep,
       [`step--done`]: index < activeStep
-    })
-    return (
-      <div key={index} className={stepsClassStyle} />
-    )
-  })
+    })} />
+  ))
 }
 
 class Wizard extends React.Component {
@@ -112,6 +113,7 @@ class Wizard extends React.Component {
   }
 
   stepValidator = (keys, errors) => {
+    console.log({ errors })
     if (!isEmpty(keys)) {
       return keys.some((key) => get(errors, key))
     }
@@ -127,26 +129,31 @@ class Wizard extends React.Component {
     })
 
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
-
     return (
       <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
         {page === 0 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
-        {page === 1 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} community</h1>}
-        {page === 3 && <h1 className='issuance__wizard__title'>Issuance process</h1>}
+        {page === 1 && <h1 className='issuance__wizard__title'>Choose the network you want to deploy to:</h1>}
+        {page === 2 && <h1 className='issuance__wizard__title'>Choose what do you want to do</h1>}
+        {page === 3 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} community</h1>}
         {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>
-          {page < 2 && (
+          {page < 4 && (
             <div className='grid-x align-center next'>
               <button disabled={this.stepValidator(validations[page], errors) || isEmpty(touched)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
             </div>
           )}
           {isSubmitStep && (
             <div className='grid-x align-center summary-step__issue'>
-              <TransactionButton disabled={!isValid || !adminAddress} clickHandler={handleSubmit} type='submit' frontText='ISSUE' />
+              <TransactionButton
+                disabled={!isValid || !adminAddress}
+                clickHandler={handleSubmit}
+                type='submit'
+                frontText='ISSUE'
+              />
             </div>
           )}
-          {inRange(page, 1, 3) && ((transactionStatus !== PENDING) && (transactionStatus !== SUCCESS) && (transactionStatus !== REQUEST)) && (
+          {inRange(page, 1, 5) && ((transactionStatus !== PENDING) && (transactionStatus !== SUCCESS) && (transactionStatus !== REQUEST)) && (
             <button
               type='button'
               className='issuance__wizard__back'
@@ -207,4 +214,8 @@ const mapDispatchToProps = {
   saveWizardProgress
 }
 
-export default connect(null, mapDispatchToProps)(Wizard)
+const mapState = (state) => ({
+  account: getAccount(state)
+})
+
+export default connect(mapState, mapDispatchToProps)(Wizard)

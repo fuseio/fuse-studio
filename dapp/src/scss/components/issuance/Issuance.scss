@@ -166,8 +166,7 @@
       }
 
       @include breakpoint(medium up) {
-        padding-top: 30px;
-        padding-bottom: 30px;
+        padding: 50px 0;
       }
     }
 
@@ -188,7 +187,8 @@
       @include flex-align(spaced, null);
 
       @include breakpoint(medium up) {
-        padding: 40px 0 60px;
+        // padding: 40px 0 60px;
+        padding-bottom: 50px;
       }
 
       @include element(wrapper) {
@@ -316,6 +316,9 @@
       }
 
       @include element(field) {
+        > div:first-child {
+          background-color: white;
+        }
         @include breakpoint(medium up) {
         }
 
@@ -358,6 +361,343 @@
             border-bottom-color: none !important;
           }
         }
+      }
+
+      @include element(textarea) {
+        > div:first-child {
+          background-color: white;
+        }
+        width: 100%;
+        font-size: 0.938em;
+        border-radius: 5px;
+        border: solid 2px $color-lighter-gray;
+        @include breakpoint(medium up) {
+        }
+
+        @include breakpoint(small) {
+          width: 100%;
+        }
+
+        textarea {
+          color: $color-dark;
+          font-size: 0.938em;
+          color: $color-dark;
+
+          &::placeholder {
+            color: #92a1ac;
+          }
+          &:focus {
+            border-color: $color-light-gray;
+          }
+        }
+
+        @include modifier(underline) {
+          &:before {
+            border-bottom: none !important;
+          }
+          &:hover:not(.Mui-disabled):before {
+            border-bottom: none !important;
+          }
+          &:after {
+            border-bottom: none !important;
+          }
+        }
+
+        @include modifier(error) {
+          &:after {
+            border-bottom-color: none !important;
+          }
+        }
+      }
+    }
+
+    @include block(options) {
+      width: 100%;
+      @include element(wrapper) {
+        @include breakpoint(medium up) {
+          max-width: 620px;
+          width: 100%;
+          margin: auto;
+          @include xy-grid(vertical, false);
+          @include flex-align(spaced, middle);
+        }
+
+        @include breakpoint(medium down) {
+          > *:not(:last-child) {
+            margin: 1em 0;
+          }
+        }
+      }
+
+      @include block(or) {
+        font-size: 0.775em;
+        color: $color-gray;
+      }
+
+      @include block(option) {
+        border-radius: 5px;
+        border: solid 2px #e2e2e2;
+        background-color: #ffffff;
+        cursor: pointer;
+
+        &:hover {
+          border: solid 2px #abc3d2;
+
+          .option__text {
+            color: #052235;
+          }
+        }
+
+        @include modifier(fullWidth) {
+          height: 90px;
+          width: 100%;
+          &:first-child {
+            margin-bottom: 1em;
+          }
+        }
+
+        @include modifier(small) {
+          height: 52px;
+        }
+        @include modifier(selected) {
+          border: solid 2px #abc3d2;
+          .option__text {
+            color: #052235;
+          }
+        }
+        @include element(logo) {
+          > img {
+            max-width: 54px;
+            max-height: 54px;
+          }
+
+          @include modifier(small) {
+            > img {
+              width: fit-content;
+              max-height: 21px;
+            }
+          }
+        }
+
+        @include element(text) {
+          position: relative;
+          font-weight: bold;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 0.94;
+          letter-spacing: normal;
+          color: $color-gray;
+          > span {
+            font-size: 12px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.25;
+            letter-spacing: normal;
+            text-align: center;
+            color: #7a7a7a;
+          }
+          @include block(error) {
+            position: absolute;
+            bottom: -15px;
+            font-size: 10px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: normal;
+            color: #e75050;
+          }
+        }
+      }
+    }
+
+    @include block(options_network) {
+      width: 100%;
+      @include element(wrapper) {
+        @include breakpoint(medium up) {
+          max-width: 620px;
+          width: 100%;
+          margin: auto;
+          @include xy-grid(vertical, false);
+          @include flex-align(spaced, middle);
+        }
+
+        @include breakpoint(medium down) {
+          > *:not(:last-child) {
+            margin: 1em 0;
+          }
+        }
+      }
+
+      @include block(or) {
+        font-size: 0.775em;
+        color: $color-gray;
+      }
+
+      @include block(option) {
+        border-radius: 5px;
+        padding: 20px;
+        border: solid 2px #e2e2e2;
+        background-color: #ffffff;
+        cursor: pointer;
+
+        &:hover {
+          border: solid 2px #abc3d2;
+
+          .option__text {
+            color: #052235;
+          }
+        }
+
+        @include modifier(fullWidth) {
+          min-height: 165px;
+          width: 100%;
+          &:first-child {
+            margin-bottom: 1em;
+          }
+        }
+
+        @include modifier(small) {
+          height: 52px;
+        }
+        @include modifier(selected) {
+          border: solid 2px #abc3d2;
+          .option__text {
+            color: #052235;
+          }
+        }
+        @include element(logo) {
+          > img {
+            max-width: 54px;
+            max-height: 54px;
+          }
+
+          @include modifier(small) {
+            > img {
+              width: fit-content;
+              max-height: 21px;
+            }
+          }
+        }
+
+        @include element(content) {
+          position: relative;
+          @include block(title) {
+            font-size: 1.125em;
+            padding-bottom: .4em;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 0.83;
+            letter-spacing: normal;
+            color: $color-light-dark;
+          }
+
+          @include block(text) {
+            font-size: 0.75em;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: normal;
+            color: $color-gray;
+
+            >div:first-child {
+              padding-bottom: .8em;
+            }
+
+            @include block(bold) {
+              font-weight: bold;
+              color: $color-light-dark;
+            }
+
+            @include block(link) {
+              color: #006aff;
+            }
+          }
+
+          @include block(error) {
+            position: absolute;
+            bottom: -15px;
+            font-size: 10px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: normal;
+            color: #e75050;
+          }
+        }
+      }
+    }
+
+    @include block(customToken) {
+      @include element(title) {
+        font-size: 0.938em;
+        font-weight: 500;
+        line-height: 1.29;
+        text-transform: capitalize;
+        color: $color-dark;
+        margin-bottom: 1em;
+
+        @include breakpoint(small only) {
+          font-size: 1.25em;
+        }
+      }
+
+      @include element(field) {
+        > div:first-child {
+          background-color: white;
+        }
+        @include breakpoint(medium up) {
+        }
+
+        @include breakpoint(small) {
+          width: 100%;
+        }
+
+        input {
+          width: 100%;
+          background-color: $color-white;
+          padding: 0 16px;
+          font-size: 0.938em;
+          color: $color-dark;
+          height: 40px;
+          border-radius: 5px;
+          border: solid 2px $color-lighter-gray;
+
+          &::placeholder {
+            color: #92a1ac;
+          }
+          &:focus {
+            border-color: $color-light-gray;
+          }
+        }
+
+        @include modifier(underline) {
+          &:before {
+            border-bottom: none !important;
+          }
+          &:hover:not(.Mui-disabled):before {
+            border-bottom: none !important;
+          }
+          &:after {
+            border-bottom: none !important;
+          }
+        }
+
+        @include modifier(error) {
+          &:after {
+            border-bottom-color: none !important;
+          }
+        }
+      }
+
+      @include element(button) {
+        width: 20%;
+        height: 100%;
+        display: inline-block;
       }
     }
 
@@ -527,74 +867,7 @@
             }
 
             @include element(group) {
-              display: inline !important;
-
-              @include block(customToken) {
-                @include xy-grid(vertical);
-                @include flex-align(spaced, null);
-                @include breakpoint(medium up) {
-                  margin-top: 1em;
-                }
-          
-                @include breakpoint(small down) {
-                  margin-top: 2em;
-                }
-          
-                @include element(title) {
-                  font-weight: 500;
-                  font-size: 0.938em;
-                  line-height: 1.29;
-                  text-transform: capitalize;
-                  color: $color-dark;
-          
-                  @include breakpoint(small only) {
-                    margin-bottom: 1em;
-                  }
-          
-                  @include modifier(name) {
-                    font-weight: normal;
-                    color: $color-dark-gray;
-                  }
-                }
-
-                @include element(field) {
-
-                  > div:first-child {
-                    display: inline-block;
-                    width: 80%;
-                    height: 100%;
-                    padding: 0px 10px;
-                  }
-          
-                  input {
-                    width: 100%;
-                    background-color: $color-white;
-                    padding: 0 16px;
-                    font-size: 0.938em;
-                    color: $color-dark;
-                    height: 40px;
-                    border-radius: 5px;
-                    border: solid 2px $color-lighter-gray;
-          
-                    &::placeholder {
-                      color: rgba(0, 0, 0, 0.3);
-                    }
-                    &:focus {
-                      border-color: $color-light-gray;
-                    }
-          
-                    &:disabled {
-                      cursor: not-allowed;
-                    }
-                  }
-                }
-
-                @include element(button) {
-                  width: 20%;
-                  height: 100%;
-                  display: inline-block;
-                }
-              }
+              // display: inline !important;
             }
 
             @include element(control) {
@@ -625,7 +898,18 @@
 
             @include element(value-container) {
               height: inherit;
-              justify-content: center;
+              // justify-content: center;
+              @include block(icon) {
+                display: inline-block;
+                width: 25px;
+                margin-right: 1em;
+
+                > img {
+                  background-repeat: no-repeat;
+                  background-size: contain;
+                  background-position: center;
+                }
+              }
             }
 
             @include element(indicator-separator) {
@@ -636,7 +920,11 @@
               color: #0a7586 !important;
               font-size: 0.75em !important;
               text-align: start;
-
+              padding: 10px;
+              &:hover {
+                cursor: pointer;
+                background-color: rgba(238, 238, 238, 0.5);
+              }
               @include modifier(is-focused) {
                 border-color: none !important;
                 background-color: rgba(10, 117, 134, 0.53) !important;
@@ -650,18 +938,18 @@
             @include element(menu-list) {
               color: $color-dark;
               > div {
-                font-size: 0.75em;
-                display: flex;
-                align-items: center;
-                padding: 5px 16px;
-                min-height: 54px;
-                height: 100%;
-                max-height: 54px;
+                // font-size: 0.75em;
+                // display: flex;
+                // align-items: center;
+                // padding: 5px 16px;
+                // min-height: 54px;
+                // height: 100%;
+                // max-height: 54px;
 
-                &:hover {
-                  cursor: pointer;
-                  background-color: rgba(238, 238, 238, 0.5);
-                }
+                // &:hover {
+                //   cursor: pointer;
+                //   background-color: rgba(238, 238, 238, 0.5);
+                // }
 
                 @include block(icon) {
                   display: inline-block;

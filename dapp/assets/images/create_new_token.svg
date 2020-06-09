@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 4</title>
+    <defs>
+        <path d="M20.9,0 C9.35724873,0 0,9.35724873 0,20.9 C0,32.4427513 9.35724873,41.8 20.9,41.8 C32.4427513,41.8 41.8,32.4427513 41.8,20.9 C41.8,9.35724873 32.4427513,0 20.9,0 Z" id="path-1"></path>
+        <filter x="-9.6%" y="-9.6%" width="119.1%" height="119.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="4" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="0" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.145098039   0 0 0 0 0.262745098   0 0 0 0 0.352941176  0 0 0 0.304141171 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Wizard-new-flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="currency-" transform="translate(-750.000000, -288.000000)">
+            <g id="Group-4" transform="translate(750.000000, 288.000000)">
+                <g id="Group-5" fill="#DBE8F0" fill-rule="nonzero">
+                    <path d="M26.62,0 C11.91818,0 0,11.91818 0,26.62 C0,41.32182 11.91818,53.24 26.62,53.24 C41.32182,53.24 53.24,41.32182 53.24,26.62 C53.24,11.91818 41.32182,0 26.62,0 Z" id="Path-Copy"></path>
+                </g>
+                <g id="Group-5" transform="translate(5.500000, 5.500000)" fill-rule="nonzero">
+                    <g id="Path-Copy">
+                        <use fill="#DBE8F0" xlink:href="#path-1"></use>
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    </g>
+                </g>
+                <text id="MY-COIN" font-family="GothamSSm-Bold, Gotham SSm" font-size="8.8" font-weight="bold" line-spacing="9.9" fill="#62869E">
+                    <tspan x="18.4272" y="22.3">MY</tspan>
+                    <tspan x="13.2" y="32.2">COIN</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

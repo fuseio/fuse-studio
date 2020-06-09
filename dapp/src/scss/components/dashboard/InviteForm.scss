@@ -109,7 +109,7 @@
     }
 
     @include block(highlight) {
-      background-color: #4a687b;
+      background-color: $color-light-dark;
       border-radius: 50%;
       height: 14px;
       left: 13px;
@@ -246,7 +246,7 @@
   }
 
   @include block(highlight) {
-    background-color: #4a687b;
+    background-color: $color-light-dark;
     border-radius: 50%;
     height: 14px;
     left: 13px;

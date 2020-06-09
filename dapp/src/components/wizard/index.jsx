@@ -20,6 +20,8 @@ import withTracker from 'containers/withTracker'
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
 import NameAndEmail from 'components/wizard/pages/NameAndEmail'
+import ChooseCurrencyType from 'components/wizard/pages/ChooseCurrencyType'
+import ChooseNetwork from 'components/wizard/pages/ChooseNetwork'
 import DetailsStep from 'components/wizard/pages/DetailsStep'
 import SummaryStep from 'components/wizard/pages/SummaryStep'
 import DeployProgressStep from 'components/wizard/pages/DeployProgress'
@@ -85,6 +87,7 @@ const WizardPage = ({
       window.analytics.track('Wizard init')
     }
   }, [])
+
   const initialTemplateValues = useCallback(getInitialValues(templateId, networkType), [templateId, networkType])
 
   const initialValues = useMemo(() => {
@@ -101,6 +104,8 @@ const WizardPage = ({
       totalSupply: totalSupply || '',
       communityType: communityType || undefined,
       existingToken: existingToken || undefined,
+      description: '',
+      customToken: '',
       isOpen: true,
       subscribe: true,
       email: '',
@@ -162,7 +167,8 @@ const WizardPage = ({
       email,
       subscribe,
       plugins,
-      coverPhoto
+      coverPhoto,
+      description
     } = values
 
     const chosenPlugins = Object.keys(plugins)
@@ -182,7 +188,7 @@ const WizardPage = ({
         [contracts[contractName].key]: contracts[contractName].key === 'bridge'
           ? { args: { foreignTokenAddress: null } }
           : contracts[contractName].key === 'community'
-            ? { args: { isClosed: !isOpen, name: communityName, adminAddress, plugins: chosenPlugins } }
+            ? { args: { isClosed: !isOpen, name: communityName, adminAddress, plugins: chosenPlugins, description } }
             : contracts[contractName].key === 'email'
               ? { args: { email, subscribe } }
               : {}
@@ -240,6 +246,12 @@ const WizardPage = ({
       >
         <Wizard.Page>
           <NameAndEmail />
+        </Wizard.Page>
+        <Wizard.Page>
+          <ChooseNetwork />
+        </Wizard.Page>
+        <Wizard.Page>
+          <ChooseCurrencyType />
         </Wizard.Page>
         <Wizard.Page>
           <DetailsStep networkType={networkType} />
