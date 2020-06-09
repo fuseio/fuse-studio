@@ -16,6 +16,8 @@ import useWeb3Connect from 'hooks/useWeb3Connect'
 import { getWeb3 } from 'services/web3'
 import 'scss/main.scss'
 
+console.log('test')
+
 const Root = ({
   connectToWallet
 }) => {
