@@ -117,7 +117,8 @@ module.exports = {
   mail: {
     sendgrid: {
       templates: {}
-    }
+    },
+    managers: ['example@example.com']
   },
   explorer: {
     fuse: {

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import Select from 'react-select'
 import CommunityTypes from 'constants/communityTypes'
 import { dollarPeggedTokens, otherExistingTokens } from 'constants/existingTokens'
@@ -6,10 +6,10 @@ import { Field, connect, getIn } from 'formik'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
 import classNames from 'classnames'
-// import TextField from '@material-ui/core/TextField'
-// import { useDispatch, useSelector } from 'react-redux'
-// import { isAddress, toChecksumAddress } from 'web3-utils'
-// import { fetchTokenFromEthereum } from 'actions/token'
+import TextField from '@material-ui/core/TextField'
+import { useDispatch, useSelector } from 'react-redux'
+import { isAddress, toChecksumAddress } from 'web3-utils'
+import { fetchTokenFromEthereum } from 'actions/token'
 
 const Option = (props) => {
   const { children, className, cx, isDisabled, innerRef, innerProps, data } = props
@@ -42,74 +42,72 @@ const Option = (props) => {
   )
 }
 
-// const CustomToken = connect((props) => {
-//   const { formik } = props
-//   const [isDone, setDone] = useState(false)
-//   const dispatch = useDispatch()
-//   const tokenAddress = getIn(formik.values, 'customToken')
-//   const token = useSelector(state => state.entities.tokens[isAddress(tokenAddress) ? toChecksumAddress(tokenAddress) : tokenAddress])
+const CustomToken = connect((props) => {
+  const { formik } = props
+  const [isDone, setDone] = useState(false)
+  const dispatch = useDispatch()
+  const tokenAddress = getIn(formik.values, 'customToken')
+  const token = useSelector(state => state.entities.tokens[isAddress(tokenAddress) ? toChecksumAddress(tokenAddress) : tokenAddress])
 
-//   if (tokenAddress && token && isDone) {
-//     console.log({ token })
-//     console.log({
-//       label: token.symbol,
-//       value: toChecksumAddress(tokenAddress),
-//       isCustom: true,
-//       ...token
-//     })
-//     formik.setFieldValue('existingToken', {
-//       label: token.symbol,
-//       value: toChecksumAddress(tokenAddress),
-//       isCustom: true,
-//       ...token
-//     })
-//   }
+  useEffect(() => {
+    if (tokenAddress && token && isDone) {
+      console.log({ token })
+      console.log({
+        label: token.symbol,
+        value: toChecksumAddress(tokenAddress),
+        isCustom: true,
+        ...token
+      })
+      formik.setFieldValue('communitySymbol', token.symbol)
+      formik.setFieldValue('totalSupply', '')
+      formik.setFieldValue('communityType', '')
+      formik.setFieldValue('tokenType', 'basic')
+      formik.setFieldValue('existingToken', '')
+    }
+  }, [tokenAddress && token && isDone])
 
-//   const fetchCustomToken = (e) => {
-//     // const address = toChecksumAddress(e.target.value)
-//     // console.log({ address })
-//     // console.log(isAddress(e.target.value))
-//     dispatch(fetchTokenFromEthereum(e.target.value))
-//     setDone(true)
-//     // if (isAddress(address)) {
-//     // }
-//   }
+  const fetchCustomToken = (e) => {
+    if (isAddress(e.target.value)) {
+      dispatch(fetchTokenFromEthereum(toChecksumAddress(e.target.value)))
+      setDone(true)
+    }
+  }
 
-//   return (
-//     <div className='customToken'>
-//       <div className='attributes__title'>Custom token:</div>
-//       <div className='customToken__field'>
-//         <Field
-//           name='customToken'
-//           render={({ field, form: { handleChange } }) => (
-//             <TextField
-//               {...field}
-//               onChange={(e) => {
-//                 handleChange(e)
-//                 fetchCustomToken(e)
-//               }}
-//               type='text'
-//               placeholder='Name your community'
-//               classes={{
-//                 root: 'customToken__field'
-//               }}
-//               inputProps={{
-//                 maxLength: '36',
-//                 autoComplete: 'off'
-//               }}
-//               InputProps={{
-//                 classes: {
-//                   underline: 'customToken__field--underline',
-//                   error: 'customToken__field--error'
-//                 }
-//               }}
-//             />
-//           )}
-//         />
-//       </div>
-//     </div>
-//   )
-// })
+  return (
+    <div className='customToken'>
+      <div className='attributes__title'>Custom token:</div>
+      <div className='customToken__field'>
+        <Field
+          name='customToken'
+          render={({ field, form: { handleChange } }) => (
+            <TextField
+              {...field}
+              onChange={(e) => {
+                handleChange(e)
+                fetchCustomToken(e)
+              }}
+              type='text'
+              placeholder='Enter token address'
+              classes={{
+                root: 'customToken__field'
+              }}
+              inputProps={{
+                maxLength: '42',
+                autoComplete: 'off'
+              }}
+              InputProps={{
+                classes: {
+                  underline: 'customToken__field--underline',
+                  error: 'customToken__field--error'
+                }
+              }}
+            />
+          )}
+        />
+      </div>
+    </div>
+  )
+})
 
 const CurrencyType = ({ networkType, formik }) => {
   const existingToken = getIn(formik.values, 'existingToken')
@@ -184,6 +182,7 @@ const CurrencyType = ({ networkType, formik }) => {
                       setFieldValue('totalSupply', '')
                       setFieldValue('communityType', '')
                       setFieldValue('communitySymbol', val.symbol)
+                      setFieldValue('customToken', '')
                       if (window && window.analytics) {
                         window.analytics.track(`Existing currency - ${val.label}`)
                       }
@@ -202,10 +201,10 @@ const CurrencyType = ({ networkType, formik }) => {
                 )}
               />
             </div>
-            {/* <p className='or cell shrink'>OR</p>
+            <p className='or cell shrink'>OR</p>
             <div className='cell large-11'>
               <CustomToken />
-            </div> */}
+            </div>
           </Fragment>
         )}
       </div>
