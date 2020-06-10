@@ -49,24 +49,6 @@ const CustomToken = connect((props) => {
   const tokenAddress = getIn(formik.values, 'customToken')
   const token = useSelector(state => state.entities.tokens[isAddress(tokenAddress) ? toChecksumAddress(tokenAddress) : tokenAddress])
 
-  if (tokenAddress && token && isDone) {
-    // debugger
-    // console.log({ token })
-    // console.log({
-    //   label: token.symbol,
-    //   value: toChecksumAddress(tokenAddress),
-    //   isCustom: true,
-    //   ...token
-    // })
-    // debugger
-    // formik.setFieldValue('communitySymbol', token.symbol)
-    // formik.setFieldValue('existingToken', {
-    //   label: token.symbol,
-    //   value: toChecksumAddress(tokenAddress),
-    //   isCustom: true,
-    //   ...token
-    // })
-  }
   useEffect(() => {
     if (tokenAddress && token && isDone) {
       console.log({ token })
@@ -79,7 +61,6 @@ const CustomToken = connect((props) => {
       formik.setFieldValue('communitySymbol', token.symbol)
       formik.setFieldValue('totalSupply', '')
       formik.setFieldValue('communityType', '')
-      formik.setFieldValue('tokenType', 'basic')
       formik.setFieldValue('tokenType', 'basic')
       formik.setFieldValue('existingToken', '')
     }
