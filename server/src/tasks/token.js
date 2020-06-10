@@ -196,10 +196,10 @@ const adminSpendabilityTransfer = withAccount(async (account, { bridgeType, toke
     let tokenAddress = balancesData[i].tokenAddress
     let balance = balancesData[i].balance
     if (total.lt(balance)) {
-      jobs.push(await agenda.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, fromAccount: account, amount: total.toString(), wallet, to, correlationId: `${job.attrs.data.correlationId}-2` }))
+      jobs.push(await agenda.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, amount: total.toString(), wallet, to, correlationId: `${job.attrs.data.correlationId}-2` }))
       total = total.minus(total)
     } else {
-      jobs.push(await agenda.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, fromAccount: account, amount: balance.toString(), wallet, to, correlationId: `${job.attrs.data.correlationId}-2` }))
+      jobs.push(await agenda.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, amount: balance.toString(), wallet, to, correlationId: `${job.attrs.data.correlationId}-2` }))
       total = total.minus(balance.toString())
     }
     i++
