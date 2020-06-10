@@ -171,13 +171,14 @@ const CurrencyType = ({ networkType, formik }) => {
         {isExisting && (
           <Fragment>
             <div className='cell large-11 grid-x align-middle'>
-              <div className='attributes__title'>Officially supported on Fuse:</div>
+              <div className='attributes__title input_title'>Officially supported on Fuse:</div>
               <Field
                 name='existingToken'
                 render={({ field, form: { setFieldValue } }) => (
                   <Select
                     {...field}
                     onChange={val => {
+                      console.log({ value: val })
                       setFieldValue('existingToken', val)
                       setFieldValue('totalSupply', '')
                       setFieldValue('communityType', '')
@@ -186,11 +187,6 @@ const CurrencyType = ({ networkType, formik }) => {
                       if (window && window.analytics) {
                         window.analytics.track(`Existing currency - ${val.label}`)
                       }
-                    }}
-                    styles={{
-                      valueContainer: base => ({
-                        ...base
-                      })
                     }}
                     className={classNames('attributes__options__select', { 'attributes__options__select--selected': existingToken })}
                     classNamePrefix='attributes__options__select__prefix'

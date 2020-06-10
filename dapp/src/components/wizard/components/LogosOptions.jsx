@@ -70,8 +70,11 @@ const LogosOptions = ({
   }
 
   const setDefaultImages = useCallback(() => {
+    console.log({ existingToken })
     if (existingToken && existingToken.label && existingToken.value && TokenIcons[existingToken.symbol]) {
       const { symbol } = existingToken
+      console.log({ symbol })
+      console.log(TokenIcons[symbol])
       imageConverter(TokenIcons[symbol], 'images.defaultOne')
     } else {
       imageConverter(TokenIcons[2], 'images.defaultOne')
@@ -88,7 +91,6 @@ const LogosOptions = ({
 
   const onSelectFile = e => {
     if (e.target.files && e.target.files.length > 0) {
-      console.log(e.target.files)
       const reader = new window.FileReader()
       reader.addEventListener('load', () => {
         openImageCropper(reader.result)

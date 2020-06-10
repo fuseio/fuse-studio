@@ -59,7 +59,7 @@ const CoverPhoto = ({
 
   return (
     <div className='cover_photo cell large-auto'>
-      <div className='cover_photo__title'>Community cover photo</div>
+      <div className='cover_photo__title input_title'>Community cover photo</div>
       <label
         htmlFor='coverPhotoUpload'
         className='cover_photo__label'

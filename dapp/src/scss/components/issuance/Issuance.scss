@@ -143,6 +143,7 @@
 
   @include element(wizard) {
     padding-bottom: 100px;
+    
     @include breakpoint(medium up) {
     }
 
@@ -1678,6 +1679,10 @@
         cursor: pointer;
         color: darken($color-dark, 10%);
       }
+    }
+
+    @include block(input_title) {
+      @extend %issuance_title;
     }
   }
 }
