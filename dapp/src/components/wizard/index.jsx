@@ -164,6 +164,7 @@ const WizardPage = ({
       contracts,
       images,
       existingToken,
+      customToken,
       email,
       subscribe,
       plugins,
@@ -205,7 +206,10 @@ const WizardPage = ({
 
     if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
-      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress, isCustom: existingToken.isCustom } } }
+      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress, isCustom: false } } }
+      deployExistingToken(metadata, newSteps)
+    } else if (customToken) {
+      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress: customToken, isCustom: true } } }
       deployExistingToken(metadata, newSteps)
     } else {
       const tokenData = {
