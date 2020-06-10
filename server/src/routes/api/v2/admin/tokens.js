@@ -350,7 +350,7 @@ router.post('/burnEvents', auth.required, async (req, res) => {
         spendabilityIds: token && token.spendabilityIds,
         amount: job.attrs.data.amount,
         timestamp: job.attrs.lastRunAt,
-        expired: token && token.expiryTimestamp && moment(token.expiryTimestamp).lt(job.attrs.lastRunAt),
+        expired: token && token.expiryTimestamp && moment(token.expiryTimestamp).isBefore(job.attrs.lastRunAt),
         txHash: job.attrs.data.txHash,
         correlationId: job.attrs.data.correlationId
       })
