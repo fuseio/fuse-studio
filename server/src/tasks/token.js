@@ -127,6 +127,39 @@ const adminApprove = withAccount(async (account, { bridgeType, tokenAddress, wal
   return lockAccount({ address: from })
 })
 
+const adminSpendabilityApprove = withAccount(async (account, { bridgeType, tokenAddresses, wallet, spender, amount, burnFromAddress }, job) => {
+  const { createContract } = createNetwork(bridgeType, account)
+  const balancesData = (await Promise.all(tokenAddresses.map(async tokenAddress => {
+    let balance = await fetchBalance({ createContract }, tokenAddress, wallet)
+    return { tokenAddress, balance }
+  }))).filter(obj => !obj.balance.isZero())
+  if (balancesData.length === 0) {
+    throw new Error(`No balances for ${wallet}`)
+  }
+
+  let total = new BigNumber(amount)
+  let i = 0
+  let jobs = []
+  const { agenda } = require('@services/agenda')
+  while (!total.isZero()) {
+    let tokenAddress = balancesData[i].tokenAddress
+    let balance = balancesData[i].balance
+    console.log(balance.toString())
+    if (total.lt(balance)) {
+      jobs.push(await agenda.now('adminApprove', { tokenAddress, bridgeType, from: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.attrs.data.correlationId}-2` }))
+      total = total.minus(total)
+    } else {
+      jobs.push(await agenda.now('adminApprove', { tokenAddress, bridgeType, from: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.attrs.data.correlationId}-2` }))
+      total = total.minus(balance.toString())
+    }
+    i++
+  }
+  job.attrs.data.transferJobs = jobs.map(job => job.attrs._id.toString())
+  job.save()
+}, ({ from }) => {
+  return lockAccount({ address: from })
+})
+
 const adminTransfer = withAccount(async (account, { bridgeType, tokenAddress, amount, wallet, to }, job) => {
   const { createContract, createMethod, send } = createNetwork(bridgeType, account)
   const userWallet = await UserWallet.findOne({ walletAddress: wallet })
@@ -183,6 +216,7 @@ module.exports = {
   burn,
   burnFrom,
   adminApprove,
+  adminSpendabilityApprove,
   adminTransfer,
   adminSpendabilityTransfer
 }

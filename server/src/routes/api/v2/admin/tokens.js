@@ -124,17 +124,33 @@ router.post('/burn', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount, from, correlationId } = req.body
+  const { tokenAddress, networkType, amount, from, correlationId, spendabilityIds, spendabilityOrder } = req.body
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
   try {
     const amountInWei = toWei(amount)
     let job
-    if (!from) {
-      job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, correlationId })
+    if (tokenAddress) {
+      if (!from) {
+        job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, correlationId })
+      } else {
+        job = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
+      }
     } else {
-      job = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
+      const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
+      if (!spendabilityIdsArr.length) {
+        return res.status(400).send({ error: 'Missing spendabilityIds' })
+      }
+      if (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc')) {
+        return res.status(400).send({ error: 'Missing spendabilityOrder' })
+      }
+      const tokens = await mongoose.token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
+      if (!tokens || !tokens.length) {
+        return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
+      }
+      const tokenAddresses = tokens.map(t => t.address)
+      job = await agenda.now('adminSpendabilityApprove', { tokenAddresses, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
     }
     return res.json({ json: job.attrs })
   } catch (err) {
