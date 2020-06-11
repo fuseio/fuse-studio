@@ -91,7 +91,7 @@ const ChooseNetwork = ({ providerInfo, loadModal, networkType, formik, foreignNe
             <div className='text'>
               <div>
                 This will require you to pay network fees in ETH
-                <a className='link' href='https://docs.fuse.io/' target='_blank' rel='noopener noreferrer'> Read more</a>
+                <a className='link' href='https://metamask.zendesk.com/hc/en-us/articles/360015489531-Getting-Started-With-MetaMask-Part-1-' target='_blank' rel='noopener noreferrer'> Read more</a>
               </div>
               After deployment on Ethereum you will receive <span className='bold'>1000 Fuse</span> <img src={fuseToken} />
               &nbsp;that will cover your transactions on Fuse for your community bootstrapping period
@@ -108,7 +108,7 @@ const ChooseNetwork = ({ providerInfo, loadModal, networkType, formik, foreignNe
             <div className='text'>
               <div>
                 This is an Ethereum testnet so you can do your tests for free
-                <a className='link' href='https://docs.fuse.io/' target='_blank' rel='noopener noreferrer'> Read more</a>
+                <a className='link' href='https://docs.fuse.io/the-fuse-studio/getting-started/using-the-studio-for-free-on-ropsten' target='_blank' rel='noopener noreferrer'> Read more</a>
               </div>
               After deployment on Ropsten you will receive <span className='bold'>100 Fuse</span> <img src={fuseToken} />
               &nbsp;that will cover your transactions on Fuse for your testing period
