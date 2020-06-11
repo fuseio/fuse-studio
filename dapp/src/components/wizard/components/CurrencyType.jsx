@@ -34,9 +34,7 @@ const Option = (props) => {
               <div>{data.tooltipText}</div>
             </ReactTooltip>
           </Fragment>
-        ) : (
-          <span>{children}</span>
-        )
+        ) : <span>{children}</span>
       }
     </div>
   )
@@ -47,24 +45,18 @@ const CustomToken = connect((props) => {
   const [isDone, setDone] = useState(false)
   const dispatch = useDispatch()
   const tokenAddress = getIn(formik.values, 'customToken')
-  const token = useSelector(state => state.entities.tokens[isAddress(tokenAddress) ? toChecksumAddress(tokenAddress) : tokenAddress])
+  const network = getIn(formik.values, 'network')
+  const token = useSelector(state => tokenAddress && state.entities.tokens[isAddress(tokenAddress) ? toChecksumAddress(tokenAddress) : tokenAddress])
+  const isToken = useSelector(state => tokenAddress && state.screens.issuance.isTokens[isAddress(tokenAddress) ? toChecksumAddress(tokenAddress) : tokenAddress] && state.screens.issuance.isTokens[isAddress(tokenAddress) ? toChecksumAddress(tokenAddress) : tokenAddress])
 
   useEffect(() => {
-    if (tokenAddress && token && isDone) {
-      console.log({ token })
-      console.log({
-        label: token.symbol,
-        value: toChecksumAddress(tokenAddress),
-        isCustom: true,
-        ...token
-      })
+    if (tokenAddress && token && isDone && isToken) {
       formik.setFieldValue('communitySymbol', token.symbol)
       formik.setFieldValue('totalSupply', '')
       formik.setFieldValue('communityType', '')
-      formik.setFieldValue('tokenType', 'basic')
       formik.setFieldValue('existingToken', '')
     }
-  }, [tokenAddress && token && isDone])
+  }, [tokenAddress, token, isDone, isToken])
 
   const fetchCustomToken = (e) => {
     if (isAddress(e.target.value)) {
@@ -75,7 +67,7 @@ const CustomToken = connect((props) => {
 
   return (
     <div className='customToken'>
-      <div className='attributes__title'>Custom token:</div>
+      {network === 'ropsten' && <div className='attributes__title'>Custom token:</div>}
       <div className='customToken__field'>
         <Field
           name='customToken'
@@ -87,7 +79,7 @@ const CustomToken = connect((props) => {
                 fetchCustomToken(e)
               }}
               type='text'
-              placeholder='Enter token address'
+              placeholder={`Enter ethereum token address`}
               classes={{
                 root: 'customToken__field'
               }}
@@ -104,7 +96,18 @@ const CustomToken = connect((props) => {
             />
           )}
         />
+        {isToken == null && (
+          <div className='customToken__img'>
+            <div className='customToken__loader' />
+          </div>
+        )}
       </div>
+      {isToken === false && (
+        <div style={{ color: '#fa6400', fontSize: '0.57em', fontWeight: '500' }}>
+          <FontAwesome name='info-circle' />&nbsp;
+          This token is not supported! reason: not an ERC20 token
+        </div>
+      )}
     </div>
   )
 })
@@ -112,6 +115,7 @@ const CustomToken = connect((props) => {
 const CurrencyType = ({ networkType, formik }) => {
   const existingToken = getIn(formik.values, 'existingToken')
   const currency = getIn(formik.values, 'currency')
+  const network = getIn(formik.values, 'network')
   const isNew = currency === 'new'
   const isExisting = currency === 'existing'
   const groupedOptions = [
@@ -127,7 +131,12 @@ const CurrencyType = ({ networkType, formik }) => {
 
   return (
     <div className='attributes__currency'>
-      {isNew && <h3 className='attributes__title'>Create new</h3>}
+      {isNew && <h3 className='attributes__title'>
+        Create new token<span style={{ fontSize: 'smaller', fontWeight: '400' }}> | select one option</span>
+      </h3>}
+      {isExisting && network !== 'ropsten' && <h3 className='attributes__title'>
+        Pick one of the two options:
+      </h3>}
       <div className='options grid-x align-middle align-justify'>
         {isNew && (
           CommunityTypes.map((item, index) => {
@@ -170,38 +179,36 @@ const CurrencyType = ({ networkType, formik }) => {
         )}
         {isExisting && (
           <Fragment>
-            <div className='cell large-11 grid-x align-middle'>
-              <div className='attributes__title'>Officially supported on Fuse:</div>
-              <Field
-                name='existingToken'
-                render={({ field, form: { setFieldValue } }) => (
-                  <Select
-                    {...field}
-                    onChange={val => {
-                      setFieldValue('existingToken', val)
-                      setFieldValue('totalSupply', '')
-                      setFieldValue('communityType', '')
-                      setFieldValue('communitySymbol', val.symbol)
-                      setFieldValue('customToken', '')
-                      if (window && window.analytics) {
-                        window.analytics.track(`Existing currency - ${val.label}`)
-                      }
-                    }}
-                    styles={{
-                      valueContainer: base => ({
-                        ...base
-                      })
-                    }}
-                    className={classNames('attributes__options__select', { 'attributes__options__select--selected': existingToken })}
-                    classNamePrefix='attributes__options__select__prefix'
-                    options={groupedOptions}
-                    components={{ Option }}
-                    placeholder={'I want to use an existing currency'}
+            {network !== 'ropsten' && (
+              <Fragment>
+                <div className='cell large-11 grid-x align-middle'>
+                  <Field
+                    name='existingToken'
+                    render={({ field, form: { setFieldValue } }) => (
+                      <Select
+                        {...field}
+                        onChange={val => {
+                          setFieldValue('existingToken', val)
+                          setFieldValue('totalSupply', '')
+                          setFieldValue('communityType', '')
+                          setFieldValue('communitySymbol', val.symbol)
+                          setFieldValue('customToken', '')
+                          if (window && window.analytics) {
+                            window.analytics.track(`Existing currency - ${val.label}`)
+                          }
+                        }}
+                        className={classNames('attributes__options__select', { 'attributes__options__select--selected': existingToken })}
+                        classNamePrefix='attributes__options__select__prefix'
+                        options={groupedOptions}
+                        components={{ Option }}
+                        placeholder={'Choose a currency'}
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
-            <p className='or cell shrink'>OR</p>
+                </div>
+                <p className='or cell shrink'>OR</p>
+              </Fragment>
+            )}
             <div className='cell large-11'>
               <CustomToken />
             </div>

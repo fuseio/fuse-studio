@@ -143,6 +143,8 @@
 
   @include element(wizard) {
     padding-bottom: 100px;
+    font-family: $font-family !important;
+
     @include breakpoint(medium up) {
     }
 
@@ -208,16 +210,8 @@
       }
 
       @include element(title) {
-        font-size: 0.938em;
-        line-height: 1.29;
-        text-transform: capitalize;
-        color: $color-dark;
-        padding-bottom: 1em;
+        @extend %issuance_title;
         font-weight: bold;
-
-        @include breakpoint(small only) {
-          font-size: 1.25em;
-        }
       }
 
       @include element(text) {
@@ -436,16 +430,12 @@
 
       @include block(option) {
         border-radius: 5px;
-        border: solid 2px #e2e2e2;
         background-color: #ffffff;
+        border: solid 2px rgba(226, 226, 226, 0.49);
         cursor: pointer;
 
         &:hover {
-          border: solid 2px #abc3d2;
-
-          .option__text {
-            color: #052235;
-          }
+          border: solid 2px #9eafb9;
         }
 
         @include modifier(fullWidth) {
@@ -460,9 +450,9 @@
           height: 52px;
         }
         @include modifier(selected) {
-          border: solid 2px #abc3d2;
+          border: solid 2px #9eafb9;
           .option__text {
-            color: #052235;
+            color: $color-dark;
           }
         }
         @include element(logo) {
@@ -480,23 +470,11 @@
         }
 
         @include element(text) {
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1.25;
           position: relative;
-          font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 0.94;
-          letter-spacing: normal;
           color: $color-gray;
-          > span {
-            font-size: 12px;
-            font-weight: 500;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.25;
-            letter-spacing: normal;
-            text-align: center;
-            color: #7a7a7a;
-          }
           @include block(error) {
             position: absolute;
             bottom: -15px;
@@ -507,6 +485,10 @@
             line-height: 1.5;
             letter-spacing: normal;
             color: #e75050;
+          }
+
+          @include modifier(big) {
+            font-size: 1.125em;
           }
         }
       }
@@ -567,6 +549,13 @@
             color: #052235;
           }
         }
+
+        @include modifier(error) {
+          border: solid 2px #e85e5e;
+          .option__text {
+            color: #052235;
+          }
+        }
         @include element(logo) {
           > img {
             max-width: 54px;
@@ -585,7 +574,7 @@
           position: relative;
           @include block(title) {
             font-size: 1.125em;
-            padding-bottom: .4em;
+            padding-bottom: 0.4em;
             font-weight: bold;
             font-stretch: normal;
             font-style: normal;
@@ -603,8 +592,8 @@
             letter-spacing: normal;
             color: $color-gray;
 
-            >div:first-child {
-              padding-bottom: .8em;
+            > div:first-child {
+              padding-bottom: 0.8em;
             }
 
             @include block(bold) {
@@ -633,20 +622,68 @@
     }
 
     @include block(customToken) {
+      @include block(not_supported) {
+        font-size: 9px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.56;
+        letter-spacing: normal;
+        color: #fa6400;
+      }
       @include element(title) {
-        font-size: 0.938em;
-        font-weight: 500;
-        line-height: 1.29;
-        text-transform: capitalize;
-        color: $color-dark;
-        margin-bottom: 1em;
-
-        @include breakpoint(small only) {
-          font-size: 1.25em;
-        }
+        @extend %issuance_title;
       }
 
+      @include element(img) {
+        position: absolute;
+        top: 12px;
+        right: 10px;
+        width: 17px;
+        height: 17px;
+      }
+
+      @include element(loader) {
+        position: relative;
+        text-indent: -9999em;
+        border-top: 3.5px solid rgba(225, 225, 225, 0.5);
+        border-right: 3.5px solid rgba(225, 225, 225, 0.5);
+        border-bottom: 3.5px solid rgba(225, 225, 225, 0.5);
+        border-left: 3.5px solid #4a687b;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        animation: spinner 1.1s infinite linear;
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+
+        &::after {
+          border-radius: 50%;
+          width: 100%;
+          height: 100%;
+        }
+
+        @include modifier(stop) {
+          border-top: 3.5px solid rgba(225, 225, 225, 0.5);
+          border-right: 3.5px solid rgba(225, 225, 225, 0.5);
+          border-bottom: 3.5px solid rgba(225, 225, 225, 0.5);
+          border-left: 3.5px solid rgba(225, 225, 225, 0.5);
+          animation: none;
+        }
+      }
       @include element(field) {
+        position: relative;
+
+        @include element(error) {
+          margin-top: 20px;
+          @include xy-grid(vertical);
+          @include flex-align(null, middle);
+          > p {
+            margin-bottom: 5px;
+            color: red;
+          }
+        }
         > div:first-child {
           background-color: white;
         }
@@ -663,7 +700,7 @@
           padding: 0 16px;
           font-size: 0.938em;
           color: $color-dark;
-          height: 40px;
+          height: 46px;
           border-radius: 5px;
           border: solid 2px $color-lighter-gray;
 
@@ -688,6 +725,7 @@
         }
 
         @include modifier(error) {
+          border: solid 2px #fa6400;
           &:after {
             border-bottom-color: none !important;
           }
@@ -722,15 +760,7 @@
       }
 
       @include element(title) {
-        font-weight: 500;
-        font-size: 0.938em;
-        line-height: 1.29;
-        text-transform: capitalize;
-        color: $color-dark;
-
-        @include breakpoint(small only) {
-          margin-bottom: 1em;
-        }
+        @extend %issuance_title;
 
         @include modifier(name) {
           font-weight: normal;
@@ -795,16 +825,7 @@
       }
 
       @include element(title) {
-        font-size: 0.938em;
-        font-weight: 500;
-        line-height: 1.29;
-        text-transform: capitalize;
-        color: $color-dark;
-        margin-bottom: 1em;
-
-        @include breakpoint(small only) {
-          font-size: 1.25em;
-        }
+        @extend %issuance_title;
       }
 
       @include element(currency) {
@@ -844,6 +865,7 @@
         }
 
         @include element(select) {
+          font-family: $font-family !important;
           border-radius: 5px;
           display: inline-block;
           width: 100%;
@@ -1025,6 +1047,7 @@
         }
 
         @include element(select) {
+          font-family: $font-family !important;
           @include element(wrapper) {
             width: 70%;
           }
@@ -1198,14 +1221,7 @@
       }
 
       @include element(title) {
-        font-size: 0.938em;
-        line-height: 1.29;
-        text-transform: capitalize;
-        color: $color-dark;
-
-        @include breakpoint(small only) {
-          font-size: 1.25em;
-        }
+        @extend %issuance_title;
       }
 
       @include element(label) {
@@ -1226,15 +1242,7 @@
       padding-top: 1em;
 
       @include element(title) {
-        font-size: 0.938em;
-        line-height: 1.29;
-        text-transform: capitalize;
-        color: $color-dark;
-        margin-bottom: 1em;
-
-        @include breakpoint(small only) {
-          font-size: 1.25em;
-        }
+        @extend %issuance_title;
       }
       @include element(text) {
         font-size: 0.75em;

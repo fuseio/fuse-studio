@@ -22,13 +22,14 @@ const CurrencyOption = ({ account, logo, name, value }) => {
                 if (value === 'new') {
                   setFieldValue('communitySymbol', '')
                   setFieldValue('existingToken', '')
+                  setFieldValue('customToken', '')
                 }
               }}
             />
             <div className='option__logo grid-x align-center cell small-4'>
               <img src={logo} />
             </div>
-            <div className='option__text cell large-auto'>
+            <div className='option__text option__text--big cell large-auto'>
               {name}
             </div>
           </label>

@@ -21,6 +21,7 @@ const SummaryStep = ({
   const isOpen = getIn(formik.values, 'isOpen')
   const communityType = getIn(formik.values, 'communityType')
   const existingToken = getIn(formik.values, 'existingToken')
+  const customTokenAddress = getIn(formik.values, 'customToken')
   const images = getIn(formik.values, 'images')
   const plugins = getIn(formik.values, 'plugins')
   const coverPhoto = getIn(formik.values, 'coverPhoto')
@@ -56,6 +57,7 @@ const SummaryStep = ({
               <h4 className='summary-step__content__title'>Currency type</h4>
               {communityType && <p>{communityType.label}</p>}
               {existingToken && <p>{`Existing token - ${existingToken.label}`}</p>}
+              {customTokenAddress && <p>{`Existing token - ${communitySymbol}`}</p>}
             </div>
             {
               totalSupply && (

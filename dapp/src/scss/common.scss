@@ -28,7 +28,6 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-
       }
     }
 
@@ -239,7 +238,7 @@
     }
   }
 
-  @include element (desc) {
+  @include element(desc) {
     color: $color-dark;
     padding-top: 20px;
     font-weight: 500;
@@ -1004,6 +1003,7 @@
   @include element(button) {
     color: #0d2d45;
     cursor: pointer;
+    font-size: 1.125em !important;
     font-weight: bold !important;
 
     > a {
@@ -1023,6 +1023,10 @@
     display: flex;
     flex-direction: column;
     animation: fadein 0.35s ease-in;
+
+    > div {
+      font-family: $font-family !important;
+    }
   }
 
   @include element(heading) {
@@ -1088,7 +1092,7 @@
     }
 
     &:before {
-      content: '';
+      content: "";
       display: block;
       width: 8.5px;
       height: 8.5px;
@@ -1116,7 +1120,7 @@
   }
 }
 
-.BrainhubCarousel__thumbnail[type=button] {
+.BrainhubCarousel__thumbnail[type="button"] {
   -webkit-appearance: none;
 }
 
@@ -1149,7 +1153,6 @@
     cursor: pointer;
   }
   &.BrainhubCarouselItem--active {
-
   }
   .debug-number {
     position: absolute;

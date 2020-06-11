@@ -26,7 +26,6 @@ class PluginsForm extends Component {
   onSubmit = (values, formikBag) => {
     const { addPlugin } = this.props
     const { plugin } = values
-    console.log({ plugin })
 
     addPlugin({
       name: plugin,

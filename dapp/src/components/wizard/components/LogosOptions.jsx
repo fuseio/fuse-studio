@@ -35,6 +35,7 @@ const LogosOptions = ({
   const imagesValues = getIn(formik.values, 'images')
   const communityType = getIn(formik.values, 'communityType')
   const communitySymbol = getIn(formik.values, 'communitySymbol')
+  const customTokenAddress = getIn(formik.values, 'customToken')
   const existingToken = getIn(formik.values, 'existingToken')
 
   const { custom } = imagesValues
@@ -88,7 +89,6 @@ const LogosOptions = ({
 
   const onSelectFile = e => {
     if (e.target.files && e.target.files.length > 0) {
-      console.log(e.target.files)
       const reader = new window.FileReader()
       reader.addEventListener('load', () => {
         openImageCropper(reader.result)
@@ -127,7 +127,7 @@ const LogosOptions = ({
               </div>
               <CommunityLogo
                 metadata={{
-                  isDefault: (communityType && communityType.value && communityType.label) || (existingToken && existingToken.isCustom)
+                  isDefault: customTokenAddress || (communityType && communityType.value && communityType.label) || (existingToken && existingToken.isCustom)
                 }}
                 symbol={communitySymbol}
                 imageUrl={(custom && custom.croppedImageUrl) || (field && field.value && field.value.croppedImageUrl)}

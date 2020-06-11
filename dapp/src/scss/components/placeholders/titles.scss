@@ -1,0 +1,12 @@
+%issuance_title {
+  font-size: 0.938em;
+  line-height: 1.29;
+  text-transform: capitalize;
+  color: $color-dark;
+  padding-bottom: 1em;
+  font-weight: 500;
+
+  @include breakpoint(small only) {
+    font-size: 1.25em;
+  }
+}
