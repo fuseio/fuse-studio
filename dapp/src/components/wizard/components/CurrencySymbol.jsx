@@ -7,7 +7,7 @@ const CurrencySymbol = ({ formik }) => {
 
   return (
     <div className='symbol'>
-      <h2 className='symbol__title input_title'>Currency Symbol</h2>
+      <h2 className='symbol__title'>Currency Symbol</h2>
       <div className='symbol__field'>
         <Field
           name='communitySymbol'

@@ -46,7 +46,7 @@ export const otherExistingTokens = (networkType) => networkType ? ([
     icon: EursTokenIcon
   },
   {
-    label: 'Digital Rand',
+    label: 'Digital Rand (South Africa)',
     symbol: 'DZAR',
     value: CONFIG.web3.addresses[networkType].DigitalRand,
     isDisabled: false,

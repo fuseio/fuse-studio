@@ -35,6 +35,7 @@ const LogosOptions = ({
   const imagesValues = getIn(formik.values, 'images')
   const communityType = getIn(formik.values, 'communityType')
   const communitySymbol = getIn(formik.values, 'communitySymbol')
+  const customTokenAddress = getIn(formik.values, 'customToken')
   const existingToken = getIn(formik.values, 'existingToken')
 
   const { custom } = imagesValues
@@ -70,11 +71,8 @@ const LogosOptions = ({
   }
 
   const setDefaultImages = useCallback(() => {
-    console.log({ existingToken })
     if (existingToken && existingToken.label && existingToken.value && TokenIcons[existingToken.symbol]) {
       const { symbol } = existingToken
-      console.log({ symbol })
-      console.log(TokenIcons[symbol])
       imageConverter(TokenIcons[symbol], 'images.defaultOne')
     } else {
       imageConverter(TokenIcons[2], 'images.defaultOne')
@@ -129,7 +127,7 @@ const LogosOptions = ({
               </div>
               <CommunityLogo
                 metadata={{
-                  isDefault: (communityType && communityType.value && communityType.label) || (existingToken && existingToken.isCustom)
+                  isDefault: customTokenAddress || (communityType && communityType.value && communityType.label) || (existingToken && existingToken.isCustom)
                 }}
                 symbol={communitySymbol}
                 imageUrl={(custom && custom.croppedImageUrl) || (field && field.value && field.value.croppedImageUrl)}

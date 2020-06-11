@@ -5,7 +5,7 @@ const CommunityStatus = ({ formik }) => {
   const isOpen = getIn(formik.values, 'isOpen')
   return (
     <div className='close_open_community'>
-      <h3 className='close_open_community__title input_title'>
+      <h3 className='close_open_community__title'>
         Community status
       </h3>
       <Field

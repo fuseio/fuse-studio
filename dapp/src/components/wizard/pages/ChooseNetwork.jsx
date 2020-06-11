@@ -24,7 +24,7 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
     <Field
       name='network'
       render={({ field, form: { setFieldValue } }) => (
-        <label htmlFor={value} className={classNames('option option--fullWidth grid-x align-middle', { 'option--selected': field.value === value })}>
+        <label htmlFor={value} className={classNames('option option--fullWidth grid-x align-middle', { 'option--selected': field.value === value }, { 'option--error': value === network && !hasEth })}>
           <input
             style={{ display: 'none' }}
             id={value}

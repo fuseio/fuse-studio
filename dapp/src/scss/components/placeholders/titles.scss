@@ -4,7 +4,7 @@
   text-transform: capitalize;
   color: $color-dark;
   padding-bottom: 1em;
-  font-weight: bold;
+  font-weight: 500;
 
   @include breakpoint(small only) {
     font-size: 1.25em;

@@ -4,7 +4,8 @@ import {
   FETCH_DEPLOY_PROGRESS,
   DEPLOY_EXISTING_TOKEN,
   DEPLOY_TOKEN,
-  CLEAR_TRANSACTION
+  CLEAR_TRANSACTION,
+  FETCH_TOKEN_FROM_ETHEREUM
 } from 'actions/token'
 import { REQUEST, FAILURE, PENDING } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
@@ -15,6 +16,7 @@ const initialState = {
   receipt: null,
   transactionHash: null,
   transactionStatus: null,
+  isTokens: {},
   steps: {
     tokenIssued: false,
     community: false,
@@ -52,6 +54,12 @@ export default (state = initialState, action) => {
       return { ...state, ...action.response, createTokenSignature: false }
     case CREATE_TOKEN.FAILURE:
       return { ...state, ...action.response, createTokenSignature: false }
+    case FETCH_TOKEN_FROM_ETHEREUM.FAILURE:
+      return { ...state, isTokens: { ...state.isTokens, [action.tokenAddress]: false } }
+    case FETCH_TOKEN_FROM_ETHEREUM.REQUEST:
+      return { ...state, isTokens: { ...state.isTokens, [action.tokenAddress]: null } }
+    case FETCH_TOKEN_FROM_ETHEREUM.SUCCESS:
+      return { ...state, isTokens: { ...state.isTokens, [action.response.address]: true } }
     case FETCH_DEPLOY_PROGRESS.SUCCESS:
       return { ...state, ...action.response, steps: { ...state.steps, ...action.response.steps }, communityAddress: action.communityAddress }
     case LOCATION_CHANGE:
