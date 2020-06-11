@@ -99,16 +99,16 @@ const WizardPage = ({
       totalSupply
     } = initialTemplateValues
     return {
-      communityName: 'sddsaaas',
+      communityName: '',
       communitySymbol: communitySymbol || '',
       totalSupply: totalSupply || '',
       communityType: communityType || undefined,
       existingToken: existingToken || undefined,
-      description: 'sdadasassaa',
+      description: '',
       customToken: '',
       isOpen: true,
       subscribe: true,
-      email: 'lior.agnin@fuse.io',
+      email: '',
       coverPhoto: {},
       images: {
         chosen: 'defaultOne'
