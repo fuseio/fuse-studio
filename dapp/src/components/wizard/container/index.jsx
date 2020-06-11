@@ -113,7 +113,6 @@ class Wizard extends React.Component {
   }
 
   stepValidator = (keys, errors) => {
-    console.log({ errors })
     if (!isEmpty(keys)) {
       return keys.some((key) => get(errors, key))
     }
