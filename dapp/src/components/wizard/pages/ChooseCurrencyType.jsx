@@ -22,6 +22,7 @@ const CurrencyOption = ({ account, logo, name, value }) => {
                 if (value === 'new') {
                   setFieldValue('communitySymbol', '')
                   setFieldValue('existingToken', '')
+                  setFieldValue('customToken', '')
                 }
               }}
             />
