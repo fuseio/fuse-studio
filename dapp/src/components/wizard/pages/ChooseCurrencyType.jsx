@@ -1,8 +1,9 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { Field, connect, getIn } from 'formik'
 import classNames from 'classnames'
 import createNewToken from 'images/create_new_token.svg'
 import existingToken from 'images/existing_token.svg'
+import { nameToSymbol } from 'utils/format'
 
 const CurrencyOption = ({ account, logo, name, value }) => {
   return (
@@ -20,8 +21,10 @@ const CurrencyOption = ({ account, logo, name, value }) => {
               onChange={(e) => {
                 setFieldValue('currency', e.target.value)
                 if (value === 'new') {
-                  setFieldValue('communitySymbol', '')
                   setFieldValue('existingToken', '')
+                  setFieldValue('customToken', '')
+                } else {
+                  setFieldValue('communityType', '')
                   setFieldValue('customToken', '')
                 }
               }}
@@ -43,6 +46,14 @@ const ChooseCurrencyType = ({
   formik
 }) => {
   const network = getIn(formik.values, 'network')
+  const communityName = getIn(formik.values, 'communityName')
+  const currency = getIn(formik.values, 'currency')
+
+  useEffect(() => {
+    if (currency === 'new') {
+      formik.setFieldValue('communitySymbol', nameToSymbol(communityName))
+    }
+  }, [currency])
 
   return (
     <div className='options__wrapper grid-y align-spaced'>

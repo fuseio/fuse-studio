@@ -22,12 +22,13 @@ async function run () {
     Roost: '0xE3393d5167badAAC6D5989612A1354B6Ef55027c',
     LocalDolarMX: '0xe8f18ebE449A8f63435C2f3889AFaEE4625b3Da3',
     LocalPay: '0xEAdC097Efaf4b9994Ef76dB86570a79a24A03Ae5',
-    WEPY: '0x66f0821861D08fb374cE5a9CA47685ac81B83551',
+    WEPY: '0x922C902763AAF6f22d13207a1D380FAB9442E067',
     Supervecina: '0xfF4e4B6283dB9e1d4690160a0CF740736E2b3EE8',
     BIM: '0x3132342DFcC632041109eB5854554ACF04D352Ac',
     Bit2C: '0xf22aFE879538878C4DB6de8D4C1eBC78C9051dbf',
     FarmlyLedger: '0x9ce47ff5998CFFEBB65dFd9E4a3e4afC835A9074',
-    Seedbed: '0x104bac6FD3778944B733f128644e9AeCA8f0dFbc'
+    Seedbed: '0x104bac6FD3778944B733f128644e9AeCA8f0dFbc',
+    DigitalRand: '0x3A9f719A793e3ABcf2ABD6a7Fa8046D2487493c8'
   }
   const getUsers = (communityAddress) => `{communities(where:{address:"${communityAddress}"}) { entitiesList { communityEntities{ address, isUser } } }}`
   const query = (address) => `{wallets(where: {address: "${address}"}) {owner}}`
