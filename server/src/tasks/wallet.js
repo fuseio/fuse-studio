@@ -12,6 +12,7 @@ const Invite = mongoose.model('Invite')
 const Fork = mongoose.model('Fork')
 const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
+const { watchAddress } = require('@services/blocknative')
 const { generateSalt } = require('@utils/web3')
 
 const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
@@ -135,6 +136,15 @@ const createForeignWallet = withAccount(async (account, { userWallet, ens = '' }
   job.save()
 
   await UserWallet.findOneAndUpdate({ walletAddress }, { networks: userWallet.networks })
+
+  try {
+    const response = await watchAddress(walletAddress)
+    if (response.msg !== 'success') {
+      throw new Error(response.msg ? response.msg : response)
+    }
+  } catch (e) {
+    console.error(e)
+  }
 
   return receipt
 })

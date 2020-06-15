@@ -3,6 +3,7 @@ const config = require('config')
 const Agenda = require('agenda')
 const tasks = require('@tasks')
 const lodash = require('lodash')
+const yn = require('yn')
 
 const agenda = new Agenda({ ...config.get('agenda.args'), db: { address: config.get('mongo.uri'), options: config.get('mongo.options') } })
 
@@ -33,7 +34,7 @@ async function start () {
 
   await agenda.start()
 
-  if (config.get('agenda.startPeriodicTasks') == true) {
+  if (yn(config.get('agenda.startPeriodicTasks'))) {
     await agenda.now('processPastBridgeMappingEvents')
     await agenda.now('processPastTokenCreatedEvents')
     await agenda.every('10 minutes', 'processPastTokenCreatedEvents')

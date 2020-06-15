@@ -12,6 +12,7 @@ require('./Contact')
 require('./Invite')
 require('./PhoneVerification')
 require('./Fork')
+require('./WalletTransaction')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
