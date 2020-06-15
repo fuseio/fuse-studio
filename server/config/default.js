@@ -28,6 +28,10 @@ module.exports = {
       url: 'https://api.3box.io/graph'
     }
   },
+  blocknative: {
+    url: 'https://api.blocknative.com',
+    apiKey: ''
+  },
   network: {
     misc: {
       pageSize: 1000,

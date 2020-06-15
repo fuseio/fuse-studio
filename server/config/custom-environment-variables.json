@@ -33,6 +33,9 @@
   "ipfsProxy": {
     "urlBase": "COMMUNITY_IPFS_PROXY_URL_BASE"
   },
+  "blocknative": {
+    "apiKey": "COMMUNITY_BLOCKNATIVE_API_KEY"
+  },
   "network": {
     "misc": {
       "pageSize": "COMMUNITY_WEB3_PAGE_SIZE"
