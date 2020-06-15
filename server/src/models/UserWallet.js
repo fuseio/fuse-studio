@@ -19,8 +19,9 @@ const UserWalletSchema = new Schema({
   networks: [{ type: String }],
   identifier: { type: String },
   appName: { type: String },
-  ip: { type: String }
-}, { timestamps: true })
+  ip: { type: String },
+  balancesOnForeign: { type: Map, of: String, default: {} }
+}, { timestamps: true, default: {} })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
 

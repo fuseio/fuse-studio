@@ -8,6 +8,9 @@ const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
 
+router.use('/notify', require('./notify'))
+router.use('/transactions', require('./transactions'))
+
 /**
  * @api {post} api/v2/wallets/ Create wallet contract for user
  * @apiName CreateWallet
