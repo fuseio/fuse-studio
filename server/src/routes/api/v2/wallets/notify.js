@@ -17,7 +17,6 @@ const manipulateTx = (tx) => {
     return addressessToLowerCase({ ...tx, tokenAddress: AddressZero })
   } else {
     const { contractCall } = tx
-    console.log({ contractCall })
     const { params, contractType } = contractCall
     if (contractType !== 'erc20') {
       throw new Error(`unsupported contract type ${contractType} from tx ${tx.hash}`)
@@ -44,9 +43,8 @@ const updateWallet = async (tx, address) => {
 }
 
 router.post('/', async (req, res) => {
-  console.log(req.body)
+  console.log(`receiving tx ${req.body.hash} from blocknative`)
   const receivedTx = manipulateTx(req.body)
-  console.log({ receivedTx })
   const { hash, watchedAddress } = req.body
   const existingTx = await WalletTransaction.findOne({ hash })
 
@@ -60,7 +58,7 @@ router.post('/', async (req, res) => {
   if (receivedTx.status === 'confirmed') {
     await updateWallet(receivedTx, watchedAddress)
   }
-  return res.send({ ok: 2 })
+  return res.send({ msg: 'success' })
 })
 
 module.exports = router
