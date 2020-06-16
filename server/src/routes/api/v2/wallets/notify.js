@@ -13,8 +13,28 @@ const addressessToLowerCase = (obj) => mapValues(obj, (prop) => typeof prop === 
   : isAddress(prop) ? prop.toLowerCase() : prop)
 
 const manipulateTx = (tx) => {
-  if (tx.asset === 'ETH' && !tx.contractCall) {
+  if (tx.asset === 'ETH' && !tx.netBalanceChanges && !tx.contractCall) {
     return addressessToLowerCase({ ...tx, tokenAddress: AddressZero })
+  } else if (tx.netBalanceChanges && tx.netBalanceChanges.length > 0) {
+    const { address, balanceChanges } = tx.netBalanceChanges[0]
+    const balanceChange = balanceChanges[0]
+    const breakdown = balanceChange.breakdown[0]
+    const delta = new BigNumber(balanceChange.delta)
+    if (delta.isPositive()) {
+      const to = address
+      const from = breakdown.counterparty
+      const value = delta.toString()
+      const tokenAddress = balanceChange.asset.contractAddress
+      const asset = balanceChange.asset.symbol
+      return addressessToLowerCase({ ...tx, to, from, value, tokenAddress, asset })
+    } else {
+      const to = breakdown.counterparty
+      const from = address
+      const value = delta.abs().toString()
+      const tokenAddress = balanceChange.asset.contractAddress
+      const asset = balanceChange.asset.symbol
+      return addressessToLowerCase({ ...tx, to, from, value, tokenAddress, asset })
+    }
   } else {
     const { contractCall } = tx
     const { params, contractType } = contractCall
@@ -26,8 +46,8 @@ const manipulateTx = (tx) => {
   }
 }
 
-const updateWallet = async (tx, address) => {
-  const userWallet = await UserWallet.findOne({ walletAddress: toChecksumAddress(address) })
+const updateWallet = async (tx) => {
+  const userWallet = await UserWallet.findOne({ walletAddress: toChecksumAddress(tx.from) })
 
   let value
   if (!(userWallet.balancesOnForeign.get(tx.tokenAddress))) {
@@ -39,11 +59,15 @@ const updateWallet = async (tx, address) => {
       value = new BigNumber(userWallet.balancesOnForeign.get(tx.tokenAddress)).minus(tx.value)
     }
   }
-  return UserWallet.updateOne({ walletAddress: toChecksumAddress(address) }, { [`balancesOnForeign.${tx.tokenAddress}`]: value })
+  return UserWallet.updateOne({ walletAddress: toChecksumAddress(tx.from) }, { [`balancesOnForeign.${tx.tokenAddress}`]: value })
 }
 
 router.post('/', async (req, res) => {
   console.log(`receiving tx ${req.body.hash} from blocknative`)
+  console.log(req.body)
+  if (req.body.status === 'pending') {
+    console.log('ignoring the pending tx')
+  }
   const receivedTx = manipulateTx(req.body)
   const { hash, watchedAddress } = req.body
   const existingTx = await WalletTransaction.findOne({ hash })
