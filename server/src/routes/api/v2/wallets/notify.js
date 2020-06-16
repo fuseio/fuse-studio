@@ -46,20 +46,24 @@ const manipulateTx = (tx) => {
   }
 }
 
-const updateWallet = async (tx) => {
-  const userWallet = await UserWallet.findOne({ walletAddress: toChecksumAddress(tx.from) })
+const updateWallet = async (tx, watchedAddress) => {
+  const userWallet = await UserWallet.findOne({ walletAddress: toChecksumAddress(watchedAddress) })
+  if (!userWallet) {
+    console.warn(`address ${watchedAddress} does not have a user wallet`)
+    return
+  }
 
   let value
   if (!(userWallet.balancesOnForeign.get(tx.tokenAddress))) {
     value = tx.value
   } else {
-    if (tx.to === 'address') {
+    if (tx.to === watchedAddress) {
       value = new BigNumber(userWallet.balancesOnForeign.get(tx.tokenAddress)).plus(tx.value)
     } else {
       value = new BigNumber(userWallet.balancesOnForeign.get(tx.tokenAddress)).minus(tx.value)
     }
   }
-  return UserWallet.updateOne({ walletAddress: toChecksumAddress(tx.from) }, { [`balancesOnForeign.${tx.tokenAddress}`]: value })
+  return UserWallet.updateOne({ walletAddress: toChecksumAddress(watchedAddress) }, { [`balancesOnForeign.${tx.tokenAddress}`]: value })
 }
 
 router.post('/', async (req, res) => {
@@ -69,7 +73,7 @@ router.post('/', async (req, res) => {
     console.log('ignoring the pending tx')
   }
   const receivedTx = manipulateTx(req.body)
-  const { hash, watchedAddress } = req.body
+  const { hash, watchedAddress } = receivedTx
   const existingTx = await WalletTransaction.findOne({ hash })
 
   if (existingTx) {
