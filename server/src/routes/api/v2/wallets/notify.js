@@ -1,41 +1,67 @@
 
 const router = require('express').Router()
+const config = require('config')
 const mongoose = require('mongoose')
 const WalletTransaction = mongoose.model('WalletTransaction')
 const UserWallet = mongoose.model('UserWallet')
 const { toChecksumAddress, isAddress } = require('web3-utils')
 const { AddressZero } = require('ethers/constants')
 const BigNumber = require('bignumber.js')
-const { mapValues } = require('lodash')
+const { mapValues, map } = require('lodash')
 
-const addressessToLowerCase = (obj) => mapValues(obj, (prop) => typeof prop === 'object'
+const totlePrimaryAddress = config.get('network.foreign.addresses.TotlePrimary').toLowerCase()
+
+const addressessToLowerCase = (obj) => (Array.isArray(obj) ? map : mapValues)(obj, (prop) => typeof prop === 'object'
   ? addressessToLowerCase(prop)
   : isAddress(prop) ? prop.toLowerCase() : prop)
 
-const createTransferTx = (tx) => {
+const isTotleSwap = (tx) =>
+  !!tx.netBalanceChanges.find(netBalance => netBalance.address === totlePrimaryAddress)
+
+const createTxFromNetBalanceChange = (tx, netBalanceChange, props) => {
+  const { address, balanceChanges } = netBalanceChange
+  const balanceChange = balanceChanges[0]
+  const breakdown = balanceChange.breakdown[0]
+  const delta = new BigNumber(balanceChange.delta)
+  if (delta.isPositive()) {
+    const to = address
+    const from = breakdown.counterparty
+    const value = delta.toString()
+    const tokenAddress = balanceChange.asset.contractAddress || AddressZero
+    const asset = balanceChange.asset.symbol
+    return { ...tx, to, from, value, tokenAddress, asset, ...props }
+  } else {
+    const to = breakdown.counterparty
+    const from = address
+    const value = delta.abs().toString()
+    const tokenAddress = balanceChange.asset.contractAddress || AddressZero
+    const asset = balanceChange.asset.symbol
+    return { ...tx, to, from, value, tokenAddress, asset, ...props }
+  }
+}
+const createTransactions = (tx) => {
+  const { watchedAddress } = tx
+  console.log(tx.netBalanceChanges.length)
   if (tx.asset === 'ETH' && !tx.netBalanceChanges && !tx.contractCall) {
     console.log(`processing the ${tx.hash} as ETH transfer`)
-    return addressessToLowerCase({ ...tx, tokenAddress: AddressZero })
+    return [{ ...tx, tokenAddress: AddressZero }]
   } else if (tx.netBalanceChanges && tx.netBalanceChanges.length > 0) {
-    console.log(`processing the ${tx.hash} as complex token transfer`)
-    const { address, balanceChanges } = tx.netBalanceChanges[0]
-    const balanceChange = balanceChanges[0]
-    const breakdown = balanceChange.breakdown[0]
-    const delta = new BigNumber(balanceChange.delta)
-    if (delta.isPositive()) {
-      const to = address
-      const from = breakdown.counterparty
-      const value = delta.toString()
-      const tokenAddress = balanceChange.asset.contractAddress
-      const asset = balanceChange.asset.symbol
-      return addressessToLowerCase({ ...tx, to, from, value, tokenAddress, asset })
+    const { netBalanceChanges } = tx
+    console.log({ netBalanceChanges })
+    if (isTotleSwap(tx)) {
+      console.log(`processing the ${tx.hash} as totle swap by looking into netBalanceChanges`)
+      console.log({ watchedAddress })
+      const sentNetBalanceChange = tx.netBalanceChanges.find(netBalance => netBalance.address === totlePrimaryAddress)
+      const receivedNetBalanceChange = netBalanceChanges.find(netBalance => netBalance.address === watchedAddress)
+      console.log({ receivedNetBalanceChange })
+      const sentTx = createTxFromNetBalanceChange(tx, sentNetBalanceChange, { isSwap: true, externalId: 1 })
+      sentTx.from = watchedAddress
+      console.log({ sentTx })
+      const receivedTx = createTxFromNetBalanceChange(tx, receivedNetBalanceChange, { isSwap: true, externalId: 2 })
+      return [receivedTx, sentTx]
     } else {
-      const to = breakdown.counterparty
-      const from = address
-      const value = delta.abs().toString()
-      const tokenAddress = balanceChange.asset.contractAddress
-      const asset = balanceChange.asset.symbol
-      return addressessToLowerCase({ ...tx, to, from, value, tokenAddress, asset })
+      console.log(`processing the ${tx.hash} as erc20 transfer by looking into netBalanceChanges`)
+      return [createTxFromNetBalanceChange(tx, netBalanceChanges[0])]
     }
   } else {
     console.log(`processing the ${tx.hash} as ERC20 token transfer`)
@@ -45,7 +71,7 @@ const createTransferTx = (tx) => {
       throw new Error(`unsupported contract type ${contractType} from tx ${tx.hash}`)
     }
     const { _to, _value } = params
-    return addressessToLowerCase({ ...tx, to: _to, value: _value, tokenAddress: tx.to })
+    return [{ ...tx, to: _to, value: _value, tokenAddress: tx.to }]
   }
 }
 
@@ -75,20 +101,23 @@ router.post('/', async (req, res) => {
   if (req.body.status === 'pending') {
     console.log('ignoring the pending tx')
   }
-  const receivedTx = createTransferTx(req.body)
-  const { hash, watchedAddress } = receivedTx
-  const existingTx = await WalletTransaction.findOne({ hash })
+  const tsx = createTransactions(addressessToLowerCase(req.body))
+  for (const receivedTx of tsx) {
+    const { hash, externalId, watchedAddress } = receivedTx
+    const existingTx = await WalletTransaction.findOne({ hash, externalId })
 
-  if (existingTx) {
-    const { status, timePending, timeStamp } = req.body
-    await WalletTransaction.findOneAndUpdate({ hash }, { status, timePending, timeStamp })
-  } else {
-    await new WalletTransaction(receivedTx).save()
+    if (existingTx) {
+      const { status, timePending, timeStamp } = req.body
+      await WalletTransaction.findOneAndUpdate({ hash, externalId }, { status, timePending, timeStamp })
+    } else {
+      await new WalletTransaction(receivedTx).save()
+    }
+
+    if (receivedTx.status === 'confirmed') {
+      await updateWallet(receivedTx, watchedAddress)
+    }
   }
 
-  if (receivedTx.status === 'confirmed') {
-    await updateWallet(receivedTx, watchedAddress)
-  }
   return res.send({ msg: 'success' })
 })
 
