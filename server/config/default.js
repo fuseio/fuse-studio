@@ -202,6 +202,9 @@ module.exports = {
   alerts: {
     lockedAccounts: {
       threshold: 10 // in minutes
+    },
+    lowBalanceAccounts: {
+      threshold: '0.25' // in ETH
     }
   },
   daipCommunityAddress: '0xc036118695Eff203b00B74B5a3ef8c3fA808E09B'

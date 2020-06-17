@@ -164,6 +164,9 @@
   "alerts": {
     "lockedAccounts": {
       "threshold": "COMMUNITY_ALERTS_LOCKED_ACCOUNTS_THRESHOLD"
+    },
+    "lowBalanceAccounts": {
+      "threshold": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_THRESHOLD"
     }
   }
 }
