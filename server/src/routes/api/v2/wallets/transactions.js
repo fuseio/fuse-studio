@@ -7,8 +7,8 @@ const auth = require('@routes/auth')
 const clean = (obj) => pickBy(obj, identity)
 
 router.get('/', auth.required, async (req, res) => {
-  const { tokenAddress } = req.query
-  const { docs, hasNextPage } = await WalletTransaction.paginate(clean({ tokenAddress }))
+  const { tokenAddress, hash } = req.query
+  const { docs, hasNextPage } = await WalletTransaction.paginate(clean({ tokenAddress, hash }))
 
   res.send({ data: docs, hasNextPage })
 })
