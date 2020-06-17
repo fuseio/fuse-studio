@@ -8,6 +8,7 @@ const WalletTransactionSchema = new Schema({
   timeStamp: { type: Date, required: [true, "can't be blank"] },
   timePending: { type: String },
   hash: { type: String, required: [true, "can't be blank"] },
+  externalId: { type: String, required: [true, "can't be blank"] },
   from: { type: String, required: [true, "can't be blank"] },
   to: { type: String, required: [true, "can't be blank"] },
   value: { type: String, required: [true, "can't be blank"] },
@@ -15,10 +16,11 @@ const WalletTransactionSchema = new Schema({
   netBalanceChanges: { type: Object },
   tokenAddress: { type: String },
   asset: { type: String },
-  watchedAddress: { type: String, required: [true, "can't be blank"] }
+  watchedAddress: { type: String, required: [true, "can't be blank"] },
+  isSwap: { type: Boolean, default: false }
 }, { timestamps: true })
 
-WalletTransactionSchema.index({ hash: 1, status: 1 }, { unique: true })
+WalletTransactionSchema.index({ hash: 1, externalId: 1 }, { unique: true })
 
 WalletTransactionSchema.plugin(mongoosePaginate)
 
