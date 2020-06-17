@@ -41,6 +41,7 @@ async function start () {
     await agenda.every('1 minute', 'proccessPendingTransactions')
     await agenda.every('1 minute', 'startTransfers')
     await agenda.every('1 hour', 'lockedAccounts')
+    await agenda.every('1 hour', 'lowBalanceAccounts')
 
     await agenda.now('proccessPendingTransactions')
   }
