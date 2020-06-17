@@ -12,10 +12,12 @@ const addressessToLowerCase = (obj) => mapValues(obj, (prop) => typeof prop === 
   ? addressessToLowerCase(prop)
   : isAddress(prop) ? prop.toLowerCase() : prop)
 
-const manipulateTx = (tx) => {
+const createTransferTx = (tx) => {
   if (tx.asset === 'ETH' && !tx.netBalanceChanges && !tx.contractCall) {
+    console.log(`processing the ${tx.hash} as ETH transfer`)
     return addressessToLowerCase({ ...tx, tokenAddress: AddressZero })
   } else if (tx.netBalanceChanges && tx.netBalanceChanges.length > 0) {
+    console.log(`processing the ${tx.hash} as complex token transfer`)
     const { address, balanceChanges } = tx.netBalanceChanges[0]
     const balanceChange = balanceChanges[0]
     const breakdown = balanceChange.breakdown[0]
@@ -36,6 +38,7 @@ const manipulateTx = (tx) => {
       return addressessToLowerCase({ ...tx, to, from, value, tokenAddress, asset })
     }
   } else {
+    console.log(`processing the ${tx.hash} as ERC20 token transfer`)
     const { contractCall } = tx
     const { params, contractType } = contractCall
     if (contractType !== 'erc20') {
@@ -67,12 +70,12 @@ const updateWallet = async (tx, watchedAddress) => {
 }
 
 router.post('/', async (req, res) => {
-  console.log(`receiving tx ${req.body.hash} from blocknative`)
+  console.log(`receiving tx ${req.body.hash} for address ${req.body.watchedAddress} with status ${req.body.status} from blocknative`)
   console.log(req.body)
   if (req.body.status === 'pending') {
     console.log('ignoring the pending tx')
   }
-  const receivedTx = manipulateTx(req.body)
+  const receivedTx = createTransferTx(req.body)
   const { hash, watchedAddress } = receivedTx
   const existingTx = await WalletTransaction.findOne({ hash })
 

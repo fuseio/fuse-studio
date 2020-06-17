@@ -12,6 +12,7 @@ const WalletTransactionSchema = new Schema({
   to: { type: String, required: [true, "can't be blank"] },
   value: { type: String, required: [true, "can't be blank"] },
   contractCall: { type: Object },
+  netBalanceChanges: { type: Object },
   tokenAddress: { type: String },
   asset: { type: String },
   watchedAddress: { type: String, required: [true, "can't be blank"] }
