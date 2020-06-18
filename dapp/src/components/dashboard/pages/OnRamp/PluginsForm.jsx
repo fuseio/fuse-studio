@@ -91,7 +91,7 @@ class PluginsForm extends Component {
                   <div className='circle' />
                   <div className='entry-label'>
                     <img src={pluginsIcons['transak']} style={{ width: '15px', height: '15px', marginRight: '10px' }} />
-                    Transak
+                    Ramp instant
                   </div>
                 </label>
               </Fragment>
