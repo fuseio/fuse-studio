@@ -7,7 +7,8 @@ import pluginsIcons from 'constants/pluginsIcons'
 const getPluginName = (myPlugins) => {
   const isMoonpay = get(myPlugins, 'moonpay.isActive', false)
   const isTransak = get(myPlugins, 'transak.isActive', false)
-  return isTransak ? 'transak' : isMoonpay ? 'moonpay' : null
+  const isRampInstant = get(myPlugins, 'rampInstant.isActive', false)
+  return isTransak ? 'transak' : isMoonpay ? 'moonpay' : isRampInstant ? 'rampInstant' : null
 }
 
 class PluginsForm extends Component {
@@ -37,6 +38,7 @@ class PluginsForm extends Component {
     const { plugin } = values
     const isMoonpay = plugin === 'moonpay'
     const isTransak = plugin === 'transak'
+    const isRampInstant = plugin === 'rampInstant'
 
     return (
       <form onSubmit={handleSubmit} className='containerOuter'>
@@ -68,6 +70,24 @@ class PluginsForm extends Component {
                   setTimeout(submitForm, 3)
                 }} />
                 <label className='entry' htmlFor='transak'>
+                  <div className='circle' />
+                  <div className='entry-label'>
+                    <img src={pluginsIcons['transak']} style={{ width: '15px', height: '15px', marginRight: '10px' }} />
+                    Transak
+                  </div>
+                </label>
+              </Fragment>
+            )}
+          />
+          <Field
+            name='plugin'
+            render={({ field, form: { setFieldValue } }) => (
+              <Fragment>
+                <input {...field} type='radio' checked={isRampInstant} value='rampInstant' className='hidden' id='rampInstant' onChange={(e) => {
+                  setFieldValue('plugin', e.target.value)
+                  setTimeout(submitForm, 3)
+                }} />
+                <label className='entry' htmlFor='rampInstant'>
                   <div className='circle' />
                   <div className='entry-label'>
                     <img src={pluginsIcons['transak']} style={{ width: '15px', height: '15px', marginRight: '10px' }} />
