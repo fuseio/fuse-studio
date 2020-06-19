@@ -1,5 +1,6 @@
 const config = require('config')
 const request = require('request-promise-native')
+const { toShortName } = require('@utils/network')
 
 const watchAddress = (address) => {
   const url = config.get('blocknative.url')
@@ -8,7 +9,7 @@ const watchAddress = (address) => {
     body: {
       address,
       blockchain: 'ethereum',
-      networks: [config.get(`network.foreign.name`)],
+      networks: [toShortName(config.get(`network.foreign.name`))],
       apiKey: config.get('blocknative.apiKey')
     }
   })
