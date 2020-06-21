@@ -8,7 +8,7 @@ const WalletTransactionSchema = new Schema({
   timeStamp: { type: Date, required: [true, "can't be blank"] },
   timePending: { type: String },
   hash: { type: String, required: [true, "can't be blank"] },
-  externalId: { type: String, required: [true, "can't be blank"] },
+  externalId: { type: String },
   from: { type: String, required: [true, "can't be blank"] },
   to: { type: String, required: [true, "can't be blank"] },
   value: { type: String, required: [true, "can't be blank"] },
