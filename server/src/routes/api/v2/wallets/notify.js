@@ -41,7 +41,6 @@ const createTxFromNetBalanceChange = (tx, netBalanceChange, props) => {
 }
 const createTransactions = (tx) => {
   const { watchedAddress } = tx
-  console.log(tx.netBalanceChanges.length)
   if (tx.asset === 'ETH' && !tx.netBalanceChanges && !tx.contractCall) {
     console.log(`processing the ${tx.hash} as ETH transfer`)
     return [{ ...tx, tokenAddress: AddressZero }]

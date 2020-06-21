@@ -70,27 +70,17 @@ async function init () {
     next(err)
   })
 
-  /// error handlers
-  if (!isProduction) {
-    app.use(function (err, req, res, next) {
-      console.log(err.stack)
+  /// error handler
+  app.use(function (err, req, res, next) {
+    console.error(err.stack)
 
-      res.status(err.status || 500)
+    res.status(err.status || 500)
 
-      res.json({ 'errors': {
-        message: err.message,
-        error: err
-      } })
-    })
-  } else {
-    app.use(function (err, req, res, next) {
-      res.status(err.status || 500)
-      res.json({ 'errors': {
-        message: err.message,
-        error: {}
-      } })
-    })
-  }
+    res.json({ 'errors': {
+      message: err.message,
+      error: err
+    } })
+  })
 
   // finally, let's start our server...
   var server = app.listen(config.get('api.port') || 8080, function () {
