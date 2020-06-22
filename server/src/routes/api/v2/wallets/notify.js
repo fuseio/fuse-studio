@@ -100,23 +100,25 @@ const updateWallet = async (tx, watchedAddress) => {
 router.post('/', async (req, res) => {
   console.log(`receiving tx ${req.body.hash} for address ${req.body.watchedAddress} with status ${req.body.status} from blocknative`)
   console.log(req.body)
-  if (req.body.status === 'pending') {
-    console.log('ignoring the pending tx')
+  if (req.body.status === 'speedup') {
+    console.log(`ignoring the tx ${req.body.hash} because of the status ${req.body.status}`)
+    return
   }
-  const tsx = createTransactions(addressessToLowerCase(req.body))
-  for (const receivedTx of tsx) {
+  const txs = createTransactions(addressessToLowerCase(req.body))
+  for (const receivedTx of txs) {
     const { hash, externalId, watchedAddress } = receivedTx
     const existingTx = await WalletTransaction.findOne({ hash, externalId })
 
     if (existingTx) {
-      const { status, timePending, timeStamp } = req.body
-      await WalletTransaction.findOneAndUpdate({ hash, externalId }, { status, timePending, timeStamp })
+      await WalletTransaction.findOneAndUpdate({ hash, externalId }, receivedTx)
     } else {
       await new WalletTransaction(receivedTx).save()
     }
 
     if (receivedTx.status === 'confirmed') {
       await updateWallet(receivedTx, watchedAddress)
+    } else if (receivedTx.status === 'pending') {
+      await updateWallet({ ...receivedTx, value: '0' }, watchedAddress)
     }
   }
 
