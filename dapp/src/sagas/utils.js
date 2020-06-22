@@ -4,6 +4,7 @@ import { getForeignNetwork } from 'selectors/network'
 import { getAccount } from 'selectors/accounts'
 import { getApiRoot } from 'utils/network'
 import keyBy from 'lodash/keyBy'
+import * as Sentry from '@sentry/browser'
 
 export const createEntityPut = (entity) => (action) => put({ ...action, entity })
 
@@ -17,6 +18,8 @@ function * tryClause (args, error, action, numberOfTries = CONFIG.api.retryCount
   if (args.numberOfTries < numberOfTries) {
     yield delay(CONFIG.api.retryTimeout)
     yield put(args)
+  } else {
+    Sentry.captureException(error)
   }
 }
 
