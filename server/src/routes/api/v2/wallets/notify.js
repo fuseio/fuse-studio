@@ -102,6 +102,7 @@ router.post('/', async (req, res) => {
   console.log(req.body)
   if (req.body.status === 'speedup') {
     console.log(`ignoring the tx ${req.body.hash} because of the status ${req.body.status}`)
+    return
   }
   const txs = createTransactions(addressessToLowerCase(req.body))
   for (const receivedTx of txs) {
@@ -116,6 +117,8 @@ router.post('/', async (req, res) => {
 
     if (receivedTx.status === 'confirmed') {
       await updateWallet(receivedTx, watchedAddress)
+    } else if (receivedTx.status === 'pending') {
+      await updateWallet({ ...receivedTx, value: '0' }, watchedAddress)
     }
   }
 
