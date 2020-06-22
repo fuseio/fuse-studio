@@ -62,7 +62,7 @@ const createTransactions = (tx) => {
       console.log(`processing the ${tx.hash} as erc20 transfer by looking into netBalanceChanges`)
       return [createTxFromNetBalanceChange(tx, netBalanceChanges[0])]
     }
-  } else {
+  } else if (tx.contractCall) {
     console.log(`processing the ${tx.hash} as ERC20 token transfer`)
     const { contractCall } = tx
     const { params, contractType } = contractCall
@@ -71,6 +71,9 @@ const createTransactions = (tx) => {
     }
     const { _to, _value } = params
     return [{ ...tx, to: _to, value: _value, tokenAddress: tx.to }]
+  } else {
+    console.log(`Cannot process the ${tx.hash} transaction`)
+    return []
   }
 }
 
