@@ -61,7 +61,7 @@ class Wizard extends React.Component {
 
   next = (values) => {
     const { saveWizardProgress } = this.props
-    saveWizardProgress(omit(values, ['images', 'coverPhoto']))
+    saveWizardProgress({ ...omit(values, ['images', 'coverPhoto']), page: this.state.page })
     if (validations[this.state.page]) {
       const currentStepFields = validations[this.state.page]
       const trackProps = currentStepFields.reduce((acc, key) => {
@@ -103,7 +103,7 @@ class Wizard extends React.Component {
       if (window && window.analytics) {
         window.analytics.track('Issue pressed')
       }
-      saveWizardProgress({ ...omit(values, ['images', 'coverPhoto']), isSubmit: true })
+      saveWizardProgress({ ...omit(values, ['images', 'coverPhoto']), isSubmit: true, page })
       return submitHandler(values, bag)
     } else {
       bag.setTouched({})
