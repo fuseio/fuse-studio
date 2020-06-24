@@ -272,7 +272,7 @@ router.post('/expired', auth.required, async (req, res) => {
     }
     const result = await Promise.map(wallets, wallet => {
       return new Promise(resolve => {
-        getAccountTokenList(wallet, [tokenAddress])
+        getAccountTokenList(wallet, [tokenAddress.toLowerCase()])
           .then(result => {
             resolve(result)
           })
@@ -288,10 +288,12 @@ router.post('/expired', auth.required, async (req, res) => {
     if (!tokens || !tokens.length) {
       throw new Error(`Could not find tokens for spendabilityId: ${spendabilityId}`)
     }
-    const expiredTokens = tokens.filter(t => t.expiryTimestamp < now).map(t => t.address)
+    const expiredTokens = tokens.filter(t => t.expiryTimestamp < now).map(t => t.address.toLowerCase())
     if (!expiredTokens || !expiredTokens.length) {
       throw new Error(`Could not find expired tokens for spendabilityId: ${spendabilityId}`)
     }
+    console.log(`the expired tokens are: ${expiredTokens}`)
+
     const result = await Promise.map(wallets, wallet => {
       return new Promise(resolve => {
         getAccountTokenList(wallet, expiredTokens)
