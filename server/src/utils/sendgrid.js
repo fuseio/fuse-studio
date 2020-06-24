@@ -68,22 +68,27 @@ const sendInfoMail = async (user, { networkType, communityName, communityAddress
   }
 }
 
-const notifyManagers = async ({ communityName, networkType }) => {
+const notifyManagers = async ({ formData, networkType }) => {
+  const { communityName, description, accountAddress, email } = formData
+  console.log(`notifying managers about new user with ${email} email`)
   const managers = (config.get('mail.managers') || []).map((email) => ({ email }))
-
   const templateData = {
     communityName,
+    description,
+    accountAddress,
+    email,
     networkType: capitalize(networkType)
   }
 
   const request = createMailRequest({
     to: managers,
     from: config.get('mail.supportAddress'),
-    templateId: config.get('mail.sendgrid.templates.communityLaunched'),
+    templateId: config.get('mail.sendgrid.templates.notifyManagers'),
     templateData
   })
 
   const [response] = await client.request(request)
+
   if (response.statusCode >= 400) {
     console.error(`Cannot send welcome email to ${managers}`)
   }

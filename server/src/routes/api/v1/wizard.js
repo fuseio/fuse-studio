@@ -6,9 +6,9 @@ const config = require('config')
 
 router.post('/', async (req, res) => {
   const { accountAddress, formData } = req.body
-  if (formData.isSubmit) {
+  if (formData.page === 0) {
     try {
-      sendgridUtils.notifyManagers({ communityName: formData.communityName, networkType: config.get('network.foreign.name') })
+      sendgridUtils.notifyManagers({ formData, networkType: config.get('network.foreign.name') })
     } catch (e) {
       console.error(e)
     }
