@@ -19,7 +19,7 @@ const Congratulations = ({ networkType, goToDashboard }) => {
           Congratulations!
         </div>
         <p className='congratulation__fuse-text'>
-          You have been awarded with {networkType === 'ropsten' ? '10' : '100'} Fuse tokens for launching on Ethereum {capitalize(convertNetworkName(networkType))} network
+          You have been awarded with {networkType === 'ropsten' ? '100' : '1000'} Fuse tokens for launching on Ethereum {capitalize(convertNetworkName(networkType))} network
           &nbsp;<small>(<a target='_blank' rel='noopener noreferrer' href='https://docs.fuse.io/the-fuse-chain/fuse-token'>What's that?</a>)</small>
         </p>
         <div className='congratulation__boxImg'>
