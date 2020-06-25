@@ -1,14 +1,12 @@
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
-import { connect, getIn, Field } from 'formik'
-import { nameToSymbol } from 'utils/format'
+import { connect, Field } from 'formik'
 import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
 
 const NameAndCurrency = ({
   formik
 }) => {
-  const existingToken = getIn(formik.values, 'existingToken')
   return (
     <div className='name__wrapper'>
       <div className='name'>
@@ -18,12 +16,6 @@ const NameAndCurrency = ({
           render={({ field, form: { setFieldValue, handleChange } }) => (
             <TextField
               {...field}
-              onChange={event => {
-                handleChange(event)
-                if (!existingToken) {
-                  setFieldValue('communitySymbol', nameToSymbol(event.target.value))
-                }
-              }}
               type='search'
               placeholder='Name your community'
               classes={{
@@ -53,7 +45,7 @@ const NameAndCurrency = ({
               multiline
               placeholder='Add description'
               rows={4}
-              variant='filled'
+              variant='standard'
               classes={{
                 root: 'name__textarea'
               }}

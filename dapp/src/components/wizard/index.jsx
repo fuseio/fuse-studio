@@ -14,7 +14,7 @@ import { toChecksumAddress } from 'web3-utils'
 import CommunityTypes from 'constants/communityTypes'
 import { existingTokens } from 'constants/existingTokens'
 import { loadState } from 'utils/storage'
-import { getHomeNetworkType, getForeignNetwork } from 'selectors/network'
+import { getForeignNetwork } from 'selectors/network'
 
 import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
@@ -78,7 +78,6 @@ const WizardPage = ({
   clearTransaction,
   loadModal,
   communityAddress,
-  homeNetwork,
   foreignNetwork,
   push,
   templateId
@@ -304,7 +303,6 @@ const mapStateToProps = (state, { match }) => ({
   templateId: match.params.templateId,
   ...state.screens.issuance,
   foreignNetwork: getForeignNetwork(state),
-  homeNetwork: getHomeNetworkType(state),
   adminAddress: getAccountAddress(state)
 })
 

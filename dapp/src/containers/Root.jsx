@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Switch, Route } from 'react-router'
 
@@ -27,11 +27,12 @@ const Root = ({
     connectToWallet()
   }
 
+  const web3connect = useWeb3Connect(onConnectCallback)
+
   const logout = () => {
     web3Auth.signOut()
+    web3connect.core.clearCachedProvider()
   }
-
-  const web3connect = useWeb3Connect(onConnectCallback)
 
   useEffect(() => {
     if (web3connect.core.cachedProvider) {

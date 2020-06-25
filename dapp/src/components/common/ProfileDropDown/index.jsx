@@ -139,9 +139,10 @@ const ProfileDropDown = ({
   }
 
   const logout = () => {
-    saveState('state.defaultWallet', '')
+    if (window && window.analytics) {
+      window.analytics.reset()
+    }
     handleLogOut()
-    window.analytics.reset()
     window.location.reload()
   }
 

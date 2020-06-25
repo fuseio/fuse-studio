@@ -10,9 +10,9 @@ const useWeb3ProvideAuth = () => {
     let web3AuthObject
     if (provider) {
       web3AuthObject = { provider }
+      setWeb3Auth(web3AuthObject)
       return web3AuthObject
     }
-    setWeb3Auth(web3AuthObject)
   }
 
   const signOut = () => {

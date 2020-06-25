@@ -49,6 +49,9 @@ function * balanceOfToken ({ tokenAddress, accountAddress, options }) {
 }
 
 function * balanceOfNative ({ accountAddress, options }) {
+  if (!accountAddress) {
+    throw new Error(`No accountAddress given`)
+  }
   const web3 = yield getWeb3(options)
   const balanceOfNative = yield call(web3.eth.getBalance, accountAddress)
 
