@@ -38,6 +38,11 @@ export default (state = initialState, action) => {
         steps: { ...state.steps, tokenIssued: true },
         communityAddress: action.communityAddress
       }
+    case DEPLOY_TOKEN.REQUEST:
+      return {
+        ...state,
+        transactionStatus: PENDING
+      }
     case DEPLOY_EXISTING_TOKEN.REQUEST:
       return { ...state, transactionStatus: REQUEST, tokenIssued: true }
     case DEPLOY_EXISTING_TOKEN.SUCCESS:

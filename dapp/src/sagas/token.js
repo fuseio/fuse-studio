@@ -140,6 +140,9 @@ function * deployChosenContracts ({ response: { steps, receipt } }) {
 }
 
 function * deployExistingToken ({ steps, metadata }) {
+  yield put({
+    type: actions.DEPLOY_TOKEN.REQUEST
+  })
   const { hash } = yield call(createMetadata, { metadata })
   const communityURI = `ipfs://${hash}`
   const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
