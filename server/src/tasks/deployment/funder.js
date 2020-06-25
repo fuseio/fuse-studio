@@ -1,20 +1,46 @@
-const request = require('request-promise-native')
 const config = require('config')
+const mongoose = require('mongoose')
+const Token = mongoose.model('Token')
+const Account = mongoose.model('Account')
+const { toWei } = require('web3-utils')
 
-const funder = async (networks, communityProgress) => {
-  const { adminAddress: accountAddress } = communityProgress.steps.community.args
-  const { homeTokenAddress: tokenAddress } = communityProgress.steps.bridge.results
-  const options = {
-    method: 'POST',
-    uri: `${config.get('funder.urlBase')}fund/native`,
-    body: { accountAddress, tokenAddress, networkType: config.get('network.foreign.name') },
-    json: true
+const funder = async ({ home: { web3, from } }, communityProgress) => {
+  const bonus = config.get('bonus.launch.fuse').toString()
+  const { adminAddress } = communityProgress.steps.community.args
+
+  const userTokensCount = await Token.find({ owner: adminAddress }).countDocuments()
+
+  if (userTokensCount > 1) {
+    console.log(`User ${adminAddress} already received the fuse bonus`)
+    return {
+      isSent: false
+    }
   }
 
+  const account = await Account.findOne({ address: from })
   try {
-    await request(options)
-  } catch (error) {
-    console.log('funder step error', { error })
+    const receipt = await web3.eth.sendTransaction({
+      to: adminAddress,
+      from,
+      value: toWei(bonus),
+      nonce: account.nonce,
+      gasPrice: config.get('network.home.gasPrice'),
+      gas: 21000
+    })
+    if (receipt) {
+      account.nonces['home']++
+      await account.save()
+    }
+
+    return {
+      isSent: true,
+      bonus
+    }
+  } catch (e) {
+    console.error(e)
+    return {
+      isSent: false
+    }
   }
 }
 

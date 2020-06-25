@@ -87,6 +87,11 @@
       }
     }
   },
+  "bonus": {
+    "launch": {
+      "fuse": "COMMUNITY_BONUS_LAUNCH_FUSE"
+    }
+  },
   "agenda": {
     "args": {
         "__name": "COMMUNTITY_AGENDA_ARGS",

@@ -149,7 +149,12 @@ module.exports = {
     }
   },
   funder: {
-    urlBase: 'https://funder-qa.fuse.io/api/'
+    urlBase: 'https://funder-qa.fuse.io/api/',
+  },
+  bonus: {
+    launch: {
+      fuse: 1
+    }
   },
   branch: {
     urlBase: 'https://api2.branch.io/v1/',
