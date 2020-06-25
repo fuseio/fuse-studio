@@ -30,7 +30,7 @@ export default ({ hideModal, web3connect }) => {
           </div>
           <div style={{ marginLeft: '1em' }}>
             The Studio deploys communities on Ethereum mainnet by default <br />
-            (You can test also test in Testnet to avoid feed - <a target='_blank' href='https://docs.fuse.io/the-fuse-studio/how-to-add-fuse-to-your-metamask'>Learn here how</a>)
+            (You can test also test in Testnet to avoid feed - <a target='_blank' href='https://docs.fuse.io/the-fuse-studio/getting-started/using-the-studio-for-free-on-ropsten'>Learn here how</a>)
           </div>
         </div>
       </div>
