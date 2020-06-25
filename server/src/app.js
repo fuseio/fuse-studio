@@ -23,8 +23,6 @@ async function init () {
 
   console.log(util.inspect(config, { depth: null }))
 
-  var isProduction = process.env.NODE_ENV === 'production'
-
   var app = express()
 
   if (config.get('api.allowCors')) {

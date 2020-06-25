@@ -9,6 +9,7 @@ import { FAILURE } from 'actions/constants'
 import WizardShape from 'utils/validation/shapes/wizard'
 import * as Sentry from '@sentry/browser'
 import { push } from 'connected-react-router'
+import { toChecksumAddress } from 'web3-utils'
 
 import CommunityTypes from 'constants/communityTypes'
 import { existingTokens } from 'constants/existingTokens'
@@ -209,7 +210,7 @@ const WizardPage = ({
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress, isCustom: false } } }
       deployExistingToken(metadata, newSteps)
     } else if (customToken) {
-      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress: customToken, isCustom: true } } }
+      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
       deployExistingToken(metadata, newSteps)
     } else {
       const tokenData = {

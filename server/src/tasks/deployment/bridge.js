@@ -109,6 +109,7 @@ async function deployBridge ({ home, foreign }, communityProgress) {
 
   let token = await Token.findOne({ address: foreignTokenAddress })
   if (isCustom && !token) {
+    console.log(`Adding the custom token ${foreignTokenAddress} to the database`)
     const tokenData = await fetchTokenData(foreignTokenAddress, {}, foreign.web3)
     token = await new Token({ address: foreignTokenAddress, networkType: foreign.networkType, tokenType: 'custom', ...tokenData }).save()
   }
