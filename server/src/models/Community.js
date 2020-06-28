@@ -14,7 +14,8 @@ const CommunitySchema = new Schema({
   communityURI: { type: String },
   coverPhoto: { type: String },
   description: { type: String },
-  webUrl: { type: String }
+  webUrl: { type: String },
+  creatorAddress: { type: String }
 }, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })
