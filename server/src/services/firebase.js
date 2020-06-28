@@ -76,7 +76,7 @@ const initAdmin = async () => {
     credential: admin.credential.cert(JSON.parse(digitalRandResponse.SecretString))
   }, 'DigitalRand')
 
-  const paywiseResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdDigitalRand }).promise()
+  const paywiseResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdPaywise }).promise()
   paywiseAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(paywiseResponse.SecretString))
   }, 'Paywise')
