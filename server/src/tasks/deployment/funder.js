@@ -9,7 +9,7 @@ const funder = async ({ home: { web3, from } }, communityProgress) => {
   const { adminAddress } = communityProgress.steps.community.args
 
   const createdCommunitiesCount = await Community.find({ creatorAddress: adminAddress }).countDocuments()
-  if (createdCommunitiesCount > 1) {
+  if (createdCommunitiesCount > 0) {
     console.log(`User ${adminAddress} already received the fuse bonus`)
     return {
       isSent: false
