@@ -1,6 +1,7 @@
 const config = require('config')
 const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
+const jwt = require('jsonwebtoken')
 var { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
 
 const lockAccount = async (query = { role: '*' }) => {
@@ -48,7 +49,16 @@ const createAccount = async (role = '*') => {
     address,
     role
   }).save()
+  console.log(`create new account address: ${account.address}, the jwt is: ${generateAdminJwt(account.address)}`)
   return account
+}
+
+const generateAdminJwt = (accountAddress) => {
+  const secret = config.get('api.secret')
+  return jwt.sign({
+    accountAddress,
+    isCommunityAdmin: true
+  }, secret)
 }
 
 module.exports = {
@@ -56,5 +66,6 @@ module.exports = {
   unlockAccount,
   withAccount,
   createAccount,
-  generateAccounts
+  generateAccounts,
+  generateAdminJwt
 }
