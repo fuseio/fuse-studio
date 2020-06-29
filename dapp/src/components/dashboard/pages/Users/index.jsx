@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
-import { toChecksumAddress } from 'web3-utils'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
@@ -16,7 +15,6 @@ import {
   removeEntity,
   addAdminRole,
   removeAdminRole,
-  confirmUser,
   joinCommunity,
   importExistingEntity,
   fetchUsersMetadata,
@@ -44,7 +42,6 @@ const Users = ({
   removeEntity,
   addAdminRole,
   removeAdminRole,
-  confirmUser,
   userJustAdded,
   entityAdded,
   push,
@@ -209,7 +206,6 @@ const Users = ({
                 {
                   !isApproved && !hasAdminRole && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleConfirmUser(address)}>Confirm</li>
                       <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                       <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
@@ -228,7 +224,6 @@ const Users = ({
                 {
                   hasAdminRole && !isApproved && (
                     <ul className='more__options'>
-                      <li className='more__options__item' onClick={() => handleConfirmUser(address)}>Confirm</li>
                       {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
                       {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>}
@@ -284,8 +279,6 @@ const Users = ({
   const handleAddAdminRole = (account) => addAdminRole(account)
 
   const handleRemoveAdminRole = (account) => removeAdminRole(account)
-
-  const handleConfirmUser = (account) => confirmUser(account)
 
   const renderTable = () => {
     return (
@@ -358,7 +351,6 @@ const mapDispatchToProps = {
   push,
   joinCommunity,
   addEntity,
-  confirmUser,
   addAdminRole,
   removeAdminRole,
   removeEntity,
