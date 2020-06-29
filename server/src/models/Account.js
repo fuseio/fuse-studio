@@ -4,11 +4,11 @@ const { Schema } = mongoose
 const AccountSchema = new Schema({
   address: { type: String, required: [true, "can't be blank"] },
   childIndex: { type: Number, required: [true, "can't be blank"] },
-  nonces: { type: Object, default: {} },
+  nonces: { type: Object, default: { home: 0, foreign: 0 } },
   isLocked: { type: Boolean, default: false },
   lockingTime: { type: Date },
   role: { type: String, default: '*' }
-})
+}, { timestamps: true })
 
 AccountSchema.index({ address: 1 }, { unique: true })
 

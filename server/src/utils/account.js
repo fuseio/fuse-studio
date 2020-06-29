@@ -1,3 +1,4 @@
+const config = require('config')
 const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
 var { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
@@ -31,9 +32,29 @@ const generateAccounts = (seed, accountsNumber) => {
   }
 }
 
+const generateAccountAddress = (childIndex = 0) => {
+  const mnemonic = config.get('secrets.accounts.seed')
+  const address = fromMasterSeed(mnemonic).deriveChild(childIndex).getWallet().getAddressString()
+  return address
+}
+
+const createAccount = async (role = '*') => {
+  const lastAccount = await Account.findOne().sort({ childIndex: -1 })
+  const lastChildIndex = (lastAccount && lastAccount.childIndex) || 0
+  const childIndex = lastChildIndex + 1
+  const address = generateAccountAddress(childIndex)
+  const account = await new Account({
+    childIndex,
+    address,
+    role
+  }).save()
+  return account
+}
+
 module.exports = {
   lockAccount,
   unlockAccount,
   withAccount,
+  createAccount,
   generateAccounts
 }
