@@ -49,7 +49,7 @@ export const fetchFuseToken = () => tokenAction(FETCH_FUSE_TOKEN.REQUEST)
 export const createToken = (tokenData) => requestAction(CREATE_TOKEN, tokenData)
 export const createTokenWithMetadata = (tokenData, metadata, tokenType, steps, options) => requestAction(CREATE_TOKEN_WITH_METADATA, { tokenData, metadata, tokenType, steps, options })
 
-export const deployExistingToken = (metadata, steps) => requestAction(DEPLOY_EXISTING_TOKEN, { metadata, steps })
+export const deployExistingToken = (metadata, steps, options) => requestAction(DEPLOY_EXISTING_TOKEN, { metadata, steps, options })
 
 export const transferTokenToFunder = (tokenAddress, value) => requestAction(TRANSFER_TOKEN_TO_FUNDER, { tokenAddress, value, options: { desiredNetworkType: 'fuse' } })
 export const transferToken = (tokenAddress, to, value) => requestAction(TRANSFER_TOKEN, { tokenAddress, to, value })
