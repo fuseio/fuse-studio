@@ -49,7 +49,7 @@ const createAccount = async (role = '*') => {
     address,
     role
   }).save()
-  console.log(`create new account address: ${account.address}, the jwt is: ${generateAdminJwt(account.address)}`)
+  console.log(`new admin account created, address: ${account.address}, jwt: ${generateAdminJwt(account.address)}`)
   return account
 }
 
