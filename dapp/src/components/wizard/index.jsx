@@ -204,20 +204,22 @@ const WizardPage = ({
       scope.setUser({ email })
     })
 
+    const sentry = { tags: { issuance: true } }
     if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress, isCustom: false } } }
-      deployExistingToken(metadata, newSteps)
+      deployExistingToken(metadata, newSteps, { sentry })
     } else if (customToken) {
       const newSteps = { ...steps, bridge: { args: { foreignTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
-      deployExistingToken(metadata, newSteps)
+      deployExistingToken(metadata, newSteps, { sentry })
     } else {
       const tokenData = {
         name: communityName,
         symbol: communitySymbol,
         totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
       }
-      createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: foreignNetwork })
+
+      createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: foreignNetwork, sentry })
     }
 
     signUpUser(email, subscribe)

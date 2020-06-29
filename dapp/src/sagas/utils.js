@@ -4,6 +4,7 @@ import { getForeignNetwork } from 'selectors/network'
 import { getAccount } from 'selectors/accounts'
 import { getApiRoot } from 'utils/network'
 import keyBy from 'lodash/keyBy'
+import get from 'lodash/get'
 import * as Sentry from '@sentry/browser'
 
 export const createEntityPut = (entity) => (action) => put({ ...action, entity })
@@ -19,7 +20,13 @@ function * tryClause (args, error, action, numberOfTries = CONFIG.api.retryCount
     yield delay(CONFIG.api.retryTimeout)
     yield put(args)
   } else {
-    Sentry.captureException(error)
+    Sentry.withScope(function (scope) {
+      const tags = get(args, 'options.sentry.tags')
+      if (tags) {
+        Object.entries(tags).forEach(([name, value]) => scope.setTag(name, value))
+      }
+      Sentry.captureException(error)
+    })
   }
 }
 
