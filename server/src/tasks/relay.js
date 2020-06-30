@@ -7,7 +7,7 @@ const request = require('request-promise-native')
 const mongoose = require('mongoose')
 const { getAdmin } = require('@services/firebase')
 const web3Utils = require('web3-utils')
-
+const { processTransaction } = require('@utils/wallet')
 const graphClient = new GraphQLClient(config.get('graph.url'))
 const UserWallet = mongoose.model('UserWallet')
 
@@ -100,7 +100,29 @@ const isAllowedToRelay = async (web3, walletModule, walletModuleABI, methodName,
     : isAllowedToRelayHome(web3, walletModule, walletModuleABI, methodName, methodData)
 }
 
-const relay = withAccount(async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
+const requestJoinBonus = async ({ web3, job, wallet, walletAddress, walletModuleABI, identifier, methodData }) => {
+  console.log(`Requesting token funding for wallet: ${wallet}`)
+  const params = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
+  const token = await fetchTokenByCommunity(params._community)
+  const tokenAddress = web3.utils.toChecksumAddress(token.address)
+  const { originNetwork } = token
+  const { phoneNumber } = await UserWallet.findOne({ walletAddress })
+  request.post(`${config.get('funder.urlBase')}fund/token`, {
+    json: true,
+    body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork }
+  }, (err, response, body) => {
+    if (err) {
+      console.error(`Error on token funding for wallet: ${wallet}`, err)
+    } else if (body.error) {
+      console.error(`Error on token funding for wallet: ${wallet}`, body.error)
+    } else {
+      job.attrs.data.funderJobId = body.job._id
+    }
+    job.save()
+  })
+}
+
+const relay = withAccount(async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays, transactionBody }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
@@ -117,9 +139,15 @@ const relay = withAccount(async (account, { walletAddress, methodName, methodDat
       from: account.address,
       gas: 5000000
     }, {
-      transactionHash: (hash) => {
+      transactionHash: async (hash) => {
         job.attrs.data.txHash = hash
         job.save()
+        try {
+          const tx = { ...transactionBody, hash, status: 'pending', watchedAddress: transactionBody.from, source: 'wallet' }
+          await processTransaction(tx)
+        } catch (error) {
+          console.error(error)
+        }
       }
     })
 
@@ -130,27 +158,11 @@ const relay = withAccount(async (account, { walletAddress, methodName, methodDat
     const { success, wallet, signedHash } = returnValues
     if (success) {
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
+      const tx = { ...transactionBody, hash: receipt.hash, status: 'confirmed', watchedAddress: transactionBody.from, source: 'wallet' }
+      await processTransaction(tx)
       if (walletModule === 'CommunityManager') {
         try {
-          console.log(`Requesting token funding for wallet: ${wallet}`)
-          const params = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
-          const token = await fetchTokenByCommunity(params._community)
-          const tokenAddress = web3.utils.toChecksumAddress(token.address)
-          const { originNetwork } = token
-          const { phoneNumber } = await UserWallet.findOne({ walletAddress })
-          request.post(`${config.get('funder.urlBase')}fund/token`, {
-            json: true,
-            body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork }
-          }, (err, response, body) => {
-            if (err) {
-              console.error(`Error on token funding for wallet: ${wallet}`, err)
-            } else if (body.error) {
-              console.error(`Error on token funding for wallet: ${wallet}`, body.error)
-            } else {
-              job.attrs.data.funderJobId = body.job._id
-            }
-            job.save()
-          })
+          await requestJoinBonus({ web3, job, wallet, walletAddress, walletModuleABI, identifier, methodData })
         } catch (e) {
           console.log(`Error on token funding for wallet: ${wallet}`, e)
         }
