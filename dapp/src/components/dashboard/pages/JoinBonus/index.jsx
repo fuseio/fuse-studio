@@ -11,7 +11,6 @@ import { formatWei, toWei } from 'utils/format'
 import { setBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import get from 'lodash/get'
-import { checkIsFunderPartOfCommunity } from 'selectors/entities'
 import { getCurrentNetworkType } from 'selectors/network'
 import { getHomeTokenByCommunityAddress } from 'selectors/token'
 
@@ -120,7 +119,6 @@ const JoinBonus = ({
 const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   balances: getBalances(state),
-  isFunderPartOfCommunity: checkIsFunderPartOfCommunity(state),
   networkType: getCurrentNetworkType(state),
   homeToken: getHomeTokenByCommunityAddress(state, match.params.address) || {}
 })

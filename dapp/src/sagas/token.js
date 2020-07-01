@@ -23,12 +23,9 @@ import {
   createMetadata as createMetadataApi
 } from 'services/api/metadata'
 import { imageUpload } from 'services/api/images'
-import { ADD_ENTITY } from 'actions/communityEntities'
-import { roles, combineRoles } from '@fuse/roles'
-import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
+import { getCommunityAddress } from 'selectors/entities'
 import get from 'lodash/get'
 import TokenFactoryABI from '@fuse/token-factory-contracts/abi/TokenFactoryWithEvents'
-import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
 import { getOptions, getNetworkVersion } from 'utils/network'
 import FuseTokenABI from 'constants/abi/FuseToken'
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
@@ -350,19 +347,6 @@ function * transferTokenToFunder ({ tokenAddress, value }) {
 
 function * setBonus ({ amount, bonusType }) {
   const communityAddress = yield select(getCommunityAddress)
-  const isMemberOfCommunity = yield select(checkIsFunderPartOfCommunity)
-  if (!isMemberOfCommunity) {
-    const web3 = yield getWeb3()
-    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
-    const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
-    const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
-    const accountAddress = yield select(getAccountAddress)
-    const transactionPromise = method.send({
-      from: accountAddress
-    })
-    yield call(transactionFlow, { transactionPromise, action: ADD_ENTITY, sendReceipt: true })
-    yield transactionPromise
-  }
 
   const infoFieldsMapping = {
     inviteBonus: 'inviteInfo',
