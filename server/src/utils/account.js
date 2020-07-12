@@ -8,8 +8,12 @@ const lockAccount = async (query = { role: '*' }) => {
   return Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date() })
 }
 
+const lockAccountWithReason = async (query = { role: '*' }, reason) => {
+  return Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date(), lockingReason: reason })
+}
+
 const unlockAccount = async (address) =>
-  Account.findOneAndUpdate({ address }, { isLocked: false, lockingTime: null })
+  Account.findOneAndUpdate({ address }, { isLocked: false, lockingTime: null, lockingReason: null })
 
 const withAccount = (func, getAccount) => async (...params) => {
   const account = getAccount ? await getAccount(...params) : await lockAccount()
@@ -63,6 +67,7 @@ const generateAdminJwt = (accountAddress) => {
 
 module.exports = {
   lockAccount,
+  lockAccountWithReason,
   unlockAccount,
   withAccount,
   createAccount,
