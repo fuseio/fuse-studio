@@ -4,7 +4,7 @@ import QRCode from 'qrcode.react'
 
 export default ({ value, hideModal }) => {
   return (
-    <Modal className='qr_code_modal__wrapper' onClose={hideModal}>
+    <Modal className='qr_code_modal__wrapper' onClose={hideModal} hasCloseBtn>
       <div className='qr_code_modal'>
         <h6 className='qr_code_modal__title'>{value}</h6>
         <div className='qr_code_modal__image'>
