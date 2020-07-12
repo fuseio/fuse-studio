@@ -35,7 +35,7 @@ const lockedAccounts = async () => {
 }
 
 const lowBalanceAccounts = async () => {
-  const accounts = await Account.find({ isLocked: true })
+  const accounts = await Account.find()
   const network = config.get('network.foreign.name')
   const threshold = new BigNumber(toWei(config.get('alerts.lowBalanceAccounts.threshold')))
 
