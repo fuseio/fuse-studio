@@ -21,7 +21,7 @@ module.exports = {
     urlBase: 'http://localhost:4000/api'
   },
   graph: {
-    url: 'https://graph.fuse.io/subgraphs/name/fuseio/fuse-qa'
+    url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio/fuse-qa'
   },
   box: {
     graph: {
