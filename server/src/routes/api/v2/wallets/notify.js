@@ -11,7 +11,7 @@ const { mapValues, map } = require('lodash')
 
 const totlePrimaryAddress = config.get('network.foreign.addresses.TotlePrimary').toLowerCase()
 
-const addressessToLowerCase = (obj) => (Array.isArray(obj) ? map : mapValues)(obj, (prop) => typeof prop === 'object'
+const addressessToLowerCase = (obj) => (Array.isArray(obj) ? map : mapValues)(obj, (prop) => typeof prop === 'object' && prop !== null
   ? addressessToLowerCase(prop)
   : isAddress(prop) ? prop.toLowerCase() : prop)
 

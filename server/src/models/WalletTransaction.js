@@ -18,7 +18,7 @@ const WalletTransactionSchema = new Schema({
   asset: { type: String },
   watchedAddress: { type: String, required: [true, "can't be blank"] },
   isSwap: { type: Boolean, default: false },
-  blockNumber: { type: String }
+  blockNumber: { type: Number }
 }, { timestamps: true })
 
 WalletTransactionSchema.index({ hash: 1, externalId: 1 }, { unique: true })
