@@ -7,11 +7,11 @@ const UserWallet = mongoose.model('UserWallet')
 const { toChecksumAddress, isAddress } = require('web3-utils')
 const { AddressZero } = require('ethers/constants')
 const BigNumber = require('bignumber.js')
-const { mapValues, map } = require('lodash')
+const { mapValues, map, isObject } = require('lodash')
 
 const totlePrimaryAddress = config.get('network.foreign.addresses.TotlePrimary').toLowerCase()
 
-const addressessToLowerCase = (obj) => (Array.isArray(obj) ? map : mapValues)(obj, (prop) => typeof prop === 'object'
+const addressessToLowerCase = (obj) => (Array.isArray(obj) ? map : mapValues)(obj, (prop) => isObject(prop)
   ? addressessToLowerCase(prop)
   : isAddress(prop) ? prop.toLowerCase() : prop)
 
