@@ -1,4 +1,5 @@
 const sendgridUtils = require('@utils/sendgrid')
+const mailchimpUtils = require('@utils/mailchimp')
 
 const onboardUser = async ({ foreign: { web3 } }, communityProgress) => {
   if (web3.eth && web3.eth.net && web3.eth.net.getId) {
@@ -13,7 +14,7 @@ const onboardUser = async ({ foreign: { web3 } }, communityProgress) => {
             ? 'mainnet' : ''
       sendgridUtils.sendInfoMail({ email }, { networkType, communityName: name, communityAddress })
       if (subscribe) {
-        sendgridUtils.subscribeUser({ email })
+        mailchimpUtils.subscribeUser({ email })
       }
     } catch (error) {
       console.log('email step error', { error })
