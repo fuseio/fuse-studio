@@ -1,14 +1,14 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
-const sendgridUtils = require('@utils/sendgrid')
+const mailchimpUtils = require('@utils/mailchimp')
 
 router.post('/', async (req, res) => {
   try {
     const user = await new User(req.body).save()
 
     if (req.body.subscribe) {
-      sendgridUtils.subscribeUser(user)
+      mailchimpUtils.subscribeUser(user)
     }
 
     res.json({
