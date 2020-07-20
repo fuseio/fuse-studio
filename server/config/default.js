@@ -90,8 +90,21 @@ module.exports = {
         }
       },
       provider: defer(function () {
-        return `https://${this.network.foreign.name}.infura.io/v3/${this.network.foreign.apiKey}`
+        if (this.network.foreign.providers.default === 'infura') {
+          return `https://${this.network.foreign.name}.infura.io/v3/${this.network.foreign.apiKey}`
+        } else {
+          return this.network.foreign.providers.alchemy.http
+        }
       }),
+      providers: {
+        infura: {
+
+        },
+        alchemy: {
+          http: ''
+        },
+        default: 'alchemy'
+      },
       addressesMainnet: {
         TokenFactory: '0xB2100946628D3e45FF94971b35508AfCBBc87432',
         ForeignBridgeFactory: '0xaC116929b2baB59D05a1Da99303e7CAEd100ECC9',

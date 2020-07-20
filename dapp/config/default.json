@@ -4,6 +4,15 @@
     "fuseProvider": "https://rpc.fuse.io",
     "supportedNetworks": ["main", "ropsten", "fuse"],
     "supportedForeignNetworks": ["main", "ropsten"],
+    "providers": {
+      "default": "alchemy",
+      "alchemy": {
+        "ropsten": {
+        },
+        "main": {
+        }
+      }
+    },
     "portis": {
     },
     "addresses": {
