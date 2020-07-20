@@ -2,6 +2,16 @@
   "qa": "NODE_CONFIG_ENV",
   "web3": {
     "apiKey": "COMMUNITY_WEB3_API_KEY",
+    "providers": {
+      "alchemy": {
+        "ropsten": {
+          "http": "COMMUNITY_WEB3_PROVIDERS_ALCHEMY_ROPSTEN_HTTP"
+        },
+        "main": {
+          "http": "COMMUNITY_WEB3_PROVIDERS_ALCHEMY_MAIN_HTTP"
+        }
+      }
+    },
     "portis": {
       "id": "COMMMUNITY_WEB3_PORTIS_ID"
     },

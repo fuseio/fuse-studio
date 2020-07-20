@@ -19,6 +19,14 @@ const getInfuraUrl = (networkType) => {
   return `https://${toLongName(networkType)}.infura.io/v3/${CONFIG.web3.apiKey}`
 }
 
+const getForeignProviderUrl = (networkType) => {
+  if (CONFIG.web3.providers.default === 'alchemy') {
+    return CONFIG.web3.providers.alchemy[toShortName(networkType)].http
+  } else {
+    getInfuraUrl(networkType)
+  }
+}
+
 export const toLongName = (networkType) => networkType === 'main' ? 'mainnet' : networkType
 
 export const toShortName = (networkType) => networkType === 'mainnet' ? 'main' : networkType
@@ -27,7 +35,7 @@ export const getProviderUrl = (networkType) => {
   if (networkType === 'fuse') {
     return CONFIG.web3.fuseProvider
   } else {
-    return getInfuraUrl(networkType)
+    return getForeignProviderUrl(networkType)
   }
 }
 
