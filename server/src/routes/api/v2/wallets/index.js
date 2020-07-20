@@ -231,19 +231,22 @@ router.post('/backup', auth.required, async (req, res, next) => {
     return res.status(400).json({ error: msg })
   }
 
-  const bonusInfo = {
-    phoneNumber,
-    identifier,
-    receiver: walletAddress,
-    bonusType: 'plugins.backupBonus.backupInfo',
-    bonusId: phoneNumber
-  }
-
   await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { backup: true })
 
-  const job = await agenda.now('bonus', { communityAddress, bonusInfo, correlationId })
+  if (communityAddress) {
+    const bonusInfo = {
+      phoneNumber,
+      identifier,
+      receiver: walletAddress,
+      bonusType: 'plugins.backupBonus.backupInfo',
+      bonusId: phoneNumber
+    }
 
-  return res.json({ job: job.attrs })
+    const job = await agenda.now('bonus', { communityAddress, bonusInfo, correlationId })
+    return res.json({ job: job.attrs })
+  }
+
+  return res.json({ response: 'ok' })
 })
 
 /**
