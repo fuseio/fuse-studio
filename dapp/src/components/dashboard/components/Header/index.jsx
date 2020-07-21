@@ -3,8 +3,7 @@ import { isMobileOnly } from 'react-device-detect'
 import CommunityLogo from 'components/common/CommunityLogo'
 import PlusIcon from 'images/plus.svg'
 
-import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
+import { getImageUri } from 'utils/metadata'
 
 export default ({ isClosed, token, metadata, name, handleJoinCommunity }) => {
   return (
@@ -12,7 +11,7 @@ export default ({ isClosed, token, metadata, name, handleJoinCommunity }) => {
       <div className='community_header__image'>
         <CommunityLogo
           symbol={token && token.symbol}
-          imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
+          imageUrl={getImageUri(metadata)}
           isSmall={isMobileOnly}
           metadata={metadata}
         />

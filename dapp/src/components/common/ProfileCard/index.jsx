@@ -1,12 +1,11 @@
 import React, { useEffect, memo } from 'react'
 import { connect } from 'react-redux'
-import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
 import ArrowTiny from 'images/arrow_tiny.svg'
 
 import { fetchToken } from 'actions/token'
 import { fetchMetadata } from 'actions/metadata'
 import { balanceOfToken } from 'actions/accounts'
+import { getImageUri } from 'utils/metadata'
 
 import CommunityLogo from 'components/common/CommunityLogo'
 
@@ -42,7 +41,7 @@ const ProfileCard = memo(({
       <div className='profile__card__logo'>
         <CommunityLogo
           symbol={symbol}
-          imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
+          imageUrl={getImageUri(metadata)}
           isSmall
           metadata={metadata}
         />

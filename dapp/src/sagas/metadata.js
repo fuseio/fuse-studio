@@ -1,4 +1,4 @@
-import { all, put, takeEvery } from 'redux-saga/effects'
+import { all, put, call, takeEvery } from 'redux-saga/effects'
 
 import { createEntityPut, tryTakeEvery, apiCall } from './utils'
 import { get3box } from 'services/web3'
@@ -17,9 +17,14 @@ function * fetchMetadata ({ tokenURI }) {
     throw new Error(`No tokenURI given`)
   }
 
-  const hash = tokenURI.split('://')[1]
-
-  const { data } = yield apiCall(metadataApi.fetchMetadata, { hash })
+  let response
+  if (tokenURI.startsWith('ipfs://')) {
+    const hash = tokenURI.split('://')[1]
+    response = yield apiCall(metadataApi.fetchMetadata, { hash })
+  } else {
+    response = yield call(metadataApi.fetchMetadataByUri, { uri: tokenURI })
+  }
+  const { data } = response
 
   yield entityPut({
     type: actions.FETCH_METADATA.SUCCESS,
@@ -32,28 +37,27 @@ function * fetchMetadata ({ tokenURI }) {
 }
 
 export function * createMetadata ({ metadata }) {
-  let imageHash
-  let coverPhotoHash
+  const newData = { ...metadata }
   if (metadata && metadata.image) {
-    const { hash } = yield apiCall(imageUpload, { image: metadata.image })
-    imageHash = hash
+    const { uri, hash } = yield apiCall(imageUpload, { image: metadata.image })
+    newData.imageUri = uri
+    newData.image = hash
   }
 
   if (metadata && metadata.coverPhoto) {
-    const { hash } = yield apiCall(imageUpload, { image: metadata.coverPhoto })
-    coverPhotoHash = hash
+    const { uri, hash } = yield apiCall(imageUpload, { image: metadata.coverPhoto })
+    newData.coverPhotoUri = uri
+    newData.coverPhoto = hash
   }
 
-  let newData = imageHash ? { ...metadata, image: imageHash } : metadata
-  newData = coverPhotoHash ? { ...newData, coverPhoto: coverPhotoHash } : newData
-  const { data, hash } = yield apiCall(metadataApi.createMetadata, { metadata: { ...newData } })
+  const { data, hash, uri } = yield apiCall(metadataApi.createMetadata, { metadata: { ...newData } })
   yield put({
     type: actions.CREATE_METADATA.SUCCESS,
     response: {
       data
     }
   })
-  return { data, hash }
+  return { data, hash, uri }
 }
 
 export function * createBusinessMetadata ({ communityAddress, accountAddress, metadata }) {
