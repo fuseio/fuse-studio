@@ -43,6 +43,7 @@ const Users = ({
   removeEntity,
   addAdminRole,
   removeAdminRole,
+  addMinter,
   userJustAdded,
   entityAdded,
   push,
