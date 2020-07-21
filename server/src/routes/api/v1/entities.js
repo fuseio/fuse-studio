@@ -67,9 +67,9 @@ router.put('/:communityAddress/:account', async (req, res) => {
   const { account, communityAddress } = req.params
 
   const { name } = req.body.metadata
-  const { hash } = await metadataUtils.createMetadata(req.body.metadata)
+  const metadata = await metadataUtils.createMetadata(req.body.metadata)
 
-  const uri = `ipfs://${hash}`
+  const uri = metadata.uri || `ipfs://${metadata.hash}`
   const entity = await Entity.findOneAndUpdate({ account: toChecksumAddress(account), communityAddress }, { uri, name }, { new: true, upsert: true })
   return res.json({ data: entity })
 })

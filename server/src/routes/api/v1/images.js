@@ -1,36 +1,37 @@
 const router = require('express').Router()
 const multer = require('multer')
-const config = require('config')
-const request = require('request')
-
-const urlBase = config.get('ipfsProxy.urlBase')
+const imageUtils = require('@utils/image')
 
 const upload = multer()
 
 router.get('/:hash', async (req, res) => {
-  const hash = req.params.hash
-  return res.redirect(`${urlBase}/image/${hash}`)
+  return imageUtils.getImage(req, res)
+  // return imageUtils.getImage(req, res)
+  // const hash = req.params.hash
+  // return res.redirect(`${urlBase}/image/${hash}`)
 })
 
 router.post('/', upload.single('image'), async (req, res) => {
-  let formData = {
-    file: {
-      value: req.file.buffer,
-      options: {
-        contentType: req.file.mimetype,
-        filename: req.file.originalname
-      }
-    }
-  }
-  return request.post(`${urlBase}/image`, {
-    formData
-  }, (error, response, body) => {
-    if (error) {
-      throw error
-    }
-    return res.set('Content-Type', 'application/json')
-      .send(body)
-  })
+  return imageUtils.uploadImage(req, res)
+  // imageUtils.
+  // let formData = {
+  //   file: {
+  //     value: req.file.buffer,
+  //     options: {
+  //       contentType: req.file.mimetype,
+  //       filename: req.file.originalname
+  //     }
+  //   }
+  // }
+  // return request.post(`${urlBase}/image`, {
+  //   formData
+  // }, (error, response, body) => {
+  //   if (error) {
+  //     throw error
+  //   }
+  //   return res.set('Content-Type', 'application/json')
+  //     .send(body)
+  // })
 })
 
 module.exports = router

@@ -15,7 +15,10 @@ async function createMetadata (metadata) {
   })
 }
 
+const isIpfsHash = (hash) => hash.length === 46
+
 module.exports = {
   getMetadata,
-  createMetadata
+  createMetadata,
+  isIpfsHash
 }
