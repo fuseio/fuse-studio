@@ -3,11 +3,12 @@ import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
 import { useParams } from 'react-router'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import sortBy from 'lodash/sortBy'
 import identity from 'lodash/identity'
 import MyTable from 'components/dashboard/components/Table'
 import TransactionMessage from 'components/common/TransactionMessage'
+import { getForeignNetwork } from 'selectors/network'
 
 import {
   addEntity,
@@ -60,6 +61,7 @@ const Users = ({
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
+  const foreignNetwork = useSelector(getForeignNetwork)
 
   useEffect(() => {
     if (userAccounts && userAccounts.length > 0) {
@@ -219,7 +221,7 @@ const Users = ({
                     <ul className='more__options'>
                       <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                       <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
-                      <li className='more__options__item' onClick={() => handleAddMinter(address)}>Make Minter</li>
+                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleAddMinter(address)}>Make Minter</li>}
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
                     </ul>
                   )
@@ -273,7 +275,7 @@ const Users = ({
 
   const handleRemoveAdminRole = (account) => removeAdminRole(account)
 
-  const handleAddMinter = (account) => addMinter(account)
+  const handleAddMinter = (account) => addMinter(community.foreignTokenAddress, account, { desiredNetworkType: foreignNetwork })
 
   const renderTable = () => {
     return (
