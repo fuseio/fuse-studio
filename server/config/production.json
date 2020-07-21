@@ -39,6 +39,11 @@
   "mongo": {
     "debug": false
   },
+  "aws": {
+    "s3": {
+      "bucket": "fuse-studio"
+    }
+  },
   "funder": {
     "urlBase": "https://funder.fuse.io/api/"
   },
