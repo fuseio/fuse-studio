@@ -21,6 +21,7 @@ import {
   fetchUserWallets,
   fetchUserNames
 } from 'actions/communityEntities'
+import { addMinter } from 'actions/token'
 import { loadModal, hideModal } from 'actions/ui'
 import { ADD_USER_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
 import { getTransaction } from 'selectors/transaction'
@@ -195,7 +196,7 @@ const Users = ({
       id: 'dropdown',
       accessor: '',
       Cell: (rowInfo) => {
-        const { isApproved, hasAdminRole, address } = rowInfo.row.original
+        const { hasAdminRole, address } = rowInfo.row.original
         return (
           isAdmin ? (
             <div className='table__body__cell__more'>
@@ -203,39 +204,32 @@ const Users = ({
                 <img src={dotsIcon} />
               </div>
               <div className='more' onClick={e => e.stopPropagation()}>
+                {/* <ul className='more__options'>
+                  {
+                    hasAdminRole
+                      ? <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
+                      : !isNotSameAccount(accountAddress, address) && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>
+                  }
+                  <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
+
+                </ul> */}
                 {
-                  !isApproved && !hasAdminRole && (
+                  !hasAdminRole && (
                     <ul className='more__options'>
                       <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                       <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>
+                      <li className='more__options__item' onClick={() => handleAddMinter(address)}>Make Minter</li>
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
                     </ul>
                   )
                 }
                 {
-                  hasAdminRole && isApproved && (
+                  hasAdminRole && (
                     <ul className='more__options'>
                       {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
-                      <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
                       {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>}
-                    </ul>
-                  )
-                }
-                {
-                  hasAdminRole && !isApproved && (
-                    <ul className='more__options'>
-                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
+                      <li className='more__options__item' onClick={() => handleAddMinter(address)}>Make Minter</li>
                       <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
-                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>}
-                    </ul>
-                  )
-                }
-                {
-                  !hasAdminRole && isApproved && (
-                    <ul className='more__options'>
-                      {accountAddress && accountAddress.toLowerCase() !== address.toLowerCase() && <li className='more__options__item' onClick={() => handleRemoveEntity(address)}>Remove</li>}
-                      <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
-                      <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
                     </ul>
                   )
                 }
@@ -247,11 +241,9 @@ const Users = ({
             </div>
             <div className='more' onClick={e => e.stopPropagation()}>
               {
-                !isApproved && !hasAdminRole && (
-                  <ul className='more__options'>
-                    <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
-                  </ul>
-                )
+                <ul className='more__options'>
+                  <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
+                </ul>
               }
             </div>
           </div>
@@ -279,6 +271,8 @@ const Users = ({
   const handleAddAdminRole = (account) => addAdminRole(account)
 
   const handleRemoveAdminRole = (account) => removeAdminRole(account)
+
+  const handleAddMinter = (account) => addMinter(account)
 
   const renderTable = () => {
     return (
@@ -354,6 +348,7 @@ const mapDispatchToProps = {
   addAdminRole,
   removeAdminRole,
   removeEntity,
+  addMinter,
   loadModal,
   hideModal,
   fetchEntities,

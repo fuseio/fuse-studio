@@ -250,6 +250,20 @@ function * burnToken ({ tokenAddress, value }) {
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
 }
 
+function * addMinter ({ tokenAddress, minterAddress }) {
+  const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
+  const networkVersion = getNetworkVersion(web3)
+  const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress, getOptions(networkVersion))
+
+  const transactionPromise = contract.methods.addMinter(minterAddress).send({
+    from: accountAddress
+  })
+
+  const action = actions.ADD_MINTER
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
+}
+
 function * watchTokenChanges ({ response }) {
   yield put(actions.fetchToken(response.tokenAddress))
 }
@@ -407,6 +421,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.TRANSFER_TOKEN_TO_FUNDER, transferTokenToFunder, 1),
     tryTakeEvery(actions.MINT_TOKEN, mintToken, 1),
     tryTakeEvery(actions.BURN_TOKEN, burnToken, 1),
+    tryTakeEvery(actions.ADD_MINTER, addMinter, 1),
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
