@@ -116,11 +116,10 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
 }
 
 function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
-  const { hash } = yield call(createMetadata, { metadata })
-  const tokenURI = `ipfs://${hash}`
-  const communityURI = `ipfs://${hash}`
-  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
-  const receipt = yield call(createToken, { ...tokenData, tokenURI, tokenType })
+  const response = yield call(createMetadata, { metadata })
+  const uri = response.uri || `ipfs://${response.hash}`
+  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI: uri } } }
+  const receipt = yield call(createToken, { ...tokenData, tokenURI: uri, tokenType })
   yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps: newSteps }))
 }
 
