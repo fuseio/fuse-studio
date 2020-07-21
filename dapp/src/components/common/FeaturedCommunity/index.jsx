@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import CommunityLogo from 'components/common/CommunityLogo'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
+import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 
 const FeaturedCommunity = memo(({
   community,
@@ -15,10 +16,10 @@ const FeaturedCommunity = memo(({
       <div className='featured__image'>
         <div className='featured__image__container'>
           {
-            community.featured && community.coverPhoto ? (
-              <img alt='cover photo' src={community.coverPhoto ? `${CONFIG.ipfsProxy.urlBase}/image/${community.coverPhoto}` : CommunityPlaceholderImage} />
-            ) : metadata && metadata.coverPhoto && typeof metadata.coverPhoto === 'string' ? (
-              <img alt='cover photo' src={metadata.coverPhoto ? `${CONFIG.ipfsProxy.urlBase}/image/${metadata.coverPhoto}` : CommunityPlaceholderImage} />
+            community.featured && getCoverPhotoUri(community) ? (
+              <img alt='cover photo' src={getCoverPhotoUri(community)} />
+            ) : getCoverPhotoUri(metadata) ? (
+              <img alt='cover photo' src={getCoverPhotoUri(metadata)} />
             ) : (
               <img alt='cover photo' src={CommunityPlaceholderImage} />
             )
@@ -26,7 +27,7 @@ const FeaturedCommunity = memo(({
         </div>
         <div className='featured__logo'>
           <CommunityLogo
-            imageUrl={metadata && metadata.image && `${CONFIG.ipfsProxy.urlBase}/image/${metadata && metadata.image}`}
+            imageUrl={getImageUri(metadata)}
             metadata={{
               isDefault: metadata && metadata.isDefault
             }}

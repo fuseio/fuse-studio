@@ -2,8 +2,7 @@ import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import identity from 'lodash/identity'
 import CommunityLogo from 'components/common/CommunityLogo'
-import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
+import { getImageUri } from 'utils/metadata'
 
 const Community = memo(({
   token = {},
@@ -28,7 +27,7 @@ const Community = memo(({
       <div className='community__logo'>
         <CommunityLogo
           symbol={symbol}
-          imageUrl={!isEmpty(get(metadata, 'image')) ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}` : null}
+          imageUrl={getImageUri(metadata)}
           metadata={metadata}
         />
       </div>

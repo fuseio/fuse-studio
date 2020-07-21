@@ -116,11 +116,10 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
 }
 
 function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
-  const { hash } = yield call(createMetadata, { metadata })
-  const tokenURI = `ipfs://${hash}`
-  const communityURI = `ipfs://${hash}`
-  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
-  const receipt = yield call(createToken, { ...tokenData, tokenURI, tokenType })
+  const response = yield call(createMetadata, { metadata })
+  const uri = response.uri || `ipfs://${response.hash}`
+  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI: uri } } }
+  const receipt = yield call(createToken, { ...tokenData, tokenURI: uri, tokenType })
   yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps: newSteps }))
 }
 
@@ -140,8 +139,8 @@ function * deployExistingToken ({ steps, metadata }) {
   yield put({
     type: actions.DEPLOY_TOKEN.REQUEST
   })
-  const { hash } = yield call(createMetadata, { metadata })
-  const communityURI = `ipfs://${hash}`
+  const response = yield call(createMetadata, { metadata })
+  const communityURI = response.uri || `ipfs://${response.hash}`
   const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
   const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps })
   yield put({
@@ -296,20 +295,22 @@ function * updateCommunityMetadata ({ communityAddress, fields: { metadata, ...r
   const currentMetadata = yield select(state => state.entities.metadata[communityURI])
   let isMetadataUpdated = false
   if (get(metadata, 'image')) {
-    const { hash } = yield apiCall(imageUpload, { image: get(metadata, 'image') })
+    const { hash, uri } = yield apiCall(imageUpload, { image: get(metadata, 'image') })
+    currentMetadata.imageUri = uri
     currentMetadata.image = hash
     isMetadataUpdated = true
   }
 
   if (get(metadata, 'coverPhoto')) {
-    const { hash } = yield apiCall(imageUpload, { image: get(metadata, 'coverPhoto') })
+    const { hash, uri } = yield apiCall(imageUpload, { image: get(metadata, 'coverPhoto') })
+    currentMetadata.coverPhotoUri = uri
     currentMetadata.coverPhoto = hash
     isMetadataUpdated = true
   }
   let newCommunityURI
   if (isMetadataUpdated) {
-    const { hash } = yield apiCall(createMetadataApi, { metadata: currentMetadata })
-    newCommunityURI = `ipfs://${hash}`
+    const { hash, uri } = yield apiCall(createMetadataApi, { metadata: currentMetadata })
+    newCommunityURI = uri || `ipfs://${hash}`
   }
   const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI, ...rest })
 

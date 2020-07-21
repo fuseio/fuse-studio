@@ -214,6 +214,9 @@ module.exports = {
       region: 'eu-west-1',
       senderId: 'Wallet',
       smsType: 'Promotional'
+    },
+    s3: {
+      bucket: 'fuse-studio-qa'
     }
   },
   slack: {
