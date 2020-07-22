@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const config = require('config')
 const metadataUtils = require('@utils/metadata')
 const ipfsUtils = require('@utils/metadata/ipfs')
 
@@ -15,7 +16,7 @@ router.get('/:hash', async (req, res) => {
 })
 
 router.post('/', async (req, res, next) => {
-  const apiBase = `${req.protocol}://${req.headers.host}${req.baseUrl}`
+  const apiBase = `${config.get('api.protocol')}://${req.headers.host}${req.baseUrl}`
   const body = await metadataUtils.createMetadata(req.body.metadata, apiBase)
   return res.json(body)
 })

@@ -2,6 +2,7 @@
   "env": "production",
   "api": {
     "allowCors": false,
+    "protocol": "https",
     "auth": {
       "domain": {
         "name": "Fuse Studio Prod",
