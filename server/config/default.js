@@ -6,6 +6,7 @@ module.exports = {
     allowCors: true,
     secret: 'secret',
     tokenExpiresIn: '7d',
+    protocol: 'http',
     port: 3000,
     auth: {
       domain: {

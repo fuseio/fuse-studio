@@ -1,6 +1,7 @@
 {
   "env": "qa",
   "api": {
+    "protocol": "https",
     "auth": {
       "domain": {
         "name": "Fuse Studio QA",
