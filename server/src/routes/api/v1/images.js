@@ -2,7 +2,7 @@ const router = require('express').Router()
 const multer = require('multer')
 const imageUtils = require('@utils/image')
 const imageIpfsUtils = require('@utils/image/ipfs')
-const { isIpfsHash } = require('@utils/metadata')
+const { isIpfsHash } = require('@utils/metadata/ipfs')
 
 const upload = multer()
 

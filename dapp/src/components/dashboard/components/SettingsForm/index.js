@@ -9,7 +9,7 @@ import get from 'lodash/get'
 import set from 'lodash/set'
 import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
-
+import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 import { Formik } from 'formik'
 
 const ExpansionPanelDetails = withStyles({
@@ -148,17 +148,17 @@ class SettingsForm extends Component {
   render = () => {
     const { isClosed, secondaryTokenAddress, description, webUrl } = this.props.community
     const { symbol } = this.props.token
-    const { coverPhoto, image, isDefault } = this.props.communityMetadata
+    const { isDefault } = this.props.communityMetadata
     const initialValues = {
       communityType: {
         label: isDefault,
         value: isDefault
       },
       isOpen: !isClosed,
-      coverPhoto: coverPhoto ? `${CONFIG.ipfsProxy.urlBase}/image/${coverPhoto}` : '',
+      coverPhoto: getCoverPhotoUri(this.props.communityMetadata),
       images: {
         custom: {
-          croppedImageUrl: `${CONFIG.ipfsProxy.urlBase}/image/${image}`
+          croppedImageUrl: getImageUri(this.props.communityMetadata)
         }
       },
       communitySymbol: symbol,
