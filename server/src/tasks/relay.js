@@ -146,7 +146,7 @@ const relay = withAccount(async (account, { walletAddress, methodName, methodDat
               console.error(`Error on token funding for wallet: ${wallet}`, err)
             } else if (body.error) {
               console.error(`Error on token funding for wallet: ${wallet}`, body.error)
-            } else {
+            } else if (lodash.has(body, 'job._id')) {
               job.attrs.data.funderJobId = body.job._id
             }
             job.save()
