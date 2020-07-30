@@ -1,6 +1,6 @@
 const config = require('config')
 const lodash = require('lodash')
-const { withAccount } = require('@utils/account')
+const { withWalletAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
 const { GraphQLClient } = require('graphql-request')
 const request = require('request-promise-native')
@@ -100,7 +100,7 @@ const isAllowedToRelay = async (web3, walletModule, walletModuleABI, methodName,
     : isAllowedToRelayHome(web3, walletModule, walletModuleABI, methodName, methodData)
 }
 
-const relay = withAccount(async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
+const relay = withWalletAccount(async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)

@@ -4,7 +4,7 @@ const WalletFactoryABI = require('@constants/abi/WalletFactory')
 const WalletOwnershipManagerABI = require('@constants/abi/WalletOwnershipManager')
 const MultiSigWalletABI = require('@constants/abi/MultiSigWallet')
 const homeAddresses = config.get('network.home.addresses')
-const { withAccount } = require('@utils/account')
+const { withWalletAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
@@ -15,7 +15,7 @@ const smsProvider = require('@utils/smsProvider')
 const { watchAddress } = require('@services/blocknative')
 const { generateSalt } = require('@utils/web3')
 
-const createWallet = withAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
+const createWallet = withWalletAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
   const { agenda } = require('@services/agenda')
   const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
@@ -91,7 +91,7 @@ const createWallet = withAccount(async (account, { owner, communityAddress, phon
   return receipt
 })
 
-const setWalletOwner = withAccount(async (account, { walletAddress, newOwner }, job) => {
+const setWalletOwner = withWalletAccount(async (account, { walletAddress, newOwner }, job) => {
   const { createContract, createMethod, send, web3 } = createNetwork('home', account)
 
   const userWallet = await UserWallet.findOne({ walletAddress })
@@ -115,7 +115,7 @@ const setWalletOwner = withAccount(async (account, { walletAddress, newOwner }, 
   return receipt
 })
 
-const createForeignWallet = withAccount(async (account, { userWallet, ens = '' }, job) => {
+const createForeignWallet = withWalletAccount(async (account, { userWallet, ens = '' }, job) => {
   const { createContract, createMethod, send } = createNetwork('foreign', account)
   const owner = userWallet.walletOwnerOriginalAddress
   const walletFactory = createContract(WalletFactoryABI, userWallet.walletFactoryOriginalAddress)

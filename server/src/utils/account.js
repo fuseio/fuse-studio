@@ -15,8 +15,14 @@ const lockAccountWithReason = async (query = { role: '*' }, reason) => {
 const unlockAccount = async (address) =>
   Account.findOneAndUpdate({ address }, { isLocked: false, lockingTime: null, lockingReason: null })
 
-const withAccount = (func, getAccount) => async (...params) => {
-  const account = getAccount ? await getAccount(...params) : await lockAccount()
+const withAccount = (func, filterOrLockingFunction) => async (...params) => {
+  let account
+  if (typeof queryOrLockingFunction === 'function') {
+    account = await filterOrLockingFunction(...params)
+  } else {
+    account = await lockAccount(filterOrLockingFunction)
+  }
+
   if (!account) {
     throw new Error('no unlocked accounts available')
   }
@@ -28,6 +34,9 @@ const withAccount = (func, getAccount) => async (...params) => {
     throw e
   }
 }
+
+const withWalletAccount = (func) => withAccount(func, { role: 'wallet' })
+
 const generateAccounts = (seed, accountsNumber) => {
   const wallet = fromMasterSeed(seed)
   for (let i = 0; i < accountsNumber; i++) {
@@ -70,6 +79,7 @@ module.exports = {
   lockAccountWithReason,
   unlockAccount,
   withAccount,
+  withWalletAccount,
   createAccount,
   generateAccounts,
   generateAdminJwt
