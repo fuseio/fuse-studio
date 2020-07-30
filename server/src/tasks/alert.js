@@ -13,6 +13,8 @@ const environment = process.env.NODE_ENV || ''
 const codeBlock = '`'
 const OUT_OF_GAS = 'out of gas'
 
+const wrapCodeBlock = (value) => `${codeBlock}${value}${codeBlock}`
+
 const lockedAccounts = async () => {
   const accounts = await Account.find({ isLocked: true })
   const now = moment()
@@ -39,17 +41,24 @@ const lockedAccounts = async () => {
 }
 
 const lowBalanceAccounts = async () => {
-  const accounts = await Account.find({ role: '*' })
+  const watchedRoles = ['*', 'wallet']
+  for (const role of watchedRoles) {
+    await lowBalanceAccountsWithRole(role)
+  }
+}
+
+const lowBalanceAccountsWithRole = async (role) => {
+  const accounts = await Account.find({ role })
   const network = config.get('network.foreign.name')
   const threshold = new BigNumber(toWei(config.get('alerts.lowBalanceAccounts.threshold')))
 
   const msgPrefix = `*${environment.toUpperCase()}-${network.toUpperCase()}*`
 
   const web3 = getWeb3({ networkType: network })
-  accounts.forEach(async (account) => {
+  for (const account of accounts) {
     const balance = await web3.eth.getBalance(account.address)
     if (threshold.isGreaterThan(balance)) {
-      const msg = `${msgPrefix}\naccount ${codeBlock}${account.address}${codeBlock} got low balance of ${codeBlock}${fromWei(balance)}${codeBlock}`
+      const msg = `${msgPrefix}\naccount ${wrapCodeBlock(account.address)} with role ${wrapCodeBlock(account.role)} got low balance of ${wrapCodeBlock(fromWei(balance))}`
       console.warn(msg)
       notify(msg)
       if (!account.isLocked) {
@@ -61,7 +70,15 @@ const lowBalanceAccounts = async () => {
       console.info(`account ${account.address} received ether, unlocking`)
       await unlockAccount(account.address)
     }
-  })
+  }
+  const numberOflockedAccounts = await Account.find({ isLocked: true, role }).countDocuments()
+  const totalNumberOfAccounts = await Account.find({ role }).countDocuments()
+  const summaryMsg = `${msgPrefix}\nSummary: ${codeBlock}${numberOflockedAccounts} / ${totalNumberOfAccounts}${codeBlock} account locked for role ${wrapCodeBlock(role)}.`
+
+  console.info(summaryMsg)
+  if (numberOflockedAccounts > 0) {
+    notify(summaryMsg)
+  }
 }
 
 module.exports = {
