@@ -8,6 +8,7 @@ const { toChecksumAddress, isAddress } = require('web3-utils')
 const { AddressZero } = require('ethers/constants')
 const BigNumber = require('bignumber.js')
 const { mapValues, map, isObject } = require('lodash')
+const { agenda } = require('@services/agenda')
 
 const totlePrimaryAddress = config.get('network.foreign.addresses.TotlePrimary').toLowerCase()
 
@@ -97,6 +98,17 @@ const updateWallet = async (tx, watchedAddress) => {
   return UserWallet.updateOne({ walletAddress: toChecksumAddress(watchedAddress) }, { [`balancesOnForeign.${tx.tokenAddress}`]: value })
 }
 
+const createForeignWalletIfNeeded = async ({ watchedAddress }) => {
+  const userWallet = await UserWallet.findOne({ walletAddress: toChecksumAddress(watchedAddress) })
+  const network = config.get('network.foreign.name')
+
+  if (userWallet.networks.includes(network)) {
+    return
+  }
+  const job = await agenda.now('createForeignWallet', { userWallet })
+  console.log(`watchedAddress ${watchedAddress} does not have wallet on ${network}. Scheduling a job to create one ${job.attrs._id}`)
+}
+
 router.post('/', async (req, res) => {
   console.log(`receiving tx ${req.body.hash} for address ${req.body.watchedAddress} with status ${req.body.status} from blocknative`)
   console.log(req.body)
@@ -104,6 +116,9 @@ router.post('/', async (req, res) => {
     console.log(`ignoring the tx ${req.body.hash} because of the status ${req.body.status}`)
     return
   }
+
+  await createForeignWalletIfNeeded(req.body)
+
   const txs = createTransactions(addressessToLowerCase(req.body))
   for (const receivedTx of txs) {
     const { hash, externalId, watchedAddress } = receivedTx
