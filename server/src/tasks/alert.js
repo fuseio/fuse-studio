@@ -41,7 +41,7 @@ const lockedAccounts = async () => {
 }
 
 const lowBalanceAccounts = async () => {
-  const watchedRoles = ['*', 'wallet']
+  const watchedRoles = config.get('alerts.lowBalanceAccounts.roles')
   for (const role of watchedRoles) {
     await lowBalanceAccountsWithRole(role)
   }

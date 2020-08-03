@@ -228,6 +228,7 @@ module.exports = {
       threshold: 10 // in minutes
     },
     lowBalanceAccounts: {
+      roles: ['*'],
       threshold: '0.25' // in ETH
     }
   },

@@ -183,7 +183,11 @@
       "threshold": "COMMUNITY_ALERTS_LOCKED_ACCOUNTS_THRESHOLD"
     },
     "lowBalanceAccounts": {
-      "threshold": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_THRESHOLD"
+      "threshold": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_THRESHOLD",
+      "roles": {
+        "__name": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_ROLES",
+        "__format": "json"
+      }
     }
   }
 }
