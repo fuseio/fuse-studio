@@ -15,6 +15,31 @@ const smsProvider = require('@utils/smsProvider')
 const { watchAddress } = require('@services/blocknative')
 const { generateSalt } = require('@utils/web3')
 
+const getQueryFilter = ({ _id, owner, phoneNumber }) => {
+  if (_id) {
+    return { _id }
+  } else {
+    if (phoneNumber) {
+      return { phoneNumber, accountAddress: owner }
+    }
+    return { accountAddress: owner }
+  }
+}
+
+const subscribeToBlocknative = async (walletAddress) => {
+  try {
+    console.log(`Adding the address ${walletAddress} to the watch list of blocknative`)
+    const response = await watchAddress(walletAddress)
+    if (response.msg !== 'success') {
+      console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
+      throw new Error(response.msg ? response.msg : response)
+    }
+  } catch (e) {
+    console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
+    console.error(e)
+  }
+}
+
 const createWallet = withWalletAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
   const { agenda } = require('@services/agenda')
   const salt = generateSalt()
@@ -44,19 +69,10 @@ const createWallet = withWalletAccount(async (account, { owner, communityAddress
   }
   job.save()
 
-  let cond
+  subscribeToBlocknative(walletAddress)
 
-  if (_id) {
-    cond = { _id }
-  } else {
-    cond = { accountAddress: owner }
-
-    if (phoneNumber) {
-      cond.phoneNumber = phoneNumber
-    }
-  }
-
-  const userWallet = await UserWallet.findOneAndUpdate(cond, { walletAddress, salt })
+  const queryFilter = getQueryFilter({ _id, owner, phoneNumber })
+  const userWallet = await UserWallet.findOneAndUpdate(queryFilter, { walletAddress, salt })
   phoneNumber = userWallet.phoneNumber
 
   await Contact.updateMany({ phoneNumber }, { walletAddress, state: 'NEW' })
@@ -137,17 +153,7 @@ const createForeignWallet = withWalletAccount(async (account, { userWallet, ens 
 
   await UserWallet.findOneAndUpdate({ walletAddress }, { networks: userWallet.networks })
 
-  try {
-    console.log(`Adding the address ${walletAddress} to the watch list of blocknative`)
-    const response = await watchAddress(walletAddress)
-    if (response.msg !== 'success') {
-      console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
-      throw new Error(response.msg ? response.msg : response)
-    }
-  } catch (e) {
-    console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
-    console.error(e)
-  }
+  await subscribeToBlocknative(walletAddress)
 
   return receipt
 })
