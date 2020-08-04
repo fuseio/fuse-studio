@@ -98,7 +98,10 @@ const updateWallet = async (tx, watchedAddress) => {
   return UserWallet.updateOne({ walletAddress: toChecksumAddress(watchedAddress) }, { [`balancesOnForeign.${tx.tokenAddress}`]: value })
 }
 
-const createForeignWalletIfNeeded = async ({ watchedAddress }) => {
+const createForeignWalletIfNeeded = async ({ watchedAddress, status }) => {
+  if (status !== 'confirmed') {
+    return
+  }
   const userWallet = await UserWallet.findOne({ walletAddress: toChecksumAddress(watchedAddress) })
   const network = config.get('network.foreign.name')
 
