@@ -17,8 +17,8 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Sync contacts list](#Sync-contacts-list)
 	
 - [Jobs](#Jobs)
-	- [Fetch job by id](#Fetch-job-by-id)
 	- [Fetch job by correlationId](#Fetch-job-by-correlationId)
+	- [Fetch job by id](#Fetch-job-by-id)
 	
 - [Login](#Login)
 	- [Login using firebase ID token](#Login-using-firebase-ID-token)
@@ -318,13 +318,13 @@ POST api/v2/contacts/
 | nonce | `Number` |  |
 # <a name='Jobs'></a> Jobs
 
-## <a name='Fetch-job-by-id'></a> Fetch job by id
+## <a name='Fetch-job-by-correlationId'></a> Fetch job by correlationId
 [Back to top](#top)
 
-<p>Fetches agenda job by job id</p>
+<p>Fetches agenda job by job's correlationId</p>
 
 ```
-GET api/v2/jobs/:jobId
+GET api/v2/jobs/correlationId/:correlationId
 ```
 ### Headers
 | Name    | Type      | Description                          |
@@ -337,13 +337,13 @@ GET api/v2/jobs/:jobId
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | data | `Object` | <p>Job object</p> |
-## <a name='Fetch-job-by-correlationId'></a> Fetch job by correlationId
+## <a name='Fetch-job-by-id'></a> Fetch job by id
 [Back to top](#top)
 
-<p>Fetches agenda job by job's correlationId</p>
+<p>Fetches agenda job by job id</p>
 
 ```
-GET api/v2/jobs/correlationId/:correlationId
+GET api/v2/jobs/:jobId
 ```
 ### Headers
 | Name    | Type      | Description                          |
