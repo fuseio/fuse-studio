@@ -254,4 +254,15 @@ router.get('/:communityAddress/:accountAddress', async (req, res) => {
   return res.json({ data: community })
 })
 
+/**
+ * @api {get} /number
+ * @apiName Fetch number of communities that have been launched
+ * @apiGroup Community
+ *
+ */
+router.get('/count', async (req, res) => {
+  const community = await Community.find().count()
+  return res.json({ data: { communities: (community.length || 0) } })
+})
+
 module.exports = router
