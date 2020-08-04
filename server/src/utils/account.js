@@ -27,7 +27,9 @@ const withAccount = (func, filterOrLockingFunction) => async (...params) => {
     throw new Error('no unlocked accounts available')
   }
   try {
+    console.log(`account ${account.address} is locked for running a task`)
     await func(account, ...params)
+    console.log(`unlocking the account ${account.address}`)
     await unlockAccount(account.address)
   } catch (e) {
     await unlockAccount(account.address)

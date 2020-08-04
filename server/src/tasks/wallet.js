@@ -41,6 +41,7 @@ const subscribeToBlocknative = async (walletAddress) => {
 }
 
 const createWallet = withWalletAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
+  console.log(`Using the account ${account.address} to create a wallet on home`)
   const { agenda } = require('@services/agenda')
   const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
@@ -132,6 +133,7 @@ const setWalletOwner = withWalletAccount(async (account, { walletAddress, newOwn
 })
 
 const createForeignWallet = withWalletAccount(async (account, { userWallet, ens = '' }, job) => {
+  console.log(`Using the account ${account.address} to create a wallet on foreign`)
   const { createContract, createMethod, send } = createNetwork('foreign', account)
   const owner = userWallet.walletOwnerOriginalAddress
   const walletFactory = createContract(WalletFactoryABI, userWallet.walletFactoryOriginalAddress)
