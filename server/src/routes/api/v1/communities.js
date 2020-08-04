@@ -255,8 +255,8 @@ router.get('/:communityAddress/:accountAddress', async (req, res) => {
 })
 
 /**
- * @api {get} /number
- * @apiName Fetch number of communities that have been launched
+ * @api {get} /communities/count
+ * @apiName Fetch count of communities that have been launched
  * @apiGroup Community
  *
  */

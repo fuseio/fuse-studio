@@ -87,7 +87,7 @@ POST /communities/:communityAddress/plugins
 
 
 ```
-GET /number
+GET /communities/count
 ```
 
 
