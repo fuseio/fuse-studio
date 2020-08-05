@@ -17,6 +17,7 @@ const UserWalletSchema = new Schema({
   walletModules: { type: Object },
   salt: { type: String, default: null },
   networks: [{ type: String }],
+  pendingNetworks: { type: Array, default: [] },
   identifier: { type: String },
   appName: { type: String },
   ip: { type: String },
