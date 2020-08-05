@@ -4,6 +4,7 @@ const { createNetwork } = require('@utils/web3')
 const { GraphQLClient } = require('graphql-request')
 const graphClient = new GraphQLClient(config.get('graph.url'))
 const request = require('request-promise-native')
+const lodash = require('lodash')
 
 const bonus = withAccount(async (account, { communityAddress, bonusInfo }, job) => {
   const { web3 } = createNetwork('home', account)
@@ -23,7 +24,7 @@ const bonus = withAccount(async (account, { communityAddress, bonusInfo }, job) 
       } else if (body.error) {
         console.error(`Error on token bonus for wallet: ${bonusInfo.receiver}`, body.error)
         job.fail(body.error)
-      } else {
+      } else if (lodash.has(body, 'job._id')) {
         job.attrs.data.funderJobId = body.job._id
       }
       job.save()
