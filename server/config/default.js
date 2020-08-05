@@ -159,6 +159,12 @@ module.exports = {
       },
       startTransfers: {
         concurrency: 1
+      },
+      createWallet: {
+        concurrency: 4
+      },
+      createForeignWallet: {
+        concurrency: 4
       }
     }
   },
