@@ -127,6 +127,7 @@ router.get('/metadata/:communityAddress/:account', async (req, res, next) => {
       metadata = await ipfsUtils.getMetadata(last(uri.split('://')))
     } else {
       metadata = await metadataUtils.getMetadata(last(uri.split('/')))
+      metadata = { ...metadata.toObject() }
     }
     if (has(metadata, 'data.account')) {
       try {
