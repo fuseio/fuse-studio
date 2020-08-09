@@ -126,7 +126,7 @@ router.get('/metadata/:communityAddress/:account', async (req, res, next) => {
     if (ipfsUtils.isIpfsHash(uri)) {
       metadata = await ipfsUtils.getMetadata(last(uri.split('://')))
     } else {
-      metadata = await metadataUtils.getMetadata(last('/'))
+      metadata = await metadataUtils.getMetadata(last(uri.split('/')))
     }
     if (has(metadata, 'data.account')) {
       try {
@@ -191,7 +191,7 @@ router.get('/:communityAddress', async (req, res, next) => {
     const metadatas = await Promise.all(results.map(({ uri }) => uri
       ? ipfsUtils.isIpfsHash(uri)
         ? ipfsUtils.getMetadata(last(uri.split('://')))
-        : metadataUtils.getMetadata(last('/'))
+        : metadataUtils.getMetadata(last(uri.split('/')))
       : null))
     results = results.map((result, index) => ({ ...result.toObject(), metadata: (metadatas[index] && metadatas[index].data) || {} }))
   }
