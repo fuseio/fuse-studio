@@ -1,12 +1,14 @@
 const paginate = require('express-paginate')
 const router = require('express').Router()
+const config = require('config')
 const mongoose = require('mongoose')
 const Entity = mongoose.model('Entity')
 const Profile = mongoose.model('Profile')
 const metadataUtils = require('@utils/metadata')
+const ipfsUtils = require('@utils/metadata/ipfs')
 const Community = mongoose.model('Community')
 const Token = mongoose.model('Token')
-const { sortBy, keyBy, get, has } = require('lodash')
+const { sortBy, keyBy, get, has, last } = require('lodash')
 const { toChecksumAddress } = require('web3-utils')
 
 const withCommunities = async (entities) => {
@@ -67,7 +69,8 @@ router.put('/:communityAddress/:account', async (req, res) => {
   const { account, communityAddress } = req.params
 
   const { name } = req.body.metadata
-  const metadata = await metadataUtils.createMetadata(req.body.metadata)
+  const apiBase = `${config.get('api.protocol')}://${req.headers.host}${req.baseUrl}`
+  const metadata = await metadataUtils.createMetadata(req.body.metadata, apiBase)
 
   const uri = metadata.uri || `ipfs://${metadata.hash}`
   const entity = await Entity.findOneAndUpdate({ account: toChecksumAddress(account), communityAddress }, { uri, name }, { new: true, upsert: true })
@@ -119,7 +122,13 @@ router.get('/metadata/:communityAddress/:account', async (req, res, next) => {
   const entity = await Entity.findOne({ account: toChecksumAddress(account), communityAddress: toChecksumAddress(communityAddress) })
   const uri = get(entity, 'uri', false)
   if (uri) {
-    const metadata = await metadataUtils.getMetadata(entity.uri.split('://')[1])
+    let metadata
+    if (ipfsUtils.isIpfsHash(uri)) {
+      metadata = await ipfsUtils.getMetadata(last(uri.split('://')))
+    } else {
+      metadata = await metadataUtils.getMetadata(last(uri.split('/')))
+      metadata = { ...metadata.toObject() }
+    }
     if (has(metadata, 'data.account')) {
       try {
         metadata.data.account = toChecksumAddress(metadata.data.account)
@@ -180,7 +189,11 @@ router.get('/:communityAddress', async (req, res, next) => {
   ])
 
   if (withMetadata) {
-    const metadatas = await Promise.all(results.map(result => result.uri ? metadataUtils.getMetadata(result.uri.split('://')[1]).catch(console.error) : null))
+    const metadatas = await Promise.all(results.map(({ uri }) => uri
+      ? ipfsUtils.isIpfsHash(uri)
+        ? ipfsUtils.getMetadata(last(uri.split('://')))
+        : metadataUtils.getMetadata(last(uri.split('/')))
+      : null))
     results = results.map((result, index) => ({ ...result.toObject(), metadata: (metadatas[index] && metadatas[index].data) || {} }))
   }
 
