@@ -160,6 +160,17 @@ router.get('/featured', async (req, res, next) => {
 })
 
 /**
+ * @api {get} /communities/count
+ * @apiName Fetch count of communities that have been launched
+ * @apiGroup Community
+ *
+ */
+router.get('/count', async (req, res) => {
+  const count = await Community.find().count()
+  return res.json({ data: (count || 0) })
+})
+
+/**
  * @api {get} /communities/:communityAddress Fetch community
  * @apiName GetCommunity
  * @apiGroup Community

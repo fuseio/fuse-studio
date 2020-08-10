@@ -11,7 +11,7 @@ import TotalSupply from 'components/wizard/components/TotalSupply'
 import LogosOptions from 'components/wizard/components/LogosOptions'
 import CurrencySymbol from 'components/wizard/components/CurrencySymbol'
 import CurrencyType from 'components/wizard/components/CurrencyType'
-import Plugins from 'components/wizard/components/Plugins'
+// import Plugins from 'components/wizard/components/Plugins'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
 // import CommunityStatus from 'components/wizard/components/CommunityStatus'
 
@@ -115,7 +115,7 @@ const DetailsStep = ({
         </ExpansionPanelDetails>
       </ExpansionPanel>
 
-      <ExpansionPanel>
+      {/* <ExpansionPanel>
         <ExpansionPanelSummary
           classes={{
             root: 'ExpansionPanelSummary--last'
@@ -134,7 +134,7 @@ const DetailsStep = ({
             <Plugins />
           </Typography>
         </ExpansionPanelDetails>
-      </ExpansionPanel>
+      </ExpansionPanel> */}
     </div>
   )
 }
