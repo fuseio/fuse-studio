@@ -160,6 +160,17 @@ router.get('/featured', async (req, res, next) => {
 })
 
 /**
+ * @api {get} /communities/count
+ * @apiName Fetch count of communities that have been launched
+ * @apiGroup Community
+ *
+ */
+router.get('/count', async (req, res) => {
+  const count = await Community.find().count()
+  return res.json({ data: (count || 0) })
+})
+
+/**
  * @api {get} /communities/:communityAddress Fetch community
  * @apiName GetCommunity
  * @apiGroup Community
@@ -252,17 +263,6 @@ router.get('/:communityAddress/:accountAddress', async (req, res) => {
     community.plugins.onramp.services.transak.widgetUrl = `${community.plugins.onramp.services.transak.widgetUrl}&partnerCustomerId=${accountAddress}_${toChecksumAddress(communityAddress)}`
   }
   return res.json({ data: community })
-})
-
-/**
- * @api {get} /communities/count
- * @apiName Fetch count of communities that have been launched
- * @apiGroup Community
- *
- */
-router.get('/count', async (req, res) => {
-  const count = await Community.find().count()
-  return res.json({ data: { communities: (count || 0) } })
 })
 
 module.exports = router
