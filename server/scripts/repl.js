@@ -1,5 +1,7 @@
-console.log('loading models')
-require('../src/models')
 require('module-alias/register')
+require('../src/services/mongo').start()
+global.config = require('config')
 
-require('repl').start({})
+require('repl').start({
+  useGlobal: true
+})
