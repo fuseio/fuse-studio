@@ -185,7 +185,7 @@ function * changeNetwork ({ networkType }) {
   }
 
   if (check === 'isFortmatic') {
-    const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[foreignNetwork].id, currentNetwork === 'fuse' ? {
+    const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[currentNetwork === 'fuse' ? foreignNetwork : currentNetwork].id, currentNetwork === 'fuse' ? {
       rpcUrl: CONFIG.web3.fuseProvider,
       chainId: CONFIG.web3.chainId.fuse
     } : currentNetwork)
