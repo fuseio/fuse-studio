@@ -1,37 +1,95 @@
-
 @include block(wallet-modal) {
   min-width: 500px;
-  color: #7A7A7A;
+  max-width: 700px;
+  color: #7a7a7a;
+  padding: 1em;
+
+  @include breakpoint(medium down) {
+    min-width: 80%;
+  }
 
   @include element(title) {
-    font-size: 1.1em;
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 1;
+    letter-spacing: -0.65px;
+    text-align: center;
+    color: #7a7a7a;
   }
 
   @include element(providers-list) {
-    padding: 70px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+    padding: 3em 0;
+    @include xy-grid();
+    @include flex-align(spaced, middle);
   }
 
   @include element(provider) {
-    cursor: pointer;
-    flex-direction: column;
-    display: flex;
+    padding: 1em;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    @include xy-cell(8, null, 0);
+    @include xy-grid(vertical);
+    @include flex-align(center, middle);
 
-    > img {
-      margin: 10px;
-      width: 50px;
-      height: 50px;
+    &:hover {
+      border: 2px solid #e0eaf1;
+      cursor: pointer;
+    }
+
+    @include breakpoint(medium down) {
+      @include xy-cell(24, null, 0);
+    }
+
+    @include block(image) {
+      margin-bottom: 10px;
+      width: 70px;
+      height: 70px;
+    }
+
+    @include block(text) {
+      font-size: 1.5em;
+      font-weight: bold;
+      letter-spacing: -0.65px;
+      text-align: center;
+      color: $color-black;
+    }
+
+    @include block(info) {
+      font-size: 0.75em;
+      line-height: 1.36;
+      letter-spacing: -0.3px;
+      text-align: center;
+
+      > span {
+        font-weight: normal;
+        color: #25435a;
+        font-weight: 500;
+        font-size: 1em;
+      }
     }
   }
 
   @include element(explanation) {
-    font-size: 0.8em;
-    display: flex;
+    text-align: start;
+    &::before {
+      content: "";
+      width: 100%;
+      background-color: #e7e7e7;
+      margin-bottom: 3em;
+      height: 1px;
+    }
+    font-size: 0.75em;
+    letter-spacing: -0.3px;
+
+    > div:first-child {
+      > img {
+        min-width: 28px;
+        min-height: 44px;
+      }
+    }
 
     a {
-      color: #0082FF;
+      color: #0082ff;
     }
   }
 }
