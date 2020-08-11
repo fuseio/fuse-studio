@@ -11,7 +11,7 @@
     "doc:v1": "apidoc -c src/routes/api/v1 -i src/routes/api/v1 -o docs/api/v1 && apidoc-markdown -p docs/api/v1 -o docs/api-v1.md",
     "doc:v2": "apidoc -c src/routes/api/v2 -i src/routes/api/v2 -o docs/api/v2 && apidoc-markdown -p docs/api/v2 -o docs/api-v2.md",
     "lint": "standard",
-    "repl": "node scripts/repl.js",
+    "repl": "node --experimental-repl-await scripts/repl.js",
     "lint-fix": "standard --fix"
   },
   "repository": {

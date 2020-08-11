@@ -102,14 +102,17 @@ const createForeignWalletIfNeeded = async ({ watchedAddress, status }) => {
   if (status !== 'confirmed') {
     return
   }
-  const userWallet = await UserWallet.findOne({ walletAddress: toChecksumAddress(watchedAddress) })
+  const walletAddress = toChecksumAddress(watchedAddress)
+  const userWallet = await UserWallet.findOne({ walletAddress })
   const network = config.get('network.foreign.name')
 
   if (userWallet.networks.includes(network) || (userWallet.networks.pendingNetworks && userWallet.networks.pendingNetworks.includes(network))) {
     return
   }
-  userWallet.pendingNetworks.push(network)
-  await userWallet.save()
+
+  const pendingNetworks = [...userWallet.pendingNetworks, network]
+  await UserWallet.findOneAndUpdate({ walletAddress }, { pendingNetworks })
+
   const job = await agenda.now('createForeignWallet', { userWallet })
   console.log(`watchedAddress ${watchedAddress} does not have wallet on ${network}. Scheduling a job to create one ${job.attrs._id}`)
 }

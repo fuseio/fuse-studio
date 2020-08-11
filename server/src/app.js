@@ -2,12 +2,11 @@ require('module-alias/register')
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
-const mongoose = require('mongoose')
 const path = require('path')
 const paginate = require('express-paginate')
-const process = require('process')
 const util = require('util')
 const config = require('config')
+const mongo = require('./services/mongo')
 const initSecrets = require('@utils/awsSecrets')
 require('express-async-errors')
 const requestIp = require('request-ip')
@@ -46,15 +45,7 @@ async function init () {
     response.sendFile(path.resolve(__dirname, '../public', 'index.html'))
   })
 
-  mongoose.set('debug', config.get('mongo.debug'))
-  mongoose.set('useFindAndModify', false)
-  mongoose.set('useCreateIndex', true)
-
-  mongoose.connect(config.get('mongo.uri'), config.get('mongo.options')).catch((error) => {
-    console.error(error)
-    process.exit(1)
-  })
-  require('./models')(mongoose)
+  mongo.start()
 
   app.use(require('./routes'))
 
