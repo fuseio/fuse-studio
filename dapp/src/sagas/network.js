@@ -1,4 +1,5 @@
 import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effects'
+import Fortmatic from 'fortmatic'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 as getWeb3Service } from 'services/web3'
@@ -182,10 +183,20 @@ function * changeNetwork ({ networkType }) {
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }
+
+  if (check === 'isFortmatic') {
+    const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[foreignNetwork].id, currentNetwork === 'fuse' ? {
+      rpcUrl: CONFIG.web3.fuseProvider,
+      chainId: CONFIG.web3.chainId.fuse
+    } : currentNetwork)
+    const provider = fortmatic.getProvider()
+    const web3 = getWeb3Service({ provider })
+    yield web3.eth.net.getId()
+    yield call(checkNetworkType, { web3 })
+  }
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
-  // window.location.reload()
 }
 
 function * sendTransactionHash ({ transactionHash, abiName }) {

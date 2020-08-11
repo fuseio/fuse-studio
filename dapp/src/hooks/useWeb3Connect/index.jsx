@@ -2,14 +2,19 @@ import { useState } from 'react'
 import Web3Modal from 'web3modal'
 import Torus from '@toruslabs/torus-embed'
 import Fortmatic from 'fortmatic'
+import { loadState } from 'utils/storage'
+
+const networkState = loadState('state.network') || CONFIG.web3.bridge.network
+const { foreignNetwork } = networkState
 
 const providerOptions = {
+  network: foreignNetwork,
   metamask: {
   },
   fortmatic: {
     package: Fortmatic,
     options: {
-      key: CONFIG.web3.fortmatic.id
+      key: CONFIG.web3.fortmatic[foreignNetwork].id
     }
   },
   // portis: {
