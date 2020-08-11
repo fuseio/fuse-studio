@@ -1,6 +1,6 @@
-@include block(templates) {
+@include block(my_communities) {
   @include element(decoration) {
-    @include breakpoint (medium up) {
+    @include breakpoint(medium up) {
       padding: 25px;
       box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
       background-color: $color-white;
@@ -11,6 +11,7 @@
     display: flex;
     flex-flow: column wrap;
     height: 100%;
+    justify-content: space-around;
   }
 
   @include element(list) {
@@ -18,17 +19,9 @@
   }
 
   @include element(title) {
-    font-size: 1.5em;
+    font-size: 1.125em;
+    color: $color-dark;
     font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    margin-bottom: 1em;
-    letter-spacing: 0.5px;
-    color: $color-primary-dark;
-    
-    @include breakpoint (small only) {
-      font-size: 1.3em;
-    }
   }
 
   @include block(item) {
@@ -36,19 +29,19 @@
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
     background-color: $color-white;
 
-    &:hover { 
+    &:hover {
       cursor: pointer;
     }
 
     @include element(image) {
       position: relative;
       width: 100%;
-      
-      @include breakpoint (medium up) {
+
+      @include breakpoint(medium up) {
         padding-top: 100px;
       }
 
-      @include breakpoint (medium down) {
+      @include breakpoint(medium down) {
         padding-top: 130px;
       }
 
@@ -83,7 +76,7 @@
 
       &:hover {
         cursor: pointer;
-        background-color: #F5F5F5;
+        background-color: #f5f5f5;
       }
 
       @include element(title) {
@@ -100,7 +93,7 @@
     }
 
     @include element(name) {
-      font-size: .8em;
+      font-size: 0.8em;
       font-weight: 500;
       letter-spacing: normal;
       color: #696969;
@@ -152,7 +145,7 @@
   }
 
   @include block(side_image) {
-    flex: .7;
+    flex: 0.7;
     width: 100%;
     height: 85%;
 
@@ -274,5 +267,42 @@
         }
       }
     }
+  }
+}
+@include block(no_communities) {
+  cursor: pointer;
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  @include xy-grid();
+  @include flex-align(center, middle);
+
+  @include block (content) {
+    @include xy-grid(vertical);
+    @include flex-align(center, middle);
+
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: center;
+    color: #35617b;
+    padding: 2em;
+
+    > img {
+      margin-top: .5em;
+    }
+  }
+
+  @include block(title) {
+    
+  }
+
+  @include block (empty) {
+    font-size: 0.750em;
+    font-weight: normal;
+    color: #848484;
+    margin-bottom: .5em;
   }
 }

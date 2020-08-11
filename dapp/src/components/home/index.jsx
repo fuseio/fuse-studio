@@ -2,11 +2,9 @@ import React from 'react'
 import { push } from 'connected-react-router'
 import { isMobileOnly } from 'react-device-detect'
 import { connect } from 'react-redux'
-import isEmpty from 'lodash/isEmpty'
 
 import withTracker from 'containers/withTracker'
-import Templates from 'components/home/components/Templates'
-import Tabs from 'components/home/components/Tabs'
+import MyCommunities from 'components/home/components/MyCommunities'
 import Faqs from 'components/home/components/Faq'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import { loadModal } from 'actions/ui'
@@ -24,7 +22,6 @@ const HomePage = ({
   accountAddress,
   web3connect,
   push,
-  communitiesKeys,
   loadModal
 }) => {
   const showIssuance = (templateId) => {
@@ -79,13 +76,7 @@ const HomePage = ({
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
             <div className='cell medium-24 large-12'>
-              {
-                !isEmpty(communitiesKeys) ? (
-                  <Tabs showDashboard={showDashboard} showIssuance={showIssuance} />
-                ) : (
-                  <Templates withDecoration showDashboard={showDashboard} showIssuance={showIssuance} />
-                )
-              }
+              <MyCommunities withDecoration showDashboard={showDashboard} showIssuance={showIssuance} />
             </div>
             <div className='cell medium-24 large-12 home_page__faqAndRecent grid-y grid-margin-y'>
               <FeaturedCommunities accountAddress={accountAddress} showDashboard={showDashboard} />
