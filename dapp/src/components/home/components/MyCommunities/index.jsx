@@ -84,7 +84,7 @@ const MyCommunities = ({
   }, [communitiesIOwn])
   return (
     <div className={classNames('my_communities', { 'my_communities__decoration': withDecoration })}>
-      {withDecoration && <div className='templates__title'>{title}</div>}
+      {withDecoration && <div className='my_communities__title'>{title}</div>}
       <Carousel
         value={valueSpinner}
         centered
