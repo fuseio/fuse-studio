@@ -35,7 +35,6 @@ node_modules
 .node_repl_history
 
 .idea
-run.sh
 
 # App data
 blockNumber
