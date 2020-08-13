@@ -128,8 +128,8 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       throw new Error(`No return values in receipt (or now receipt)`)
     }
     const { success, wallet, signedHash } = returnValues
+    const { blockNumber } = receipt
     if (success) {
-      const { blockNumber } = receipt
       job.attrs.data.status = 'confirmed'
       job.attrs.data.blockNumber = blockNumber
       job.save()
@@ -173,6 +173,7 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       }
     } else {
       job.attrs.data.status = 'failed'
+      job.attrs.data.blockNumber = blockNumber
       job.save()
       console.error(`Relay transaction failed from wallet: ${wallet}, signedHash: ${signedHash}`)
     }
