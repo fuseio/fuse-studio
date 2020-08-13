@@ -491,6 +491,11 @@ GET api/v2/wallets/transfers/tokentx/:walletAddress
 |---------|-----------|--------------------------------------|
 | Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
 
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| tokenAddress | `String` | <p>Address of the token</p> |
+| startblock | `String` | <p>The block number to start fetch from</p> |
 
 
 ### Success 200

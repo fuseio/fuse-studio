@@ -25,6 +25,8 @@ const formatPending = ({ _id, data: { transactionBody, txHash } }) => ({
  * @api {get} api/v2/wallets/transfers/tokentx/:walletAddress Get token transfer events by address on fuse
  * @apiName FetchTokenTxByAddress
  * @apiGroup Wallet
+ * @apiParam {String} tokenAddress Address of the token
+ * @apiParam {String} startblock The block number to start fetch from
  * @apiDescription Get token transfer events by address on fuse
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
