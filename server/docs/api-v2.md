@@ -29,6 +29,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Create wallet contract for user](#Create-wallet-contract-for-user)
 	- [Create wallet contract for user on Ethereum](#Create-wallet-contract-for-user-on-Ethereum)
 	- [Fetch all wallets by phone number](#Fetch-all-wallets-by-phone-number)
+	- [Get token transfer events by address on fuse](#Get-token-transfer-events-by-address-on-fuse)
 	- [Fetch user wallet](#Fetch-user-wallet)
 	- [Fetch latest wallet by phone number](#Fetch-latest-wallet-by-phone-number)
 	- [Notify server on client wallet backup](#Notify-server-on-client-wallet-backup)
@@ -477,6 +478,30 @@ GET api/v2/wallets/all/:phoneNumber
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | data | `Object` | <p>Array of Wallet objects</p> |
+## <a name='Get-token-transfer-events-by-address-on-fuse'></a> Get token transfer events by address on fuse
+[Back to top](#top)
+
+<p>Get token transfer events by address on fuse</p>
+
+```
+GET api/v2/wallets/transfers/tokentx/:walletAddress
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| tokenAddress | `String` | <p>Address of the token</p> |
+| startblock | `String` | <p>The block number to start fetch from</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| data | `Object` | <p>Array of transfer events</p> |
 ## <a name='Fetch-user-wallet'></a> Fetch user wallet
 [Back to top](#top)
 
