@@ -23,7 +23,8 @@ const UserWallet = mongoose.model('UserWallet')
  * @apiSuccess {String} Started job data
  */
 router.post('/create', auth.required, async (req, res) => {
-  const { isCommunityAdmin, accountAddress, identifier, appName } = req.user
+  const { isCommunityAdmin, identifier, appName } = req.user
+  const accountAddress = req.body.defaultOwner ? config.get('network.home.addresses.MultiSigWallet') : req.user.accountAddress
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
