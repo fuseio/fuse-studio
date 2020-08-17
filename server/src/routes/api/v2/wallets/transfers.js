@@ -4,8 +4,7 @@ const mongoose = require('mongoose')
 const AgendaJob = mongoose.model('AgendaJob')
 const auth = require('@routes/auth')
 const request = require('request-promise-native')
-const Promise = require('bluebird')
-const { get } = require('lodash')
+const { get, keyBy } = require('lodash')
 
 const formatPending = ({ _id, data: { transactionBody, txHash } }) => ({
   jobId: _id,
@@ -20,6 +19,13 @@ const formatPending = ({ _id, data: { transactionBody, txHash } }) => ({
   to: get(transactionBody, 'to', ''),
   hash: txHash
 })
+
+const withJobs = async (transferEvents) => {
+  const txHashesFromJobs = transferEvents.map(transferEvent => transferEvent.hash)
+  const jobsFromWallet = await AgendaJob.find({ 'data.txHash': { $in: txHashesFromJobs } })
+  const jobsByTxHashes = keyBy(jobsFromWallet, 'data.txHash')
+  return jobsByTxHashes
+}
 
 /**
  * @api {get} api/v2/wallets/transfers/tokentx/:walletAddress Get token transfer events by address on fuse
@@ -40,19 +46,17 @@ router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
   const transferEvents = JSON.parse(responseTransferEvents)
 
   if (transferEvents['status'] === '1') {
-    const result = await Promise.map(transferEvents['result'], transferEvent => {
-      return new Promise(resolve => {
-        if (transferEvent.from.toLowerCase() === walletAddress.toLowerCase()) {
-          AgendaJob.findOne({
-            'data.txHash': transferEvent.hash
-          }).then(job => {
-            resolve({ ...transferEvent, jobId: job._id, status: 'confirmed' })
-          })
-        } else {
-          resolve({ ...transferEvent, status: 'confirmed' })
+    const hashesByJobs = await withJobs(transferEvents.result)
+    const result = transferEvents.result.map(transferEvent => {
+      if (transferEvent.from.toLowerCase() === walletAddress.toLowerCase()) {
+        if (hashesByJobs[transferEvent.hash]) {
+          return { ...transferEvent, jobId: hashesByJobs[transferEvent.hash]._id, status: 'confirmed' }
         }
-      })
-    }, { concurrency: 10 })
+        return { ...transferEvent, status: 'confirmed' }
+      } else {
+        return { ...transferEvent, status: 'confirmed' }
+      }
+    })
 
     const pendingJobs = await AgendaJob.find({
       'data.walletAddress': walletAddress,

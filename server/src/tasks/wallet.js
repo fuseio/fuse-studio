@@ -140,7 +140,8 @@ const createForeignWallet = withWalletAccount(async (account, { userWallet, ens 
   const method = createMethod(walletFactory, 'createCounterfactualWallet', owner, Object.values(userWallet.walletModulesOriginal), ens, userWallet.salt)
 
   const receipt = await send(method, {
-    from: account.address
+    from: account.address,
+    gas: 5500000
   }, {
     transactionHash: (hash) => {
       job.attrs.data.txHash = hash
