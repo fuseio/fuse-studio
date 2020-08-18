@@ -130,8 +130,7 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
     const { success, wallet, signedHash } = returnValues
     const { blockNumber } = receipt
     if (success) {
-      job.attrs.data.transactionBody.status = 'confirmed'
-      job.attrs.data.transactionBody.blockNumber = blockNumber
+      job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'confirmed', blockNumber }
       job.save()
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
       if (walletModule === 'CommunityManager') {
@@ -172,8 +171,7 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
         job.save()
       }
     } else {
-      job.attrs.data.transactionBody.status = 'failed'
-      job.attrs.data.transactionBody.blockNumber = blockNumber
+      job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'failed', blockNumber }
       job.save()
       console.error(`Relay transaction failed from wallet: ${wallet}, signedHash: ${signedHash}`)
     }
