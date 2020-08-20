@@ -169,7 +169,8 @@ function * watchConnectToWallet ({ response, accountAddress }) {
 function * changeNetwork ({ networkType }) {
   const foreignNetwork = yield select(getForeignNetwork)
   const currentNetwork = toLongName(networkType)
-  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : currentNetwork, networkType: currentNetwork })
+  const isFuseNetwork = currentNetwork === 'fuse'
+  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: isFuseNetwork ? foreignNetwork : currentNetwork, networkType: currentNetwork })
   const web3 = yield getWeb3()
   const providerInfo = getProviderInfo(web3.currentProvider)
   const { check } = providerInfo
@@ -180,15 +181,15 @@ function * changeNetwork ({ networkType }) {
   }
   if (check === 'isTorus') {
     yield web3.currentProvider.torus.setProvider({
-      host: currentNetwork === 'fuse' ? CONFIG.web3.fuseProvider : currentNetwork,
+      host: isFuseNetwork ? CONFIG.web3.fuseProvider : currentNetwork,
       networkName: currentNetwork,
-      chainId: currentNetwork === 'fuse' ? CONFIG.web3.chainId.fuse : undefined })
+      chainId: isFuseNetwork ? CONFIG.web3.chainId.fuse : undefined })
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }
 
   if (check === 'isFortmatic') {
-    const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[networkType === 'fuse' ? 'main' : toShortName(currentNetwork)].id, currentNetwork === 'fuse' ? {
+    const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[isFuseNetwork ? 'main' : toShortName(currentNetwork)].id, isFuseNetwork ? {
       rpcUrl: CONFIG.web3.fuseProvider,
       chainId: CONFIG.web3.chainId.fuse
     } : currentNetwork)
