@@ -24,6 +24,12 @@ module.exports = {
   graph: {
     url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio/fuse-qa'
   },
+  jobsGases: {
+    createForeignWallet: 5500000,
+    relay: 250000,
+    funder: 21000,
+    getDAIPointsToAddress: 1000000
+  },
   box: {
     graph: {
       url: 'https://api.3box.io/graph'

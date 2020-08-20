@@ -1,3 +1,4 @@
+const config = require('config')
 const BigNumber = require('bignumber.js')
 const mongoose = require('mongoose')
 const Transfer = mongoose.model('Transfer')
@@ -50,7 +51,7 @@ const getDAIPointsToAddress = withAccount(async (account, { bridgeType, tokenAdd
 
   await send(method, {
     from: account.address,
-    gas: 1000000
+    gas: config.get('jobsGases.getDAIPointsToAddress')
   }, {
     transactionHash: (hash) => {
       job.attrs.data.txHash = hash
