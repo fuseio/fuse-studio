@@ -24,7 +24,7 @@ const funder = async ({ home: { web3, from } }, communityProgress) => {
       value: toWei(bonus),
       nonce: account.nonce,
       gasPrice: config.get('network.home.gasPrice'),
-      gas: 21000
+      gas: config.get('gasLimitForTx.funder')
     })
     if (receipt) {
       account.nonces['home']++

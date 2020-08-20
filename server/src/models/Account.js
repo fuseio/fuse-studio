@@ -8,10 +8,11 @@ const AccountSchema = new Schema({
   isLocked: { type: Boolean, default: false },
   lockingTime: { type: Date },
   role: { type: String, default: '*' },
-  lockingReason: { type: String }
+  lockingReason: { type: String },
+  bridgeType: { type: String, enum: ['home', 'foreign'] }
 }, { timestamps: true })
 
-AccountSchema.index({ address: 1 }, { unique: true })
+AccountSchema.index({ address: 1, bridgeType: 1 }, { unique: true })
 
 const Account = mongoose.model('Account', AccountSchema)
 

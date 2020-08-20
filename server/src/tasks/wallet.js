@@ -141,7 +141,7 @@ const createForeignWallet = withWalletAccount(async (account, { userWallet, ens 
 
   const receipt = await send(method, {
     from: account.address,
-    gas: 5500000
+    gas: config.get('gasLimitForTx.createForeignWallet')
   }, {
     transactionHash: (hash) => {
       job.attrs.data.txHash = hash
