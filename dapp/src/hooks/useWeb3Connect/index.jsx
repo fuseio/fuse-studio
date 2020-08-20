@@ -3,18 +3,19 @@ import Web3Modal from 'web3modal'
 import Torus from '@toruslabs/torus-embed'
 import Fortmatic from 'fortmatic'
 import { loadState } from 'utils/storage'
+import { get } from 'lodash'
+import { toShortName, toLongName } from 'utils/network'
 
-const networkState = loadState('state.network') || CONFIG.web3.bridge.network
-const { foreignNetwork } = networkState
+const network = get(loadState('state.network'), 'foreignNetwork', null) || CONFIG.web3.bridge.network.foreignNetwork
 
 const providerOptions = {
-  network: foreignNetwork,
   metamask: {
   },
   fortmatic: {
     package: Fortmatic,
     options: {
-      key: CONFIG.web3.fortmatic[foreignNetwork].id
+      network: toLongName(network),
+      key: CONFIG.web3.fortmatic[toShortName(network)].id
     }
   },
   // portis: {
@@ -24,7 +25,7 @@ const providerOptions = {
   //   }
   // },
   torus: {
-    package: Torus, // required
+    package: Torus,
     options: {
       enableLogging: CONFIG.env !== 'production',
       buttonPosition: 'top-right',

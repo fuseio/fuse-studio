@@ -19,7 +19,7 @@ export const SEND_TRANSACTION_HASH = createRequestTypes('SEND_TRANSACTION_HASH')
 export const SET_FOREIGN_NETWORK = 'SET_FOREIGN_NETWORK'
 
 export const checkNetworkType = (enableProvider, provider) => requestAction(CHECK_NETWORK_TYPE, { provider, enableProvider })
-export const connectToWallet = (provider) => requestAction(CONNECT_TO_WALLET, { provider })
+export const connectToWallet = () => requestAction(CONNECT_TO_WALLET)
 
 export const getForeignNetwork = (communityAddress) => requestAction(GET_FOREIGN_NETWORK, { communityAddress })
 

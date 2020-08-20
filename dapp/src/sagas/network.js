@@ -3,7 +3,7 @@ import Fortmatic from 'fortmatic'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 as getWeb3Service } from 'services/web3'
-import { toLongName } from 'utils/network'
+import { toLongName, toShortName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse, balanceOfNative, fetchCommunities } from 'actions/accounts'
 import { networkIdToName } from 'constants/network'
@@ -59,7 +59,9 @@ function * connectToWallet () {
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
 
-    yield fork(watchNetworkChanges, provider)
+    if (!provider.isFortmatic) {
+      yield fork(watchNetworkChanges, provider)
+    }
     yield call(checkNetworkType, { web3 })
 
     yield put({
@@ -100,7 +102,8 @@ function * checkNetworkType ({ web3 }) {
       type: actions.CHECK_NETWORK_TYPE.SUCCESS,
       response
     })
-    const accountAddress = yield select(state => state.network.accountAddress)
+    const accounts = yield web3.eth.getAccounts(cb)
+    const accountAddress = accounts[0]
     yield put(balanceOfNative(accountAddress, { bridgeType: 'home' }))
     yield put(balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
   } catch (error) {
@@ -185,11 +188,11 @@ function * changeNetwork ({ networkType }) {
   }
 
   if (check === 'isFortmatic') {
-    const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[currentNetwork === 'fuse' ? foreignNetwork : currentNetwork].id, currentNetwork === 'fuse' ? {
+    const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[networkType === 'fuse' ? 'main' : toShortName(currentNetwork)].id, currentNetwork === 'fuse' ? {
       rpcUrl: CONFIG.web3.fuseProvider,
       chainId: CONFIG.web3.chainId.fuse
     } : currentNetwork)
-    const provider = fortmatic.getProvider()
+    const provider = yield fortmatic.getProvider()
     const web3 = getWeb3Service({ provider })
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })

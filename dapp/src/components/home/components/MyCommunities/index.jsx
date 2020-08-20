@@ -73,7 +73,7 @@ const MyCommunities = ({
       return myCommunitiesList
     } else {
       return [
-        <div style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
+        <div key={'NoCommunities'} style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
           <NoCommunities showIssuance={showIssuance} />
           <Empty />
           <Empty />
