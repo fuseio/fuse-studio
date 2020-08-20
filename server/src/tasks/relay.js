@@ -115,7 +115,7 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
 
     const receipt = await send(method, {
       from: account.address,
-      gas: config.get('jobsGases.createForeignWallet')
+      gas: config.get('gasLimitForTx.createForeignWallet')
     }, {
       transactionHash: (hash) => {
         job.attrs.data.txHash = hash

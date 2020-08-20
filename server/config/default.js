@@ -24,7 +24,7 @@ module.exports = {
   graph: {
     url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio/fuse-qa'
   },
-  jobsGases: {
+  gasLimitForTx: {
     createForeignWallet: 5500000,
     relay: 250000,
     funder: 21000,

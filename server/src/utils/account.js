@@ -38,8 +38,8 @@ const withAccount = (func, filterOrLockingFunction) => async (...params) => {
 }
 
 const withWalletAccount = (func) => withAccount(func, ({ network }) => {
-  const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
-  return lockAccount({ role: 'wallet', network: networkType })
+  const bridgeType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
+  return lockAccount({ role: 'wallet', bridgeType })
 })
 
 const generateAccounts = (seed, accountsNumber) => {

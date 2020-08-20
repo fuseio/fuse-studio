@@ -51,7 +51,7 @@ const getDAIPointsToAddress = withAccount(async (account, { bridgeType, tokenAdd
 
   await send(method, {
     from: account.address,
-    gas: config.get('jobsGases.getDAIPointsToAddress')
+    gas: config.get('gasLimitForTx.getDAIPointsToAddress')
   }, {
     transactionHash: (hash) => {
       job.attrs.data.txHash = hash
