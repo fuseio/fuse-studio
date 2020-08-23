@@ -26,7 +26,7 @@ export default ({ isClosed, token, metadata, name, handleJoinCommunity }) => {
       {
         handleJoinCommunity
           ? <div className='community_header__button'>
-            <button onClick={handleJoinCommunity}><img src={PlusIcon} />Join comminity</button>
+            <button onClick={handleJoinCommunity}><img src={PlusIcon} />Join community</button>
           </div>
           : null
       }

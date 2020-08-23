@@ -3,14 +3,21 @@ import TextField from '@material-ui/core/TextField'
 import BannerImage from 'components/dashboard/components/BannerImage'
 import { Formik } from 'formik'
 import { object, string } from 'yup'
+import { isIpfsHash, isS3Hash } from 'utils/metadata'
 
 class WalletBannerLinkForm extends Component {
   constructor (props) {
     super(props)
 
+    const { plugin: { link, walletBannerHash } } = props
+
     this.initialValues = {
-      link: '' || props.plugin.link,
-      walletBanner: props.plugin.walletBannerHash ? `${CONFIG.ipfsProxy.urlBase}/image/${props.plugin.walletBannerHash}` : ''
+      link: '' || link,
+      walletBanner: isIpfsHash(walletBannerHash)
+        ? `${CONFIG.ipfsProxy.urlBase}/image/${walletBannerHash}`
+        : isS3Hash(walletBannerHash)
+          ? `${CONFIG.aws.s3.bucket}/${walletBannerHash}`
+          : ''
     }
 
     this.validationSchema = object().noUnknown(false).shape({

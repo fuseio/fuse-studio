@@ -2,6 +2,9 @@ import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 import has from 'lodash/has'
 
+export const isIpfsHash = (hash) => hash != null && hash.length === 46
+export const isS3Hash = (hash) => hash != null && hash.length === 64
+
 export const getImageUri = (metadata) => get(metadata, 'imageUri') ||
   (!isEmpty(get(metadata, 'image'))
     ? `${CONFIG.ipfsProxy.urlBase}/image/${get(metadata, 'image')}`
