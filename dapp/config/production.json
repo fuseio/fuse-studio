@@ -49,5 +49,10 @@
   "sentry": {
     "key": "24bb2594d71c47489e029add66203eae",
     "project": "1815168"
+  },
+  "aws": {
+    "s3": {
+      "bucket": "fuse-studio"
+    }
   }
 }

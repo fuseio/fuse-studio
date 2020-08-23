@@ -113,7 +113,7 @@
   },
   "aws": {
     "s3": {
-      "bucket": "fuse-studio"
+      "bucket": "fuse-studio-qa"
     }
   },
   "sentry": {
