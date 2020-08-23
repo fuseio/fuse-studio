@@ -111,6 +111,11 @@
   "ipfsProxy": {
     "urlBase": "http://localhost:4000/api"
   },
+  "aws": {
+    "s3": {
+      "bucket": "fuse-studio-qa"
+    }
+  },
   "sentry": {
     "key": "e466161467e346d586ae94565d5ae924",
     "project": "1814732"
