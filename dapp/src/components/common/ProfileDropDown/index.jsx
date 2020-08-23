@@ -158,7 +158,7 @@ const ProfileDropDown = ({
           </CopyToClipboard>
         </div>
         <div onClick={logout} className='cell small-24 profile__account__logout grid-x align-middle align-center'>
-          <span>Log out from {providerInfo.check.substring(2)}</span>
+          <span>Log out from {providerInfo.check && providerInfo.check.substring && providerInfo.check.substring(2)}</span>
         </div>
       </div>
       <div className='profile__communities grid-y'>

@@ -194,9 +194,10 @@ function * changeNetwork ({ networkType }) {
       chainId: CONFIG.web3.chainId.fuse
     } : currentNetwork)
     const provider = yield fortmatic.getProvider()
-    const web3 = getWeb3Service({ provider })
-    yield web3.eth.net.getId()
-    yield call(checkNetworkType, { web3 })
+    getWeb3Service({ provider })
+    yield put({
+      type: actions.CONNECT_TO_WALLET.REQUEST
+    })
   }
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
