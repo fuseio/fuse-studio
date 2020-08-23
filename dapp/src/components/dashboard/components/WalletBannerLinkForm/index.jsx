@@ -16,7 +16,7 @@ class WalletBannerLinkForm extends Component {
       walletBanner: isIpfsHash(walletBannerHash)
         ? `${CONFIG.ipfsProxy.urlBase}/image/${walletBannerHash}`
         : isS3Hash(walletBannerHash)
-          ? `${CONFIG.aws.s3.bucket}/${walletBannerHash}`
+          ? `https://${CONFIG.aws.s3.bucket}.s3.amazonaws.com/${walletBannerHash}`
           : ''
     }
 
