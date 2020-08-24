@@ -41,20 +41,21 @@ const lockedAccounts = async () => {
 }
 
 const lowBalanceAccounts = async () => {
-  const watchedRoles = config.get('alerts.lowBalanceAccounts.roles')
-  for (const role of watchedRoles) {
-    await lowBalanceAccountsWithRole(role)
+  const watchedOptions = config.get('alerts.lowBalanceAccounts.options')
+  for (const option of watchedOptions) {
+    await lowBalanceAccountsWithRole(option)
   }
 }
 
-const lowBalanceAccountsWithRole = async (role) => {
-  const accounts = await Account.find({ role })
+const lowBalanceAccountsWithRole = async ({ role, bridgeType }) => {
+  const accounts = await Account.find({ role, bridgeType: !bridgeType ? { '$exists': false } : bridgeType })
   const network = config.get('network.foreign.name')
+  const networkType = config.get(`network.${!bridgeType ? 'foreign' : bridgeType}.name`)
   const threshold = new BigNumber(toWei(config.get('alerts.lowBalanceAccounts.threshold')))
 
   const msgPrefix = `*${environment.toUpperCase()}-${network.toUpperCase()}*`
 
-  const web3 = getWeb3({ networkType: network })
+  const web3 = getWeb3({ networkType: networkType })
   for (const account of accounts) {
     const balance = await web3.eth.getBalance(account.address)
     if (threshold.isGreaterThan(balance)) {
