@@ -184,8 +184,8 @@
     },
     "lowBalanceAccounts": {
       "threshold": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_THRESHOLD",
-      "roles": {
-        "__name": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_ROLES",
+      "options": {
+        "__name": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_OPTIONS",
         "__format": "json"
       }
     }
