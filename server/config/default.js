@@ -240,7 +240,19 @@ module.exports = {
       threshold: 10 // in minutes
     },
     lowBalanceAccounts: {
-      roles: ['*'],
+      options: [
+        {
+          role: '*'
+        },
+        {
+          role: 'wallet',
+          bridgeType: 'home'
+        },
+        {
+          role: 'wallet',
+          bridgeType: 'foreign'
+        }
+      ],
       threshold: '0.25' // in ETH
     }
   },
