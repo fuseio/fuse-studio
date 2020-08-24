@@ -71,10 +71,11 @@ const createAccount = async (role = '*') => {
   return account
 }
 
-const generateAdminJwt = (accountAddress) => {
+const generateAdminJwt = (accountAddress, appName) => {
   const secret = config.get('api.secret')
   return jwt.sign({
     accountAddress,
+    appName,
     isCommunityAdmin: true
   }, secret)
 }
