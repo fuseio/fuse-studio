@@ -59,7 +59,7 @@ const lowBalanceAccountsWithRole = async ({ role, bridgeType }) => {
   for (const account of accounts) {
     const balance = await web3.eth.getBalance(account.address)
     if (threshold.isGreaterThan(balance)) {
-      const msg = `${msgPrefix}\naccount ${wrapCodeBlock(account.address)} with role ${wrapCodeBlock(account.role)} got low balance of ${wrapCodeBlock(fromWei(balance))}`
+      const msg = `${msgPrefix}\naccount ${wrapCodeBlock(account.address)} with role ${wrapCodeBlock(account.role)} got low balance of ${wrapCodeBlock(fromWei(balance))} on - ${wrapCodeBlock(networkType)}`
       console.warn(msg)
       notify(msg)
       if (!account.isLocked) {
