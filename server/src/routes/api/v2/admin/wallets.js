@@ -44,7 +44,7 @@ router.post('/create', auth.required, async (req, res) => {
       identifier,
       appName
     }).save()
-    const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id })
+    const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id, network: config.get('network.home.name') })
     return res.json({ job: job.attrs })
   } catch (err) {
     return res.status(400).send({ error: err.message })
