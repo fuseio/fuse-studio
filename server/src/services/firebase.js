@@ -83,7 +83,7 @@ const initAdmin = async () => {
   }, 'Paywise')
 
   const fcKnuddeResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdFCKnudde }).promise()
-  paywiseAdmin = admin.initializeApp({
+  fcKnuddeAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(fcKnuddeResponse.SecretString))
   }, 'FCKnudde')
 }
