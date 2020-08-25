@@ -70,8 +70,8 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
 
 router.put('/:communityAddress', async (req, res) => {
   const { communityAddress } = req.params
-  const { communityURI, description, webUrl } = req.body
-  const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description, webUrl }, lodash.identity), { new: true })
+  const { communityURI, description, webUrl, customData } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description, webUrl, customData }, lodash.identity), { new: true })
   return res.json({ data: community })
 })
 
