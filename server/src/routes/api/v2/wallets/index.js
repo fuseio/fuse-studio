@@ -28,7 +28,7 @@ router.post('/', auth.required, async (req, res, next) => {
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
-    const job = await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress, correlationId, network: config.get('network.home.name') })
+    const job = await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress, correlationId })
     return res.json({ job: job.attrs })
   } else {
     let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
@@ -51,7 +51,7 @@ router.post('/', auth.required, async (req, res, next) => {
         appName,
         ip: req.clientIp
       }).save()
-      const job = await agenda.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id, network: config.get('network.home.name') })
+      const job = await agenda.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id })
       return res.json({ job: job.attrs })
     }
   }
@@ -200,7 +200,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     appName
   }).save()
 
-  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, network: config.get('network.home.name') })
+  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName })
 
   return res.json({ job: job.attrs })
 })
