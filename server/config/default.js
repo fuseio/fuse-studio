@@ -25,7 +25,7 @@ module.exports = {
     url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio/fuse-qa'
   },
   gasLimitForTx: {
-    createForeignWallet: 5500000,
+    createForeignWallet: 550000,
     relay: 250000,
     funder: 21000,
     getDAIPointsToAddress: 1000000
