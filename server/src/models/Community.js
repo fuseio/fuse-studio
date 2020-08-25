@@ -10,6 +10,7 @@ const CommunitySchema = new Schema({
   secondaryTokenAddress: { type: String },
   isClosed: { type: Boolean, default: false },
   plugins: { type: Object },
+  customData: { type: Object },
   name: { type: String, required: [true, "can't be blank"] },
   communityURI: { type: String },
   coverPhoto: { type: String },
