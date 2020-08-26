@@ -22,6 +22,7 @@ import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import TransactionMessage from 'components/common/TransactionMessage'
+import { isIpfsHash, isS3Hash } from 'utils/metadata'
 
 import dotsIcon from 'images/dots.svg'
 
@@ -89,14 +90,20 @@ const Businesses = ({
     if (businesses) {
       const data = businesses.map(({ address }) => {
         const checkSumAddress = toChecksumAddress(address)
+        const imageHash = get(businessesMetadata[checkSumAddress], 'image')
+        const image = isIpfsHash(imageHash)
+          ? `${CONFIG.ipfsProxy.urlBase}/image/${imageHash}`
+          : isS3Hash(imageHash)
+            ? `https://${CONFIG.aws.s3.bucket}.s3.amazonaws.com/${imageHash}`
+            : ''
         return {
           name: [
             {
               name: get(businessesMetadata[checkSumAddress], 'name', ''),
-              image: get(businessesMetadata[checkSumAddress], 'image')
+              image: imageHash
                 ? <div
                   style={{
-                    backgroundImage: `url(${CONFIG.ipfsProxy.urlBase}/image/${get(businessesMetadata[checkSumAddress], 'image')}`,
+                    backgroundImage: `url(${image}`,
                     width: '36px',
                     height: '36px',
                     backgroundSize: 'contain',
