@@ -15,6 +15,7 @@ let seedbedAdmin
 let digitalRandAdmin
 let paywiseAdmin
 let fcKnuddeAdmin
+let straitsxAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -86,6 +87,11 @@ const initAdmin = async () => {
   fcKnuddeAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(fcKnuddeResponse.SecretString))
   }, 'FCKnudde')
+
+  const straitsxResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdStraitsx }).promise()
+  straitsxAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(straitsxResponse.SecretString))
+  }, 'StraitsX')
 }
 
 initAdmin()
@@ -117,6 +123,8 @@ const getAdmin = (appName) => {
     return paywiseAdmin
   } else if (appName === 'FCKnudde') {
     return fcKnuddeAdmin
+  } else if (appName === 'StraitsX') {
+    return straitsxAdmin
   } else {
     return admin
   }
