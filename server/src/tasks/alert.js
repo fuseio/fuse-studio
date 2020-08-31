@@ -69,7 +69,7 @@ const lowBalanceAccountsWithRole = async ({ role, bridgeType }) => {
       account.lockingReason === OUT_OF_GAS &&
       threshold.isLessThanOrEqualTo(balance)) {
       console.info(`account ${account.address} received ether, unlocking`)
-      await unlockAccount(account.address)
+      await unlockAccount(account.address, { role: account.role, bridgeType: account.bridgeType })
     }
   }
   const numberOflockedAccounts = await Account.find({ isLocked: true, role }).countDocuments()
