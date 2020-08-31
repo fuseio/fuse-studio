@@ -98,6 +98,11 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
     } catch (error) {
       console.error(error)
 
+      // reverted: transaction has beed confirmed but failed
+      if (error.receipt) {
+        return error
+      }
+
       const updateNonce = async () => {
         console.log('updating the nonce')
         const nonce = await web3.eth.getTransactionCount(from)
@@ -134,6 +139,9 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
     const response = await doSend(i) || {}
     const { receipt } = response
     if (receipt) {
+      if (!receipt.status) {
+        console.warn(`Transaction ${receipt.transactionHash} is reverted`)
+      }
       account.nonces[bridgeType]++
       await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
       receipt.bridgeType = bridgeType
