@@ -278,7 +278,7 @@ router.post('/foreign', auth.required, async (req, res, next) => {
     const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress} on ${network}`
     return res.status(400).json({ error: msg })
   }
-  const job = await agenda.now('createForeignWallet', { userWallet, correlationId })
+  const job = await agenda.now('createForeignWallet', { userWallet, correlationId, network })
   return res.json({ job: job.attrs })
 })
 
