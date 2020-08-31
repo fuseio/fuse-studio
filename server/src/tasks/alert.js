@@ -48,7 +48,7 @@ const lowBalanceAccounts = async () => {
 }
 
 const lowBalanceAccountsWithRole = async ({ role, bridgeType }) => {
-  const accounts = await Account.find({ role, bridgeType: !bridgeType ? { '$exists': false } : bridgeType })
+  const accounts = await Account.find({ role, bridgeType: bridgeType || { '$exists': false } })
   const network = config.get('network.foreign.name')
   const networkType = config.get(`network.${bridgeType || network}.name`)
   const threshold = new BigNumber(toWei(config.get('alerts.lowBalanceAccounts.threshold')))
