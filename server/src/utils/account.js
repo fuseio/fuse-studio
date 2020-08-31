@@ -12,8 +12,8 @@ const lockAccountWithReason = async (query = { role: '*' }, reason) => {
   return Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date(), lockingReason: reason })
 }
 
-const unlockAccount = async (address) =>
-  Account.findOneAndUpdate({ address }, { isLocked: false, lockingTime: null, lockingReason: null })
+const unlockAccount = async (address, query = { role: '*' }) =>
+  Account.findOneAndUpdate({ address, ...query }, { isLocked: false, lockingTime: null, lockingReason: null })
 
 const withAccount = (func, filterOrLockingFunction) => async (...params) => {
   let account
@@ -29,10 +29,10 @@ const withAccount = (func, filterOrLockingFunction) => async (...params) => {
   try {
     console.log(`account ${account.address} is locked for running a task`)
     await func(account, ...params)
-    console.log(`unlocking the account ${account.address}`)
-    await unlockAccount(account.address)
+    console.log(`unlocking the account ${account.address} with role ${account.role} and bridgeType ${account.bridgeType}`)
+    await unlockAccount(account.address, { role: account.role, bridgeType: account.bridgeType })
   } catch (e) {
-    await unlockAccount(account.address)
+    await unlockAccount(account.address, { role: account.role, bridgeType: account.bridgeType })
     throw e
   }
 }
