@@ -48,26 +48,26 @@ const lowBalanceAccounts = async () => {
 }
 
 const lowBalanceAccountsWithRole = async ({ role, bridgeType }) => {
-  const accounts = await Account.find({ role, bridgeType: !bridgeType ? { '$exists': false } : bridgeType })
+  const accounts = await Account.find({ role, bridgeType: bridgeType || { '$exists': false } })
   const network = config.get('network.foreign.name')
-  const networkType = config.get(`network.${!bridgeType ? 'foreign' : bridgeType}.name`)
+  const networkType = config.get(`network.${bridgeType || network}.name`)
   const threshold = new BigNumber(toWei(config.get('alerts.lowBalanceAccounts.threshold')))
 
   const msgPrefix = `*${environment.toUpperCase()}-${network.toUpperCase()}*`
 
-  const web3 = getWeb3({ networkType: networkType })
+  const web3 = getWeb3({ networkType: networkType, bridgeType: bridgeType || network })
   for (const account of accounts) {
     const balance = await web3.eth.getBalance(account.address)
     if (threshold.isGreaterThan(balance)) {
-      const msg = `${msgPrefix}\naccount ${wrapCodeBlock(account.address)} with role ${wrapCodeBlock(account.role)} got low balance of ${wrapCodeBlock(fromWei(balance))} on - ${wrapCodeBlock(networkType)}`
+      const msg = `${msgPrefix}\naccount ${wrapCodeBlock(account.address)} with role ${wrapCodeBlock(account.role)} got low balance of ${wrapCodeBlock(fromWei(balance))} on - ${wrapCodeBlock(networkType)} bridgeType - ${wrapCodeBlock(bridgeType)}`
       console.warn(msg)
       notify(msg)
       if (!account.isLocked) {
         await lockAccountWithReason({ address: account.address }, OUT_OF_GAS)
       }
     } else if (account.isLocked &&
-        account.lockingReason === OUT_OF_GAS &&
-        threshold.isLessThanOrEqualTo(balance)) {
+      account.lockingReason === OUT_OF_GAS &&
+      threshold.isLessThanOrEqualTo(balance)) {
       console.info(`account ${account.address} received ether, unlocking`)
       await unlockAccount(account.address)
     }
