@@ -17,7 +17,7 @@ const unlockAccount = async (address) =>
 
 const withAccount = (func, filterOrLockingFunction) => async (...params) => {
   let account
-  if (typeof queryOrLockingFunction === 'function') {
+  if (typeof filterOrLockingFunction === 'function') {
     account = await filterOrLockingFunction(...params)
   } else {
     account = await lockAccount(filterOrLockingFunction)
