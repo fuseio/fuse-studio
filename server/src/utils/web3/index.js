@@ -91,7 +91,14 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
         console.log(`[${bridgeType}] method ${methodName} succeeded ${contract.options.address}`)
         return { receipt: contract }
       } else {
-        const receipt = await promise
+        const receipt = await new Promise(async (resolve, reject) => {
+          promise
+            .on('error', (e, rec) => {
+              e.receipt = rec
+              reject(e)
+            })
+            .on('receipt', (r) => resolve(r))
+        })
         console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
         return { receipt }
       }
