@@ -51,6 +51,7 @@
     "foreign": {
       "apiKey": "COMMUNITY_WEB3_API_KEY",
       "name": "COMMUNITY_WEB3_NETWORK",
+      "gasPrice": "COMMUNITY_NETWORK_FOREIGN_GAS_PRICE",
       "gasStation": {
         "url": "COMMUNITY_WEB3_GAS_STATION_URL",
         "speed": "COMMUNITY_WEB3_GAS_STATION_SPEED"
