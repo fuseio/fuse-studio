@@ -58,7 +58,7 @@ const getMethodName = (method) => method.methodName || 'unknown'
 
 const getGasPrice = async (bridgeType, web3) => {
   if (config.has(`network.${bridgeType}.gasPrice`)) {
-    return config.has(`network.${bridgeType}.gasPrice`)
+    return config.get(`network.${bridgeType}.gasPrice`)
   }
   const gasPrice = await fetchGasPrice()
   return web3.utils.toWei(gasPrice.toString(), 'gwei')
