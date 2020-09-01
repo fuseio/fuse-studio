@@ -64,7 +64,7 @@ const lowBalanceAccountsWithCond = async ({ role, bridgeType }) => {
       console.warn(msg)
       if (!account.isLocked) {
         notify(msg)
-        // await lockAccountWithReason({ _id: account._id }, OUT_OF_GAS)
+        await lockAccountWithReason({ _id: account._id }, OUT_OF_GAS)
       }
     } else if (account.isLocked &&
       account.lockingReason === OUT_OF_GAS &&
