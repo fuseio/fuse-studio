@@ -51,7 +51,10 @@
     "foreign": {
       "apiKey": "COMMUNITY_WEB3_API_KEY",
       "name": "COMMUNITY_WEB3_NETWORK",
-      "gasStation": "COMMUNITY_WEB3_GAS_STATION",
+      "gasStation": {
+        "url": "COMMUNITY_WEB3_GAS_STATION_URL",
+        "speed": "COMMUNITY_WEB3_GAS_STATION_SPEED"
+      },
       "allowedTokensToRelay": "COMMUNITY_FOREIGN_TOKENS_ALLOWED_TO_RELAY",
       "providers": {
         "alchemy": {

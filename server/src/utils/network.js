@@ -6,9 +6,9 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const isZeroAddress = (address) => address === ZERO_ADDRESS
 
 const fetchGasPrice = async (speed) => {
-  const url = config.get('network.foreign.gasStation')
+  const url = config.get('network.foreign.gasStation.url')
   const response = JSON.parse(await request.get(url))
-  const gas = response[speed]
+  const gas = response[speed || config.get(`network.foreign.gasStation.speed`)]
   // special treatment for https://ethgasstation.info/
   if (url.includes('ethgasstation')) {
     return gas / 10

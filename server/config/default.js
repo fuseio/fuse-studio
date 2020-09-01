@@ -129,7 +129,10 @@ module.exports = {
           return this.network.foreign.addressesRopsten
         }
       }),
-      gasStation: 'https://ethgasstation.info/json/ethgasAPI.json'
+      gasStation: {
+        url: 'https://ethgasstation.info/json/ethgasAPI.json',
+        speed: 'average'
+      }
     }
   },
   mongo: {
