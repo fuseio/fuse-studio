@@ -58,18 +58,19 @@ const lowBalanceAccountsWithRole = async ({ role, bridgeType }) => {
   const web3 = getWeb3({ networkType: networkType, bridgeType: bridgeType || network })
   for (const account of accounts) {
     const balance = await web3.eth.getBalance(account.address)
+    const query = { role: account.role, bridgeType: account.bridgeType || { $exists: false } }
     if (threshold.isGreaterThan(balance)) {
       const msg = `${msgPrefix}\naccount ${wrapCodeBlock(account.address)} with role ${wrapCodeBlock(account.role)} got low balance of ${wrapCodeBlock(fromWei(balance))} on - ${wrapCodeBlock(networkType)} bridgeType - ${wrapCodeBlock(bridgeType)}`
       console.warn(msg)
       notify(msg)
       if (!account.isLocked) {
-        await lockAccountWithReason({ address: account.address }, OUT_OF_GAS)
+        await lockAccountWithReason({ address: account.address, ...query }, OUT_OF_GAS)
       }
     } else if (account.isLocked &&
       account.lockingReason === OUT_OF_GAS &&
       threshold.isLessThanOrEqualTo(balance)) {
       console.info(`account ${account.address} received ether, unlocking`)
-      await unlockAccount(account.address, { role: account.role, bridgeType: account.bridgeType })
+      await unlockAccount(account.address, query)
     }
   }
   const numberOflockedAccounts = await Account.find({ isLocked: true, role }).countDocuments()

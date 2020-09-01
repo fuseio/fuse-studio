@@ -26,13 +26,14 @@ const withAccount = (func, filterOrLockingFunction) => async (...params) => {
   if (!account) {
     throw new Error('no unlocked accounts available')
   }
+  const query = { role: account.role, bridgeType: account.bridgeType || { $exist: false } }
   try {
     console.log(`account ${account.address} is locked for running a task`)
     await func(account, ...params)
     console.log(`unlocking the account ${account.address} with role ${account.role} and bridgeType ${account.bridgeType}`)
-    await unlockAccount(account.address, { role: account.role, bridgeType: account.bridgeType })
+    await unlockAccount(account.address, query)
   } catch (e) {
-    await unlockAccount(account.address, { role: account.role, bridgeType: account.bridgeType })
+    await unlockAccount(account.address, query)
     throw e
   }
 }
