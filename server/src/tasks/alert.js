@@ -48,33 +48,33 @@ const lowBalanceAccounts = async () => {
 }
 
 const lowBalanceAccountsWithRole = async ({ role, bridgeType }) => {
-  const accounts = await Account.find({ role, bridgeType: bridgeType || { '$exists': false } })
+  const query = { role, bridgeType: bridgeType || { '$exists': false } }
+  const accounts = await Account.find(query)
   const network = config.get('network.foreign.name')
-  const networkType = config.get(`network.${bridgeType || network}.name`)
   const threshold = new BigNumber(toWei(config.get('alerts.lowBalanceAccounts.threshold')))
 
   const msgPrefix = `*${environment.toUpperCase()}-${network.toUpperCase()}*`
 
-  const web3 = getWeb3({ networkType: networkType, bridgeType: bridgeType || network })
+  const web3 = getWeb3({ bridgeType: bridgeType || 'foreign' })
   for (const account of accounts) {
     const balance = await web3.eth.getBalance(account.address)
-    const query = { role: account.role, bridgeType: account.bridgeType || { $exists: false } }
     if (threshold.isGreaterThan(balance)) {
       const msg = `${msgPrefix}\naccount ${wrapCodeBlock(account.address)} with role ${wrapCodeBlock(account.role)} got low balance of ${wrapCodeBlock(fromWei(balance))} on - ${wrapCodeBlock(networkType)} bridgeType - ${wrapCodeBlock(bridgeType)}`
       console.warn(msg)
       notify(msg)
       if (!account.isLocked) {
-        await lockAccountWithReason({ address: account.address, ...query }, OUT_OF_GAS)
+        await lockAccountWithReason({ _id: account._id }, OUT_OF_GAS)
       }
     } else if (account.isLocked &&
       account.lockingReason === OUT_OF_GAS &&
       threshold.isLessThanOrEqualTo(balance)) {
       console.info(`account ${account.address} received ether, unlocking`)
-      await unlockAccount(account.address, query)
+      await unlockAccount(account._id)
     }
   }
-  const numberOflockedAccounts = await Account.find({ isLocked: true, role }).countDocuments()
-  const totalNumberOfAccounts = await Account.find({ role }).countDocuments()
+  // summing up the role
+  const numberOflockedAccounts = await Account.find({ ...query, isLocked: true }).countDocuments()
+  const totalNumberOfAccounts = await Account.find(query).countDocuments()
   const summaryMsg = `${msgPrefix}\nSummary: ${codeBlock}${numberOflockedAccounts} / ${totalNumberOfAccounts}${codeBlock} account locked for role ${wrapCodeBlock(role)}.`
 
   console.info(summaryMsg)
