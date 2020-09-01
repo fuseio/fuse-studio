@@ -57,10 +57,10 @@ const createNetwork = (bridgeType, account) => {
 const getMethodName = (method) => method.methodName || 'unknown'
 
 const getGasPrice = async (bridgeType, web3) => {
-  if (bridgeType === 'home') {
-    return config.get('network.home.gasPrice')
+  if (config.has(`network.${bridgeType}.gasPrice`)) {
+    return config.has(`network.${bridgeType}.gasPrice`)
   }
-  const gasPrice = await fetchGasPrice('fast')
+  const gasPrice = await fetchGasPrice()
   return web3.utils.toWei(gasPrice.toString(), 'gwei')
 }
 
