@@ -26,6 +26,7 @@ const useWeb3Connect = (connectCallback) => {
   const [provider, setProvider] = useState()
 
   const web3Modal = new Web3Modal({
+    network: 'ropsten',
     providerOptions,
     cacheProvider: true
   })
