@@ -51,7 +51,7 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
   )
 }
 
-const ChooseNetwork = ({ providerInfo, loadModal, networkType, formik, foreignNetwork, account }) => {
+const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, formik, foreignNetwork, account }) => {
   const network = getIn(formik.values, 'network')
 
   useEffect(() => {
@@ -127,4 +127,4 @@ const mapState = (state) => ({
   providerInfo: getProviderInfo(state)
 })
 
-export default connect(mapState, { loadModal })(formikConnect(ChooseNetwork))
+export default connect(mapState, { loadModal, changeNetwork })(formikConnect(ChooseNetwork))
