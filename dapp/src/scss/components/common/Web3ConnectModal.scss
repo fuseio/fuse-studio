@@ -27,9 +27,6 @@
     padding: 1em;
     border-radius: 10px;
     border: 2px solid transparent;
-    @include xy-cell(8, null, 0);
-    @include xy-grid(vertical);
-    @include flex-align(center, middle);
 
     &:hover {
       border: 2px solid #e0eaf1;

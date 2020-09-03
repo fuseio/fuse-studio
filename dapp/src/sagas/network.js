@@ -188,17 +188,17 @@ function * changeNetwork ({ networkType }) {
     yield call(checkNetworkType, { web3 })
   }
 
-  if (check === 'isFortmatic') {
-    const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[isFuseNetwork ? 'main' : toShortName(currentNetwork)].id, isFuseNetwork ? {
-      rpcUrl: CONFIG.web3.fuseProvider,
-      chainId: CONFIG.web3.chainId.fuse
-    } : currentNetwork)
-    const provider = yield fortmatic.getProvider()
-    getWeb3Service({ provider })
-    yield put({
-      type: actions.CONNECT_TO_WALLET.REQUEST
-    })
-  }
+  // if (check === 'isFortmatic') {
+  //   const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[isFuseNetwork ? 'main' : toShortName(currentNetwork)].id, isFuseNetwork ? {
+  //     rpcUrl: CONFIG.web3.fuseProvider,
+  //     chainId: CONFIG.web3.chainId.fuse
+  //   } : currentNetwork)
+  //   const provider = yield fortmatic.getProvider()
+  //   getWeb3Service({ provider })
+  //   yield put({
+  //     type: actions.CONNECT_TO_WALLET.REQUEST
+  //   })
+  // }
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })

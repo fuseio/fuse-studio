@@ -27,7 +27,7 @@ export default ({ hideModal, web3connect }) => {
             </div>
           </div>
 
-          <div className='wallet-modal__provider' onClick={createHandleProvider('fortmatic')}>
+          {/* <div className='wallet-modal__provider' onClick={createHandleProvider('fortmatic')}>
             <img className='image' src={FortmaticIcon} />
             <div className='text'>
               Fortmatic
@@ -36,7 +36,7 @@ export default ({ hideModal, web3connect }) => {
               Have Fortmatic?<br />
               <span>Click here to connect</span>
             </div>
-          </div>
+          </div> */}
 
           <div className='wallet-modal__provider' onClick={createHandleProvider('torus')}>
             <img className='image' src={GoogleIcon} />

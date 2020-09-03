@@ -37,10 +37,11 @@
     overflow-y: auto;
     box-sizing: content-box;
 
-		@include breakpoint(small down) {
-      width: 90%;
+    @include breakpoint(small down) {
+      max-width: 90%;
       max-height: 95%;
-		}
+      width: 80%;
+    }
 
     @include element(close) {
       position: absolute;
@@ -61,8 +62,8 @@
 @include block(modal-body) {
   @include element(title) {
     color: $color-dark;
-		font-size: 1.250em;
-		margin-bottom: 2.5em;
+    font-size: 1.25em;
+    margin-bottom: 2.5em;
   }
 
   @include element(content) {
