@@ -2,7 +2,6 @@ import React from 'react'
 import Modal from 'components/common/Modal'
 import MetamaskIcon from 'images/metamask-fox.png'
 import GoogleIcon from 'images/google.png'
-import FortmaticIcon from 'images/fortmatic.png'
 import EtherIcon from 'images/ether.svg'
 
 export default ({ hideModal, web3connect }) => {
@@ -26,17 +25,6 @@ export default ({ hideModal, web3connect }) => {
               <span>Click here to connect</span>
             </div>
           </div>
-
-          {/* <div className='wallet-modal__provider' onClick={createHandleProvider('fortmatic')}>
-            <img className='image' src={FortmaticIcon} />
-            <div className='text'>
-              Fortmatic
-            </div>
-            <div className='info'>
-              Have Fortmatic?<br />
-              <span>Click here to connect</span>
-            </div>
-          </div> */}
 
           <div className='wallet-modal__provider' onClick={createHandleProvider('torus')}>
             <img className='image' src={GoogleIcon} />

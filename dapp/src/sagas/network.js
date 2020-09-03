@@ -1,5 +1,4 @@
 import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effects'
-import Fortmatic from 'fortmatic'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 as getWeb3Service } from 'services/web3'
@@ -59,9 +58,7 @@ function * connectToWallet () {
     const accounts = yield web3.eth.getAccounts(cb)
     const accountAddress = accounts[0]
 
-    if (!provider.isFortmatic) {
-      yield fork(watchNetworkChanges, provider)
-    }
+    yield fork(watchNetworkChanges, provider)
     yield call(checkNetworkType, { web3 })
 
     yield put({
@@ -102,8 +99,7 @@ function * checkNetworkType ({ web3 }) {
       type: actions.CHECK_NETWORK_TYPE.SUCCESS,
       response
     })
-    const accounts = yield web3.eth.getAccounts(cb)
-    const accountAddress = accounts[0]
+    const accountAddress = yield select(state => state.network.accountAddress)
     yield put(balanceOfNative(accountAddress, { bridgeType: 'home' }))
     yield put(balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
   } catch (error) {
@@ -187,18 +183,6 @@ function * changeNetwork ({ networkType }) {
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }
-
-  // if (check === 'isFortmatic') {
-  //   const fortmatic = new Fortmatic(CONFIG.web3.fortmatic[isFuseNetwork ? 'main' : toShortName(currentNetwork)].id, isFuseNetwork ? {
-  //     rpcUrl: CONFIG.web3.fuseProvider,
-  //     chainId: CONFIG.web3.chainId.fuse
-  //   } : currentNetwork)
-  //   const provider = yield fortmatic.getProvider()
-  //   getWeb3Service({ provider })
-  //   yield put({
-  //     type: actions.CONNECT_TO_WALLET.REQUEST
-  //   })
-  // }
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
