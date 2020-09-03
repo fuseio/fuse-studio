@@ -2,7 +2,7 @@ import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effect
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 as getWeb3Service } from 'services/web3'
-import { toLongName } from 'utils/network'
+import { toLongName, toShortName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse, balanceOfNative, fetchCommunities } from 'actions/accounts'
 import { networkIdToName } from 'constants/network'
@@ -165,7 +165,8 @@ function * watchConnectToWallet ({ response, accountAddress }) {
 function * changeNetwork ({ networkType }) {
   const foreignNetwork = yield select(getForeignNetwork)
   const currentNetwork = toLongName(networkType)
-  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : currentNetwork, networkType: currentNetwork })
+  const isFuseNetwork = currentNetwork === 'fuse'
+  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: isFuseNetwork ? foreignNetwork : currentNetwork, networkType: currentNetwork })
   const web3 = yield getWeb3()
   const providerInfo = getProviderInfo(web3.currentProvider)
   const { check } = providerInfo
@@ -176,16 +177,15 @@ function * changeNetwork ({ networkType }) {
   }
   if (check === 'isTorus') {
     yield web3.currentProvider.torus.setProvider({
-      host: currentNetwork === 'fuse' ? CONFIG.web3.fuseProvider : currentNetwork,
+      host: isFuseNetwork ? CONFIG.web3.fuseProvider : currentNetwork,
       networkName: currentNetwork,
-      chainId: currentNetwork === 'fuse' ? CONFIG.web3.chainId.fuse : undefined })
+      chainId: isFuseNetwork ? CONFIG.web3.chainId.fuse : undefined })
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
-  // window.location.reload()
 }
 
 function * sendTransactionHash ({ transactionHash, abiName }) {

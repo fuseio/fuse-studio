@@ -29,19 +29,19 @@
     position: relative;
     height: auto;
     outline: 0;
-    border-radius: 4px;
+    border-radius: 20px;
     background-color: $color-white;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
     padding: 2em;
     max-height: 90%;
     overflow-y: auto;
-    padding-right: 16px;
     box-sizing: content-box;
 
-		@include breakpoint(small down) {
-      width: 90%;
+    @include breakpoint(small down) {
+      max-width: 90%;
       max-height: 95%;
-		}
+      width: 80%;
+    }
 
     @include element(close) {
       position: absolute;
@@ -62,8 +62,8 @@
 @include block(modal-body) {
   @include element(title) {
     color: $color-dark;
-		font-size: 1.250em;
-		margin-bottom: 2.5em;
+    font-size: 1.25em;
+    margin-bottom: 2.5em;
   }
 
   @include element(content) {

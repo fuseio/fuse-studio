@@ -1,23 +1,18 @@
 import { useState } from 'react'
 import Web3Modal from 'web3modal'
-// import Portis from '@portis/web3'
 import Torus from '@toruslabs/torus-embed'
 
 const providerOptions = {
   metamask: {
   },
-  // portis: {
-  //   package: Portis,
-  //   options: {
-  //     id: CONFIG.web3.portis.id
-  //   }
-  // },
   torus: {
-    package: Torus, // required
+    package: Torus,
     options: {
       enableLogging: CONFIG.env !== 'production',
       buttonPosition: 'top-right',
-      buildEnv: CONFIG.env === 'production' ? 'production' : 'development'
+      config: {
+        buildEnv: CONFIG.env === 'production' ? 'production' : 'development'
+      }
     }
   }
 }

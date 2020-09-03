@@ -16,7 +16,12 @@
       "id": "COMMMUNITY_WEB3_PORTIS_ID"
     },
     "fortmatic": {
-      "id": "COMMMUNITY_WEB3_FORTMATIC_ID"
+      "ropsten": {
+        "id": "COMMMUNITY_WEB3_FORTMATIC_ROPSTEN_ID"
+      },
+      "main": {
+        "id": "COMMMUNITY_WEB3_FORTMATIC_MAIN_ID"
+      }
     }
   },
   "api": {
