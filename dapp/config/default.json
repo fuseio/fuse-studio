@@ -2,19 +2,23 @@
   "env": "qa",
   "web3": {
     "fuseProvider": "https://rpc.fuse.io",
-    "supportedNetworks": ["main", "ropsten", "fuse"],
-    "supportedForeignNetworks": ["main", "ropsten"],
+    "supportedNetworks": [
+      "main",
+      "ropsten",
+      "fuse"
+    ],
+    "supportedForeignNetworks": [
+      "main",
+      "ropsten"
+    ],
     "providers": {
       "default": "alchemy",
       "alchemy": {
-        "ropsten": {
-        },
-        "main": {
-        }
+        "ropsten": {},
+        "main": {}
       }
     },
-    "portis": {
-    },
+    "portis": {},
     "addresses": {
       "ropsten": {
         "FuseToken": "0xEc304De130dA3afbD2F60C7aa6C5485e30239372",
@@ -45,6 +49,18 @@
       }
     },
     "bridge": {
+      "multi": {
+        "homeBridge": {
+          "homeBridgeMediator": {
+            "address": "0xcC39cA83c56f49a829e73016399c38FdC03826A6"
+          }
+        },
+        "foreignBridge": {
+          "foreignBridgeMediator": {
+            "address": "0x16289514e1c1a5720B481d38edA7bf0f9348E434"
+          }
+        }
+      },
       "confirmations": {
         "home": 1,
         "foreign": 2
@@ -78,10 +94,10 @@
   },
   "api": {
     "auth": {
-        "domain": {
-          "name": "Fuse Studio Dev",
-          "version": 1
-        }
+      "domain": {
+        "name": "Fuse Studio Dev",
+        "version": 1
+      }
     },
     "url": {
       "main": "http://localhost:3000/api/v1",
@@ -109,7 +125,7 @@
   },
   "debugTrace": true,
   "ipfsProxy": {
-    "urlBase": "http://localhost:4000/api"
+    "urlBase": "https://ipfs-proxy-qa.fuse.io/api"
   },
   "aws": {
     "s3": {

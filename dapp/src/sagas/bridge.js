@@ -1,6 +1,6 @@
 import { call, all, put, select, delay, takeEvery } from 'redux-saga/effects'
 
-import { tryTakeEvery } from './utils'
+import { tryTakeEvery, createEntityPut } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
 import { getBlockNumber, getForeignNetwork } from 'selectors/network'
 import { transactionFlow } from './transaction'
@@ -13,14 +13,53 @@ import { getCommunityAddress } from 'selectors/entities'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchTokenTotalSupply, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
+import HomeMultiAMBErc20ToErc677 from 'constants/abi/HomeMultiAMBErc20ToErc677'
 
-function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, confirmationsLimit }) {
+const entityPut = createEntityPut('tokens')
+
+function * getAllowance ({ tokenAddress }) {
+  const bridgeAddress = CONFIG.web3.bridge.multi.foreignBridge.foreignBridgeMediator.address
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const basicToken = new web3.eth.Contract(BasicTokenABI, foreignTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
+  const basicToken = new web3.eth.Contract(BasicTokenABI, tokenAddress)
+  const allowance = yield call(basicToken.methods.allowance(accountAddress, bridgeAddress).call)
+
+  yield entityPut({
+    type: actions.GET_TOKEN_ALLOWANCE.SUCCESS,
+    address: tokenAddress,
+    response: {
+      allowance,
+      address: tokenAddress
+    }
+  })
+}
+
+function * approveToken ({ tokenAddress, value }) {
+  // - erc20Token.approve(amount, spender= homeBridgeMediator)
+  // - homeBridgeMediator.relayTokens(erc20Token, receiver, amount)
+  const bridgeAddress = CONFIG.web3.bridge.multi.foreignBridge.foreignBridgeMediator.address
+  const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
+  const basicToken = new web3.eth.Contract(BasicTokenABI, tokenAddress)
+
+  const transactionPromise = basicToken.methods.approve(bridgeAddress, value).send({
+    from: accountAddress
+  })
+
+  const action = actions.APPROVE_TOKEN
+  yield call(transactionFlow, { transactionPromise, action })
+}
+
+function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, confirmationsLimit }) {
+  // - erc20Token.approve(amount, spender= homeBridgeMediator)
+  // - homeBridgeMediator.relayTokens(erc20Token, receiver, amount)
+  const bridgeAddress = CONFIG.web3.bridge.multi.foreignBridge.foreignBridgeMediator.address
+  const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
+  const homeBridgeMediator = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeAddress, { transactionConfirmationBlocks: confirmationsLimit })
 
   window.analytics.track('Bridge used', { tokenAddress: foreignTokenAddress, networkType: 'fuse' })
-  const transactionPromise = basicToken.methods.transfer(foreignBridgeAddress, value).send({
+  const transactionPromise = homeBridgeMediator.methods.relayTokens(foreignTokenAddress, accountAddress, value).send({
     from: accountAddress
   })
 
@@ -29,12 +68,14 @@ function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, c
 }
 
 function * transferToForeign ({ homeTokenAddress, homeBridgeAddress, value, confirmationsLimit }) {
+  // - erc677.transferAndCall(homeBridgeMediator, value, data) (need to figure out this better)
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
+  const bridgeAddress = CONFIG.web3.bridge.multi.homeBridge.homeBridgeMediator.address
   const basicToken = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
 
   window.analytics.track('Bridge used', { tokenAddress: homeTokenAddress, networkType: yield select(getForeignNetwork) })
-  const transactionPromise = basicToken.methods.transfer(homeBridgeAddress, value).send({
+  const transactionPromise = basicToken.methods.transferAndCall(bridgeAddress, value).send({
     from: accountAddress
   })
 
@@ -113,6 +154,8 @@ function * watchBridgeTransfers () {
 
 export default function * bridgeSaga () {
   yield all([
+    tryTakeEvery(actions.GET_TOKEN_ALLOWANCE, getAllowance, 1),
+    tryTakeEvery(actions.APPROVE_TOKEN, approveToken, 1),
     tryTakeEvery(actions.TRANSFER_TO_HOME, transferToHome, 1),
     tryTakeEvery(actions.TRANSFER_TO_FOREIGN, transferToForeign, 1),
     tryTakeEvery(actions.WATCH_FOREIGN_BRIDGE, watchForeignBridge, 1),
