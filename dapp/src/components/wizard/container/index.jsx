@@ -130,10 +130,10 @@ class Wizard extends React.Component {
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
     return (
       <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
-        {page === 0 && <h1 className='issuance__wizard__title'>Launch your community</h1>}
+        {page === 0 && <h1 className='issuance__wizard__title'>Launch your economy</h1>}
         {page === 1 && <h1 className='issuance__wizard__title'>Choose the network you want to deploy to:</h1>}
-        {page === 2 && <h1 className='issuance__wizard__title'>Choose what do you want to do</h1>}
-        {page === 3 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} community</h1>}
+        {page === 2 && <h1 className='issuance__wizard__title'>New or existing token?</h1>}
+        {page === 3 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} economy</h1>}
         {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>

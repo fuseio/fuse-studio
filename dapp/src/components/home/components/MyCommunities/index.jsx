@@ -24,7 +24,7 @@ const NoCommunities = ({ showIssuance }) => {
     <div className='cell medium-12 small-24' onClick={showIssuance}>
       <div className='no_communities'>
         <div className='content'>
-          <div className='empty'>You have no communities yet</div>
+          <div className='empty'>You have no economies yet</div>
           <div className='title'>Click here to create your first one!</div>
           <img src={PlusIcon} />
         </div>
@@ -35,7 +35,7 @@ const NoCommunities = ({ showIssuance }) => {
 
 const MyCommunities = ({
   showIssuance,
-  title = 'My communities',
+  title = 'My economies',
   withDecoration = false,
   communitiesKeys,
   communities,
@@ -66,7 +66,7 @@ const MyCommunities = ({
         )
       })
       const myCommunitiesList = toMatrix(myCommunities, 4).map((items, index) => (
-        <div style={{ width: '100%' }} key={index} className='grid-x grid-margin-x grid-margin-y'>
+        <div style={{ width: '100%', height: '100%' }} key={index} className='grid-x grid-margin-x grid-margin-y'>
           {items}
         </div>
       ))

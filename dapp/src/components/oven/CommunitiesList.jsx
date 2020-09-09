@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { isMobileOnly } from 'react-device-detect'
 // import Community from 'components/common/Community'
 import InfiniteScroll from 'react-infinite-scroller'
@@ -10,21 +10,16 @@ const PAGE_START = 1
 
 export default ({
   tokens,
-  account,
   hasMore,
-  history,
-  metadata,
   addresses,
-  fetchTokens,
-  networkType,
   showDashboard,
   getScrollParent,
   communities
 }) => {
-  useEffect(() => {
-    // fetchTokens(networkType, PAGE_START)
-    return () => { }
-  }, [])
+  // useEffect(() => {
+  // fetchTokens(networkType, PAGE_START)
+  //   return () => { }
+  // }, [])
 
   const loadMore = (nextPage) => {
     // fetchTokens(networkType, nextPage)
@@ -35,12 +30,9 @@ export default ({
       <div className='communities__wrapper'>
         <div className='grid-container communities__banner grid-x grid-padding-x grid-padding-y'>
           <div className='communities__banner__content cell medium-14 large-10' style={{ height: '50%' }}>
-            <h2 className='communities__banner__title'>Welcome to<br />Fuse communities</h2>
-            <p className='communities__banner__text communities__banner__text--space'>
-              Fuse is intended for community currencies operated by companies and entrepreneurs.
-            </p>
+            <h2 className='communities__banner__title'>Welcome to<br />Fuse economies</h2>
             <p className='communities__banner__text'>
-              It streamlines the process of launching your community currency and provide battle-tested and customizable tools to get it off the ground
+              Explore the countless different micro-economies around the world utilizing Fuse network
             </p>
           </div>
           <div className='communities__banner__image communities__banner__image--second cell medium-10 small-20'>
