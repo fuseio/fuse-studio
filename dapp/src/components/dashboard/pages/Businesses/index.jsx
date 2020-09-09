@@ -212,7 +212,7 @@ const Businesses = ({
   // }
 
   const renderContent = () => {
-    if (isEmpty(tableData)) {
+    if (!isEmpty(tableData)) {
       return (
         <MyTable
           addActionProps={{
