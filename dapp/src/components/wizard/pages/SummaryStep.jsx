@@ -114,7 +114,7 @@ const SummaryStep = ({
         <div className='summary-step__text'>
           <span><FontAwesome name='info-circle' /> Your coin will be issued on the Ethereum {capitalize(toLongName(foreignNetwork))}</span>
           <br />
-          <span>After published a bridge will allow you to start using your coin on the Fuse-chain!</span>
+          <span>Once launched, the Fuse bridge will allow you to start using your tokens on the Fuse chain, greatly reducing transaction cost and time!</span>
         </div>
       </div>
     </div>

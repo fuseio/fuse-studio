@@ -1,4 +1,4 @@
-import React, { useEffect, memo, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { fetchFeaturedCommunities } from 'actions/token'
 import { withRouter } from 'react-router'
@@ -9,7 +9,7 @@ import { push } from 'connected-react-router'
 import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import arrow from 'images/arrow_3.svg'
 
-const FeaturedCommunities = memo(({
+const FeaturedCommunities = ({
   communities,
   tokens,
   fetchFeaturedCommunities,
@@ -58,7 +58,7 @@ const FeaturedCommunities = memo(({
   return (
     <div className='featured__carousel__wrapper'>
       <div className='grid-x align-justify align-middle'>
-        <h3 className='featured__carousel__title'>Featured communities</h3>
+        <h3 className='featured__carousel__title'>Featured economies</h3>
         <div onClick={showCommunities} className='featured__carousel__action'>
           Explore&nbsp;<img src={arrow} alt='arrow' />
         </div>
@@ -85,16 +85,7 @@ const FeaturedCommunities = memo(({
       </div>
     </div>
   )
-}, (prevProps, nextProps) => {
-  if (prevProps.accountAddress !== nextProps.accountAddress) {
-    return false
-  } else if (prevProps.communities !== nextProps.communities) {
-    return false
-  } else if (prevProps.featuredCommunities !== nextProps.featuredCommunities) {
-    return false
-  }
-  return true
-})
+}
 
 FeaturedCommunities.displayName = 'FeaturedCommunities'
 

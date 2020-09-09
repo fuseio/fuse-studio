@@ -14,7 +14,6 @@ import personImage from 'images/person.png'
 import groupImageMobile from 'images/group_mobile.png'
 import groupImage from 'images/group_image.png'
 import arrowImage from 'images/arrow_1.svg'
-import GiftIcon from 'images/gift.svg'
 
 import { getCommunitiesKeys } from 'selectors/accounts'
 
@@ -49,11 +48,11 @@ const HomePage = ({
   return (
     <div className='home_page'>
       <div className='home_page__wrapper grid-container'>
-        <div className='home_page__banner grid-x align-bottom'>
+        <div className='home_page__banner grid-x align-middle'>
           <div className='home_page__content cell medium-12 large-9' style={{ height: '50%', paddingBottom: '50px' }}>
-            <h2 className='home_page__title'>Welcome to fuse studio</h2>
+            <h2 className='home_page__title'>Welcome to Fuse studio</h2>
             <p className='home_page__text'>
-              Use the wizard or choose from a template below <br />  and get some Fuse tokens to start exploring the features <img src={GiftIcon} />
+              Create your own custom branded wallet and currency in a few simple steps
             </p>
             <div className='home_page__button'>
               <button onClick={() => {

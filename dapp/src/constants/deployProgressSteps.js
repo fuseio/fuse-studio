@@ -3,7 +3,7 @@ import FontAwesome from 'react-fontawesome'
 
 const deployProgress = [
   {
-    label: 'Issuing community currency',
+    label: 'Issuing economy currency',
     loaderText: (networkType) => `Your asset is being deployed as an ERC-20 contract to Ethereum ${networkType}`,
     key: 'tokenIssued',
     RenderLink: ({ txHash }) => (
@@ -13,13 +13,13 @@ const deployProgress = [
     )
   },
   {
-    label: 'Deploy community contract',
-    loaderText: 'The members list is deployed on the Fuse sidechain to allow adding users to the community',
+    label: 'Deploy economy contract',
+    loaderText: 'The members list is deployed on the Fuse sidechain to allow adding users to the economy',
     key: 'community'
   },
   {
     label: 'Deploying bridge contract',
-    loaderText: (networkType) => `A bridge contract is being deployed for the community currency on mainnet and the Fuse sidechain ${networkType}`,
+    loaderText: (networkType) => `A bridge contract is being deployed for the economy currency on mainnet and the Fuse sidechain ${networkType}`,
     key: 'bridge'
   },
   {
