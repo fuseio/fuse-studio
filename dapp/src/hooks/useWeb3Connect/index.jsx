@@ -26,9 +26,9 @@ const useWeb3Connect = (connectCallback) => {
     cacheProvider: true
   })
 
-  web3Modal.on('connect', async (response) => {
-    setProvider(response)
-    connectCallback(response)
+  web3Modal.on('connect', (provider) => {
+    setProvider(provider)
+    connectCallback(provider)
   })
 
   web3Modal.on('disconnected', () => {

@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
+const { get } = require('lodash')
 const { withAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
 
-const { deployBridge } = require('./bridge')
 const { deployCommunity } = require('./community')
-const { transferOwnership } = require('./token')
 const { funder } = require('./funder')
 const { onboardUser } = require('./email')
 const CommunityProgress = mongoose.model('CommunityProgress')
@@ -12,13 +11,11 @@ const Community = mongoose.model('Community')
 
 const stepFunctions = {
   community: deployCommunity,
-  bridge: deployBridge,
-  transferOwnership,
   funder,
   email: onboardUser
 }
 
-const stepsOrder = ['community', 'bridge', 'transferOwnership', 'funder', 'email']
+const stepsOrder = ['community', 'funder', 'email']
 
 const mandatorySteps = {
   bridge: false,
@@ -78,38 +75,18 @@ const deploy = withAccount(async (account, { communityProgressId }) => {
 
     const { steps } = communityProgress
     const { communityAddress, isClosed } = steps.community.results
-
-    if (steps.bridge) {
-      const { homeTokenAddress, foreignTokenAddress, foreignBridgeAddress, homeBridgeAddress } = steps.bridge.results
-      const { name, communityURI, plugins, description, adminAddress, customData } = steps.community.args
-      await new Community({
-        plugins,
-        customData,
-        communityAddress,
-        isClosed,
-        homeTokenAddress,
-        foreignTokenAddress,
-        foreignBridgeAddress,
-        homeBridgeAddress,
-        name,
-        communityURI,
-        description,
-        creatorAddress: adminAddress
-      }).save()
-    } else {
-      const { homeTokenAddress, name, communityURI, plugins, description, adminAddress, customData } = steps.community.args
-      await new Community({
-        plugins,
-        customData,
-        communityAddress,
-        isClosed,
-        homeTokenAddress,
-        name,
-        communityURI,
-        description,
-        creatorAddress: adminAddress
-      }).save()
-    }
+    const { name, communityURI, plugins, description, adminAddress, customData } = steps.community.args
+    await new Community({
+      plugins,
+      customData,
+      communityAddress,
+      isClosed,
+      foreignTokenAddress: get(steps, 'bridge.args.foreignTokenAddress'),
+      name,
+      communityURI,
+      description,
+      creatorAddress: adminAddress
+    }).save()
 
     await CommunityProgress.findByIdAndUpdate(communityProgress._id, { communityAddress, done: true })
 

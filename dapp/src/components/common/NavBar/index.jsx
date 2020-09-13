@@ -24,7 +24,6 @@ const NavBar = ({
   networkType,
   push,
   connectingToWallet,
-  logout,
   web3connect,
   foreignToken,
   location,
@@ -108,7 +107,7 @@ const NavBar = ({
               <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
               <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                <ProfileDropDown handleLogOut={() => logout()} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
+                <ProfileDropDown handleLogOut={web3connect.core.clearCachedProvider} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
               </div>
             </div>
           ) : connectingToWallet ? (

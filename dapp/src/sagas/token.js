@@ -2,6 +2,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 import BasicToken from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
+import { getTokenAllowance } from 'actions/bridge'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
 import { ADD_COMMUNITY_PLUGIN, SET_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA, SET_SECONDARY_TOKEN } from 'actions/community'
@@ -13,6 +14,7 @@ import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './u
 import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import { getWeb3 } from 'sagas/network'
+import { fetchHomeTokenAddress } from 'sagas/bridge'
 import {
   fetchCommunity as fetchCommunityApi,
   updateCommunityMetadata as updateCommunityMetadataApi,
@@ -272,17 +274,26 @@ function * watchFetchCommunity ({ response }) {
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
       if (entities && entities[communityAddress]) {
-        const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
+        let { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
         const accountAddress = yield select(getAccountAddress)
 
         if (entities[communityAddress] && entities[communityAddress].communityURI) {
           yield put(fetchMetadata(entities[communityAddress].communityURI))
         }
+
+        if (foreignTokenAddress) {
+          const homeToken = yield call(fetchHomeTokenAddress, { communityAddress, foreignTokenAddress })
+          if (homeToken) {
+            homeTokenAddress = homeToken
+          }
+        }
         const calls = [
           put(actions.fetchToken(homeTokenAddress)),
           put(actions.fetchToken(foreignTokenAddress)),
           put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-          put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' }))
+          put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
+          put(getTokenAllowance(homeTokenAddress, { bridgeType: 'home' })),
+          put(getTokenAllowance(foreignTokenAddress))
         ]
         if (accountAddress) {
           calls.push(put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })))

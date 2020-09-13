@@ -122,12 +122,12 @@ const WizardPage = ({
         },
         bridge: {
           label: 'Bridge to fuse',
-          checked: true,
+          checked: false,
           key: 'bridge',
           icon: BridgeIcon
         },
         transferOwnership: {
-          checked: true,
+          checked: false,
           key: 'transferOwnership'
         },
         funder: {

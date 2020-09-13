@@ -2,7 +2,7 @@ import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effect
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 as getWeb3Service } from 'services/web3'
-import { toLongName, toShortName } from 'utils/network'
+import { toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse, balanceOfNative, fetchCommunities } from 'actions/accounts'
 import { networkIdToName } from 'constants/network'
