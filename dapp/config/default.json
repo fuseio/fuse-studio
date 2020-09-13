@@ -136,7 +136,7 @@
   },
   "debugTrace": true,
   "ipfsProxy": {
-    "urlBase": "https://ipfs-proxy-qa.fuse.io/api"
+    "urlBase": "http://localhost:4000/api"
   },
   "aws": {
     "s3": {
