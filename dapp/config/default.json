@@ -39,32 +39,23 @@
         "RupiahToken": "0x998FFE1E43fAcffb941dc337dD0468d52bA5b48A"
       },
       "fuse": {
-        "ropsten": {
-          "BridgeMapper": "0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66"
-        },
-        "main": {
-          "BridgeMapper": "0x89b98bB511A41FeF73b388cF8C052221f42cd44f"
-        },
         "funder": "0xa6c61e75e6008eed7f75b73c84755558764081d1"
       },
       "multiBridge": {
         "fuse": {
-          "address": "0x98c65c72c095AD886Ca0f0e37b4B3dD771A01016",
-          "deployedBlockNumber": 6843740,
+          "address": "0x1b4DC7506C2d3BCE5e38919d45b3D6f6806a0106",
           "homeBridgeMediator": {
-            "address": "0xcC39cA83c56f49a829e73016399c38FdC03826A6"
+            "address": "0xAEBC2058780eb0372e7Ee75c11019d26E36894ad"
           }
         },
         "ropsten": {
-          "address": "0x9F62F41d306C1c4Bf7256bEb72936647f1BD6808",
-          "deployedBlockNumber": 8604558,
+          "address": "0x4a6C9c14451d43cc7e5E95A9fEAB51F5e8140871",
           "foreignBridgeMediator": {
-            "address": "0x16289514e1c1a5720B481d38edA7bf0f9348E434"
+            "address": "0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419"
           }
         },
         "mainnet": {
           "address": "",
-          "deployedBlockNumber": 0,
           "foreignBridgeMediator": {
             "address": ""
           }

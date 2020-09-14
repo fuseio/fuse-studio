@@ -13,6 +13,8 @@ export default (state = initialState, action) => {
       return { ...state, allowance: { ...state.allowance, [action.tokenAddress]: action.response.allowance } }
     case actions.WATCH_FOREIGN_BRIDGE.SUCCESS:
       return { ...state, ...action.response }
+    case actions.WATCH_NEW_TOKEN_REGISTERED.SUCCESS:
+      return { ...state, ...action.response }
     case actions.WATCH_HOME_BRIDGE.SUCCESS:
       return { ...state, ...action.response }
     case actions.APPROVE_TOKEN.SUCCESS:

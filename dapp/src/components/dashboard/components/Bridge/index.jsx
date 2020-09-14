@@ -44,11 +44,12 @@ const Bridge = (props) => {
     getBlockNumber,
     approveToken,
     foreignTokenAddress,
-    homeTokenAddress
-    // transactionHash,
-    // hasHomeTokenInNewBridge
-    // watchForeignBridge,
-    // watchHomeBridge
+    homeTokenAddress,
+    watchHomeNewTokenRegistered,
+    hasHomeTokenInNewBridge,
+    watchForeignBridge,
+    transactionHash,
+    watchHomeBridge
   } = props
   const isTokenApproved = get(approved, tokenOfCommunityOnCurrentSide, false)
 
@@ -56,6 +57,17 @@ const Bridge = (props) => {
     homeBridgeAddress,
     foreignBridgeAddress
   } = community
+
+  useEffect(() => {
+    if (bridgeStatus.to.bridge === 'home' && !hasHomeTokenInNewBridge) {
+      watchHomeNewTokenRegistered()
+    }
+    if (bridgeStatus.to.bridge === 'home' && hasHomeTokenInNewBridge) {
+      watchHomeBridge(transactionHash)
+    } else {
+      watchForeignBridge(transactionHash)
+    }
+  }, [waitingForConfirmation])
 
   useEffect(() => {
     if (isTokenApproved) {
@@ -172,7 +184,7 @@ const Bridge = (props) => {
 
 const BridgeContainer = (props) => {
   const {
-    // relayEvent,
+    relayEvent,
     transactionStatus,
     confirmationNumber,
     confirmationsLimit
@@ -191,9 +203,9 @@ const BridgeContainer = (props) => {
       if (!isConfirmed()) {
         return 'WAITING FOR CONFIRMATION'
       }
-      // if (!relayEvent) {
-      //   return 'WAITING FOR BRIDGE'
-      // }
+      if (!relayEvent) {
+        return 'WAITING FOR BRIDGE'
+      }
     }
   }
 
@@ -202,7 +214,7 @@ const BridgeContainer = (props) => {
       {...props}
       waitingForConfirmation={isWaitingForConfirmation()}
       transferStatus={getTransferStatus()}
-    // waitingForRelayEvent={getTransferStatus() === 'WAITING FOR BRIDGE'}
+      waitingForRelayEvent={getTransferStatus() === 'WAITING FOR BRIDGE'}
     />
   )
 }
