@@ -60,6 +60,7 @@ agenda.now = async (name, data) => {
       throw Error(`Job with the correlationId ${correlationId} already exists`)
     }
   }
+  console.log(`Requesting to start a job ${name} with arguments: ${JSON.stringify(data)}`)
   return now.call(agenda, name, data)
 }
 
