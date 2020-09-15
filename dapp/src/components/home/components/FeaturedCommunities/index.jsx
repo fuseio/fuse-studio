@@ -34,17 +34,15 @@ const FeaturedCommunities = ({
       return featuredCommunities.map((address) => {
         const token = tokens[communities[address].foreignTokenAddress]
         const community = communities[address]
-        if (token && community) {
-          return (
-            <div style={{ width: '90%' }} key={address}>
-              <FeaturedCommunity
-                token={token}
-                showDashboard={() => showDashboard(address, community.name)}
-                community={community}
-              />
-            </div>
-          )
-        }
+        return (
+          <div style={{ width: '90%' }} key={address}>
+            <FeaturedCommunity
+              token={token}
+              showDashboard={() => showDashboard(address, community.name)}
+              community={community}
+            />
+          </div>
+        )
       })
     } else {
       return [1, 2, 3, 4].map((item) =>
