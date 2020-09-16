@@ -170,10 +170,14 @@ module.exports = {
         concurrency: 1
       },
       createWallet: {
-        concurrency: 4
+        concurrency: 4,
+        priority: 'high'
       },
       createForeignWallet: {
         concurrency: 4
+      },
+      relay: {
+        priority: 'high'
       }
     }
   },
