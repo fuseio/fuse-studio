@@ -20,8 +20,6 @@ const initialState = {
   steps: {
     tokenIssued: false,
     community: false,
-    bridge: false,
-    transferOwnership: false,
     funder: false
   }
 }

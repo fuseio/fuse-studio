@@ -275,26 +275,29 @@ function * watchFetchCommunity ({ response }) {
     if (entities.hasOwnProperty(communityAddress)) {
       if (entities && entities[communityAddress]) {
         let { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
+        let calls = []
         const accountAddress = yield select(getAccountAddress)
 
         if (entities[communityAddress] && entities[communityAddress].communityURI) {
           yield put(fetchMetadata(entities[communityAddress].communityURI))
         }
-
         if (foreignTokenAddress) {
           const homeToken = yield call(fetchHomeTokenAddress, { communityAddress, foreignTokenAddress })
           if (homeToken) {
-            homeTokenAddress = homeToken
+            calls.push(
+              put(actions.fetchToken(homeToken)),
+              put(actions.fetchTokenTotalSupply(homeToken, { bridgeType: 'home' }))
+            )
           }
         }
-        const calls = [
+        calls.push(
           put(actions.fetchToken(homeTokenAddress)),
           put(actions.fetchToken(foreignTokenAddress)),
           put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
           put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
           put(getTokenAllowance(homeTokenAddress, { bridgeType: 'home' })),
           put(getTokenAllowance(foreignTokenAddress))
-        ]
+        )
         if (accountAddress) {
           calls.push(put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })))
           calls.push(put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })))
