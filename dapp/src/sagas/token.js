@@ -274,30 +274,38 @@ function * watchFetchCommunity ({ response }) {
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
       if (entities && entities[communityAddress]) {
-        let { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
+        const { foreignTokenAddress } = entities[communityAddress]
+        const homeTokenAddress = get(entities[communityAddress], 'homeTokenAddress')
+        const calls = []
         const accountAddress = yield select(getAccountAddress)
 
         if (entities[communityAddress] && entities[communityAddress].communityURI) {
           yield put(fetchMetadata(entities[communityAddress].communityURI))
         }
-
         if (foreignTokenAddress) {
+          calls.push(
+            put(actions.fetchToken(foreignTokenAddress)),
+            put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
+            put(getTokenAllowance(foreignTokenAddress)),
+            put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
+          )
           const homeToken = yield call(fetchHomeTokenAddress, { communityAddress, foreignTokenAddress })
           if (homeToken) {
-            homeTokenAddress = homeToken
+            calls.push(
+              put(actions.fetchToken(homeToken)),
+              put(actions.fetchTokenTotalSupply(homeToken, { bridgeType: 'home' })),
+              put(balanceOfToken(homeToken, accountAddress, { bridgeType: 'home' })),
+              put(getTokenAllowance(homeToken, { bridgeType: 'home' }))
+            )
           }
         }
-        const calls = [
-          put(actions.fetchToken(homeTokenAddress)),
-          put(actions.fetchToken(foreignTokenAddress)),
-          put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-          put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
-          put(getTokenAllowance(homeTokenAddress, { bridgeType: 'home' })),
-          put(getTokenAllowance(foreignTokenAddress))
-        ]
-        if (accountAddress) {
-          calls.push(put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })))
-          calls.push(put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })))
+
+        if (homeTokenAddress) {
+          calls.push(
+            put(actions.fetchToken(homeTokenAddress)),
+            put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
+            put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' }))
+          )
         }
         yield all(calls)
       }

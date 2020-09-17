@@ -60,13 +60,13 @@ const Bridge = (props) => {
   } = community
 
   useEffect(() => {
-    if (bridgeStatus.to.bridge === 'home' && !hasHomeTokenInNewBridge && isMultiBridge) {
+    if (bridgeStatus.to.bridge === 'home' && !hasHomeTokenInNewBridge) {
       watchHomeNewTokenRegistered()
     }
-    if (bridgeStatus.to.bridge === 'home' && hasHomeTokenInNewBridge) {
-      watchHomeBridge(transactionHash, !isMultiBridge && homeBridgeAddress)
+    if (bridgeStatus.to.bridge === 'home') {
+      watchHomeBridge(transactionHash, homeBridgeAddress, isMultiBridge)
     } else {
-      watchForeignBridge(transactionHash, !isMultiBridge && foreignBridgeAddress)
+      watchForeignBridge(transactionHash, foreignBridgeAddress, isMultiBridge)
     }
   }, [waitingForConfirmation])
 
@@ -94,9 +94,9 @@ const Bridge = (props) => {
   const handleTransfer = () => {
     const value = toWei(transferAmount, decimals)
     if (bridgeStatus.to.bridge === 'home') {
-      transferToHome(foreignTokenAddress, value, !isMultiBridge && foreignBridgeAddress)
+      transferToHome(foreignTokenAddress, value, foreignBridgeAddress, isMultiBridge)
     } else {
-      transferToForeign(homeTokenAddress, value, !isMultiBridge && homeBridgeAddress)
+      transferToForeign(homeTokenAddress, value, homeBridgeAddress, isMultiBridge)
     }
     getBlockNumber(bridgeStatus.to.network, bridgeStatus.to.bridge)
     getBlockNumber(bridgeStatus.from.network, bridgeStatus.from.bridge)

@@ -15,11 +15,11 @@ export const FETCH_HOME_TOKEN_ADDRESS = createRequestTypes('FETCH_HOME_TOKEN_ADD
 
 export const clearRelayEvent = () => requestAction(CLEAR_RELAY_EVENT)
 export const watchHomeNewTokenRegistered = () => requestAction(WATCH_NEW_TOKEN_REGISTERED)
-export const transferToHome = (foreignTokenAddress, value, foreignBridgeAddress) => requestAction(TRANSFER_TO_HOME, { foreignTokenAddress, value, confirmationsLimit: CONFIG.web3.bridge.confirmations.foreign, foreignBridgeAddress })
-export const transferToForeign = (homeTokenAddress, value, homeBridgeAddress) => requestAction(TRANSFER_TO_FOREIGN, { homeTokenAddress, value, confirmationsLimit: CONFIG.web3.bridge.confirmations.home, homeBridgeAddress })
+export const transferToHome = (foreignTokenAddress, value, foreignBridgeAddress, multiBridge) => requestAction(TRANSFER_TO_HOME, { foreignTokenAddress, value, confirmationsLimit: CONFIG.web3.bridge.confirmations.foreign, foreignBridgeAddress, multiBridge })
+export const transferToForeign = (homeTokenAddress, value, homeBridgeAddress, multiBridge) => requestAction(TRANSFER_TO_FOREIGN, { homeTokenAddress, value, confirmationsLimit: CONFIG.web3.bridge.confirmations.home, homeBridgeAddress, multiBridge })
 export const approveToken = (tokenAddress, value, bridgeType) => requestAction(APPROVE_TOKEN, { tokenAddress, value, bridgeType })
 export const getTokenAllowance = (tokenAddress, bridgeType) => requestAction(GET_TOKEN_ALLOWANCE, { tokenAddress, bridgeType })
 export const fetchHomeTokenAddress = (communityAddress, foreignTokenAddress) => requestAction(FETCH_HOME_TOKEN_ADDRESS, { communityAddress, foreignTokenAddress })
 
-export const watchForeignBridge = (transactionHash, foreignBridgeAddress) => requestAction(WATCH_FOREIGN_BRIDGE, { transactionHash, foreignBridgeAddress })
-export const watchHomeBridge = (transactionHash, homeBridgeAddress) => requestAction(WATCH_HOME_BRIDGE, { transactionHash, homeBridgeAddress })
+export const watchForeignBridge = (transactionHash, foreignBridgeAddress, multiBridge) => requestAction(WATCH_FOREIGN_BRIDGE, { transactionHash, foreignBridgeAddress, multiBridge })
+export const watchHomeBridge = (transactionHash, homeBridgeAddress, multiBridge) => requestAction(WATCH_HOME_BRIDGE, { transactionHash, homeBridgeAddress, multiBridge })
