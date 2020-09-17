@@ -128,7 +128,7 @@ class DeployProgress extends PureComponent {
         </div>
         {
           deployProgressSteps
-            .filter(({ key }) => key === 'tokenIssued' || contracts[key].checked)
+            .filter(({ key }) => key === 'tokenIssued' || get(contracts, `${key}.checked`, false))
             .map(({ label, loaderText, key, RenderLink }) => {
               return (
                 <div key={key} className={classNames('progress__item', { 'progress__item--active': currentStep === key && !this.stepHasError(key) })}>
