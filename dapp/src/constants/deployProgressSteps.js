@@ -16,15 +16,6 @@ const deployProgress = [
     label: 'Deploy economy contract',
     loaderText: 'The members list is deployed on the Fuse sidechain to allow adding users to the economy',
     key: 'community'
-  },
-  {
-    label: 'Deploying bridge contract',
-    loaderText: (networkType) => `A bridge contract is being deployed for the economy currency on mainnet and the Fuse sidechain ${networkType}`,
-    key: 'bridge'
-  },
-  {
-    label: 'Transfer ownership to the user',
-    key: 'transferOwnership'
   }
 ]
 
