@@ -1,23 +1,24 @@
 import { call, all, put, select, delay, takeEvery } from 'redux-saga/effects'
-
 import { tryTakeEvery } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
+import { getBridgeMediator } from 'selectors/bridge'
 import { getBlockNumber, getForeignNetwork } from 'selectors/network'
 import { transactionFlow } from './transaction'
 import * as actions from 'actions/bridge'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getWeb3 } from 'sagas/network'
+import BasicForeignBridgeABI from 'constants/abi/BasicForeignBridge'
+import BasicHomeBridgeABI from 'constants/abi/BasicHomeBridge'
 import { getCommunityAddress } from 'selectors/entities'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchTokenTotalSupply, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
 import HomeMultiAMBErc20ToErc677 from 'constants/abi/HomeMultiAMBErc20ToErc677'
 import { isZeroAddress } from 'utils/web3'
-import { toLongName } from 'utils/network'
 
 export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress }) {
   const web3 = yield getWeb3({ bridgeType: 'home' })
-  const homeBridgeMediatorAddress = CONFIG.web3.addresses.multiBridge.fuse.homeBridgeMediator.address
+  const homeBridgeMediatorAddress = yield select(getBridgeMediator, 'home')
   const homeBridge = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, homeBridgeMediatorAddress)
   const homeTokenAddress = yield call(homeBridge.methods.homeTokenAddress(foreignTokenAddress).call)
   if (isZeroAddress(homeTokenAddress)) {
@@ -38,10 +39,7 @@ export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress
 }
 
 export function * getAllowance ({ tokenAddress, bridgeType = 'foreign' }) {
-  const foreignNetwork = yield select(getForeignNetwork)
-  const bridgeMediator = bridgeType === 'foreign'
-    ? CONFIG.web3.addresses.multiBridge[`${toLongName(foreignNetwork)}`].foreignBridgeMediator.address
-    : CONFIG.web3.addresses.multiBridge.fuse.homeBridgeMediator.address
+  const bridgeMediator = yield select(getBridgeMediator, bridgeType)
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3({ bridgeType })
   const basicToken = new web3.eth.Contract(BasicTokenABI, tokenAddress)
@@ -56,10 +54,7 @@ export function * getAllowance ({ tokenAddress, bridgeType = 'foreign' }) {
 }
 
 function * approveToken ({ tokenAddress, value, bridgeType = 'foreign' }) {
-  const foreignNetwork = yield select(getForeignNetwork)
-  const bridgeMediator = bridgeType === 'foreign'
-    ? CONFIG.web3.addresses.multiBridge[`${toLongName(foreignNetwork)}`].foreignBridgeMediator.address
-    : CONFIG.web3.addresses.multiBridge.fuse.homeBridgeMediator.address
+  const bridgeMediator = yield select(getBridgeMediator, bridgeType)
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
   const basicToken = new web3.eth.Contract(BasicTokenABI, tokenAddress)
@@ -73,32 +68,49 @@ function * approveToken ({ tokenAddress, value, bridgeType = 'foreign' }) {
   return receipt
 }
 
-function * transferToHome ({ foreignTokenAddress, value, confirmationsLimit }) {
-  const foreignNetwork = yield select(getForeignNetwork)
-  const foreignBridgeMediator = CONFIG.web3.addresses.multiBridge[`${toLongName(foreignNetwork)}`].foreignBridgeMediator.address
+function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, confirmationsLimit }) {
+  const foreignBridgeMediator = yield select(getBridgeMediator)
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const homeBridgeMediator = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, foreignBridgeMediator, { transactionConfirmationBlocks: confirmationsLimit })
-
-  window.analytics.track('Bridge used', { tokenAddress: foreignTokenAddress, networkType: 'fuse' })
-  const transactionPromise = homeBridgeMediator.methods.relayTokens(foreignTokenAddress, value).send({
-    from: accountAddress
-  })
+  let transactionPromise
+  if (foreignBridgeAddress) {
+    console.log({ foreignBridgeAddress })
+    const basicToken = new web3.eth.Contract(BasicTokenABI, foreignTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
+    window.analytics.track('Bridge used', { tokenAddress: foreignTokenAddress, networkType: 'fuse' })
+    transactionPromise = basicToken.methods.transfer(foreignBridgeAddress, value).send({
+      from: accountAddress
+    })
+  } else {
+    const homeBridgeMediator = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, foreignBridgeMediator, { transactionConfirmationBlocks: confirmationsLimit })
+    window.analytics.track('Bridge used', { tokenAddress: foreignTokenAddress, networkType: 'fuse' })
+    transactionPromise = homeBridgeMediator.methods.relayTokens(foreignTokenAddress, value).send({
+      from: accountAddress
+    })
+  }
 
   const action = actions.TRANSFER_TO_HOME
   yield call(transactionFlow, { transactionPromise, action, confirmationsLimit, tokenAddress: foreignTokenAddress })
 }
 
-function * transferToForeign ({ homeTokenAddress, value, confirmationsLimit }) {
+function * transferToForeign ({ homeTokenAddress, homeBridgeAddress, value, confirmationsLimit }) {
   const accountAddress = yield select(getAccountAddress)
   const web3 = yield getWeb3()
-  const homeBridgeMediatorAddress = CONFIG.web3.addresses.multiBridge.fuse.homeBridgeMediator.address
-  const basicToken = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
-
-  window.analytics.track('Bridge used', { tokenAddress: homeTokenAddress, networkType: yield select(getForeignNetwork) })
-  const transactionPromise = basicToken.methods.transferAndCall(homeBridgeMediatorAddress, value, []).send({
-    from: accountAddress
-  })
+  let transactionPromise
+  if (homeBridgeAddress) {
+    console.log({ homeBridgeAddress })
+    const basicToken = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
+    window.analytics.track('Bridge used', { tokenAddress: homeTokenAddress, networkType: yield select(getForeignNetwork) })
+    transactionPromise = basicToken.methods.transfer(homeBridgeAddress, value).send({
+      from: accountAddress
+    })
+  } else {
+    const homeBridgeMediatorAddress = yield select(getBridgeMediator, 'home')
+    const basicToken = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
+    window.analytics.track('Bridge used', { tokenAddress: homeTokenAddress, networkType: yield select(getForeignNetwork) })
+    transactionPromise = basicToken.methods.transferAndCall(homeBridgeMediatorAddress, value, []).send({
+      from: accountAddress
+    })
+  }
 
   const action = actions.TRANSFER_TO_FOREIGN
   yield call(transactionFlow, { transactionPromise, action, confirmationsLimit })
@@ -125,16 +137,21 @@ function * pollForBridgeEvent ({ bridgeContract, transactionHash, fromBlock, eve
   }
 }
 
-function * watchForeignBridge ({ transactionHash }) {
+function * watchForeignBridge ({ foreignBridgeAddress, transactionHash }) {
   const accountAddress = yield select(getAccountAddress)
   const foreignNetwork = yield select(getForeignNetwork)
   const fromBlock = yield select(getBlockNumber, foreignNetwork)
   const options = { bridgeType: 'foreign' }
   const web3 = yield getWeb3(options)
-  const foreignBridgeMediator = CONFIG.web3.addresses.multiBridge[`${toLongName(foreignNetwork)}`].foreignBridgeMediator.address
-  const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, foreignBridgeMediator)
-
-  const relayEvent = yield pollForBridgeEvent({ bridgeContract, fromBlock, eventName: 'TokensBridged', accountAddress, transactionHash })
+  let relayEvent
+  if (foreignBridgeAddress) {
+    const bridgeContract = new web3.eth.Contract(BasicForeignBridgeABI, foreignBridgeAddress)
+    relayEvent = yield pollForBridgeEvent({ bridgeContract, transactionHash, fromBlock, eventName: 'RelayedMessage' })
+  } else {
+    const foreignBridgeMediator = yield select(getBridgeMediator)
+    const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, foreignBridgeMediator)
+    relayEvent = yield pollForBridgeEvent({ bridgeContract, fromBlock, eventName: 'TokensBridged', accountAddress, transactionHash })
+  }
 
   yield put({
     type: actions.WATCH_FOREIGN_BRIDGE.SUCCESS,
@@ -144,16 +161,21 @@ function * watchForeignBridge ({ transactionHash }) {
   })
 }
 
-function * watchHomeBridge ({ transactionHash }) {
+function * watchHomeBridge ({ homeBridgeAddress, transactionHash }) {
   const homeNetwork = yield select(state => state.network.homeNetwork)
   const fromBlock = yield select(getBlockNumber, homeNetwork)
   const options = { bridgeType: 'home' }
   const web3 = yield getWeb3(options)
-  const accountAddress = yield select(getAccountAddress)
-  const homeBridgeMediatorAddress = CONFIG.web3.addresses.multiBridge.fuse.homeBridgeMediator.address
-  const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, homeBridgeMediatorAddress)
-
-  const relayEvent = yield pollForBridgeEvent({ bridgeContract, fromBlock, eventName: 'TokensBridged', accountAddress, transactionHash })
+  let relayEvent
+  if (homeBridgeAddress) {
+    const bridgeContract = new web3.eth.Contract(BasicHomeBridgeABI, homeBridgeAddress)
+    relayEvent = yield pollForBridgeEvent({ bridgeContract, transactionHash, fromBlock, eventName: 'RelayedMessage' })
+  } else {
+    const accountAddress = yield select(getAccountAddress)
+    const homeBridgeMediatorAddress = yield select(getBridgeMediator, 'home')
+    const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, homeBridgeMediatorAddress)
+    relayEvent = yield pollForBridgeEvent({ bridgeContract, fromBlock, eventName: 'TokensBridged', accountAddress, transactionHash })
+  }
 
   yield put({
     type: actions.WATCH_HOME_BRIDGE.SUCCESS,
@@ -169,7 +191,7 @@ function * watchHomeNewTokenRegistered () {
   const fromBlock = yield select(getBlockNumber, homeNetwork)
   const options = { bridgeType: 'home' }
   const web3 = yield getWeb3(options)
-  const homeBridgeMediatorAddress = CONFIG.web3.addresses.multiBridge.fuse.homeBridgeMediator.address
+  const homeBridgeMediatorAddress = yield select(getBridgeMediator, 'home')
   const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, homeBridgeMediatorAddress)
 
   const relayEvent = yield pollForBridgeEvent({ bridgeContract, fromBlock, eventName: 'NewTokenRegistered', accountAddress })

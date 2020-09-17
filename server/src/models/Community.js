@@ -16,7 +16,8 @@ const CommunitySchema = new Schema({
   coverPhoto: { type: String },
   description: { type: String },
   webUrl: { type: String },
-  creatorAddress: { type: String }
+  creatorAddress: { type: String },
+  isMultiBridge: { type: Boolean, default: true }
 }, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })

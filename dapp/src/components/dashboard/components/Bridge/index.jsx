@@ -49,7 +49,8 @@ const Bridge = (props) => {
     hasHomeTokenInNewBridge,
     watchForeignBridge,
     transactionHash,
-    watchHomeBridge
+    watchHomeBridge,
+    isMultiBridge
   } = props
   const isTokenApproved = get(approved, tokenOfCommunityOnCurrentSide, false)
 
@@ -59,13 +60,13 @@ const Bridge = (props) => {
   } = community
 
   useEffect(() => {
-    if (bridgeStatus.to.bridge === 'home' && !hasHomeTokenInNewBridge) {
+    if (bridgeStatus.to.bridge === 'home' && !hasHomeTokenInNewBridge && isMultiBridge) {
       watchHomeNewTokenRegistered()
     }
     if (bridgeStatus.to.bridge === 'home' && hasHomeTokenInNewBridge) {
-      watchHomeBridge(transactionHash)
+      watchHomeBridge(transactionHash, !isMultiBridge && homeBridgeAddress)
     } else {
-      watchForeignBridge(transactionHash)
+      watchForeignBridge(transactionHash, !isMultiBridge && foreignBridgeAddress)
     }
   }, [waitingForConfirmation])
 
@@ -79,7 +80,7 @@ const Bridge = (props) => {
   const balance = balances[tokenOfCommunityOnCurrentSide]
   const formatted = formatWei(balance, 2, decimals)
   const tokenAllowed = get(allowance, tokenOfCommunityOnCurrentSide, new BigNumber(0))
-  const allowed = new BigNumber(tokenAllowed).isGreaterThanOrEqualTo(BigNumber(transferAmount || 0).multipliedBy(10 ** decimals))
+  const allowed = new BigNumber(tokenAllowed).isGreaterThanOrEqualTo(new BigNumber(transferAmount || 0).multipliedBy(10 ** decimals)) || !isMultiBridge
 
   const handleApprove = () => {
     const value = toWei(transferAmount, decimals)
@@ -93,9 +94,9 @@ const Bridge = (props) => {
   const handleTransfer = () => {
     const value = toWei(transferAmount, decimals)
     if (bridgeStatus.to.bridge === 'home') {
-      transferToHome(foreignTokenAddress, value)
+      transferToHome(foreignTokenAddress, value, !isMultiBridge && foreignBridgeAddress)
     } else {
-      transferToForeign(homeTokenAddress, value)
+      transferToForeign(homeTokenAddress, value, !isMultiBridge && homeBridgeAddress)
     }
     getBlockNumber(bridgeStatus.to.network, bridgeStatus.to.bridge)
     getBlockNumber(bridgeStatus.from.network, bridgeStatus.from.bridge)
@@ -132,7 +133,7 @@ const Bridge = (props) => {
             <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={(e) => setTransferAmount(e.target.value)} disabled={transferStatus} />
             <div className='bridge__transfer__form__currency'>{symbol}</div>
           </div>
-          <button disabled={transferStatus || !Number(transferAmount) || BigNumber(transferAmount).multipliedBy(10 ** decimals).isGreaterThan(new BigNumber(balance))}
+          <button disabled={transferStatus || !Number(transferAmount) || new BigNumber(transferAmount).multipliedBy(10 ** decimals).isGreaterThan(new BigNumber(balance))}
             className='bridge__transfer__form__btn' onClick={allowed ? handleTransfer : handleApprove}>
             {
               allowed
