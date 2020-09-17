@@ -2,26 +2,32 @@
   "env": "qa",
   "web3": {
     "fuseProvider": "https://rpc.fuse.io",
-    "supportedNetworks": ["main", "ropsten", "fuse"],
-    "supportedForeignNetworks": ["main", "ropsten"],
+    "supportedNetworks": [
+      "main",
+      "ropsten",
+      "fuse"
+    ],
+    "supportedForeignNetworks": [
+      "main",
+      "ropsten"
+    ],
     "providers": {
       "default": "alchemy",
       "alchemy": {
-        "ropsten": {
-        },
-        "main": {
-        }
+        "ropsten": {},
+        "main": {}
       }
     },
-    "portis": {
-    },
+    "portis": {},
     "addresses": {
       "ropsten": {
         "FuseToken": "0xEc304De130dA3afbD2F60C7aa6C5485e30239372",
         "TokenFactory": "0x6004EAdF0aD3aCd568F354CA7E2b410bA0080E98",
         "DaiToken": "0x1CAf0Ed93dD34152000ACec9441D4D9ed0f55D7B",
         "UsdToken": "0x9756abE980756c3913Dfd5Efe327E0e3aa843d30",
-        "TetherToken": "0x7b732Ee450Ab4B66A63B9ad5E408C62c942bBc9b"
+        "TetherToken": "0x7b732Ee450Ab4B66A63B9ad5E408C62c942bBc9b",
+        "AMBBridge": "0x4a6C9c14451d43cc7e5E95A9fEAB51F5e8140871",
+        "MultiBridgeMediator": "0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419"
       },
       "main": {
         "FuseToken": "0x4162178B78D6985480A308B2190EE5517460406D",
@@ -32,15 +38,15 @@
         "TrustToken": "0x0000000000085d4780B73119b644AE5ecd22b376",
         "EursToken": "0xdB25f211AB05b1c97D595516F45794528a807ad8",
         "DigitalRand": "0x9Cb2f26A23b8d89973F08c957C4d7cdf75CD341c",
-        "RupiahToken": "0x998FFE1E43fAcffb941dc337dD0468d52bA5b48A"
+        "RupiahToken": "0x998FFE1E43fAcffb941dc337dD0468d52bA5b48A",
+        "AMBBridge": "0x63C47c296B63bE888e9af376bd927C835014039f",
+        "MultiBridgeMediator": "0xf301d525da003e874DF574BCdd309a6BF0535bb6"
       },
       "fuse": {
-        "ropsten": {
-          "BridgeMapper": "0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66"
-        },
-        "main": {
-          "BridgeMapper": "0x89b98bB511A41FeF73b388cF8C052221f42cd44f"
-        },
+        "AMBBridgeRopsten": "0x1b4DC7506C2d3BCE5e38919d45b3D6f6806a0106",
+        "MultiBridgeMediatorRopsten": "0xAEBC2058780eb0372e7Ee75c11019d26E36894ad",
+        "AMBBridgeMain": "0x2CA5411c4bf447Cc27CD6E6d1d046f922A27C399",
+        "MultiBridgeMediatorMain": "0xc2220646E1E76D5fF3a441eDd9E8EFF0e4A8EF03",
         "funder": "0xa6c61e75e6008eed7f75b73c84755558764081d1"
       }
     },
@@ -78,10 +84,10 @@
   },
   "api": {
     "auth": {
-        "domain": {
-          "name": "Fuse Studio Dev",
-          "version": 1
-        }
+      "domain": {
+        "name": "Fuse Studio Dev",
+        "version": 1
+      }
     },
     "url": {
       "main": "http://localhost:3000/api/v1",

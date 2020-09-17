@@ -29,7 +29,6 @@ import DeployProgressStep from 'components/wizard/pages/DeployProgress'
 import Congratulations from 'components/wizard/components/Congratulations'
 
 import contractIcon from 'images/contract.svg'
-import BridgeIcon from 'images/Bridge.svg'
 
 const getInitialValues = (templateId, networkType) => {
   const networkState = loadState('state.network') || CONFIG.web3.bridge.network
@@ -120,16 +119,6 @@ const WizardPage = ({
           key: 'community',
           icon: contractIcon
         },
-        bridge: {
-          label: 'Bridge to fuse',
-          checked: true,
-          key: 'bridge',
-          icon: BridgeIcon
-        },
-        transferOwnership: {
-          checked: true,
-          key: 'transferOwnership'
-        },
         funder: {
           checked: true,
           key: 'funder'
@@ -186,13 +175,11 @@ const WizardPage = ({
       .filter((contractName) => contracts[contractName].checked)
       .reduce((steps, contractName) => ({
         ...steps,
-        [contracts[contractName].key]: contracts[contractName].key === 'bridge'
-          ? { args: { foreignTokenAddress: null } }
-          : contracts[contractName].key === 'community'
-            ? { args: { isClosed: !isOpen, name: communityName, adminAddress, plugins: chosenPlugins, description } }
-            : contracts[contractName].key === 'email'
-              ? { args: { email, subscribe } }
-              : {}
+        [contracts[contractName].key]: contracts[contractName].key === 'community'
+          ? { args: { isClosed: !isOpen, name: communityName, adminAddress, plugins: chosenPlugins, description } }
+          : contracts[contractName].key === 'email'
+            ? { args: { email, subscribe } }
+            : {}
       }), {})
 
     const { chosen } = images
@@ -207,10 +194,10 @@ const WizardPage = ({
     const sentry = { tags: { issuance: true } }
     if (existingToken && existingToken.label && existingToken.value) {
       const { value: foreignTokenAddress } = existingToken
-      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress, isCustom: false } } }
+      const newSteps = { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress, isCustom: false } } }
       deployExistingToken(metadata, newSteps, { sentry })
     } else if (customToken) {
-      const newSteps = { ...steps, bridge: { args: { foreignTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
+      const newSteps = { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
       deployExistingToken(metadata, newSteps, { sentry })
     } else {
       const tokenData = {

@@ -3,7 +3,7 @@ const { Schema } = mongoose
 
 const CommunitySchema = new Schema({
   communityAddress: { type: String, required: [true, "can't be blank"] },
-  homeTokenAddress: { type: String, required: [true, "can't be blank"] },
+  homeTokenAddress: { type: String },
   foreignTokenAddress: { type: String },
   homeBridgeAddress: { type: String },
   foreignBridgeAddress: { type: String },
@@ -16,11 +16,11 @@ const CommunitySchema = new Schema({
   coverPhoto: { type: String },
   description: { type: String },
   webUrl: { type: String },
-  creatorAddress: { type: String }
+  creatorAddress: { type: String },
+  isMultiBridge: { type: Boolean, default: true }
 }, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })
-CommunitySchema.index({ homeTokenAddress: 1 }, { unique: true })
 
 const Community = mongoose.model('Community', CommunitySchema)
 

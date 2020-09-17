@@ -11,7 +11,6 @@ import NavBar from 'components/common/NavBar'
 
 import { connectToWallet } from 'actions/network'
 import ModalContainer from 'containers/ModalContainer'
-import { useWeb3Auth } from 'hooks/useWeb3Auth'
 import useWeb3Connect from 'hooks/useWeb3Connect'
 import { getWeb3 } from 'services/web3'
 import 'scss/main.scss'
@@ -19,20 +18,12 @@ import 'scss/main.scss'
 const Root = ({
   connectToWallet
 }) => {
-  const web3Auth = useWeb3Auth()
-
-  const onConnectCallback = async (response) => {
-    const { provider } = await web3Auth.signIn(response)
+  const onConnectCallback = (provider) => {
     getWeb3({ provider })
     connectToWallet()
   }
 
   const web3connect = useWeb3Connect(onConnectCallback)
-
-  const logout = () => {
-    web3Auth.signOut()
-    web3connect.core.clearCachedProvider()
-  }
 
   useEffect(() => {
     if (web3connect.core.cachedProvider) {
@@ -42,12 +33,12 @@ const Root = ({
 
   return (
     <div className='root__wrapper'>
-      <NavBar logout={logout} web3connect={web3connect} />
+      <NavBar web3connect={web3connect} />
       <Switch>
-        <Route exact path='/' render={props => <HomePage logout={logout} web3connect={web3connect} {...props} />} />
-        <Route path='/view/issuance/:templateId?' component={props => <Wizard logout={logout} web3connect={web3connect} {...props} />} />
-        <Route path='/view/communities' component={props => <CommunitiesPage logout={logout} web3connect={web3connect} {...props} />} />
-        <Route path='/view/community/:address' component={props => <Dashboard logout={logout} web3connect={web3connect} {...props} />} />
+        <Route exact path='/' render={props => <HomePage {...props} />} />
+        <Route path='/view/issuance/:templateId?' component={props => <Wizard {...props} />} />
+        <Route path='/view/communities' component={props => <CommunitiesPage {...props} />} />
+        <Route path='/view/community/:address' component={props => <Dashboard {...props} />} />
       </Switch>
       <Footer />
       <ModalContainer />

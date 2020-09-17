@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
+import { useParams } from 'react-router'
 import { connect } from 'react-redux'
 import { joinCommunity } from 'actions/communityEntities'
-import { WRONG_NETWORK_MODAL, QR_MODAL } from 'constants/uiConstants'
+import { QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
 import { getTransaction } from 'selectors/transaction'
 import Bridge from 'components/dashboard/components/Bridge'
@@ -9,6 +10,7 @@ import CommunityInfo from 'components/dashboard/components/CommunityInfo'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
 import Header from 'components/dashboard/components/Header'
+import ToggleBridgeVersion from 'components/dashboard/components/ToggleBridge'
 import { push } from 'connected-react-router'
 import { getForeignNetwork } from 'selectors/network'
 import SignIn from 'components/common/SignIn'
@@ -16,116 +18,87 @@ import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getEntity, getCommunityAddress } from 'selectors/entities'
 import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
+import get from 'lodash/get'
 
-class Dashboard extends Component {
-  state = {
-    transferMessage: false,
-    burnMessage: false,
-    mintMessage: false,
-    lastAction: {}
-  }
+const Dashboard = (props) => {
+  const {
+    community,
+    foreignToken,
+    accountAddress,
+    dashboard,
+    metadata,
+    networkType,
+    tokenOfCommunityOnCurrentSide,
+    userEntity,
+    push,
+    loadModal,
+    hasHomeTokenInNewBridge
+  } = props
+  const [isMultiBridge, setIsMultiBridge] = useState(hasHomeTokenInNewBridge || get(community, 'isMultiBridge', false))
+  const { address: communityAddress } = useParams()
+  const homeTokenAddress = isMultiBridge ? (dashboard && dashboard.homeTokenAddress) : (community && community.homeTokenAddress)
 
-  componentDidUpdate (prevProps) {
-    const { networkType, tokenNetworkType } = this.props
-    if ((!prevProps.tokenNetworkType && (prevProps.tokenNetworkType !== networkType)) && (networkType !== 'fuse')) {
-      const { loadModal } = this.props
-      loadModal(WRONG_NETWORK_MODAL, { supportedNetworks: [tokenNetworkType], handleClose: this.showHomePage })
-    }
-  }
-
-  showHomePage = () => {
-    this.props.push('/')
-  }
-
-  loadQrModal = (value) => {
-    const { loadModal } = this.props
+  const loadQrModal = (value) => {
     loadModal(QR_MODAL, { value })
   }
 
-  getHeaderMetadata = () => {
-    const {
-      community,
-      foreignToken,
-      metadata
-    } = this.props
-    if (community && community.communityURI && metadata) {
-      return {
-        ...metadata[foreignToken.tokenURI],
-        ...metadata[community.communityURI]
-      }
-    } else if (foreignToken && foreignToken.tokenURI && (metadata && metadata[foreignToken.tokenURI])) {
-      return {
-        ...metadata[foreignToken.tokenURI]
-      }
-    } else {
-      return {}
-    }
-  }
-  handleJoinCommunity = () => {
-    this.props.push(`${this.props.pathname}/users`)
-    this.props.joinCommunity(this.props.community.communityAddress)
+  const handleJoinCommunity = () => {
+    push(`${this.props.pathname}/users`)
+    joinCommunity(communityAddress)
   }
 
-  render () {
-    const {
-      community,
-      foreignToken,
-      accountAddress,
-      dashboard,
-      metadata,
-      networkType,
-      tokenOfCommunityOnCurrentSide,
-      userEntity
-    } = this.props
-    const isAdmin = userEntity && userEntity.isAdmin
-
-    return (
-      (community && foreignToken) ? <React.Fragment>
-        <SignIn accountAddress={accountAddress} />
-        <Header
-          metadata={{
-            ...metadata[foreignToken && foreignToken.tokenURI],
-            ...metadata[community && community.communityURI]
-          }}
-          tokenAddress={foreignToken && foreignToken.tokenAddress}
-          isClosed={community && community.isClosed}
-          communityURI={community && community.communityURI}
-          name={community && community.name}
-          networkType={networkType}
-          token={foreignToken}
-          handleJoinCommunity={userEntity ? undefined : this.handleJoinCommunity}
-        />
-        <CommunityInfo
-          tokensTotalSupplies={dashboard && dashboard.totalSupply}
-          foreignToken={foreignToken}
-          loadQrModal={this.loadQrModal}
-          communityAddress={community && community.communityAddress}
-          homeTokenAddress={community && community.homeTokenAddress}
-          foreignTokenAddress={community && community.foreignTokenAddress}
-        />
-        {
-          (community && community.homeBridgeAddress) && (community && community.foreignBridgeAddress) && (
-            <div className='content__bridge'>
+  return (
+    (community && foreignToken) ? <React.Fragment>
+      <SignIn accountAddress={accountAddress} />
+      <Header
+        metadata={{
+          ...metadata[foreignToken && foreignToken.tokenURI],
+          ...metadata[community && community.communityURI]
+        }}
+        tokenAddress={foreignToken && foreignToken.tokenAddress}
+        isClosed={community && community.isClosed}
+        communityURI={community && community.communityURI}
+        name={community && community.name}
+        networkType={networkType}
+        token={foreignToken}
+        handleJoinCommunity={userEntity ? undefined : handleJoinCommunity}
+      />
+      <CommunityInfo
+        tokensTotalSupplies={dashboard && dashboard.totalSupply}
+        foreignToken={foreignToken}
+        loadQrModal={loadQrModal}
+        communityAddress={community && community.communityAddress}
+        homeTokenAddress={homeTokenAddress}
+        foreignTokenAddress={community && community.foreignTokenAddress}
+      />
+      {
+        (community && community.foreignTokenAddress) && (
+          <div className='content__bridge'>
+            <div className='grid-x align-justify'>
               <h3 className='content__bridge__title'>Bridge <FontAwesome style={{ fontSize: '60%' }} data-tip data-for='bridge' name='info-circle' /></h3>
               <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
                 <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
               </ReactTooltip>
-              <Bridge
-                symbol={foreignToken && foreignToken.symbol}
-                decimals={foreignToken && foreignToken.decimals}
-                tokenName={community.name}
-                isAdmin={isAdmin}
-                community={community}
-                accountAddress={accountAddress}
-                communityAddress={community && community.communityAddress}
-                tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
-              />
+              <ToggleBridgeVersion isUseMultiBridge={isMultiBridge} submitHandler={(values) => setIsMultiBridge(values.isUseMultiBridge)} />
             </div>
-          )
-        }
-      </React.Fragment> : <div />
-    )
-  }
+            <Bridge
+              symbol={foreignToken && foreignToken.symbol}
+              decimals={foreignToken && foreignToken.decimals}
+              isMultiBridge={isMultiBridge}
+              tokenName={community.name}
+              isAdmin={userEntity && userEntity.isAdmin}
+              homeTokenAddress={homeTokenAddress}
+              foreignTokenAddress={community && community.foreignTokenAddress}
+              community={{ ...community, homeTokenAddress }}
+              accountAddress={accountAddress}
+              communityAddress={community && community.communityAddress}
+              tokenOfCommunityOnCurrentSide={tokenOfCommunityOnCurrentSide}
+            />
+          </div>
+        )
+      }
+    </React.Fragment> : <div />
+  )
 }
 
 const mapStateToProps = (state) => ({
@@ -136,6 +109,8 @@ const mapStateToProps = (state) => ({
   accountAddress: getAccountAddress(state),
   foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)),
   dashboard: state.screens.dashboard,
+  hasHomeTokenInNewBridge: get(state, 'screens.dashboard.hasHomeTokenInNewBridge', false),
+  community: getCurrentCommunity(state),
   ...state.screens.token,
   ...getTransaction(state, state.screens.token.transactionHash),
   pathname: state.router.location.pathname

@@ -10,7 +10,8 @@ export const getTokenAddressOfByNetwork = (state, community) => {
   if (community) {
     const { homeTokenAddress, foreignTokenAddress } = community
     const { homeNetwork, bridgeStatus } = getInfo(state)
-    return homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress
+    const { homeTokenAddress: homeToken } = getHomeTokenAddress(state)
+    return homeNetwork === bridgeStatus.from.network ? (homeToken || homeTokenAddress) : foreignTokenAddress
   }
 }
 
@@ -33,6 +34,11 @@ export const getInfo = createSelector(
   state => state.network.homeNetwork,
   getBridgeStatus,
   (homeNetwork, bridgeStatus) => ({ homeNetwork, bridgeStatus })
+)
+
+export const getHomeTokenAddress = createSelector(
+  state => state.screens.dashboard.homeTokenAddress,
+  (homeTokenAddress) => ({ homeTokenAddress })
 )
 
 export const getTokenUtil = createSelector(

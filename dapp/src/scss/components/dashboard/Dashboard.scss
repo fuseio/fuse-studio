@@ -13,7 +13,7 @@
 
     .fa {
       z-index: 100;
-      font-size: 1.250em;
+      font-size: 1.25em;
       color: $color-white;
     }
   }
@@ -54,7 +54,7 @@
         width: 15%;
       }
     }
-    
+
     @include block(item) {
       padding: 20px;
       font-size: 14px;
@@ -90,7 +90,7 @@
       @include element(text) {
         text-align: start;
         text-overflow: ellipsis;
-        overflow: hidden; 
+        overflow: hidden;
         white-space: nowrap;
         width: 200px;
       }
@@ -103,7 +103,7 @@
       font-size: 0.625em;
 
       @include block(title) {
-        color: rgba(214, 214, 214, 0.6)
+        color: rgba(214, 214, 214, 0.6);
       }
 
       @include block(manage) {
@@ -121,7 +121,7 @@
       padding-left: 20px;
       padding-top: 20px;
       font-size: 0.625em;
-      color: rgba(214, 214, 214, 0.6)
+      color: rgba(214, 214, 214, 0.6);
     }
   }
 
@@ -133,18 +133,18 @@
         width: 80%;
         margin: 4em auto 3em;
       }
-  
+
       @include breakpoint(2000) {
         width: 70%;
         margin: 4em auto 3em;
       }
-  
+
       @include breakpoint(medium only) {
         width: 70%;
         padding-top: 4em;
         margin: auto;
       }
-  
+
       @include breakpoint(small only) {
         padding: 2em 0.625em 6.125em;
       }
@@ -202,9 +202,16 @@
         margin: 3em 0.5em 3em;
       }
 
+      .bridge_toggle {
+        color: $color-gray;
+        font-size: 1.25em;
+        margin-bottom: 10px;
+        font-weight: 500;
+      }
+
       @include element(title) {
         color: $color-gray;
-        font-size: 1.250em;
+        font-size: 1.25em;
         margin-bottom: 10px;
         font-weight: 500;
       }
@@ -220,7 +227,7 @@
       @include element(container) {
         display: flex;
         align-items: center;
-        
+
         @include breakpoint(medium up) {
           flex: 1;
         }
@@ -316,8 +323,8 @@
           color: $color-dark-gray;
           font-weight: normal;
           line-height: 2.17;
-          flex: .9;
-          
+          flex: 0.9;
+
           @include breakpoint(small down) {
             margin-bottom: 10px;
           }
@@ -391,16 +398,15 @@
 
           @include element(title) {
             color: $color-dark;
-            font-size: 0.750em;
+            font-size: 0.75em;
             font-weight: 500;
             line-height: 2.17;
           }
-    
         }
 
         @include element(deploy-btn) {
           display: block;
-        }          
+        }
       }
     }
   }

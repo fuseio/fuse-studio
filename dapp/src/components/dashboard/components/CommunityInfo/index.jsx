@@ -39,10 +39,12 @@ const CommunityInfo = ({
   let totalSupply = 0
   let homeTokenSupply = 0
   let foreignTokenSupply = 0
+  const homeBalance = tokensTotalSupplies && tokensTotalSupplies.hasOwnProperty(homeTokenAddress) ? tokensTotalSupplies[homeTokenAddress] : 0
+  const foreignBalance = tokensTotalSupplies && tokensTotalSupplies.hasOwnProperty(foreignTokenAddress) ? tokensTotalSupplies[foreignTokenAddress] : 0
 
-  if (tokensTotalSupplies && tokensTotalSupplies[homeTokenAddress] && tokensTotalSupplies[foreignTokenAddress]) {
-    homeTokenSupply = new BigNumber(tokensTotalSupplies[homeTokenAddress])
-    foreignTokenSupply = new BigNumber(tokensTotalSupplies[foreignTokenAddress]).minus(tokensTotalSupplies[homeTokenAddress])
+  if (tokensTotalSupplies) {
+    homeTokenSupply = new BigNumber(homeBalance)
+    foreignTokenSupply = new BigNumber(foreignBalance).minus(homeBalance)
     totalSupply = new BigNumber(foreignTokenSupply).plus(homeTokenSupply)
   }
 

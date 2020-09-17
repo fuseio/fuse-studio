@@ -15,6 +15,7 @@ import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
 import { fetchCommunity } from 'actions/token'
+import { fetchHomeTokenAddress } from 'actions/bridge'
 import { fetchMetadata } from 'actions/metadata'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
@@ -57,12 +58,14 @@ const DashboardLayout = (props) => {
     isAdmin,
     location,
     fetchEntities,
-    setForeignNetwork
+    setForeignNetwork,
+    fetchHomeTokenAddress
   } = props
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
   const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
   const communityURI = community && community.communityURI
+  const foreignTokenAddress = community && community.foreignTokenAddress
 
   useEffect(() => {
     if (isMobile) {
@@ -87,6 +90,12 @@ const DashboardLayout = (props) => {
       fetchEntities(communityAddress)
     }
   }, [communityAddress, accountAddress, loading])
+
+  useEffect(() => {
+    if (foreignTokenAddress && accountAddress) {
+      fetchHomeTokenAddress(communityAddress, foreignTokenAddress)
+    }
+  }, [foreignTokenAddress, accountAddress])
 
   useEffect(() => {
     if (communityURI) {
@@ -231,7 +240,7 @@ const DashboardLayout = (props) => {
 
                 {community && (
                   <Route exact path={`${match.path}/:success?`}>
-                    <Dashboard community={community} />
+                    <Dashboard />
                   </Route>)
                 }
               </Switch>
@@ -258,7 +267,8 @@ const mapDispatchToProps = {
   loadModal,
   fetchEntities,
   push,
-  setForeignNetwork
+  setForeignNetwork,
+  fetchHomeTokenAddress
 }
 
 export default withTracker(withNetwork(connect(
