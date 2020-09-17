@@ -31,9 +31,10 @@ const Dashboard = (props) => {
     tokenOfCommunityOnCurrentSide,
     userEntity,
     push,
-    loadModal
+    loadModal,
+    hasHomeTokenInNewBridge
   } = props
-  const [isMultiBridge, setIsMultiBridge] = useState(get(community, 'isMultiBridge', false))
+  const [isMultiBridge, setIsMultiBridge] = useState(hasHomeTokenInNewBridge || get(community, 'isMultiBridge', false))
   const { address: communityAddress } = useParams()
   const homeTokenAddress = isMultiBridge ? (dashboard && dashboard.homeTokenAddress) : (community && community.homeTokenAddress)
 
@@ -108,6 +109,7 @@ const mapStateToProps = (state) => ({
   accountAddress: getAccountAddress(state),
   foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)),
   dashboard: state.screens.dashboard,
+  hasHomeTokenInNewBridge: get(state, 'screens.dashboard.hasHomeTokenInNewBridge', false),
   community: getCurrentCommunity(state),
   ...state.screens.token,
   ...getTransaction(state, state.screens.token.transactionHash),

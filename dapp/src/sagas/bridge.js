@@ -74,7 +74,6 @@ function * transferToHome ({ foreignTokenAddress, foreignBridgeAddress, value, c
   const web3 = yield getWeb3()
   let transactionPromise
   if (foreignBridgeAddress) {
-    console.log({ foreignBridgeAddress })
     const basicToken = new web3.eth.Contract(BasicTokenABI, foreignTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
     window.analytics.track('Bridge used', { tokenAddress: foreignTokenAddress, networkType: 'fuse' })
     transactionPromise = basicToken.methods.transfer(foreignBridgeAddress, value).send({
@@ -97,7 +96,6 @@ function * transferToForeign ({ homeTokenAddress, homeBridgeAddress, value, conf
   const web3 = yield getWeb3()
   let transactionPromise
   if (homeBridgeAddress) {
-    console.log({ homeBridgeAddress })
     const basicToken = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
     window.analytics.track('Bridge used', { tokenAddress: homeTokenAddress, networkType: yield select(getForeignNetwork) })
     transactionPromise = basicToken.methods.transfer(homeBridgeAddress, value).send({
