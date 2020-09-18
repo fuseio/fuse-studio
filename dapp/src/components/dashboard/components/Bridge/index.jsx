@@ -80,7 +80,7 @@ const Bridge = (props) => {
   const balance = balances[tokenOfCommunityOnCurrentSide]
   const formatted = formatWei(balance, 2, decimals)
   const tokenAllowed = get(allowance, tokenOfCommunityOnCurrentSide, new BigNumber(0))
-  const allowed = new BigNumber(tokenAllowed).isGreaterThanOrEqualTo(new BigNumber(transferAmount || 0).multipliedBy(10 ** decimals)) || !isMultiBridge
+  const allowed = new BigNumber(tokenAllowed).isGreaterThanOrEqualTo(new BigNumber(transferAmount || 0).multipliedBy(10 ** decimals))
 
   const handleApprove = () => {
     const value = toWei(transferAmount, decimals)
@@ -134,11 +134,13 @@ const Bridge = (props) => {
             <div className='bridge__transfer__form__currency'>{symbol}</div>
           </div>
           <button disabled={transferStatus || !Number(transferAmount) || new BigNumber(transferAmount).multipliedBy(10 ** decimals).isGreaterThan(new BigNumber(balance))}
-            className='bridge__transfer__form__btn' onClick={allowed ? handleTransfer : handleApprove}>
+            className='bridge__transfer__form__btn' onClick={!isMultiBridge ? handleTransfer : allowed ? handleTransfer : handleApprove}>
             {
-              allowed
+              !isMultiBridge
                 ? (transferStatus || `Transfer to ${bridgeStatus.to.network}`)
-                : (transferStatus || `Unlock ${transferAmount} ${symbol}`)
+                : allowed
+                  ? (transferStatus || `Transfer to ${bridgeStatus.to.network}`)
+                  : (transferStatus || `Unlock ${transferAmount} ${symbol}`)
             }
           </button>
         </div>
