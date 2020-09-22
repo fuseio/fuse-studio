@@ -232,9 +232,10 @@ const getCommunitiesByEntities = (entities) => {
 router.get('/account/:account', async (req, res, next) => {
   const { account } = req.params
 
-  const createdByAccount = await Community.find({ creatorAddress: account }).sort({ createdAt: -1 })
   const adminEntities = await Entity.find({ account, isAdmin: true }).sort({ blockNumber: -1 })
-  const adminCommunities = (await getCommunitiesByEntities([...createdByAccount, ...adminEntities])).map(community => ({ ...community.toObject(), isAdmin: true }))
+  const createdByAccount = await Community.find({ creatorAddress: account }).sort({ createdAt: -1 })
+  const communitiesByEntities = await getCommunitiesByEntities(adminEntities)
+  const adminCommunities = [...createdByAccount, ...communitiesByEntities].map(community => ({ ...community.toObject(), isAdmin: true }))
   const nonAdminEntities = await Entity.find({ account, isAdmin: false }).sort({ blockNumber: -1 })
 
   const monAdminCommunities = await getCommunitiesByEntities(nonAdminEntities)
