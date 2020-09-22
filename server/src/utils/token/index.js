@@ -38,8 +38,22 @@ const transfer = async (network, { from, to, tokenAddress, amount }) => {
   return receipt
 }
 
+const approve = async (network, { from, to, tokenAddress, amount }) => {
+  const { createContract, createMethod, send } = network
+
+  const tokenContract = createContract(BasicTokenAbi, tokenAddress)
+
+  const method = createMethod(tokenContract, 'approve', to, amount)
+
+  const receipt = await send(method, {
+    from
+  })
+  return receipt
+}
+
 module.exports = {
   fetchTokenData,
   fetchBalance,
-  transfer
+  transfer,
+  approve
 }

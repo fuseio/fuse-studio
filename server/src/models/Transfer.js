@@ -9,7 +9,8 @@ const TransferSchema = new Schema({
   tokenAddress: { type: String, required: [true, "can't be blank"] },
   amount: { type: mongoose.Types.Decimal128, required: [true, "can't be blank"] },
   bridgeType: { type: String, required: [true, "can't be blank"] },
-  status: { type: String }
+  status: { type: String },
+  customerAddress: { type: String }
 }, { timestamps: true })
 
 TransferSchema.set('toJSON', {

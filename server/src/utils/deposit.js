@@ -19,7 +19,7 @@ const makeDeposit = async (deposit) => {
     console.error(`[makeDeposit] could not find community ${communityAddress}`)
     return
   }
-  const { foreignBridgeAddress, foreignTokenAddress, homeTokenAddress } = community
+  const { foreignBridgeAddress, foreignTokenAddress, homeTokenAddress, isMultiBridge } = community
   console.log(`[makeDeposit] foreignBridgeAddress: ${foreignBridgeAddress}, foreignTokenAddress: ${foreignTokenAddress}, homeTokenAddress: ${homeTokenAddress}`)
 
   await new Deposit(deposit).save()
@@ -29,28 +29,42 @@ const makeDeposit = async (deposit) => {
     console.log(`[makeDeposit] is DAIp community`)
     agenda.now('getDAIPointsToAddress', { from: walletAddress, tokenAddress: foreignTokenAddress, amount, recipient: customerAddress, bridgeType: 'foreign' })
   } else {
-    console.log(`[makeDeposit] is not DAIp community`)
-    const transferToHome = await new Transfer({
-      from: walletAddress,
-      to: foreignBridgeAddress,
-      tokenAddress,
-      amount,
-      bridgeType: 'foreign',
-      status: 'READY'
-    }).save()
-    console.log(`[makeDeposit] after transferToHome save()`)
+    if (isMultiBridge) {
+      console.log(`[makeDeposit] transferring to home with relayTokens`)
+      const transferToHome = await new Transfer({
+        from: walletAddress,
+        to: config.get('network.foreign.addresses.MultiBridgeMediator'),
+        customerAddress,
+        tokenAddress,
+        amount,
+        bridgeType: 'foreign',
+        status: 'READY'
+      }).save()
+      agenda.now('relayTokens', { transferId: transferToHome._id })
+    } else {
+      console.log(`[makeDeposit] is not DAIp community`)
+      const transferToHome = await new Transfer({
+        from: walletAddress,
+        to: foreignBridgeAddress,
+        tokenAddress,
+        amount,
+        bridgeType: 'foreign',
+        status: 'READY'
+      }).save()
+      console.log(`[makeDeposit] after transferToHome save()`)
 
-    await new Transfer({
-      from: walletAddress,
-      to: customerAddress,
-      tokenAddress: homeTokenAddress,
-      amount,
-      bridgeType: 'home',
-      status: 'WAITING'
-    }).save()
-    console.log(`[makeDeposit] after transferToCustomer save()`)
+      await new Transfer({
+        from: walletAddress,
+        to: customerAddress,
+        tokenAddress: homeTokenAddress,
+        amount,
+        bridgeType: 'home',
+        status: 'WAITING'
+      }).save()
+      console.log(`[makeDeposit] after transferToCustomer save()`)
 
-    agenda.now('transfer', { transferId: transferToHome._id })
+      agenda.now('transfer', { transferId: transferToHome._id })
+    }
   }
 }
 
