@@ -59,7 +59,7 @@ function * connectToWallet () {
     const accountAddress = accounts[0]
 
     yield fork(watchNetworkChanges, provider)
-    yield call(checkNetworkType, { web3 })
+    yield call(checkNetworkType, { web3, accountAddress })
 
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,
@@ -82,12 +82,16 @@ function * connectToWallet () {
   }
 }
 
-function * checkNetworkType ({ web3 }) {
+function * checkNetworkType ({ web3, accountAddress }) {
   try {
+    if (!accountAddress) {
+      accountAddress = yield select(getAccountAddress)
+    }
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const response = {
       networkType,
-      networkId
+      networkId,
+      accountAddress
     }
     if (CONFIG.web3.supportedForeignNetworks.includes(networkType)) {
       const { pathname } = yield select(state => state.router.location)
@@ -99,7 +103,6 @@ function * checkNetworkType ({ web3 }) {
       type: actions.CHECK_NETWORK_TYPE.SUCCESS,
       response
     })
-    const accountAddress = yield select(state => state.network.accountAddress)
     yield put(balanceOfNative(accountAddress, { bridgeType: 'home' }))
     yield put(balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
   } catch (error) {
@@ -151,8 +154,7 @@ function * getBlockNumber ({ networkType, bridgeType }) {
 }
 
 function * watchCheckNetworkTypeSuccess ({ response }) {
-  const { foreignNetwork, homeNetwork } = response
-  const accountAddress = yield select(getAccountAddress)
+  const { foreignNetwork, homeNetwork, accountAddress } = response
   yield put(fetchCommunities(accountAddress))
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
