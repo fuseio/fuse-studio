@@ -12,7 +12,9 @@ import { setBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import get from 'lodash/get'
 import { getCurrentNetworkType } from 'selectors/network'
-import { getHomeTokenByCommunityAddress } from 'selectors/token'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
+import { getCommunityAddress } from 'selectors/entities'
+import { getHomeTokenAddress, getCurrentCommunity } from 'selectors/dashboard'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
@@ -29,12 +31,13 @@ const BackupBonus = ({
   balanceOfToken,
   clearTransactionStatus,
   balances,
-  setBonus
+  setBonus,
+  homeTokenAddress,
+  foreignToken
 }) => {
   const { address: communityAddress } = useParams()
-
   const funderAccount = useSelector(getFunderAccount)
-  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[homeToken.address]
+  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[homeTokenAddress]
 
   const { plugins } = community
 
@@ -43,27 +46,27 @@ const BackupBonus = ({
   const [transferMessage, setTransferMessage] = useState(false)
 
   useEffect(() => {
-    if (homeToken && homeToken.address) {
-      balanceOfToken(homeToken.address, funderAddress, { bridgeType: 'home' })
+    if (homeTokenAddress) {
+      balanceOfToken(homeTokenAddress, funderAddress, { bridgeType: 'home' })
     }
-  }, [homeToken && homeToken.address])
+  }, [homeTokenAddress])
 
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
       if (transferSuccess) {
         setTransferMessage(true)
-        balanceOfToken(homeToken.address, funderAddress, { bridgeType: 'home' })
+        balanceOfToken(homeTokenAddress, funderAddress, { bridgeType: 'home' })
       }
     } else if (transactionStatus && transactionStatus === FAILURE) {
       if (transferSuccess === false) {
         setTransferMessage(true)
       }
     }
-    return () => {}
+    return () => { }
   }, [transactionStatus])
 
   const transferToFunder = (amount) => {
-    transferTokenToFunder(homeToken.address, toWei(String(amount), homeToken.decimals))
+    transferTokenToFunder(homeTokenAddress, toWei(String(amount), foreignToken.decimals))
   }
 
   const transactionError = () => {
@@ -78,7 +81,7 @@ const BackupBonus = ({
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
-  const balance = balances[homeToken.address]
+  const balance = balances[homeTokenAddress]
 
   return (
     community ? <div className='join_bonus__wrapper'>
@@ -92,13 +95,13 @@ const BackupBonus = ({
               setTransferMessage(false)
               clearTransactionStatus(null)
             }}
-            symbol={homeToken.symbol}
+            symbol={foreignToken.symbol}
             transactionConfirmed={transactionConfirmed}
             transactionError={transactionError}
             transactionDenied={transactionDenied}
-            balance={balance ? formatWei(balance, 0, homeToken.decimals) : 0}
+            balance={balance ? formatWei(balance, 0, foreignToken.decimals) : 0}
             transferToFunder={transferToFunder}
-            funderBalance={funderBalance ? formatWei(funderBalance, 0, homeToken.decimals) : 0}
+            funderBalance={funderBalance ? formatWei(funderBalance, 0, foreignToken.decimals) : 0}
           />
           <RewardUserForm
             networkType={networkType}
@@ -120,7 +123,8 @@ const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   balances: getBalances(state),
   networkType: getCurrentNetworkType(state),
-  homeToken: getHomeTokenByCommunityAddress(state, match.params.address) || {}
+  homeTokenAddress: getHomeTokenAddress(state, getCurrentCommunity(state)),
+  foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { networkType: '' }
 })
 
 const mapDispatchToState = {

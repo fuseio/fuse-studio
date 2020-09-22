@@ -11,7 +11,7 @@ import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
 import { getHomeNetworkType } from 'selectors/network'
 import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
-import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { fetchCommunity } from 'actions/token'
 import { fetchHomeTokenAddress } from 'actions/bridge'
 import { fetchMetadata } from 'actions/metadata'
@@ -198,7 +198,7 @@ const DashboardLayout = (props) => {
                 )}
 
                 <Route exact path={`${match.path}/wallet`}>
-                  <WhiteLabelWallet value={qrValue} />
+                  <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
                 </Route>
 
                 {community && (
@@ -229,7 +229,6 @@ const DashboardLayout = (props) => {
 
 const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
-  homeToken: getHomeTokenByCommunityAddress(state, match.params.address),
   foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
   community: getCurrentCommunity(state),
   isAdmin: checkIsAdmin(state),

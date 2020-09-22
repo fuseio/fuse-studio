@@ -6,12 +6,21 @@ import get from 'lodash/get'
 
 const getCommunities = state => state.entities.communities
 
+export const getHomeToken = state => state.screens.dashboard && state.screens.dashboard.homeTokenAddress
+
+export const getHomeTokenAddress = (state, community) => {
+  if (community) {
+    const { isMultiBridge, homeTokenAddress } = community
+    return isMultiBridge ? getHomeToken(state) : homeTokenAddress
+  }
+}
+
 export const getTokenAddressOfByNetwork = (state, community) => {
   if (community) {
-    const { homeTokenAddress, foreignTokenAddress } = community
+    const { foreignTokenAddress } = community
     const { homeNetwork, bridgeStatus } = getInfo(state)
-    const { homeTokenAddress: homeToken } = getHomeTokenAddress(state)
-    return homeNetwork === bridgeStatus.from.network ? (homeToken || homeTokenAddress) : foreignTokenAddress
+    const homeTokenAddress = getHomeTokenAddress(state, community)
+    return homeNetwork === bridgeStatus.from.network ? homeTokenAddress : foreignTokenAddress
   }
 }
 
@@ -34,11 +43,6 @@ export const getInfo = createSelector(
   state => state.network.homeNetwork,
   getBridgeStatus,
   (homeNetwork, bridgeStatus) => ({ homeNetwork, bridgeStatus })
-)
-
-export const getHomeTokenAddress = createSelector(
-  state => state.screens.dashboard.homeTokenAddress,
-  (homeTokenAddress) => ({ homeTokenAddress })
 )
 
 export const getTokenUtil = createSelector(

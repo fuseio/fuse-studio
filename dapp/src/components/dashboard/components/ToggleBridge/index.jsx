@@ -3,17 +3,15 @@ import { Formik, Field } from 'formik'
 import { object, boolean } from 'yup'
 import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
-import get from 'lodash/get'
-import { connect } from 'react-redux'
 
 class ToggleBridgeVersion extends React.Component {
   constructor (props) {
     super(props)
 
-    const { isUseMultiBridge, hasHomeTokenInNewBridge } = props
+    const { isUseMultiBridge } = props
 
     this.initialValues = {
-      isUseMultiBridge: hasHomeTokenInNewBridge || isUseMultiBridge
+      isUseMultiBridge
     }
 
     this.validationSchema = object().noUnknown(false).shape({
@@ -77,8 +75,4 @@ class ToggleBridgeVersion extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  hasHomeTokenInNewBridge: get(state, 'screens.dashboard.hasHomeTokenInNewBridge', false)
-})
-
-export default connect(mapStateToProps, null)(ToggleBridgeVersion)
+export default ToggleBridgeVersion

@@ -31,10 +31,9 @@ const Dashboard = (props) => {
     tokenOfCommunityOnCurrentSide,
     userEntity,
     push,
-    loadModal,
-    hasHomeTokenInNewBridge
+    loadModal
   } = props
-  const [isMultiBridge, setIsMultiBridge] = useState(hasHomeTokenInNewBridge || get(community, 'isMultiBridge', false))
+  const [isMultiBridge, setIsMultiBridge] = useState(get(community, 'isMultiBridge', false))
   const { address: communityAddress } = useParams()
   const homeTokenAddress = isMultiBridge ? (dashboard && dashboard.homeTokenAddress) : (community && community.homeTokenAddress)
 
@@ -79,7 +78,7 @@ const Dashboard = (props) => {
               <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
                 <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
               </ReactTooltip>
-              <ToggleBridgeVersion isUseMultiBridge={isMultiBridge} submitHandler={(values) => setIsMultiBridge(values.isUseMultiBridge)} />
+              {!get(community, 'isMultiBridge', false) && <ToggleBridgeVersion isUseMultiBridge={isMultiBridge} submitHandler={(values) => setIsMultiBridge(values.isUseMultiBridge)} />}
             </div>
             <Bridge
               symbol={foreignToken && foreignToken.symbol}
