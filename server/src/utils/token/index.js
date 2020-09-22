@@ -1,4 +1,5 @@
 const { inspect } = require('util')
+const BigNumber = require('bignumber.js')
 const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 
@@ -51,9 +52,19 @@ const approve = async (network, { from, to, tokenAddress, amount }) => {
   return receipt
 }
 
+const hasAllowance = async (network, { to, tokenAddress, amount }) => {
+  const { createContract } = network
+
+  const tokenContract = createContract(BasicTokenAbi, tokenAddress)
+
+  const allowance = await tokenContract.methods.allowance(to).call()
+  return new BigNumber(allowance).isGreaterThanOrEqualTo(amount.toString())
+}
+
 module.exports = {
   fetchTokenData,
   fetchBalance,
   transfer,
-  approve
+  approve,
+  hasAllowance
 }

@@ -13,8 +13,11 @@ const relayTokens = withAccount(async (account, { transferId }) => {
   }
   try {
     const network = createNetwork(transferDoc.bridgeType, account)
-    const approveReceipt = await utils.approve(network, transferDoc.toObject())
-    await handleReceipt(approveReceipt)
+    const hasAllowance = await utils.hasAllowance(network, transferDoc.toObject())
+    if (!hasAllowance) {
+      const approveReceipt = await utils.approve(network, transferDoc.toObject())
+      await handleReceipt(approveReceipt)
+    }
     const relayTokensReceipt = await bridgeUtils.relayTokens(network, transferDoc.toObject())
     await handleReceipt(relayTokensReceipt)
     transferDoc.status = 'DONE'
