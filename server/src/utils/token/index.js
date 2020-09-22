@@ -2,6 +2,7 @@ const { inspect } = require('util')
 const BigNumber = require('bignumber.js')
 const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
+const { toWei } = require('web3-utils')
 
 const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
   const tokenContractInstance = new web3.eth.Contract(BasicTokenAbi, address)
@@ -44,7 +45,7 @@ const approve = async (network, { from, to, tokenAddress, amount }) => {
 
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
 
-  const method = createMethod(tokenContract, 'approve', to, amount)
+  const method = createMethod(tokenContract, 'approve', to, toWei('1000000'))
 
   const receipt = await send(method, {
     from
