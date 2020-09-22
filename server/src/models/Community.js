@@ -17,7 +17,7 @@ const CommunitySchema = new Schema({
   description: { type: String },
   webUrl: { type: String },
   creatorAddress: { type: String },
-  isMultiBridge: { type: Boolean, default: true }
+  isMultiBridge: { type: Boolean, default: false }
 }, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })
