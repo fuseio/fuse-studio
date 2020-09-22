@@ -33,7 +33,10 @@
       "url": "https://studio.fuse.io/api/v2"
     },
     "graph": {
-      "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse"
+      "url": "https://graph.fuse.io/subgraphs/name/fuseio",
+      "subgraphs": {
+        "entities": "/fuse-entities"
+      }
     }
   },
   "reactGA": {

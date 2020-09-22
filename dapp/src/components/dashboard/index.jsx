@@ -4,10 +4,8 @@ import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import { Route, Switch, useParams } from 'react-router'
-import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 import { push } from 'connected-react-router'
-import { gql, useQuery } from '@apollo/client'
 
 import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
 import { getHomeNetworkType } from 'selectors/network'
@@ -19,7 +17,6 @@ import { fetchHomeTokenAddress } from 'actions/bridge'
 import { fetchMetadata } from 'actions/metadata'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
-import { setForeignNetwork } from 'actions/network'
 import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
 
@@ -38,16 +35,6 @@ import BackupBonusPage from 'components/dashboard/pages/BackupBonus'
 import OnRampPage from 'components/dashboard/pages/OnRamp'
 import WalletBannerLinkPage from 'components/dashboard/pages/WalletBannerLink'
 
-const GET_COMMUNITY_ORIGIN_NETWORK = (communityAddress) => {
-  return gql`
-    {
-      tokens (where:{communityAddress: "${communityAddress}"}) {
-      originNetwork
-    }
-  }
-`
-}
-
 const DashboardLayout = (props) => {
   const {
     match,
@@ -58,12 +45,10 @@ const DashboardLayout = (props) => {
     isAdmin,
     location,
     fetchEntities,
-    setForeignNetwork,
     fetchHomeTokenAddress
   } = props
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
-  const { loading, error, data } = useQuery(GET_COMMUNITY_ORIGIN_NETWORK(communityAddress))
   const communityURI = community && community.communityURI
   const foreignTokenAddress = community && community.foreignTokenAddress
 
@@ -74,22 +59,12 @@ const DashboardLayout = (props) => {
   }, [location.pathname])
 
   useEffect(() => {
-    if (!loading) {
-      if (!isEmpty(data) && !error) {
-        const originNetwork = get(data, 'tokens[0].originNetwork', '')
-        if (originNetwork) {
-          setForeignNetwork(originNetwork === 'mainnet' ? 'main' : originNetwork)
-        }
-      }
-    }
-  }, [data, loading, error])
-
-  useEffect(() => {
-    if (communityAddress && !loading) {
-      fetchCommunity(communityAddress)
+    if (communityAddress) {
+      fetchCommunity(communityAddress, { networkType: 'ropsten' })
+      fetchCommunity(communityAddress, { networkType: 'mainnet' })
       fetchEntities(communityAddress)
     }
-  }, [communityAddress, accountAddress, loading])
+  }, [communityAddress, accountAddress])
 
   useEffect(() => {
     if (foreignTokenAddress && accountAddress) {
@@ -267,7 +242,6 @@ const mapDispatchToProps = {
   loadModal,
   fetchEntities,
   push,
-  setForeignNetwork,
   fetchHomeTokenAddress
 }
 
