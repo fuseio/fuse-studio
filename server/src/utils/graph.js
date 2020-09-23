@@ -1,6 +1,6 @@
 const config = require('config')
 const mongoose = require('mongoose')
-const { capitalize } = require('lodash')
+const { capitalize, get } = require('lodash')
 const { toChecksumAddress } = require('web3-utils')
 const { GraphQLClient } = require('graphql-request')
 const Community = mongoose.model('Community')
@@ -11,7 +11,8 @@ const graphFuseClient = new GraphQLClient(`${config.get('graph.url')}${config.ge
 
 const fetchTokenByCommunity = async (communityAddress) => {
   const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
-  if (community.isMultiBridge) {
+  const isMultiBridge = get(community, 'isMultiBridge', false)
+  if (isMultiBridge) {
     const { foreignTokenAddress } = community
     const query = `{bridgedTokens(where: {foreignAddress: "${foreignTokenAddress}"}) {address, name}}`
     const { bridgedTokens } = await graphBridgeClient.request(query)
