@@ -75,7 +75,6 @@ const DashboardLayout = (props) => {
 
   useEffect(() => {
     if (communityURI) {
-      console.log({ toggleMultiBridge: community && community.isMultiBridge })
       toggleMultiBridge(get(community, 'isMultiBridge', false))
       fetchMetadata(communityURI)
     }
