@@ -5,7 +5,7 @@ const { GraphQLClient } = require('graphql-request')
 const Community = mongoose.model('Community')
 const web3Utils = require('web3-utils')
 
-const graphBridgeSubgraphClient = new GraphQLClient(`${config.get('graph.url')}${config.get(`graph.subgraphs[bridge${lodash.capitalize(config.get(`network.foreign.name`))}]`)}`)
+const graphBridgeSubgraphClient = new GraphQLClient(`${config.get('graph.url')}${config.get(`graph.subgraphs.bridge${lodash.capitalize(config.get(`network.foreign.name`))}`)}`)
 const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.entities')}`)
 
 export const fetchTokenByCommunity = async (communityAddress) => {
