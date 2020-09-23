@@ -10,7 +10,7 @@ const { getAdmin } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
 
-const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.entities')}`)
+const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.fuse')}`)
 
 function getParamsFromMethodData (web3, abi, methodName, methodData) {
   const methodABI = abi.filter(obj => obj.name === methodName)[0]

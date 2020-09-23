@@ -51,6 +51,7 @@
   "graph": {
     "url": "https://graph.fuse.io/subgraphs/name/fuseio",
     "subgraphs": {
+      "fuse": "/fuse",
       "entities": "/fuse-entities",
       "bridgeRopsten": "/fuse-ropsten-bridge",
       "bridgeMain": "/fuse-ethereum-bridge"
