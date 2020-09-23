@@ -11,9 +11,9 @@ import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
 import { getHomeNetworkType } from 'selectors/network'
 import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
-import { getForeignTokenByCommunityAddress, getHomeTokenByCommunityAddress } from 'selectors/token'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { fetchCommunity } from 'actions/token'
-import { fetchHomeTokenAddress } from 'actions/bridge'
+import { fetchHomeTokenAddress, toggleMultiBridge } from 'actions/bridge'
 import { fetchMetadata } from 'actions/metadata'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
@@ -45,7 +45,8 @@ const DashboardLayout = (props) => {
     isAdmin,
     location,
     fetchEntities,
-    fetchHomeTokenAddress
+    fetchHomeTokenAddress,
+    toggleMultiBridge
   } = props
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
@@ -74,6 +75,7 @@ const DashboardLayout = (props) => {
 
   useEffect(() => {
     if (communityURI) {
+      toggleMultiBridge(get(community, 'isMultiBridge', false))
       fetchMetadata(communityURI)
     }
   }, [communityURI])
@@ -198,7 +200,7 @@ const DashboardLayout = (props) => {
                 )}
 
                 <Route exact path={`${match.path}/wallet`}>
-                  <WhiteLabelWallet value={qrValue} />
+                  <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
                 </Route>
 
                 {community && (
@@ -229,7 +231,6 @@ const DashboardLayout = (props) => {
 
 const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
-  homeToken: getHomeTokenByCommunityAddress(state, match.params.address),
   foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
   community: getCurrentCommunity(state),
   isAdmin: checkIsAdmin(state),
@@ -242,7 +243,8 @@ const mapDispatchToProps = {
   loadModal,
   fetchEntities,
   push,
-  fetchHomeTokenAddress
+  fetchHomeTokenAddress,
+  toggleMultiBridge
 }
 
 export default withTracker(withNetwork(connect(

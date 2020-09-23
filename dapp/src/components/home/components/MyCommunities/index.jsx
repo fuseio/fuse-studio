@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import classNames from 'classnames'
 import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import isEmpty from 'lodash/isEmpty'
+import has from 'lodash/has'
+import get from 'lodash/get'
 import FeaturedCommunity from 'components/common/FeaturedCommunity'
 import { getCommunitiesKeys } from 'selectors/accounts'
 
@@ -39,26 +41,26 @@ const MyCommunities = ({
   withDecoration = false,
   communitiesKeys,
   communities,
-  showDashboard
+  showDashboard,
+  tokens
 }) => {
   const [valueSpinner, onChangeSpinner] = useState(0)
 
   const communitiesIOwn = React.useMemo(() => {
     return communitiesKeys
       .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj).filter(({ isAdmin, token }) => isAdmin && token)
+      .filter(obj => !!obj).filter(({ isAdmin }) => isAdmin)
   }, [communitiesKeys, communities])
 
   const slides = React.useMemo(() => {
     if (!isEmpty(communitiesIOwn)) {
       const myCommunities = communitiesIOwn.map((community) => {
-        const { token } = community
+        const { token, foreignTokenAddress } = community
         const { communityAddress } = community
-
         return (
           <div className='cell medium-12 small-24' key={communityAddress}>
             <FeaturedCommunity
-              token={token}
+              token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
               showDashboard={() => showDashboard(communityAddress)}
               community={community}
             />
@@ -111,6 +113,7 @@ const MyCommunities = ({
 
 const mapStateToProps = (state) => ({
   communities: state.entities.communities,
+  tokens: state.entities.tokens,
   communitiesKeys: getCommunitiesKeys(state)
 })
 

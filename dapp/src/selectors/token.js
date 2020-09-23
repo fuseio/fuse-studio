@@ -16,20 +16,4 @@ export const getForeignTokenByCommunityAddress = createSelector(
     }
     return null
   }
-  // const { communities, tokens } = state.entities
-  // const { communityAddress } = state.screens.dashboard
-  // const community = communities[communityAddress]
-  // if (!community) {
-  //   return null
-  // }
-  // return tokens[community.foreignTokenAddress]
 )
-
-export const getHomeTokenByCommunityAddress = (state, communityAddress) => {
-  const { communities, tokens } = state.entities
-  const community = communities[communityAddress]
-  if (!community) {
-    return null
-  }
-  return tokens[community.homeTokenAddress]
-}

@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { joinCommunity } from 'actions/communityEntities'
 import { QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'
@@ -16,7 +16,7 @@ import { getForeignNetwork } from 'selectors/network'
 import SignIn from 'components/common/SignIn'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getEntity, getCommunityAddress } from 'selectors/entities'
-import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
+import { getTokenAddressOfByNetwork, getCurrentCommunity, getHomeTokenAddress, getIsMultiBridge } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import get from 'lodash/get'
 
@@ -28,15 +28,14 @@ const Dashboard = (props) => {
     dashboard,
     metadata,
     networkType,
-    tokenOfCommunityOnCurrentSide,
     userEntity,
     push,
     loadModal,
-    hasHomeTokenInNewBridge
+    homeTokenAddress,
+    isMultiBridge,
+    tokenOfCommunityOnCurrentSide
   } = props
-  const [isMultiBridge, setIsMultiBridge] = useState(hasHomeTokenInNewBridge || get(community, 'isMultiBridge', false))
   const { address: communityAddress } = useParams()
-  const homeTokenAddress = isMultiBridge ? (dashboard && dashboard.homeTokenAddress) : (community && community.homeTokenAddress)
 
   const loadQrModal = (value) => {
     loadModal(QR_MODAL, { value })
@@ -79,7 +78,7 @@ const Dashboard = (props) => {
               <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
                 <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
               </ReactTooltip>
-              <ToggleBridgeVersion isUseMultiBridge={isMultiBridge} submitHandler={(values) => setIsMultiBridge(values.isUseMultiBridge)} />
+              {!get(community, 'isMultiBridge', false) && <ToggleBridgeVersion isUseMultiBridge={get(community, 'isMultiBridge', false)} />}
             </div>
             <Bridge
               symbol={foreignToken && foreignToken.symbol}
@@ -103,6 +102,8 @@ const Dashboard = (props) => {
 
 const mapStateToProps = (state) => ({
   tokenNetworkType: getForeignNetwork(state),
+  homeTokenAddress: getHomeTokenAddress(state, getCurrentCommunity(state)),
+  isMultiBridge: getIsMultiBridge(state),
   metadata: state.entities.metadata,
   userEntity: getEntity(state),
   tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state)),

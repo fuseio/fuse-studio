@@ -20,7 +20,7 @@ const FeaturedCommunities = ({
   const [value, onChange] = useState(0)
 
   useEffect(() => {
-    fetchFeaturedCommunities({ networkType: 'main' })
+    fetchFeaturedCommunities({ networkType: 'mainnet' })
     fetchFeaturedCommunities({ networkType: 'ropsten' })
     return () => { }
   }, [])

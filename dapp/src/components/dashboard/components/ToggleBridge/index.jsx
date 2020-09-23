@@ -3,37 +3,38 @@ import { Formik, Field } from 'formik'
 import { object, boolean } from 'yup'
 import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
-import get from 'lodash/get'
+import { getIsMultiBridge } from 'selectors/dashboard'
+import { toggleMultiBridge } from 'actions/bridge'
 import { connect } from 'react-redux'
 
-class ToggleBridgeVersion extends React.Component {
+class ToggleBridge extends React.Component {
   constructor (props) {
     super(props)
 
-    const { isUseMultiBridge, hasHomeTokenInNewBridge } = props
+    const { isMultiBridge } = props
 
     this.initialValues = {
-      isUseMultiBridge: hasHomeTokenInNewBridge || isUseMultiBridge
+      isMultiBridge: isMultiBridge
     }
 
     this.validationSchema = object().noUnknown(false).shape({
-      isUseMultiBridge: boolean()
+      isMultiBridge: boolean()
     })
   }
 
   renderForm = ({ values, handleSubmit, submitForm }) => {
-    const { isUseMultiBridge } = values
+    const { isMultiBridge } = values
     return (
       <form className='bridge_toggle' onSubmit={handleSubmit}>
         <Field
-          name='isUseMultiBridge'
+          name='isMultiBridge'
           render={({ field, form: { handleChange } }) => (
             <div className='grid-x align-middle'>
               <label className='toggle'>
                 <input
                   {...field}
                   type='checkbox'
-                  checked={isUseMultiBridge}
+                  checked={isMultiBridge}
                   onChange={e => {
                     handleChange(e)
                     setTimeout(submitForm, 2)
@@ -44,7 +45,7 @@ class ToggleBridgeVersion extends React.Component {
                 </div>
               </label>
               <div className='close_open_community__text'>
-                <span>&nbsp;{isUseMultiBridge ? ' V2' : 'V1'}</span>
+                <span>&nbsp;{isMultiBridge ? ' V2' : 'V1'}</span>
               </div>
               &nbsp;<FontAwesome style={{ fontSize: '60%' }} data-tip data-for='MultiBridge' name='info-circle' />
               <ReactTooltip className='tooltip__content' id='MultiBridge' place='bottom' effect='solid'>
@@ -58,15 +59,16 @@ class ToggleBridgeVersion extends React.Component {
     )
   }
 
-  render () {
-    const { submitHandler } = this.props
+  onSubmit = (values, bag) => {
+    const { toggleMultiBridge } = this.props
+    toggleMultiBridge(values.isMultiBridge)
+  }
 
+  render () {
     return (
       <Formik
         initialValues={this.initialValues}
-        onSubmit={(values, bag) => {
-          submitHandler(values)
-        }}
+        onSubmit={this.onSubmit}
         validationSchema={this.validationSchema}
         render={this.renderForm}
         initialStatus={false}
@@ -78,7 +80,7 @@ class ToggleBridgeVersion extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  hasHomeTokenInNewBridge: get(state, 'screens.dashboard.hasHomeTokenInNewBridge', false)
+  isMultiBridge: getIsMultiBridge(state)
 })
 
-export default connect(mapStateToProps, null)(ToggleBridgeVersion)
+export default connect(mapStateToProps, { toggleMultiBridge })(ToggleBridge)
