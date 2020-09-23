@@ -4,13 +4,16 @@ import { getBridgeStatus } from 'selectors/network'
 import has from 'lodash/has'
 import get from 'lodash/get'
 
+export const getIsMultiBridge = state => state.screens.dashboard && state.screens.dashboard.isMultiBridge
+
 const getCommunities = state => state.entities.communities
 
 export const getHomeToken = state => state.screens.dashboard && state.screens.dashboard.homeTokenAddress
 
 export const getHomeTokenAddress = (state, community) => {
   if (community) {
-    const { isMultiBridge, homeTokenAddress } = community
+    const isMultiBridge = getIsMultiBridge(state)
+    const { homeTokenAddress } = community
     return isMultiBridge ? getHomeToken(state) : homeTokenAddress
   }
 }

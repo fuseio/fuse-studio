@@ -12,7 +12,7 @@ import { convertNetworkName } from 'utils/network'
 import { getCurrentNetworkType, getHomeNetworkType } from 'selectors/network'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
-import { getTokenAddressOfByNetwork, getCurrentCommunity } from 'selectors/dashboard'
+import { getCurrentCommunity, getTokenAddressOfByNetwork } from 'selectors/dashboard'
 
 const Transfer = ({
   sendTo,

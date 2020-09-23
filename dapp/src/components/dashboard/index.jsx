@@ -13,7 +13,7 @@ import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { fetchCommunity } from 'actions/token'
-import { fetchHomeTokenAddress } from 'actions/bridge'
+import { fetchHomeTokenAddress, toggleMultiBridge } from 'actions/bridge'
 import { fetchMetadata } from 'actions/metadata'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
@@ -45,7 +45,8 @@ const DashboardLayout = (props) => {
     isAdmin,
     location,
     fetchEntities,
-    fetchHomeTokenAddress
+    fetchHomeTokenAddress,
+    toggleMultiBridge
   } = props
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
@@ -74,6 +75,8 @@ const DashboardLayout = (props) => {
 
   useEffect(() => {
     if (communityURI) {
+      console.log({ toggleMultiBridge: community && community.isMultiBridge })
+      toggleMultiBridge(get(community, 'isMultiBridge', false))
       fetchMetadata(communityURI)
     }
   }, [communityURI])
@@ -241,7 +244,8 @@ const mapDispatchToProps = {
   loadModal,
   fetchEntities,
   push,
-  fetchHomeTokenAddress
+  fetchHomeTokenAddress,
+  toggleMultiBridge
 }
 
 export default withTracker(withNetwork(connect(
