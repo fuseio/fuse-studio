@@ -10,7 +10,7 @@
     }
   },
   "graph": {
-    "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
+    "url": "https://graph.fuse.io/subgraphs/name/fuseio",
     "subgraphs": {
       "entities": "/fuse-entities",
       "bridgeRopsten": "/fuse-ropsten-bridge",

@@ -22,7 +22,7 @@ module.exports = {
     urlBase: 'http://localhost:4000/api'
   },
   graph: {
-    url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio',
+    url: 'https://graph.fuse.io/subgraphs/name/fuseio',
     subgraphs: {
       entities: '/fuse-entities',
       bridgeRopsten: '/fuse-ropsten-bridge',
