@@ -22,7 +22,12 @@ module.exports = {
     urlBase: 'http://localhost:4000/api'
   },
   graph: {
-    url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio/fuse-qa'
+    url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio',
+    subgraphs: {
+      entities: '/fuse-entities-qa',
+      bridgeRopsten: '/fuse-ropsten-bridge',
+      bridgeMain: '/fuse-ethereum-bridge'
+    }
   },
   gasLimitForTx: {
     createForeignWallet: 550000,
@@ -184,7 +189,7 @@ module.exports = {
     }
   },
   funder: {
-    urlBase: 'https://funder-qa.fuse.io/api/',
+    urlBase: 'https://funder-qa.fuse.io/api/'
   },
   bonus: {
     launch: {
