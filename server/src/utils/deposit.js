@@ -14,7 +14,7 @@ const makeDeposit = async (deposit) => {
     amount
   } = deposit
   console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
-  const community = await Community.findOne({ communityAddress })
+  const community = await Community.findOne({ communityAddress }).lean()
   if (!community) {
     console.error(`[makeDeposit] could not find community ${communityAddress}`)
     return
