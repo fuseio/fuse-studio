@@ -9,7 +9,7 @@ const { toShortName } = require('@utils/network')
 const graphBridgeClient = new GraphQLClient(`${config.get('graph.url')}${config.get(`graph.subgraphs.bridge${capitalize(toShortName(config.get(`network.foreign.name`)))}`)}`)
 const graphFuseClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.fuse')}`)
 
-export const fetchTokenByCommunity = async (communityAddress) => {
+const fetchTokenByCommunity = async (communityAddress) => {
   const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
   if (community.isMultiBridge) {
     const { foreignTokenAddress } = community
