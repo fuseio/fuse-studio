@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Metadata = mongoose.model('Metadata')
 
-const getMetadata = (hash) => Metadata.findOne({ hash: hash })
+const getMetadata = (hash) => Metadata.findOne({ hash: hash }).lean()
 
 async function createMetadata (data, apiBase) {
   const metadata = await new Metadata({ data }).save()
