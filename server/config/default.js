@@ -24,6 +24,7 @@ module.exports = {
   graph: {
     url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio',
     subgraphs: {
+      fuse: '/fuse-qa',
       entities: '/fuse-entities-qa',
       bridgeRopsten: '/fuse-ropsten-bridge',
       bridgeMain: '/fuse-ethereum-bridge'
