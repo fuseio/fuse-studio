@@ -256,9 +256,6 @@ module.exports = {
     lowBalanceAccounts: {
       options: [
         {
-          role: '*'
-        },
-        {
           role: 'wallet',
           bridgeType: 'home'
         },
