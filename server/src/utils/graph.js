@@ -5,7 +5,7 @@ const { toChecksumAddress } = require('web3-utils')
 const { GraphQLClient } = require('graphql-request')
 const Community = mongoose.model('Community')
 
-const graphEthereumBridgeClient = new GraphQLClient(`${config.get('graph.url')}${config.get(`graph.subgraphs.bridgeRopsten`)}`)
+const graphEthereumBridgeClient = new GraphQLClient(`${config.get('graph.url')}${config.get(`graph.subgraphs.bridgeMain`)}`)
 const graphRopstenBridgeClient = new GraphQLClient(`${config.get('graph.url')}${config.get(`graph.subgraphs.bridgeRopsten`)}`)
 const graphFuseEntitiesClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.entities')}`)
 
