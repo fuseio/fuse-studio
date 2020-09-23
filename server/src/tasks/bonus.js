@@ -1,8 +1,7 @@
 const config = require('config')
 const { withAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
-const { GraphQLClient } = require('graphql-request')
-const graphClient = new GraphQLClient(config.get('graph.url'))
+const { fetchTokenByCommunity } = require('@utils/graph')
 const request = require('request-promise-native')
 const lodash = require('lodash')
 
@@ -10,10 +9,9 @@ const bonus = withAccount(async (account, { communityAddress, bonusInfo }, job) 
   const { web3 } = createNetwork('home', account)
   try {
     console.log(`Requesting token bonus for wallet: ${bonusInfo.receiver} and community: ${communityAddress}`)
-    const query = `{tokens(where: {communityAddress: "${communityAddress}"}) {address, communityAddress, originNetwork}}`
-    const { tokens } = await graphClient.request(query)
-    const tokenAddress = web3.utils.toChecksumAddress(tokens[0].address)
-    const originNetwork = tokens[0].originNetwork
+    const token = await fetchTokenByCommunity(communityAddress)
+    const tokenAddress = web3.utils.toChecksumAddress(token.address)
+    const originNetwork = config.get(`network.foreign.name`)
     request.post(`${config.get('funder.urlBase')}bonus/token`, {
       json: true,
       body: { phoneNumber: bonusInfo.phoneNumber, identifier: bonusInfo.identifier, accountAddress: bonusInfo.receiver, tokenAddress, originNetwork, bonusInfo }

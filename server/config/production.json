@@ -49,7 +49,12 @@
     "urlBase": "https://funder.fuse.io/api/"
   },
   "graph": {
-    "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse"
+    "url": "https://graph.fuse.io/subgraphs/name/fuseio",
+    "subgraphs": {
+      "entities": "/fuse-entities",
+      "bridgeRopsten": "/fuse-ropsten-bridge",
+      "bridgeMain": "/fuse-ethereum-bridge"
+    }
   },
   "plugins": {
     "moonpay": {

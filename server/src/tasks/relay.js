@@ -2,26 +2,21 @@ const config = require('config')
 const lodash = require('lodash')
 const { withWalletAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
+const { fetchTokenByCommunity } = require('@utils/graph')
 const { GraphQLClient } = require('graphql-request')
 const request = require('request-promise-native')
 const mongoose = require('mongoose')
 const { getAdmin } = require('@services/firebase')
 const web3Utils = require('web3-utils')
-
-const graphClient = new GraphQLClient(config.get('graph.url'))
 const UserWallet = mongoose.model('UserWallet')
+
+const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.entities')}`)
 
 function getParamsFromMethodData (web3, abi, methodName, methodData) {
   const methodABI = abi.filter(obj => obj.name === methodName)[0]
   const methodSig = web3.eth.abi.encodeFunctionSignature(methodABI)
   const params = web3.eth.abi.decodeParameters(methodABI.inputs, `0x${methodData.replace(methodSig, '')}`)
   return params
-}
-
-const fetchTokenByCommunity = async (communityAddress) => {
-  const query = `{tokens(where: {communityAddress: "${communityAddress}"}) {address, communityAddress, originNetwork}}`
-  const { tokens } = await graphClient.request(query)
-  return tokens[0]
 }
 
 const fetchCommunityAddressByTokenAddress = async (tokenAddress) => {
@@ -139,7 +134,7 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
           const params = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
           const token = await fetchTokenByCommunity(params._community)
           const tokenAddress = web3.utils.toChecksumAddress(token.address)
-          const { originNetwork } = token
+          const originNetwork = config.get(`network.foreign.name`)
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
           request.post(`${config.get('funder.urlBase')}fund/token`, {
             json: true,

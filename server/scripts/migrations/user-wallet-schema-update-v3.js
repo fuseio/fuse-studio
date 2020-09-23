@@ -2,7 +2,7 @@ const config = require('config')
 const mongoose = require('mongoose')
 const _ = require('lodash')
 const { GraphQLClient } = require('graphql-request')
-const graphClient = new GraphQLClient(config.get('graph.url'))
+const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.entities')}`)
 
 console.log({ config })
 
