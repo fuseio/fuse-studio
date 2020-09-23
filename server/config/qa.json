@@ -12,9 +12,9 @@
   "graph": {
     "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
     "subgraphs": {
-      "entities": "/fuse-entities-qa",
-      "bridgeRopsten": "/fuse-ropsten-bridge-qa",
-      "bridgeMain": "/fuse-ethereum-bridge-qa"
+      "entities": "/fuse-entities",
+      "bridgeRopsten": "/fuse-ropsten-bridge",
+      "bridgeMain": "/fuse-ethereum-bridge"
     }
   },
   "network": {
