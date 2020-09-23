@@ -9,7 +9,7 @@ const graphEthereumBridgeClient = new GraphQLClient(`${config.get('graph.url')}$
 const graphRopstenBridgeClient = new GraphQLClient(`${config.get('graph.url')}${config.get(`graph.subgraphs.bridgeRopsten`)}`)
 const graphFuseEntitiesClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.entities')}`)
 
-export const fetchTokenByCommunity = async (communityAddress) => {
+const fetchTokenByCommunity = async (communityAddress) => {
   const community = await Community.findOne({ communityAddress: toChecksumAddress(communityAddress) }).lean()
   if (community.isMultiBridge) {
     const { foreignTokenAddress } = community
