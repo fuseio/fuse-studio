@@ -130,9 +130,9 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
       if (walletModule === 'CommunityManager') {
         try {
-          console.log(`Requesting token funding for wallet: ${wallet}`)
-          const params = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
-          const token = await fetchTokenByCommunity(params._community)
+          const { _community } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
+          console.log(`Requesting token funding for wallet: ${wallet} in community ${_community}`)
+          const token = await fetchTokenByCommunity(_community)
           const tokenAddress = web3.utils.toChecksumAddress(token.address)
           const originNetwork = config.get(`network.foreign.name`)
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
