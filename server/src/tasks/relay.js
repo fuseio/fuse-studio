@@ -135,8 +135,8 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
           const { _community } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
           console.log(`Requesting token funding for wallet: ${wallet} and community ${_community}`)
           let tokenAddress, originNetwork
-          if (lodash.has(job.attrs.data.transactionBody, 'tokenAddress')) {
-            tokenAddress = web3Utils.toChecksumAddress((lodash.get(job.attrs.data.transactionBody, 'tokenAddress')))
+          if (lodash.get(job.attrs.data.transactionBody, 'tokenAddress', false) && lodash.get(job.attrs.data.transactionBody, 'originNetwork', false)) {
+            tokenAddress = web3Utils.toChecksumAddress(lodash.get(job.attrs.data.transactionBody, 'tokenAddress'))
             originNetwork = lodash.get(job.attrs.data.transactionBody, 'originNetwork')
           } else {
             const token = await fetchTokenByCommunity(_community)
