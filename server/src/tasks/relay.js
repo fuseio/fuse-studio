@@ -120,6 +120,8 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
 
     const returnValues = receipt && receipt.events.TransactionExecuted.returnValues
     if (!returnValues) {
+      job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'failed' }
+      job.save()
       throw new Error(`No return values in receipt (or now receipt)`)
     }
     const { success, wallet, signedHash } = returnValues
@@ -131,10 +133,16 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       if (walletModule === 'CommunityManager') {
         try {
           const { _community } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
-          console.log(`Requesting token funding for wallet: ${wallet} in community ${_community}`)
-          const token = await fetchTokenByCommunity(_community)
-          const tokenAddress = web3.utils.toChecksumAddress(token.address)
-          const originNetwork = config.get(`network.foreign.name`)
+          console.log(`Requesting token funding for wallet: ${wallet} and community ${_community}`)
+          let tokenAddress, originNetwork
+          if (lodash.has(job.attrs.data.transactionBody, 'tokenAddress')) {
+            tokenAddress = web3Utils.toChecksumAddress((lodash.get(job.attrs.data.transactionBody, 'tokenAddress')))
+            originNetwork = lodash.get(job.attrs.data.transactionBody, 'originNetwork')
+          } else {
+            const token = await fetchTokenByCommunity(_community)
+            tokenAddress = web3Utils.toChecksumAddress(token.address)
+            originNetwork = token.originNetwork
+          }
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
           request.post(`${config.get('funder.urlBase')}fund/token`, {
             json: true,

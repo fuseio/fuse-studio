@@ -17,12 +17,12 @@ const fetchTokenByCommunity = async (communityAddress) => {
     const { foreignTokenAddress } = community
     const query = `{bridgedTokens(where: {foreignAddress: "${foreignTokenAddress}"}) {address, name}}`
     const { bridgedTokens } = await graphBridgeClient.request(query)
-    console.log(`fetch token by community tokenAddress - ${{ ...bridgedTokens }}`)
+    console.log(`fetch token by community tokenAddress - ${bridgedTokens[0]['address']}`)
     return bridgedTokens[0]
   }
   const query = `{tokens(where: {communityAddress: "${communityAddress}"}) {address, communityAddress, originNetwork}}`
   const { tokens } = await graphFuseClient.request(query)
-  console.log(`fetch token by community tokenAddress - ${{ ...tokens }}`)
+  console.log(`fetch token by community tokenAddress - ${tokens[0]['address']}`)
   return tokens[0]
 }
 
