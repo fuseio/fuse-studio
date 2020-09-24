@@ -8,7 +8,7 @@ export default object().noUnknown(false).shape({
   network: mixed().oneOf(['ropsten', 'main']).required(),
   currency: mixed().oneOf(['new', 'existing']).required(),
   communityName: string().normalize().min(3).max(36).required(),
-  communitySymbol: string().uppercase().normalize().min(3).max(4).required(),
+  communitySymbol: string().uppercase().normalize().min(2).max(4).required(),
   description: string().normalize().required(),
   customToken: string().when(['existingToken', 'communityType'], {
     is: (existingToken, communityType) => !existingToken.value || !communityType.value,
