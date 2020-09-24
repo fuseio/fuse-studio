@@ -9,9 +9,15 @@ const bonus = withAccount(async (account, { communityAddress, bonusInfo }, job) 
   const { web3 } = createNetwork('home', account)
   try {
     console.log(`Requesting token bonus for wallet: ${bonusInfo.receiver} and community: ${communityAddress}`)
-    const token = await fetchTokenByCommunity(communityAddress)
-    const tokenAddress = web3.utils.toChecksumAddress(token.address)
-    const originNetwork = config.get(`network.foreign.name`)
+    let tokenAddress, originNetwork
+    if (lodash.has(job.attrs.data.transactionBody, 'tokenAddress')) {
+      tokenAddress = lodash.get(job.attrs.data.transactionBody, 'tokenAddress')
+      originNetwork = lodash.get(job.attrs.data.transactionBody, 'originNetwork')
+    } else {
+      const token = await fetchTokenByCommunity(communityAddress)
+      tokenAddress = web3.utils.toChecksumAddress(token.address)
+      originNetwork = token.originNetwork
+    }
     request.post(`${config.get('funder.urlBase')}bonus/token`, {
       json: true,
       body: { phoneNumber: bonusInfo.phoneNumber, identifier: bonusInfo.identifier, accountAddress: bonusInfo.receiver, tokenAddress, originNetwork, bonusInfo }
