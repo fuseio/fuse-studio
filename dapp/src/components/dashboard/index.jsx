@@ -13,8 +13,6 @@ import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { fetchCommunity } from 'actions/token'
-import { fetchHomeTokenAddress, toggleMultiBridge } from 'actions/bridge'
-import { fetchMetadata } from 'actions/metadata'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
 import { withNetwork } from 'containers/Web3'
@@ -44,14 +42,10 @@ const DashboardLayout = (props) => {
     accountAddress,
     isAdmin,
     location,
-    fetchEntities,
-    fetchHomeTokenAddress,
-    toggleMultiBridge
+    fetchEntities
   } = props
   const { address: communityAddress } = useParams()
   const [open, onSetSidebarOpen] = useState(false)
-  const communityURI = community && community.communityURI
-  const foreignTokenAddress = community && community.foreignTokenAddress
 
   useEffect(() => {
     if (isMobile) {
@@ -65,20 +59,13 @@ const DashboardLayout = (props) => {
       fetchCommunity(communityAddress, { networkType: 'mainnet' })
       fetchEntities(communityAddress)
     }
-  }, [communityAddress, accountAddress])
+  }, [accountAddress])
 
   useEffect(() => {
-    if (foreignTokenAddress && accountAddress) {
-      fetchHomeTokenAddress(communityAddress, foreignTokenAddress)
-    }
-  }, [foreignTokenAddress, accountAddress])
-
-  useEffect(() => {
-    if (communityURI) {
-      toggleMultiBridge(get(community, 'isMultiBridge', false))
-      fetchMetadata(communityURI)
-    }
-  }, [communityURI])
+    fetchCommunity(communityAddress, { networkType: 'ropsten' })
+    fetchCommunity(communityAddress, { networkType: 'mainnet' })
+    fetchEntities(communityAddress)
+  }, [communityAddress])
 
   useEffect(() => {
     if (isAdmin) {
@@ -242,9 +229,7 @@ const mapDispatchToProps = {
   fetchCommunity,
   loadModal,
   fetchEntities,
-  push,
-  fetchHomeTokenAddress,
-  toggleMultiBridge
+  push
 }
 
 export default withTracker(withNetwork(connect(
