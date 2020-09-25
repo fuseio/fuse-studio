@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 import BasicToken from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
-import { getTokenAllowance } from 'actions/bridge'
+import { getTokenAllowance, fetchHomeTokenAddress, toggleMultiBridge } from 'actions/bridge'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
 import { ADD_COMMUNITY_PLUGIN, SET_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA, SET_SECONDARY_TOKEN } from 'actions/community'
@@ -14,7 +14,6 @@ import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './u
 import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import { getWeb3 } from 'sagas/network'
-import { fetchHomeTokenAddress } from 'sagas/bridge'
 import {
   fetchCommunity as fetchCommunityApi,
   updateCommunityMetadata as updateCommunityMetadataApi,
@@ -270,41 +269,36 @@ function * watchTokenChanges ({ response }) {
 }
 
 function * watchFetchCommunity ({ response }) {
+  const accountAddress = yield select(getAccountAddress)
   const { entities } = response
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
       if (entities && entities[communityAddress]) {
-        const { foreignTokenAddress } = entities[communityAddress]
+        const foreignTokenAddress = get(entities[communityAddress], 'foreignTokenAddress')
         const homeTokenAddress = get(entities[communityAddress], 'homeTokenAddress')
-        const calls = []
-        const accountAddress = yield select(getAccountAddress)
-
-        if (entities[communityAddress] && entities[communityAddress].communityURI) {
-          yield put(fetchMetadata(entities[communityAddress].communityURI))
-        }
-        if (foreignTokenAddress) {
-          calls.push(
-            put(actions.fetchToken(foreignTokenAddress)),
-            put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
-            put(getTokenAllowance(foreignTokenAddress)),
-            put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
-          )
-          const homeToken = yield call(fetchHomeTokenAddress, { communityAddress, foreignTokenAddress })
-          if (homeToken) {
-            calls.push(
-              put(actions.fetchToken(homeToken)),
-              put(actions.fetchTokenTotalSupply(homeToken, { bridgeType: 'home' })),
-              put(balanceOfToken(homeToken, accountAddress, { bridgeType: 'home' })),
-              put(getTokenAllowance(homeToken, { bridgeType: 'home' }))
-            )
-          }
-        }
-
+        const communityURI = get(entities[communityAddress], 'communityURI')
+        const calls = [
+          put(toggleMultiBridge(get(entities[communityAddress], 'isMultiBridge', false)))
+        ]
         if (homeTokenAddress) {
           calls.push(
             put(actions.fetchToken(homeTokenAddress)),
             put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
             put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' }))
+          )
+        }
+        if (communityURI) {
+          calls.push(
+            put(fetchMetadata(communityURI))
+          )
+        }
+        if (foreignTokenAddress) {
+          calls.push(
+            put(fetchHomeTokenAddress(communityAddress, foreignTokenAddress)),
+            put(actions.fetchToken(foreignTokenAddress)),
+            put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
+            put(getTokenAllowance(foreignTokenAddress)),
+            put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
           )
         }
         yield all(calls)

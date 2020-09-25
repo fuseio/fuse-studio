@@ -11,7 +11,7 @@ import BasicForeignBridgeABI from 'constants/abi/BasicForeignBridge'
 import BasicHomeBridgeABI from 'constants/abi/BasicHomeBridge'
 import { getCommunityAddress } from 'selectors/entities'
 import { balanceOfToken } from 'actions/accounts'
-import { fetchTokenTotalSupply, MINT_TOKEN, BURN_TOKEN } from 'actions/token'
+import { fetchTokenTotalSupply, MINT_TOKEN, BURN_TOKEN, fetchToken } from 'actions/token'
 import HomeMultiAMBErc20ToErc677 from 'constants/abi/HomeMultiAMBErc20ToErc677'
 import { isZeroAddress } from 'utils/web3'
 import { getCurrentCommunity } from 'selectors/dashboard'
@@ -26,15 +26,21 @@ export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress
     return
   }
   const accountAddress = yield select(getAccountAddress)
-  yield put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' }))
-  yield put({
-    type: actions.FETCH_HOME_TOKEN_ADDRESS.SUCCESS,
-    communityAddress,
-    response: {
-      hasHomeTokenInNewBridge: !isZeroAddress(homeTokenAddress),
-      homeTokenAddress
-    }
-  })
+  const calls = [
+    put(fetchToken(homeTokenAddress)),
+    put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
+    put(fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
+    put(actions.getTokenAllowance(foreignTokenAddress)),
+    put({
+      type: actions.FETCH_HOME_TOKEN_ADDRESS.SUCCESS,
+      communityAddress,
+      response: {
+        hasHomeTokenInNewBridge: !isZeroAddress(homeTokenAddress),
+        homeTokenAddress
+      }
+    })
+  ]
+  yield all(calls)
   return homeTokenAddress
 }
 
@@ -185,6 +191,9 @@ function * watchHomeBridge ({ homeBridgeAddress, transactionHash, multiBridge })
 
 function * watchHomeNewTokenRegistered () {
   const accountAddress = yield select(getAccountAddress)
+  if (!accountAddress) {
+    throw new Error(`No accountAddress given`)
+  }
   const homeNetwork = yield select(state => state.network.homeNetwork)
   const fromBlock = yield select(getBlockNumber, homeNetwork)
   const options = { bridgeType: 'home' }
@@ -203,26 +212,21 @@ function * watchHomeNewTokenRegistered () {
 }
 
 function * watchBridgeTransfers () {
-  const communityAddress = yield select(getCommunityAddress)
   const accountAddress = yield select(getAccountAddress)
+  if (!accountAddress) {
+    throw new Error(`No accountAddress given`)
+  }
+  const communityAddress = yield select(getCommunityAddress)
   const { foreignTokenAddress, homeTokenAddress } = yield select(state => getCurrentCommunity(state, communityAddress))
-  const homeToken = yield call(fetchHomeTokenAddress, { communityAddress, foreignTokenAddress })
   const calls = [
     put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })),
     put(fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
-    put(actions.getTokenAllowance(foreignTokenAddress))
+    put(actions.fetchHomeTokenAddress(foreignTokenAddress))
   ]
   if (homeTokenAddress) {
     calls.push(
       put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
       put(fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' }))
-    )
-  }
-  if (homeToken) {
-    calls.push(
-      put(balanceOfToken(homeToken, accountAddress, { bridgeType: 'home' })),
-      put(fetchTokenTotalSupply(homeToken, { bridgeType: 'home' })),
-      put(actions.getTokenAllowance(homeToken, { bridgeType: 'home' }))
     )
   }
   yield all(calls)
