@@ -132,21 +132,19 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
       if (walletModule === 'CommunityManager') {
         try {
-          const { _community } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
-          console.log(`Requesting token funding for wallet: ${wallet} and community ${_community}`)
-          let tokenAddress, originNetwork
-          if (lodash.get(job.attrs.data.transactionBody, 'tokenAddress', false) && lodash.get(job.attrs.data.transactionBody, 'originNetwork', false)) {
-            tokenAddress = web3Utils.toChecksumAddress(lodash.get(job.attrs.data.transactionBody, 'tokenAddress'))
+          const { _community: communityAddress } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
+          console.log(`Requesting token funding for wallet: ${wallet} and community ${communityAddress}`)
+          let originNetwork
+          if (lodash.get(job.attrs.data.transactionBody, 'originNetwork', false)) {
             originNetwork = lodash.get(job.attrs.data.transactionBody, 'originNetwork')
           } else {
-            const token = await fetchTokenByCommunity(_community)
-            tokenAddress = web3Utils.toChecksumAddress(token.address)
-            originNetwork = token.originNetwork
+            const token = await fetchTokenByCommunity(communityAddress)
+            originNetwork = lodash.get(token, 'originNetwork')
           }
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
           request.post(`${config.get('funder.urlBase')}fund/token`, {
             json: true,
-            body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork }
+            body: { phoneNumber, accountAddress: walletAddress, identifier, originNetwork, communityAddress }
           }, (err, response, body) => {
             if (err) {
               console.error(`Error on token funding for wallet: ${wallet}`, err)
