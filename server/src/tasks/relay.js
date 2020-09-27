@@ -134,17 +134,19 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
         try {
           const { _community: communityAddress } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
           console.log(`Requesting token funding for wallet: ${wallet} and community ${communityAddress}`)
-          let originNetwork
-          if (lodash.get(job.attrs.data.transactionBody, 'originNetwork', false)) {
+          let tokenAddress, originNetwork
+          if (lodash.get(job.attrs.data.transactionBody, 'tokenAddress', false) && lodash.get(job.attrs.data.transactionBody, 'originNetwork', false)) {
+            tokenAddress = web3Utils.toChecksumAddress(lodash.get(job.attrs.data.transactionBody, 'tokenAddress'))
             originNetwork = lodash.get(job.attrs.data.transactionBody, 'originNetwork')
           } else {
             const token = await fetchTokenByCommunity(communityAddress)
-            originNetwork = lodash.get(token, 'originNetwork')
+            tokenAddress = web3Utils.toChecksumAddress(token.address)
+            originNetwork = token.originNetwork
           }
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
           request.post(`${config.get('funder.urlBase')}fund/token`, {
             json: true,
-            body: { phoneNumber, accountAddress: walletAddress, identifier, originNetwork, communityAddress }
+            body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork, communityAddress }
           }, (err, response, body) => {
             if (err) {
               console.error(`Error on token funding for wallet: ${wallet}`, err)
