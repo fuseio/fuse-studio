@@ -132,21 +132,21 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
       if (walletModule === 'CommunityManager') {
         try {
-          const { _community } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
-          console.log(`Requesting token funding for wallet: ${wallet} and community ${_community}`)
+          const { _community: communityAddress } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
+          console.log(`Requesting token funding for wallet: ${wallet} and community ${communityAddress}`)
           let tokenAddress, originNetwork
           if (lodash.get(job.attrs.data.transactionBody, 'tokenAddress', false) && lodash.get(job.attrs.data.transactionBody, 'originNetwork', false)) {
             tokenAddress = web3Utils.toChecksumAddress(lodash.get(job.attrs.data.transactionBody, 'tokenAddress'))
             originNetwork = lodash.get(job.attrs.data.transactionBody, 'originNetwork')
           } else {
-            const token = await fetchTokenByCommunity(_community)
+            const token = await fetchTokenByCommunity(communityAddress)
             tokenAddress = web3Utils.toChecksumAddress(token.address)
             originNetwork = token.originNetwork
           }
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
           request.post(`${config.get('funder.urlBase')}fund/token`, {
             json: true,
-            body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork }
+            body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork, communityAddress }
           }, (err, response, body) => {
             if (err) {
               console.error(`Error on token funding for wallet: ${wallet}`, err)

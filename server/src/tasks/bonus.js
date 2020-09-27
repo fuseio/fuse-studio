@@ -10,7 +10,7 @@ const bonus = withAccount(async (account, { communityAddress, bonusInfo }, job) 
   try {
     console.log(`Requesting token bonus for wallet: ${bonusInfo.receiver} and community: ${communityAddress}`)
     let tokenAddress, originNetwork
-    if (lodash.has(job.attrs.data.transactionBody, 'tokenAddress')) {
+    if (lodash.get(job.attrs.data.transactionBody, 'tokenAddress', false) && lodash.get(job.attrs.data.transactionBody, 'originNetwork', false)) {
       tokenAddress = lodash.get(job.attrs.data.transactionBody, 'tokenAddress')
       originNetwork = lodash.get(job.attrs.data.transactionBody, 'originNetwork')
     } else {
@@ -20,7 +20,7 @@ const bonus = withAccount(async (account, { communityAddress, bonusInfo }, job) 
     }
     request.post(`${config.get('funder.urlBase')}bonus/token`, {
       json: true,
-      body: { phoneNumber: bonusInfo.phoneNumber, identifier: bonusInfo.identifier, accountAddress: bonusInfo.receiver, tokenAddress, originNetwork, bonusInfo }
+      body: { phoneNumber: bonusInfo.phoneNumber, identifier: bonusInfo.identifier, accountAddress: bonusInfo.receiver, tokenAddress, originNetwork, bonusInfo, communityAddress }
     }, (err, response, body) => {
       if (err) {
         console.error(`Error on token bonus for wallet: ${bonusInfo.receiver}`, err)
