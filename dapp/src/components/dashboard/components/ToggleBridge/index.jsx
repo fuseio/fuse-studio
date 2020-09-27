@@ -49,7 +49,7 @@ class ToggleBridge extends React.Component {
               </div>
               &nbsp;<FontAwesome style={{ fontSize: '60%' }} data-tip data-for='MultiBridge' name='info-circle' />
               <ReactTooltip className='tooltip__content' id='MultiBridge' place='bottom' effect='solid'>
-                <div>Multi bridge tooltip</div>
+                <div>New communities on Fuse use the V2 bridge by default. It is still possible to switch to the old bridge if your community is older.</div>
               </ReactTooltip>
             </div>
           )}
