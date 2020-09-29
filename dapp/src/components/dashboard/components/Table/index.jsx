@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  useTable,
-  // useColumns,
-  // useRows,
-  useSortBy,
-  usePagination,
-  useTableState
-} from 'react-table'
+import { useTable, usePagination, useSortBy } from 'react-table'
 import BodyRow from 'components/dashboard/components/BodyRow'
 import HeaderRow from 'components/dashboard/components/HeaderRow'
 import FontAwesome from 'react-fontawesome'
@@ -17,33 +10,33 @@ const MyTable = ({
   addActionProps,
   loading,
   justAdded,
-  pageCount,
-  pageSize,
+  count,
+  size,
   ...props
 }) => {
-  const state = useTableState({ pageCount, pageSize })
-
   const {
     getTableProps,
+    getTableBodyProps,
     headerGroups,
-    // rows,
-    // getRowProps,
-    // pageOptions,
-    page,
-    state: [{ pageIndex }],
-    gotoPage,
     prepareRow,
-    // previousPage,
-    // nextPage,
-    // setPageSize,
-    // canPreviousPage,
-    // canNextPage,
-    pageOptions
+    page, // Instead of using 'rows', we'll use page,
+    // which has only the rows for the active page
+
+    // The rest of these things are super handy, too ;)
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      state
+      initialState: { pageCount: count, pageSize: size }
     },
     // useColumns,
     // useRows,
@@ -76,7 +69,7 @@ const MyTable = ({
           {
             loading ? (
               <div className='table__body__row grid-x align-middle align-spaced'>Loading...</div>
-            ) : page && page.length ? page.map((row, i) => prepareRow(row) || <BodyRow key={i} justAdded={justAdded} row={row} index={i} />) : (
+            ) : page && page.length ? <div {...getTableBodyProps()}>{page.map((row, i) => prepareRow(row) || <BodyRow key={i} justAdded={justAdded} row={row} index={i} />)}</div> : (
               <div className='table__body__row grid-x align-middle'>
                 <div className='table__body__cell cell'>0 Total Records</div>
               </div>

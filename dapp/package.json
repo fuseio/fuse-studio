@@ -81,7 +81,7 @@
     "react-router": "^5.1.2",
     "react-select": "^3.0.8",
     "react-sidebar": "^3.0.2",
-    "react-table": "7.0.0-alpha.27",
+    "react-table": "^7.5.1",
     "react-tooltip": "^3.11.0",
     "react-use": "^13.10.0",
     "redux": "^4.0.1",

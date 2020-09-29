@@ -17751,9 +17751,9 @@
       }
     },
     "react-table": {
-      "version": "7.0.0-alpha.27",
-      "resolved": "https://registry.npmjs.org/react-table/-/react-table-7.0.0-alpha.27.tgz",
-      "integrity": "sha512-O29Ux+inQ3IXzxG8ENYmYtGQFipC8+NwMk+nfqfWjbVqenaHjtD2D0AACIX/Ev/NdgsNf2jeDmYJd2mqxRiAlw=="
+      "version": "7.5.1",
+      "resolved": "https://registry.npmjs.org/react-table/-/react-table-7.5.1.tgz",
+      "integrity": "sha512-rprrUElCqvj79lyY2XbUoYLzwA5Mm4CGS8ElQ8OyzocvmkvCcmunvvfbpIg9Jm9HnMBjVZcVyPFPZ1BFelIBKw=="
     },
     "react-tooltip": {
       "version": "3.11.1",

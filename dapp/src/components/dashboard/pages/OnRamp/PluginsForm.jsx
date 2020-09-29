@@ -3,6 +3,7 @@ import { Formik, Field } from 'formik'
 import pluginsShape from 'utils/validation/shapes/plugins'
 import get from 'lodash/get'
 import pluginsIcons from 'constants/pluginsIcons'
+import MyTable from 'components/dashboard/components/Table'
 
 const getPluginName = (myPlugins) => {
   const isMoonpay = get(myPlugins, 'moonpay.isActive', false)
