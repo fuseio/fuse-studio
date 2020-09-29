@@ -22,7 +22,7 @@
   }
 
   @include element(content) {
-    color: $color-white;
+    color: $color-dark;
     @include xy-grid(vertical);
     @include flex-align(spaced, null);
     > div:first-child {

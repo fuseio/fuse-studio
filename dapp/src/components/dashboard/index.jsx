@@ -6,6 +6,7 @@ import FontAwesome from 'react-fontawesome'
 import { Route, Switch, useParams } from 'react-router'
 import get from 'lodash/get'
 import { push } from 'connected-react-router'
+import SignIn from 'components/common/SignIn'
 
 import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
 import { getHomeNetworkType } from 'selectors/network'
@@ -82,6 +83,7 @@ const DashboardLayout = (props) => {
 
   return (
     <div className='dashboard'>
+      <SignIn accountAddress={accountAddress} />
       <div className='container'>
         {
           !isMobile
@@ -108,104 +110,107 @@ const DashboardLayout = (props) => {
         }
         <div className='content__container'>
           <div className='content'>
-            <div className='content__wrapper'>
-              <Switch>
-                {get(community, 'plugins.joinBonus') && !get(community, 'plugins.joinBonus.isRemoved', false) && isAdmin && (
-                  <Route exact path={`${match.path}/bonus`}>
-                    <JoinBonusPage
-                      match={match}
-                      community={community}
-                    />
-                  </Route>
-                )}
-
-                {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
-                  <Route exact path={`${match.path}/invite-bonus`}>
-                    <InviteBonusPage
-                      match={match}
-                      community={community}
-                    />
-                  </Route>
-                )}
-
-                {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
-                  <Route exact path={`${match.path}/backup-bonus`}>
-                    <BackupBonusPage
-                      match={match}
-                      community={community}
-                    />
-                  </Route>
-                )}
-
-                {community && isAdmin && (
-                  <Route exact path={`${match.path}/onramp`}>
-                    <OnRampPage />
-                  </Route>
-                )
-                }
-
-                {community && isAdmin && (
-                  <Route exact path={`${match.path}/walletbanner`}
-                    render={() => (
-                      <WalletBannerLinkPage
-                        match={match}
-                        community={community}
-                      />
-                    )}
-                  />)
-                }
-
-                {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
-                  <Route exact path={`${match.path}/mintBurn`}>
-                    <MintBurnPage />
-                  </Route>
-                )}
-
-                {isAdmin && (
-                  <Route exact path={`${match.path}/settings`}>
-                    <SettingsPage
-                      community={community}
-                    />
-                  </Route>
-                )}
-
-                {community && isAdmin && (
-                  <Route exact path={`${match.path}/plugins`}>
-                    <PluginsPage
-                      community={community}
-                    />
-                  </Route>
-                )}
-
-                {!get((community && community.plugins), 'businessList.isRemoved', false) && (
-                  <Route exact path={`${match.path}/merchants`}>
-                    <Businesses />
-                  </Route>
-                )}
-
-                <Route exact path={`${match.path}/wallet`}>
-                  <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
+            {/* <div className='content__wrapper'> */}
+            <Switch>
+              {get(community, 'plugins.joinBonus') && !get(community, 'plugins.joinBonus.isRemoved', false) && isAdmin && (
+                <Route exact path={`${match.path}/bonus`}>
+                  <JoinBonusPage
+                    match={match}
+                    community={community}
+                  />
                 </Route>
+              )}
 
-                {community && (
-                  <Route exact path={`${match.path}/users`}>
-                    <Users />
-                  </Route>)
-                }
+              {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
+                <Route exact path={`${match.path}/invite-bonus`}>
+                  <InviteBonusPage
+                    match={match}
+                    community={community}
+                  />
+                </Route>
+              )}
 
-                {community && (
-                  <Route exact path={`${match.path}/transfer/:sendTo?`}>
-                    <TransferPage />
-                  </Route>)
-                }
+              {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
+                <Route exact path={`${match.path}/backup-bonus`}>
+                  <BackupBonusPage
+                    match={match}
+                    community={community}
+                  />
+                </Route>
+              )}
 
-                {community && (
-                  <Route exact path={`${match.path}/:success?`}>
-                    <Dashboard />
-                  </Route>)
-                }
-              </Switch>
-            </div>
+              {community && isAdmin && (
+                <Route exact path={`${match.path}/onramp`}
+                  render={() => (
+                    <OnRampPage
+                      community={community}
+                    />
+                  )}
+                />)
+              }
+
+              {community && isAdmin && (
+                <Route exact path={`${match.path}/walletbanner`}
+                  render={() => (
+                    <WalletBannerLinkPage
+                      match={match}
+                      community={community}
+                    />
+                  )}
+                />)
+              }
+
+              {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
+                <Route exact path={`${match.path}/mintBurn`}>
+                  <MintBurnPage />
+                </Route>
+              )}
+
+              {isAdmin && (
+                <Route exact path={`${match.path}/settings`}>
+                  <SettingsPage
+                    community={community}
+                  />
+                </Route>
+              )}
+
+              {community && isAdmin && (
+                <Route exact path={`${match.path}/plugins`}>
+                  <PluginsPage
+                    community={community}
+                  />
+                </Route>
+              )}
+
+              {!get((community && community.plugins), 'businessList.isRemoved', false) && (
+                <Route exact path={`${match.path}/merchants`}>
+                  <Businesses />
+                </Route>
+              )}
+
+              <Route exact path={`${match.path}/wallet`}>
+                <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
+              </Route>
+
+              {community && (
+                <Route exact path={`${match.path}/users`}>
+                  <Users />
+                </Route>)
+              }
+
+              {community && (
+                <Route exact path={`${match.path}/transfer/:sendTo?`}>
+                  <TransferPage />
+                </Route>)
+              }
+
+              {community && (
+                <Route exact path={`${match.path}/:success?`}>
+                  <Dashboard />
+                </Route>)
+              }
+            </Switch>
+            {/* </div> */}
           </div>
         </div>
       </div>
