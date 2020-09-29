@@ -152,6 +152,12 @@
         "__format": "json"
       }
     },
+    "rampInstant": {
+      "args": {
+        "__name": "COMMUNITY_PLUGINS_RAMP_INSTANT_ARGS",
+        "__format": "json"
+      }
+    },
     "carbon": {
       "args": {
         "__name": "COMMUNITY_PLUGINS_CARBON_ARGS",
