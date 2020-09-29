@@ -26,6 +26,9 @@ const MenuItem = memo(({
   if (prevProps.isCurrentPath !== nextProps.isCurrentPath) {
     return false
   }
+  if (prevProps.communityName !== nextProps.communityName) {
+    return false
+  }
 
   return true
 })

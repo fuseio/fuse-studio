@@ -70,8 +70,8 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
 
 router.put('/:communityAddress', async (req, res) => {
   const { communityAddress } = req.params
-  const { communityURI, description, webUrl } = req.body
-  const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description, webUrl }, lodash.identity), { new: true })
+  const { communityURI, description, webUrl, customData } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description, webUrl, customData }, lodash.identity), { new: true })
   return res.json({ data: community })
 })
 
@@ -160,6 +160,17 @@ router.get('/featured', async (req, res, next) => {
 })
 
 /**
+ * @api {get} /communities/count
+ * @apiName Fetch count of communities that have been launched
+ * @apiGroup Community
+ *
+ */
+router.get('/count', async (req, res) => {
+  const count = await Community.find().count()
+  return res.json({ data: (count || 0) })
+})
+
+/**
  * @api {get} /communities/:communityAddress Fetch community
  * @apiName GetCommunity
  * @apiGroup Community
@@ -222,12 +233,13 @@ router.get('/account/:account', async (req, res, next) => {
   const { account } = req.params
 
   const adminEntities = await Entity.find({ account, isAdmin: true }).sort({ blockNumber: -1 })
-  const adminCommunitities = (await getCommunitiesByEntities(adminEntities)).map(community => ({ ...community.toObject(), isAdmin: true }))
-
+  const createdByAccount = await Community.find({ creatorAddress: account }).sort({ createdAt: -1 })
+  const communitiesByEntities = await getCommunitiesByEntities(adminEntities)
+  const adminCommunities = [...createdByAccount, ...communitiesByEntities].map(community => ({ ...community.toObject(), isAdmin: true }))
   const nonAdminEntities = await Entity.find({ account, isAdmin: false }).sort({ blockNumber: -1 })
 
-  const monAdminCommunitites = await getCommunitiesByEntities(nonAdminEntities)
-  return res.json({ data: await withTokens([...adminCommunitities, ...monAdminCommunitites]) })
+  const monAdminCommunities = await getCommunitiesByEntities(nonAdminEntities)
+  return res.json({ data: await withTokens([...adminCommunities, ...monAdminCommunities]) })
 })
 
 /**

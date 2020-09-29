@@ -1,6 +1,6 @@
 const config = require('config')
 const mongoose = require('mongoose')
-const Token = mongoose.model('Token')
+const Community = mongoose.model('Community')
 const Account = mongoose.model('Account')
 const { toWei } = require('web3-utils')
 
@@ -8,9 +8,8 @@ const funder = async ({ home: { web3, from } }, communityProgress) => {
   const bonus = config.get('bonus.launch.fuse').toString()
   const { adminAddress } = communityProgress.steps.community.args
 
-  const userTokensCount = await Token.find({ owner: adminAddress }).countDocuments()
-
-  if (userTokensCount > 1) {
+  const createdCommunitiesCount = await Community.find({ creatorAddress: adminAddress }).countDocuments()
+  if (createdCommunitiesCount > 0) {
     console.log(`User ${adminAddress} already received the fuse bonus`)
     return {
       isSent: false
@@ -25,7 +24,7 @@ const funder = async ({ home: { web3, from } }, communityProgress) => {
       value: toWei(bonus),
       nonce: account.nonce,
       gasPrice: config.get('network.home.gasPrice'),
-      gas: 21000
+      gas: config.get('gasLimitForTx.funder')
     })
     if (receipt) {
       account.nonces['home']++

@@ -84,28 +84,14 @@ POST /communities/:communityAddress/plugins
 ## <a name=''></a> 
 [Back to top](#top)
 
-<p>Community is a set of contracts and services. Members of the community are users of the Fuse network. The community is configured via the plugins.</p>
+
 
 ```
-GET /communities
+GET /communities/count
 ```
 
-### Parameter Parameters
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| homeTokenAddress | `String` | <p>Home token address (optional)</p> |
 
 
-### Success 200
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| communityAddress | `String` | <p>Address of the community on the Fuse network</p> |
-| homeTokenAddress | `String` | <p>Address of the community token on the Fuse network</p> |
-| foreignTokenAddress | `String` | <p>Address of the community token on the Ethereum network</p> |
-| homeBridgeAddress | `String` | <p>Address of the community bridge on the Fuse network</p> |
-| foreignBridgeAddress | `String` | <p>Address of the community bridge on the Ethereum network</p> |
-| isClosed | `Boolean` | <p>Is the community is closed or open. Closed community requires an approve of community admin to join.</p> |
-| plugins | `Object` | <p>Defines the community plugins.</p> |
 ## <a name='Fetch-community'></a> Fetch community
 [Back to top](#top)
 

@@ -15,7 +15,6 @@ import { getNetworkSide, getCurrentNetworkType } from 'selectors/network'
 import { convertNetworkName } from 'utils/network'
 import { addressShortener, formatWei } from 'utils/format'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
-import { saveState } from 'utils/storage'
 import { changeNetwork } from 'actions/network'
 import { loadModal } from 'actions/ui'
 import { fetchBalances } from 'actions/accounts'
@@ -139,9 +138,10 @@ const ProfileDropDown = ({
   }
 
   const logout = () => {
-    saveState('state.defaultWallet', '')
+    if (window && window.analytics) {
+      window.analytics.reset()
+    }
     handleLogOut()
-    window.analytics.reset()
     window.location.reload()
   }
 
@@ -158,7 +158,7 @@ const ProfileDropDown = ({
           </CopyToClipboard>
         </div>
         <div onClick={logout} className='cell small-24 profile__account__logout grid-x align-middle align-center'>
-          <span>Log out from {providerInfo.check.substring(2)}</span>
+          <span>Log out from {providerInfo.check && providerInfo.check.substring && providerInfo.check.substring(2)}</span>
         </div>
       </div>
       <div className='profile__communities grid-y'>

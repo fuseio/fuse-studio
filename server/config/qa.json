@@ -1,11 +1,21 @@
 {
   "env": "qa",
   "api": {
+    "protocol": "https",
     "auth": {
       "domain": {
         "name": "Fuse Studio QA",
         "version": 1
       }
+    }
+  },
+  "graph": {
+    "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
+    "subgraphs": {
+      "fuse": "/fuse-qa",
+      "entities": "/fuse-entities-qa",
+      "bridgeRopsten": "/fuse-ropsten-bridge",
+      "bridgeMain": "/fuse-ethereum-bridge"
     }
   },
   "network": {

@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
 import capitalize from 'lodash/capitalize'
+import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
 import MyTable from 'components/dashboard/components/Table'
 import {
@@ -22,8 +23,10 @@ import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import TransactionMessage from 'components/common/TransactionMessage'
+import { isIpfsHash, isS3Hash } from 'utils/metadata'
 
 import dotsIcon from 'images/dots.svg'
+import AddBusiness from 'images/add_business.svg'
 
 const Businesses = ({
   isClosed,
@@ -89,14 +92,20 @@ const Businesses = ({
     if (businesses) {
       const data = businesses.map(({ address }) => {
         const checkSumAddress = toChecksumAddress(address)
+        const imageHash = get(businessesMetadata[checkSumAddress], 'image')
+        const image = isIpfsHash(imageHash)
+          ? `${CONFIG.ipfsProxy.urlBase}/image/${imageHash}`
+          : isS3Hash(imageHash)
+            ? `https://${CONFIG.aws.s3.bucket}.s3.amazonaws.com/${imageHash}`
+            : ''
         return {
           name: [
             {
               name: get(businessesMetadata[checkSumAddress], 'name', ''),
-              image: get(businessesMetadata[checkSumAddress], 'image')
+              image: imageHash
                 ? <div
                   style={{
-                    backgroundImage: `url(${CONFIG.ipfsProxy.urlBase}/image/${get(businessesMetadata[checkSumAddress], 'image')}`,
+                    backgroundImage: `url(${image}`,
                     width: '36px',
                     height: '36px',
                     backgroundSize: 'contain',
@@ -202,45 +211,41 @@ const Businesses = ({
   //   setData([...data])
   // }
 
-  const renderTable = () => {
-    return (
-      <MyTable
-        addActionProps={{
-          placeholder: 'Search a business',
-          action: isAdmin ? handleAddBusiness : null,
-          isAdmin,
-          text: isAdmin ? 'Add business' : null,
-          onChange: identity
-          // TODO - search
-          // onChange: setSearch
-        }}
-        data={tableData}
-        justAdded={entityAdded}
-        columns={columns}
-        pageCount={0}
-        pageSize={100}
-      />
-    )
+  const renderContent = () => {
+    if (!isEmpty(tableData)) {
+      return (
+        <MyTable
+          addActionProps={{
+            placeholder: 'Search a business',
+            action: isAdmin ? handleAddBusiness : null,
+            isAdmin,
+            text: isAdmin ? 'Add business' : null,
+            onChange: identity
+            // TODO - search
+            // onChange: setSearch
+          }}
+          data={tableData}
+          justAdded={entityAdded}
+          columns={columns}
+          pageCount={0}
+          pageSize={100}
+        />
+      )
+    } else {
+      return (
+        <div className='entities__empty-list'>
+          <img src={AddBusiness} />
+          <div className='entities__empty-list__title'>Add a business to your List!</div>
+          <button
+            className='entities__empty-list__btn'
+            onClick={handleAddBusiness}
+          >
+            Add business
+          </button>
+        </div>
+      )
+    }
   }
-
-  // const renderContent = () => {
-  //   if (data && data.length) {
-  //     return renderTable()
-  //   } else {
-  //     return (
-  //       <div className='entities__empty-list'>
-  //         <img src={AddBusiness} />
-  //         <div className='entities__empty-list__title'>Add a business to your List!</div>
-  //         <button
-  //           className='entities__empty-list__btn'
-  //           onClick={handleAddBusiness}
-  //         >
-  //           Add business
-  //         </button>
-  //       </div>
-  //     )
-  //   }
-  // }
 
   return (
     <Fragment>
@@ -248,7 +253,7 @@ const Businesses = ({
         <h2 className='entities__header__title'>Business List</h2>
       </div>
       <div className='entities__wrapper'>
-        {renderTable()}
+        {renderContent()}
         <TransactionMessage
           title={transactionTitle}
           message={signatureNeeded ? 'Please sign with your wallet' : 'Pending'}

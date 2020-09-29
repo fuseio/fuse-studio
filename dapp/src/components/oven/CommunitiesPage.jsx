@@ -21,7 +21,7 @@ class CommunitiesPage extends Component {
     const { featuredCommunities } = this.props
     if (isEmpty(featuredCommunities)) {
       const { fetchFeaturedCommunities } = this.props
-      fetchFeaturedCommunities({ networkType: 'main' })
+      fetchFeaturedCommunities({ networkType: 'mainnet' })
       fetchFeaturedCommunities({ networkType: 'ropsten' })
     }
   }

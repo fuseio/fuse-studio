@@ -300,12 +300,11 @@
 }
 
 @include block(qr_code_modal) {
-  width: 350px;
   @include xy-grid(vertical);
 
   @include element(wrapper) {
     @include breakpoint(large) {
-      margin-top: 40px;
+      padding: 2em !important;
     }
   }
 
@@ -1125,6 +1124,7 @@
 }
 
 .BrainhubCarousel {
+  width: 100%;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -1147,7 +1147,6 @@
 .BrainhubCarouselItem {
   display: flex;
   justify-content: center;
-  align-items: center;
   position: relative;
   &.BrainhubCarouselItem--clickable {
     cursor: pointer;

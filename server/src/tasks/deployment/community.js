@@ -1,12 +1,15 @@
+const mongoose = require('mongoose')
+const Token = mongoose.model('Token')
 const config = require('config')
 const { handleReceipt } = require('@handlers/receipts')
+const { fetchTokenData } = require('@utils/token')
 const CommunityTransferManagerABI = require('@fuse/entities-contracts/abi/CommunityTransferManagerWithEvents')
 const CommunityFactoryABI = require('@fuse/entities-contracts/abi/CommunityFactoryWithEvents')
 
 const { roles: { ADMIN_ROLE, APPROVED_ROLE, EMPTY_ROLE } } = require('@fuse/roles')
 
-const deployCommunity = async ({ home: { createContract, createMethod, send, from } }, communityProgress) => {
-  const { name, isClosed, adminAddress } = communityProgress.steps.community.args
+const deployCommunity = async ({ home: { createContract, createMethod, send, from }, foreign }, communityProgress) => {
+  const { name, isClosed, adminAddress, isCustom, foreignTokenAddress } = communityProgress.steps.community.args
   const method = createMethod(createContract(CommunityFactoryABI, config.get('network.home.addresses.CommunityFactory')), 'createCommunity', name, adminAddress)
 
   const receipt = await send(method, {
@@ -30,6 +33,13 @@ const deployCommunity = async ({ home: { createContract, createMethod, send, fro
   for (let method of communityMethods) {
     const receipt = await send(method, { from })
     await handleReceipt(receipt)
+  }
+
+  let token = await Token.findOne({ address: foreignTokenAddress })
+  if (isCustom && !token) {
+    console.log(`Adding the custom token ${foreignTokenAddress} to the database`)
+    const tokenData = await fetchTokenData(foreignTokenAddress, {}, foreign.web3)
+    await new Token({ address: foreignTokenAddress, networkType: foreign.networkType, tokenType: 'custom', ...tokenData }).save()
   }
 
   return {

@@ -37,9 +37,9 @@ async function start () {
   if (yn(config.get('agenda.startPeriodicTasks'))) {
     await agenda.now('processPastBridgeMappingEvents')
     await agenda.now('processPastTokenCreatedEvents')
-    await agenda.every('10 minutes', 'processPastTokenCreatedEvents')
-    await agenda.every('1 minute', 'proccessPendingTransactions')
-    await agenda.every('1 minute', 'startTransfers')
+    await agenda.every('1 hour', 'processPastTokenCreatedEvents')
+    await agenda.every('1 hour', 'proccessPendingTransactions')
+    await agenda.every('1 hour', 'startTransfers')
     await agenda.every('1 hour', 'lockedAccounts')
     await agenda.every('1 hour', 'lowBalanceAccounts')
 
@@ -60,6 +60,7 @@ agenda.now = async (name, data) => {
       throw Error(`Job with the correlationId ${correlationId} already exists`)
     }
   }
+  console.log(`Requesting to start a job ${name} with arguments: ${JSON.stringify(data)}`)
   return now.call(agenda, name, data)
 }
 

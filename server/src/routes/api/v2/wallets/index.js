@@ -10,6 +10,7 @@ const Invite = mongoose.model('Invite')
 
 router.use('/notify', require('./notify'))
 router.use('/transactions', require('./transactions'))
+router.use('/transfers', require('./transfers'))
 
 /**
  * @api {post} api/v2/wallets/ Create wallet contract for user
@@ -231,19 +232,22 @@ router.post('/backup', auth.required, async (req, res, next) => {
     return res.status(400).json({ error: msg })
   }
 
-  const bonusInfo = {
-    phoneNumber,
-    identifier,
-    receiver: walletAddress,
-    bonusType: 'plugins.backupBonus.backupInfo',
-    bonusId: phoneNumber
-  }
-
   await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { backup: true })
 
-  const job = await agenda.now('bonus', { communityAddress, bonusInfo, correlationId })
+  if (communityAddress) {
+    const bonusInfo = {
+      phoneNumber,
+      identifier,
+      receiver: walletAddress,
+      bonusType: 'plugins.backupBonus.backupInfo',
+      bonusId: phoneNumber
+    }
 
-  return res.json({ job: job.attrs })
+    const job = await agenda.now('bonus', { communityAddress, bonusInfo, correlationId })
+    return res.json({ job: job.attrs })
+  }
+
+  return res.json({ response: 'ok' })
 })
 
 /**
@@ -257,6 +261,10 @@ router.post('/backup', auth.required, async (req, res, next) => {
  * @apiSuccess {Object} Started job data
  */
 router.post('/foreign', auth.required, async (req, res, next) => {
+  const { force } = req.query
+  if (!force) {
+    return res.json({ })
+  }
   const { phoneNumber, accountAddress } = req.user
   const { correlationId } = req.body
   const network = config.get('network.foreign.name')
@@ -266,11 +274,12 @@ router.post('/foreign', auth.required, async (req, res, next) => {
     const msg = `User ${phoneNumber}, ${accountAddress} doesn't have a wallet account on fuse yet, cannot create on ${network}`
     return res.status(400).json({ error: msg })
   }
-  if (userWallet.networks.includes[network]) {
+  if (userWallet.networks.includes(network)) {
     const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress} on ${network}`
     return res.status(400).json({ error: msg })
   }
-  const job = await agenda.now('createForeignWallet', { userWallet, correlationId })
+  console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
+  const job = await agenda.now('createForeignWallet', { userWallet, correlationId, network })
   return res.json({ job: job.attrs })
 })
 

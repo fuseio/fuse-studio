@@ -10,7 +10,8 @@ const abiMapping = {
   CommunityTransferManager: () => require('@fuse/entities-contracts/abi/CommunityTransferManager'),
   TransferManager: () => require('./TransferManager'),
   ExpirableToken: () => require('@fuse/token-factory-contracts/abi/ExpirableToken'),
-  DAIPoints: () => require('./DAIPoints')
+  DAIPoints: () => require('./DAIPoints'),
+  HomeMultiAMBErc20ToErc677: () => require('./HomeMultiAMBErc20ToErc677')
 }
 
 const getAbi = (abiName) => {

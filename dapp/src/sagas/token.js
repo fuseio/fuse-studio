@@ -2,6 +2,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 import BasicToken from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
+import { getTokenAllowance, fetchHomeTokenAddress, toggleMultiBridge } from 'actions/bridge'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
 import { ADD_COMMUNITY_PLUGIN, SET_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA, SET_SECONDARY_TOKEN } from 'actions/community'
@@ -23,12 +24,9 @@ import {
   createMetadata as createMetadataApi
 } from 'services/api/metadata'
 import { imageUpload } from 'services/api/images'
-import { ADD_ENTITY } from 'actions/communityEntities'
-import { roles, combineRoles } from '@fuse/roles'
-import { getCommunityAddress, checkIsFunderPartOfCommunity } from 'selectors/entities'
+import { getCommunityAddress } from 'selectors/entities'
 import get from 'lodash/get'
 import TokenFactoryABI from '@fuse/token-factory-contracts/abi/TokenFactoryWithEvents'
-import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
 import { getOptions, getNetworkVersion } from 'utils/network'
 import FuseTokenABI from 'constants/abi/FuseToken'
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
@@ -119,17 +117,16 @@ export function * createToken ({ name, symbol, totalSupply, tokenURI, tokenType 
 }
 
 function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
-  const { hash } = yield call(createMetadata, { metadata })
-  const tokenURI = `ipfs://${hash}`
-  const communityURI = `ipfs://${hash}`
-  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
-  const receipt = yield call(createToken, { ...tokenData, tokenURI, tokenType })
+  const response = yield call(createMetadata, { metadata })
+  const uri = response.uri || `ipfs://${response.hash}`
+  const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI: uri } } }
+  const receipt = yield call(createToken, { ...tokenData, tokenURI: uri, tokenType })
   yield put(transactionSucceeded(actions.CREATE_TOKEN_WITH_METADATA, receipt, { steps: newSteps }))
 }
 
 function * deployChosenContracts ({ response: { steps, receipt } }) {
   const foreignTokenAddress = receipt.events.TokenCreated.returnValues.token
-  const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, { steps: { ...steps, bridge: { args: { foreignTokenAddress } } } })
+  const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, { steps: { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress } } } })
 
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,
@@ -140,8 +137,11 @@ function * deployChosenContracts ({ response: { steps, receipt } }) {
 }
 
 function * deployExistingToken ({ steps, metadata }) {
-  const { hash } = yield call(createMetadata, { metadata })
-  const communityURI = `ipfs://${hash}`
+  yield put({
+    type: actions.DEPLOY_TOKEN.REQUEST
+  })
+  const response = yield call(createMetadata, { metadata })
+  const communityURI = response.uri || `ipfs://${response.hash}`
   const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
   const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps })
   yield put({
@@ -250,30 +250,56 @@ function * burnToken ({ tokenAddress, value }) {
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
 }
 
+function * addMinter ({ tokenAddress, minterAddress }) {
+  const accountAddress = yield select(getAccountAddress)
+  const web3 = yield getWeb3()
+  const networkVersion = getNetworkVersion(web3)
+  const contract = new web3.eth.Contract(MintableBurnableTokenAbi, tokenAddress, getOptions(networkVersion))
+
+  const transactionPromise = contract.methods.addMinter(minterAddress).send({
+    from: accountAddress
+  })
+
+  const action = actions.ADD_MINTER
+  yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, tokenAddress, abiName: 'MintableBurnableToken' })
+}
+
 function * watchTokenChanges ({ response }) {
   yield put(actions.fetchToken(response.tokenAddress))
 }
 
 function * watchFetchCommunity ({ response }) {
+  const accountAddress = yield select(getAccountAddress)
   const { entities } = response
   for (const communityAddress in entities) {
     if (entities.hasOwnProperty(communityAddress)) {
       if (entities && entities[communityAddress]) {
-        const { foreignTokenAddress, homeTokenAddress } = entities[communityAddress]
-        const accountAddress = yield select(getAccountAddress)
-
-        if (entities[communityAddress] && entities[communityAddress].communityURI) {
-          yield put(fetchMetadata(entities[communityAddress].communityURI))
-        }
+        const foreignTokenAddress = get(entities[communityAddress], 'foreignTokenAddress')
+        const homeTokenAddress = get(entities[communityAddress], 'homeTokenAddress')
+        const communityURI = get(entities[communityAddress], 'communityURI')
         const calls = [
-          put(actions.fetchToken(homeTokenAddress)),
-          put(actions.fetchToken(foreignTokenAddress)),
-          put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-          put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' }))
+          put(toggleMultiBridge(get(entities[communityAddress], 'isMultiBridge', false)))
         ]
-        if (accountAddress) {
-          calls.push(put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })))
-          calls.push(put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })))
+        if (homeTokenAddress) {
+          calls.push(
+            put(actions.fetchToken(homeTokenAddress)),
+            put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
+            put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' }))
+          )
+        }
+        if (communityURI) {
+          calls.push(
+            put(fetchMetadata(communityURI))
+          )
+        }
+        if (foreignTokenAddress) {
+          calls.push(
+            put(fetchHomeTokenAddress(communityAddress, foreignTokenAddress)),
+            put(actions.fetchToken(foreignTokenAddress)),
+            put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
+            put(getTokenAllowance(foreignTokenAddress)),
+            put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
+          )
         }
         yield all(calls)
       }
@@ -296,20 +322,22 @@ function * updateCommunityMetadata ({ communityAddress, fields: { metadata, ...r
   const currentMetadata = yield select(state => state.entities.metadata[communityURI])
   let isMetadataUpdated = false
   if (get(metadata, 'image')) {
-    const { hash } = yield apiCall(imageUpload, { image: get(metadata, 'image') })
+    const { hash, uri } = yield apiCall(imageUpload, { image: get(metadata, 'image') })
+    currentMetadata.imageUri = uri
     currentMetadata.image = hash
     isMetadataUpdated = true
   }
 
   if (get(metadata, 'coverPhoto')) {
-    const { hash } = yield apiCall(imageUpload, { image: get(metadata, 'coverPhoto') })
+    const { hash, uri } = yield apiCall(imageUpload, { image: get(metadata, 'coverPhoto') })
+    currentMetadata.coverPhotoUri = uri
     currentMetadata.coverPhoto = hash
     isMetadataUpdated = true
   }
   let newCommunityURI
   if (isMetadataUpdated) {
-    const { hash } = yield apiCall(createMetadataApi, { metadata: currentMetadata })
-    newCommunityURI = `ipfs://${hash}`
+    const { hash, uri } = yield apiCall(createMetadataApi, { metadata: currentMetadata })
+    newCommunityURI = uri || `ipfs://${hash}`
   }
   const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI, ...rest })
 
@@ -347,19 +375,6 @@ function * transferTokenToFunder ({ tokenAddress, value }) {
 
 function * setBonus ({ amount, bonusType }) {
   const communityAddress = yield select(getCommunityAddress)
-  const isMemberOfCommunity = yield select(checkIsFunderPartOfCommunity)
-  if (!isMemberOfCommunity) {
-    const web3 = yield getWeb3()
-    const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress)
-    const adminMultiRole = combineRoles(roles.USER_ROLE, roles.ADMIN_ROLE, roles.APPROVED_ROLE)
-    const method = CommunityContract.methods.addEntity(funderAddress, adminMultiRole)
-    const accountAddress = yield select(getAccountAddress)
-    const transactionPromise = method.send({
-      from: accountAddress
-    })
-    yield call(transactionFlow, { transactionPromise, action: ADD_ENTITY, sendReceipt: true })
-    yield transactionPromise
-  }
 
   const infoFieldsMapping = {
     inviteBonus: 'inviteInfo',
@@ -420,6 +435,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.TRANSFER_TOKEN_TO_FUNDER, transferTokenToFunder, 1),
     tryTakeEvery(actions.MINT_TOKEN, mintToken, 1),
     tryTakeEvery(actions.BURN_TOKEN, burnToken, 1),
+    tryTakeEvery(actions.ADD_MINTER, addMinter, 1),
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
@@ -429,11 +445,11 @@ export default function * tokenSaga () {
     takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchFetchCommunity),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
-    tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 1),
+    tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 0),
     tryTakeEvery(actions.FETCH_TOKEN_PROGRESS, fetchTokenProgress, 1),
     takeEvery([actions.MINT_TOKEN.SUCCESS, actions.BURN_TOKEN.SUCCESS], watchTokenChanges),
     takeEvery(actions.CREATE_TOKEN_WITH_METADATA.SUCCESS, deployChosenContracts),
-    tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken),
+    tryTakeEvery(actions.DEPLOY_EXISTING_TOKEN, deployExistingToken, 0),
     tryTakeEvery(actions.FETCH_DEPLOY_PROGRESS, fetchDeployProgress),
     tryTakeEvery(SET_BONUS, setBonus, 1),
     tryTakeEvery(SET_SECONDARY_TOKEN, setSecondaryToken, 1),

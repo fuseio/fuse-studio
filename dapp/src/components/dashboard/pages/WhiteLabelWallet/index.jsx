@@ -1,13 +1,6 @@
 import React, { Fragment } from 'react'
-import { connect } from 'react-redux'
 import QRCode from 'qrcode.react'
-
 import InviteForm from 'components/dashboard/components/InviteForm'
-
-import { getCurrentCommunity } from 'selectors/dashboard'
-import { getHomeTokenByCommunityAddress } from 'selectors/token'
-import { getCommunityAddress } from 'selectors/entities'
-
 import AppleDownload from 'images/apple.svg'
 import GoogleDownload from 'images/google-play.svg'
 
@@ -45,10 +38,4 @@ const WhiteLabelWallet = ({ value, communityAddress }) => {
   )
 }
 
-const mapState = (state) => ({
-  communityAddress: getCommunityAddress(state),
-  community: getCurrentCommunity(state, getCommunityAddress(state)),
-  homeToken: getHomeTokenByCommunityAddress(state, getCommunityAddress(state)) || { owner: '' }
-})
-
-export default connect(mapState, null)(WhiteLabelWallet)
+export default WhiteLabelWallet

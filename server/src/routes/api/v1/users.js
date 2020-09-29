@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const router = require('express').Router()
-const sendgridUtils = require('@utils/sendgrid')
+const mailchimpUtils = require('@utils/mailchimp')
 const sigUtil = require('eth-sig-util')
 const config = require('config')
 const moment = require('moment')
@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
   const user = await new User(req.body.user).save()
 
   if (req.body.subscribe) {
-    sendgridUtils.subscribeUser(user)
+    mailchimpUtils.subscribeUser(user)
   }
 
   res.json({

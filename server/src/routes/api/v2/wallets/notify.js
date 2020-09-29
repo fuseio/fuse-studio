@@ -7,11 +7,12 @@ const UserWallet = mongoose.model('UserWallet')
 const { toChecksumAddress, isAddress } = require('web3-utils')
 const { AddressZero } = require('ethers/constants')
 const BigNumber = require('bignumber.js')
-const { mapValues, map } = require('lodash')
+const { mapValues, map, isObject } = require('lodash')
+const { agenda } = require('@services/agenda')
 
 const totlePrimaryAddress = config.get('network.foreign.addresses.TotlePrimary').toLowerCase()
 
-const addressessToLowerCase = (obj) => (Array.isArray(obj) ? map : mapValues)(obj, (prop) => typeof prop === 'object'
+const addressessToLowerCase = (obj) => (Array.isArray(obj) ? map : mapValues)(obj, (prop) => isObject(prop)
   ? addressessToLowerCase(prop)
   : isAddress(prop) ? prop.toLowerCase() : prop)
 
@@ -97,6 +98,26 @@ const updateWallet = async (tx, watchedAddress) => {
   return UserWallet.updateOne({ walletAddress: toChecksumAddress(watchedAddress) }, { [`balancesOnForeign.${tx.tokenAddress}`]: value })
 }
 
+const createForeignWalletIfNeeded = async ({ watchedAddress, status }) => {
+  if (status !== 'confirmed') {
+    return
+  }
+  const walletAddress = toChecksumAddress(watchedAddress)
+  const userWallet = await UserWallet.findOne({ walletAddress })
+  const network = config.get('network.foreign.name')
+
+  if (userWallet.networks.includes(network) || (userWallet.networks.pendingNetworks && userWallet.networks.pendingNetworks.includes(network))) {
+    return
+  }
+
+  const pendingNetworks = [...userWallet.pendingNetworks, network]
+  await UserWallet.findOneAndUpdate({ walletAddress }, { pendingNetworks })
+
+  console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
+  const job = await agenda.now('createForeignWallet', { userWallet, network: config.get('network.foreign.name') })
+  console.log(`watchedAddress ${watchedAddress} does not have wallet on ${network}. Scheduling a job to create one ${job.attrs._id}`)
+}
+
 router.post('/', async (req, res) => {
   console.log(`receiving tx ${req.body.hash} for address ${req.body.watchedAddress} with status ${req.body.status} from blocknative`)
   console.log(req.body)
@@ -104,6 +125,9 @@ router.post('/', async (req, res) => {
     console.log(`ignoring the tx ${req.body.hash} because of the status ${req.body.status}`)
     return
   }
+
+  await createForeignWalletIfNeeded(req.body)
+
   const txs = createTransactions(addressessToLowerCase(req.body))
   for (const receivedTx of txs) {
     const { hash, externalId, watchedAddress } = receivedTx

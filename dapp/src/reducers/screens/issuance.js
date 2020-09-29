@@ -7,7 +7,7 @@ import {
   CLEAR_TRANSACTION,
   FETCH_TOKEN_FROM_ETHEREUM
 } from 'actions/token'
-import { REQUEST, FAILURE, PENDING } from 'actions/constants'
+import { REQUEST, FAILURE, PENDING, SUCCESS } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
 import pick from 'lodash/pick'
 import omit from 'lodash/omit'
@@ -20,8 +20,6 @@ const initialState = {
   steps: {
     tokenIssued: false,
     community: false,
-    bridge: false,
-    transferOwnership: false,
     funder: false
   }
 }
@@ -38,10 +36,17 @@ export default (state = initialState, action) => {
         steps: { ...state.steps, tokenIssued: true },
         communityAddress: action.communityAddress
       }
+    case DEPLOY_TOKEN.REQUEST:
+      return {
+        ...state,
+        transactionStatus: PENDING
+      }
     case DEPLOY_EXISTING_TOKEN.REQUEST:
       return { ...state, transactionStatus: REQUEST, tokenIssued: true }
     case DEPLOY_EXISTING_TOKEN.SUCCESS:
-      return { ...state, transactionStatus: 'SUCCESS' }
+      return { ...state, transactionStatus: SUCCESS }
+    case DEPLOY_EXISTING_TOKEN.FAILURE:
+      return { ...state, transactionStatus: FAILURE, createTokenSignature: false, ...action.error }
     case CREATE_TOKEN_WITH_METADATA.REQUEST:
       return { ...state, transactionStatus: REQUEST, createTokenSignature: true }
     case CREATE_TOKEN_WITH_METADATA.FAILURE:

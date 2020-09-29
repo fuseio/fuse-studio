@@ -13,6 +13,11 @@ let bit2cAdmin
 let localChampionsAdmin
 let seedbedAdmin
 let digitalRandAdmin
+let paywiseAdmin
+let fcKnuddeAdmin
+let straitsxAdmin
+let esolAdmin
+let bitazzaAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -74,6 +79,31 @@ const initAdmin = async () => {
   digitalRandAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(digitalRandResponse.SecretString))
   }, 'DigitalRand')
+
+  const paywiseResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdPaywise }).promise()
+  paywiseAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(paywiseResponse.SecretString))
+  }, 'Paywise')
+
+  const fcKnuddeResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdFCKnudde }).promise()
+  fcKnuddeAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(fcKnuddeResponse.SecretString))
+  }, 'FCKnudde')
+
+  const straitsxResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdStraitsx }).promise()
+  straitsxAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(straitsxResponse.SecretString))
+  }, 'StraitsX')
+
+  const esolResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdEsol }).promise()
+  esolAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(esolResponse.SecretString))
+  }, 'ESOL')
+
+  const bitazzaResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdBitazza }).promise()
+  bitazzaAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(bitazzaResponse.SecretString))
+  }, 'Bitazza')
 }
 
 initAdmin()
@@ -101,6 +131,16 @@ const getAdmin = (appName) => {
     return seedbedAdmin
   } else if (appName === 'DigitalRand') {
     return digitalRandAdmin
+  } else if (appName === 'Paywise') {
+    return paywiseAdmin
+  } else if (appName === 'FCKnudde') {
+    return fcKnuddeAdmin
+  } else if (appName === 'StraitsX') {
+    return straitsxAdmin
+  } else if (appName === 'ESOL') {
+    return esolAdmin
+  } else if (appName === 'Bitazza') {
+    return bitazzaAdmin
   } else {
     return admin
   }

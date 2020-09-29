@@ -11,9 +11,10 @@ import { formatWei, toWei } from 'utils/format'
 import { setBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import get from 'lodash/get'
-import { checkIsFunderPartOfCommunity } from 'selectors/entities'
 import { getCurrentNetworkType } from 'selectors/network'
-import { getHomeTokenByCommunityAddress } from 'selectors/token'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
+import { getHomeTokenAddress, getCurrentCommunity } from 'selectors/dashboard'
+import { getCommunityAddress } from 'selectors/entities'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
@@ -30,12 +31,14 @@ const JoinBonus = ({
   balanceOfToken,
   clearTransactionStatus,
   balances,
-  setBonus
+  setBonus,
+  homeTokenAddress,
+  foreignToken
 }) => {
   const { address: communityAddress } = useParams()
 
   const funderAccount = useSelector(getFunderAccount)
-  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[homeToken.address]
+  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[homeTokenAddress]
 
   const { plugins } = community
 
@@ -44,16 +47,16 @@ const JoinBonus = ({
   const [transferMessage, setTransferMessage] = useState(false)
 
   useEffect(() => {
-    if (homeToken && homeToken.address) {
-      balanceOfToken(homeToken.address, funderAddress, { bridgeType: 'home' })
+    if (homeTokenAddress) {
+      balanceOfToken(homeTokenAddress, funderAddress, { bridgeType: 'home' })
     }
-  }, [homeToken && homeToken.address])
+  }, [homeTokenAddress])
 
   useEffect(() => {
     if (transactionStatus && transactionStatus === SUCCESS) {
       if (transferSuccess) {
         setTransferMessage(true)
-        balanceOfToken(homeToken.address, funderAddress, { bridgeType: 'home' })
+        balanceOfToken(homeTokenAddress, funderAddress, { bridgeType: 'home' })
       }
     } else if (transactionStatus && transactionStatus === FAILURE) {
       if (transferSuccess === false) {
@@ -64,7 +67,7 @@ const JoinBonus = ({
   }, [transactionStatus])
 
   const transferToFunder = (amount) => {
-    transferTokenToFunder(homeToken.address, toWei(String(amount), homeToken.decimals))
+    transferTokenToFunder(homeTokenAddress, toWei(String(amount), foreignToken.decimals))
   }
 
   const transactionError = () => {
@@ -79,7 +82,7 @@ const JoinBonus = ({
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
-  const balance = balances[homeToken.address]
+  const balance = balances[homeTokenAddress]
 
   return (
     community ? <div className='join_bonus__wrapper'>
@@ -93,13 +96,13 @@ const JoinBonus = ({
               setTransferMessage(false)
               clearTransactionStatus(null)
             }}
-            symbol={homeToken.symbol}
+            symbol={foreignToken.symbol}
             transactionConfirmed={transactionConfirmed}
             transactionError={transactionError}
             transactionDenied={transactionDenied}
-            balance={balance ? formatWei(balance, 0, homeToken.decimals) : 0}
+            balance={balance ? formatWei(balance, 0, foreignToken.decimals) : 0}
             transferToFunder={transferToFunder}
-            funderBalance={funderBalance ? formatWei(funderBalance, 0, homeToken.decimals) : 0}
+            funderBalance={funderBalance ? formatWei(funderBalance, 0, foreignToken.decimals) : 0}
           />
           <RewardUserForm
             networkType={networkType}
@@ -120,9 +123,9 @@ const JoinBonus = ({
 const mapStateToProps = (state, { match }) => ({
   ...state.screens.token,
   balances: getBalances(state),
-  isFunderPartOfCommunity: checkIsFunderPartOfCommunity(state),
   networkType: getCurrentNetworkType(state),
-  homeToken: getHomeTokenByCommunityAddress(state, match.params.address) || {}
+  homeTokenAddress: getHomeTokenAddress(state, getCurrentCommunity(state)),
+  foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { networkType: '' }
 })
 
 const mapDispatchToState = {

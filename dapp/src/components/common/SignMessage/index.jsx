@@ -28,7 +28,7 @@ export default ({ message, clickHandler, isOpen, isDark = false, subTitle = 'Ple
             </Fragment>
           ) : (
             <Fragment>
-              <p style={{ maxWidth: '280px' }} className='status__title status__title--white'>Your community is about to be born!</p>
+              <p style={{ maxWidth: '280px' }} className='status__title status__title--white'>Your economy is about to be launched!</p>
               {
                 subTitle && (
                   <div className='status__sub-title status__sub-title--white'>

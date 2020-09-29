@@ -33,7 +33,10 @@
       "url": "https://studio.fuse.io/api/v2"
     },
     "graph": {
-      "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse"
+      "url": "https://graph.fuse.io/subgraphs/name/fuseio",
+      "subgraphs": {
+        "entities": "/fuse-entities"
+      }
     }
   },
   "reactGA": {
@@ -49,5 +52,10 @@
   "sentry": {
     "key": "24bb2594d71c47489e029add66203eae",
     "project": "1815168"
+  },
+  "aws": {
+    "s3": {
+      "bucket": "fuse-studio"
+    }
   }
 }

@@ -57,10 +57,10 @@ const createNetwork = (bridgeType, account) => {
 const getMethodName = (method) => method.methodName || 'unknown'
 
 const getGasPrice = async (bridgeType, web3) => {
-  if (bridgeType === 'home') {
-    return config.get('network.home.gasPrice')
+  if (config.has(`network.${bridgeType}.gasPrice`)) {
+    return config.get(`network.${bridgeType}.gasPrice`)
   }
-  const gasPrice = await fetchGasPrice('fast')
+  const gasPrice = await fetchGasPrice()
   return web3.utils.toWei(gasPrice.toString(), 'gwei')
 }
 
@@ -91,12 +91,24 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
         console.log(`[${bridgeType}] method ${methodName} succeeded ${contract.options.address}`)
         return { receipt: contract }
       } else {
-        const receipt = await promise
+        const receipt = await new Promise(async (resolve, reject) => {
+          promise
+            .on('error', (e, rec) => {
+              e.receipt = rec
+              reject(e)
+            })
+            .on('receipt', (r) => resolve(r))
+        })
         console.log(`[${bridgeType}] method ${methodName} succeeded in tx ${receipt.transactionHash}`)
         return { receipt }
       }
     } catch (error) {
       console.error(error)
+
+      // reverted: transaction has beed confirmed but failed
+      if (error.receipt) {
+        return error
+      }
 
       const updateNonce = async () => {
         console.log('updating the nonce')
@@ -134,6 +146,9 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
     const response = await doSend(i) || {}
     const { receipt } = response
     if (receipt) {
+      if (!receipt.status) {
+        console.warn(`Transaction ${receipt.transactionHash} is reverted`)
+      }
       account.nonces[bridgeType]++
       await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
       receipt.bridgeType = bridgeType

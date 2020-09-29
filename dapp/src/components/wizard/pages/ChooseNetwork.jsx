@@ -51,7 +51,7 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
   )
 }
 
-const ChooseNetwork = ({ providerInfo, loadModal, networkType, formik, foreignNetwork, account }) => {
+const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, formik, foreignNetwork, account }) => {
   const network = getIn(formik.values, 'network')
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const ChooseNetwork = ({ providerInfo, loadModal, networkType, formik, foreignNe
                 This will require you to pay network fees in ETH
                 <a className='link' href='https://metamask.zendesk.com/hc/en-us/articles/360015489531-Getting-Started-With-MetaMask-Part-1-' target='_blank' rel='noopener noreferrer'> Read more</a>
               </div>
-              After deployment on Ethereum you will receive <span className='bold'>1000 Fuse</span> <img src={fuseToken} />
+              After deployment on Ethereum you will receive <span className='bold'>100 Fuse</span> <img src={fuseToken} />
               &nbsp;that will cover your transactions on Fuse for your community bootstrapping period
             </div>
           )}
@@ -110,7 +110,7 @@ const ChooseNetwork = ({ providerInfo, loadModal, networkType, formik, foreignNe
                 This is an Ethereum testnet so you can do your tests for free
                 <a className='link' href='https://docs.fuse.io/the-fuse-studio/getting-started/using-the-studio-for-free-on-ropsten' target='_blank' rel='noopener noreferrer'> Read more</a>
               </div>
-              After deployment on Ropsten you will receive <span className='bold'>100 Fuse</span> <img src={fuseToken} />
+              After deployment on Ropsten you will receive <span className='bold'>10 Fuse</span> <img src={fuseToken} />
               &nbsp;that will cover your transactions on Fuse for your testing period
             </div>
           )}
@@ -127,4 +127,4 @@ const mapState = (state) => ({
   providerInfo: getProviderInfo(state)
 })
 
-export default connect(mapState, { loadModal })(formikConnect(ChooseNetwork))
+export default connect(mapState, { loadModal, changeNetwork })(formikConnect(ChooseNetwork))

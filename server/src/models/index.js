@@ -13,6 +13,8 @@ require('./Invite')
 require('./PhoneVerification')
 require('./Fork')
 require('./WalletTransaction')
+require('./Metadata')
+require('./AgendaJob')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')

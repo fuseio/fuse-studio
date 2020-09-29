@@ -360,22 +360,17 @@
       @include element(textarea) {
         > div:first-child {
           background-color: white;
+          padding: 0;
         }
         width: 100%;
         font-size: 0.938em;
-        border-radius: 5px;
-        border: solid 2px $color-lighter-gray;
-        @include breakpoint(medium up) {
-        }
-
-        @include breakpoint(small) {
-          width: 100%;
-        }
-
+        
         textarea {
+          border-radius: 5px;
+          border: solid 2px $color-lighter-gray;
           color: $color-dark;
+          padding: 16px;
           font-size: 0.938em;
-          color: $color-dark;
 
           &::placeholder {
             color: #92a1ac;
@@ -520,7 +515,7 @@
       @include block(option) {
         border-radius: 5px;
         padding: 20px;
-        border: solid 2px #e2e2e2;
+        border: solid 2px $color-lighter-gray;
         background-color: #ffffff;
         cursor: pointer;
 
@@ -1543,7 +1538,6 @@
       @include element(title) {
         font-size: 14px;
         color: $color-gray;
-        margin-top: 2em;
         margin-bottom: 3em;
         text-align: center;
 

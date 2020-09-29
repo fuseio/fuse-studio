@@ -7,5 +7,6 @@ module.exports = {
   BasicHomeBridge: require('./BasicHomeBridge'),
   Community: require('@fuse/entities-contracts/abi/CommunityWithEvents'),
   IRestrictedToken: require('./IRestrictedToken'),
-  CommunityTransferManager: require('@fuse/entities-contracts/abi/CommunityTransferManager')
+  CommunityTransferManager: require('@fuse/entities-contracts/abi/CommunityTransferManager'),
+  HomeMultiAMBErc20ToErc677: require('./HomeMultiAMBErc20ToErc677')
 }

@@ -1,4 +1,3 @@
-import last from 'lodash/last'
 import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effects'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
@@ -7,7 +6,7 @@ import { toLongName } from 'utils/network'
 import * as actions from 'actions/network'
 import { balanceOfFuse, balanceOfNative, fetchCommunities } from 'actions/accounts'
 import { networkIdToName } from 'constants/network'
-import providers from 'constants/providers'
+import { getProviderInfo } from 'web3modal'
 import { saveState } from 'utils/storage'
 import { processTransactionHash } from 'services/api/misc'
 import { getNetworkSide, getForeignNetwork } from 'selectors/network'
@@ -27,36 +26,6 @@ function * getNetworkTypeInternal (web3) {
   const networkId = yield web3.eth.net.getId(cb)
   const networkType = networkIdToName[networkId] || 'unknown'
   return { networkId, networkType }
-}
-
-const getProviderName = ({ check }) => {
-  if (check === 'isPortis') {
-    return 'portis'
-  } else if (check === 'isTorus') {
-    return 'torus'
-  } else {
-    return 'metamask'
-  }
-}
-
-export function getProviderInfo (provider) {
-  let result = {
-    name: 'Web3',
-    type: 'injected',
-    check: 'isWeb3',
-    styled: {
-      noShadow: false
-    }
-  }
-
-  if (provider) {
-    const matches = providers.filter(_provider => provider[_provider.check])
-    if (!!matches && matches.length) {
-      result = last(matches)
-    }
-  }
-
-  return result
 }
 
 function * watchNetworkChanges (provider) {
@@ -90,7 +59,7 @@ function * connectToWallet () {
     const accountAddress = accounts[0]
 
     yield fork(watchNetworkChanges, provider)
-    yield call(checkNetworkType, { web3 })
+    yield call(checkNetworkType, { web3, accountAddress })
 
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,
@@ -113,12 +82,16 @@ function * connectToWallet () {
   }
 }
 
-function * checkNetworkType ({ web3 }) {
+function * checkNetworkType ({ web3, accountAddress }) {
   try {
+    if (!accountAddress) {
+      accountAddress = yield select(getAccountAddress)
+    }
     const { networkType, networkId } = yield getNetworkTypeInternal(web3)
     const response = {
       networkType,
-      networkId
+      networkId,
+      accountAddress
     }
     if (CONFIG.web3.supportedForeignNetworks.includes(networkType)) {
       const { pathname } = yield select(state => state.router.location)
@@ -130,8 +103,6 @@ function * checkNetworkType ({ web3 }) {
       type: actions.CHECK_NETWORK_TYPE.SUCCESS,
       response
     })
-    const accountAddress = yield select(state => state.network.accountAddress)
-    yield put(balanceOfFuse(accountAddress))
     yield put(balanceOfNative(accountAddress, { bridgeType: 'home' }))
     yield put(balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
   } catch (error) {
@@ -183,44 +154,40 @@ function * getBlockNumber ({ networkType, bridgeType }) {
 }
 
 function * watchCheckNetworkTypeSuccess ({ response }) {
-  const { foreignNetwork, homeNetwork } = response
-  const accountAddress = yield select(getAccountAddress)
+  const { foreignNetwork, homeNetwork, accountAddress } = response
   yield put(fetchCommunities(accountAddress))
   saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
 function * watchConnectToWallet ({ response, accountAddress }) {
-  const { providerInfo } = response
-  const { check } = providerInfo
   yield put(fetchCommunities(accountAddress))
   saveState('state.userEthAddress', accountAddress)
-  saveState('state.defaultWallet', check.substring(2))
 }
 
 function * changeNetwork ({ networkType }) {
   const foreignNetwork = yield select(getForeignNetwork)
   const currentNetwork = toLongName(networkType)
-  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: networkType === 'fuse' ? foreignNetwork : currentNetwork, networkType: currentNetwork })
+  const isFuseNetwork = currentNetwork === 'fuse'
+  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: isFuseNetwork ? foreignNetwork : currentNetwork, networkType: currentNetwork })
   const web3 = yield getWeb3()
   const providerInfo = getProviderInfo(web3.currentProvider)
-  const providerName = getProviderName(providerInfo)
-  if (providerName === 'portis') {
+  const { check } = providerInfo
+  if (check === 'isPortis') {
     yield web3.currentProvider._portis.changeNetwork(currentNetwork)
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }
-  if (providerName === 'torus') {
+  if (check === 'isTorus') {
     yield web3.currentProvider.torus.setProvider({
-      host: currentNetwork === 'fuse' ? CONFIG.web3.fuseProvider : currentNetwork,
+      host: isFuseNetwork ? CONFIG.web3.fuseProvider : currentNetwork,
       networkName: currentNetwork,
-      chainId: currentNetwork === 'fuse' ? CONFIG.web3.chainId.fuse : undefined })
+      chainId: isFuseNetwork ? CONFIG.web3.chainId.fuse : undefined })
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
-  // window.location.reload()
 }
 
 function * sendTransactionHash ({ transactionHash, abiName }) {

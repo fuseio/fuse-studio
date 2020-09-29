@@ -2,6 +2,7 @@
   "env": "production",
   "api": {
     "allowCors": false,
+    "protocol": "https",
     "auth": {
       "domain": {
         "name": "Fuse Studio Prod",
@@ -39,11 +40,22 @@
   "mongo": {
     "debug": false
   },
+  "aws": {
+    "s3": {
+      "bucket": "fuse-studio"
+    }
+  },
   "funder": {
     "urlBase": "https://funder.fuse.io/api/"
   },
   "graph": {
-    "url": "https://graph.fuse.io/subgraphs/name/fuseio/fuse"
+    "url": "https://graph.fuse.io/subgraphs/name/fuseio",
+    "subgraphs": {
+      "fuse": "/fuse",
+      "entities": "/fuse-entities",
+      "bridgeRopsten": "/fuse-ropsten-bridge",
+      "bridgeMain": "/fuse-ethereum-bridge"
+    }
   },
   "plugins": {
     "moonpay": {

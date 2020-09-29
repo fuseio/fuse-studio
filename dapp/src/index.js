@@ -10,7 +10,6 @@ import { ConnectedRouter } from 'connected-react-router'
 
 import ErrorBoundary from 'components/common/ErrorBoundary'
 import ScrollToTopController from 'containers/ScrollToTopController'
-import { Web3ProvideAuth } from 'hooks/useWeb3Auth'
 import Root from 'containers/Root'
 import configureStore from 'store/configureStore'
 import rootSaga from 'sagas/index'
@@ -28,9 +27,7 @@ ReactDOM.render(
       <ConnectedRouter history={history}>
         <ScrollToTopController>
           <ErrorBoundary>
-            <Web3ProvideAuth>
-              <Root />
-            </Web3ProvideAuth>
+            <Root />
           </ErrorBoundary>
         </ScrollToTopController>
       </ConnectedRouter>

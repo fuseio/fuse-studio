@@ -20,6 +20,11 @@
       "firebaseSecretIdLocalChampions": "COMMUNITY_AWS_FIREBASE_SECRET_ID_LOCAL_CHAMPIONS",
       "firebaseSecretIdSeedbed": "COMMUNITY_AWS_FIREBASE_SECRET_ID_SEEDBED",
       "firebaseSecretIdDigitalRand": "COMMUNITY_AWS_FIREBASE_SECRET_ID_DIGITAL_RAND",
+      "firebaseSecretIdPaywise": "COMMUNITY_AWS_FIREBASE_SECRET_ID_PAYWISE",
+      "firebaseSecretIdFCKnudde": "COMMUNITY_AWS_FIREBASE_SECRET_ID_FC_KNUDDE",
+      "firebaseSecretIdStraitsx": "COMMUNITY_AWS_FIREBASE_SECRET_ID_STRAITSX",
+      "firebaseSecretIdEsol": "COMMUNITY_AWS_FIREBASE_SECRET_ID_ESOL",
+      "firebaseSecretIdBitazza": "COMMUNITY_AWS_FIREBASE_SECRET_ID_BITAZZA",
       "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
@@ -47,8 +52,18 @@
     "foreign": {
       "apiKey": "COMMUNITY_WEB3_API_KEY",
       "name": "COMMUNITY_WEB3_NETWORK",
-      "gasStation": "COMMUNITY_WEB3_GAS_STATION",
-      "allowedTokensToRelay": "COMMUNITY_FOREIGN_TOKENS_ALLOWED_TO_RELAY"
+      "gasPrice": "COMMUNITY_NETWORK_FOREIGN_GAS_PRICE",
+      "gasStation": {
+        "url": "COMMUNITY_WEB3_GAS_STATION_URL",
+        "speed": "COMMUNITY_WEB3_GAS_STATION_SPEED"
+      },
+      "allowedTokensToRelay": "COMMUNITY_FOREIGN_TOKENS_ALLOWED_TO_RELAY",
+      "providers": {
+        "alchemy": {
+          "http": "COMMUNITY_FOREIGN_PROVIDERS_ALCHEMY_HTTP",
+          "websocket": "COMMUNITY_FOREIGN_PROVIDERS_ALCHEMY_WEBSOCKET"
+        }
+      }
     }
   },
   "mongo": {
@@ -75,6 +90,10 @@
         "clientCreatedCommunity": "COMMUNITY_MAIL_SENDGRID_TEMPLATES_CLIENT_CREATED_COMMUNITY",
         "notifyManagers": "COMMUNITY_MAIL_SENDGRID_TEMPLATES_NOTIFY_MANAGERS"
       }
+    },
+    "mailchimp": {
+      "apiKey": "COMMUNITY_MAIL_MAILCHIMP_API_KEY",
+      "listId": "COMMUNITY_MAIL_MAILCHIMP_LIST_ID"
     }
   },
   "secrets": {
@@ -94,8 +113,8 @@
   },
   "agenda": {
     "args": {
-        "__name": "COMMUNTITY_AGENDA_ARGS",
-        "__format": "json"
+      "__name": "COMMUNTITY_AGENDA_ARGS",
+      "__format": "json"
     },
     "startPeriodicTasks": "COMMUNTITY_AGENDA_START_PERIODIC_TASKS",
     "tasks": {
@@ -178,7 +197,11 @@
       "threshold": "COMMUNITY_ALERTS_LOCKED_ACCOUNTS_THRESHOLD"
     },
     "lowBalanceAccounts": {
-      "threshold": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_THRESHOLD"
+      "threshold": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_THRESHOLD",
+      "options": {
+        "__name": "COMMUNITY_ALERTS_LOW_BALANCE_ACCOUNTS_OPTIONS",
+        "__format": "json"
+      }
     }
   }
 }

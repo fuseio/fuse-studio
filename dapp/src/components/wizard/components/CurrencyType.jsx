@@ -132,7 +132,7 @@ const CurrencyType = ({ networkType, formik }) => {
   return (
     <div className='attributes__currency'>
       {isNew && <h3 className='attributes__title'>
-        Create new token<span style={{ fontSize: 'smaller', fontWeight: '400' }}> | select one option</span>
+        Create new token<span style={{ fontSize: 'smaller', fontWeight: '400' }}> | select one</span>
       </h3>}
       {isExisting && network !== 'ropsten' && <h3 className='attributes__title'>
         Pick one of the two options:

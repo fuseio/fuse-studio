@@ -7,6 +7,7 @@
     "test": "truffle test",
     "build": "truffle compile && npm run abi && npm run bytecode",
     "compile": "truffle compile",
+    "flatten": "scripts/flatten.sh",
     "abi": "node_modules/@fuse/contract-utils/bin/abi.js $PWD && node ./scripts/extendAbi.js",
     "bytecode": "node_modules/@fuse/contract-utils/bin/bytecode.js $PWD",
     "deploy-dev": "truffle migrate",
@@ -33,9 +34,10 @@
     "@fuse/contract-utils": "../../@fuse/contract-utils"
   },
   "devDependencies": {
-    "solc": "^0.4.24",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "chai-bn": "^0.1.1"
+    "chai-bn": "^0.1.1",
+    "solc": "^0.4.24",
+    "truffle-flattener": "^1.4.4"
   }
 }

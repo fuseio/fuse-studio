@@ -7,7 +7,8 @@ const UserSchema = new Schema({
   accountAddress: { type: String, required: [true, "can't be blank"] },
   provider: { type: String, required: [true, "can't be blank"] },
   source: { type: String, required: true },
-  displayName: { type: String }
+  displayName: { type: String },
+  avatarHash: { type: String }
 }, { timestamps: true })
 
 UserSchema.index({ email: 1, accountAddress: 1 }, { unique: true })

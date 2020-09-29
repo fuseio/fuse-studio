@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
-    <title>Group</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
-            <stop stop-color="#99FAAB" offset="0%"></stop>
-            <stop stop-color="#FEE926" offset="100%"></stop>
-        </linearGradient>
-    </defs>
-    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Fuse-example-of-fuse-color--Copy-2" transform="translate(-949.000000, -770.000000)">
-            <g id="Group-39" transform="translate(944.000000, 765.000000)">
-                <g id="Group" transform="translate(0.384776, 0.384776)">
-                    <rect id="Rectangle" fill="#25435A" x="8.61522369" y="9.61522369" width="13" height="12"></rect>
-                    <path d="M15,25 C9.47715252,25 5,20.5228475 5,15 C5,9.47715252 9.47715252,5 15,5 C20.5228475,5 25,9.47715252 25,15 C25,20.5228475 20.5228475,25 15,25 Z M16.375,15 L19.4,11.975 L18.025,10.6 L15,13.625 L11.975,10.6 L10.6,11.975 L13.625,15 L10.6,18.025 L11.975,19.4 L15,16.375 L18.025,19.4 L19.4,18.025 L16.375,15 Z" id="X-Rounded-Icon" fill="url(#linearGradient-1)" transform="translate(15.000000, 15.000000) rotate(-45.000000) translate(-15.000000, -15.000000) "></path>
-                </g>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 23</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="First-time-use-Copy-2" transform="translate(-530.000000, -685.000000)">
+            <g id="Group-23" transform="translate(531.000000, 686.000000)">
+                <circle id="Oval" stroke="#CCDBE3" stroke-width="2" fill="#FFFFFF" cx="16.632" cy="16.632" r="16.632"></circle>
+                <path d="M16.66728,9.072 C17.3436742,9.072 17.892,9.62032582 17.892,10.29672 L17.892,15.372 L22.96728,15.372 C23.6436742,15.372 24.192,15.9203258 24.192,16.59672 L24.192,16.66728 C24.192,17.3436742 23.6436742,17.892 22.96728,17.892 L17.892,17.892 L17.892,22.96728 C17.892,23.6436742 17.3436742,24.192 16.66728,24.192 L16.59672,24.192 C15.9203258,24.192 15.372,23.6436742 15.372,22.96728 L15.372,17.892 L10.29672,17.892 C9.62032582,17.892 9.072,17.3436742 9.072,16.66728 L9.072,16.59672 C9.072,15.9203258 9.62032582,15.372 10.29672,15.372 L15.372,15.372 L15.372,10.29672 C15.372,9.62032582 15.9203258,9.072 16.59672,9.072 L16.66728,9.072 Z" id="Combined-Shape" fill="#92A9B6"></path>
             </g>
         </g>
     </g>
