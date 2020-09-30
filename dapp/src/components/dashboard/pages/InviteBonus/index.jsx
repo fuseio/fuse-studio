@@ -12,8 +12,9 @@ import { setBonus } from 'actions/community'
 import { loadModal } from 'actions/ui'
 import get from 'lodash/get'
 import { getCurrentNetworkType } from 'selectors/network'
-import { getForeignTokenByCommunityAddress, getHomeTokenAddress, getCurrentCommunity } from 'selectors/dashboard'
+import { getHomeTokenAddress, getCurrentCommunity } from 'selectors/dashboard'
 import { getCommunityAddress } from 'selectors/entities'
+import { getForeignTokenByCommunityAddress } from 'selectors/token'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 

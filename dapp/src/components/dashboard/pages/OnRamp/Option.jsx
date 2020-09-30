@@ -3,8 +3,9 @@ import { connect, getIn, Field } from 'formik'
 import HeaderRow from 'components/dashboard/components/HeaderRow'
 import BodyRow from 'components/dashboard/components/BodyRow'
 import { useTable, useSortBy, useRowSelect } from 'react-table'
-import pluginsIcons from 'constants/pluginsIcons'
 import get from 'lodash/get'
+import moonpayIcon from 'images/moonpay_table.svg'
+import transkIcon from 'images/transak_table.svg'
 
 const getPluginName = (myPlugins) => {
   const isMoonpay = get(myPlugins, 'moonpay.isActive', false)
@@ -20,7 +21,7 @@ const options = (plugin) => [
         name: 'Moonpay',
         image: <div
           style={{
-            backgroundImage: `url(${pluginsIcons['moonpay']})`,
+            backgroundImage: `url(${moonpayIcon})`,
             width: '36px',
             height: '36px',
             backgroundSize: 'contain',
@@ -30,8 +31,8 @@ const options = (plugin) => [
         />
       }
     ],
-    fee: '0.0',
-    countries: 'sdadada',
+    fee: '4.5% or 4.99 (EUR/GBP/USD/ whichever is higher)',
+    countries: '',
     value: 'moonpay',
     isSelected: plugin === 'moonpay'
   },
@@ -41,7 +42,7 @@ const options = (plugin) => [
         name: 'Transak',
         image: <div
           style={{
-            backgroundImage: `url(${pluginsIcons['transak']})`,
+            backgroundImage: `url(${transkIcon})`,
             width: '36px',
             height: '36px',
             backgroundSize: 'contain',
@@ -51,11 +52,11 @@ const options = (plugin) => [
         />
       }
     ],
-    fee: '0.0',
-    countries: 'sdadada',
+    fee: '0.5%',
+    countries: '',
     value: 'transak',
     isSelected: plugin === 'transak'
-  },
+  }
   // {
   //   name: [
   //     {
