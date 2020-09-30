@@ -5,6 +5,7 @@ const web3Utils = require('web3-utils')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const request = require('request-promise-native')
+const stableStringify = require('fast-json-stable-stringify')
 
 const moonpayAuthCheck = (req, res, next) => {
   console.log(`[deposit-moonpayAuthCheck]`)
@@ -43,6 +44,25 @@ const transakAuthCheck = (req, res, next) => {
   } catch (err) {
     console.log(`[deposit-transakAuthCheck] catch: ${JSON.stringify(err)}`)
     throw new Error(`Transak auth check failed - ${err}`)
+  }
+}
+
+const rampAuthCheck = (req, res, next) => {
+  if (req.body && req.header('X-Body-Signature')) {
+    console.log(`[deposit-rampAuthCheck]`)
+    const verified = crypto.verify(
+      'sha256',
+      Buffer.from(stableStringify(req.body)),
+      config.get('plugins.rampInstant.webhook.secret'),
+      Buffer.from(req.header('X-Body-Signature'), 'base64')
+    )
+    if (verified) {
+      console.log(`[deposit-rampAuthCheck] if is true`)
+      return next()
+    }
+  } else {
+    console.log(`[deposit-rampAuthCheck] if is false`)
+    throw Error('Invalid ramp signature')
   }
 }
 
@@ -120,6 +140,11 @@ router.post('/transak', transakAuthCheck, async (req, res) => {
     console.log(`[deposit-transak] reached else`)
     return res.json({})
   }
+})
+
+router.post('/ramp', rampAuthCheck, async (req, res) => {
+  console.log(`[deposit-ramp] req.body: ${JSON.stringify(req.body)}`)
+  // Todo - new to make deposit to the user
 })
 
 module.exports = router

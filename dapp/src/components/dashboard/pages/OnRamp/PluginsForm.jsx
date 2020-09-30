@@ -1,9 +1,8 @@
-import React, { Component, Fragment } from 'react'
-import { Formik, Field } from 'formik'
+import React, { Component } from 'react'
+import { Formik } from 'formik'
 import pluginsShape from 'utils/validation/shapes/plugins'
 import get from 'lodash/get'
-import pluginsIcons from 'constants/pluginsIcons'
-import MyTable from 'components/dashboard/components/Table'
+import Options from './Option'
 
 const getPluginName = (myPlugins) => {
   const isMoonpay = get(myPlugins, 'moonpay.isActive', false)
@@ -28,79 +27,18 @@ class PluginsForm extends Component {
   onSubmit = (values, formikBag) => {
     const { addPlugin } = this.props
     const { plugin } = values
-
     addPlugin({
       name: plugin,
       isActive: true
     })
+    formikBag.resetForm({ plugin })
   }
 
-  renderForm = ({ values, handleSubmit, submitForm }) => {
-    const { plugin } = values
-    const isMoonpay = plugin === 'moonpay'
-    const isTransak = plugin === 'transak'
-    const isRampInstant = plugin === 'rampInstant'
+  renderForm = ({ handleSubmit }) => {
 
     return (
-      <form onSubmit={handleSubmit} className='containerOuter'>
-        <div className='containerInner'>
-          <Field
-            name='plugin'
-            render={({ field, form: { setFieldValue } }) => (
-              <Fragment>
-                <input {...field} type='radio' value='moonpay' checked={isMoonpay} className='hidden' id='moonpay' onChange={(e) => {
-                  setFieldValue('plugin', e.target.value)
-                  setTimeout(submitForm, 3)
-                }} />
-                <label className='entry' htmlFor='moonpay'>
-                  <div className='circle' />
-                  <div className='entry-label'>
-                    <img src={pluginsIcons['moonpay']} style={{ width: '15px', height: '15px', marginRight: '10px' }} />
-                  Moonpay
-                  </div>
-                </label>
-              </Fragment>
-            )}
-          />
-          <Field
-            name='plugin'
-            render={({ field, form: { setFieldValue } }) => (
-              <Fragment>
-                <input {...field} type='radio' checked={isTransak} value='transak' className='hidden' id='transak' onChange={(e) => {
-                  setFieldValue('plugin', e.target.value)
-                  setTimeout(submitForm, 3)
-                }} />
-                <label className='entry' htmlFor='transak'>
-                  <div className='circle' />
-                  <div className='entry-label'>
-                    <img src={pluginsIcons['transak']} style={{ width: '15px', height: '15px', marginRight: '10px' }} />
-                    Transak
-                  </div>
-                </label>
-              </Fragment>
-            )}
-          />
-          <Field
-            name='plugin'
-            render={({ field, form: { setFieldValue } }) => (
-              <Fragment>
-                <input {...field} type='radio' checked={isRampInstant} value='rampInstant' className='hidden' id='rampInstant' onChange={(e) => {
-                  setFieldValue('plugin', e.target.value)
-                  setTimeout(submitForm, 3)
-                }} />
-                <label className='entry' htmlFor='rampInstant'>
-                  <div className='circle' />
-                  <div className='entry-label'>
-                    <img src={pluginsIcons['transak']} style={{ width: '15px', height: '15px', marginRight: '10px' }} />
-                    Ramp instant
-                  </div>
-                </label>
-              </Fragment>
-            )}
-          />
-          <div className='highlight' />
-          <div className='overlay' />
-        </div>
+      <form onSubmit={handleSubmit}>
+        <Options myPlugins={this.props.myPlugins} />
       </form >
     )
   }
@@ -110,9 +48,9 @@ class PluginsForm extends Component {
       <Formik
         initialValues={this.initialValues}
         onSubmit={this.onSubmit}
-        validationSchema={this.validationSchema}
+        validationSchema={pluginsShape}
         render={this.renderForm}
-        validateOnChange
+        enableReinitialize
       />
     )
   }

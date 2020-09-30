@@ -6,8 +6,8 @@
     border-radius: 5px;
 
     @include breakpoint(medium up) {
-      min-height: 390px;
-      height: 390px;  
+      // min-height: 390px;
+      // height: 390px;  
     }
   }
 
@@ -16,12 +16,14 @@
     padding-top: 20px;
 
     @include breakpoint(medium up) {
-      padding: 40px;
       min-height: 200px;
     }
 
     @include block(title) {
       padding-bottom: 1em;
+      padding: 20px 40px;
+      font-size: 1em;
+      color: #9b9b9b;
     }
 
     @include block(plugins_step) {

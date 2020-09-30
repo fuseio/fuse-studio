@@ -11,58 +11,56 @@ const MyTable = ({
   loading,
   justAdded,
   count,
-  size,
-  ...props
+  size
 }) => {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
-    canPreviousPage,
-    canNextPage,
+    page,
     pageOptions,
-    pageCount,
     gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize }
+    // canPreviousPage,
+    // canNextPage,
+    // pageCount,
+    // nextPage,
+    // previousPage,
+    // setPageSize,
   } = useTable(
     {
       columns,
       data,
       initialState: { pageCount: count, pageSize: size }
     },
-    // useColumns,
-    // useRows,
     useSortBy,
     usePagination
   )
 
   return (
     <div className='table__wrapper'>
-      <div className='table__actions'>
-        <div className='table__actions__search'>
-          <FontAwesome name='search' className='table__actions__search__icon' />
-          <input type='text' onChange={(e) => addActionProps.onChange(e.target.value)} placeholder={addActionProps.placeholder} className='table__actions__search__input' />
-        </div>
-        {
-          addActionProps && addActionProps.action && addActionProps.text && (
-            <button
-              className='table__actions__button'
-              onClick={addActionProps.action}
-            >
-              <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
-              {addActionProps.text}
-            </button>
-          )
-        }
-      </div>
+      {
+        addActionProps && (
+          <div className='table__actions'>
+            <div className='table__actions__search'>
+              <FontAwesome name='search' className='table__actions__search__icon' />
+              <input type='text' onChange={(e) => addActionProps.onChange(e.target.value)} placeholder={addActionProps.placeholder} className='table__actions__search__input' />
+            </div>
+            {
+              addActionProps && addActionProps.action && addActionProps.text && (
+                <button
+                  className='table__actions__button'
+                  onClick={addActionProps.action}
+                >
+                  <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
+                  {addActionProps.text}
+                </button>
+              )
+            }
+          </div>
+        )
+      }
       <div {...getTableProps({ className: 'table' })}>
         {headerGroups.map((headerGroup, index) => <HeaderRow key={index} headerGroup={headerGroup} />)}
         <div className='table__body'>

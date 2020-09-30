@@ -263,9 +263,10 @@ router.get('/:communityAddress/:accountAddress', async (req, res) => {
   if (lodash.has(community, 'plugins.onramp.services.transak.widgetUrl') && config.has('plugins.transak.api.secret')) {
     community.plugins.onramp.services.transak.widgetUrl = `${community.plugins.onramp.services.transak.widgetUrl}&partnerCustomerId=${accountAddress}_${toChecksumAddress(communityAddress)}`
   }
-  if (lodash.has(community, 'plugins.onramp.services.rampInstant.widgetUrl')) {
-    community.plugins.onramp.services.rampInstant.widgetUrl = `${community.plugins.onramp.services.transak.widgetUrl}&userAddress=${accountAddress}_${toChecksumAddress(communityAddress)}`
-  }
+  // Todo - handle externalCustomerId
+  // if (lodash.has(community, 'plugins.onramp.services.rampInstant.widgetUrl')) {
+  // community.plugins.onramp.services.rampInstant.widgetUrl = `${community.plugins.onramp.services.rampInstant.widgetUrl}&userAddress=${accountAddress}_${toChecksumAddress(communityAddress)}`
+  // }
   return res.json({ data: community })
 })
 

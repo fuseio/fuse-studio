@@ -153,6 +153,9 @@
       }
     },
     "rampInstant": {
+      "webhook": {
+        "secret": "COMMUNITY_PLUGINS_RAMP_INSTANT_SECRET"
+      },
       "args": {
         "__name": "COMMUNITY_PLUGINS_RAMP_INSTANT_ARGS",
         "__format": "json"
