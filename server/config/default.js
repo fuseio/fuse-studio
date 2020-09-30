@@ -195,6 +195,9 @@ module.exports = {
   bonus: {
     launch: {
       fuse: 1
+    },
+    eth: {
+      ropsten: 0.05
     }
   },
   branch: {

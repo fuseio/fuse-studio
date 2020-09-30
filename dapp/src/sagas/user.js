@@ -99,6 +99,11 @@ function * subscribeUser ({ user }) {
   saveState('subscribe', true)
 }
 
+function * fundEth ({ accountAddress }) {
+  yield apiCall(api.fundEth, { accountAddress }, { networkType: 'ropsten' })
+  saveState('fundEth', true)
+}
+
 function * isUserExists ({ accountAddress }) {
   const response = yield apiCall(isUserProfileExists, { accountAddress })
 
@@ -115,6 +120,7 @@ export default function * userSaga () {
     tryTakeEvery(actions.SIGN_UP_USER, signUpUser, 1),
     tryTakeEvery(actions.SAVE_WIZARD_PROGRESS, saveWizardProgress, 1),
     tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1),
-    tryTakeEvery(actions.SEND_EMAIL, subscribeUser, 1)
+    tryTakeEvery(actions.SEND_EMAIL, subscribeUser, 1),
+    tryTakeEvery(actions.FUND_ETH, fundEth, 1)
   ])
 }

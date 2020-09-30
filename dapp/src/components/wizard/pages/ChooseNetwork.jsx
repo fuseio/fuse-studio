@@ -1,16 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import { Field, connect as formikConnect, getIn } from 'formik'
-import { connect } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import classNames from 'classnames'
 import ethereumMainnet from 'images/ethereum_mainnet.svg'
 import ethereumRopsten from 'images/ethereum_ropsten.svg'
 import fuseToken from 'images/fuse_token.svg'
-import { getAccount, getProviderInfo } from 'selectors/accounts'
+import { getAccount, getProviderInfo, getAccountAddress } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
 import { getForeignNetwork, getCurrentNetworkType } from 'selectors/network'
 import { loadModal } from 'actions/ui'
 import { changeNetwork } from 'actions/network'
+import { fundEth } from 'actions/user'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
+
+const Fund = ({ value, network, hasEth }) => {
+  const dispatch = useDispatch()
+  const accountAddress = useSelector(state => getAccountAddress(state))
+  return value === 'ropsten' && value === network && !hasEth && (
+    <button
+      onClick={(e) => {
+        e.preventDefault()
+        dispatch(fundEth(accountAddress))
+      }}
+      className='fund'
+      style={{ display: value === network && !hasEth ? 'block' : 'none' }}>
+      <span>
+        Click here to get 0.05 {value} eth
+      </span>
+    </button>
+  )
+}
 
 const NetworkOption = ({ network, account, logo, name, value, Content }) => {
   const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 0.01
@@ -44,6 +63,7 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
             <span className='error' style={{ display: value === network && !hasEth ? 'block' : 'none' }}>
               You need at least 0.1 ETH (you have <span>{account && account.foreign ? formatWei((account.foreign), 2) : 0}&nbsp;</span> ETH).
             </span>
+            <Fund value={value} network={network} hasEth={hasEth} />
           </div>
         </label>
       )}
@@ -51,7 +71,7 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
   )
 }
 
-const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, formik, foreignNetwork, account }) => {
+const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, formik, account }) => {
   const network = getIn(formik.values, 'network')
 
   useEffect(() => {

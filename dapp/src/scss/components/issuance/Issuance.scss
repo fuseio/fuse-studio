@@ -364,7 +364,7 @@
         }
         width: 100%;
         font-size: 0.938em;
-        
+
         textarea {
           border-radius: 5px;
           border: solid 2px $color-lighter-gray;
@@ -611,6 +611,28 @@
             line-height: 1.5;
             letter-spacing: normal;
             color: #e75050;
+          }
+
+          @include block(fund) {
+            position: absolute;
+            top: -23px;
+            right: 0;
+            font-size: 0.85em;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: normal;
+            color: $color-gray;
+
+            &:hover {
+              cursor: pointer;
+              text-decoration: underline;
+            }
+
+            @include block(link) {
+              color: #006aff;
+            }
           }
         }
       }
