@@ -46,11 +46,12 @@ const MyCommunities = ({
 }) => {
   const [valueSpinner, onChangeSpinner] = useState(0)
 
-  const communitiesIOwn = React.useMemo(() => {
-    return communitiesKeys
-      .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj).filter(({ isAdmin }) => isAdmin)
-  }, [communitiesKeys, communities])
+  const communitiesIOwn = []
+  // const communitiesIOwn = React.useMemo(() => {
+  //   return communitiesKeys
+  //     .map((communityAddress) => communities[communityAddress])
+  //     .filter(obj => !!obj).filter(({ isAdmin }) => isAdmin)
+  // }, [communitiesKeys, communities])
 
   const slides = React.useMemo(() => {
     if (!isEmpty(communitiesIOwn)) {

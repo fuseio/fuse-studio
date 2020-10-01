@@ -76,7 +76,7 @@ const NavBar = ({
   return (
     <div className={classNames('navbar', { 'navbar--scroll': isGreaterThen70(), 'navbar--short': modifier })} >
       {(withLogo || (isMobileOnly && isGreaterThen70())) && <div className='navbar__logo'>
-        <Logo showHomePage={() => push('/')} isBlue={!isGreaterThen70()} />
+        <Logo showHomePage={() => push('/')} isBlue={false} />
       </div>}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
         <div
