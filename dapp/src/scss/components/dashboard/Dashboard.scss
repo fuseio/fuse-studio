@@ -143,16 +143,23 @@
       margin-top: 80px;
       position: relative;
 
-      > img {
-        width: 100%;
-        height: 200px;
+      @include block(cover) {
+        > img {
+          width: 100%;
+          height: 200px;
+        }
       }
-
       @include block(logo) {
         @include element(wrapper) {
           position: absolute;
-          width: 80%;
-          margin: 4em auto 3em;
+          left: 8.7em;
+          bottom: -1.9em;
+          height: 70px;
+          width: 70px;
+          background-color: $color-white;
+          border-radius: 50%;
+          // width: 80%;
+          // margin: 4em auto 3em;
         }
       }
     }

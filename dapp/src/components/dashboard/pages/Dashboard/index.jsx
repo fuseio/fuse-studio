@@ -27,7 +27,9 @@ const CoverPhoto = ({ community, metadata, symbol }) => {
   console.log(metadata)
   return (
     <div className='content__cover_photo'>
-      <img src={'https://fuse-studio-qa.s3.eu-central-1.amazonaws.com/03b66e0d92a1d80cc3af21d981864d38929e6a468c9935eaa2394b0ad552aaf4'} />
+      <div className='cover'>
+        <img src={'https://fuse-studio-qa.s3.eu-central-1.amazonaws.com/03b66e0d92a1d80cc3af21d981864d38929e6a468c9935eaa2394b0ad552aaf4'} />
+      </div>
       <div className='logo__wrapper'>
         <div className='logo'>
           <CommunityLogo
