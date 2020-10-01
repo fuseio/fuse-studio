@@ -49,7 +49,7 @@ const transakAuthCheck = (req, res, next) => {
 
 const rampAuthCheck = (req, res, next) => {
   if (req.body && req.header('X-Body-Signature')) {
-    console.log(`[deposit-rampAuthCheck]`)
+    console.log(`[deposit-rampAuthCheck] X-Body-Signature - ${req.header('X-Body-Signature')}`)
     const verified = crypto.verify(
       'sha256',
       Buffer.from(stableStringify(req.body)),
