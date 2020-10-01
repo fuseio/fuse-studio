@@ -22,17 +22,15 @@ const Fund = ({ value, network, hasEth }) => {
         e.preventDefault()
         dispatch(fundEth(accountAddress))
       }}
-      className='fund'
-      style={{ display: value === network && !hasEth ? 'block' : 'none' }}>
-      <span>
-        Click here to get 0.05 {value} eth
-      </span>
+      className='link'
+      style={{ display: value === network && !hasEth && 'inline-block' }}>
+      &nbsp;&nbsp;<span>Click here to get 0.05 {value} ETH</span>
     </button>
   )
 }
 
 const NetworkOption = ({ network, account, logo, name, value, Content }) => {
-  const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 0.01
+  const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 10
   const [hasEth, setHasEth] = useState(true)
   useEffect(() => {
     if (value === network) {
@@ -60,10 +58,14 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
           <div className='option__content cell large-auto grid-y'>
             <div className='title'>{name}</div>
             <Content />
-            <span className='error' style={{ display: value === network && !hasEth ? 'block' : 'none' }}>
-              You need at least 0.1 ETH (you have <span>{account && account.foreign ? formatWei((account.foreign), 2) : 0}&nbsp;</span> ETH).
-            </span>
-            <Fund value={value} network={network} hasEth={hasEth} />
+            <div className='grid-x align-middle' style={{ display: value === network && !hasEth ? 'block' : 'none' }}>
+              <div className='error'>
+                <span>
+                  You need at least 0.1 ETH (you have <span>{account && account.foreign ? formatWei((account.foreign), 2) : 0}&nbsp;</span> ETH).
+                </span>
+                <Fund value={value} network={network} hasEth={hasEth} />
+              </div>
+            </div>
           </div>
         </label>
       )}
@@ -75,7 +77,7 @@ const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, fo
   const network = getIn(formik.values, 'network')
 
   useEffect(() => {
-    const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 0.01
+    const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 10
     formik.setFieldValue('hasBalance', hasBalance)
   }, [account])
 

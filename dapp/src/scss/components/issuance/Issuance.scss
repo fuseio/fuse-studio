@@ -602,38 +602,29 @@
           }
 
           @include block(error) {
-            position: absolute;
-            bottom: -15px;
             font-size: 10px;
             font-weight: normal;
             font-stretch: normal;
             font-style: normal;
             line-height: 1.5;
             letter-spacing: normal;
-            color: #e75050;
-          }
 
-          @include block(fund) {
-            position: absolute;
-            top: -23px;
-            right: 0;
-            font-size: 0.85em;
-            font-weight: normal;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: normal;
-            letter-spacing: normal;
-            color: $color-gray;
-
-            &:hover {
-              cursor: pointer;
-              text-decoration: underline;
+            &:first-child {
+              color: #e75050;
             }
 
             @include block(link) {
               color: #006aff;
+
+              &:hover {
+                cursor: pointer;
+                text-decoration: underline;
+              }
             }
           }
+        }
+
+        @include element(content) {
         }
       }
     }
