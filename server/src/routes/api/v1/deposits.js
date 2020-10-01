@@ -53,16 +53,19 @@ const rampAuthCheck = (req, res, next) => {
     const verified = crypto.verify(
       'sha256',
       Buffer.from(stableStringify(req.body)),
-      config.get('plugins.rampInstant.webhook.secret'),
+      config.get('plugins.rampInstant.webhook.publicKey'),
       Buffer.from(req.header('X-Body-Signature'), 'base64')
     )
     if (verified) {
       console.log(`[deposit-rampAuthCheck] if is true`)
       return next()
+    } else {
+      console.error('ERROR: Invalid signature')
+      res.status(401).send()
     }
   } else {
-    console.log(`[deposit-rampAuthCheck] if is false`)
-    throw Error('Invalid ramp signature')
+    console.log(`[deposit-rampAuthCheck] ERROR: Wrong request structure`)
+    throw Error('ERROR: Wrong request structure')
   }
 }
 
@@ -142,9 +145,30 @@ router.post('/transak', transakAuthCheck, async (req, res) => {
   }
 })
 
-router.post('/ramp', rampAuthCheck, async (req, res) => {
+router.post('/ramp/:externalCustomerId', rampAuthCheck, async (req, res) => {
   console.log(`[deposit-ramp] req.body: ${JSON.stringify(req.body)}`)
-  // Todo - new to make deposit to the user
+  const { externalCustomerId } = req.params
+  const { purchase, type } = req.body
+  if (type === 'CREATED') {
+    const { asset: { address }, cryptoAmount, purchaseHash, receiverAddress, id } = purchase
+    console.log(`[deposit-ramp] before makeDeposit`)
+    const [customerAddress, communityAddress] = externalCustomerId.split('_')
+    await makeDeposit({
+      transactionHash: purchaseHash,
+      walletAddress: receiverAddress,
+      customerAddress,
+      communityAddress,
+      tokenAddress: address,
+      amount: cryptoAmount,
+      externalId: id,
+      provider: 'ramp'
+    })
+    console.log(`[deposit-ramp] after makeDeposit`)
+    return res.json({ response: 'job started' })
+  } else {
+    console.log(`[deposit-ramp] reached else`)
+    return res.json({})
+  }
 })
 
 module.exports = router

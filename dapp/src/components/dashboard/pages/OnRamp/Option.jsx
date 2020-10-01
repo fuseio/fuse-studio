@@ -56,28 +56,28 @@ const options = (plugin) => [
     countries: '',
     value: 'transak',
     isSelected: plugin === 'transak'
+  },
+  {
+    name: [
+      {
+        name: 'Ramp',
+        image: <div
+          style={{
+            backgroundImage: `url(${transkIcon})`,
+            width: '36px',
+            height: '36px',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center'
+          }}
+        />
+      }
+    ],
+    fee: '0.0',
+    countries: 'sdadada',
+    value: 'rampInstant',
+    isSelected: plugin === 'rampInstant'
   }
-  // {
-  //   name: [
-  //     {
-  //       name: 'Ramp.network',
-  //       image: <div
-  //         style={{
-  //           backgroundImage: `url(${pluginsIcons['transak']})`,
-  //           width: '36px',
-  //           height: '36px',
-  //           backgroundSize: 'contain',
-  //           backgroundRepeat: 'no-repeat',
-  //           backgroundPosition: 'center'
-  //         }}
-  //       />
-  //     }
-  //   ],
-  //   fee: '0.0',
-  //   countries: 'sdadada',
-  //   value: 'rampInstant',
-  //   isSelected: plugin === 'rampInstant'
-  // },
 ]
 
 const TableOptions = connect(({ formik, data, columns }) => {
