@@ -145,14 +145,13 @@ router.post('/transak', transakAuthCheck, async (req, res) => {
   }
 })
 
-router.post('/ramp/:externalCustomerId', rampAuthCheck, async (req, res) => {
+router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (req, res) => {
   console.log(`[deposit-ramp] req.body: ${JSON.stringify(req.body)}`)
-  const { externalCustomerId } = req.params
+  const { customerAddress, communityAddress } = req.params
   const { purchase, type } = req.body
   if (type === 'CREATED') {
     const { asset: { address }, cryptoAmount, purchaseHash, receiverAddress, id } = purchase
     console.log(`[deposit-ramp] before makeDeposit`)
-    const [customerAddress, communityAddress] = externalCustomerId.split('_')
     await makeDeposit({
       transactionHash: purchaseHash,
       walletAddress: receiverAddress,
@@ -166,7 +165,7 @@ router.post('/ramp/:externalCustomerId', rampAuthCheck, async (req, res) => {
     console.log(`[deposit-ramp] after makeDeposit`)
     return res.json({ response: 'job started' })
   } else {
-    console.log(`[deposit-ramp] reached else`)
+    console.log(`[deposit-ramp] reached else type - ${type}`)
     return res.json({})
   }
 })
