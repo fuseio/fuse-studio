@@ -6,14 +6,16 @@ const { toWei, toChecksumAddress } = require('web3-utils')
 const EthFunding = mongoose.model('EthFunding')
 
 const ethFunder = withAccount(async (account, { accountAddress }) => {
-  const ethFunding = new EthFunding({
+  const ethFunding = await new EthFunding({
     accountAddress: toChecksumAddress(accountAddress),
     fundingDate: new Date()
   }).save()
   const bonus = config.get('bonus.eth.ropsten').toString()
   const network = createNetwork('foreign', account)
   const { web3, networkType } = network
-  if (networkType !== 'ropsten') throw Error('Fund ETH available only for ropsten')
+  if (networkType !== 'ropsten') {
+    throw Error('Fund ETH available only for ropsten')
+  }
   await web3.eth.sendTransaction({
     to: accountAddress,
     from: account.address,
