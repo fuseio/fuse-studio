@@ -5,6 +5,7 @@ const web3Utils = require('web3-utils')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const request = require('request-promise-native')
+const stableStringify = require('fast-json-stable-stringify')
 
 const moonpayAuthCheck = (req, res, next) => {
   console.log(`[deposit-moonpayAuthCheck]`)
@@ -43,6 +44,28 @@ const transakAuthCheck = (req, res, next) => {
   } catch (err) {
     console.log(`[deposit-transakAuthCheck] catch: ${JSON.stringify(err)}`)
     throw new Error(`Transak auth check failed - ${err}`)
+  }
+}
+
+const rampAuthCheck = (req, res, next) => {
+  if (req.body && req.header('X-Body-Signature')) {
+    console.log(`[deposit-rampAuthCheck]`)
+    const verified = crypto.verify(
+      'sha256',
+      Buffer.from(stableStringify(req.body)),
+      config.get('plugins.rampInstant.webhook.publicKey'),
+      Buffer.from(req.header('X-Body-Signature'), 'base64')
+    )
+    if (verified) {
+      console.log(`[deposit-rampAuthCheck] if is true`)
+      return next()
+    } else {
+      console.error('ERROR: Invalid signature')
+      res.status(401).send()
+    }
+  } else {
+    console.log(`[deposit-rampAuthCheck] ERROR: Wrong request structure`)
+    throw Error('ERROR: Wrong request structure')
   }
 }
 
@@ -118,6 +141,31 @@ router.post('/transak', transakAuthCheck, async (req, res) => {
     }
   } else {
     console.log(`[deposit-transak] reached else`)
+    return res.json({})
+  }
+})
+
+router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (req, res) => {
+  console.log(`[deposit-ramp] req.body: ${JSON.stringify(req.body)}`)
+  const { customerAddress, communityAddress } = req.params
+  const { purchase, type } = req.body
+  if (type === 'CREATED') {
+    const { asset: { address }, cryptoAmount, purchaseHash, receiverAddress, id } = purchase
+    console.log(`[deposit-ramp] before makeDeposit`)
+    await makeDeposit({
+      transactionHash: purchaseHash,
+      walletAddress: receiverAddress,
+      customerAddress,
+      communityAddress,
+      tokenAddress: address,
+      amount: cryptoAmount,
+      externalId: id,
+      provider: 'ramp'
+    })
+    console.log(`[deposit-ramp] after makeDeposit`)
+    return res.json({ response: 'job started' })
+  } else {
+    console.log(`[deposit-ramp] reached else type - ${type}`)
     return res.json({})
   }
 })

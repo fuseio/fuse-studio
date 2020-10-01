@@ -138,13 +138,10 @@ const DashboardLayout = (props) => {
                 )}
 
                 {community && isAdmin && (
-                  <Route exact path={`${match.path}/onramp`}
-                    render={() => (
-                      <OnRampPage
-                        community={community}
-                      />
-                    )}
-                  />)
+                  <Route exact path={`${match.path}/onramp`}>
+                    <OnRampPage />
+                  </Route>
+                )
                 }
 
                 {community && isAdmin && (

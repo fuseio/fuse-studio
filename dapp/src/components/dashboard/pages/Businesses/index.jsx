@@ -227,8 +227,8 @@ const Businesses = ({
           data={tableData}
           justAdded={entityAdded}
           columns={columns}
-          pageCount={0}
-          pageSize={100}
+          count={0}
+          size={100}
         />
       )
     } else {

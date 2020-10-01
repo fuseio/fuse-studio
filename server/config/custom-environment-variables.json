@@ -152,6 +152,18 @@
         "__format": "json"
       }
     },
+    "rampInstant": {
+      "webhook": {
+        "publicKey": "COMMUNITY_PLUGINS_RAMP_INSTANT_PUBLIC_KEY"
+      },
+      "api": {
+        "key": "COMMUNITY_PLUGINS_RAMP_INSTANT_API_KEY"
+      },
+      "args": {
+        "__name": "COMMUNITY_PLUGINS_RAMP_INSTANT_ARGS",
+        "__format": "json"
+      }
+    },
     "carbon": {
       "args": {
         "__name": "COMMUNITY_PLUGINS_CARBON_ARGS",
@@ -167,12 +179,6 @@
     "coindirect": {
       "args": {
         "__name": "COMMUNITY_PLUGINS_COINDIRECT_ARGS",
-        "__format": "json"
-      }
-    },
-    "ramp": {
-      "args": {
-        "__name": "COMMUNITY_PLUGINS_RAMP_ARGS",
         "__format": "json"
       }
     }

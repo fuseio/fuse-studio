@@ -263,6 +263,10 @@ router.get('/:communityAddress/:accountAddress', async (req, res) => {
   if (lodash.has(community, 'plugins.onramp.services.transak.widgetUrl') && config.has('plugins.transak.api.secret')) {
     community.plugins.onramp.services.transak.widgetUrl = `${community.plugins.onramp.services.transak.widgetUrl}&partnerCustomerId=${accountAddress}_${toChecksumAddress(communityAddress)}`
   }
+  if (lodash.has(community, 'plugins.onramp.services.rampInstant.widgetUrl') && config.has('plugins.rampInstant.api.secret')) {
+    const webhookStatusUrl = `${config.get('api.protocol')}://${req.headers.host}/api/v1/deposits/ramp/${accountAddress}/${toChecksumAddress(communityAddress)}`
+    community.plugins.onramp.services.rampInstant.widgetUrl = `${community.plugins.onramp.services.rampInstant.widgetUrl}&webhookStatusUrl=${webhookStatusUrl}`
+  }
   return res.json({ data: community })
 })
 
