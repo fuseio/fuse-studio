@@ -1,5 +1,10 @@
 import request from 'superagent'
 
+export const fundEth = (apiRoot, { accountAddress }) =>
+  request.post(`${apiRoot}/fund/${accountAddress}`)
+    .send()
+    .then(response => response.body)
+
 export const login = (apiRoot, { accountAddress, signature, date }) =>
   request.post(`${apiRoot}/users/login/${accountAddress}`)
     .send({ signature, date })

@@ -15,6 +15,7 @@ require('./Fork')
 require('./WalletTransaction')
 require('./Metadata')
 require('./AgendaJob')
+require('./EthFunding')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
