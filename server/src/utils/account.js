@@ -57,7 +57,7 @@ const generateAccountAddress = (childIndex = 0) => {
   return address
 }
 
-const createAccount = async (role = '*') => {
+const createAccount = async ({ role, bridgeType, description }) => {
   const lastAccount = await Account.findOne().sort({ childIndex: -1 })
   const lastChildIndex = (lastAccount && lastAccount.childIndex) || 0
   const childIndex = lastChildIndex + 1
@@ -65,13 +65,15 @@ const createAccount = async (role = '*') => {
   const account = await new Account({
     childIndex,
     address,
-    role
+    role,
+    bridgeType,
+    description
   }).save()
-  console.log(`new admin account created, address: ${account.address}, jwt: ${generateAdminJwt(account.address)}`)
+  console.log(`new admin account created, address: ${account.address}`)
   return account
 }
 
-const generateAdminJwt = (accountAddress, appName) => {
+const generateCommunityAdminJwt = (accountAddress, appName) => {
   const secret = config.get('api.secret')
   return jwt.sign({
     accountAddress,
@@ -88,5 +90,5 @@ module.exports = {
   withWalletAccount,
   createAccount,
   generateAccounts,
-  generateAdminJwt
+  generateCommunityAdminJwt
 }

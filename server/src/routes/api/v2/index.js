@@ -7,5 +7,6 @@ router.use('/wallets', require('./wallets'))
 router.use('/jobs', require('./jobs'))
 router.use('/contacts', require('./contacts'))
 router.use('/admin', require('./admin'))
+router.use('/accounts', require('./accounts'))
 
 module.exports = router
