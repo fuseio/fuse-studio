@@ -3,6 +3,10 @@
 
 The Fuse Studio V2 REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. The backend base URL is https://studio.fuse.io. Learn more on https://github.com/fuseio/fuse-studio
 
+- [Accounts](#Accounts)
+	- [Fetch backend accounts](#Fetch-backend-accounts)
+	- [Create backend account](#Create-backend-account)
+	
 - [Admin](#Admin)
 	- [Burn tokens](#Burn-tokens)
 	- [Get burn events](#Get-burn-events)
@@ -37,6 +41,63 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Check if wallet exists by wallet address](#Check-if-wallet-exists-by-wallet-address)
 	
 
+# <a name='Accounts'></a> Accounts
+
+## <a name='Fetch-backend-accounts'></a> Fetch backend accounts
+[Back to top](#top)
+
+<p>Fetch backend accounts</p>
+
+```
+GET api/v2/accounts/
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| accounts | `Object[]` | <p>list</p> |
+## <a name='Create-backend-account'></a> Create backend account
+[Back to top](#top)
+
+<p>Create backend account</p>
+
+```
+POST api/v2/accounts/
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| role | `String` | <p>Account role</p> |
+| bridgeType | `String` | <p>Account bridgeType</p> |
+| description | `String` | <p>Account description</p> |
+| appName | `String` | <p>wallet application if the account uses a wallet app</p> |
+
+### Param Examples
+`json` - Request-Example:
+
+```json
+{
+   "role": "wallet",
+   "bridgeType": "home"
+   "description": "Wallet account"
+ }
+```
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| created | `Object` | <p>account and the jwt if needed</p> |
 # <a name='Admin'></a> Admin
 
 ## <a name='Burn-tokens'></a> Burn tokens

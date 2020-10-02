@@ -14,4 +14,6 @@ var auth = {
   })
 }
 
+auth.admin = [auth.required, (req, res, next) => req.user.isAdmin ? next() : res.status(403).send({ error: 'The user is not admin' })]
+
 module.exports = auth
