@@ -55,7 +55,7 @@ const HomePage = ({
               <button onClick={() => {
                 showIssuance()
               }}>
-                Launch your community
+                Launch an economy
                 <span style={{ marginLeft: '5px' }}>
                   <img src={arrowImage} alt='arrow' />
                 </span>
@@ -71,7 +71,7 @@ const HomePage = ({
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
             <div className='cell medium-24 large-12'>
-              <MyCommunities withDecoration showDashboard={showDashboard} showIssuance={showIssuance} />
+              <MyCommunities showDashboard={showDashboard} showIssuance={showIssuance} />
             </div>
             <div className='cell medium-24 large-12 home_page__faqAndRecent grid-y grid-margin-y'>
               <FeaturedCommunities accountAddress={accountAddress} showDashboard={showDashboard} />

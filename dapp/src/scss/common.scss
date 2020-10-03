@@ -13,7 +13,7 @@
   @include element(image) {
     position: relative;
     width: 100%;
-    padding-top: 35%;
+    padding-top: 40%;
 
     @include element(container) {
       position: absolute;
@@ -45,8 +45,8 @@
   }
 
   @include element(logo) {
-    width: 54px;
-    height: 54px;
+    // width: 54px;
+    // height: 54px;
     background-color: $color-white;
     position: absolute;
     border-radius: 50%;
@@ -54,8 +54,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    bottom: -1.6em;
-
+    bottom: -2.2em;
+    height: 70px;
+    width: 70px;
     > img {
       width: 46px;
       height: 46px;
@@ -64,10 +65,49 @@
   }
 
   @include element(content) {
-    min-height: 3em;
+    min-height: 4em;
     display: flex;
     align-items: center;
-    padding-left: 1em;
+    padding: 1em;
+    margin-top: 1em;
+  }
+
+  @include element(description) {
+    color: #808080;
+    font-size: 0.75em;
+    margin-top: 0.4em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  @include element(information) {
+    margin-top: 1em;
+    font-size: 0.75em;
+    width: 100%;
+    flex-flow: row nowrap;
+
+    @include block(item) {
+      flex-flow: row nowrap;
+      color: #cad8e2;
+      @include element(icon) {
+        font-size: 20px;
+      }
+
+      @include element(content) {
+        margin-left: 0.3em;
+        > span {
+          &:first-child {
+            $color-light-blue: #0091ff;
+          }
+
+          &:not(:first-child) {
+            color: $color-light-gray;
+          }
+        }
+      }
+    }
   }
 
   @include element(name) {
@@ -78,14 +118,40 @@
 }
 
 @include block(featured__carousel) {
-  margin-top: 1em;
+  margin-top: 2em;
+
+  .BrainhubCarousel {
+    margin-bottom: 1em !important;
+  }
+
+  @include modifier(spaced) {
+    padding: 0 2em 2em;
+  }
+
+  @include modifier(top-spaced) {
+    padding-top: 2em;
+  }
 
   @include element(wrapper) {
-    padding-top: 25px;
-    padding-bottom: 25px;
+    // padding-bottom: 25px;
+    height: 100%;
     border-radius: 10px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
     background-color: $color-white;
+
+    > div:first-child {
+      height: 60px;
+      background: #f5f5f5;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    // background: linear-gradient(to bottom, #f5f5f5 15%, white 0%);
+    // max-height: 500px;
+    // min-height: 500px;
+    // display: flex;
+    // flex-flow: column nowrap;
+    // justify-content: space-around;
 
     > div:first-child {
       @include breakpoint(medium up) {

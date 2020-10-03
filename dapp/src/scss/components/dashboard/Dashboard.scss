@@ -213,14 +213,14 @@
       }
 
       .bridge_toggle {
-        color: $color-gray;
+        color: $color-dark;
         font-size: 1.25em;
         margin-bottom: 10px;
         font-weight: 500;
       }
 
       @include element(title) {
-        color: $color-gray;
+        color: $color-dark;
         font-size: 1.25em;
         margin-bottom: 10px;
         font-weight: 500;
@@ -228,19 +228,19 @@
 
       @include element(wrapper) {
         border-radius: 5px;
-        padding: 20px 50px;
+        padding: 2em;
         position: relative;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
         background: $color-white;
       }
 
       @include element(container) {
-        display: flex;
-        align-items: center;
+        // display: flex;
+        // align-items: center;
 
-        @include breakpoint(medium up) {
-          flex: 1;
-        }
+        // @include breakpoint(medium up) {
+        //   flex: 1;
+        // }
 
         @include breakpoint(small down) {
           flex-direction: column;
@@ -248,8 +248,6 @@
       }
 
       @include block(bridge) {
-        text-align: center;
-
         @include block(fuse-logo) {
           background-image: $color-fuse_gradient;
           padding: 2px;
@@ -265,9 +263,8 @@
         @include block(network-logo) {
           width: 52px;
           height: 52px;
-          margin: 15px auto;
           border-radius: 50%;
-
+          margin-bottom: 5px;
           > img {
             width: 100%;
             height: 100%;
@@ -278,37 +275,25 @@
           text-transform: capitalize;
           font-size: 14px;
           color: $color-dark;
-          text-align: center;
+          // text-align: center;
           text-transform: capitalize;
-          margin-bottom: 5px;
           font-weight: 500;
         }
 
         @include element(text) {
           color: $color-dark-gray;
-          font-size: 0.688em;
-          text-align: center;
-          margin-bottom: 5px;
-
-          > div:first-child {
-            line-height: 1.8;
-            font-size: 0.9em;
-            text-align: center;
-            color: $color-light-dark;
-          }
-
-          span {
-            font-weight: 500;
-          }
+          font-weight: 500;
+          font-size: 0.9em;
         }
 
         @include element(more) {
           min-width: 66px;
           height: 14px;
+          margin-top: 1em;
           font-size: 0.688em;
           font-weight: 500;
-          text-align: center;
-          color: #a4a4a4;
+          // text-align: center;
+          color: $color-light-blue;
 
           &:hover {
             text-decoration: underline;
@@ -316,7 +301,7 @@
         }
 
         @include element(arrow) {
-          flex: 0.5;
+          flex: 0.2;
           line-height: 125px;
           text-align: center;
           color: $color-light-gray;
@@ -328,35 +313,31 @@
         }
 
         @include element(transfer) {
-          text-align: center;
-          line-height: 95px;
-          color: $color-dark-gray;
-          font-weight: normal;
-          line-height: 2.17;
-          flex: 0.9;
+          @include xy-grid(horizontal, false);
+          // text-align: center;
+          // line-height: 95px;
+          // color: $color-dark-gray;
+          // font-weight: normal;
+          // line-height: 2.17;
+          // flex: 0.9;
 
-          @include breakpoint(small down) {
-            margin-bottom: 10px;
-          }
-
-          @include breakpoint(large) {
-            align-self: flex-end;
-          }
+          // @include breakpoint(small down) {
+          //   margin-bottom: 10px;
+          // }
 
           @include element(form) {
             position: relative;
             display: flex;
             align-items: center;
             height: 50px;
-
             input {
-              border: 1px solid transparent;
+              border-bottom-left-radius: 5px;
+              border-top-left-radius: 5px;
+              border: solid 1px #dadada;
               font-size: 25px;
               color: $color-dark;
               font-weight: bold;
               width: 100%;
-              border-radius: 25px;
-              box-shadow: inset -1px 0 4px 0 rgba(0, 0, 0, 0.23);
               height: 50px;
               align-items: center;
               padding-left: 16px;
@@ -366,9 +347,9 @@
                 color: #92a1ac;
               }
 
-              &:focus {
-                border: solid 1px $color-dark;
-              }
+              // &:focus {
+              //   border: solid 1px $color-dark;
+              // }
             }
 
             @include element(currency) {
@@ -381,10 +362,13 @@
 
             @include element(btn) {
               border: none;
+              min-width: 100px;
               color: $color-dark;
               padding: 9px 20px;
               background: $color-fuse_gradient;
-              border-radius: 16px;
+              // border-radius: 16px;
+              border-bottom-right-radius: 5px;
+              border-top-right-radius: 5px;
               font-size: 0.688em;
               text-transform: uppercase;
               display: inline-block;
@@ -392,7 +376,7 @@
               font-weight: bold;
               text-align: center;
               outline: none;
-              margin-top: 30px;
+              // margin-top: 30px;
               &:hover {
                 cursor: pointer;
               }

@@ -40,6 +40,7 @@ const FeaturedCommunities = ({
               token={token}
               showDashboard={() => showDashboard(address, community.name)}
               community={community}
+              withDescription
             />
           </div>
         )

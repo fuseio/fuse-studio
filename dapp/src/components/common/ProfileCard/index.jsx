@@ -37,7 +37,7 @@ const ProfileCard = memo(({
   }, [])
 
   return (
-    <div className='profile__card grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
+    <div className='profile__card profile__card--link grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
       <div className='profile__card__logo'>
         <CommunityLogo
           symbol={symbol}

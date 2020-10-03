@@ -1,8 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import Logo from 'components/common/Logo'
-import HelpIcon from 'images/help.svg'
-import NotificationIcon from 'images/notification.svg'
+// import HelpIcon from 'images/help.svg'
+import HelpIcon, { ReactComponent as Help } from 'images/help.svg'
+
+// import NotificationIcon from 'images/notification.svg'
 import WalletIcon from 'images/fuse-wallet.svg'
 import classNames from 'classnames'
 import ProfileDropDown from 'components/common/ProfileDropDown'
@@ -71,10 +73,10 @@ const NavBar = ({
     loadModal(WEB3_CONNECT_MODAL, { web3connect })
   }
 
-  const isGreaterThen70 = () => scrollY > 70
+  const isGreaterThen70 = () => scrollY > 20
 
   return (
-    <div className={classNames('navbar', { 'navbar--scroll': isGreaterThen70(), 'navbar--short': modifier })} >
+    <div className={classNames('navbar', { 'navbar--scroll': isGreaterThen70(), 'navbar--short': modifier, 'navbar--bgImage': !modifier })} >
       {(withLogo || (isMobileOnly && isGreaterThen70())) && <div className='navbar__logo'>
         <Logo showHomePage={() => push('/')} isBlue={false} />
       </div>}
@@ -84,7 +86,7 @@ const NavBar = ({
           ref={helpRef}
           onClick={openHelp}
         >
-          <span className='icon'><img src={HelpIcon} /></span>
+          <span className='icon'>{isInCommunityPage ? <Help className='help' /> : <img src={HelpIcon} />}</span>
           <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
             <ul className='drop__options'>
               <li className='drop__options__item'><a href='https://fuse.io' target='_blank' rel='noopener noreferrer'>Website</a></li>
@@ -94,9 +96,9 @@ const NavBar = ({
             </ul>
           </div>
         </div>
-        <div className='navbar__links__notification'>
+        {/* <div className='navbar__links__notification'>
           <span className='icon'><img src={NotificationIcon} /></span>
-        </div>
+        </div> */}
         {
           accountAddress ? (
             <div

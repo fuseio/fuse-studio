@@ -38,7 +38,6 @@ const NoCommunities = ({ showIssuance }) => {
 const MyCommunities = ({
   showIssuance,
   title = 'My economies',
-  withDecoration = false,
   communitiesKeys,
   communities,
   showDashboard,
@@ -46,68 +45,80 @@ const MyCommunities = ({
 }) => {
   const [valueSpinner, onChangeSpinner] = useState(0)
 
-  const communitiesIOwn = []
-  // const communitiesIOwn = React.useMemo(() => {
-  //   return communitiesKeys
-  //     .map((communityAddress) => communities[communityAddress])
-  //     .filter(obj => !!obj).filter(({ isAdmin }) => isAdmin)
-  // }, [communitiesKeys, communities])
+  const communitiesIOwn = React.useMemo(() => {
+    return communitiesKeys
+      .map((communityAddress) => communities[communityAddress])
+      .filter(obj => !!obj).filter(({ isAdmin }) => isAdmin)
+  }, [communitiesKeys, communities])
 
   const slides = React.useMemo(() => {
-    if (!isEmpty(communitiesIOwn)) {
-      const myCommunities = communitiesIOwn.map((community) => {
-        const { token, foreignTokenAddress } = community
-        const { communityAddress } = community
-        return (
-          <div className='cell medium-12 small-24' key={communityAddress}>
-            <FeaturedCommunity
-              token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
-              showDashboard={() => showDashboard(communityAddress)}
-              community={community}
-            />
-          </div>
-        )
-      })
-      const myCommunitiesList = toMatrix(myCommunities, 4).map((items, index) => (
-        <div style={{ width: '100%', height: '100%' }} key={index} className='grid-x grid-margin-x grid-margin-y'>
-          {items}
-        </div>
-      ))
-      return myCommunitiesList
-    } else {
-      return [
-        <div key={'NoCommunities'} style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
-          <NoCommunities showIssuance={showIssuance} />
-          <Empty />
-          <Empty />
-          <Empty />
-        </div>
-      ]
-    }
-  }, [communitiesIOwn])
+    return [
+      <div key={'NoCommunities'} style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
+        <NoCommunities showIssuance={showIssuance} />
+        <Empty />
+        <Empty />
+        <Empty />
+      </div>
+    ]
+    // if (!isEmpty(communitiesIOwn)) {
+    //   const myCommunities = communitiesIOwn.map((community) => {
+    //     const { token, foreignTokenAddress } = community
+    //     const { communityAddress } = community
+    //     return (
+    //       <div className='cell medium-12 small-24' key={communityAddress}>
+    //         <FeaturedCommunity
+    //           token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
+    //           showDashboard={() => showDashboard(communityAddress)}
+    //           community={community}
+    //           withDescription={false}
+    //         />
+    //       </div>
+    //     )
+    //   })
+    //   const myCommunitiesList = toMatrix(myCommunities, 4).map((items, index) => (
+    //     <div style={{ width: '100%', height: '100%' }} key={index} className='grid-x grid-margin-x grid-margin-y'>
+    //       {items}
+    //     </div>
+    //   ))
+    //   return myCommunitiesList
+    // } else {
+    //   return [
+    //     <div key={'NoCommunities'} style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
+    //       <NoCommunities showIssuance={showIssuance} />
+    //       <Empty />
+    //       <Empty />
+    //       <Empty />
+    //     </div>
+    //   ]
+    // }
+  }, [])
   return (
-    <div className={classNames('my_communities', { 'my_communities__decoration': withDecoration })}>
-      {withDecoration && <div className='my_communities__title'>{title}</div>}
-      <Carousel
-        value={valueSpinner}
-        centered
-        infinite={slides && slides.length > 1}
-        draggable
-        onChange={onChangeSpinner}
-        animationSpeed={1000}
-        slidesPerPage={1}
-        breakpoints={{
-          1000: {
-            slidesPerPage: 2
-          },
-          800: {
-            slidesPerPage: 1
-          }
-        }}
-      >
-        {slides}
-      </Carousel>
-      {slides && slides.length > 1 && <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />}
+    <div className='featured__carousel__wrapper'>
+      <div className='grid-x align-justify align-middle'>
+        <h3 className='featured__carousel__title'>{title}</h3>
+      </div>
+      <div className='featured__carousel featured__carousel--spaced'>
+        <Carousel
+          value={valueSpinner}
+          centered
+          infinite={slides && slides.length > 1}
+          draggable
+          onChange={onChangeSpinner}
+          animationSpeed={1000}
+          slidesPerPage={1}
+          breakpoints={{
+            1000: {
+              slidesPerPage: 2
+            },
+            800: {
+              slidesPerPage: 1
+            }
+          }}
+        >
+          {slides}
+        </Carousel>
+        {slides && slides.length > 1 && <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />}
+      </div>
     </div>
   )
 }

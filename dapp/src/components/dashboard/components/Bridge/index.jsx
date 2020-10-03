@@ -116,7 +116,7 @@ const Bridge = (props) => {
 
   return (
     <div className='content__bridge__wrapper'>
-      <div className='content__bridge__container'>
+      <div className='content__bridge__container grid-x align-middle align-justify'>
         <Balance
           isAdmin={isAdmin}
           symbol={symbol}
@@ -125,10 +125,10 @@ const Bridge = (props) => {
           bridgeSide={bridgeStatus.from}
           openModal={() => openModal('from')}
         />
-        <div className='bridge__arrow'>
+        {/* <div className='bridge__arrow'>
           <img src={homeNetwork === bridgeStatus.from.network ? arrow1 : arrow2} />
-        </div>
-        <div className='bridge__transfer'>
+        </div> */}
+        <div className='bridge__transfer cell medium-10'>
           <div className='bridge__transfer__form'>
             <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={(e) => setTransferAmount(e.target.value)} disabled={transferStatus} />
             <div className='bridge__transfer__form__currency'>{symbol}</div>
@@ -137,16 +137,16 @@ const Bridge = (props) => {
             className='bridge__transfer__form__btn' onClick={!isMultiBridge ? handleTransfer : allowed ? handleTransfer : handleApprove}>
             {
               !isMultiBridge
-                ? (transferStatus || `Transfer to ${bridgeStatus.to.network}`)
+                ? (transferStatus || `Transfer`) //  to ${bridgeStatus.to.network}
                 : allowed
-                  ? (transferStatus || `Transfer to ${bridgeStatus.to.network}`)
-                  : (transferStatus || `Unlock ${transferAmount} ${symbol}`)
+                  ? (transferStatus || `Transfer`) //  to ${bridgeStatus.to.network}
+                  : (transferStatus || `Unlock`) //  ${transferAmount} ${symbol}
             }
           </button>
         </div>
-        <div className='bridge__arrow'>
+        {/* <div className='bridge__arrow'>
           <img src={homeNetwork === bridgeStatus.to.network ? arrow1 : arrow2} />
-        </div>
+        </div> */}
         <Balance
           isAdmin={isAdmin}
           symbol={symbol}

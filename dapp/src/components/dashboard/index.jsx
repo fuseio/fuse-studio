@@ -54,7 +54,7 @@ const DashboardLayout = (props) => {
   }, [location.pathname])
 
   useEffect(() => {
-    if (communityAddress) {
+    if (accountAddress) {
       fetchCommunity(communityAddress, { networkType: 'ropsten' })
       fetchCommunity(communityAddress, { networkType: 'mainnet' })
       fetchEntities(communityAddress)

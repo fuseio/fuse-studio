@@ -102,6 +102,7 @@
   "devDependencies": {
     "@babel/traverse": "^7.7.4",
     "@babel/types": "^7.7.4",
+    "@svgr/webpack": "^5.4.0",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "redux-devtools": "^3.5.0",

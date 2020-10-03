@@ -47,12 +47,12 @@
     padding-top: 2%;
     padding-bottom: 2%;
 
-    @include breakpoint(medium up) {
-      min-height: 50vh;
-    }
+    // @include breakpoint(medium up) {
+    //   min-height: 50vh;
+    // }
 
     @include breakpoint(large) {
-      padding-top: 5.5%;
+      padding-top: 4.5%;
     }
 
     @include breakpoint(medium up) {
@@ -75,9 +75,9 @@
     align-items: center;
     background-color: #f5f5f5;
 
-    @include breakpoint(medium up) {
-      min-height: 50vh;
-    }
+    // @include breakpoint(medium up) {
+    //   min-height: 50vh;
+    // }
 
     > div {
       width: 100%;
@@ -163,7 +163,7 @@
   @include element(button) {
     @include breakpoint(medium up) {
       min-width: 300px;
-      width: 70%;
+      width: 48%;
     }
     @include breakpoint(medium down) {
       width: 85%;
@@ -172,7 +172,6 @@
     > button {
       background: $color-fuse_gradient;
       color: $color-dark;
-      font-weight: bold;
       text-align: center;
       height: 45px;
       width: 100%;

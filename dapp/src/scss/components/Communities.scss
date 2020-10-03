@@ -7,32 +7,32 @@
 
 @include block(communities) {
 	position: relative;
-	&:before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 35%;
-    height: 30%;
-    right: 0;
-    background-image: url(../../assets/images/pattern.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-		background-position: top right;
+	// &:before {
+  //   content: "";
+  //   display: block;
+  //   position: absolute;
+  //   width: 35%;
+  //   height: 30%;
+  //   right: 0;
+  //   background-image: url(../../assets/images/pattern.png);
+  //   background-size: contain;
+  //   background-repeat: no-repeat;
+	// 	background-position: top right;
 		
-		@include breakpoint(medium down) {
-			width: 65%;
-      height: 200px;		
-		}
-	}
-	&:after {
-    height: 100%;
-  }
+	// 	@include breakpoint(medium down) {
+	// 		width: 65%;
+  //     height: 200px;		
+	// 	}
+	// }
+	// &:after {
+  //   height: 100%;
+  // }
 	@include breakpoint(small down) {
 		margin-bottom: 70px;
 	}
 
   @include element(wrapper) {
-		padding: 100px 0 10px;
+		padding-top: 4%;
 	}
 
 	@include element(banner) {
