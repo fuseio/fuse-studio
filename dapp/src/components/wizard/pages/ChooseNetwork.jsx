@@ -30,7 +30,7 @@ const Fund = ({ value, network, hasEth }) => {
 }
 
 const NetworkOption = ({ network, account, logo, name, value, Content }) => {
-  const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 10
+  const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 0.01
   const [hasEth, setHasEth] = useState(true)
   useEffect(() => {
     if (value === network) {
@@ -61,7 +61,7 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
             <div className='grid-x align-middle' style={{ display: value === network && !hasEth ? 'block' : 'none' }}>
               <div className='error'>
                 <span>
-                  You need at least 0.1 ETH (you have <span>{account && account.foreign ? formatWei((account.foreign), 2) : 0}&nbsp;</span> ETH).
+                  You need at least 0.01 ETH (you have <span>{account && account.foreign ? formatWei((account.foreign), 2) : 0}&nbsp;</span> ETH).
                 </span>
                 <Fund value={value} network={network} hasEth={hasEth} />
               </div>
@@ -77,7 +77,7 @@ const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, fo
   const network = getIn(formik.values, 'network')
 
   useEffect(() => {
-    const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 10
+    const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 0.01
     formik.setFieldValue('hasBalance', hasBalance)
   }, [account])
 
