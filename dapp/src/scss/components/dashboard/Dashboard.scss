@@ -335,7 +335,9 @@
 
         @include element(transfer) {
           @include xy-grid(horizontal, false);
-          flex: 0.9;
+          @include breakpoint(medium down) {
+            flex: 0.9;
+          }
 
           @include element(form) {
             position: relative;
@@ -358,7 +360,6 @@
               &::placeholder {
                 color: #92a1ac;
               }
-
             }
 
             @include element(currency) {
