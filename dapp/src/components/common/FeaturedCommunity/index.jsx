@@ -45,7 +45,6 @@ const FeaturedCommunity = memo(({
               <span style={{ fontSize: 'smaller' }}>{community.subTitle}</span>
             </React.Fragment>
           )}</h6>
-        {/* && community.description */}
         {withDescription && community && (
           <div className='featured__description'>
             {community && community.description}

@@ -8,15 +8,9 @@
     margin-top: 2em;
     @include xy-grid(vertical);
     border-radius: 10px;
-    // padding-left: 25px;
-    // padding-right: 25px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
     background-color: $color-white;
-    // padding-top: 25px;
-    // padding-bottom: 25px;
-    // background: linear-gradient(to bottom, #f5f5f5 23%, white 0%);
     min-height: 300px;
-    // max-height: 320px;
 
     @include breakpoint(medium down) {
       margin-top: 1em;

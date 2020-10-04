@@ -101,9 +101,6 @@ const NavBar = ({
             </ul>
           </div>
         </div>
-        {/* <div className='navbar__links__notification'>
-          <span className='icon'><img src={NotificationIcon} /></span>
-        </div> */}
         {
           accountAddress ? (
             <div

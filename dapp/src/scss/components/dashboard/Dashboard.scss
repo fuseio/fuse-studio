@@ -24,15 +24,14 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 106%; /* and this */
-    overflow-y: scroll; /* add scrollbar */
-    height: inherit; /* parent height or 100% */
+    width: 106%;
+    overflow-y: scroll;
+    height: inherit;
     @include element(container) {
       overflow: hidden;
       position: relative;
       min-height: 100%;
       background-color: #051926;
-      // @include element(container) {
       box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
 
       @include breakpoint(small down) {
@@ -53,8 +52,6 @@
         overflow: auto;
         top: 0;
         left: 0;
-        // overflow-y: scroll;
-        // padding-right: 16px;
         box-sizing: content-box;
       }
 
@@ -301,7 +298,6 @@
           text-transform: capitalize;
           font-size: 14px;
           color: $color-dark;
-          // text-align: center;
           text-transform: capitalize;
           font-weight: 500;
         }
@@ -318,7 +314,6 @@
           margin-top: 1em;
           font-size: 0.688em;
           font-weight: 500;
-          // text-align: center;
           color: $color-light-blue;
 
           &:hover {
@@ -341,15 +336,6 @@
         @include element(transfer) {
           @include xy-grid(horizontal, false);
           flex: 0.9;
-          // text-align: center;
-          // line-height: 95px;
-          // color: $color-dark-gray;
-          // font-weight: normal;
-          // line-height: 2.17;
-          
-          // @include breakpoint(small down) {
-            //   margin-bottom: 10px;
-          // }
 
           @include element(form) {
             position: relative;
@@ -373,9 +359,6 @@
                 color: #92a1ac;
               }
 
-              // &:focus {
-              //   border: solid 1px $color-dark;
-              // }
             }
 
             @include element(currency) {
@@ -392,17 +375,14 @@
               color: $color-dark;
               padding: 9px 20px;
               background: $color-fuse_gradient;
-              // border-radius: 16px;
               border-bottom-right-radius: 5px;
               border-top-right-radius: 5px;
               font-size: 0.688em;
               text-transform: uppercase;
               display: inline-block;
-              // margin: 0 auto;
               font-weight: bold;
               text-align: center;
               outline: none;
-              // margin-top: 30px;
               &:hover {
                 cursor: pointer;
               }

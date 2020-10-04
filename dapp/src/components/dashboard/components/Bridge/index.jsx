@@ -132,10 +132,10 @@ const Bridge = (props) => {
             className='bridge__transfer__form__btn' onClick={!isMultiBridge ? handleTransfer : allowed ? handleTransfer : handleApprove}>
             {
               !isMultiBridge
-                ? (transferStatus || `Transfer`) //  to ${bridgeStatus.to.network}
+                ? (transferStatus || `Transfer`)
                 : allowed
-                  ? (transferStatus || `Transfer`) //  to ${bridgeStatus.to.network}
-                  : (transferStatus || `Unlock`) //  ${transferAmount} ${symbol}
+                  ? (transferStatus || `Transfer`)
+                  : (transferStatus || `Unlock`)
             }
           </button>
         </div>

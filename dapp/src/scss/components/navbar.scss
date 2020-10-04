@@ -1,5 +1,4 @@
 @include block(navbar) {
-  // position: absolute;
   @include xy-grid();
   @include flex-align(justify, middle);
   padding: 10px 20px;
@@ -50,7 +49,6 @@
   }
 
   @include modifier(scroll) {
-    // position: fixed;
     top: 0;
     background-image: url(../../assets/images/header.jpg);
     background-repeat: no-repeat;

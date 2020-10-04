@@ -75,7 +75,6 @@ const HomePage = ({
             </div>
             <div className='cell medium-24 large-12 home_page__faqAndRecent grid-y grid-margin-y'>
               <FeaturedCommunities accountAddress={accountAddress} showDashboard={showDashboard} />
-              {/* <Faqs /> */}
             </div>
           </div>
           <Faqs />
