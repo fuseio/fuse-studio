@@ -13,7 +13,6 @@ import Header from 'components/dashboard/components/Header'
 import ToggleBridgeVersion from 'components/dashboard/components/ToggleBridge'
 import { push } from 'connected-react-router'
 import { getForeignNetwork } from 'selectors/network'
-import SignIn from 'components/common/SignIn'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getEntity, getCommunityAddress } from 'selectors/entities'
 import { getTokenAddressOfByNetwork, getCurrentCommunity, getHomeTokenAddress, getIsMultiBridge } from 'selectors/dashboard'
@@ -23,31 +22,27 @@ import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 import CommunityLogo from 'components/common/CommunityLogo'
 
-const CoverPhoto = ({ community, metadata, symbol }) => {
-  console.log(metadata)
+const CoverPhoto = ({ metadata, symbol }) => {
   return (
     <div className='content__cover_photo'>
       <div className='cover'>
-        <img src={'https://fuse-studio-qa.s3.eu-central-1.amazonaws.com/03b66e0d92a1d80cc3af21d981864d38929e6a468c9935eaa2394b0ad552aaf4'} />
+        {
+          getCoverPhotoUri(metadata) ? (
+            <img alt='cover photo' src={getCoverPhotoUri(metadata)} />
+          ) : (
+            <img alt='cover photo' src={CommunityPlaceholderImage} />
+          )
+        }
       </div>
-      <div className='logo__wrapper'>
-        <div className='logo'>
-          <CommunityLogo
-            symbol={symbol}
-            imageUrl={getImageUri(metadata)}
-            metadata={metadata}
-          />
-        </div>
+      <div className='logo grid-x align-middle align-center'>
+        <CommunityLogo
+          isBig
+          symbol={symbol}
+          imageUrl={getImageUri(metadata)}
+          metadata={metadata}
+        />
       </div>
-      {/* <img src={
-        getCoverPhotoUri(community) ? (
-          <img alt='cover photo' src={getCoverPhotoUri(community)} />
-        ) : getCoverPhotoUri(metadata) ? (
-          <img alt='cover photo' src={getCoverPhotoUri(metadata)} />
-        ) : (
-              <img alt='cover photo' src={CommunityPlaceholderImage} />
-            )
-      } /> */}
+
     </div>
   )
 }
@@ -65,9 +60,16 @@ const Dashboard = (props) => {
     loadModal,
     homeTokenAddress,
     isMultiBridge,
-    tokenOfCommunityOnCurrentSide
+    tokenOfCommunityOnCurrentSide,
+    joinCommunity
   } = props
   const { address: communityAddress } = useParams()
+
+  const communityMetadata = React.useMemo(() => ({
+    ...community,
+    ...metadata[foreignToken && foreignToken.tokenURI],
+    ...metadata[community && community.communityURI]
+  }), [metadata, community, foreignToken])
 
   const loadQrModal = (value) => {
     loadModal(QR_MODAL, { value })
@@ -80,20 +82,16 @@ const Dashboard = (props) => {
 
   return (
     (community && foreignToken) ? <React.Fragment>
-      <CoverPhoto
-        community={community}
-        symbol={foreignToken && foreignToken.symbol}
-        metadata={{
-          ...metadata[foreignToken && foreignToken.tokenURI],
-          ...metadata[community && community.communityURI]
-        }}
-      />
+      {getCoverPhotoUri(communityMetadata) && (
+        <CoverPhoto
+          symbol={foreignToken && foreignToken.symbol}
+          metadata={communityMetadata}
+        />
+      )}
       <div className='content__wrapper'>
         <Header
-          metadata={{
-            ...metadata[foreignToken && foreignToken.tokenURI],
-            ...metadata[community && community.communityURI]
-          }}
+          withLogo={!getCoverPhotoUri(communityMetadata)}
+          metadata={communityMetadata}
           tokenAddress={foreignToken && foreignToken.tokenAddress}
           isClosed={community && community.isClosed}
           communityURI={community && community.communityURI}

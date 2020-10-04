@@ -1,6 +1,5 @@
 @include block(community_header) {
   @include xy-grid();
-  min-height: 56px;
 
   @include breakpoint(small only) {
     padding: 2em 0;
@@ -27,7 +26,7 @@
     @include flex-align(spaced, null);
     > div:first-child {
       @include breakpoint(medium up) {
-        @include xy-grid();        
+        @include xy-grid();
       }
     }
 
@@ -51,6 +50,7 @@
     @include block(name) {
       font-size: 24px;
       font-weight: 500;
+      color: $color-gray;
 
       @include element(wrapper) {
         width: max-content;
@@ -87,10 +87,15 @@
 
     > button {
       background-color: $color-light-dark;
-      border-radius: 5px;
+      padding: 0 15px;
+      height: 33px;
+      border-radius: 16.3px;
       color: $color-white;
-      padding: 10px;
       font-size: 0.85em;
+
+      &:hover {
+        background-color: $color-primary-dark;
+      }
 
       > img {
         padding-right: 5px;

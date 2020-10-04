@@ -48,9 +48,7 @@ const FeaturedCommunity = memo(({
         {/* && community.description */}
         {withDescription && community && (
           <div className='featured__description'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Tenetur mollitia officiis, possimus eos laborum quisquam perspiciatis tempore quas similique repellendus laudantium!
-            Nostrum quibusdam architecto et ullam possimus! Similique, laudantium doloremque!
+            {community && community.description}
           </div>
         )}
         {withDescription && community && (

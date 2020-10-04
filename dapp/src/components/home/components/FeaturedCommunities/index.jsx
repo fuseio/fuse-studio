@@ -67,7 +67,7 @@ const FeaturedCommunities = ({
           value={value}
           centered
           infinite
-          draggable
+          draggable={false}
           onChange={onChange}
           animationSpeed={1000}
           slidesPerPage={2}
@@ -79,8 +79,10 @@ const FeaturedCommunities = ({
               slidesPerPage: 1
             }
           }}
-        >{slides}</Carousel>
-        <Dots value={value} onChange={onChange} number={React.Children.count(slides)} />
+        >
+          {slides}
+        </Carousel>
+        {slides && slides.length > 1 && <Dots value={value} onChange={onChange} number={React.Children.count(slides)} />}
       </div>
     </div>
   )

@@ -116,7 +116,7 @@ const Bridge = (props) => {
 
   return (
     <div className='content__bridge__wrapper'>
-      <div className='content__bridge__container grid-x align-middle align-justify'>
+      <div className='content__bridge__container'>
         <Balance
           isAdmin={isAdmin}
           symbol={symbol}
@@ -128,7 +128,7 @@ const Bridge = (props) => {
         {/* <div className='bridge__arrow'>
           <img src={homeNetwork === bridgeStatus.from.network ? arrow1 : arrow2} />
         </div> */}
-        <div className='bridge__transfer cell medium-10'>
+        <div className='bridge__transfer cell shrink'>
           <div className='bridge__transfer__form'>
             <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={(e) => setTransferAmount(e.target.value)} disabled={transferStatus} />
             <div className='bridge__transfer__form__currency'>{symbol}</div>

@@ -29,7 +29,7 @@
     @include element(container) {
       position: relative;
       min-height: 100%;
-      background-color: #051926;
+      background-color: #00253d;
       box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
 
       @include breakpoint(small down) {
@@ -140,7 +140,6 @@
 
     @include element(cover_photo) {
       width: 100%;
-      margin-top: 80px;
       position: relative;
 
       @include block(cover) {
@@ -150,16 +149,18 @@
         }
       }
       @include block(logo) {
-        @include element(wrapper) {
-          position: absolute;
-          left: 8.7em;
-          bottom: -1.9em;
-          height: 70px;
-          width: 70px;
-          background-color: $color-white;
+        position: absolute;
+        left: 8.7em;
+        bottom: -3em;
+        height: 100px;
+        width: 100px;
+        background-color: $color-white;
+        border-radius: 50%;
+        display: flex;
+
+        .logo-circle__inner {
+          position: unset;
           border-radius: 50%;
-          // width: 80%;
-          // margin: 4em auto 3em;
         }
       }
     }
@@ -167,12 +168,11 @@
     @include element(wrapper) {
       @include breakpoint(large up) {
         width: 80%;
-        margin: 4em auto 3em;
+        margin: 5em auto 0;
       }
 
       @include breakpoint(2000) {
         width: 70%;
-        margin: 4em auto 3em;
       }
 
       @include breakpoint(medium only) {
@@ -192,7 +192,7 @@
         position: relative;
         width: 100%;
         margin-left: 20%;
-        min-height: 100vh;
+        min-height: 90vh;
         height: 100%;
       }
 
@@ -206,17 +206,19 @@
         // height: auto;
       }
 
-      // &:before {
-      //   content: "";
-      //   display: block;
-      //   position: absolute;
-      //   width: 100%;
-      //   height: 320px;
-      //   background-image: url(../../assets/images/header-full.png);
-      //   box-shadow: 0 1px 3px 0 rgba(37, 67, 90, 0.6), inset 5px -5px 11px 0 rgba(0, 0, 0, 0.25);
-      //   background-repeat: no-repeat;
-      //   background-size: cover;
-      // }
+      @include modifier(bgImage) {
+        &:before {
+          content: "";
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 320px;
+          background-image: url(../../assets/images/header-full.png);
+          box-shadow: 0 1px 3px 0 rgba(37, 67, 90, 0.6), inset 5px -5px 11px 0 rgba(0, 0, 0, 0.25);
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+      }
 
       @include breakpoint(xxlarge up) {
         margin-left: 17.5%;
@@ -261,19 +263,22 @@
       }
 
       @include element(container) {
-        // display: flex;
-        // align-items: center;
-
-        // @include breakpoint(medium up) {
-        //   flex: 1;
-        // }
+        // grid-x align-middle align-justify
+        @include xy-grid(horizontal, false);
+        @include flex-align(justify, middle);
 
         @include breakpoint(small down) {
+          @include xy-grid(vertical, false);
+          @include flex-align(justify, middle);
           flex-direction: column;
         }
       }
 
       @include block(bridge) {
+        @include xy-cell(5, null, 0);
+        @include breakpoint(medium down) {
+          @include xy-cell(24, null, 0);
+        }
         @include block(fuse-logo) {
           background-image: $color-fuse_gradient;
           padding: 2px;

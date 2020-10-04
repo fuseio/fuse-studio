@@ -52,46 +52,38 @@ const MyCommunities = ({
   }, [communitiesKeys, communities])
 
   const slides = React.useMemo(() => {
-    return [
-      <div key={'NoCommunities'} style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
-        <NoCommunities showIssuance={showIssuance} />
-        <Empty />
-        <Empty />
-        <Empty />
-      </div>
-    ]
-    // if (!isEmpty(communitiesIOwn)) {
-    //   const myCommunities = communitiesIOwn.map((community) => {
-    //     const { token, foreignTokenAddress } = community
-    //     const { communityAddress } = community
-    //     return (
-    //       <div className='cell medium-12 small-24' key={communityAddress}>
-    //         <FeaturedCommunity
-    //           token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
-    //           showDashboard={() => showDashboard(communityAddress)}
-    //           community={community}
-    //           withDescription={false}
-    //         />
-    //       </div>
-    //     )
-    //   })
-    //   const myCommunitiesList = toMatrix(myCommunities, 4).map((items, index) => (
-    //     <div style={{ width: '100%', height: '100%' }} key={index} className='grid-x grid-margin-x grid-margin-y'>
-    //       {items}
-    //     </div>
-    //   ))
-    //   return myCommunitiesList
-    // } else {
-    //   return [
-    //     <div key={'NoCommunities'} style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
-    //       <NoCommunities showIssuance={showIssuance} />
-    //       <Empty />
-    //       <Empty />
-    //       <Empty />
-    //     </div>
-    //   ]
-    // }
-  }, [])
+    if (!isEmpty(communitiesIOwn)) {
+      const myCommunities = communitiesIOwn.map((community) => {
+        const { token, foreignTokenAddress } = community
+        const { communityAddress } = community
+        return (
+          <div className='cell medium-12 small-24' key={communityAddress}>
+            <FeaturedCommunity
+              token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
+              showDashboard={() => showDashboard(communityAddress)}
+              community={community}
+              withDescription={false}
+            />
+          </div>
+        )
+      })
+      const myCommunitiesList = toMatrix(myCommunities, 4).map((items, index) => (
+        <div style={{ width: '100%', height: '100%' }} key={index} className='grid-x grid-margin-x grid-margin-y'>
+          {items}
+        </div>
+      ))
+      return myCommunitiesList
+    } else {
+      return [
+        <div key={'NoCommunities'} style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
+          <NoCommunities showIssuance={showIssuance} />
+          <Empty />
+          <Empty />
+          <Empty />
+        </div>
+      ]
+    }
+  }, [communitiesIOwn])
   return (
     <div className='featured__carousel__wrapper'>
       <div className='grid-x align-justify align-middle'>
@@ -102,7 +94,7 @@ const MyCommunities = ({
           value={valueSpinner}
           centered
           infinite={slides && slides.length > 1}
-          draggable
+          draggable={false}
           onChange={onChangeSpinner}
           animationSpeed={1000}
           slidesPerPage={1}

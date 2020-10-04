@@ -108,113 +108,183 @@ const DashboardLayout = (props) => {
               {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
             </Sidebar>
         }
-        <div className='content__container'>
-          <div className='content'>
-            {/* <div className='content__wrapper'> */}
-            <Switch>
-              {get(community, 'plugins.joinBonus') && !get(community, 'plugins.joinBonus.isRemoved', false) && isAdmin && (
-                <Route exact path={`${match.path}/bonus`}>
-                  <JoinBonusPage
-                    match={match}
-                    community={community}
-                  />
-                </Route>
-              )}
-
-              {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
-                <Route exact path={`${match.path}/invite-bonus`}>
-                  <InviteBonusPage
-                    match={match}
-                    community={community}
-                  />
-                </Route>
-              )}
-
-              {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
-                <Route exact path={`${match.path}/backup-bonus`}>
-                  <BackupBonusPage
-                    match={match}
-                    community={community}
-                  />
-                </Route>
-              )}
-
-              {community && isAdmin && (
-                <Route exact path={`${match.path}/onramp`}
-                  render={() => (
-                    <OnRampPage
-                      community={community}
-                    />
-                  )}
-                />)
-              }
-
-              {community && isAdmin && (
-                <Route exact path={`${match.path}/walletbanner`}
-                  render={() => (
-                    <WalletBannerLinkPage
+        <Switch>
+          {get(community, 'plugins.joinBonus') && !get(community, 'plugins.joinBonus.isRemoved', false) && isAdmin && (
+            <Route exact path={`${match.path}/bonus`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <JoinBonusPage
                       match={match}
                       community={community}
                     />
-                  )}
-                />)
-              }
+                  </div>
+                </div>
+              </div>
+            </Route>
+          )}
 
-              {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
-                <Route exact path={`${match.path}/mintBurn`}>
-                  <MintBurnPage />
-                </Route>
+          {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
+            <Route exact path={`${match.path}/invite-bonus`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <InviteBonusPage
+                      match={match}
+                      community={community}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Route>
+          )}
+
+          {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
+            <Route exact path={`${match.path}/backup-bonus`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <BackupBonusPage
+                      match={match}
+                      community={community}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Route>
+          )}
+
+          {community && isAdmin && (
+            <Route exact path={`${match.path}/onramp`}
+              render={() => (
+                <div className='content__container content__container--bgImage'>
+                  <div className='content'>
+                    <div className='content__wrapper'>
+                      <OnRampPage
+                        community={community}
+                      />
+                    </div>
+                  </div>
+                </div>
               )}
+            />)
+          }
 
-              {isAdmin && (
-                <Route exact path={`${match.path}/settings`}>
-                  <SettingsPage
-                    community={community}
-                  />
-                </Route>
+          {community && isAdmin && (
+            <Route exact path={`${match.path}/walletbanner`}
+              render={() => (
+                <div className='content__container content__container--bgImage'>
+                  <div className='content'>
+                    <div className='content__wrapper'>
+                      <WalletBannerLinkPage
+                        match={match}
+                        community={community}
+                      />
+                    </div>
+                  </div>
+                </div>
               )}
+            />)
+          }
 
-              {community && isAdmin && (
-                <Route exact path={`${match.path}/plugins`}>
-                  <PluginsPage
-                    community={community}
-                  />
-                </Route>
-              )}
+          {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
+            <Route exact path={`${match.path}/mintBurn`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <MintBurnPage />
+                  </div>
+                </div>
+              </div>
+            </Route>
+          )}
 
-              {!get((community && community.plugins), 'businessList.isRemoved', false) && (
-                <Route exact path={`${match.path}/merchants`}>
-                  <Businesses />
-                </Route>
-              )}
+          {isAdmin && (
+            <Route exact path={`${match.path}/settings`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <SettingsPage
+                      community={community}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Route>
+          )}
 
-              <Route exact path={`${match.path}/wallet`}>
-                <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
-              </Route>
+          {community && isAdmin && (
+            <Route exact path={`${match.path}/plugins`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <PluginsPage
+                      community={community}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Route>
+          )}
 
-              {community && (
-                <Route exact path={`${match.path}/users`}>
-                  <Users />
-                </Route>)
-              }
+          {!get((community && community.plugins), 'businessList.isRemoved', false) && (
+            <Route exact path={`${match.path}/merchants`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <Businesses />
+                  </div>
+                </div>
+              </div>
+            </Route>
+          )}
 
-              {community && (
-                <Route exact path={`${match.path}/transfer/:sendTo?`}>
-                  <TransferPage />
-                </Route>)
-              }
+          <Route exact path={`${match.path}/wallet`}>
+            <div className='content__container content__container--bgImage'>
+              <div className='content'>
+                <div className='content__wrapper'>
+                  <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
+                </div>
+              </div>
+            </div>
+          </Route>
 
-              {community && (
-                <Route exact path={`${match.path}/:success?`}>
+          {community && (
+            <Route exact path={`${match.path}/users`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <Users />
+                  </div>
+                </div>
+              </div>
+            </Route>)
+          }
+
+          {community && (
+            <Route exact path={`${match.path}/transfer/:sendTo?`}>
+              <div className='content__container content__container--bgImage'>
+                <div className='content'>
+                  <div className='content__wrapper'>
+                    <TransferPage />
+                  </div>
+                </div>
+              </div>
+            </Route>)
+          }
+
+          {community && (
+            <Route exact path={`${match.path}/:success?`}>
+              <div className='content__container'>
+                <div className='content'>
                   <Dashboard />
-                </Route>)
-              }
-            </Switch>
-            {/* </div> */}
-          </div>
-        </div>
-      </div>
-    </div>
+                </div>
+              </div>
+            </Route>)
+          }
+        </Switch>
+      </div >
+    </div >
   )
 }
 
