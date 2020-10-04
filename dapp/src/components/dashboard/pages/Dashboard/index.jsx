@@ -21,6 +21,7 @@ import get from 'lodash/get'
 import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 import CommunityLogo from 'components/common/CommunityLogo'
+import SignIn from 'components/common/SignIn'
 
 const CoverPhoto = ({ metadata, symbol }) => {
   return (
@@ -82,6 +83,7 @@ const Dashboard = (props) => {
 
   return (
     (community && foreignToken) ? <React.Fragment>
+      <SignIn accountAddress={accountAddress} />
       {getCoverPhotoUri(communityMetadata) && (
         <CoverPhoto
           symbol={foreignToken && foreignToken.symbol}

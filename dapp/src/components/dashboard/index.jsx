@@ -6,10 +6,8 @@ import FontAwesome from 'react-fontawesome'
 import { Route, Switch, useParams } from 'react-router'
 import get from 'lodash/get'
 import { push } from 'connected-react-router'
-import SignIn from 'components/common/SignIn'
 
-import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
-import { getHomeNetworkType } from 'selectors/network'
+import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
@@ -63,9 +61,11 @@ const DashboardLayout = (props) => {
   }, [accountAddress])
 
   useEffect(() => {
-    fetchCommunity(communityAddress, { networkType: 'ropsten' })
-    fetchCommunity(communityAddress, { networkType: 'mainnet' })
-    fetchEntities(communityAddress)
+    if (communityAddress) {
+      fetchCommunity(communityAddress, { networkType: 'ropsten' })
+      fetchCommunity(communityAddress, { networkType: 'mainnet' })
+      fetchEntities(communityAddress)
+    }
   }, [communityAddress])
 
   useEffect(() => {
@@ -83,7 +83,6 @@ const DashboardLayout = (props) => {
 
   return (
     <div className='dashboard'>
-      <SignIn accountAddress={accountAddress} />
       <div className='container'>
         {
           !isMobileOnly
@@ -292,9 +291,7 @@ const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
   foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
   community: getCurrentCommunity(state),
-  isAdmin: checkIsAdmin(state),
-  homeNetwork: getHomeNetworkType(state),
-  providerInfo: getProviderInfo(state)
+  isAdmin: checkIsAdmin(state)
 })
 
 const mapDispatchToProps = {
