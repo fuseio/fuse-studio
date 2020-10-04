@@ -24,12 +24,15 @@
     top: 0;
     left: 0;
     bottom: 0;
-    right: -16px;
-    overflow-y: scroll;
+    width: 106%; /* and this */
+    overflow-y: scroll; /* add scrollbar */
+    height: inherit; /* parent height or 100% */
     @include element(container) {
+      overflow: hidden;
       position: relative;
       min-height: 100%;
-      background-color: #00253d;
+      background-color: #051926;
+      // @include element(container) {
       box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
 
       @include breakpoint(small down) {
@@ -50,10 +53,9 @@
         overflow: auto;
         top: 0;
         left: 0;
+        // overflow-y: scroll;
+        // padding-right: 16px;
         box-sizing: content-box;
-        &:-webkit-scrollbar {
-          display: none;
-        }
       }
 
       @include breakpoint(xxlarge up) {
@@ -168,7 +170,7 @@
     @include element(wrapper) {
       @include breakpoint(large up) {
         width: 80%;
-        margin: 5em auto 0;
+        margin: 5em auto 3em;
       }
 
       @include breakpoint(2000) {
@@ -188,22 +190,13 @@
 
     @include element(container) {
       background-color: #f5f5f5;
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      height: 100%;
+
       @include breakpoint(medium up) {
-        position: relative;
-        width: 100%;
         margin-left: 20%;
-        min-height: 90vh;
-        height: 100%;
-      }
-
-      @include breakpoint(medium down) {
-        height: auto;
-        position: relative;
-        width: 100%;
-
-        // flex-basis: 20%;
-        // box-shadow: -1px 0 8px 0 rgba(0, 0, 0, 0.25);
-        // height: auto;
       }
 
       @include modifier(bgImage) {
@@ -263,7 +256,9 @@
       }
 
       @include element(container) {
-        // grid-x align-middle align-justify
+        @include breakpoint(medium up) {
+          flex: 1;
+        }
         @include xy-grid(horizontal, false);
         @include flex-align(justify, middle);
 
@@ -345,15 +340,15 @@
 
         @include element(transfer) {
           @include xy-grid(horizontal, false);
+          flex: 0.9;
           // text-align: center;
           // line-height: 95px;
           // color: $color-dark-gray;
           // font-weight: normal;
           // line-height: 2.17;
-          // flex: 0.9;
-
+          
           // @include breakpoint(small down) {
-          //   margin-bottom: 10px;
+            //   margin-bottom: 10px;
           // }
 
           @include element(form) {
@@ -403,7 +398,7 @@
               font-size: 0.688em;
               text-transform: uppercase;
               display: inline-block;
-              margin: 0 auto;
+              // margin: 0 auto;
               font-weight: bold;
               text-align: center;
               outline: none;

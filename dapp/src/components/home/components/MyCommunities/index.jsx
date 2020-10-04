@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import PlusIcon from 'images/add.svg'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import isEmpty from 'lodash/isEmpty'
 import has from 'lodash/has'
@@ -94,7 +94,7 @@ const MyCommunities = ({
           value={valueSpinner}
           centered
           infinite={slides && slides.length > 1}
-          draggable={false}
+          draggable={isMobile}
           onChange={onChangeSpinner}
           animationSpeed={1000}
           slidesPerPage={1}

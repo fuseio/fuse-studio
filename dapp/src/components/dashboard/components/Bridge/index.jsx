@@ -7,8 +7,6 @@ import { BigNumber } from 'bignumber.js'
 import * as actions from 'actions/bridge'
 import { getBlockNumber } from 'actions/network'
 import { getBalances } from 'selectors/accounts'
-import arrow1 from 'images/arrow--1.svg'
-import arrow2 from 'images/arrow--2.svg'
 import { convertNetworkName } from 'utils/network'
 import { getTransaction } from 'selectors/transaction'
 import { loadModal } from 'actions/ui'
@@ -125,10 +123,7 @@ const Bridge = (props) => {
           bridgeSide={bridgeStatus.from}
           openModal={() => openModal('from')}
         />
-        {/* <div className='bridge__arrow'>
-          <img src={homeNetwork === bridgeStatus.from.network ? arrow1 : arrow2} />
-        </div> */}
-        <div className='bridge__transfer cell shrink'>
+        <div className='bridge__transfer shrink'>
           <div className='bridge__transfer__form'>
             <input type='number' value={transferAmount} max={formatted} placeholder='0' onChange={(e) => setTransferAmount(e.target.value)} disabled={transferStatus} />
             <div className='bridge__transfer__form__currency'>{symbol}</div>
@@ -144,9 +139,6 @@ const Bridge = (props) => {
             }
           </button>
         </div>
-        {/* <div className='bridge__arrow'>
-          <img src={homeNetwork === bridgeStatus.to.network ? arrow1 : arrow2} />
-        </div> */}
         <Balance
           isAdmin={isAdmin}
           symbol={symbol}

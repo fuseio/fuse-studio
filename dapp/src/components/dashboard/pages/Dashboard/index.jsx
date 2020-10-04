@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router'
-import { connect, useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import { joinCommunity } from 'actions/communityEntities'
 import { QR_MODAL } from 'constants/uiConstants'
 import { loadModal, hideModal } from 'actions/ui'

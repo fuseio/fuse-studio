@@ -1,10 +1,8 @@
 import React, { useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import Logo from 'components/common/Logo'
-// import HelpIcon from 'images/help.svg'
 import HelpIcon, { ReactComponent as Help } from 'images/help.svg'
 
-// import NotificationIcon from 'images/notification.svg'
 import WalletIcon from 'images/fuse-wallet.svg'
 import NewWalletIcon from 'images/new_wallet.svg'
 import classNames from 'classnames'
@@ -33,6 +31,7 @@ const NavBar = ({
   loadModal
 }) => {
   const isInCommunityPage = location.pathname.includes('/community/')
+  const isInNestedCommunityPage = isInCommunityPage && !location.pathname.includes('justCreated') && location.pathname.split('/').length > 4
   const isInIssuancePage = location.pathname.includes('/issuance')
 
   if (isInIssuancePage) {
@@ -74,10 +73,15 @@ const NavBar = ({
     loadModal(WEB3_CONNECT_MODAL, { web3connect })
   }
 
-  const isGreaterThen70 = () => scrollY > 20
+  const isGreaterThen70 = () => scrollY > 70
 
   return (
-    <div className={classNames('navbar', { 'navbar--scroll': isGreaterThen70(), 'navbar--short': modifier, 'navbar--bgImage': !modifier })} >
+    <div className={classNames('navbar',
+      { 'navbar--scroll': isGreaterThen70(),
+        'navbar--short': modifier,
+        'navbar--fixed': isInNestedCommunityPage,
+        'navbar--bgImage': !modifier || isMobileOnly
+      })}>
       {(withLogo || (isMobileOnly && isGreaterThen70())) && <div className='navbar__logo'>
         <Logo showHomePage={() => push('/')} isBlue={false} />
       </div>}

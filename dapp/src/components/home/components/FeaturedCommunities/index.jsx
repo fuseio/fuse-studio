@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
+import { isMobile } from 'react-device-detect'
 import { connect } from 'react-redux'
 import { fetchFeaturedCommunities } from 'actions/token'
 import { withRouter } from 'react-router'
@@ -67,7 +68,7 @@ const FeaturedCommunities = ({
           value={value}
           centered
           infinite
-          draggable={false}
+          draggable={isMobile}
           onChange={onChange}
           animationSpeed={1000}
           slidesPerPage={2}
