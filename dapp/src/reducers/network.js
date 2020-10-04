@@ -1,10 +1,9 @@
 import * as network from 'actions/network'
 import { SIGN_IN, CREATE_3BOX_PROFILE } from 'actions/accounts'
 import omit from 'lodash/omit'
-import { loadState } from 'utils/storage'
 const { addresses } = CONFIG.web3
 
-const loadedState = loadState('state.network') || CONFIG.web3.bridge.network
+const loadedState = CONFIG.web3.bridge.network
 
 const initialState = {
   addresses,

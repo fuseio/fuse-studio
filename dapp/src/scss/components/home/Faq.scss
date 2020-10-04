@@ -1,56 +1,53 @@
 @include block(faq) {
+  display: flex;
+  align-items: center;
   font-size: 16px;
   line-height: 25px;
   padding: 5px 0px;
   width: 100%;
 
   @include element(wrapper) {
-    margin-top: 2em;
     @include xy-grid(vertical);
     border-radius: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
     background-color: $color-white;
-    min-height: 300px;
+    padding-top: 25px;
+    padding-bottom: 25px;
 
     @include breakpoint(medium down) {
       margin-top: 1em;
     }
 
     > div:first-child {
-      height: 60px;
-      background: #f5f5f5;
-      width: inherit;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-      padding-left: 25px;
-      padding-right: 25px;
+      margin-bottom: 1.2em;
     }
-  }
-  @include element(questions) {
-    width: 100%;
-    padding: 2em;
   }
 
   @include element(title) {
     font-weight: 500;
     color: $color-dark;
-    font-size: 1.125em;
+
+    @include modifier (main) {
+      font-size: 1.125em;
+      // padding-bottom: .5em;
+    }
   }
 
   @include element(content) {
     color: #808080;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
     font-size: 0.75em;
-    > div:first-child {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      width: 90%;
-      white-space: nowrap;
-      line-height: 1.67;
-    }
+    white-space: nowrap;
+    line-height: 1.67;
   }
 
   @include element(read) {
-    color: #57b4fe;
+    color: #808080;
+    font-size: 0.75em;
     &:hover {
       text-decoration: underline;
       cursor: pointer;

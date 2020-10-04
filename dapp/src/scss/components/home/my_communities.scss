@@ -1,3 +1,127 @@
+@include block(my_communities) {
+  @include element(decoration) {
+    @include breakpoint(medium up) {
+      padding: 25px;
+      box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+      background-color: $color-white;
+      max-height: 500px;
+      min-height: 500px;
+    }
+    border-radius: 10px;
+    display: flex;
+    flex-flow: column wrap;
+    height: 100%;
+    justify-content: space-around;
+  }
+
+  @include element(list) {
+    height: 90%;
+  }
+
+  @include element(title) {
+    font-size: 1.125em;
+    color: $color-dark;
+    font-weight: 500;
+  }
+
+  @include block(item) {
+    border-radius: 5px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+    background-color: $color-white;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    @include element(image) {
+      position: relative;
+      width: 100%;
+
+      @include breakpoint(medium up) {
+        padding-top: 100px;
+      }
+
+      @include breakpoint(medium down) {
+        padding-top: 130px;
+      }
+
+      @include element(container) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+    }
+
+    @include element(content) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+    }
+
+    @include block(custom) {
+      height: 100%;
+      min-height: 180px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #f5f5f5;
+      }
+
+      @include element(title) {
+        font-size: 0.875em;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        text-align: center;
+        color: #696969;
+        margin-bottom: 1em;
+      }
+    }
+
+    @include element(name) {
+      font-size: 0.8em;
+      font-weight: 500;
+      letter-spacing: normal;
+      color: #696969;
+      line-height: 3;
+      white-space: nowrap;
+    }
+
+    @include element(button) {
+      width: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 30px;
+      border-radius: 3px;
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
+      border: solid 1px #ebebeb;
+      background-color: $color-white;
+      font-size: 0.688em;
+      text-align: center;
+      color: #868686;
+
+      &:hover {
+        background-color: #f4f4f4;
+      }
+    }
+  }
+}
+
 @include block(template_modal) {
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
@@ -149,7 +273,7 @@
   cursor: pointer;
   height: 100%;
   border-radius: 8px;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   @include xy-grid();
   @include flex-align(center, middle);
@@ -164,7 +288,7 @@
     letter-spacing: normal;
     text-align: center;
     color: #35617b;
-    padding: 1em;
+    padding: 2em;
 
     > img {
       margin-top: .5em;

@@ -295,8 +295,7 @@ function * watchFetchCommunity ({ response }) {
         if (foreignTokenAddress) {
           calls.push(
             put(fetchHomeTokenAddress(communityAddress, foreignTokenAddress)),
-            put(actions.fetchToken(foreignTokenAddress, { networkType: 'mainnet' })),
-            put(actions.fetchToken(foreignTokenAddress, { networkType: 'ropsten' })),
+            put(actions.fetchToken(foreignTokenAddress)),
             put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
             put(getTokenAllowance(foreignTokenAddress)),
             put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))

@@ -66,14 +66,10 @@ module.exports = {
         }]
       },
       {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|svg|jpg|gif)$/,
         use: {
           loader: 'file-loader'
         }
-      },
-      {
-        test: /\.svg$/,
-        use: ['@svgr/webpack', 'file-loader']
       }
     ]
   }

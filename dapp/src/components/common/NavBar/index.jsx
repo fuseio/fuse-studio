@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import Logo from 'components/common/Logo'
-import HelpIcon, { ReactComponent as Help } from 'images/help.svg'
-
+import HelpIcon from 'images/help.svg'
+import NotificationIcon from 'images/notification.svg'
 import WalletIcon from 'images/fuse-wallet.svg'
-import NewWalletIcon from 'images/new_wallet.svg'
 import classNames from 'classnames'
 import ProfileDropDown from 'components/common/ProfileDropDown'
 import { isMobileOnly } from 'react-device-detect'
@@ -31,7 +30,6 @@ const NavBar = ({
   loadModal
 }) => {
   const isInCommunityPage = location.pathname.includes('/community/')
-  const isInNestedCommunityPage = isInCommunityPage && !location.pathname.includes('justCreated') && location.pathname.split('/').length > 4
   const isInIssuancePage = location.pathname.includes('/issuance')
 
   if (isInIssuancePage) {
@@ -76,14 +74,9 @@ const NavBar = ({
   const isGreaterThen70 = () => scrollY > 70
 
   return (
-    <div className={classNames('navbar',
-      { 'navbar--scroll': isGreaterThen70(),
-        'navbar--short': modifier,
-        'navbar--fixed': isInNestedCommunityPage,
-        'navbar--bgImage': !modifier || isMobileOnly
-      })}>
+    <div className={classNames('navbar', { 'navbar--scroll': isGreaterThen70(), 'navbar--short': modifier })} >
       {(withLogo || (isMobileOnly && isGreaterThen70())) && <div className='navbar__logo'>
-        <Logo showHomePage={() => push('/')} isBlue={false} />
+        <Logo showHomePage={() => push('/')} isBlue={!isGreaterThen70()} />
       </div>}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
         <div
@@ -91,7 +84,7 @@ const NavBar = ({
           ref={helpRef}
           onClick={openHelp}
         >
-          <span className='icon'>{isInCommunityPage ? <Help className='help' /> : <img src={HelpIcon} />}</span>
+          <span className='icon'><img src={HelpIcon} /></span>
           <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
             <ul className='drop__options'>
               <li className='drop__options__item'><a href='https://fuse.io' target='_blank' rel='noopener noreferrer'>Website</a></li>
@@ -101,6 +94,9 @@ const NavBar = ({
             </ul>
           </div>
         </div>
+        <div className='navbar__links__notification'>
+          <span className='icon'><img src={NotificationIcon} /></span>
+        </div>
         {
           accountAddress ? (
             <div
@@ -108,7 +104,7 @@ const NavBar = ({
               ref={profileRef}
               onClick={openProfile}
             >
-              <span className='icon'><img src={isInCommunityPage ? NewWalletIcon : WalletIcon} /></span>
+              <span className='icon'><img src={WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
               <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
                 <ProfileDropDown handleLogOut={() => web3connect.core.clearCachedProvider()} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />

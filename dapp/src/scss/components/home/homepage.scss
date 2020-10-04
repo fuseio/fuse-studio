@@ -1,5 +1,33 @@
-@include block(home_page) {
+@include block (home_page) {
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 35%;
+    height: 30%;
+    right: 0;
+    background-image: url(../../assets/images/pattern.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: top right;
+
+    @include breakpoint(large only) {
+      width: 50%;
+    }
+    
+    @include breakpoint(medium down) {
+      width: 70%;
+      height: 200px;	
+		}
+  }
+
+  &:after {
+    height: 100%;
+  }
+
   @include breakpoint(large only) {
+    height: 100vh;
+
     > div {
       &:not(:first-child) {
         height: 50%;
@@ -18,8 +46,13 @@
     align-items: center;
     padding-top: 2%;
     padding-bottom: 2%;
+
+    @include breakpoint(medium up) {
+      min-height: 50vh;
+    }
+
     @include breakpoint(large) {
-      padding-top: 4.5%;
+      padding-top: 10%;   
     }
 
     @include breakpoint(medium up) {
@@ -28,7 +61,7 @@
     }
     @include breakpoint(medium down) {
       padding-top: 90px;
-    }
+		}
   }
 
   @include element(banner) {
@@ -41,6 +74,10 @@
     display: flex;
     align-items: center;
     background-color: #f5f5f5;
+
+    @include breakpoint(medium up) {
+      min-height: 50vh;
+    }
 
     > div {
       width: 100%;
@@ -57,8 +94,8 @@
     @include flex-align(justify, null);
 
     @include breakpoint(small down) {
-      padding: 20px 0;
-    }
+			padding: 20px 0
+		}
   }
 
   @include element(image) {
@@ -68,6 +105,25 @@
 
     @include breakpoint(small down) {
       margin: auto;
+
+      >img {
+        &:nth-of-type(1) {
+          display: none;
+        }
+      }
+    }
+
+    img {
+      background-size: contain;
+      background-repeat: no-repeat; 
+    }
+
+    >img {
+      &:nth-of-type(1) {
+        height: 100px;
+        width: 50px;
+        margin-right: 2em;
+      }
     }
   }
 
@@ -75,7 +131,7 @@
     color: $color-primary-dark;
     font-weight: bold;
     line-height: 1.14;
-    padding-bottom: 0.4em;
+    padding-bottom: .4em;
     @include breakpoint(medium up) {
       font-size: 1.75em;
     }
@@ -87,7 +143,7 @@
 
   @include element(text) {
     line-height: 1.29;
-    padding: 0 0 1.25em;
+    padding: 0 0 1.250em;
     letter-spacing: -0.46px;
     @include breakpoint(medium up) {
       font-size: 1.1em;
@@ -100,22 +156,24 @@
     }
 
     > a {
-      color: #0082ff;
+      color: #0082FF;
     }
   }
 
   @include element(button) {
+    
     @include breakpoint(medium up) {
       min-width: 300px;
-      width: 48%;
+      width: 70%;
     }
     @include breakpoint(medium down) {
-      width: 85%;
+      width: 85%;      
     }
-
+  
     > button {
       background: $color-fuse_gradient;
       color: $color-dark;
+      font-weight: bold;
       text-align: center;
       height: 45px;
       width: 100%;
@@ -138,7 +196,7 @@
   }
 
   @include element(tabs) {
-    @include breakpoint(medium up) {
+    @include breakpoint (medium up) {
       min-height: 500px;
       max-height: 500px;
     }

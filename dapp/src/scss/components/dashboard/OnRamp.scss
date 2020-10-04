@@ -4,6 +4,11 @@
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background: $color-white;
     border-radius: 5px;
+
+    @include breakpoint(medium up) {
+      // min-height: 390px;
+      // height: 390px;  
+    }
   }
 
   @include element(container) {

@@ -12,6 +12,7 @@ const Community = memo(({
   const {
     name,
     symbol,
+    // totalSupply,
     communityAddress
   } = token
 
@@ -32,11 +33,17 @@ const Community = memo(({
       </div>
       <div className='community__content'>
         <h3 className='community__content__title'>{name}</h3>
+        {/* <p className='community__content__members'>
+          Total Supply
+          <span>{formatWei(totalSupply, 0)}</span>
+        </p> */}
       </div>
     </div>
   )
 }, (prevProps, nextProps) => {
-  if ((prevProps.metadata !== nextProps.metadata) || (prevProps.token !== nextProps.token)) {
+  if (prevProps.token !== nextProps.token) {
+    return false
+  } else if (prevProps.metadata !== nextProps.metadata) {
     return false
   }
 

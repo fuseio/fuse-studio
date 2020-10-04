@@ -207,6 +207,15 @@ const Users = ({
                 <img src={dotsIcon} />
               </div>
               <div className='more' onClick={e => e.stopPropagation()}>
+                {/* <ul className='more__options'>
+                  {
+                    hasAdminRole
+                      ? <li className='more__options__item' onClick={() => handleAddAdminRole(address)}>Make admin</li>
+                      : !isNotSameAccount(accountAddress, address) && <li className='more__options__item' onClick={() => handleRemoveAdminRole(address)}>Remove as admin</li>
+                  }
+                  <li className='more__options__item' onClick={() => push(`transfer/${address}`)}>Transfer tokens to user</li>
+
+                </ul> */}
                 {
                   !hasAdminRole && (
                     <ul className='more__options'>

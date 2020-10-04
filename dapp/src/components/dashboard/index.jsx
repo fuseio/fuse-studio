@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import Sidebar from 'react-sidebar'
-import { isMobileOnly } from 'react-device-detect'
+import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import { Route, Switch, useParams } from 'react-router'
 import get from 'lodash/get'
 import { push } from 'connected-react-router'
 
-import { getAccountAddress } from 'selectors/accounts'
+import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
+import { getHomeNetworkType } from 'selectors/network'
 import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
@@ -47,18 +48,10 @@ const DashboardLayout = (props) => {
   const [open, onSetSidebarOpen] = useState(false)
 
   useEffect(() => {
-    if (isMobileOnly) {
+    if (isMobile) {
       onSetSidebarOpen(false)
     }
   }, [location.pathname])
-
-  useEffect(() => {
-    if (accountAddress) {
-      fetchCommunity(communityAddress, { networkType: 'ropsten' })
-      fetchCommunity(communityAddress, { networkType: 'mainnet' })
-      fetchEntities(communityAddress)
-    }
-  }, [accountAddress])
 
   useEffect(() => {
     if (communityAddress) {
@@ -66,6 +59,12 @@ const DashboardLayout = (props) => {
       fetchCommunity(communityAddress, { networkType: 'mainnet' })
       fetchEntities(communityAddress)
     }
+  }, [accountAddress])
+
+  useEffect(() => {
+    fetchCommunity(communityAddress, { networkType: 'ropsten' })
+    fetchCommunity(communityAddress, { networkType: 'mainnet' })
+    fetchEntities(communityAddress)
   }, [communityAddress])
 
   useEffect(() => {
@@ -85,7 +84,7 @@ const DashboardLayout = (props) => {
     <div className='dashboard'>
       <div className='container'>
         {
-          !isMobileOnly
+          !isMobile
             ? (
               <SidebarContent
                 match={match.url}
@@ -107,183 +106,110 @@ const DashboardLayout = (props) => {
               {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
             </Sidebar>
         }
-        <Switch>
-          {get(community, 'plugins.joinBonus') && !get(community, 'plugins.joinBonus.isRemoved', false) && isAdmin && (
-            <Route exact path={`${match.path}/bonus`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+        <div className='content__container'>
+          <div className='content'>
+            <div className='content__wrapper'>
+              <Switch>
+                {get(community, 'plugins.joinBonus') && !get(community, 'plugins.joinBonus.isRemoved', false) && isAdmin && (
+                  <Route exact path={`${match.path}/bonus`}>
                     <JoinBonusPage
                       match={match}
                       community={community}
                     />
-                  </div>
-                </div>
-              </div>
-            </Route>
-          )}
+                  </Route>
+                )}
 
-          {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
-            <Route exact path={`${match.path}/invite-bonus`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+                {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
+                  <Route exact path={`${match.path}/invite-bonus`}>
                     <InviteBonusPage
                       match={match}
                       community={community}
                     />
-                  </div>
-                </div>
-              </div>
-            </Route>
-          )}
+                  </Route>
+                )}
 
-          {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
-            <Route exact path={`${match.path}/backup-bonus`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+                {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
+                  <Route exact path={`${match.path}/backup-bonus`}>
                     <BackupBonusPage
                       match={match}
                       community={community}
                     />
-                  </div>
-                </div>
-              </div>
-            </Route>
-          )}
+                  </Route>
+                )}
 
-          {community && isAdmin && (
-            <Route exact path={`${match.path}/onramp`}
-              render={() => (
-                <div className='content__container content__container--bgImage'>
-                  <div className='content'>
-                    <div className='content__wrapper'>
-                      <OnRampPage
-                        community={community}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-            />)
-          }
+                {community && isAdmin && (
+                  <Route exact path={`${match.path}/onramp`}>
+                    <OnRampPage />
+                  </Route>
+                )
+                }
 
-          {community && isAdmin && (
-            <Route exact path={`${match.path}/walletbanner`}
-              render={() => (
-                <div className='content__container content__container--bgImage'>
-                  <div className='content'>
-                    <div className='content__wrapper'>
+                {community && isAdmin && (
+                  <Route exact path={`${match.path}/walletbanner`}
+                    render={() => (
                       <WalletBannerLinkPage
                         match={match}
                         community={community}
                       />
-                    </div>
-                  </div>
-                </div>
-              )}
-            />)
-          }
+                    )}
+                  />)
+                }
 
-          {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
-            <Route exact path={`${match.path}/mintBurn`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+                {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
+                  <Route exact path={`${match.path}/mintBurn`}>
                     <MintBurnPage />
-                  </div>
-                </div>
-              </div>
-            </Route>
-          )}
+                  </Route>
+                )}
 
-          {isAdmin && (
-            <Route exact path={`${match.path}/settings`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+                {isAdmin && (
+                  <Route exact path={`${match.path}/settings`}>
                     <SettingsPage
                       community={community}
                     />
-                  </div>
-                </div>
-              </div>
-            </Route>
-          )}
+                  </Route>
+                )}
 
-          {community && isAdmin && (
-            <Route exact path={`${match.path}/plugins`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+                {community && isAdmin && (
+                  <Route exact path={`${match.path}/plugins`}>
                     <PluginsPage
                       community={community}
                     />
-                  </div>
-                </div>
-              </div>
-            </Route>
-          )}
+                  </Route>
+                )}
 
-          {!get((community && community.plugins), 'businessList.isRemoved', false) && (
-            <Route exact path={`${match.path}/merchants`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+                {!get((community && community.plugins), 'businessList.isRemoved', false) && (
+                  <Route exact path={`${match.path}/merchants`}>
                     <Businesses />
-                  </div>
-                </div>
-              </div>
-            </Route>
-          )}
+                  </Route>
+                )}
 
-          <Route exact path={`${match.path}/wallet`}>
-            <div className='content__container content__container--bgImage'>
-              <div className='content'>
-                <div className='content__wrapper'>
+                <Route exact path={`${match.path}/wallet`}>
                   <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
-                </div>
-              </div>
-            </div>
-          </Route>
+                </Route>
 
-          {community && (
-            <Route exact path={`${match.path}/users`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+                {community && (
+                  <Route exact path={`${match.path}/users`}>
                     <Users />
-                  </div>
-                </div>
-              </div>
-            </Route>)
-          }
+                  </Route>)
+                }
 
-          {community && (
-            <Route exact path={`${match.path}/transfer/:sendTo?`}>
-              <div className='content__container content__container--bgImage'>
-                <div className='content'>
-                  <div className='content__wrapper'>
+                {community && (
+                  <Route exact path={`${match.path}/transfer/:sendTo?`}>
                     <TransferPage />
-                  </div>
-                </div>
-              </div>
-            </Route>)
-          }
+                  </Route>)
+                }
 
-          {community && (
-            <Route exact path={`${match.path}/:success?`}>
-              <div className='content__container'>
-                <div className='content'>
-                  <Dashboard />
-                </div>
-              </div>
-            </Route>)
-          }
-        </Switch>
-      </div >
-    </div >
+                {community && (
+                  <Route exact path={`${match.path}/:success?`}>
+                    <Dashboard />
+                  </Route>)
+                }
+              </Switch>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -291,7 +217,9 @@ const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
   foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
   community: getCurrentCommunity(state),
-  isAdmin: checkIsAdmin(state)
+  isAdmin: checkIsAdmin(state),
+  homeNetwork: getHomeNetworkType(state),
+  providerInfo: getProviderInfo(state)
 })
 
 const mapDispatchToProps = {

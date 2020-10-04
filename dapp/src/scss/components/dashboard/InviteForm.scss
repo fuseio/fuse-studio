@@ -195,6 +195,10 @@
     overflow: hidden;
     height: 150px;
     margin: 2em 0 0;
+    // > div {
+    //   width: 400px;
+    //   height: 50px;
+    // }
   }
 
   @include block(hidden) {
@@ -204,6 +208,7 @@
   @include block(entry) {
     height: 25px;
     position: absolute;
+    // width: 160px;
 
     &:nth-child(2) {
       left: 8px;

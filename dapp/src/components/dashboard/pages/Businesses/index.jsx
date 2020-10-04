@@ -204,6 +204,13 @@ const Businesses = ({
     })
   }
 
+  // TODO - multi-selection
+  // const toggleRow = (rowData) => {
+  //   const checkbox = data.find(({ account }) => account === rowData.account).checkbox
+  //   data.find(({ account }) => account === rowData.account).checkbox = !checkbox
+  //   setData([...data])
+  // }
+
   const renderContent = () => {
     if (!isEmpty(tableData)) {
       return (

@@ -1,8 +1,3 @@
-html,
-body {
-  height: 100%;
-}
-
 @include block(root) {
   @include element(wrapper) {
     @include breakpoint(medium down) {
