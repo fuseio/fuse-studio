@@ -1,6 +1,4 @@
-
 @include block(navbar) {
-  position: absolute;
   @include xy-grid();
   @include flex-align(justify, middle);
   padding: 10px 20px;
@@ -8,10 +6,34 @@
   min-height: 70px;
   color: $color-dark;
   z-index: 99;
+  position: sticky;
+  animation: smoothScroll 0.3s ease;
+
+  @keyframes smoothScroll {
+    0% {
+      transform: translateY(-40px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  @include modifier(bgImage) {
+    background-image: url(../../assets/images/header.jpg);
+  }
+
+  @include modifier(fixed) {
+    position: fixed;
+    top: 0;
+  }
 
   @include modifier(short) {
     width: 80%;
     right: 0;
+    margin-left: auto;
+
+    .navbar__links__wallet {
+      background-color: #f5f5f5;
+    }
 
     @include breakpoint(small only) {
       width: 100%;
@@ -26,25 +48,12 @@
     }
   }
 
-
   @include modifier(scroll) {
-    position: fixed;
     top: 0;
     background-image: url(../../assets/images/header.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     z-index: 11;
-
-    animation: smoothScroll 0.3s ease;
-
-    @keyframes smoothScroll {
-      0% {
-        transform: translateY(-40px);
-      }
-      100% {
-        transform: translateY(0px);
-      }
-    }
   }
 
   @include element(connecting) {
@@ -76,16 +85,16 @@
 
     @include element(help) {
       position: relative;
-      margin: 0 .8em;
+      margin: 0 0.8em;
     }
 
     @include block(drop) {
       @include modifier(show) {
-        @include xy-grid()
+        @include xy-grid();
       }
 
       @include modifier(profile) {
-        top: 37px
+        top: 37px;
       }
 
       display: none;
@@ -98,12 +107,12 @@
       @include flex-align(left, middle);
       min-width: 250px;
       width: max-content;
-      height: auto;      
+      height: auto;
       border-radius: 5px;
       box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
       background-color: $color-white;
 
-      @include element (options) {
+      @include element(options) {
         list-style: none;
         position: relative;
         width: 100%;
@@ -112,11 +121,10 @@
         padding: 0;
         @include xy-grid(vertical);
         @include flex-align(spaced);
-        font-size: 0.750em;
+        font-size: 0.75em;
         cursor: initial;
 
         @include element(item) {
-
           > a {
             display: inline-block;
             width: 100%;
@@ -126,7 +134,7 @@
           cursor: pointer;
 
           &:hover {
-            background-color: darken($color: white, $amount: 10%)
+            background-color: darken($color: white, $amount: 10%);
           }
 
           &:first-child {
@@ -146,14 +154,14 @@
 
     @include element(notification) {
       position: relative;
-      margin: 0 .8em;
+      margin: 0 0.8em;
     }
 
     @include element(wallet) {
       cursor: pointer;
       position: relative;
-      margin: 0 .8em;
-      
+      margin: 0 0.8em;
+
       @include breakpoint(medium) {
         @include xy-grid();
         @include flex-align(spaced, middle);
@@ -180,6 +188,7 @@
 
       @include element(text) {
         font-size: 0.72em;
+        font-weight: 500;
         @include breakpoint(small down) {
           display: none;
         }
@@ -193,6 +202,12 @@
     height: 20px;
     display: inline-block;
     cursor: pointer;
+    @include block(help) {
+      font-weight: 500;
+      g > path:nth-child(1) {
+        fill: #f5f5f5;
+      }
+    }
 
     > img {
       background-position: center;

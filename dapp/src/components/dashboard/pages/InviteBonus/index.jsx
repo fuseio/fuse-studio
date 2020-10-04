@@ -62,7 +62,7 @@ const InviteBonus = ({
         setTransferMessage(true)
       }
     }
-    return () => {}
+    return () => { }
   }, [transactionStatus])
 
   const transferToFunder = (amount) => {
@@ -115,7 +115,7 @@ const InviteBonus = ({
           />
         </div>
       </div>
-    </div> : <div />
+    </div > : <div />
   )
 }
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
+import { isMobile } from 'react-device-detect'
 import { connect } from 'react-redux'
 import { fetchFeaturedCommunities } from 'actions/token'
 import { withRouter } from 'react-router'
@@ -40,6 +41,7 @@ const FeaturedCommunities = ({
               token={token}
               showDashboard={() => showDashboard(address, community.name)}
               community={community}
+              withDescription
             />
           </div>
         )
@@ -66,7 +68,7 @@ const FeaturedCommunities = ({
           value={value}
           centered
           infinite
-          draggable
+          draggable={isMobile}
           onChange={onChange}
           animationSpeed={1000}
           slidesPerPage={2}
@@ -78,8 +80,10 @@ const FeaturedCommunities = ({
               slidesPerPage: 1
             }
           }}
-        >{slides}</Carousel>
-        <Dots value={value} onChange={onChange} number={React.Children.count(slides)} />
+        >
+          {slides}
+        </Carousel>
+        {slides && slides.length > 1 && <Dots value={value} onChange={onChange} number={React.Children.count(slides)} />}
       </div>
     </div>
   )

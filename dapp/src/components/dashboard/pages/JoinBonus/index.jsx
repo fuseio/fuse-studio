@@ -63,7 +63,7 @@ const JoinBonus = ({
         setTransferMessage(true)
       }
     }
-    return () => {}
+    return () => { }
   }, [transactionStatus])
 
   const transferToFunder = (amount) => {
@@ -116,7 +116,7 @@ const JoinBonus = ({
           />
         </div>
       </div>
-    </div> : <div />
+    </div > : <div />
   )
 }
 

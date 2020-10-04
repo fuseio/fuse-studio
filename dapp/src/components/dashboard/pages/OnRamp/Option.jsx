@@ -74,7 +74,7 @@ const options = (plugin) => [
       }
     ],
     fee: '0.0',
-    countries: 'sdadada',
+    countries: '',
     value: 'rampInstant',
     isSelected: plugin === 'rampInstant'
   }

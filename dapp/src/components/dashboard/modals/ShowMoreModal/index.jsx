@@ -10,12 +10,6 @@ export default ({ hideModal, name, tokenName, foreignTokenAddress, homeTokenAddr
       <div className='show-more'>
         <div className='show-more__header'>{name}</div>
         <div className='show-more__content'>
-          {/* {
-            name && name.toLowerCase() === 'fuse' && <div className='show-more__content__item'>
-              <span>RPC Network</span>
-              <span>{network}</span>
-            </div>
-          } */}
           <div className='show-more__content__item'>
             <span>Token name</span>
             <span>{tokenName}</span>
