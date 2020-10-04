@@ -189,7 +189,6 @@
       @include flex-align(spaced, null);
 
       @include breakpoint(medium up) {
-        // padding: 40px 0 60px;
         padding-bottom: 50px;
       }
 
@@ -897,7 +896,6 @@
             }
 
             @include element(group) {
-              // display: inline !important;
             }
 
             @include element(control) {
@@ -928,7 +926,6 @@
 
             @include element(value-container) {
               height: inherit;
-              // justify-content: center;
               @include block(icon) {
                 display: inline-block;
                 width: 25px;
@@ -968,18 +965,6 @@
             @include element(menu-list) {
               color: $color-dark;
               > div {
-                // font-size: 0.75em;
-                // display: flex;
-                // align-items: center;
-                // padding: 5px 16px;
-                // min-height: 54px;
-                // height: 100%;
-                // max-height: 54px;
-
-                // &:hover {
-                //   cursor: pointer;
-                //   background-color: rgba(238, 238, 238, 0.5);
-                // }
 
                 @include block(icon) {
                   display: inline-block;

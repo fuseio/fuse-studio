@@ -3,7 +3,7 @@
   border-radius: 3px;
   padding: 15px;
   width: 100%;
-  
+
   @include breakpoint(medium up) {
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);
     border: solid 1px #c8c8c8;
@@ -88,12 +88,14 @@
   }
 
   @include element(card) {
-    padding: .5em 0;
+    padding: 0.5em 0;
     font-size: 1em;
-    &:hover {
-      cursor: pointer;
-      > .profile__card__arrow {
-        display: inline-block;
+    @include modifier(link) {
+      &:hover {
+        cursor: pointer;
+        > .profile__card__arrow {
+          display: inline-block;
+        }
       }
     }
     @include element(logo) {
@@ -119,21 +121,20 @@
     }
 
     @include element(balance) {
-
       > span {
         &:nth-child(1) {
           font-weight: normal;
-          color: $color-light-gray;        
+          color: $color-light-gray;
         }
 
         &:nth-child(2) {
-          font-weight: normal;     
-        } 
+          font-weight: normal;
+        }
 
         &:nth-child(3) {
           font-size: 9px;
           font-weight: normal;
-        } 
+        }
       }
     }
   }

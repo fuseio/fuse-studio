@@ -62,7 +62,7 @@ const InviteBonus = ({
         setTransferMessage(true)
       }
     }
-    return () => {}
+    return () => { }
   }, [transactionStatus])
 
   const transferToFunder = (amount) => {
@@ -84,35 +84,37 @@ const InviteBonus = ({
   const balance = balances[homeTokenAddress]
 
   return (
-    community ? <div className='join_bonus__wrapper'>
-      <div className='join_bonus'>
-        <h2 className='join_bonus__main-title join_bonus__main-title--white'>Invite bonus</h2>
-        <div style={{ position: 'relative' }}>
-          <TransferToFunderForm
-            isTransfer={isTransfer}
-            transferSignature={transferSignature}
-            closeInnerModal={() => {
-              setTransferMessage(false)
-              clearTransactionStatus(null)
-            }}
-            symbol={foreignToken.symbol}
-            transactionConfirmed={transactionConfirmed}
-            transactionError={transactionError}
-            transactionDenied={transactionDenied}
-            balance={balance ? formatWei(balance, 0, foreignToken.decimals) : 0}
-            transferToFunder={transferToFunder}
-            funderBalance={funderBalance ? formatWei(funderBalance, 0, foreignToken.decimals) : 0}
-          />
-          <RewardUserForm
-            networkType={networkType}
-            hasFunderBalance={funderBalance && funderBalance !== '0'}
-            initialValues={{
-              amount: get(inviteBonus, 'inviteInfo.amount', '')
-            }}
-            communityAddress={communityAddress}
-            setBonus={(amount) => setBonus('inviteBonus', amount)}
-            text='How much tokens you want to reward for invite?'
-          />
+    community ? <div className='content__wrapper'>
+      <div className='join_bonus__wrapper'>
+        <div className='join_bonus'>
+          <h2 className='join_bonus__main-title join_bonus__main-title--white'>Invite bonus</h2>
+          <div style={{ position: 'relative' }}>
+            <TransferToFunderForm
+              isTransfer={isTransfer}
+              transferSignature={transferSignature}
+              closeInnerModal={() => {
+                setTransferMessage(false)
+                clearTransactionStatus(null)
+              }}
+              symbol={foreignToken.symbol}
+              transactionConfirmed={transactionConfirmed}
+              transactionError={transactionError}
+              transactionDenied={transactionDenied}
+              balance={balance ? formatWei(balance, 0, foreignToken.decimals) : 0}
+              transferToFunder={transferToFunder}
+              funderBalance={funderBalance ? formatWei(funderBalance, 0, foreignToken.decimals) : 0}
+            />
+            <RewardUserForm
+              networkType={networkType}
+              hasFunderBalance={funderBalance && funderBalance !== '0'}
+              initialValues={{
+                amount: get(inviteBonus, 'inviteInfo.amount', '')
+              }}
+              communityAddress={communityAddress}
+              setBonus={(amount) => setBonus('inviteBonus', amount)}
+              text='How much tokens you want to reward for invite?'
+            />
+          </div>
         </div>
       </div>
     </div> : <div />

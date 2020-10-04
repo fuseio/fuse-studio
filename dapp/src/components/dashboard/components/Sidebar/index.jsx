@@ -14,6 +14,7 @@ import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 
 import MenuItem from './MenuItem'
+import { isMobile } from 'react-device-detect'
 
 const Sidebar = ({
   match,

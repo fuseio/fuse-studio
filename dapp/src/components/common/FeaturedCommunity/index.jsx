@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import { connect } from 'react-redux'
+import FontAwesome from 'react-fontawesome'
 
 import CommunityLogo from 'components/common/CommunityLogo'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
@@ -9,7 +10,8 @@ const FeaturedCommunity = memo(({
   community,
   showDashboard,
   token,
-  metadata
+  metadata,
+  withDescription
 }) => {
   return (
     <div className='featured' onClick={showDashboard}>
@@ -21,8 +23,8 @@ const FeaturedCommunity = memo(({
             ) : getCoverPhotoUri(metadata) ? (
               <img alt='cover photo' src={getCoverPhotoUri(metadata)} />
             ) : (
-              <img alt='cover photo' src={CommunityPlaceholderImage} />
-            )
+                  <img alt='cover photo' src={CommunityPlaceholderImage} />
+                )
           }
         </div>
         <div className='featured__logo'>
@@ -35,7 +37,7 @@ const FeaturedCommunity = memo(({
           />
         </div>
       </div>
-      <div className='featured__content'>
+      <div className='featured__content grid-x align-top'>
         <h6 className='featured__name'>{community.name}
           {community && community.subTitle && (
             <React.Fragment>
@@ -43,6 +45,36 @@ const FeaturedCommunity = memo(({
               <span style={{ fontSize: 'smaller' }}>{community.subTitle}</span>
             </React.Fragment>
           )}</h6>
+        {withDescription && community && (
+          <div className='featured__description'>
+            {community && community.description}
+          </div>
+        )}
+        {withDescription && community && (
+          <div className='featured__information grid-x align-middle align-justify'>
+            <div className='item cell small-8 grid-x align-middle'>
+              <div className='item__icon'><FontAwesome name='info-circle' /></div>
+              <div className='item__content grid-y'>
+                <span>Token</span>
+                <span>{token && token.symbol}</span>
+              </div>
+            </div>
+            <div className='item cell small-8 grid-x align-middle'>
+              <div className='item__icon'><FontAwesome name='info-circle' /></div>
+              <div className='item__content grid-y'>
+                <span>Business</span>
+                <span>400</span>
+              </div>
+            </div>
+            <div className='item cell small-8 grid-x align-middle'>
+              <div className='item__icon'><FontAwesome name='info-circle' /></div>
+              <div className='item__content grid-y'>
+                <span>Users</span>
+                <span>100</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

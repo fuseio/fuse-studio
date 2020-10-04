@@ -154,9 +154,9 @@ function * getBlockNumber ({ networkType, bridgeType }) {
 }
 
 function * watchCheckNetworkTypeSuccess ({ response }) {
-  const { foreignNetwork, homeNetwork, accountAddress } = response
+  const { networkId, homeNetwork = 'fuse', accountAddress } = response
+  saveState('state.network', { foreignNetwork: networkIdToName[networkId], homeNetwork })
   yield put(fetchCommunities(accountAddress))
-  saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
 function * watchConnectToWallet ({ response, accountAddress }) {
@@ -199,13 +199,13 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
   })
 }
 
-export function * getWeb3 ({ bridgeType } = {}) {
+export function * getWeb3 ({ bridgeType, networkType } = {}) {
   if (!bridgeType) {
     return getWeb3Service()
   } else if (bridgeType === 'home') {
     return getWeb3Service({ networkType: 'fuse' })
   } else {
-    const foreignNetwork = yield select(getForeignNetwork)
+    const foreignNetwork = networkType || (yield select(getForeignNetwork))
     return getWeb3Service({ networkType: foreignNetwork })
   }
 }
