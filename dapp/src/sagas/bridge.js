@@ -16,7 +16,7 @@ import HomeMultiAMBErc20ToErc677 from 'constants/abi/HomeMultiAMBErc20ToErc677'
 import { isZeroAddress } from 'utils/web3'
 import { getCurrentCommunity } from 'selectors/dashboard'
 
-export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress }) {
+export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress, options }) {
   const web3 = yield getWeb3({ bridgeType: 'home' })
   const homeBridgeMediatorAddress = yield select(getBridgeMediator, 'home')
   const homeBridge = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, homeBridgeMediatorAddress)
@@ -30,7 +30,8 @@ export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress
     put(fetchToken(homeTokenAddress)),
     put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
     put(fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-    put(actions.getTokenAllowance(foreignTokenAddress)),
+    put(fetchTokenTotalSupply(foreignTokenAddress, options)),
+    put(actions.getTokenAllowance(foreignTokenAddress, options)),
     put({
       type: actions.FETCH_HOME_TOKEN_ADDRESS.SUCCESS,
       communityAddress,
@@ -44,19 +45,21 @@ export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress
   return homeTokenAddress
 }
 
-export function * getAllowance ({ tokenAddress, bridgeType = 'foreign' }) {
+export function * getAllowance ({ tokenAddress, bridgeType = 'foreign', options }) {
   const bridgeMediator = yield select(getBridgeMediator, bridgeType)
   const accountAddress = yield select(getAccountAddress)
-  const web3 = yield getWeb3({ bridgeType })
-  const basicToken = new web3.eth.Contract(BasicTokenABI, tokenAddress)
-  const allowance = yield call(basicToken.methods.allowance(accountAddress, bridgeMediator).call)
-  yield put({
-    type: actions.GET_TOKEN_ALLOWANCE.SUCCESS,
-    tokenAddress,
-    response: {
-      allowance
-    }
-  })
+  if (accountAddress) {
+    const web3 = yield getWeb3({ bridgeType })
+    const basicToken = new web3.eth.Contract(BasicTokenABI, tokenAddress)
+    const allowance = yield call(basicToken.methods.allowance(accountAddress, bridgeMediator).call)
+    yield put({
+      type: actions.GET_TOKEN_ALLOWANCE.SUCCESS,
+      tokenAddress,
+      response: {
+        allowance
+      }
+    })
+  }
 }
 
 function * approveToken ({ tokenAddress, value, bridgeType = 'foreign' }) {
