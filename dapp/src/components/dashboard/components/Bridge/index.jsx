@@ -61,12 +61,17 @@ const Bridge = (props) => {
     if (bridgeStatus.to.bridge === 'home' && !hasHomeTokenInNewBridge) {
       watchHomeNewTokenRegistered()
     }
-    if (bridgeStatus.to.bridge === 'home') {
-      watchHomeBridge(transactionHash, homeBridgeAddress, isMultiBridge)
-    } else {
-      watchForeignBridge(transactionHash, foreignBridgeAddress, isMultiBridge)
+  }, [waitingForConfirmation, transactionHash])
+
+  useEffect(() => {
+    if (transactionHash) {
+      if (bridgeStatus.to.bridge === 'home') {
+        watchHomeBridge(transactionHash, homeBridgeAddress, isMultiBridge)
+      } else {
+        watchForeignBridge(transactionHash, foreignBridgeAddress, isMultiBridge)
+      }
     }
-  }, [waitingForConfirmation])
+  }, [transactionHash])
 
   useEffect(() => {
     if (isTokenApproved) {
