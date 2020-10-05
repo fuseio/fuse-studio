@@ -1,34 +1,38 @@
 @include block(join_bonus) {
-
   @include element(wrapper) {
-    display: flex;
-    justify-content: center;
+    position: relative;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+  }
+
+  @include element(header) {
+    @include xy-grid();
+    @include flex-align(null, middle);
+    color: $color-white;
+
+    @include breakpoint(medium up) {
+      margin-top: 10em;
+      margin-bottom: 1.5em;
+    }
 
     @include breakpoint(small down) {
       margin-top: 4em;
     }
+
+    @include element(title) {
+      font-size: 1.625em;
+      font-weight: 500;
+    }
   }
-
   @include element(container) {
-    @include breakpoint(small down) {
-      padding: 2em 1em;
-    }
-
-    position: relative;
     @include xy-grid(vertical, false);
-    border-radius: 6px;
-    background-color: $color-white;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
-    @include breakpoint(medium up) {
-      width: 687px;
-      padding: 40px 40px 20px;
-      min-height: 200px;
-    }
+    padding: 40px 40px 20px;
 
     @include modifier(opacity) {
       > * {
         cursor: not-allowed;
-        opacity: .3;
+        opacity: 0.3;
       }
     }
   }
@@ -49,7 +53,7 @@
     color: $color-light-dark;
 
     @include breakpoint(medium up) {
-    }    
+    }
 
     > div {
       @include xy-grid();
@@ -61,7 +65,7 @@
       }
 
       > small {
-        font-size: 0.750em;
+        font-size: 0.75em;
         letter-spacing: -0.26px;
         color: $color-gray;
         margin-top: auto;
@@ -80,12 +84,12 @@
 
     @include modifier(dark) {
       margin-top: 2em;
-      font-size: 1.500em;
-      margin-bottom: 0.5em;  
+      font-size: 1.5em;
+      margin-bottom: 0.5em;
       color: $color-light-dark;
     }
   }
- 
+
   @include element(title) {
     font-size: 1em;
     font-weight: 500;
@@ -96,7 +100,8 @@
 
   @include element(field) {
     margin-top: 2em;
-    @include breakpoint(medium up) {}
+    @include breakpoint(medium up) {
+    }
 
     @include breakpoint(small) {
       width: 100%;
@@ -134,7 +139,6 @@
       }
       &:hover:not(.Mui-disabled):before {
         border-bottom: none !important;
-
       }
       &:after {
         border-bottom: none !important;
@@ -150,7 +154,7 @@
 
   @include element(actions) {
     @include xy-grid();
-    @include flex-align(justify, middle)
+    @include flex-align(justify, middle);
   }
 
   @include block(content) {
@@ -165,14 +169,14 @@
       font-size: 14px;
 
       @include breakpoint(small) {
-        font-size: 14px;							
+        font-size: 14px;
       }
     }
 
     @include element(text) {
       color: $color-gray;
       line-height: 1.25;
-      font-size: 0.750em;
+      font-size: 0.75em;
     }
 
     @include element(toggle) {
@@ -181,14 +185,14 @@
       padding-top: 1em;
 
       @include element(text) {
-        font-size: 0.750em;
+        font-size: 0.75em;
         margin-left: 5px;
         color: rgba(13, 45, 69, 0.5);
         > span {
           &:first-child {
             font-weight: bold;
             color: $color-dark;
-          }  
+          }
         }
       }
 
@@ -265,5 +269,24 @@
   @include element(button) {
     margin-left: auto;
     margin-top: 1em;
+  }
+}
+
+@include block(bonus_options) {
+  @include element(container) {
+    @include xy-grid(vertical, false);
+    @include modifier(opacity) {
+      > * {
+        cursor: not-allowed;
+        opacity: 0.3;
+      }
+    }
+  }
+
+  .table {
+    height: auto;
+    .table__body {
+      height: auto;
+    }
   }
 }

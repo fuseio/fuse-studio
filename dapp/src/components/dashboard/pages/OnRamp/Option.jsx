@@ -120,7 +120,7 @@ const TableOptions = connect(({ formik, data, columns }) => {
               <React.Fragment>
                 <Field
                   name='plugin'
-                  render={({ field, form: { setFieldValue } }) => (
+                  render={({ field, form: { setFieldValue, submitForm } }) => (
                     <input
                       className='row_checkbox'
                       {...field}
@@ -131,7 +131,7 @@ const TableOptions = connect(({ formik, data, columns }) => {
                       onChange={(e) => {
                         onChange(e)
                         setFieldValue('plugin', e.target.value)
-                        setTimeout(formik.submitForm, 3)
+                        setTimeout(submitForm, 3)
                       }} />
                   )}
                 />

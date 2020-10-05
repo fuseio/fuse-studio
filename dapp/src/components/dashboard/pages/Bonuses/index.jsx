@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router'
+import React, { useState, useEffect, Fragment } from 'react'
 import RewardUserForm from 'components/dashboard/components/RewardUserForm'
 import TransferToFunderForm from 'components/dashboard/components/TransferToFunderForm'
 import { connect, useSelector } from 'react-redux'
@@ -13,16 +12,16 @@ import { loadModal } from 'actions/ui'
 import get from 'lodash/get'
 import { getCurrentNetworkType } from 'selectors/network'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
-import { getCommunityAddress } from 'selectors/entities'
 import { getHomeTokenAddress, getCurrentCommunity } from 'selectors/dashboard'
+import { getCommunityAddress } from 'selectors/entities'
+import ReactTooltip from 'react-tooltip'
+import FontAwesome from 'react-fontawesome'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
-const BackupBonus = ({
+const JoinBonus = ({
   error,
-  networkType,
   community,
-  homeToken,
   transactionStatus,
   transferSignature,
   isTransfer,
@@ -35,13 +34,10 @@ const BackupBonus = ({
   homeTokenAddress,
   foreignToken
 }) => {
-  const { address: communityAddress } = useParams()
   const funderAccount = useSelector(getFunderAccount)
   const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[homeTokenAddress]
 
   const { plugins } = community
-
-  const { backupBonus } = plugins
 
   const [transferMessage, setTransferMessage] = useState(false)
 
@@ -81,41 +77,48 @@ const BackupBonus = ({
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
+  const initialValues = React.useMemo(() => ({
+    joinBonus: { ...get(plugins, 'joinBonus.joinInfo'), isActive: get(plugins, 'joinBonus.isActive') },
+    backupBonus: { ...get(plugins, 'backupBonus.backupInfo'), isActive: get(plugins, 'backupBonus.isActive') },
+    inviteBonus: { ...get(plugins, 'inviteBonus.inviteInfo'), isActive: get(plugins, 'inviteBonus.isActive') }
+  }), [plugins])
+
   const balance = balances[homeTokenAddress]
 
   return (
-    community ? <div className='join_bonus__wrapper'>
-      <div className='join_bonus'>
-        <h2 className='join_bonus__main-title join_bonus__main-title--white'>Backup bonus</h2>
-        <div style={{ position: 'relative' }}>
-          <TransferToFunderForm
-            isTransfer={isTransfer}
-            transferSignature={transferSignature}
-            closeInnerModal={() => {
-              setTransferMessage(false)
-              clearTransactionStatus(null)
-            }}
-            symbol={foreignToken.symbol}
-            transactionConfirmed={transactionConfirmed}
-            transactionError={transactionError}
-            transactionDenied={transactionDenied}
-            balance={balance ? formatWei(balance, 2, foreignToken.decimals) : 0}
-            transferToFunder={transferToFunder}
-            funderBalance={funderBalance ? formatWei(funderBalance, 2, foreignToken.decimals) : 0}
-          />
-          <RewardUserForm
-            networkType={networkType}
-            hasFunderBalance={funderBalance && funderBalance !== '0'}
-            initialValues={{
-              amount: get(backupBonus, 'backupInfo.amount', '')
-            }}
-            communityAddress={communityAddress}
-            setBonus={(amount) => setBonus('backupBonus', amount)}
-            text='How much tokens you want to reward for backup?'
-          />
-        </div>
+    community ? <Fragment>
+      <div className='join_bonus__header'>
+        <h2 className='join_bonus__header__title'>Bonuses</h2>
+        &nbsp;<FontAwesome data-tip data-for='Bonuses' name='info-circle' />
+        <ReactTooltip className='tooltip__content' id='Bonuses' place='bottom' effect='solid'>
+          <div>Please put some tokens into the funder above and then select here the type of bonus and the amount you would like.</div>
+        </ReactTooltip>
       </div>
-    </div> : <div />
+      <div className='join_bonus__wrapper'>
+        <TransferToFunderForm
+          isTransfer={isTransfer}
+          transferSignature={transferSignature}
+          closeInnerModal={() => {
+            setTransferMessage(false)
+            clearTransactionStatus(null)
+          }}
+          symbol={foreignToken.symbol}
+          transactionConfirmed={transactionConfirmed}
+          transactionError={transactionError}
+          transactionDenied={transactionDenied}
+          balance={balance ? formatWei(balance, 2, foreignToken.decimals) : 0}
+          transferToFunder={transferToFunder}
+          funderBalance={funderBalance ? formatWei(funderBalance, 2, foreignToken.decimals) : 0}
+        />
+        <RewardUserForm
+          hasFunderBalance={funderBalance && funderBalance !== '0'}
+          setJoinBonus={(amount, isActive) => setBonus('joinBonus', amount, isActive)}
+          setBackupBonus={(amount, isActive) => setBonus('backupBonus', amount, isActive)}
+          setInviteBonus={(amount, isActive) => setBonus('inviteBonus', amount, isActive)}
+          initialValues={initialValues}
+        />
+      </div>
+    </Fragment> : <div />
   )
 }
 
@@ -135,4 +138,4 @@ const mapDispatchToState = {
   loadModal
 }
 
-export default connect(mapStateToProps, mapDispatchToState)(BackupBonus)
+export default connect(mapStateToProps, mapDispatchToState)(JoinBonus)

@@ -15,24 +15,10 @@ const allPlugins = (isAdmin) => isAdmin ? ({
     icon: BusinessIcon,
     selectedIcon: BusinessYellowIcon
   },
-  joinBonus: {
-    name: 'Join bonus',
-    path: '/bonus',
-    url: (match) => `${match}/bonus`,
-    icon: JoinBonusIcon,
-    selectedIcon: JoinBonusYellowIcon
-  },
-  backupBonus: {
-    name: 'Backup bonus',
-    path: '/backup-bonus',
-    url: (match) => `${match}/backup-bonus`,
-    icon: JoinBonusIcon,
-    selectedIcon: JoinBonusYellowIcon
-  },
-  inviteBonus: {
-    name: 'Invite bonus',
-    path: '/invite-bonus',
-    url: (match) => `${match}/invite-bonus`,
+  bonuses: {
+    name: 'Bonuses',
+    path: '/bonuses',
+    url: (match) => `${match}/bonuses`,
     icon: JoinBonusIcon,
     selectedIcon: JoinBonusYellowIcon
   },

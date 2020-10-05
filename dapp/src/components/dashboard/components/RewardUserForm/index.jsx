@@ -1,71 +1,49 @@
-import React, { Fragment, Component } from 'react'
+import React, { Component } from 'react'
 import classNames from 'classnames'
-import TextField from '@material-ui/core/TextField'
 import { Formik } from 'formik'
-import { object, number, boolean } from 'yup'
+import isEqual from 'lodash/isEqual'
+import bonusesShape from 'utils/validation/shapes/bonuses'
+import Options from './Option'
 
 class RewardUserForm extends Component {
   constructor (props) {
     super(props)
 
     this.initialValues = {
-      amount: '',
       ...this.props.initialValues
     }
 
-    this.validationSchema = object().noUnknown(false).shape({
-      amount: number().min(0),
-      activated: boolean()
-    })
-  }
-
-  componentDidUpdate (prevProps) {
-    if (prevProps.initialValues !== this.props.initialValues) {
-      this.initialValues = {
-        amount: '',
-        ...this.props.initialValues
-      }
-    }
+    this.validationSchema = bonusesShape
   }
 
   onSubmit = (values, formikBag) => {
-    const { amount } = values
-    const { setBonus } = this.props
-    setBonus(amount)
-    formikBag.resetForm({ amount })
+    const { initialValues } = this.props
+    if (!isEqual(initialValues.joinBonus, values.joinBonus)) {
+      this.props.setJoinBonus(values.joinBonus.amount, values.joinBonus.isActive)
+      formikBag.resetForm(values)
+    }
+    if (!isEqual(initialValues.backupBonus, values.backupBonus)) {
+      this.props.setBackupBonus(values.backupBonus.amount, values.backupBonus.isActive)
+      formikBag.resetForm(values)
+    }
+    if (!isEqual(initialValues.inviteBonus, values.inviteBonus)) {
+      this.props.setInviteBonus(values.inviteBonus.amount, values.inviteBonus.isActive)
+      formikBag.resetForm(values)
+    }
   }
 
-  renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
-    const { amount } = values
-    const { hasFunderBalance, text } = this.props
-
+  renderForm = ({ handleSubmit, values }) => {
+    const { hasFunderBalance } = this.props
     return (
-      <form onSubmit={handleSubmit} className={classNames('join_bonus__container', { 'join_bonus__container--opacity': !hasFunderBalance })}>
-        <p className='join_bonus__title'>{text}</p>
-        <div className='join_bonus__field'>
-          <TextField
-            type='number'
-            name='amount'
-            placeholder='00.00'
-            onChange={handleChange}
-            disabled={!hasFunderBalance}
-            classes={{
-              root: 'join_bonus__field'
-            }}
-            inputProps={{
-              autoComplete: 'off',
-              value: amount
-            }}
-            InputProps={{
-              classes: {
-                underline: 'join_bonus__field--underline',
-                error: 'join_bonus__field--error'
-              }
-            }}
+      <form
+        onSubmit={handleSubmit}
+        className={classNames('bonus_options__container',
+          { 'bonus_options__container--opacity': !hasFunderBalance })}>
+        <div className='bonus_options'>
+          <Options
+            hasFunderBalance={hasFunderBalance}
+            values={values}
           />
-        </div>
-        <div className='join_bonus__actions'>
-          <button className='button button--normal join_bonus__button' disabled={!hasFunderBalance || !isValid}>Save</button>
         </div>
       </form>
     )
@@ -73,17 +51,14 @@ class RewardUserForm extends Component {
 
   render () {
     return (
-      <Fragment>
-        <h2 className='join_bonus__main-title join_bonus__main-title--dark'>Reward user</h2>
-        <Formik
-          initialValues={this.initialValues}
-          validationSchema={this.validationSchema}
-          render={this.renderForm}
-          onSubmit={this.onSubmit}
-          enableReinitialize
-          validateOnChange
-        />
-      </Fragment>
+      <Formik
+        initialValues={this.initialValues}
+        validationSchema={this.validationSchema}
+        render={this.renderForm}
+        onSubmit={this.onSubmit}
+        enableReinitialize
+        validateOnChange
+      />
     )
   }
 }
