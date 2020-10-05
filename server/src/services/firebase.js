@@ -18,6 +18,7 @@ let fcKnuddeAdmin
 let straitsxAdmin
 let esolAdmin
 let bitazzaAdmin
+let curaDAIAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -104,6 +105,11 @@ const initAdmin = async () => {
   bitazzaAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(bitazzaResponse.SecretString))
   }, 'Bitazza')
+
+  const curaDAIResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdCuraDAI }).promise()
+  curaDAIAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(curaDAIResponse.SecretString))
+  }, 'CuraDAI')
 }
 
 initAdmin()
@@ -141,6 +147,8 @@ const getAdmin = (appName) => {
     return esolAdmin
   } else if (appName === 'Bitazza') {
     return bitazzaAdmin
+  } else if (appName === 'CuraDAI') {
+    return curaDAIAdmin
   } else {
     return admin
   }

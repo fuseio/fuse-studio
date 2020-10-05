@@ -25,6 +25,7 @@
       "firebaseSecretIdStraitsx": "COMMUNITY_AWS_FIREBASE_SECRET_ID_STRAITSX",
       "firebaseSecretIdEsol": "COMMUNITY_AWS_FIREBASE_SECRET_ID_ESOL",
       "firebaseSecretIdBitazza": "COMMUNITY_AWS_FIREBASE_SECRET_ID_BITAZZA",
+      "firebaseSecretIdCuraDAI": "COMMUNITY_AWS_FIREBASE_SECRET_ID_CURA_DAI",
       "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
