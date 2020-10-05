@@ -20,15 +20,12 @@ class RewardUserForm extends Component {
     const { initialValues } = this.props
     if (!isEqual(initialValues.joinBonus, values.joinBonus)) {
       this.props.setJoinBonus(values.joinBonus.amount, values.joinBonus.isActive)
-      formikBag.resetForm(values)
     }
     if (!isEqual(initialValues.backupBonus, values.backupBonus)) {
       this.props.setBackupBonus(values.backupBonus.amount, values.backupBonus.isActive)
-      formikBag.resetForm(values)
     }
     if (!isEqual(initialValues.inviteBonus, values.inviteBonus)) {
       this.props.setInviteBonus(values.inviteBonus.amount, values.inviteBonus.isActive)
-      formikBag.resetForm(values)
     }
   }
 
