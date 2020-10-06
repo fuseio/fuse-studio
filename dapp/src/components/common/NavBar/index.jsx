@@ -7,7 +7,7 @@ import WalletIcon from 'images/fuse-wallet.svg'
 import NewWalletIcon from 'images/new_wallet.svg'
 import classNames from 'classnames'
 import ProfileDropDown from 'components/common/ProfileDropDown'
-import { isMobileOnly } from 'react-device-detect'
+import { isMobile } from 'react-device-detect'
 import { withRouter } from 'react-router'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
@@ -78,11 +78,11 @@ const NavBar = ({
   return (
     <div className={classNames('navbar',
       { 'navbar--scroll': isGreaterThen70(),
-        'navbar--short': modifier,
+        'navbar--short': modifier && !isMobile,
         'navbar--fixed': isInNestedCommunityPage,
-        'navbar--bgImage': !modifier || isMobileOnly
+        'navbar--bgImage': !modifier || isMobile
       })}>
-      {(withLogo || (isMobileOnly && isGreaterThen70())) && <div className='navbar__logo'>
+      {(withLogo || (isMobile && isGreaterThen70())) && <div className='navbar__logo'>
         <Logo showHomePage={() => push('/')} isBlue={false} />
       </div>}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>

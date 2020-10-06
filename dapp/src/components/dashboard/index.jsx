@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import Sidebar from 'react-sidebar'
-import { isMobileOnly } from 'react-device-detect'
+import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import { Route, Switch, useParams } from 'react-router'
 import get from 'lodash/get'
@@ -55,7 +55,7 @@ const DashboardLayout = (props) => {
   const [open, onSetSidebarOpen] = useState(false)
 
   useEffect(() => {
-    if (isMobileOnly) {
+    if (isMobile) {
       onSetSidebarOpen(false)
     }
   }, [location.pathname])
@@ -93,7 +93,7 @@ const DashboardLayout = (props) => {
     <div className='dashboard'>
       <div className='container'>
         {
-          !isMobileOnly
+          !isMobile
             ? (
               <SidebarContent
                 match={match.url}

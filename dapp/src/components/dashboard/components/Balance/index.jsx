@@ -28,7 +28,7 @@ const Balance = ({
   const { network } = bridgeSide
 
   return (
-    <div className='bridge grid-y align-top cell medium-5'>
+    <div className='bridge'>
       <NetworkLogo network={network} />
       <div className='grid-y align-top'>
         <div className='bridge__title cell'>{convertNetworkName(network)}</div>
