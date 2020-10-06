@@ -7,7 +7,7 @@ const GET_COMMUNITY_BUSINESSES_QUERY = (address) => {
     {
       communities(where:{address: "${address}"}) {
         entitiesList {
-          communityEntities(where:{isBusiness: true}) {
+          communityEntities(where:{isBusiness: true}, first:1000) {
             isBusiness
           }
         }
@@ -21,7 +21,7 @@ const GET_COMMUNITY_USERS_QUERY = (address) => {
     {
       communities(where:{address: "${address}"}) {
         entitiesList {
-          communityEntities(where:{isUser: true}) {
+          communityEntities(where:{isUser: true}, first:1000) {
             isUser
           }
         }
