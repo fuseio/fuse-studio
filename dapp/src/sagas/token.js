@@ -366,7 +366,7 @@ function * transferTokenToFunder ({ tokenAddress, value }) {
   })
 }
 
-function * setBonus ({ amount, bonusType }) {
+function * setBonus ({ amount, isActive, bonusType }) {
   const communityAddress = yield select(getCommunityAddress)
 
   const infoFieldsMapping = {
@@ -377,7 +377,7 @@ function * setBonus ({ amount, bonusType }) {
 
   const infoField = infoFieldsMapping[bonusType]
 
-  yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: bonusType, isActive: amount > 0, [infoField]: { amount: amount.toString() } } })
+  yield call(addCommunityPlugin, { communityAddress, plugin: { name: bonusType, isActive, [infoField]: { amount: amount.toString() } } })
 
   yield put({
     type: SET_BONUS.SUCCESS

@@ -26,9 +26,7 @@ import SettingsPage from 'components/dashboard/pages/Settings'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
-import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
-import InviteBonusPage from 'components/dashboard/pages/InviteBonus'
-import BackupBonusPage from 'components/dashboard/pages/BackupBonus'
+import BonusesPage from 'components/dashboard/pages/Bonuses'
 import OnRampPage from 'components/dashboard/pages/OnRamp'
 import WalletBannerLinkPage from 'components/dashboard/pages/WalletBannerLink'
 
@@ -118,32 +116,10 @@ const DashboardLayout = (props) => {
             </Sidebar>
         }
         <Switch>
-          {get(community, 'plugins.joinBonus') && !get(community, 'plugins.joinBonus.isRemoved', false) && isAdmin && (
-            <Route exact path={`${match.path}/bonus`}>
+          {get(community, 'plugins.bonuses') && !get(community, 'plugins.bonuses.isRemoved', false) && isAdmin && (
+            <Route exact path={`${match.path}/bonuses`}>
               <WithBgImage>
-                <JoinBonusPage
-                  match={match}
-                  community={community}
-                />
-              </WithBgImage>
-            </Route>
-          )}
-
-          {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
-            <Route exact path={`${match.path}/invite-bonus`}>
-              <WithBgImage>
-                <InviteBonusPage
-                  match={match}
-                  community={community}
-                />
-              </WithBgImage>
-            </Route>
-          )}
-
-          {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
-            <Route exact path={`${match.path}/backup-bonus`}>
-              <WithBgImage>
-                <BackupBonusPage
+                <BonusesPage
                   match={match}
                   community={community}
                 />
