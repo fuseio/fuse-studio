@@ -89,7 +89,7 @@
       flex-flow: row nowrap;
       color: #cad8e2;
       @include element(icon) {
-        font-size: 20px;
+        min-width: 20px;
       }
 
       @include element(content) {

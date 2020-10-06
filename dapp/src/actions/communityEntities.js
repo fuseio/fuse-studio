@@ -24,6 +24,7 @@ export const JOIN_COMMUNITY = createRequestTypes('JOIN_COMMUNITY')
 export const IMPORT_EXISTING_ENTITY = createRequestTypes('IMPORT_EXISTING_ENTITY')
 export const UPLOAD_IMAGE = createRequestTypes('UPLOAD_IMAGE')
 
+export const FETCH_FEATURED_COMMUNITY_ENTITIES_COUNT = createRequestTypes('FETCH_FEATURED_COMMUNITY_ENTITIES_COUNT')
 export const FETCH_USER_WALLETS = createRequestTypes('FETCH_USER_WALLETS')
 export const FETCH_USERS_METADATA = createRequestTypes('FETCH_USERS_METADATA')
 export const FETCH_USER_METADATA = createRequestTypes('FETCH_USER_METADATA')
