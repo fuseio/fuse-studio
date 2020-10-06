@@ -19,11 +19,12 @@
   }
 
   @include block(sidebar) {
-    padding-bottom: 60px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
+    @include breakpoint(large up) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+    }
     width: 106%;
     overflow-y: scroll;
     height: inherit;
@@ -43,7 +44,7 @@
         height: 100%;
       }
 
-      @include breakpoint(medium up) {
+      @include breakpoint(large up) {
         margin: 0;
         padding: 0;
         width: 20%;
@@ -175,7 +176,7 @@
       }
 
       @include breakpoint(medium only) {
-        width: 70%;
+        width: 85%;
         padding-top: 4em;
         margin: auto;
       }
@@ -192,7 +193,7 @@
       min-height: 100vh;
       height: 100%;
 
-      @include breakpoint(medium up) {
+      @include breakpoint(large up) {
         margin-left: 20%;
       }
 
@@ -253,7 +254,7 @@
       }
 
       @include element(container) {
-        @include breakpoint(medium up) {
+        @include breakpoint(large up) {
           flex: 1;
         }
         @include xy-grid(horizontal, false);
@@ -268,7 +269,7 @@
 
       @include block(bridge) {
         @include xy-cell(5, null, 0);
-        @include breakpoint(medium down) {
+        @include breakpoint(small down) {
           @include xy-cell(24, null, 0);
         }
         @include block(fuse-logo) {
@@ -335,8 +336,14 @@
 
         @include element(transfer) {
           @include xy-grid(horizontal, false);
+
+          @include breakpoint(medium up) {
+            margin: 0 1em;
+          }
+
           @include breakpoint(medium down) {
             flex: 0.9;
+            margin: 1em 0;
           }
 
           @include element(form) {

@@ -8,7 +8,7 @@ $csspieheight: 100px;
     margin-bottom: 2em;
 
     @include breakpoint(medium down) {
-      margin-bottom: 1em;      
+      margin-bottom: 1em;
     }
   }
 
@@ -26,28 +26,33 @@ $csspieheight: 100px;
     }
 
     @include breakpoint(small down) {
-      @include xy-grid(vertical, false);      
+      @include xy-grid(vertical, false);
     }
   }
 
   @include element(general) {
     position: relative;
     @include breakpoint(medium up) {
-      flex: .5;
+      flex: 0.5;
     }
-
-    &:after {
-      content: "";
-      display: block;
-      position: absolute;
-      right: 0;
-      @include breakpoint(medium up) {
+    @include breakpoint(large up) {
+      &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        right: 0;
         top: 0;
         border-right: solid 1px #dadada;
         height: 100%;
       }
+    }
 
-      @include breakpoint(medium down) {
+    @include breakpoint(small down) {
+      &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        right: 0;
         bottom: 0;
         border-bottom: solid 1px #dadada;
         width: 100%;
@@ -56,7 +61,6 @@ $csspieheight: 100px;
   }
 
   @include element(content) {
-    
     @include breakpoint(medium up) {
       @include xy-grid();
 
@@ -66,7 +70,7 @@ $csspieheight: 100px;
     }
 
     @include breakpoint(medium down) {
-      @include xy-grid(vertical);      
+      @include xy-grid(vertical);
     }
   }
 
@@ -74,7 +78,7 @@ $csspieheight: 100px;
     @include xy-grid(vertical, false);
     @include flex-align(justify, middle);
     position: relative;
-    font-size: 0.750em;
+    font-size: 0.75em;
     color: #a4a4a4;
 
     @include block(title) {
@@ -98,18 +102,16 @@ $csspieheight: 100px;
         background-color: #abc3d2;
       }
     }
-  
+
     @include breakpoint(medium up) {
-      flex: .5;
+      flex: 0.5;
     }
 
     @include breakpoint(medium down) {
       margin-top: 2em;
     }
 
-
     @include block(pie) {
-
       @include element(wrapper) {
         position: absolute;
         top: 0;
@@ -123,7 +125,6 @@ $csspieheight: 100px;
         }
 
         @include breakpoint(medium down) {
-          
         }
       }
 
@@ -152,7 +153,6 @@ $csspieheight: 100px;
         left: -($csspieheight / 2);
         border-radius: ($csspieheight / 2) 0 0 ($csspieheight / 2);
         transform-origin: right center;
-     
       }
     }
 
@@ -187,9 +187,9 @@ $csspieheight: 100px;
 }
 
 @include block(title_value) {
-  font-size: 0.750em;
+  font-size: 0.75em;
   color: $color-gray;
-  
+
   @include breakpoint(medium up) {
     @include xy-grid(vertical);
     height: 50px;
@@ -197,13 +197,12 @@ $csspieheight: 100px;
   }
 
   @include breakpoint(medium down) {
-    @include xy-grid(vertical, false);      
+    @include xy-grid(vertical, false);
     height: 40px;
     margin-bottom: 1.5em;
   }
 
   @include breakpoint(small down) {
-    
   }
 
   @include element(title) {
