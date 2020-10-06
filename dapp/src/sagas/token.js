@@ -14,7 +14,7 @@ import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './u
 import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import { getWeb3 } from 'sagas/network'
-import { fetchFeaturedCommunitiesEntitiesCount } from 'sagas/communityEntities'
+import { fetchFeaturedCommunityEntitiesCount } from 'sagas/communityEntities'
 import {
   fetchCommunity as fetchCommunityApi,
   updateCommunityMetadata as updateCommunityMetadataApi,
@@ -429,7 +429,7 @@ function * watchFeaturedCommunities ({ response }) {
   const { result, entities } = response
   for (let account of result) {
     const { communityAddress, foreignTokenAddress, originNetwork, communityURI } = entities[account]
-    yield call(fetchFeaturedCommunitiesEntitiesCount, { communityAddress })
+    yield call(fetchFeaturedCommunityEntitiesCount, { communityAddress })
     if (foreignTokenAddress) {
       yield put(actions.fetchToken(foreignTokenAddress, originNetwork && { networkType: originNetwork }))
     }
