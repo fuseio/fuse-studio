@@ -279,10 +279,11 @@ function * fetchCommunity ({ type, ...params }) {
     const communityURI = get(response, 'communityURI')
     const communityAddress = get(response, 'communityAddress')
     const isMultiBridge = get(response, 'isMultiBridge')
-    const calls = []
+    const calls = [
+      put(toggleMultiBridge(isMultiBridge))
+    ]
     if (foreignTokenAddress) {
       calls.push(
-        put(toggleMultiBridge(isMultiBridge)),
         put(fetchHomeTokenAddress(communityAddress, foreignTokenAddress, options)),
         put(actions.fetchToken(foreignTokenAddress, options)),
         put(balanceOfToken(foreignTokenAddress, accountAddress, options))
