@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import WalletBannerLinkForm from 'components/dashboard/components/WalletBannerLinkForm'
 import { connect } from 'react-redux'
 import { setWalletBannerLink } from 'actions/community'
@@ -9,18 +9,16 @@ const WalletBannerLink = ({
   setWalletBannerLink
 }) => {
   return (
-    community ? <div className='join_bonus__wrapper'>
-      <div className='join_bonus'>
-        <h2 className='join_bonus__main-title join_bonus__main-title--white'>Wallet banner link</h2>
-        <div style={{ position: 'relative' }}>
-          <WalletBannerLinkForm
-            setWalletBannerLink={setWalletBannerLink}
-            community={community}
-            plugin={get(community, 'plugins.walletBanner', {})}
-          />
-        </div>
+    community ? <Fragment>
+      <div className='join_bonus__header'>
+        <h2 className='join_bonus__header__title'>Wallet banner link</h2>
       </div>
-    </div> : <div />
+      <WalletBannerLinkForm
+        setWalletBannerLink={setWalletBannerLink}
+        community={community}
+        plugin={get(community, 'plugins.walletBanner', {})}
+      />
+    </Fragment> : <div />
   )
 }
 

@@ -1,7 +1,7 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 
 import * as actions from 'actions/communityEntities'
-import { INVITE_USER_TO_COMMUNITY } from 'actions/community'
+import { INVITE_USER_TO_COMMUNITY, UPDATE_COMMUNITY_METADATA } from 'actions/community'
 import { inviteUserToCommunity as inviteUserToCommunityApi } from 'services/api/community'
 import { createEntitiesFetch, tryTakeEvery, apiCall } from './utils'
 import { getAccountAddress } from 'selectors/accounts'
@@ -250,6 +250,24 @@ function * fetchEntities ({ communityAddress }) {
       entities,
       result
     } })
+}
+
+export function * fetchFeaturedCommunitiesEntitiesCount ({ communityAddress }) {
+  const usersResponse = yield call(entitiesApi.fetchCommunityUsersEntities, { communityAddress })
+  const businessesResponse = yield call(entitiesApi.fetchCommunityBusinessesEntities, { communityAddress })
+  const users = get(usersResponse.data, 'communities[0].entitiesList.communityEntities', [])
+  const businesses = get(businessesResponse.data, 'communities[0].entitiesList.communityEntities', [])
+  yield put({
+    entity: 'communities',
+    type: UPDATE_COMMUNITY_METADATA.SUCCESS,
+    response: {
+      communityAddress,
+      count: {
+        users: users && users.length,
+        businesses: businesses && businesses.length
+      }
+    }
+  })
 }
 
 function * fetchUserMetadata ({ account }) {

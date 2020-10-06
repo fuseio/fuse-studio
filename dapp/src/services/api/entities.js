@@ -2,6 +2,34 @@ import request from 'superagent'
 import { gql } from '@apollo/client'
 import { client } from 'services/graphql'
 
+const GET_COMMUNITY_BUSINESSES_QUERY = (address) => {
+  return gql`
+    {
+      communities(where:{address: "${address}"}) {
+        entitiesList {
+          communityEntities(where:{isBusiness: true}) {
+            isBusiness
+          }
+        }
+      }
+    }
+  `
+}
+
+const GET_COMMUNITY_USERS_QUERY = (address) => {
+  return gql`
+    {
+      communities(where:{address: "${address}"}) {
+        entitiesList {
+          communityEntities(where:{isUser: true}) {
+            isUser
+          }
+        }
+      }
+    }
+  `
+}
+
 const GET_COMMUNITY = (address) => {
   return gql`
     {
@@ -34,6 +62,14 @@ const FETCH_WALLETS = gql`
 
 export const fetchCommunityEntities = ({ communityAddress }) => client.query({
   query: GET_COMMUNITY(communityAddress)
+})
+
+export const fetchCommunityUsersEntities = ({ communityAddress }) => client.query({
+  query: GET_COMMUNITY_USERS_QUERY(communityAddress)
+})
+
+export const fetchCommunityBusinessesEntities = ({ communityAddress }) => client.query({
+  query: GET_COMMUNITY_BUSINESSES_QUERY(communityAddress)
 })
 
 export const fetchUserWallets = ({ accounts }) => client.query({
