@@ -105,5 +105,5 @@ export const createEntitiesFetch = (action, apiFunc) => function * (params) {
       metadata
     } })
 
-  return data
+  return { ...data, ...params }
 }

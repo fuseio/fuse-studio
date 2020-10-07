@@ -13,6 +13,7 @@ import { getNetworkSide, getForeignNetwork } from 'selectors/network'
 import { getAccountAddress } from 'selectors/accounts'
 import { apiCall, tryTakeEvery } from './utils'
 import { eventChannel } from 'redux-saga'
+import { toShortName } from '../utils/network'
 
 const cb = (error, result) => {
   if (!error) {
@@ -30,7 +31,7 @@ function * getNetworkTypeInternal (web3) {
 
 function * watchNetworkChanges (provider) {
   const chan = eventChannel(emitter => {
-    provider.on('networkChanged', (message) => emitter(message))
+    provider.on('chainChanged', (message) => emitter(message))
     return () => {
       provider.close().then(() => console.log('logout'))
     }
@@ -40,6 +41,22 @@ function * watchNetworkChanges (provider) {
     if (!isNaN(message)) {
       const web3 = yield getWeb3Service({ provider })
       yield call(checkNetworkType, { web3 })
+    }
+  }
+}
+
+function * watchAccountChanges (provider) {
+  const chan = eventChannel(emitter => {
+    provider.on('accountsChanged', (message) => emitter(message))
+    return () => {
+      provider.close().then(() => console.log('accountsChanged'))
+    }
+  })
+  while (true) {
+    const message = yield take(chan)
+    if (!isNaN(message)) {
+      const web3 = yield getWeb3Service({ provider })
+      yield call(connectToWallet, { web3 })
     }
   }
 }
@@ -59,6 +76,7 @@ function * connectToWallet () {
     const accountAddress = accounts[0]
 
     yield fork(watchNetworkChanges, provider)
+    yield fork(watchAccountChanges, provider)
     yield call(checkNetworkType, { web3, accountAddress })
 
     yield put({
@@ -154,9 +172,9 @@ function * getBlockNumber ({ networkType, bridgeType }) {
 }
 
 function * watchCheckNetworkTypeSuccess ({ response }) {
-  const { foreignNetwork, homeNetwork, accountAddress } = response
+  const { networkId, homeNetwork = 'fuse', accountAddress, networkType } = response
+  saveState('state.network', { foreignNetwork: networkId === 122 ? (yield select(getForeignNetwork)) : networkType, homeNetwork })
   yield put(fetchCommunities(accountAddress))
-  saveState('state.network', { foreignNetwork, homeNetwork })
 }
 
 function * watchConnectToWallet ({ response, accountAddress }) {
@@ -165,10 +183,8 @@ function * watchConnectToWallet ({ response, accountAddress }) {
 }
 
 function * changeNetwork ({ networkType }) {
-  const foreignNetwork = yield select(getForeignNetwork)
   const currentNetwork = toLongName(networkType)
   const isFuseNetwork = currentNetwork === 'fuse'
-  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: isFuseNetwork ? foreignNetwork : currentNetwork, networkType: currentNetwork })
   const web3 = yield getWeb3()
   const providerInfo = getProviderInfo(web3.currentProvider)
   const { check } = providerInfo
@@ -199,14 +215,14 @@ function * sendTransactionHash ({ transactionHash, abiName }) {
   })
 }
 
-export function * getWeb3 ({ bridgeType } = {}) {
+export function * getWeb3 ({ bridgeType, networkType } = {}) {
   if (!bridgeType) {
     return getWeb3Service()
   } else if (bridgeType === 'home') {
     return getWeb3Service({ networkType: 'fuse' })
   } else {
-    const foreignNetwork = yield select(getForeignNetwork)
-    return getWeb3Service({ networkType: foreignNetwork })
+    const foreignNetwork = networkType || (yield select(getForeignNetwork))
+    return getWeb3Service({ networkType: toShortName(foreignNetwork) })
   }
 }
 

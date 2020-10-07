@@ -100,9 +100,9 @@ const JoinBonus = ({
             transactionConfirmed={transactionConfirmed}
             transactionError={transactionError}
             transactionDenied={transactionDenied}
-            balance={balance ? formatWei(balance, 0, foreignToken.decimals) : 0}
+            balance={balance ? formatWei(balance, 2, foreignToken.decimals) : 0}
             transferToFunder={transferToFunder}
-            funderBalance={funderBalance ? formatWei(funderBalance, 0, foreignToken.decimals) : 0}
+            funderBalance={funderBalance ? formatWei(funderBalance, 2, foreignToken.decimals) : 0}
           />
           <RewardUserForm
             networkType={networkType}

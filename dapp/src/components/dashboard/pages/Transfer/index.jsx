@@ -62,13 +62,13 @@ const Transfer = ({
 
         <div className='transfer__balance'>
           <span className='title'>My Balance: </span>
-          <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 0, decimals) : 0}</span>
+          <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
           <small className='symbol'>{symbol}</small>
         </div>
         <TransferForm
           error={error}
           sendTo={sendTo}
-          balance={balance ? formatWei(balance, 0, decimals) : 0}
+          balance={balance ? formatWei(balance, 2, decimals) : 0}
           transferMessage={transferMessage}
           transactionStatus={transactionStatus}
           closeMessage={() => {

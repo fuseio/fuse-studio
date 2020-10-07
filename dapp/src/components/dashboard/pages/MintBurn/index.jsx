@@ -117,12 +117,12 @@ const MintBurn = ({
         <TabPanel value={value} index={0}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 0, decimals) : 0}</span>
+            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
             error={error}
-            balance={balance ? formatWei(balance, 0, decimals) : 0}
+            balance={balance ? formatWei(balance, 2, decimals) : 0}
             handleMintOrBurnClick={mintHandler}
             tokenNetworkType={foreignNetwork}
             symbol={symbol}
@@ -139,12 +139,12 @@ const MintBurn = ({
         <TabPanel value={value} index={1}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 0) : 0}</span>
+            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 2) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
             error={error}
-            balance={balance ? formatWei(balance, 0) : 0}
+            balance={balance ? formatWei(balance, 2) : 0}
             handleMintOrBurnClick={burnHandler}
             tokenNetworkType={foreignNetwork}
             symbol={symbol}
