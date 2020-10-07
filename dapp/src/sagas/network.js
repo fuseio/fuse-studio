@@ -173,7 +173,7 @@ function * getBlockNumber ({ networkType, bridgeType }) {
 
 function * watchCheckNetworkTypeSuccess ({ response }) {
   const { networkId, homeNetwork = 'fuse', accountAddress, networkType } = response
-  saveState('state.network', { foreignNetwork: networkId === 122 ? (yield select(getForeignNetwork)) : networkType, homeNetwork })
+  saveState('state.network', { foreignNetwork: networkId === 122 ? (yield select(getForeignNetwork)) : networkType, homeNetwork, networkType })
   yield put(fetchCommunities(accountAddress))
 }
 
