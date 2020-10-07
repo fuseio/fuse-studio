@@ -18,7 +18,7 @@ const MenuItem = memo(({
       className={classNames('item item--hover', { 'item--home': isCurrentPath })}
     >
       <span className='item__icon'><img src={isCurrentPath ? selectedIcon : icon} /></span>
-      <span className='item__text'>{name === 'community' ? `${communityName} ${name}` : name}</span>
+      <span className='item__text'>{name === 'economy' ? `${communityName} ${name}` : name}</span>
       {moreIcon && <div style={{ marginLeft: 'auto' }}>{moreIcon && <img src={isCurrentPath ? moreIcon.AddYellowIcon : moreIcon.AddIcon} />}</div>}
     </div>
   )

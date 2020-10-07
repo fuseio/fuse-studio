@@ -25,7 +25,7 @@ const CustomElement = ({ children }) => (
 
 const sideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
   {
-    name: 'community',
+    name: 'economy',
     path: '',
     url: (match) => `${match}`,
     icon: HomeIcon,
@@ -98,7 +98,7 @@ const sideBarItems = (isAdmin, hasPlugins, tokenType) => isAdmin ? ([
   }
 ]) : ([
   {
-    name: 'community',
+    name: 'economy',
     path: '',
     url: (match) => `${match}`,
     icon: HomeIcon,

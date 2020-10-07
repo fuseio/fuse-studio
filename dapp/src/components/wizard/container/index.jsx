@@ -27,7 +27,7 @@ const validations = {
   3: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
 }
 
-const wizardSteps = ['Community name', 'Network', 'Currency', 'Set up', 'Summary']
+const wizardSteps = ['Economy name', 'Network', 'Currency', 'Set up', 'Summary']
 
 const StepsIndicator = ({ steps, activeStep }) => {
   return steps.map((item, index) => (

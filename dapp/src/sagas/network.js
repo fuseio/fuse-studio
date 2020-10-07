@@ -183,8 +183,10 @@ function * watchConnectToWallet ({ response, accountAddress }) {
 }
 
 function * changeNetwork ({ networkType }) {
+  const foreignNetwork = yield select(getForeignNetwork)
   const currentNetwork = toLongName(networkType)
   const isFuseNetwork = currentNetwork === 'fuse'
+  saveState('state.network', { homeNetwork: 'fuse', foreignNetwork: isFuseNetwork ? foreignNetwork : currentNetwork, networkType: currentNetwork })
   const web3 = yield getWeb3()
   const providerInfo = getProviderInfo(web3.currentProvider)
   const { check } = providerInfo

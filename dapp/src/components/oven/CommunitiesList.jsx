@@ -45,12 +45,12 @@ export default ({
           <div className='grid-y'>
             <div className='grid-x grid-padding-x grid-padding-y communities__search__wrapper'>
               <div className='cell small-24'>
-                <div className='communities__search'>
+                {/* <div className='communities__search'>
                   <button className='communities__search__icon'>
                     <span aria-hidden='true' className='fa fa-search' />
                   </button>
                   <input placeholder='Search community…' />
-                </div>
+                </div> */}
               </div>
             </div>
             <InfiniteScroll
