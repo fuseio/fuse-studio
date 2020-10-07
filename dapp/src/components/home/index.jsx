@@ -47,7 +47,7 @@ const HomePage = ({
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-middle'>
           <div className='home_page__content cell medium-12 large-12' style={{ height: '50%' }}>
-            <h2 className='home_page__title'>Welcome to Fuse studio</h2>
+            <h2 className='home_page__title'>Welcome to Fuse Studio</h2>
             <p className='home_page__text'>
               Create your own custom branded wallet and<br /> currency in a few simple steps
             </p>
