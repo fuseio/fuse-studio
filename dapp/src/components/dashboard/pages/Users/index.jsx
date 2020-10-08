@@ -293,12 +293,11 @@ const Users = ({
       return (
         <div className='entities__empty-list'>
           <img src={AddBusiness} />
-          <div className='entities__empty-list__title'>Add a user to your List!</div>
           <button
             className='entities__empty-list__btn'
             onClick={isAdmin ? handleAddUser : handleJoinCommunity}
           >
-            {isAdmin ? 'Add user' : 'Join'}
+            {isAdmin ? 'Add user' : `Join ${(community && community.name)}`}
           </button>
         </div>
       )
