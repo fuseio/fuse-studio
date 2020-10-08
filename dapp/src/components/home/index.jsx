@@ -28,8 +28,7 @@ const HomePage = ({
       loadModal(WEB3_CONNECT_MODAL, { web3connect })
     } else {
       window.analytics.track('Launch community button pressed - connected')
-      const path = templateId ? `/view/issuance/${templateId}` : '/view/issuance'
-      push(path)
+      push('/view/issuance')
     }
   }
 

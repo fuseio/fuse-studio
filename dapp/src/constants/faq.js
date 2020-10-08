@@ -10,9 +10,9 @@ export default [
     link: 'https://docs.fuse.io/the-fuse-studio/faq#how-much-does-it-cost-to-launch-an-economy-on-fuse'
   },
   {
-    question: 'How can I integrate credit/debit payments in my community?',
-    answer: `After first launching your community you can add a payment gateway by adding it in the plug-ins page. You will need to switch on the gateway you choose and a "top up" menu item will appear to the users of your community on the mobile app. The payment gateways vary between different jurisdictions and banking integration options like credit/debit cards and wire transfers. Our payment integrations are: Transak, Moonpay.`,
-    link: 'https://docs.fuse.io/the-fuse-studio/faq#how-can-i-integrate-credit-debit-payments-in-my-community'
+    question: 'What are some use cases for Fuse?',
+    answer: `There are many different parties who can benefit from launching their own digital economy. Be it a community leader who wants to provide the possibility of secure mobile payments to their community or a business owner who wants to create their own branded company tokens that provide users with discounts and other benefits.`,
+    link: 'https://docs.fuse.io/the-fuse-studio/faq#what-are-some-use-cases-for-fuse'
   }
   // {
   //   question: 'What is the Fuse chain and how it helps my community?',

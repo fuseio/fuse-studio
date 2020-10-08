@@ -13,11 +13,13 @@ const WalletBannerLink = ({
       <div className='join_bonus__header'>
         <h2 className='join_bonus__header__title'>Wallet banner link</h2>
       </div>
-      <WalletBannerLinkForm
-        setWalletBannerLink={setWalletBannerLink}
-        community={community}
-        plugin={get(community, 'plugins.walletBanner', {})}
-      />
+      <div className='join_bonus__wrapper'>
+        <WalletBannerLinkForm
+          setWalletBannerLink={setWalletBannerLink}
+          community={community}
+          plugin={get(community, 'plugins.walletBanner', {})}
+        />
+      </div>
     </Fragment> : <div />
   )
 }
