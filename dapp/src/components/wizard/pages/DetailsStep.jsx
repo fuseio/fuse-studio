@@ -64,8 +64,6 @@ const DetailsStep = ({
 }) => {
   const formik = useFormikContext()
   const communityType = getIn(formik.values, 'communityType')
-  // const plugins = getIn(formik.values, 'plugins')
-  // const countOfSelectedPlugins = React.useMemo(() => filter(plugins, 'isActive').length, [plugins])
 
   return (
     <div className='accordion'>

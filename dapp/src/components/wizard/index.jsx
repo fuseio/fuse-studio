@@ -108,7 +108,7 @@ const WizardPage = ({
       coverPhoto,
       description
     } = values
-    console.log({ ...values })
+
     const chosenPlugins = Object.keys(plugins)
       .filter((pluginName) => plugins[pluginName].isActive)
       .reduce((newPlugins, name) => ({

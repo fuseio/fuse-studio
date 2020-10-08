@@ -18,9 +18,6 @@ const RewardUserForm = ({ initialValues, setJoinBonus, setBackupBonus, setInvite
     }
   }
 
-  console.log({
-    ...initialValues
-  })
   return (
     <Formik
       initialValues={{
