@@ -7,8 +7,8 @@ export default () => {
     <div className='faq__wrapper'>
       <div className='grid-x align-justify align-middle faq__title'>
         <h3 className='faq__title'>FAQ</h3>
-        <a href='https://docs.fuse.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer' className='faq__action'>
-          Learn more&nbsp;<img src={arrow} alt='arrow' />
+        <a href='https://www.youtube.com/watch?v=Lh3pKLdUR60' target='_blank' rel='noopener noreferrer' className='faq__action'>
+          Watch tutorial&nbsp;<img src={arrow} alt='arrow' />
         </a>
       </div>
       <div className='faq__questions'>
