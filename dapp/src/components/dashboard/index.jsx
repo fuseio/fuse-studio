@@ -7,8 +7,7 @@ import { Route, Switch, useParams } from 'react-router'
 import get from 'lodash/get'
 import { push } from 'connected-react-router'
 
-import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
-import { getHomeNetworkType } from 'selectors/network'
+import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
@@ -27,11 +26,19 @@ import SettingsPage from 'components/dashboard/pages/Settings'
 import PluginsPage from 'components/dashboard/pages/Plugins'
 import Users from 'components/dashboard/pages/Users'
 import Businesses from 'components/dashboard/pages/Businesses'
-import JoinBonusPage from 'components/dashboard/pages/JoinBonus'
-import InviteBonusPage from 'components/dashboard/pages/InviteBonus'
-import BackupBonusPage from 'components/dashboard/pages/BackupBonus'
+import BonusesPage from 'components/dashboard/pages/Bonuses'
 import OnRampPage from 'components/dashboard/pages/OnRamp'
 import WalletBannerLinkPage from 'components/dashboard/pages/WalletBannerLink'
+
+const WithBgImage = ({ children }) => (
+  <div className='content__container content__container--bgImage'>
+    <div className='content'>
+      <div className='content__wrapper'>
+        {children}
+      </div>
+    </div>
+  </div>
+)
 
 const DashboardLayout = (props) => {
   const {
@@ -54,7 +61,7 @@ const DashboardLayout = (props) => {
   }, [location.pathname])
 
   useEffect(() => {
-    if (communityAddress) {
+    if (accountAddress) {
       fetchCommunity(communityAddress, { networkType: 'ropsten' })
       fetchCommunity(communityAddress, { networkType: 'mainnet' })
       fetchEntities(communityAddress)
@@ -62,9 +69,11 @@ const DashboardLayout = (props) => {
   }, [accountAddress])
 
   useEffect(() => {
-    fetchCommunity(communityAddress, { networkType: 'ropsten' })
-    fetchCommunity(communityAddress, { networkType: 'mainnet' })
-    fetchEntities(communityAddress)
+    if (communityAddress) {
+      fetchCommunity(communityAddress, { networkType: 'ropsten' })
+      fetchCommunity(communityAddress, { networkType: 'mainnet' })
+      fetchEntities(communityAddress)
+    }
   }, [communityAddress])
 
   useEffect(() => {
@@ -106,110 +115,120 @@ const DashboardLayout = (props) => {
               {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
             </Sidebar>
         }
-        <div className='content__container'>
-          <div className='content'>
-            <div className='content__wrapper'>
-              <Switch>
-                {get(community, 'plugins.joinBonus') && !get(community, 'plugins.joinBonus.isRemoved', false) && isAdmin && (
-                  <Route exact path={`${match.path}/bonus`}>
-                    <JoinBonusPage
-                      match={match}
-                      community={community}
-                    />
-                  </Route>
-                )}
+        <Switch>
+          {get(community, 'plugins.bonuses') && !get(community, 'plugins.bonuses.isRemoved', false) && isAdmin && (
+            <Route exact path={`${match.path}/bonuses`}>
+              <WithBgImage>
+                <BonusesPage
+                  match={match}
+                  community={community}
+                />
+              </WithBgImage>
+            </Route>
+          )}
 
-                {get(community, 'plugins.inviteBonus') && !get(community, 'plugins.inviteBonus.isRemoved', false) && isAdmin && (
-                  <Route exact path={`${match.path}/invite-bonus`}>
-                    <InviteBonusPage
-                      match={match}
-                      community={community}
-                    />
-                  </Route>
-                )}
+          {community && isAdmin && (
+            <Route exact path={`${match.path}/onramp`}
+              render={() => (
+                <WithBgImage>
+                  <OnRampPage
+                    community={community}
+                  />
+                </WithBgImage>
+              )}
+            />)
+          }
 
-                {get(community, 'plugins.backupBonus') && !get(community, 'plugins.backupBonus.isRemoved', false) && isAdmin && (
-                  <Route exact path={`${match.path}/backup-bonus`}>
-                    <BackupBonusPage
-                      match={match}
-                      community={community}
-                    />
-                  </Route>
-                )}
+          {community && isAdmin && (
+            <Route exact path={`${match.path}/walletbanner`}
+              render={() => (
+                <WithBgImage>
+                  <WalletBannerLinkPage
+                    match={match}
+                    community={community}
+                  />
+                </WithBgImage>
+              )}
+            />)
+          }
 
-                {community && isAdmin && (
-                  <Route exact path={`${match.path}/onramp`}>
-                    <OnRampPage />
-                  </Route>
-                )
-                }
+          {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
+            <Route exact path={`${match.path}/mintBurn`}>
+              <WithBgImage>
+                <MintBurnPage />
+              </WithBgImage>
+            </Route>
+          )}
 
-                {community && isAdmin && (
-                  <Route exact path={`${match.path}/walletbanner`}
-                    render={() => (
-                      <WalletBannerLinkPage
-                        match={match}
-                        community={community}
-                      />
-                    )}
-                  />)
-                }
+          {isAdmin && (
+            <Route exact path={`${match.path}/settings`}>
+              <WithBgImage>
+                <SettingsPage
+                  community={community}
+                />
+              </WithBgImage>
+            </Route>
+          )
+          }
+          {
+            community && isAdmin && (
+              <Route exact path={`${match.path}/plugins`}>
+                <WithBgImage>
+                  <PluginsPage
+                    community={community}
+                  />
+                </WithBgImage>
+              </Route>
+            )
+          }
 
-                {isAdmin && (foreignToken && foreignToken.tokenType === 'mintableBurnable') && (
-                  <Route exact path={`${match.path}/mintBurn`}>
-                    <MintBurnPage />
-                  </Route>
-                )}
+          {
+            !get((community && community.plugins), 'businessList.isRemoved', false) && (
+              <Route exact path={`${match.path}/merchants`}>
+                <WithBgImage>
+                  <Businesses />
+                </WithBgImage>
+              </Route>
+            )
+          }
 
-                {isAdmin && (
-                  <Route exact path={`${match.path}/settings`}>
-                    <SettingsPage
-                      community={community}
-                    />
-                  </Route>
-                )}
+          <Route exact path={`${match.path}/wallet`}>
+            <WithBgImage>
+              <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
+            </WithBgImage>
+          </Route>
 
-                {community && isAdmin && (
-                  <Route exact path={`${match.path}/plugins`}>
-                    <PluginsPage
-                      community={community}
-                    />
-                  </Route>
-                )}
+          {
+            community && (
+              <Route exact path={`${match.path}/users`}>
+                <WithBgImage>
+                  <Users />
+                </WithBgImage>
+              </Route>)
+          }
 
-                {!get((community && community.plugins), 'businessList.isRemoved', false) && (
-                  <Route exact path={`${match.path}/merchants`}>
-                    <Businesses />
-                  </Route>
-                )}
+          {
+            community && (
+              <Route exact path={`${match.path}/transfer/:sendTo?`}>
+                <WithBgImage>
+                  <TransferPage />
+                </WithBgImage>
+              </Route>)
+          }
 
-                <Route exact path={`${match.path}/wallet`}>
-                  <WhiteLabelWallet value={qrValue} communityAddress={communityAddress} />
-                </Route>
-
-                {community && (
-                  <Route exact path={`${match.path}/users`}>
-                    <Users />
-                  </Route>)
-                }
-
-                {community && (
-                  <Route exact path={`${match.path}/transfer/:sendTo?`}>
-                    <TransferPage />
-                  </Route>)
-                }
-
-                {community && (
-                  <Route exact path={`${match.path}/:success?`}>
+          {
+            community && (
+              <Route exact path={`${match.path}/:success?`}>
+                <div className='content__container'>
+                  <div className='content'>
                     <Dashboard />
-                  </Route>)
-                }
-              </Switch>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                  </div>
+                </div>
+              </Route>)
+          }
+        </Switch >
+      </div >
+    </div >
   )
 }
 
@@ -217,9 +236,7 @@ const mapStateToProps = (state, { match }) => ({
   accountAddress: getAccountAddress(state),
   foreignToken: getForeignTokenByCommunityAddress(state, match.params.address),
   community: getCurrentCommunity(state),
-  isAdmin: checkIsAdmin(state),
-  homeNetwork: getHomeNetworkType(state),
-  providerInfo: getProviderInfo(state)
+  isAdmin: checkIsAdmin(state)
 })
 
 const mapDispatchToProps = {

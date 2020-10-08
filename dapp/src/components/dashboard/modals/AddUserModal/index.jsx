@@ -14,7 +14,7 @@ const AddUserModal = ({ hideModal, isJoin, showTransactionMessage, signatureNeed
   }
 
   return (
-    <Modal className='user-form__modal' onClose={hideModal}>
+    <Modal className='user-form__modal' onClose={hideModal} hasCloseBtn>
       <TransactionMessage
         title={isJoin ? 'Joining the list' : 'Adding user to list'}
         message={signatureNeeded ? 'Please sign with your wallet' : 'Pending'}

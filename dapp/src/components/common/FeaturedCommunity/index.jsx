@@ -1,16 +1,21 @@
 import React, { memo } from 'react'
 import { connect } from 'react-redux'
-
+import get from 'lodash/get'
 import CommunityLogo from 'components/common/CommunityLogo'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
+import BusinessIcon from 'images/featured_business.svg'
+import TokenIcon from 'images/featured_token.svg'
+import UsersIcon from 'images/featured_user.svg'
 import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 
 const FeaturedCommunity = memo(({
   community,
   showDashboard,
   token,
-  metadata
+  metadata,
+  withDescription
 }) => {
+  const { count } = community
   return (
     <div className='featured' onClick={showDashboard}>
       <div className='featured__image'>
@@ -35,7 +40,7 @@ const FeaturedCommunity = memo(({
           />
         </div>
       </div>
-      <div className='featured__content'>
+      <div className='featured__content grid-x align-top'>
         <h6 className='featured__name'>{community.name}
           {community && community.subTitle && (
             <React.Fragment>
@@ -43,6 +48,36 @@ const FeaturedCommunity = memo(({
               <span style={{ fontSize: 'smaller' }}>{community.subTitle}</span>
             </React.Fragment>
           )}</h6>
+        {withDescription && community && (
+          <div className='featured__description'>
+            {community && community.description}
+          </div>
+        )}
+        {withDescription && community && (
+          <div className='featured__information grid-x align-middle align-justify'>
+            <div className='item cell small-7 grid-x align-middle'>
+              <div className='item__icon'><img src={TokenIcon} /></div>
+              <div className='item__content grid-y'>
+                <span>Token</span>
+                <span>{token && token.symbol}</span>
+              </div>
+            </div>
+            <div className='item cell small-7 grid-x align-middle'>
+              <div className='item__icon'><img src={BusinessIcon} /></div>
+              <div className='item__content grid-y'>
+                <span>Business</span>
+                <span>{get(count, 'businesses', 0)}</span>
+              </div>
+            </div>
+            <div className='item cell small-7 grid-x align-middle'>
+              <div className='item__icon'><img src={UsersIcon} /></div>
+              <div className='item__content grid-y'>
+                <span>Users</span>
+                <span>{get(count, 'users', 0)}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

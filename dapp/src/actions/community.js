@@ -12,5 +12,5 @@ export const addCommunityPlugin = (communityAddress, plugin) => action(ADD_COMMU
 export const updateCommunityMetadata = (communityAddress, fields) => requestAction(UPDATE_COMMUNITY_METADATA, { communityAddress, fields })
 
 export const setSecondaryToken = (communityAddress, secondaryTokenAddress) => requestAction(SET_SECONDARY_TOKEN, { communityAddress, secondaryTokenAddress })
-export const setBonus = (bonusType, amount) => action(SET_BONUS.REQUEST, { amount, bonusType })
+export const setBonus = (bonusType, amount, isActive) => action(SET_BONUS.REQUEST, { amount, isActive, bonusType })
 export const setWalletBannerLink = (link, walletBanner) => action(SET_WALLET_BANNER_LINK.REQUEST, { link, walletBanner })

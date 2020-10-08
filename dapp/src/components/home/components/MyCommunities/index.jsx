@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import PlusIcon from 'images/add.svg'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import isEmpty from 'lodash/isEmpty'
 import has from 'lodash/has'
@@ -38,7 +38,6 @@ const NoCommunities = ({ showIssuance }) => {
 const MyCommunities = ({
   showIssuance,
   title = 'My economies',
-  withDecoration = false,
   communitiesKeys,
   communities,
   showDashboard,
@@ -63,6 +62,7 @@ const MyCommunities = ({
               token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
               showDashboard={() => showDashboard(communityAddress)}
               community={community}
+              withDescription={false}
             />
           </div>
         )
@@ -85,28 +85,32 @@ const MyCommunities = ({
     }
   }, [communitiesIOwn])
   return (
-    <div className={classNames('my_communities', { 'my_communities__decoration': withDecoration })}>
-      {withDecoration && <div className='my_communities__title'>{title}</div>}
-      <Carousel
-        value={valueSpinner}
-        centered
-        infinite={slides && slides.length > 1}
-        draggable
-        onChange={onChangeSpinner}
-        animationSpeed={1000}
-        slidesPerPage={1}
-        breakpoints={{
-          1000: {
-            slidesPerPage: 2
-          },
-          800: {
-            slidesPerPage: 1
-          }
-        }}
-      >
-        {slides}
-      </Carousel>
-      {slides && slides.length > 1 && <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />}
+    <div className='featured__carousel__wrapper'>
+      <div className='grid-x align-justify align-middle'>
+        <h3 className='featured__carousel__title'>{title}</h3>
+      </div>
+      <div className='featured__carousel featured__carousel--spaced'>
+        <Carousel
+          value={valueSpinner}
+          centered
+          infinite={slides && slides.length > 1}
+          draggable={isMobile}
+          onChange={onChangeSpinner}
+          animationSpeed={1000}
+          slidesPerPage={1}
+          breakpoints={{
+            1000: {
+              slidesPerPage: 2
+            },
+            800: {
+              slidesPerPage: 1
+            }
+          }}
+        >
+          {slides}
+        </Carousel>
+        {slides && slides.length > 1 && <Dots value={valueSpinner} onChange={onChangeSpinner} number={slides && slides.length} />}
+      </div>
     </div>
   )
 }

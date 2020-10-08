@@ -1,18 +1,18 @@
 export default [
   {
-    question: 'What types of communities can I create with the studio?',
-    answer: `The Fuse studio community launch wizard provides the following options for enterpreneues`,
-    link: 'https://docs.fuse.io/the-fuse-studio/faq#what-types-of-communities-can-i-create-with-the-studio'
+    question: 'What is Fuse?',
+    answer: `Fuse enables businesses and communities around the world to unleash the power of mobile payments. With Fuse, entrepreneurs and community leaders can now upgrade their existing communities into thriving micro-economies by providing them the tools to build and maintain their own custom-branded mobile wallet and currency. `,
+    link: 'https://docs.fuse.io/the-fuse-studio/faq#what-is-fuse'
   },
   {
-    question: 'What is a community on Fuse?',
-    answer: `Most online services today are centralized and usually companies that hold them have complete control over the data. While building a new software stack for the web, and slowly moving to a world where more and more data is owned by the users, we need to figure out how communities can create better transparency and governance over user data without having it all stored and manged by a single company. A community on Fuse is a contract that could be owned by an individual or several blockchain accounts and defines all the properties of the community and is controlled by the community.`,
-    link: 'https://docs.fuse.io/the-fuse-studio/faq#what-is-a-community-on-fuse'
+    question: 'How much does it cost to launch an economy on Fuse?',
+    answer: `The only cost of launching an economy on Fuse is paying Ethereum gas prices. Which can range between 10-100 USD (depending on gas prices at the time). Another option is to launch an economy on the Ropsten testnet for free.`,
+    link: 'https://docs.fuse.io/the-fuse-studio/faq#how-much-does-it-cost-to-launch-an-economy-on-fuse'
   },
   {
-    question: 'How can I integrate credit/debit payments in my community?',
-    answer: `After first launching your community you can add a payment gateway by adding it in the plug-ins page. You will need to switch on the gateway you choose and a "top up" menu item will appear to the users of your community on the mobile app. The payment gateways vary between different jurisdictions and banking integration options like credit/debit cards and wire transfers. Our payment integrations are: Transak, Moonpay.`,
-    link: 'https://docs.fuse.io/the-fuse-studio/faq#how-can-i-integrate-credit-debit-payments-in-my-community'
+    question: 'What are some use cases for Fuse?',
+    answer: `There are many different parties who can benefit from launching their own digital economy. Be it a community leader who wants to provide the possibility of secure mobile payments to their community or a business owner who wants to create their own branded company tokens that provide users with discounts and other benefits.`,
+    link: 'https://docs.fuse.io/the-fuse-studio/faq#what-are-some-use-cases-for-fuse'
   }
   // {
   //   question: 'What is the Fuse chain and how it helps my community?',

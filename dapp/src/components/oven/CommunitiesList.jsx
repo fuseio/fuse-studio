@@ -28,7 +28,7 @@ export default ({
   return (
     <React.Fragment>
       <div className='communities__wrapper'>
-        <div className='grid-container communities__banner grid-x grid-padding-x grid-padding-y'>
+        <div className='grid-container communities__banner grid-x grid-padding-x grid-padding-y align-middle'>
           <div className='communities__banner__content cell medium-14 large-10' style={{ height: '50%' }}>
             <h2 className='communities__banner__title'>Welcome to<br />Fuse economies</h2>
             <p className='communities__banner__text'>
@@ -45,12 +45,12 @@ export default ({
           <div className='grid-y'>
             <div className='grid-x grid-padding-x grid-padding-y communities__search__wrapper'>
               <div className='cell small-24'>
-                <div className='communities__search'>
+                {/* <div className='communities__search'>
                   <button className='communities__search__icon'>
                     <span aria-hidden='true' className='fa fa-search' />
                   </button>
                   <input placeholder='Search community…' />
-                </div>
+                </div> */}
               </div>
             </div>
             <InfiniteScroll

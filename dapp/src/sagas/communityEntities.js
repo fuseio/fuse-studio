@@ -252,6 +252,28 @@ function * fetchEntities ({ communityAddress }) {
     } })
 }
 
+export function * fetchFeaturedCommunityEntitiesCount ({ communityAddress }) {
+  try {
+    const usersResponse = yield call(entitiesApi.fetchCommunityUsersEntities, { communityAddress })
+    const businessesResponse = yield call(entitiesApi.fetchCommunityBusinessesEntities, { communityAddress })
+    const users = get(usersResponse.data, 'communities[0].entitiesList.communityEntities', [])
+    const businesses = get(businessesResponse.data, 'communities[0].entitiesList.communityEntities', [])
+    yield put({
+      entity: 'communities',
+      type: actions.FETCH_FEATURED_COMMUNITY_ENTITIES_COUNT.SUCCESS,
+      response: {
+        communityAddress,
+        count: {
+          users: users && users.length,
+          businesses: businesses && businesses.length
+        }
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 function * fetchUserMetadata ({ account }) {
   const userMetadata = yield call(getProfile, account)
   if (userMetadata && userMetadata.account) {

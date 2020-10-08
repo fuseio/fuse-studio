@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects'
 import BasicToken from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getAddress } from 'selectors/network'
 import * as actions from 'actions/token'
-import { getTokenAllowance, fetchHomeTokenAddress, toggleMultiBridge } from 'actions/bridge'
+import { fetchHomeTokenAddress, toggleMultiBridge } from 'actions/bridge'
 import { balanceOfToken } from 'actions/accounts'
 import { fetchMetadata } from 'actions/metadata'
 import { ADD_COMMUNITY_PLUGIN, SET_BONUS, SET_WALLET_BANNER_LINK, UPDATE_COMMUNITY_METADATA, SET_SECONDARY_TOKEN } from 'actions/community'
@@ -14,6 +14,7 @@ import { apiCall, createEntityPut, tryTakeEvery, createEntitiesFetch } from './u
 import { transactionFlow } from './transaction'
 import MintableBurnableTokenAbi from 'constants/abi/MintableBurnableToken'
 import { getWeb3 } from 'sagas/network'
+import { fetchFeaturedCommunityEntitiesCount } from 'sagas/communityEntities'
 import {
   fetchCommunity as fetchCommunityApi,
   updateCommunityMetadata as updateCommunityMetadataApi,
@@ -35,7 +36,6 @@ const entityPut = createEntityPut(actions.entityName)
 
 const fetchTokens = createEntitiesFetch(actions.FETCH_TOKENS, api.fetchTokens)
 const fetchToken = createEntitiesFetch(actions.FETCH_TOKEN, api.fetchToken)
-const fetchCommunity = createEntitiesFetch(actions.FETCH_COMMUNITY_DATA, fetchCommunityApi)
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
 const fetchFeaturedCommunities = createEntitiesFetch(actions.FETCH_FEATURED_COMMUNITIES, api.fetchFeaturedCommunities)
 
@@ -268,42 +268,41 @@ function * watchTokenChanges ({ response }) {
   yield put(actions.fetchToken(response.tokenAddress))
 }
 
-function * watchFetchCommunity ({ response }) {
+function * fetchCommunity ({ type, ...params }) {
   const accountAddress = yield select(getAccountAddress)
-  const { entities } = response
-  for (const communityAddress in entities) {
-    if (entities.hasOwnProperty(communityAddress)) {
-      if (entities && entities[communityAddress]) {
-        const foreignTokenAddress = get(entities[communityAddress], 'foreignTokenAddress')
-        const homeTokenAddress = get(entities[communityAddress], 'homeTokenAddress')
-        const communityURI = get(entities[communityAddress], 'communityURI')
-        const calls = [
-          put(toggleMultiBridge(get(entities[communityAddress], 'isMultiBridge', false)))
-        ]
-        if (homeTokenAddress) {
-          calls.push(
-            put(actions.fetchToken(homeTokenAddress)),
-            put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-            put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' }))
-          )
-        }
-        if (communityURI) {
-          calls.push(
-            put(fetchMetadata(communityURI))
-          )
-        }
-        if (foreignTokenAddress) {
-          calls.push(
-            put(fetchHomeTokenAddress(communityAddress, foreignTokenAddress)),
-            put(actions.fetchToken(foreignTokenAddress)),
-            put(actions.fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
-            put(getTokenAllowance(foreignTokenAddress)),
-            put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' }))
-          )
-        }
-        yield all(calls)
-      }
+  const fetcher = yield createEntitiesFetch(actions.FETCH_COMMUNITY_DATA, fetchCommunityApi)
+  const response = yield fetcher({ ...params })
+  const { options, _id } = response
+  if (_id) {
+    const foreignTokenAddress = get(response, 'foreignTokenAddress')
+    const homeTokenAddress = get(response, 'homeTokenAddress')
+    const communityURI = get(response, 'communityURI')
+    const communityAddress = get(response, 'communityAddress')
+    const isMultiBridge = get(response, 'isMultiBridge')
+    const calls = [
+      put(toggleMultiBridge(isMultiBridge))
+    ]
+    if (foreignTokenAddress) {
+      calls.push(
+        put(fetchHomeTokenAddress(communityAddress, foreignTokenAddress, options)),
+        put(actions.fetchToken(foreignTokenAddress, options)),
+        put(balanceOfToken(foreignTokenAddress, accountAddress, options))
+      )
     }
+
+    if (homeTokenAddress) {
+      calls.push(
+        put(actions.fetchToken(homeTokenAddress, options)),
+        put(actions.fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
+        put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' }))
+      )
+    }
+    if (communityURI) {
+      calls.push(
+        put(fetchMetadata(communityURI))
+      )
+    }
+    yield all(calls)
   }
 }
 
@@ -373,7 +372,7 @@ function * transferTokenToFunder ({ tokenAddress, value }) {
   })
 }
 
-function * setBonus ({ amount, bonusType }) {
+function * setBonus ({ amount, isActive, bonusType }) {
   const communityAddress = yield select(getCommunityAddress)
 
   const infoFieldsMapping = {
@@ -384,7 +383,7 @@ function * setBonus ({ amount, bonusType }) {
 
   const infoField = infoFieldsMapping[bonusType]
 
-  yield apiCall(addCommunityPluginApi, { communityAddress, plugin: { name: bonusType, isActive: amount > 0, [infoField]: { amount: amount.toString() } } })
+  yield call(addCommunityPlugin, { communityAddress, plugin: { name: bonusType, isActive, [infoField]: { amount: amount && amount.toString() } } })
 
   yield put({
     type: SET_BONUS.SUCCESS
@@ -426,6 +425,21 @@ function * watchCommunities ({ response }) {
   }
 }
 
+function * watchFeaturedCommunities ({ response }) {
+  const { result, entities } = response
+  for (let account of result) {
+    const { communityAddress, foreignTokenAddress, originNetwork, communityURI } = entities[account]
+    yield call(fetchFeaturedCommunityEntitiesCount, { communityAddress })
+    if (foreignTokenAddress) {
+      yield put(actions.fetchToken(foreignTokenAddress, originNetwork && { networkType: originNetwork }))
+    }
+
+    if (communityURI) {
+      yield put(fetchMetadata(communityURI))
+    }
+  }
+}
+
 export default function * tokenSaga () {
   yield all([
     tryTakeEvery(ADD_COMMUNITY_PLUGIN, addCommunityPlugin, 1),
@@ -442,7 +456,6 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKEN_FROM_ETHEREUM, fetchTokenFromEthereum, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
     takeEvery([actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS], watchPluginsChanges),
-    takeEvery([actions.FETCH_COMMUNITY_DATA.SUCCESS], watchFetchCommunity),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),
     tryTakeEvery(actions.CREATE_TOKEN, createToken, 1),
     tryTakeEvery(actions.CREATE_TOKEN_WITH_METADATA, createTokenWithMetadata, 0),
@@ -454,6 +467,7 @@ export default function * tokenSaga () {
     tryTakeEvery(SET_BONUS, setBonus, 1),
     tryTakeEvery(SET_SECONDARY_TOKEN, setSecondaryToken, 1),
     tryTakeEvery(actions.FETCH_FEATURED_COMMUNITIES, fetchFeaturedCommunities),
-    takeEvery(action => /^(FETCH_FEATURED_COMMUNITIES|FETCH_COMMUNITIES).*SUCCESS/.test(action.type), watchCommunities)
+    takeEvery(action => /^(FETCH_COMMUNITIES).*SUCCESS/.test(action.type), watchCommunities),
+    takeEvery(action => /^(FETCH_FEATURED_COMMUNITIES).*SUCCESS/.test(action.type), watchFeaturedCommunities)
   ])
 }

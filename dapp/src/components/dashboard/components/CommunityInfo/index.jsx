@@ -100,17 +100,17 @@ const CommunityInfo = ({
         <div className='grid-y total__sides'>
           <p>
             <span className='title'>Total supply</span>
-            {formatWei(totalSupply, 0, foreignToken && foreignToken.decimals)} <small>{foreignToken && foreignToken.symbol}</small>
+            {formatWei(totalSupply, 2, foreignToken && foreignToken.decimals)} <small>{foreignToken && foreignToken.symbol}</small>
           </p>
           <p>
             <span className='dot dot--fuse' />
             <span className='title'>Supply on Fuse:</span>
-            {formatWei(homeTokenSupply, 0, foreignToken && foreignToken.decimals)} <small>{foreignToken && foreignToken.symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
+            {formatWei(homeTokenSupply, 2, foreignToken && foreignToken.decimals)} <small>{foreignToken && foreignToken.symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
           </p>
           <p>
             <span className='dot dot--main' />
             <span className='title'>Supply on Ethereum:</span>
-            {formatWei(foreignTokenSupply, 0, foreignToken && foreignToken.decimals)} <small>{foreignToken && foreignToken.symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
+            {formatWei(foreignTokenSupply, 2, foreignToken && foreignToken.decimals)} <small>{foreignToken && foreignToken.symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
           </p>
         </div>
       </div>

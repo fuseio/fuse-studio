@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Switch, Route } from 'react-router'
 
 import CommunitiesPage from 'components/oven/CommunitiesPage'
@@ -15,12 +15,11 @@ import useWeb3Connect from 'hooks/useWeb3Connect'
 import { getWeb3 } from 'services/web3'
 import 'scss/main.scss'
 
-const Root = ({
-  connectToWallet
-}) => {
+const Root = () => {
+  const dispatch = useDispatch()
   const onConnectCallback = (provider) => {
     getWeb3({ provider })
-    connectToWallet()
+    dispatch(connectToWallet())
   }
 
   const web3connect = useWeb3Connect(onConnectCallback)
@@ -46,8 +45,4 @@ const Root = ({
   )
 }
 
-const mapDispatch = {
-  connectToWallet
-}
-
-export default connect(null, mapDispatch)(Root)
+export default Root

@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { convertNetworkName } from 'utils/network'
 import MainnetLogo from 'images/Mainnet.svg'
-import FuseLogo from 'images/fuseLogo.svg'
+import FuseLogo from 'images/fuse_network_logo.svg'
 import { formatWei } from 'utils/format'
 
 const NetworkLogo = memo(({ network }) => {
@@ -30,11 +30,11 @@ const Balance = ({
   return (
     <div className='bridge'>
       <NetworkLogo network={network} />
-      <div className='bridge__title'>{convertNetworkName(network)}</div>
-      <div className='bridge__text'>
-        <div>Balance</div>
-        <span>{balance ? formatWei(balance, 2, decimals) : 0} <small>{symbol}</small>
-        </span>
+      <div className='grid-y align-top'>
+        <div className='bridge__title cell'>{convertNetworkName(network)}</div>
+        <div className='bridge__text cell'>
+          Balance&nbsp;{balance ? formatWei(balance, 2, decimals) : 0} {symbol}
+        </div>
       </div>
       <button className='bridge__more' onClick={openModal}>Show more</button>
     </div>

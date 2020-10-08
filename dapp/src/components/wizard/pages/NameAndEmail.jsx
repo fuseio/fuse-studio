@@ -62,9 +62,8 @@ const NameAndCurrency = ({
       <div className='name' style={{ padding: '0' }}>
         <h3 className='name__title' style={{ paddingBottom: '.2em' }}>Email <FontAwesome data-tip style={{ fontSize: '0.750em' }} data-for='email' name='info-circle' /></h3>
         <ReactTooltip className='tooltip__content' id='email' place='bottom' effect='solid'>
-          <div>We collect your email only to send you important notifications about your economy and for a friendlier experience with future collaborators.</div>
+          <div>We collect your email only to send you important notifications about your economy and to work to improve your user experience.</div>
         </ReactTooltip>
-        <p className='name__text' style={{ marginBottom: '1em' }}>Leave us your mail and we will notify you with all the essential information</p>
         <Field
           name='email'
           render={({ field }) => (

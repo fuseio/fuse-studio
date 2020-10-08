@@ -1,6 +1,5 @@
 import React from 'react'
 import { push } from 'connected-react-router'
-import { isMobileOnly } from 'react-device-detect'
 import { connect } from 'react-redux'
 
 import withTracker from 'containers/withTracker'
@@ -10,9 +9,7 @@ import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import { loadModal } from 'actions/ui'
 import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
 
-import personImage from 'images/person.png'
-import groupImageMobile from 'images/group_mobile.png'
-import groupImage from 'images/group_image.png'
+import homeImage from 'images/studio_home.png'
 import arrowImage from 'images/arrow_1.svg'
 
 import { getCommunitiesKeys } from 'selectors/accounts'
@@ -31,8 +28,7 @@ const HomePage = ({
       loadModal(WEB3_CONNECT_MODAL, { web3connect })
     } else {
       window.analytics.track('Launch community button pressed - connected')
-      const path = templateId ? `/view/issuance/${templateId}` : '/view/issuance'
-      push(path)
+      push('/view/issuance')
     }
   }
 
@@ -49,25 +45,24 @@ const HomePage = ({
     <div className='home_page'>
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-middle'>
-          <div className='home_page__content cell medium-12 large-9' style={{ height: '50%', paddingBottom: '50px' }}>
-            <h2 className='home_page__title'>Welcome to Fuse studio</h2>
+          <div className='home_page__content cell medium-12 large-12' style={{ height: '50%' }}>
+            <h2 className='home_page__title'>Welcome to Fuse Studio</h2>
             <p className='home_page__text'>
-              Create your own custom branded wallet and currency in a few simple steps
+              Create your own custom branded wallet and<br /> currency in a few simple steps
             </p>
             <div className='home_page__button'>
               <button onClick={() => {
                 showIssuance()
               }}>
-                Launch your community
+                Launch an economy
                 <span style={{ marginLeft: '5px' }}>
                   <img src={arrowImage} alt='arrow' />
                 </span>
               </button>
             </div>
           </div>
-          <div className='home_page__image home_page__image--second cell large-12 medium-12 small-18'>
-            <img src={personImage} />
-            <img src={!isMobileOnly ? groupImage : groupImageMobile} />
+          <div className='home_page__image cell large-12 medium-12'>
+            <img src={homeImage} />
           </div>
         </div>
       </div>
@@ -75,13 +70,13 @@ const HomePage = ({
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
             <div className='cell medium-24 large-12'>
-              <MyCommunities withDecoration showDashboard={showDashboard} showIssuance={showIssuance} />
+              <MyCommunities showDashboard={showDashboard} showIssuance={showIssuance} />
             </div>
             <div className='cell medium-24 large-12 home_page__faqAndRecent grid-y grid-margin-y'>
               <FeaturedCommunities accountAddress={accountAddress} showDashboard={showDashboard} />
-              <Faqs />
             </div>
           </div>
+          <Faqs />
         </div>
       </div>
     </div>
