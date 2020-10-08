@@ -1,16 +1,16 @@
 import React from 'react'
-import { connect, getIn, Field } from 'formik'
+import { getIn, Field, useFormikContext } from 'formik'
 
-const CommunityStatus = ({ formik }) => {
+const CommunityStatus = () => {
+  const formik = useFormikContext()
   const isOpen = getIn(formik.values, 'isOpen')
   return (
     <div className='close_open_community'>
       <h3 className='close_open_community__title'>
         Community status
       </h3>
-      <Field
-        name='isOpen'
-        render={({ field, form: { setFieldValue } }) => (
+      <Field name='isOpen'>
+        {({ field, form: { setFieldValue } }) => (
           <label className='toggle'>
             <input
               type='checkbox'
@@ -36,9 +36,9 @@ const CommunityStatus = ({ formik }) => {
             </div>
           </label>
         )}
-      />
+      </Field>
     </div>
   )
 }
 
-export default connect(CommunityStatus)
+export default CommunityStatus

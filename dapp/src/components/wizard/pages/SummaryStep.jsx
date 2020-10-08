@@ -1,7 +1,7 @@
 import React from 'react'
 import CommunityLogo from 'components/common/CommunityLogo'
 import FontAwesome from 'react-fontawesome'
-import { connect, getIn } from 'formik'
+import { getIn, useFormikContext } from 'formik'
 import pickBy from 'lodash/pickBy'
 import pluginsIcons from 'constants/pluginsIcons'
 import upperCase from 'lodash/upperCase'
@@ -12,9 +12,9 @@ import isEmpty from 'lodash/isEmpty'
 import { toLongName } from 'utils/network'
 
 const SummaryStep = ({
-  foreignNetwork,
-  formik
+  foreignNetwork
 }) => {
+  const formik = useFormikContext()
   const contracts = getIn(formik.values, 'contracts')
   const communitySymbol = getIn(formik.values, 'communitySymbol')
   const totalSupply = getIn(formik.values, 'totalSupply')
@@ -121,4 +121,4 @@ const SummaryStep = ({
   )
 }
 
-export default connect(SummaryStep)
+export default SummaryStep

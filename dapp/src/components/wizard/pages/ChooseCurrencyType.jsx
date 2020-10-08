@@ -1,15 +1,14 @@
 import React, { Fragment, useEffect } from 'react'
-import { Field, connect, getIn } from 'formik'
+import { Field, useFormikContext, getIn } from 'formik'
 import classNames from 'classnames'
 import createNewToken from 'images/create_new_token.svg'
 import existingToken from 'images/existing_token.svg'
 import { nameToSymbol } from 'utils/format'
 
-const CurrencyOption = ({ account, logo, name, value }) => {
+const CurrencyOption = ({ logo, name, value }) => {
   return (
-    <Field
-      name='currency'
-      render={({ field, form: { setFieldValue } }) => (
+    <Field name='currency'>
+      {({ field, form: { setFieldValue } }) => (
         <Fragment>
           <label htmlFor={value} className={classNames('option option--fullWidth grid-x align-middle', { 'option--selected': field.value === value })}>
             <input
@@ -38,13 +37,12 @@ const CurrencyOption = ({ account, logo, name, value }) => {
           </label>
         </Fragment>
       )}
-    />
+    </Field>
   )
 }
 
-const ChooseCurrencyType = ({
-  formik
-}) => {
+const ChooseCurrencyType = () => {
+  const formik = useFormikContext()
   const network = getIn(formik.values, 'network')
   const communityName = getIn(formik.values, 'communityName')
   const currency = getIn(formik.values, 'currency')
@@ -73,4 +71,4 @@ const ChooseCurrencyType = ({
   )
 }
 
-export default connect(ChooseCurrencyType)
+export default ChooseCurrencyType

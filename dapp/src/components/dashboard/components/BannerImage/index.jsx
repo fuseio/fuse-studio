@@ -1,11 +1,10 @@
 import React from 'react'
-import { connect, getIn } from 'formik'
+import { useFormikContext, getIn } from 'formik'
 import { createObjectURL } from 'utils/images'
 import cameraIcon from 'images/camara.svg'
 
-const BannerImage = ({
-  formik
-}) => {
+const BannerImage = () => {
+  const formik = useFormikContext()
   const walletBanner = getIn(formik.values, 'walletBanner')
   const onSelectFile = async (event) => {
     event.preventDefault()
@@ -42,4 +41,4 @@ const BannerImage = ({
   )
 }
 
-export default connect(BannerImage)
+export default BannerImage

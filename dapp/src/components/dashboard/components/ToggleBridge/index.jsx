@@ -5,30 +5,21 @@ import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
 import { getIsMultiBridge } from 'selectors/dashboard'
 import { toggleMultiBridge } from 'actions/bridge'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
-class ToggleBridge extends React.Component {
-  constructor (props) {
-    super(props)
+const Scheme = object().noUnknown(false).shape({
+  isMultiBridge: boolean()
+})
 
-    const { isMultiBridge } = props
-
-    this.initialValues = {
-      isMultiBridge: isMultiBridge
-    }
-
-    this.validationSchema = object().noUnknown(false).shape({
-      isMultiBridge: boolean()
-    })
-  }
-
-  renderForm = ({ values, handleSubmit, submitForm }) => {
+const ToggleBridge = (props) => {
+  const isMultiBridge = useSelector(getIsMultiBridge)
+  const dispatch = useDispatch()
+  const renderForm = ({ values, handleSubmit, submitForm }) => {
     const { isMultiBridge } = values
     return (
       <form className='bridge_toggle' onSubmit={handleSubmit}>
-        <Field
-          name='isMultiBridge'
-          render={({ field, form: { handleChange } }) => (
+        <Field name='isMultiBridge'>
+          {({ field, form: { handleChange } }) => (
             <div className='grid-x align-middle'>
               <label className='toggle'>
                 <input
@@ -53,34 +44,27 @@ class ToggleBridge extends React.Component {
               </ReactTooltip>
             </div>
           )}
-        />
+        </Field>
 
       </form>
     )
   }
 
-  onSubmit = (values, bag) => {
-    const { toggleMultiBridge } = this.props
-    toggleMultiBridge(values.isMultiBridge)
+  const onSubmit = (values, bag) => {
+    dispatch(toggleMultiBridge(values.isMultiBridge))
   }
 
-  render () {
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        onSubmit={this.onSubmit}
-        validationSchema={this.validationSchema}
-        render={this.renderForm}
-        initialStatus={false}
-        validateOnChange
-        isInitialValid={false}
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{ isMultiBridge }}
+      onSubmit={onSubmit}
+      validationSchema={Scheme}
+      render={renderForm}
+      initialStatus={false}
+      validateOnChange
+      isInitialValid={false}
+    />
+  )
 }
 
-const mapStateToProps = (state) => ({
-  isMultiBridge: getIsMultiBridge(state)
-})
-
-export default connect(mapStateToProps, { toggleMultiBridge })(ToggleBridge)
+export default ToggleBridge

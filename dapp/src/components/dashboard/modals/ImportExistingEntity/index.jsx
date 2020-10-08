@@ -6,32 +6,19 @@ import TransactionButton from 'components/common/TransactionButton'
 import Modal from 'components/common/Modal'
 import { string, object } from 'yup'
 
-class ImportExistingEntity extends Component {
-  constructor (props) {
-    super(props)
+const Scheme = object().noUnknown(false).shape({
+  account: string().normalize().required().isAddress()
+})
 
-    const { entity } = props
-
-    this.initialValues = {
-      account: get(entity, 'account', '')
-    }
-
-    this.validationSchema = object().noUnknown(false).shape({
-      account: string().normalize().required().isAddress()
-    })
-  }
-
-  onSubmit = (values) => {
-    const {
-      submitEntity
-    } = this.props
-
+// class ImportExistingEntity extends Component {
+const ImportExistingEntity = ({ entity, submitEntity }) => {
+  const onSubmit = (values) => {
     const entity = omit(values, 'selectedType')
 
     submitEntity(entity)
   }
 
-  renderForm = ({ handleSubmit, isValid }) => {
+  const renderForm = ({ handleSubmit, isValid }) => {
     return (
       <form className='user-form' onSubmit={handleSubmit}>
         <h5 className='user-form__title'>Import existing entity</h5>
@@ -50,17 +37,17 @@ class ImportExistingEntity extends Component {
     )
   }
 
-  render () {
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        validationSchema={this.validationSchema}
-        render={this.renderForm}
-        onSubmit={this.onSubmit}
-        isInitialValid={false}
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        account: get(entity, 'account', '')
+      }}
+      validationSchema={Scheme}
+      render={renderForm}
+      onSubmit={onSubmit}
+      isInitialValid={false}
+    />
+  )
 }
 
 export default ({ hideModal, submitEntity, entity }) => {

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useCallback } from 'react'
+import React, { Fragment, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
@@ -6,14 +6,10 @@ import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clea
 import { signUpUser } from 'actions/user'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
-import WizardShape from 'utils/validation/shapes/wizard'
 import * as Sentry from '@sentry/browser'
 import { push } from 'connected-react-router'
 import { toChecksumAddress } from 'web3-utils'
 
-import CommunityTypes from 'constants/communityTypes'
-import { existingTokens } from 'constants/existingTokens'
-import { loadState } from 'utils/storage'
 import { getForeignNetwork } from 'selectors/network'
 
 import { withNetwork } from 'containers/Web3'
@@ -30,41 +26,6 @@ import Congratulations from 'components/wizard/components/Congratulations'
 
 import contractIcon from 'images/contract.svg'
 
-const getInitialValues = (templateId, networkType) => {
-  const networkState = loadState('state.network') || CONFIG.web3.bridge.network
-  const { foreignNetwork } = networkState
-  switch (templateId) {
-    case '1':
-      return {
-        plugins: {
-          businessList: {
-            isActive: true
-          },
-          joinBonus: {
-            isActive: true
-          }
-        },
-        existingToken: existingTokens(networkType || foreignNetwork)[0],
-        communitySymbol: existingTokens(networkType || foreignNetwork)[0].symbol
-      }
-    case '2':
-      return {
-        plugins: {
-          businessList: {
-            isActive: true
-          },
-          joinBonus: {
-            isActive: true
-          }
-        },
-        communityType: CommunityTypes[0],
-        totalSupply: 1000
-      }
-    default:
-      return {}
-  }
-}
-
 const WizardPage = ({
   deployExistingToken,
   createTokenWithMetadata,
@@ -78,8 +39,7 @@ const WizardPage = ({
   loadModal,
   communityAddress,
   foreignNetwork,
-  push,
-  templateId
+  push
 }) => {
   useEffect(() => {
     if (window && window.analytics) {
@@ -87,61 +47,49 @@ const WizardPage = ({
     }
   }, [])
 
-  const initialTemplateValues = useCallback(getInitialValues(templateId, networkType), [templateId, networkType])
-
-  const initialValues = useMemo(() => {
-    const {
-      plugins,
-      communityType,
-      existingToken,
-      communitySymbol,
-      totalSupply
-    } = initialTemplateValues
-    return {
-      communityName: '',
-      communitySymbol: communitySymbol || '',
-      totalSupply: totalSupply || '',
-      communityType: communityType || undefined,
-      existingToken: existingToken || undefined,
-      description: '',
-      customToken: '',
-      isOpen: true,
-      subscribe: true,
-      email: '',
-      coverPhoto: {},
-      images: {
-        chosen: 'defaultOne'
+  const initialValues = useMemo(() => ({
+    communityName: '',
+    communitySymbol: '',
+    totalSupply: '',
+    communityType: undefined,
+    existingToken: undefined,
+    description: '',
+    customToken: '',
+    isOpen: true,
+    subscribe: true,
+    email: '',
+    coverPhoto: {},
+    images: {
+      chosen: 'defaultOne'
+    },
+    contracts: {
+      community: {
+        label: 'Members list',
+        checked: true,
+        key: 'community',
+        icon: contractIcon
       },
-      contracts: {
-        community: {
-          label: 'Members list',
-          checked: true,
-          key: 'community',
-          icon: contractIcon
-        },
-        funder: {
-          checked: true,
-          key: 'funder'
-        },
-        email: {
-          checked: true,
-          key: 'email'
-        }
+      funder: {
+        checked: true,
+        key: 'funder'
       },
-      plugins: {
-        businessList: {
-          isActive: false
-        },
-        joinBonus: {
-          isActive: false
-        },
-        onramp: {
-          isActive: false
-        },
-        ...plugins
+      email: {
+        checked: true,
+        key: 'email'
+      }
+    },
+    plugins: {
+      businessList: {
+        isActive: false
+      },
+      joinBonus: {
+        isActive: false
+      },
+      onramp: {
+        isActive: false
       }
     }
-  }, [initialTemplateValues])
+  }), [])
 
   const setIssuanceTransaction = (values) => {
     const {
@@ -160,7 +108,7 @@ const WizardPage = ({
       coverPhoto,
       description
     } = values
-
+    console.log({ ...values })
     const chosenPlugins = Object.keys(plugins)
       .filter((pluginName) => plugins[pluginName].isActive)
       .reduce((newPlugins, name) => ({
@@ -230,7 +178,6 @@ const WizardPage = ({
         loadModal={loadModal}
         transactionStatus={transactionStatus}
         createTokenSignature={createTokenSignature}
-        validationSchema={WizardShape}
         initialValues={initialValues}
         submitHandler={(values, actions) => {
           setIssuanceTransaction(values)
@@ -288,8 +235,7 @@ const WizardPage = ({
   )
 }
 
-const mapStateToProps = (state, { match }) => ({
-  templateId: match.params.templateId,
+const mapStateToProps = (state) => ({
   ...state.screens.issuance,
   foreignNetwork: getForeignNetwork(state),
   adminAddress: getAccountAddress(state)

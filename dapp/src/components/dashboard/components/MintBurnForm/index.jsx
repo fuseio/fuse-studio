@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { Formik, ErrorMessage } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/SignMessage'
@@ -7,30 +7,21 @@ import upperCase from 'lodash/upperCase'
 import mintBurnShape from 'utils/validation/shapes/mintBurn'
 import TextField from '@material-ui/core/TextField'
 
-export default class MintBurnForm extends PureComponent {
-  constructor (props) {
-    super(props)
-
-    const { balance, actionType } = this.props
-
-    this.initialValues = {
-      actionType,
-      mintAmount: '',
-      burnAmount: ''
-    }
-
-    this.validationSchema = mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
-  }
-
-  componentDidUpdate (prevProps) {
-    if (prevProps.balance !== this.props.balance) {
-      const { balance } = this.props
-      this.validationSchema = mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
-    }
-  }
-
-  onSubmit = (values, formikBag) => {
-    const { handleMintOrBurnClick } = this.props
+export default ({
+  tokenNetworkType,
+  symbol,
+  lastAction,
+  closeMintMessage,
+  closeBurnMessage,
+  balance,
+  actionType,
+  error,
+  handleMintOrBurnClick,
+  transactionStatus,
+  mintMessage,
+  burnMessage
+}) => {
+  const onSubmit = (values, formikBag) => {
     const {
       actionType,
       mintAmount,
@@ -42,8 +33,7 @@ export default class MintBurnForm extends PureComponent {
     formikBag.resetForm(this.initialValues)
   }
 
-  transactionConfirmed = (actionType) => {
-    const { transactionStatus, mintMessage, burnMessage } = this.props
+  const transactionConfirmed = (actionType) => {
     const sharedCondition = transactionStatus && (transactionStatus === SUCCESS || transactionStatus === CONFIRMATION)
     if (actionType === 'mint') {
       return sharedCondition && mintMessage
@@ -52,8 +42,7 @@ export default class MintBurnForm extends PureComponent {
     }
   }
 
-  transactionError = (actionType) => {
-    const { transactionStatus, mintMessage, burnMessage } = this.props
+  const transactionError = (actionType) => {
     const sharedCondition = transactionStatus && transactionStatus === FAILURE
     if (actionType === 'mint') {
       return sharedCondition && mintMessage
@@ -62,22 +51,11 @@ export default class MintBurnForm extends PureComponent {
     }
   }
 
-  transactionDenied = (actionType) => {
-    const {
-      error
-    } = this.props
-    return this.transactionError(actionType) && error && typeof error.includes === 'function' && error.includes('denied')
+  const transactionDenied = (actionType) => {
+    return transactionError(actionType) && error && typeof error.includes === 'function' && error.includes('denied')
   }
 
-  renderForm = ({ handleSubmit, errors, handleChange, touched, values, isValid }) => {
-    const {
-      tokenNetworkType,
-      symbol,
-      lastAction,
-      closeMintMessage,
-      closeBurnMessage
-    } = this.props
-
+  const renderForm = ({ handleSubmit, errors, handleChange, touched, values, isValid }) => {
     const {
       actionType
     } = values
@@ -87,7 +65,7 @@ export default class MintBurnForm extends PureComponent {
 
         <Message
           message={`Your just ${lastAction && lastAction.actionType}ed ${lastAction && lastAction.mintBurnAmount} ${symbol} on ${tokenNetworkType} network`}
-          isOpen={this.transactionConfirmed(actionType)}
+          isOpen={transactionConfirmed(actionType)}
           subTitle=''
           clickHandler={
             actionType === 'mint'
@@ -98,7 +76,7 @@ export default class MintBurnForm extends PureComponent {
 
         <Message
           message={'Oops, something went wrong'}
-          isOpen={this.transactionError(actionType)}
+          isOpen={transactionError(actionType)}
           subTitle=''
           clickHandler={
             actionType === 'mint'
@@ -110,7 +88,7 @@ export default class MintBurnForm extends PureComponent {
         <Message
           message={'Oh no'}
           subTitle={`You reject the action, That’s ok, try next time!`}
-          isOpen={this.transactionDenied(actionType)}
+          isOpen={transactionDenied(actionType)}
           clickHandler={
             actionType === 'mint'
               ? closeMintMessage
@@ -193,12 +171,16 @@ export default class MintBurnForm extends PureComponent {
     )
   }
 
-  render = () => (
+  return (
     <Formik
-      initialValues={this.initialValues}
-      validationSchema={this.validationSchema}
-      render={this.renderForm}
-      onSubmit={this.onSubmit}
+      initialValues={{
+        actionType,
+        mintAmount: '',
+        burnAmount: ''
+      }}
+      validationSchema={mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)}
+      render={renderForm}
+      onSubmit={onSubmit}
       isInitialValid={false}
       enableReinitialize
       validateOnChange

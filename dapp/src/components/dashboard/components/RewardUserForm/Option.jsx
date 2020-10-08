@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { connect, getIn, Field } from 'formik'
+import { getIn, Field, useFormikContext } from 'formik'
 import HeaderRow from 'components/dashboard/components/HeaderRow'
 import BodyRow from 'components/dashboard/components/BodyRow'
 import { useTable, useSortBy, useRowSelect } from 'react-table'
@@ -56,9 +56,8 @@ const EditableCell = ({
   }, [amount])
 
   return (
-    <Field
-      name={fieldName}
-      render={({ field, form: { handleChange, submitForm } }) => {
+    <Field name={fieldName}>
+      {({ field, form: { handleChange, submitForm } }) => {
         const { onBlur } = field
         return (
           <div className='grid-x align-middle'>
@@ -79,7 +78,7 @@ const EditableCell = ({
           </div>
         )
       }}
-    />
+    </Field>
   )
 }
 
@@ -97,9 +96,8 @@ const IndeterminateCheckbox = React.forwardRef(
     }, [resolvedRef, indeterminate])
 
     return (
-      <Field
-        name={fieldName}
-        render={({ field, form: { setFieldValue, submitForm } }) => {
+      <Field name={fieldName}>
+        {({ field, form: { setFieldValue, submitForm } }) => {
           return (
             <div className='grid-x align-middle'>
               <label className='toggle' htmlFor={fieldName}>
@@ -123,12 +121,13 @@ const IndeterminateCheckbox = React.forwardRef(
             </div>
           )
         }}
-      />
+      </Field>
     )
   }
 )
 
-const TableOptions = connect(({ formik, data, columns, updateMyData }) => {
+const TableOptions = ({ data, columns, updateMyData }) => {
+  const formik = useFormikContext()
   const joinBonus = getIn(formik.values, 'joinBonus')
   const inviteBonus = getIn(formik.values, 'inviteBonus')
   const backupBonus = getIn(formik.values, 'backupBonus')
@@ -192,7 +191,7 @@ const TableOptions = connect(({ formik, data, columns, updateMyData }) => {
       </div>
     </div>
   )
-})
+}
 
 const OptionsContainer = ({ values }) => {
   const [data, setData] = useState(options(values))

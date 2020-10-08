@@ -54,7 +54,7 @@
     "css-loader": "^2.1.1",
     "ethereumjs-wallet": "^0.6.3",
     "file-loader": "^1.1.11",
-    "formik": "^1.5.1",
+    "formik": "^2.1.7",
     "foundation-sites": "^6.5.3",
     "google-libphonenumber": "^3.2.6",
     "graphql": "^14.5.8",
@@ -97,7 +97,7 @@
     "webpack": "^4.6.0",
     "webpack-cli": "^3.1.2",
     "websocket": "^1.0.28",
-    "yup": "^0.27.0"
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@babel/traverse": "^7.7.4",

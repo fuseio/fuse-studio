@@ -1,42 +1,33 @@
-import React, { Component } from 'react'
+import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import { Formik } from 'formik'
 import { object, number } from 'yup'
 import TransactionButton from 'components/common/TransactionButton'
 import SignMessage from 'components/common/SignMessage'
 
-class TransferToFunderForm extends Component {
-  constructor (props) {
-    super(props)
+const Scheme = object().noUnknown(false).shape({
+  amount: number().positive()
+})
 
-    this.initialValues = {
-      amount: ''
-    }
-
-    this.validationSchema = object().noUnknown(false).shape({
-      amount: number().positive()
-    })
-  }
-
-  onSubmit = (values, formikBag) => {
+const TransferToFunderForm = ({
+  transactionConfirmed,
+  transactionDenied,
+  transactionError,
+  closeInnerModal,
+  funderBalance,
+  balance,
+  symbol,
+  isTransfer,
+  transferSignature,
+  transferToFunder
+}) => {
+  const onSubmit = (values, formikBag) => {
     const { amount } = values
-    const { transferToFunder } = this.props
     transferToFunder(amount)
     formikBag.resetForm()
   }
 
-  renderHasBalanceForm = ({ handleSubmit, isValid, values, handleChange }) => {
-    const {
-      transactionConfirmed,
-      transactionDenied,
-      transactionError,
-      closeInnerModal,
-      funderBalance,
-      balance,
-      symbol,
-      isTransfer,
-      transferSignature
-    } = this.props
+  const renderHasBalanceForm = ({ handleSubmit, isValid, values, handleChange }) => {
     const { amount } = values
     return (
       <form onSubmit={handleSubmit} className='join_bonus__container'>
@@ -108,18 +99,7 @@ class TransferToFunderForm extends Component {
     )
   }
 
-  renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
-    const {
-      transactionConfirmed,
-      transactionDenied,
-      transactionError,
-      closeInnerModal,
-      funderBalance,
-      balance,
-      symbol,
-      isTransfer,
-      transferSignature
-    } = this.props
+  const renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
     const { amount } = values
     return (
       <form onSubmit={handleSubmit} className='join_bonus__container'>
@@ -191,20 +171,18 @@ class TransferToFunderForm extends Component {
     )
   }
 
-  render () {
-    const { funderBalance } = this.props
-
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        validationSchema={this.validationSchema}
-        render={Number(funderBalance) <= 0 ? this.renderForm : this.renderHasBalanceForm}
-        onSubmit={this.onSubmit}
-        enableReinitialize
-        validateOnChange
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        amount: ''
+      }}
+      validationSchema={Scheme}
+      render={Number(funderBalance) <= 0 ? renderForm : renderHasBalanceForm}
+      onSubmit={onSubmit}
+      enableReinitialize
+      validateOnChange
+    />
+  )
 }
 
 export default TransferToFunderForm

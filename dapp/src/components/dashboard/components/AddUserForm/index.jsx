@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import omit from 'lodash/omit'
 import get from 'lodash/get'
@@ -13,27 +13,10 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { connect } from 'react-redux'
 import { getUser3boxData } from 'selectors/accounts'
 
-class AddUserForm extends Component {
-  constructor (props) {
-    super(props)
+const AddUserForm = (props) => {
+  const { entity, userData: { publicData, privateData } } = props
 
-    const { entity, userData: { publicData, privateData } } = props
-
-    this.initialValues = {
-      name: get(publicData, 'name', ''),
-      email: get(privateData, 'email', ''),
-      phoneNumber: '',
-      country: '',
-      status: '',
-      address: get(publicData, 'address', ''),
-      account: get(entity, 'account', ''),
-      image: null
-    }
-
-    this.validationSchema = userEntity
-  }
-
-  onSubmit = (values) => {
+  const onSubmit = (values) => {
     const {
       submitEntity
     } = this.props
@@ -43,12 +26,12 @@ class AddUserForm extends Component {
     submitEntity(entity)
   }
 
-  renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
+  const renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
     const { isJoin } = this.props
     return (
       <form className='user-form' onSubmit={handleSubmit}>
         <h5 className='user-form__title'>
-          { isJoin ? 'Join community' : 'Add new user' }
+          {isJoin ? 'Join community' : 'Add new user'}
         </h5>
         <div className='user-form__field user-form__field--space-bottom'>
           <TextField
@@ -272,18 +255,24 @@ class AddUserForm extends Component {
       </form>
     )
   }
-
-  render () {
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        validationSchema={this.validationSchema}
-        render={this.renderForm}
-        onSubmit={this.onSubmit}
-        isInitialValid={false}
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        name: get(publicData, 'name', ''),
+        email: get(privateData, 'email', ''),
+        phoneNumber: '',
+        country: '',
+        status: '',
+        address: get(publicData, 'address', ''),
+        account: get(entity, 'account', ''),
+        image: null
+      }}
+      validationSchema={userEntity}
+      render={renderForm}
+      onSubmit={onSubmit}
+      isInitialValid={false}
+    />
+  )
 }
 
 AddUserForm.propTypes = {

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
@@ -14,67 +14,25 @@ import CreatableSelect from 'react-select/creatable'
 
 const createUserOptions = (users) => users.map(user => ({ value: user.address, label: user.address }))
 
-class BusinessForm extends Component {
-  constructor (props) {
-    super(props)
-
-    const { entity } = props
-
-    this.initialValues = {
-      name: get(entity, 'name', ''),
-      address: get(entity, 'address', ''),
-      email: get(entity, 'email', ''),
-      phoneNumber: get(entity, 'phoneNumber', ''),
-      website: get(entity, 'website', ''),
-      description: get(entity, 'description', ''),
-      type: get(entity, 'type', '', ''),
-      account: get(entity, 'account', ''),
-      selectedType: options().some(({ value }) => value === get(entity, 'type', '')) ? {
-        value: get(entity, 'type', ''),
-        label: capitalize(get(entity, 'type', ''))
-      } : {},
-      image: null,
-      coverPhoto: null,
-      details: get(entity, 'details', '')
-    }
-
-    this.validationSchema = entityShape
-  }
-
-  setUploadCoverPicture = (node) => {
-    this.uploadCoverPicture = node
-  }
-
-  setUploadLogoPicture = (node) => {
-    this.uploadLogoPicture = node
-  }
-
-  onSubmit = (values) => {
-    const {
-      submitEntity
-    } = this.props
-
+const BusinessForm = ({ submitEntity, uploadImage, isJoin, users, entity }) => {
+  const onSubmit = (values) => {
     const entity = omit(values, 'selectedType')
-
     submitEntity(entity)
   }
 
-  handleUploadImage = (photoFile, e) => {
-    if (photoFile.size <= 2500000) {
-      const formData = new window.FormData()
-      formData.append('path', new window.Blob([photoFile]))
+  // const handleUploadImage = (photoFile, e) => {
+  //   if (photoFile.size <= 2500000) {
+  //     const formData = new window.FormData()
+  //     formData.append('path', new window.Blob([photoFile]))
 
-      const { uploadImage } = this.props
+  //     uploadImage(formData)
+  //   } else {
+  //     e.target.value = null
+  //     this.setState({ showFileSizeModal: true })
+  //   }
+  // }
 
-      uploadImage(formData)
-    } else {
-      e.target.value = null
-      this.setState({ showFileSizeModal: true })
-    }
-  }
-
-  renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
-    const { isJoin, users } = this.props
+  const renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
     return (
       <form className='user-form' onSubmit={handleSubmit}>
         <h5 className='user-form__title'>
@@ -334,17 +292,31 @@ class BusinessForm extends Component {
     )
   }
 
-  render () {
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        validationSchema={this.validationSchema}
-        render={this.renderForm}
-        onSubmit={this.onSubmit}
-        isInitialValid={false}
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        name: get(entity, 'name', ''),
+        address: get(entity, 'address', ''),
+        email: get(entity, 'email', ''),
+        phoneNumber: get(entity, 'phoneNumber', ''),
+        website: get(entity, 'website', ''),
+        description: get(entity, 'description', ''),
+        type: get(entity, 'type', '', ''),
+        account: get(entity, 'account', ''),
+        selectedType: options().some(({ value }) => value === get(entity, 'type', '')) ? {
+          value: get(entity, 'type', ''),
+          label: capitalize(get(entity, 'type', ''))
+        } : {},
+        image: null,
+        coverPhoto: null,
+        details: get(entity, 'details', '')
+      }}
+      validationSchema={entityShape}
+      render={renderForm}
+      onSubmit={onSubmit}
+      isInitialValid={false}
+    />
+  )
 }
 
 BusinessForm.propTypes = {

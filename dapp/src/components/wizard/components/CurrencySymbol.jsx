@@ -1,17 +1,17 @@
 import React from 'react'
 import TextInput from 'components/common/TextInput'
-import { connect, getIn, Field } from 'formik'
+import { getIn, Field, useFormikContext } from 'formik'
 
-const CurrencySymbol = ({ formik }) => {
+const CurrencySymbol = () => {
+  const formik = useFormikContext()
   const communityType = getIn(formik.values, 'communityType')
 
   return (
     <div className='symbol'>
       <h2 className='symbol__title'>Currency Symbol</h2>
       <div className='symbol__field'>
-        <Field
-          name='communitySymbol'
-          render={({ field, form: { setFieldValue } }) => (
+        <Field name='communitySymbol'>
+          {({ field, form: { setFieldValue } }) => (
             <TextInput
               {...field}
               id='communitySymbol'
@@ -25,10 +25,10 @@ const CurrencySymbol = ({ formik }) => {
               }}
             />
           )}
-        />
+        </Field>
       </div>
     </div>
   )
 }
 
-export default connect(CurrencySymbol)
+export default CurrencySymbol

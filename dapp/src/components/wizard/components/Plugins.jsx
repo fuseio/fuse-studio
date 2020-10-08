@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { connect, Field, getIn } from 'formik'
+import { useFormikContext, Field, getIn } from 'formik'
 import upperCase from 'lodash/upperCase'
 import lowerCase from 'lodash/lowerCase'
 import upperFirst from 'lodash/upperFirst'
@@ -12,7 +12,8 @@ const PluginItem = memo(({ pluginName, isActive }) => {
       <div className='plugins_step__title'>{upperFirst(lowerCase(upperCase(pluginName)))}</div>
       <Field
         name='isOpen'
-        render={({ field, form: { setFieldValue } }) => (
+      >
+        {({ field, form: { setFieldValue } }) => (
           <label className='toggle'>
             <input
               {...field}
@@ -28,6 +29,7 @@ const PluginItem = memo(({ pluginName, isActive }) => {
             </div>
           </label>
         )}
+      </Field>
       />
     </div>
   )
@@ -41,13 +43,10 @@ const PluginItem = memo(({ pluginName, isActive }) => {
   return true
 })
 
-const Plugins = ({
-  formik
-}) => {
+const Plugins = () => {
+  const formik = useFormikContext()
   const plugins = getIn(formik.values, 'plugins')
-  const keys = React.useMemo(() => {
-    return Object.keys(plugins)
-  }, [])
+  const keys = React.useMemo(() => Object.keys(plugins), [])
 
   return (
     <div className='grid-x grid-margin-x grid-margin-y plugins_step'>
@@ -56,4 +55,4 @@ const Plugins = ({
   )
 }
 
-export default connect(Plugins)
+export default Plugins

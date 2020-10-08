@@ -7,9 +7,9 @@ export default object().noUnknown(false).shape({
   hasBalance: boolean().oneOf([true]).required(),
   network: mixed().oneOf(['ropsten', 'main']).required(),
   currency: mixed().oneOf(['new', 'existing']).required(),
-  communityName: string().normalize().min(3).max(36).required(),
-  communitySymbol: string().uppercase().normalize().min(2).max(4).required(),
-  description: string().normalize().required(),
+  communityName: string().normalize().min(3).max(36).required().label('Name'),
+  communitySymbol: string().uppercase().normalize().min(2).max(4).required().label('Symbol'),
+  description: string().normalize().required().label('Description'),
   customToken: string().when(['existingToken', 'communityType'], {
     is: (existingToken, communityType) => !existingToken.value || !communityType.value,
     then: string(),

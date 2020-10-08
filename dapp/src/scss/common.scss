@@ -1024,6 +1024,10 @@
   font-size: 0.688em;
   line-height: 1.25;
 
+  @include modifier(block) {
+    bottom: 2.2em;
+  }
+
   @include modifier(bold) {
     font-weight: bold;
   }

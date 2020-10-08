@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import Select from 'react-select'
 import CommunityTypes from 'constants/communityTypes'
 import { dollarPeggedTokens, otherExistingTokens } from 'constants/existingTokens'
-import { Field, connect, getIn } from 'formik'
+import { Field, getIn, useFormikContext } from 'formik'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
 import classNames from 'classnames'
@@ -40,8 +40,8 @@ const Option = (props) => {
   )
 }
 
-const CustomToken = connect((props) => {
-  const { formik } = props
+const CustomToken = () => {
+  const formik = useFormikContext()
   const [isDone, setDone] = useState(false)
   const dispatch = useDispatch()
   const tokenAddress = getIn(formik.values, 'customToken')
@@ -69,9 +69,8 @@ const CustomToken = connect((props) => {
     <div className='customToken'>
       {network === 'ropsten' && <div className='attributes__title'>Custom token:</div>}
       <div className='customToken__field'>
-        <Field
-          name='customToken'
-          render={({ field, form: { handleChange } }) => (
+        <Field name='customToken'>
+          {({ field, form: { handleChange } }) => (
             <TextField
               {...field}
               onChange={(e) => {
@@ -95,7 +94,7 @@ const CustomToken = connect((props) => {
               }}
             />
           )}
-        />
+        </Field>
         {isToken == null && (
           <div className='customToken__img'>
             <div className='customToken__loader' />
@@ -110,9 +109,10 @@ const CustomToken = connect((props) => {
       )}
     </div>
   )
-})
+}
 
-const CurrencyType = ({ networkType, formik }) => {
+const CurrencyType = ({ networkType }) => {
+  const formik = useFormikContext()
   const existingToken = getIn(formik.values, 'existingToken')
   const currency = getIn(formik.values, 'currency')
   const network = getIn(formik.values, 'network')
@@ -148,9 +148,8 @@ const CurrencyType = ({ networkType, formik }) => {
             } = item
             return (
               <Fragment key={value}>
-                <Field
-                  name='communityType'
-                  render={({ field, form: { setFieldValue } }) => {
+                <Field name='communityType'>
+                  {({ field, form: { setFieldValue } }) => {
                     return (
                       <div
                         onClick={() => {
@@ -171,7 +170,7 @@ const CurrencyType = ({ networkType, formik }) => {
                       </div>
                     )
                   }}
-                />
+                </Field>
                 {index === 0 && <p className='or cell shrink'>OR</p>}
               </Fragment>
             )
@@ -182,9 +181,8 @@ const CurrencyType = ({ networkType, formik }) => {
             {network !== 'ropsten' && (
               <Fragment>
                 <div className='cell large-11 grid-x align-middle'>
-                  <Field
-                    name='existingToken'
-                    render={({ field, form: { setFieldValue } }) => (
+                  <Field name='existingToken'>
+                    {({ field, form: { setFieldValue } }) => (
                       <Select
                         {...field}
                         onChange={val => {
@@ -204,7 +202,7 @@ const CurrencyType = ({ networkType, formik }) => {
                         placeholder={'Choose a currency'}
                       />
                     )}
-                  />
+                  </Field>
                 </div>
                 <p className='or cell shrink'>OR</p>
               </Fragment>
@@ -219,4 +217,4 @@ const CurrencyType = ({ networkType, formik }) => {
   )
 }
 
-export default connect(CurrencyType)
+export default CurrencyType
