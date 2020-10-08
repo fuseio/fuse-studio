@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Field, connect as formikConnect, getIn } from 'formik'
+import { Field, useFormikContext, getIn } from 'formik'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import classNames from 'classnames'
 import ethereumMainnet from 'images/ethereum_mainnet.svg'
@@ -38,9 +38,8 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
     }
   }, [account, network])
   return (
-    <Field
-      name='network'
-      render={({ field, form: { setFieldValue } }) => (
+    <Field name='network'>
+      {({ field, form: { setFieldValue } }) => (
         <label htmlFor={value} className={classNames('option option--fullWidth grid-x align-middle', { 'option--selected': field.value === value }, { 'option--error': value === network && !hasEth })}>
           <input
             style={{ display: 'none' }}
@@ -69,11 +68,12 @@ const NetworkOption = ({ network, account, logo, name, value, Content }) => {
           </div>
         </label>
       )}
-    />
+    </Field>
   )
 }
 
-const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, formik, account }) => {
+const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, account }) => {
+  const formik = useFormikContext()
   const network = getIn(formik.values, 'network')
 
   useEffect(() => {
@@ -149,4 +149,4 @@ const mapState = (state) => ({
   providerInfo: getProviderInfo(state)
 })
 
-export default connect(mapState, { loadModal, changeNetwork })(formikConnect(ChooseNetwork))
+export default connect(mapState, { loadModal, changeNetwork })(ChooseNetwork)

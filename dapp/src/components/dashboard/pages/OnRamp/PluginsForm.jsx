@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Formik } from 'formik'
 import pluginsShape from 'utils/validation/shapes/plugins'
 import get from 'lodash/get'
@@ -11,21 +11,8 @@ const getPluginName = (myPlugins) => {
   return isTransak ? 'transak' : isMoonpay ? 'moonpay' : isRampInstant ? 'rampInstant' : null
 }
 
-class PluginsForm extends Component {
-  constructor (props) {
-    super(props)
-
-    const { myPlugins } = props
-
-    this.initialValues = {
-      plugin: getPluginName(myPlugins)
-    }
-
-    this.validationSchema = pluginsShape
-  }
-
-  onSubmit = (values, formikBag) => {
-    const { addPlugin } = this.props
+const PluginsForm = ({ myPlugins, addPlugin }) => {
+  const onSubmit = (values, formikBag) => {
     const { plugin } = values
     addPlugin({
       name: plugin,
@@ -34,26 +21,25 @@ class PluginsForm extends Component {
     formikBag.resetForm({ plugin })
   }
 
-  renderForm = ({ handleSubmit }) => {
-
+  const renderForm = ({ handleSubmit }) => {
     return (
       <form onSubmit={handleSubmit}>
-        <Options myPlugins={this.props.myPlugins} />
+        <Options myPlugins={myPlugins} />
       </form >
     )
   }
 
-  render () {
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        onSubmit={this.onSubmit}
-        validationSchema={pluginsShape}
-        render={this.renderForm}
-        enableReinitialize
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        plugin: getPluginName(myPlugins)
+      }}
+      onSubmit={onSubmit}
+      validationSchema={pluginsShape}
+      render={renderForm}
+      enableReinitialize
+    />
+  )
 }
 
 export default PluginsForm

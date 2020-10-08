@@ -35,9 +35,9 @@ const Root = () => {
       <NavBar web3connect={web3connect} />
       <Switch>
         <Route exact path='/' render={props => <HomePage {...props} />} />
-        <Route path='/view/issuance/:templateId?' component={props => <Wizard {...props} />} />
-        <Route path='/view/communities' component={props => <CommunitiesPage {...props} />} />
-        <Route path='/view/community/:address' component={props => <Dashboard {...props} />} />
+        <Route path='/view/issuance' render={props => <Wizard {...props} />} />
+        <Route path='/view/communities' render={props => <CommunitiesPage {...props} />} />
+        <Route path='/view/community/:address' render={props => <Dashboard {...props} />} />
       </Switch>
       <Footer />
       <ModalContainer />

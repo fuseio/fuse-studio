@@ -1,6 +1,5 @@
 import React from 'react'
-import { connect, getIn } from 'formik'
-import filter from 'lodash/filter'
+import { getIn, useFormikContext } from 'formik'
 import { withStyles } from '@material-ui/styles'
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel'
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
@@ -11,9 +10,7 @@ import TotalSupply from 'components/wizard/components/TotalSupply'
 import LogosOptions from 'components/wizard/components/LogosOptions'
 import CurrencySymbol from 'components/wizard/components/CurrencySymbol'
 import CurrencyType from 'components/wizard/components/CurrencyType'
-// import Plugins from 'components/wizard/components/Plugins'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
-// import CommunityStatus from 'components/wizard/components/CommunityStatus'
 
 import CaretDown from 'images/drop-down.svg'
 
@@ -63,12 +60,10 @@ const ExpansionPanelDetails = withStyles({
 const DropDownIcon = () => <img src={CaretDown} />
 
 const DetailsStep = ({
-  formik,
   networkType
 }) => {
+  const formik = useFormikContext()
   const communityType = getIn(formik.values, 'communityType')
-  const plugins = getIn(formik.values, 'plugins')
-  const countOfSelectedPlugins = React.useMemo(() => filter(plugins, 'isActive').length, [plugins])
 
   return (
     <div className='accordion'>
@@ -139,4 +134,4 @@ const DetailsStep = ({
   )
 }
 
-export default connect(DetailsStep)
+export default DetailsStep

@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react'
 import TextInput from 'components/common/TextInput'
-import { connect, getIn, Field } from 'formik'
+import { getIn, Field, ErrorMessage, useFormikContext } from 'formik'
 
-const TotalSupply = ({ formik }) => {
+const TotalSupply = () => {
+  const formik = useFormikContext()
   const communityTypeValue = getIn(formik.values, 'communityType')
   return (
     <Fragment>
@@ -12,7 +13,8 @@ const TotalSupply = ({ formik }) => {
         </h3>
         <Field
           name='totalSupply'
-          render={({ field, form: { handleChange } }) => (
+        >
+          {({ field, form: { handleChange } }) => (
             <div className='attributes__supply'>
               <TextInput
                 {...field}
@@ -24,10 +26,11 @@ const TotalSupply = ({ formik }) => {
               />
             </div>
           )}
-        />
+        </Field>
+        <ErrorMessage name='totalSupply' render={msg => <div className='input-error'>{msg}</div>} />
       </div>
     </Fragment>
   )
 }
 
-export default connect(TotalSupply)
+export default TotalSupply

@@ -1,19 +1,16 @@
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
-import { connect, Field } from 'formik'
+import { Field, ErrorMessage } from 'formik'
 import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
 
-const NameAndCurrency = ({
-  formik
-}) => {
+const NameAndCurrency = () => {
   return (
     <div className='name__wrapper'>
       <div className='name'>
         <h3 className='name__title'>Name your economy</h3>
-        <Field
-          name='communityName'
-          render={({ field }) => (
+        <Field name='communityName'>
+          {({ field }) => (
             <TextField
               {...field}
               type='search'
@@ -33,13 +30,13 @@ const NameAndCurrency = ({
               }}
             />
           )}
-        />
+        </Field>
+        <ErrorMessage name='communityName' render={msg => <div className='input-error input-error--block'>{msg}</div>} />
       </div>
       <div className='name' style={{ padding: '0 0 60px' }}>
         <h3 className='name__title'>Add economy description</h3>
-        <Field
-          name='description'
-          render={({ field }) => (
+        <Field name='description'>
+          {({ field }) => (
             <TextField
               {...field}
               multiline
@@ -57,16 +54,17 @@ const NameAndCurrency = ({
                 }
               }}
             />
-          )} />
+          )}
+        </Field>
+        <ErrorMessage name='description' render={msg => <div className='input-error input-error--block'>{msg}</div>} />
       </div>
-      <div className='name' style={{ padding: '0' }}>
+      <div className='name'>
         <h3 className='name__title' style={{ paddingBottom: '.2em' }}>Email <FontAwesome data-tip style={{ fontSize: '0.750em' }} data-for='email' name='info-circle' /></h3>
         <ReactTooltip className='tooltip__content' id='email' place='bottom' effect='solid'>
           <div>We collect your email only to send you important notifications about your economy and to work to improve your user experience.</div>
         </ReactTooltip>
-        <Field
-          name='email'
-          render={({ field }) => (
+        <Field name='email'>
+          {({ field }) => (
             <TextField
               {...field}
               type='email'
@@ -85,11 +83,11 @@ const NameAndCurrency = ({
               }}
             />
           )}
-        />
+        </Field>
+        <ErrorMessage name='email' render={msg => <div className='input-error input-error--block'>{msg}</div>} />
         <div className='name__toggle'>
-          <Field
-            name='subscribe'
-            render={({ field }) => (
+          <Field name='subscribe'>
+            {({ field }) => (
               <label className='toggle'>
                 <input
                   {...field}
@@ -101,7 +99,7 @@ const NameAndCurrency = ({
                 </div>
               </label>
             )}
-          />
+          </Field>
           <div className='name__toggle__text'>
             <span>I want to receive updates from Fuse.io</span>
           </div>
@@ -111,4 +109,4 @@ const NameAndCurrency = ({
   )
 }
 
-export default connect(NameAndCurrency)
+export default NameAndCurrency

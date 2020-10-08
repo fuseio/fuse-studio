@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
 import LogosOptions from 'components/wizard/components/LogosOptions'
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
@@ -19,8 +19,8 @@ const ExpansionPanelDetails = withStyles({
   }
 })(MuiExpansionPanelDetails)
 
-class SettingsForm extends Component {
-  renderForm = ({ isValid, handleSubmit, handleChange, values }) => {
+const SettingsForm = (props) => {
+  const renderForm = ({ isValid, handleSubmit, handleChange, values }) => {
     return (
       <form onSubmit={handleSubmit} className='issuance__wizard'>
         <div className='settings__form'>
@@ -119,7 +119,7 @@ class SettingsForm extends Component {
     )
   }
 
-  onSubmit = (values, formikBag) => {
+  const onSubmit = (values, formikBag) => {
     const { updateCommunityMetadata, setSecondaryToken, community } = this.props
     const fields = {
     }
@@ -142,37 +142,36 @@ class SettingsForm extends Component {
     if (values.secondaryTokenAddress && community.secondaryTokenAddress !== toChecksumAddress(values.secondaryTokenAddress)) {
       setSecondaryToken(community.communityAddress, toChecksumAddress(values.secondaryTokenAddress))
     }
-    formikBag.resetForm(values)
+    formikBag.resetForm({
+      values
+    })
   }
 
-  render = () => {
-    const { isClosed, secondaryTokenAddress, description, webUrl } = this.props.community
-    const { symbol } = this.props.token
-    const { isDefault } = this.props.communityMetadata
-    const initialValues = {
-      communityType: {
-        label: isDefault,
-        value: isDefault
-      },
-      isOpen: !isClosed,
-      coverPhoto: getCoverPhotoUri(this.props.communityMetadata),
-      images: {
-        custom: {
-          croppedImageUrl: getImageUri(this.props.communityMetadata)
-        }
-      },
-      communitySymbol: symbol,
-      secondaryTokenAddress,
-      description,
-      webUrl
-    }
-    return (
-      <Formik
-        render={this.renderForm}
-        onSubmit={this.onSubmit}
-        initialValues={initialValues} />
-    )
+  const {
+    community: { isClosed, secondaryTokenAddress, description, webUrl }, token: { symbol }, communityMetadata: { isDefault } } = props.community
+  const initialValues = {
+    communityType: {
+      label: isDefault,
+      value: isDefault
+    },
+    isOpen: !isClosed,
+    coverPhoto: getCoverPhotoUri(this.props.communityMetadata),
+    images: {
+      custom: {
+        croppedImageUrl: getImageUri(this.props.communityMetadata)
+      }
+    },
+    communitySymbol: symbol,
+    secondaryTokenAddress,
+    description,
+    webUrl
   }
+  return (
+    <Formik
+      render={renderForm}
+      onSubmit={onSubmit}
+      initialValues={initialValues} />
+  )
 }
 
 export default SettingsForm

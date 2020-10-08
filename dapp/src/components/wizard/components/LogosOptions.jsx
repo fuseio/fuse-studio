@@ -116,7 +116,8 @@ const LogosOptions = ({
       <Field
         key='defaultOne'
         name='images.defaultOne'
-        render={({ field }) => {
+      >
+        {({ field }) => {
           return (
             <label htmlFor='logoUpload' className='attributes__logo'>
               <div className='use_custom'>
@@ -133,7 +134,7 @@ const LogosOptions = ({
             </label>
           )
         }}
-      />
+      </Field>
     </div>
   )
 }

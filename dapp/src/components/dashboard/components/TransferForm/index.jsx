@@ -1,64 +1,44 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { Formik, ErrorMessage } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/SignMessage'
 import transferShape from 'utils/validation/shapes/transfer'
 import TextField from '@material-ui/core/TextField'
 
-export default class TransferForm extends PureComponent {
-  constructor (props) {
-    super(props)
-
-    const { balance, sendTo } = this.props
-
-    this.initialValues = {
-      to: sendTo || '',
-      amount: ''
-    }
-
-    this.validationSchema = transferShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
-  }
-
-  componentDidUpdate (prevProps) {
-    if (prevProps.balance !== this.props.balance) {
-      const { balance } = this.props
-      this.validationSchema = transferShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)
-    }
-  }
-
-  onSubmit = (values, formikBag) => {
-    const { handleTransfer } = this.props
+export default ({
+  balance,
+  sendTo,
+  transactionStatus,
+  transferMessage,
+  closeMessage,
+  error,
+  handleTransfer
+}) => {
+  const onSubmit = (values, formikBag) => {
     const { to, amount } = values
     handleTransfer({ to, amount })
     formikBag.resetForm()
   }
 
-  transactionError = () => {
-    const { transactionStatus, transferMessage } = this.props
+  const transactionError = () => {
     return transactionStatus && transactionStatus === 'FAILURE' && transferMessage
   }
 
-  transactionDenied = () => {
-    const { error, transferMessage } = this.props
-    return this.transactionError() && transferMessage && error && typeof error.includes === 'function' && error.includes('denied')
+  const transactionDenied = () => {
+    return transactionError() && transferMessage && error && typeof error.includes === 'function' && error.includes('denied')
   }
 
-  transactionConfirmed = () => {
-    const { transactionStatus, transferMessage } = this.props
+  const transactionConfirmed = () => {
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
-  renderForm = ({ handleSubmit, isValid, setFieldTouched, values, handleChange, errors, touched, resetForm }) => {
-    const {
-      closeMessage
-    } = this.props
-
+  const renderForm = ({ handleSubmit, isValid, setFieldTouched, values, handleChange, errors, touched, resetForm }) => {
     return (
       <form className='transfer__content grid-y align-justify' onSubmit={handleSubmit}>
 
         <Message
           message={'Your money has been sent successfully'}
-          isOpen={this.transactionConfirmed()}
+          isOpen={transactionConfirmed()}
           clickHandler={() => {
             resetForm()
             closeMessage()
@@ -68,14 +48,14 @@ export default class TransferForm extends PureComponent {
         <Message
           message={'Oops, something went wrong'}
           subTitle=''
-          isOpen={this.transactionError()}
+          isOpen={transactionError()}
           clickHandler={closeMessage}
         />
 
         <Message
           message={'Oh no'}
           subTitle={`You reject the action, That’s ok, try next time!`}
-          isOpen={this.transactionDenied()}
+          isOpen={transactionDenied()}
           clickHandler={closeMessage}
         />
 
@@ -140,16 +120,17 @@ export default class TransferForm extends PureComponent {
     )
   }
 
-  render () {
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        validationSchema={this.validationSchema}
-        render={this.renderForm}
-        onSubmit={this.onSubmit}
-        isInitialValid={false}
-        enableReinitialize
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        to: sendTo || '',
+        amount: ''
+      }}
+      validationSchema={transferShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)}
+      render={renderForm}
+      onSubmit={onSubmit}
+      isInitialValid={false}
+      enableReinitialize
+    />
+  )
 }

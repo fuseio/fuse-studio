@@ -1,10 +1,9 @@
 import React from 'react'
-import { connect, Field, getIn } from 'formik'
+import { Field, getIn, useFormikContext } from 'formik'
 import ContractsType from 'constants/contractsType'
 
-const Contracts = ({
-  formik
-}) => {
+const Contracts = () => {
+  const formik = useFormikContext()
   const isOpen = getIn(formik.values, 'isOpen')
   return (
     <div className='contracts__wrapper'>
@@ -23,9 +22,8 @@ const Contracts = ({
                   {
                     key === 'community' && (
                       <div className='content__toggle'>
-                        <Field
-                          name='isOpen'
-                          render={({ field, form: { setFieldValue } }) => (
+                        <Field name='isOpen'>
+                          {({ field, form: { setFieldValue } }) => (
                             <label className='toggle'>
                               <input
                                 type='checkbox'
@@ -44,7 +42,7 @@ const Contracts = ({
                               </div>
                             </label>
                           )}
-                        />
+                        </Field>
                         <div className='content__toggle__text'>
                           <span>{isOpen ? 'Open' : 'Close'} community:</span>
                           {isOpen
@@ -65,4 +63,4 @@ const Contracts = ({
   )
 }
 
-export default connect(Contracts)
+export default Contracts

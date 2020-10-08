@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { connect, getIn, Field } from 'formik'
+import { getIn, Field, useFormikContext } from 'formik'
 import HeaderRow from 'components/dashboard/components/HeaderRow'
 import BodyRow from 'components/dashboard/components/BodyRow'
 import { useTable, useSortBy, useRowSelect } from 'react-table'
@@ -80,7 +80,43 @@ const options = (plugin) => [
   }
 ]
 
-const TableOptions = connect(({ formik, data, columns }) => {
+const IndeterminateRadio = React.forwardRef(
+  ({ indeterminate, fieldName, updateMyData, index, value, onChange, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <React.Fragment>
+        <Field name='plugin'>
+          {({ field, form: { setFieldValue, submitForm } }) => (
+            <input
+              className='row_checkbox'
+              {...field}
+              {...rest}
+              ref={resolvedRef}
+              type='radio'
+              value={value}
+              id={value}
+              onChange={(e) => {
+                onChange(e)
+                setFieldValue('plugin', e.target.value)
+                setTimeout(submitForm, 3)
+              }} />
+          )}
+        </Field>
+        <label className='label' htmlFor={value} />
+        <div className='check' />
+      </React.Fragment >
+    )
+  }
+)
+
+const TableOptions = ({ data, columns }) => {
+  const formik = useFormikContext()
   const plugin = getIn(formik.values, 'plugin')
   const isMoonpay = plugin === 'moonpay'
   const isTransak = plugin === 'transak'
@@ -115,29 +151,11 @@ const TableOptions = connect(({ formik, data, columns }) => {
           id: 'checkbox',
           Cell: ({ row }) => {
             const { original: { value } } = row
-            const { onChange, ...rest } = row.getToggleRowSelectedProps()
             return (
-              <React.Fragment>
-                <Field
-                  name='plugin'
-                  render={({ field, form: { setFieldValue, submitForm } }) => (
-                    <input
-                      className='row_checkbox'
-                      {...field}
-                      {...rest}
-                      type='radio'
-                      value={value}
-                      id={value}
-                      onChange={(e) => {
-                        onChange(e)
-                        setFieldValue('plugin', e.target.value)
-                        setTimeout(submitForm, 3)
-                      }} />
-                  )}
-                />
-                <label className='label' htmlFor={value} />
-                <div className='check' />
-              </React.Fragment >
+              <IndeterminateRadio
+                {...row.getToggleRowSelectedProps()}
+                value={value}
+              />
             )
           }
         },
@@ -156,7 +174,7 @@ const TableOptions = connect(({ formik, data, columns }) => {
       </div>
     </div>
   )
-})
+}
 
 const OptionsContainer = ({ myPlugins }) => {
   const data = useMemo(() => getPluginName(myPlugins) ? options(getPluginName(myPlugins)) : options(''), [myPlugins])

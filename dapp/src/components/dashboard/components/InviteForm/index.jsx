@@ -1,30 +1,16 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { Formik, Field } from 'formik'
 import { connect } from 'react-redux'
 import inviteShape from 'utils/validation/shapes/invite'
 import TextInput from 'components/common/TextInput'
-// import PhoneInput from 'react-phone-input-2'
 import { inviteUserToCommunity } from 'actions/community'
 
-class Invite extends Component {
-  constructor (props) {
-    super(props)
-
-    this.initialValues = {
-      invitationType: 'sms',
-      email: '',
-      phoneNumber: ''
-    }
-
-    this.validationSchema = inviteShape
-  }
-
-  onSubmit = (values, formikBag) => {
-    const { inviteUserToCommunity, communityAddress } = this.props
+const Invite = ({ inviteUserToCommunity, communityAddress }) => {
+  const onSubmit = (values) => {
     inviteUserToCommunity(communityAddress, values)
   }
 
-  renderForm = ({ values, handleSubmit, errors, isValid, touched, isSubmitting }) => {
+  const renderForm = ({ values, handleSubmit, isValid, isSubmitting }) => {
     const { invitationType } = values
     const isSMS = invitationType === 'sms'
     const isEMAIL = invitationType === 'email'
@@ -68,9 +54,8 @@ class Invite extends Component {
             </div>
             {
               isEMAIL && (
-                <Field
-                  name='email'
-                  render={({ field, form: { handleChange } }) => (
+                <Field name='email'>
+                  {({ field, form: { handleChange } }) => (
                     <TextInput
                       {...field}
                       className='invite__email_field'
@@ -80,14 +65,13 @@ class Invite extends Component {
                       onChange={handleChange}
                     />
                   )}
-                />
+                </Field>
               )
             }
             {
               isSMS && (
-                <Field
-                  name='phoneNumber'
-                  render={({ field, form: { handleChange } }) => (
+                <Field name='phoneNumber'>
+                  {({ field, form: { handleChange } }) => (
                     <TextInput
                       {...field}
                       className='invite__email_field'
@@ -96,7 +80,7 @@ class Invite extends Component {
                       onChange={handleChange}
                     />
                   )}
-                />
+                </Field>
               )
             }
             <button className='button button--normal' disabled={!isValid}>Send</button>
@@ -112,17 +96,19 @@ class Invite extends Component {
     )
   }
 
-  render () {
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        onSubmit={this.onSubmit}
-        validationSchema={this.validationSchema}
-        render={this.renderForm}
-        validateOnChange
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        invitationType: 'sms',
+        email: '',
+        phoneNumber: ''
+      }}
+      onSubmit={onSubmit}
+      validationSchema={inviteShape}
+      render={renderForm}
+      validateOnChange
+    />
+  )
 }
 
 export default connect(null, {

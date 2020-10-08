@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
-import { connect, getIn } from 'formik'
+import { getIn, useFormikContext } from 'formik'
 import { createObjectURL } from 'utils/images'
 import cameraIcon from 'images/camara.svg'
 import DefaultCover from 'images/default_cover.png'
 import isEmpty from 'lodash/isEmpty'
-const CoverPhoto = ({
-  formik
-}) => {
+const CoverPhoto = () => {
+  const formik = useFormikContext()
   const coverPhoto = getIn(formik.values, 'coverPhoto')
   const onSelectFile = async (event) => {
     event.preventDefault()
@@ -76,4 +75,4 @@ const CoverPhoto = ({
   )
 }
 
-export default connect(CoverPhoto)
+export default CoverPhoto

@@ -5,34 +5,20 @@ import { Formik } from 'formik'
 import { object, string } from 'yup'
 import { isIpfsHash, isS3Hash } from 'utils/metadata'
 
-class WalletBannerLinkForm extends Component {
-  constructor (props) {
-    super(props)
+const Scheme = object().noUnknown(false).shape({
+  link: string().url('Must be link').normalize()
+})
 
-    const { plugin: { link, walletBannerHash } } = props
-
-    this.initialValues = {
-      link: '' || link,
-      walletBanner: isIpfsHash(walletBannerHash)
-        ? `${CONFIG.ipfsProxy.urlBase}/image/${walletBannerHash}`
-        : isS3Hash(walletBannerHash)
-          ? `https://${CONFIG.aws.s3.bucket}.s3.amazonaws.com/${walletBannerHash}`
-          : ''
-    }
-
-    this.validationSchema = object().noUnknown(false).shape({
-      link: string().url('Must be link').normalize()
-    })
-  }
-
-  onSubmit = (values, formikBag) => {
-    const { setWalletBannerLink } = this.props
+// class WalletBannerLinkForm extends Component {
+const WalletBannerLinkForm = (props) => {
+  const { plugin: { link, walletBannerHash }, setWalletBannerLink } = props
+  const onSubmit = (values, formikBag) => {
     const { link, walletBanner } = values
     setWalletBannerLink(link, walletBanner)
     formikBag.resetForm(values)
   }
 
-  renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
+  const renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
     const { link } = values
     return (
       <form onSubmit={handleSubmit} className='join_bonus__container'>
@@ -66,18 +52,23 @@ class WalletBannerLinkForm extends Component {
     )
   }
 
-  render () {
-    return (
-      <Formik
-        initialValues={this.initialValues}
-        validationSchema={this.validationSchema}
-        render={this.renderForm}
-        onSubmit={this.onSubmit}
-        enableReinitialize
-        validateOnChange
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        link: '' || link,
+        walletBanner: isIpfsHash(walletBannerHash)
+          ? `${CONFIG.ipfsProxy.urlBase}/image/${walletBannerHash}`
+          : isS3Hash(walletBannerHash)
+            ? `https://${CONFIG.aws.s3.bucket}.s3.amazonaws.com/${walletBannerHash}`
+            : ''
+      }}
+      validationSchema={Scheme}
+      render={renderForm}
+      onSubmit={onSubmit}
+      enableReinitialize
+      validateOnChange
+    />
+  )
 }
 
 export default WalletBannerLinkForm

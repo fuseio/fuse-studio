@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
 import get from 'lodash/get'
@@ -12,6 +13,7 @@ import TransactionButton from 'components/common/TransactionButton'
 import { PENDING, FAILURE, REQUEST, SUCCESS } from 'actions/constants'
 import { saveWizardProgress } from 'actions/user'
 import { getAccount } from 'selectors/accounts'
+import WizardShape from 'utils/validation/shapes/wizard'
 
 const nextStepEvents = {
   0: 'Next step - 1',
@@ -20,6 +22,17 @@ const nextStepEvents = {
   3: 'Next step - 4'
 }
 
+// the specific path for each page
+const locations = [
+  '/view/issuance',
+  '/view/issuance/1',
+  '/view/issuance/2',
+  '/view/issuance/3',
+  '/view/issuance/4',
+  '/view/issuance/5',
+  '/view/issuance/6'
+]
+
 const validations = {
   0: ['communityName', 'description', 'email'],
   1: ['network', 'hasBalance'],
@@ -27,7 +40,7 @@ const validations = {
   3: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
 }
 
-const wizardSteps = ['Economy name', 'Network', 'Currency', 'Set up', 'Summary']
+const wizardSteps = ['Community name', 'Network', 'Currency', 'Set up', 'Summary']
 
 const StepsIndicator = ({ steps, activeStep }) => {
   return steps.map((item, index) => (
@@ -48,7 +61,6 @@ class Wizard extends React.Component {
 
     this.state = {
       page: 0,
-      validationSchema: props.validationSchema,
       values: props.initialValues
     }
   }
@@ -60,10 +72,11 @@ class Wizard extends React.Component {
   }
 
   next = (values) => {
-    const { saveWizardProgress } = this.props
-    saveWizardProgress({ ...omit(values, ['images', 'coverPhoto']), page: this.state.page })
-    if (validations[this.state.page]) {
-      const currentStepFields = validations[this.state.page]
+    const { saveWizardProgress, location, history } = this.props
+    const page = locations.indexOf(location.pathname)
+    saveWizardProgress({ ...omit(values, ['images', 'coverPhoto']), page })
+    if (validations[page]) {
+      const currentStepFields = validations[page]
       const trackProps = currentStepFields.reduce((acc, key) => {
         acc = values[key] ? {
           ...acc,
@@ -76,27 +89,26 @@ class Wizard extends React.Component {
         return acc
       }, {})
       if (window && window.analytics) {
-        window.analytics.track(nextStepEvents[this.state.page], { ...trackProps })
+        window.analytics.track(nextStepEvents[page], { ...trackProps })
       }
 
-      if (this.state.page === 0 && values.email) {
+      if (page === 0 && values.email) {
         window.analytics.identify({ email: values.email })
       }
     }
-    this.setState(state => ({
-      page: Math.min(state.page + 1, this.props.children.length - 1),
-      values
-    }))
+    const nextPath = page + 1
+    history.push(locations[nextPath])
   }
 
-  previous = () =>
-    this.setState(state => ({
-      page: Math.max(state.page - 1, 0)
-    }))
+  previous = () => {
+    const { location, history } = this.props
+    const prevPath = locations.indexOf(location.pathname) - 1
+    history.push(locations[prevPath])
+  }
 
   onSubmit = (values, bag) => {
-    const { children, submitHandler, saveWizardProgress } = this.props
-    const { page } = this.state
+    const { children, submitHandler, saveWizardProgress, location } = this.props
+    const page = locations.indexOf(location.pathname)
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
 
     if (isSubmitStep) {
@@ -120,14 +132,13 @@ class Wizard extends React.Component {
   }
 
   renderForm = ({ values, handleSubmit, errors, isValid, touched }) => {
-    const { children, transactionStatus, createTokenSignature, adminAddress } = this.props
-    const { page } = this.state
+    const { children, transactionStatus, createTokenSignature, adminAddress, location } = this.props
+    const page = locations.indexOf(location.pathname)
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
-      setNextStep: () => this.next(values),
-      previous: () => this.previous()
+      setNextStep: () => this.next(values)
     })
 
-    const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
+    const isSubmitStep = get(React.Children.toArray(children)[page], 'props.isSubmitStep')
     return (
       <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
         {page === 0 && <h1 className='issuance__wizard__title'>Launch your economy</h1>}
@@ -168,7 +179,7 @@ class Wizard extends React.Component {
 
   render () {
     const { push } = this.props
-    const { page, values, validationSchema } = this.state
+    const { page, values } = this.state
 
     return (
       <Fragment>
@@ -197,9 +208,8 @@ class Wizard extends React.Component {
           <Formik
             initialValues={values}
             onSubmit={this.onSubmit}
-            validationSchema={validationSchema}
+            validationSchema={WizardShape}
             render={this.renderForm}
-            initialStatus={false}
             validateOnChange
             isInitialValid={false}
           />
@@ -217,4 +227,4 @@ const mapState = (state) => ({
   account: getAccount(state)
 })
 
-export default connect(mapState, mapDispatchToProps)(Wizard)
+export default connect(mapState, mapDispatchToProps)(withRouter(Wizard))
