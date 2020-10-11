@@ -176,11 +176,11 @@ const ProfileDropDown = ({
         metadata={metadata}
         balances={balances}
         fetchBalances={fetchBalances}
-        title='Community I own'
+        title='Economy I own'
       />
       <InnerCommunities
         showDashboard={showDashboard}
-        title='Community I am part'
+        title='Economy I am part'
         communities={communitiesIPartOf}
         networkType={networkType}
         accountAddress={accountAddress}
