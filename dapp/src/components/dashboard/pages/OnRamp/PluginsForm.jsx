@@ -18,7 +18,6 @@ const PluginsForm = ({ myPlugins, addPlugin }) => {
       name: plugin,
       isActive: true
     })
-    formikBag.resetForm({ plugin })
   }
 
   const renderForm = ({ handleSubmit }) => {

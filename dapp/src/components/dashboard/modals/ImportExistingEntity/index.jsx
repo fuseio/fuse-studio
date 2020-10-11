@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import omit from 'lodash/omit'
 import get from 'lodash/get'
 import { Formik, Field, ErrorMessage } from 'formik'
@@ -10,7 +10,6 @@ const Scheme = object().noUnknown(false).shape({
   account: string().normalize().required().isAddress()
 })
 
-// class ImportExistingEntity extends Component {
 const ImportExistingEntity = ({ entity, submitEntity }) => {
   const onSubmit = (values) => {
     const entity = omit(values, 'selectedType')

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useMemo } from 'react'
 import { Formik, ErrorMessage } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/SignMessage'
@@ -21,6 +21,12 @@ export default ({
   mintMessage,
   burnMessage
 }) => {
+  const initialValues = useMemo(() => ({
+    actionType,
+    mintAmount: '',
+    burnAmount: ''
+  }), [])
+
   const onSubmit = (values, formikBag) => {
     const {
       actionType,
@@ -30,7 +36,7 @@ export default ({
 
     const amount = actionType === 'mint' ? mintAmount : burnAmount
     handleMintOrBurnClick(amount)
-    formikBag.resetForm(this.initialValues)
+    formikBag.resetForm()
   }
 
   const transactionConfirmed = (actionType) => {
@@ -173,11 +179,7 @@ export default ({
 
   return (
     <Formik
-      initialValues={{
-        actionType,
-        mintAmount: '',
-        burnAmount: ''
-      }}
+      initialValues={initialValues}
       validationSchema={mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)}
       render={renderForm}
       onSubmit={onSubmit}
