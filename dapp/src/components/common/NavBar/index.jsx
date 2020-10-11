@@ -80,7 +80,7 @@ const NavBar = ({
       { 'navbar--scroll': isGreaterThen70(),
         'navbar--short': modifier && !isMobile,
         'navbar--fixed': isInNestedCommunityPage,
-        'navbar--bgImage': !modifier || isMobile
+        'navbar--bgImage': !isInNestedCommunityPage
       })}>
       {(withLogo || (isMobile && isGreaterThen70())) && <div className='navbar__logo'>
         <Logo showHomePage={() => push('/')} isBlue={false} />

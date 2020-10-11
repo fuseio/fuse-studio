@@ -16,35 +16,35 @@ import { getEntity, getCommunityAddress } from 'selectors/entities'
 import { getTokenAddressOfByNetwork, getCurrentCommunity, getHomeTokenAddress, getIsMultiBridge } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import get from 'lodash/get'
-import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
-import CommunityPlaceholderImage from 'images/community_placeholder.png'
-import CommunityLogo from 'components/common/CommunityLogo'
 import SignIn from 'components/common/SignIn'
+// import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
+// import CommunityPlaceholderImage from 'images/community_placeholder.png'
+// import CommunityLogo from 'components/common/CommunityLogo'
 
-const CoverPhoto = ({ metadata, symbol }) => {
-  return (
-    <div className='content__cover_photo'>
-      <div className='cover'>
-        {
-          getCoverPhotoUri(metadata) ? (
-            <img alt='cover photo' src={getCoverPhotoUri(metadata)} />
-          ) : (
-            <img alt='cover photo' src={CommunityPlaceholderImage} />
-          )
-        }
-      </div>
-      <div className='logo grid-x align-middle align-center'>
-        <CommunityLogo
-          isBig
-          symbol={symbol}
-          imageUrl={getImageUri(metadata)}
-          metadata={metadata}
-        />
-      </div>
+// const CoverPhoto = ({ metadata, symbol }) => {
+//   return (
+//     <div className='content__cover_photo'>
+//       <div className='cover'>
+//         {
+//           getCoverPhotoUri(metadata) ? (
+//             <img alt='cover photo' src={getCoverPhotoUri(metadata)} />
+//           ) : (
+//             <img alt='cover photo' src={CommunityPlaceholderImage} />
+//           )
+//         }
+//       </div>
+//       <div className='logo grid-x align-middle align-center'>
+//         <CommunityLogo
+//           isBig
+//           symbol={symbol}
+//           imageUrl={getImageUri(metadata)}
+//           metadata={metadata}
+//         />
+//       </div>
 
-    </div>
-  )
-}
+//     </div>
+//   )
+// }
 
 const Dashboard = (props) => {
   const {
@@ -79,15 +79,15 @@ const Dashboard = (props) => {
   return (
     (community && foreignToken) ? <React.Fragment>
       <SignIn accountAddress={accountAddress} />
-      {getCoverPhotoUri(communityMetadata) && (
+      {/* {getCoverPhotoUri(communityMetadata) && (
         <CoverPhoto
           symbol={foreignToken && foreignToken.symbol}
           metadata={communityMetadata}
         />
-      )}
+      )} */}
       <div className='content__wrapper'>
         <Header
-          withLogo={!getCoverPhotoUri(communityMetadata)}
+          withLogo
           metadata={communityMetadata}
           tokenAddress={foreignToken && foreignToken.tokenAddress}
           isClosed={community && community.isClosed}
