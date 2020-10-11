@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
-import { useParams } from 'react-router'
+import { useParams, withRouter } from 'react-router'
 import { connect, useSelector } from 'react-redux'
 import sortBy from 'lodash/sortBy'
 import identity from 'lodash/identity'
@@ -57,11 +57,18 @@ const Users = ({
   userWallets,
   users,
   showTransactionMessage,
-  signatureNeeded
+  signatureNeeded,
+  join
 }) => {
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const foreignNetwork = useSelector(getForeignNetwork)
+
+  useEffect(() => {
+    if (join) {
+      handleJoinCommunity()
+    }
+  }, [join])
 
   useEffect(() => {
     if (userAccounts && userAccounts.length > 0) {
@@ -154,7 +161,7 @@ const Users = ({
         })
       }, 1000)
     }
-    return () => {}
+    return () => { }
   }, [entityAdded])
 
   const tableData = useMemo(() => data, [data])
@@ -322,7 +329,8 @@ const Users = ({
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, { match }) => ({
+  join: match.params.join,
   communityEntities: state.entities.communityEntities,
   accountAddress: getAccountAddress(state),
   users: state.entities.users,
@@ -351,4 +359,4 @@ const mapDispatchToProps = {
   fetchUserNames
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Users)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Users))

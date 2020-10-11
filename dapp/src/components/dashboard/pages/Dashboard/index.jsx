@@ -1,9 +1,7 @@
 import React from 'react'
-import { useParams } from 'react-router'
-import { connect } from 'react-redux'
-import { joinCommunity } from 'actions/communityEntities'
+import { connect, useDispatch } from 'react-redux'
 import { QR_MODAL } from 'constants/uiConstants'
-import { loadModal, hideModal } from 'actions/ui'
+import { loadModal } from 'actions/ui'
 import { getTransaction } from 'selectors/transaction'
 import Bridge from 'components/dashboard/components/Bridge'
 import CommunityInfo from 'components/dashboard/components/CommunityInfo'
@@ -57,14 +55,12 @@ const Dashboard = (props) => {
     metadata,
     networkType,
     userEntity,
-    push,
-    loadModal,
     homeTokenAddress,
     isMultiBridge,
     tokenOfCommunityOnCurrentSide,
-    joinCommunity
+    pathname
   } = props
-  const { address: communityAddress } = useParams()
+  const dispatch = useDispatch()
 
   const communityMetadata = React.useMemo(() => ({
     ...community,
@@ -73,12 +69,11 @@ const Dashboard = (props) => {
   }), [metadata, community, foreignToken])
 
   const loadQrModal = (value) => {
-    loadModal(QR_MODAL, { value })
+    dispatch(loadModal(QR_MODAL, { value }))
   }
 
   const handleJoinCommunity = () => {
-    push(`${this.props.pathname}/users`)
-    joinCommunity(communityAddress)
+    dispatch(push(`${pathname}/users/join`))
   }
 
   return (
@@ -158,14 +153,7 @@ const mapStateToProps = (state) => ({
   pathname: state.router.location.pathname
 })
 
-const mapDispatchToProps = {
-  loadModal,
-  hideModal,
-  push,
-  joinCommunity
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(Dashboard)

@@ -200,7 +200,7 @@ const DashboardLayout = (props) => {
 
           {
             community && (
-              <Route exact path={`${match.path}/users`}>
+              <Route exact path={`${match.path}/users/:join?`}>
                 <WithBgImage>
                   <Users />
                 </WithBgImage>
