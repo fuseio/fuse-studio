@@ -97,6 +97,7 @@ module.exports = {
     foreign: {
       name: 'ropsten',
       bridgeType: 'foreign',
+      gasPrice: '1000000000',
       contract: {
         options: {
           transactionConfirmationBlocks: 2

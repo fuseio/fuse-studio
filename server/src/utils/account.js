@@ -1,4 +1,5 @@
 const config = require('config')
+const { toChecksumAddress } = require('web3-utils')
 const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
 const jwt = require('jsonwebtoken')
@@ -54,7 +55,7 @@ const generateAccounts = (seed, accountsNumber) => {
 const generateAccountAddress = (childIndex = 0) => {
   const mnemonic = config.get('secrets.accounts.seed')
   const address = fromMasterSeed(mnemonic).deriveChild(childIndex).getWallet().getAddressString()
-  return address
+  return toChecksumAddress(address)
 }
 
 const createAccount = async ({ role, bridgeType, description }) => {
