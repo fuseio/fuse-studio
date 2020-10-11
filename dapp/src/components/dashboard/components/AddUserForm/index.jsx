@@ -22,7 +22,7 @@ const AddUserForm = (props) => {
     submitEntity(entity)
   }
 
-  const renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
+  const renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange }) => {
     return (
       <form className='user-form' onSubmit={handleSubmit}>
         <h5 className='user-form__title'>
