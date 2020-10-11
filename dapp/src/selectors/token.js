@@ -2,9 +2,6 @@ import { createSelector } from 'reselect'
 import get from 'lodash/get'
 import { getCommunityAddress } from 'selectors/entities'
 
-export const getHomeTokenAddress = (state, tokenAddress) =>
-  state.entities.bridges[tokenAddress] && state.entities.bridges[tokenAddress].homeTokenAddress
-
 export const getForeignTokenByCommunityAddress = createSelector(
   getCommunityAddress,
   state => state.entities.tokens,

@@ -29,7 +29,6 @@ import dotsIcon from 'images/dots.svg'
 import AddBusiness from 'images/add_business.svg'
 
 const Businesses = ({
-  isClosed,
   isAdmin,
   accountAddress,
   entityAdded,
@@ -45,8 +44,9 @@ const Businesses = ({
   showTransactionMessage,
   businessesAccounts,
   userAccounts,
-  communityEntities
+  community
 }) => {
+  const communityEntities = get(community, 'communityEntities', {})
   const { address: communityAddress } = useParams()
   const [data, setData] = useState(null)
   const [businesses, setBusinesses] = useState()
@@ -71,7 +71,7 @@ const Businesses = ({
   useEffect(() => {
     if (updateEntities) {
       setTimeout(() => {
-        fetchEntities()
+        fetchEntities(communityAddress)
       }, 2000)
     }
   }, [updateEntities])
@@ -200,7 +200,7 @@ const Businesses = ({
       isJoin,
       entity: isJoin ? { account: accountAddress } : undefined,
       users,
-      submitEntity: (data) => submitEntity(communityAddress, { ...data }, isClosed, 'business')
+      submitEntity: (data) => submitEntity(communityAddress, { ...data }, get(community, 'isClosed', false), 'business')
     })
   }
 
@@ -259,15 +259,13 @@ const Businesses = ({
 }
 
 const mapStateToProps = (state) => ({
-  network: state.network,
-  communityEntities: state.entities.communityEntities,
   accountAddress: getAccountAddress(state),
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
   businessesMetadata: state.entities.businesses,
-  isClosed: get(getCurrentCommunity(state), 'isClosed', false),
   isAdmin: checkIsAdmin(state),
-  updateEntities: state.screens.communityEntities.updateEntities
+  updateEntities: state.screens.communityEntities.updateEntities,
+  community: getCurrentCommunity(state)
 })
 
 const mapDispatchToProps = {

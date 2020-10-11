@@ -1,15 +1,16 @@
 import { createSelector } from 'reselect'
 import { getAccountAddress } from './accounts'
 import sortBy from 'lodash/sortBy'
+import get from 'lodash/get'
+import { getCurrentCommunity } from 'selectors/dashboard'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
 export const getCommunityAddress = state => state.screens.dashboard && state.screens.dashboard.communityAddress
 
 export const getEntities = createSelector(
-  state => state.screens.communityEntities.listHashes,
-  state => state.entities.metadata,
-  (listHashes, metadata) => listHashes.map(hash => metadata[`ipfs://${hash}`]).filter(obj => !!obj)
+  getCurrentCommunity,
+  (community) => get(community, 'communityEntities', {})
 )
 
 export const getUsersEntities = createSelector(
@@ -24,30 +25,21 @@ export const getBusinessesEntities = createSelector(
   (merchantsResults, communityEntities) => sortBy(merchantsResults.map(account => communityEntities[account]).filter(obj => !!obj), ['updatedAt']).reverse() || []
 )
 
-export const checkIsAdmin = createSelector(
+export const getEntity = createSelector(
   getAccountAddress,
-  getCommunityAddress,
-  state => state.entities.communities,
-  state => state.entities.communityEntities,
-  (accountAddress, communityAddress, communities, communityEntities) => {
+  getEntities,
+  (accountAddress, communityEntities) => {
     if (accountAddress) {
-      const lowerCaseAddress = accountAddress.toLowerCase()
-      return (communityEntities[lowerCaseAddress] &&
-        communityEntities[lowerCaseAddress].isAdmin) || (communities[communityAddress] &&
-        communities[communityAddress].isAdmin) || false
+      return get(communityEntities, accountAddress.toLowerCase(), {})
     }
+    return {}
   }
 )
 
-export const getEntity = createSelector(
-  getAccountAddress,
-  getCommunityAddress,
-  state => state.entities.communityEntities,
-  (accountAddress, communityAddress, communityEntities) => {
-    if (accountAddress) {
-      const lowerCaseAddress = accountAddress.toLowerCase()
-      return communityEntities[lowerCaseAddress]
-    }
+export const checkIsAdmin = createSelector(
+  getEntity,
+  (entity) => {
+    return get(entity, 'isAdmin')
   }
 )
 

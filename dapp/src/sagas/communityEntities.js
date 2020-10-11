@@ -244,12 +244,14 @@ function * fetchEntities ({ communityAddress }) {
   const result = Object.keys(entities)
 
   yield put({
-    entity: 'communityEntities',
+    entity: 'communities',
     type: actions.FETCH_ENTITIES.SUCCESS,
     response: {
-      entities,
-      result
-    } })
+      communityAddress,
+      result,
+      communityEntities: entities
+    }
+  })
 }
 
 export function * fetchFeaturedCommunityEntitiesCount ({ communityAddress }) {

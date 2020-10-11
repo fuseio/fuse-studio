@@ -6,8 +6,6 @@ const initialState = {
   tokens: {},
   businesses: {},
   users: {},
-  bridges: {},
-  communityEntities: {},
   communities: {},
   wallets: {}
 }
