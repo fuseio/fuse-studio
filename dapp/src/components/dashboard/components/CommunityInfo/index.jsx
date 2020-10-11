@@ -1,8 +1,10 @@
 import React from 'react'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
+import { useSelector } from 'react-redux'
 import { formatWei, addressShortener } from 'utils/format'
 import { BigNumber } from 'bignumber.js'
+import { getCurrentCommunity } from 'selectors/dashboard'
 
 const percentOnSide = (total, homeTokenBalance, foreignTokenBalance) => {
   const calc = (value) => value * 100 / total
@@ -30,6 +32,7 @@ const CommunityInfo = ({
   foreignTokenAddress,
   tokensTotalSupplies
 }) => {
+  const entities = useSelector(getCurrentCommunity)
   const type = foreignToken && foreignToken.tokenType === 'mintableBurnable'
     ? 'Mintable burnable token'
     : foreignToken && foreignToken.tokenType === 'basic'
@@ -68,7 +71,7 @@ const CommunityInfo = ({
             tokenType={`(${type})`}
           />
           <TitleValue title='Total entities'>
-            <span>0</span>
+            <span>{(entities && entities.result && entities.result.length) || 0}</span>
           </TitleValue>
           <TitleValue title='Currency address'>
             <div className='grid-x'>
