@@ -286,6 +286,7 @@ function * fetchCommunity ({ type, ...params }) {
       calls.push(
         put(fetchHomeTokenAddress(communityAddress, foreignTokenAddress, options)),
         put(actions.fetchToken(foreignTokenAddress, options)),
+        put(actions.fetchTokenTotalSupply(foreignTokenAddress, { ...options, bridgeType: 'foreign' })),
         put(balanceOfToken(foreignTokenAddress, accountAddress, options))
       )
     }
