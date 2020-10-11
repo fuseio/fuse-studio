@@ -224,7 +224,7 @@ function * watchBridgeTransfers () {
   const calls = [
     put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })),
     put(fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
-    put(actions.fetchHomeTokenAddress(foreignTokenAddress))
+    put(actions.fetchHomeTokenAddress(communityAddress, foreignTokenAddress))
   ]
   if (homeTokenAddress) {
     calls.push(
