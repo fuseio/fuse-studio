@@ -30,7 +30,8 @@ export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress
     put(fetchToken(homeTokenAddress)),
     put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
     put(fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-    put(actions.getTokenAllowance(foreignTokenAddress, { ...options, bridgeType: 'foreign' })),
+    put(fetchTokenTotalSupply(foreignTokenAddress, options)),
+    put(actions.getTokenAllowance(foreignTokenAddress, options)),
     put({
       type: actions.FETCH_HOME_TOKEN_ADDRESS.SUCCESS,
       communityAddress,
