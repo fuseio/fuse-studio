@@ -19,7 +19,7 @@ const ExpansionPanelDetails = withStyles({
   }
 })(MuiExpansionPanelDetails)
 
-const SettingsForm = (props) => {
+const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, token, communityMetadata }) => {
   const renderForm = ({ isValid, handleSubmit, handleChange, values }) => {
     return (
       <form onSubmit={handleSubmit} className='issuance__wizard'>
@@ -120,7 +120,6 @@ const SettingsForm = (props) => {
   }
 
   const onSubmit = (values, formikBag) => {
-    const { updateCommunityMetadata, setSecondaryToken, community } = this.props
     const fields = {
     }
     if (get(values, 'images.custom.blob')) {
@@ -147,25 +146,23 @@ const SettingsForm = (props) => {
     })
   }
 
-  const {
-    community: { isClosed, secondaryTokenAddress, description, webUrl }, token: { symbol }, communityMetadata: { isDefault } } = props.community
-  const initialValues = {
+  const initialValues = React.useMemo(() => ({
     communityType: {
-      label: isDefault,
-      value: isDefault
+      label: get(communityMetadata, 'isDefault', false),
+      value: get(communityMetadata, 'isDefault', false)
     },
-    isOpen: !isClosed,
-    coverPhoto: getCoverPhotoUri(this.props.communityMetadata),
+    isOpen: get(community, 'isClosed', true),
+    coverPhoto: getCoverPhotoUri(communityMetadata),
     images: {
       custom: {
-        croppedImageUrl: getImageUri(this.props.communityMetadata)
+        croppedImageUrl: getImageUri(communityMetadata)
       }
     },
-    communitySymbol: symbol,
-    secondaryTokenAddress,
-    description,
-    webUrl
-  }
+    communitySymbol: get(token, 'symbol', ''),
+    secondaryTokenAddress: get(community, 'secondaryTokenAddress', ''),
+    description: get(community, 'description', ''),
+    webUrl: get(community, 'webUrl', '')
+  }), [communityMetadata, token, community])
   return (
     <Formik
       render={renderForm}
