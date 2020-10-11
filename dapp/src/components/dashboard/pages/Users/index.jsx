@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 import { useParams, withRouter } from 'react-router'
 import { connect, useSelector } from 'react-redux'
 import sortBy from 'lodash/sortBy'
@@ -49,7 +50,6 @@ const Users = ({
   entityAdded,
   push,
   userAccounts,
-  communityEntities,
   fetchUsersMetadata,
   fetchUserWallets,
   fetchUserNames,
@@ -60,6 +60,7 @@ const Users = ({
   signatureNeeded,
   join
 }) => {
+  const communityEntities = get(community, 'communityEntities', {})
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const foreignNetwork = useSelector(getForeignNetwork)
@@ -150,7 +151,7 @@ const Users = ({
     }
 
     return () => { }
-  }, [userAccounts, users])
+  }, [communityEntities, userAccounts, users])
 
   useEffect(() => {
     if (entityAdded) {
@@ -331,7 +332,6 @@ const Users = ({
 
 const mapStateToProps = (state, { match }) => ({
   join: match.params.join,
-  communityEntities: state.entities.communityEntities,
   accountAddress: getAccountAddress(state),
   users: state.entities.users,
   userWallets: state.entities.wallets,

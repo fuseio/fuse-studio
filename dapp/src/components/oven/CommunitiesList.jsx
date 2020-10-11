@@ -62,10 +62,10 @@ export default ({
               getScrollParent={getScrollParent}
             >
               {
-                addresses.map((address, index) => {
+                addresses.map((address) => {
                   const token = tokens[communities[address].foreignTokenAddress]
                   const community = communities[address]
-                  if (token && community) {
+                  if (community) {
                     return (
                       <div className='medium-12 large-8 small-24 cell' key={address}>
                         <FeaturedCommunity
@@ -78,17 +78,6 @@ export default ({
                   }
                 })
               }
-              {/* {addresses.map(address =>
-                <div className='medium-12 large-8 small-24 cell' key={address}>
-                  <Community
-                    token={tokens[address]}
-                    metadata={metadata[tokens[address].tokenURI]}
-                    history={history}
-                    account={account}
-                    showDashboard={showDashboard}
-                  />
-                </div>
-              )} */}
             </InfiniteScroll>
           </div>
         </div>

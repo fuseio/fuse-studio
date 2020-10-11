@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import BannerImage from 'components/dashboard/components/BannerImage'
 import { Formik } from 'formik'
@@ -9,13 +9,12 @@ const Scheme = object().noUnknown(false).shape({
   link: string().url('Must be link').normalize()
 })
 
-// class WalletBannerLinkForm extends Component {
 const WalletBannerLinkForm = (props) => {
   const { plugin: { link, walletBannerHash }, setWalletBannerLink } = props
   const onSubmit = (values, formikBag) => {
     const { link, walletBanner } = values
     setWalletBannerLink(link, walletBanner)
-    formikBag.resetForm(values)
+    formikBag.resetForm({ values })
   }
 
   const renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
