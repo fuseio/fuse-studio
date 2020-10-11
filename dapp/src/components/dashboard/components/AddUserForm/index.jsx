@@ -14,15 +14,20 @@ import { connect } from 'react-redux'
 import { getUser3boxData } from 'selectors/accounts'
 
 const AddUserForm = (props) => {
-  const { submitEntity, isJoin, entity, userData: { publicData, privateData } } = props
+  const { entity, userData: { publicData, privateData } } = props
 
   const onSubmit = (values) => {
+    const {
+      submitEntity
+    } = this.props
+
     const entity = omit(values, 'selectedType')
 
     submitEntity(entity)
   }
 
   const renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
+    const { isJoin } = this.props
     return (
       <form className='user-form' onSubmit={handleSubmit}>
         <h5 className='user-form__title'>
