@@ -40,7 +40,7 @@ const validations = {
   3: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
 }
 
-const wizardSteps = ['Community name', 'Network', 'Currency', 'Set up', 'Summary']
+const wizardSteps = ['Economy name', 'Network', 'Currency', 'Set up', 'Summary']
 
 const StepsIndicator = ({ steps, activeStep }) => {
   return steps.map((item, index) => (
@@ -178,8 +178,9 @@ class Wizard extends React.Component {
   }
 
   render () {
-    const { push } = this.props
-    const { page, values } = this.state
+    const { push, location } = this.props
+    const { values } = this.state
+    const page = locations.indexOf(location.pathname)
 
     return (
       <Fragment>
