@@ -21,7 +21,7 @@ const ethFunder = withAccount(async (account, { accountAddress }) => {
     from: account.address,
     value: toWei(bonus),
     nonce: account.nonce,
-    gasPrice: config.get('network.foreign.gasPrice'),
+    gasPrice: '1000000000',
     gas: config.get('gasLimitForTx.funder')
   })
   ethFunding.funded = true
