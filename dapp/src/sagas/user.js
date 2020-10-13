@@ -1,6 +1,7 @@
 import { all, put, select, call } from 'redux-saga/effects'
 import { apiCall, tryTakeEvery } from './utils'
 import * as actions from 'actions/user'
+import { balanceOfNative } from 'actions/accounts'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/user'
 import { isUserProfileExists } from 'services/api/profiles'
@@ -84,7 +85,7 @@ function * fetchFundingStatus () {
   try {
     const response = yield apiCall(api.fetchEthFundStatus, { id: jobId }, { networkType: 'ropsten' })
     const web3 = yield getWeb3({ bridgeType: 'foreign' })
-    const balanceOfNative = yield call(web3.eth.getBalance, accountAddress)
+    const balance = yield call(web3.eth.getBalance, accountAddress)
     const { data } = response
     if (data.failReason && data.failedAt) {
       yield put({
@@ -103,9 +104,9 @@ function * fetchFundingStatus () {
         }
       })
     }
-    if (get(data, 'data.receipt', false) || !(new BigNumber(balanceOfNative).isZero())) {
-      yield put(actions.balanceOfNative(accountAddress, { bridgeType: 'home' }))
-      yield put(actions.balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
+    if (get(data, 'data.receipt', false) || !(new BigNumber(balance).isZero())) {
+      yield put(balanceOfNative(accountAddress, { bridgeType: 'home' }))
+      yield put(balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
       yield put({
         type: actions.GET_FUND_STATUS.SUCCESS,
         response: {
