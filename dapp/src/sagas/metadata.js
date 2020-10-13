@@ -13,27 +13,24 @@ import * as entitiesApi from 'services/api/entities'
 const entityPut = createEntityPut(actions.entityName)
 
 function * fetchMetadata ({ tokenURI }) {
-  if (!tokenURI) {
-    throw new Error(`No tokenURI given`)
-  }
-
-  let response
-  if (tokenURI.startsWith('ipfs://')) {
-    const hash = tokenURI.split('://')[1]
-    response = yield apiCall(metadataApi.fetchMetadata, { hash })
-  } else {
-    response = yield call(metadataApi.fetchMetadataByUri, { uri: tokenURI })
-  }
-  const { data } = response
-
-  yield entityPut({
-    type: actions.FETCH_METADATA.SUCCESS,
-    response: {
-      entities: {
-        [tokenURI]: data
-      }
+  if (tokenURI) {
+    let response
+    if (tokenURI.startsWith('ipfs://')) {
+      const hash = tokenURI.split('://')[1]
+      response = yield apiCall(metadataApi.fetchMetadata, { hash })
+    } else {
+      response = yield call(metadataApi.fetchMetadataByUri, { uri: tokenURI })
     }
-  })
+    const { data } = response
+    yield entityPut({
+      type: actions.FETCH_METADATA.SUCCESS,
+      response: {
+        entities: {
+          [tokenURI]: data
+        }
+      }
+    })
+  }
 }
 
 export function * createMetadata ({ metadata }) {
