@@ -21,15 +21,14 @@ const generalPlugins = ([
     coverImage: BusinessList,
     modalCoverPhoto: BusinessListBig,
     key: 'businessList',
-    content: `The business list allows to add new businesses to the community contract with all the meta-data of the business. After adding a business trough the interface your users will see the business list on their phone after switching to your community.`
+    content: `The business list allows to you integrate new businesses into your economy. Once a business is added they will appear in the mobile wallet and users will be able to transact with them freely.`
   },
   {
     title: 'Wallet banner link',
     coverImage: WalletBannerLink,
     disabled: false,
     modalCoverPhoto: WalletBannerLinkBig,
-    content: `The wallet banner plug-in lets you insert any image with a link to any webpage and it will be shown to all the users that joined your community.
-    For example, if your community has a bulletin board, or a shopping cart, or a Facebook page you can link it here so your users will find it.`,
+    content: `The wallet banner plug-in allows you to customize your wallet by adding an image and hyperlink of your choice to your wallet.`,
     key: 'walletBanner'
   },
   {
@@ -37,8 +36,7 @@ const generalPlugins = ([
     coverImage: JoinBonus,
     modalCoverPhoto: JoinBonusBig,
     key: 'bonuses',
-    content: `The join bonus is contract of a funder account that rewards your new users with your token. The join bonus adds a new funder account address in your user list and opens a new menu item on the left where you can send the funder some tokens and turn it on by choosing the text, amount and activating the plug-in.
-    Then your users can get the bonus after installing the Fuse app and joining your community.`
+    content: `This plugin gives you the ability to reward users for completing multiple different actions. Join your economy, invite their friends or backup their wallet are all actions that can be rewarded with tokens.`
   },
   {
     title: 'Fiat on ramp',
@@ -148,13 +146,13 @@ const Plugins = ({
       <div className='plugins__wrapper'>
         <div className='plugins__content__wrapper'>
           <div className='plugins__content'>
-            Plug-ins are contracts deployed on the Fuse-chain and allow to add functionality to your app with a few easy steps.
-            Any plug-in you activate will open a new navigation menu that allows to configure it's settings.
-            Give it try.
+            Plug-ins are contracts deployed on the Fuse chain that allow you to add functionality to your app with the click of a button.
+            Any plug-in you activate will open a new navigation menu that allows you to configure it's settings.
+            Give it try!
           </div>
           <div className='plugins__puzzle'><img src={Puzzle} /></div>
         </div>
-        <PluginList pluginList={generalPlugins} pluginTile={'Choose plug-in you want to add'} plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
+        <PluginList pluginList={generalPlugins} pluginTile={'Choose the plugin you want to add'} plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
       </div>
     </div> : <div />
   )

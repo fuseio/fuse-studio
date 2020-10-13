@@ -1,17 +1,17 @@
 export default [
   {
     question: 'What is Fuse?',
-    answer: `Fuse enables businesses and communities around the world to unleash the power of mobile payments. With Fuse, entrepreneurs and community leaders can now upgrade their existing communities into thriving micro-economies by providing them the tools to build and maintain their own custom-branded mobile wallet and currency. `,
+    answer: `The Fuse Studio is a smart contract platform intended for entrepreneurs.`,
     link: 'https://docs.fuse.io/the-fuse-studio/faq#what-is-fuse'
   },
   {
     question: 'How much does it cost to launch an economy on Fuse?',
-    answer: `The only cost of launching an economy on Fuse is paying Ethereum gas prices. Which can range between 10-100 USD (depending on gas prices at the time). Another option is to launch an economy on the Ropsten testnet for free.`,
+    answer: `The only cost of launching an economy on Fuse is paying Ethereum gas prices.`,
     link: 'https://docs.fuse.io/the-fuse-studio/faq#how-much-does-it-cost-to-launch-an-economy-on-fuse'
   },
   {
     question: 'What are some use cases for Fuse?',
-    answer: `There are many different parties who can benefit from launching their own digital economy. Be it a community leader who wants to provide the possibility of secure mobile payments to their community or a business owner who wants to create their own branded company tokens that provide users with discounts and other benefits.`,
+    answer: `There are many different parties who can benefit from launching their own digital economy.`,
     link: 'https://docs.fuse.io/the-fuse-studio/faq#what-are-some-use-cases-for-fuse'
   }
   // {

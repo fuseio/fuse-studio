@@ -5,7 +5,9 @@ const { createNetwork } = require('@utils/web3')
 const { toWei, toChecksumAddress } = require('web3-utils')
 const EthFunding = mongoose.model('EthFunding')
 
-const ethFunder = withAccount(async (account, { accountAddress }) => {
+const setFunded = async (id) => EthFunding.findByIdAndUpdate(id, { funded: true })
+
+const ethFunder = withAccount(async (account, { accountAddress }, job) => {
   const ethFunding = await new EthFunding({
     accountAddress: toChecksumAddress(accountAddress),
     fundingDate: new Date()
@@ -16,16 +18,23 @@ const ethFunder = withAccount(async (account, { accountAddress }) => {
   if (networkType !== 'ropsten') {
     throw Error('Fund ETH available only for ropsten')
   }
-  await web3.eth.sendTransaction({
+  const promise = web3.eth.sendTransaction({
     to: accountAddress,
     from: account.address,
     value: toWei(bonus),
     nonce: account.nonce,
     gasPrice: '1000000000',
     gas: config.get('gasLimitForTx.funder')
+  }).on('transactionHash', (hash) => {
+    job.attrs.data.txHash = hash
+    job.save()
+  }).on('receipt', (receipt) => {
+    job.attrs.data.receipt = true
+    job.save()
   })
-  ethFunding.funded = true
-  await ethFunding.save()
+
+  await promise
+  await setFunded(ethFunding._id)
 }, (args) => {
   return lockAccount({ role: 'eth' })
 })

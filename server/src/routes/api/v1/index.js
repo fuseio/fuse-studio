@@ -15,6 +15,7 @@ router.use('/deposits', require('./deposits'))
 router.use('/wallets', require('./wallets'))
 router.use('/wizard', require('./wizard'))
 router.use('/fund', require('./fund'))
+router.use('/jobs', require('./jobs'))
 
 router.use(function (err, req, res, next) {
   if (err.name === 'ValidationError') {

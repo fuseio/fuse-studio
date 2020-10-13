@@ -193,45 +193,43 @@ function * watchHomeBridge ({ homeBridgeAddress, transactionHash, multiBridge })
 
 function * watchHomeNewTokenRegistered () {
   const accountAddress = yield select(getAccountAddress)
-  if (!accountAddress) {
-    throw new Error(`No accountAddress given`)
+  if (accountAddress) {
+    const homeNetwork = yield select(state => state.network.homeNetwork)
+    const fromBlock = yield select(getBlockNumber, homeNetwork)
+    const options = { bridgeType: 'home' }
+    const web3 = yield getWeb3(options)
+    const homeBridgeMediatorAddress = yield select(getBridgeMediator, 'home')
+    const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, homeBridgeMediatorAddress)
+
+    const relayEvent = yield pollForBridgeEvent({ bridgeContract, fromBlock, eventName: 'NewTokenRegistered', accountAddress })
+
+    yield put({
+      type: actions.WATCH_NEW_TOKEN_REGISTERED.SUCCESS,
+      response: {
+        relayEvent
+      }
+    })
   }
-  const homeNetwork = yield select(state => state.network.homeNetwork)
-  const fromBlock = yield select(getBlockNumber, homeNetwork)
-  const options = { bridgeType: 'home' }
-  const web3 = yield getWeb3(options)
-  const homeBridgeMediatorAddress = yield select(getBridgeMediator, 'home')
-  const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, homeBridgeMediatorAddress)
-
-  const relayEvent = yield pollForBridgeEvent({ bridgeContract, fromBlock, eventName: 'NewTokenRegistered', accountAddress })
-
-  yield put({
-    type: actions.WATCH_NEW_TOKEN_REGISTERED.SUCCESS,
-    response: {
-      relayEvent
-    }
-  })
 }
 
 function * watchBridgeTransfers () {
   const accountAddress = yield select(getAccountAddress)
-  if (!accountAddress) {
-    throw new Error(`No accountAddress given`)
+  if (accountAddress) {
+    const communityAddress = yield select(getCommunityAddress)
+    const { foreignTokenAddress, homeTokenAddress } = yield select(state => getCurrentCommunity(state, communityAddress))
+    const calls = [
+      put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })),
+      put(fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
+      put(actions.fetchHomeTokenAddress(communityAddress, foreignTokenAddress))
+    ]
+    if (homeTokenAddress) {
+      calls.push(
+        put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
+        put(fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' }))
+      )
+    }
+    yield all(calls)
   }
-  const communityAddress = yield select(getCommunityAddress)
-  const { foreignTokenAddress, homeTokenAddress } = yield select(state => getCurrentCommunity(state, communityAddress))
-  const calls = [
-    put(balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })),
-    put(fetchTokenTotalSupply(foreignTokenAddress, { bridgeType: 'foreign' })),
-    put(actions.fetchHomeTokenAddress(communityAddress, foreignTokenAddress))
-  ]
-  if (homeTokenAddress) {
-    calls.push(
-      put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
-      put(fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' }))
-    )
-  }
-  yield all(calls)
 }
 
 export default function * bridgeSaga () {

@@ -49,16 +49,14 @@ function * balanceOfToken ({ tokenAddress, accountAddress, options }) {
 }
 
 function * balanceOfNative ({ accountAddress, options }) {
-  if (!accountAddress) {
-    throw new Error(`No accountAddress given`)
+  if (accountAddress) {
+    const web3 = yield getWeb3(options)
+    const balanceOfNative = yield call(web3.eth.getBalance, accountAddress)
+    yield put({ type: actions.BALANCE_OF_NATIVE.SUCCESS,
+      accountAddress,
+      response: options ? { [`${options.bridgeType}`]: balanceOfNative } : { balanceOfNative }
+    })
   }
-  const web3 = yield getWeb3(options)
-  const balanceOfNative = yield call(web3.eth.getBalance, accountAddress)
-
-  yield put({ type: actions.BALANCE_OF_NATIVE.SUCCESS,
-    accountAddress,
-    response: options ? { [`${options.bridgeType}`]: balanceOfNative } : { balanceOfNative }
-  })
 }
 
 function * balanceOfFuse ({ accountAddress }) {

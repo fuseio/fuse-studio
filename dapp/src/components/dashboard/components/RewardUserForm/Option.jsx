@@ -1,8 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React, { Fragment, useMemo, useState } from 'react'
 import { getIn, Field, useFormikContext } from 'formik'
 import HeaderRow from 'components/dashboard/components/HeaderRow'
 import BodyRow from 'components/dashboard/components/BodyRow'
 import { useTable, useSortBy, useRowSelect } from 'react-table'
+import ReactTooltip from 'react-tooltip'
+import FontAwesome from 'react-fontawesome'
 
 const options = (values) => {
   const joinBonus = getIn(values, 'joinBonus')
@@ -10,31 +12,22 @@ const options = (values) => {
   const backupBonus = getIn(values, 'backupBonus')
   return [
     {
-      name: [
-        {
-          name: 'Join bonus'
-        }
-      ],
+      bonusName: 'Join bonus',
+      tooltipText: 'Reward users for becoming a part of your economy.',
       key: 'joinBonus',
       amount: joinBonus && joinBonus.amount,
       isActive: (joinBonus && joinBonus.isActive)
     },
     {
-      name: [
-        {
-          name: 'Backup bonus'
-        }
-      ],
+      bonusName: 'Backup bonus',
+      tooltipText: 'Reward users for backing up their wallet. This helps educates them on how to keep their funds secure.',
       key: 'backupBonus',
       amount: backupBonus && backupBonus.amount,
       isActive: (backupBonus && backupBonus.isActive)
     },
     {
-      name: [
-        {
-          name: 'Invite Bonus'
-        }
-      ],
+      bonusName: 'Invite Bonus',
+      tooltipText: 'Reward users for inviting their friends to participate in your economy. Once they send a translation to a new wallet they will receive the bonus.',
       key: 'inviteBonus',
       amount: inviteBonus && inviteBonus.amount,
       isActive: (inviteBonus && inviteBonus.isActive)
@@ -212,7 +205,16 @@ const OptionsContainer = ({ values }) => {
   const columns = useMemo(() => [
     {
       Header: 'Reward name',
-      accessor: 'name'
+      accessor: 'bonusName',
+      Cell: ({ cell: { value }, row: { original: { tooltipText } } }) => (
+        <Fragment>
+          {value}
+          &nbsp;<FontAwesome data-tip data-for={value} name='info-circle' />
+          <ReactTooltip className='tooltip__content' id={value} place='bottom' effect='solid'>
+            <div>{tooltipText}</div>
+          </ReactTooltip>
+        </Fragment>
+      )
     },
     {
       Header: 'Amount',

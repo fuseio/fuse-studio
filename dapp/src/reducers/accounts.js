@@ -1,5 +1,5 @@
 import * as actions from 'actions/accounts'
-import { LOGIN, IS_USER_EXISTS } from 'actions/user'
+import { IS_USER_EXISTS } from 'actions/user'
 import { FETCH_FEATURED_COMMUNITIES } from 'actions/token'
 import { CHECK_ACCOUNT_CHANGED, CONNECT_TO_WALLET } from 'actions/network'
 import pick from 'lodash/pick'
@@ -19,9 +19,6 @@ const handlers = {
     return { ...state, balances }
   },
   [actions.BALANCE_OF_NATIVE.SUCCESS]: (state, action) => {
-    return { ...state, ...action.response }
-  },
-  [LOGIN.SUCCESS]: (state, action) => {
     return { ...state, ...action.response }
   },
   [actions.FETCH_COMMUNITIES.SUCCESS]: (state, action) => {

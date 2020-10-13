@@ -119,7 +119,7 @@ const TransferToFunderForm = ({
             </div>
           </div>
         </div>
-        <p className='join_bonus__title'>In order to reward your first users please transfer your tokens to the funder, choose how much to send to the funder:</p>
+        <p className='join_bonus__title'>In order to reward users with bonuses you must first fill your funder balance. Bonuses are sent directly from the funder balancer. If the funder balance is empty users will no longer receive bonuses.</p>
         <div className='join_bonus__field'>
           <TextField
             type='number'

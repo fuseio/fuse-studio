@@ -11,6 +11,7 @@ import { REQUEST, FAILURE, PENDING, SUCCESS } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
 import pick from 'lodash/pick'
 import omit from 'lodash/omit'
+import { FUND_ETH, GET_FUND_STATUS } from 'actions/user'
 
 const initialState = {
   receipt: null,
@@ -63,6 +64,12 @@ export default (state = initialState, action) => {
       return { ...state, isTokens: { ...state.isTokens, [action.tokenAddress]: false } }
     case FETCH_TOKEN_FROM_ETHEREUM.REQUEST:
       return { ...state, isTokens: { ...state.isTokens, [action.tokenAddress]: null } }
+    case FUND_ETH.SUCCESS:
+      return { ...state, ...action.response }
+    case GET_FUND_STATUS.SUCCESS:
+      return { ...state, ...action.response }
+    case GET_FUND_STATUS.FAILURE:
+      return { ...state, ...action.response }
     case FETCH_TOKEN_FROM_ETHEREUM.SUCCESS:
       return { ...state, isTokens: { ...state.isTokens, [action.response.address]: true } }
     case FETCH_DEPLOY_PROGRESS.SUCCESS:
