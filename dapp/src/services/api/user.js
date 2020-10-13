@@ -5,9 +5,9 @@ export const fundEth = (apiRoot, { accountAddress }) =>
     .send()
     .then(response => response.body)
 
-export const login = (apiRoot, { accountAddress, signature, date }) =>
-  request.post(`${apiRoot}/users/login/${accountAddress}`)
-    .send({ signature, date })
+export const fetchEthFundStatus = (apiRoot, { id }) =>
+  request.get(`${apiRoot}/jobs/${id}`)
+    .send()
     .then(response => response.body)
 
 export const saveWizardProgress = (apiRoot, { accountAddress, formData }) =>

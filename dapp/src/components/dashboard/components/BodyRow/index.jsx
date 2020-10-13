@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { addressShortener } from 'utils/format'
+import isArray from 'lodash/isArray'
 
 export default ({
   row,
@@ -38,7 +39,7 @@ export default ({
       {row.cells.map(cell => {
         const { column: { id, isEthereumAddress }, value } = cell
         const className = id === 'checkbox' || id === 'dropdown' ? `table__body__cell cell small-2` : `table__body__cell cell small-${Math.ceil(24 / row.cells.length)}`
-        if (id === 'name') {
+        if (id === 'name' && isArray(value)) {
           return (
             <div {...cell.getCellProps({ className, style: { display: 'flex', alignItems: 'center', position: 'relative', height: '100%' } })}>
               <div

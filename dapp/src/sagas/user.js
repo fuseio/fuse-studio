@@ -1,48 +1,13 @@
-import { all, put, select } from 'redux-saga/effects'
-
+import { all, put, select, call } from 'redux-saga/effects'
 import { apiCall, tryTakeEvery } from './utils'
 import * as actions from 'actions/user'
 import { getAccountAddress } from 'selectors/accounts'
 import * as api from 'services/api/user'
 import { isUserProfileExists } from 'services/api/profiles'
-import { generateSignatureData } from 'utils/web3'
 import { saveState } from 'utils/storage'
 import get from 'lodash/get'
-
-export function * login () {
-  const accountAddress = yield select(getAccountAddress)
-  const chainId = yield select(state => state.network.networkId)
-
-  const date = new Date().toUTCString()
-
-  const signatureData = generateSignatureData({ accountAddress, date, chainId })
-  const promise = new Promise((resolve, reject) => {
-    window.ethereum.sendAsync(
-      {
-        method: 'eth_signTypedData_v3',
-        params: [accountAddress, JSON.stringify(signatureData)],
-        from: accountAddress
-      },
-      (error, { result }) => {
-        if (error) {
-          return reject(error)
-        }
-        return resolve(result)
-      }
-    )
-  })
-  const signature = yield promise
-  if (signature) {
-    const response = yield apiCall(api.login, { accountAddress, signature, date })
-    yield put({
-      type: actions.LOGIN.SUCCESS,
-      accountAddress,
-      response: {
-        authToken: response.token
-      }
-    })
-  }
-}
+import { getWeb3 } from 'sagas/network'
+import BigNumber from 'bignumber.js'
 
 function * signUpUser ({ email, subscribe }) {
   const accountAddress = yield select(getAccountAddress)
@@ -100,8 +65,62 @@ function * subscribeUser ({ user }) {
 }
 
 function * fundEth ({ accountAddress }) {
-  yield apiCall(api.fundEth, { accountAddress }, { networkType: 'ropsten' })
-  saveState('fundEth', true)
+  if (accountAddress) {
+    const response = yield apiCall(api.fundEth, { accountAddress }, { networkType: 'ropsten' })
+    saveState('fundEth', true)
+    yield put({
+      type: actions.FUND_ETH.SUCCESS,
+      accountAddress,
+      response: {
+        jobId: response['job']['_id']
+      }
+    })
+  }
+}
+
+function * fetchFundingStatus () {
+  const accountAddress = yield select(getAccountAddress)
+  const { jobId } = yield select(state => state.screens.issuance)
+  try {
+    const response = yield apiCall(api.fetchEthFundStatus, { id: jobId }, { networkType: 'ropsten' })
+    const web3 = yield getWeb3({ bridgeType: 'foreign' })
+    const balanceOfNative = yield call(web3.eth.getBalance, accountAddress)
+    const { data } = response
+    if (data.failReason && data.failedAt) {
+      yield put({
+        type: actions.GET_FUND_STATUS.FAILURE,
+        response: {
+          fundingStatus: 'failed'
+        }
+      })
+    }
+
+    if (get(data, 'data.txHash', false)) {
+      yield put({
+        type: actions.GET_FUND_STATUS.SUCCESS,
+        response: {
+          fundingTxHash: get(data, 'data.txHash')
+        }
+      })
+    }
+    if (get(data, 'data.receipt', false) || !(new BigNumber(balanceOfNative).isZero())) {
+      yield put(actions.balanceOfNative(accountAddress, { bridgeType: 'home' }))
+      yield put(actions.balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
+      yield put({
+        type: actions.GET_FUND_STATUS.SUCCESS,
+        response: {
+          fundingStatus: 'success'
+        }
+      })
+    }
+  } catch (error) {
+    yield put({
+      type: actions.GET_FUND_STATUS.FAILURE,
+      response: {
+        fundingStatus: 'failed'
+      }
+    })
+  }
 }
 
 function * isUserExists ({ accountAddress }) {
@@ -116,11 +135,11 @@ function * isUserExists ({ accountAddress }) {
 
 export default function * userSaga () {
   yield all([
-    tryTakeEvery(actions.LOGIN, login, 1),
     tryTakeEvery(actions.SIGN_UP_USER, signUpUser, 1),
     tryTakeEvery(actions.SAVE_WIZARD_PROGRESS, saveWizardProgress, 1),
     tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1),
     tryTakeEvery(actions.SEND_EMAIL, subscribeUser, 1),
-    tryTakeEvery(actions.FUND_ETH, fundEth, 1)
+    tryTakeEvery(actions.FUND_ETH, fundEth, 1),
+    tryTakeEvery(actions.GET_FUND_STATUS, fetchFundingStatus, 1)
   ])
 }

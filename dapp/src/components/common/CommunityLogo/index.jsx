@@ -5,7 +5,6 @@ import DAI_1 from 'images/DAI_CoinIcon1.svg'
 import DAI_2 from 'images/DAI_CoinIcon2.svg'
 import tokenOne from 'images/CoinIcon1.svg'
 import tokenTwo from 'images/CoinIcon2.svg'
-import { isMobileOnly } from 'react-device-detect'
 
 const getImages = () => ({
   'CoinIcon1.svg': tokenOne,
@@ -21,7 +20,7 @@ const CommunityLogo = ({
   metadata,
   symbol,
   imageUrl,
-  isSmall = isMobileOnly,
+  isSmall,
   isBig = false
 }) => {
   const wrapperClasses = classNames(`logo-circle__outer`,
