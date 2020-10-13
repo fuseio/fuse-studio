@@ -5,7 +5,7 @@ const { createNetwork } = require('@utils/web3')
 const { toWei, toChecksumAddress } = require('web3-utils')
 const EthFunding = mongoose.model('EthFunding')
 
-const updateEthFunding = async (id) => EthFunding.findByIdAndUpdate(id, { funded: true })
+const setFunded = async (id) => EthFunding.findByIdAndUpdate(id, { funded: true })
 
 const ethFunder = withAccount(async (account, { accountAddress }, job) => {
   const ethFunding = await new EthFunding({
@@ -29,12 +29,12 @@ const ethFunder = withAccount(async (account, { accountAddress }, job) => {
     job.attrs.data.txHash = hash
     job.save()
   }).on('receipt', (receipt) => {
-    job.attrs.data.receipt = receipt
+    job.attrs.data.receipt = true
     job.save()
   })
 
   await promise
-  await updateEthFunding(ethFunding._id)
+  await setFunded(ethFunding._id)
 }, (args) => {
   return lockAccount({ role: 'eth' })
 })
