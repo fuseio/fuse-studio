@@ -129,14 +129,6 @@
     }
   }
 
-  // @include element(faqAndRecent) {
-  //   @include breakpoint(medium up) {
-  //     display: flex;
-  //     flex-direction: column;
-  //     justify-content: space-between;
-  //   }
-  // }
-
   @include element(tabs) {
     @include breakpoint(medium up) {
       min-height: 500px;
