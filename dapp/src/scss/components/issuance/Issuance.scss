@@ -615,6 +615,7 @@
 
             @include block(link) {
               color: #006aff;
+              font-size: 14px;
 
               &:hover {
                 cursor: pointer;
