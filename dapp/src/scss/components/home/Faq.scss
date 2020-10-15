@@ -49,6 +49,10 @@
       width: 80%;
       white-space: nowrap;
       line-height: 1.67;
+
+      @include breakpoint(medium down) {
+        width: 70%;
+      }
     }
   }
 

@@ -69,10 +69,10 @@ const HomePage = ({
       <div className='home_page__faq'>
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
-            <div className='cell shrink medium-24 large-12'>
+            <div className='cell medium-24 large-12'>
               <MyCommunities showDashboard={showDashboard} showIssuance={showIssuance} />
             </div>
-            <div className='cell shrink medium-24 large-12'>
+            <div className='cell medium-24 large-12'>
               <FeaturedCommunities accountAddress={accountAddress} showDashboard={showDashboard} />
             </div>
             <Faqs />

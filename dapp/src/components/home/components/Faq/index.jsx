@@ -5,7 +5,7 @@ import arrow from 'images/arrow_3.svg'
 export default () => {
   return (
     <Fragment>
-      <div className='faq__wrapper cell shrink small-24 medium-12'>
+      <div className='faq__wrapper cell medium-24 large-12'>
         <div className='grid-x align-justify align-middle faq__title'>
           <h3 className='faq__title'>FAQ</h3>
           <a href='https://docs.fuse.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer' className='faq__action'>
@@ -25,11 +25,13 @@ export default () => {
         </div>
       </div>
 
-      <div className='faq__wrapper cell shrink small-24 medium-12' style={{ backgroundColor: '#f5f5f5' }}>
+      <div className='faq__wrapper cell medium-24 large-12' style={{ backgroundColor: '#f5f5f5' }}>
         <div className='grid-x align-justify align-middle faq__title'>
           <h3 className='faq__title'>Watch tutorial</h3>
         </div>
-        <div style={{ position: 'relative', height: 0, overflow: 'hidden', maxWidth: '100%', paddingBottom: '56.25%' }}><iframe style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} allowfullscreen frameborder='0' src='https://www.youtube.com/embed/Lh3pKLdUR60?autoplay=1&mute=1' /></div>
+        <div style={{ position: 'relative', height: 0, overflow: 'hidden', maxWidth: '100%', paddingBottom: '56.25%' }}>
+          <iframe style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} allowFullScreen frameBorder='0' src='https://www.youtube.com/embed/Lh3pKLdUR60?autoplay=1&mute=1' />
+        </div>
       </div>
     </Fragment>
   )

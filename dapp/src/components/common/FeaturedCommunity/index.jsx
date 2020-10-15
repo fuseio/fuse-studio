@@ -1,11 +1,11 @@
 import React, { memo } from 'react'
 import { connect } from 'react-redux'
-import get from 'lodash/get'
+// import get from 'lodash/get'
 import CommunityLogo from 'components/common/CommunityLogo'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
-import BusinessIcon from 'images/featured_business.svg'
-import TokenIcon from 'images/featured_token.svg'
-import UsersIcon from 'images/featured_user.svg'
+// import BusinessIcon from 'images/featured_business.svg'
+// import TokenIcon from 'images/featured_token.svg'
+// import UsersIcon from 'images/featured_user.svg'
 import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 
 const FeaturedCommunity = memo(({
@@ -15,7 +15,7 @@ const FeaturedCommunity = memo(({
   metadata,
   withDescription
 }) => {
-  const { count } = community
+  // const { count } = community
   return (
     <div className='featured' onClick={showDashboard}>
       <div className='featured__image'>
@@ -53,7 +53,7 @@ const FeaturedCommunity = memo(({
             {community && community.description}
           </div>
         )}
-        {withDescription && community && (
+        {/* {withDescription && community && (
           <div className='featured__information grid-x align-middle align-justify'>
             <div className='item cell small-7 grid-x align-middle'>
               <div className='item__icon'><img src={TokenIcon} /></div>
@@ -77,7 +77,7 @@ const FeaturedCommunity = memo(({
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )
