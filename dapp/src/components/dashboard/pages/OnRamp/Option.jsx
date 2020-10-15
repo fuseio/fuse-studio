@@ -6,6 +6,8 @@ import { useTable, useSortBy, useRowSelect } from 'react-table'
 import get from 'lodash/get'
 import moonpayIcon from 'images/moonpay_table.svg'
 import transkIcon from 'images/transak_table.svg'
+import rampIcon from 'images/ramp_network_log.svg'
+import FontAwesome from 'react-fontawesome'
 
 const getPluginName = (myPlugins) => {
   const isMoonpay = get(myPlugins, 'moonpay.isActive', false)
@@ -31,8 +33,8 @@ const options = (plugin) => [
         />
       }
     ],
-    fee: '4.5% or 4.99 (EUR/GBP/USD/ whichever is higher)',
-    countries: '',
+    // fee: '4.5% or 4.99 (EUR/GBP/USD/ whichever is higher)',
+    learnMore: 'https://www.moonpay.io/',
     value: 'moonpay',
     isSelected: plugin === 'moonpay'
   },
@@ -52,8 +54,8 @@ const options = (plugin) => [
         />
       }
     ],
-    fee: '0.5%',
-    countries: '',
+    // fee: '0.5%',
+    learnMore: 'https://transak.com/',
     value: 'transak',
     isSelected: plugin === 'transak'
   },
@@ -63,7 +65,7 @@ const options = (plugin) => [
         name: 'Ramp',
         image: <div
           style={{
-            backgroundImage: `url(${transkIcon})`,
+            backgroundImage: `url(${rampIcon})`,
             width: '36px',
             height: '36px',
             backgroundSize: 'contain',
@@ -73,8 +75,8 @@ const options = (plugin) => [
         />
       }
     ],
-    fee: '0.0',
-    countries: '',
+    // fee: '0.0',
+    learnMore: 'https://ramp.network/',
     value: 'rampInstant',
     isSelected: plugin === 'rampInstant'
   }
@@ -90,7 +92,7 @@ const IndeterminateRadio = React.forwardRef(
     }, [resolvedRef, indeterminate])
 
     return (
-      <React.Fragment>
+      <label className='label' htmlFor={value} >
         <Field name='plugin'>
           {({ field, form: { setFieldValue, submitForm } }) => (
             <input
@@ -108,9 +110,8 @@ const IndeterminateRadio = React.forwardRef(
               }} />
           )}
         </Field>
-        <label className='label' htmlFor={value} />
         <div className='check' />
-      </React.Fragment >
+      </label >
     )
   }
 )
@@ -184,13 +185,18 @@ const OptionsContainer = ({ myPlugins }) => {
       Header: 'Service name',
       accessor: 'name'
     },
+    // {
+    //   Header: 'Fees',
+    //   accessor: 'fee'
+    // },
     {
-      Header: 'Fees',
-      accessor: 'fee'
-    },
-    {
-      Header: 'Countries',
-      accessor: 'countries'
+      Header: 'Learn more',
+      accessor: 'learnMore',
+      Cell: ({ cell: { value } }) => (
+        <a target='_blank' className='link' rel='noopener noreferrer' style={{ marginLeft: '5px' }} href={value}>
+          <FontAwesome style={{ fontSize: '14px' }} name='external-link-alt' />&nbsp;{value}
+        </a>
+      )
     }
   ], [])
 

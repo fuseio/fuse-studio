@@ -57,7 +57,7 @@ const MyCommunities = ({
         const { token, foreignTokenAddress } = community
         const { communityAddress } = community
         return (
-          <div className='cell medium-12 small-24' key={communityAddress}>
+          <div className='cell shrink medium-12 small-24' key={communityAddress}>
             <FeaturedCommunity
               token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
               showDashboard={() => showDashboard(communityAddress)}

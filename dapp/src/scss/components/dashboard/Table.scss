@@ -58,7 +58,7 @@
 
     @include element(cell) {
       font-size: 0.688em;
-      font-weight: bold;
+      // font-weight: bold;
       color: $color-gray;
 
       @include element(sort) {
@@ -80,10 +80,6 @@
       &:hover {
         border-bottom: none;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
-
-        // .row_checkbox {
-        //   display: block;
-        // }
       }
 
       @include modifier(just-added) {
@@ -95,6 +91,12 @@
     @include element(cell) {
       font-size: 0.688em;
       color: $color-gray;
+
+      @include block(link) {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
 
       .fa-clone {
         color: $color-dark-gray;
@@ -112,14 +114,6 @@
         &:hover {
           display: none;
         }
-        &[type="radio"] {
-          position: absolute;
-          height: 20px;
-          width: 20px;
-          top: 10px;
-          left: 20px;
-          visibility: hidden;
-        }
         &:checked ~ .check {
           border: 2px solid #969696;
         }
@@ -135,7 +129,6 @@
 
       @include block(label) {
         display: block;
-        position: relative;
         font-weight: 300;
         font-size: 1.35em;
         height: 20px;

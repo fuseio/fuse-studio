@@ -15,6 +15,13 @@ export default ({ hideModal, web3connect }) => {
       <div className='wallet-modal'>
         <div className='wallet-modal__title'>Connect your wallet</div>
         <div className='wallet-modal__providers-list'>
+          <div className='wallet-modal__provider' onClick={createHandleProvider('torus')}>
+            <img className='image' src={GoogleIcon} />
+            <div className='text'>
+              Google
+            </div>
+            <div className='info'>Create a wallet using your<br /> Google account</div>
+          </div>
           <div className='wallet-modal__provider' onClick={createHandleProvider('injected')}>
             <img className='image' src={MetamaskIcon} />
             <div className='text'>
@@ -25,15 +32,6 @@ export default ({ hideModal, web3connect }) => {
               <span>Click here to connect</span>
             </div>
           </div>
-
-          <div className='wallet-modal__provider' onClick={createHandleProvider('torus')}>
-            <img className='image' src={GoogleIcon} />
-            <div className='text'>
-              Google
-            </div>
-            <div className='info'>Create a wallet using your<br /> Google account</div>
-          </div>
-
         </div>
         <div className='wallet-modal__explanation grid-x grid-margin-x align-middle align-center'>
           <div className='cell shrink'>

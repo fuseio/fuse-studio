@@ -8,7 +8,7 @@ export default ({
     <div {...headerGroup.getHeaderGroupProps({ className: 'table__header grid-x align-middle align-spaced' })}>
       {headerGroup.headers.map(column => {
         const { id } = column
-        const className = id === 'checkbox' || id === 'dropdown' ? `table__body__cell cell small-2` : `table__body__cell cell small-${Math.ceil(24 / headerGroup.headers.length)}`
+        const className = id === 'checkbox' || id === 'dropdown' ? `table__header__cell cell small-2` : `table__header__cell cell small-${Math.ceil(24 / headerGroup.headers.length)}`
         return (
           <div {...column.getHeaderProps({ className })}>
             <span {...column.getSortByToggleProps()}>
