@@ -1,4 +1,4 @@
-import { all, fork, call, put, takeEvery, select, take } from 'redux-saga/effects'
+import { all, fork, call, put, takeEvery, select, take, delay } from 'redux-saga/effects'
 import request from 'superagent'
 import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 as getWeb3Service } from 'services/web3'
@@ -77,6 +77,7 @@ function * connectToWallet () {
 
     yield fork(watchNetworkChanges, provider)
     yield fork(watchAccountChanges, provider)
+    yield delay(CONFIG.api.timeout)
     yield call(checkNetworkType, { web3, accountAddress })
 
     yield put({

@@ -4,9 +4,9 @@ import MetamaskIcon from 'images/metamask-fox.png'
 import GoogleIcon from 'images/google.png'
 import EtherIcon from 'images/ether.svg'
 
-export default ({ hideModal, web3connect }) => {
+export default ({ hideModal, connectTo }) => {
   const createHandleProvider = (provider) => (e) => {
-    web3connect.core.connectTo(provider)
+    connectTo(provider)
     hideModal()
   }
 
@@ -27,20 +27,18 @@ export default ({ hideModal, web3connect }) => {
             <div className='text'>
               MetaMask
             </div>
-            <div className='info'>
-              Have Metamask?<br />
-              <span>Click here to connect</span>
-            </div>
+            <div className='info'>Connect using metamask</div>
           </div>
         </div>
         <div className='wallet-modal__explanation grid-x grid-margin-x align-middle align-center'>
           <div className='cell shrink'>
             <img src={EtherIcon} />
           </div>
-          <div className='cell small-22'>
-            <div>The Studio deploys communities on Ethereum mainnet by Default (You can also test on Testnet to avoid fees - <a target='_blank' href='https://docs.fuse.io/the-fuse-studio/getting-started/using-the-studio-for-free-on-ropsten'>Learn here how</a>)</div>
+          <div className='cell small-20'>
+            <div>A wallet is needed in order to interact with both Ethereum and Fuse.</div>
           </div>
         </div>
       </div>
-    </Modal>)
+    </Modal>
+  )
 }

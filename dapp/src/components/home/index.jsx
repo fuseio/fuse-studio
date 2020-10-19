@@ -20,7 +20,7 @@ const HomePage = ({
   push,
   loadModal
 }) => {
-  const showIssuance = (templateId) => {
+  const showIssuance = () => {
     if (!accountAddress) {
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')

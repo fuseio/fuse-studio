@@ -30,7 +30,7 @@ export default () => {
           <h3 className='faq__title'>Watch tutorial</h3>
         </div>
         <div style={{ position: 'relative', height: 0, overflow: 'hidden', maxWidth: '100%', paddingBottom: '56.25%' }}>
-          <iframe style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} allowFullScreen frameBorder='0' src='https://www.youtube.com/embed/Lh3pKLdUR60?autoplay=1&mute=1' />
+          <iframe style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} allowFullScreen frameBorder='0' src='https://www.youtube.com/embed/Lh3pKLdUR60?autoplay=0&mute=1' />
         </div>
       </div>
     </Fragment>
