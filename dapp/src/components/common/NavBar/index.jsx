@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import Logo from 'components/common/Logo'
 import HelpIcon, { ReactComponent as Help } from 'images/help.svg'
 
@@ -17,19 +17,17 @@ import useOutsideClick from 'hooks/useOutsideClick'
 import { getCurrentNetworkType } from 'selectors/network'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
-import { loadModal } from 'actions/ui'
-import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
 
 const NavBar = ({
   accountAddress,
   networkType,
-  push,
   connectingToWallet,
-  web3connect,
   foreignToken,
   location,
-  loadModal
+  handleConnect,
+  handleLogout
 }) => {
+  const dispatch = useDispatch()
   const isInCommunityPage = location.pathname.includes('/community/')
   const isInNestedCommunityPage = isInCommunityPage && !location.pathname.includes('justCreated') && location.pathname.split('/').length > 4
   const isInIssuancePage = location.pathname.includes('/issuance')
@@ -69,10 +67,6 @@ const NavBar = ({
     setHelpOpen(!isHelpOpen)
   }
 
-  const handleConnect = (e) => {
-    loadModal(WEB3_CONNECT_MODAL, { web3connect })
-  }
-
   const isGreaterThen70 = () => scrollY > 70
 
   return (
@@ -83,7 +77,7 @@ const NavBar = ({
         'navbar--bgImage': !isInNestedCommunityPage
       })}>
       {(withLogo || (isMobile && isGreaterThen70())) && <div className='navbar__logo'>
-        <Logo showHomePage={() => push('/')} isBlue={false} />
+        <Logo showHomePage={() => dispatch(push('/'))} isBlue={false} />
       </div>}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
         <div
@@ -111,7 +105,7 @@ const NavBar = ({
               <span className='icon'><img src={isInCommunityPage ? NewWalletIcon : WalletIcon} /></span>
               <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
               <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                <ProfileDropDown handleLogOut={() => web3connect.core.clearCachedProvider()} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
+                <ProfileDropDown handleLogOut={handleLogout} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
               </div>
             </div>
           ) : connectingToWallet ? (
@@ -141,9 +135,4 @@ const mapStateToProps = (state) => ({
   location: state.router.location
 })
 
-const mapDispatchToProps = {
-  push,
-  loadModal
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar))
+export default withRouter(connect(mapStateToProps, null)(NavBar))
