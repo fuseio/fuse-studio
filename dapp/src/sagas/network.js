@@ -77,7 +77,7 @@ function * connectToWallet () {
 
     yield fork(watchNetworkChanges, provider)
     yield fork(watchAccountChanges, provider)
-    yield delay(CONFIG.api.timeout)
+    yield delay(1500)
     yield call(checkNetworkType, { web3, accountAddress })
 
     yield put({

@@ -518,20 +518,22 @@
         border: solid 2px $color-lighter-gray;
         background-color: #ffffff;
         cursor: pointer;
+        min-height: 90px;
+        width: 100%;
+
+        .fa {
+          font-size: 12px;
+        }
+
+        &:first-child {
+          margin-bottom: 1em;
+        }
 
         &:hover {
           border: solid 2px #abc3d2;
 
           .option__text {
             color: #052235;
-          }
-        }
-
-        @include modifier(fullWidth) {
-          min-height: 165px;
-          width: 100%;
-          &:first-child {
-            margin-bottom: 1em;
           }
         }
 
@@ -586,19 +588,6 @@
             line-height: normal;
             letter-spacing: normal;
             color: $color-gray;
-
-            > div:first-child {
-              padding-bottom: 0.8em;
-            }
-
-            @include block(bold) {
-              font-weight: bold;
-              color: $color-light-dark;
-            }
-
-            @include block(link) {
-              color: #006aff;
-            }
           }
 
           @include block(error) {
@@ -1737,7 +1726,7 @@
   @include element(content) {
     @include xy-grid(vertical, false);
     width: 240px !important;
-    font-size: 10px !important;
+    font-size: 12px !important;
     height: auto;
     padding: 10px;
     color: $color-dark !important;
