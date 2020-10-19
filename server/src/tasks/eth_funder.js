@@ -18,23 +18,25 @@ const ethFunder = withAccount(async (account, { accountAddress }, job) => {
   if (networkType !== 'ropsten') {
     throw Error('Fund ETH available only for ropsten')
   }
-  const promise = web3.eth.sendTransaction({
+  web3.eth.transactionConfirmationBlocks = parseInt(config.get(`network.foreign.contract.options.transactionConfirmationBlocks`))
+  const receipt = await web3.eth.sendTransaction({
     to: accountAddress,
     from: account.address,
     value: toWei(bonus),
-    nonce: account.nonce,
+    nonce: account.nonces['foreign'],
     gasPrice: '1000000000',
     gas: config.get('gasLimitForTx.funder')
   }).on('transactionHash', (hash) => {
     job.attrs.data.txHash = hash
     job.save()
-  }).on('receipt', (receipt) => {
-    job.attrs.data.receipt = true
-    job.save()
   })
-
-  await promise
-  await setFunded(ethFunding._id)
+  if (receipt) {
+    job.attrs.data.receipt = true
+    account.nonces['foreign']++
+    await setFunded(ethFunding._id)
+    await account.save()
+    job.save()
+  }
 }, (args) => {
   return lockAccount({ role: 'eth' })
 })
