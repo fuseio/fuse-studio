@@ -590,6 +590,21 @@
             color: $color-gray;
           }
 
+          @include block(tooltip) {
+            font-size: 1em;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: normal;
+            color: $color-gray;
+
+            @include block(bold) {
+              font-weight: bold;
+              color: $color-light-dark;
+            }
+          }
+
           @include block(error) {
             font-size: 10px;
             font-weight: normal;
