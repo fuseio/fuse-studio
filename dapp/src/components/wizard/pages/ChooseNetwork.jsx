@@ -200,9 +200,9 @@ const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, ac
           name='Launch on Ethereum'
           value='main'
           TooltipText={() => (
-            <div>
+            <div className='tooltip'>
               After deployment on Ethereum you will receive
-              <span className='bold'>100 Fuse</span>
+              <span className='bold'>&nbsp;100 Fuse&nbsp;</span>
               <img src={fuseToken} />
               &nbsp;that will cover your transactions on Fuse for your community bootstrapping period
             </div>
@@ -220,9 +220,9 @@ const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, ac
           name='Launch on Ropsten'
           value='ropsten'
           TooltipText={() => (
-            <div>
+            <div className='tooltip'>
               After deployment on Ropsten you will receive
-              <span className='bold'>10 Fuse</span>
+              <span className='bold'>&nbsp;10 Fuse&nbsp;</span>
               <img src={fuseToken} />&nbsp;that will cover your transactions on Fuse for your testing period
             </div>
           )}

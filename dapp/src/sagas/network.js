@@ -55,8 +55,8 @@ function * watchAccountChanges (provider) {
   while (true) {
     const message = yield take(chan)
     if (!isNaN(message)) {
-      const web3 = yield getWeb3Service({ provider })
-      yield call(connectToWallet, { web3 })
+      yield getWeb3Service({ provider })
+      yield call(connectToWallet)
     }
   }
 }

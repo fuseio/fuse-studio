@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { push } from 'connected-react-router'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import withTracker from 'containers/withTracker'
 import MyCommunities from 'components/home/components/MyCommunities'
@@ -10,19 +10,26 @@ import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import homeImage from 'images/studio_home.png'
 import arrowImage from 'images/arrow_1.svg'
 
-import { getCommunitiesKeys } from 'selectors/accounts'
-
 const HomePage = ({
-  accountAddress,
   handleConnect
 }) => {
   const dispatch = useDispatch()
+  const { accountAddress } = useSelector(state => state.network)
+  const [moveToIssuance, setMove] = useState(false)
+
+  useEffect(() => {
+    if (moveToIssuance && accountAddress) {
+      dispatch(push('/view/issuance'))
+    }
+  }, [moveToIssuance, accountAddress])
+
   const showIssuance = () => {
     if (!accountAddress) {
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')
       }
       handleConnect()
+      setMove(true)
     } else {
       window.analytics.track('Launch community button pressed - connected')
       dispatch(push('/view/issuance'))
@@ -70,7 +77,7 @@ const HomePage = ({
               <MyCommunities showDashboard={showDashboard} showIssuance={showIssuance} />
             </div>
             <div className='cell medium-24 large-12'>
-              <FeaturedCommunities accountAddress={accountAddress} showDashboard={showDashboard} />
+              <FeaturedCommunities showDashboard={showDashboard} />
             </div>
             <Faqs />
           </div>
@@ -80,9 +87,4 @@ const HomePage = ({
   )
 }
 
-const mapStateToProps = (state) => ({
-  accountAddress: state.network.accountAddress,
-  communitiesKeys: getCommunitiesKeys(state)
-})
-
-export default withTracker(connect(mapStateToProps, null)(HomePage))
+export default withTracker(HomePage)
