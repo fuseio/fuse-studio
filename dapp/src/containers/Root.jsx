@@ -47,7 +47,7 @@ const Root = () => {
     <div className='root__wrapper'>
       <NavBar handleConnect={handleConnect} handleLogout={handleLogout} />
       <Switch>
-        <Route exact path='/' render={props => <HomePage {...props} />} />
+        <Route exact path='/' render={props => <HomePage handleConnect={handleConnect} {...props} />} />
         <Route path='/view/issuance' render={props => <Wizard {...props} />} />
         <Route path='/view/communities' render={props => <CommunitiesPage {...props} />} />
         <Route path='/view/community/:address' render={props => <Dashboard {...props} />} />

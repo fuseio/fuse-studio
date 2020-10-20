@@ -1,13 +1,11 @@
 import React from 'react'
 import { push } from 'connected-react-router'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 
 import withTracker from 'containers/withTracker'
 import MyCommunities from 'components/home/components/MyCommunities'
 import Faqs from 'components/home/components/Faq'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
-import { loadModal } from 'actions/ui'
-import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
 
 import homeImage from 'images/studio_home.png'
 import arrowImage from 'images/arrow_1.svg'
@@ -16,19 +14,18 @@ import { getCommunitiesKeys } from 'selectors/accounts'
 
 const HomePage = ({
   accountAddress,
-  web3connect,
-  push,
-  loadModal
+  handleConnect
 }) => {
+  const dispatch = useDispatch()
   const showIssuance = () => {
     if (!accountAddress) {
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')
       }
-      loadModal(WEB3_CONNECT_MODAL, { web3connect })
+      handleConnect()
     } else {
       window.analytics.track('Launch community button pressed - connected')
-      push('/view/issuance')
+      dispatch(push('/view/issuance'))
     }
   }
 
@@ -38,7 +35,7 @@ const HomePage = ({
         window.analytics.track(`Clicked on featured community`, { name })
       }
     }
-    push(`/view/community/${communityAddress}`)
+    dispatch(push(`/view/community/${communityAddress}`))
   }
 
   return (
@@ -88,9 +85,4 @@ const mapStateToProps = (state) => ({
   communitiesKeys: getCommunitiesKeys(state)
 })
 
-const mapDispatchToProps = {
-  push,
-  loadModal
-}
-
-export default withTracker(connect(mapStateToProps, mapDispatchToProps)(HomePage))
+export default withTracker(connect(mapStateToProps, null)(HomePage))
