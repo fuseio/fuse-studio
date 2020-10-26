@@ -139,8 +139,8 @@ const createForeignWallet = withWalletAccount(async (account, { userWallet, ens 
   const walletFactory = createContract(WalletFactoryABI, userWallet.walletFactoryOriginalAddress)
   const method = createMethod(walletFactory, 'createCounterfactualWallet', owner, Object.values(userWallet.walletModulesOriginal), ens, userWallet.salt)
 
-  if (await web3.eth.getCode(userWallet.address) !== '0x') {
-    throw new Error(`Contract already exists for wallet ${userWallet.address} on foreign`)
+  if (await web3.eth.getCode(userWallet.walletAddress) !== '0x') {
+    throw new Error(`Contract already exists for wallet ${userWallet.walletAddress} on foreign`)
   }
 
   const receipt = await send(method, {
