@@ -197,7 +197,7 @@ module.exports = {
       fuse: 1
     },
     trade: {
-      fuse: 1
+      fuse: 0.01
     },
     eth: {
       ropsten: 0.05
