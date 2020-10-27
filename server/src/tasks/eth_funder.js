@@ -7,23 +7,27 @@ const EthFunding = mongoose.model('EthFunding')
 
 const setFunded = async (id) => EthFunding.findByIdAndUpdate(id, { funded: true })
 
-const ethFunder = withAccount(async (account, { accountAddress }, job) => {
+const ethFunder = withAccount(async (account, { accountAddress, networkName }, job) => {
+  const bridgeType = networkName === 'fuse' ? 'home' : 'foreign'
+  const network = createNetwork(bridgeType, account)
+  const { web3, networkType } = network
   const ethFunding = await new EthFunding({
     accountAddress: toChecksumAddress(accountAddress),
-    fundingDate: new Date()
+    fundingDate: new Date(),
+    network: networkType
   }).save()
-  const bonus = config.get('bonus.eth.ropsten').toString()
-  const network = createNetwork('foreign', account)
-  const { web3, networkType } = network
-  if (networkType !== 'ropsten') {
-    throw Error('Fund ETH available only for ropsten')
+  if (networkType !== 'fuse' || networkType !== 'ropsten') {
+    throw Error(`Fund available only for ${networkName || 'ropsten'}`)
   }
   web3.eth.transactionConfirmationBlocks = parseInt(config.get(`network.foreign.contract.options.transactionConfirmationBlocks`))
+  const bonus = networkName
+    ? config.get('bonus.trade.fuse').toString()
+    : config.get('bonus.eth.ropsten').toString()
   const receipt = await web3.eth.sendTransaction({
     to: accountAddress,
     from: account.address,
     value: toWei(bonus),
-    nonce: account.nonces['foreign'],
+    nonce: account.nonces[bridgeType],
     gasPrice: '1000000000',
     gas: config.get('gasLimitForTx.funder')
   }).on('transactionHash', (hash) => {
@@ -32,13 +36,13 @@ const ethFunder = withAccount(async (account, { accountAddress }, job) => {
   })
   if (receipt) {
     job.attrs.data.receipt = true
-    account.nonces['foreign']++
+    account.nonces[bridgeType]++
     await setFunded(ethFunding._id)
     await account.save()
     job.save()
   }
-}, (args) => {
-  return lockAccount({ role: 'eth' })
+}, ({ networkName }) => {
+  return lockAccount({ role: networkName === 'fuse' ? '*' : 'eth' })
 })
 
 module.exports = {

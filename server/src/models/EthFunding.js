@@ -8,7 +8,7 @@ const EthFundingSchema = new Schema({
   network: { type: String, default: 'ropsten' }
 }, { timestamps: true })
 
-EthFundingSchema.index({ accountAddress: 1 }, { unique: true })
+EthFundingSchema.index({ accountAddress: 1, network: 1 }, { unique: true })
 
 const EthFunding = mongoose.model('EthFunding', EthFundingSchema)
 
