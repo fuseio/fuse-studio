@@ -15,7 +15,6 @@ const Footer = ({ networkType }) => {
         }
       </div>
       <div className='footer__item footer__item--last'>
-        <span><a href='https://cdn.forms-content.sg-form.com/d81bb4fc-c732-11e9-a6f6-de5802169549' target='_blank' rel='noopener noreferrer'>Sign up for updates</a>&nbsp;|&nbsp;</span>
         <span>Fuse 2020&nbsp;|&nbsp;</span>
         <span style={{ fontWeight: 'bold' }}>BETA</span>
       </div>

@@ -27,7 +27,7 @@ const Fund = ({ value, network, hasEth }) => {
       }}
       className='link'
       style={{ display: value === network && !hasEth && 'inline-block' }}>
-      &nbsp;&nbsp;<span>Click here to get 0.05 {value} ETH</span>
+      <span>Click here to get 0.05 {value} ETH</span>
     </button>
   )
 }
@@ -130,7 +130,7 @@ const NetworkOption = ({ network, account, logo, name, value, Content, TooltipTe
               }
 
               {
-                showMessage && fundingStatus === 'failed' && (
+                showMessage && fundingStatus === 'failed' && value === 'ropsten' && (
                   <div className='error'>
                     <span>
                       Something went wrong
@@ -140,7 +140,7 @@ const NetworkOption = ({ network, account, logo, name, value, Content, TooltipTe
               }
 
               {
-                showMessage && fundingStatus === 'success' && (
+                showMessage && fundingStatus === 'success' && value === 'ropsten' && (
                   <div className='pending shrink grid-x'>
                     <span>
                       Sent successfully&nbsp;&nbsp;

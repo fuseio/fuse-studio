@@ -18,7 +18,6 @@ const CurrencyOption = ({ logo, name, value }) => {
               type='radio'
               checked={field.value === value}
               onChange={(e) => {
-                setFieldValue('currency', e.target.value)
                 if (value === 'new') {
                   setFieldValue('existingToken', '')
                   setFieldValue('customToken', '')
@@ -26,6 +25,7 @@ const CurrencyOption = ({ logo, name, value }) => {
                   setFieldValue('communityType', '')
                   setFieldValue('customToken', '')
                 }
+                setFieldValue('currency', e.target.value)
               }}
             />
             <div className='option__logo grid-x align-center cell small-4'>
