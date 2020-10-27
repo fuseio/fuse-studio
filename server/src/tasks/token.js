@@ -188,6 +188,7 @@ const adminSpendabilityTransfer = withAccount(async (account, { bridgeType, toke
   if (balancesData.length === 0) {
     throw new Error(`No balances for ${wallet}`)
   }
+  console.log({ balancesData })
   let total = new BigNumber(amount)
   let i = 0
   let jobs = []
