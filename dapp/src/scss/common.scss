@@ -269,6 +269,11 @@
     margin-bottom: 60px;
   }
 
+  @include block(warning) {
+    color: $color-dark;
+    font-size: 1.1em;
+  }
+
   @include breakpoint(small only) {
     padding: 1em 3em;
   }
