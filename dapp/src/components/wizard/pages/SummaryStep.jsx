@@ -1,6 +1,5 @@
 import React from 'react'
 import CommunityLogo from 'components/common/CommunityLogo'
-import FontAwesome from 'react-fontawesome'
 import { getIn, useFormikContext } from 'formik'
 import pickBy from 'lodash/pickBy'
 import pluginsIcons from 'constants/pluginsIcons'
@@ -112,7 +111,7 @@ const SummaryStep = ({
         </div>
 
         <div className='summary-step__text'>
-          <span><FontAwesome name='info-circle' /> Your coin will be issued on the Ethereum {capitalize(toLongName(foreignNetwork))}</span>
+          <span>Your coin will be issued on the Ethereum {capitalize(toLongName(foreignNetwork))}</span>
           <br />
           <span>Once launched, the Fuse bridge will allow you to start using your tokens on the Fuse chain, greatly reducing transaction cost and time!</span>
         </div>

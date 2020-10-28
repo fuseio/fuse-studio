@@ -1,6 +1,5 @@
 @include block(faq) {
-  font-size: 16px;
-  line-height: 25px;
+  font-size: 1em;
   padding: 5px 0px;
   width: 100%;
 
@@ -26,10 +25,14 @@
       padding-right: 25px;
     }
   }
+
   @include element(questions) {
-    width: 100%;
-    padding: 2em;
-    min-height: 330px;
+    min-height: 250px;
+
+    @include element(wrapper) {
+      padding: 2em;
+      width: 100%;
+    }
   }
 
   @include element(title) {

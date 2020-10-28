@@ -13,6 +13,7 @@ const WhiteLabelWallet = ({ value, communityAddress }) => {
       <div className='qr-code__wrapper'>
         <div className='qr-code'>
           <div className='qr-code__main'>
+            <div className='warning'><strong>Important:</strong> In order to access this economy with the mobile wallet, you must first move some of your tokens using the Fuse bridge.</div>
             <ol className='qr-code__steps'>
               <li>Please download the Fuse wallet from Google play/Apple <br />app store by clicking on this <a target='_blank' rel='noopener noreferrer' href='http://fuseio.app.link/PKSgcxA6KZ'>link</a>
                 <div className='qr-code__download grid-x align-middle'>
