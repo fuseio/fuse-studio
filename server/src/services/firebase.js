@@ -19,6 +19,7 @@ let straitsxAdmin
 let esolAdmin
 let bitazzaAdmin
 let curaDAIAdmin
+let worldXrAdmin
 
 const initAdmin = async () => {
   const secretsClient = new AWS.SecretsManager(config.aws.secrets.manager)
@@ -110,6 +111,11 @@ const initAdmin = async () => {
   curaDAIAdmin = admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(curaDAIResponse.SecretString))
   }, 'CuraDAI')
+
+  const worldXrResponse = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdWorldXR }).promise()
+  worldXrAdmin = admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(worldXrResponse.SecretString))
+  }, 'WorldXR')
 }
 
 initAdmin()
@@ -149,6 +155,8 @@ const getAdmin = (appName) => {
     return bitazzaAdmin
   } else if (appName === 'CuraDAI') {
     return curaDAIAdmin
+  } else if (appName === 'WorldXR') {
+    return worldXrAdmin
   } else {
     return admin
   }
