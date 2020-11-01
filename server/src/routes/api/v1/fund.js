@@ -8,11 +8,11 @@ router.post('/:accountAddress', async (req, res, next) => {
     const job = await agenda.now('ethFunder', { accountAddress })
     return res.json({ job: job.attrs })
   } else {
-    if (networkName !== 'fuse' || networkName !== 'ropsten') {
-      return res.status(404).json({ error: `Funding available only for FUSE / Ropsten.` })
+    if (networkName === 'fuse' || networkName === 'ropsten') {
+      const job = await agenda.now('ethFunder', { accountAddress, networkName })
+      return res.json({ job: job.attrs })
     }
-    const job = await agenda.now('ethFunder', { accountAddress, networkName })
-    return res.json({ job: job.attrs })
+    return res.status(404).json({ error: `Funding available only for FUSE / Ropsten.` })
   }
 })
 
