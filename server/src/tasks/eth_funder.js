@@ -16,9 +16,6 @@ const ethFunder = withAccount(async (account, { accountAddress, networkName }, j
     fundingDate: new Date(),
     network: networkType
   }).save()
-  if (networkType !== 'fuse' || networkType !== 'ropsten') {
-    throw Error(`Fund available only for ${networkName || 'ropsten'}`)
-  }
   web3.eth.transactionConfirmationBlocks = parseInt(config.get(`network.foreign.contract.options.transactionConfirmationBlocks`))
   const bonus = networkName
     ? config.get('bonus.trade.fuse').toString()
