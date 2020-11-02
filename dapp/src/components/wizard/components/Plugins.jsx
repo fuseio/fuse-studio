@@ -30,7 +30,7 @@ const PluginItem = memo(({ pluginName, isActive }) => {
           </label>
         )}
       </Field>
-      />
+      /{">"}
     </div>
   )
 }, (prevProps, nextProps) => {

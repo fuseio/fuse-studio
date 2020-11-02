@@ -10,6 +10,8 @@ import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import homeImage from 'images/studio_home.png'
 import arrowImage from 'images/arrow_1.svg'
 
+import { FormattedMessage } from 'react-intl';
+
 const HomePage = ({
   handleConnect
 }) => {
@@ -50,15 +52,20 @@ const HomePage = ({
       <div className='home_page__wrapper grid-container'>
         <div className='home_page__banner grid-x align-middle'>
           <div className='home_page__content cell medium-12 large-12' style={{ height: '50%' }}>
-            <h2 className='home_page__title'>Welcome to Fuse Studio</h2>
+            <h2 className='home_page__title'><FormattedMessage defaultMessage="Welcome to Fuse Studio" /></h2>
             <p className='home_page__text'>
-              Create your own custom branded wallet and<br /> currency in a few simple steps
+              <FormattedMessage 
+                defaultMessage="Create your own custom branded wallet and{newLine} currency in a few simple steps" 
+                values={{
+                  newLine: <br />,
+                }}
+              />
             </p>
             <div className='home_page__button'>
               <button onClick={() => {
                 showIssuance()
               }}>
-                Launch an economy
+                <FormattedMessage defaultMessage="Launch an economy" />
                 <span style={{ marginLeft: '5px' }}>
                   <img src={arrowImage} alt='arrow' />
                 </span>
@@ -74,7 +81,9 @@ const HomePage = ({
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
             <div className='cell medium-24 large-12'>
-              <MyCommunities showDashboard={showDashboard} showIssuance={showIssuance} />
+              <FormattedMessage defaultMessage="My economies">
+                {txt => <MyCommunities title={txt} showDashboard={showDashboard} showIssuance={showIssuance} />}
+              </FormattedMessage>
             </div>
             <div className='cell medium-24 large-12'>
               <FeaturedCommunities showDashboard={showDashboard} />

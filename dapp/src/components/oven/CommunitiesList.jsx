@@ -30,9 +30,16 @@ export default ({
       <div className='communities__wrapper'>
         <div className='grid-container communities__banner grid-x grid-padding-x grid-padding-y align-middle'>
           <div className='communities__banner__content cell medium-14 large-10' style={{ height: '50%' }}>
-            <h2 className='communities__banner__title'>Welcome to<br />Fuse economies</h2>
+            <h2 className='communities__banner__title'>
+              <FormattedMessage 
+                defaultMessage="Welcome to{newLine}Fuse economies"
+                values={{
+                  newLine: <br />
+                }}
+               />
+            </h2>
             <p className='communities__banner__text'>
-              Explore the countless different micro-economies around the world utilizing Fuse network
+            <FormattedMessage defaultMessage="Explore the countless different micro-economies around the world utilizing Fuse network" />
             </p>
           </div>
           <div className='communities__banner__image communities__banner__image--second cell medium-10 small-20'>

@@ -17,6 +17,8 @@ import useOutsideClick from 'hooks/useOutsideClick'
 import { getCurrentNetworkType } from 'selectors/network'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
+import { FormattedMessage } from 'react-intl';
+import SelectLanguage from './../Language/select_language';
 
 const NavBar = ({
   accountAddress,
@@ -88,13 +90,14 @@ const NavBar = ({
           <span className='icon'>{isInCommunityPage ? <Help className='help' /> : <img src={HelpIcon} />}</span>
           <div style={{ minWidth: '130px' }} className={classNames('drop', { 'drop--show': isHelpOpen })}>
             <ul className='drop__options'>
-              <li className='drop__options__item'><a href='https://fuse.io' target='_blank' rel='noopener noreferrer'>Website</a></li>
-              <li className='drop__options__item'><a href='https://docs.fuse.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer'>FAQ</a></li>
-              <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'>Github</a></li>
-              <li className='drop__options__item'><a href='mailto:hello@fuse.io'>Contact us</a></li>
+              <li className='drop__options__item'><a href='https://fuse.io' target='_blank' rel='noopener noreferrer'><FormattedMessage defaultMessage="Website" /></a></li>
+              <li className='drop__options__item'><a href='https://docs.fuse.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer'><FormattedMessage defaultMessage="FAQ" /></a></li>
+              <li className='drop__options__item'><a href='https://github.com/fuseio' target='_blank'><FormattedMessage defaultMessage="Github" /></a></li>
+              <li className='drop__options__item'><a href='mailto:hello@fuse.io'><FormattedMessage defaultMessage="Contact us" /></a></li>
             </ul>
           </div>
         </div>
+        <SelectLanguage />
         {
           accountAddress ? (
             <div

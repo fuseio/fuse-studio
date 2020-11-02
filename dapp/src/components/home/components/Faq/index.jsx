@@ -1,14 +1,15 @@
 import React from 'react'
 import faqItems from 'constants/faq'
 import arrow from 'images/arrow_3.svg'
+import { FormattedMessage } from 'react-intl';
 
 export default () => {
   return (
     <div className='faq__wrapper cell large-auto'>
       <div className='grid-x align-justify align-middle faq__title'>
-        <h3 className='faq__title'>FAQ</h3>
+        <h3 className='faq__title'><FormattedMessage defaultMessage="FAQ" /></h3>
         <a href='https://docs.fuse.io/the-fuse-studio/faq' target='_blank' rel='noopener noreferrer' className='faq__action'>
-          Learn more&nbsp;<img src={arrow} alt='arrow' />
+          <FormattedMessage defaultMessage="Learn more" />&nbsp;<img src={arrow} alt='arrow' />
         </a>
       </div>
       <div className='faq__questions__wrapper grid-x align-middle'>
@@ -18,7 +19,7 @@ export default () => {
               <h4 className='faq__title'>Q:&nbsp;&nbsp;{question}</h4>
               <div className='faq__content'>
                 <div>{answer}</div>&nbsp;&nbsp;
-                {link && <a className='faq__read' href={link} target='_blank' rel='noopener noreferrer'>Read more</a>}
+                {link && <a className='faq__read' href={link} target='_blank' rel='noopener noreferrer'><FormattedMessage defaultMessage="Read more" /></a>}
               </div>
             </div>
           ))}

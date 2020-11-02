@@ -9,6 +9,8 @@ import get from 'lodash/get'
 import FeaturedCommunity from 'components/common/FeaturedCommunity'
 import { getCommunitiesKeys } from 'selectors/accounts'
 
+import { FormattedMessage, defineMessage } from 'react-intl';
+
 const toMatrix = (arr, width) =>
   arr.reduce((rows, key, index) => (index % width === 0 ? rows.push([key])
     : rows[rows.length - 1].push(key)) && rows, [])
@@ -26,8 +28,8 @@ const NoCommunities = ({ showIssuance }) => {
     <div className='cell medium-12 small-24' onClick={showIssuance}>
       <div className='no_communities'>
         <div className='content'>
-          <div className='empty'>You have no economies yet</div>
-          <div className='title'>Click here to create your first one!</div>
+          <div className='empty'><FormattedMessage defaultMessage="You have no economies yet" /></div>
+          <div className='title'><FormattedMessage defaultMessage="Click here to create your first one!" /></div>
           <img src={PlusIcon} />
         </div>
       </div>

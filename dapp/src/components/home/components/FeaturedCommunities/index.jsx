@@ -9,6 +9,7 @@ import FeaturedCommunity from 'components/common/FeaturedCommunity'
 import { push } from 'connected-react-router'
 import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import arrow from 'images/arrow_3.svg'
+import { FormattedMessage } from 'react-intl';
 
 const FeaturedCommunities = ({
   communities,
@@ -58,9 +59,9 @@ const FeaturedCommunities = ({
   return (
     <div className='featured__carousel__wrapper'>
       <div className='grid-x align-justify align-middle'>
-        <h3 className='featured__carousel__title'>Featured economies</h3>
+        <h3 className='featured__carousel__title'><FormattedMessage defaultMessage="Featured economies" /></h3>
         <div onClick={showCommunities} className='featured__carousel__action'>
-          Explore&nbsp;<img src={arrow} alt='arrow' />
+          <FormattedMessage defaultMessage="Explore" />&nbsp;<img src={arrow} alt='arrow' />
         </div>
       </div>
       <div className='featured__carousel'>
