@@ -26,7 +26,7 @@ const ethFunder = withAccount(
         `network.foreign.contract.options.transactionConfirmationBlocks`
       )
     )
-    const bonus = networkName
+    const bonus = bridgeType === 'home'
       ? config.get('bonus.trade.fuse').toString()
       : config.get('bonus.eth.ropsten').toString()
     const receipt = await web3.eth
