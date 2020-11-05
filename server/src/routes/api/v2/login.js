@@ -45,11 +45,7 @@ router.post('/verify', async (req, res) => {
 
   if (response.status === 'approved') {
     const secret = config.get('api.secret')
-    const expiresIn = config.get('api.tokenExpiresIn')
-
-    const token = jwt.sign({ phoneNumber, accountAddress }, secret, {
-      expiresIn
-    })
+    const token = jwt.sign({ phoneNumber, accountAddress }, secret)
     res.json({ token })
   } else {
     res.status(400).json({ error: 'Wrong SMS code' })
