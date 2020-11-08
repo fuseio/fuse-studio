@@ -118,7 +118,7 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       }
     })
 
-    const hasReturnValues = lodash.hasIn(receipt, ['events', 'TransactionExecuted', 'returnValues'])
+    const hasReturnValues = lodash.hasIn(receipt, 'events.TransactionExecuted.returnValues')
     if (!hasReturnValues) {
       job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'failed' }
       job.save()
