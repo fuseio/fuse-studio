@@ -118,12 +118,13 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       }
     })
 
-    const returnValues = receipt && receipt.events.TransactionExecuted.returnValues
-    if (!returnValues) {
+    const hasReturnValues = lodash.hasIn(receipt, ['events', 'TransactionExecuted', 'returnValues'])
+    if (!hasReturnValues) {
       job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'failed' }
       job.save()
       throw new Error(`No return values in receipt (or now receipt)`)
     }
+    const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
     const { success, wallet, signedHash } = returnValues
     const { blockNumber } = receipt
     if (success) {
@@ -180,7 +181,9 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
     }
     return receipt
   } else {
-    job.fail(`Not allowed to relay`)
+    job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'failed' }
+    job.save()
+    throw new Error(`Not allowed to relay`)
   }
 })
 
