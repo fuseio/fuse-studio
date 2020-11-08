@@ -26,7 +26,7 @@ export default object().noUnknown(false).shape({
   totalSupply: number().when(['existingToken', 'customToken'], {
     is: (existingToken, customToken) => (existingToken && existingToken.label && existingToken.value) || customToken,
     then: number(),
-    otherwise: number().required()
+    otherwise: number().positive().required()
   }),
   images: object().noUnknown(false).shape({
     defaultOne: object().noUnknown(false).shape({
