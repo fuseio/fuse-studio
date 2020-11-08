@@ -12,7 +12,7 @@ const UserWallet = mongoose.model('UserWallet')
 
 const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.fuse')}`)
 
-function getParamsFromMethodData (web3, abi, methodName, methodData) {
+const getParamsFromMethodData = (web3, abi, methodName, methodData) => {
   const methodABI = abi.filter(obj => obj.name === methodName)[0]
   const methodSig = web3.eth.abi.encodeFunctionSignature(methodABI)
   const params = web3.eth.abi.decodeParameters(methodABI.inputs, `0x${methodData.replace(methodSig, '')}`)
@@ -118,15 +118,11 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       }
     })
 
-    const returnValues = receipt && receipt.events.TransactionExecuted.returnValues
-    if (!returnValues) {
-      job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'failed' }
-      job.save()
-      throw new Error(`No return values in receipt (or now receipt)`)
-    }
-    const { success, wallet, signedHash } = returnValues
-    const { blockNumber } = receipt
+    const success = lodash.get(receipt, 'status') && lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
     if (success) {
+      const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
+      const { wallet, signedHash } = returnValues
+      const { blockNumber } = receipt
       job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'confirmed', blockNumber }
       job.save()
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
@@ -174,13 +170,11 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
         job.save()
       }
     } else {
-      job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'failed', blockNumber }
+      job.attrs.data.transactionBody = { ...lodash.get(job.attrs.data, 'transactionBody', {}), status: 'failed', blockNumber: lodash.get(receipt, 'blockNumber') }
       job.save()
-      console.error(`Relay transaction failed from wallet: ${wallet}, signedHash: ${signedHash}`)
+      console.error(`Relay transaction failed from wallet: ${lodash.get(receipt, 'events.TransactionExecuted.returnValues.wallet')}, signedHash: ${lodash.get(receipt, 'events.TransactionExecuted.returnValues.signedHash')}`)
     }
     return receipt
-  } else {
-    job.fail(`Not allowed to relay`)
   }
 })
 

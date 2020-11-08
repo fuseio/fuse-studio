@@ -33,6 +33,7 @@ const withAccount = (func, filterOrLockingFunction) => async (...params) => {
     console.log(`unlocking the account ${account.address} with role ${account.role} and bridgeType ${account.bridgeType}`)
     await unlockAccount(account._id)
   } catch (e) {
+    console.log(`unlocking the account ${account.address} with role ${account.role} and bridgeType ${account.bridgeType}`)
     await unlockAccount(account._id)
     throw e
   }
