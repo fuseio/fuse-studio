@@ -118,7 +118,7 @@ const relay = withWalletAccount(async (account, { walletAddress, methodName, met
       }
     })
 
-    const success = lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
+    const success = lodash.get(receipt, 'status') && lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
     if (success) {
       const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
       const { wallet, signedHash } = returnValues
