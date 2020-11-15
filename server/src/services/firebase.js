@@ -21,31 +21,31 @@ const firebaseApps = {
   },
   supervecina: {
     appName: 'Supervecina',
-    secret: 'firebaseSecretIdWepy'
+    secret: 'firebaseSecretIdSupervecina'
   },
   farmlyledger: {
     appName: 'FarmlyLedger',
-    secret: 'firebaseSecretIdWepy'
+    secret: 'firebaseSecretIdFarmlyledger'
   },
   bim: {
     appName: 'BIM',
-    secret: 'firebaseSecretIdWepy'
+    secret: 'firebaseSecretIdBIM'
   },
   bit2c: {
     appName: 'Bit2C',
-    secret: 'firebaseSecretIdWepy'
+    secret: 'firebaseSecretIdBit2C'
   },
   localChampions: {
     appName: 'LocalChampions',
-    secret: 'firebaseSecretIdWepy'
+    secret: 'firebaseSecretIdLocalChampions'
   },
   seedbed: {
     appName: 'Seedbed',
-    secret: 'firebaseSecretIdWepy'
+    secret: 'firebaseSecretIdSeedbed'
   },
   digitalRand: {
     appName: 'DigitalRand',
-    secret: 'firebaseSecretIdWepy'
+    secret: 'firebaseSecretIdDigitalRand'
   },
   paywise: {
     appName: 'Paywise',
