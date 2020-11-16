@@ -69,12 +69,11 @@ router.post('/', async (req, res) => {
   manager.auth().verifyIdToken(token)
     .then(decodedToken => {
       const secret = config.get('api.secret')
-      const expiresIn = config.get('api.tokenExpiresIn')
       const data = { phoneNumber: decodedToken.phone_number, accountAddress, uid: decodedToken.uid, appName }
       if (identifier) {
         data.identifier = identifier
       }
-      const token = jwt.sign(data, secret, { expiresIn })
+      const token = jwt.sign(data, secret)
       res.json({ token })
     }).catch(err => {
       console.error('Login error', err)
