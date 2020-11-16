@@ -251,6 +251,13 @@ module.exports = {
     },
     s3: {
       bucket: 'fuse-studio-qa'
+    },
+    sqs: {
+      constructor: {
+        region: 'eu-cental-1',
+        apiVersion: '2012-11-05'
+      },
+      queueUrl: 'https://sqs.eu-central-1.amazonaws.com/563576219775/jobs-qa.fifo'
     }
   },
   slack: {
