@@ -4,76 +4,76 @@ const config = require('config')
 
 const firebaseApps = {
   roost: {
-    secret: 'firebaseSecretIdRoost',
+    secretKey: 'firebaseSecretIdRoost',
     appName: 'Roost'
   },
   localDolar: {
     appName: 'LocalDollarMX',
-    secret: 'firebaseSecretIdLocalDolarMX'
+    secretKey: 'firebaseSecretIdLocalDolarMX'
   },
   localPay: {
     appName: 'LocalPay',
-    secret: 'firebaseSecretIdLocalPay'
+    secretKey: 'firebaseSecretIdLocalPay'
   },
   wepy: {
     appName: 'WEPY',
-    secret: 'firebaseSecretIdWepy'
+    secretKey: 'firebaseSecretIdWepy'
   },
   supervecina: {
     appName: 'Supervecina',
-    secret: 'firebaseSecretIdSupervecina'
+    secretKey: 'firebaseSecretIdSupervecina'
   },
   farmlyledger: {
     appName: 'FarmlyLedger',
-    secret: 'firebaseSecretIdFarmlyledger'
+    secretKey: 'firebaseSecretIdFarmlyledger'
   },
   bim: {
     appName: 'BIM',
-    secret: 'firebaseSecretIdBIM'
+    secretKey: 'firebaseSecretIdBIM'
   },
   bit2c: {
     appName: 'Bit2C',
-    secret: 'firebaseSecretIdBit2C'
+    secretKey: 'firebaseSecretIdBit2C'
   },
   localChampions: {
     appName: 'LocalChampions',
-    secret: 'firebaseSecretIdLocalChampions'
+    secretKey: 'firebaseSecretIdLocalChampions'
   },
   seedbed: {
     appName: 'Seedbed',
-    secret: 'firebaseSecretIdSeedbed'
+    secretKey: 'firebaseSecretIdSeedbed'
   },
   digitalRand: {
     appName: 'DigitalRand',
-    secret: 'firebaseSecretIdDigitalRand'
+    secretKey: 'firebaseSecretIdDigitalRand'
   },
   paywise: {
     appName: 'Paywise',
-    secret: 'firebaseSecretIdPaywise'
+    secretKey: 'firebaseSecretIdPaywise'
   },
   fcKnudde: {
     appName: 'FCKnudde',
-    secret: 'firebaseSecretIdFCKnudde'
+    secretKey: 'firebaseSecretIdFCKnudde'
   },
   straitsx: {
     appName: 'StraitsX',
-    secret: 'firebaseSecretIdStraitsx'
+    secretKey: 'firebaseSecretIdStraitsx'
   },
   esol: {
     appName: 'ESOL',
-    secret: 'firebaseSecretIdEsol'
+    secretKey: 'firebaseSecretIdEsol'
   },
   bitazza: {
     appName: 'Bitazza',
-    secret: 'firebaseSecretIdBitazza'
+    secretKey: 'firebaseSecretIdBitazza'
   },
   curaDAI: {
     appName: 'CuraDAI',
-    secret: 'firebaseSecretIdCuraDAI'
+    secretKey: 'firebaseSecretIdCuraDAI'
   },
   worldXr: {
     appName: 'WorldXR',
-    secret: 'firebaseSecretIdWorldXR'
+    secretKey: 'firebaseSecretIdWorldXR'
   }
 }
 
@@ -87,10 +87,10 @@ const initAdmins = async () => {
   })
   firebaseAdmins.default = admin
 
-  for (const { appName, secret } of Object.values(firebaseApps)) {
-    if (config.aws.secrets.hasOwnProperty(secret)) {
+  for (const { appName, secretKey } of Object.values(firebaseApps)) {
+    if (config.aws.secrets.hasOwnProperty(secretKey)) {
       console.log(`initializing firebase admin for ${appName}`)
-      const response = await secretsClient.getSecretValue({ SecretId: config.aws.secrets.firebaseSecretIdRoost }).promise()
+      const response = await secretsClient.getSecretValue({ SecretId: config.aws.secrets[secretKey] }).promise()
       const appAdmin = admin.initializeApp({
         credential: admin.credential.cert(JSON.parse(response.SecretString))
       }, appName)
