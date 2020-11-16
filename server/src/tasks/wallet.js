@@ -40,7 +40,7 @@ const subscribeToBlocknative = async (walletAddress) => {
   }
 }
 
-const createWallet = withWalletAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
+const createWallet = async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
   console.log(`Using the account ${account.address} to create a wallet on home`)
   const { agenda } = require('@services/agenda')
   const salt = generateSalt()
@@ -52,25 +52,26 @@ const createWallet = withWalletAccount(async (account, { owner, communityAddress
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.attrs.data.txHash = hash
-      job.save()
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      // job.attrs.data.txHash = hash
+      // job.save()
     }
   })
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
-  job.attrs.data.walletAddress = walletAddress
-  if (bonusInfo && communityAddress) {
-    bonusInfo.bonusId = walletAddress
-    const bonusJob = await agenda.now('bonus', { communityAddress, bonusInfo })
-    job.attrs.data.bonusJob = {
-      name: bonusJob.attrs.name,
-      _id: bonusJob.attrs._id.toString()
-    }
-  }
-  job.save()
+  // job.attrs.data.walletAddress = walletAddress
+  // if (bonusInfo && communityAddress) {
+  //   bonusInfo.bonusId = walletAddress
+  //   const bonusJob = await agenda.now('bonus', { communityAddress, bonusInfo })
+  //   job.attrs.data.bonusJob = {
+  //     name: bonusJob.attrs.name,
+  //     _id: bonusJob.attrs._id.toString()
+  //   }
+  // }
+  // job.save()
 
-  subscribeToBlocknative(walletAddress)
+  // subscribeToBlocknative(walletAddress)
 
   const queryFilter = getQueryFilter({ _id, owner, phoneNumber })
   const userWallet = await UserWallet.findOneAndUpdate(queryFilter, { walletAddress, salt })
@@ -106,7 +107,7 @@ const createWallet = withWalletAccount(async (account, { owner, communityAddress
   }
 
   return receipt
-})
+}
 
 const setWalletOwner = withWalletAccount(async (account, { walletAddress, newOwner }, job) => {
   const { createContract, createMethod, send, web3 } = createNetwork('home', account)

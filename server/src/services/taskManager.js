@@ -1,25 +1,51 @@
 const { receiveMessage, deleteMessage } = require('@services/queue')
+const tasks = require('@tasks')
+const { lockAccount, unlockAccount } = require('@utils/account')
+const mongoose = require('mongoose')
+const QueueJob = mongoose.model('QueueJob')
 
-const tasks = {
-  'createWallet': {
+const tasksData = {
+  createWallet: {
+    role: 'wallet',
+    bridgeType: 'home'
+  },
+  relay: {
     role: 'wallet',
     bridgeType: 'home'
   }
 }
 
-const processTask = (task) => {
-  const { name } = task
+const processTask = async (task) => {
+  const { name, params } = task
   console.log({ name })
+  const taskData = tasksData[name]
+  const account = await lockAccount(taskData)
+  const queueJob = await new QueueJob({
+    name,
+    data: params
+  }).save()
+  console.log({ account })
+  if (!account) {
+    return null
+  }
+  return tasks[name](account, params, queueJob).then(async () => {
+    queueJob.lastFinishedAt = Date.now()
+    await queueJob.save()
+    await unlockAccount(account._id)
+  })
 }
 
 const start = async () => {
   while (true) {
     const message = await receiveMessage()
     if (message) {
-      console.log({ message })
       const task = message.Body
-      processTask(task)
-      await deleteMessage(message)
+      console.log({ task })
+      const response = await processTask(task)
+      console.log({ response })
+      if (response) {
+        await deleteMessage(message)
+      }
     }
   }
 }

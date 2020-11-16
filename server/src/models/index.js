@@ -16,6 +16,7 @@ require('./WalletTransaction')
 require('./Metadata')
 require('./AgendaJob')
 require('./EthFunding')
+require('./QueueJob')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
