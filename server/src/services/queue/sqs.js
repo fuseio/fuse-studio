@@ -12,19 +12,19 @@ const sendMessage = async (msg) => {
   }
 
   const response = await sqs.sendMessage(params).promise()
-  console.log({ response })
+  // console.log({ response })
   return response
 }
 
 const receiveMessage = async () => {
   console.log('Waiting for messages')
   const params = {
-    WaitTimeSeconds: 3,
+    WaitTimeSeconds: 20,
     QueueUrl: queueUrl
   }
 
   const response = await sqs.receiveMessage(params).promise()
-  console.log({ response })
+  // console.log({ response })
   return response.Messages && { ...response.Messages[0], Body: JSON.parse(response.Messages[0].Body) }
 }
 
@@ -36,7 +36,7 @@ const deleteMessage = async ({ ReceiptHandle }) => {
   }
 
   const response = await sqs.deleteMessage(params).promise()
-  console.log({ response })
+  // console.log({ response })
 
   return response
 }

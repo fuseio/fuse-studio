@@ -8,7 +8,6 @@ router.post('/', async (req, res, next) => {
     name: 'createWallet',
     params: req.body
   })
-  console.log({ job })
   return res.json({ job: job })
 })
 
