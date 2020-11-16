@@ -7,7 +7,6 @@ import get from 'lodash/get'
 import moonpayIcon from 'images/moonpay_table.svg'
 import transkIcon from 'images/transak_table.svg'
 import rampIcon from 'images/ramp_network_log.svg'
-import FontAwesome from 'react-fontawesome'
 
 const getPluginName = (myPlugins) => {
   const isMoonpay = get(myPlugins, 'moonpay.isActive', false)
@@ -33,8 +32,10 @@ const options = (plugin) => [
         />
       }
     ],
-    // fee: '4.5% or 4.99 (EUR/GBP/USD/ whichever is higher)',
-    learnMore: 'https://www.moonpay.io/',
+    paymentType: 'Debit/Credit or Apple Pay Bank transfer',
+    currencies: 'USD, EUR, GBP',
+    limits: <div><small>20-50,000 USD/EUR/GBP</small></div>,
+    fee: <div><strong>Card: </strong><small>3.5% or 4.99 USD/EUR/GBP </small><br /><strong>Bank transfer: </strong><small>1% or 4.99 USD/EUR/GBP</small></div>,
     value: 'moonpay',
     isSelected: plugin === 'moonpay'
   },
@@ -54,8 +55,10 @@ const options = (plugin) => [
         />
       }
     ],
-    // fee: '0.5%',
-    learnMore: 'https://transak.com/',
+    paymentType: 'Debit/Credit Bank transfer',
+    currencies: 'EUR, GBP, INR',
+    limits: <div><strong>Card:</strong> <small>10-1000 GBP/EUR/INR</small>  <br /> <strong>Bank transfer:</strong> <small>0.5% GBP/EUR 0.25% INR</small></div>,
+    fee: <div><strong>Card:</strong> <small>3.9% + 0.30 GBP/EUR/INR</small><br />  <strong>Bank transfer:</strong> <small>0.5% GBP/EUR 0.25% INR</small> </div>,
     value: 'transak',
     isSelected: plugin === 'transak'
   },
@@ -75,8 +78,10 @@ const options = (plugin) => [
         />
       }
     ],
-    // fee: '0.0',
-    learnMore: 'https://ramp.network/',
+    paymentType: 'Debit/Credit or Apple Pay Bank transfer',
+    currencies: 'EUR',
+    limits: <div><small>15-5000 EUR</small></div>,
+    fee: <div><strong>Card:</strong> <small>2.9%</small> <br /><strong>Bank transfer:</strong> <small>1.99% (under €2500) 0.49% (above €2500)</small></div>,
     value: 'rampInstant',
     isSelected: plugin === 'rampInstant'
   }
@@ -185,18 +190,21 @@ const OptionsContainer = ({ myPlugins }) => {
       Header: 'Service name',
       accessor: 'name'
     },
-    // {
-    //   Header: 'Fees',
-    //   accessor: 'fee'
-    // },
     {
-      Header: 'Learn more',
-      accessor: 'learnMore',
-      Cell: ({ cell: { value } }) => (
-        <a target='_blank' className='link' rel='noopener noreferrer' style={{ marginLeft: '5px' }} href={value}>
-          <FontAwesome style={{ fontSize: '14px' }} name='external-link-alt' />&nbsp;{value}
-        </a>
-      )
+      Header: 'Payment type',
+      accessor: 'paymentType'
+    },
+    {
+      Header: 'Fees',
+      accessor: 'fee'
+    },
+    {
+      Header: 'Limits/transaction',
+      accessor: 'limits'
+    },
+    {
+      Header: 'Primary Currencies',
+      accessor: 'currencies'
     }
   ], [])
 

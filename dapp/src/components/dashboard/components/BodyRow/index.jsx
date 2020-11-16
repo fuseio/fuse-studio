@@ -58,6 +58,13 @@ export default ({
             </div>
           )
         }
+        if (id === 'limits' || id === 'fee') {
+          return (
+            <div {...cell.getCellProps({ className })}>
+              {value}
+            </div>
+          )
+        }
         return (
           <div {...cell.getCellProps({ className })}>
             {
