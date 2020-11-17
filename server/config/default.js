@@ -253,6 +253,7 @@ module.exports = {
       bucket: 'fuse-studio-qa'
     },
     sqs: {
+      enabled: false,
       constructor: {
         region: 'eu-cental-1',
         apiVersion: '2012-11-05'

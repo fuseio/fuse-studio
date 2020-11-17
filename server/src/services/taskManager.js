@@ -91,6 +91,7 @@ const now = async (name, params) => {
 }
 
 const start = async () => {
+  console.log('starting SQS task manager')
   while (true) {
     const message = await receiveMessage()
     if (message) {

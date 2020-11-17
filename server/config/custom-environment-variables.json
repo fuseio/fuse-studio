@@ -37,6 +37,7 @@
       "smsType": "COMMUNITY_AWS_SNS_SMS_TYPE"
     },
     "sqs": {
+      "enabled": "COMMUNITY_AWS_SQS_ENABLED",
       "queueUrl": "COMMUNITY_AWS_SQS_QUEUE_URL"
     }
   },
