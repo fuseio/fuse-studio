@@ -17,7 +17,7 @@ const tasksData = {
 
 const processTask = async (task) => {
   const { name, params } = task
-  console.log({ name })
+  console.log(`starting a taks for ${name}`)
   const taskData = tasksData[name]
   const account = await lockAccount(taskData)
   const queueJob = await new QueueJob({
@@ -28,11 +28,12 @@ const processTask = async (task) => {
   if (!account) {
     return null
   }
-  return tasks[name](account, params, queueJob).then(async () => {
+  tasks[name](account, params, queueJob).then(async () => {
     queueJob.lastFinishedAt = Date.now()
     await queueJob.save()
     await unlockAccount(account._id)
   })
+  return true
 }
 
 const start = async () => {

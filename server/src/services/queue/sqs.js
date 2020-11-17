@@ -19,13 +19,17 @@ const sendMessage = async (msg) => {
 const receiveMessage = async () => {
   console.log('Waiting for messages')
   const params = {
-    WaitTimeSeconds: 20,
-    QueueUrl: queueUrl
+    QueueUrl: queueUrl,
+    ...config.get('aws.sqs.receive')
   }
 
   const response = await sqs.receiveMessage(params).promise()
-  // console.log({ response })
-  return response.Messages && { ...response.Messages[0], Body: JSON.parse(response.Messages[0].Body) }
+  if (response.Messages) {
+    const message = response.Messages[0]
+    console.log(`message with id ${message.MessageId} recieved`)
+    return { ...message, Body: JSON.parse(message.Body) }
+  }
+  console.log('no new messages found')
 }
 
 const deleteMessage = async ({ ReceiptHandle }) => {
@@ -36,29 +40,9 @@ const deleteMessage = async ({ ReceiptHandle }) => {
   }
 
   const response = await sqs.deleteMessage(params).promise()
-  // console.log({ response })
 
   return response
 }
-
-// const flow = async () => {
-//   await sendMessage({ name: 'createWallet',
-//     params: {
-//       address: '0x123',
-//       name: 'leon5',
-//       contracts: [
-//       ]
-//     }
-//   })
-//   const message = await receiveMessage()
-//   if (message) {
-//     console.log({ message })
-//     await deleteMessage(message)
-//   }
-// }
-
-// flow()
-// receiveMessage()
 
 module.exports = {
   sendMessage,
