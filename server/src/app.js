@@ -10,6 +10,7 @@ const mongo = require('./services/mongo')
 const initSecrets = require('@utils/awsSecrets')
 require('express-async-errors')
 const requestIp = require('request-ip')
+const yn = require('yn')
 
 async function initConfig () {
   await initSecrets(config)
@@ -75,7 +76,7 @@ async function init () {
   var server = app.listen(config.get('api.port') || 8080, function () {
     console.log('Listening on port ' + server.address().port)
   })
-  if (config.get('aws.sqs.enabled')) {
+  if (yn(config.get('aws.sqs.enabled'))) {
     const taskManager = require('@services/taskManager')
     taskManager.start()
   }
