@@ -251,6 +251,16 @@ module.exports = {
     },
     s3: {
       bucket: 'fuse-studio-qa'
+    },
+    sqs: {
+      enabled: false,
+      constructor: {
+        region: 'eu-cental-1',
+        apiVersion: '2012-11-05'
+      },
+      receive: {
+        WaitTimeSeconds: 5
+      }
     }
   },
   slack: {

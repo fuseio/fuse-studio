@@ -75,6 +75,10 @@ async function init () {
   var server = app.listen(config.get('api.port') || 8080, function () {
     console.log('Listening on port ' + server.address().port)
   })
+  if (config.get('aws.sqs.enabled')) {
+    const taskManager = require('@services/taskManager')
+    taskManager.start()
+  }
 }
 
 init()

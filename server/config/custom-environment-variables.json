@@ -35,6 +35,10 @@
       "region": "COMMUNITY_AWS_SNS_REGION",
       "senderId": "COMMUNITY_AWS_SNS_SENDER_ID",
       "smsType": "COMMUNITY_AWS_SNS_SMS_TYPE"
+    },
+    "sqs": {
+      "enabled": "COMMUNITY_AWS_SQS_ENABLED",
+      "queueUrl": "COMMUNITY_AWS_SQS_QUEUE_URL"
     }
   },
   "ipfsProxy": {

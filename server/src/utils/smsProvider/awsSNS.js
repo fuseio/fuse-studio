@@ -4,10 +4,8 @@ const mongoose = require('mongoose')
 const PhoneVerification = mongoose.model('PhoneVerification')
 const { isMagic } = require('./common')
 
-AWS.config.update({ region: config.get('aws.sns.region') })
-
 const publishMessage = ({ phoneNumber, body }) => {
-  const publishPromise = new AWS.SNS({ apiVersion: '2010-03-31' }).publish({
+  const publishPromise = new AWS.SNS({ apiVersion: '2010-03-31', region: config.get('aws.sns.region') }).publish({
     PhoneNumber: phoneNumber,
     Message: body,
     MessageAttributes: {
