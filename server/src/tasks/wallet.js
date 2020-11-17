@@ -42,7 +42,7 @@ const subscribeToBlocknative = async (walletAddress) => {
 
 const createWallet = async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
   console.log(`Using the account ${account.address} to create a wallet on home`)
-  const { agenda } = require('@services/agenda')
+  // const { agenda } = require('@services/agenda')
   const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
   const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
@@ -53,6 +53,8 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   }, {
     transactionHash: (hash) => {
       console.log(`transaction ${hash} is created by ${account.address}`)
+      job.data.txHash = hash
+      job.save()
       // job.attrs.data.txHash = hash
       // job.save()
     }
@@ -60,16 +62,17 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
-  // job.attrs.data.walletAddress = walletAddress
-  // if (bonusInfo && communityAddress) {
-  //   bonusInfo.bonusId = walletAddress
-  //   const bonusJob = await agenda.now('bonus', { communityAddress, bonusInfo })
-  //   job.attrs.data.bonusJob = {
-  //     name: bonusJob.attrs.name,
-  //     _id: bonusJob.attrs._id.toString()
-  //   }
-  // }
-  // job.save()
+  job.data.walletAddress = walletAddress
+  if (bonusInfo && communityAddress) {
+    bonusInfo.bonusId = walletAddress
+    const bonusJob = null
+    // const bonusJob = await agenda.now('bonus', { communityAddress, bonusInfo })
+    job.data.bonusJob = {
+      name: bonusJob.name,
+      _id: bonusJob._id.toString()
+    }
+  }
+  job.save()
 
   // subscribeToBlocknative(walletAddress)
 
