@@ -254,6 +254,7 @@ module.exports = {
     },
     sqs: {
       enabled: false,
+      queueUrl: '',
       constructor: {
         region: 'eu-cental-1',
         apiVersion: '2012-11-05'
