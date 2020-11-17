@@ -3,11 +3,12 @@ const { Schema } = mongoose
 
 const QueueJobSchema = new Schema({
   name: { type: String, required: [true, "can't be blank"] },
+  messageId: { type: String, required: [true, "can't be blank"] },
   data: { type: Object },
-  status: { type: String, default: 'running' },
+  status: { type: String, default: 'pending' },
   accountAddress: { type: String },
   lastFinishedAt: { type: Date },
-  lastRunAt: { type: Date, default: Date.now },
+  lastRunAt: { type: Date },
   failedAt: { type: Date },
   failReason: { type: String },
   failCount: { type: Number }

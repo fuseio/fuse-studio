@@ -12,7 +12,6 @@ const sendMessage = async (msg) => {
   }
 
   const response = await sqs.sendMessage(params).promise()
-  // console.log({ response })
   return response
 }
 

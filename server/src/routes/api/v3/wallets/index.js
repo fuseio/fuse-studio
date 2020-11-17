@@ -29,7 +29,7 @@ router.post('/', auth.required, async (req, res, next) => {
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
     const job = await taskManager.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress, correlationId })
-    return res.json({ job: job.attrs })
+    return res.json({ job: job })
   } else {
     let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
     if (userWallet) {
@@ -52,7 +52,7 @@ router.post('/', auth.required, async (req, res, next) => {
         ip: req.clientIp
       }).save()
       const job = await taskManager.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id })
-      return res.json({ job: job.attrs })
+      return res.json({ job: job })
     }
   }
 })
@@ -202,7 +202,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
 
   const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName })
 
-  return res.json({ job: job.attrs })
+  return res.json({ job })
 })
 
 /**
@@ -244,7 +244,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
     }
 
     const job = await taskManager.now('bonus', { communityAddress, bonusInfo, correlationId })
-    return res.json({ job: job.attrs })
+    return res.json({ job: job })
   }
 
   return res.json({ response: 'ok' })
@@ -280,7 +280,7 @@ router.post('/foreign', auth.required, async (req, res, next) => {
   }
   console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
   const job = await taskManager.now('createForeignWallet', { userWallet, correlationId, network })
-  return res.json({ job: job.attrs })
+  return res.json({ job: job })
 })
 
 module.exports = router
