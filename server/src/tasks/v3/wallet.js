@@ -4,7 +4,6 @@ const WalletFactoryABI = require('@constants/abi/WalletFactory')
 const WalletOwnershipManagerABI = require('@constants/abi/WalletOwnershipManager')
 const MultiSigWalletABI = require('@constants/abi/MultiSigWallet')
 const homeAddresses = config.get('network.home.addresses')
-const { withWalletAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
@@ -12,8 +11,8 @@ const Invite = mongoose.model('Invite')
 const Fork = mongoose.model('Fork')
 const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
-const { watchAddress } = require('@services/blocknative')
 const { generateSalt } = require('@utils/web3')
+const queue = require('@services/queue')
 
 const getQueryFilter = ({ _id, owner, phoneNumber }) => {
   if (_id) {
@@ -26,23 +25,8 @@ const getQueryFilter = ({ _id, owner, phoneNumber }) => {
   }
 }
 
-const subscribeToBlocknative = async (walletAddress) => {
-  try {
-    console.log(`Adding the address ${walletAddress} to the watch list of blocknative`)
-    const response = await watchAddress(walletAddress)
-    if (response.msg !== 'success') {
-      console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
-      throw new Error(response.msg ? response.msg : response)
-    }
-  } catch (e) {
-    console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
-    console.error(e)
-  }
-}
-
-const createWallet = withWalletAccount(async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
+const createWallet = async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
   console.log(`Using the account ${account.address} to create a wallet on home`)
-  const { agenda } = require('@services/agenda')
   const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
   const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
@@ -52,25 +36,29 @@ const createWallet = withWalletAccount(async (account, { owner, communityAddress
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.attrs.data.txHash = hash
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      job.data.txHash = hash
       job.save()
     }
   })
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
-  job.attrs.data.walletAddress = walletAddress
+  job.data.walletAddress = walletAddress
   if (bonusInfo && communityAddress) {
     bonusInfo.bonusId = walletAddress
-    const bonusJob = await agenda.now('bonus', { communityAddress, bonusInfo })
-    job.attrs.data.bonusJob = {
-      name: bonusJob.attrs.name,
-      _id: bonusJob.attrs._id.toString()
+    // const bonusJob = null
+    const bonusJob = await queue.sendMessage({
+      name: 'bonus',
+      params: { communityAddress, bonusInfo }
+    })
+    console.log({ bonusJob })
+    job.data.bonusJob = {
+      name: bonusJob.name,
+      _id: bonusJob._id.toString()
     }
   }
   job.save()
-
-  subscribeToBlocknative(walletAddress)
 
   const queryFilter = getQueryFilter({ _id, owner, phoneNumber })
   const userWallet = await UserWallet.findOneAndUpdate(queryFilter, { walletAddress, salt })
@@ -106,9 +94,9 @@ const createWallet = withWalletAccount(async (account, { owner, communityAddress
   }
 
   return receipt
-})
+}
 
-const setWalletOwner = withWalletAccount(async (account, { walletAddress, newOwner }, job) => {
+const setWalletOwner = async (account, { walletAddress, newOwner }, job) => {
   const { createContract, createMethod, send, web3 } = createNetwork('home', account)
 
   const userWallet = await UserWallet.findOne({ walletAddress })
@@ -124,49 +112,15 @@ const setWalletOwner = withWalletAccount(async (account, { walletAddress, newOwn
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.attrs.data.txHash = hash
+      job.data.txHash = hash
       job.save()
     }
   })
   await UserWallet.findOneAndUpdate({ walletAddress }, { accountAddress: newOwner })
   return receipt
-})
-
-const createForeignWallet = withWalletAccount(async (account, { userWallet, ens = '' }, job) => {
-  console.log(`Using the account ${account.address} to create a wallet on foreign`)
-  const { web3, createContract, createMethod, send } = createNetwork('foreign', account)
-  const owner = userWallet.walletOwnerOriginalAddress
-  const walletFactory = createContract(WalletFactoryABI, userWallet.walletFactoryOriginalAddress)
-  const method = createMethod(walletFactory, 'createCounterfactualWallet', owner, Object.values(userWallet.walletModulesOriginal), ens, userWallet.salt)
-
-  if (await web3.eth.getCode(userWallet.walletAddress) !== '0x') {
-    throw new Error(`Contract already exists for wallet ${userWallet.walletAddress} on foreign`)
-  }
-
-  const receipt = await send(method, {
-    from: account.address,
-    gas: config.get('gasLimitForTx.createForeignWallet')
-  }, {
-    transactionHash: (hash) => {
-      job.attrs.data.txHash = hash
-      job.save()
-    }
-  })
-
-  const walletAddress = receipt.events.WalletCreated.returnValues._wallet
-  console.log(`Created wallet contract ${walletAddress} for account ${owner}`)
-  userWallet.networks.push(config.get('network.foreign.name'))
-  job.save()
-
-  await UserWallet.findOneAndUpdate({ walletAddress }, { networks: userWallet.networks })
-
-  await subscribeToBlocknative(walletAddress)
-
-  return receipt
-})
+}
 
 module.exports = {
   createWallet,
-  createForeignWallet,
   setWalletOwner
 }

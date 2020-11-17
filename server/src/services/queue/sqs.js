@@ -8,7 +8,7 @@ const sendMessage = async (msg) => {
   const params = {
     MessageBody: JSON.stringify(msg),
     QueueUrl: queueUrl,
-    MessageGroupId: 'jobs'
+    MessageGroupId: `${msg.name}`
   }
 
   const response = await sqs.sendMessage(params).promise()
