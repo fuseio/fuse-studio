@@ -13,7 +13,7 @@ router.use('/transactions', require('./transactions'))
 router.use('/transfers', require('./transfers'))
 
 /**
- * @api {post} api/v2/wallets/ Create wallet contract for user
+ * @api {post} api/v3/wallets/ Create wallet contract for user
  * @apiName CreateWallet
  * @apiGroup Wallet
  * @apiDescription Creates wallet contract for the user
@@ -65,7 +65,7 @@ router.put('/token/:walletAddress', auth.required, async (req, res) => {
 })
 
 /**
- * @api {get} api/v2/wallets/ Fetch user wallet
+ * @api {get} api/v3/wallets/ Fetch user wallet
  * @apiName FetchWallet
  * @apiGroup Wallet
  * @apiDescription Fetches user's wallet address
@@ -83,7 +83,7 @@ router.get('/', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {get} api/v2/wallets/:phoneNumber Fetch latest wallet by phone number
+ * @api {get} api/v3/wallets/:phoneNumber Fetch latest wallet by phone number
  * @apiName FetchWalletByPhoneNumber
  * @apiGroup Wallet
  * @apiDescription Fetches latest wallet created by phone number
@@ -101,7 +101,7 @@ router.get('/:phoneNumber', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {get} api/v2/wallets/all/:phoneNumber Fetch all wallets by phone number
+ * @api {get} api/v3/wallets/all/:phoneNumber Fetch all wallets by phone number
  * @apiName FetchAllWalletsByPhoneNumber
  * @apiGroup Wallet
  * @apiDescription Fetches all wallets created by phone number
@@ -118,7 +118,7 @@ router.get('/all/:phoneNumber', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {get} api/v2/wallets/exists/:walletAddress Check if wallet exists by wallet address
+ * @api {get} api/v3/wallets/exists/:walletAddress Check if wallet exists by wallet address
  * @apiName WalletIsExistByAddress
  * @apiGroup Wallet
  * @apiDescription Checks if wallet exists by wallet address
@@ -135,7 +135,7 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {post} api/v2/wallets/invite/:phoneNumber Create wallet for phone number
+ * @api {post} api/v3/wallets/invite/:phoneNumber Create wallet for phone number
  * @apiName WalletInvite
  * @apiGroup Wallet
  * @apiDescription Creates wallet contract for phone number, owned by the server until claimed by the user
@@ -206,7 +206,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {post} api/v2/wallets/backup Notify server on client wallet backup
+ * @api {post} api/v3/wallets/backup Notify server on client wallet backup
  * @apiName WalletBackup
  * @apiGroup Wallet
  * @apiDescription Notify the server that the client has backed up his wallet
@@ -251,7 +251,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
 })
 
 /**
- * @api {post} api/v2/wallets/foreign Create wallet contract for user on Ethereum
+ * @api {post} api/v3/wallets/foreign Create wallet contract for user on Ethereum
  * @apiName CreateWalletForeign
  * @apiGroup Wallet
  * @apiDescription Creates wallet contract for the user on Ethereum

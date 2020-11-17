@@ -28,7 +28,7 @@ const withJobs = async (transferEvents) => {
 }
 
 /**
- * @api {get} api/v2/wallets/transfers/tokentx/:walletAddress Get token transfer events by address on fuse
+ * @api {get} api/v3/wallets/transfers/tokentx/:walletAddress Get token transfer events by address on fuse
  * @apiName FetchTokenTxByAddress
  * @apiGroup Wallet
  * @apiParam {String} tokenAddress Address of the token
