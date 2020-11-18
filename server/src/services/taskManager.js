@@ -13,7 +13,7 @@ const startTask = async message => {
   const messageId = message.MessageId
   const task = message.Body
   const { name, params } = task
-  console.log(`starting a taks for ${name}`)
+  console.log(`starting a task for ${name}`)
   const taskData = getTaskData(name)
   if (!taskData || !tasks[name]) {
     console.warn(
@@ -39,7 +39,7 @@ const startTask = async message => {
       } for task ${name} with task data ${JSON.stringify(taskData)}`
     )
 
-    const queueJob = await QueueJob.find({ messageId })
+    const queueJob = await QueueJob.findOne({ messageId })
     queueJob.accountAddress = account.address
     queueJob.status = 'started'
     await queueJob.save()
@@ -69,10 +69,11 @@ const startTask = async message => {
     return true
   } catch (err) {
     console.error(
-      `Unexpected rrror received in task ${name} with task data ${JSON.stringify(
+      `Unexpected error received in task ${name} with task data ${JSON.stringify(
         taskData
       )}, skipping. ${err}`
     )
+    console.log({ err })
     return false
   }
 }
