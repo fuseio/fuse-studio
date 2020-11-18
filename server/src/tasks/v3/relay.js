@@ -112,7 +112,8 @@ const relay = async (account, { walletAddress, methodName, methodData, nonce, ga
       gas: config.get('gasLimitForTx.createForeignWallet')
     }, {
       transactionHash: (hash) => {
-        job.data.txHash = hash
+        job.set('data.txHash', hash)
+        // job.data.txHash = hash
         job.save()
       }
     })
@@ -122,7 +123,8 @@ const relay = async (account, { walletAddress, methodName, methodData, nonce, ga
       const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
       const { wallet, signedHash } = returnValues
       const { blockNumber } = receipt
-      job.data.transactionBody = { ...lodash.get(job.data, 'transactionBody', {}), status: 'confirmed', blockNumber }
+      // job.data.transactionBody = { ...lodash.get(job.data, 'transactionBody', {}), status: 'confirmed', blockNumber }
+      job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: 'confirmed', blockNumber })
       job.save()
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
       if (walletModule === 'CommunityManager') {
@@ -148,7 +150,8 @@ const relay = async (account, { walletAddress, methodName, methodData, nonce, ga
             } else if (body.error) {
               console.error(`Error on token funding for wallet: ${wallet}`, body.error)
             } else if (lodash.has(body, 'job._id')) {
-              job.data.funderJobId = body.job._id
+              job.set('data.funderJobId', body.job._id)
+              // job.data.funderJobId = body.job._id
             }
             job.save()
           })
@@ -165,11 +168,13 @@ const relay = async (account, { walletAddress, methodName, methodData, nonce, ga
         const { agenda } = require('@services/agenda')
         const nextToRelay = nextRelays.shift()
         const nextRelayJob = await agenda.now('relay', { ...nextToRelay, identifier, appName, nextRelays })
-        job.data.nextRealyJobId = nextRelayJob._id.toString()
+        // job.data.nextRealyJobId = nextRelayJob._id.toString()
+        job.set('data.nextRealyJobId', nextRelayJob._id.toString())
         job.save()
       }
     } else {
-      job.data.transactionBody = { ...lodash.get(job.data, 'transactionBody', {}), status: 'failed', blockNumber: lodash.get(receipt, 'blockNumber') }
+      // job.data.transactionBody = { ...lodash.get(job.data, 'transactionBody', {}), status: 'failed', blockNumber: lodash.get(receipt, 'blockNumber') }
+      job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: 'failed', blockNumber: lodash.get(receipt, 'blockNumber') })
       job.save()
       console.error(`Relay transaction failed from wallet: ${lodash.get(receipt, 'events.TransactionExecuted.returnValues.wallet')}, signedHash: ${lodash.get(receipt, 'events.TransactionExecuted.returnValues.signedHash')}`)
     }

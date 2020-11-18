@@ -23,7 +23,7 @@ const startTask = async message => {
     )
     return true
   }
-  let account
+  let account, queueJob
   try {
     account = await lockAccount(taskData)
     if (!account) {
@@ -35,24 +35,18 @@ const startTask = async message => {
       return
     }
 
-    const queueJob = await QueueJob.findOne({ messageId })
+    queueJob = await QueueJob.findOne({ messageId })
     queueJob.accountAddress = account.address
     queueJob.status = 'started'
     await queueJob.save()
 
     tasks[name](account, params, queueJob)
-      .then(() => {
-        queueJob.lastFinishedAt = Date.now()
-        if (queueJob.status === 'started') {
-          queueJob.status = 'succeeded'
-        }
-        queueJob.save()
+      .then(async () => {
+        await queueJob.successAndUpdate()
         unlockAccount(account._id)
       })
-      .catch(err => {
-        queueJob.lastFinishedAt = Date.now()
-        queueJob.status = 'failed'
-        queueJob.save()
+      .catch(async err => {
+        await queueJob.failAndUpdate(err)
         unlockAccount(account._id)
         console.error(
           `Error received in task ${name} with task data ${JSON.stringify(
@@ -69,6 +63,9 @@ const startTask = async message => {
         taskData
       )}, skipping. ${err}`
     )
+    if (queueJob) {
+      await queueJob.failAndUpdate(err)
+    }
     if (account && account._id) {
       unlockAccount(account._id)
     }
