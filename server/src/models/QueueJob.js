@@ -23,6 +23,13 @@ QueueJobSchema.methods.fail = function (reason) {
   this.status = 'failed'
 }
 
+QueueJobSchema.methods.failAndUpdate = function (reason) {
+  if (reason instanceof Error) {
+    reason = reason.message
+  }
+  return QueueJob.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), status: 'failed', failReason: reason, $inc: { failCount: 1 } })
+}
+
 const QueueJob = mongoose.model('QueueJob', QueueJobSchema)
 
 module.exports = QueueJob
