@@ -28,7 +28,8 @@ const bonus = async (account, { communityAddress, bonusInfo }, job) => {
         console.error(`Error on token bonus for wallet: ${bonusInfo.receiver}`, body.error)
         job.fail(body.error)
       } else if (lodash.has(body, 'job._id')) {
-        job.data.funderJobId = body.job._id
+        job.set('data.funderJobId', body.job._id)
+        // job.data.funderJobId = body.job._id
       }
       job.save()
     })

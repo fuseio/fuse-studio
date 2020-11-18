@@ -41,12 +41,8 @@ const startTask = async message => {
     await queueJob.save()
 
     tasks[name](account, params, queueJob)
-      .then(() => {
-        queueJob.lastFinishedAt = Date.now()
-        if (queueJob.status === 'started') {
-          queueJob.status = 'succeeded'
-        }
-        queueJob.save()
+      .then(async () => {
+        await queueJob.successAndUpdate()
         unlockAccount(account._id)
       })
       .catch(async err => {

@@ -35,28 +35,32 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   const receipt = await send(method, {
     from: account.address
   }, {
-    transactionHash: (hash) => {
+    transactionHash: async (hash) => {
       console.log(`transaction ${hash} is created by ${account.address}`)
-      job.data.txHash = hash
+      job.set('data.txHash', hash)
       job.save()
     }
   })
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
-  job.data.walletAddress = walletAddress
+  // job.data.walletAddress = walletAddress
+  job.set('data.walletAddress', walletAddress)
   if (bonusInfo && communityAddress) {
     bonusInfo.bonusId = walletAddress
-    // const bonusJob = null
     const bonusJob = await queue.sendMessage({
       name: 'bonus',
       params: { communityAddress, bonusInfo }
     })
     console.log({ bonusJob })
-    job.data.bonusJob = {
+    job.set('data.bonusJob', {
       name: bonusJob.name,
       _id: bonusJob._id.toString()
-    }
+    })
+    // job.data.bonusJob = {
+    //   name: bonusJob.name,
+    //   _id: bonusJob._id.toString()
+    // }
   }
   job.save()
 
@@ -112,7 +116,9 @@ const setWalletOwner = async (account, { walletAddress, newOwner }, job) => {
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.data.txHash = hash
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      job.set('data.txHash', hash)
+      // job.data.txHash = hash
       job.save()
     }
   })
