@@ -31,7 +31,8 @@ const fetchToken = async (tokenAddress) => {
 }
 
 const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName }) => {
-  const receiverWallet = await UserWallet.findOne({ walletAddress: receiverAddress })
+  console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
+  const receiverWallet = await UserWallet.findOne({ walletAddress: web3Utils.toChecksumAddress(receiverAddress) })
   const firebaseToken = lodash.get(receiverWallet, 'firebaseToken')
   if (firebaseToken) {
     const { symbol } = await fetchToken(tokenAddress)
