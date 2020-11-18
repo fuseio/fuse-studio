@@ -23,8 +23,9 @@ const startTask = async message => {
     )
     return true
   }
+  let account
   try {
-    const account = await lockAccount(taskData)
+    account = await lockAccount(taskData)
     if (!account) {
       console.log(
         `no unlocked accounts found for task ${name} with task data ${JSON.stringify(
@@ -33,11 +34,6 @@ const startTask = async message => {
       )
       return
     }
-    console.log(
-      `locking the account ${
-        account.address
-      } for task ${name} with task data ${JSON.stringify(taskData)}`
-    )
 
     const queueJob = await QueueJob.findOne({ messageId })
     queueJob.accountAddress = account.address
@@ -73,8 +69,11 @@ const startTask = async message => {
         taskData
       )}, skipping. ${err}`
     )
+    if (account && account._id) {
+      unlockAccount(account._id)
+    }
     console.log({ err })
-    return false
+    return true
   }
 }
 
