@@ -26,10 +26,10 @@ const lockAccountWithReason = async (query = { role: '*' }, reason) => {
 const unlockAccount = async (accountId) => {
   const account = await Account.findByIdAndUpdate(accountId, { isLocked: false, lockingTime: null, lockingReason: null })
   if (account) {
-    console.log(`account ${account.address} unlocked by queury with id ${account._id}`)
+    console.log(`account ${account.address} unlocked with id ${account._id}`)
     return account
   }
-  console.log(`accounts found to unlock  by queury with id ${accountId}`)
+  console.log(`no account found to unlock with id ${accountId}`)
 }
 
 const withAccount = (func, filterOrLockingFunction) => async (...params) => {
