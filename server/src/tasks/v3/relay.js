@@ -25,9 +25,9 @@ const fetchCommunityAddressByTokenAddress = async (tokenAddress) => {
 }
 
 const fetchToken = async (tokenAddress) => {
-  const query = `{token(id: "${tokenAddress.toLowerCase()}") {symbol, name}}`
-  const { token } = await graphClient.request(query)
-  return token
+  const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
+  const data = JSON.parse(res)
+  return data['result']
 }
 
 const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName }) => {
