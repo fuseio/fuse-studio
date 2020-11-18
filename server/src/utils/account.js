@@ -6,15 +6,31 @@ const jwt = require('jsonwebtoken')
 var { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
 
 const lockAccount = async (query = { role: '*' }) => {
-  return Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date() })
+  const account = await Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date() })
+  if (account) {
+    console.log(`account ${account.address} with id ${account._id} is locked by query ${JSON.stringify(query)}`)
+    return account
+  }
+  console.log(`no free account found by query ${JSON.stringify(query)}`)
 }
 
 const lockAccountWithReason = async (query = { role: '*' }, reason) => {
-  return Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date(), lockingReason: reason })
+  const account = await Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date(), lockingReason: reason })
+  if (account) {
+    console.log(`account ${account.address} with id ${account._id} is locked by query ${JSON.stringify(query)}, locking reason: ${reason}`)
+    return account
+  }
+  console.log(`no free account found by query ${JSON.stringify(query)}, locking reason: ${reason}`)
 }
 
-const unlockAccount = async (accountId) =>
-  Account.findByIdAndUpdate(accountId, { isLocked: false, lockingTime: null, lockingReason: null })
+const unlockAccount = async (accountId) => {
+  const account = await Account.findByIdAndUpdate(accountId, { isLocked: false, lockingTime: null, lockingReason: null })
+  if (account) {
+    console.log(`account ${account.address} unlocked by queury with id ${account._id}`)
+    return account
+  }
+  console.log(`accounts found to unlock  by queury with id ${accountId}`)
+}
 
 const withAccount = (func, filterOrLockingFunction) => async (...params) => {
   let account
