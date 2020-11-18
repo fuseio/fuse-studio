@@ -13,7 +13,7 @@ const startTask = async message => {
   const messageId = message.MessageId
   const task = message.Body
   const { name, params } = task
-  console.log(`starting a taks for ${name}`)
+  console.log(`starting a task for ${name}`)
   const taskData = getTaskData(name)
   if (!taskData || !tasks[name]) {
     console.warn(
