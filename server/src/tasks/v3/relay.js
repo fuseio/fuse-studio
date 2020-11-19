@@ -2,80 +2,17 @@ const config = require('config')
 const lodash = require('lodash')
 const { createNetwork } = require('@utils/web3')
 const { fetchTokenByCommunity } = require('@utils/graph')
-const { GraphQLClient } = require('graphql-request')
 const request = require('request-promise-native')
 const mongoose = require('mongoose')
-const { getAdmin } = require('@services/firebase')
+const { notifyReceiver } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
-
-const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.fuse')}`)
 
 const getParamsFromMethodData = (web3, abi, methodName, methodData) => {
   const methodABI = abi.filter(obj => obj.name === methodName)[0]
   const methodSig = web3.eth.abi.encodeFunctionSignature(methodABI)
   const params = web3.eth.abi.decodeParameters(methodABI.inputs, `0x${methodData.replace(methodSig, '')}`)
   return params
-}
-
-const fetchCommunityAddressByTokenAddress = async (tokenAddress) => {
-  const query = `{tokens(where: {address: "${tokenAddress}"}) {communityAddress}}`
-  const { tokens } = await graphClient.request(query)
-  return tokens[0]
-}
-
-const fetchToken = async (tokenAddress) => {
-  const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
-  const data = JSON.parse(res)
-  return data['result']
-}
-
-const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName }) => {
-  console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
-  const receiverWallet = await UserWallet.findOne({ walletAddress: receiverAddress })
-  const firebaseTokens = lodash.get(receiverWallet, 'firebaseTokens')
-  if (firebaseTokens) {
-    const { symbol } = await fetchToken(tokenAddress)
-    const amount = web3Utils.fromWei(String(amountInWei))
-    let messages = firebaseTokens.map((token) => ({
-      notification: {
-        title: `You got ${amount} ${symbol}`,
-        body: 'Please click on this message to open your Fuse wallet'
-      },
-      data: {
-        click_action: 'FLUTTER_NOTIFICATION_CLICK'
-      },
-      token,
-      android: {
-        notification: {
-          sound: 'default'
-        }
-      },
-      apns: {
-        payload: {
-          sound: 'default'
-        }
-      }
-    }))
-    if (!appName) {
-      try {
-        const { communityAddress } = await fetchCommunityAddressByTokenAddress(tokenAddress)
-        messages = messages.map(({ data, ...rest }) => ({
-          ...rest,
-          data: {
-            ...data,
-            communityAddress
-          }
-        }))
-      } catch (error) {
-        console.log(`Error while fetching community address for ${tokenAddress} from the graph ${error}`)
-      }
-    }
-    console.log(`Sending tokens receive push message to ${receiverWallet.phoneNumber} ${receiverAddress}`)
-    getAdmin(appName).messaging().sendAll(messages)
-  } else {
-    console.warn(`No firebase token found for ${receiverAddress} wallet address`)
-  }
 }
 
 const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
