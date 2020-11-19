@@ -33,8 +33,8 @@ const fetchToken = async (tokenAddress) => {
 const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName }) => {
   console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
   const receiverWallet = await UserWallet.findOne({ walletAddress: web3Utils.toChecksumAddress(receiverAddress) })
-  const firebaseToken = lodash.get(receiverWallet, 'firebaseToken')
-  if (firebaseToken) {
+  const firebaseTokens = lodash.get(receiverWallet, 'firebaseTokens')
+  if (firebaseTokens) {
     const { symbol } = await fetchToken(tokenAddress)
     const amount = web3Utils.fromWei(String(amountInWei))
     const message = {
@@ -42,7 +42,7 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
         title: `You got ${amount} ${symbol}`,
         body: 'Please click on this message to open your Fuse wallet'
       },
-      token: firebaseToken
+      registration_ids: firebaseTokens
     }
     if (!appName) {
       try {

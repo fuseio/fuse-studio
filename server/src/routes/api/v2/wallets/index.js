@@ -60,8 +60,15 @@ router.post('/', auth.required, async (req, res, next) => {
 router.put('/token/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
   const { firebaseToken } = req.body
-  const response = await UserWallet.updateOne({ walletAddress }, { firebaseToken })
+  const response = await UserWallet.updateOne({ walletAddress }, { $push: { firebaseTokens: firebaseToken } })
   return res.json({ data: response })
+})
+
+router.delete('/token/:walletAddress', auth.required, async (req, res) => {
+  const { walletAddress } = req.params
+  const { firebaseToken } = req.body
+  const userWallet = await UserWallet.updateOne({ walletAddress }, { '$pullAll': { firebaseTokens: [firebaseToken] } })
+  return res.json({ data: userWallet })
 })
 
 /**
