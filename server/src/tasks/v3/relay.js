@@ -55,7 +55,7 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
         console.log(`Error while fetching community address for ${tokenAddress} from the graph ${error}`)
       }
     }
-    console.log(`Sending tokens receive push message to ${receiverWallet.phoneNumber} via firebase token ${firebaseToken}`)
+    console.log(`Sending tokens receive push message to ${receiverWallet.phoneNumber} ${receiverAddress}`)
     getAdmin(appName).messaging().send(message)
   } else {
     console.warn(`No firebase token found for ${receiverAddress} wallet address`)
