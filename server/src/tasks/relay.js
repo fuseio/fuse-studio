@@ -42,7 +42,17 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
         title: `You got ${amount} ${symbol}`,
         body: 'Please click on this message to open your Fuse wallet'
       },
-      registration_ids: firebaseTokens
+      tokens: firebaseTokens,
+      android: {
+        notification: {
+          sound: 'default'
+        }
+      },
+      apns: {
+        payload: {
+          sound: 'default'
+        }
+      }
     }
     if (!appName) {
       try {
