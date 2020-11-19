@@ -73,12 +73,20 @@ const TRANSACTION_HASH_TOO_LOW = 'Node error: {"code":-32010,"message":"Transact
 const TRANSACTION_TIMEOUT = 'Error: Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
 
 const send = async ({ web3, bridgeType, address }, method, options, handlers) => {
+
   const doSend = async (retry) => {
     let transactionHash
     const nonce = account.nonces[bridgeType]
     const methodName = getMethodName(method)
     console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
     const methodParams = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
+    if (!method) {
+      web3.eth.transactionConfirmationBlocks = parseInt(
+        config.get(
+          `network.foreign.contract.options.transactionConfirmationBlocks`
+        )
+      )
+    }
     const promise = method ? method.send({ ...methodParams }) : web3.eth.sendTransaction(options)
     promise.on('transactionHash', (hash) => {
       transactionHash = hash
@@ -132,10 +140,12 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
       const errorMessage = error.message || error.error
       console.error(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce} failed with ${errorMessage}`)
       if (errorHandlers.hasOwnProperty(errorMessage)) {
-        return errorHandlers[errorMessage]()
+        const response = await errorHandlers[errorMessage]()
+        return { ...response, error }
       } else {
         console.log('No error handler found, using the default one.')
-        return updateNonce()
+        await updateNonce()
+        return { error }
       }
     }
   }
@@ -150,7 +160,7 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
   const account = await Account.findOne({ address })
   for (let i = 0; i < retries; i++) {
     const response = await doSend(i) || {}
-    const { receipt } = response
+    const { receipt, error } = response
     if (receipt) {
       if (!receipt.status) {
         console.warn(`Transaction ${receipt.transactionHash} is reverted`)
@@ -159,6 +169,9 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
       await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
       receipt.bridgeType = bridgeType
       return receipt
+    }
+    if (error && i === retries - 1) {
+      throw error
     }
   }
 }
