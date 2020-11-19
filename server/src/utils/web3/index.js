@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
 const { fetchGasPrice } = require('@utils/network')
 const wallet = fromMasterSeed(config.get('secrets.accounts.seed'))
+const { get } = require('lodash')
 
 const createWeb3 = (providerUrl, account) => {
   const web3 = new Web3(providerUrl)
@@ -55,7 +56,7 @@ const createNetwork = (bridgeType, account) => {
   }
 }
 
-const getMethodName = (method) => method.methodName || 'unknown'
+const getMethodName = (method) => method ? get(method, 'methodName', 'unknown') : 'raw'
 
 const getGasPrice = async (bridgeType, web3) => {
   if (config.has(`network.${bridgeType}.gasPrice`)) {
@@ -72,13 +73,21 @@ const TRANSACTION_HASH_TOO_LOW = 'Node error: {"code":-32010,"message":"Transact
 const TRANSACTION_TIMEOUT = 'Error: Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
 
 const send = async ({ web3, bridgeType, address }, method, options, handlers) => {
+
   const doSend = async (retry) => {
     let transactionHash
-    const methodName = getMethodName(method)
     const nonce = account.nonces[bridgeType]
+    const methodName = getMethodName(method)
     console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
     const methodParams = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
-    const promise = method.send({ ...methodParams })
+    if (!method) {
+      web3.eth.transactionConfirmationBlocks = parseInt(
+        config.get(
+          `network.foreign.contract.options.transactionConfirmationBlocks`
+        )
+      )
+    }
+    const promise = method ? method.send({ ...methodParams }) : web3.eth.sendTransaction(options)
     promise.on('transactionHash', (hash) => {
       transactionHash = hash
       if (handlers && handlers.transactionHash) {
@@ -131,21 +140,26 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
       const errorMessage = error.message || error.error
       console.error(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce} failed with ${errorMessage}`)
       if (errorHandlers.hasOwnProperty(errorMessage)) {
-        return errorHandlers[errorMessage]()
+        const response = await errorHandlers[errorMessage]()
+        return { ...response, error }
       } else {
         console.log('No error handler found, using the default one.')
-        return updateNonce()
+        await updateNonce()
+        return { error }
       }
     }
   }
 
+  const estimateGas = () => options.gas ||
+    (method ? method.estimateGas({ from }) : web3.eth.estimateGas(options))
+
   const from = address
-  const gas = options.gas || await method.estimateGas({ from })
+  const gas = await estimateGas()
   const gasPrice = await getGasPrice(bridgeType, web3)
   const account = await Account.findOne({ address })
   for (let i = 0; i < retries; i++) {
     const response = await doSend(i) || {}
-    const { receipt } = response
+    const { receipt, error } = response
     if (receipt) {
       if (!receipt.status) {
         console.warn(`Transaction ${receipt.transactionHash} is reverted`)
@@ -154,6 +168,9 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
       await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
       receipt.bridgeType = bridgeType
       return receipt
+    }
+    if (error && i === retries - 1) {
+      throw error
     }
   }
 }

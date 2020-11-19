@@ -18,6 +18,10 @@ const tasksData = {
     role: 'wallet',
     bridgeType: 'home',
     description: 'owner'
+  },
+  ethFunder: {
+    role: 'eth',
+    bridgeType: 'home'
   }
 }
 

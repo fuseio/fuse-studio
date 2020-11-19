@@ -7,7 +7,7 @@ const token = require('./token')
 const bonus = require('./bonus')
 const alert = require('./alert')
 const deposit = require('./deposit')
-const ethFunder = require('./eth_funder')
+const ethFunder = require('./ethFunder')
 
 module.exports = {
   ...events,
