@@ -12,7 +12,7 @@ const Fork = mongoose.model('Fork')
 const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
 const { generateSalt } = require('@utils/web3')
-const queue = require('@services/queue')
+const manageTasks = require('./manage')
 
 const getQueryFilter = ({ _id, owner, phoneNumber }) => {
   if (_id) {
@@ -44,23 +44,19 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
-  // job.data.walletAddress = walletAddress
   job.set('data.walletAddress', walletAddress)
   if (bonusInfo && communityAddress) {
+    const taskManager = require('@services/taskManager')
     bonusInfo.bonusId = walletAddress
-    const bonusJob = await queue.sendMessage({
+    const bonusJob = await taskManager.now('bonus', {
       name: 'bonus',
       params: { communityAddress, bonusInfo }
     })
-    console.log({ bonusJob })
+
     job.set('data.bonusJob', {
       name: bonusJob.name,
       _id: bonusJob._id.toString()
     })
-    // job.data.bonusJob = {
-    //   name: bonusJob.name,
-    //   _id: bonusJob._id.toString()
-    // }
   }
   job.save()
 
@@ -118,7 +114,6 @@ const setWalletOwner = async (account, { walletAddress, newOwner }, job) => {
     transactionHash: (hash) => {
       console.log(`transaction ${hash} is created by ${account.address}`)
       job.set('data.txHash', hash)
-      // job.data.txHash = hash
       job.save()
     }
   })
@@ -128,5 +123,6 @@ const setWalletOwner = async (account, { walletAddress, newOwner }, job) => {
 
 module.exports = {
   createWallet,
-  setWalletOwner
+  setWalletOwner,
+  ...manageTasks
 }
