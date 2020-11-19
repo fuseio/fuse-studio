@@ -64,7 +64,7 @@ router.put('/token/:walletAddress', auth.required, async (req, res) => {
   return res.json({ data: response })
 })
 
-router.delete('/token/:walletAddress', auth.required, async (req, res) => {
+router.put('/token/:walletAddress/delete', auth.required, async (req, res) => {
   const { walletAddress } = req.params
   const { firebaseToken } = req.body
   const userWallet = await UserWallet.updateOne({ walletAddress }, { '$pullAll': { firebaseTokens: [firebaseToken] } })
