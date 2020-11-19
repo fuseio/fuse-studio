@@ -6,6 +6,7 @@ const UserWalletSchema = new Schema({
   accountAddress: { type: String, required: [true, "can't be blank"] },
   walletAddress: { type: String },
   firebaseToken: { type: String },
+  firebaseTokens: { type: Array },
   contacts: [{ type: Schema.Types.ObjectId, ref: 'Contact' }],
   backup: { type: Boolean, default: false },
   walletOwnerOriginalAddress: { type: String },
