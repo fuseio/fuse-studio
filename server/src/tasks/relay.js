@@ -20,7 +20,7 @@ const getParamsFromMethodData = (web3, abi, methodName, methodData) => {
 }
 
 const fetchCommunityAddressByTokenAddress = async (tokenAddress) => {
-  const query = `{tokens(where: {address: '${tokenAddress}'}) {communityAddress}}`
+  const query = `{tokens(where: {address: "${tokenAddress}"}) {communityAddress}}`
   const { tokens } = await graphClient.request(query)
   return tokens[0]
 }
