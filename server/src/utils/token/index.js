@@ -1,8 +1,24 @@
+const config = require('config')
 const { inspect } = require('util')
+const request = require('request-promise-native')
 const BigNumber = require('bignumber.js')
 const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const { toWei } = require('web3-utils')
+const { GraphQLClient } = require('graphql-request')
+const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.fuse')}`)
+
+const fetchCommunityAddressByTokenAddress = async (tokenAddress) => {
+  const query = `{tokens(where: {address: "${tokenAddress}"}) {communityAddress}}`
+  const { tokens } = await graphClient.request(query)
+  return tokens[0]
+}
+
+const fetchToken = async (tokenAddress) => {
+  const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
+  const data = JSON.parse(res)
+  return data['result']
+}
 
 const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
   const tokenContractInstance = new web3.eth.Contract(BasicTokenAbi, address)
@@ -67,5 +83,7 @@ module.exports = {
   fetchBalance,
   transfer,
   approve,
-  hasAllowance
+  hasAllowance,
+  fetchToken,
+  fetchCommunityAddressByTokenAddress
 }
