@@ -32,17 +32,21 @@ const fetchToken = async (tokenAddress) => {
 }
 
 const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName }) => {
+  console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
   const receiverWallet = await UserWallet.findOne({ walletAddress: receiverAddress })
   const firebaseTokens = lodash.get(receiverWallet, 'firebaseTokens')
   if (firebaseTokens) {
     const { symbol } = await fetchToken(tokenAddress)
     const amount = web3Utils.fromWei(String(amountInWei))
-    const message = {
+    let messages = firebaseTokens.map((token) => ({
       notification: {
         title: `You got ${amount} ${symbol}`,
         body: 'Please click on this message to open your Fuse wallet'
       },
-      tokens: firebaseTokens,
+      data: {
+        click_action: 'FLUTTER_NOTIFICATION_CLICK'
+      },
+      token,
       android: {
         notification: {
           sound: 'default'
@@ -53,20 +57,23 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
           sound: 'default'
         }
       }
-    }
+    }))
     if (!appName) {
       try {
         const { communityAddress } = await fetchCommunityAddressByTokenAddress(tokenAddress)
-        message.data = {
-          communityAddress,
-          click_action: 'FLUTTER_NOTIFICATION_CLICK'
-        }
+        messages = messages.map(({ data, ...rest }) => ({
+          ...rest,
+          data: {
+            ...data,
+            communityAddress
+          }
+        }))
       } catch (error) {
         console.log(`Error while fetching community address for ${tokenAddress} from the graph ${error}`)
       }
     }
     console.log(`Sending tokens receive push message to ${receiverWallet.phoneNumber} ${receiverAddress}`)
-    getAdmin(appName).messaging().send(message)
+    getAdmin(appName).messaging().sendAll(messages)
   } else {
     console.warn(`No firebase token found for ${receiverAddress} wallet address`)
   }
