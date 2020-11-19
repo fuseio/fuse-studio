@@ -155,7 +155,6 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
 
   const from = address
   const gas = await estimateGas()
-  //  options.gas || await method.estimateGas({ from })
   const gasPrice = await getGasPrice(bridgeType, web3)
   const account = await Account.findOne({ address })
   for (let i = 0; i < retries; i++) {
