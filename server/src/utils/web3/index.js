@@ -21,6 +21,7 @@ const createWeb3 = (providerUrl, account) => {
 }
 
 const createContract = ({ web3, bridgeType }, abi, address) => {
+  console.log(`creating contract for address ${address}`)
   const contract = new web3.eth.Contract(abi, address, config.get(`network.${bridgeType}.contract.options`))
   contract.bridgeType = bridgeType
   return contract

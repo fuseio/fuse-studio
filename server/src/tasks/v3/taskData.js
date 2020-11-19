@@ -13,6 +13,11 @@ const tasksData = {
   setWalletOwner: {
     role: 'wallet',
     bridgeType: 'home'
+  },
+  addManager: {
+    role: 'wallet',
+    bridgeType: 'home',
+    description: 'owner'
   }
 }
 

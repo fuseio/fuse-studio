@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const { createAccount, generateCommunityAdminJwt } = require('@utils/account')
 const auth = require('@routes/auth')
 const Account = mongoose.model('Account')
-
+const taskManager = require('@services/taskManager')
 /**
  * @api {get} api/v2/accounts/ Fetch backend accounts
  * @apiName FetchAccounts
@@ -46,6 +46,8 @@ router.post('/', auth.admin, async (req, res) => {
   if (role === 'communityAdmin') {
     const jwt = generateCommunityAdminJwt(account.address, appName)
     return res.json({ data: { account, jwt } })
+  } else if (role === 'wallet' && bridgeType === 'home') {
+    taskManager.now('addManager', { managerAccount: account.address })
   }
   return res.json({ data: { account } })
 })
