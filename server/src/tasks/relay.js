@@ -20,7 +20,7 @@ const getParamsFromMethodData = (web3, abi, methodName, methodData) => {
 }
 
 const fetchCommunityAddressByTokenAddress = async (tokenAddress) => {
-  const query = `{tokens(where: {address: "${tokenAddress}"}) {communityAddress}}`
+  const query = `{tokens(where: {address: '${tokenAddress}'}) {communityAddress}}`
   const { tokens } = await graphClient.request(query)
   return tokens[0]
 }
@@ -42,7 +42,17 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
         title: `You got ${amount} ${symbol}`,
         body: 'Please click on this message to open your Fuse wallet'
       },
-      tokens: firebaseTokens
+      tokens: firebaseTokens,
+      android: {
+        notification: {
+          sound: 'default'
+        }
+      },
+      apns: {
+        payload: {
+          sound: 'default'
+        }
+      }
     }
     if (!appName) {
       try {
