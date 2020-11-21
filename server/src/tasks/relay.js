@@ -3,14 +3,11 @@ const lodash = require('lodash')
 const { withWalletAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
 const { fetchTokenByCommunity } = require('@utils/graph')
-const { GraphQLClient } = require('graphql-request')
 const request = require('request-promise-native')
 const mongoose = require('mongoose')
-const { getAdmin } = require('@services/firebase')
+const { notifyReceiver } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
-
-const graphClient = new GraphQLClient(`${config.get('graph.url')}${config.get('graph.subgraphs.fuse')}`)
 
 const getParamsFromMethodData = (web3, abi, methodName, methodData) => {
   const methodABI = abi.filter(obj => obj.name === methodName)[0]
@@ -18,19 +15,6 @@ const getParamsFromMethodData = (web3, abi, methodName, methodData) => {
   const params = web3.eth.abi.decodeParameters(methodABI.inputs, `0x${methodData.replace(methodSig, '')}`)
   return params
 }
-
-const fetchCommunityAddressByTokenAddress = async (tokenAddress) => {
-  const query = `{tokens(where: {address: "${tokenAddress}"}) {communityAddress}}`
-  const { tokens } = await graphClient.request(query)
-  return tokens[0]
-}
-
-const fetchToken = async (tokenAddress) => {
-  const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
-  const data = JSON.parse(res)
-  return data['result']
-}
-
 
 const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
   const allowedModules = ['TransferManager', 'DAIPointsManager']
