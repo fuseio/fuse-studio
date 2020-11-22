@@ -34,7 +34,7 @@ const ethFunder = async (account, { receiverAddress, networkName }, job) => {
       to: receiverAddress,
       from: account.address,
       value: toWei(bonus),
-      gasPrice: '2000000000',
+      gasPrice: '1000000000',
       gas: config.get('gasLimitForTx.funder')
     },
     {
