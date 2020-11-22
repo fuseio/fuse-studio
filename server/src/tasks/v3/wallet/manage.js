@@ -26,7 +26,9 @@ const addManager = async (mutisigOwnerAccount, { managerAccountAddress }, job) =
   })
 
   const initialBalance = config.get('accounts.wallet.initialBalance')
-
+  if (!receipt.status) {
+    throw new Error('addManager failed for unknown reason')
+  }
   await send(null,
     {
       to: managerAccountAddress,
