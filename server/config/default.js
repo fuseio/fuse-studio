@@ -264,6 +264,11 @@ module.exports = {
       }
     }
   },
+  accounts: {
+    wallet: {
+      initialBalance: '0.1'
+    }
+  },
   slack: {
     channel: 'monitor'
   },

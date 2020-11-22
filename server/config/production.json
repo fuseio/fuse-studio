@@ -48,6 +48,11 @@
   "funder": {
     "urlBase": "https://funder.fuse.io/api/"
   },
+  "accounts": {
+    "wallet": {
+      "initialBalance": "10"
+    }
+  },
   "graph": {
     "url": "https://graph.fuse.io/subgraphs/name/fuseio",
     "subgraphs": {
