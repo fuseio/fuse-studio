@@ -52,6 +52,18 @@ router.post('/verify', async (req, res) => {
   }
 })
 
+router.post('/test', async (req, res) => {
+  const { accountAddress, identifier, appName, phoneNumber } = req.body
+  const secret = config.get('api.secret')
+  const expiresIn = config.get('api.tokenExpiresIn')
+  const data = { phoneNumber, accountAddress, appName }
+  if (identifier) {
+    data.identifier = identifier
+  }
+  const token = jwt.sign(data, secret, { expiresIn })
+  res.json({ token })
+})
+
 /**
  * @api {post} api/v2/login/ Login using firebase ID token
  * @apiName Login
