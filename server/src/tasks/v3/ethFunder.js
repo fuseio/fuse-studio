@@ -13,6 +13,7 @@ const ethFunder = async (account, { receiverAddress, networkName }, job) => {
     name: 'ethFunder',
     status: { $ne: 'failed' },
     _id: { $ne: job._id },
+    'data.networkName': networkName,
     'data.receiverAddress': receiverAddress
   })
 
