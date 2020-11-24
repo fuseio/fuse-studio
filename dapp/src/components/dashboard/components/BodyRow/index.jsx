@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import CopyToClipboard from 'components/common/CopyToClipboard'
-import FontAwesome from 'react-fontawesome'
-import { addressShortener } from 'utils/format'
 import isArray from 'lodash/isArray'
 
 export default ({
@@ -27,7 +24,7 @@ export default ({
         setNewOne(false)
       }, 5000)
     }
-    return () => {}
+    return () => { }
   }, [justAdded])
 
   const className = index === 0 && hasNewOne
@@ -37,7 +34,7 @@ export default ({
   return (
     <div {...row.getRowProps({ style, className })}>
       {row.cells.map(cell => {
-        const { column: { id, isEthereumAddress }, value } = cell
+        const { column: { id }, value } = cell
         const className = id === 'checkbox' || id === 'dropdown' ? `table__body__cell cell small-2` : `table__body__cell cell small-${Math.ceil(24 / row.cells.length)}`
         if (id === 'name' && isArray(value)) {
           return (
@@ -67,19 +64,7 @@ export default ({
         }
         return (
           <div {...cell.getCellProps({ className })}>
-            {
-              isEthereumAddress
-                ? (
-                  <React.Fragment>
-                    {addressShortener(value)}
-                    <CopyToClipboard text={value}>
-                      <FontAwesome name='clone' />
-                    </CopyToClipboard>
-                  </React.Fragment>
-                ) : (
-                  cell.render('Cell')
-                )
-            }
+            {cell.render('Cell')}
           </div>
         )
       })}

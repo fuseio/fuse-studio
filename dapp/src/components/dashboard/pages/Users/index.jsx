@@ -10,6 +10,10 @@ import identity from 'lodash/identity'
 import MyTable from 'components/dashboard/components/Table'
 import TransactionMessage from 'components/common/TransactionMessage'
 import { getForeignNetwork } from 'selectors/network'
+import CopyToClipboard from 'components/common/CopyToClipboard'
+import FontAwesome from 'react-fontawesome'
+import { addressShortener } from 'utils/format'
+import { getBlockExplorerUrl } from 'utils/network'
 
 import {
   addEntity,
@@ -195,7 +199,20 @@ const Users = ({
     {
       Header: 'Account ID',
       accessor: 'address',
-      isEthereumAddress: true
+      Cell: ({ cell: { value } }) => (
+        <React.Fragment>
+          <a
+            className='link'
+            target='_blank'
+            rel='noopener noreferrer'
+            href={`${getBlockExplorerUrl('fuse')}/address/${value}`}>
+            {addressShortener(value)}
+          </a>
+          <CopyToClipboard text={value}>
+            <FontAwesome name='clone' />
+          </CopyToClipboard>
+        </React.Fragment>
+      )
     },
     {
       Header: 'Date',
