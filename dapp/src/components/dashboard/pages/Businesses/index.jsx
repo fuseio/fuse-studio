@@ -24,6 +24,9 @@ import { getAccountAddress } from 'selectors/accounts'
 import { checkIsAdmin } from 'selectors/entities'
 import TransactionMessage from 'components/common/TransactionMessage'
 import { isIpfsHash, isS3Hash } from 'utils/metadata'
+import CopyToClipboard from 'components/common/CopyToClipboard'
+import { addressShortener } from 'utils/format'
+import { getBlockExplorerUrl } from 'utils/network'
 
 import dotsIcon from 'images/dots.svg'
 import AddBusiness from 'images/add_business.svg'
@@ -157,7 +160,21 @@ const Businesses = ({
     },
     {
       Header: 'Account ID',
-      accessor: 'account'
+      accessor: 'account',
+      Cell: ({ cell: { value } }) => (
+        <React.Fragment>
+          <a
+            className='link'
+            target='_blank'
+            rel='noopener noreferrer'
+            href={`${getBlockExplorerUrl('fuse')}/address/${value}`}>
+            {addressShortener(value)}
+          </a>
+          <CopyToClipboard text={value}>
+            <FontAwesome name='clone' />
+          </CopyToClipboard>
+        </React.Fragment>
+      )
     },
     {
       id: 'dropdown',
