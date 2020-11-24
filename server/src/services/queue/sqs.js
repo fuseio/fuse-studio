@@ -1,14 +1,20 @@
 const AWS = require('aws-sdk')
 const config = require('config')
-
+const { get } = require('lodash')
 const sqs = new AWS.SQS(config.get('aws.sqs.constructor'))
 const queueUrl = config.get('aws.sqs.queueUrl')
+
+const makeMessageGroupId = msg => {
+  const { name } = msg
+  const bridgeType = get(msg, 'params.bridgeType', 'home')
+  return `${name}-${bridgeType}`
+}
 
 const sendMessage = async (msg) => {
   const params = {
     MessageBody: JSON.stringify(msg),
     QueueUrl: queueUrl,
-    MessageGroupId: `${msg.name}`
+    MessageGroupId: makeMessageGroupId(msg)
   }
 
   const response = await sqs.sendMessage(params).promise()

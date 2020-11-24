@@ -1,31 +1,41 @@
+const { get } = require('lodash')
+
+const defaultBridgeType = 'home'
+
 const tasksData = {
   createWallet: {
     role: 'wallet',
-    bridgeType: 'home'
+    bridgeType: defaultBridgeType
   },
   relay: {
     role: 'wallet',
-    bridgeType: 'home'
+    bridgeType: defaultBridgeType
   },
   bonus: {
     role: '*'
   },
   setWalletOwner: {
     role: 'wallet',
-    bridgeType: 'home'
+    bridgeType: defaultBridgeType
   },
   addManager: {
     role: 'wallet',
-    bridgeType: 'home',
+    bridgeType: defaultBridgeType,
     description: 'owner'
   },
   ethFunder: {
     role: 'eth',
-    bridgeType: 'home'
+    bridgeType: '*'
   }
 }
 
-const getTaskData = (taskName) => tasksData[taskName]
+const getTaskData = ({ name, params }) => {
+  const taskData = tasksData[name]
+  if (taskData.bridgeType === '*') {
+    return { ...tasksData[name], bridgeType: get(params, 'bridgeType', defaultBridgeType) }
+  }
+  return tasksData[name]
+}
 
 module.exports = {
   getTaskData,

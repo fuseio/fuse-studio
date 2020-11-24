@@ -14,7 +14,7 @@ const startTask = async message => {
   const task = message.Body
   const { name, params } = task
   console.log(`starting a task for ${name}`)
-  const taskData = getTaskData(name)
+  const taskData = getTaskData(task)
   if (!taskData || !tasks[name]) {
     console.warn(
       `no task data or task function found for task ${name} with task data ${JSON.stringify(

@@ -10,7 +10,7 @@ router.post('/:receiverAddress', async (req, res, next) => {
     return res.status(404).json({ error: 'Funding available only for FUSE / Ropsten.' })
   }
 
-  const job = await taskManager.now('ethFunder', { receiverAddress, networkName, rand: req.body.rand })
+  const job = await taskManager.now('ethFunder', { receiverAddress, bridgeType: networkName === 'fuse' ? 'home' : 'foreign', networkName })
   return res.json({ job: job })
 })
 
