@@ -5,6 +5,7 @@ const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
+const { toChecksumAddress } = require('web3-utils')
 
 /**
  * @api {post} /api/v2/admin/wallets/create Create wallet for phone number
@@ -49,6 +50,41 @@ router.post('/create', auth.required, async (req, res) => {
   } catch (err) {
     return res.status(400).send({ error: err.message })
   }
+})
+
+
+/**
+ * @api {post} /api/v2/admin/wallets/create/foreign Create foreign wallet for the matching home
+ * @apiName CreateForeignWallet
+ * @apiGroup Admin
+ * @apiDescription Start async job of creating a wallet for phone number (owned by the community admin)
+ *
+ * @apiExample Create wallet for the provided phone number
+ *  POST /api/v2/admin/wallets/create
+ *  body: { phoneNumber: '+972546123321' }
+ *
+ * @apiParam {String} phoneNumber phone number to create a wallet for (body parameter)
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {String} Started job data
+ */
+router.post('/create/foreign', auth.admin, async (req, res) => {
+  const walletAddress = toChecksumAddress(req.body.walletAddress)
+  const userWallet = await UserWallet.findOne({ walletAddress })
+  console.log({ userWallet })
+  const network = config.get('network.foreign.name')
+
+  if (userWallet.networks.includes(network)) {
+    return
+  }
+
+  const pendingNetworks = [...userWallet.pendingNetworks, network]
+  await UserWallet.findOneAndUpdate({ walletAddress }, { pendingNetworks })
+
+  console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
+  const job = await agenda.now('createForeignWallet', { userWallet, network: config.get('network.foreign.name') })
+  return res.json({ job: job.attrs })
 })
 
 module.exports = router
