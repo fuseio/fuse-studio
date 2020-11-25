@@ -60,7 +60,7 @@ export function * apiCall (apiFunc, params, options = {}) {
   if (options.v2) {
     apiRoot = CONFIG.api.v2.url
   } else if (options.v3) {
-    apiRoot = CONFIG.api.v3.url
+    apiRoot = CONFIG.api.v3.url[options.networkType]
   } else {
     const networkType = (options && options.networkType) ? options.networkType : yield select(getForeignNetwork)
     apiRoot = getApiRoot(networkType)

@@ -101,7 +101,10 @@
       "url": "http://localhost:3000/api/v2"
     },
     "v3": {
-      "url": "http://localhost:3000/api/v3"
+      "url": {
+        "main": "http://localhost:3000/api/v3",
+        "ropsten": "http://localhost:3000/api/v3"
+      }
     },
     "graph": {
       "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
