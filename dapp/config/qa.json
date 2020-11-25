@@ -17,6 +17,9 @@
     "v2": {
       "url": "https://studio-qa.fuse.io/api/v2"
     },
+    "v3": {
+      "url": "https://studio-qa.fuse.io/api/v3"
+    },
     "graph": {
       "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
       "subgraphs": {
