@@ -57,13 +57,13 @@ router.post('/create', auth.required, async (req, res) => {
  * @api {post} /api/v2/admin/wallets/create/foreign Create foreign wallet for the matching home
  * @apiName CreateForeignWallet
  * @apiGroup Admin
- * @apiDescription Start async job of creating a wallet for phone number (owned by the community admin)
+ * @apiDescription Start async job of creating a wallet on the foreign network
  *
- * @apiExample Create wallet for the provided phone number
- *  POST /api/v2/admin/wallets/create
- *  body: { phoneNumber: '+972546123321' }
+ * @apiExample Create wallet for the provided wallet address
+ *  POST /api/v2/admin/wallets/create/foreign
+ *  body: { wallerAddress: '0x92c358fcF6d270F97458C57583FCeabC086c3a26' }
  *
- * @apiParam {String} phoneNumber phone number to create a wallet for (body parameter)
+ * @apiParam {String} wallerAddress address create a wallet for, should be an existing wallet on home network (body parameter)
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
