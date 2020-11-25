@@ -72,7 +72,6 @@ router.post('/create', auth.required, async (req, res) => {
 router.post('/create/foreign', auth.admin, async (req, res) => {
   const walletAddress = toChecksumAddress(req.body.walletAddress)
   const userWallet = await UserWallet.findOne({ walletAddress })
-  console.log({ userWallet })
   const network = config.get('network.foreign.name')
 
   if (userWallet.networks.includes(network)) {
