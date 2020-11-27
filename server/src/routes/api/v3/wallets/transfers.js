@@ -58,14 +58,12 @@ router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
       }
     })
 
-    const [pendingJobs] = await Promise.all([
-      QueueJob.find({
-        'data.walletAddress': walletAddress,
-        'data.transactionBody': { '$exists': true },
-        'data.transactionBody.status': 'pending',
-        'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
-      }).limit(limit).skip(skip)
-    ])
+    const pendingJobs = await QueueJob.find({
+      'data.walletAddress': walletAddress,
+      'data.transactionBody': { '$exists': true },
+      'data.transactionBody.status': 'pending',
+      'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
+    })
 
     const formatPendingJobs = pendingJobs.filter(item => !result.some(({ hash }) => hash === item.hash)).map((jobInfo) => formatPending(jobInfo))
 
