@@ -41,8 +41,8 @@ const withJobs = async (transferEvents) => {
  */
 router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
-  const { tokenAddress, sort = 'desc', startblock = 0 } = req.query
-  const responseTransferEvents = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${walletAddress}&startblock=${startblock}&sort=${sort}`)
+  const { tokenAddress, sort = 'desc', startblock = 0, page = 1, offset = 50, skip, limit } = req.query
+  const responseTransferEvents = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${walletAddress}&startblock=${startblock}&sort=${sort}&page=${page}&offset=${offset}`)
   const transferEvents = JSON.parse(responseTransferEvents)
 
   if (transferEvents['status'] === '1') {
@@ -58,12 +58,14 @@ router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
       }
     })
 
-    const pendingJobs = await QueueJob.find({
-      'data.walletAddress': walletAddress,
-      'data.transactionBody': { '$exists': true },
-      'data.transactionBody.status': 'pending',
-      'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
-    })
+    const [pendingJobs] = await Promise.all([
+      QueueJob.find({
+        'data.walletAddress': walletAddress,
+        'data.transactionBody': { '$exists': true },
+        'data.transactionBody.status': 'pending',
+        'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
+      }).sort({ blockNumber: -1 }).limit(limit).skip(skip)
+    ])
 
     const formatPendingJobs = pendingJobs.filter(item => !result.some(({ hash }) => hash === item.hash)).map((jobInfo) => formatPending(jobInfo))
 
