@@ -41,8 +41,8 @@ const withJobs = async (transferEvents) => {
  */
 router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
-  const { tokenAddress, sort = 'desc', startblock = 0 } = req.query
-  const responseTransferEvents = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${walletAddress}&startblock=${startblock}&sort=${sort}`)
+  const { tokenAddress, sort = 'desc', startblock = 0, page = 1, offset = 50, skip, limit } = req.query
+  const responseTransferEvents = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${walletAddress}&startblock=${startblock}&sort=${sort}&page=${page}&offset=${offset}`)
   const transferEvents = JSON.parse(responseTransferEvents)
 
   if (transferEvents['status'] === '1') {
