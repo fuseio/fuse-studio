@@ -64,7 +64,7 @@ router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
         'data.transactionBody': { '$exists': true },
         'data.transactionBody.status': 'pending',
         'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
-      }).sort({ blockNumber: -1 }).limit(limit).skip(skip)
+      }).limit(limit).skip(skip)
     ])
 
     const formatPendingJobs = pendingJobs.filter(item => !result.some(({ hash }) => hash === item.hash)).map((jobInfo) => formatPending(jobInfo))
