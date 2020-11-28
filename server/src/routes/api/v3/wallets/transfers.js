@@ -13,6 +13,7 @@ const formatPending = ({ _id, data: { transactionBody, txHash } }) => ({
   tokenDecimal: get(transactionBody, 'tokenDecimal', ''),
   tokenSymbol: get(transactionBody, 'asset', ''),
   tokenAddress: get(transactionBody, 'tokenAddress', ''),
+  contractAddress: get(transactionBody, 'tokenAddress', ''),
   status: get(transactionBody, 'status', ''),
   type: get(transactionBody, 'type', ''),
   from: get(transactionBody, 'from', ''),
