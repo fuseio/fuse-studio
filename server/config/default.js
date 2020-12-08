@@ -6,6 +6,7 @@ module.exports = {
     allowCors: true,
     secret: 'secret',
     tokenExpiresIn: '7d',
+    studioUserTokenExpiresIn: '14d',
     protocol: 'http',
     port: 3000,
     auth: {
@@ -15,6 +16,9 @@ module.exports = {
           return this.network.foreign.name === 'mainnet' ? 1 : 3
         }),
         version: 1
+      },
+      google: {
+        clientId: '784912570329-hkc327u95ps4ia7ja70s8mkhb6kphrbd.apps.googleusercontent.com'
       }
     }
   },

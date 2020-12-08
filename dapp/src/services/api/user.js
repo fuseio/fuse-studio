@@ -1,5 +1,21 @@
 import request from 'superagent'
 
+export const fetchUserAccounts = (apiRoot, { jwtToken }) =>
+  request.get(`${apiRoot}/userAccount`)
+    .set('Authorization', `Bearer ${jwtToken}`)
+    .then(response => response.body)
+
+export const saveUserAccount = (apiRoot, { jwtToken, provider, accountAddress }) =>
+  request.post(`${apiRoot}/userAccount`)
+    .set('Authorization', `Bearer ${jwtToken}`)
+    .send({ provider, accountAddress })
+    .then(response => response.body)
+
+export const login = (apiRoot, { tokenId }) =>
+  request.post(`${apiRoot}/login/google/`)
+    .send({ tokenId })
+    .then(response => response.body)
+
 export const fundEth = (apiRoot, { accountAddress }) =>
   request.post(`${apiRoot}/fund/${accountAddress}`)
     .send()

@@ -4,6 +4,7 @@ import { toChecksumAddress } from 'web3-utils'
 import { getWeb3 as getWeb3Service } from 'services/web3'
 import { toLongName } from 'utils/network'
 import * as actions from 'actions/network'
+import { saveUserAccount, fetchUserAccounts } from 'actions/user'
 import { balanceOfFuse, balanceOfNative, fetchCommunities } from 'actions/accounts'
 import { networkIdToName } from 'constants/network'
 import { getProviderInfo } from 'web3modal'
@@ -79,7 +80,7 @@ function * connectToWallet () {
     yield fork(watchAccountChanges, provider)
     yield delay(1500)
     yield call(checkNetworkType, { web3, accountAddress })
-
+    yield put(saveUserAccount(providerInfo.name.toLowerCase(), accountAddress))
     yield put({
       type: actions.CONNECT_TO_WALLET.SUCCESS,
       accountAddress,
@@ -178,9 +179,9 @@ function * watchCheckNetworkTypeSuccess ({ response }) {
   yield put(fetchCommunities(accountAddress))
 }
 
-function * watchConnectToWallet ({ response, accountAddress }) {
+function * watchConnectToWallet ({ accountAddress }) {
   yield put(fetchCommunities(accountAddress))
-  saveState('state.userEthAddress', accountAddress)
+  yield put(fetchUserAccounts())
 }
 
 function * changeNetwork ({ networkType }) {

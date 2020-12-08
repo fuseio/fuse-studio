@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route } from 'react-router'
 import has from 'lodash/has'
+import get from 'lodash/get'
 
 import CommunitiesPage from 'components/oven/CommunitiesPage'
 import Wizard from 'components/wizard'
@@ -20,6 +21,7 @@ import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
 
 const Root = () => {
   const dispatch = useDispatch()
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn)
   const onConnectCallback = (provider) => {
     getWeb3({ provider })
     dispatch(connectToWallet())
@@ -38,7 +40,7 @@ const Root = () => {
   }, [web3connect])
 
   useEffect(() => {
-    if (web3connect.core.cachedProvider) {
+    if (web3connect.core.cachedProvider && isLoggedIn) {
       web3connect.core.connect()
     }
   }, [])
