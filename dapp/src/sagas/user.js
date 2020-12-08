@@ -67,7 +67,7 @@ function * subscribeUser ({ user }) {
 
 function * fundEth ({ accountAddress }) {
   if (accountAddress) {
-    const response = yield apiCall(api.fundEth, { accountAddress }, { networkType: 'ropsten', v3: true })
+    const response = yield apiCall(api.fundEth, { accountAddress }, { networkType: 'ropsten', v2: true })
     saveState('fundEth', true)
     yield put({
       type: actions.FUND_ETH.SUCCESS,

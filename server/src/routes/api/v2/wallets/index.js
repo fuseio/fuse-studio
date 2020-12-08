@@ -1,7 +1,7 @@
 const config = require('config')
 const homeAddresses = config.get('network.home.addresses')
 const router = require('express').Router()
-const { agenda } = require('@services/agenda')
+const taskManager = require('@services/taskManager')
 const { web3 } = require('@services/web3/home')
 const auth = require('@routes/auth')
 const mongoose = require('mongoose')
@@ -28,8 +28,8 @@ router.post('/', auth.required, async (req, res, next) => {
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
-    const job = await agenda.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress, correlationId })
-    return res.json({ job: job.attrs })
+    const job = await taskManager.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, newOwner: accountAddress, correlationId })
+    return res.json({ job: job })
   } else {
     let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
     if (userWallet) {
@@ -51,8 +51,8 @@ router.post('/', auth.required, async (req, res, next) => {
         appName,
         ip: req.clientIp
       }).save()
-      const job = await agenda.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id })
-      return res.json({ job: job.attrs })
+      const job = await taskManager.now('createWallet', { owner: accountAddress, correlationId, _id: userWallet._id })
+      return res.json({ job: job })
     }
   }
 })
@@ -207,9 +207,9 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     appName
   }).save()
 
-  const job = await agenda.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName })
+  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName })
 
-  return res.json({ job: job.attrs })
+  return res.json({ job })
 })
 
 /**
@@ -250,8 +250,8 @@ router.post('/backup', auth.required, async (req, res, next) => {
       bonusId: phoneNumber
     }
 
-    const job = await agenda.now('bonus', { communityAddress, bonusInfo, correlationId })
-    return res.json({ job: job.attrs })
+    const job = await taskManager.now('bonus', { communityAddress, bonusInfo, correlationId })
+    return res.json({ job: job })
   }
 
   return res.json({ response: 'ok' })
@@ -286,8 +286,8 @@ router.post('/foreign', auth.required, async (req, res, next) => {
     return res.status(400).json({ error: msg })
   }
   console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
-  const job = await agenda.now('createForeignWallet', { userWallet, correlationId, network })
-  return res.json({ job: job.attrs })
+  const job = await taskManager.now('createForeignWallet', { userWallet, correlationId, network })
+  return res.json({ job: job })
 })
 
 module.exports = router

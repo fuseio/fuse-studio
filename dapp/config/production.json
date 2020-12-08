@@ -30,12 +30,9 @@
       "default": "https://studio.fuse.io/api/v1"
     },
     "v2": {
-      "url": "https://studio.fuse.io/api/v2"
-    },
-    "v3": {
       "url": {
-        "main": "https://studio.fuse.io/api/v3",
-        "ropsten": "https://studio-ropsten.fuse.io/api/v3"
+        "main": "https://studio.fuse.io/api/v2",
+        "ropsten": "https://studio-ropsten.fuse.io/api/v2"
       }
     },
     "graph": {

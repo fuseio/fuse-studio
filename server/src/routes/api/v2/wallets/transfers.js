@@ -1,7 +1,7 @@
 const config = require('config')
 const router = require('express').Router()
 const mongoose = require('mongoose')
-const AgendaJob = mongoose.model('AgendaJob')
+const QueueJob = mongoose.model('QueueJob')
 const auth = require('@routes/auth')
 const request = require('request-promise-native')
 const { get, keyBy } = require('lodash')
@@ -23,7 +23,7 @@ const formatPending = ({ _id, data: { transactionBody, txHash } }) => ({
 
 const withJobs = async (transferEvents) => {
   const txHashesFromJobs = transferEvents.map(transferEvent => transferEvent.hash)
-  const jobsFromWallet = await AgendaJob.find({ 'data.txHash': { $in: txHashesFromJobs } })
+  const jobsFromWallet = await QueueJob.find({ 'data.txHash': { $in: txHashesFromJobs } })
   const jobsByTxHashes = keyBy(jobsFromWallet, 'data.txHash')
   return jobsByTxHashes
 }
@@ -42,8 +42,8 @@ const withJobs = async (transferEvents) => {
  */
 router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
-  const { tokenAddress, sort = 'desc', startblock = 0 } = req.query
-  const responseTransferEvents = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${walletAddress}&startblock=${startblock}&sort=${sort}`)
+  const { tokenAddress, sort = 'desc', startblock = 0, page = 1, offset = 50 } = req.query
+  const responseTransferEvents = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${walletAddress}&startblock=${startblock}&sort=${sort}&page=${page}&offset=${offset}`)
   const transferEvents = JSON.parse(responseTransferEvents)
 
   if (transferEvents['status'] === '1') {
@@ -59,7 +59,7 @@ router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
       }
     })
 
-    const pendingJobs = await AgendaJob.find({
+    const pendingJobs = await QueueJob.find({
       'data.walletAddress': walletAddress,
       'data.transactionBody': { '$exists': true },
       'data.transactionBody.status': 'pending',

@@ -7,6 +7,10 @@ const tasksData = {
     role: 'wallet',
     bridgeType: defaultBridgeType
   },
+  createForeignWallet: {
+    role: 'wallet',
+    bridgeType: 'foreign'
+  },
   relay: {
     role: 'wallet',
     bridgeType: defaultBridgeType

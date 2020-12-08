@@ -3,8 +3,8 @@ const {
   receiveMessage,
   deleteMessage
 } = require('@services/queue')
-const tasks = require('@tasks/v3')
-const { getTaskData } = require('@tasks/v3/taskData')
+const tasks = require('@tasks/sqs')
+const { getTaskData } = require('@tasks/sqs/taskData')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')

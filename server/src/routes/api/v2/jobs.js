@@ -1,5 +1,6 @@
 const router = require('express').Router()
 var mongoose = require('mongoose')
+const QueueJob = mongoose.model('QueueJob')
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
 
@@ -31,12 +32,20 @@ router.get('/correlationId/:correlationId', auth.required, async (req, res) => {
  *
  * @apiSuccess {Object} data Job object
  */
-router.get('/:id', auth.required, async (req, res) => {
+router.get('/:id', async (req, res) => {
   const jobs = await agenda.jobs({ _id: mongoose.Types.ObjectId(req.params.id) })
   if (!jobs || jobs.length === 0 || !jobs[0]) {
+    const queueJob = await QueueJob.findById(req.params.id)
+    if (queueJob && queueJob.name === 'ethFunder') {
+      return res.json({ data: queueJob })
+    }
     return res.status(404).json({ error: 'Job not found' })
   }
-  res.json({ data: jobs[0] })
+  const job = jobs[0]
+  if (job.attrs.name === 'ethFunder') {
+    res.json({ data: job.attrs })
+  }
+  return res.status(404).json({ error: `Job not found try use API V2` })
 })
 
 module.exports = router
