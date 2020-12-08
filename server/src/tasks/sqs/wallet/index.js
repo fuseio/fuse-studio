@@ -53,6 +53,9 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     transactionHash: async (hash) => {
       console.log(`transaction ${hash} is created by ${account.address}`)
       job.set('data.txHash', hash)
+      if (communityAddress) {
+        job.set('communityAddress', communityAddress)
+      }
       job.save()
     }
   })

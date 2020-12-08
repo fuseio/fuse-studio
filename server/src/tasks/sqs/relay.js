@@ -48,7 +48,7 @@ const isAllowedToRelay = async (web3, walletModule, walletModuleABI, methodName,
     : isAllowedToRelayHome(web3, walletModule, walletModuleABI, methodName, methodData)
 }
 
-const relay = async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
+const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
@@ -67,6 +67,9 @@ const relay = async (account, { walletAddress, methodName, methodData, nonce, ga
     }, {
       transactionHash: (hash) => {
         job.set('data.txHash', hash)
+        if (communityAddress) {
+          job.set('communityAddress', communityAddress)
+        }
         job.save()
       }
     })
