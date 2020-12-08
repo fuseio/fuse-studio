@@ -7,8 +7,8 @@ const StudioUserSchema = new Schema({
   externalId: { type: String },
   displayName: { type: String },
   email: { type: String, required: [true, "can't be blank"], validate: [validator.isEmail, 'invalid email'] },
-  firstName: { type: String, required: 'First Name is required' },
-  lastName: { type: String, required: 'Last Name is required' }
+  firstName: { type: String, required: 'First name is required' },
+  lastName: { type: String, required: 'Last name is required' }
 }, { timestamps: true })
 
 StudioUserSchema.index({ email: 1 }, { unique: true })
