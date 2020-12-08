@@ -1,3 +1,5 @@
+const config = require('config')
+const { capitalize } = require('lodash')
 const sendgridUtils = require('@utils/sendgrid')
 const mailchimpUtils = require('@utils/mailchimp')
 
@@ -14,7 +16,7 @@ const onboardUser = async ({ foreign: { web3 } }, communityProgress) => {
             ? 'mainnet' : ''
       sendgridUtils.sendInfoMail({ email }, { networkType, communityName: name, communityAddress })
       if (subscribe) {
-        mailchimpUtils.subscribeUser({ email })
+        mailchimpUtils.subscribeUser({ email }, [`Studio User ${capitalize(config.get(`network.foreign.name`))}`])
       }
     } catch (error) {
       console.log('email step error', { error })
