@@ -4,7 +4,6 @@ const WalletFactoryABI = require('@constants/abi/WalletFactory')
 const WalletOwnershipManagerABI = require('@constants/abi/WalletOwnershipManager')
 const MultiSigWalletABI = require('@constants/abi/MultiSigWallet')
 const homeAddresses = config.get('network.home.addresses')
-const { withWalletAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
@@ -137,7 +136,7 @@ const setWalletOwner = async (account, { walletAddress, newOwner }, job) => {
   return receipt
 }
 
-const createForeignWallet = withWalletAccount(async (account, { userWallet, ens = '' }, job) => {
+const createForeignWallet = async (account, { userWallet, ens = '' }, job) => {
   console.log(`Using the account ${account.address} to create a wallet on foreign`)
   const { web3, createContract, createMethod, send } = createNetwork('foreign', account)
   const owner = userWallet.walletOwnerOriginalAddress
@@ -153,7 +152,7 @@ const createForeignWallet = withWalletAccount(async (account, { userWallet, ens 
     gas: config.get('gasLimitForTx.createForeignWallet')
   }, {
     transactionHash: (hash) => {
-      job.attrs.data.txHash = hash
+      job.set('data.txHash', hash)
       job.save()
     }
   })
@@ -161,14 +160,13 @@ const createForeignWallet = withWalletAccount(async (account, { userWallet, ens 
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${walletAddress} for account ${owner}`)
   userWallet.networks.push(config.get('network.foreign.name'))
-  job.save()
 
   await UserWallet.findOneAndUpdate({ walletAddress }, { networks: userWallet.networks })
 
   await subscribeToBlocknative(walletAddress)
 
   return receipt
-})
+}
 
 module.exports = {
   createWallet,

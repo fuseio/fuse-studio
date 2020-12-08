@@ -2,7 +2,6 @@ const config = require('config')
 const homeAddresses = config.get('network.home.addresses')
 const router = require('express').Router()
 const taskManager = require('@services/taskManager')
-const { agenda } = require('@services/agenda')
 const { web3 } = require('@services/web3/home')
 const auth = require('@routes/auth')
 const mongoose = require('mongoose')
@@ -287,8 +286,8 @@ router.post('/foreign', auth.required, async (req, res, next) => {
     return res.status(400).json({ error: msg })
   }
   console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
-  const job = await agenda.now('createForeignWallet', { userWallet, correlationId, network })
-  return res.json({ job: job.attrs })
+  const job = await taskManager.now('createForeignWallet', { userWallet, correlationId, network })
+  return res.json({ job: job })
 })
 
 module.exports = router
