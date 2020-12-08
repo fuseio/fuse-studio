@@ -2,6 +2,7 @@ import 'babel-polyfill'
 import 'utils/validation/yup'
 
 import React from 'react'
+import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom'
 import { ApolloProvider } from '@apollo/client'
@@ -17,20 +18,22 @@ import { client } from 'services/graphql'
 
 Sentry.init({ dsn: `https://${CONFIG.sentry.key}@sentry.io/${CONFIG.sentry.project}` })
 
-const { store, history } = configureStore(window.__INITIAL_STATE__)
+const { store, history, persistor } = configureStore(window.__INITIAL_STATE__)
 
 store.runSaga(rootSaga)
 
 ReactDOM.render(
   <Provider store={store}>
-    <ApolloProvider client={client}>
-      <ConnectedRouter history={history}>
-        <ScrollToTopController>
-          <ErrorBoundary>
-            <Root />
-          </ErrorBoundary>
-        </ScrollToTopController>
-      </ConnectedRouter>
-    </ApolloProvider>
+    <PersistGate loading={null} persistor={persistor}>
+      <ApolloProvider client={client}>
+        <ConnectedRouter history={history}>
+          <ScrollToTopController>
+            <ErrorBoundary>
+              <Root />
+            </ErrorBoundary>
+          </ScrollToTopController>
+        </ConnectedRouter>
+      </ApolloProvider>
+    </PersistGate>
   </Provider>,
   document.getElementById('root'))

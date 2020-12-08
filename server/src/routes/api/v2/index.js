@@ -10,5 +10,6 @@ router.use('/admin', require('./admin'))
 router.use('/accounts', require('./accounts'))
 router.use('/fund', require('./fund'))
 router.use('/communities', require('./communities'))
+router.use('/userAccount', require('./userAccount'))
 
 module.exports = router

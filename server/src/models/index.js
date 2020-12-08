@@ -17,6 +17,8 @@ require('./Metadata')
 require('./AgendaJob')
 require('./EthFunding')
 require('./QueueJob')
+require('./StudioUser')
+require('./UserAccount')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')

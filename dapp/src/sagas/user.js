@@ -10,6 +10,47 @@ import get from 'lodash/get'
 import { getWeb3 } from 'sagas/network'
 import BigNumber from 'bignumber.js'
 
+export function * login ({ tokenId }) {
+  const { token } = yield apiCall(api.login, { tokenId }, { v2: true })
+  if (token) {
+    saveState('state.user', { jwtToken: token, isLoggedIn: true })
+
+    yield put({
+      type: actions.LOGIN.SUCCESS,
+      response: {
+        jwtToken: token,
+        isLoggedIn: true
+      }
+    })
+  }
+}
+
+export function * fetchUserAccounts () {
+  const { jwtToken } = yield select(state => state.user)
+  const { data } = yield apiCall(api.fetchUserAccounts, { jwtToken }, { v2: true })
+  if (data) {
+    yield put({
+      type: actions.GET_USER_ACCOUNTS.SUCCESS,
+      response: {
+        ...data
+      }
+    })
+  }
+}
+
+export function * saveUserAccount ({ provider, accountAddress }) {
+  const { jwtToken } = yield select(state => state.user)
+  const { data } = yield apiCall(api.saveUserAccount, { jwtToken, provider, accountAddress }, { v2: true })
+  if (data) {
+    yield put({
+      type: actions.SAVE_USER_ACCOUNT.SUCCESS,
+      response: {
+        ...data
+      }
+    })
+  }
+}
+
 function * signUpUser ({ email, subscribe }) {
   const accountAddress = yield select(getAccountAddress)
   try {
@@ -141,6 +182,9 @@ export default function * userSaga () {
     tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1),
     tryTakeEvery(actions.SEND_EMAIL, subscribeUser, 1),
     tryTakeEvery(actions.FUND_ETH, fundEth, 1),
-    tryTakeEvery(actions.GET_FUND_STATUS, fetchFundingStatus, 1)
+    tryTakeEvery(actions.GET_FUND_STATUS, fetchFundingStatus, 1),
+    tryTakeEvery(actions.LOGIN, login, 1),
+    tryTakeEvery(actions.SAVE_USER_ACCOUNT, saveUserAccount, 1),
+    tryTakeEvery(actions.GET_USER_ACCOUNTS, fetchUserAccounts, 1)
   ])
 }

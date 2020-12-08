@@ -1,150 +1,3 @@
-@include block(template_modal) {
-  border-radius: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
-  background-color: #ffffff;
-  text-align: initial;
-  @include breakpoint(medium up) {
-    padding: 0 !important;
-    width: 90% !important;
-    max-height: 90%;
-  }
-
-  @include breakpoint(2000) {
-    width: 65% !important;
-  }
-
-  @include element(logo) {
-    > img {
-      width: 60px;
-      height: 60px;
-    }
-  }
-
-  @include block(side_image) {
-    flex: 0.7;
-    width: 100%;
-    height: 85%;
-
-    > img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  @include element(title) {
-    font-size: 1.875em;
-    font-weight: 500;
-    line-height: 0.87;
-    letter-spacing: normal;
-    color: $color-primary-dark;
-    padding: 1em 0;
-  }
-
-  @include block(content) {
-    @include breakpoint(medium down) {
-    }
-
-    @include breakpoint(medium up) {
-      flex: 0.5;
-    }
-
-    @include element(wrapper) {
-      color: $color-gray;
-      align-items: center;
-      position: relative;
-
-      @include breakpoint(medium up) {
-        font-size: 0.65em;
-        padding: 4em;
-      }
-
-      @include breakpoint(xxlarge up) {
-        font-size: 0.8em;
-        padding: 4em 5em;
-      }
-    }
-
-    @include element(button) {
-      margin-top: 1.5em;
-
-      @include breakpoint(medium up) {
-        min-width: 300px;
-        max-width: 310px;
-        width: 70%;
-      }
-      @include breakpoint(medium down) {
-        width: 85%;
-      }
-
-      > button {
-        background: $color-fuse_gradient;
-        color: $color-dark;
-        font-weight: bold;
-        text-align: center;
-        height: 45px;
-        width: 100%;
-        border-radius: 30.5px;
-        border: none;
-        font-size: 16px;
-
-        &:hover {
-          background: $color-fuse;
-        }
-      }
-    }
-
-    @include block(text) {
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.5;
-      letter-spacing: normal;
-    }
-
-    @include block(title) {
-      color: #919191;
-      padding-bottom: 1em;
-    }
-
-    @include block(attributes) {
-      @include block(item) {
-        font-size: 1em;
-        font-weight: 500;
-        padding: 8px 0;
-        display: flex;
-
-        &:before {
-          content: "";
-          display: inline-block;
-          background-image: url(../../assets/images/check.svg);
-          width: 20px;
-          background-repeat: no-repeat;
-          margin-right: 7px;
-        }
-      }
-    }
-
-    @include block(icons) {
-      display: flex;
-      display: flex;
-      padding: 1.65em 0;
-      @include block(icon) {
-        @include breakpoint(large up) {
-          flex: 0.3;
-        }
-
-        @include breakpoint(medium down) {
-          flex: 0.5;
-        }
-        > img {
-          margin-right: 5px;
-          width: 21px;
-          height: 23px;
-        }
-      }
-    }
-  }
-}
 @include block(no_communities) {
   cursor: pointer;
   height: 100%;
@@ -154,7 +7,7 @@
   @include xy-grid();
   @include flex-align(center, middle);
 
-  @include block (content) {
+  @include block(content) {
     @include xy-grid(vertical);
     @include flex-align(center, middle);
 
@@ -167,18 +20,17 @@
     padding: 1em;
 
     > img {
-      margin-top: .5em;
+      margin-top: 0.5em;
     }
   }
 
   @include block(title) {
-    
   }
 
-  @include block (empty) {
-    font-size: 0.750em;
+  @include block(empty) {
+    font-size: 0.75em;
     font-weight: normal;
     color: #848484;
-    margin-bottom: .5em;
+    margin-bottom: 0.5em;
   }
 }

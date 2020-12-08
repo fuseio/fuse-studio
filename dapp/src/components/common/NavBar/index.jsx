@@ -3,6 +3,7 @@ import { connect, useDispatch } from 'react-redux'
 import Logo from 'components/common/Logo'
 import HelpIcon, { ReactComponent as Help } from 'images/help.svg'
 
+import LoginIcon from 'images/login.svg'
 import WalletIcon from 'images/fuse-wallet.svg'
 import NewWalletIcon from 'images/new_wallet.svg'
 import classNames from 'classnames'
@@ -17,6 +18,8 @@ import useOutsideClick from 'hooks/useOutsideClick'
 import { getCurrentNetworkType } from 'selectors/network'
 import { getForeignTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
+import { loadModal } from 'actions/ui'
+import { LOGIN_MODAL } from 'constants/uiConstants'
 
 const NavBar = ({
   accountAddress,
@@ -25,7 +28,8 @@ const NavBar = ({
   foreignToken,
   location,
   handleConnect,
-  handleLogout
+  handleLogout,
+  isLoggedIn
 }) => {
   const dispatch = useDispatch()
   const isInCommunityPage = location.pathname.includes('/community/')
@@ -67,11 +71,21 @@ const NavBar = ({
     setHelpOpen(!isHelpOpen)
   }
 
+  const handleLogin = (e) => {
+    e.stopPropagation()
+    if (!isLoggedIn) {
+      dispatch(loadModal(LOGIN_MODAL, { handleConnect }))
+    } else if (isLoggedIn) {
+      handleConnect()
+    }
+  }
+
   const isGreaterThen70 = () => scrollY > 70
 
   return (
     <div className={classNames('navbar',
-      { 'navbar--scroll': isGreaterThen70(),
+      {
+        'navbar--scroll': isGreaterThen70(),
         'navbar--short': modifier && !isMobile,
         'navbar--fixed': isInNestedCommunityPage,
         'navbar--bgImage': !isInNestedCommunityPage
@@ -96,9 +110,26 @@ const NavBar = ({
           </div>
         </div>
         {
-          accountAddress ? (
+          connectingToWallet ? (
+            <div className='navbar__links__wallet navbar__connecting'>
+              <span className='navbar__links__wallet__text'>Connecting to wallet</span>
+              <span className='animate'>.</span>
+              <span className='animate'>.</span>
+              <span className='animate'>.</span>
+            </div>
+          ) : !isLoggedIn ? (
+            <div className='navbar__links__wallet navbar__links__wallet--pointer' onClick={handleLogin}>
+              <span className='icon'><img src={LoginIcon} /></span>
+              <span className='navbar__links__wallet__text'>Login</span>
+            </div>
+          ) : isLoggedIn && !accountAddress ? (
+            <div className='navbar__links__wallet navbar__links__wallet--pointer' onClick={handleConnect}>
+              <span className='icon'><img src={WalletIcon} /></span>
+              <span className='navbar__links__wallet__text'>Connect wallet</span>
+            </div>
+          ) : (
             <div
-              className='navbar__links__wallet'
+              className='navbar__links__wallet navbar__links__wallet--pointer'
               ref={profileRef}
               onClick={openProfile}
             >
@@ -107,18 +138,6 @@ const NavBar = ({
               <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
                 <ProfileDropDown handleLogOut={handleLogout} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
               </div>
-            </div>
-          ) : connectingToWallet ? (
-            <div className='navbar__links__wallet navbar__connecting'>
-              <span className='navbar__links__wallet__text'>Connecting to wallet</span>
-              <span className='animate'>.</span>
-              <span className='animate'>.</span>
-              <span className='animate'>.</span>
-            </div>
-          ) : (
-            <div className='navbar__links__wallet' onClick={handleConnect}>
-              <span className='icon'><img src={WalletIcon} /></span>
-              <span className='navbar__links__wallet__text'>Connect wallet</span>
             </div>
           )
         }
@@ -132,7 +151,8 @@ const mapStateToProps = (state) => ({
   connectingToWallet: state.network.connectingToWallet,
   networkType: getCurrentNetworkType(state),
   foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { networkType: '' },
-  location: state.router.location
+  location: state.router.location,
+  isLoggedIn: state.user.isLoggedIn
 })
 
 export default withRouter(connect(mapStateToProps, null)(NavBar))
