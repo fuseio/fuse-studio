@@ -4,7 +4,7 @@ const Community = mongoose.model('Community')
 const Account = mongoose.model('Account')
 const { toWei } = require('web3-utils')
 
-const funder = async ({ home: { web3, from } }, communityProgress) => {
+const funder = async ({ home: { send, from } }, communityProgress) => {
   const bonus = config.get('bonus.launch.fuse').toString()
   const { adminAddress } = communityProgress.steps.community.args
 
@@ -16,21 +16,30 @@ const funder = async ({ home: { web3, from } }, communityProgress) => {
     }
   }
 
-  const account = await Account.findOne({ address: from })
   try {
-    const receipt = await web3.eth.sendTransaction({
-      to: adminAddress,
-      from,
-      value: toWei(bonus),
-      nonce: account.nonce,
-      gasPrice: config.get('network.home.gasPrice'),
-      gas: config.get('gasLimitForTx.funder')
-    })
-    if (receipt) {
-      account.nonces['home']++
-      await account.save()
+    const receipt = await send(null,
+      {
+        to: adminAddress,
+        from,
+        value: toWei(bonus),
+        gasPrice: config.get('network.home.gasPrice'),
+        gas: config.get('gasLimitForTx.funder')
+      },
+      {
+        transactionHash: hash => {
+          console.log(`transaction ${hash} is created by ${from}`)
+        }
+      }
+    )
+    if (!receipt.status) {
+      console.warn(`error in funding ${adminAddress} with ${bonus} native`)
+      console.log({ receipt })
+      return {
+        isSent: false
+      }
     }
 
+    console.log(`succesfully funder ${adminAddress} with ${bonus} native`)
     return {
       isSent: true,
       bonus
