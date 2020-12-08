@@ -46,8 +46,12 @@ const ethFunder = async (account, { receiverAddress, networkName }, job) => {
       }
     }
   )
-  console.log({ receipt })
-  console.log(`succesfully funder ${receiverAddress} with ${bonus} native`)
+  if (receipt.status) {
+    console.log(`succesfully funder ${receiverAddress} with ${bonus} native`)
+  } else {
+    console.warn(`error in funding ${receiverAddress} with ${bonus} native`)
+    console.log({ receipt })
+  }
 }
 
 module.exports = {
