@@ -30,7 +30,8 @@ export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress
     put(fetchToken(homeTokenAddress)),
     put(balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })),
     put(fetchTokenTotalSupply(homeTokenAddress, { bridgeType: 'home' })),
-    put(actions.getTokenAllowance(foreignTokenAddress, { ...options, bridgeType: 'foreign' })),
+    put(actions.getTokenAllowance(homeTokenAddress, 'home')),
+    put(actions.getTokenAllowance(foreignTokenAddress, 'foreign')),
     put({
       type: actions.FETCH_HOME_TOKEN_ADDRESS.SUCCESS,
       communityAddress,
@@ -41,7 +42,6 @@ export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress
     })
   ]
   yield all(calls)
-  return homeTokenAddress
 }
 
 export function * getAllowance ({ tokenAddress, bridgeType = 'foreign', options }) {
@@ -232,6 +232,17 @@ function * watchBridgeTransfers () {
   }
 }
 
+function * watchApproveToken () {
+  const communityAddress = yield select(getCommunityAddress)
+  const { foreignTokenAddress, homeTokenAddress } = yield select(state => getCurrentCommunity(state, communityAddress))
+  const { homeTokenAddress: currentHomeToken } = yield select(state => state.screens.dashboard)
+  yield put(actions.getTokenAllowance(foreignTokenAddress, 'foreign'))
+  yield put(actions.getTokenAllowance(homeTokenAddress, 'home'))
+  if (currentHomeToken) {
+    yield put(actions.getTokenAllowance(currentHomeToken, 'home'))
+  }
+}
+
 export default function * bridgeSaga () {
   yield all([
     tryTakeEvery(actions.FETCH_HOME_TOKEN_ADDRESS, fetchHomeTokenAddress, 1),
@@ -242,6 +253,7 @@ export default function * bridgeSaga () {
     tryTakeEvery(actions.WATCH_FOREIGN_BRIDGE, watchForeignBridge, 1),
     tryTakeEvery(actions.WATCH_HOME_BRIDGE, watchHomeBridge, 1),
     tryTakeEvery(actions.WATCH_NEW_TOKEN_REGISTERED, watchHomeNewTokenRegistered, 1),
+    takeEvery([actions.APPROVE_TOKEN.SUCCESS], watchApproveToken, 1),
     takeEvery([
       MINT_TOKEN.SUCCESS,
       BURN_TOKEN.SUCCESS,

@@ -20,7 +20,7 @@ export const watchHomeNewTokenRegistered = () => requestAction(WATCH_NEW_TOKEN_R
 export const transferToHome = (foreignTokenAddress, value, foreignBridgeAddress, multiBridge) => requestAction(TRANSFER_TO_HOME, { foreignTokenAddress, value, confirmationsLimit: CONFIG.web3.bridge.confirmations.foreign, foreignBridgeAddress, multiBridge })
 export const transferToForeign = (homeTokenAddress, value, homeBridgeAddress, multiBridge) => requestAction(TRANSFER_TO_FOREIGN, { homeTokenAddress, value, confirmationsLimit: CONFIG.web3.bridge.confirmations.home, homeBridgeAddress, multiBridge })
 export const approveToken = (tokenAddress, value, bridgeType) => requestAction(APPROVE_TOKEN, { tokenAddress, value, bridgeType })
-export const getTokenAllowance = (tokenAddress, bridgeType, options = {}) => requestAction(GET_TOKEN_ALLOWANCE, { tokenAddress, bridgeType, options })
+export const getTokenAllowance = (tokenAddress, bridgeType) => requestAction(GET_TOKEN_ALLOWANCE, { tokenAddress, bridgeType })
 export const fetchHomeTokenAddress = (communityAddress, foreignTokenAddress, options = {}) => requestAction(FETCH_HOME_TOKEN_ADDRESS, { communityAddress, foreignTokenAddress, options })
 
 export const watchForeignBridge = (transactionHash, foreignBridgeAddress, multiBridge) => requestAction(WATCH_FOREIGN_BRIDGE, { transactionHash, foreignBridgeAddress, multiBridge })

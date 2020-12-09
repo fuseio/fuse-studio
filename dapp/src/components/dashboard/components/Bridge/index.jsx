@@ -78,7 +78,7 @@ const Bridge = (props) => {
       handleTransfer()
       setTransferAmount('')
     }
-  }, [approved, tokenOfCommunityOnCurrentSide])
+  }, [isTokenApproved])
 
   const balance = balances[tokenOfCommunityOnCurrentSide]
   const formatted = formatWei(balance, 2, decimals)
