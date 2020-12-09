@@ -1,8 +1,12 @@
 import React, { useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
+import ReactModal from 'react-modal'
+import { useModal } from 'react-modal-hook'
 import Logo from 'components/common/Logo'
 import HelpIcon, { ReactComponent as Help } from 'images/help.svg'
 
+import CloseButton from 'images/x.png'
+import GoogleIcon from 'images/google.svg'
 import LoginIcon from 'images/login.svg'
 import WalletIcon from 'images/fuse-wallet.svg'
 import NewWalletIcon from 'images/new_wallet.svg'
@@ -46,8 +50,35 @@ const NavBar = ({
   const { y: scrollY } = useWindowScroll()
   const [isHelpOpen, setHelpOpen] = useState(false)
   const [isProfileOpen, setProfileOpen] = useState(false)
+  // const [modalStatus, setModalStatus] = useState(false)
   const helpRef = useRef(null)
+  // const loginRef = useRef(null)
   const profileRef = useRef(null)
+
+  // const [showModal] = useModal(() => (
+  //   <ReactModal ref={loginRef} isOpen={modalStatus} overlayClassName='use_modal__overlay' className='use_modal__content'>
+  //     <div className='use_modal__content__close' onClick={() => setModalStatus(false)}>
+  //       <img src={CloseButton} />
+  //     </div>
+  //     <div className='login-modal__title'>Please choose one of the following</div>
+  //     <div className='grid-x align-middle align-justify grid-margin-x'>
+  //       <button className='login-modal__button cell small-24 medium-12'>
+  //         <img src={GoogleIcon} />
+  //         <div>Create new</div>
+  //       </button>
+  //       <button className='login-modal__button cell small-24 medium-12'>
+  //         <img src={GoogleIcon} />
+  //         <div>Use existing</div>
+  //       </button>
+  //     </div>
+  //   </ReactModal>
+  // ), [modalStatus])
+
+  // useOutsideClick(loginRef, () => {
+  //   if (modalStatus) {
+  //     setModalStatus(false)
+  //   }
+  // })
 
   useOutsideClick(profileRef, () => {
     if (isProfileOpen) {

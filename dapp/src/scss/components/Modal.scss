@@ -1,3 +1,55 @@
+@include block(use_modal) {
+  @include element(overlay) {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    overflow: auto;
+    text-align: center;
+
+    @include modifier(after-open) {
+    }
+    @include modifier(before-open) {
+    }
+  }
+
+  @include element(content) {
+    position: relative;
+    height: auto;
+    outline: 0;
+    border-radius: 20px;
+    background-color: $color-white;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    padding: 2em;
+    max-height: 90%;
+    overflow-y: auto;
+    box-sizing: content-box;
+    width: 352px;
+
+    @include element(close) {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      color: $color-dark !important;
+      cursor: pointer;
+      z-index: 1;
+      > img {
+        height: 13px !important;
+        width: 13px !important;
+        min-width: 13px !important;
+      }
+    }
+  }
+}
+
 @include block(modal) {
   @include block(overlay) {
     position: fixed;
