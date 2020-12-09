@@ -1,3 +1,4 @@
+import omit from 'lodash/omit'
 import * as actions from 'actions/bridge'
 import { LOCATION_CHANGE } from 'connected-react-router'
 
@@ -18,9 +19,9 @@ export default (state = initialState, action) => {
     case actions.WATCH_HOME_BRIDGE.SUCCESS:
       return { ...state, ...action.response }
     case actions.APPROVE_TOKEN.SUCCESS:
-      return { ...state, approveSignature: false, approved: { ...state.approved, [action.response.tokenAddress]: true } }
+      return { ...omit({ ...state, approveSignature: false, approved: { ...state.approved, [action.response.tokenAddress]: true } }, 'transactionHash') }
     case actions.APPROVE_TOKEN.FAILURE:
-      return { ...state, approveSignature: false }
+      return { ...omit({ ...state, approveSignature: false }, 'transactionHash') }
     case actions.APPROVE_TOKEN.PENDING:
       return { ...state, approveSignature: false, transactionHash: action.response.transactionHash }
     case actions.APPROVE_TOKEN.REQUEST:
