@@ -1,8 +1,10 @@
 import 'babel-polyfill'
 import 'utils/validation/yup'
 
-import React from 'react'
+import React, { StrictMode } from 'react'
+import { ModalProvider } from 'react-modal-hook'
 import { PersistGate } from 'redux-persist/integration/react'
+import { TransitionGroup } from 'react-transition-group'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom'
 import { ApolloProvider } from '@apollo/client'
@@ -23,17 +25,21 @@ const { store, history, persistor } = configureStore(window.__INITIAL_STATE__)
 store.runSaga(rootSaga)
 
 ReactDOM.render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <ApolloProvider client={client}>
-        <ConnectedRouter history={history}>
-          <ScrollToTopController>
-            <ErrorBoundary>
-              <Root />
-            </ErrorBoundary>
-          </ScrollToTopController>
-        </ConnectedRouter>
-      </ApolloProvider>
-    </PersistGate>
-  </Provider>,
+  <StrictMode>
+    <ModalProvider rootComponent={TransitionGroup}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ApolloProvider client={client}>
+            <ConnectedRouter history={history}>
+              <ScrollToTopController>
+                <ErrorBoundary>
+                  <Root />
+                </ErrorBoundary>
+              </ScrollToTopController>
+            </ConnectedRouter>
+          </ApolloProvider>
+        </PersistGate>
+      </Provider>
+    </ModalProvider>
+  </StrictMode>,
   document.getElementById('root'))
