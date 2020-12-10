@@ -32,7 +32,7 @@ router.get('/correlationId/:correlationId', auth.required, async (req, res) => {
  *
  * @apiSuccess {Object} data Job object
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth.required, async (req, res) => {
   const jobs = await agenda.jobs({ _id: mongoose.Types.ObjectId(req.params.id) })
   if (!jobs || jobs.length === 0 || !jobs[0]) {
     const queueJob = await QueueJob.findById(req.params.id)
