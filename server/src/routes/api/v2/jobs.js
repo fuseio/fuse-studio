@@ -26,26 +26,22 @@ router.get('/correlationId/:correlationId', auth.required, async (req, res) => {
  * @api {get} api/v2/jobs/:jobId Fetch job by id
  * @apiName FetchJob
  * @apiGroup Jobs
- * @apiDescription Fetches agenda job by job id
+ * @apiDescription Fetch job by id
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
  * @apiSuccess {Object} data Job object
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth.required, async (req, res) => {
   const jobs = await agenda.jobs({ _id: mongoose.Types.ObjectId(req.params.id) })
   if (!jobs || jobs.length === 0 || !jobs[0]) {
-    const queueJob = await QueueJob.findById(req.params.id)
-    if (queueJob && queueJob.name === 'ethFunder') {
-      return res.json({ data: queueJob })
+    const job = await QueueJob.findById(req.params.id)
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found' })
     }
-    return res.status(404).json({ error: 'Job not found' })
+    return res.json({ data: job })
   }
-  const job = jobs[0]
-  if (job.attrs.name === 'ethFunder') {
-    res.json({ data: job.attrs })
-  }
-  return res.status(404).json({ error: `Job not found try use API V2` })
+  return res.json({ data: jobs[0] })
 })
 
 module.exports = router
