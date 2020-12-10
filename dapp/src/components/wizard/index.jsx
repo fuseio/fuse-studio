@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useMemo } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
@@ -16,7 +16,7 @@ import { withNetwork } from 'containers/Web3'
 import withTracker from 'containers/withTracker'
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
-import NameAndEmail from 'components/wizard/pages/NameAndEmail'
+import NameAndDescription from 'components/wizard/pages/NameAndDescription'
 import ChooseCurrencyType from 'components/wizard/pages/ChooseCurrencyType'
 import ChooseNetwork from 'components/wizard/pages/ChooseNetwork'
 import DetailsStep from 'components/wizard/pages/DetailsStep'
@@ -29,7 +29,6 @@ import contractIcon from 'images/contract.svg'
 const WizardPage = ({
   deployExistingToken,
   createTokenWithMetadata,
-  signUpUser,
   adminAddress,
   networkType,
   transactionStatus,
@@ -47,6 +46,8 @@ const WizardPage = ({
     }
   }, [])
 
+  const email = useSelector(state => state.user.email)
+
   const initialValues = useMemo(() => ({
     communityName: '',
     communitySymbol: '',
@@ -57,7 +58,6 @@ const WizardPage = ({
     customToken: '',
     isOpen: true,
     subscribe: true,
-    email: '',
     coverPhoto: {},
     images: {
       chosen: 'defaultOne'
@@ -72,10 +72,6 @@ const WizardPage = ({
       funder: {
         checked: true,
         key: 'funder'
-      },
-      email: {
-        checked: true,
-        key: 'email'
       }
     },
     plugins: {
@@ -102,8 +98,6 @@ const WizardPage = ({
       images,
       existingToken,
       customToken,
-      email,
-      subscribe,
       plugins,
       coverPhoto,
       description
@@ -125,9 +119,7 @@ const WizardPage = ({
         ...steps,
         [contracts[contractName].key]: contracts[contractName].key === 'community'
           ? { args: { isClosed: !isOpen, name: communityName, adminAddress, plugins: chosenPlugins, description } }
-          : contracts[contractName].key === 'email'
-            ? { args: { email, subscribe } }
-            : {}
+          : {}
       }), {})
 
     const { chosen } = images
@@ -156,8 +148,6 @@ const WizardPage = ({
 
       createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: foreignNetwork, sentry })
     }
-
-    // signUpUser(email, subscribe)
   }
 
   const goToDashboard = () => {
@@ -185,7 +175,7 @@ const WizardPage = ({
         }}
       >
         <Wizard.Page>
-          <NameAndEmail />
+          <NameAndDescription />
         </Wizard.Page>
         <Wizard.Page>
           <ChooseNetwork />
