@@ -1,10 +1,6 @@
-import React, { useEffect, memo } from 'react'
-import { connect } from 'react-redux'
+import React, { memo } from 'react'
 import ArrowTiny from 'images/arrow_tiny.svg'
 
-import { fetchToken } from 'actions/token'
-import { fetchMetadata } from 'actions/metadata'
-import { balanceOfToken } from 'actions/accounts'
 import { getImageUri } from 'utils/metadata'
 
 import CommunityLogo from 'components/common/CommunityLogo'
@@ -13,29 +9,10 @@ const ProfileCard = memo(({
   community,
   metadata,
   balance,
-  fetchMetadata,
-  fetchToken,
-  balanceOfToken,
-  showDashboard,
-  accountAddress
+  showDashboard
 }) => {
-  const { token } = community
-  const { name, symbol, tokenURI } = token
-  const { communityURI, homeTokenAddress, foreignTokenAddress, communityAddress } = community
-
-  useEffect(() => {
-    if (accountAddress) {
-      balanceOfToken(homeTokenAddress, accountAddress, { bridgeType: 'home' })
-      balanceOfToken(foreignTokenAddress, accountAddress, { bridgeType: 'foreign' })
-    }
-
-    fetchMetadata(communityURI)
-    fetchMetadata(tokenURI)
-    fetchToken(homeTokenAddress)
-    fetchToken(foreignTokenAddress)
-    return () => { }
-  }, [])
-
+  const { token, communityAddress } = community
+  const { name, symbol } = token
   return (
     <div className='profile__card profile__card--link grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
       <div className='profile__card__logo'>
@@ -60,9 +37,6 @@ const ProfileCard = memo(({
     </div>
   )
 }, (prevProps, nextProps) => {
-  if (prevProps.entity !== nextProps.entity) {
-    return false
-  }
   if (prevProps.metadata !== nextProps.metadata) {
     return false
   }
@@ -78,8 +52,4 @@ const ProfileCard = memo(({
   return true
 })
 
-export default connect(null, {
-  fetchMetadata,
-  fetchToken,
-  balanceOfToken
-})(ProfileCard)
+export default ProfileCard

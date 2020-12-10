@@ -1,4 +1,4 @@
-import { createRequestTypes, requestAction } from './utils'
+import { createRequestTypes, requestAction, action } from './utils'
 
 export const LOGIN = createRequestTypes('LOGIN')
 export const LOGOUT = createRequestTypes('LOGOUT')
@@ -13,7 +13,7 @@ export const IS_USER_EXISTS = createRequestTypes('IS_USER_EXISTS')
 export const SEND_EMAIL = createRequestTypes('SEND_EMAIL')
 export const SAVE_WIZARD_PROGRESS = createRequestTypes('SAVE_WIZARD_PROGRESS')
 
-export const logout = () => requestAction(LOGOUT)
+export const logout = () => action('LOGOUT')
 
 export const fetchUserAccounts = (tok) => requestAction(GET_USER_ACCOUNTS)
 export const fetchFundingStatus = () => requestAction(GET_FUND_STATUS)

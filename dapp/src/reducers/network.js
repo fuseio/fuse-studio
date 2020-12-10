@@ -17,6 +17,8 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'LOGOUT':
+      return initialState
     case network.CONNECT_TO_WALLET.REQUEST:
       return { ...state, connectingToWallet: true }
     case network.CONNECT_TO_WALLET.SUCCESS:

@@ -9,6 +9,7 @@
     border: solid 1px #c8c8c8;
     background-color: $color-white;
     min-width: 346px;
+    max-width: 346px;
   }
 
   @include breakpoint(small only) {
@@ -28,13 +29,30 @@
 
   @include element(account) {
     text-align: center;
+    position: relative;
+
+    @include block(logout) {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: red;
+
+      > span {
+        font-size: small;
+        &:hover {
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+    }
+
     @include element(avatar) {
       .fa {
         font-size: 50px;
       }
     }
 
-    @include element(logout) {
+    @include element(disconnect) {
       margin-top: 10px;
       height: 14px;
       line-height: 0.88;
@@ -45,9 +63,11 @@
         font-size: x-small;
       }
 
-      &:hover {
-        text-decoration: underline;
-        cursor: pointer;
+      @include block(disconnect) {
+        &:hover {
+          text-decoration: underline;
+          cursor: pointer;
+        }
       }
     }
 
