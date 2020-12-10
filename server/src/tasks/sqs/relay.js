@@ -48,7 +48,7 @@ const isAllowedToRelay = async (web3, walletModule, walletModuleABI, methodName,
     : isAllowedToRelayHome(web3, walletModule, walletModuleABI, methodName, methodData)
 }
 
-const relay = async (account, { walletAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
+const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
@@ -67,17 +67,28 @@ const relay = async (account, { walletAddress, methodName, methodData, nonce, ga
     }, {
       transactionHash: (hash) => {
         job.set('data.txHash', hash)
+        if (communityAddress) {
+          job.set('communityAddress', communityAddress)
+        } else {
+          console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
+        }
         job.save()
       }
     })
 
-    const success = lodash.get(receipt, 'status') && lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
-    if (success) {
+    const txSuccess = lodash.get(receipt, 'status')
+    const relayingSuccess = txSuccess && lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
+
+    if (receipt) {
+      const { blockNumber, txFee } = receipt
+      job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: txSuccess ? 'confirmed' : 'failed', blockNumber })
+      job.set('data.txFee', txFee)
+      job.save()
+    }
+
+    if (relayingSuccess) {
       const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
       const { wallet, signedHash } = returnValues
-      const { blockNumber } = receipt
-      job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: 'confirmed', blockNumber })
-      job.save()
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
       if (walletModule === 'CommunityManager') {
         try {

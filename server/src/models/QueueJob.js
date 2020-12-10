@@ -11,8 +11,11 @@ const QueueJobSchema = new Schema({
   lastRunAt: { type: Date },
   failedAt: { type: Date },
   failReason: { type: String },
-  failCount: { type: Number }
+  failCount: { type: Number },
+  communityAddress: { type: String }
 }, { timestamps: true })
+
+QueueJobSchema.index({ communityAddress: 1 })
 
 QueueJobSchema.methods.fail = function (reason) {
   if (reason instanceof Error) {
