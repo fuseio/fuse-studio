@@ -269,6 +269,9 @@ module.exports = {
       initialBalance: '0.1'
     }
   },
+  community: {
+    initialBalance: '1'
+  },
   slack: {
     channel: 'monitor'
   },

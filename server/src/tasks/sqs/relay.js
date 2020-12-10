@@ -69,18 +69,26 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
         job.set('data.txHash', hash)
         if (communityAddress) {
           job.set('communityAddress', communityAddress)
+        } else {
+          console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
         }
         job.save()
       }
     })
 
-    const success = lodash.get(receipt, 'status') && lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
-    if (success) {
+    const txSuccess = lodash.get(receipt, 'status')
+    const relayingSuccess = txSuccess && lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
+
+    if (receipt) {
+      const { blockNumber, txFee } = receipt
+      job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: txSuccess ? 'confirmed' : 'failed', blockNumber })
+      job.set('data.txFee', txFee)
+      job.save()
+    }
+
+    if (relayingSuccess) {
       const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
       const { wallet, signedHash } = returnValues
-      const { blockNumber } = receipt
-      job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: 'confirmed', blockNumber })
-      job.save()
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
       if (walletModule === 'CommunityManager') {
         try {

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Entity = mongoose.model('Entity')
 const Community = mongoose.model('Community')
 const { hasRole, roles: { APPROVED_ROLE } } = require('@fuse/roles')
-const { deriveFromRoles } = require('@utils/roles')
+const { deriveFromRoles } = require('@utils/community/roles')
 const { web3 } = require('@services/web3/home')
 const Profile = mongoose.model('Profile')
 

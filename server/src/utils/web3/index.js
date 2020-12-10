@@ -9,6 +9,11 @@ const Account = mongoose.model('Account')
 const { fetchGasPrice } = require('@utils/network')
 const wallet = fromMasterSeed(config.get('secrets.accounts.seed'))
 const { get } = require('lodash')
+const BigNumber = require('bignumber.js')
+
+const calculateTxFee = ({ gasUsed, gasPrice }) => {
+  return new BigNumber(gasUsed).multipliedBy(gasPrice).toString()
+}
 
 const createWeb3 = (providerUrl, account) => {
   const web3 = new Web3(providerUrl)
@@ -73,7 +78,6 @@ const TRANSACTION_HASH_TOO_LOW = 'Node error: {"code":-32010,"message":"Transact
 const TRANSACTION_TIMEOUT = 'Error: Timeout exceeded during the transaction confirmation process. Be aware the transaction could still get confirmed!'
 
 const send = async ({ web3, bridgeType, address }, method, options, handlers) => {
-
   const doSend = async (retry) => {
     let transactionHash
     const nonce = account.nonces[bridgeType]
@@ -167,6 +171,8 @@ const send = async ({ web3, bridgeType, address }, method, options, handlers) =>
       account.nonces[bridgeType]++
       await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
       receipt.bridgeType = bridgeType
+      receipt.gasPrice = gasPrice
+      receipt.txFee = calculateTxFee(receipt)
       return receipt
     }
     if (error && i === retries - 1) {

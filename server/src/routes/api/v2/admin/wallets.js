@@ -24,7 +24,7 @@ const { toChecksumAddress } = require('web3-utils')
  * @apiSuccess {String} Started job data
  */
 router.post('/create', auth.required, async (req, res) => {
-  const { isCommunityAdmin, identifier, appName } = req.user
+  const { isCommunityAdmin, communityAddress, identifier, appName } = req.user
   const accountAddress = req.body.defaultOwner ? config.get('network.home.addresses.MultiSigWallet') : req.user.accountAddress
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
@@ -45,7 +45,7 @@ router.post('/create', auth.required, async (req, res) => {
       identifier,
       appName
     }).save()
-    const job = await agenda.now('createWallet', { owner: accountAddress, phoneNumber, correlationId, _id: userWallet._id })
+    const job = await agenda.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, correlationId, _id: userWallet._id })
     return res.json({ job: job.attrs })
   } catch (err) {
     return res.status(400).send({ error: err.message })

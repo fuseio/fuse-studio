@@ -1,4 +1,5 @@
 const config = require('config')
+const lodash = require('lodash')
 const { createNetwork, signMultiSig } = require('@utils/web3')
 const WalletFactoryABI = require('@constants/abi/WalletFactory')
 const WalletOwnershipManagerABI = require('@constants/abi/WalletOwnershipManager')
@@ -55,10 +56,20 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
       job.set('data.txHash', hash)
       if (communityAddress) {
         job.set('communityAddress', communityAddress)
+      } else {
+        console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
       }
       job.save()
     }
   })
+
+  if (receipt) {
+    const { txFee, blockNumber, status } = receipt
+    job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: status ? 'confirmed' : 'failed', blockNumber: blockNumber })
+    job.set('data.txFee', txFee, mongoose.Decimal128)
+    await job.save()
+  }
+
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
 
@@ -76,7 +87,7 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
       _id: bonusJob._id.toString()
     })
   }
-  job.save()
+  await job.save()
 
   const queryFilter = getQueryFilter({ _id, owner, phoneNumber })
   const userWallet = await UserWallet.findOneAndUpdate(queryFilter, { walletAddress, salt })
@@ -84,7 +95,7 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
 
   await Contact.updateMany({ phoneNumber }, { walletAddress, state: 'NEW' })
 
-  if (communityAddress) {
+  if (communityAddress && bonusInfo) {
     let deepLinkUrl
     if (!appName) {
       const { url } = await branch.createDeepLink({ communityAddress })
@@ -114,7 +125,7 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   return receipt
 }
 
-const setWalletOwner = async (account, { walletAddress, newOwner }, job) => {
+const setWalletOwner = async (account, { walletAddress, communityAddress, newOwner }, job) => {
   const { createContract, createMethod, send, web3 } = createNetwork('home', account)
 
   const userWallet = await UserWallet.findOne({ walletAddress })
@@ -132,14 +143,27 @@ const setWalletOwner = async (account, { walletAddress, newOwner }, job) => {
     transactionHash: (hash) => {
       console.log(`transaction ${hash} is created by ${account.address}`)
       job.set('data.txHash', hash)
+      if (communityAddress) {
+        job.set('communityAddress', communityAddress)
+      } else {
+        console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
+      }
       job.save()
     }
   })
+
+  if (receipt) {
+    const { txFee, blockNumber, status } = receipt
+    job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: status ? 'confirmed' : 'failed', blockNumber: blockNumber })
+    job.set('data.txFee', txFee)
+    job.save()
+  }
+
   await UserWallet.findOneAndUpdate({ walletAddress }, { accountAddress: newOwner })
   return receipt
 }
 
-const createForeignWallet = async (account, { userWallet, ens = '' }, job) => {
+const createForeignWallet = async (account, { communityAddress, userWallet, ens = '' }, job) => {
   console.log(`Using the account ${account.address} to create a wallet on foreign`)
   const { web3, createContract, createMethod, send } = createNetwork('foreign', account)
   const owner = userWallet.walletOwnerOriginalAddress
@@ -156,6 +180,11 @@ const createForeignWallet = async (account, { userWallet, ens = '' }, job) => {
   }, {
     transactionHash: (hash) => {
       job.set('data.txHash', hash)
+      if (communityAddress) {
+        job.set('communityAddress', communityAddress)
+      } else {
+        console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
+      }
       job.save()
     }
   })
