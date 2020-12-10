@@ -9,6 +9,7 @@ import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 
 import homeImage from 'images/studio_home.png'
 import arrowImage from 'images/arrow_1.svg'
+import { fetchFeaturedCommunities } from 'actions/token'
 
 const HomePage = ({
   handleConnect
@@ -16,6 +17,12 @@ const HomePage = ({
   const dispatch = useDispatch()
   const { accountAddress } = useSelector(state => state.network)
   const [moveToIssuance, setMove] = useState(false)
+
+  useEffect(() => {
+    dispatch(fetchFeaturedCommunities({ networkType: 'mainnet' }))
+    dispatch(fetchFeaturedCommunities({ networkType: 'ropsten' }))
+    return () => { }
+  }, [])
 
   useEffect(() => {
     if (moveToIssuance && accountAddress) {

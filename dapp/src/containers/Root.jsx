@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route } from 'react-router'
 import has from 'lodash/has'
-import get from 'lodash/get'
 
 import CommunitiesPage from 'components/oven/CommunitiesPage'
 import Wizard from 'components/wizard'
@@ -29,7 +28,7 @@ const Root = () => {
 
   const web3connect = useWeb3Connect(onConnectCallback)
 
-  const handleLogout = React.useCallback(() => {
+  const handleDisconnect = React.useCallback(() => {
     web3connect.core.clearCachedProvider()
   }, [web3connect])
 
@@ -47,7 +46,7 @@ const Root = () => {
 
   return (
     <div className='root__wrapper'>
-      <NavBar handleConnect={handleConnect} handleLogout={handleLogout} />
+      <NavBar handleConnect={handleConnect} handleDisconnect={handleDisconnect} />
       <Switch>
         <Route exact path='/' render={props => <HomePage handleConnect={handleConnect} {...props} />} />
         <Route path='/view/issuance' render={props => <Wizard {...props} />} />

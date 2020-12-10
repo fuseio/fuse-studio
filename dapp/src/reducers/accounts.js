@@ -38,6 +38,10 @@ export default (state = {}, action) => {
     return { ...state, [action.accountAddress]: handlers[action.type](account, action) }
   }
 
+  if (action.type === 'LOGOUT') {
+    return {}
+  }
+
   if (action.type === FETCH_FEATURED_COMMUNITIES.SUCCESS) {
     return { ...state, featuredCommunities: union(state.featuredCommunities, action.response.result) }
   }

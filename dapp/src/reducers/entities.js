@@ -11,6 +11,9 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
+  if (action.type === 'LOGOUT') {
+    return initialState
+  }
   if (action.entity && action.response) {
     if (action.response.entities) {
       return merge({}, state, { [action.entity]: action.response.entities })

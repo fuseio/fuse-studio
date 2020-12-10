@@ -7,6 +7,8 @@ export default (state = {}, action) => {
   switch (action.type) {
     case user.LOGIN.SUCCESS:
       return { ...state, ...action.response }
+    case 'LOGOUT':
+      return {}
     case user.GET_USER_ACCOUNTS.SUCCESS:
       return { ...state, ...action.response }
     case REHYDRATE:
