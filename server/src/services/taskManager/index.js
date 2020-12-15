@@ -15,7 +15,7 @@ const getWorkerAccount = (taskData, task) => {
     if (accountAddress) {
       return lockAccount({ address: accountAddress })
     } else {
-      const msg = `no from account supplied for task  with task data ${JSON.stringify(
+      const msg = `no account address supplied for task  with task data ${JSON.stringify(
         taskData
       )}`
       console.warn(msg)
