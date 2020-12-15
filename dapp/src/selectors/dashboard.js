@@ -27,8 +27,8 @@ export const getTokenAddressOfByNetwork = (state, community) => {
   }
 }
 
-const communityAddressMatchSelector = createMatchSelector({ path: '/view/community/:communityAddress' })
-export const getCommunityAddress = (state) => get(communityAddressMatchSelector(state), 'params.communityAddress')
+const communityAddressMatchSelector = createMatchSelector({ path: '/view/fuse-community/:address' })
+export const getCommunityAddress = (state) => get(communityAddressMatchSelector(state), 'params.address')
 
 export const getCurrentCommunity = createSelector(
   getCommunityAddress,

@@ -43,7 +43,6 @@ const CurrencyOption = ({ logo, name, value }) => {
 
 const ChooseCurrencyType = () => {
   const formik = useFormikContext()
-  const network = getIn(formik.values, 'network')
   const communityName = getIn(formik.values, 'communityName')
   const currency = getIn(formik.values, 'currency')
 
@@ -63,7 +62,7 @@ const ChooseCurrencyType = () => {
         />
         <CurrencyOption
           logo={existingToken}
-          name={`Use an existing token on Ethereum ${network}`}
+          name='Use an existing token on Fuse'
           value='existing'
         />
       </div>

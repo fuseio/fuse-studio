@@ -32,7 +32,7 @@ const NavBar = ({
   isLoggedIn
 }) => {
   const dispatch = useDispatch()
-  const isInCommunityPage = location.pathname.includes('/community/')
+  const isInCommunityPage = location.pathname.includes('/community/') || location.pathname.includes('/fuse-community/')
   const isInNestedCommunityPage = isInCommunityPage && !location.pathname.includes('justCreated') && location.pathname.split('/').length > 4
   const isInIssuancePage = location.pathname.includes('/issuance')
 

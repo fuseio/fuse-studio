@@ -6,6 +6,7 @@ import has from 'lodash/has'
 import CommunitiesPage from 'components/oven/CommunitiesPage'
 import Wizard from 'components/wizard'
 import Dashboard from 'components/dashboard'
+import FuseDashboard from 'components/FuseDashboard'
 import HomePage from 'components/home'
 import Footer from 'components/common/Footer'
 import NavBar from 'components/common/NavBar'
@@ -52,6 +53,7 @@ const Root = () => {
         <Route path='/view/issuance' render={props => <Wizard {...props} />} />
         <Route path='/view/communities' render={props => <CommunitiesPage {...props} />} />
         <Route path='/view/community/:address' render={props => <Dashboard {...props} />} />
+        <Route path='/view/fuse-community/:address' render={props => <FuseDashboard {...props} />} />
       </Switch>
       <Footer />
       <ModalContainer />

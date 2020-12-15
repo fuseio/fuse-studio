@@ -3,7 +3,6 @@ import { connect, useSelector } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
-import { signUpUser } from 'actions/user'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import * as Sentry from '@sentry/browser'
@@ -49,12 +48,12 @@ const WizardPage = ({
   const email = useSelector(state => state.user.email)
 
   const initialValues = useMemo(() => ({
-    communityName: '',
+    communityName: 'sfasfs',
     communitySymbol: '',
     totalSupply: '',
     communityType: undefined,
     existingToken: undefined,
-    description: '',
+    description: 'dssdgdsddsfds',
     customToken: '',
     isOpen: true,
     subscribe: true,
@@ -133,11 +132,11 @@ const WizardPage = ({
 
     const sentry = { tags: { issuance: true } }
     if (existingToken && existingToken.label && existingToken.value) {
-      const { value: foreignTokenAddress } = existingToken
-      const newSteps = { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress, isCustom: false } } }
+      const { value: homeTokenAddress } = existingToken
+      const newSteps = { ...steps, community: { args: { ...steps.community.args, homeTokenAddress, isCustom: false } } }
       deployExistingToken(metadata, newSteps, { sentry })
     } else if (customToken) {
-      const newSteps = { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
+      const newSteps = { ...steps, community: { args: { ...steps.community.args, homeTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
       deployExistingToken(metadata, newSteps, { sentry })
     } else {
       const tokenData = {
@@ -146,12 +145,12 @@ const WizardPage = ({
         totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
       }
 
-      createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: foreignNetwork, sentry })
+      createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: 'fuse', sentry })
     }
   }
 
   const goToDashboard = () => {
-    push(`/view/community/${communityAddress}/justCreated`)
+    push(`/view/fuse-community/${communityAddress}/justCreated`)
   }
 
   const transactionDenied = () => {
@@ -176,13 +175,14 @@ const WizardPage = ({
       >
         <Wizard.Page>
           <NameAndDescription />
-        </Wizard.Page>
-        <Wizard.Page>
-          <ChooseNetwork />
-        </Wizard.Page>
-        <Wizard.Page>
           <ChooseCurrencyType />
         </Wizard.Page>
+        {/* <Wizard.Page>
+          <ChooseNetwork />
+        </Wizard.Page> */}
+        {/* <Wizard.Page>
+          <ChooseCurrencyType />
+        </Wizard.Page> */}
         <Wizard.Page>
           <DetailsStep networkType={networkType} />
         </Wizard.Page>
@@ -235,7 +235,6 @@ const mapDispatchToProps = {
   createTokenWithMetadata,
   fetchDeployProgress,
   deployExistingToken,
-  signUpUser,
   clearTransaction,
   loadModal,
   push

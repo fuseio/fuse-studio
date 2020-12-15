@@ -125,8 +125,8 @@ function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
 }
 
 function * deployChosenContracts ({ response: { steps, receipt } }) {
-  const foreignTokenAddress = receipt.events.TokenCreated.returnValues.token
-  const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, { steps: { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress } } } })
+  const homeTokenAddress = receipt.events.TokenCreated.returnValues.token
+  const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, { steps: { ...steps, community: { args: { ...steps.community.args, homeTokenAddress } } } })
 
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,

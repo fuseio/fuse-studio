@@ -49,7 +49,7 @@ const HomePage = ({
         window.analytics.track(`Clicked on featured community`, { name })
       }
     }
-    dispatch(push(`/view/community/${communityAddress}`))
+    dispatch(push(`/view/fuse-community/${communityAddress}`))
   }
 
   return (

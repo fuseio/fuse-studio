@@ -4,7 +4,7 @@ export default object().noUnknown(false).shape({
   isOpen: boolean(),
   subscribe: boolean(),
   hasBalance: boolean().oneOf([true]).required(),
-  network: mixed().oneOf(['ropsten', 'main']).required(),
+  // network: mixed().oneOf(['ropsten', 'main']).required(),
   currency: mixed().oneOf(['new', 'existing']).required(),
   communityName: string().normalize().min(3).max(36).required().label('Name'),
   communitySymbol: string().uppercase().normalize().min(2).max(4).required().label('Symbol'),

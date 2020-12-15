@@ -16,7 +16,6 @@ import { getEntity, getCommunityAddress } from 'selectors/entities'
 import { getTokenAddressOfByNetwork, getCurrentCommunity, getHomeTokenAddress, getIsMultiBridge } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import get from 'lodash/get'
-import SignIn from 'components/common/SignIn'
 // import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 // import CommunityPlaceholderImage from 'images/community_placeholder.png'
 // import CommunityLogo from 'components/common/CommunityLogo'
@@ -78,7 +77,6 @@ const Dashboard = (props) => {
 
   return (
     (community && foreignToken) ? <React.Fragment>
-      <SignIn accountAddress={accountAddress} />
       {/* {getCoverPhotoUri(communityMetadata) && (
         <CoverPhoto
           symbol={foreignToken && foreignToken.symbol}

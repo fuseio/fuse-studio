@@ -25,7 +25,7 @@ const handlers = {
     return { ...state, communities: action.response.result }
   },
   [CHECK_ACCOUNT_CHANGED.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
-  [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) }),
+  // [actions.SIGN_IN.SUCCESS]: (state, action) => ({ ...state, ...pick(action.response, ['publicData', 'privateData']) }),
   [IS_USER_EXISTS.SUCCESS]: (state, action) => ({ ...state, ...action.response }),
   [CONNECT_TO_WALLET.SUCCESS]: (state, action) => ({ ...state, providerInfo: { ...action.response.providerInfo } }),
   [actions.POSTPONE_ACTION.SUCCESS]: (state, action) => ({ ...state, postponed: [...state, action.postponed] }),

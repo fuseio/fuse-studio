@@ -19,12 +19,6 @@
         "main": "https://studio-qa.fuse.io/api/v2",
         "ropsten": "https://studio-qa-ropsten.fuse.io/api/v2"
       }
-    },
-    "graph": {
-      "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
-      "subgraphs": {
-        "entities": "/fuse-entities-qa"
-      }
     }
   },
   "reactGA": {

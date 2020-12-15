@@ -43,6 +43,7 @@
         "MultiBridgeMediator": "0xf301d525da003e874DF574BCdd309a6BF0535bb6"
       },
       "fuse": {
+        "TokenFactory": "0x78Cb0FeEC1fA3b3469cA18e79823b6A87C8929a4",
         "AMBBridgeRopsten": "0x1b4DC7506C2d3BCE5e38919d45b3D6f6806a0106",
         "MultiBridgeMediatorRopsten": "0xAEBC2058780eb0372e7Ee75c11019d26E36894ad",
         "AMBBridgeMain": "0x2CA5411c4bf447Cc27CD6E6d1d046f922A27C399",
@@ -109,7 +110,7 @@
     "graph": {
       "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
       "subgraphs": {
-        "entities": "/fuse-entities-dev"
+        "entities": "/fuse-entities-qa"
       }
     }
   },

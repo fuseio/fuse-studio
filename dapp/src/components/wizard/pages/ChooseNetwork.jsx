@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Field, useFormikContext, getIn } from 'formik'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import classNames from 'classnames'
 import useInterval from 'hooks/useInterval'
 import ethereumMainnet from 'images/ethereum_mainnet.svg'
@@ -8,7 +8,7 @@ import ethereumRopsten from 'images/ethereum_ropsten.svg'
 import fuseToken from 'images/fuse_token.svg'
 import { getAccount, getProviderInfo, getAccountAddress } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
-import { getForeignNetwork, getCurrentNetworkType } from 'selectors/network'
+import { getCurrentNetworkType } from 'selectors/network'
 import { loadModal } from 'actions/ui'
 import { changeNetwork } from 'actions/network'
 import { fundEth, fetchFundingStatus } from 'actions/user'
@@ -162,33 +162,36 @@ const NetworkOption = ({ network, account, logo, name, value, Content, TooltipTe
   )
 }
 
-const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, account }) => {
+const ChooseNetwork = () => {
   const formik = useFormikContext()
+  const networkType = useSelector(getCurrentNetworkType)
+  const dispatch = useDispatch()
+  const providerInfo = useSelector(getProviderInfo)
+  const account = useSelector(getAccount)
   const network = getIn(formik.values, 'network')
 
   useEffect(() => {
-    const hasBalance = parseFloat(account && account.foreign ? formatWei((account.foreign), 2) : '0') > 0.01
+    const hasBalance = parseFloat(account && account.home ? formatWei((account.home), 2) : '0') > 0.01
     formik.setFieldValue('hasBalance', hasBalance)
   }, [account])
 
-  const loadSwitchModal = (desired) => {
-    loadModal(SWITCH_NETWORK, { desiredNetworkType: [desired], networkType, goBack: false })
+  const loadSwitchModal = () => {
+    dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: ['fuse'], networkType, goBack: false }))
   }
 
   const switchNetwork = () => {
     if (providerInfo.type === 'injected') {
-      loadSwitchModal(network)
+      loadSwitchModal()
     } else if (providerInfo.type === 'web') {
-      changeNetwork(network)
+      dispatch(changeNetwork(network))
     }
   }
 
   useEffect(() => {
-    if (!network) return
-    if (network !== networkType) {
+    if (networkType !== 'fuse') {
       switchNetwork()
     }
-  }, [network])
+  }, [networkType])
 
   return (
     <div className='options_network__wrapper'>
@@ -237,11 +240,4 @@ const ChooseNetwork = ({ providerInfo, loadModal, changeNetwork, networkType, ac
   )
 }
 
-const mapState = (state) => ({
-  account: getAccount(state),
-  foreignNetwork: getForeignNetwork(state),
-  networkType: getCurrentNetworkType(state),
-  providerInfo: getProviderInfo(state)
-})
-
-export default connect(mapState, { loadModal, changeNetwork })(ChooseNetwork)
+export default ChooseNetwork
