@@ -8,7 +8,6 @@ const QueueJobSchema = new Schema({
   status: { type: String, default: 'pending' },
   accountAddress: { type: String },
   lastFinishedAt: { type: Date },
-  lastRunAt: { type: Date },
   failedAt: { type: Date },
   failReason: { type: String },
   failCount: { type: Number },

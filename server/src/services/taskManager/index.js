@@ -4,10 +4,26 @@ const {
   deleteMessage
 } = require('@services/queue')
 const tasks = require('@tasks/sqs')
-const { getTaskData } = require('@tasks/sqs/taskData')
+const { getTaskData } = require('./taskData')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
+
+const getWorkerAccount = (taskData, task) => {
+  if (taskData.role === 'admin') {
+    const { accountAddress } = task
+    if (accountAddress) {
+      return lockAccount({ address: accountAddress })
+    } else {
+      const msg = `no from account supplied for task  with task data ${JSON.stringify(
+        taskData
+      )}`
+      console.warn(msg)
+      throw Error(msg)
+    }
+  }
+  return lockAccount(taskData)
+}
 
 const startTask = async message => {
   const messageId = message.MessageId
@@ -25,7 +41,7 @@ const startTask = async message => {
   }
   let account, queueJob
   try {
-    account = await lockAccount(taskData)
+    account = await getWorkerAccount(taskData)
     if (!account) {
       console.log(
         `no unlocked accounts found for task ${name} with task data ${JSON.stringify(
@@ -63,6 +79,11 @@ const startTask = async message => {
         taskData
       )}, skipping. ${err}`
     )
+    if (!queueJob) {
+      queueJob = await QueueJob.findOne({ messageId })
+    }
+
+    // marking queueJob as failed
     if (queueJob) {
       await queueJob.failAndUpdate(err)
     }
@@ -79,10 +100,12 @@ const now = async (name, params) => {
     name,
     params
   })
+  const { communityAddress } = params
   const job = await new QueueJob({
     name,
     data: params,
-    messageId: response.MessageId
+    messageId: response.MessageId,
+    ...(communityAddress && { communityAddress })
   }).save()
   return job
 }
