@@ -1,16 +1,16 @@
 const config = require('config')
 const router = require('express').Router()
 const { toWei } = require('web3-utils')
-const { agenda } = require('@services/agenda')
+const taskManager = require('@services/taskManager')
 const auth = require('@routes/auth')
 const moment = require('moment')
 const mongoose = require('mongoose')
 const Token = mongoose.model('Token')
 const UserWallet = mongoose.model('UserWallet')
+const QueueJob = mongoose.model('QueueJob')
 const request = require('request-promise-native')
 const Promise = require('bluebird')
 const { toChecksumAddress } = require('web3-utils')
-
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
  * @apiName Create
@@ -60,8 +60,8 @@ router.post('/create', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'Missing spendabilityIds' })
   }
   try {
-    const job = await agenda.now('createToken', { bridgeType: 'home', from: accountAddress, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr, correlationId })
-    return res.json({ job: job.attrs })
+    const job = await taskManager.now('createToken', { bridgeType: 'home', accountAddress, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr, correlationId })
+    return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })
   }
@@ -95,8 +95,8 @@ router.post('/mint', auth.required, async (req, res) => {
   }
   try {
     const amountInWei = toWei(amount.toString())
-    const job = await agenda.now('mint', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, toAddress, correlationId })
-    return res.json({ job: job.attrs })
+    const job = await taskManager.now('mint', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, toAddress, correlationId })
+    return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })
   }
@@ -133,9 +133,9 @@ router.post('/burn', auth.required, async (req, res) => {
     let job
     if (tokenAddress) {
       if (!from) {
-        job = await agenda.now('burn', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, correlationId })
+        job = await taskManager.now('burn', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, correlationId })
       } else {
-        job = await agenda.now('adminApprove', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
+        job = await taskManager.now('adminApprove', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
       }
     } else {
       const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
@@ -150,9 +150,9 @@ router.post('/burn', auth.required, async (req, res) => {
         return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
       }
       const tokenAddresses = tokens.map(t => t.address)
-      job = await agenda.now('adminSpendabilityApprove', { tokenAddresses, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
+      job = await taskManager.now('adminSpendabilityApprove', { tokenAddresses, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
     }
-    return res.json({ json: job.attrs })
+    return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })
   }
@@ -191,8 +191,8 @@ router.post('/transfer', auth.required, async (req, res) => {
   const amountInWei = toWei(amount)
   if (tokenAddress) {
     try {
-      const job = await agenda.now('adminTransfer', { tokenAddress, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, to, correlationId })
-      return res.json({ job: job.attrs })
+      const job = await taskManager.now('adminTransfer', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, to, correlationId })
+      return res.json({ job })
     } catch (err) {
       return res.status(400).send({ error: err.message })
     }
@@ -210,8 +210,8 @@ router.post('/transfer', auth.required, async (req, res) => {
         return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
       }
       const tokenAddresses = tokens.map(t => t.address)
-      const job = await agenda.now('adminSpendabilityTransfer', { tokenAddresses, bridgeType: 'home', from: accountAddress, amount: amountInWei, wallet: from, to, correlationId: `${correlationId}-1` })
-      return res.json({ job: job.attrs })
+      const job = await taskManager.now('adminSpendabilityTransfer', { tokenAddresses, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, to, correlationId: `${correlationId}-1` })
+      return res.json({ job })
     } catch (err) {
       return res.status(400).send({ error: err.message })
     }
@@ -355,7 +355,7 @@ router.post('/burnEvents', auth.required, async (req, res) => {
   if (endTime) {
     filter.lastFinishedAt = { $lt: moment(parseInt(endTime)).unix() }
   }
-  const jobs = await agenda.jobs(filter)
+  const jobs = await QueueJob.find(filter)
   if (!jobs || jobs.length === 0 || !jobs[0]) {
     return res.status(404).json({ error: 'No burn events found' })
   }
@@ -363,14 +363,14 @@ router.post('/burnEvents', auth.required, async (req, res) => {
     return new Promise(async resolve => {
       const token = await Token.findOne({ address: toChecksumAddress(job.attrs.data.tokenAddress) }, { _id: 0, spendabilityIds: 1, expiryTimestamp: 1 })
       resolve({
-        fromWallet: job.attrs.data.burnFromAddress,
-        tokenAddress: job.attrs.data.tokenAddress,
+        fromWallet: job.data.burnFromAddress,
+        tokenAddress: job.data.tokenAddress,
         spendabilityIds: token && token.spendabilityIds,
-        amount: job.attrs.data.amount,
-        timestamp: job.attrs.lastRunAt,
-        expired: token && token.expiryTimestamp && moment(token.expiryTimestamp).isBefore(job.attrs.lastRunAt),
-        txHash: job.attrs.data.txHash,
-        correlationId: job.attrs.data.correlationId
+        amount: job.data.amount,
+        timestamp: job.lastFinishedAt,
+        expired: token && token.expiryTimestamp && moment(token.expiryTimestamp).isBefore(job.lastFinishedAt),
+        txHash: job.data.txHash,
+        correlationId: job.data.correlationId
       })
     })
   }, { concurrency: 10 })

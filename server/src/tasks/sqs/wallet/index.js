@@ -54,11 +54,6 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     transactionHash: async (hash) => {
       console.log(`transaction ${hash} is created by ${account.address}`)
       job.set('data.txHash', hash)
-      if (communityAddress) {
-        job.set('communityAddress', communityAddress)
-      } else {
-        console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
-      }
       job.save()
     }
   })
@@ -143,11 +138,6 @@ const setWalletOwner = async (account, { walletAddress, communityAddress, newOwn
     transactionHash: (hash) => {
       console.log(`transaction ${hash} is created by ${account.address}`)
       job.set('data.txHash', hash)
-      if (communityAddress) {
-        job.set('communityAddress', communityAddress)
-      } else {
-        console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
-      }
       job.save()
     }
   })
@@ -180,11 +170,6 @@ const createForeignWallet = async (account, { communityAddress, userWallet, ens 
   }, {
     transactionHash: (hash) => {
       job.set('data.txHash', hash)
-      if (communityAddress) {
-        job.set('communityAddress', communityAddress)
-      } else {
-        console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
-      }
       job.save()
     }
   })

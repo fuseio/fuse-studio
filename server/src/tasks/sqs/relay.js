@@ -67,11 +67,6 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
     }, {
       transactionHash: (hash) => {
         job.set('data.txHash', hash)
-        if (communityAddress) {
-          job.set('communityAddress', communityAddress)
-        } else {
-          console.warn(`communityAddress is missing for ${userWallet.walletAddress}`)
-        }
         job.save()
       }
     })
