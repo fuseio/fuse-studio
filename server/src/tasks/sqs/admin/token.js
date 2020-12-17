@@ -129,15 +129,15 @@ const adminSpendabilityApprove = async (account, { bridgeType, tokenAddresses, w
   let total = new BigNumber(amount)
   let i = 0
   let jobs = []
-  const { agenda } = require('@services/agenda')
+  const taskManager = require('@services/taskManager')
   while (!total.isZero()) {
     let tokenAddress = balancesData[i].tokenAddress
     let balance = balancesData[i].balance
     if (total.lt(balance)) {
-      jobs.push(await agenda.now('adminApprove', { tokenAddress, bridgeType, from: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` }))
+      jobs.push(await taskManager.now('adminApprove', { tokenAddress, bridgeType, from: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` }))
       total = total.minus(total)
     } else {
-      jobs.push(await agenda.now('adminApprove', { tokenAddress, bridgeType, from: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` }))
+      jobs.push(await taskManager.now('adminApprove', { tokenAddress, bridgeType, from: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` }))
       total = total.minus(balance)
     }
     i++
@@ -176,15 +176,15 @@ const adminSpendabilityTransfer = async (account, { bridgeType, tokenAddresses, 
   let total = new BigNumber(amount)
   let i = 0
   let jobs = []
-  const { agenda } = require('@services/agenda')
+  const taskManager = require('@services/taskManager')
   while (!total.isZero()) {
     let tokenAddress = balancesData[i].tokenAddress
     let balance = balancesData[i].balance
     if (total.lt(balance)) {
-      jobs.push(await agenda.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, amount: total.toFixed(), wallet, to, correlationId: `${job.data.correlationId}-2` }))
+      jobs.push(await taskManager.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, amount: total.toFixed(), wallet, to, correlationId: `${job.data.correlationId}-2` }))
       total = total.minus(total)
     } else {
-      jobs.push(await agenda.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, amount: balance, wallet, to, correlationId: `${job.data.correlationId}-2` }))
+      jobs.push(await taskManager.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, amount: balance, wallet, to, correlationId: `${job.data.correlationId}-2` }))
       total = total.minus(balance)
     }
     i++
