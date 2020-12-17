@@ -3,6 +3,7 @@ const {
   receiveMessage,
   deleteMessage
 } = require('@services/queue')
+const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
 const { getTaskData } = require('./taskData')
 const { lockAccount, unlockAccount } = require('@utils/account')
@@ -41,7 +42,7 @@ const startTask = async message => {
   }
   let account, queueJob
   try {
-    account = await getWorkerAccount(taskData)
+    account = await getWorkerAccount(taskData, task)
     if (!account) {
       console.log(
         `no unlocked accounts found for task ${name} with task data ${JSON.stringify(
@@ -96,6 +97,13 @@ const startTask = async message => {
 }
 
 const now = async (name, params) => {
+  const correlationId = lodash.get(params, 'correlationId')
+  if (correlationId) {
+    const savedJob = await QueueJob.findOne({ 'data.correlationId': correlationId, status: { $ne: 'failed' } })
+    if (savedJob) {
+      throw Error(`Job with the correlationId ${correlationId} already exists. jobId: ${savedJob._id}, status: ${savedJob.status}.`)
+    }
+  }
   const response = await sendMessage({
     name,
     params
