@@ -10,9 +10,9 @@ const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 
-const getWorkerAccount = (taskData, task) => {
+const getWorkerAccount = (taskData, taskParams) => {
   if (taskData.role === 'admin') {
-    const { accountAddress } = task
+    const { accountAddress } = taskParams
     if (accountAddress) {
       return lockAccount({ address: accountAddress })
     } else {
@@ -42,7 +42,7 @@ const startTask = async message => {
   }
   let account, queueJob
   try {
-    account = await getWorkerAccount(taskData, task)
+    account = await getWorkerAccount(taskData, params)
     if (!account) {
       console.log(
         `no unlocked accounts found for task ${name} with task data ${JSON.stringify(
