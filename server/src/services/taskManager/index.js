@@ -108,7 +108,7 @@ const now = async (name, params) => {
     name,
     params
   })
-  const { communityAddress } = params
+  const communityAddress = lodash.get(params, 'communityAddress')
   const job = await new QueueJob({
     name,
     data: params,
