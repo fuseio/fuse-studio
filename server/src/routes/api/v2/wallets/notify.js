@@ -115,7 +115,7 @@ const createForeignWalletIfNeeded = async ({ watchedAddress, status }) => {
 
   console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
   const job = await agenda.now('createForeignWallet', { userWallet, network: config.get('network.foreign.name') })
-  console.log(`watchedAddress ${watchedAddress} does not have wallet on ${network}. Scheduling a job to create one ${job.attrs._id}`)
+  console.log(`watchedAddress ${watchedAddress} does not have wallet on ${network}. Scheduling a job to create one ${job._id || job.attrs._id}`)
 }
 
 router.post('/', async (req, res) => {
