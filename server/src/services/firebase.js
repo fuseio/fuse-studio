@@ -8,6 +8,10 @@ const UserWallet = mongoose.model('UserWallet')
 const { fetchToken, fetchCommunityAddressByTokenAddress } = require('@utils/token')
 
 const firebaseApps = {
+  happyCow: {
+    secretKey: 'firebaseSecretIdHappyCow',
+    appName: 'HappyCow'
+  },
   roost: {
     secretKey: 'firebaseSecretIdRoost',
     appName: 'Roost'
