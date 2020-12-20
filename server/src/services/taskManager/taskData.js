@@ -3,63 +3,78 @@ const { get } = require('lodash')
 const tasksData = {
   createWallet: {
     role: 'wallet',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'createWallet'
   },
   createForeignWallet: {
     role: 'wallet',
-    bridgeType: 'foreign'
+    bridgeType: 'foreign',
+    name: 'createForeignWallet'
   },
   relay: {
     role: 'wallet',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'relay'
   },
   bonus: {
-    role: '*'
+    role: '*',
+    name: 'bonus'
   },
   setWalletOwner: {
     role: 'wallet',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'setWalletOwner'
   },
   addManager: {
     role: 'wallet',
     bridgeType: 'home',
-    description: 'owner'
+    description: 'owner',
+    name: 'addManager'
   },
   ethFunder: {
     role: 'eth',
-    bridgeType: '*'
+    bridgeType: '*',
+    name: 'ethFunder'
   },
   createToken: {
     role: 'admin',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'createToken'
   },
   mint: {
     role: 'admin',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'mint'
   },
   burn: {
     role: 'admin',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'burn'
   },
   burnFrom: {
     role: 'admin',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'burnFrom'
   },
   adminApprove: {
     role: 'admin',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'adminApprove'
   },
   adminSpendabilityApprove: {
     role: 'admin',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'adminSpendabilityApprove'
   },
   adminTransfer: {
     role: 'admin',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'adminTransfer'
   },
   adminSpendabilityTransfer: {
     role: 'admin',
-    bridgeType: 'home'
+    bridgeType: 'home',
+    name: 'adminSpendabilityTransfer'
   }
 }
 
@@ -73,7 +88,9 @@ const getTaskData = ({ name, params }) => {
   return tasksData[name]
 }
 
+const makeAccountsFilter = ({ name, ...rest }) => ({ ...rest })
+
 module.exports = {
   getTaskData,
-  tasksData
+  makeAccountsFilter
 }

@@ -5,7 +5,7 @@ const {
 } = require('@services/queue')
 const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
-const { getTaskData } = require('./taskData')
+const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
@@ -23,7 +23,7 @@ const getWorkerAccount = (taskData, taskParams) => {
       throw Error(msg)
     }
   }
-  return lockAccount(taskData)
+  return lockAccount(makeAccountsFilter(taskData))
 }
 
 const startTask = async message => {
