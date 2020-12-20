@@ -24,8 +24,9 @@ const createToken = async (account, { bridgeType, name, symbol, initialSupplyInW
   const tokenAddress = receipt.options.address
   const { blockNumber } = await web3.eth.getTransaction(receipt.transactionHash)
 
-  job.data.tokenAddress = tokenAddress
-  job.data.blockNumber = blockNumber
+  job.set('data.tokenAddress', tokenAddress)
+  job.set('data.blockNumber', blockNumber)
+
   job.save()
 
   const token = await new Token({
@@ -116,7 +117,7 @@ const adminApprove = async (account, { bridgeType, tokenAddress, wallet, spender
   if (burnFromAddress) {
     const taskManager = require('@services/taskManager')
     const burnJob = await taskManager.now('burnFrom', { tokenAddress, bridgeType, from: account.address, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` })
-    job.data.burnJobId = burnJob._id.toString()
+    job.set('data.burnJobId', burnJob._id.toString())
     job.save()
   }
 }
@@ -147,7 +148,7 @@ const adminSpendabilityApprove = async (account, { bridgeType, tokenAddresses, w
     }
     i++
   }
-  job.data.transferJobs = jobs.map(job => job._id.toString())
+  job.set('data.transferJobs', jobs.map(job => job._id.toString()))
   job.save()
 }
 
@@ -195,7 +196,7 @@ const adminSpendabilityTransfer = async (account, { bridgeType, tokenAddresses, 
     }
     i++
   }
-  job.data.transferJobs = jobs.map(job => job._id.toString())
+  job.set('data.transferJobs', jobs.map(job => job._id.toString()))
   job.save()
 }
 

@@ -361,7 +361,7 @@ router.post('/burnEvents', auth.required, async (req, res) => {
   }
   const result = await Promise.map(jobs, job => {
     return new Promise(async resolve => {
-      const token = await Token.findOne({ address: toChecksumAddress(job.attrs.data.tokenAddress) }, { _id: 0, spendabilityIds: 1, expiryTimestamp: 1 })
+      const token = await Token.findOne({ address: toChecksumAddress(job.data.tokenAddress) }, { _id: 0, spendabilityIds: 1, expiryTimestamp: 1 })
       resolve({
         fromWallet: job.data.burnFromAddress,
         tokenAddress: job.data.tokenAddress,
