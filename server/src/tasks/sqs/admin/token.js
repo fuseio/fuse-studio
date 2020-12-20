@@ -16,12 +16,13 @@ const createToken = async (account, { bridgeType, name, symbol, initialSupplyInW
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.data.txHash = hash
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      job.set('data.txHash', hash)
       job.save()
     }
   })
   const tokenAddress = receipt.options.address
-  const { blockNumber } = await web3.eth.getTransaction(job.data.txHash)
+  const { blockNumber } = await web3.eth.getTransaction(receipt.transactionHash)
 
   job.data.tokenAddress = tokenAddress
   job.data.blockNumber = blockNumber
@@ -55,7 +56,8 @@ const mint = async (account, { bridgeType, tokenAddress, amount, toAddress }, jo
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.data.txHash = hash
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      job.set('data.txHash', hash)
       job.save()
     }
   })
@@ -71,7 +73,8 @@ const burn = async (account, { bridgeType, tokenAddress, amount }, job) => {
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.data.txHash = hash
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      job.set('data.txHash', hash)
       job.save()
     }
   })
@@ -87,7 +90,8 @@ const burnFrom = async (account, { bridgeType, tokenAddress, amount, burnFromAdd
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.data.txHash = hash
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      job.set('data.txHash', hash)
       job.save()
     }
   })
@@ -103,7 +107,8 @@ const adminApprove = async (account, { bridgeType, tokenAddress, wallet, spender
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.data.txHash = hash
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      job.set('data.txHash', hash)
       job.save()
     }
   })
@@ -157,7 +162,8 @@ const adminTransfer = async (account, { bridgeType, tokenAddress, amount, wallet
     from: account.address
   }, {
     transactionHash: (hash) => {
-      job.data.txHash = hash
+      console.log(`transaction ${hash} is created by ${account.address}`)
+      job.set('data.txHash', hash)
       job.save()
     }
   })
