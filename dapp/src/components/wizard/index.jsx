@@ -12,12 +12,10 @@ import { toChecksumAddress } from 'web3-utils'
 import { getForeignNetwork } from 'selectors/network'
 
 import { withNetwork } from 'containers/Web3'
-import withTracker from 'containers/withTracker'
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
 import NameAndDescription from 'components/wizard/pages/NameAndDescription'
 import ChooseCurrencyType from 'components/wizard/pages/ChooseCurrencyType'
-import ChooseNetwork from 'components/wizard/pages/ChooseNetwork'
 import DetailsStep from 'components/wizard/pages/DetailsStep'
 import SummaryStep from 'components/wizard/pages/SummaryStep'
 import DeployProgressStep from 'components/wizard/pages/DeployProgress'
@@ -158,7 +156,7 @@ const WizardPage = ({
   }
 
   return (
-    <Fragment>
+    <>
       <Wizard
         push={push}
         adminAddress={adminAddress}
@@ -207,8 +205,8 @@ const WizardPage = ({
 
       <Message
         issue
-        message={'Oh no'}
-        subTitle={`You reject the action, That’s ok, try next time!`}
+        message='Oh no'
+        subTitle='You reject the action, That’s ok, try next time!'
         isOpen={transactionDenied()}
         clickHandler={() => clearTransaction()}
       />
@@ -221,7 +219,7 @@ const WizardPage = ({
         clickHandler={() => clearTransaction()}
         subTitle='Try again later'
       />
-    </Fragment>
+    </>
   )
 }
 
@@ -240,4 +238,4 @@ const mapDispatchToProps = {
   push
 }
 
-export default withTracker(withNetwork(connect(mapStateToProps, mapDispatchToProps)(WizardPage)))
+export default withNetwork(connect(mapStateToProps, mapDispatchToProps)(WizardPage))

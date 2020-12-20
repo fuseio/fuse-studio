@@ -2,7 +2,6 @@ import * as actions from 'actions/accounts'
 import { IS_USER_EXISTS } from 'actions/user'
 import { FETCH_FEATURED_COMMUNITIES } from 'actions/token'
 import { CHECK_ACCOUNT_CHANGED, CONNECT_TO_WALLET } from 'actions/network'
-import pick from 'lodash/pick'
 import union from 'lodash/union'
 
 export const initialAccount = {
@@ -33,7 +32,7 @@ const handlers = {
 }
 
 export default (state = {}, action) => {
-  if (handlers.hasOwnProperty(action.type) && action.accountAddress) {
+  if (Object.prototype.hasOwnProperty.call(handlers, action.type) && action.accountAddress) {
     const account = state[action.accountAddress] || initialAccount
     return { ...state, [action.accountAddress]: handlers[action.type](account, action) }
   }
@@ -47,7 +46,7 @@ export default (state = {}, action) => {
   }
 
   if (action.type === actions.GET_INITIAL_ADDRESS.SUCCESS) {
-    return { ...state, ...actions.response }
+    return { ...state, ...action.response }
   }
 
   return state

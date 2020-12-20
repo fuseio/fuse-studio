@@ -28,9 +28,7 @@ const locations = [
   '/view/issuance/1',
   '/view/issuance/2',
   '/view/issuance/3',
-  '/view/issuance/4',
-  '/view/issuance/5',
-  '/view/issuance/6'
+  '/view/issuance/4'
 ]
 
 const validations = {
@@ -55,7 +53,7 @@ class Wizard extends React.Component {
     return React.Children.map(children, child => React.cloneElement(child, { ...rest }))
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -64,7 +62,7 @@ class Wizard extends React.Component {
     }
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.transactionStatus === PENDING && prevProps.transactionStatus === REQUEST) {
       this.next(this.state.values)
     }
@@ -83,8 +81,8 @@ class Wizard extends React.Component {
             ? `${get(values, `${key}.value`)}`
             : get(values, key)
         } : {
-          ...acc
-        }
+            ...acc
+          }
         return acc
       }, {})
       if (window && window.analytics) {
@@ -176,7 +174,7 @@ class Wizard extends React.Component {
     )
   }
 
-  render () {
+  render() {
     const { push, location } = this.props
     const { values } = this.state
     const page = locations.indexOf(location.pathname)

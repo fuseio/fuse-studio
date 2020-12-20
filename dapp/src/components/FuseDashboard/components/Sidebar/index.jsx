@@ -1,46 +1,45 @@
 import React, { useState, useEffect } from 'react'
 import Logo from 'components/common/Logo'
-import { useParams } from 'react-router'
+import { observer, inject } from 'mobx-react'
+import { useStore } from 'mobxStore'
+import { useDispatch } from 'react-redux'
+import { useParams, withRouter } from 'react-router'
+import { push } from 'connected-react-router'
 import SideBarItems from 'constants/sideBarItems'
 import allPlugins from 'constants/plugins'
 
 import isEmpty from 'lodash/isEmpty'
 import pickBy from 'lodash/pickBy'
-import { push } from 'connected-react-router'
-import { connect } from 'react-redux'
-import { getForeignTokenByCommunityAddress } from 'selectors/token'
-
-import { checkIsAdmin, getCommunityAddress } from 'selectors/entities'
-import { getCurrentCommunity } from 'selectors/dashboard'
+import { toJS } from 'mobx'
 
 import MenuItem from './MenuItem'
 
 const Sidebar = ({
   match,
-  isAdmin,
-  token,
-  location,
-  push,
-  community
+  location
 }) => {
   const { address: communityAddress } = useParams()
+  const { dashboard } = useStore()
+  console.log({ Sidebar: toJS(dashboard?.plugins) })
+  const dispatch = useDispatch()
   const [currentPath, setPath] = useState('')
   const [sideBarItems, setSideBarItems] = useState([])
-  const [addedPlugins, setAddedPlugins] = useState([])
+  // const [addedPlugins, setAddedPlugins] = useState([])
+
+  // useEffect(() => {
+  //   if (dashboard?.plugins) {
+  //     setAddedPlugins(Object.keys(pickBy(dashboard?.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
+  //   }
+  //   return () => { }
+  // }, [dashboard?.plugins])
 
   useEffect(() => {
-    if (!isEmpty(community && community.plugins)) {
-      setAddedPlugins(Object.keys(pickBy(community && community.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
-    }
+    setSideBarItems(SideBarItems(dashboard?.isAdmin, !isEmpty(dashboard?.plugins), dashboard?.homeToken?.tokenType).filter(Boolean))
+    // setAddedPlugins(Object.keys(pickBy(dashboard?.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
     return () => { }
-  }, [community])
+  }, [dashboard?.isAdmin, dashboard?.homeToken?.tokenType, dashboard?.plugins])
 
-  useEffect(() => {
-    setSideBarItems(SideBarItems(isAdmin, !isEmpty(community && community.plugins), token && token.tokenType).filter(Boolean))
-    setAddedPlugins(Object.keys(pickBy(community && community.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
-    return () => { }
-  }, [isAdmin, token.tokenType])
-
+  console.log({ addedPlugins: dashboard?.addedPlugins })
   useEffect(() => {
     const paramsArr = location.pathname.split('/')
     const lastItem = paramsArr[paramsArr.length - 1]
@@ -55,7 +54,7 @@ const Sidebar = ({
   }, [location.pathname])
 
   const goToPage = (path) => {
-    push(path)
+    dispatch(push(path))
   }
 
   return (
@@ -65,9 +64,7 @@ const Sidebar = ({
           <Logo showHomePage={() => goToPage('/')} isGradientLogo />
         </div>
         {
-          !community ? (
-            null
-          ) : sideBarItems.map(({
+          sideBarItems.map(({
             icon,
             name,
             url,
@@ -77,7 +74,7 @@ const Sidebar = ({
             CustomElement,
             moreIcon
           }) => {
-            if (path === '/plugins' && !isEmpty(addedPlugins)) {
+            if (path === '/plugins' && !isEmpty(dashboard?.addedPlugins)) {
               return (
                 <div
                   key={name}
@@ -86,20 +83,21 @@ const Sidebar = ({
                   <div className='plugin__header'>
                     <span className='title'>Plugins</span>
                     {
-                      isAdmin && (
+                      dashboard?.isAdmin && (
                         <div
                           className='manage'
                           onClick={() => {
-                            goToPage(url(match))
+                            goToPage(url(match.url))
                             setPath(path)
                           }}
-                        >Manage</div>
+                        >Manage
+                        </div>
                       )
                     }
                   </div>
                   {
-                    addedPlugins.map((plugin) => {
-                      const myPlugins = allPlugins(isAdmin)
+                    dashboard?.addedPlugins?.map((plugin) => {
+                      const myPlugins = allPlugins(dashboard?.isAdmin)
                       if (plugin && myPlugins[plugin] && !myPlugins[plugin].isRemoved) {
                         const {
                           name,
@@ -116,7 +114,7 @@ const Sidebar = ({
                             selectedIcon={selectedIcon}
                             name={name}
                             viewPage={() => {
-                              goToPage(url(match))
+                              goToPage(url(match.url))
                               setPath(path)
                             }}
                           />
@@ -136,7 +134,7 @@ const Sidebar = ({
                     icon={icon}
                     selectedIcon={selectedIcon}
                     viewPage={() => {
-                      goToPage(url(match))
+                      goToPage(url(match.url))
                       setPath(path)
                     }}
                   />
@@ -152,9 +150,8 @@ const Sidebar = ({
                   name={name}
                   selectedIcon={selectedIcon}
                   moreIcon={moreIcon}
-                  communityName={community && community.name}
                   viewPage={() => {
-                    goToPage(url(match))
+                    goToPage(url(match.url))
                     setPath(path)
                   }}
                 />
@@ -167,13 +164,4 @@ const Sidebar = ({
   )
 }
 
-const mapState = (state) => ({
-  isAdmin: checkIsAdmin(state),
-  location: state.router.location,
-  community: getCurrentCommunity(state),
-  token: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { tokenType: '' }
-})
-
-export default connect(mapState, {
-  push
-})(Sidebar)
+export default withRouter(observer(Sidebar))

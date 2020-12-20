@@ -11,13 +11,11 @@ const blockExplorers = {
 
 export const getBlockExplorerUrl = (networkType) => blockExplorers[networkType]
 
-export const getApiRoot = (networkType) => CONFIG.api.url[toShortName(networkType)] ? CONFIG.api.url[toShortName(networkType)] : CONFIG.api.url['default']
+export const getApiRoot = (networkType) => CONFIG.api.url[toShortName(networkType)] ? CONFIG.api.url[toShortName(networkType)] : CONFIG.api.url.default
 
 export const isFuse = (provider) => (get(provider, 'networkVersion', false) || get(provider, 'connection.networkVersion', false)) === String(CONFIG.web3.chainId.fuse)
 
-const getInfuraUrl = (networkType) => {
-  return `https://${toLongName(networkType)}.infura.io/v3/${CONFIG.web3.apiKey}`
-}
+const getInfuraUrl = (networkType) => `https://${toLongName(networkType)}.infura.io/v3/${CONFIG.web3.apiKey}`
 
 const getForeignProviderUrl = (networkType) => {
   if (CONFIG.web3.providers.default === 'alchemy') {

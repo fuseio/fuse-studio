@@ -10,9 +10,9 @@ import { createBusinessMetadata, createUsersMetadata } from 'sagas/metadata'
 import * as entitiesApi from 'services/api/entities'
 import { transactionFlow } from './transaction'
 import { roles, combineRoles } from '@fuse/roles'
-import Box from '3box'
-import { separateData } from 'utils/3box'
-import { createProfile } from 'services/api/profiles'
+// import Box from '3box'
+// import { separateData } from 'utils/3box'
+// import { createProfile } from 'services/api/profiles'
 import { uploadImage as uploadImageApi } from 'services/api/images'
 import omit from 'lodash/omit'
 import get from 'lodash/get'
@@ -22,8 +22,8 @@ import CommunityTransferManagerABI from '@fuse/entities-contracts/abi/CommunityT
 import { getWeb3 } from 'sagas/network'
 import { getOptions, getNetworkVersion } from 'utils/network'
 import { gql } from '@apollo/client'
-import { client } from 'services/graphql'
-import { getProfile } from '3box/lib/api'
+import { client } from 'services/graphql/index'
+// import { getProfile } from '3box/lib/api'
 
 function * confirmUser ({ account }) {
   const communityAddress = yield select(getCommunityAddress)
@@ -202,7 +202,7 @@ function * watchEntityChanges ({ response }) {
 }
 
 function * importExistingEntity ({ accountAddress, communityAddress, isClosed }) {
-  const profile = yield Box.getProfile(accountAddress)
+  // const profile = yield Box.getProfile(accountAddress)
   const { entityRoles } = deriveEntityData(omit('user', ['ethereum_proof', 'proof_did']), isClosed)
 
   const adminAccountAddress = yield select(getAccountAddress)
@@ -216,8 +216,8 @@ function * importExistingEntity ({ accountAddress, communityAddress, isClosed })
     from: adminAccountAddress
   })
   const action = actions.ADD_ENTITY
-  const { publicData } = separateData(omit({ ...profile, type: 'user' }, ['ethereum_proof', 'proof_did']))
-  yield apiCall(createProfile, { accountAddress, publicData })
+  // const { publicData } = separateData(omit({ ...profile, type: 'user' }, ['ethereum_proof', 'proof_did']))
+  // yield apiCall(createProfile, { accountAddress, publicData })
   yield call(transactionFlow, { transactionPromise, action, sendReceipt: true, abiName: 'Community' })
 
   yield put({
@@ -277,14 +277,14 @@ export function * fetchFeaturedCommunityEntitiesCount ({ communityAddress }) {
 }
 
 function * fetchUserMetadata ({ account }) {
-  const userMetadata = yield call(getProfile, account)
-  if (userMetadata && userMetadata.account) {
-    yield put({
-      entity: 'users',
-      type: actions.FETCH_USER_METADATA.SUCCESS,
-      response: userMetadata
-    })
-  }
+  // const userMetadata = yield call(getProfile, account)
+  // if (userMetadata && userMetadata.account) {
+  //   yield put({
+  //     entity: 'users',
+  //     type: actions.FETCH_USER_METADATA.SUCCESS,
+  //     response: userMetadata
+  //   })
+  // }
 }
 
 function * fetchUsersMetadata ({ accounts }) {

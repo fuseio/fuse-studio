@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { push } from 'connected-react-router'
 import { useDispatch, useSelector } from 'react-redux'
 
-import withTracker from 'containers/withTracker'
 import MyCommunities from 'components/home/components/MyCommunities'
 import Faqs from 'components/home/components/Faq'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
@@ -94,4 +93,4 @@ const HomePage = ({
   )
 }
 
-export default withTracker(HomePage)
+export default HomePage

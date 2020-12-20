@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route } from 'react-router'
 import has from 'lodash/has'
+import { useStore } from 'mobxStore'
 
 import CommunitiesPage from 'components/oven/CommunitiesPage'
+import GoogleAnalyticsReporter from 'components/common/analytics'
 import Wizard from 'components/wizard'
 import Dashboard from 'components/dashboard'
 import FuseDashboard from 'components/FuseDashboard'
@@ -21,19 +23,19 @@ import { WEB3_CONNECT_MODAL } from 'constants/uiConstants'
 
 const Root = () => {
   const dispatch = useDispatch()
+  const store = useStore()
   const isLoggedIn = useSelector(state => state.user.isLoggedIn)
   const onConnectCallback = (provider) => {
+    store.network.initWeb3(provider)
     getWeb3({ provider })
     dispatch(connectToWallet())
   }
 
   const web3connect = useWeb3Connect(onConnectCallback)
 
-  const handleDisconnect = React.useCallback(() => {
-    web3connect.core.clearCachedProvider()
-  }, [web3connect])
+  const handleDisconnect = useCallback(web3connect?.core?.clearCachedProvider, [web3connect])
 
-  const handleConnect = React.useCallback(() => {
+  const handleConnect = useCallback(() => {
     if (has(web3connect, 'core')) {
       dispatch(loadModal(WEB3_CONNECT_MODAL, { connectTo: web3connect.core.connectTo }))
     }
@@ -48,12 +50,23 @@ const Root = () => {
   return (
     <div className='root__wrapper'>
       <NavBar handleConnect={handleConnect} handleDisconnect={handleDisconnect} />
+      <Route component={GoogleAnalyticsReporter} />
       <Switch>
-        <Route exact path='/' render={props => <HomePage handleConnect={handleConnect} {...props} />} />
-        <Route path='/view/issuance' render={props => <Wizard {...props} />} />
-        <Route path='/view/communities' render={props => <CommunitiesPage {...props} />} />
-        <Route path='/view/community/:address' render={props => <Dashboard {...props} />} />
-        <Route path='/view/fuse-community/:address' render={props => <FuseDashboard {...props} />} />
+        <Route exact path='/'>
+          <HomePage handleConnect={handleConnect} />
+        </Route>
+        <Route path='/view/issuance'>
+          <Wizard />
+        </Route>
+        <Route path='/view/communities'>
+          <CommunitiesPage />
+        </Route>
+        <Route path='/view/community/:address'>
+          <Dashboard />
+        </Route>
+        <Route path='/view/fuse-community/:address'>
+          <FuseDashboard />
+        </Route>
       </Switch>
       <Footer />
       <ModalContainer />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import CommunitiesList from 'components/oven/CommunitiesList'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { fetchTokens, fetchTokensByOwner, fetchFuseToken, fetchFeaturedCommunities } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { getAccountAddress } from 'selectors/accounts'
@@ -8,7 +8,6 @@ import { getForeignNetwork } from 'selectors/network'
 import isEmpty from 'lodash/isEmpty'
 import { push } from 'connected-react-router'
 import { withNetwork } from 'containers/Web3'
-import withTracker from 'containers/withTracker'
 
 class CommunitiesPage extends Component {
   constructor (props) {
@@ -44,6 +43,30 @@ class CommunitiesPage extends Component {
   )
 }
 
+// const Communities = (props) => {
+//   const dispatch = useDispatch()
+//   const myRef = useRef()
+//   useEffect(() => {
+//     dispatch(fetchFeaturedCommunities({ networkType: 'mainnet' }))
+//     dispatch(fetchFeaturedCommunities({ networkType: 'ropsten' }))
+//   }, [])
+
+//   const showDashboard = (communityAddress, name) => {
+//     if (window && window.analytics) {
+//       if (name) {
+//         window.analytics.track(`Clicked on featured community - ${name}`)
+//       }
+//     }
+//     dispatch(push(`/view/community/${communityAddress}`))
+//   }
+
+//   return (
+//     <div className='communities' ref={myRef}>
+//       <CommunitiesList getScrollParent={myRef?.current} {...props} showDashboard={showDashboard} />
+//     </div>
+//   )
+// }
+
 const mapStateToProps = state => ({
   featuredCommunities: state.accounts.featuredCommunities,
   tokens: state.entities.tokens,
@@ -63,7 +86,7 @@ const mapDispatchToProps = {
   push
 }
 
-export default withTracker(withNetwork(connect(
+export default withNetwork(connect(
   mapStateToProps,
   mapDispatchToProps
-)(CommunitiesPage)))
+)(CommunitiesPage))

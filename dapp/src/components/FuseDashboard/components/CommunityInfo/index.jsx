@@ -8,6 +8,8 @@ import { BigNumber } from 'bignumber.js'
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { loadModal } from 'actions/ui'
 import { QR_MODAL } from 'constants/uiConstants'
+import { observer } from 'mobx-react'
+import { useStore } from 'mobxStore'
 
 const percentOnSide = (total, homeTokenBalance, foreignTokenBalance) => {
   const calc = (value) => value * 100 / total
@@ -27,28 +29,22 @@ const TitleValue = ({ title, symbol, tokenType, children }) => (
   </div>
 )
 
-const CommunityInfo = ({
-  communityAddress,
-  homeTokenAddress,
-  foreignTokenAddress,
-  tokenType,
-  symbol,
-  decimals
-}) => {
+const CommunityInfo = () => {
+  const { dashboard } = useStore()
   const dispatch = useDispatch()
   const entities = useSelector(getCurrentCommunity)
   const tokensTotalSupplies = useSelector(state => get(state, 'screens.dashboard.totalSupply'), 0)
-  const type = tokenType && tokenType === 'mintableBurnable'
+  const type = dashboard?.homeToken?.tokenType && dashboard?.homeToken?.tokenType === 'mintableBurnable'
     ? 'Mintable burnable token'
-    : tokenType === 'basic'
+    : dashboard?.homeToken?.tokenType === 'basic'
       ? 'One time issued token'
       : 'Imported'
 
   let totalSupply = 0
   let homeTokenSupply = 0
   let foreignTokenSupply = 0
-  const homeBalance = tokensTotalSupplies && tokensTotalSupplies.hasOwnProperty(homeTokenAddress) ? tokensTotalSupplies[homeTokenAddress] : 0
-  const foreignBalance = tokensTotalSupplies && tokensTotalSupplies.hasOwnProperty(foreignTokenAddress) ? tokensTotalSupplies[foreignTokenAddress] : 0
+  const homeBalance = tokensTotalSupplies && tokensTotalSupplies.hasOwnProperty(dashboard?.community?.homeTokenAddress) ? tokensTotalSupplies[dashboard?.community?.homeTokenAddress] : 0
+  const foreignBalance = tokensTotalSupplies && tokensTotalSupplies.hasOwnProperty(dashboard?.community?.foreignTokenAddress) ? tokensTotalSupplies[dashboard?.community?.foreignTokenAddress] : 0
 
   if (tokensTotalSupplies) {
     homeTokenSupply = new BigNumber(homeBalance)
@@ -60,7 +56,7 @@ const CommunityInfo = ({
   const homeTokenBalance = Number(new BigNumber(homeTokenSupply).div(1e18).toFixed())
   const foreignTokenBalance = Number(new BigNumber(foreignTokenSupply).div(1e18).toFixed())
 
-  let {
+  const {
     percentOnHome,
     percentOnForeign
   } = percentOnSide(total, homeTokenBalance, foreignTokenBalance)
@@ -76,7 +72,7 @@ const CommunityInfo = ({
         <div className='community_info__content'>
           <TitleValue
             title='Currency'
-            symbol={symbol}
+            symbol={dashboard?.homeToken?.symbol}
             tokenType={`(${type})`}
           />
           <TitleValue title='Total entities'>
@@ -84,20 +80,20 @@ const CommunityInfo = ({
           </TitleValue>
           <TitleValue title='Currency address'>
             <div className='grid-x'>
-              <span>{addressShortener(homeTokenAddress)}</span>
-              <CopyToClipboard text={homeTokenAddress}>
+              <span>{addressShortener(dashboard?.community?.homeTokenAddress)}</span>
+              <CopyToClipboard text={dashboard?.community?.homeTokenAddress}>
                 <div className='copy'><FontAwesome name='clone' /></div>
               </CopyToClipboard>
-              <div className='copy copy--spaced' onClick={() => loadQrModal(homeTokenAddress)}><FontAwesome name='qrcode' /></div>
+              <div className='copy copy--spaced' onClick={() => loadQrModal(dashboard?.community?.homeTokenAddress)}><FontAwesome name='qrcode' /></div>
             </div>
           </TitleValue>
           <TitleValue title='Community address'>
             <div className='grid-x'>
-              <span>{addressShortener(communityAddress)}</span>
-              <CopyToClipboard text={communityAddress}>
+              <span>{addressShortener(dashboard?.communityAddress)}</span>
+              <CopyToClipboard text={dashboard?.communityAddress}>
                 <div className='copy'><FontAwesome name='clone' /></div>
               </CopyToClipboard>
-              <div className='copy copy--spaced' onClick={() => loadQrModal(communityAddress)}><FontAwesome name='qrcode' /></div>
+              <div className='copy copy--spaced' onClick={() => loadQrModal(dashboard?.communityAddress)}><FontAwesome name='qrcode' /></div>
             </div>
           </TitleValue>
         </div>
@@ -112,17 +108,17 @@ const CommunityInfo = ({
         <div className='grid-y total__sides'>
           <p>
             <span className='title'>Total supply</span>
-            {formatWei(totalSupply, 2, decimals)} <small>{symbol}</small>
+            {formatWei(totalSupply, 2, dashboard?.homeToken?.decimals)} <small>{dashboard?.homeToken?.symbol}</small>
           </p>
           <p>
             <span className='dot dot--fuse' />
             <span className='title'>Supply on Fuse:</span>
-            {formatWei(homeTokenSupply, 2, decimals)} <small>{symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
+            {formatWei(homeTokenSupply, 2, dashboard?.homeToken?.decimals)} <small>{dashboard?.homeToken?.symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
           </p>
           <p>
             <span className='dot dot--main' />
             <span className='title'>Supply on Ethereum:</span>
-            {formatWei(foreignTokenSupply, 2, decimals)} <small>{symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
+            {formatWei(foreignTokenSupply, 2, dashboard?.homeToken?.decimals)} <small>{dashboard?.homeToken?.symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
           </p>
         </div>
       </div>
@@ -130,4 +126,4 @@ const CommunityInfo = ({
   )
 }
 
-export default CommunityInfo
+export default observer(CommunityInfo)

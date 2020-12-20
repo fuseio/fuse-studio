@@ -1,10 +1,9 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router'
 import Plugin from 'components/FuseDashboard/components/Plugin'
 import { loadModal } from 'actions/ui'
 import { PLUGIN_INFO_MODAL } from 'constants/uiConstants'
-import { addCommunityPlugin } from 'actions/community'
 import Puzzle from 'images/puzzle.svg'
 import JoinBonus from 'images/join_bonus.png'
 import JoinBonusBig from 'images/join_bonus_big.png'
@@ -14,6 +13,8 @@ import FiatOnRamp from 'images/fiat-on-ramp.png'
 import FiatOnRampBig from 'images/fiat-on-ramp-big.png'
 import WalletBannerLink from 'images/wallet_banner_link.png'
 import WalletBannerLinkBig from 'images/wallet_banner_link_big.png'
+import { useStore } from 'mobxStore'
+import { observer } from 'mobx-react'
 
 const generalPlugins = ([
   {
@@ -21,14 +22,14 @@ const generalPlugins = ([
     coverImage: BusinessList,
     modalCoverPhoto: BusinessListBig,
     key: 'businessList',
-    content: `The business list allows to you integrate new businesses into your economy. Once a business is added they will appear in the mobile wallet and users will be able to transact with them freely.`
+    content: 'The business list allows to you integrate new businesses into your economy. Once a business is added they will appear in the mobile wallet and users will be able to transact with them freely.'
   },
   {
     title: 'Wallet banner link',
     coverImage: WalletBannerLink,
     disabled: false,
     modalCoverPhoto: WalletBannerLinkBig,
-    content: `The wallet banner plug-in allows you to customize your wallet by adding an image and hyperlink of your choice to your wallet.`,
+    content: 'The wallet banner plug-in allows you to customize your wallet by adding an image and hyperlink of your choice to your wallet.',
     key: 'walletBanner'
   },
   {
@@ -36,7 +37,7 @@ const generalPlugins = ([
     coverImage: JoinBonus,
     modalCoverPhoto: JoinBonusBig,
     key: 'bonuses',
-    content: `This plugin gives you the ability to reward users for completing multiple different actions. Join your economy, invite their friends or backup their wallet are all actions that can be rewarded with tokens.`
+    content: 'This plugin gives you the ability to reward users for completing multiple different actions. Join your economy, invite their friends or backup their wallet are all actions that can be rewarded with tokens.'
   },
   {
     title: 'Fiat on ramp',
@@ -51,7 +52,7 @@ const generalPlugins = ([
   }
 ])
 
-const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin, togglePlugin }) => {
+const PluginList = ({ pluginList, pluginTile, showInfoModal, addPlugin, togglePlugin }) => {
   return (
     <div className='plugins__items__wrapper'>
       <h5 className='plugins__items__title'>{pluginTile}</h5>
@@ -76,7 +77,7 @@ const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin,
                 subTitle={subTitle}
                 disabled={disabled}
                 title={title}
-                hasPlugin={plugins && plugins[key] && !plugins[key].isRemoved}
+                pluginKey={key}
                 image={coverImage}
                 managePlugin={() => addPlugin(togglePlugin(key))}
                 showInfoModal={() => showInfoModal(key, {
@@ -95,20 +96,17 @@ const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin,
   )
 }
 
-const Plugins = ({
-  loadModal,
-  addCommunityPlugin,
-  community
-}) => {
+const Plugins = () => {
+  const dispatch = useDispatch()
+  const { dashboard } = useStore()
   const { address: communityAddress } = useParams()
-  const { plugins } = community
   const showInfoModal = (key, props) => {
-    loadModal(PLUGIN_INFO_MODAL, {
+    dispatch(loadModal(PLUGIN_INFO_MODAL, {
       ...props,
       pluginName: key,
-      hasPlugin: plugins && plugins[key] ? plugins[key] : false,
+      hasPlugin: dashboard?.plugins && dashboard?.plugins[key] ? dashboard?.plugins[key] : false,
       managePlugin: () => addPlugin(togglePlugin(key))
-    })
+    }))
   }
 
   const handleTracker = (plugin) => {
@@ -120,7 +118,7 @@ const Plugins = ({
 
   const addPlugin = (plugin) => {
     handleTracker(plugin)
-    addCommunityPlugin(communityAddress, plugin)
+    dashboard.addCommunityPlugin({ communityAddress, plugin })
   }
 
   const togglePlugin = (key) => {
@@ -130,10 +128,10 @@ const Plugins = ({
     } else {
       plugin.isActive = false
     }
-    if (plugins) {
-      if (plugins[key] && plugins[key].isRemoved) {
+    if (dashboard?.plugins) {
+      if (dashboard?.plugins[key] && dashboard?.plugins[key].isRemoved) {
         plugin.isRemoved = false
-      } else if (plugins[key] && !plugins[key].isRemoved) {
+      } else if (dashboard?.plugins[key] && !dashboard?.plugins[key].isRemoved) {
         plugin.isRemoved = true
       }
     }
@@ -141,26 +139,28 @@ const Plugins = ({
   }
 
   return (
-    community ? <div className='plugins'>
-      <h2 className='plugins__title'>Plugins</h2>
-      <div className='plugins__wrapper'>
-        <div className='plugins__content__wrapper'>
-          <div className='plugins__content'>
-            Plug-ins are contracts deployed on the Fuse chain that allow you to add functionality to your app with the click of a button.
-            Any plug-in you activate will open a new navigation menu that allows you to configure it's settings.
-            Give it try!
+    dashboard?.community
+      ? <div className='plugins'>
+        <h2 className='plugins__title'>Plugins</h2>
+        <div className='plugins__wrapper'>
+          <div className='plugins__content__wrapper'>
+            <div className='plugins__content'>
+              Plug-ins are contracts deployed on the Fuse chain that allow you to add functionality to your app with the click of a button.
+              Any plug-in you activate will open a new navigation menu that allows you to configure it's settings.
+              Give it try!
+            </div>
+            <div className='plugins__puzzle'><img src={Puzzle} /></div>
           </div>
-          <div className='plugins__puzzle'><img src={Puzzle} /></div>
+          <PluginList
+            pluginList={generalPlugins}
+            pluginTile='Choose the plugin you want to add'
+            showInfoModal={showInfoModal}
+            addPlugin={addPlugin} togglePlugin={togglePlugin}
+          />
         </div>
-        <PluginList pluginList={generalPlugins} pluginTile={'Choose the plugin you want to add'} plugins={plugins} showInfoModal={showInfoModal} addPlugin={addPlugin} togglePlugin={togglePlugin} />
       </div>
-    </div> : <div />
+      : <div />
   )
 }
 
-const mapDispatchToProps = {
-  loadModal,
-  addCommunityPlugin
-}
-
-export default connect(null, mapDispatchToProps)(Plugins)
+export default observer(Plugins)

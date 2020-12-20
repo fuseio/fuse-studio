@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { observer, inject } from 'mobx-react'
+// import { connect } from 'react-redux'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
-import { Route, Switch, useParams } from 'react-router'
+import { Route, Switch, useParams, withRouter } from 'react-router'
+import { useStore } from 'mobxStore'
 import get from 'lodash/get'
-import { push } from 'connected-react-router'
+// import { push } from 'connected-react-router'
 
-import { getAccountAddress } from 'selectors/accounts'
-import { checkIsAdmin } from 'selectors/entities'
-import { getCurrentCommunity } from 'selectors/dashboard'
-import { getHomeTokenByCommunityAddress } from 'selectors/token'
-import { fetchCommunity } from 'actions/token'
-import { loadModal } from 'actions/ui'
-import { fetchEntities } from 'actions/communityEntities'
-import { withNetwork } from 'containers/Web3'
-import withTracker from 'containers/withTracker'
+// import { getAccountAddress } from 'selectors/accounts'
+// import { checkIsAdmin } from 'selectors/entities'
+// import { getCurrentCommunity } from 'selectors/dashboard'
+// import { getHomeTokenByCommunityAddress } from 'selectors/token'
+// import { fetchCommunity } from 'actions/token'
+// import { loadModal } from 'actions/ui'
+// import { fetchEntities } from 'actions/communityEntities'
+// import { withNetwork } from 'containers/Web3'
 
 import SidebarContent from 'components/FuseDashboard/components/Sidebar'
 import Dashboard from 'components/FuseDashboard/pages/Dashboard'
@@ -43,15 +44,20 @@ const WithBgImage = ({ children }) => (
 const DashboardLayout = (props) => {
   const {
     match,
-    fetchCommunity,
-    homeToken,
-    community,
-    accountAddress,
-    isAdmin,
-    location,
-    fetchEntities
+    location
   } = props
   const { address: communityAddress } = useParams()
+  const { dashboard, network } = useStore()
+  useEffect(() => {
+    console.log({ checkIsAdmin: network?.communityAddress })
+    dashboard.fetchCommunity(communityAddress)
+  }, [dashboard?.communityAddress])
+
+  useEffect(() => {
+    console.log({ checkIsAdmin: network?.accountAddress })
+    dashboard.checkIsAdmin(network?.accountAddress)
+  }, [network?.accountAddress])
+
   const [open, onSetSidebarOpen] = useState(false)
 
   useEffect(() => {
@@ -61,30 +67,14 @@ const DashboardLayout = (props) => {
   }, [location.pathname])
 
   useEffect(() => {
-    if (accountAddress) {
-      fetchCommunity(communityAddress, { networkType: 'ropsten' })
-      fetchCommunity(communityAddress, { networkType: 'mainnet' })
-      fetchEntities(communityAddress)
-    }
-  }, [accountAddress])
-
-  useEffect(() => {
-    if (communityAddress) {
-      fetchCommunity(communityAddress, { networkType: 'ropsten' })
-      fetchCommunity(communityAddress, { networkType: 'mainnet' })
-      fetchEntities(communityAddress)
-    }
-  }, [communityAddress])
-
-  useEffect(() => {
-    if (isAdmin) {
+    if (dashboard?.isAdmin) {
       window.analytics.identify({ role: 'admin', communityAddress })
     }
-  }, [isAdmin])
+  }, [dashboard?.isAdmin])
 
   const qrValue = JSON.stringify({
-    tokenAddress: community && community.homeTokenAddress,
-    originNetwork: homeToken && homeToken.networkType,
+    tokenAddress: dashboard?.community?.homeTokenAddress,
+    originNetwork: dashboard?.homeToken?.networkType,
     env: CONFIG.env,
     communityAddress
   })
@@ -92,67 +82,68 @@ const DashboardLayout = (props) => {
   return (
     <div className='dashboard'>
       <div className='container'>
-        {
-          !isMobile
-            ? (
+        {!isMobile
+          ? (
+            <SidebarContent
+              match={match.url}
+            />
+          )
+          : <Sidebar
+            sidebar={
               <SidebarContent
                 match={match.url}
               />
-            )
-            : <Sidebar
-              sidebar={
-                <SidebarContent
-                  match={match.url}
-                />
-              }
-              open={open}
-              styles={{
-                sidebar: { zIndex: 101 },
-                overlay: { zIndex: 100 }
-              }}
-              onSetOpen={onSetSidebarOpen}
-            >
-              {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
-            </Sidebar>
+            }
+            open={open}
+            styles={{
+              sidebar: { zIndex: 101 },
+              overlay: { zIndex: 100 }
+            }}
+            onSetOpen={onSetSidebarOpen}
+          >
+            {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
+          </Sidebar>
         }
         <Switch>
-          {get(community, 'plugins.bonuses') && !get(community, 'plugins.bonuses.isRemoved', false) && isAdmin && (
+          {get(dashboard?.community, 'plugins.bonuses') && !get(dashboard?.community, 'plugins.bonuses.isRemoved', false) && dashboard?.isAdmin && (
             <Route exact path={`${match.path}/bonuses`}>
               <WithBgImage>
                 <BonusesPage
                   match={match}
-                  community={community}
+                  community={dashboard?.community}
                 />
               </WithBgImage>
             </Route>
           )}
 
-          {community && isAdmin && (
-            <Route exact path={`${match.path}/onramp`}
+          {dashboard?.community && dashboard?.isAdmin && (
+            <Route
+              exact
+              path={`${match.path}/onramp`}
               render={() => (
                 <WithBgImage>
                   <OnRampPage
-                    community={community}
+                    community={dashboard?.community}
                   />
                 </WithBgImage>
               )}
-            />)
-          }
+            />)}
 
-          {community && isAdmin && (
-            <Route exact path={`${match.path}/walletbanner`}
+          {dashboard?.community && dashboard?.isAdmin && (
+            <Route
+              exact
+              path={`${match.path}/walletbanner`}
               render={() => (
                 <WithBgImage>
                   <WalletBannerLinkPage
                     match={match}
-                    community={community}
+                    community={dashboard?.community}
                   />
                 </WithBgImage>
               )}
-            />)
-          }
+            />)}
 
-          {isAdmin && (homeToken && homeToken.tokenType === 'mintableBurnable') && (
+          {dashboard?.isAdmin && (dashboard?.homeToken?.tokenType === 'mintableBurnable') && (
             <Route exact path={`${match.path}/mintBurn`}>
               <WithBgImage>
                 <MintBurnPage />
@@ -160,30 +151,28 @@ const DashboardLayout = (props) => {
             </Route>
           )}
 
-          {isAdmin && (
+          {dashboard?.isAdmin && (
             <Route exact path={`${match.path}/settings`}>
               <WithBgImage>
                 <SettingsPage
-                  community={community}
+                  community={dashboard?.community}
                 />
               </WithBgImage>
             </Route>
-          )
-          }
-          {
-            community && isAdmin && (
-              <Route exact path={`${match.path}/plugins`}>
-                <WithBgImage>
-                  <PluginsPage
-                    community={community}
-                  />
-                </WithBgImage>
-              </Route>
-            )
-          }
+          )}
+          {dashboard?.community && (
+            <Route
+              exact
+              path={`${match.path}/plugins`}
+            >
+              <WithBgImage>
+                <PluginsPage />
+              </WithBgImage>
+            </Route>
+          )}
 
           {
-            !get((community && community.plugins), 'businessList.isRemoved', false) && (
+            !get((dashboard?.community?.plugins), 'businessList.isRemoved', false) && (
               <Route exact path={`${match.path}/merchants`}>
                 <WithBgImage>
                   <Businesses />
@@ -199,7 +188,7 @@ const DashboardLayout = (props) => {
           </Route>
 
           {
-            community && (
+            dashboard?.community && (
               <Route exact path={`${match.path}/users/:join?`}>
                 <WithBgImage>
                   <Users />
@@ -208,7 +197,7 @@ const DashboardLayout = (props) => {
           }
 
           {
-            community && (
+            dashboard?.community && (
               <Route exact path={`${match.path}/transfer/:sendTo?`}>
                 <WithBgImage>
                   <TransferPage />
@@ -217,36 +206,20 @@ const DashboardLayout = (props) => {
           }
 
           {
-            community && (
+            dashboard?.community && (
               <Route path={`${match.path}/:success?`}>
                 <div className='content__container'>
                   <div className='content'>
                     <Dashboard />
                   </div>
                 </div>
-              </Route>)
+              </Route>
+            )
           }
-        </Switch >
-      </div >
-    </div >
+        </Switch>
+      </div>
+    </div>
   )
 }
 
-const mapStateToProps = (state, { match }) => ({
-  accountAddress: getAccountAddress(state),
-  homeToken: getHomeTokenByCommunityAddress(state, match.params.address),
-  community: getCurrentCommunity(state),
-  isAdmin: checkIsAdmin(state)
-})
-
-const mapDispatchToProps = {
-  fetchCommunity,
-  loadModal,
-  fetchEntities,
-  push
-}
-
-export default withTracker(withNetwork(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DashboardLayout)))
+export default withRouter(observer(DashboardLayout))

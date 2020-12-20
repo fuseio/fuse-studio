@@ -75,43 +75,6 @@ function * fetchBalances ({ accountAddress, tokens }) {
   }
 }
 
-// function * signIn ({ accountAddress }) {
-//   yield put(isUserExists(accountAddress))
-//   const box = yield call(get3box, { accountAddress })
-//   const profilePublicData = yield box.public.all()
-//   const privatePrivateData = yield box.private.all()
-//   const { publicData } = separateData({ ...profilePublicData, type: 'user' })
-//   const { privateData } = separateData(privatePrivateData)
-
-//   const { userExists } = yield select(getAccount)
-
-//   if (!userExists) {
-//     yield call(create3boxProfile, { accountAddress, data: { ...publicData, ...privateData } })
-//   }
-
-//   yield put({ type: actions.SIGN_IN.SUCCESS,
-//     accountAddress,
-//     response: {
-//       isBoxConnected: true,
-//       accountAddress,
-//       publicData,
-//       privateData
-//     }
-//   })
-// }
-
-// function * create3boxProfile ({ accountAddress, data }) {
-//   yield call(createUsersMetadata, { accountAddress, metadata: data })
-
-//   yield put({ type: actions.CREATE_3BOX_PROFILE.SUCCESS,
-//     accountAddress,
-//     response: {
-//       isBoxConnected: true,
-//       accountAddress
-//     }
-//   })
-// }
-
 function * watchAccountChanged ({ response }) {
   yield put(actions.balanceOfFuse(response.accountAddress))
   yield put(actions.balanceOfNative(response.accountAddress, { bridgeType: 'home' }))
@@ -182,8 +145,6 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.FETCH_COMMUNITIES, fetchCommunities),
     takeEvery([TRANSFER_TOKEN.SUCCESS, BURN_TOKEN.SUCCESS, MINT_TOKEN.SUCCESS], watchBalanceOfToken),
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
-    // tryTakeEvery(actions.SIGN_IN, signIn, 1),
-    // tryTakeEvery(actions.CREATE_3BOX_PROFILE, create3boxProfile, 1),
     tryTakeEvery(FETCH_TOKEN_TOTAL_SUPPLY, fetchTokenTotalSupply),
     tryTakeEvery(actions.GET_INITIAL_ADDRESS, initialAddress),
     tryTakeEvery(actions.POSTPONE_ACTION, postponeAction),

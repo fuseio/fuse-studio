@@ -2,18 +2,22 @@ import React from 'react'
 import RemoveIcon from 'images/remove.svg'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
+import { observer } from 'mobx-react'
+import { useStore } from 'mobxStore'
 
 const Plugin = ({
   title,
   image,
-  hasPlugin,
   disabled,
   showInfoModal,
   subTitle,
   managePlugin,
   modifier,
-  text
+  text,
+  pluginKey
 }) => {
+  const { dashboard } = useStore()
+  const hasPlugin = !dashboard?.plugins[pluginKey]?.isRemoved
   return (
     <div className='plugin-card cell small-24 medium-8'>
       <div className={classNames('plugin-card__image', { 'plugin-card__image--fiat': modifier })}>
@@ -27,17 +31,19 @@ const Plugin = ({
         <div className='plugin-card__actions cell small-24'>
           <button disabled={disabled} className='plugin-card__learn' onClick={showInfoModal}>LEARN MORE</button>
           <button disabled={disabled} className={classNames('plugin-card__btn', { 'plugin-card__btn--add': !hasPlugin }, { 'plugin-card__btn--remove': hasPlugin })} onClick={managePlugin}>
-            {!hasPlugin ? (
-              <React.Fragment>
-                <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
-                <span>ADD</span>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <img src={RemoveIcon} />
-                <span>Remove</span>
-              </React.Fragment>
-            )}
+            {!hasPlugin
+              ? (
+                <>
+                  <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
+                  <span>ADD</span>
+                </>
+                )
+              : (
+                <>
+                  <img src={RemoveIcon} />
+                  <span>Remove</span>
+                </>
+                )}
           </button>
         </div>
       </div>
@@ -45,4 +51,4 @@ const Plugin = ({
   )
 }
 
-export default Plugin
+export default observer(Plugin)

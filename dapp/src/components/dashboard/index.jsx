@@ -15,7 +15,6 @@ import { fetchCommunity } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
 import { withNetwork } from 'containers/Web3'
-import withTracker from 'containers/withTracker'
 
 import SidebarContent from 'components/dashboard/components/Sidebar'
 import Dashboard from 'components/dashboard/pages/Dashboard'
@@ -246,7 +245,7 @@ const mapDispatchToProps = {
   push
 }
 
-export default withTracker(withNetwork(connect(
+export default withNetwork(connect(
   mapStateToProps,
   mapDispatchToProps
-)(DashboardLayout)))
+)(DashboardLayout))
