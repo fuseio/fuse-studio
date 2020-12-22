@@ -42,9 +42,15 @@ export const getOptions = (networkVersion) => {
   return CONFIG.web3.options[networkType]
 }
 
+export const getWeb3Options = (networkName) => {
+  return CONFIG.web3.options[networkName]
+}
+
 export const getNetworkVersion = (provider) => {
   return get(provider, 'currentProvider.networkVersion', false) || get(provider, 'currentProvider.connection.networkVersion', false)
 }
+
+export const toNetworkType = (networkId) => networkIdToName[networkId] || 'unknown'
 
 export const convertNetworkName = (name) => {
   if (name === 'main') {

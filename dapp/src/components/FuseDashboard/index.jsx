@@ -48,14 +48,22 @@ const DashboardLayout = (props) => {
   } = props
   const { address: communityAddress } = useParams()
   const { dashboard, network } = useStore()
+  const { community } = dashboard
+  const { accountAddress } = network
+  const { isAdmin } = dashboard
+
   useEffect(() => {
-    console.log({ checkIsAdmin: network?.communityAddress })
     dashboard.fetchCommunity(communityAddress)
   }, [dashboard?.communityAddress])
 
   useEffect(() => {
-    console.log({ checkIsAdmin: network?.accountAddress })
-    dashboard.checkIsAdmin(network?.accountAddress)
+    if (community && accountAddress) {
+      dashboard.fetchTokenBalances(accountAddress)
+    }
+  }, [dashboard?.community, network?.accountAddress])
+
+  useEffect(() => {
+    dashboard.checkIsAdmin(accountAddress)
   }, [network?.accountAddress])
 
   const [open, onSetSidebarOpen] = useState(false)
@@ -67,7 +75,7 @@ const DashboardLayout = (props) => {
   }, [location.pathname])
 
   useEffect(() => {
-    if (dashboard?.isAdmin) {
+    if (isAdmin) {
       window.analytics.identify({ role: 'admin', communityAddress })
     }
   }, [dashboard?.isAdmin])

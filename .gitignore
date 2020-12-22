@@ -66,6 +66,7 @@ dist
 
 .DS_Store
 
+.vscode/
 
 # Docker volumes data - depends on user, dont want these in repo.
 docker/mongo/config/

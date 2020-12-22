@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const config = require('config')
 const { get } = require('lodash')
 const { withAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
@@ -81,6 +82,7 @@ const deploy = withAccount(async (account, { communityProgressId }) => {
       customData,
       communityAddress,
       isClosed,
+      foreignNetworkType: get(steps, 'community.args.foreignTokenAddress', null) && config.get('network.foreign.name'),
       foreignTokenAddress: get(steps, 'community.args.foreignTokenAddress', null),
       homeTokenAddress: get(steps, 'community.args.homeTokenAddress', null),
       name,

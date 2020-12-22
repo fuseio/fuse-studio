@@ -19,7 +19,7 @@ export default function configureStore (initialState) {
   const history = createBrowserHistory()
   const sagaMiddleware = createSagaMiddleware({
     onError: (error, sec) => {
-      Sentry.captureException(error)
+      // Sentry.captureException(error)
     }
   })
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -36,16 +36,16 @@ export default function configureStore (initialState) {
         reduxCatch(errorHandler),
         routerMiddleware(history),
         postponeMiddleware,
-        sagaMiddleware,
-        createLogger({
-          collapsed: (getState, action, logEntry) => !action.error,
-          actionTransformer: (action) => {
-            if (action.error) {
-              console.error(action.error)
-            }
-            return action
-          }
-        })
+        sagaMiddleware
+        // createLogger({
+        //   collapsed: (getState, action, logEntry) => !action.error,
+        //   actionTransformer: (action) => {
+        //     if (action.error) {
+        //       console.error(action.error)
+        //     }
+        //     return action
+        //   }
+        // })
       )
     )
   )

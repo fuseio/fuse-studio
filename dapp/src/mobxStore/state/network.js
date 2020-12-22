@@ -1,23 +1,34 @@
-import { action, observable, flow } from 'mobx'
+import { action, observable, flow, makeObservable } from 'mobx'
 import Web3 from 'web3'
 import { getProviderInfo } from 'web3modal'
-
+import { getWeb3 } from 'services/web3'
+import { toNetworkType } from 'utils/network'
 export default class Network {
   homeNetwork = 'fuse'
-  @observable foreignNetwork = 'main'
-  @observable networkType = 'main'
-  @observable walletConnected
-  @observable networkId
-  @observable accountAddress
+  foreignNetwork = 'ropsten'
+  walletConnected
+  accountAddress
+  networkName
+  networkId
   providerName
   _provider
   _web3
+  _web3Home
+  _web3Foreign
 
   constructor (rootStore) {
+    makeObservable(this, {
+      foreignNetwork: observable,
+      walletConnected: observable,
+      accountAddress: observable,
+      networkName: observable,
+      networkId: observable,
+      clearWallet: action,
+      initWeb3: action
+    })
     this.rootStore = rootStore
   }
 
-  @action
   clearWallet () {
     this.walletConnected = false
     this.accountAddress = ''
@@ -31,22 +42,25 @@ export default class Network {
       if (accounts.length) {
         this.walletConnected = true
         this.accountAddress = accounts[0]
-        console.log({ accountAddress: this.accountAddress })
       }
       const providerInfo = getProviderInfo(provider)
 
+      this._web3Home = getWeb3({ networkType: this.homeNetwork })
+      this._web3Foreign = getWeb3({ networkType: this.foreignNetwork })
       this._web3 = web3
       this._provider = provider
       switch (providerInfo.name) {
         case 'MetaMask':
           this._provider.autoRefreshOnNetworkChange = false
-          this._provider.on('chainChanged', async () => {
-            this.networkId = await web3.eth.net.getId()
+          this._provider.on('chainChanged', async (chainId) => {
+            this.networkId = parseInt(chainId)
+            this.networkName = toNetworkType(this.networkId)
           })
           break
       }
 
       this.networkId = yield this._web3.eth.net.getId()
+      this.networkName = toNetworkType(this.networkId)
     } catch (error) {
       console.log({ error })
     }

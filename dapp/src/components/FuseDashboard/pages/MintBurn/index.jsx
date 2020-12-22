@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from 'react'
-import { connect, useSelector } from 'react-redux'
 import capitalize from 'lodash/capitalize'
 import { formatWei, toWei } from 'utils/format'
 import Tabs from '@material-ui/core/Tabs'
@@ -7,13 +6,10 @@ import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/styles'
 import MintBurnForm from 'components/FuseDashboard/components/MintBurnForm'
-import { mintToken, burnToken, clearTransactionStatus } from 'actions/token'
-import Message from 'components/common/SignMessage'
-import { getForeignNetwork, getHomeNetworkType, getCurrentNetworkType } from 'selectors/network'
-import { getBalances, getAccountAddress } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
-import { getHomeTokenByCommunityAddress } from 'selectors/token'
-import { getCommunityAddress } from 'selectors/entities'
+import { useStore } from 'mobxStore'
+import { observer } from 'mobx-react'
+import { mint, burn } from 'utils/token'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -60,48 +56,39 @@ const useTabStyles = makeStyles(theme => ({
   }
 }))
 
-const MintBurn = ({
-  error,
-  token: { symbol, address: tokenAddress, decimals },
-  balances,
-  isMinting,
-  isBurning,
-  mintToken,
-  burnToken,
-  mintSignature,
-  burnSignature,
-  accountAddress,
-  transactionStatus,
-  clearTransactionStatus
-}) => {
+const MintBurn = () => {
+  const { dashboard, network } = useStore()
+  const decimals = dashboard?.homeToken?.decimals
+  const tokenAddress = dashboard?.homeToken?.address
+  const { web3Context } = dashboard
+  const { token, networkName } = web3Context
+  const balance = web3Context.tokenBalance
+  const { accountAddress } = network
+  const symbol = token?.symbol
+
   const tabsClasses = useTabsStyles()
   const tabClasses = useTabStyles()
   const [value, setValue] = useState(0)
-  const [mintMessage, setMintMessage] = useState(false)
-  const [burnMessage, setBurnMessage] = useState(false)
-  const foreignNetwork = useSelector(getForeignNetwork)
 
-  const balance = balances[tokenAddress]
-
-  const mintHandler = (amount) => {
-    mintToken(tokenAddress, toWei(String(amount), decimals), { desiredNetworkType: ['fuse'] })
+  const makeMint = (amount) => {
+    return mint({ tokenAddress, to: accountAddress, amount: toWei(String(amount), decimals) }, web3Context)
   }
 
-  const burnHandler = (amount) => {
-    burnToken(tokenAddress, toWei(String(amount), decimals), { desiredNetworkType: ['fuse'] })
+  const makeBurn = (amount) => {
+    return burn({ tokenAddress, amount: toWei(String(amount), decimals) }, web3Context)
   }
 
   const handleChange = (event, newValue) => setValue(newValue)
 
+  const handleConfirmation = () => dashboard?.fetchTokenBalances(accountAddress)
+
   return (
-    <Fragment>
+    <>
       <div className='mint-burn__header'>
         <h2 className='mint-burn__header__title'>Mint / Burn</h2>
       </div>
 
       <div className='mint-burn'>
-        <Message message={'Pending'} isOpen={isBurning || isMinting} isDark subTitle='' />
-        <Message message={'Pending'} isOpen={mintSignature || burnSignature} isDark />
         <Tabs
           classes={tabsClasses}
           value={value}
@@ -117,65 +104,38 @@ const MintBurn = ({
         <TabPanel value={value} index={0}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
+            <span className='amount'>{`(${capitalize(convertNetworkName(networkName))}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
-            error={error}
             balance={balance ? formatWei(balance, 2, decimals) : 0}
-            handleMintOrBurnClick={mintHandler}
-            tokenNetworkType={foreignNetwork}
+            sendTransaction={makeMint}
+            tokenNetworkType={networkName}
             symbol={symbol}
             actionType='mint'
+            onConfirmation={handleConfirmation}
             accountAddress={accountAddress}
-            mintMessage={mintMessage}
-            transactionStatus={transactionStatus}
-            closeMintMessage={() => {
-              setMintMessage(false)
-              clearTransactionStatus(null)
-            }}
           />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(foreignNetwork))}) `}{balance ? formatWei(balance, 2) : 0}</span>
-            <small className='symbol'>{symbol}</small>
+            <span className='amount'>{`(${capitalize(convertNetworkName(networkName))}) `}{balance ? formatWei(balance, 2) : 0}</span>
+            <small className='symbol'>{dashboard?.homeToken?.symbol}</small>
           </div>
           <MintBurnForm
-            error={error}
             balance={balance ? formatWei(balance, 2) : 0}
-            handleMintOrBurnClick={burnHandler}
-            tokenNetworkType={foreignNetwork}
+            sendTransaction={makeBurn}
+            tokenNetworkType={networkName}
             symbol={symbol}
             actionType='burn'
+            onConfirmation={handleConfirmation}
             accountAddress={accountAddress}
-            burnMessage={burnMessage}
-            transactionStatus={transactionStatus}
-            closeBurnMessage={() => {
-              setBurnMessage(false)
-              clearTransactionStatus(null)
-            }}
           />
         </TabPanel>
       </div>
-    </Fragment>
+    </>
   )
 }
 
-const mapStateToProps = (state) => ({
-  ...state.screens.token,
-  homeNetwork: getHomeNetworkType(state),
-  accountAddress: getAccountAddress(state),
-  networkType: getCurrentNetworkType(state),
-  balances: getBalances(state),
-  token: getHomeTokenByCommunityAddress(state, getCommunityAddress(state)) || { symbol: '', address: '' }
-})
-
-const mapDispatchToProps = {
-  mintToken,
-  burnToken,
-  clearTransactionStatus
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MintBurn)
+export default observer(MintBurn)
