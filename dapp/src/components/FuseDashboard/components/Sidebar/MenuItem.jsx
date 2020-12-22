@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 
 const MenuItem = observer(({
   style,

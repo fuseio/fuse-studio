@@ -9,7 +9,7 @@ import { getCurrentCommunity } from 'selectors/dashboard'
 import { loadModal } from 'actions/ui'
 import { QR_MODAL } from 'constants/uiConstants'
 import { observer } from 'mobx-react'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 
 const percentOnSide = (total, homeTokenBalance, foreignTokenBalance) => {
   const calc = (value) => value * 100 / total

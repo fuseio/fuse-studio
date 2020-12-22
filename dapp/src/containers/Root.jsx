@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route } from 'react-router'
 import has from 'lodash/has'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 
 import CommunitiesPage from 'components/oven/CommunitiesPage'
 import GoogleAnalyticsReporter from 'components/common/analytics'

@@ -13,6 +13,8 @@ import { getCurrentNetworkType } from 'selectors/network'
 import { getHomeTokenByCommunityAddress } from 'selectors/token'
 import { getCommunityAddress } from 'selectors/entities'
 import { getCurrentCommunity, getTokenAddressOfByNetwork } from 'selectors/dashboard'
+import { useStore } from 'store/mobx'
+import { observer } from 'mobx-react'
 
 const Transfer = ({
   sendTo,

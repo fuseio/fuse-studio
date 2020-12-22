@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/styles'
 import MintBurnForm from 'components/FuseDashboard/components/MintBurnForm'
 import { convertNetworkName } from 'utils/network'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 import { observer } from 'mobx-react'
 import { mint, burn } from 'utils/token'
 

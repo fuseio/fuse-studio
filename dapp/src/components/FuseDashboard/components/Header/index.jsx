@@ -2,7 +2,7 @@ import React from 'react'
 import CommunityLogo from 'components/common/CommunityLogo'
 import PlusIcon from 'images/plus.svg'
 import { observer, inject } from 'mobx-react'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 import { getImageUri } from 'utils/metadata'
 
 const Header = ({ dashboard, metadata, handleJoinCommunity }) => {

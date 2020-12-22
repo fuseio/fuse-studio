@@ -13,7 +13,7 @@ import FiatOnRamp from 'images/fiat-on-ramp.png'
 import FiatOnRampBig from 'images/fiat-on-ramp-big.png'
 import WalletBannerLink from 'images/wallet_banner_link.png'
 import WalletBannerLinkBig from 'images/wallet_banner_link_big.png'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 import { observer } from 'mobx-react'
 
 const generalPlugins = ([

@@ -3,7 +3,7 @@ import RemoveIcon from 'images/remove.svg'
 import classNames from 'classnames'
 import FontAwesome from 'react-fontawesome'
 import { observer } from 'mobx-react'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 
 const Plugin = ({
   title,

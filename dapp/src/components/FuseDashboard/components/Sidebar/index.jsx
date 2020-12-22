@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Logo from 'components/common/Logo'
 import { observer, inject } from 'mobx-react'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 import { useDispatch } from 'react-redux'
 import { useParams, withRouter } from 'react-router'
 import { push } from 'connected-react-router'

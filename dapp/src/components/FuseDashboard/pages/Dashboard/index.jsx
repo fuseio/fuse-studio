@@ -9,7 +9,7 @@ import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
 import get from 'lodash/get'
 import { observer } from 'mobx-react'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 import { withRouter } from 'react-router'
 
 const Dashboard = (props) => {

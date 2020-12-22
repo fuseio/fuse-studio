@@ -5,7 +5,7 @@ import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import { Route, Switch, useParams, withRouter } from 'react-router'
-import { useStore } from 'mobxStore'
+import { useStore } from 'store/mobx'
 import get from 'lodash/get'
 // import { push } from 'connected-react-router'
 
