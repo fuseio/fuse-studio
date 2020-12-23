@@ -4,59 +4,50 @@ import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/SignMessage'
 import transferShape from 'utils/validation/shapes/transfer'
 import TextField from '@material-ui/core/TextField'
+import withTransaction from 'components/common/WithTransaction'
 
-export default ({
+export default withTransaction(({
   balance,
   sendTo,
-  transactionStatus,
-  transferMessage,
-  closeMessage,
   error,
-  handleTransfer
+  handleSendTransaction,
+  clearTransaction,
+  isRequested,
+  isDenied,
+  isPending,
+  isConfirmed,
+  isFailed
 }) => {
   const onSubmit = (values, formikBag) => {
     const { to, amount } = values
-    handleTransfer({ to, amount })
+    handleSendTransaction({ to, amount })
     formikBag.resetForm()
-  }
-
-  const transactionError = () => {
-    return transactionStatus && transactionStatus === 'FAILURE' && transferMessage
-  }
-
-  const transactionDenied = () => {
-    return transactionError() && transferMessage && error && typeof error.includes === 'function' && error.includes('denied')
-  }
-
-  const transactionConfirmed = () => {
-    return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
   const renderForm = ({ handleSubmit, isValid, setFieldTouched, values, handleChange, errors, touched, resetForm }) => {
     return (
       <form className='transfer__content grid-y align-justify' onSubmit={handleSubmit}>
-
         <Message
-          message={'Your money has been sent successfully'}
-          isOpen={transactionConfirmed()}
+          message='Your money has been sent successfully'
+          isOpen={isConfirmed}
           clickHandler={() => {
             resetForm()
-            closeMessage()
+            clearTransaction()
           }}
           subTitle=''
         />
         <Message
-          message={'Oops, something went wrong'}
+          message='Oops, something went wrong'
           subTitle=''
-          isOpen={transactionError()}
-          clickHandler={closeMessage}
+          isOpen={isFailed}
+          clickHandler={clearTransaction}
         />
 
         <Message
-          message={'Oh no'}
+          message='Oh no'
           subTitle={`You reject the action, That’s ok, try next time!`}
-          isOpen={transactionDenied()}
-          clickHandler={closeMessage}
+          isOpen={isDenied}
+          clickHandler={clearTransaction}
         />
 
         <div className='grid-y field'>
@@ -133,4 +124,4 @@ export default ({
       enableReinitialize
     />
   )
-}
+})

@@ -115,6 +115,7 @@ const MintBurn = () => {
             actionType='mint'
             onConfirmation={handleConfirmation}
             accountAddress={accountAddress}
+            pendingText=''
           />
         </TabPanel>
         <TabPanel value={value} index={1}>
@@ -131,6 +132,7 @@ const MintBurn = () => {
             actionType='burn'
             onConfirmation={handleConfirmation}
             accountAddress={accountAddress}
+            pendingText=''
           />
         </TabPanel>
       </div>

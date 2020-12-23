@@ -5,7 +5,7 @@ import Message from 'components/common/SignMessage'
 import upperCase from 'lodash/upperCase'
 import mintBurnShape from 'utils/validation/shapes/mintBurn'
 import TextField from '@material-ui/core/TextField'
-import withTransaction from 'components/FuseDashboard/components/TransactionWrapper'
+import withTransaction from 'components/common/WithTransaction'
 import get from 'lodash/get'
 import { formatWei } from 'utils/format'
 
@@ -18,7 +18,7 @@ export default withTransaction(
     actionType,
     error,
     receipt,
-    handleMintOrBurnClick,
+    handleSendTransaction,
     isDenied,
     isConfirmed,
     isFailed
@@ -36,7 +36,7 @@ export default withTransaction(
       const { actionType, mintAmount, burnAmount } = values
 
       const amount = actionType === 'mint' ? mintAmount : burnAmount
-      handleMintOrBurnClick(amount)
+      handleSendTransaction(amount)
       formikBag.resetForm()
     }
 

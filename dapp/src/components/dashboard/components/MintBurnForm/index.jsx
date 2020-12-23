@@ -16,7 +16,7 @@ export default ({
   balance,
   actionType,
   error,
-  handleMintOrBurnClick,
+  handleSendTransaction,
   transactionStatus,
   mintMessage,
   burnMessage
@@ -35,7 +35,7 @@ export default ({
     } = values
 
     const amount = actionType === 'mint' ? mintAmount : burnAmount
-    handleMintOrBurnClick(amount)
+    handleSendTransaction(amount)
     formikBag.resetForm()
   }
 

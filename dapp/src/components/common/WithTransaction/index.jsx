@@ -3,12 +3,12 @@ import { REQUEST, PENDING, SUCCESS, FAILURE, DENIED } from 'actions/constants'
 import Message from 'components/common/SignMessage'
 
 export default function withTransaction (WrappedComponent) {
-  const TransactionWrapper = ({ sendTransaction, onConfirmation, ...rest }) => {
+  const TransactionWrapper = ({ sendTransaction, onConfirmation, pendingText, ...rest }) => {
     const [transactionHash, setTransactionHash] = useState()
     const [transactionStatus, setTransactionStatus] = useState()
     const [receipt, setReceipt] = useState()
 
-    const handleMintOrBurnClick = amount => {
+    const handleSendTransaction = amount => {
       const promise = sendTransaction(amount)
       setTransactionStatus(REQUEST)
       promise.on('transactionHash', transactionHash => {
@@ -40,33 +40,27 @@ export default function withTransaction (WrappedComponent) {
         }
       })
     }
+
+    const isRequested = transactionStatus === REQUEST
+    const isPending = transactionStatus === PENDING
     return (
       <>
-        <Message
-          message={'Pending'}
-          isOpen={transactionStatus === REQUEST}
-          isDark
-        />
-        <Message
-          message={'Pending'}
-          isOpen={transactionStatus === PENDING}
-          isDark
-          subTitle=''
-        />
+        <Message message='Pending' isOpen={isRequested} isDark />
+        <Message message='Pending' isOpen={isPending} isDark subTitle={pendingText} />
 
         <WrappedComponent
-          handleMintOrBurnClick={handleMintOrBurnClick}
+          handleSendTransaction={handleSendTransaction}
           transactionStatus={transactionStatus}
           transactionHash={transactionHash}
           receipt={receipt}
-          isRequeted={transactionStatus === REQUEST}
+          isRequested={isRequested}
           isDenied={transactionStatus === DENIED}
-          isPending={transactionStatus === PENDING}
+          isPending={isPending}
           isConfirmed={transactionStatus === SUCCESS}
           isFailed={transactionStatus === FAILURE}
           clearTransaction={() => {
             setTransactionStatus(null)
-            setTransactionHash(null)
+            setReceipt(null)
             setTransactionHash(null)
           }}
           {...rest}

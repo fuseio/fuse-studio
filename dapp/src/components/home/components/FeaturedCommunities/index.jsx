@@ -30,7 +30,7 @@ const FeaturedCommunities = ({
           <div style={{ width: '90%' }} key={address}>
             <FeaturedCommunity
               token={token}
-              showDashboard={() => showDashboard(address, community.name)}
+              showDashboard={() => showDashboard(address, community.name, token)}
               community={community}
               withDescription
             />

@@ -11,6 +11,7 @@ import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
 import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 import { Formik } from 'formik'
+import { Observer } from 'mobx-react'
 
 const ExpansionPanelDetails = withStyles({
   root: {
@@ -146,7 +147,24 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
     })
   }
 
-  const initialValues = React.useMemo(() => ({
+  // const initialValues = React.useMemo(() => ({
+  //   communityType: {
+  //     label: get(communityMetadata, 'isDefault', false),
+  //     value: get(communityMetadata, 'isDefault', false)
+  //   },
+  //   isOpen: get(community, 'isClosed', true),
+  //   coverPhoto: getCoverPhotoUri(communityMetadata),
+  //   images: {
+  //     custom: {
+  //       croppedImageUrl: getImageUri(communityMetadata)
+  //     }
+  //   },
+  //   communitySymbol: get(token, 'symbol', ''),
+  //   secondaryTokenAddress: get(community, 'secondaryTokenAddress', ''),
+  //   description: get(community, 'description', ''),
+  //   webUrl: get(community, 'webUrl', '')
+  // }), [communityMetadata, token, community])
+  const initialValues = {
     communityType: {
       label: get(communityMetadata, 'isDefault', false),
       value: get(communityMetadata, 'isDefault', false)
@@ -162,12 +180,14 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
     secondaryTokenAddress: get(community, 'secondaryTokenAddress', ''),
     description: get(community, 'description', ''),
     webUrl: get(community, 'webUrl', '')
-  }), [communityMetadata, token, community])
+  }
+
   return (
     <Formik
       render={renderForm}
       onSubmit={onSubmit}
-      initialValues={initialValues} />
+      initialValues={initialValues}
+    />
   )
 }
 

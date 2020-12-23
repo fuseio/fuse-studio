@@ -1,102 +1,53 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 import { formatWei, toWei } from 'utils/format'
-import TransferForm from 'components/dashboard/components/TransferForm'
-import { transferToken, clearTransactionStatus } from 'actions/token'
+import TransferForm from 'components/FuseDashboard/components/TransferForm'
 import capitalize from 'lodash/capitalize'
-import Message from 'components/common/SignMessage'
-import { FAILURE, SUCCESS } from 'actions/constants'
 import { withRouter } from 'react-router'
-import { getBalances } from 'selectors/accounts'
 import { convertNetworkName } from 'utils/network'
-import { getCurrentNetworkType } from 'selectors/network'
-import { getHomeTokenByCommunityAddress } from 'selectors/token'
-import { getCommunityAddress } from 'selectors/entities'
-import { getCurrentCommunity, getTokenAddressOfByNetwork } from 'selectors/dashboard'
 import { useStore } from 'store/mobx'
 import { observer } from 'mobx-react'
+import { transfer } from 'utils/token'
 
 const Transfer = ({
   sendTo,
-  error,
-  token: { symbol, decimals },
-  balances,
-  networkType,
-  isTransfer,
-  transferToken,
-  transferSignature,
-  transactionStatus,
-  transferSuccess,
-  clearTransactionStatus,
-  tokenOfCommunityOnCurrentSide,
   loading
 }) => {
-  console.log({ tokenOfCommunityOnCurrentSide })
-  const [transferMessage, setTransferMessage] = useState(false)
+  const { dashboard, network } = useStore()
+  const { accountAddress } = network
+  const decimals = dashboard?.homeToken?.decimals
+  const tokenAddress = dashboard?.homeToken?.address
+  const { web3Context } = dashboard
+  const balance = web3Context.tokenBalance
+  const { token, networkName } = web3Context
+  const symbol = token?.symbol
 
-  useEffect(() => {
-    if (transactionStatus && transactionStatus === SUCCESS) {
-      if (transferSuccess) {
-        setTransferMessage(true)
-      }
-    } else if (transactionStatus && transactionStatus === FAILURE) {
-      if (transferSuccess === false) {
-        setTransferMessage(true)
-      }
-    }
-    return () => {}
-  }, [transactionStatus])
+  const handleConfirmation = () => dashboard?.fetchTokenBalances(accountAddress)
 
-  const balance = balances[tokenOfCommunityOnCurrentSide]
-
-  const handleTransfer = ({ to: toField, amount }) => {
-    transferToken(tokenOfCommunityOnCurrentSide, toField, toWei(String(amount), decimals))
-  }
-
+  const makeTransfer = ({ to: toField, amount }) =>
+    transfer({ tokenAddress, to: toField, amount: toWei(String(amount), decimals) }, web3Context)
+  debugger
   return (
-    !loading && <Fragment>
+    !loading && <>
       <div className='transfer__header'>
         <h2 className='transfer__header__title'>Transfer</h2>
       </div>
 
       <div className='transfer'>
-        <Message message={'Pending'} isOpen={isTransfer} isDark subTitle={`Your money on it's way`} />
-        <Message message={'Pending'} isOpen={transferSignature} isDark />
-
         <div className='transfer__balance'>
           <span className='title'>My Balance: </span>
-          <span className='amount'>{`(${capitalize(convertNetworkName(networkType))}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
+          <span className='amount'>{`(${capitalize(convertNetworkName(networkName))}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
           <small className='symbol'>{symbol}</small>
         </div>
         <TransferForm
-          error={error}
           sendTo={sendTo}
           balance={balance ? formatWei(balance, 2, decimals) : 0}
-          transferMessage={transferMessage}
-          transactionStatus={transactionStatus}
-          closeMessage={() => {
-            setTransferMessage(false)
-            clearTransactionStatus(null)
-          }}
-          handleTransfer={handleTransfer}
+          sendTransaction={makeTransfer}
+          onConfirmation={handleConfirmation}
+          pendingText="Your money on it's way"
         />
       </div>
-    </Fragment>
+    </>
   )
 }
 
-const mapStateToProps = (state, { match }) => ({
-  ...state.screens.token,
-  sendTo: match.params.sendTo,
-  balances: getBalances(state),
-  networkType: getCurrentNetworkType(state),
-  token: getHomeTokenByCommunityAddress(state, getCommunityAddress(state)) || { symbol: '' },
-  tokenOfCommunityOnCurrentSide: getTokenAddressOfByNetwork(state, getCurrentCommunity(state))
-})
-
-const mapDispatchToProps = {
-  transferToken,
-  clearTransactionStatus
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Transfer))
+export default withRouter(observer(Transfer))

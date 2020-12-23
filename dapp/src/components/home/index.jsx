@@ -42,13 +42,18 @@ const HomePage = ({
     }
   }
 
-  const showDashboard = (communityAddress, name) => {
+  const showDashboard = (communityAddress, name, foreignToken) => {
     if (window && window.analytics) {
       if (name) {
         window.analytics.track(`Clicked on featured community`, { name })
       }
     }
-    dispatch(push(`/view/fuse-community/${communityAddress}`))
+    debugger
+    if (!foreignToken) {
+      dispatch(push(`/view/fuse-community/${communityAddress}`))
+    } else {
+      dispatch(push(`/view/community/${communityAddress}`))
+    }
   }
 
   return (

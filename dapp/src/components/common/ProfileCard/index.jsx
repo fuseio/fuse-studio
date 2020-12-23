@@ -14,7 +14,7 @@ const ProfileCard = memo(({
   const { token, communityAddress } = community
   const { name, symbol } = token
   return (
-    <div className='profile__card profile__card--link grid-x cell align-middle' onClick={() => showDashboard(communityAddress)}>
+    <div className='profile__card profile__card--link grid-x cell align-middle' onClick={() => showDashboard(communityAddress, name, token)}>
       <div className='profile__card__logo'>
         <CommunityLogo
           symbol={symbol}
