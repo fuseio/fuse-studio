@@ -2,7 +2,8 @@ import { action, observable, flow, makeObservable } from 'mobx'
 import Web3 from 'web3'
 import { getProviderInfo } from 'web3modal'
 import { getWeb3 } from 'services/web3'
-import { toNetworkType } from 'utils/network'
+import { toNetworkType, getWeb3Options } from 'utils/network'
+
 export default class Network {
   homeNetwork = 'fuse'
   foreignNetwork = 'ropsten'
@@ -33,6 +34,14 @@ export default class Network {
     this.walletConnected = false
     this.accountAddress = ''
     this._provider.close()
+  }
+
+  get web3Context () {
+    return {
+      web3: this._web3,
+      accountAddress: this.accountAddress,
+      web3Options: getWeb3Options(this.networkName)
+    }
   }
 
   initWeb3 = flow(function * (provider) {

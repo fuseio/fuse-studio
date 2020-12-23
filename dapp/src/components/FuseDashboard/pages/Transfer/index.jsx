@@ -3,7 +3,6 @@ import { formatWei, toWei } from 'utils/format'
 import TransferForm from 'components/FuseDashboard/components/TransferForm'
 import capitalize from 'lodash/capitalize'
 import { withRouter } from 'react-router'
-import { convertNetworkName } from 'utils/network'
 import { useStore } from 'store/mobx'
 import { observer } from 'mobx-react'
 import { transfer } from 'utils/token'
@@ -16,16 +15,16 @@ const Transfer = ({
   const { accountAddress } = network
   const decimals = dashboard?.homeToken?.decimals
   const tokenAddress = dashboard?.homeToken?.address
-  const { web3Context } = dashboard
-  const balance = web3Context.tokenBalance
-  const { token, networkName } = web3Context
+  const { tokenContext } = dashboard
+  const { web3Context } = network
+  const balance = tokenContext.tokenBalance
+  const { token, tokenNetworkName } = tokenContext
   const symbol = token?.symbol
 
   const handleConfirmation = () => dashboard?.fetchTokenBalances(accountAddress)
 
   const makeTransfer = ({ to: toField, amount }) =>
     transfer({ tokenAddress, to: toField, amount: toWei(String(amount), decimals) }, web3Context)
-  debugger
   return (
     !loading && <>
       <div className='transfer__header'>
@@ -35,13 +34,14 @@ const Transfer = ({
       <div className='transfer'>
         <div className='transfer__balance'>
           <span className='title'>My Balance: </span>
-          <span className='amount'>{`(${capitalize(convertNetworkName(networkName))}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
+          <span className='amount'>{`(${capitalize(tokenNetworkName)}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
           <small className='symbol'>{symbol}</small>
         </div>
         <TransferForm
           sendTo={sendTo}
           balance={balance ? formatWei(balance, 2, decimals) : 0}
           sendTransaction={makeTransfer}
+          desiredNetworkName={tokenNetworkName}
           onConfirmation={handleConfirmation}
           pendingText="Your money on it's way"
         />

@@ -1,14 +1,26 @@
 import React, { useState } from 'react'
 import { REQUEST, PENDING, SUCCESS, FAILURE, DENIED } from 'actions/constants'
 import Message from 'components/common/SignMessage'
+import { useDispatch } from 'react-redux'
+import { SWITCH_NETWORK } from 'constants/uiConstants'
+import { loadModal } from 'actions/ui'
+import { observer } from 'mobx-react'
+import { useStore } from 'store/mobx'
 
 export default function withTransaction (WrappedComponent) {
-  const TransactionWrapper = ({ sendTransaction, onConfirmation, pendingText, ...rest }) => {
+  const TransactionWrapper = ({ desiredNetworkName, sendTransaction, onConfirmation, pendingText, ...rest }) => {
+    const { network } = useStore()
+    const currentNetworkType = network.networkName
     const [transactionHash, setTransactionHash] = useState()
     const [transactionStatus, setTransactionStatus] = useState()
     const [receipt, setReceipt] = useState()
+    const dispatch = useDispatch()
 
     const handleSendTransaction = amount => {
+      if (currentNetworkType !== desiredNetworkName) {
+        dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: desiredNetworkName, networkType: currentNetworkType }))
+        return
+      }
       const promise = sendTransaction(amount)
       setTransactionStatus(REQUEST)
       promise.on('transactionHash', transactionHash => {
@@ -69,5 +81,5 @@ export default function withTransaction (WrappedComponent) {
     )
   }
 
-  return TransactionWrapper
+  return observer(TransactionWrapper)
 }

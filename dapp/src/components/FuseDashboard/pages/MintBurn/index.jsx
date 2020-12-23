@@ -6,7 +6,6 @@ import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/styles'
 import MintBurnForm from 'components/FuseDashboard/components/MintBurnForm'
-import { convertNetworkName } from 'utils/network'
 import { useStore } from 'store/mobx'
 import { observer } from 'mobx-react'
 import { mint, burn } from 'utils/token'
@@ -60,10 +59,10 @@ const MintBurn = () => {
   const { dashboard, network } = useStore()
   const decimals = dashboard?.homeToken?.decimals
   const tokenAddress = dashboard?.homeToken?.address
-  const { web3Context } = dashboard
-  const { token, networkName } = web3Context
-  const balance = web3Context.tokenBalance
-  const { accountAddress } = network
+  const { tokenContext } = dashboard
+  const { token, tokenNetworkName } = tokenContext
+  const balance = tokenContext.tokenBalance
+  const { accountAddress, web3Context } = network
   const symbol = token?.symbol
 
   const tabsClasses = useTabsStyles()
@@ -104,13 +103,13 @@ const MintBurn = () => {
         <TabPanel value={value} index={0}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(networkName))}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
+            <span className='amount'>{`(${capitalize(tokenNetworkName)}) `}{balance ? formatWei(balance, 2, decimals) : 0}</span>
             <small className='symbol'>{symbol}</small>
           </div>
           <MintBurnForm
             balance={balance ? formatWei(balance, 2, decimals) : 0}
             sendTransaction={makeMint}
-            tokenNetworkType={networkName}
+            desiredNetworkName={tokenNetworkName}
             symbol={symbol}
             actionType='mint'
             onConfirmation={handleConfirmation}
@@ -121,13 +120,13 @@ const MintBurn = () => {
         <TabPanel value={value} index={1}>
           <div className='mint-burn__balance'>
             <span className='title'>My Balance: </span>
-            <span className='amount'>{`(${capitalize(convertNetworkName(networkName))}) `}{balance ? formatWei(balance, 2) : 0}</span>
+            <span className='amount'>{`(${capitalize(tokenNetworkName)}) `}{balance ? formatWei(balance, 2) : 0}</span>
             <small className='symbol'>{dashboard?.homeToken?.symbol}</small>
           </div>
           <MintBurnForm
             balance={balance ? formatWei(balance, 2) : 0}
             sendTransaction={makeBurn}
-            tokenNetworkType={networkName}
+            desiredNetworkName={tokenNetworkName}
             symbol={symbol}
             actionType='burn'
             onConfirmation={handleConfirmation}
