@@ -48,6 +48,7 @@ const DashboardLayout = ({
     if (community && accountAddress) {
       dashboard.checkIsAdmin(accountAddress)
       dashboard.fetchTokenBalances(accountAddress)
+      dashboard.checkIsCommunityMember(accountAddress)
     }
   }, [dashboard?.community, network?.accountAddress])
 

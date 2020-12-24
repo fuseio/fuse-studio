@@ -11,7 +11,7 @@ import keyBy from 'lodash/keyBy'
 import has from 'lodash/has'
 import request from 'superagent'
 import pickBy from 'lodash/pickBy'
-import { getCommunityAdmins } from 'services/graphql/community.js'
+import { getCommunityAdmins, isCommunityMember } from 'services/graphql/community.js'
 import { getWeb3 } from 'services/web3'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getWeb3Options } from 'utils/network'
@@ -29,6 +29,7 @@ export default class Dashboard {
   _web3Home
   _foreignWeb3
   _baseUrl
+  isCommunityMember
   tokenBalances = {
     home: 0,
     foreign: 0
@@ -42,6 +43,7 @@ export default class Dashboard {
       communityAddress: observable,
       foreignToken: observable,
       isFetching: observable,
+      isCommunityMember: observable,
       isAdmin: observable,
       tokenBalances: observable,
       addedPlugins: computed,
@@ -210,6 +212,15 @@ export default class Dashboard {
       yield request.post(`${this.baseUrl}/communities/${this.communityAddress}/invite`)
         .send({ email, phoneNumber })
         .then(response => response.body)
+    } catch (error) {
+
+    }
+  })
+
+  checkIsCommunityMember = flow(function * (accountAddress) {
+    try {
+      const memberData = yield isCommunityMember(this.communityAddress, accountAddress)
+      this.isCommunityMember = memberData?.data?.communityEntities?.length > 0
     } catch (error) {
 
     }
