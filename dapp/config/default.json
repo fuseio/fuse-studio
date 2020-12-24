@@ -110,7 +110,7 @@
     "graph": {
       "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
       "subgraphs": {
-        "entities": "/fuse-entities-qa"
+        "entities": "/fuse-entities-dev"
       }
     }
   },

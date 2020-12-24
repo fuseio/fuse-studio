@@ -77,7 +77,7 @@ module.exports = {
       sharedAddresses: {
         WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
         WalletImplementation: '0x1DA43F87611B7FFDb104D125389E14313e053A3A',
-        CommunityFactory: '0x5E853EDAEE70BD635d02CC0169Cf97083DE3436D',
+        CommunityFactory: '0xcc004Ee01Da7D9207aBE384cE601623E9F223536',
         MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
         walletModules: {
           GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',

@@ -69,13 +69,11 @@ const MintBurn = () => {
   const tabClasses = useTabStyles()
   const [value, setValue] = useState(0)
 
-  const makeMint = (amount) => {
-    return mint({ tokenAddress, to: accountAddress, amount: toWei(String(amount), decimals) }, web3Context)
-  }
+  const makeMint = (amount) =>
+    mint({ tokenAddress, to: accountAddress, amount: toWei(String(amount), decimals) }, web3Context)
 
-  const makeBurn = (amount) => {
-    return burn({ tokenAddress, amount: toWei(String(amount), decimals) }, web3Context)
-  }
+  const makeBurn = (amount) =>
+    burn({ tokenAddress, amount: toWei(String(amount), decimals) }, web3Context)
 
   const handleChange = (event, newValue) => setValue(newValue)
 
