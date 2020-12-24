@@ -88,9 +88,9 @@ const deploy = withAccount(async (account, { communityProgressId }) => {
       name,
       communityURI,
       description,
-      creatorAddress: adminAddress,
-      isMultiBridge: true,
-      isFuse: true
+      creatorAddress: adminAddress
+      // isMultiBridge: true,
+      // isFuse: true
     }).save()
 
     await CommunityProgress.findByIdAndUpdate(communityProgress._id, { communityAddress, done: true })
