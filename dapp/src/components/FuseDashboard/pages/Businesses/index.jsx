@@ -32,6 +32,7 @@ import dotsIcon from 'images/dots.svg'
 import AddBusiness from 'images/add_business.svg'
 
 const Businesses = ({
+  fetchEntities,
   isAdmin,
   accountAddress,
   entityAdded,
@@ -56,6 +57,10 @@ const Businesses = ({
   const [users, setUsers] = useState([])
 
   const [transactionTitle, setTransactionTitle] = useState()
+
+  useEffect(() => {
+    fetchEntities(communityAddress)
+  }, [])
 
   useEffect(() => {
     businessesAccounts.forEach((address) => {

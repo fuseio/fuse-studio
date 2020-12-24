@@ -40,6 +40,7 @@ import AddBusiness from 'images/add_business.svg'
 import Avatar from 'images/avatar.svg'
 
 const Users = ({
+  fetchEntities,
   isAdmin,
   community,
   accountAddress,
@@ -68,6 +69,10 @@ const Users = ({
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const foreignNetwork = useSelector(getForeignNetwork)
+
+  useEffect(() => {
+    fetchEntities(communityAddress)
+  }, [])
 
   useEffect(() => {
     if (join) {
