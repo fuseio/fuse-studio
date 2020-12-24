@@ -16,7 +16,6 @@ export default withTransaction(
     clearTransaction,
     balance,
     actionType,
-    error,
     receipt,
     handleSendTransaction,
     isDenied,
@@ -175,7 +174,7 @@ export default withTransaction(
         )}
         render={renderForm}
         onSubmit={onSubmit}
-        isInitialValid={false}
+        validateOnMount
         enableReinitialize
         validateOnChange
       />

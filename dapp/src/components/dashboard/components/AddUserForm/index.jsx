@@ -250,6 +250,7 @@ const AddUserForm = (props) => {
       </form>
     )
   }
+
   return (
     <Formik
       initialValues={{
@@ -265,7 +266,7 @@ const AddUserForm = (props) => {
       validationSchema={userEntity}
       render={renderForm}
       onSubmit={onSubmit}
-      isInitialValid={false}
+      validateOnMount
     />
   )
 }

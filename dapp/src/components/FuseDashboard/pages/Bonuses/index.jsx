@@ -1,141 +1,79 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import RewardUserForm from 'components/dashboard/components/RewardUserForm'
-import TransferToFunderForm from 'components/dashboard/components/TransferToFunderForm'
-import { connect, useSelector } from 'react-redux'
-import { transferTokenToFunder, clearTransactionStatus } from 'actions/token'
+import RewardUserForm from 'components/FuseDashboard/components/RewardUserForm'
+import TransferToFunderForm from 'components/FuseDashboard/components/TransferToFunderForm'
+import { useSelector, useDispatch } from 'react-redux'
 import { balanceOfToken } from 'actions/accounts'
-import { FAILURE, SUCCESS } from 'actions/constants'
-import { getFunderAccount, getBalances } from 'selectors/accounts'
+import { getFunderAccount } from 'selectors/accounts'
 import { formatWei, toWei } from 'utils/format'
 import { setBonus } from 'actions/community'
-import { loadModal } from 'actions/ui'
 import get from 'lodash/get'
-import { getCurrentNetworkType } from 'selectors/network'
-import { getForeignTokenByCommunityAddress } from 'selectors/token'
-import { getHomeTokenAddress, getCurrentCommunity } from 'selectors/dashboard'
-import { getCommunityAddress } from 'selectors/entities'
 import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
+import { observer } from 'mobx-react'
+import { useStore } from 'store/mobx'
+import { transfer } from 'utils/token'
 
 const { addresses: { fuse: { funder: funderAddress } } } = CONFIG.web3
 
-const JoinBonus = ({
-  error,
-  community,
-  transactionStatus,
-  transferSignature,
-  isTransfer,
-  transferSuccess,
-  transferTokenToFunder,
-  balanceOfToken,
-  clearTransactionStatus,
-  balances,
-  setBonus,
-  homeTokenAddress,
-  foreignToken
-}) => {
+const Bonuses = () => {
+  const dispatch = useDispatch()
   const funderAccount = useSelector(getFunderAccount)
-  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[homeTokenAddress]
-
-  const { plugins } = community
-
-  const [transferMessage, setTransferMessage] = useState(false)
-
-  useEffect(() => {
-    if (homeTokenAddress) {
-      balanceOfToken(homeTokenAddress, funderAddress, { bridgeType: 'home' })
-    }
-  }, [homeTokenAddress])
+  const { dashboard, network } = useStore()
+  const { accountAddress } = network
+  const { web3Context, tokenContext } = dashboard
+  const { networkName } = web3Context
+  const { tokenNetworkName, tokenBalance } = tokenContext
+  const decimals = dashboard?.homeToken?.decimals
+  const tokenAddress = dashboard?.homeToken?.address
+  const funderBalance = funderAccount && funderAccount.balances && funderAccount.balances[tokenAddress]
 
   useEffect(() => {
-    if (transactionStatus && transactionStatus === SUCCESS) {
-      if (transferSuccess) {
-        setTransferMessage(true)
-        balanceOfToken(homeTokenAddress, funderAddress, { bridgeType: 'home' })
-      }
-    } else if (transactionStatus && transactionStatus === FAILURE) {
-      if (transferSuccess === false) {
-        setTransferMessage(true)
-      }
+    if (tokenAddress) {
+      dispatch(balanceOfToken(tokenAddress, funderAddress, { bridgeType: 'home' }))
     }
-    return () => { }
-  }, [transactionStatus])
+  }, [dashboard?.homeToken?.address])
 
-  const transferToFunder = (amount) => {
-    transferTokenToFunder(homeTokenAddress, toWei(String(amount), foreignToken.decimals))
+  const makeTransfer = (amount) => {
+    return transfer({ tokenAddress, to: funderAddress, amount: toWei(String(amount), decimals) }, web3Context)
   }
 
-  const transactionError = () => {
-    return transactionStatus && transactionStatus === 'FAILURE' && transferMessage
+  const handleConfirmation = () => {
+    dashboard?.fetchTokenBalances(accountAddress)
+    dispatch(balanceOfToken(tokenAddress, funderAddress, { bridgeType: 'home' }))
   }
-
-  const transactionDenied = () => {
-    return transactionError() && transferMessage && error && typeof error.includes === 'function' && error.includes('denied')
-  }
-
-  const transactionConfirmed = () => {
-    return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
-  }
-
-  const initialValues = React.useMemo(() => ({
-    joinBonus: { ...get(plugins, 'joinBonus.joinInfo'), isActive: get(plugins, 'joinBonus.isActive') },
-    backupBonus: { ...get(plugins, 'backupBonus.backupInfo'), isActive: get(plugins, 'backupBonus.isActive') },
-    inviteBonus: { ...get(plugins, 'inviteBonus.inviteInfo'), isActive: get(plugins, 'inviteBonus.isActive') }
-  }), [plugins])
-
-  const balance = balances[homeTokenAddress]
 
   return (
-    community ? <Fragment>
-      <div className='join_bonus__header'>
-        <h2 className='join_bonus__header__title'>Bonuses</h2>
-        &nbsp;<FontAwesome data-tip data-for='Bonuses' name='info-circle' />
-        <ReactTooltip className='tooltip__content' id='Bonuses' place='bottom' effect='solid'>
-          <div>Please put some tokens into the funder above and then select here the type of bonus and the amount you would like.</div>
-        </ReactTooltip>
-      </div>
-      <div className='join_bonus__wrapper'>
-        <TransferToFunderForm
-          isTransfer={isTransfer}
-          transferSignature={transferSignature}
-          closeInnerModal={() => {
-            setTransferMessage(false)
-            clearTransactionStatus(null)
-          }}
-          symbol={foreignToken.symbol}
-          transactionConfirmed={transactionConfirmed}
-          transactionError={transactionError}
-          transactionDenied={transactionDenied}
-          balance={balance ? formatWei(balance, 2, foreignToken.decimals) : 0}
-          transferToFunder={transferToFunder}
-          funderBalance={funderBalance ? formatWei(funderBalance, 2, foreignToken.decimals) : 0}
-        />
-        <RewardUserForm
-          hasFunderBalance={funderBalance && funderBalance !== '0'}
-          setJoinBonus={(amount, isActive) => setBonus('joinBonus', amount, isActive)}
-          setBackupBonus={(amount, isActive) => setBonus('backupBonus', amount, isActive)}
-          setInviteBonus={(amount, isActive) => setBonus('inviteBonus', amount, isActive)}
-          initialValues={initialValues}
-        />
-      </div>
-    </Fragment> : <div />
+    dashboard?.community
+      ? (
+        <>
+          <div className='join_bonus__header'>
+            <h2 className='join_bonus__header__title'>Bonuses</h2>
+            &nbsp;<FontAwesome data-tip data-for='Bonuses' name='info-circle' />
+            <ReactTooltip className='tooltip__content' id='Bonuses' place='bottom' effect='solid'>
+              <div>Please put some tokens into the funder above and then select here the type of bonus and the amount you would like.</div>
+            </ReactTooltip>
+          </div>
+          <div className='join_bonus__wrapper'>
+            <TransferToFunderForm
+              desiredNetworkName={tokenNetworkName}
+              symbol={dashboard?.homeToken?.symbol}
+              balance={tokenBalance ? formatWei(tokenBalance, 2, decimals) : 0}
+              sendTransaction={makeTransfer}
+              tokenNetworkType={networkName}
+              onConfirmation={handleConfirmation}
+              funderBalance={funderBalance ? formatWei(funderBalance, 2, decimals) : 0}
+            />
+            <RewardUserForm
+              hasFunderBalance={funderBalance && funderBalance !== '0'}
+              setJoinBonus={(amount, isActive) => dashboard?.setBonus('joinBonus', amount, isActive)}
+              setBackupBonus={(amount, isActive) => dashboard?.setBonus('backupBonus', amount, isActive)}
+              setInviteBonus={(amount, isActive) => dashboard?.setBonus('inviteBonus', amount, isActive)}
+            />
+          </div>
+        </>
+      )
+      : <div />
   )
 }
 
-const mapStateToProps = (state, { match }) => ({
-  ...state.screens.token,
-  balances: getBalances(state),
-  networkType: getCurrentNetworkType(state),
-  homeTokenAddress: getHomeTokenAddress(state, getCurrentCommunity(state)),
-  foreignToken: getForeignTokenByCommunityAddress(state, getCommunityAddress(state)) || { networkType: '' }
-})
-
-const mapDispatchToState = {
-  transferTokenToFunder,
-  clearTransactionStatus,
-  balanceOfToken,
-  setBonus,
-  loadModal
-}
-
-export default connect(mapStateToProps, mapDispatchToState)(JoinBonus)
+export default observer(Bonuses)

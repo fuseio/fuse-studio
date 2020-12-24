@@ -183,7 +183,7 @@ export default ({
       validationSchema={mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)}
       render={renderForm}
       onSubmit={onSubmit}
-      isInitialValid={false}
+      validateOnMount
       enableReinitialize
       validateOnChange
     />

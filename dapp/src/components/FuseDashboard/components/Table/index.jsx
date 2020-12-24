@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTable, usePagination, useSortBy } from 'react-table'
-import BodyRow from 'components/dashboard/components/BodyRow'
-import HeaderRow from 'components/dashboard/components/HeaderRow'
+import BodyRow from 'components/FuseDashboard/components/BodyRow'
+import HeaderRow from 'components/FuseDashboard/components/HeaderRow'
 import FontAwesome from 'react-fontawesome'
 
 const MyTable = ({

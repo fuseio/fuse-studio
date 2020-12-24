@@ -7,7 +7,7 @@ import identity from 'lodash/identity'
 import capitalize from 'lodash/capitalize'
 import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
-import MyTable from 'components/dashboard/components/Table'
+import MyTable from 'components/FuseDashboard/components/Table'
 import {
   fetchEntities,
   addEntity,

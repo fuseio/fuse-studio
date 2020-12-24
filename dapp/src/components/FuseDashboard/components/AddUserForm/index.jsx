@@ -265,7 +265,7 @@ const AddUserForm = (props) => {
       validationSchema={userEntity}
       render={renderForm}
       onSubmit={onSubmit}
-      isInitialValid={false}
+      validateOnMount
     />
   )
 }

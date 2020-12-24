@@ -2,8 +2,8 @@ import React from 'react'
 import { getIn, useFormikContext } from 'formik'
 import { withStyles } from '@material-ui/styles'
 import MuiExpansionPanel from '@material-ui/core/Accordion'
-import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import MuiExpansionPanelSummary from '@material-ui/core/AccordionSummary'
+import AccordionDetails from '@material-ui/core/AccordionActions'
 import Typography from '@material-ui/core/Typography'
 
 import TotalSupply from 'components/wizard/components/TotalSupply'
@@ -55,7 +55,7 @@ const ExpansionPanelDetails = withStyles({
     display: 'flex',
     padding: '24px'
   }
-})(MuiExpansionPanelDetails)
+})(AccordionDetails)
 
 const DropDownIcon = () => <img src={CaretDown} />
 

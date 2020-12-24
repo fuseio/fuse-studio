@@ -1,14 +1,12 @@
-import React, { Fragment } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { addCommunityPlugin } from 'actions/community'
+import React from 'react'
 import get from 'lodash/get'
 import PluginsForm from './PluginsForm'
-import { getCurrentCommunity } from 'selectors/dashboard'
+import { observer } from 'mobx-react'
+import { useStore } from 'store/mobx'
 
 const OnRamp = () => {
-  const community = useSelector(state => getCurrentCommunity(state))
-  const dispatch = useDispatch()
-  const services = get(community, 'plugins.onramp.services', {})
+  const { dashboard } = useStore()
+  const services = get(dashboard, 'plugins.onramp.services', {})
 
   const addPlugin = (nestedPlugin) => {
     const newServices = { ...services }
@@ -24,11 +22,11 @@ const OnRamp = () => {
       newServices.moonpay = { isActive: false, name: 'moonpay' }
       newServices.transak = { isActive: false, name: 'transak' }
     }
-    dispatch(addCommunityPlugin(community.communityAddress, { ...get(community, 'plugins.onramp', {}), services: { ...newServices, [nestedPlugin.name]: nestedPlugin } }))
+    dashboard.addCommunityPlugin({ communityAddress: dashboard.communityAddress, plugin: { ...get(dashboard, 'plugins.onramp', {}), services: { ...newServices, [nestedPlugin.name]: nestedPlugin } } })
   }
 
   return (
-    <Fragment>
+    <>
       <div className='onramp__header'>
         <h2 className='onramp__header__title'>Fiat on ramp</h2>
       </div>
@@ -45,8 +43,8 @@ const OnRamp = () => {
           <PluginsForm myPlugins={services} addPlugin={addPlugin} />
         </div>
       </div>
-    </Fragment>
+    </>
   )
 }
 
-export default OnRamp
+export default observer(OnRamp)

@@ -1,6 +1,6 @@
 import React from 'react'
 import Modal from 'components/common/Modal'
-import BusinessForm from 'components/dashboard/components/BusinessForm'
+import BusinessForm from 'components/FuseDashboard/components/BusinessForm'
 import { connect } from 'react-redux'
 
 const AddBusinessModal = ({ hideModal, isJoin, submitEntity, entity, users }) => {

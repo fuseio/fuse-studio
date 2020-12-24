@@ -209,7 +209,7 @@ class Wizard extends React.Component {
             validationSchema={WizardShape}
             render={this.renderForm}
             validateOnChange
-            isInitialValid={false}
+            validateOnMount
           />
         </div>
       </Fragment>

@@ -62,7 +62,7 @@ const ToggleBridge = (props) => {
       render={renderForm}
       initialStatus={false}
       validateOnChange
-      isInitialValid={false}
+      validateOnMount
     />
   )
 }

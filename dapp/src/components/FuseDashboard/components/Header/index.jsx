@@ -1,12 +1,12 @@
 import React from 'react'
 import CommunityLogo from 'components/common/CommunityLogo'
 import PlusIcon from 'images/plus.svg'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
 import { getImageUri } from 'utils/metadata'
 
-const Header = ({ dashboard, metadata, handleJoinCommunity }) => {
-  console.log({ Header: dashboard })
+const Header = ({ metadata, handleJoinCommunity }) => {
+  const { dashboard } = useStore()
   return (
     <div className='community_header'>
       <div className='community_header__image'>
@@ -21,15 +21,17 @@ const Header = ({ dashboard, metadata, handleJoinCommunity }) => {
           <h2 className='name'>{dashboard?.community?.name} community</h2>
         </div>
       </div>
-      {/* {
-        handleJoinCommunity
-          ? <div className='community_header__button'>
-            <button onClick={handleJoinCommunity}><img src={PlusIcon} />Join community</button>
-          </div>
+      {
+        !dashboard?.isAdmin
+          ? (
+            <div className='community_header__button'>
+              <button onClick={handleJoinCommunity}><img src={PlusIcon} />Join community</button>
+            </div>
+            )
           : null
-      } */}
+      }
     </div>
   )
 }
 
-export default inject('dashboard')(observer(Header))
+export default observer(Header)

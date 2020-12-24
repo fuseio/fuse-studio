@@ -3,28 +3,31 @@ import TextField from '@material-ui/core/TextField'
 import { Formik } from 'formik'
 import { object, number } from 'yup'
 import TransactionButton from 'components/common/TransactionButton'
-import SignMessage from 'components/common/SignMessage'
+import withTransaction from 'components/common/WithTransaction'
 
 const Scheme = object().noUnknown(false).shape({
   amount: number().positive()
 })
 
 const TransferToFunderForm = ({
-  transactionConfirmed,
-  transactionDenied,
-  transactionError,
-  closeInnerModal,
-  funderBalance,
+  handleSendTransaction,
+  transactionStatus,
+  transactionHash,
+  receipt,
+  isRequested,
+  isDenied,
+  isPending,
+  isConfirmed,
+  isFailed,
+  clearTransaction,
   balance,
   symbol,
-  isTransfer,
-  transferSignature,
-  transferToFunder
+  funderBalance
 }) => {
   const onSubmit = (values, formikBag) => {
     const { amount } = values
-    transferToFunder(amount)
-    formikBag.resetForm()
+    handleSendTransaction(amount)
+    // formikBag.resetForm()
   }
 
   const renderHasBalanceForm = ({ handleSubmit, isValid, values, handleChange }) => {
@@ -72,29 +75,6 @@ const TransferToFunderForm = ({
         <div className='join_bonus__button'>
           <TransactionButton frontText='Send' disabled={!isValid} type='submit' />
         </div>
-
-        <SignMessage message={'Pending'} isOpen={isTransfer} isDark subTitle={`Your money on it's way`} />
-        <SignMessage message={'Pending'} isOpen={transferSignature} isDark />
-
-        <SignMessage
-          message={'Your money has been sent successfully'}
-          isOpen={transactionConfirmed()}
-          clickHandler={closeInnerModal}
-          subTitle=''
-        />
-        <SignMessage
-          message={'Oops, something went wrong'}
-          subTitle=''
-          isOpen={transactionError()}
-          clickHandler={closeInnerModal}
-        />
-
-        <SignMessage
-          message={'Oh no'}
-          subTitle={`You reject the action, That’s ok, try next time!`}
-          isOpen={transactionDenied()}
-          clickHandler={closeInnerModal}
-        />
       </form>
     )
   }
@@ -144,29 +124,6 @@ const TransferToFunderForm = ({
         <div className='join_bonus__button'>
           <TransactionButton frontText='Send' disabled={!isValid} type='submit' />
         </div>
-
-        <SignMessage message={'Pending'} isOpen={isTransfer} isDark subTitle={`Your money on it's way`} />
-        <SignMessage message={'Pending'} isOpen={transferSignature} isDark />
-
-        <SignMessage
-          message={'Your money has been sent successfully'}
-          isOpen={transactionConfirmed()}
-          clickHandler={closeInnerModal}
-          subTitle=''
-        />
-        <SignMessage
-          message={'Oops, something went wrong'}
-          subTitle=''
-          isOpen={transactionError()}
-          clickHandler={closeInnerModal}
-        />
-
-        <SignMessage
-          message={'Oh no'}
-          subTitle={`You reject the action, That’s ok, try next time!`}
-          isOpen={transactionDenied()}
-          clickHandler={closeInnerModal}
-        />
       </form>
     )
   }
@@ -185,4 +142,4 @@ const TransferToFunderForm = ({
   )
 }
 
-export default TransferToFunderForm
+export default withTransaction(TransferToFunderForm)

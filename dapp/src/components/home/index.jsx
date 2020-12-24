@@ -45,10 +45,9 @@ const HomePage = ({
   const showDashboard = (communityAddress, name, foreignToken) => {
     if (window && window.analytics) {
       if (name) {
-        window.analytics.track(`Clicked on featured community`, { name })
+        window.analytics.track('Clicked on featured community', { name })
       }
     }
-    debugger
     if (!foreignToken) {
       dispatch(push(`/view/fuse-community/${communityAddress}`))
     } else {
@@ -66,9 +65,7 @@ const HomePage = ({
               Create your own custom branded wallet and<br /> currency in a few simple steps
             </p>
             <div className='home_page__button'>
-              <button onClick={() => {
-                showIssuance()
-              }}>
+              <button onClick={showIssuance}>
                 Launch an economy
                 <span style={{ marginLeft: '5px' }}>
                   <img src={arrowImage} alt='arrow' />

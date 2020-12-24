@@ -4,8 +4,13 @@ import { Formik } from 'formik'
 import isEqual from 'lodash/isEqual'
 import bonusesShape from 'utils/validation/shapes/bonuses'
 import Options from './Option'
+import { useStore } from 'store/mobx'
+import get from 'lodash/get'
+import { observer } from 'mobx-react'
 
-const RewardUserForm = ({ initialValues, setJoinBonus, setBackupBonus, setInviteBonus, hasFunderBalance }) => {
+const RewardUserForm = ({ setJoinBonus, setBackupBonus, setInviteBonus, hasFunderBalance }) => {
+  const { dashboard } = useStore()
+  const { plugins } = dashboard
   const onSubmit = (values, formikBag) => {
     if (!isEqual((initialValues && initialValues.joinBonus), values.joinBonus)) {
       setJoinBonus(values.joinBonus.amount, values.joinBonus.isActive)
@@ -18,6 +23,12 @@ const RewardUserForm = ({ initialValues, setJoinBonus, setBackupBonus, setInvite
     }
   }
 
+  const initialValues = React.useMemo(() => ({
+    joinBonus: { ...get(plugins, 'joinBonus.joinInfo'), isActive: get(plugins, 'joinBonus.isActive') },
+    backupBonus: { ...get(plugins, 'backupBonus.backupInfo'), isActive: get(plugins, 'backupBonus.isActive') },
+    inviteBonus: { ...get(plugins, 'inviteBonus.inviteInfo'), isActive: get(plugins, 'inviteBonus.isActive') }
+  }), [dashboard?.plugins])
+
   return (
     <Formik
       initialValues={{
@@ -29,7 +40,8 @@ const RewardUserForm = ({ initialValues, setJoinBonus, setBackupBonus, setInvite
           <form
             onSubmit={handleSubmit}
             className={classNames('bonus_options__container',
-              { 'bonus_options__container--opacity': !hasFunderBalance })}>
+              { 'bonus_options__container--opacity': !hasFunderBalance })}
+          >
             <div className='bonus_options'>
               <Options
                 hasFunderBalance={hasFunderBalance}
@@ -46,4 +58,4 @@ const RewardUserForm = ({ initialValues, setJoinBonus, setBackupBonus, setInvite
   )
 }
 
-export default RewardUserForm
+export default observer(RewardUserForm)

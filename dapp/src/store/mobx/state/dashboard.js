@@ -3,7 +3,7 @@ import {
   computed,
   makeObservable,
   observable,
-  flow,
+  flow
 } from 'mobx'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
@@ -15,6 +15,7 @@ import { getCommunityAdmins } from 'services/graphql/community.js'
 import { getWeb3 } from 'services/web3'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getWeb3Options } from 'utils/network'
+
 export default class Dashboard {
   community
   plugins
@@ -46,20 +47,18 @@ export default class Dashboard {
       addedPlugins: computed,
       web3Context: computed,
       fetchTokenBalances: action,
-      fetchCommunity: action
+      fetchCommunity: action,
+      setBonus: action
     })
     this.rootStore = rootStore
   }
 
   addCommunityPlugin = flow(function * ({ communityAddress, plugin }) {
     try {
-      console.log({ communityAddress, plugin })
       const { data } = yield request
         .post(`${this.baseUrl}/communities/${communityAddress}/plugins`)
         .send({ plugin })
         .then(response => response.body)
-      console.log({ ...get(data, 'plugins') })
-
       this.plugins = get(data, 'plugins')
     } catch (error) {
       console.log({ error })
@@ -67,8 +66,8 @@ export default class Dashboard {
   })
 
   initStateByCommunity = community => {
-    this.community = { ...this.community, ...omit(community, ['plugins']) }
-    this.plugins = { ...this.plugins, ...get(community, 'plugins') }
+    this.community = { ...omit(community, ['plugins']) }
+    this.plugins = { ...get(community, 'plugins') }
     this.foreignNetwork = community.foreignNetworkType
 
     this._web3Home = getWeb3({ networkType: this.homeNetwork })
@@ -176,6 +175,43 @@ export default class Dashboard {
       this.tokenBalances.home = tokenBalance
     } catch (error) {
       console.log({ error })
+    }
+  })
+
+  setBonus = (bonusType, amount, isActive) => {
+    const infoFieldsMapping = {
+      inviteBonus: 'inviteInfo',
+      backupBonus: 'backupInfo',
+      joinBonus: 'joinInfo'
+    }
+    const infoField = infoFieldsMapping[bonusType]
+    this.addCommunityPlugin({ communityAddress: this.communityAddress, plugin: { name: bonusType, isActive, [infoField]: { amount: amount && amount.toString() } } })
+  }
+
+  setWalletBannerLink = flow(function * (link, walletBanner) {
+    try {
+      const plugin = { name: 'walletBanner', link, isActive: true }
+      if (walletBanner && walletBanner.blob) {
+        const formData = new window.FormData()
+        formData.append('image', walletBanner.blob)
+        const { hash } = yield request.post(`${this.baseUrl}/images`)
+          .send(formData)
+          .then(response => response.body)
+        plugin.walletBannerHash = hash
+      }
+      this.addCommunityPlugin({ communityAddress: this.communityAddress, plugin })
+    } catch (error) {
+
+    }
+  })
+
+  inviteUserToCommunity = flow(function * ({ email, phoneNumber }) {
+    try {
+      yield request.post(`${this.baseUrl}/communities/${this.communityAddress}/invite`)
+        .send({ email, phoneNumber })
+        .then(response => response.body)
+    } catch (error) {
+
     }
   })
 

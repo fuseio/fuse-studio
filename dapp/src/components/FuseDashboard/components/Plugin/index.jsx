@@ -1,6 +1,7 @@
 import React from 'react'
 import RemoveIcon from 'images/remove.svg'
 import classNames from 'classnames'
+import includes from 'lodash/includes'
 import FontAwesome from 'react-fontawesome'
 import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
@@ -17,7 +18,7 @@ const Plugin = ({
   pluginKey
 }) => {
   const { dashboard } = useStore()
-  const hasPlugin = !dashboard?.plugins[pluginKey]?.isRemoved
+  const hasPlugin = includes(dashboard?.addedPlugins, pluginKey)
   return (
     <div className='plugin-card cell small-24 medium-8'>
       <div className={classNames('plugin-card__image', { 'plugin-card__image--fiat': modifier })}>

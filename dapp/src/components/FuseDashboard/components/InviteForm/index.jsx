@@ -1,13 +1,14 @@
 import React, { Fragment } from 'react'
 import { Formik, Field } from 'formik'
-import { connect } from 'react-redux'
 import inviteShape from 'utils/validation/shapes/invite'
 import TextInput from 'components/common/TextInput'
-import { inviteUserToCommunity } from 'actions/community'
+import { observer } from 'mobx-react'
+import { useStore } from 'store/mobx'
 
-const Invite = ({ inviteUserToCommunity, communityAddress }) => {
+const Invite = () => {
+  const { dashboard } = useStore()
   const onSubmit = (values) => {
-    inviteUserToCommunity(communityAddress, values)
+    dashboard.inviteUserToCommunity(values)
   }
 
   const renderForm = ({ values, handleSubmit, isValid, isSubmitting }) => {
@@ -23,25 +24,25 @@ const Invite = ({ inviteUserToCommunity, communityAddress }) => {
               <Field
                 name='invitationType'
                 render={({ field, form: { setFieldValue } }) => (
-                  <Fragment>
+                  <>
                     <input {...field} type='radio' value='sms' checked={isSMS} onChange={() => setFieldValue('invitationType', 'sms')} className='hidden' id='input1' />
                     <label className='entry' htmlFor='input1'>
                       <div className='circle' />
                       <div className='entry-label'>Text message (SMS)</div>
                     </label>
-                  </Fragment>
+                  </>
                 )}
               />
               <Field
                 name='invitationType'
                 render={({ field, form: { setFieldValue } }) => (
-                  <Fragment>
+                  <>
                     <input {...field} type='radio' checked={isEMAIL} onChange={() => setFieldValue('invitationType', 'email')} value='email' className='hidden' id='input2' />
                     <label className='entry' htmlFor='input2'>
                       <div className='circle' />
                       <div className='entry-label'>Email</div>
                     </label>
-                  </Fragment>
+                  </>
                 )}
               />
               <div className='highlight' />
@@ -84,11 +85,14 @@ const Invite = ({ inviteUserToCommunity, communityAddress }) => {
               )
             }
             <button className='button button--normal' disabled={!isValid}>Send</button>
-            {isSubmitting && <div className='invite__resend'>
-              Invitation sent.
-              <br />
-              *Didn't get any message? Resend message
-            </div>}
+            {
+              isSubmitting &&
+                <div className='invite__resend'>
+                  Invitation sent.
+                  <br />
+                  *Didn't get any message? Resend message
+                </div>
+            }
           </div>
 
         </div>
@@ -111,6 +115,4 @@ const Invite = ({ inviteUserToCommunity, communityAddress }) => {
   )
 }
 
-export default connect(null, {
-  inviteUserToCommunity
-})(Invite)
+export default observer(Invite)

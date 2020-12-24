@@ -314,7 +314,7 @@ const BusinessForm = ({ submitEntity, uploadImage, isJoin, users, entity }) => {
       validationSchema={entityShape}
       render={renderForm}
       onSubmit={onSubmit}
-      isInitialValid={false}
+      validateOnMount
     />
   )
 }

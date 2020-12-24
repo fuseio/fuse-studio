@@ -14,16 +14,3 @@ export const getForeignTokenByCommunityAddress = createSelector(
     return null
   }
 )
-
-export const getHomeTokenByCommunityAddress = createSelector(
-  getCommunityAddress,
-  state => state.entities.tokens,
-  state => state.entities.communities,
-  (communityAddress, tokens, communities) => {
-    if (communityAddress && get(communities, communityAddress, null)) {
-      const community = communities[communityAddress]
-      return tokens[community.homeTokenAddress]
-    }
-    return null
-  }
-)

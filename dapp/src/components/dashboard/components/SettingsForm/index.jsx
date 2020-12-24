@@ -1,7 +1,7 @@
 import React from 'react'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
 import LogosOptions from 'components/wizard/components/LogosOptions'
-import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import AccordionDetails from '@material-ui/core/AccordionActions'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/styles'
@@ -17,7 +17,7 @@ const ExpansionPanelDetails = withStyles({
     display: 'flex',
     padding: '24px'
   }
-})(MuiExpansionPanelDetails)
+})(AccordionDetails)
 
 const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, token, communityMetadata }) => {
   const renderForm = ({ isValid, handleSubmit, handleChange, values }) => {
@@ -163,11 +163,13 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
     description: get(community, 'description', ''),
     webUrl: get(community, 'webUrl', '')
   }), [communityMetadata, token, community])
+
   return (
     <Formik
       render={renderForm}
       onSubmit={onSubmit}
-      initialValues={initialValues} />
+      initialValues={initialValues}
+    />
   )
 }
 

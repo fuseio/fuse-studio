@@ -44,7 +44,7 @@ const ImportExistingEntity = ({ entity, submitEntity }) => {
       validationSchema={Scheme}
       render={renderForm}
       onSubmit={onSubmit}
-      isInitialValid={false}
+      validateOnMount
     />
   )
 }
