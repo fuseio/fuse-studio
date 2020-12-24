@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
-import { Formik } from 'formik'
+import { Formik, Form } from 'formik'
 import isEqual from 'lodash/isEqual'
 import bonusesShape from 'utils/validation/shapes/bonuses'
 import Options from './Option'
@@ -23,11 +23,11 @@ const RewardUserForm = ({ setJoinBonus, setBackupBonus, setInviteBonus, hasFunde
     }
   }
 
-  const initialValues = React.useMemo(() => ({
+  const initialValues = {
     joinBonus: { ...get(plugins, 'joinBonus.joinInfo'), isActive: get(plugins, 'joinBonus.isActive') },
     backupBonus: { ...get(plugins, 'backupBonus.backupInfo'), isActive: get(plugins, 'backupBonus.isActive') },
     inviteBonus: { ...get(plugins, 'inviteBonus.inviteInfo'), isActive: get(plugins, 'inviteBonus.isActive') }
-  }), [dashboard?.plugins])
+  }
 
   return (
     <Formik
@@ -35,10 +35,13 @@ const RewardUserForm = ({ setJoinBonus, setBackupBonus, setInviteBonus, hasFunde
         ...initialValues
       }}
       validationSchema={bonusesShape}
-      render={({ handleSubmit, values }) => {
+      onSubmit={onSubmit}
+      enableReinitialize
+      validateOnChange
+    >
+      {({ values }) => {
         return (
-          <form
-            onSubmit={handleSubmit}
+          <Form
             className={classNames('bonus_options__container',
               { 'bonus_options__container--opacity': !hasFunderBalance })}
           >
@@ -48,13 +51,10 @@ const RewardUserForm = ({ setJoinBonus, setBackupBonus, setInviteBonus, hasFunde
                 values={values}
               />
             </div>
-          </form>
+          </Form>
         )
       }}
-      onSubmit={onSubmit}
-      enableReinitialize
-      validateOnChange
-    />
+    </Formik>
   )
 }
 

@@ -10,7 +10,7 @@ import set from 'lodash/set'
 import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
 import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 
 const ExpansionPanelDetails = withStyles({
   root: {
@@ -20,9 +20,9 @@ const ExpansionPanelDetails = withStyles({
 })(AccordionDetails)
 
 const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, token, communityMetadata }) => {
-  const renderForm = ({ isValid, handleSubmit, handleChange, values }) => {
+  const renderForm = ({ isValid, handleChange, values }) => {
     return (
-      <form onSubmit={handleSubmit} className='issuance__wizard'>
+      <Form className='issuance__wizard'>
         <div className='settings__form'>
           <ExpansionPanelDetails className='accordion__panel'>
             <Typography component='div'>
@@ -115,7 +115,7 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
             <button className='button button--normal join_bonus__button' disabled={!isValid}>Save</button>
           </div>
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -166,10 +166,11 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
 
   return (
     <Formik
-      render={renderForm}
       onSubmit={onSubmit}
       initialValues={initialValues}
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

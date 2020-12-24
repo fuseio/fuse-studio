@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo } from 'react'
-import { Formik, ErrorMessage } from 'formik'
+import { Formik, ErrorMessage, Form } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/SignMessage'
 import upperCase from 'lodash/upperCase'
@@ -40,7 +40,6 @@ export default withTransaction(
     }
 
     const renderForm = ({
-      handleSubmit,
       errors,
       handleChange,
       touched,
@@ -50,10 +49,9 @@ export default withTransaction(
       const { actionType } = values
 
       return (
-        <form
+        <Form
           className='transfer__content grid-y align-justify'
           style={{ height: '140px' }}
-          onSubmit={handleSubmit}
         >
           <Message
             message={`Your just ${actionType}ed ${formatWei(
@@ -160,7 +158,7 @@ export default withTransaction(
               />
             )}
           </div>
-        </form>
+        </Form>
       )
     }
 
@@ -172,12 +170,13 @@ export default withTransaction(
             ? balance.replace(/,/g, '')
             : 0
         )}
-        render={renderForm}
         onSubmit={onSubmit}
         validateOnMount
         enableReinitialize
         validateOnChange
-      />
+      >
+        {(props) => renderForm(props)}
+      </Formik>
     )
   }
 )

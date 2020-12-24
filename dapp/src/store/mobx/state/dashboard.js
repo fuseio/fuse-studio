@@ -50,6 +50,12 @@ export default class Dashboard {
       web3Context: computed,
       fetchTokenBalances: action,
       fetchCommunity: action,
+      checkIsAdmin: action,
+      fetchHomeToken: action,
+      setWalletBannerLink: action,
+      inviteUserToCommunity: action,
+      checkIsCommunityMember: action,
+      addCommunityPlugin: action,
       setBonus: action
     })
     this.rootStore = rootStore

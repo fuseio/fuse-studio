@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Formik, Field } from 'formik'
+import { Formik, Field, Form } from 'formik'
 import inviteShape from 'utils/validation/shapes/invite'
 import TextInput from 'components/common/TextInput'
 import { observer } from 'mobx-react'
@@ -11,12 +11,12 @@ const Invite = () => {
     dashboard.inviteUserToCommunity(values)
   }
 
-  const renderForm = ({ values, handleSubmit, isValid, isSubmitting }) => {
+  const renderForm = ({ values, isValid, isSubmitting }) => {
     const { invitationType } = values
     const isSMS = invitationType === 'sms'
     const isEMAIL = invitationType === 'email'
     return (
-      <form onSubmit={handleSubmit} className='invite'>
+      <Form className='invite'>
         <div className='invite__wrapper'>
           <div className='invite__title'>Get a smart invite link to your phone</div>
           <div className='invite__containerOuter'>
@@ -96,7 +96,7 @@ const Invite = () => {
           </div>
 
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -109,9 +109,10 @@ const Invite = () => {
       }}
       onSubmit={onSubmit}
       validationSchema={inviteShape}
-      render={renderForm}
       validateOnChange
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Formik, Field } from 'formik'
+import { Formik, Field, Form } from 'formik'
 import { object, boolean } from 'yup'
 import ReactTooltip from 'react-tooltip'
 import FontAwesome from 'react-fontawesome'
@@ -14,10 +14,10 @@ const Scheme = object().noUnknown(false).shape({
 const ToggleBridge = (props) => {
   const isMultiBridge = useSelector(getIsMultiBridge)
   const dispatch = useDispatch()
-  const renderForm = ({ values, handleSubmit, submitForm }) => {
+  const renderForm = ({ values, submitForm }) => {
     const { isMultiBridge } = values
     return (
-      <form className='bridge_toggle' onSubmit={handleSubmit}>
+      <Form className='bridge_toggle'>
         <Field name='isMultiBridge'>
           {({ field, form: { handleChange } }) => (
             <div className='grid-x align-middle'>
@@ -46,7 +46,7 @@ const ToggleBridge = (props) => {
           )}
         </Field>
 
-      </form>
+      </Form>
     )
   }
 
@@ -59,11 +59,12 @@ const ToggleBridge = (props) => {
       initialValues={{ isMultiBridge }}
       onSubmit={onSubmit}
       validationSchema={Scheme}
-      render={renderForm}
       initialStatus={false}
       validateOnChange
       validateOnMount
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

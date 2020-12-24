@@ -4,7 +4,7 @@ import { useStore } from 'store/mobx'
 import { observer } from 'mobx-react'
 import TextField from '@material-ui/core/TextField'
 import BannerImage from 'components/FuseDashboard/components/BannerImage'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import { object, string } from 'yup'
 import { isIpfsHash, isS3Hash } from 'utils/metadata'
 
@@ -21,10 +21,10 @@ const WalletBannerLinkForm = observer(() => {
     formikBag.resetForm({ values })
   }
 
-  const renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
+  const renderForm = ({ isValid, values, handleChange }) => {
     const { link } = values
     return (
-      <form onSubmit={handleSubmit} className='join_bonus__container'>
+      <Form className='join_bonus__container'>
         <div className='join_bonus__field'>
           <div className='join_bonus__title' style={{ paddingBottom: '1em' }}>Link</div>
           <TextField
@@ -51,7 +51,7 @@ const WalletBannerLinkForm = observer(() => {
         <div className='join_bonus__actions'>
           <button className='button button--normal join_bonus__button' disabled={!isValid}>Save</button>
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -66,11 +66,13 @@ const WalletBannerLinkForm = observer(() => {
             : ''
       }}
       validationSchema={Scheme}
-      render={renderForm}
+      // render={renderForm}
       onSubmit={onSubmit}
       enableReinitialize
       validateOnChange
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 })
 

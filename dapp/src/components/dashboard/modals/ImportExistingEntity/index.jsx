@@ -1,7 +1,7 @@
 import React from 'react'
 import omit from 'lodash/omit'
 import get from 'lodash/get'
-import { Formik, Field, ErrorMessage } from 'formik'
+import { Formik, Field, ErrorMessage, Form } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Modal from 'components/common/Modal'
 import { string, object } from 'yup'
@@ -17,9 +17,9 @@ const ImportExistingEntity = ({ entity, submitEntity }) => {
     submitEntity(entity)
   }
 
-  const renderForm = ({ handleSubmit, isValid }) => {
+  const renderForm = ({ isValid }) => {
     return (
-      <form className='user-form' onSubmit={handleSubmit}>
+      <Form className='user-form'>
         <h5 className='user-form__title'>Import existing entity</h5>
         <div className='user-form__field'>
           <label className='user-form__field__label'>Ethereum account</label>
@@ -32,7 +32,7 @@ const ImportExistingEntity = ({ entity, submitEntity }) => {
         <div className='user-form__submit'>
           <TransactionButton type='submit' disabled={!isValid} />
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -42,10 +42,11 @@ const ImportExistingEntity = ({ entity, submitEntity }) => {
         account: get(entity, 'account', '')
       }}
       validationSchema={Scheme}
-      render={renderForm}
       onSubmit={onSubmit}
       validateOnMount
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

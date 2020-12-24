@@ -1,6 +1,6 @@
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import { object, number } from 'yup'
 import TransactionButton from 'components/common/TransactionButton'
 import withTransaction from 'components/common/WithTransaction'
@@ -30,10 +30,10 @@ const TransferToFunderForm = ({
     // formikBag.resetForm()
   }
 
-  const renderHasBalanceForm = ({ handleSubmit, isValid, values, handleChange }) => {
+  const renderHasBalanceForm = ({ isValid, values, handleChange }) => {
     const { amount } = values
     return (
-      <form onSubmit={handleSubmit} className='join_bonus__container'>
+      <Form className='join_bonus__container'>
         <div className='join_bonus__balances'>
           <div className='join_bonus__funder_balance'>
             <span>My balance:&nbsp;</span>
@@ -75,14 +75,14 @@ const TransferToFunderForm = ({
         <div className='join_bonus__button'>
           <TransactionButton frontText='Send' disabled={!isValid} type='submit' />
         </div>
-      </form>
+      </Form>
     )
   }
 
-  const renderForm = ({ handleSubmit, isValid, values, handleChange }) => {
+  const renderForm = ({ isValid, values, handleChange }) => {
     const { amount } = values
     return (
-      <form onSubmit={handleSubmit} className='join_bonus__container'>
+      <Form className='join_bonus__container'>
         <div className='join_bonus__balances'>
           <div className='join_bonus__funder_balance'>
             <span>My balance:&nbsp;</span>
@@ -124,7 +124,7 @@ const TransferToFunderForm = ({
         <div className='join_bonus__button'>
           <TransactionButton frontText='Send' disabled={!isValid} type='submit' />
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -134,11 +134,12 @@ const TransferToFunderForm = ({
         amount: ''
       }}
       validationSchema={Scheme}
-      render={Number(funderBalance) <= 0 ? renderForm : renderHasBalanceForm}
       onSubmit={onSubmit}
       enableReinitialize
       validateOnChange
-    />
+    >
+      {(props) => Number(funderBalance) <= 0 ? renderForm(props) : renderHasBalanceForm(props)}
+    </Formik>
   )
 }
 

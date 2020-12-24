@@ -1,5 +1,5 @@
 import React from 'react'
-import { Formik, ErrorMessage } from 'formik'
+import { Formik, ErrorMessage, Form } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/SignMessage'
 import transferShape from 'utils/validation/shapes/transfer'
@@ -32,9 +32,9 @@ export default ({
     return transactionStatus && (transactionStatus === 'SUCCESS' || transactionStatus === 'CONFIRMATION') && transferMessage
   }
 
-  const renderForm = ({ handleSubmit, isValid, setFieldTouched, values, handleChange, errors, touched, resetForm }) => {
+  const renderForm = ({ isValid, setFieldTouched, values, handleChange, errors, touched, resetForm }) => {
     return (
-      <form className='transfer__content grid-y align-justify' onSubmit={handleSubmit}>
+      <Form className='transfer__content grid-y align-justify'>
 
         <Message
           message={'Your money has been sent successfully'}
@@ -116,7 +116,7 @@ export default ({
         <div className='transfer__content__button'>
           <TransactionButton type='submit' disabled={!isValid} />
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -127,10 +127,11 @@ export default ({
         amount: ''
       }}
       validationSchema={transferShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)}
-      render={renderForm}
       onSubmit={onSubmit}
       validateOnMount
       enableReinitialize
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
