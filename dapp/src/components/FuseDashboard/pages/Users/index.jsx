@@ -14,6 +14,8 @@ import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { addressShortener } from 'utils/format'
 import { getBlockExplorerUrl } from 'utils/network'
+import { observer }from 'mobx-react'
+import { useStore } from 'store/mobx'
 
 import {
   addEntity,
@@ -38,11 +40,11 @@ import { checkIsAdmin } from 'selectors/entities'
 
 import AddBusiness from 'images/add_business.svg'
 import Avatar from 'images/avatar.svg'
+import Network from '../../../../store/mobx/state/network'
 
 const Users = ({
   fetchEntities,
   isAdmin,
-  community,
   accountAddress,
   loadModal,
   joinCommunity,
@@ -65,7 +67,12 @@ const Users = ({
   signatureNeeded,
   join
 }) => {
+  const { dashboard } = useStore()
+  const { community } = dashboard
+  console.log({ community })
   const communityEntities = get(community, 'communityEntities', {})
+  console.log({ communityEntities })
+
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const foreignNetwork = useSelector(getForeignNetwork)
@@ -381,4 +388,4 @@ const mapDispatchToProps = {
   fetchUserNames
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Users))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(observer(Users)))
