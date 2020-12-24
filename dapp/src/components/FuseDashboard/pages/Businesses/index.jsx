@@ -30,10 +30,12 @@ import { getBlockExplorerUrl } from 'utils/network'
 
 import dotsIcon from 'images/dots.svg'
 import AddBusiness from 'images/add_business.svg'
+import { observer } from 'mobx-react'
+import { useStore } from 'store/mobx'
+import { autorun } from "mobx"
 
 const Businesses = ({
   fetchEntities,
-  isAdmin,
   accountAddress,
   entityAdded,
   businessJustAdded,
@@ -47,34 +49,32 @@ const Businesses = ({
   signatureNeeded,
   showTransactionMessage,
   businessesAccounts,
-  userAccounts,
-  community
+  userAccounts
 }) => {
-  const communityEntities = get(community, 'communityEntities', {})
+  const { dashboard } = useStore()
+  const { community, communityBusinesses, isAdmin } = dashboard
   const { address: communityAddress } = useParams()
   const [data, setData] = useState(null)
-  const [businesses, setBusinesses] = useState()
   const [users, setUsers] = useState([])
 
   const [transactionTitle, setTransactionTitle] = useState()
+
+  useEffect (( )=> {
+    dashboard.fetchCommunityBusinesses(communityAddress)
+  }, [])
 
   useEffect(() => {
     fetchEntities(communityAddress)
   }, [])
 
-  useEffect(() => {
-    businessesAccounts.forEach((address) => {
+  useEffect(() => autorun(() => {
+    (communityBusinesses || []).forEach(({ address }) => {
       const checkSumAddress = toChecksumAddress(address)
       if (!businessesMetadata[checkSumAddress]) {
         fetchEntityMetadata(toChecksumAddress(communityAddress), toChecksumAddress(address))
       }
     })
-    const businessEntities = businessesAccounts.map(account => communityEntities[account])
-    const userEntities = userAccounts.map(account => communityEntities[account]).filter(entity => !entity.isBusiness)
-
-    setBusinesses(businessEntities)
-    setUsers(userEntities)
-  }, [businessesAccounts])
+  }), [communityBusinesses])
 
   useEffect(() => {
     if (updateEntities) {
@@ -96,9 +96,9 @@ const Businesses = ({
     return () => { }
   }, [entityAdded])
 
-  useEffect(() => {
-    if (businesses) {
-      const data = businesses.map(({ address }) => {
+  useEffect(() => autorun(() => {
+    if (communityBusinesses) {
+      const data = communityBusinesses.map(({ address }) => {
         const checkSumAddress = toChecksumAddress(address)
         const imageHash = get(businessesMetadata[checkSumAddress], 'image')
         const image = isIpfsHash(imageHash)
@@ -132,7 +132,7 @@ const Businesses = ({
       setData(data)
     }
     return () => { }
-  }, [businesses, businessesMetadata])
+  }), [communityBusinesses, businessesMetadata])
 
   const columns = useMemo(() => [
     {
@@ -167,7 +167,7 @@ const Businesses = ({
       Header: 'Account ID',
       accessor: 'account',
       Cell: ({ cell: { value } }) => (
-        <React.Fragment>
+        <>
           <a
             className='link'
             target='_blank'
@@ -178,7 +178,7 @@ const Businesses = ({
           <CopyToClipboard text={value}>
             <FontAwesome name='clone' />
           </CopyToClipboard>
-        </React.Fragment>
+        </>
       )
     },
     {
@@ -284,7 +284,6 @@ const mapStateToProps = (state) => ({
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
   businessesMetadata: state.entities.businesses,
-  isAdmin: checkIsAdmin(state),
   updateEntities: state.screens.communityEntities.updateEntities,
   community: getCurrentCommunity(state)
 })
@@ -299,4 +298,4 @@ const mapDispatchToProps = {
   fetchEntities
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Businesses)
+export default connect(mapStateToProps, mapDispatchToProps)(observer(Businesses))

@@ -14,8 +14,9 @@ import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { addressShortener } from 'utils/format'
 import { getBlockExplorerUrl } from 'utils/network'
-import { observer }from 'mobx-react'
+import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
+import { autorun } from "mobx"
 
 import {
   addEntity,
@@ -25,9 +26,7 @@ import {
   removeAdminRole,
   joinCommunity,
   importExistingEntity,
-  fetchUsersMetadata,
-  fetchUserWallets,
-  fetchUserNames
+  fetchUsersMetadata
 } from 'actions/communityEntities'
 import { addMinter } from 'actions/token'
 import { loadModal, hideModal } from 'actions/ui'
@@ -40,11 +39,8 @@ import { checkIsAdmin } from 'selectors/entities'
 
 import AddBusiness from 'images/add_business.svg'
 import Avatar from 'images/avatar.svg'
-import Network from '../../../../store/mobx/state/network'
 
 const Users = ({
-  fetchEntities,
-  isAdmin,
   accountAddress,
   loadModal,
   joinCommunity,
@@ -56,29 +52,22 @@ const Users = ({
   userJustAdded,
   entityAdded,
   push,
-  userAccounts,
   fetchUsersMetadata,
-  fetchUserWallets,
-  fetchUserNames,
-  walletAccounts,
-  userWallets,
-  users,
+  usersMetadata,
   showTransactionMessage,
   signatureNeeded,
   join
 }) => {
   const { dashboard } = useStore()
-  const { community } = dashboard
-  console.log({ community })
-  const communityEntities = get(community, 'communityEntities', {})
-  console.log({ communityEntities })
+  const { community, communityUsers, isAdmin } = dashboard
+
 
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const foreignNetwork = useSelector(getForeignNetwork)
 
-  useEffect(() => {
-    fetchEntities(communityAddress)
+  useEffect (( )=> {
+    dashboard.fetchCommunityUsers(communityAddress)
   }, [])
 
   useEffect(() => {
@@ -87,26 +76,19 @@ const Users = ({
     }
   }, [join])
 
-  useEffect(() => {
-    if (userAccounts && userAccounts.length > 0) {
-      fetchUsersMetadata(userAccounts)
-      fetchUserWallets(userAccounts)
+  useEffect(() => autorun(() => {
+    if (communityUsers && communityUsers.length > 0) {
+      fetchUsersMetadata(communityUsers.map(u => u.address))
     }
-  }, [userAccounts])
+  }), [communityUsers])
 
-  useEffect(() => {
-    if (walletAccounts && walletAccounts.length > 0) {
-      const walletOwners = walletAccounts.filter(wallet => userWallets[wallet] && userWallets[wallet].owner).map(wallet => userWallets[wallet].owner)
-      fetchUserNames(walletOwners)
-    }
-  }, [walletAccounts])
-
-  useEffect(() => {
-    const userEntities = userAccounts.map(account => communityEntities[account])
-    if (!isEmpty(userEntities)) {
-      const data = userEntities.map(({ isAdmin, isApproved, address, createdAt, displayName }) => {
-        const metadataAddress = userWallets[address] ? userWallets[address].owner : address
-        const metadata = users[metadataAddress]
+  useEffect(() => autorun(() => {
+    // const userEntities = userAccounts.map(account => communityEntities[account])
+    if (!isEmpty(communityUsers)) {
+      debugger
+      const data = communityUsers.map(({ isAdmin, isApproved, address, createdAt, displayName }) => {
+        // const metadataAddress = userWallets[address] ? userWallets[address].owner : address
+        const metadata = usersMetadata[address]
         return ({
           isApproved,
           hasAdminRole: isAdmin,
@@ -167,7 +149,7 @@ const Users = ({
     }
 
     return () => { }
-  }, [communityEntities, userAccounts, users])
+  }), [communityUsers, usersMetadata])
 
   useEffect(() => {
     if (entityAdded) {
@@ -179,7 +161,7 @@ const Users = ({
       }, 1000)
     }
     return () => { }
-  }, [entityAdded])
+  }, [communityUsers, entityAdded])
 
   const tableData = useMemo(() => data, [data])
 
@@ -362,11 +344,10 @@ const Users = ({
 const mapStateToProps = (state, { match }) => ({
   join: match.params.join,
   accountAddress: getAccountAddress(state),
-  users: state.entities.users,
+  usersMetadata: state.entities.users,
   userWallets: state.entities.wallets,
   ...state.screens.communityEntities,
   ...getTransaction(state, state.screens.communityEntities.transactionHash),
-  isAdmin: checkIsAdmin(state),
   community: getCurrentCommunity(state),
   transactionData: getTransaction(state, state.screens.communityEntities.transactionHash)
 })
@@ -383,9 +364,7 @@ const mapDispatchToProps = {
   hideModal,
   fetchEntities,
   importExistingEntity,
-  fetchUsersMetadata,
-  fetchUserWallets,
-  fetchUserNames
+  fetchUsersMetadata
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(observer(Users)))

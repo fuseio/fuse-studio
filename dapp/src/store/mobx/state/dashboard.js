@@ -11,7 +11,7 @@ import keyBy from 'lodash/keyBy'
 import has from 'lodash/has'
 import request from 'superagent'
 import pickBy from 'lodash/pickBy'
-import { getCommunityAdmins, isCommunityMember } from 'services/graphql/community.js'
+import { getCommunityAdmins, fetchCommunityUsers as fetchCommunityUsersApi, fetchCommunityBusinesses as fetchCommunityBusinessesApi, isCommunityMember } from 'services/graphql/community.js'
 import { getWeb3 } from 'services/web3'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getWeb3Options } from 'utils/network'
@@ -34,6 +34,9 @@ export default class Dashboard {
     home: 0,
     foreign: 0
   }
+  communityUsers
+  communityBusinesses
+
 
   constructor (rootStore) {
     makeObservable(this, {
@@ -46,6 +49,8 @@ export default class Dashboard {
       isCommunityMember: observable,
       isAdmin: observable,
       tokenBalances: observable,
+      communityUsers: observable,
+      communityBusinesses: observable,
       addedPlugins: computed,
       web3Context: computed,
       fetchTokenBalances: action,
@@ -56,7 +61,8 @@ export default class Dashboard {
       inviteUserToCommunity: action,
       checkIsCommunityMember: action,
       addCommunityPlugin: action,
-      setBonus: action
+      setBonus: action,
+      fetchCommunityUsers: action
     })
     this.rootStore = rootStore
   }
@@ -150,6 +156,32 @@ export default class Dashboard {
         entities,
         this.rootStore?.network?.accountAddress,
         false
+      )
+    } catch (error) {
+      console.log({ error })
+    }
+  })
+
+  fetchCommunityUsers = flow(function * (communityAddress) {
+    try {
+      const response = yield fetchCommunityUsersApi(communityAddress)
+      this.communityUsers = get(
+        response.data,
+        'communities[0].entitiesList.communityEntities',
+        []
+      )
+    } catch (error) {
+      console.log({ error })
+    }
+  })
+
+  fetchCommunityBusinesses = flow(function * (communityAddress) {
+    try {
+      const response = yield fetchCommunityBusinessesApi(communityAddress)
+      this.communityBusinesses = get(
+        response.data,
+        'communities[0].entitiesList.communityEntities',
+        []
       )
     } catch (error) {
       console.log({ error })
