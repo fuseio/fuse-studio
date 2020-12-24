@@ -40,6 +40,7 @@ import AddBusiness from 'images/add_business.svg'
 import Avatar from 'images/avatar.svg'
 
 const Users = ({
+  fetchEntities,
   isAdmin,
   community,
   accountAddress,
@@ -68,6 +69,10 @@ const Users = ({
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const foreignNetwork = useSelector(getForeignNetwork)
+
+  useEffect(() => {
+    fetchEntities(communityAddress)
+  }, [])
 
   useEffect(() => {
     if (join) {
@@ -292,7 +297,7 @@ const Users = ({
   const handleRemoveAdminRole = (account) => removeAdminRole(account)
 
   const handleAddMinter = (account) => addMinter(community.foreignTokenAddress, account, { desiredNetworkType: foreignNetwork })
-
+  console.log({ tableData })
   const renderTable = () => {
     return (
       <MyTable
@@ -330,7 +335,7 @@ const Users = ({
   }
 
   return (
-    <Fragment>
+    <>
       <div className='entities__header'>
         <h2 className='entities__header__title'>Users list</h2>
       </div>
@@ -343,7 +348,7 @@ const Users = ({
           isDark
         />
       </div>
-    </Fragment>
+    </>
   )
 }
 
