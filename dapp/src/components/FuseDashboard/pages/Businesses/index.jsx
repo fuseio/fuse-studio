@@ -35,7 +35,6 @@ import { useStore } from 'store/mobx'
 import { autorun } from "mobx"
 
 const Businesses = ({
-  fetchEntities,
   accountAddress,
   entityAdded,
   businessJustAdded,
@@ -47,9 +46,7 @@ const Businesses = ({
   fetchEntityMetadata,
   updateEntities,
   signatureNeeded,
-  showTransactionMessage,
-  businessesAccounts,
-  userAccounts
+  showTransactionMessage
 }) => {
   const { dashboard } = useStore()
   const { community, communityBusinesses, isAdmin } = dashboard
@@ -61,10 +58,6 @@ const Businesses = ({
 
   useEffect (( )=> {
     dashboard.fetchCommunityBusinesses(communityAddress)
-  }, [])
-
-  useEffect(() => {
-    fetchEntities(communityAddress)
   }, [])
 
   useEffect(() => autorun(() => {
@@ -79,7 +72,7 @@ const Businesses = ({
   useEffect(() => {
     if (updateEntities) {
       setTimeout(() => {
-        fetchEntities(communityAddress)
+        dashboard.fetchCommunityBusinesses(communityAddress)
       }, 2000)
     }
   }, [updateEntities])
