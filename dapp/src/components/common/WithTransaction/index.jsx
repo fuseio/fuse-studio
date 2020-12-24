@@ -8,7 +8,7 @@ import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
 
 export default function withTransaction (WrappedComponent) {
-  const TransactionWrapper = ({ desiredNetworkName, sendTransaction, onConfirmation, pendingText, ...rest }) => {
+  const TransactionWrapper = ({ desiredNetworkName, onConfirmation, pendingText, ...rest }) => {
     const { network } = useStore()
     const currentNetworkType = network.networkName
     const [transactionHash, setTransactionHash] = useState()
@@ -16,12 +16,12 @@ export default function withTransaction (WrappedComponent) {
     const [receipt, setReceipt] = useState()
     const dispatch = useDispatch()
 
-    const handleSendTransaction = amount => {
+    const handleSendTransaction = (sendTransaction) => {
       if (currentNetworkType !== desiredNetworkName) {
         dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: desiredNetworkName, networkType: currentNetworkType }))
         return
       }
-      const promise = sendTransaction(amount)
+      const promise = sendTransaction()
       setTransactionStatus(REQUEST)
       promise.on('transactionHash', transactionHash => {
         setTransactionHash(transactionHash)

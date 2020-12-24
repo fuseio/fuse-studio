@@ -36,16 +36,16 @@ export default function configureStore (initialState) {
         reduxCatch(errorHandler),
         routerMiddleware(history),
         postponeMiddleware,
-        sagaMiddleware
-        // createLogger({
-        //   collapsed: (getState, action, logEntry) => !action.error,
-        //   actionTransformer: (action) => {
-        //     if (action.error) {
-        //       console.error(action.error)
-        //     }
-        //     return action
-        //   }
-        // })
+        sagaMiddleware,
+        createLogger({
+          collapsed: (getState, action, logEntry) => !action.error,
+          actionTransformer: (action) => {
+            if (action.error) {
+              console.error(action.error)
+            }
+            return action
+          }
+        })
       )
     )
   )

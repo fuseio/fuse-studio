@@ -71,6 +71,10 @@ const Users = ({
   }, [])
 
   useEffect(() => {
+    fetchEntities(communityAddress)
+  }, [])
+
+  useEffect(() => {
     if (join) {
       handleJoinCommunity()
     }
@@ -83,9 +87,7 @@ const Users = ({
   }), [communityUsers])
 
   useEffect(() => autorun(() => {
-    // const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(communityUsers)) {
-      debugger
       const data = communityUsers.map(({ isAdmin, isApproved, address, createdAt, displayName }) => {
         // const metadataAddress = userWallets[address] ? userWallets[address].owner : address
         const metadata = usersMetadata[address]
@@ -286,7 +288,7 @@ const Users = ({
   const handleRemoveAdminRole = (account) => removeAdminRole(account)
 
   const handleAddMinter = (account) => addMinter(community.foreignTokenAddress, account, { desiredNetworkType: foreignNetwork })
-
+  console.log({ tableData })
   const renderTable = () => {
     return (
       <MyTable
@@ -324,7 +326,7 @@ const Users = ({
   }
 
   return (
-    <Fragment>
+    <>
       <div className='entities__header'>
         <h2 className='entities__header__title'>Users list</h2>
       </div>
@@ -337,7 +339,7 @@ const Users = ({
           isDark
         />
       </div>
-    </Fragment>
+    </>
   )
 }
 
