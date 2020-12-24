@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
-import { Route, Switch, useParams } from 'react-router'
+import { Route, Switch, useParams, withRouter } from 'react-router'
 import get from 'lodash/get'
 import { push } from 'connected-react-router'
 
@@ -139,7 +139,9 @@ const DashboardLayout = (props) => {
           }
 
           {community && isAdmin && (
-            <Route exact path={`${match.path}/walletbanner`}
+            <Route
+              exact
+              path={`${match.path}/walletbanner`}
               render={() => (
                 <WithBgImage>
                   <WalletBannerLinkPage
@@ -159,19 +161,24 @@ const DashboardLayout = (props) => {
             </Route>
           )}
 
-          {isAdmin && (
-            <Route exact path={`${match.path}/settings`}>
-              <WithBgImage>
-                <SettingsPage
-                  community={community}
-                />
-              </WithBgImage>
-            </Route>
-          )
+          {
+            isAdmin && (
+              <Route exact path={`${match.path}/settings`}>
+                <WithBgImage>
+                  <SettingsPage
+                    community={community}
+                  />
+                </WithBgImage>
+              </Route>
+            )
           }
+
           {
             community && isAdmin && (
-              <Route exact path={`${match.path}/plugins`}>
+              <Route
+                exact
+                path={`${match.path}/plugins`}
+              >
                 <WithBgImage>
                   <PluginsPage
                     community={community}
@@ -245,7 +252,7 @@ const mapDispatchToProps = {
   push
 }
 
-export default withNetwork(connect(
+export default withRouter(withNetwork(connect(
   mapStateToProps,
   mapDispatchToProps
-)(DashboardLayout))
+)(DashboardLayout)))

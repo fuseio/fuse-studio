@@ -63,7 +63,7 @@ class DeployProgress extends PureComponent {
             action: 'Stop deployment process'
           })
         } catch (error) {
-          window.analytics.track(`Error`, {
+          window.analytics.track('Error', {
             error: error,
             category: 'Issuance',
             action: 'Stop deployment process'
@@ -84,7 +84,7 @@ class DeployProgress extends PureComponent {
     return get(stepErrors, [`${step}`], false)
   }
 
-  refreshPage = () => {
+  handleRefresh = () => {
     window.location.reload(true)
   }
 
@@ -119,11 +119,9 @@ class DeployProgress extends PureComponent {
         <div className='progress__title'>Please wait while your contracts are being published to Ethereum and verification received.</div>
         <div className='progress__img'>
           {
-            !done ? (
-              <div className={classNames('progress__loader', { 'progress__loader--stop': hasErrors })} />
-            ) : (
-              <img src={FinishIssuance} alt='finish' />
-            )
+            !done
+              ? <div className={classNames('progress__loader', { 'progress__loader--stop': hasErrors })} />
+              : <img src={FinishIssuance} alt='finish' />
           }
         </div>
         {
@@ -133,15 +131,17 @@ class DeployProgress extends PureComponent {
               return (
                 <div key={key} className={classNames('progress__item', { 'progress__item--active': currentStep === key && !this.stepHasError(key) })}>
                   <div className={classNames('progress__item__label')}>
-                    { steps && steps[key] && <FontAwesome name='check' /> }
-                    { this.stepHasError(key) && <FontAwesome name='times' /> }
+                    {steps && steps[key] && <FontAwesome name='check' />}
+                    {this.stepHasError(key) && <FontAwesome name='times' />}
                     {label}
                     {RenderLink && transactionHash ? <RenderLink txHash={transactionHash} /> : null}
                   </div>
                   {
                     currentStep === key &&
                     !this.stepHasError(key) &&
-                    <div className='progress__item__loaderText'>{typeof loaderText === 'function' ? loaderText(networkType) : loaderText}</div>
+                      <div className='progress__item__loaderText'>
+                        {typeof loaderText === 'function' ? loaderText(networkType) : loaderText}
+                      </div>
                   }
                 </div>
               )
@@ -151,7 +151,7 @@ class DeployProgress extends PureComponent {
           hasErrors && (
             <div className='progress__error'>
               <p>The process has failed, please start over</p>
-              <button className='button button--normal' type='button' onClick={this.refreshPage}>Try again</button>
+              <button className='button button--normal' type='button' onClick={this.handleRefresh}>Try again</button>
             </div>
           )
         }

@@ -1,22 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { observer, inject } from 'mobx-react'
-// import { connect } from 'react-redux'
+import { observer } from 'mobx-react'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
 import { Route, Switch, useParams, withRouter } from 'react-router'
 import { useStore } from 'store/mobx'
 import get from 'lodash/get'
-// import { push } from 'connected-react-router'
-
-// import { getAccountAddress } from 'selectors/accounts'
-// import { checkIsAdmin } from 'selectors/entities'
-// import { getCurrentCommunity } from 'selectors/dashboard'
-// import { getHomeTokenByCommunityAddress } from 'selectors/token'
-// import { fetchCommunity } from 'actions/token'
-// import { loadModal } from 'actions/ui'
-// import { fetchEntities } from 'actions/communityEntities'
-// import { withNetwork } from 'containers/Web3'
 
 import SidebarContent from 'components/FuseDashboard/components/Sidebar'
 import Dashboard from 'components/FuseDashboard/pages/Dashboard'
@@ -41,11 +30,10 @@ const WithBgImage = ({ children }) => (
   </div>
 )
 
-const DashboardLayout = (props) => {
-  const {
-    match,
-    location
-  } = props
+const DashboardLayout = ({
+  match,
+  location
+}) => {
   const { address: communityAddress } = useParams()
   const { dashboard, network } = useStore()
   const { community } = dashboard
@@ -58,13 +46,11 @@ const DashboardLayout = (props) => {
 
   useEffect(() => {
     if (community && accountAddress) {
+      dashboard.checkIsAdmin(accountAddress)
       dashboard.fetchTokenBalances(accountAddress)
+      dashboard.checkIsCommunityMember(accountAddress)
     }
   }, [dashboard?.community, network?.accountAddress])
-
-  useEffect(() => {
-    dashboard.checkIsAdmin(accountAddress)
-  }, [network?.accountAddress])
 
   const [open, onSetSidebarOpen] = useState(false)
 
@@ -72,7 +58,7 @@ const DashboardLayout = (props) => {
     if (isMobile) {
       onSetSidebarOpen(false)
     }
-  }, [location.pathname])
+  }, [location?.pathname])
 
   useEffect(() => {
     if (isAdmin) {
@@ -82,7 +68,7 @@ const DashboardLayout = (props) => {
 
   const qrValue = JSON.stringify({
     tokenAddress: dashboard?.community?.homeTokenAddress,
-    originNetwork: dashboard?.homeToken?.networkType,
+    originNetwork: dashboard?.baseUrl,
     env: CONFIG.env,
     communityAddress
   })
@@ -90,35 +76,33 @@ const DashboardLayout = (props) => {
   return (
     <div className='dashboard'>
       <div className='container'>
-        {!isMobile
-          ? (
-            <SidebarContent
-              match={match.url}
-            />
-          )
-          : <Sidebar
-            sidebar={
-              <SidebarContent
-                match={match.url}
-              />
-            }
-            open={open}
-            styles={{
-              sidebar: { zIndex: 101 },
-              overlay: { zIndex: 100 }
-            }}
-            onSetOpen={onSetSidebarOpen}
-          >
-            {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
-          </Sidebar>
+        {
+          !isMobile
+            ? <SidebarContent match={match.url} />
+            : (
+              <Sidebar
+                sidebar={
+                  <SidebarContent
+                    match={match.url}
+                  />
+                }
+                open={open}
+                styles={{
+                  sidebar: { zIndex: 101 },
+                  overlay: { zIndex: 100 }
+                }}
+                onSetOpen={onSetSidebarOpen}
+              >
+                {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
+              </Sidebar>
+              )
         }
         <Switch>
-          {get(dashboard?.community, 'plugins.bonuses') && !get(dashboard?.community, 'plugins.bonuses.isRemoved', false) && dashboard?.isAdmin && (
+          {get(dashboard?.plugins, 'bonuses') && !get(dashboard?.plugins, 'bonuses.isRemoved', false) && dashboard?.isAdmin && (
             <Route exact path={`${match.path}/bonuses`}>
               <WithBgImage>
                 <BonusesPage
                   match={match}
-                  community={dashboard?.community}
                 />
               </WithBgImage>
             </Route>
@@ -141,15 +125,11 @@ const DashboardLayout = (props) => {
             <Route
               exact
               path={`${match.path}/walletbanner`}
-              render={() => (
-                <WithBgImage>
-                  <WalletBannerLinkPage
-                    match={match}
-                    community={dashboard?.community}
-                  />
-                </WithBgImage>
-              )}
-            />)}
+            >
+              <WithBgImage>
+                <WalletBannerLinkPage />
+              </WithBgImage>
+            </Route>)}
 
           {dashboard?.isAdmin && (dashboard?.homeToken?.tokenType === 'mintableBurnable') && (
             <Route exact path={`${match.path}/mintBurn`}>
@@ -180,7 +160,7 @@ const DashboardLayout = (props) => {
           )}
 
           {
-            !get((dashboard?.community?.plugins), 'businessList.isRemoved', false) && (
+            !get((dashboard?.plugins), 'businessList.isRemoved', false) && (
               <Route exact path={`${match.path}/merchants`}>
                 <WithBgImage>
                   <Businesses />

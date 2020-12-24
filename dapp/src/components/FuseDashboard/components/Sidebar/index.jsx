@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Logo from 'components/common/Logo'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
 import { useDispatch } from 'react-redux'
 import { useParams, withRouter } from 'react-router'
@@ -9,8 +9,6 @@ import SideBarItems from 'constants/sideBarItems'
 import allPlugins from 'constants/plugins'
 
 import isEmpty from 'lodash/isEmpty'
-import pickBy from 'lodash/pickBy'
-import { toJS } from 'mobx'
 
 import MenuItem from './MenuItem'
 
@@ -20,7 +18,6 @@ const Sidebar = ({
 }) => {
   const { address: communityAddress } = useParams()
   const { dashboard } = useStore()
-  console.log({ Sidebar: toJS(dashboard?.plugins) })
   const dispatch = useDispatch()
   const [currentPath, setPath] = useState('')
   const [sideBarItems, setSideBarItems] = useState([])

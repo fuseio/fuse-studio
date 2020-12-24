@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import get from 'lodash/get'
-import Balance from 'components/dashboard/components/Balance'
+import Balance from 'components/FuseDashboard/components/Balance'
 import Message from 'components/common/SignMessage'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'

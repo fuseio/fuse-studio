@@ -1,7 +1,7 @@
 import React from 'react'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
 import LogosOptions from 'components/wizard/components/LogosOptions'
-import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import AccordionDetails from '@material-ui/core/AccordionActions'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/styles'
@@ -10,20 +10,20 @@ import set from 'lodash/set'
 import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
 import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import { Observer } from 'mobx-react'
 
 const ExpansionPanelDetails = withStyles({
   root: {
-    display: 'flex',
-    padding: '24px'
+    padding: '24px',
+    alignItems: 'flex-start'
   }
-})(MuiExpansionPanelDetails)
+})(AccordionDetails)
 
 const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, token, communityMetadata }) => {
-  const renderForm = ({ isValid, handleSubmit, handleChange, values }) => {
+  const renderForm = ({ isValid, handleChange, values }) => {
     return (
-      <form onSubmit={handleSubmit} className='issuance__wizard'>
+      <Form className='issuance__wizard'>
         <div className='settings__form'>
           <ExpansionPanelDetails className='accordion__panel'>
             <Typography component='div'>
@@ -116,7 +116,7 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
             <button className='button button--normal join_bonus__button' disabled={!isValid}>Save</button>
           </div>
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -147,23 +147,6 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
     })
   }
 
-  // const initialValues = React.useMemo(() => ({
-  //   communityType: {
-  //     label: get(communityMetadata, 'isDefault', false),
-  //     value: get(communityMetadata, 'isDefault', false)
-  //   },
-  //   isOpen: get(community, 'isClosed', true),
-  //   coverPhoto: getCoverPhotoUri(communityMetadata),
-  //   images: {
-  //     custom: {
-  //       croppedImageUrl: getImageUri(communityMetadata)
-  //     }
-  //   },
-  //   communitySymbol: get(token, 'symbol', ''),
-  //   secondaryTokenAddress: get(community, 'secondaryTokenAddress', ''),
-  //   description: get(community, 'description', ''),
-  //   webUrl: get(community, 'webUrl', '')
-  // }), [communityMetadata, token, community])
   const initialValues = {
     communityType: {
       label: get(communityMetadata, 'isDefault', false),
@@ -184,10 +167,11 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
 
   return (
     <Formik
-      render={renderForm}
       onSubmit={onSubmit}
       initialValues={initialValues}
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

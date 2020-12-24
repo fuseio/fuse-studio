@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import inRange from 'lodash/inRange'
@@ -103,7 +103,7 @@ class Wizard extends React.Component {
     history.push(locations[prevPath])
   }
 
-  onSubmit = (values, bag) => {
+  handleOnSubmit = (values, bag) => {
     const { children, submitHandler, saveWizardProgress, location } = this.props
     const page = locations.indexOf(location.pathname)
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
@@ -128,7 +128,7 @@ class Wizard extends React.Component {
     return false
   }
 
-  renderForm = ({ values, handleSubmit, errors, isValid, touched }) => {
+  renderForm = ({ values, errors, isValid, touched }) => {
     const { children, transactionStatus, createTokenSignature, adminAddress, location } = this.props
     const page = locations.indexOf(location.pathname)
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
@@ -137,7 +137,7 @@ class Wizard extends React.Component {
 
     const isSubmitStep = get(React.Children.toArray(children)[page], 'props.isSubmitStep')
     return (
-      <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
+      <Form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })}>
         {page === 0 && <h1 className='issuance__wizard__title'>Launch your economy</h1>}
         {/* {page === 1 && <h1 className='issuance__wizard__title'>Choose the network you want to deploy to:</h1>} */}
         {/* {page === 2 && <h1 className='issuance__wizard__title'>New or existing token?</h1>} */}
@@ -170,7 +170,7 @@ class Wizard extends React.Component {
             </button>
           )}
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -180,7 +180,7 @@ class Wizard extends React.Component {
     const page = locations.indexOf(location.pathname)
 
     return (
-      <Fragment>
+      <>
         <div className='issuance__wrapper'>
           <div className='issuance__header grid-x align-justify'>
             <div className='issuance__header__logo align-self-middle grid-x align-middle'>
@@ -205,14 +205,16 @@ class Wizard extends React.Component {
           </div>
           <Formik
             initialValues={values}
-            onSubmit={this.onSubmit}
+            onSubmit={this.handleOnSubmit}
             validationSchema={WizardShape}
-            render={this.renderForm}
+            // render={this.renderForm}
             validateOnChange
-            isInitialValid={false}
-          />
+            validateOnMount
+          >
+            {(props) => this.renderForm(props)}
+          </Formik>
         </div>
-      </Fragment>
+      </>
     )
   }
 }

@@ -1092,6 +1092,7 @@
     animation: fadein 0.35s ease-in;
 
     > div {
+      width: 100%;
       font-family: $font-family !important;
     }
   }

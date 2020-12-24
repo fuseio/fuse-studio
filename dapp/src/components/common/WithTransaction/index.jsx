@@ -26,7 +26,6 @@ export default function withTransaction (WrappedComponent) {
       promise.on('transactionHash', transactionHash => {
         setTransactionHash(transactionHash)
         setTransactionStatus(PENDING)
-        console.log({ transactionHash })
       })
       promise.on('receipt', receipt => {
         setReceipt(receipt)

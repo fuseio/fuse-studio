@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import omit from 'lodash/omit'
 import get from 'lodash/get'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import userEntity from 'utils/validation/shapes/userEntity'
 import TransactionButton from 'components/common/TransactionButton'
 import Select from 'react-select'
@@ -22,9 +22,9 @@ const AddUserForm = (props) => {
     submitEntity(entity)
   }
 
-  const renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange }) => {
+  const renderForm = ({ touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange }) => {
     return (
-      <form className='user-form' onSubmit={handleSubmit}>
+      <Form className='user-form'>
         <h5 className='user-form__title'>
           {isJoin ? 'Join community' : 'Add new user'}
         </h5>
@@ -247,7 +247,7 @@ const AddUserForm = (props) => {
         <div className='user-form__submit'>
           <TransactionButton frontText={isJoin ? 'Join' : 'Add user'} type='submit' disabled={!isValid} />
         </div>
-      </form>
+      </Form>
     )
   }
   return (
@@ -263,10 +263,11 @@ const AddUserForm = (props) => {
         image: null
       }}
       validationSchema={userEntity}
-      render={renderForm}
       onSubmit={onSubmit}
-      isInitialValid={false}
-    />
+      validateOnMount
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

@@ -23,8 +23,10 @@ const Transfer = ({
 
   const handleConfirmation = () => dashboard?.fetchTokenBalances(accountAddress)
 
-  const makeTransfer = ({ to: toField, amount }) =>
-    transfer({ tokenAddress, to: toField, amount: toWei(String(amount), decimals) }, web3Context)
+  const makeTransfer = ({ to: toField, amount }) => {
+    return transfer({ tokenAddress, to: toField, amount: toWei(String(amount), decimals) }, web3Context)
+  }
+
   return (
     !loading && <>
       <div className='transfer__header'>

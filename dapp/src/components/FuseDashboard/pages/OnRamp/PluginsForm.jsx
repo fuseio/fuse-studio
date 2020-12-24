@@ -1,5 +1,5 @@
 import React from 'react'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import pluginsShape from 'utils/validation/shapes/plugins'
 import get from 'lodash/get'
 import Options from './Option'
@@ -20,11 +20,11 @@ const PluginsForm = ({ myPlugins, addPlugin }) => {
     })
   }
 
-  const renderForm = ({ handleSubmit }) => {
+  const renderForm = (props) => {
     return (
-      <form onSubmit={handleSubmit}>
+      <Form>
         <Options myPlugins={myPlugins} />
-      </form >
+      </Form>
     )
   }
 
@@ -35,9 +35,11 @@ const PluginsForm = ({ myPlugins, addPlugin }) => {
       }}
       onSubmit={onSubmit}
       validationSchema={pluginsShape}
-      render={renderForm}
+      // render={renderForm}
       enableReinitialize
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

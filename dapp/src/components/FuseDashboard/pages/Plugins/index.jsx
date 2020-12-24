@@ -140,25 +140,27 @@ const Plugins = () => {
 
   return (
     dashboard?.community
-      ? <div className='plugins'>
-        <h2 className='plugins__title'>Plugins</h2>
-        <div className='plugins__wrapper'>
-          <div className='plugins__content__wrapper'>
-            <div className='plugins__content'>
-              Plug-ins are contracts deployed on the Fuse chain that allow you to add functionality to your app with the click of a button.
-              Any plug-in you activate will open a new navigation menu that allows you to configure it's settings.
-              Give it try!
+      ? (
+        <div className='plugins'>
+          <h2 className='plugins__title'>Plugins</h2>
+          <div className='plugins__wrapper'>
+            <div className='plugins__content__wrapper'>
+              <div className='plugins__content'>
+                Plug-ins are contracts deployed on the Fuse chain that allow you to add functionality to your app with the click of a button.
+                Any plug-in you activate will open a new navigation menu that allows you to configure it's settings.
+                Give it try!
+              </div>
+              <div className='plugins__puzzle'><img src={Puzzle} /></div>
             </div>
-            <div className='plugins__puzzle'><img src={Puzzle} /></div>
+            <PluginList
+              pluginList={generalPlugins}
+              pluginTile='Choose the plugin you want to add'
+              showInfoModal={showInfoModal}
+              addPlugin={addPlugin} togglePlugin={togglePlugin}
+            />
           </div>
-          <PluginList
-            pluginList={generalPlugins}
-            pluginTile='Choose the plugin you want to add'
-            showInfoModal={showInfoModal}
-            addPlugin={addPlugin} togglePlugin={togglePlugin}
-          />
         </div>
-      </div>
+        )
       : <div />
   )
 }
