@@ -48,7 +48,7 @@ const BusinessesTable = withTransaction(
     makeRemoveBusinessTransaction,
     makeAddBusinessTransaction
   }) => {
-    const handleAddBusiness = () => loadAddBusinessModal(false)
+    const handleAddBusiness = () => loadAddBusinessModal()
     const [transactionTitle, setTransactionTitle] = useState()
 
     const columns = [
@@ -131,12 +131,8 @@ const BusinessesTable = withTransaction(
       }
     ]
 
-    const loadAddBusinessModal = isJoin => {
-      // const submitEntity = isJoin ? joinCommunity : addEntity
-      // setTransactionTitle(isJoin ? 'Joining the list' : 'Adding business to list')
+    const loadAddBusinessModal = () => {
       loadModal(ADD_BUSINESS_MODAL, {
-        isJoin,
-        // entity: isJoin ? { account: accountAddress } : undefined,
         users,
         submitEntity: (...args) => {
           handleSendTransaction(() => makeAddBusinessTransaction(...args))
@@ -199,19 +195,12 @@ const BusinessesTable = withTransaction(
 )
 
 const Businesses = ({
-  fetchEntities,
-  accountAddress,
   entityAdded,
   businessJustAdded,
   loadModal,
-  addEntity,
-  joinCommunity,
-  removeEntity,
   businessesMetadata,
   fetchEntityMetadata,
   updateEntities,
-  signatureNeeded,
-  showTransactionMessage
 }) => {
   const { dashboard } = useStore()
   const { community, communityBusinesses, isAdmin } = dashboard
@@ -220,11 +209,6 @@ const Businesses = ({
   const [users, setUsers] = useState([])
   const { network, _web3 } = useStore()
   const { web3Context } = network
-  console.log(web3Context)
-
-  useEffect(() => {
-    fetchEntities(communityAddress)
-  }, [])
 
   useEffect(() => {
     dashboard.fetchCommunityBusinesses(communityAddress)
@@ -233,7 +217,7 @@ const Businesses = ({
   useEffect(
     () =>
       autorun(() => {
-        ;(communityBusinesses || []).forEach(({ address }) => {
+        (communityBusinesses || []).forEach(({ address }) => {
           const checkSumAddress = toChecksumAddress(address)
           if (!businessesMetadata[checkSumAddress]) {
             fetchEntityMetadata(
@@ -344,8 +328,6 @@ const Businesses = ({
           desiredNetworkName='fuse'
           loadModal={loadModal}
           tableData={tableData}
-          // columns={columns}
-          // sendTransaction={makeAddBusinessTransaction}
           makeAddBusinessTransaction={makeAddBusinessTransaction}
           makeRemoveBusinessTransaction={makeRemoveBusinessTransaction}
           users={users}
