@@ -128,7 +128,7 @@ class Wizard extends React.Component {
     return false
   }
 
-  renderForm = ({ values, errors, isValid, touched }) => {
+  renderForm = ({ values, errors, handleSubmit, isValid, touched }) => {
     const { children, transactionStatus, createTokenSignature, adminAddress, location } = this.props
     const page = locations.indexOf(location.pathname)
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
