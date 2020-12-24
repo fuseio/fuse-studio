@@ -40,7 +40,7 @@ const Transfer = ({
         <TransferForm
           sendTo={sendTo}
           balance={balance ? formatWei(balance, 2, decimals) : 0}
-          sendTransaction={makeTransfer}
+          makeTransaction={makeTransfer}
           desiredNetworkName={tokenNetworkName}
           onConfirmation={handleConfirmation}
           pendingText="Your money on it's way"

@@ -108,7 +108,7 @@ const MintBurn = () => {
           </div>
           <MintBurnForm
             balance={balance ? formatWei(balance, 2, decimals) : 0}
-            sendTransaction={makeMint}
+            makeTransaction={makeMint}
             desiredNetworkName={tokenNetworkName}
             symbol={symbol}
             actionType='mint'
@@ -125,7 +125,7 @@ const MintBurn = () => {
           </div>
           <MintBurnForm
             balance={balance ? formatWei(balance, 2) : 0}
-            sendTransaction={makeBurn}
+            makeTransaction={makeBurn}
             desiredNetworkName={tokenNetworkName}
             symbol={symbol}
             actionType='burn'

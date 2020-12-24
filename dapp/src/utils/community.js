@@ -30,3 +30,13 @@ export function addBusiness ({ communityAddress, businessAccountAddress, metadat
   })
   return transactionPromise
 }
+
+export function removeBusiness ({ communityAddress, businessAccountAddress }, { accountAddress, web3, web3Options }) {
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
+
+  const method = CommunityContract.methods.removeEntity(businessAccountAddress)
+  const transactionPromise = method.send({
+    from: accountAddress
+  })
+  return transactionPromise
+}

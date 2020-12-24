@@ -11,6 +11,7 @@ export default withTransaction(({
   sendTo,
   error,
   handleSendTransaction,
+  makeTransaction,
   clearTransaction,
   isRequested,
   isDenied,
@@ -20,7 +21,7 @@ export default withTransaction(({
 }) => {
   const onSubmit = (values, formikBag) => {
     const { to, amount } = values
-    handleSendTransaction({ to, amount })
+    handleSendTransaction(() => makeTransaction({ to, amount }))
     formikBag.resetForm()
   }
 

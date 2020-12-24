@@ -32,13 +32,105 @@ import dotsIcon from 'images/dots.svg'
 import AddBusiness from 'images/add_business.svg'
 import withTransaction from 'components/common/WithTransaction'
 import { observer } from 'mobx-react'
-import { addBusiness } from 'utils/community'
+import { addBusiness, removeBusiness } from 'utils/community'
 import { useStore } from 'store/mobx'
 
 const BusinessesTable = withTransaction(
-  ({ transactionStatus, isRequested, isPending, users, tableData, columns, handleSendTransaction, isAdmin, entityAdded }) => {
-    // console.log({ transactionStatus, isRequested, isPending, tableData, columns, isAdmin, entityAdded })
+  ({
+    transactionStatus,
+    isRequested,
+    isPending,
+    users,
+    tableData,
+    handleSendTransaction,
+    isAdmin,
+    entityAdded,
+    loadModal,
+    makeRemoveBusinessTransaction,
+    makeAddBusinessTransaction
+  }) => {
     const handleAddBusiness = () => loadAddBusinessModal(false)
+    const [transactionTitle, setTransactionTitle] = useState()
+
+    const columns = useMemo(
+      () => [
+        {
+          id: 'checkbox',
+          accessor: '',
+          Cell: rowInfo => {
+            return null
+            // return (
+            //   <input
+            //     type='checkbox'
+            //     className='row_checkbox'
+            //     checked={rowInfo.value.checkbox}
+            //     // checked={this.state.selected[rowInfo.original.title.props.children] === true}
+            //     onChange={() => this.toggleRow(rowInfo.row.original)}
+            //   />
+            // )
+          }
+        },
+        {
+          Header: 'Name',
+          accessor: 'name'
+        },
+        {
+          Header: 'Type',
+          accessor: 'type'
+        },
+        {
+          Header: 'Address',
+          accessor: 'address'
+        },
+        {
+          Header: 'Account ID',
+          accessor: 'account',
+          Cell: ({ cell: { value } }) => (
+            <React.Fragment>
+              <a
+                className='link'
+                target='_blank'
+                rel='noopener noreferrer'
+                href={`${getBlockExplorerUrl('fuse')}/address/${value}`}
+              >
+                {addressShortener(value)}
+              </a>
+              <CopyToClipboard text={value}>
+                <FontAwesome name='clone' />
+              </CopyToClipboard>
+            </React.Fragment>
+          )
+        },
+        {
+          id: 'dropdown',
+          accessor: '',
+          Cell: rowInfo => {
+            return isAdmin ? (
+              <div className='table__body__cell__more'>
+                <div className='table__body__cell__more__toggler'>
+                  <img src={dotsIcon} />
+                </div>
+                <div className='more' onClick={e => e.stopPropagation()}>
+                  <ul className='more__options'>
+                    <li
+                      className='more__options__item'
+                      onClick={() => {
+                          makeRemoveBusinessTransaction(rowInfo.row.original.account)
+                          setTransactionTitle('Removing the business from list')
+                        }
+                      }
+                    >
+                      <FontAwesome name='trash' /> Remove from list
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            ) : null
+          }
+        }
+      ],
+      [isAdmin]
+    )
 
     const loadAddBusinessModal = isJoin => {
       // const submitEntity = isJoin ? joinCommunity : addEntity
@@ -47,21 +139,14 @@ const BusinessesTable = withTransaction(
         isJoin,
         // entity: isJoin ? { account: accountAddress } : undefined,
         users,
-        submitEntity: handleSendTransaction
-        // submitEntity: data =>
-        //   submitEntity(
-        //     communityAddress,
-        //     { ...data },
-        //     get(community, 'isClosed', false),
-        //     'business'
-        //   )
+        submitEntity: makeAddBusinessTransaction
       })
     }
 
     const message = (
       <TransactionMessage
-        title={'Removing the business from list'}
-        message={isPending ? 'Please sign with your wallet' : 'Pending'}
+        title={transactionTitle}
+        message={isRequested ? 'Please sign with your wallet' : 'Pending'}
         isOpen={isRequested || !!transactionStatus}
         isDark
       />
@@ -79,9 +164,9 @@ const BusinessesTable = withTransaction(
               // TODO - search
               // onChange: setSearch
             }}
+            columns={columns}
             data={tableData}
             justAdded={entityAdded}
-            columns={columns}
             count={0}
             size={100}
           />
@@ -97,7 +182,10 @@ const BusinessesTable = withTransaction(
           </div>
           <button
             className='entities__empty-list__btn'
-            onClick={handleAddBusiness}
+            onClick={(...args) => {
+              handleAddBusiness(...args)
+              setTransactionTitle('Adding business to list')
+            }}
           >
             Add business
           </button>
@@ -132,9 +220,9 @@ const Businesses = ({
   const [data, setData] = useState(null)
   const [businesses, setBusinesses] = useState()
   const [users, setUsers] = useState([])
-  const { network } = useStore()
+  const { network, _web3 } = useStore()
   const { web3Context } = network
-  const [transactionTitle, setTransactionTitle] = useState()
+  console.log(web3Context)
 
   useEffect(() => {
     fetchEntities(communityAddress)
@@ -225,92 +313,7 @@ const Businesses = ({
     return () => {}
   }, [businesses, businessesMetadata])
 
-  const columns = useMemo(
-    () => [
-      {
-        id: 'checkbox',
-        accessor: '',
-        Cell: rowInfo => {
-          return null
-          // return (
-          //   <input
-          //     type='checkbox'
-          //     className='row_checkbox'
-          //     checked={rowInfo.value.checkbox}
-          //     // checked={this.state.selected[rowInfo.original.title.props.children] === true}
-          //     onChange={() => this.toggleRow(rowInfo.row.original)}
-          //   />
-          // )
-        }
-      },
-      {
-        Header: 'Name',
-        accessor: 'name'
-      },
-      {
-        Header: 'Type',
-        accessor: 'type'
-      },
-      {
-        Header: 'Address',
-        accessor: 'address'
-      },
-      {
-        Header: 'Account ID',
-        accessor: 'account',
-        Cell: ({ cell: { value } }) => (
-          <React.Fragment>
-            <a
-              className='link'
-              target='_blank'
-              rel='noopener noreferrer'
-              href={`${getBlockExplorerUrl('fuse')}/address/${value}`}
-            >
-              {addressShortener(value)}
-            </a>
-            <CopyToClipboard text={value}>
-              <FontAwesome name='clone' />
-            </CopyToClipboard>
-          </React.Fragment>
-        )
-      },
-      {
-        id: 'dropdown',
-        accessor: '',
-        Cell: rowInfo => {
-          return isAdmin ? (
-            <div className='table__body__cell__more'>
-              <div className='table__body__cell__more__toggler'>
-                <img src={dotsIcon} />
-              </div>
-              <div className='more' onClick={e => e.stopPropagation()}>
-                <ul className='more__options'>
-                  <li
-                    className='more__options__item'
-                    onClick={() =>
-                      handleRemoveEntity(rowInfo.row.original.account)
-                    }
-                  >
-                    <FontAwesome name='trash' /> Remove from list
-                  </li>
-                </ul>
-              </div>
-            </div>
-          ) : null
-        }
-      }
-    ],
-    [isAdmin]
-  )
-
   const tableData = useMemo(() => data || [], [data])
-
-  // const handleAddBusiness = () => loadAddBusinessModal(false)
-
-  const handleRemoveEntity = account => {
-    setTransactionTitle('Removing the business from list')
-    removeEntity(account)
-  }
 
   const makeAddBusinessTransaction = data => {
     const businessAccountAddress = data.account
@@ -320,23 +323,15 @@ const Businesses = ({
     )
   }
 
-  // const loadAddBusinessModal = isJoin => {
-  //   // const submitEntity = isJoin ? joinCommunity : addEntity
-  //   setTransactionTitle(isJoin ? 'Joining the list' : 'Adding business to list')
-  //   loadModal(ADD_BUSINESS_MODAL, {
-  //     isJoin,
-  //     entity: isJoin ? { account: accountAddress } : undefined,
-  //     users,
-  //     submitEntity: makeAddBusinessTransaction
-  //     // submitEntity: data =>
-  //     //   submitEntity(
-  //     //     communityAddress,
-  //     //     { ...data },
-  //     //     get(community, 'isClosed', false),
-  //     //     'business'
-  //     //   )
-  //   })
-  // }
+  const makeRemoveBusinessTransaction = account => {
+    console.log(web3Context)
+    console.log(_web3)
+
+    return removeBusiness(
+      { communityAddress, businessAccountAddress: account },
+      web3Context
+    )
+  }
 
   return (
     <>
@@ -345,11 +340,15 @@ const Businesses = ({
       </div>
       <div className='entities__wrapper'>
         <BusinessesTable
+          desiredNetworkName='fuse'
+          loadModal={loadModal}
           tableData={tableData}
-          columns={columns}
-          sendTransaction={makeAddBusinessTransaction}
+          // columns={columns}
+          // sendTransaction={makeAddBusinessTransaction}
+          makeAddBusinessTransaction={makeAddBusinessTransaction}
+          makeRemoveBusinessTransaction={makeRemoveBusinessTransaction}
           users={users}
-          isAdmin={isAdmin}
+          isAdmin={true}
           entityAdded
         />
       </div>

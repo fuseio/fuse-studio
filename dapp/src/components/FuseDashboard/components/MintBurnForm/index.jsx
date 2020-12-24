@@ -19,6 +19,7 @@ export default withTransaction(
     error,
     receipt,
     handleSendTransaction,
+    makeTransaction,
     isDenied,
     isConfirmed,
     isFailed
@@ -36,7 +37,7 @@ export default withTransaction(
       const { actionType, mintAmount, burnAmount } = values
 
       const amount = actionType === 'mint' ? mintAmount : burnAmount
-      handleSendTransaction(amount)
+      handleSendTransaction(() => makeTransaction(amount))
       formikBag.resetForm()
     }
 

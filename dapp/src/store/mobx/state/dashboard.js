@@ -44,7 +44,6 @@ export default class Dashboard {
       isAdmin: observable,
       tokenBalances: observable,
       addedPlugins: computed,
-      web3Context: computed,
       fetchTokenBalances: action,
       fetchCommunity: action
     })
@@ -104,14 +103,6 @@ export default class Dashboard {
       console.log({ error })
     }
   })
-
-  get web3Context () {
-    return {
-      web3: this.rootStore.network._web3,
-      accountAddress: this.rootStore.network.accountAddress,
-      web3Options: getWeb3Options('fuse')
-    }
-  }
 
   get tokenContext () {
     return {
