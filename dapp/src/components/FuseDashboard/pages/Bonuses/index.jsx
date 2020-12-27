@@ -20,7 +20,8 @@ const Bonuses = () => {
   const funderAccount = useSelector(getFunderAccount)
   const { dashboard, network } = useStore()
   const { accountAddress } = network
-  const { web3Context, tokenContext } = dashboard
+  const { tokenContext } = dashboard
+  const { web3Context } = network
   const { networkName } = web3Context
   const { tokenNetworkName, tokenBalance } = tokenContext
   const decimals = dashboard?.homeToken?.decimals
@@ -58,7 +59,7 @@ const Bonuses = () => {
               desiredNetworkName={tokenNetworkName}
               symbol={dashboard?.homeToken?.symbol}
               balance={tokenBalance ? formatWei(tokenBalance, 2, decimals) : 0}
-              sendTransaction={makeTransfer}
+              makeTransaction={makeTransfer}
               tokenNetworkType={networkName}
               onConfirmation={handleConfirmation}
               funderBalance={funderBalance ? formatWei(funderBalance, 2, decimals) : 0}
