@@ -20,7 +20,6 @@ import { autorun } from "mobx"
 
 import {
   addEntity,
-  fetchEntities,
   removeEntity,
   addAdminRole,
   removeAdminRole,
@@ -71,10 +70,6 @@ const Users = ({
   }, [])
 
   useEffect(() => {
-    fetchEntities(communityAddress)
-  }, [])
-
-  useEffect(() => {
     if (join) {
       handleJoinCommunity()
     }
@@ -89,7 +84,6 @@ const Users = ({
   useEffect(() => autorun(() => {
     if (!isEmpty(communityUsers)) {
       const data = communityUsers.map(({ isAdmin, isApproved, address, createdAt, displayName }) => {
-        // const metadataAddress = userWallets[address] ? userWallets[address].owner : address
         const metadata = usersMetadata[address]
         return ({
           isApproved,
@@ -364,7 +358,6 @@ const mapDispatchToProps = {
   addMinter,
   loadModal,
   hideModal,
-  fetchEntities,
   importExistingEntity,
   fetchUsersMetadata
 }

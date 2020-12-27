@@ -9,18 +9,10 @@ import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
 import MyTable from 'components/FuseDashboard/components/Table'
 import {
-  fetchEntities,
-  addEntity,
-  removeEntity,
-  joinCommunity,
   fetchEntityMetadata
 } from 'actions/communityEntities'
-import { loadModal, hideModal } from 'actions/ui'
-import { ADD_BUSINESS_MODAL, ENTITY_ADDED_MODAL } from 'constants/uiConstants'
-import { getTransaction } from 'selectors/transaction'
-
-import { getCurrentCommunity } from 'selectors/dashboard'
-import { getAccountAddress } from 'selectors/accounts'
+import { loadModal } from 'actions/ui'
+import { ADD_BUSINESS_MODAL } from 'constants/uiConstants'
 import TransactionMessage from 'components/common/TransactionMessage'
 import { isIpfsHash, isS3Hash } from 'utils/metadata'
 import CopyToClipboard from 'components/common/CopyToClipboard'
@@ -195,23 +187,29 @@ const BusinessesTable = withTransaction(
 )
 
 const Businesses = ({
-  entityAdded,
-  businessJustAdded,
   loadModal,
   businessesMetadata,
   fetchEntityMetadata,
-  updateEntities,
 }) => {
   const { dashboard } = useStore()
-  const { community, communityBusinesses, isAdmin } = dashboard
+  const { communityBusinesses, communityUsers, isAdmin } = dashboard
   const { address: communityAddress } = useParams()
   const [data, setData] = useState(null)
-  const [users, setUsers] = useState([])
   const { network, _web3 } = useStore()
   const { web3Context } = network
+  const { tokenContext } = dashboard
+
+  const handleConfirmation = () => {
+    dashboard?.fetchCommunityBusinesses(communityAddress)
+    // temp thegraph race condition hack
+    setTimeout(() => {
+      dashboard.fetchCommunityBusinesses(communityAddress)
+    }, 2000)
+  }
 
   useEffect(() => {
     dashboard.fetchCommunityBusinesses(communityAddress)
+    dashboard.fetchCommunityUsers(communityAddress)
   }, [])
 
   useEffect(
@@ -229,26 +227,6 @@ const Businesses = ({
       }),
     [communityBusinesses]
   )
-
-  useEffect(() => {
-    if (updateEntities) {
-      setTimeout(() => {
-        dashboard.fetchCommunityBusinesses(communityAddress)
-      }, 2000)
-    }
-  }, [updateEntities])
-
-  useEffect(() => {
-    if (entityAdded) {
-      setTimeout(() => {
-        loadModal(ENTITY_ADDED_MODAL, {
-          type: 'business',
-          name: businessJustAdded
-        })
-      }, 2500)
-    }
-    return () => {}
-  }, [entityAdded])
 
   useEffect(
     () =>
@@ -304,14 +282,11 @@ const Businesses = ({
     const businessAccountAddress = data.account
     return addBusiness(
       { communityAddress, businessAccountAddress, metadata: data },
-      web3Context
+      web3Context, tokenContext
     )
   }
 
   const makeRemoveBusinessTransaction = account => {
-    console.log(web3Context)
-    console.log(_web3)
-
     return removeBusiness(
       { communityAddress, businessAccountAddress: account },
       web3Context
@@ -330,9 +305,10 @@ const Businesses = ({
           tableData={tableData}
           makeAddBusinessTransaction={makeAddBusinessTransaction}
           makeRemoveBusinessTransaction={makeRemoveBusinessTransaction}
-          users={users}
+          users={communityUsers}
           isAdmin={isAdmin}
           entityAdded
+          onConfirmation={handleConfirmation}
         />
       </div>
     </>
@@ -340,22 +316,12 @@ const Businesses = ({
 }
 
 const mapStateToProps = state => ({
-  accountAddress: getAccountAddress(state),
-  ...state.screens.communityEntities,
-  ...getTransaction(state, state.screens.communityEntities.transactionHash),
   businessesMetadata: state.entities.businesses,
-  updateEntities: state.screens.communityEntities.updateEntities,
-  community: getCurrentCommunity(state)
 })
 
 const mapDispatchToProps = {
-  addEntity,
-  removeEntity,
   loadModal,
-  hideModal,
-  joinCommunity,
-  fetchEntityMetadata,
-  fetchEntities
+  fetchEntityMetadata
 }
 
 export default connect(

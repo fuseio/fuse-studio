@@ -1,5 +1,6 @@
 import CommunityABI from '@fuse/entities-contracts/abi/CommunityWithEvents'
 import { roles, combineRoles } from '@fuse/roles'
+import { createBusinessMetadata } from 'utils/metadata'
 
 export function deriveEntityData (type, isClosed) {
   if (type === 'user') {
@@ -20,7 +21,8 @@ export function addUser ({ communityAddress, userAccountAddress, metadata }, { a
   return transactionPromise
 }
 
-export function addBusiness ({ communityAddress, businessAccountAddress, metadata }, { accountAddress, web3, web3Options }) {
+export function addBusiness ({ communityAddress, businessAccountAddress, metadata }, { accountAddress, web3, web3Options }, { baseUrl}) {
+  createBusinessMetadata({ communityAddress, accountAddress: businessAccountAddress, metadata }, { baseUrl })
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
 
   const { entityRoles } = deriveEntityData('business')

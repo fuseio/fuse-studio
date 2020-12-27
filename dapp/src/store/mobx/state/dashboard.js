@@ -28,7 +28,7 @@ export default class Dashboard {
   foreignNetwok
   _web3Home
   _foreignWeb3
-  _baseUrl
+  baseUrl
   isCommunityMember
   tokenBalances = {
     home: 0,
@@ -123,7 +123,8 @@ export default class Dashboard {
       isHome: true,
       token: this.homeToken,
       tokenNetworkName: 'fuse',
-      tokenBalance: this.tokenBalances.home
+      tokenBalance: this.tokenBalances.home,
+      baseUrl: this.baseUrl
     }
   }
 
