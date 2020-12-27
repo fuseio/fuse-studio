@@ -1,4 +1,4 @@
-import { action, observable, flow, makeObservable } from 'mobx'
+import { action, observable, computed, flow, makeObservable } from 'mobx'
 import Web3 from 'web3'
 import { getProviderInfo } from 'web3modal'
 import { getWeb3 } from 'services/web3'
@@ -19,6 +19,8 @@ export default class Network {
 
   constructor (rootStore) {
     makeObservable(this, {
+      _web3: observable.ref,
+      web3Context: computed,
       foreignNetwork: observable,
       walletConnected: observable,
       accountAddress: observable,
@@ -57,6 +59,7 @@ export default class Network {
       this._web3Home = getWeb3({ networkType: this.homeNetwork })
       this._web3Foreign = getWeb3({ networkType: this.foreignNetwork })
       this._web3 = web3
+      console.log(!!this._web3)
       this._provider = provider
       switch (providerInfo.name) {
         case 'MetaMask':

@@ -11,7 +11,7 @@ import keyBy from 'lodash/keyBy'
 import has from 'lodash/has'
 import request from 'superagent'
 import pickBy from 'lodash/pickBy'
-import { getCommunityAdmins, isCommunityMember } from 'services/graphql/community.js'
+import { getCommunityAdmins, fetchCommunityUsers as fetchCommunityUsersApi, fetchCommunityBusinesses as fetchCommunityBusinessesApi, isCommunityMember } from 'services/graphql/community.js'
 import { getWeb3 } from 'services/web3'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getWeb3Options } from 'utils/network'
@@ -28,12 +28,15 @@ export default class Dashboard {
   foreignNetwok
   _web3Home
   _foreignWeb3
-  _baseUrl
+  baseUrl
   isCommunityMember
   tokenBalances = {
     home: 0,
     foreign: 0
   }
+  communityUsers
+  communityBusinesses
+
 
   constructor (rootStore) {
     makeObservable(this, {
@@ -46,8 +49,9 @@ export default class Dashboard {
       isCommunityMember: observable,
       isAdmin: observable,
       tokenBalances: observable,
+      communityUsers: observable,
+      communityBusinesses: observable,
       addedPlugins: computed,
-      web3Context: computed,
       fetchTokenBalances: action,
       fetchCommunity: action,
       checkIsAdmin: action,
@@ -56,7 +60,8 @@ export default class Dashboard {
       inviteUserToCommunity: action,
       checkIsCommunityMember: action,
       addCommunityPlugin: action,
-      setBonus: action
+      setBonus: action,
+      fetchCommunityUsers: action
     })
     this.rootStore = rootStore
   }
@@ -112,21 +117,14 @@ export default class Dashboard {
     }
   })
 
-  get web3Context () {
-    return {
-      web3: this.rootStore.network._web3,
-      accountAddress: this.rootStore.network.accountAddress,
-      web3Options: getWeb3Options('fuse')
-    }
-  }
-
   get tokenContext () {
     return {
       web3: this._web3Home,
       isHome: true,
       token: this.homeToken,
       tokenNetworkName: 'fuse',
-      tokenBalance: this.tokenBalances.home
+      tokenBalance: this.tokenBalances.home,
+      baseUrl: this.baseUrl
     }
   }
 
@@ -150,6 +148,32 @@ export default class Dashboard {
         entities,
         this.rootStore?.network?.accountAddress,
         false
+      )
+    } catch (error) {
+      console.log({ error })
+    }
+  })
+
+  fetchCommunityUsers = flow(function * (communityAddress) {
+    try {
+      const response = yield fetchCommunityUsersApi(communityAddress)
+      this.communityUsers = get(
+        response.data,
+        'communities[0].entitiesList.communityEntities',
+        []
+      )
+    } catch (error) {
+      console.log({ error })
+    }
+  })
+
+  fetchCommunityBusinesses = flow(function * (communityAddress) {
+    try {
+      const response = yield fetchCommunityBusinessesApi(communityAddress)
+      this.communityBusinesses = get(
+        response.data,
+        'communities[0].entitiesList.communityEntities',
+        []
       )
     } catch (error) {
       console.log({ error })
