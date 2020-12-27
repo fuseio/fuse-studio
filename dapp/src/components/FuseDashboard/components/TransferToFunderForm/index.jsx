@@ -20,13 +20,14 @@ const TransferToFunderForm = ({
   isConfirmed,
   isFailed,
   clearTransaction,
+  makeTransaction,
   balance,
   symbol,
   funderBalance
 }) => {
   const onSubmit = (values, formikBag) => {
     const { amount } = values
-    handleSendTransaction(amount)
+    handleSendTransaction(() => makeTransaction(amount))
     // formikBag.resetForm()
   }
 

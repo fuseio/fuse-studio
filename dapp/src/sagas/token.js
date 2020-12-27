@@ -407,7 +407,8 @@ export function * setWalletBannerLink ({ link, walletBanner }) {
 
 function * watchCommunities ({ response }) {
   const { result, entities } = response
-  for (let account of result) {
+  const firstPage = result.slice(0, 10)
+  for (const account of firstPage) {
     const entity = entities[account]
     if (entity && entity.foreignTokenAddress) {
       yield put(actions.fetchToken(entity.foreignTokenAddress, entity.originNetwork && { networkType: entity.originNetwork }))
