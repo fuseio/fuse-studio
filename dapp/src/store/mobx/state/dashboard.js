@@ -96,7 +96,7 @@ export default class Dashboard {
       let response = yield request
         .get(`${CONFIG.api.url.main}/communities/${communityAddress}`)
         .then(response => response.body)
-      if (response) {
+      if (response.data) {
         this.baseUrl = CONFIG.api.url.main
       } else {
         response = yield request
