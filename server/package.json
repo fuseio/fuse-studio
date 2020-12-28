@@ -96,7 +96,6 @@
     "@babel/types": "^7.7.4",
     "@rigwild/apidoc-markdown": "^2.0.2",
     "apidoc": "^0.17.7",
-    "migrate-mongo": "^8.1.4",
     "nodemon": "^1.18.11",
     "standard": "^12.0.1"
   }

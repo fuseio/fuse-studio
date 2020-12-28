@@ -42,8 +42,7 @@ export default class Network {
     return {
       web3: this._web3,
       accountAddress: this.accountAddress,
-      web3Options: getWeb3Options(this.networkName),
-      networkType: this.networkName
+      web3Options: getWeb3Options(this.networkName)
     }
   }
 
