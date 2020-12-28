@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
 import { useParams, withRouter } from 'react-router'
 import { connect, useSelector } from 'react-redux'
 import sortBy from 'lodash/sortBy'
@@ -34,7 +33,6 @@ import { getTransaction } from 'selectors/transaction'
 
 import { getCurrentCommunity } from 'selectors/dashboard'
 import { getAccountAddress } from 'selectors/accounts'
-import { checkIsAdmin } from 'selectors/entities'
 
 import AddBusiness from 'images/add_business.svg'
 import Avatar from 'images/avatar.svg'
@@ -282,7 +280,7 @@ const Users = ({
   const handleRemoveAdminRole = (account) => removeAdminRole(account)
 
   const handleAddMinter = (account) => addMinter(community.foreignTokenAddress, account, { desiredNetworkType: foreignNetwork })
-  console.log({ tableData })
+
   const renderTable = () => {
     return (
       <MyTable

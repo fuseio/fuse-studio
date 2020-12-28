@@ -39,7 +39,7 @@ const fetchToken = createEntitiesFetch(actions.FETCH_TOKEN, api.fetchToken)
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
 const fetchFeaturedCommunities = createEntitiesFetch(actions.FETCH_FEATURED_COMMUNITIES, api.fetchFeaturedCommunities)
 
-function * fetchTokenFromEthereum ({ tokenAddress }) {
+function * fetchTokenFromCurrentNetwork ({ tokenAddress }) {
   const web3 = yield getWeb3()
   const FuseTokenContract = new web3.eth.Contract(FuseTokenABI, tokenAddress)
   const calls = {
@@ -49,7 +49,8 @@ function * fetchTokenFromEthereum ({ tokenAddress }) {
   }
   const response = yield all(calls)
 
-  yield entityPut({ type: actions.FETCH_TOKEN_FROM_ETHEREUM.SUCCESS,
+  yield entityPut({
+    type: actions.FETCH_TOKEN_FROM_ETHEREUM.SUCCESS,
     address: tokenAddress,
     response: {
       ...response,
@@ -72,7 +73,8 @@ function * fetchFuseToken () {
 
   const response = yield all(calls)
 
-  yield entityPut({ type: actions.FETCH_FUSE_TOKEN.SUCCESS,
+  yield entityPut({
+    type: actions.FETCH_FUSE_TOKEN.SUCCESS,
     address: tokenAddress,
     response: {
       ...response,
@@ -429,7 +431,7 @@ function * watchCommunities ({ response }) {
 
 function * watchFeaturedCommunities ({ response }) {
   const { result, entities } = response
-  for (let account of result) {
+  for (const account of result) {
     const { communityAddress, foreignTokenAddress, originNetwork, communityURI } = entities[account]
     yield call(fetchFeaturedCommunityEntitiesCount, { communityAddress })
     if (foreignTokenAddress) {
@@ -455,7 +457,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
-    tryTakeEvery(actions.FETCH_TOKEN_FROM_ETHEREUM, fetchTokenFromEthereum, 1),
+    tryTakeEvery(actions.FETCH_TOKEN_FROM_ETHEREUM, fetchTokenFromCurrentNetwork, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
     takeEvery([actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS], watchPluginsChanges),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),

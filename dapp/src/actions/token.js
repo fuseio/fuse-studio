@@ -43,7 +43,7 @@ export const fetchToken = (tokenAddress, options) => tokenAction(FETCH_TOKEN.REQ
 export const fetchTokenTotalSupply = (tokenAddress, options) => requestAction(FETCH_TOKEN_TOTAL_SUPPLY, { tokenAddress, options })
 export const fetchCommunity = (communityAddress, options) => communitiesAction(FETCH_COMMUNITY_DATA.REQUEST, { communityAddress, options })
 
-export const fetchTokenFromEthereum = (tokenAddress) => tokenAction(FETCH_TOKEN_FROM_ETHEREUM.REQUEST, { tokenAddress })
+export const fetchTokenFromCurrentNetwork = (tokenAddress) => tokenAction(FETCH_TOKEN_FROM_ETHEREUM.REQUEST, { tokenAddress })
 
 export const fetchFuseToken = () => tokenAction(FETCH_FUSE_TOKEN.REQUEST)
 

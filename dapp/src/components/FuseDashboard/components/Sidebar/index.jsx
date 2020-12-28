@@ -23,18 +23,9 @@ const Sidebar = ({
   const [sideBarItems, setSideBarItems] = useState([])
   const { isAdmin, plugins, homeToken } = dashboard
   const tokenType = homeToken?.tokenType
-  // const [addedPlugins, setAddedPlugins] = useState([])
-
-  // useEffect(() => {
-  //   if (dashboard?.plugins) {
-  //     setAddedPlugins(Object.keys(pickBy(dashboard?.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
-  //   }
-  //   return () => { }
-  // }, [dashboard?.plugins])
 
   useEffect(() => {
     setSideBarItems(SideBarItems(isAdmin, !isEmpty(plugins), tokenType).filter(Boolean))
-    // setAddedPlugins(Object.keys(pickBy(dashboard?.plugins, (pluginKey) => pluginKey && !pluginKey.isRemoved)).sort())
     return () => { }
   }, [dashboard?.isAdmin, dashboard?.homeToken?.tokenType, dashboard?.plugins])
 

@@ -27,7 +27,7 @@ const getForeignProviderUrl = (networkType) => {
 
 export const toLongName = (networkType) => networkType === 'main' ? 'mainnet' : networkType
 
-export const toShortName = (networkType) => networkType === 'mainnet' ? 'main' : networkType
+export const toShortName = (networkType) => networkType === 'mainnet' || networkType === 'main' ? 'main' : networkType
 
 export const getProviderUrl = (networkType) => {
   if (networkType === 'fuse') {

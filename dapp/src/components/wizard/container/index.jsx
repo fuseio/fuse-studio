@@ -41,10 +41,13 @@ const wizardSteps = ['Economy name', 'Set up', 'Summary']
 
 const StepsIndicator = ({ steps, activeStep }) => {
   return steps.map((item, index) => (
-    <div key={index} className={classNames('cell large-2 medium-2 small-4 step', {
-      [`step--active`]: index === activeStep,
-      [`step--done`]: index < activeStep
-    })} />
+    <div
+      key={index}
+      className={classNames('cell large-2 medium-2 small-4 step', {
+        'step--active': index === activeStep,
+        'step--done': index < activeStep
+      })}
+    />
   ))
 }
 
@@ -53,7 +56,7 @@ class Wizard extends React.Component {
     return React.Children.map(children, child => React.cloneElement(child, { ...rest }))
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -62,7 +65,7 @@ class Wizard extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     if (this.props.transactionStatus === PENDING && prevProps.transactionStatus === REQUEST) {
       this.next(this.state.values)
     }
@@ -75,14 +78,16 @@ class Wizard extends React.Component {
     if (validations[page]) {
       const currentStepFields = validations[page]
       const trackProps = currentStepFields.reduce((acc, key) => {
-        acc = values[key] ? {
-          ...acc,
-          [key]: get(values, `${key}.value`)
-            ? `${get(values, `${key}.value`)}`
-            : get(values, key)
-        } : {
-            ...acc
-          }
+        acc = values[key]
+          ? {
+              ...acc,
+              [key]: get(values, `${key}.value`)
+                ? `${get(values, `${key}.value`)}`
+                : get(values, key)
+            }
+          : {
+              ...acc
+            }
         return acc
       }, {})
       if (window && window.analytics) {
@@ -174,7 +179,7 @@ class Wizard extends React.Component {
     )
   }
 
-  render() {
+  render () {
     const { push, location } = this.props
     const { values } = this.state
     const page = locations.indexOf(location.pathname)
@@ -207,7 +212,6 @@ class Wizard extends React.Component {
             initialValues={values}
             onSubmit={this.handleOnSubmit}
             validationSchema={WizardShape}
-            // render={this.renderForm}
             validateOnChange
             validateOnMount
           >

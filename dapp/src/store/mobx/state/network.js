@@ -42,7 +42,8 @@ export default class Network {
     return {
       web3: this._web3,
       accountAddress: this.accountAddress,
-      web3Options: getWeb3Options(this.networkName)
+      web3Options: getWeb3Options(this.networkName),
+      networkType: this.networkName
     }
   }
 
@@ -59,7 +60,6 @@ export default class Network {
       this._web3Home = getWeb3({ networkType: this.homeNetwork })
       this._web3Foreign = getWeb3({ networkType: this.foreignNetwork })
       this._web3 = web3
-      console.log(!!this._web3)
       this._provider = provider
       switch (providerInfo.name) {
         case 'MetaMask':

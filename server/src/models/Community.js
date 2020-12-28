@@ -19,7 +19,7 @@ const CommunitySchema = new Schema({
   webUrl: { type: String },
   creatorAddress: { type: String },
   bridgeType: { type: String, enum: ['multiple-erc20-to-erc20', 'multi-amb-erc20-to-erc677', 'amb-erc677-to-erc677'] },
-  bridgeDirection: { type: String, enum: ['foreign-to-home', 'home-to-foreign'], default: 'foreign-to-home' }
+  bridgeDirection: { type: String, enum: ['foreign-to-home', 'home-to-foreign'] }
 }, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })

@@ -46,9 +46,9 @@ const DashboardLayout = ({
 
   useEffect(() => {
     if (community && accountAddress) {
+      dashboard.fetchTokensTotalSupply()
       dashboard.checkIsAdmin(accountAddress)
       dashboard.fetchTokenBalances(accountAddress)
-      dashboard.checkIsCommunityMember(accountAddress)
     }
   }, [dashboard?.community, network?.accountAddress])
 

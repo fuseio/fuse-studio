@@ -59,6 +59,24 @@ query getCommunityAdmins($address: String!, $userAddress: String!) {
 }
 `
 
+const FETCH_COMMUNITY_ENTITIES = gql`
+query fetchCommunityEntities($communityAddress: String!) {
+    communities(where:{address: $communityAddress}) {
+      entitiesList {
+        id
+        communityEntities (first: 1000) {
+          address
+          isAdmin
+          isApproved
+          isUser
+          isBusiness,
+          createdAt
+        }
+      }
+    }
+  }
+`
+
 export const getCommunityAdmins = (address) => client.query({
   query: GET_COMMUNITY_ADMINS,
   variables: { address }
@@ -77,4 +95,9 @@ export const fetchCommunityBusinesses = (address) => client.query({
 export const isCommunityMember = (address, userAddress) => client.query({
   query: IS_COMMUNITY_MEMBER,
   variables: { address, userAddress }
+})
+
+export const fetchCommunityEntities = (communityAddress) => client.query({
+  query: FETCH_COMMUNITY_ENTITIES,
+  variables: { communityAddress }
 })

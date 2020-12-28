@@ -9,13 +9,10 @@ import withTransaction from 'components/common/WithTransaction'
 export default withTransaction(({
   balance,
   sendTo,
-  error,
   handleSendTransaction,
   makeTransaction,
   clearTransaction,
-  isRequested,
   isDenied,
-  isPending,
   isConfirmed,
   isFailed
 }) => {

@@ -46,12 +46,12 @@ const WizardPage = ({
   const email = useSelector(state => state.user.email)
 
   const initialValues = useMemo(() => ({
-    communityName: 'sfasfs',
+    communityName: '',
     communitySymbol: '',
     totalSupply: '',
     communityType: undefined,
     existingToken: undefined,
-    description: 'dssdgdsddsfds',
+    description: '',
     customToken: '',
     isOpen: true,
     subscribe: true,
@@ -130,8 +130,8 @@ const WizardPage = ({
 
     const sentry = { tags: { issuance: true } }
     if (existingToken && existingToken.label && existingToken.value) {
-      const { value: homeTokenAddress } = existingToken
-      const newSteps = { ...steps, community: { args: { ...steps.community.args, homeTokenAddress, isCustom: false } } }
+      const { value: homeTokenAddress, foreignTokenAddress } = existingToken
+      const newSteps = { ...steps, community: { args: { ...steps.community.args, homeTokenAddress, foreignTokenAddress, isCustom: false } } }
       deployExistingToken(metadata, newSteps, { sentry })
     } else if (customToken) {
       const newSteps = { ...steps, community: { args: { ...steps.community.args, homeTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
@@ -182,7 +182,7 @@ const WizardPage = ({
           <ChooseCurrencyType />
         </Wizard.Page> */}
         <Wizard.Page>
-          <DetailsStep networkType={networkType} />
+          <DetailsStep />
         </Wizard.Page>
         <Wizard.Page isSubmitStep={Boolean(true).toString()}>
           <SummaryStep foreignNetwork={foreignNetwork} />

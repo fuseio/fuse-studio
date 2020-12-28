@@ -9,7 +9,7 @@ const CurrencyOption = ({ logo, name, value }) => {
   return (
     <Field name='currency'>
       {({ field, form: { setFieldValue } }) => (
-        <Fragment>
+        <>
           <label htmlFor={value} className={classNames('option option--fullWidth grid-x align-middle', { 'option--selected': field.value === value })}>
             <input
               style={{ display: 'none' }}
@@ -35,7 +35,7 @@ const CurrencyOption = ({ logo, name, value }) => {
               {name}
             </div>
           </label>
-        </Fragment>
+        </>
       )}
     </Field>
   )
