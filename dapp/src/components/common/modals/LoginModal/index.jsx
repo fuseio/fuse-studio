@@ -16,12 +16,10 @@ export default ({ hideModal, handleConnect }) => {
   }
 
   const renderButton = ({ onClick, disabled }) => (
-    <Fragment>
-      <button className='login-modal__button' onClick={onClick} disabled={disabled}>
-        <img src={GoogleIcon} />
-        <div>Sign in / Sign up with Google</div>
-      </button>
-    </Fragment>
+    <button className='login-modal__button' onClick={onClick} disabled={disabled}>
+      <img src={GoogleIcon} />
+      <div>Sign in / Sign up with Google</div>
+    </button>
   )
 
   return (
@@ -34,7 +32,7 @@ export default ({ hideModal, handleConnect }) => {
         clientId={clientId}
         render={renderButton}
         onSuccess={handleLogin}
-        cookiePolicy={'single_host_origin'}
+        cookiePolicy='single_host_origin'
       />
     </Modal>
   )

@@ -1,11 +1,10 @@
 import React from 'react'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import get from 'lodash/get'
 import { formatWei, addressShortener } from 'utils/format'
 import { BigNumber } from 'bignumber.js'
-import { getCurrentCommunity } from 'selectors/dashboard'
 import { loadModal } from 'actions/ui'
 import { QR_MODAL } from 'constants/uiConstants'
 import { observer } from 'mobx-react'
@@ -32,26 +31,17 @@ const TitleValue = ({ title, symbol, tokenType, children }) => (
 const CommunityInfo = () => {
   const { dashboard } = useStore()
   const dispatch = useDispatch()
-  const entities = useSelector(getCurrentCommunity)
-  const tokensTotalSupplies = useSelector(state => get(state, 'screens.dashboard.totalSupply'), 0)
   const type = dashboard?.homeToken?.tokenType && dashboard?.homeToken?.tokenType === 'mintableBurnable'
     ? 'Mintable burnable token'
     : dashboard?.homeToken?.tokenType === 'basic'
       ? 'One time issued token'
       : 'Imported'
 
-  let totalSupply = 0
-  let homeTokenSupply = 0
-  let foreignTokenSupply = 0
-  const homeBalance = tokensTotalSupplies && tokensTotalSupplies.hasOwnProperty(dashboard?.community?.homeTokenAddress) ? tokensTotalSupplies[dashboard?.community?.homeTokenAddress] : 0
-  const foreignBalance = tokensTotalSupplies && tokensTotalSupplies.hasOwnProperty(dashboard?.community?.foreignTokenAddress) ? tokensTotalSupplies[dashboard?.community?.foreignTokenAddress] : 0
-
-  if (tokensTotalSupplies) {
-    homeTokenSupply = new BigNumber(homeBalance)
-    foreignTokenSupply = foreignBalance ? new BigNumber(foreignBalance).minus(homeBalance) : foreignBalance
-    totalSupply = new BigNumber(foreignTokenSupply).plus(homeTokenSupply)
-  }
-
+  const homeBalance = get(dashboard, 'homeToken.totalSupply', 0)
+  const foreignBalance = get(dashboard, 'foreignToken.totalSupply', 0)
+  const homeTokenSupply = new BigNumber(homeBalance)
+  const foreignTokenSupply = foreignBalance ? new BigNumber(foreignBalance).minus(homeBalance) : foreignBalance
+  const totalSupply = new BigNumber(foreignTokenSupply).plus(homeTokenSupply)
   const total = Number(new BigNumber(totalSupply).div(1e18).toFixed())
   const homeTokenBalance = Number(new BigNumber(homeTokenSupply).div(1e18).toFixed())
   const foreignTokenBalance = Number(new BigNumber(foreignTokenSupply).div(1e18).toFixed())
@@ -76,7 +66,7 @@ const CommunityInfo = () => {
             tokenType={`(${type})`}
           />
           <TitleValue title='Total entities'>
-            <span>{(entities && entities.result && entities.result.length) || 0}</span>
+            <span>{dashboard?.entitiesCount ?? 0}</span>
           </TitleValue>
           <TitleValue title='Currency address'>
             <div className='grid-x'>

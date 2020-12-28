@@ -11,6 +11,7 @@ import LogosOptions from 'components/wizard/components/LogosOptions'
 import CurrencySymbol from 'components/wizard/components/CurrencySymbol'
 import CurrencyType from 'components/wizard/components/CurrencyType'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
+import { withNetwork } from 'containers/Web3'
 
 import CaretDown from 'images/drop-down.svg'
 
@@ -59,9 +60,7 @@ const ExpansionPanelDetails = withStyles({
 
 const DropDownIcon = () => <img src={CaretDown} />
 
-const DetailsStep = ({
-  networkType
-}) => {
+const DetailsStep = () => {
   const formik = useFormikContext()
   const communityType = getIn(formik.values, 'communityType')
 
@@ -80,7 +79,7 @@ const DetailsStep = ({
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className='accordion__panel'>
           <Typography component='div'>
-            <CurrencyType networkType={networkType} />
+            <CurrencyType />
             {
               communityType && communityType.value && communityType.label && (
                 <TotalSupply />
@@ -134,4 +133,4 @@ const DetailsStep = ({
   )
 }
 
-export default DetailsStep
+export default withNetwork(DetailsStep)

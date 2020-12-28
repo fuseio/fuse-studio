@@ -11,10 +11,10 @@ import keyBy from 'lodash/keyBy'
 import has from 'lodash/has'
 import request from 'superagent'
 import pickBy from 'lodash/pickBy'
-import { getCommunityAdmins, fetchCommunityUsers as fetchCommunityUsersApi, fetchCommunityBusinesses as fetchCommunityBusinessesApi, isCommunityMember } from 'services/graphql/community.js'
+import { getCommunityAdmins, fetchCommunityUsers as fetchCommunityUsersApi, fetchCommunityBusinesses as fetchCommunityBusinessesApi, isCommunityMember, fetchCommunityEntities } from 'services/graphql/community.js'
 import { getWeb3 } from 'services/web3'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
-import { getWeb3Options } from 'utils/network'
+import { getBridgeMediator } from 'utils/bridge'
 
 export default class Dashboard {
   community
@@ -25,10 +25,11 @@ export default class Dashboard {
   isFetching
   isAdmin
   homeNetwork = 'fuse'
-  foreignNetwok
+  foreignNetwork
   _web3Home
   _foreignWeb3
   baseUrl
+  entitiesCount
   isCommunityMember
   tokenBalances = {
     home: 0,
@@ -37,20 +38,31 @@ export default class Dashboard {
   communityUsers
   communityBusinesses
 
+  allowance = {
+    home: 0,
+    foreign: 0
+  }
+
+  totalSupply = {
+    home: 0,
+    foreign: 0
+  }
 
   constructor (rootStore) {
     makeObservable(this, {
-      community: observable,
+      community: observable.ref,
       plugins: observable.ref,
-      homeToken: observable,
+      homeToken: observable.ref,
       communityAddress: observable,
       foreignToken: observable,
       isFetching: observable,
-      isCommunityMember: observable,
       isAdmin: observable,
       tokenBalances: observable,
       communityUsers: observable,
       communityBusinesses: observable,
+      entitiesCount: observable,
+      totalSupply: observable,
+      allowance: observable,
       addedPlugins: computed,
       fetchTokenBalances: action,
       fetchCommunity: action,
@@ -58,10 +70,12 @@ export default class Dashboard {
       fetchHomeToken: action,
       setWalletBannerLink: action,
       inviteUserToCommunity: action,
-      checkIsCommunityMember: action,
       addCommunityPlugin: action,
       setBonus: action,
-      fetchCommunityUsers: action
+      fetchCommunityUsers: action,
+      fetchTokensTotalSupply: action,
+      fetchEntitiesCount: action,
+      checkIsCommunityMember: action
     })
     this.rootStore = rootStore
   }
@@ -74,23 +88,46 @@ export default class Dashboard {
         .then(response => response.body)
       this.plugins = get(data, 'plugins')
     } catch (error) {
-      console.log({ error })
+      console.log('ERROR in addCommunityPlugin', { error })
     }
   })
 
   initStateByCommunity = community => {
     this.community = { ...omit(community, ['plugins']) }
     this.plugins = { ...get(community, 'plugins') }
-    this.foreignNetwork = community.foreignNetworkType
 
     this._web3Home = getWeb3({ networkType: this.homeNetwork })
     if (this.foreignNetwork) {
       this._web3Foreign = getWeb3({ networkType: this.foreignNetwork })
     }
+    if (community?.homeTokenAddress) {
+      this.fetchHomeToken(community?.homeTokenAddress)
+    }
+
+    if (community?.foreignTokenAddress) {
+      this.fetchForeignToken(community?.foreignTokenAddress)
+    }
   }
 
   fetchCommunity = flow(function * (communityAddress) {
     try {
+      this.isAdmin = false
+      this.homeToken = {}
+      this.foreignToken = {}
+      this.community = {}
+      this.tokenBalances = {
+        home: 0,
+        foreign: 0
+      }
+      this.plugins = {}
+      this.allowance = {
+        home: 0,
+        foreign: 0
+      }
+      this.totalSupply = {
+        home: 0,
+        foreign: 0
+      }
       this.isFetching = true
       this.communityAddress = communityAddress
       let response = yield request
@@ -98,24 +135,50 @@ export default class Dashboard {
         .then(response => response.body)
       if (response.data) {
         this.baseUrl = CONFIG.api.url.main
+        this.foreignNetwork = 'main'
       } else {
         response = yield request
           .get(`${CONFIG.api.url.ropsten}/communities/${communityAddress}`)
           .then(response => response.body)
         this.baseUrl = CONFIG.api.url.ropsten
+        this.foreignNetwork = 'ropsten'
       }
       const { data } = response
-      if (data?.homeTokenAddress) {
-        this.fetchHomeToken(data?.homeTokenAddress)
-      }
+      this.fetchEntitiesCount(communityAddress)
       this.initStateByCommunity(data)
 
       this.isFetching = false
     } catch (error) {
       this.isFetching = false
-      console.log({ error })
+      console.log('ERROR in fetchCommunity', { error })
     }
   })
+
+  get bridgeStatus () {
+    if (this.rootStore.network.networkId === 122) {
+      return {
+        from: {
+          network: this.rootStore.network.homeNetwork,
+          bridge: 'home'
+        },
+        to: {
+          network: this.foreignNetwork,
+          bridge: 'foreign'
+        }
+      }
+    } else {
+      return {
+        from: {
+          network: this.foreignNetwork,
+          bridge: 'foreign'
+        },
+        to: {
+          network: this.rootStore.network.homeNetwork,
+          bridge: 'home'
+        }
+      }
+    }
+  }
 
   get tokenContext () {
     return {
@@ -185,28 +248,116 @@ export default class Dashboard {
       const response = yield request
         .get(`${this.baseUrl}/tokens/${tokenAddress}`)
         .then(response => response.body)
-      this.homeToken = { ...response.data }
+      const contract = new this._web3Home.eth.Contract(BasicTokenABI, tokenAddress)
+      const [name, symbol, totalSupply, decimals] = yield Promise.all([
+        contract.methods.name().call(),
+        contract.methods.symbol().call(),
+        contract.methods.totalSupply().call(),
+        contract.methods.decimals().call(),
+      ])
+      this.homeToken = { ...response.data, name, symbol, totalSupply, decimals }
     } catch (error) {
       console.log({ error })
     }
   })
 
-  fetchTokenBalances = flow(function * (accountAddress) {
+  fetchForeignToken = flow(function * (tokenAddress) {
     try {
-      // Todo fetching from home/foreign token
-      const web3 = this._web3Home
-      const tokenAddress = this.homeToken?.address
-      const basicTokenContract = new web3.eth.Contract(
-        BasicTokenABI,
-        tokenAddress
-      )
-      const tokenBalance = yield basicTokenContract.methods
-        .balanceOf(accountAddress)
-        .call()
-      console.log(`balance of token ${tokenAddress} is ${tokenBalance}`)
-      this.tokenBalances.home = tokenBalance
+      const contract = new this._web3Foreign.eth.Contract(BasicTokenABI, tokenAddress)
+      const [name, symbol, totalSupply, decimals] = yield Promise.all([
+        contract.methods.name().call(),
+        contract.methods.symbol().call(),
+        contract.methods.totalSupply().call(),
+        contract.methods.decimals().call(),
+      ])
+      this.foreignToken = { name, symbol, totalSupply, decimals }
     } catch (error) {
       console.log({ error })
+    }
+  })
+
+  fetchTokensTotalSupply = flow(function * () {
+    try {
+      if (this?.community?.homeTokenAddress) {
+        const web3 = this._web3Home
+        const tokenAddress = this?.community?.homeTokenAddress
+        const basicTokenContract = new web3.eth.Contract(
+          BasicTokenABI,
+          tokenAddress
+        )
+        const totalSupplyHome = yield basicTokenContract.methods
+          .totalSupply()
+          .call()
+        this.totalSupply.home = totalSupplyHome
+      }
+      if (this?.community?.foreignTokenAddress) {
+        const web3 = this._web3Foreign
+        const contract = new web3.eth.Contract(
+          BasicTokenABI,
+          this.community?.foreignTokenAddress
+        )
+        const totalSupplyForeign = yield contract.methods
+          .totalSupply()
+          .call()
+        this.totalSupply.foreign = totalSupplyForeign
+      }
+    } catch (error) {
+      console.log('ERROR in fetchTokenBalances', { error })
+    }
+  })
+
+  checkAllowance = flow(function * (accountAddress) {
+    try {
+      if (this?.community?.homeTokenAddress) {
+        const web3 = this._web3Home
+        const basicTokenContract = new web3.eth.Contract(
+          BasicTokenABI,
+          this?.community?.homeTokenAddress
+        )
+        const bridgeMediator = getBridgeMediator('home', this.foreignNetwork)
+        this.allowance.home = yield basicTokenContract.methods.allowance(accountAddress, bridgeMediator).call()
+      }
+      if (this?.community?.foreignTokenAddress) {
+        const web3 = this._web3Foreign
+        const contract = new web3.eth.Contract(
+          BasicTokenABI,
+          this.community?.foreignTokenAddress
+        )
+        const bridgeMediator = getBridgeMediator('foreign', this.foreignNetwork)
+        this.allowance.foreign = yield contract.methods.allowance(accountAddress, bridgeMediator).call()
+      }
+    } catch (error) {
+      console.log('ERROR in checkAllowance', { error })
+    }
+  })
+
+  fetchTokenBalances = flow(function * (accountAddress) {
+    try {
+      if (this?.community?.homeTokenAddress) {
+        const web3 = this._web3Home
+        const tokenAddress = this?.community?.homeTokenAddress
+        const basicTokenContract = new web3.eth.Contract(
+          BasicTokenABI,
+          tokenAddress
+        )
+        const balanceHome = yield basicTokenContract.methods
+          .balanceOf(accountAddress)
+          .call()
+          this.tokenBalances.home = balanceHome
+      }
+      if (this?.community?.foreignTokenAddress) {
+        const web3 = this._web3Foreign
+        const contract = new web3.eth.Contract(
+          BasicTokenABI,
+          this.community?.foreignTokenAddress
+        )
+        const balanceForeign = yield contract.methods
+          .balanceOf(accountAddress)
+          .call()
+          this.tokenBalances.foreign = balanceForeign
+      }
+    } catch (error) {
+      console.log('ERROR in fetchTokenBalances', { error })
     }
   })
 
@@ -247,14 +398,21 @@ export default class Dashboard {
     }
   })
 
-  checkIsCommunityMember = flow(function * (accountAddress) {
+  fetchEntitiesCount = flow(function * (communityAddress) {
     try {
-      const memberData = yield isCommunityMember(this.communityAddress, accountAddress)
-      this.isCommunityMember = memberData?.data?.communityEntities?.length > 0
+      const { data } = yield fetchCommunityEntities(communityAddress)
+      const communityEntities = get(data, 'communities[0].entitiesList.communityEntities', [])
+      this.entitiesCount = communityEntities.length
     } catch (error) {
-
+      console.log('ERROR in addCommunityPlugin', { error })
     }
   })
+
+  checkIsCommunityMember = flow(function * (accountAddress) {
+    const memberData = yield isCommunityMember(this.communityAddress, accountAddress)
+    this.isCommunityMember = memberData?.data?.communityEntities?.length > 0
+  })
+
 
   get addedPlugins () {
     return Object.keys(

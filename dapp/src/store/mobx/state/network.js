@@ -59,7 +59,6 @@ export default class Network {
       this._web3Home = getWeb3({ networkType: this.homeNetwork })
       this._web3Foreign = getWeb3({ networkType: this.foreignNetwork })
       this._web3 = web3
-      console.log(!!this._web3)
       this._provider = provider
       switch (providerInfo.name) {
         case 'MetaMask':

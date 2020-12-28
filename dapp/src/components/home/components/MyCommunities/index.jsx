@@ -55,12 +55,12 @@ const MyCommunities = ({
     if (!isEmpty(communitiesIOwn)) {
       const myCommunities = communitiesIOwn.map((community) => {
         const { token, foreignTokenAddress } = community
-        const { communityAddress } = community
+        const { communityAddress, foreignNetworkType } = community
         return (
           <div className='cell shrink medium-12 small-24' key={communityAddress}>
             <FeaturedCommunity
               token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
-              showDashboard={() => showDashboard(communityAddress)}
+              showDashboard={() => showDashboard(communityAddress, foreignNetworkType)}
               community={community}
               withDescription={false}
             />

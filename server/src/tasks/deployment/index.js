@@ -89,8 +89,8 @@ const deploy = withAccount(async (account, { communityProgressId }) => {
       communityURI,
       description,
       creatorAddress: adminAddress,
-      isMultiBridge: true,
-      isFuse: true
+      bridgeDirection: get(steps, 'community.args.foreignTokenAddress') && 'foreign-to-home',
+      bridgeType: get(steps, 'community.args.foreignTokenAddress') && 'multi-amb-erc20-to-erc677'
     }).save()
 
     await CommunityProgress.findByIdAndUpdate(communityProgress._id, { communityAddress, done: true })
