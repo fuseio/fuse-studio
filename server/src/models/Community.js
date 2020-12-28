@@ -18,6 +18,7 @@ const CommunitySchema = new Schema({
   description: { type: String },
   webUrl: { type: String },
   creatorAddress: { type: String },
+  isMultiBridge: { type: Boolean, default: false },
   bridgeType: { type: String, enum: ['multiple-erc20-to-erc20', 'multi-amb-erc20-to-erc677', 'amb-erc677-to-erc677'] },
   bridgeDirection: { type: String, enum: ['foreign-to-home', 'home-to-foreign'] }
 }, { timestamps: true })
