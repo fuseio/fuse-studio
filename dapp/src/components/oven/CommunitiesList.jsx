@@ -64,12 +64,13 @@ export default ({
                 addresses.map((address) => {
                   const token = tokens[communities[address].foreignTokenAddress]
                   const community = communities[address]
+                  const useOld = community?.isMultiBridge || (community?.foreignBridgeAddress && community?.homeBridgeAddress)
                   if (community) {
                     return (
                       <div className='medium-12 large-8 small-24 cell' key={address}>
                         <FeaturedCommunity
                           token={token}
-                          showDashboard={() => showDashboard(address, community.name)}
+                          showDashboard={() => showDashboard(address, community.name, useOld)}
                           community={community}
                         />
                       </div>

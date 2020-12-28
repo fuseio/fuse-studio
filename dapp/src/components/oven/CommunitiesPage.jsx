@@ -25,13 +25,17 @@ class CommunitiesPage extends Component {
     }
   }
 
-  showDashboard = (communityAddress, name) => {
+  showDashboard = (communityAddress, name, useOld) => {
     if (window && window.analytics) {
       if (name) {
         window.analytics.track(`Clicked on featured community - ${name}`)
       }
     }
-    this.props.push(`/view/community/${communityAddress}`)
+    if (useOld) {
+      this.props.push(`/view/community/${communityAddress}`)
+    } else {
+      this.props.push(`/view/fuse-community/${communityAddress}`)
+    }
   }
 
   getScrollParent = () => this.myRef.current

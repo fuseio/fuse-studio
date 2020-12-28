@@ -26,11 +26,12 @@ const FeaturedCommunities = ({
       return featuredCommunities.map((address) => {
         const token = tokens[communities[address].foreignTokenAddress]
         const community = communities[address]
+        const useOld = community?.isMultiBridge || (community?.foreignBridgeAddress && community?.homeBridgeAddress)
         return (
           <div style={{ width: '90%' }} key={address}>
             <FeaturedCommunity
               token={token}
-              showDashboard={() => showDashboard(address, community.name, token)}
+              showDashboard={() => showDashboard(address, community.name, useOld)}
               community={community}
               withDescription
             />
