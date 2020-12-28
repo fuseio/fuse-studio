@@ -28,7 +28,7 @@ export default class Dashboard {
   foreignNetwork
   _web3Home
   _foreignWeb3
-  baseUrls
+  baseUrl
   entitiesCount
   tokenBalances = {
     home: 0,
