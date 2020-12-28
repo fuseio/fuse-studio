@@ -1,7 +1,6 @@
 import { all, put, call, takeEvery } from 'redux-saga/effects'
 
 import { createEntityPut, tryTakeEvery, apiCall } from './utils'
-// import { get3box } from 'services/web3'
 import { separateData } from 'utils/3box'
 import { createProfile } from 'services/api/profiles'
 import * as metadataApi from 'services/api/metadata'
@@ -101,8 +100,6 @@ const fetchPic = buffer => window.fetch('https://ipfs.infura.io:5001/api/v0/add'
 })
 
 export function * createUsersMetadata ({ accountAddress, metadata }) {
-  // const box = yield get3box({ accountAddress })
-
   const getImageHash = async (image) => {
     const formData = new window.FormData()
     formData.append('path', new window.Blob([image]))
@@ -126,13 +123,6 @@ export function * createUsersMetadata ({ accountAddress, metadata }) {
   newMetadata = image ? { ...metadata, image } : metadata
   newMetadata = coverPhoto ? { ...newMetadata, coverPhoto } : newMetadata
   const { publicData } = separateData(newMetadata)
-  // const publicFields = Object.keys(publicData)
-  // const publicValues = Object.values(publicData)
-  // yield box.public.setMultiple(publicFields, publicValues)
-
-  // const privateFields = Object.keys(privateData)
-  // const privateValues = Object.values(privateData)
-  // yield box.private.setMultiple(privateFields, privateValues)
   yield apiCall(createProfile, { accountAddress, publicData })
 
   yield put({

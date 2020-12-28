@@ -2,10 +2,6 @@ import DaiIcon from 'images/dai_logo.png'
 import UsdcIcon from 'images/usdc_logo.png'
 import TetherIcon from 'images/tether.png'
 import MoneriumIcon from 'images/monerium.jpeg'
-// import DigitalRandIcon from 'images/digital_rand_logo.png'
-// import TrustIcon from 'images/trust_token_logo.png'
-// import EursTokenIcon from 'images/eurs_token.png'
-// import RupiahIcon from 'images/rupiah_logo.png'
 
 export const dollarPeggedTokens = (foreignNetwork = 'main', homeNetwork = 'fuse') => {
   return [

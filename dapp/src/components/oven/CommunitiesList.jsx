@@ -1,6 +1,5 @@
 import React from 'react'
 import { isMobileOnly } from 'react-device-detect'
-// import Community from 'components/common/Community'
 import InfiniteScroll from 'react-infinite-scroller'
 import groupImage from 'images/all-communities.png'
 import groupImageMobile from 'images/all-communities-mobile.png'

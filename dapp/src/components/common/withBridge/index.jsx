@@ -3,7 +3,6 @@ import useInterval from 'hooks/useInterval'
 import { REQUEST, PENDING, SUCCESS, FAILURE, DENIED } from 'actions/constants'
 import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
-import { getWeb3 } from 'services/web3'
 import { fetchForeignBridgePastEvents, fetchHomeBridgePastEvents } from 'utils/bridge'
 
 const getRelayEventByTransactionHash = ({ events, transactionHash, accountAddress }) => {
@@ -21,30 +20,31 @@ export default function withBridge(WrappedComponent) {
     const [transactionStatus, setTransactionStatus] = useState()
     const [confirmationNumber, setConfirmationNumber] = useState()
     const [receipt, setReceipt] = useState()
-    const [blockNumbers, setBlockNumbers] = useState()
+    const [blockNumber, setBlockNumber] = useState()
     const [confirmationsLimit, setConfirmationsLimit] = useState()
     const [delay, setDelay] = useState(null)
     const [relayEvent, setRelayEvent] = useState(null)
-    const { homeNetwork, accountAddress } = network
-    const foreignNetwork = dashboard.foreignNetwork
-    const bridgeDirection = dashboard.bridgeDirection ?? 'foreign-to-home'
+    const { accountAddress } = network
+    const { web3Context } = network
+    const { tokenContext } = dashboard
+    const { web3: web3Home } = tokenContext
+    const { web3: web3Foreign } = web3Context
+    const { foreignNetwork, bridgeDirection } = dashboard
     const bridge = dashboard?.bridgeStatus?.from?.bridge
-    const bridgeTo = dashboard?.bridgeStatus?.to?.bridge
     const bridgeType = dashboard?.community?.bridgeType
     const homeBridgeAddress = dashboard?.community?.homeBridgeAddress
     const foreignBridgeAddress = dashboard?.community?.foreignBridgeAddress
 
     useInterval(() => {
-      if (bridgeTo === 'home') {
-        const web3 = getWeb3({ networkType: homeNetwork })
+      if (bridge === 'foreign') {
         fetchHomeBridgePastEvents({
           networkType: foreignNetwork,
           bridgeType,
           transactionHash,
-          fromBlock: blockNumbers.home,
+          fromBlock: blockNumber,
           homeBridgeAddress,
           bridgeDirection,
-        }, { web3 }).then((events) => {
+        }, { web3: web3Home }).then((events) => {
           const bridgeEvent = getRelayEventByTransactionHash({ events, accountAddress })
           if (bridgeEvent) {
             setRelayEvent(bridgeEvent)
@@ -53,14 +53,13 @@ export default function withBridge(WrappedComponent) {
           }
         })
       } else {
-        const web3 = getWeb3({ networkType: foreignNetwork })
         fetchForeignBridgePastEvents({
           networkType: foreignNetwork,
           bridgeType,
-          fromBlock: blockNumbers.foreign,
+          fromBlock: blockNumber,
           foreignBridgeAddress,
           bridgeDirection,
-        }, { web3 }).then((events) => {
+        }, { web3: web3Foreign }).then((events) => {
           const bridgeEvent = getRelayEventByTransactionHash({ events, transactionHash, accountAddress })
           if (bridgeEvent) {
             setRelayEvent(bridgeEvent)
@@ -79,17 +78,17 @@ export default function withBridge(WrappedComponent) {
             ? CONFIG.web3.bridge.confirmations.foreign
             : CONFIG.web3.bridge.confirmations.home
         )
+
+        if (bridge === 'foreign') {
+          const homeBlockNumber = await web3Home.eth.getBlockNumber()
+          setBlockNumber(homeBlockNumber)
+        } else {
+          const foreignBlockNumber = await web3Foreign.eth.getBlockNumber()
+          setBlockNumber(foreignBlockNumber)
+        }
+
         promise.on('confirmation', (confirmationNumber) => {
           setConfirmationNumber(confirmationNumber)
-        })
-
-        const _web3Home = getWeb3({ networkType: homeNetwork })
-        const _web3Foreign = getWeb3({ networkType: foreignNetwork })
-        const homeBlockNumber = await _web3Home.eth.getBlockNumber()
-        const foreignBlockNumber = await _web3Foreign.eth.getBlockNumber()
-        setBlockNumbers({
-          home: homeBlockNumber,
-          foreign: foreignBlockNumber
         })
       }
       setTransactionStatus(REQUEST)

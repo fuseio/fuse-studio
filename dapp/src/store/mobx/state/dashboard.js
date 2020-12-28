@@ -30,6 +30,7 @@ export default class Dashboard {
   _foreignWeb3
   baseUrl
   entitiesCount
+  isCommunityMember
   tokenBalances = {
     home: 0,
     foreign: 0
@@ -73,7 +74,8 @@ export default class Dashboard {
       setBonus: action,
       fetchCommunityUsers: action,
       fetchTokensTotalSupply: action,
-      fetchEntitiesCount: action
+      fetchEntitiesCount: action,
+      checkIsCommunityMember: action
     })
     this.rootStore = rootStore
   }
@@ -404,6 +406,11 @@ export default class Dashboard {
     } catch (error) {
       console.log('ERROR in addCommunityPlugin', { error })
     }
+  })
+
+  checkIsCommunityMember = flow(function * (accountAddress) {
+    const memberData = yield isCommunityMember(this.communityAddress, accountAddress)
+    this.isCommunityMember = memberData?.data?.communityEntities?.length > 0
   })
 
 
