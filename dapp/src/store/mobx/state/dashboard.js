@@ -14,10 +14,7 @@ import pickBy from 'lodash/pickBy'
 import { getCommunityAdmins, fetchCommunityUsers as fetchCommunityUsersApi, fetchCommunityBusinesses as fetchCommunityBusinessesApi, isCommunityMember, fetchCommunityEntities } from 'services/graphql/community.js'
 import { getWeb3 } from 'services/web3'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
-<<<<<<< HEAD
 import { getBridgeMediator } from 'utils/bridge'
-=======
->>>>>>> working
 
 export default class Dashboard {
   community
