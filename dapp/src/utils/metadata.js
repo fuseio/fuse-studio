@@ -29,11 +29,9 @@ export const getCoverPhotoUri = (metadata) => {
   return `${CONFIG.ipfsProxy.urlBase}/image/${metadata.coverPhoto}`
 }
 
-
 export async function createBusinessMetadata ({ communityAddress, accountAddress, metadata }, { baseUrl }) {
   let image
   let coverPhoto
-  debugger
   if (metadata.image) {
     const { hash } = await imageUpload(baseUrl, { image: metadata.image })
     image = hash

@@ -1,3 +1,5 @@
+/* eslint multiline-ternary: ["error", "never"] */
+
 import React, { Fragment, useEffect, useState, useMemo } from 'react'
 import { useParams } from 'react-router'
 import FontAwesome from 'react-fontawesome'
@@ -25,7 +27,7 @@ import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
 import { autorun } from 'mobx'
 import withTransaction from 'components/common/WithTransaction'
-import { removeBusiness, addBusiness } from 'utils/community'
+import { removeEntity, addBusiness } from 'utils/community'
 
 const BusinessesTable = withTransaction(
   ({
@@ -37,7 +39,7 @@ const BusinessesTable = withTransaction(
     entityAdded,
     isAdmin,
     loadModal,
-    makeRemoveBusinessTransaction,
+    makeRemoveEntityTransaction,
     makeAddBusinessTransaction
   }) => {
     const handleAddBusiness = () => loadAddBusinessModal()
@@ -76,7 +78,7 @@ const BusinessesTable = withTransaction(
         Header: 'Account ID',
         accessor: 'account',
         Cell: ({ cell: { value } }) => (
-          <React.Fragment>
+          <>
             <a
               className='link'
               target='_blank'
@@ -88,7 +90,7 @@ const BusinessesTable = withTransaction(
             <CopyToClipboard text={value}>
               <FontAwesome name='clone' />
             </CopyToClipboard>
-          </React.Fragment>
+          </>
         )
       },
       {
@@ -106,7 +108,7 @@ const BusinessesTable = withTransaction(
                     className='more__options__item'
                     onClick={() => {
                       handleSendTransaction(() =>
-                        makeRemoveBusinessTransaction(
+                        makeRemoveEntityTransaction(
                           rowInfo.row.original.account
                         )
                       )
@@ -189,13 +191,13 @@ const BusinessesTable = withTransaction(
 const Businesses = ({
   loadModal,
   businessesMetadata,
-  fetchEntityMetadata,
+  fetchEntityMetadata
 }) => {
   const { dashboard } = useStore()
   const { communityBusinesses, communityUsers, isAdmin } = dashboard
   const { address: communityAddress } = useParams()
   const [data, setData] = useState(null)
-  const { network, _web3 } = useStore()
+  const { network } = useStore()
   const { web3Context } = network
   const { tokenContext } = dashboard
 
@@ -278,17 +280,17 @@ const Businesses = ({
 
   const tableData = useMemo(() => data || [], [data])
 
-  const makeAddBusinessTransaction = data => {
-    const businessAccountAddress = data.account
+  const makeAddBusinessTransaction = metadata => {
+    const businessAccountAddress = metadata.account
     return addBusiness(
-      { communityAddress, businessAccountAddress, metadata: data },
+      { communityAddress, businessAccountAddress, metadata },
       web3Context, tokenContext
     )
   }
 
-  const makeRemoveBusinessTransaction = account => {
-    return removeBusiness(
-      { communityAddress, businessAccountAddress: account },
+  const makeRemoveEntityTransaction = entityAccountAddress => {
+    return removeEntity(
+      { communityAddress, entityAccountAddress },
       web3Context
     )
   }
@@ -304,7 +306,7 @@ const Businesses = ({
           loadModal={loadModal}
           tableData={tableData}
           makeAddBusinessTransaction={makeAddBusinessTransaction}
-          makeRemoveBusinessTransaction={makeRemoveBusinessTransaction}
+          makeRemoveEntityTransaction={makeRemoveEntityTransaction}
           users={communityUsers}
           isAdmin={isAdmin}
           entityAdded
@@ -316,7 +318,7 @@ const Businesses = ({
 }
 
 const mapStateToProps = state => ({
-  businessesMetadata: state.entities.businesses,
+  businessesMetadata: state.entities.businesses
 })
 
 const mapDispatchToProps = {

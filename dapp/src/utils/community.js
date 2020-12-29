@@ -33,12 +33,43 @@ export function addBusiness ({ communityAddress, businessAccountAddress, metadat
   return transactionPromise
 }
 
-export function removeBusiness ({ communityAddress, businessAccountAddress }, { accountAddress, web3, web3Options }) {
+export function removeEntity ({ communityAddress, entityAccountAddress }, { accountAddress, web3, web3Options }) {
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
 
-  const method = CommunityContract.methods.removeEntity(businessAccountAddress)
+  const method = CommunityContract.methods.removeEntity(entityAccountAddress)
   const transactionPromise = method.send({
     from: accountAddress
   })
   return transactionPromise
+}
+
+export function joinUser ({ communityAddress, metadata }, { accountAddress, web3, web3Options }) {
+  // if (data) {
+  //   yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: data })
+  // }
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
+
+  const method = CommunityContract.methods.join()
+  const transactionPromise = method.send({
+    from: accountAddress
+  })
+  return transactionPromise
+}
+
+export function addAdminRole ({ communityAddress, userAccountAddress }, { accountAddress, web3, web3Options }) {
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
+
+  const method = CommunityContract.methods.addEnitityRoles(userAccountAddress, combineRoles(roles.ADMIN_ROLE, roles.APPROVED_ROLE))
+  return method.send({
+    from: accountAddress
+  })
+}
+
+export function removeAdminRole ({ communityAddress, userAccountAddress }, { accountAddress, web3, web3Options }) {
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
+
+  const method = CommunityContract.methods.removeEnitityRoles(userAccountAddress, roles.ADMIN_ROLE)
+  return method.send({
+    from: accountAddress
+  })
 }

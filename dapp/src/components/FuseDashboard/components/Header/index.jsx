@@ -6,10 +6,15 @@ import { useStore } from 'store/mobx'
 import { getImageUri } from 'utils/metadata'
 import { useDispatch, useSelector } from 'react-redux'
 
-const Header = () => {
+const Header = ({ location }) => {
+  const dispatch = useDispatch()
   const { dashboard } = useStore()
   const communityURI = dashboard?.community?.communityURI
   const communityMetadata = useSelector(state => state.entities.metadata[communityURI])
+
+  const handleJoinCommunity = () => {
+    dispatch(push(`${location.pathname}/users/join`))
+  }
 
   return (
     <div className='community_header'>
