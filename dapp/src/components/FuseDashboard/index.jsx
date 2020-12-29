@@ -100,9 +100,7 @@ const DashboardLayout = ({
           {get(dashboard?.plugins, 'bonuses') && !get(dashboard?.plugins, 'bonuses.isRemoved', false) && dashboard?.isAdmin && (
             <Route exact path={`${match.path}/bonuses`}>
               <WithBgImage>
-                <BonusesPage
-                  match={match}
-                />
+                <BonusesPage />
               </WithBgImage>
             </Route>
           )}
@@ -116,18 +114,22 @@ const DashboardLayout = ({
                 <WithBgImage>
                   <OnRampPage />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
-          {dashboard?.community && dashboard?.isAdmin && (
-            <Route
-              exact
-              path={`${match.path}/walletbanner`}
-            >
-              <WithBgImage>
-                <WalletBannerLinkPage />
-              </WithBgImage>
-            </Route>)}
+          {
+            dashboard?.community && dashboard?.isAdmin && (
+              <Route
+                exact
+                path={`${match.path}/walletbanner`}
+              >
+                <WithBgImage>
+                  <WalletBannerLinkPage />
+                </WithBgImage>
+              </Route>
+            )
+          }
 
           {dashboard?.isAdmin && (dashboard?.homeToken?.tokenType === 'mintableBurnable') && (
             <Route exact path={`${match.path}/mintBurn`}>
@@ -177,7 +179,8 @@ const DashboardLayout = ({
                 <WithBgImage>
                   <Users />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
           {
@@ -186,7 +189,8 @@ const DashboardLayout = ({
                 <WithBgImage>
                   <TransferPage />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
           {
