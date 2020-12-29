@@ -1,20 +1,14 @@
 import React from 'react'
 import CommunityLogo from 'components/common/CommunityLogo'
-import PlusIcon from 'images/plus.svg'
 import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
 import { getImageUri } from 'utils/metadata'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-const Header = ({ location }) => {
-  const dispatch = useDispatch()
+const Header = () => {
   const { dashboard } = useStore()
   const communityURI = dashboard?.community?.communityURI
   const communityMetadata = useSelector(state => state.entities.metadata[communityURI])
-
-  const handleJoinCommunity = () => {
-    dispatch(push(`${location.pathname}/users/join`))
-  }
 
   return (
     <div className='community_header'>
