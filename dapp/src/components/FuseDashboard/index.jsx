@@ -36,7 +36,6 @@ const DashboardLayout = ({
 }) => {
   const { address: communityAddress } = useParams()
   const { dashboard, network } = useStore()
-  const { community } = dashboard
   const { accountAddress } = network
   const { isAdmin } = dashboard
 

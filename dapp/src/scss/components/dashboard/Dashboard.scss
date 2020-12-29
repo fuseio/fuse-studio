@@ -165,6 +165,49 @@
       }
     }
 
+    @include block(banner) {
+      background-color: #f2f5fa;
+      width: 100%;
+      min-height: 190px;
+      margin-top: 2em;
+      border-radius: 5px;
+      padding: 2em;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+
+      @include block(title) {
+        font-weight: 500;
+        color: #5e707f;
+        font-size: 1.5em;
+      }
+
+      @include block(sub-title) {
+        color: #5e707f;
+      }
+
+      @include block(boxes) {
+        margin-top: 2em;
+
+        @include block(item) {
+          background-color: $color-white;
+          color: #5e707f;
+          min-height: 72px;
+          border-radius: 5px;
+          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+          padding: 1em;
+          cursor: pointer;
+
+          @include element(title) {
+            font-weight: 500;
+          }
+
+          @include element(subtitle) {
+            color: $color-dark-gray;
+            font-size: 0.8em;
+          }
+        }
+      }
+    }
+
     @include element(wrapper) {
       @include breakpoint(large up) {
         width: 80%;
