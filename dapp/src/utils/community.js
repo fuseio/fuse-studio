@@ -21,7 +21,7 @@ export function addUser ({ communityAddress, userAccountAddress, metadata }, { a
   return transactionPromise
 }
 
-export function addBusiness ({ communityAddress, businessAccountAddress, metadata }, { accountAddress, web3, web3Options }, { baseUrl}) {
+export function addBusiness ({ communityAddress, businessAccountAddress, metadata }, { accountAddress, web3, web3Options }, { baseUrl }) {
   createBusinessMetadata({ communityAddress, accountAddress: businessAccountAddress, metadata }, { baseUrl })
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
 
@@ -43,10 +43,7 @@ export function removeEntity ({ communityAddress, entityAccountAddress }, { acco
   return transactionPromise
 }
 
-export function joinUser ({ communityAddress, metadata }, { accountAddress, web3, web3Options }) {
-  // if (data) {
-  //   yield call(createUsersMetadata, { communityAddress, accountAddress: data.account, metadata: data })
-  // }
+export function joinUser ({ communityAddress }, { accountAddress, web3, web3Options }) {
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
 
   const method = CommunityContract.methods.join()
@@ -60,6 +57,24 @@ export function addAdminRole ({ communityAddress, userAccountAddress }, { accoun
   const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
 
   const method = CommunityContract.methods.addEnitityRoles(userAccountAddress, combineRoles(roles.ADMIN_ROLE, roles.APPROVED_ROLE))
+  return method.send({
+    from: accountAddress
+  })
+}
+
+export function addBusinessRole ({ communityAddress, businessAccountAddress, metadata }, { accountAddress, web3, web3Options }, { baseUrl }) {
+  createBusinessMetadata({ communityAddress, accountAddress: businessAccountAddress, metadata }, { baseUrl })
+
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
+  const method = CommunityContract.methods.addEnitityRoles(businessAccountAddress, roles.BUSINESS_ROLE)
+  return method.send({
+    from: accountAddress
+  })
+}
+
+export function removeBusinessRole ({ communityAddress, businessAccountAddress }, { accountAddress, web3, web3Options }) {
+  const CommunityContract = new web3.eth.Contract(CommunityABI, communityAddress, web3Options)
+  const method = CommunityContract.methods.removeEnitityRoles(businessAccountAddress, roles.BUSINESS_ROLE)
   return method.send({
     from: accountAddress
   })
