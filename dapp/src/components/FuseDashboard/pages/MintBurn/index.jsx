@@ -77,7 +77,10 @@ const MintBurn = () => {
 
   const handleChange = (event, newValue) => setValue(newValue)
 
-  const handleConfirmation = () => dashboard?.fetchTokenBalances(accountAddress)
+  const handleConfirmation = () => {
+    dashboard?.fetchTokensTotalSupply()
+    dashboard?.fetchTokenBalances(accountAddress)
+  }
 
   return (
     <>

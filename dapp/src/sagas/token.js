@@ -128,7 +128,19 @@ function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
 
 function * deployChosenContracts ({ response: { steps, receipt } }) {
   const homeTokenAddress = receipt.events.TokenCreated.returnValues.token
-  const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, { steps: { ...steps, community: { args: { ...steps.community.args, homeTokenAddress } } } })
+  const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, {
+    steps: {
+      ...steps,
+      community: {
+        args: {
+          ...steps.community.args,
+          homeTokenAddress
+        }
+      }
+    }
+  },{
+    networkType: 'main'
+  })
 
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,
@@ -145,7 +157,7 @@ function * deployExistingToken ({ steps, metadata }) {
   const response = yield call(createMetadata, { metadata })
   const communityURI = response.uri || `ipfs://${response.hash}`
   const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
-  const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps })
+  const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps }, { networkType: 'main' })
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,
     response: {
@@ -155,7 +167,7 @@ function * deployExistingToken ({ steps, metadata }) {
 }
 
 function * fetchTokenProgress ({ communityAddress }) {
-  const response = yield apiCall(api.fetchTokenProgress, { communityAddress })
+  const response = yield apiCall(api.fetchTokenProgress, { communityAddress }, { networkType: 'main' })
   const { data: { steps, done = false } } = response
   const keys = Object.keys(steps)
     .reduce((obj, key) => ({
@@ -183,7 +195,7 @@ function * fetchTokenProgress ({ communityAddress }) {
 }
 
 function * fetchDeployProgress ({ id }) {
-  const response = yield apiCall(api.fetchDeployProgress, { id })
+  const response = yield apiCall(api.fetchDeployProgress, { id }, { networkType: 'main' })
   const { data: { steps, done = false, communityAddress } } = response
 
   const stepErrors = Object.keys(steps)

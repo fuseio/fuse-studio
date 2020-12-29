@@ -42,11 +42,10 @@ const DashboardLayout = ({
 
   useEffect(() => {
     dashboard.fetchCommunity(communityAddress)
-  }, [dashboard?.communityAddress])
+  }, [communityAddress])
 
   useEffect(() => {
-    if (community && accountAddress) {
-      dashboard.fetchTokensTotalSupply()
+    if (accountAddress) {
       dashboard.checkIsAdmin(accountAddress)
       dashboard.fetchTokenBalances(accountAddress)
     }
@@ -95,7 +94,7 @@ const DashboardLayout = ({
               >
                 {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
               </Sidebar>
-              )
+            )
         }
         <Switch>
           {get(dashboard?.plugins, 'bonuses') && !get(dashboard?.plugins, 'bonuses.isRemoved', false) && dashboard?.isAdmin && (
@@ -108,18 +107,17 @@ const DashboardLayout = ({
             </Route>
           )}
 
-          {dashboard?.community && dashboard?.isAdmin && (
-            <Route
-              exact
-              path={`${match.path}/onramp`}
-              render={() => (
+          {
+            dashboard?.community && dashboard?.isAdmin && (
+              <Route
+                exact
+                path={`${match.path}/onramp`}
+              >
                 <WithBgImage>
-                  <OnRampPage
-                    community={dashboard?.community}
-                  />
+                  <OnRampPage />
                 </WithBgImage>
-              )}
-            />)}
+              </Route>)
+          }
 
           {dashboard?.community && dashboard?.isAdmin && (
             <Route
@@ -142,13 +140,11 @@ const DashboardLayout = ({
           {dashboard?.isAdmin && (
             <Route exact path={`${match.path}/settings`}>
               <WithBgImage>
-                <SettingsPage
-                  community={dashboard?.community}
-                />
+                <SettingsPage />
               </WithBgImage>
             </Route>
           )}
-          {dashboard?.community && (
+          {dashboard?.community && dashboard?.isAdmin && (
             <Route
               exact
               path={`${match.path}/plugins`}

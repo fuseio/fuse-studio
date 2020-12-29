@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
 import LogosOptions from 'components/wizard/components/LogosOptions'
 import AccordionDetails from '@material-ui/core/AccordionActions'
@@ -11,7 +12,9 @@ import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
 import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
 import { Form, Formik } from 'formik'
-import { Observer } from 'mobx-react'
+import { useStore } from 'store/mobx'
+import { observer } from 'mobx-react'
+import { updateCommunityMetadata, setSecondaryToken } from 'actions/community'
 
 const ExpansionPanelDetails = withStyles({
   root: {
@@ -20,7 +23,11 @@ const ExpansionPanelDetails = withStyles({
   }
 })(AccordionDetails)
 
-const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, token, communityMetadata }) => {
+const SettingsForm = () => {
+  const dispatch = useDispatch()
+  const { dashboard } = useStore()
+  const { community } = dashboard
+
   const renderForm = ({ isValid, handleChange, values }) => {
     return (
       <Form className='issuance__wizard'>
@@ -136,11 +143,11 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
       fields.webUrl = values.webUrl
     }
     if (!isEmpty(fields)) {
-      updateCommunityMetadata(community.communityAddress, fields)
+      dispatch(updateCommunityMetadata(community.communityAddress, fields))
     }
 
     if (values.secondaryTokenAddress && community.secondaryTokenAddress !== toChecksumAddress(values.secondaryTokenAddress)) {
-      setSecondaryToken(community.communityAddress, toChecksumAddress(values.secondaryTokenAddress))
+      dispatch(setSecondaryToken(community.communityAddress, toChecksumAddress(values.secondaryTokenAddress)))
     }
     formikBag.resetForm({
       values
@@ -149,17 +156,17 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
 
   const initialValues = {
     communityType: {
-      label: get(communityMetadata, 'isDefault', false),
-      value: get(communityMetadata, 'isDefault', false)
+      label: get(dashboard, 'metadata.isDefault', false),
+      value: get(dashboard, 'metadata.isDefault', false)
     },
     isOpen: get(community, 'isClosed', true),
-    coverPhoto: getCoverPhotoUri(communityMetadata),
+    coverPhoto: getCoverPhotoUri(get(dashboard, 'metadata')),
     images: {
       custom: {
-        croppedImageUrl: getImageUri(communityMetadata)
+        croppedImageUrl: getImageUri(get(dashboard, 'metadata'))
       }
     },
-    communitySymbol: get(token, 'symbol', ''),
+    communitySymbol: get(dashboard, 'homeToken.symbol', ''),
     secondaryTokenAddress: get(community, 'secondaryTokenAddress', ''),
     description: get(community, 'description', ''),
     webUrl: get(community, 'webUrl', '')
@@ -169,10 +176,11 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
     <Formik
       onSubmit={onSubmit}
       initialValues={initialValues}
+      enableReinitialize
     >
       {(props) => renderForm(props)}
     </Formik>
   )
 }
 
-export default SettingsForm
+export default observer(SettingsForm)

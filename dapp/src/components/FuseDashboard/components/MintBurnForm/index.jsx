@@ -9,111 +9,110 @@ import withTransaction from 'components/common/WithTransaction'
 import get from 'lodash/get'
 import { formatWei } from 'utils/format'
 
-export default withTransaction(
-  ({
-    tokenNetworkType,
-    symbol,
-    clearTransaction,
-    balance,
-    actionType,
-    receipt,
-    handleSendTransaction,
-    makeTransaction,
-    isDenied,
-    isConfirmed,
-    isFailed
+function MintBurnForm({
+  tokenNetworkType,
+  symbol,
+  balance,
+  clearTransaction,
+  actionType,
+  receipt,
+  handleSendTransaction,
+  makeTransaction,
+  isDenied,
+  isConfirmed,
+  isFailed
+}) {
+  const initialValues = useMemo(
+    () => ({
+      actionType,
+      mintAmount: '',
+      burnAmount: ''
+    }),
+    []
+  )
+
+  const onSubmit = (values, formikBag) => {
+    const { actionType, mintAmount, burnAmount } = values
+
+    const amount = actionType === 'mint' ? mintAmount : burnAmount
+    handleSendTransaction(() => makeTransaction(amount))
+    formikBag.resetForm()
+  }
+
+  const renderForm = ({
+    errors,
+    handleChange,
+    touched,
+    values,
+    isValid
   }) => {
-    const initialValues = useMemo(
-      () => ({
-        actionType,
-        mintAmount: '',
-        burnAmount: ''
-      }),
-      []
-    )
+    const { actionType } = values
 
-    const onSubmit = (values, formikBag) => {
-      const { actionType, mintAmount, burnAmount } = values
+    return (
+      <Form
+        className='transfer__content grid-y align-justify'
+        style={{ height: '140px' }}
+      >
+        <Message
+          message={`Your just ${actionType}ed ${formatWei(
+            get(receipt, 'events.Transfer.returnValues.value', 0),
+            2
+          )} ${symbol} on ${tokenNetworkType} network`}
+          isOpen={isConfirmed}
+          subTitle=''
+          clickHandler={clearTransaction}
+        />
 
-      const amount = actionType === 'mint' ? mintAmount : burnAmount
-      handleSendTransaction(() => makeTransaction(amount))
-      formikBag.resetForm()
-    }
+        <Message
+          message='Oops, something went wrong'
+          isOpen={isFailed}
+          subTitle=''
+          clickHandler={clearTransaction}
+        />
 
-    const renderForm = ({
-      errors,
-      handleChange,
-      touched,
-      values,
-      isValid
-    }) => {
-      const { actionType } = values
+        <Message
+          message={'Oh no'}
+          subTitle={`You reject the action, That’s ok, try next time!`}
+          isOpen={isDenied}
+          clickHandler={clearTransaction}
+        />
+        {actionType === 'mint' ? (
+          <>
+            <div className='grid-y field'>
+              <h3 className='field__title'>Insert amount</h3>
 
-      return (
-        <Form
-          className='transfer__content grid-y align-justify'
-          style={{ height: '140px' }}
-        >
-          <Message
-            message={`Your just ${actionType}ed ${formatWei(
-              get(receipt, 'events.Transfer.returnValues.value', 0),
-              2
-            )} ${symbol} on ${tokenNetworkType} network`}
-            isOpen={isConfirmed}
-            subTitle=''
-            clickHandler={clearTransaction}
-          />
-
-          <Message
-            message='Oops, something went wrong'
-            isOpen={isFailed}
-            subTitle=''
-            clickHandler={clearTransaction}
-          />
-
-          <Message
-            message={'Oh no'}
-            subTitle={`You reject the action, That’s ok, try next time!`}
-            isOpen={isDenied}
-            clickHandler={clearTransaction}
-          />
-          {actionType === 'mint' ? (
-            <>
-              <div className='grid-y field'>
-                <h3 className='field__title'>Insert amount</h3>
-
-                <TextField
-                  name='mintAmount'
-                  fullWidth
-                  placeholder='0'
-                  type='number'
-                  autoComplete='off'
-                  margin='none'
-                  error={
-                    errors && errors.mintAmount && touched.mintAmount && true
+              <TextField
+                name='mintAmount'
+                fullWidth
+                placeholder='0'
+                type='number'
+                autoComplete='off'
+                margin='none'
+                error={
+                  errors && errors.mintAmount && touched.mintAmount && true
+                }
+                onChange={handleChange}
+                InputProps={{
+                  classes: {
+                    underline: 'user-form__field__underline',
+                    error: 'user-form__field__error'
                   }
-                  onChange={handleChange}
-                  InputProps={{
-                    classes: {
-                      underline: 'user-form__field__underline',
-                      error: 'user-form__field__error'
-                    }
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                    className: 'user-form__field__label'
-                  }}
-                  inputProps={{
-                    value: values.mintAmount
-                  }}
-                />
-                <ErrorMessage
-                  name='mintAmount'
-                  render={msg => <div className='input-error'>{msg}</div>}
-                />
-              </div>
-            </>
-          ) : (
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                  className: 'user-form__field__label'
+                }}
+                inputProps={{
+                  value: values.mintAmount
+                }}
+              />
+              <ErrorMessage
+                name='mintAmount'
+                render={msg => <div className='input-error'>{msg}</div>}
+              />
+            </div>
+          </>
+        ) : (
             <>
               <div className='grid-y field'>
                 <h3 className='field__title'>Insert amount</h3>
@@ -150,34 +149,35 @@ export default withTransaction(
               </div>
             </>
           )}
-          <div className='transfer__content__button'>
-            {actionType && (
-              <TransactionButton
-                type='submit'
-                disabled={!isValid}
-                frontText={upperCase(actionType)}
-              />
-            )}
-          </div>
-        </Form>
-      )
-    }
-
-    return (
-      <Formik
-        initialValues={initialValues}
-        validationSchema={mintBurnShape(
-          balance && typeof balance.replace === 'function'
-            ? balance.replace(/,/g, '')
-            : 0
-        )}
-        onSubmit={onSubmit}
-        validateOnMount
-        enableReinitialize
-        validateOnChange
-      >
-        {(props) => renderForm(props)}
-      </Formik>
+        <div className='transfer__content__button'>
+          {actionType && (
+            <TransactionButton
+              type='submit'
+              disabled={!isValid}
+              frontText={upperCase(actionType)}
+            />
+          )}
+        </div>
+      </Form>
     )
   }
-)
+
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={mintBurnShape(
+        balance && typeof balance.replace === 'function'
+          ? balance.replace(/,/g, '')
+          : 0
+      )}
+      onSubmit={onSubmit}
+      validateOnMount
+      enableReinitialize
+      validateOnChange
+    >
+      {(props) => renderForm(props)}
+    </Formik>
+  )
+}
+
+export default withTransaction(MintBurnForm)

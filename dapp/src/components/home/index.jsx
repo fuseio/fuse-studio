@@ -9,12 +9,15 @@ import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 import homeImage from 'images/studio_home.png'
 import arrowImage from 'images/arrow_1.svg'
 import { fetchFeaturedCommunities } from 'actions/token'
+import { loadModal } from 'actions/ui'
+import { LOGIN_MODAL } from 'constants/uiConstants'
 
 const HomePage = ({
   handleConnect
 }) => {
   const dispatch = useDispatch()
   const { accountAddress } = useSelector(state => state.network)
+  const { isLoggedIn } = useSelector(state => state.user)
   const [moveToIssuance, setMove] = useState(false)
 
   useEffect(() => {
@@ -34,7 +37,11 @@ const HomePage = ({
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')
       }
-      handleConnect()
+      if (!isLoggedIn) {
+        dispatch(loadModal(LOGIN_MODAL, { handleConnect }))
+      } else if (isLoggedIn) {
+        handleConnect()
+      }
       setMove(true)
     } else {
       window.analytics.track('Launch community button pressed - connected')
