@@ -8,6 +8,9 @@ import { useStore } from 'store/mobx'
 import { withRouter } from 'react-router'
 import { push } from 'connected-react-router'
 import { useDispatch } from 'react-redux'
+import Plugins from 'images/setup_plugins.svg'
+import Users from 'images/setup_users.svg'
+import Wallet from 'images/setup_wallet.svg'
 
 function CommunityBanner(props) {
   const { address } = useParams()
@@ -31,17 +34,32 @@ function CommunityBanner(props) {
         <div className='title'>Community created successfully!</div>
         <div className='sub-title'>Continue setting up your community</div>
         <div className='boxes grid-x align-middle align-justify grid-margin-x'>
-          <div className='item cell large-auto' onClick={plugins}>
-            <div className='item__title'>Set up plugins</div>
-            <div className='item__subtitle'>Get additional functionality for your community</div>
+          <div className='item cell large-auto grid-x align-middle align-spaced grid-margin-x' onClick={plugins}>
+            <div className='image cell small-6'>
+              <img src={Plugins} />
+            </div>
+            <div className='content cell large-auto'>
+              <div className='content__title'>Set plug-ins</div>
+              <div className='content__subtitle'>Easily add new functionality to your community</div>
+            </div>
           </div>
-          <div className='item cell large-auto' onClick={wallet}>
-            <div className='item__title'>Wallet</div>
-            <div className='item__subtitle'>Customize and launched your coin on any mobile device</div>
+          <div className='item cell large-auto grid-x align-middle align-spaced grid-margin-x' onClick={wallet}>
+            <div className='image cell small-6'>
+              <img src={Wallet} />
+            </div>
+            <div className='content cell large-auto'>
+              <div className='content__title'>Set up wallet</div>
+              <div className='content__subtitle'>Experience your community on iOS or Android</div>
+            </div>
           </div>
-          <div className='item cell large-auto' onClick={users}>
-            <div className='item__title'>Users</div>
-            <div className='item__subtitle'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+          <div className='item cell large-auto grid-x align-middle align-spaced grid-margin-x' onClick={users}>
+            <div className='image cell small-6'>
+              <img src={Users} />
+            </div>
+            <div className='content cell large-auto'>
+              <div className='content__title'>Invite users</div>
+              <div className='content__subtitle'>Manage community members and set permissions</div>
+            </div>
           </div>
         </div>
       </div>

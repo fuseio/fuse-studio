@@ -3,6 +3,22 @@
   background-color: $color-white;
   border-radius: 5px;
   position: relative;
+  padding: 2em;
+  width: fit-content;
+
+  @include block(actions) {
+    @include xy-grid();
+    @include flex-align(justify, middle);
+  }
+
+  @include block(button) {
+    margin-left: auto;
+    margin-top: 1em;
+  }
+
+  .issuance__wizard {
+    padding-bottom: 0;
+  }
 
   @include element(header) {
     color: $color-white;
@@ -22,7 +38,6 @@
       font-size: 1.625em;
       font-weight: 500;
     }
-    
   }
 
   @include element(form) {

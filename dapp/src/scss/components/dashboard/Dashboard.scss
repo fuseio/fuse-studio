@@ -193,8 +193,10 @@
 
       @include block(boxes) {
         margin-top: 2em;
+        width: 100%;
 
         @include block(item) {
+          width: 100%;
           background-color: $color-white;
           color: #5e707f;
           min-height: 72px;
@@ -202,29 +204,32 @@
           box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
           padding: 1em;
           cursor: pointer;
-          @include xy-grid(vertical);
-          @include flex-align(left, top);
 
-          @include element(title) {
-            font-weight: 500;
+          @include block(image) {
           }
 
-          @include element(subtitle) {
-            color: $color-dark-gray;
-            font-size: 0.8em;
+          @include block(content) {
+            @include xy-grid(vertical);
+            @include flex-align(left, top);
+
+            @include element(title) {
+              font-weight: 500;
+            }
+
+            @include element(subtitle) {
+              color: $color-dark-gray;
+              font-size: 0.8em;
+            }
           }
         }
       }
     }
 
     @include element(wrapper) {
+      max-width: 900px;
       @include breakpoint(large up) {
-        width: 80%;
+        width: 65%;
         margin: 5em auto 3em;
-      }
-
-      @include breakpoint(2000) {
-        width: 70%;
       }
 
       @include breakpoint(medium only) {

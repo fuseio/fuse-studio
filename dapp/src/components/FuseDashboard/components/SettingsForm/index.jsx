@@ -18,7 +18,6 @@ import { updateCommunityMetadata, setSecondaryToken } from 'actions/community'
 
 const ExpansionPanelDetails = withStyles({
   root: {
-    padding: '24px',
     alignItems: 'flex-start'
   }
 })(AccordionDetails)
@@ -119,8 +118,8 @@ const SettingsForm = () => {
               </div>
             </Typography>
           </ExpansionPanelDetails>
-          <div className='join_bonus__actions'>
-            <button className='button button--normal join_bonus__button' disabled={!isValid}>Save</button>
+          <div className='actions'>
+            <button className='button button--normal button' disabled={!isValid}>Save</button>
           </div>
         </div>
       </Form>
