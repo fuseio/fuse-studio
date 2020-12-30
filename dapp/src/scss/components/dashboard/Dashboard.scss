@@ -166,13 +166,20 @@
     }
 
     @include block(banner) {
-      background-color: #f2f5fa;
       width: 100%;
       min-height: 190px;
       margin-top: 2em;
       border-radius: 5px;
-      padding: 2em;
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+      background: linear-gradient(#fefefe, #f2f5f8, #e0ebf4);
+
+      @include element(container) {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        background-image: url(../../assets/images/confetti.png);
+        padding: 2em;
+      }
 
       @include block(title) {
         font-weight: 500;
@@ -195,6 +202,8 @@
           box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
           padding: 1em;
           cursor: pointer;
+          @include xy-grid(vertical);
+          @include flex-align(left, top);
 
           @include element(title) {
             font-weight: 500;
@@ -283,8 +292,8 @@
 
       @include element(title) {
         color: $color-dark;
-        font-size: 1.25em;
-        margin-bottom: 10px;
+        font-size: 1em;
+        margin-bottom: 1em;
         font-weight: 500;
       }
 

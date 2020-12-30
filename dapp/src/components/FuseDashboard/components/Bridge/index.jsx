@@ -166,13 +166,14 @@ const Bridge = ({
 
   return (
     <div className='content__bridge'>
-      <div className='grid-x align-justify'>
-        <h3 className='content__bridge__title'>Bridge <FontAwesome style={{ fontSize: '60%' }} data-tip data-for='bridge' name='info-circle' /></h3>
-        <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
-          <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
-        </ReactTooltip>
-      </div>
       <div className='content__bridge__wrapper'>
+        <div className='content__bridge__title grid-x align-middle'>
+          <h3>Bridge</h3>&nbsp;
+          <FontAwesome style={{ fontSize: '60%' }} data-tip data-for='bridge' name='info-circle' />
+          <ReactTooltip className='tooltip__content' id='bridge' place='bottom' effect='solid'>
+            <div>Use the bridge to move tokens to Fuse to add new functionality and faster and cheaper verification times. You can start by selecting an initial sum, sigining the transaction and wait for 2 confirmations. Then you can switch to the Fuse chain to see the coins on the other side. Click here to learn more about the bridge.</div>
+          </ReactTooltip>
+        </div>
         <div className='content__bridge__container'>
           <Balance
             side='from'

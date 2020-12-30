@@ -27,19 +27,22 @@ function CommunityBanner(props) {
 
   return (
     <div className='banner'>
-      <div className='title'>Community created successfully!</div>
-      <div className='sub-title'>Continue setting up your community</div>
-      <div className='boxes grid-x align-middle align-justify grid-margin-x'>
-        <div className='item cell large-auto' onClick={plugins}>
-          <div className='item__title'>Set up plugins</div>
-          <div className='item__subtitle'>Get additional functionality for your community</div>
-        </div>
-        <div className='item cell large-auto' onClick={wallet}>
-          <div className='item__title'>Wallet</div>
-          <div className='item__subtitle'>Customize and launched your coin on any mobile device</div>
-        </div>
-        <div className='item cell large-auto' onClick={users}>
-          <div className='item__title'>Users</div>
+      <div className='banner__container'>
+        <div className='title'>Community created successfully!</div>
+        <div className='sub-title'>Continue setting up your community</div>
+        <div className='boxes grid-x align-middle align-justify grid-margin-x'>
+          <div className='item cell large-auto' onClick={plugins}>
+            <div className='item__title'>Set up plugins</div>
+            <div className='item__subtitle'>Get additional functionality for your community</div>
+          </div>
+          <div className='item cell large-auto' onClick={wallet}>
+            <div className='item__title'>Wallet</div>
+            <div className='item__subtitle'>Customize and launched your coin on any mobile device</div>
+          </div>
+          <div className='item cell large-auto' onClick={users}>
+            <div className='item__title'>Users</div>
+            <div className='item__subtitle'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+          </div>
         </div>
       </div>
     </div>
