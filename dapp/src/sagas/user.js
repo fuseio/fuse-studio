@@ -108,7 +108,7 @@ function * subscribeUser ({ user }) {
 
 function * fund ({ accountAddress }) {
   if (accountAddress) {
-    const response = yield apiCall(api.fund, { accountAddress }, { networkType: 'ropsten', v2: true })
+    const response = yield apiCall(api.fund, { accountAddress }, { networkType: 'fuse', v2: true })
     saveState('funded', true)
     yield put({
       type: actions.FUND.SUCCESS,
