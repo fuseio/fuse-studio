@@ -38,7 +38,6 @@
     "@material-ui/core": "^4.2.1",
     "@sentry/browser": "^5.7.1",
     "@toruslabs/torus-embed": "^1.8.6",
-    "@walletconnect/web3-provider": "^1.0.0-beta.35",
     "apollo-boost": "^0.4.4",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
