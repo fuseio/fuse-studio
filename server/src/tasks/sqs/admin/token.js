@@ -115,10 +115,18 @@ const adminApprove = async (account, { bridgeType, tokenAddress, wallet, spender
   })
 
   if (burnFromAddress) {
-    const taskManager = require('@services/taskManager')
-    const burnJob = await taskManager.now('burnFrom', { tokenAddress, bridgeType, from: account.address, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` })
-    job.set('data.burnJobId', burnJob._id.toString())
-    job.save()
+    const tokenContractInstance = createContract(MintableBurnableTokenAbi, tokenAddress)
+    const method = createMethod(tokenContractInstance, 'burnFrom', burnFromAddress, amount)
+
+    await send(method, {
+      from: account.address
+    }, {
+      transactionHash: (hash) => {
+        console.log(`transaction ${hash} is created by ${account.address}`)
+        job.set('data.txHashBurn', hash)
+        job.save()
+      }
+    })
   }
 }
 
