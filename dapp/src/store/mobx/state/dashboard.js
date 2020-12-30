@@ -34,6 +34,7 @@ export default class Dashboard {
   metadata
   communityUsers
   communityBusinesses
+  communityAdmins
 
   tokenBalances = {
     home: 0,
@@ -69,7 +70,7 @@ export default class Dashboard {
       addedPlugins: computed,
       fetchTokenBalances: action,
       fetchCommunity: action,
-      checkIsAdmin: action,
+      fetchCommunityAdmins: action,
       fetchHomeToken: action,
       setWalletBannerLink: action,
       inviteUserToCommunity: action,
@@ -213,14 +214,24 @@ export default class Dashboard {
       web3: this._web3Home,
       isHome: true,
       token: this.homeToken,
+      tokenAddress: this.community?.homeTokenAddress,
       tokenNetworkName: 'fuse',
       tokenBalance: this.tokenBalances.home,
       baseUrl: this.baseUrl
     }
   }
 
-  checkIsAdmin = flow(function * (communityAddress) {
+  fetchCommunityAdmins = flow(function * (communityAddress) {
     try {
+      const admins = yield getCommunityAdmins(communityAddress)
+      const communityEntities = get(
+        admins.data,
+        'communities[0].entitiesList.communityEntities',
+        []
+      )
+      this.communityAdmins = communityEntities
+      const entities = keyBy(communityEntities, 'address')
+
       if (
         this?.rootStore?.network?.accountAddress ===
         this?.community?.creatorAddress
@@ -228,13 +239,6 @@ export default class Dashboard {
         this.isAdmin = true
         return
       }
-      const admins = yield getCommunityAdmins(communityAddress)
-      const communityEntities = get(
-        admins.data,
-        'communities[0].entitiesList.communityEntities',
-        []
-      )
-      const entities = keyBy(communityEntities, 'address')
       this.isAdmin = has(
         entities,
         this.rootStore?.network?.accountAddress,
