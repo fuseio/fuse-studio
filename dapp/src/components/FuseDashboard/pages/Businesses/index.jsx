@@ -1,4 +1,6 @@
-import React, { Fragment, useEffect, useState, useMemo } from 'react'
+/* eslint multiline-ternary: ["error", "never"] */
+
+import React, { useEffect, useState, useMemo } from 'react'
 import { useParams } from 'react-router'
 import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
@@ -25,23 +27,29 @@ import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
 import { autorun } from 'mobx'
 import withTransaction from 'components/common/WithTransaction'
-import { removeBusiness, addBusiness } from 'utils/community'
+import { removeEntity, addBusiness, addBusinessRole, removeBusinessRole } from 'utils/community'
 
 const BusinessesTable = withTransaction(
   ({
     isRequested,
     isPending,
     users,
+    admins,
     tableData,
     handleSendTransaction,
     entityAdded,
     isAdmin,
     loadModal,
-    makeRemoveBusinessTransaction,
-    makeAddBusinessTransaction
+    makeRemoveEntityTransaction,
+    makeAddBusinessTransaction,
+    makeAddBusinessRoleTransaction,
+    makeRemoveBusinessRoleTransaction
   }) => {
     const handleAddBusiness = () => loadAddBusinessModal()
     const [transactionTitle, setTransactionTitle] = useState()
+
+    const checkIsUser = ({ account }) => users.some(u => u.address === account)
+    const checkIsAdmin = ({ account }) => admins.some(u => u.address === account)
 
     const columns = [
       {
@@ -76,7 +84,7 @@ const BusinessesTable = withTransaction(
         Header: 'Account ID',
         accessor: 'account',
         Cell: ({ cell: { value } }) => (
-          <React.Fragment>
+          <>
             <a
               className='link'
               target='_blank'
@@ -88,7 +96,7 @@ const BusinessesTable = withTransaction(
             <CopyToClipboard text={value}>
               <FontAwesome name='clone' />
             </CopyToClipboard>
-          </React.Fragment>
+          </>
         )
       },
       {
@@ -105,12 +113,18 @@ const BusinessesTable = withTransaction(
                   <li
                     className='more__options__item'
                     onClick={() => {
-                      handleSendTransaction(() =>
-                        makeRemoveBusinessTransaction(
-                          rowInfo.row.original.account
+                      debugger
+                      if (checkIsAdmin(rowInfo.row.original)) {
+                        handleSendTransaction(() => makeRemoveBusinessRoleTransaction(rowInfo.row.original.account))
+                        setTransactionTitle('Removing business role from user')
+                      } else {
+                        handleSendTransaction(() =>
+                          makeRemoveEntityTransaction(
+                            rowInfo.row.original.account
+                          )
                         )
-                      )
-                      setTransactionTitle('Removing the business from list')
+                        setTransactionTitle('Removing the business from list')
+                      }
                     }}
                   >
                     <FontAwesome name='trash' /> Remove from list
@@ -127,8 +141,13 @@ const BusinessesTable = withTransaction(
       loadModal(ADD_BUSINESS_MODAL, {
         users,
         submitEntity: (...args) => {
-          handleSendTransaction(() => makeAddBusinessTransaction(...args))
-          setTransactionTitle('Adding business to list')
+          if (checkIsUser(...args)) {
+            handleSendTransaction(() => makeAddBusinessRoleTransaction(...args))
+            setTransactionTitle('Assigning user as business')
+          } else {
+            handleSendTransaction(() => makeAddBusinessTransaction(...args))
+            setTransactionTitle('Adding business to list')
+          }
         }
       })
     }
@@ -189,13 +208,13 @@ const BusinessesTable = withTransaction(
 const Businesses = ({
   loadModal,
   businessesMetadata,
-  fetchEntityMetadata,
+  fetchEntityMetadata
 }) => {
   const { dashboard } = useStore()
-  const { communityBusinesses, communityUsers, isAdmin } = dashboard
+  const { communityBusinesses, communityUsers, communityAdmins, isAdmin } = dashboard
   const { address: communityAddress } = useParams()
   const [data, setData] = useState(null)
-  const { network, _web3 } = useStore()
+  const { network } = useStore()
   const { web3Context } = network
   const { tokenContext } = dashboard
 
@@ -278,17 +297,32 @@ const Businesses = ({
 
   const tableData = useMemo(() => data || [], [data])
 
-  const makeAddBusinessTransaction = data => {
-    const businessAccountAddress = data.account
+  const makeAddBusinessTransaction = metadata => {
+    const businessAccountAddress = metadata.account
     return addBusiness(
-      { communityAddress, businessAccountAddress, metadata: data },
+      { communityAddress, businessAccountAddress, metadata },
       web3Context, tokenContext
     )
   }
 
-  const makeRemoveBusinessTransaction = account => {
-    return removeBusiness(
-      { communityAddress, businessAccountAddress: account },
+  const makeAddBusinessRoleTransaction = metadata => {
+    const businessAccountAddress = metadata.account
+    return addBusinessRole(
+      { communityAddress, businessAccountAddress, metadata },
+      web3Context, tokenContext
+    )
+  }
+
+  const makeRemoveEntityTransaction = entityAccountAddress => {
+    return removeEntity(
+      { communityAddress, entityAccountAddress },
+      web3Context
+    )
+  }
+
+  const makeRemoveBusinessRoleTransaction = businessAccountAddress => {
+    return removeBusinessRole(
+      { communityAddress, businessAccountAddress },
       web3Context
     )
   }
@@ -304,8 +338,11 @@ const Businesses = ({
           loadModal={loadModal}
           tableData={tableData}
           makeAddBusinessTransaction={makeAddBusinessTransaction}
-          makeRemoveBusinessTransaction={makeRemoveBusinessTransaction}
+          makeAddBusinessRoleTransaction={makeAddBusinessRoleTransaction}
+          makeRemoveEntityTransaction={makeRemoveEntityTransaction}
+          makeRemoveBusinessRoleTransaction={makeRemoveBusinessRoleTransaction}
           users={communityUsers}
+          admins={communityAdmins}
           isAdmin={isAdmin}
           entityAdded
           onConfirmation={handleConfirmation}
@@ -316,7 +353,7 @@ const Businesses = ({
 }
 
 const mapStateToProps = state => ({
-  businessesMetadata: state.entities.businesses,
+  businessesMetadata: state.entities.businesses
 })
 
 const mapDispatchToProps = {
