@@ -200,7 +200,6 @@ export default class Dashboard {
         'communities[0].entitiesList.communityEntities',
         []
       )
-      debugger
       this.communityAdmins = communityEntities
       const entities = keyBy(communityEntities, 'address')
 

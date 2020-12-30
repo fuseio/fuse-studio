@@ -113,7 +113,6 @@ const BusinessesTable = withTransaction(
                   <li
                     className='more__options__item'
                     onClick={() => {
-                      debugger
                       if (checkIsAdmin(rowInfo.row.original)) {
                         handleSendTransaction(() => makeRemoveBusinessRoleTransaction(rowInfo.row.original.account))
                         setTransactionTitle('Removing business role from user')
