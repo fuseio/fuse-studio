@@ -1,11 +1,11 @@
 /* eslint multiline-ternary: ["error", "never"] */
 
-import React, { Fragment, useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
 import { useParams, withRouter } from 'react-router'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import sortBy from 'lodash/sortBy'
 import identity from 'lodash/identity'
 import MyTable from 'components/FuseDashboard/components/Table'
@@ -25,7 +25,7 @@ import {
 } from 'utils/community'
 
 import { fetchUsersMetadata } from 'actions/communityEntities'
-import { loadModal, hideModal } from 'actions/ui'
+import { loadModal } from 'actions/ui'
 import { ADD_USER_MODAL } from 'constants/uiConstants'
 
 import withTransaction from 'components/common/WithTransaction'
@@ -48,6 +48,7 @@ const UsersTable = withTransaction(
   }) => {
     const [transactionTitle, setTransactionTitle] = useState()
     const { accountAddress } = web3Context
+    const dispatch = useDispatch()
 
     const handleRemoveEntity = entityAccountAddress => {
       setTransactionTitle('Removing the user from list')
@@ -66,6 +67,8 @@ const UsersTable = withTransaction(
 
     const makeJoinUser = metadata => joinUser({ communityAddress, metadata }, web3Context)
 
+    const handleTransfer = (address) => dispatch(push(`transfer/${address}`))
+
     useEffect(() => {
       if (toHandleJoin) {
         loadAddUserModal()
@@ -73,13 +76,13 @@ const UsersTable = withTransaction(
     }, [toHandleJoin])
 
     const loadAddUserModal = () => {
-      loadModal(ADD_USER_MODAL, {
+      dispatch(loadModal(ADD_USER_MODAL, {
         isJoin: true,
         entity: { account: accountAddress },
         submitEntity: (...args) => {
           handleSendTransaction(() => makeJoinUser(...args))
         }
-      })
+      }))
     }
 
     const columns = [
@@ -159,7 +162,7 @@ const UsersTable = withTransaction(
                     </li>
                     <li
                       className='more__options__item'
-                      onClick={() => push(`transfer/${address}`)}
+                      onClick={() => handleTransfer(address)}
                     >
                       Transfer tokens to user
                     </li>
@@ -189,7 +192,7 @@ const UsersTable = withTransaction(
                       )}
                     <li
                       className='more__options__item'
-                      onClick={() => push(`transfer/${address}`)}
+                      onClick={() => handleTransfer(address)}
                     >
                       Transfer tokens to user
                     </li>
@@ -206,7 +209,7 @@ const UsersTable = withTransaction(
                 <ul className='more__options'>
                   <li
                     className='more__options__item'
-                    onClick={() => push(`transfer/${address}`)}
+                    onClick={() => handleTransfer(address)}
                   >
                     Transfer tokens to user
                   </li>
@@ -261,7 +264,6 @@ const UsersTable = withTransaction(
 )
 
 const Users = ({
-  loadModal,
   fetchUsersMetadata,
   usersMetadata,
   toHandleJoin
@@ -384,7 +386,6 @@ const Users = ({
       <div className='entities__wrapper'>
         <UsersTable
           desiredNetworkName='fuse'
-          loadModal={loadModal}
           tableData={tableData}
           users={communityUsers}
           isAdmin={isAdmin}
@@ -404,9 +405,6 @@ const mapStateToProps = (state, { match }) => ({
 })
 
 const mapDispatchToProps = {
-  push,
-  loadModal,
-  hideModal,
   fetchUsersMetadata
 }
 
