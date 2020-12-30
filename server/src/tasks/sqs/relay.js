@@ -117,7 +117,7 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
         }
       } else if (walletModule === 'TransferManager' && methodName === 'transferToken') {
         const { _to, _amount, _token, _wallet } = getParamsFromMethodData(web3, walletModuleABI, 'transferToken', methodData)
-        notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount, appName })
+        notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount, appName, communityAddress })
           .catch(console.error)
       }
 
