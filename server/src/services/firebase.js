@@ -5,7 +5,7 @@ const get = require('lodash/get')
 const mongoose = require('mongoose')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
-const { fetchToken, fetchCommunityAddressByTokenAddress } = require('@utils/token')
+const { fetchToken } = require('@utils/token')
 
 const firebaseApps = {
   happyCow: {
@@ -110,7 +110,7 @@ const initAdmins = async () => {
   }
 }
 
-const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName }) => {
+const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName, communityAddress }) => {
   console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
   const receiverWallet = await UserWallet.findOne({ walletAddress: web3Utils.toChecksumAddress(receiverAddress) })
   const firebaseTokens = get(receiverWallet, 'firebaseTokens')
@@ -126,7 +126,6 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
     }))
     if (!appName) {
       try {
-        const { communityAddress } = await fetchCommunityAddressByTokenAddress(tokenAddress)
         messages = messages.map((message) => ({
           ...message,
           data: {
