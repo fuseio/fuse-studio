@@ -1,18 +1,7 @@
-import React, { Fragment } from 'react'
-import { connect, useSelector } from 'react-redux'
-import { updateCommunityMetadata, setSecondaryToken } from 'actions/community'
+import React from 'react'
 import SettingsForm from 'components/FuseDashboard/components/SettingsForm'
-import { useStore } from 'store/mobx'
-import { observer } from 'mobx-react'
 
-const Settings = ({
-  setSecondaryToken,
-  updateCommunityMetadata
-}) => {
-  const { dashboard } = useStore()
-  const { community, homeToken: token } = dashboard
-  const communityURI = dashboard?.community?.communityURI
-  const communityMetadata = useSelector(state => state.entities.metadata[communityURI])
+const Settings = () => {
   return (
     <>
       <div className='settings__header'>
@@ -20,26 +9,11 @@ const Settings = ({
       </div>
       <div>
         <div className='settings'>
-          {token && communityMetadata && (
-            <SettingsForm
-              community={{ ...community }}
-              communityMetadata={communityMetadata}
-              token={{ ...token }}
-              updateCommunityMetadata={updateCommunityMetadata}
-              setSecondaryToken={setSecondaryToken}
-            />
-          )}
+          <SettingsForm />
         </div>
       </div>
     </>
   )
 }
 
-const mapDispatchToProps = {
-  updateCommunityMetadata,
-  setSecondaryToken
-}
-
-export default connect(null, mapDispatchToProps)(observer(Settings))
-
-// export default observer(Settings)
+export default Settings

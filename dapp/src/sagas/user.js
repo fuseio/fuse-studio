@@ -106,12 +106,12 @@ function * subscribeUser ({ user }) {
   saveState('subscribe', true)
 }
 
-function * fundEth ({ accountAddress }) {
+function * fund ({ accountAddress }) {
   if (accountAddress) {
-    const response = yield apiCall(api.fundEth, { accountAddress }, { networkType: 'ropsten', v2: true })
-    saveState('fundEth', true)
+    const response = yield apiCall(api.fund, { accountAddress }, { networkType: 'fuse', v2: true })
+    saveState('funded', true)
     yield put({
-      type: actions.FUND_ETH.SUCCESS,
+      type: actions.FUND.SUCCESS,
       accountAddress,
       response: {
         jobId: response['job']['_id']
@@ -181,7 +181,7 @@ export default function * userSaga () {
     tryTakeEvery(actions.SAVE_WIZARD_PROGRESS, saveWizardProgress, 1),
     tryTakeEvery(actions.IS_USER_EXISTS, isUserExists, 1),
     tryTakeEvery(actions.SEND_EMAIL, subscribeUser, 1),
-    tryTakeEvery(actions.FUND_ETH, fundEth, 1),
+    tryTakeEvery(actions.FUND, fund, 1),
     tryTakeEvery(actions.GET_FUND_STATUS, fetchFundingStatus, 1),
     tryTakeEvery(actions.LOGIN, login, 1),
     tryTakeEvery(actions.SAVE_USER_ACCOUNT, saveUserAccount, 1),

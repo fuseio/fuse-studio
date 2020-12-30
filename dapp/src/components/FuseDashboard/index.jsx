@@ -36,17 +36,15 @@ const DashboardLayout = ({
 }) => {
   const { address: communityAddress } = useParams()
   const { dashboard, network } = useStore()
-  const { community } = dashboard
   const { accountAddress } = network
   const { isAdmin } = dashboard
 
   useEffect(() => {
     dashboard.fetchCommunity(communityAddress)
-  }, [dashboard?.communityAddress])
+  }, [communityAddress])
 
   useEffect(() => {
-    if (community && accountAddress) {
-      dashboard.fetchTokensTotalSupply()
+    if (accountAddress) {
       dashboard.fetchCommunityAdmins(communityAddress)
       dashboard.fetchTokenBalances(accountAddress)
     }
@@ -95,41 +93,42 @@ const DashboardLayout = ({
               >
                 {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
               </Sidebar>
-              )
+            )
         }
         <Switch>
           {get(dashboard?.plugins, 'bonuses') && !get(dashboard?.plugins, 'bonuses.isRemoved', false) && dashboard?.isAdmin && (
             <Route exact path={`${match.path}/bonuses`}>
               <WithBgImage>
-                <BonusesPage
-                  match={match}
-                />
+                <BonusesPage />
               </WithBgImage>
             </Route>
           )}
 
-          {dashboard?.community && dashboard?.isAdmin && (
-            <Route
-              exact
-              path={`${match.path}/onramp`}
-              render={() => (
+          {
+            dashboard?.community && dashboard?.isAdmin && (
+              <Route
+                exact
+                path={`${match.path}/onramp`}
+              >
                 <WithBgImage>
-                  <OnRampPage
-                    community={dashboard?.community}
-                  />
+                  <OnRampPage />
                 </WithBgImage>
-              )}
-            />)}
+              </Route>
+            )
+          }
 
-          {dashboard?.community && dashboard?.isAdmin && (
-            <Route
-              exact
-              path={`${match.path}/walletbanner`}
-            >
-              <WithBgImage>
-                <WalletBannerLinkPage />
-              </WithBgImage>
-            </Route>)}
+          {
+            dashboard?.community && dashboard?.isAdmin && (
+              <Route
+                exact
+                path={`${match.path}/walletbanner`}
+              >
+                <WithBgImage>
+                  <WalletBannerLinkPage />
+                </WithBgImage>
+              </Route>
+            )
+          }
 
           {dashboard?.isAdmin && (dashboard?.homeToken?.tokenType === 'mintableBurnable') && (
             <Route exact path={`${match.path}/mintBurn`}>
@@ -142,13 +141,11 @@ const DashboardLayout = ({
           {dashboard?.isAdmin && (
             <Route exact path={`${match.path}/settings`}>
               <WithBgImage>
-                <SettingsPage
-                  community={dashboard?.community}
-                />
+                <SettingsPage />
               </WithBgImage>
             </Route>
           )}
-          {dashboard?.community && (
+          {dashboard?.community && dashboard?.isAdmin && (
             <Route
               exact
               path={`${match.path}/plugins`}
@@ -181,7 +178,8 @@ const DashboardLayout = ({
                 <WithBgImage>
                   <Users />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
           {
@@ -190,7 +188,8 @@ const DashboardLayout = ({
                 <WithBgImage>
                   <TransferPage />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
           {

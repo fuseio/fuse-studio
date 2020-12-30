@@ -31,13 +31,16 @@ export default class Dashboard {
   baseUrl
   entitiesCount
   isCommunityMember
+  metadata
+  communityUsers
+  communityBusinesses
+  communityAdmins
+
   tokenBalances = {
     home: 0,
     foreign: 0
   }
-  communityUsers
-  communityBusinesses
-  communityAdmins
+
   allowance = {
     home: 0,
     foreign: 0
@@ -50,19 +53,20 @@ export default class Dashboard {
 
   constructor (rootStore) {
     makeObservable(this, {
+      metadata: observable.ref,
       community: observable.ref,
       plugins: observable.ref,
       homeToken: observable.ref,
       communityAddress: observable,
-      foreignToken: observable,
+      foreignToken: observable.ref,
       isFetching: observable,
       isAdmin: observable,
-      tokenBalances: observable,
       communityUsers: observable,
       communityBusinesses: observable,
       entitiesCount: observable,
-      totalSupply: observable,
-      allowance: observable,
+      tokenBalances: observable.struct,
+      totalSupply: observable.struct,
+      allowance: observable.struct,
       addedPlugins: computed,
       fetchTokenBalances: action,
       fetchCommunity: action,
@@ -75,10 +79,28 @@ export default class Dashboard {
       fetchCommunityUsers: action,
       fetchTokensTotalSupply: action,
       fetchEntitiesCount: action,
-      checkIsCommunityMember: action
+      checkIsCommunityMember: action,
+      fetchMetadata: action
     })
     this.rootStore = rootStore
   }
+
+  fetchMetadata = flow(function * (uri) {
+    try {
+      if (uri.startsWith('ipfs://')) {
+        const { data } = yield request
+          .get(`${this.baseUrl}/metadata/${uri}`)
+          .then(response => response.body)
+        this.metadata = { ...data }
+      } else {
+        const { data } = yield request.get(uri)
+          .then(response => response.body)
+        this.metadata = { ...data }
+      }
+    } catch (error) {
+      console.log('ERROR in addCommunityPlugin', { error })
+    }
+  })
 
   addCommunityPlugin = flow(function * ({ communityAddress, plugin }) {
     try {
@@ -100,6 +122,13 @@ export default class Dashboard {
     if (this.foreignNetwork) {
       this._web3Foreign = getWeb3({ networkType: this.foreignNetwork })
     }
+
+    this.fetchTokensTotalSupply()
+
+    if (community?.communityURI) {
+      this.fetchMetadata(community?.communityURI)
+    }
+
     if (community?.homeTokenAddress) {
       this.fetchHomeToken(community?.homeTokenAddress)
     }
@@ -305,7 +334,7 @@ export default class Dashboard {
         this.totalSupply.foreign = totalSupplyForeign
       }
     } catch (error) {
-      console.log('ERROR in fetchTokenBalances', { error })
+      console.log('ERROR in fetchTokensTotalSupply', { error })
     }
   })
 

@@ -23,7 +23,8 @@ const Invite = () => {
             <div className='containerInner'>
               <Field
                 name='invitationType'
-                render={({ field, form: { setFieldValue } }) => (
+              >
+                {({ field, form: { setFieldValue } }) => (
                   <>
                     <input {...field} type='radio' value='sms' checked={isSMS} onChange={() => setFieldValue('invitationType', 'sms')} className='hidden' id='input1' />
                     <label className='entry' htmlFor='input1'>
@@ -32,10 +33,11 @@ const Invite = () => {
                     </label>
                   </>
                 )}
-              />
+              </Field>
               <Field
                 name='invitationType'
-                render={({ field, form: { setFieldValue } }) => (
+              >
+                {({ field, form: { setFieldValue } }) => (
                   <>
                     <input {...field} type='radio' checked={isEMAIL} onChange={() => setFieldValue('invitationType', 'email')} value='email' className='hidden' id='input2' />
                     <label className='entry' htmlFor='input2'>
@@ -44,7 +46,7 @@ const Invite = () => {
                     </label>
                   </>
                 )}
-              />
+              </Field>
               <div className='highlight' />
               <div className='overlay' />
             </div>
@@ -87,8 +89,8 @@ const Invite = () => {
             <button className='button button--normal' disabled={!isValid}>Send</button>
             {
               isSubmitting &&
-                <div className='invite__resend'>
-                  Invitation sent.
+              <div className='invite__resend'>
+                Invitation sent.
                   <br />
                   *Didn't get any message? Resend message
                 </div>

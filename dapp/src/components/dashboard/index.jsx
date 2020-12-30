@@ -210,7 +210,8 @@ const DashboardLayout = (props) => {
                 <WithBgImage>
                   <Users />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
           {
@@ -219,7 +220,8 @@ const DashboardLayout = (props) => {
                 <WithBgImage>
                   <TransferPage />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
           {
@@ -230,7 +232,8 @@ const DashboardLayout = (props) => {
                     <Dashboard />
                   </div>
                 </div>
-              </Route>)
+              </Route>
+            )
           }
         </Switch >
       </div >

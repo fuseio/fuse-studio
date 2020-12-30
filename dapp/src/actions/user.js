@@ -2,7 +2,7 @@ import { createRequestTypes, requestAction, action } from './utils'
 
 export const LOGIN = createRequestTypes('LOGIN')
 export const LOGOUT = createRequestTypes('LOGOUT')
-export const FUND_ETH = createRequestTypes('FUND_ETH')
+export const FUND = createRequestTypes('FUND')
 export const SAVE_USER_ACCOUNT = createRequestTypes('SAVE_USER_ACCOUNT')
 export const GET_USER_ACCOUNTS = createRequestTypes('GET_USER_ACCOUNTS')
 
@@ -18,7 +18,7 @@ export const logout = () => action('LOGOUT')
 export const fetchUserAccounts = (tok) => requestAction(GET_USER_ACCOUNTS)
 export const fetchFundingStatus = () => requestAction(GET_FUND_STATUS)
 export const saveUserAccount = (provider, accountAddress) => requestAction(SAVE_USER_ACCOUNT, { provider, accountAddress })
-export const fundEth = (accountAddress) => requestAction(FUND_ETH, { accountAddress })
+export const fund = (accountAddress) => requestAction(FUND, { accountAddress })
 export const signUpUser = (email, subscribe) => requestAction(SIGN_UP_USER, { email, subscribe })
 export const isUserExists = (accountAddress) => requestAction(IS_USER_EXISTS, { accountAddress })
 export const sendEmail = (user) => requestAction(SEND_EMAIL, { user })

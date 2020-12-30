@@ -33,7 +33,9 @@ const Root = () => {
 
   const web3connect = useWeb3Connect(onConnectCallback)
 
-  const handleDisconnect = useCallback(web3connect?.core?.clearCachedProvider, [web3connect])
+  const handleDisconnect = useCallback(() => {
+    web3connect?.core?.clearCachedProvider()
+  }, [web3connect])
 
   const handleConnect = useCallback(() => {
     if (has(web3connect, 'core')) {

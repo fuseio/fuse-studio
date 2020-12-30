@@ -1,7 +1,7 @@
 import { call, put, takeEvery, takeLatest, select, delay } from 'redux-saga/effects'
 
 import { getForeignNetwork } from 'selectors/network'
-import { getAccount } from 'selectors/accounts'
+import { getJwtToken } from 'selectors/user'
 import { getApiRoot } from 'utils/network'
 import keyBy from 'lodash/keyBy'
 import get from 'lodash/get'
@@ -65,8 +65,8 @@ export function * apiCall (apiFunc, params, options = {}) {
   }
 
   if (options.auth) {
-    const { authToken } = yield select(getAccount)
-    return yield call(apiFunc, apiRoot, { ...params, authToken })
+    const jwtToken = yield select(getJwtToken)
+    return yield call(apiFunc, apiRoot, { ...params, jwtToken })
   }
   return yield call(apiFunc, apiRoot, params)
 }

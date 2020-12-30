@@ -3,20 +3,17 @@ import CommunityLogo from 'components/common/CommunityLogo'
 import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
 import { getImageUri } from 'utils/metadata'
-import { useSelector } from 'react-redux'
 
 const Header = () => {
   const { dashboard } = useStore()
-  const communityURI = dashboard?.community?.communityURI
-  const communityMetadata = useSelector(state => state.entities.metadata[communityURI])
-
+  const { metadata } = dashboard
   return (
     <div className='community_header'>
       <div className='community_header__image'>
         <CommunityLogo
           symbol={dashboard?.homeToken?.symbol}
-          imageUrl={getImageUri(communityMetadata)}
-          metadata={communityMetadata}
+          imageUrl={getImageUri(metadata)}
+          metadata={metadata}
         />
       </div>
       <div className='community_header__content'>

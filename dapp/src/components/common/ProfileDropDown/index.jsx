@@ -1,15 +1,14 @@
 import React from 'react'
 import capitalize from 'lodash/capitalize'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
-import { push } from 'connected-react-router'
 
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import NativeBalance from 'components/common/NativeBalance'
 import { withAccount } from 'containers/Web3'
 
-import {  getProviderInfo, getCommunitiesKeys } from 'selectors/accounts'
-import {  getCurrentNetworkType } from 'selectors/network'
+import { getProviderInfo } from 'selectors/accounts'
+import { getCurrentNetworkType } from 'selectors/network'
 import { convertNetworkName } from 'utils/network'
 import { addressShortener } from 'utils/format'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
@@ -20,26 +19,13 @@ import { logout } from 'actions/user'
 import Avatar from 'images/avatar.svg'
 
 const ProfileDropDown = ({
-  networkType,
   accountAddress,
-  communitiesKeys,
-  communities,
   foreignNetwork,
-  providerInfo,
   handleDisconnect
 }) => {
+  const providerInfo = useSelector(getProviderInfo)
+  const networkType = useSelector(getCurrentNetworkType)
   const dispatch = useDispatch()
-  const communitiesIOwn = React.useMemo(() => {
-    return communitiesKeys
-      .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj).filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
-  }, [communitiesKeys, communities])
-
-  const communitiesIPartOf = React.useMemo(() => {
-    return communitiesKeys
-      .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj).filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
-  }, [communitiesKeys, communities])
 
   const loadSwitchModal = (desired) => {
     dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: [desired], networkType, goBack: false }))
@@ -121,11 +107,4 @@ const ProfileDropDown = ({
   )
 }
 
-const mapStateToProps = (state) => ({
-  communitiesKeys: getCommunitiesKeys(state),
-  providerInfo: getProviderInfo(state),
-  communities: state.entities.communities,
-  networkType: getCurrentNetworkType(state)
-})
-
-export default withAccount(connect(mapStateToProps, null)(ProfileDropDown))
+export default withAccount(ProfileDropDown)

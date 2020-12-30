@@ -11,7 +11,7 @@ import { formatWei } from 'utils/format'
 import { getCurrentNetworkType } from 'selectors/network'
 import { loadModal } from 'actions/ui'
 import { changeNetwork } from 'actions/network'
-import { fundEth, fetchFundingStatus } from 'actions/user'
+import { fund, fetchFundingStatus } from 'actions/user'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
 import FontAwesome from 'react-fontawesome'
 import ReactTooltip from 'react-tooltip'
@@ -23,7 +23,7 @@ const Fund = ({ value, network, hasEth }) => {
     <button
       onClick={(e) => {
         e.preventDefault()
-        dispatch(fundEth(accountAddress))
+        dispatch(fund(accountAddress))
       }}
       className='link'
       style={{ display: value === network && !hasEth && 'inline-block' }}>

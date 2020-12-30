@@ -16,7 +16,7 @@ export const login = (apiRoot, { tokenId }) =>
     .send({ tokenId })
     .then(response => response.body)
 
-export const fundEth = (apiRoot, { accountAddress }) =>
+export const fund = (apiRoot, { accountAddress }) =>
   request.post(`${apiRoot}/fund/${accountAddress}`)
     .send()
     .then(response => response.body)
