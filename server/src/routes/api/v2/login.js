@@ -113,7 +113,7 @@ router.post('/google', async (req, res) => {
     }).save()
   }
 
-  const expiresIn = config.get('api.studioUserTokenExpiresIn')
+  const expiresIn = config.get('api.tokenExpiresIn')
   const token = jwt.sign({ email, id: user._id }, secret, { expiresIn })
   res.json({ token })
 })
