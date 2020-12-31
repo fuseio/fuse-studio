@@ -34,7 +34,7 @@ function CommunityBanner(props) {
         <div className='title'>Community created successfully!</div>
         <div className='sub-title'>Continue setting up your community</div>
         <div className='boxes grid-x align-middle align-justify grid-margin-x'>
-          <div className='item cell large-auto grid-x align-middle align-spaced grid-margin-x' onClick={plugins}>
+          <div className='item cell large-auto grid-x align-middle align-spaced' onClick={plugins}>
             <div className='image cell small-6'>
               <img src={Plugins} />
             </div>
@@ -43,7 +43,7 @@ function CommunityBanner(props) {
               <div className='content__subtitle'>Easily add new functionality to your community</div>
             </div>
           </div>
-          <div className='item cell large-auto grid-x align-middle align-spaced grid-margin-x' onClick={wallet}>
+          <div className='item cell large-auto grid-x align-middle align-spaced' onClick={wallet}>
             <div className='image cell small-6'>
               <img src={Wallet} />
             </div>
@@ -52,7 +52,7 @@ function CommunityBanner(props) {
               <div className='content__subtitle'>Experience your community on iOS or Android</div>
             </div>
           </div>
-          <div className='item cell large-auto grid-x align-middle align-spaced grid-margin-x' onClick={users}>
+          <div className='item cell large-auto grid-x align-middle align-spaced' onClick={users}>
             <div className='image cell small-6'>
               <img src={Users} />
             </div>

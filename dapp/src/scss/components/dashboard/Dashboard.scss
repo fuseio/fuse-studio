@@ -171,7 +171,7 @@
       margin-top: 2em;
       border-radius: 5px;
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
-      background: linear-gradient(#fefefe, #f2f5f8, #e0ebf4);
+      background: linear-gradient(#ffffff, #e0eaf2);
 
       @include element(container) {
         background-repeat: no-repeat;
@@ -205,7 +205,15 @@
           padding: 1em;
           cursor: pointer;
 
+          &:hover {
+            box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
+          }
+
           @include block(image) {
+            margin-right: 1em;
+            > img {
+              min-width: 47px;
+            }
           }
 
           @include block(content) {
@@ -214,11 +222,12 @@
 
             @include element(title) {
               font-weight: 500;
+              font-size: 0.9em;
             }
 
             @include element(subtitle) {
               color: $color-dark-gray;
-              font-size: 0.8em;
+              font-size: 0.6em;
             }
           }
         }
