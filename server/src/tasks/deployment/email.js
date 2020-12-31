@@ -3,24 +3,17 @@ const { capitalize } = require('lodash')
 const sendgridUtils = require('@utils/sendgrid')
 const mailchimpUtils = require('@utils/mailchimp')
 
-const onboardUser = async ({ foreign: { web3 } }, communityProgress) => {
-  if (web3.eth && web3.eth.net && web3.eth.net.getId) {
-    const chainId = await web3.eth.net.getId()
-    const { email, subscribe } = communityProgress.steps.email.args
-    const { name } = communityProgress.steps.community.args
-    const { communityAddress } = communityProgress.steps.community.results
-    try {
-      const networkType = chainId === 3
-        ? 'ropsten' : chainId === 122
-          ? 'fuse' : chainId === 1
-            ? 'mainnet' : ''
-      sendgridUtils.sendInfoMail({ email }, { networkType, communityName: name, communityAddress })
-      if (subscribe) {
-        mailchimpUtils.subscribeUser({ email }, [`Studio User ${capitalize(config.get(`network.foreign.name`))}`])
-      }
-    } catch (error) {
-      console.log('email step error', { error })
+const onboardUser = async ({ foreign, home }, communityProgress) => {
+  const { email, subscribe } = communityProgress.steps.email.args
+  const { name } = communityProgress.steps.community.args
+  const { communityAddress } = communityProgress.steps.community.results
+  try {
+    sendgridUtils.sendInfoMail({ email }, { communityName: name, communityAddress })
+    if (subscribe) {
+      mailchimpUtils.subscribeUser({ email }, [`Studio User ${capitalize(config.get(`network.foreign.name`))}`])
     }
+  } catch (error) {
+    console.log('email step error', { error })
   }
 }
 
