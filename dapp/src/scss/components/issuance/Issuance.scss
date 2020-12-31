@@ -195,6 +195,7 @@
 
       @include element(wrapper) {
         @include breakpoint(medium up) {
+          max-width: 620px;
           width: 100%;
           margin: auto;
           @include xy-grid(vertical, false);
