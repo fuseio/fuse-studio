@@ -1,7 +1,7 @@
 import React from 'react'
 import Modal from 'components/common/Modal'
 import MetamaskIcon from 'images/metamask-fox.png'
-import GoogleIcon from 'images/google.png'
+import TorusIcon from 'images/torus_icon.jpeg'
 import EtherIcon from 'images/ether.svg'
 
 export default ({ hideModal, connectTo }) => {
@@ -16,11 +16,11 @@ export default ({ hideModal, connectTo }) => {
         <div className='wallet-modal__title'>Connect your wallet</div>
         <div className='wallet-modal__providers-list'>
           <div className='wallet-modal__provider' onClick={createHandleProvider('torus')}>
-            <img className='image' src={GoogleIcon} />
+            <img className='image' src={TorusIcon} />
             <div className='text'>
-              Google
+              Torus
             </div>
-            <div className='info'>Create a wallet using your<br /> Google account</div>
+            <div className='info'>Connect using Torus</div>
           </div>
           <div className='wallet-modal__provider' onClick={createHandleProvider('injected')}>
             <img className='image' src={MetamaskIcon} />
