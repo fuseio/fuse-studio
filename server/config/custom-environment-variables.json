@@ -10,6 +10,7 @@
       "secretId": "COMMUNITY_AWS_SECRET_ID",
       "firebaseSecretId": "COMMUNITY_AWS_FIREBASE_SECRET_ID",
       "firebaseSecretIdRoost": "COMMUNITY_AWS_FIREBASE_SECRET_ID_ROOST",
+      "firebaseSecretIdHappyCow": "COMMUNITY_AWS_FIREBASE_SECRET_ID_HAPPY_COW",
       "firebaseSecretIdLocalDolarMX": "COMMUNITY_AWS_FIREBASE_SECRET_ID_LOCAL_DOLAR_MX",
       "firebaseSecretIdLocalPay": "COMMUNITY_AWS_FIREBASE_SECRET_ID_LOCAL_PAY",
       "firebaseSecretIdWepy": "COMMUNITY_AWS_FIREBASE_SECRET_ID_WEPY",

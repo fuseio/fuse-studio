@@ -1,7 +1,7 @@
 const config = require('config')
 const homeAddresses = config.get('network.home.addresses')
 const router = require('express').Router()
-const { agenda } = require('@services/agenda')
+const taskManager = require('@services/taskManager')
 const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
@@ -45,8 +45,8 @@ router.post('/create', auth.required, async (req, res) => {
       identifier,
       appName
     }).save()
-    const job = await agenda.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, correlationId, _id: userWallet._id })
-    return res.json({ job: job.attrs })
+    const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, correlationId, _id: userWallet._id })
+    return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })
   }
@@ -82,8 +82,8 @@ router.post('/create/foreign', auth.admin, async (req, res) => {
   await UserWallet.findOneAndUpdate({ walletAddress }, { pendingNetworks })
 
   console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
-  const job = await agenda.now('createForeignWallet', { userWallet, network: config.get('network.foreign.name') })
-  return res.json({ job: job.attrs })
+  const job = await taskManager.now('createForeignWallet', { userWallet, network: config.get('network.foreign.name') })
+  return res.json({ job })
 })
 
 module.exports = router

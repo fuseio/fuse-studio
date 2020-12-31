@@ -3,11 +3,28 @@ const {
   receiveMessage,
   deleteMessage
 } = require('@services/queue')
+const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
-const { getTaskData } = require('@tasks/sqs/taskData')
+const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
+
+const getWorkerAccount = (taskData, taskParams) => {
+  if (taskData.role === 'admin') {
+    const { accountAddress } = taskParams
+    if (accountAddress) {
+      return lockAccount({ address: accountAddress })
+    } else {
+      const msg = `no account address supplied for task  with task data ${JSON.stringify(
+        taskData
+      )}`
+      console.warn(msg)
+      throw Error(msg)
+    }
+  }
+  return lockAccount(makeAccountsFilter(taskData))
+}
 
 const startTask = async message => {
   const messageId = message.MessageId
@@ -25,7 +42,7 @@ const startTask = async message => {
   }
   let account, queueJob
   try {
-    account = await lockAccount(taskData)
+    account = await getWorkerAccount(taskData, params)
     if (!account) {
       console.log(
         `no unlocked accounts found for task ${name} with task data ${JSON.stringify(
@@ -63,6 +80,11 @@ const startTask = async message => {
         taskData
       )}, skipping. ${err}`
     )
+    if (!queueJob) {
+      queueJob = await QueueJob.findOne({ messageId })
+    }
+
+    // marking queueJob as failed
     if (queueJob) {
       await queueJob.failAndUpdate(err)
     }
@@ -75,14 +97,23 @@ const startTask = async message => {
 }
 
 const now = async (name, params) => {
+  const correlationId = lodash.get(params, 'correlationId')
+  if (correlationId) {
+    const savedJob = await QueueJob.findOne({ 'data.correlationId': correlationId, status: { $ne: 'failed' } })
+    if (savedJob) {
+      throw Error(`Job with the correlationId ${correlationId} already exists. jobId: ${savedJob._id}, status: ${savedJob.status}.`)
+    }
+  }
   const response = await sendMessage({
     name,
     params
   })
+  const communityAddress = lodash.get(params, 'communityAddress')
   const job = await new QueueJob({
     name,
     data: params,
-    messageId: response.MessageId
+    messageId: response.MessageId,
+    ...(communityAddress && { communityAddress })
   }).save()
   return job
 }

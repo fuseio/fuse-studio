@@ -4,6 +4,7 @@ const transfers = require('./transfers')
 const token = require('./token')
 const alert = require('./alert')
 const deposit = require('./deposit')
+const wallets = require('./wallets')
 
 module.exports = {
   ...events,
@@ -11,5 +12,6 @@ module.exports = {
   ...transfers,
   ...token,
   ...alert,
-  ...deposit
+  ...deposit,
+  ...wallets
 }
