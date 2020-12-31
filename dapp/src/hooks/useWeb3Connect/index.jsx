@@ -10,6 +10,11 @@ const providerOptions = {
     options: {
       enableLogging: CONFIG.env !== 'production',
       buttonPosition: 'top-right',
+      networkParams: {
+        host: CONFIG.web3.fuseProvider,
+        networkName: 'fuse',
+        chainId: CONFIG.web3.chainId.fuse
+      },
       config: {
         buildEnv: CONFIG.env === 'production' ? 'production' : 'development'
       }
