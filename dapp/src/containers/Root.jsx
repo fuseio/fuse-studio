@@ -47,7 +47,7 @@ const Root = () => {
     if (web3connect.core.cachedProvider && isLoggedIn) {
       web3connect.core.connect()
     }
-  }, [])
+  }, [isLoggedIn])
 
   return (
     <div className='root__wrapper'>
