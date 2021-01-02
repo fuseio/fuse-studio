@@ -102,7 +102,7 @@ class Wizard extends React.Component {
     history.push(locations[nextPath])
   }
 
-  previous = () => {
+  handleBack = () => {
     const { location, history } = this.props
     const prevPath = locations.indexOf(location.pathname) - 1
     history.push(locations[prevPath])
@@ -144,15 +144,20 @@ class Wizard extends React.Component {
     return (
       <Form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })}>
         {page === 0 && <h1 className='issuance__wizard__title'>Launch your economy</h1>}
-        {/* {page === 1 && <h1 className='issuance__wizard__title'>Choose the network you want to deploy to:</h1>} */}
-        {/* {page === 2 && <h1 className='issuance__wizard__title'>New or existing token?</h1>} */}
         {page === 1 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} economy</h1>}
         {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>
           {page < 2 && (
             <div className='grid-x align-center next'>
-              <button disabled={this.stepValidator(validations[page], errors) || isEmpty(touched)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
+              <button
+                disabled={this.stepValidator(validations[page], errors) || isEmpty(touched)}
+                onClick={() => this.next(values)}
+                type='button'
+                className='button button--normal'
+              >
+                Next
+              </button>
             </div>
           )}
           {isSubmitStep && (
@@ -169,7 +174,7 @@ class Wizard extends React.Component {
             <button
               type='button'
               className='issuance__wizard__back'
-              onClick={this.previous}
+              onClick={this.handleBack}
             >
               Back
             </button>
@@ -204,7 +209,8 @@ class Wizard extends React.Component {
             </div>
             <div
               onClick={() => push('/')}
-              className='issuance__header__close align-self-middle grid-x align-middle align-right'>
+              className='issuance__header__close align-self-middle grid-x align-middle align-right'
+            >
               <img src={ExitIcon} />
             </div>
           </div>

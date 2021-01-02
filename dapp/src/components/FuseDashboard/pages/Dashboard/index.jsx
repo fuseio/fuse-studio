@@ -1,18 +1,17 @@
 import React from 'react'
-import { useParams } from 'react-router'
+import { useParams, withRouter } from 'react-router'
 import CommunityInfo from 'components/FuseDashboard/components/CommunityInfo'
 import Bridge from 'components/FuseDashboard/components/Bridge'
 import Header from 'components/FuseDashboard/components/Header'
 import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
-import { withRouter } from 'react-router'
 import { push } from 'connected-react-router'
 import { useDispatch } from 'react-redux'
 import Plugins from 'images/setup_plugins.svg'
 import Users from 'images/setup_users.svg'
 import Wallet from 'images/setup_wallet.svg'
 
-function CommunityBanner(props) {
+function CommunityBanner (props) {
   const { address } = useParams()
   const dispatch = useDispatch()
 
@@ -69,8 +68,9 @@ function CommunityBanner(props) {
 
 const Banner = withRouter(CommunityBanner)
 
-function Dashboard(props) {
-  const { dashboard } = useStore()
+function Dashboard (props) {
+  const { dashboard, network } = useStore()
+  const { accountAddress } = network
   const { success } = useParams()
 
   const handleConfirmation = () => {

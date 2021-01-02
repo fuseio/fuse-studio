@@ -175,12 +175,6 @@ const WizardPage = ({
           <NameAndDescription />
           <ChooseCurrencyType />
         </Wizard.Page>
-        {/* <Wizard.Page>
-          <ChooseNetwork />
-        </Wizard.Page> */}
-        {/* <Wizard.Page>
-          <ChooseCurrencyType />
-        </Wizard.Page> */}
         <Wizard.Page>
           <DetailsStep />
         </Wizard.Page>

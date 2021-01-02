@@ -16,13 +16,12 @@ const FeaturedCommunity = memo(({
       <div className='featured__image'>
         <div className='featured__image__container'>
           {
-            community.featured && getCoverPhotoUri(community) ? (
-              <img alt='cover photo' src={getCoverPhotoUri(community)} />
-            ) : getCoverPhotoUri(metadata) ? (
-              <img alt='cover photo' src={getCoverPhotoUri(metadata)} />
-            ) : (
-              <img alt='cover photo' src={CommunityPlaceholderImage} />
-            )
+            community.featured &&
+              getCoverPhotoUri(community)
+              ? <img alt='cover photo' src={getCoverPhotoUri(community)} />
+              : getCoverPhotoUri(metadata)
+                ? <img alt='cover photo' src={getCoverPhotoUri(metadata)} />
+                : <img alt='cover photo' src={CommunityPlaceholderImage} />
           }
         </div>
         <div className='featured__logo'>
@@ -38,41 +37,17 @@ const FeaturedCommunity = memo(({
       <div className='featured__content grid-x align-top'>
         <h6 className='featured__name'>{community.name}
           {community && community.subTitle && (
-            <React.Fragment>
+            <>
               <br />
               <span style={{ fontSize: 'smaller' }}>{community.subTitle}</span>
-            </React.Fragment>
-          )}</h6>
+            </>
+          )}
+        </h6>
         {withDescription && community && (
           <div className='featured__description'>
             {community && community.description}
           </div>
         )}
-        {/* {withDescription && community && (
-          <div className='featured__information grid-x align-middle align-justify'>
-            <div className='item cell small-7 grid-x align-middle'>
-              <div className='item__icon'><img src={TokenIcon} /></div>
-              <div className='item__content grid-y'>
-                <span>Token</span>
-                <span>{token && token.symbol}</span>
-              </div>
-            </div>
-            <div className='item cell small-7 grid-x align-middle'>
-              <div className='item__icon'><img src={BusinessIcon} /></div>
-              <div className='item__content grid-y'>
-                <span>Business</span>
-                <span>{get(count, 'businesses', 0)}</span>
-              </div>
-            </div>
-            <div className='item cell small-7 grid-x align-middle'>
-              <div className='item__icon'><img src={UsersIcon} /></div>
-              <div className='item__content grid-y'>
-                <span>Users</span>
-                <span>{get(count, 'users', 0)}</span>
-              </div>
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   )
