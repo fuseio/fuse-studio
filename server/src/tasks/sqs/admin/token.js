@@ -148,10 +148,10 @@ const adminSpendabilityApprove = async (account, { bridgeType, tokenAddresses, w
     let tokenAddress = balancesData[i].tokenAddress
     let balance = balancesData[i].balance
     if (total.lt(balance)) {
-      jobs.push(await taskManager.now('adminApprove', { tokenAddress, bridgeType, from: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` }))
+      jobs.push(await taskManager.now('adminApprove', { tokenAddress, bridgeType, accountAddress: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` }))
       total = total.minus(total)
     } else {
-      jobs.push(await taskManager.now('adminApprove', { tokenAddress, bridgeType, from: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` }))
+      jobs.push(await taskManager.now('adminApprove', { tokenAddress, bridgeType, accountAddress: account.address, wallet, spender, amount, burnFromAddress, correlationId: `${job.data.correlationId}-2` }))
       total = total.minus(balance)
     }
     i++
@@ -196,10 +196,10 @@ const adminSpendabilityTransfer = async (account, { bridgeType, tokenAddresses, 
     let tokenAddress = balancesData[i].tokenAddress
     let balance = balancesData[i].balance
     if (total.lt(balance)) {
-      jobs.push(await taskManager.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, amount: total.toFixed(), wallet, to, correlationId: `${job.data.correlationId}-2` }))
+      jobs.push(await taskManager.now('adminTransfer', { tokenAddress, bridgeType, accountAddress: account.address, amount: total.toFixed(), wallet, to, correlationId: `${job.data.correlationId}-2` }))
       total = total.minus(total)
     } else {
-      jobs.push(await taskManager.now('adminTransfer', { tokenAddress, bridgeType, from: account.address, amount: balance, wallet, to, correlationId: `${job.data.correlationId}-2` }))
+      jobs.push(await taskManager.now('adminTransfer', { tokenAddress, bridgeType, accountAddress: account.address, amount: balance, wallet, to, correlationId: `${job.data.correlationId}-2` }))
       total = total.minus(balance)
     }
     i++
