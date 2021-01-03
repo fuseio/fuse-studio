@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import InfoIcon from 'images/information.svg'
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form } from 'formik'
 import { number, object } from 'yup'
 import Slider from '@material-ui/core/Slider'
 import { withStyles } from '@material-ui/styles'
+import { observer } from 'mobx-react'
+import { useStore } from 'store/mobx'
+
+const formatValue = (num) =>
+  num.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  })
 
 const AirbnbSlider = withStyles({
   root: {
@@ -12,8 +20,8 @@ const AirbnbSlider = withStyles({
     padding: '13px 0'
   },
   thumb: {
-    height: 32,
-    width: 32,
+    height: 27,
+    width: 27,
     backgroundColor: '#fff',
     border: '2px solid #0F273C',
     marginTop: -12,
@@ -42,7 +50,7 @@ const AirbnbSlider = withStyles({
   }
 })(Slider)
 
-function AirbnbThumbComponent (props) {
+function AirbnbThumbComponent(props) {
   return (
     <span {...props}>
       <span className='bar' />
@@ -52,10 +60,18 @@ function AirbnbThumbComponent (props) {
   )
 }
 
-function Calculator () {
-  const renderForm = ({ values, isValid, isSubmitting }) => {
+function Calculator() {
+  const { price } = useStore()
+  useEffect(() => {
+    price.fetchFusePrice()
+  }, [])
+
+  const { fusePrice } = price
+
+  const renderForm = ({ values, setFieldValue }) => {
     const { transaction } = values
-    const cost = transaction * 0.000003
+    const cost = formatValue(transaction * 0.000003)
+    const usdValue = formatValue(cost * fusePrice)
     return (
       <Form className='section__two'>
         <div className='section__two__wrapper'>
@@ -72,32 +88,23 @@ function Calculator () {
               <div className='item__value'>$0.000003</div>
             </div>
           </div>
-          <Field
-            name='transaction'
-          >
-            {({ field, form }) => {
-              console.log({ field })
-              return (
-                <AirbnbSlider
-                  min={1000}
-                  ThumbComponent={AirbnbThumbComponent}
-                  max={1000000}
-                  value={values.transaction}
-                  step={1}
-                  defaultValue={1000}
-                  aria-labelledby='non-linear-slider'
-                  onChange={(e, value) => {
-                    form.setFieldValue('transaction', value)
-                  }}
-                />
-              )
+          <AirbnbSlider
+            min={1000}
+            ThumbComponent={AirbnbThumbComponent}
+            max={1000000}
+            value={values.transaction}
+            step={1}
+            defaultValue={1000}
+            aria-labelledby='non-linear-slider'
+            onChange={(e, value) => {
+              setFieldValue('transaction', value)
             }}
-          </Field>
+          />
           <div className='section__two__box'>
             <span className='cost'>COST</span>
-            <div className='content'>
-              {cost} <span>FUSE</span>
-              {/* <small>(<span>$</span>0.0003608)</small> */}
+            <div className='content grid-x align-middle'>
+              {cost}&nbsp; <span>FUSE</span>&nbsp;
+              <div>(<span>$</span>{usdValue})</div>
             </div>
           </div>
           <div className='section__two__fee'>
@@ -110,7 +117,6 @@ function Calculator () {
   }
 
   const onSubmit = (values, formikBag) => {
-    // console.log({ values })
   }
 
   return (
@@ -130,4 +136,4 @@ function Calculator () {
   )
 }
 
-export default Calculator
+export default observer(Calculator)
