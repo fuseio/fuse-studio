@@ -1,5 +1,6 @@
 import React from 'react'
 import Dashboard from './state/dashboard'
+import Price from './state/price'
 import Network from './state/network'
 import { MobXProviderContext } from 'mobx-react'
 import { configure } from 'mobx'
@@ -12,6 +13,7 @@ export class Store {
   constructor () {
     this.dashboard = new Dashboard(this)
     this.network = new Network(this)
+    this.price = new Price(this)
   }
 }
 
