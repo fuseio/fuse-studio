@@ -80,6 +80,51 @@ const NavBar = ({
     }
   }
 
+  const renderButton = () => {
+    if (connectingToWallet) {
+      return (
+        <div className='navbar__links__wallet navbar__connecting'>
+          <span className='navbar__links__wallet__text'>Connecting to wallet</span>
+          <span className='animate'>.</span>
+          <span className='animate'>.</span>
+          <span className='animate'>.</span>
+        </div>
+      )
+    } else if (!isLoggedIn) {
+      return (
+        <div className='navbar__links__wallet navbar__links__wallet--pointer' onClick={handleLogin}>
+          <span className='icon'><img src={LoginIcon} /></span>
+          <span className='navbar__links__wallet__text'>Login</span>
+        </div>
+      )
+    } else if (isLoggedIn && !accountAddress) {
+      return (
+        <div className='navbar__links__wallet navbar__links__wallet--pointer' onClick={handleConnect}>
+          <span className='icon'><img src={WalletIcon} /></span>
+          <span className='navbar__links__wallet__text'>Connect wallet</span>
+        </div>
+      )
+    } else {
+      return (
+        <div
+          className='navbar__links__wallet navbar__links__wallet--pointer'
+          ref={profileRef}
+          onClick={openProfile}
+        >
+          <span className='icon'><img src={isInCommunityPage ? NewWalletIcon : WalletIcon} /></span>
+          <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
+          <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
+            <ProfileDropDown handleDisconnect={handleDisconnect} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
+          </div>
+        </div>
+      )
+    }
+  }
+
+  const handlePricing = () => {
+    dispatch(push('/view/price'))
+  }
+
   const isGreaterThen70 = () => scrollY > 70
 
   return (
@@ -89,11 +134,20 @@ const NavBar = ({
         'navbar--short': modifier && !isMobile,
         'navbar--fixed': isInNestedCommunityPage,
         'navbar--bgImage': !isInNestedCommunityPage
-      })}>
-      {(withLogo || (isMobile && isGreaterThen70())) && <div className='navbar__logo'>
-        <Logo showHomePage={() => dispatch(push('/'))} isBlue={false} />
-      </div>}
+      })}
+    >
+      {(withLogo || (isMobile && isGreaterThen70())) && (
+        <div className='navbar__logo'>
+          <Logo showHomePage={() => dispatch(push('/'))} isBlue={false} />
+        </div>
+      )}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
+        <div
+          className='navbar__link'
+          onClick={handlePricing}
+        >
+          Pricing
+        </div>
         <div
           className='navbar__links__help'
           ref={helpRef}
@@ -109,38 +163,7 @@ const NavBar = ({
             </ul>
           </div>
         </div>
-        {
-          connectingToWallet ? (
-            <div className='navbar__links__wallet navbar__connecting'>
-              <span className='navbar__links__wallet__text'>Connecting to wallet</span>
-              <span className='animate'>.</span>
-              <span className='animate'>.</span>
-              <span className='animate'>.</span>
-            </div>
-          ) : !isLoggedIn ? (
-            <div className='navbar__links__wallet navbar__links__wallet--pointer' onClick={handleLogin}>
-              <span className='icon'><img src={LoginIcon} /></span>
-              <span className='navbar__links__wallet__text'>Login</span>
-            </div>
-          ) : isLoggedIn && !accountAddress ? (
-            <div className='navbar__links__wallet navbar__links__wallet--pointer' onClick={handleConnect}>
-              <span className='icon'><img src={WalletIcon} /></span>
-              <span className='navbar__links__wallet__text'>Connect wallet</span>
-            </div>
-          ) : (
-            <div
-              className='navbar__links__wallet navbar__links__wallet--pointer'
-              ref={profileRef}
-              onClick={openProfile}
-            >
-              <span className='icon'><img src={isInCommunityPage ? NewWalletIcon : WalletIcon} /></span>
-              <span className='navbar__links__wallet__text'>{capitalize(convertNetworkName(networkType))} network</span>
-              <div className={classNames('drop drop--profile', { 'drop--show': isProfileOpen })}>
-                <ProfileDropDown handleDisconnect={handleDisconnect} foreignNetwork={(foreignToken && foreignToken.networkType) === 'mainnet' ? 'main' : (foreignToken && foreignToken.networkType)} />
-              </div>
-            </div>
-          )
-        }
+        {renderButton()}
       </div>
     </div>
   )

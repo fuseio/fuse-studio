@@ -80,6 +80,17 @@
     }
   }
 
+  @include element(link) {
+    display: inline-block;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   @include element(links) {
     @include xy-grid();
     @include flex-align(justify, middle);
