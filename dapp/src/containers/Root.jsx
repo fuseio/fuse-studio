@@ -9,6 +9,7 @@ import GoogleAnalyticsReporter from 'components/common/analytics'
 import Wizard from 'components/wizard'
 import Dashboard from 'components/dashboard'
 import FuseDashboard from 'components/FuseDashboard'
+import Price from 'components/price'
 import HomePage from 'components/home'
 import Footer from 'components/common/Footer'
 import NavBar from 'components/common/NavBar'
@@ -65,6 +66,9 @@ const Root = () => {
         </Route>
         <Route path='/view/community/:address'>
           <Dashboard />
+        </Route>
+        <Route path='/view/price'>
+          <Price />
         </Route>
         <Route path='/view/fuse-community/:address'>
           <FuseDashboard />
