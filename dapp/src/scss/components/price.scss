@@ -1,0 +1,302 @@
+@include block(price) {
+  @include block(section_one) {
+    @include element(wrapper) {
+      position: relative;
+      background-color: #eff8ff;
+    }
+    min-height: 490px;
+    @include xy-grid-container(1100px, 40px);
+    @include xy-grid();
+    margin-top: auto;
+    margin-bottom: auto;
+
+    @include element(content) {
+      @include xy-grid(vertical);
+      @include flex-align(left, top);
+    }
+
+    @include element(image) {
+      width: 459px;
+      height: 361px;
+    }
+
+    @include element(wrapper) {
+      width: 100%;
+    }
+
+    @include element(title) {
+      font-weight: 500;
+      font-size: 1.875em;
+      line-height: 36px;
+      color: #052235;
+      padding: 1em 0;
+    }
+
+    @include element(sub_title) {
+      font-size: 1.375em;
+      line-height: 31px;
+      color: #052235;
+      padding-bottom: 1em;
+      > span {
+        font-weight: 500;
+      }
+    }
+
+    @include block(included) {
+      padding-bottom: 1em;
+      @include element(title) {
+        font-weight: 500;
+        font-size: 0.875em;
+        line-height: 14px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        color: #869aac;
+        padding-bottom: 1em;
+      }
+
+      @include element(list) {
+        @include block(item) {
+          @include xy-grid(horizontal, false);
+          @include flex-align(left, middle);
+          height: 32px;
+
+          &:not(:last-child) {
+            margin-bottom: 1em;
+          }
+
+          @include element(icon) {
+            // width: 32px;
+            // height: 32px;
+            position: relative;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ffffff;
+            margin-right: 1em;
+            box-shadow: 0px 4px 8px rgba(21, 53, 80, 0.12);
+            @include xy-grid();
+            @include flex-align(center, middle);
+          }
+
+          @include block(text) {
+            font-size: 1.125em;
+            line-height: 25px;
+            color: #052235;
+          }
+        }
+      }
+    }
+  }
+
+  @include block(section__two) {
+    position: relative;
+    @include xy-grid();
+    @include flex-align(center, middle);
+
+    @include element(wrapper) {
+      @include breakpoint(large up) {
+        width: 736px;
+        height: 444px;
+      }
+
+      background: #ffffff;
+      box-shadow: 0px 0px 30px rgba(21, 53, 80, 0.12);
+      border-radius: 16px;
+      padding: 1em;
+      margin-top: -2em;
+      @include xy-grid(vertical);
+      @include flex-align(justify, top);
+    }
+
+    @include element(title) {
+      font-size: 1.375em;
+      line-height: 26px;
+      color: #052235;
+      padding-bottom: 1em;
+      font-weight: 500;
+    }
+
+    @include element(sub_title) {
+      font-size: 1.125em;
+      line-height: 25px;
+      color: #052235;
+      padding-bottom: 2em;
+    }
+
+    @include element(info) {
+      padding-bottom: 2em;
+      @include block(space) {
+        background: #eef3f6;
+        width: 2px;
+        height: 56px;
+        margin: 0 1em;
+      }
+      @include xy-grid(horizontal, false);
+      @include flex-align(null, middle);
+      @include block(item) {
+        height: 100%;
+        // &:first-child {
+        //   margin-right: 1em;
+        // }
+
+        @include element(title) {
+          font-size: 0.875em;
+          line-height: 14px;
+          letter-spacing: 0.3px;
+          text-transform: uppercase;
+
+          color: #869aac;
+        }
+
+        @include element(value) {
+          font-size: 1.5em;
+          line-height: 34px;
+          color: #052235;
+        }
+      }
+    }
+
+    @include element(input) {
+      margin: 2em 0;
+      width: 100%;
+    }
+
+    @include element(box) {
+      @include xy-grid(vertical);
+      @include flex-align(left, top);
+      // height: 88px;
+      background: #eef3f6;
+      border-radius: 8px;
+      width: fit-content;
+      padding: 1em;
+      @include block(cost) {
+        font-size: 0.875em;
+        line-height: 14px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        color: #869aac;
+        padding-bottom: 1em;
+      }
+
+      @include block(content) {
+        font-weight: 500;
+        font-size: 1.5em;
+        line-height: 34px;
+        color: #052235;
+
+        span {
+          color: #869aac;
+        }
+      }
+    }
+    @include element(fee) {
+      margin-top: 1em;
+      @include xy-grid(horizontal, false);
+      @include flex-align(null, middle);
+
+      img {
+        margin-right: 0.5em;
+      }
+
+      @include element(text) {
+        font-size: 0.813em;
+        line-height: 25px;
+        color: #4a687b;
+      }
+    }
+  }
+
+  @include block(section_three) {
+    @include xy-grid-container(1100px, 40px);
+    padding: 6em 0 10em;
+
+    @include element(wrapper) {
+      // width: 100%;
+      @include breakpoint(medium up) {
+        @include xy-grid(horizontal, false);
+        @include flex-align(justify, middle);
+        > div {
+          &:first-child {
+            @include xy-cell(11, 0);
+          }
+
+          &:last-child {
+            @include xy-cell(auto);
+          }
+        }
+      }
+      @include breakpoint(medium down) {
+        @include xy-grid(vertical);
+        @include flex-align(center, middle);
+        > div {
+          &:first-child {
+            @include xy-cell(11, 0);
+          }
+
+          &:last-child {
+            margin-top: 2em;
+            @include xy-cell(20);
+          }
+        }
+      }
+    }
+
+    @include block(rect) {
+      @include xy-grid(horizontal);
+      @include flex-align(justify, middle);
+      padding: 1em;
+      width: 448px;
+      border-radius: 10px;
+
+      @include modifier(fuse) {
+        background: linear-gradient(90.18deg, #b7fdbc 0.15%, #fafd89 99.85%);
+        box-shadow: 0px 4px 12px rgba(5, 34, 53, 0.07);
+      }
+
+      @include modifier(grey) {
+        background: #eef3f6;
+      }
+
+      @include element(title) {
+        font-weight: 500;
+        font-size: 1.375em;
+        line-height: 1.625em;
+        color: #052235;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 1em;
+      }
+    }
+    @include element(text) {
+      font-size: 1.125em;
+      line-height: 25px;
+      color: #052235;
+    }
+  }
+
+  @include block(questions) {
+    padding-bottom: 10em;
+    @include xy-grid-container(1100px, 40px);
+    @include block(title) {
+      font-size: 1.75em;
+      font-weight: 500;
+      line-height: 34px;
+      color: #052235;
+    }
+
+    @include block(accordion) {
+      @include element(title) {
+        font-size: 1.375em;
+        line-height: 26px;
+        color: #4a687b;
+      }
+
+      @include element(details) {
+        font-size: 1.125em;
+        line-height: 25px;
+        color: #052235;
+      }
+    }
+  }
+}
