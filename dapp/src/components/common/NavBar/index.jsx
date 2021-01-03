@@ -121,6 +121,10 @@ const NavBar = ({
     }
   }
 
+  const handlePricing = () => {
+    dispatch(push('/view/price'))
+  }
+
   const isGreaterThen70 = () => scrollY > 70
 
   return (
@@ -138,6 +142,12 @@ const NavBar = ({
         </div>
       )}
       <div className='navbar__links' style={{ marginLeft: !withLogo ? 'auto' : null }}>
+        <div
+          className='navbar__link'
+          onClick={handlePricing}
+        >
+          Pricing
+        </div>
         <div
           className='navbar__links__help'
           ref={helpRef}
