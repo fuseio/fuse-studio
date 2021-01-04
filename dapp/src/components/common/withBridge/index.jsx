@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import useInterval from 'hooks/useInterval'
 import { REQUEST, PENDING, SUCCESS, FAILURE, DENIED } from 'actions/constants'
 import { observer } from 'mobx-react'

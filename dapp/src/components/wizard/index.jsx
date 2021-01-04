@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useMemo } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useSelector, useDispatch } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
-import { getAccountAddress } from 'selectors/accounts'
+import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
@@ -20,6 +20,9 @@ import DetailsStep from 'components/wizard/pages/DetailsStep'
 import SummaryStep from 'components/wizard/pages/SummaryStep'
 import DeployProgressStep from 'components/wizard/pages/DeployProgress'
 import Congratulations from 'components/wizard/components/Congratulations'
+import { changeNetwork } from 'actions/network'
+import { SWITCH_NETWORK } from 'constants/uiConstants'
+import { useStore } from 'store/mobx'
 
 import contractIcon from 'images/contract.svg'
 
@@ -37,11 +40,33 @@ const WizardPage = ({
   foreignNetwork,
   push
 }) => {
+  const store = useStore()
+  const dispatch = useDispatch()
+  const providerInfo = useSelector(getProviderInfo)
+  const { networkId } = store?.network
   useEffect(() => {
     if (window && window.analytics) {
       window.analytics.track('Wizard init')
     }
   }, [])
+
+  const loadSwitchModal = () => {
+    dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: ['fuse'], networkType, goBack: false }))
+  }
+
+  const switchNetwork = () => {
+    if (providerInfo.type === 'injected') {
+      loadSwitchModal()
+    } else if (providerInfo.type === 'web') {
+      dispatch(changeNetwork('fuse'))
+    }
+  }
+
+  useEffect(() => {
+    if (networkId && networkId !== 122) {
+      switchNetwork()
+    }
+  }, [store?.network?.networkId])
 
   const email = useSelector(state => state.user.email)
 

@@ -9,14 +9,12 @@ const providerOptions = {
     package: Torus,
     options: {
       enableLogging: CONFIG.env !== 'production',
+      buildEnv: CONFIG.torus.env,
       buttonPosition: 'top-right',
       networkParams: {
         host: CONFIG.web3.fuseProvider,
         networkName: 'fuse',
         chainId: CONFIG.web3.chainId.fuse
-      },
-      config: {
-        buildEnv: CONFIG.env === 'production' ? 'production' : 'development'
       }
     }
   }

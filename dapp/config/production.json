@@ -60,5 +60,8 @@
     "s3": {
       "bucket": "fuse-studio"
     }
+  },
+  "torus": {
+    "env": "production"
   }
 }

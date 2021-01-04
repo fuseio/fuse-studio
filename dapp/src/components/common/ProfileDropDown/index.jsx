@@ -33,7 +33,7 @@ const ProfileDropDown = ({
 
   const toggleNetwork = () => {
     const network = networkType === 'fuse'
-      ? (CONFIG.env === 'qa' || CONFIG.env === 'production')
+      ? (CONFIG.env === 'qa')
         ? 'ropsten' : 'main'
       : networkType === 'ropsten'
         ? 'main' : 'ropsten'
