@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import InfoIcon from 'images/information.svg'
 import { Formik, Form } from 'formik'
 import { number, object } from 'yup'
 import Slider from '@material-ui/core/Slider'
 import { withStyles } from '@material-ui/styles'
 import { observer } from 'mobx-react'
 import { useStore } from 'store/mobx'
+import InfoIcon from 'images/information.svg'
+import { formatNumber } from 'utils/format'
 
 const formatValue = (num) =>
   num.toLocaleString(undefined, {
@@ -60,8 +61,9 @@ function AirbnbThumbComponent(props) {
   )
 }
 
-function Calculator() {
+function Calculator () {
   const { price } = useStore()
+
   useEffect(() => {
     price.fetchFusePrice()
   }, [])
@@ -75,12 +77,11 @@ function Calculator() {
     return (
       <Form className='section__two'>
         <div className='section__two__wrapper'>
-          <div className='section__two__title'>Simple pricing</div>
-          <div className='section__two__sub_title'>Get all the tools and services and only pay as you go per transaction</div>
+          <div className='section__two__title'>Cost Simulator</div>
           <div className='section__two__info'>
             <div className='item grid-y align-justify'>
               <div className='item__title'>Number of Transactions</div>
-              <div className='item__value'>{transaction}</div>
+              <div className='item__value'>{formatNumber(transaction)}</div>
             </div>
             <div className='space' />
             <div className='item grid-y align-justify'>
