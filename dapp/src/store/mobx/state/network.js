@@ -66,8 +66,6 @@ export default class Network {
           this._provider.on('chainChanged', async (chainId) => {
             this.networkId = parseInt(chainId)
             this.networkName = toNetworkType(this.networkId)
-            const web3 = new Web3(provider)
-            this._web3 = web3
           })
           break
       }
