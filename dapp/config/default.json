@@ -141,5 +141,8 @@
   "sentry": {
     "key": "e466161467e346d586ae94565d5ae924",
     "project": "1814732"
+  },
+  "torus": {
+    "env": "development"
   }
 }

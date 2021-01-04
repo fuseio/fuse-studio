@@ -34,5 +34,8 @@
   },
   "ipfsProxy": {
     "urlBase": "https://ipfs-proxy-qa.fuse.io/api"
+  },
+  "torus": {
+    "env": "staging"
   }
 }
