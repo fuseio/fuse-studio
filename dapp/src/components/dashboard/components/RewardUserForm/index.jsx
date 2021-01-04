@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import isEqual from 'lodash/isEqual'
 import bonusesShape from 'utils/validation/shapes/bonuses'
 import Options from './Option'
@@ -24,25 +24,26 @@ const RewardUserForm = ({ initialValues, setJoinBonus, setBackupBonus, setInvite
         ...initialValues
       }}
       validationSchema={bonusesShape}
-      render={({ handleSubmit, values }) => {
+      onSubmit={onSubmit}
+      enableReinitialize
+      validateOnChange
+    >
+      {({ values }) => {
         return (
-          <form
-            onSubmit={handleSubmit}
+          <Form
             className={classNames('bonus_options__container',
-              { 'bonus_options__container--opacity': !hasFunderBalance })}>
+              { 'bonus_options__container--opacity': !hasFunderBalance })}
+          >
             <div className='bonus_options'>
               <Options
                 hasFunderBalance={hasFunderBalance}
                 values={values}
               />
             </div>
-          </form>
+          </Form>
         )
       }}
-      onSubmit={onSubmit}
-      enableReinitialize
-      validateOnChange
-    />
+    </Formik>
   )
 }
 

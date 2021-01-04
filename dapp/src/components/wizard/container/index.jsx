@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import inRange from 'lodash/inRange'
@@ -28,26 +28,26 @@ const locations = [
   '/view/issuance/1',
   '/view/issuance/2',
   '/view/issuance/3',
-  '/view/issuance/4',
-  '/view/issuance/5',
-  '/view/issuance/6'
+  '/view/issuance/4'
 ]
 
 const validations = {
-  0: ['communityName', 'description', 'email'],
-  1: ['network', 'hasBalance'],
-  2: ['currency'],
-  3: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen']
+  0: ['communityName', 'description', 'hasBalance', 'currency'],
+  1: ['totalSupply', 'communitySymbol', 'images.chosen', 'communityType', 'existingToken', 'isOpen'],
+  2: []
 }
 
-const wizardSteps = ['Economy name', 'Network', 'Currency', 'Set up', 'Summary']
+const wizardSteps = ['Economy name', 'Set up', 'Summary']
 
 const StepsIndicator = ({ steps, activeStep }) => {
   return steps.map((item, index) => (
-    <div key={index} className={classNames('cell large-2 medium-2 small-4 step', {
-      [`step--active`]: index === activeStep,
-      [`step--done`]: index < activeStep
-    })} />
+    <div
+      key={index}
+      className={classNames('cell large-2 medium-2 small-4 step', {
+        'step--active': index === activeStep,
+        'step--done': index < activeStep
+      })}
+    />
   ))
 }
 
@@ -78,14 +78,16 @@ class Wizard extends React.Component {
     if (validations[page]) {
       const currentStepFields = validations[page]
       const trackProps = currentStepFields.reduce((acc, key) => {
-        acc = values[key] ? {
-          ...acc,
-          [key]: get(values, `${key}.value`)
-            ? `${get(values, `${key}.value`)}`
-            : get(values, key)
-        } : {
-          ...acc
-        }
+        acc = values[key]
+          ? {
+              ...acc,
+              [key]: get(values, `${key}.value`)
+                ? `${get(values, `${key}.value`)}`
+                : get(values, key)
+            }
+          : {
+              ...acc
+            }
         return acc
       }, {})
       if (window && window.analytics) {
@@ -100,13 +102,13 @@ class Wizard extends React.Component {
     history.push(locations[nextPath])
   }
 
-  previous = () => {
+  handleBack = () => {
     const { location, history } = this.props
     const prevPath = locations.indexOf(location.pathname) - 1
     history.push(locations[prevPath])
   }
 
-  onSubmit = (values, bag) => {
+  handleOnSubmit = (values, bag) => {
     const { children, submitHandler, saveWizardProgress, location } = this.props
     const page = locations.indexOf(location.pathname)
     const isSubmitStep = get(React.Children.toArray(children)[page].props, 'isSubmitStep')
@@ -131,7 +133,7 @@ class Wizard extends React.Component {
     return false
   }
 
-  renderForm = ({ values, handleSubmit, errors, isValid, touched }) => {
+  renderForm = ({ values, errors, handleSubmit, isValid, touched }) => {
     const { children, transactionStatus, createTokenSignature, adminAddress, location } = this.props
     const page = locations.indexOf(location.pathname)
     const activePage = React.cloneElement(React.Children.toArray(children)[page], {
@@ -140,17 +142,22 @@ class Wizard extends React.Component {
 
     const isSubmitStep = get(React.Children.toArray(children)[page], 'props.isSubmitStep')
     return (
-      <form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })} onSubmit={handleSubmit}>
+      <Form className={classNames('issuance__wizard', { 'issuance__wizard--opacity': ((createTokenSignature) || (transactionStatus === FAILURE)) })}>
         {page === 0 && <h1 className='issuance__wizard__title'>Launch your economy</h1>}
-        {page === 1 && <h1 className='issuance__wizard__title'>Choose the network you want to deploy to:</h1>}
-        {page === 2 && <h1 className='issuance__wizard__title'>New or existing token?</h1>}
-        {page === 3 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} economy</h1>}
+        {page === 1 && <h1 className='issuance__wizard__title'>Configure your {values.communityName} economy</h1>}
         {isSubmitStep && <h1 className='issuance__wizard__title'>Review and Sign</h1>}
         {activePage}
         <div className='issuance__wizard__buttons'>
-          {page < 4 && (
+          {page < 2 && (
             <div className='grid-x align-center next'>
-              <button disabled={this.stepValidator(validations[page], errors) || isEmpty(touched)} onClick={() => this.next(values)} type='button' className='button button--normal'>Next</button>
+              <button
+                disabled={this.stepValidator(validations[page], errors) || isEmpty(touched)}
+                onClick={() => this.next(values)}
+                type='button'
+                className='button button--normal'
+              >
+                Next
+              </button>
             </div>
           )}
           {isSubmitStep && (
@@ -167,13 +174,13 @@ class Wizard extends React.Component {
             <button
               type='button'
               className='issuance__wizard__back'
-              onClick={this.previous}
+              onClick={this.handleBack}
             >
               Back
             </button>
           )}
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -183,7 +190,7 @@ class Wizard extends React.Component {
     const page = locations.indexOf(location.pathname)
 
     return (
-      <Fragment>
+      <>
         <div className='issuance__wrapper'>
           <div className='issuance__header grid-x align-justify'>
             <div className='issuance__header__logo align-self-middle grid-x align-middle'>
@@ -202,20 +209,22 @@ class Wizard extends React.Component {
             </div>
             <div
               onClick={() => push('/')}
-              className='issuance__header__close align-self-middle grid-x align-middle align-right'>
+              className='issuance__header__close align-self-middle grid-x align-middle align-right'
+            >
               <img src={ExitIcon} />
             </div>
           </div>
           <Formik
             initialValues={values}
-            onSubmit={this.onSubmit}
+            onSubmit={this.handleOnSubmit}
             validationSchema={WizardShape}
-            render={this.renderForm}
             validateOnChange
-            isInitialValid={false}
-          />
+            validateOnMount
+          >
+            {(props) => this.renderForm(props)}
+          </Formik>
         </div>
-      </Fragment>
+      </>
     )
   }
 }

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const config = require('config')
 const { get } = require('lodash')
 const { withAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
@@ -81,13 +82,15 @@ const deploy = withAccount(async (account, { communityProgressId }) => {
       customData,
       communityAddress,
       isClosed,
+      foreignNetworkType: get(steps, 'community.args.foreignTokenAddress', null) && config.get('network.foreign.name'),
       foreignTokenAddress: get(steps, 'community.args.foreignTokenAddress', null),
       homeTokenAddress: get(steps, 'community.args.homeTokenAddress', null),
       name,
       communityURI,
       description,
       creatorAddress: adminAddress,
-      isMultiBridge: true
+      bridgeDirection: get(steps, 'community.args.foreignTokenAddress') && 'foreign-to-home',
+      bridgeType: get(steps, 'community.args.foreignTokenAddress') && 'multi-amb-erc20-to-erc677'
     }).save()
 
     await CommunityProgress.findByIdAndUpdate(communityProgress._id, { communityAddress, done: true })

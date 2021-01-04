@@ -14,6 +14,7 @@ import EursTokenIcon from 'images/eurs_token.png'
 import DigitalRandIcon from 'images/digital_rand_logo.png'
 import RupiahIcon from 'images/rupiah_logo.png'
 import TrustIcon from 'images/trust_token_logo.png'
+import MoneriumIcon from 'images/monerium.jpeg'
 import { createObjectURL } from 'utils/images'
 
 const TokenIcons = {
@@ -25,7 +26,8 @@ const TokenIcons = {
   TUSD: TrustIcon,
   EURS: EursTokenIcon,
   DZAR: DigitalRandIcon,
-  IDRT: RupiahIcon
+  IDRT: RupiahIcon,
+  EURe: MoneriumIcon
 }
 
 const LogosOptions = ({

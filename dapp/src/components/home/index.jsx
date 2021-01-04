@@ -2,20 +2,29 @@ import React, { useState, useEffect } from 'react'
 import { push } from 'connected-react-router'
 import { useDispatch, useSelector } from 'react-redux'
 
-import withTracker from 'containers/withTracker'
 import MyCommunities from 'components/home/components/MyCommunities'
 import Faqs from 'components/home/components/Faq'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 
 import homeImage from 'images/studio_home.png'
 import arrowImage from 'images/arrow_1.svg'
+import { fetchFeaturedCommunities } from 'actions/token'
+import { loadModal } from 'actions/ui'
+import { LOGIN_MODAL } from 'constants/uiConstants'
 
 const HomePage = ({
   handleConnect
 }) => {
   const dispatch = useDispatch()
   const { accountAddress } = useSelector(state => state.network)
+  const { isLoggedIn } = useSelector(state => state.user)
   const [moveToIssuance, setMove] = useState(false)
+
+  useEffect(() => {
+    dispatch(fetchFeaturedCommunities({ networkType: 'mainnet' }))
+    dispatch(fetchFeaturedCommunities({ networkType: 'ropsten' }))
+    return () => { }
+  }, [])
 
   useEffect(() => {
     if (moveToIssuance && accountAddress) {
@@ -28,7 +37,11 @@ const HomePage = ({
       if (window && window.analytics) {
         window.analytics.track('Launch community button pressed - not connected')
       }
-      handleConnect()
+      if (!isLoggedIn) {
+        dispatch(loadModal(LOGIN_MODAL, { handleConnect }))
+      } else if (isLoggedIn) {
+        handleConnect()
+      }
       setMove(true)
     } else {
       window.analytics.track('Launch community button pressed - connected')
@@ -36,13 +49,17 @@ const HomePage = ({
     }
   }
 
-  const showDashboard = (communityAddress, name) => {
+  const showDashboard = (communityAddress, name, useOld) => {
     if (window && window.analytics) {
       if (name) {
-        window.analytics.track(`Clicked on featured community`, { name })
+        window.analytics.track('Clicked on featured community', { name })
       }
     }
-    dispatch(push(`/view/community/${communityAddress}`))
+    if (useOld) {
+      dispatch(push(`/view/community/${communityAddress}`))
+    } else {
+      dispatch(push(`/view/fuse-community/${communityAddress}`))
+    }
   }
 
   return (
@@ -55,9 +72,7 @@ const HomePage = ({
               Create your own custom branded wallet and<br /> currency in a few simple steps
             </p>
             <div className='home_page__button'>
-              <button onClick={() => {
-                showIssuance()
-              }}>
+              <button onClick={showIssuance}>
                 Launch an economy
                 <span style={{ marginLeft: '5px' }}>
                   <img src={arrowImage} alt='arrow' />
@@ -87,4 +102,4 @@ const HomePage = ({
   )
 }
 
-export default withTracker(HomePage)
+export default HomePage

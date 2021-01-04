@@ -6,13 +6,9 @@ import { getAddress, getCurrentNetworkType } from 'selectors/network'
 import { CHECK_ACCOUNT_CHANGED, CHECK_NETWORK_TYPE, changeNetwork } from 'actions/network'
 import { loadModal } from 'actions/ui'
 import { TRANSFER_TOKEN, MINT_TOKEN, BURN_TOKEN, FETCH_TOKEN_TOTAL_SUPPLY } from 'actions/token'
-import { get3box } from 'services/web3'
 import { getWeb3 } from 'sagas/network'
 import { getAccountAddress, getAccount, getProviderInfo } from 'selectors/accounts'
 import { fetchCommunities as fetchCommunitiesApi } from 'services/api/entities'
-import { createUsersMetadata } from 'sagas/metadata'
-import { separateData } from 'utils/3box'
-import { isUserExists } from 'actions/user'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { loadState } from 'utils/storage'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
@@ -73,43 +69,6 @@ function * fetchBalances ({ accountAddress, tokens }) {
   for (let token of tokens) {
     yield put(actions.balanceOfToken(token.address, accountAddress))
   }
-}
-
-function * signIn ({ accountAddress }) {
-  yield put(isUserExists(accountAddress))
-  const box = yield call(get3box, { accountAddress })
-  const profilePublicData = yield box.public.all()
-  const privatePrivateData = yield box.private.all()
-  const { publicData } = separateData({ ...profilePublicData, type: 'user' })
-  const { privateData } = separateData(privatePrivateData)
-
-  const { userExists } = yield select(getAccount)
-
-  if (!userExists) {
-    yield call(create3boxProfile, { accountAddress, data: { ...publicData, ...privateData } })
-  }
-
-  yield put({ type: actions.SIGN_IN.SUCCESS,
-    accountAddress,
-    response: {
-      isBoxConnected: true,
-      accountAddress,
-      publicData,
-      privateData
-    }
-  })
-}
-
-function * create3boxProfile ({ accountAddress, data }) {
-  yield call(createUsersMetadata, { accountAddress, metadata: data })
-
-  yield put({ type: actions.CREATE_3BOX_PROFILE.SUCCESS,
-    accountAddress,
-    response: {
-      isBoxConnected: true,
-      accountAddress
-    }
-  })
 }
 
 function * watchAccountChanged ({ response }) {
@@ -182,8 +141,6 @@ export default function * accountsSaga () {
     tryTakeEvery(actions.FETCH_COMMUNITIES, fetchCommunities),
     takeEvery([TRANSFER_TOKEN.SUCCESS, BURN_TOKEN.SUCCESS, MINT_TOKEN.SUCCESS], watchBalanceOfToken),
     tryTakeEvery(actions.FETCH_BALANCES, fetchBalances, 1),
-    tryTakeEvery(actions.SIGN_IN, signIn, 1),
-    tryTakeEvery(actions.CREATE_3BOX_PROFILE, create3boxProfile, 1),
     tryTakeEvery(FETCH_TOKEN_TOTAL_SUPPLY, fetchTokenTotalSupply),
     tryTakeEvery(actions.GET_INITIAL_ADDRESS, initialAddress),
     tryTakeEvery(actions.POSTPONE_ACTION, postponeAction),

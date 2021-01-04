@@ -39,7 +39,7 @@ const fetchToken = createEntitiesFetch(actions.FETCH_TOKEN, api.fetchToken)
 const fetchTokensByOwner = createEntitiesFetch(actions.FETCH_TOKENS_BY_OWNER, api.fetchTokensByOwner)
 const fetchFeaturedCommunities = createEntitiesFetch(actions.FETCH_FEATURED_COMMUNITIES, api.fetchFeaturedCommunities)
 
-function * fetchTokenFromEthereum ({ tokenAddress }) {
+function * fetchTokenFromCurrentNetwork ({ tokenAddress }) {
   const web3 = yield getWeb3()
   const FuseTokenContract = new web3.eth.Contract(FuseTokenABI, tokenAddress)
   const calls = {
@@ -49,7 +49,8 @@ function * fetchTokenFromEthereum ({ tokenAddress }) {
   }
   const response = yield all(calls)
 
-  yield entityPut({ type: actions.FETCH_TOKEN_FROM_ETHEREUM.SUCCESS,
+  yield entityPut({
+    type: actions.FETCH_TOKEN_FROM_ETHEREUM.SUCCESS,
     address: tokenAddress,
     response: {
       ...response,
@@ -72,7 +73,8 @@ function * fetchFuseToken () {
 
   const response = yield all(calls)
 
-  yield entityPut({ type: actions.FETCH_FUSE_TOKEN.SUCCESS,
+  yield entityPut({
+    type: actions.FETCH_FUSE_TOKEN.SUCCESS,
     address: tokenAddress,
     response: {
       ...response,
@@ -125,8 +127,20 @@ function * createTokenWithMetadata ({ tokenData, metadata, tokenType, steps }) {
 }
 
 function * deployChosenContracts ({ response: { steps, receipt } }) {
-  const foreignTokenAddress = receipt.events.TokenCreated.returnValues.token
-  const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, { steps: { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress } } } })
+  const homeTokenAddress = receipt.events.TokenCreated.returnValues.token
+  const { data: { _id: id } } = yield apiCall(api.deployChosenContracts, {
+    steps: {
+      ...steps,
+      community: {
+        args: {
+          ...steps.community.args,
+          homeTokenAddress
+        }
+      }
+    }
+  },{
+    networkType: 'main'
+  })
 
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,
@@ -143,7 +157,7 @@ function * deployExistingToken ({ steps, metadata }) {
   const response = yield call(createMetadata, { metadata })
   const communityURI = response.uri || `ipfs://${response.hash}`
   const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
-  const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps })
+  const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps }, { networkType: 'main' })
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,
     response: {
@@ -153,7 +167,7 @@ function * deployExistingToken ({ steps, metadata }) {
 }
 
 function * fetchTokenProgress ({ communityAddress }) {
-  const response = yield apiCall(api.fetchTokenProgress, { communityAddress })
+  const response = yield apiCall(api.fetchTokenProgress, { communityAddress }, { networkType: 'main' })
   const { data: { steps, done = false } } = response
   const keys = Object.keys(steps)
     .reduce((obj, key) => ({
@@ -181,7 +195,7 @@ function * fetchTokenProgress ({ communityAddress }) {
 }
 
 function * fetchDeployProgress ({ id }) {
-  const response = yield apiCall(api.fetchDeployProgress, { id })
+  const response = yield apiCall(api.fetchDeployProgress, { id }, { networkType: 'main' })
   const { data: { steps, done = false, communityAddress } } = response
 
   const stepErrors = Object.keys(steps)
@@ -407,7 +421,8 @@ export function * setWalletBannerLink ({ link, walletBanner }) {
 
 function * watchCommunities ({ response }) {
   const { result, entities } = response
-  for (let account of result) {
+  const firstPage = result.slice(0, 10)
+  for (const account of firstPage) {
     const entity = entities[account]
     if (entity && entity.foreignTokenAddress) {
       yield put(actions.fetchToken(entity.foreignTokenAddress, entity.originNetwork && { networkType: entity.originNetwork }))
@@ -428,7 +443,7 @@ function * watchCommunities ({ response }) {
 
 function * watchFeaturedCommunities ({ response }) {
   const { result, entities } = response
-  for (let account of result) {
+  for (const account of result) {
     const { communityAddress, foreignTokenAddress, originNetwork, communityURI } = entities[account]
     yield call(fetchFeaturedCommunityEntitiesCount, { communityAddress })
     if (foreignTokenAddress) {
@@ -454,7 +469,7 @@ export default function * tokenSaga () {
     tryTakeEvery(actions.FETCH_TOKENS, fetchTokens, 1),
     tryTakeEvery(actions.FETCH_TOKENS_BY_OWNER, fetchTokensByOwner, 1),
     tryTakeEvery(actions.FETCH_TOKEN, fetchToken, 1),
-    tryTakeEvery(actions.FETCH_TOKEN_FROM_ETHEREUM, fetchTokenFromEthereum, 1),
+    tryTakeEvery(actions.FETCH_TOKEN_FROM_ETHEREUM, fetchTokenFromCurrentNetwork, 1),
     tryTakeEvery(actions.FETCH_COMMUNITY_DATA, fetchCommunity, 1),
     takeEvery([actions.TRANSFER_TOKEN_TO_FUNDER.SUCCESS], watchPluginsChanges),
     tryTakeEvery(actions.FETCH_FUSE_TOKEN, fetchFuseToken),

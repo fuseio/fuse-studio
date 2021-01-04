@@ -54,13 +54,13 @@ const MyCommunities = ({
   const slides = React.useMemo(() => {
     if (!isEmpty(communitiesIOwn)) {
       const myCommunities = communitiesIOwn.map((community) => {
-        const { token, foreignTokenAddress } = community
-        const { communityAddress } = community
+        const { communityAddress, name, isMultiBridge, token, foreignTokenAddress, homeBridgeAddress, foreignBridgeAddress } = community
+        const useOld = isMultiBridge || (foreignBridgeAddress && homeBridgeAddress)
         return (
           <div className='cell shrink medium-12 small-24' key={communityAddress}>
             <FeaturedCommunity
               token={has(tokens, foreignTokenAddress) ? get(tokens, foreignTokenAddress) : token}
-              showDashboard={() => showDashboard(communityAddress)}
+              showDashboard={() => showDashboard(communityAddress, name, useOld)}
               community={community}
               withDescription={false}
             />
@@ -75,7 +75,7 @@ const MyCommunities = ({
       return myCommunitiesList
     } else {
       return [
-        <div key={'NoCommunities'} style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
+        <div key='NoCommunities' style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
           <NoCommunities showIssuance={showIssuance} />
           <Empty />
           <Empty />

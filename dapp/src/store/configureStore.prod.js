@@ -1,6 +1,8 @@
 import { createStore, applyMiddleware } from 'redux'
 import * as Sentry from '@sentry/browser'
 import createSagaMiddleware, { END } from 'redux-saga'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 import { createBrowserHistory } from 'history'
 import reduxCatch from 'redux-catch'
 import { postponeMiddleware } from '../middleware/postpone'
@@ -22,8 +24,13 @@ export default function configureStore (initialState) {
   })
 
   const store = createStore(
-    createRootReducer(history),
-    initialState,
+    persistReducer({
+      key: 'root',
+      storage,
+      stateReconciler: initialState,
+      whitelist: ['user']
+    },
+    createRootReducer(history)),
     applyMiddleware(
       reduxCatch(errorHandler),
       routerMiddleware(history),
@@ -34,5 +41,6 @@ export default function configureStore (initialState) {
 
   store.runSaga = sagaMiddleware.run
   store.close = () => store.dispatch(END)
-  return { store, history }
+  const persistor = persistStore(store)
+  return { store, history, persistor }
 }

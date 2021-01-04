@@ -165,14 +165,81 @@
       }
     }
 
-    @include element(wrapper) {
-      @include breakpoint(large up) {
-        width: 80%;
-        margin: 5em auto 3em;
+    @include block(banner) {
+      width: 100%;
+      min-height: 190px;
+      margin-top: 2em;
+      border-radius: 5px;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+      background: linear-gradient(#ffffff, #e0eaf2);
+
+      @include element(container) {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        background-image: url(../../assets/images/confetti.png);
+        padding: 1.3em;
       }
 
-      @include breakpoint(2000) {
-        width: 70%;
+      @include block(title) {
+        font-weight: 500;
+        color: #5e707f;
+        font-size: 1.5em;
+      }
+
+      @include block(sub-title) {
+        color: #5e707f;
+      }
+
+      @include block(boxes) {
+        margin-top: 2em;
+        width: 100%;
+
+        @include block(item) {
+          width: 100%;
+          background-color: $color-white;
+          color: #5e707f;
+          min-height: 88px;
+          max-height: 88px;
+          border-radius: 5px;
+          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+          padding: 1em;
+          cursor: pointer;
+
+          &:hover {
+            box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
+          }
+
+          @include block(image) {
+            margin-right: 1em;
+            > img {
+              min-width: 47px;
+            }
+          }
+
+          @include block(content) {
+            @include xy-grid(vertical);
+            @include flex-align(left, top);
+
+            @include element(title) {
+              font-weight: 500;
+              font-size: 0.9em;
+            }
+
+            @include element(subtitle) {
+              color: $color-dark-gray;
+              font-size: 0.6em;
+            }
+          }
+        }
+      }
+    }
+
+    @include element(wrapper) {
+      max-width: 900px;
+      @include breakpoint(large up) {
+        width: 65%;
+        margin: 5em auto 3em;
       }
 
       @include breakpoint(medium only) {
@@ -240,8 +307,8 @@
 
       @include element(title) {
         color: $color-dark;
-        font-size: 1.25em;
-        margin-bottom: 10px;
+        font-size: 1em;
+        margin-bottom: 1em;
         font-weight: 500;
       }
 

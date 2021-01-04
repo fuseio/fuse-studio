@@ -5,6 +5,7 @@ const CommunitySchema = new Schema({
   communityAddress: { type: String, required: [true, "can't be blank"] },
   homeTokenAddress: { type: String },
   foreignTokenAddress: { type: String },
+  foreignNetworkType: { type: String },
   homeBridgeAddress: { type: String },
   foreignBridgeAddress: { type: String },
   secondaryTokenAddress: { type: String },
@@ -17,7 +18,9 @@ const CommunitySchema = new Schema({
   description: { type: String },
   webUrl: { type: String },
   creatorAddress: { type: String },
-  isMultiBridge: { type: Boolean, default: false }
+  isMultiBridge: { type: Boolean, default: false },
+  bridgeType: { type: String, enum: ['multiple-erc20-to-erc20', 'multi-amb-erc20-to-erc677', 'amb-erc677-to-erc677'] },
+  bridgeDirection: { type: String, enum: ['foreign-to-home', 'home-to-foreign'] }
 }, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })

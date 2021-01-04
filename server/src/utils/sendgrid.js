@@ -40,13 +40,14 @@ const sendWelcomeMail = async (user) => {
   }
 }
 
-const sendInfoMail = async (user, { networkType, communityName, communityAddress }) => {
+const sendInfoMail = async (user, { communityName, communityAddress }) => {
   const env = config.get('env')
   const API_ROOT = 'https://studio{env}.fuse.io/view/community/'
   const domain = API_ROOT.replace('{env}', env === 'qa' ? '-qa' : '')
+  const networkType = capitalize(config.get(`network.foreign.name`))
   const templateData = {
     communityName,
-    networkType: capitalize(networkType),
+    networkType,
     communityLink: domain + communityAddress + '/justCreated',
     fuseExplorer: 'https://explorer.fuse.io/address/' + communityAddress + '/transactions',
     communityAddress

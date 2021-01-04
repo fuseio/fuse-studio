@@ -1,0 +1,58 @@
+@include block(login-modal) {
+  width: 100%;
+  max-width: 400px;
+  padding: 0;
+  max-height: 90%;
+
+  @include element(title) {
+    font-weight: bold;
+    color: #42687d;
+    background-color: #f4f4f4;
+    padding: 15px 0px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  @include element(text) {
+    color: #42687d;
+    font-size: 0.8em;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
+  }
+
+  @include element(button) {
+    display: flex;
+    flex-direction: row;
+    background-color: #42687d;
+    padding: 10px 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+
+    img {
+      padding: 5px;
+      width: 30px;
+      height: 30px;
+      background-color: white;
+      border-radius: 5px;
+    }
+
+    div {
+      font-size: 0.8em;
+      color: white;
+      font-weight: bold;
+      padding: 0px 22px;
+      margin: auto;
+    }
+  }
+
+  @include element(bottom) {
+    font-size: 0.7em;
+    text-align: center;
+    margin: 10px;
+    a {
+      color: #1457ff;
+    }
+  }
+}

@@ -106,18 +106,17 @@ function * transferToForeign ({ homeTokenAddress, homeBridgeAddress, value, conf
   if (multiBridge) {
     const homeBridgeMediatorAddress = yield select(getBridgeMediator, 'home')
     const basicToken = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
-    window.analytics.track('Bridge used', { tokenAddress: homeTokenAddress, networkType: yield select(getForeignNetwork) })
     transactionPromise = basicToken.methods.transferAndCall(homeBridgeMediatorAddress, value, []).send({
       from: accountAddress
     })
   } else {
     const basicToken = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { transactionConfirmationBlocks: confirmationsLimit })
-    window.analytics.track('Bridge used', { tokenAddress: homeTokenAddress, networkType: yield select(getForeignNetwork) })
     transactionPromise = basicToken.methods.transfer(homeBridgeAddress, value).send({
       from: accountAddress
     })
   }
 
+  window.analytics.track('Bridge used', { tokenAddress: homeTokenAddress, networkType: yield select(getForeignNetwork) })
   const action = actions.TRANSFER_TO_FOREIGN
   yield call(transactionFlow, { transactionPromise, action, confirmationsLimit })
 }

@@ -1,9 +1,8 @@
 import React, { Fragment, useEffect, useMemo } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { getAccountAddress } from 'selectors/accounts'
 import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
-import { signUpUser } from 'actions/user'
 import { loadModal } from 'actions/ui'
 import { FAILURE } from 'actions/constants'
 import * as Sentry from '@sentry/browser'
@@ -13,12 +12,10 @@ import { toChecksumAddress } from 'web3-utils'
 import { getForeignNetwork } from 'selectors/network'
 
 import { withNetwork } from 'containers/Web3'
-import withTracker from 'containers/withTracker'
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
-import NameAndEmail from 'components/wizard/pages/NameAndEmail'
+import NameAndDescription from 'components/wizard/pages/NameAndDescription'
 import ChooseCurrencyType from 'components/wizard/pages/ChooseCurrencyType'
-import ChooseNetwork from 'components/wizard/pages/ChooseNetwork'
 import DetailsStep from 'components/wizard/pages/DetailsStep'
 import SummaryStep from 'components/wizard/pages/SummaryStep'
 import DeployProgressStep from 'components/wizard/pages/DeployProgress'
@@ -29,7 +26,6 @@ import contractIcon from 'images/contract.svg'
 const WizardPage = ({
   deployExistingToken,
   createTokenWithMetadata,
-  signUpUser,
   adminAddress,
   networkType,
   transactionStatus,
@@ -47,6 +43,8 @@ const WizardPage = ({
     }
   }, [])
 
+  const email = useSelector(state => state.user.email)
+
   const initialValues = useMemo(() => ({
     communityName: '',
     communitySymbol: '',
@@ -57,7 +55,6 @@ const WizardPage = ({
     customToken: '',
     isOpen: true,
     subscribe: true,
-    email: '',
     coverPhoto: {},
     images: {
       chosen: 'defaultOne'
@@ -72,10 +69,6 @@ const WizardPage = ({
       funder: {
         checked: true,
         key: 'funder'
-      },
-      email: {
-        checked: true,
-        key: 'email'
       }
     },
     plugins: {
@@ -102,8 +95,6 @@ const WizardPage = ({
       images,
       existingToken,
       customToken,
-      email,
-      subscribe,
       plugins,
       coverPhoto,
       description
@@ -125,9 +116,7 @@ const WizardPage = ({
         ...steps,
         [contracts[contractName].key]: contracts[contractName].key === 'community'
           ? { args: { isClosed: !isOpen, name: communityName, adminAddress, plugins: chosenPlugins, description } }
-          : contracts[contractName].key === 'email'
-            ? { args: { email, subscribe } }
-            : {}
+          : {}
       }), {})
 
     const { chosen } = images
@@ -141,11 +130,11 @@ const WizardPage = ({
 
     const sentry = { tags: { issuance: true } }
     if (existingToken && existingToken.label && existingToken.value) {
-      const { value: foreignTokenAddress } = existingToken
-      const newSteps = { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress, isCustom: false } } }
+      const { value: homeTokenAddress, foreignTokenAddress } = existingToken
+      const newSteps = { ...steps, community: { args: { ...steps.community.args, homeTokenAddress, foreignTokenAddress, isCustom: false } } }
       deployExistingToken(metadata, newSteps, { sentry })
     } else if (customToken) {
-      const newSteps = { ...steps, community: { args: { ...steps.community.args, foreignTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
+      const newSteps = { ...steps, community: { args: { ...steps.community.args, homeTokenAddress: toChecksumAddress(customToken), isCustom: true } } }
       deployExistingToken(metadata, newSteps, { sentry })
     } else {
       const tokenData = {
@@ -154,14 +143,12 @@ const WizardPage = ({
         totalSupply: new BigNumber(totalSupply).multipliedBy(1e18)
       }
 
-      createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: foreignNetwork, sentry })
+      createTokenWithMetadata(tokenData, metadata, communityType.value, steps, { desiredNetworkType: 'fuse', sentry })
     }
-
-    signUpUser(email, subscribe)
   }
 
   const goToDashboard = () => {
-    push(`/view/community/${communityAddress}/justCreated`)
+    push(`/view/fuse-community/${communityAddress}/justCreated`)
   }
 
   const transactionDenied = () => {
@@ -169,7 +156,7 @@ const WizardPage = ({
   }
 
   return (
-    <Fragment>
+    <>
       <Wizard
         push={push}
         adminAddress={adminAddress}
@@ -185,16 +172,11 @@ const WizardPage = ({
         }}
       >
         <Wizard.Page>
-          <NameAndEmail />
-        </Wizard.Page>
-        <Wizard.Page>
-          <ChooseNetwork />
-        </Wizard.Page>
-        <Wizard.Page>
+          <NameAndDescription />
           <ChooseCurrencyType />
         </Wizard.Page>
         <Wizard.Page>
-          <DetailsStep networkType={networkType} />
+          <DetailsStep />
         </Wizard.Page>
         <Wizard.Page isSubmitStep={Boolean(true).toString()}>
           <SummaryStep foreignNetwork={foreignNetwork} />
@@ -217,8 +199,8 @@ const WizardPage = ({
 
       <Message
         issue
-        message={'Oh no'}
-        subTitle={`You reject the action, That’s ok, try next time!`}
+        message='Oh no'
+        subTitle='You reject the action, That’s ok, try next time!'
         isOpen={transactionDenied()}
         clickHandler={() => clearTransaction()}
       />
@@ -231,7 +213,7 @@ const WizardPage = ({
         clickHandler={() => clearTransaction()}
         subTitle='Try again later'
       />
-    </Fragment>
+    </>
   )
 }
 
@@ -245,10 +227,9 @@ const mapDispatchToProps = {
   createTokenWithMetadata,
   fetchDeployProgress,
   deployExistingToken,
-  signUpUser,
   clearTransaction,
   loadModal,
   push
 }
 
-export default withTracker(withNetwork(connect(mapStateToProps, mapDispatchToProps)(WizardPage)))
+export default withNetwork(connect(mapStateToProps, mapDispatchToProps)(WizardPage))

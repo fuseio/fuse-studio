@@ -1,9 +1,9 @@
 import React from 'react'
 import { getIn, useFormikContext } from 'formik'
 import { withStyles } from '@material-ui/styles'
-import MuiExpansionPanel from '@material-ui/core/ExpansionPanel'
-import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import MuiExpansionPanel from '@material-ui/core/Accordion'
+import MuiExpansionPanelSummary from '@material-ui/core/AccordionSummary'
+import AccordionDetails from '@material-ui/core/AccordionActions'
 import Typography from '@material-ui/core/Typography'
 
 import TotalSupply from 'components/wizard/components/TotalSupply'
@@ -11,6 +11,7 @@ import LogosOptions from 'components/wizard/components/LogosOptions'
 import CurrencySymbol from 'components/wizard/components/CurrencySymbol'
 import CurrencyType from 'components/wizard/components/CurrencyType'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
+import { withNetwork } from 'containers/Web3'
 
 import CaretDown from 'images/drop-down.svg'
 
@@ -55,13 +56,11 @@ const ExpansionPanelDetails = withStyles({
     display: 'flex',
     padding: '24px'
   }
-})(MuiExpansionPanelDetails)
+})(AccordionDetails)
 
 const DropDownIcon = () => <img src={CaretDown} />
 
-const DetailsStep = ({
-  networkType
-}) => {
+const DetailsStep = () => {
   const formik = useFormikContext()
   const communityType = getIn(formik.values, 'communityType')
 
@@ -80,7 +79,7 @@ const DetailsStep = ({
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className='accordion__panel'>
           <Typography component='div'>
-            <CurrencyType networkType={networkType} />
+            <CurrencyType />
             {
               communityType && communityType.value && communityType.label && (
                 <TotalSupply />
@@ -105,33 +104,11 @@ const DetailsStep = ({
               <LogosOptions />
               <CoverPhoto />
             </div>
-            {/* <CommunityStatus /> */}
           </Typography>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-
-      {/* <ExpansionPanel>
-        <ExpansionPanelSummary
-          classes={{
-            root: 'ExpansionPanelSummary--last'
-          }}
-          expandIcon={<DropDownIcon />}
-          aria-controls='panel1a-content'
-          id='panel1a-header'
-        >
-          <Typography component='div' className='accordion__button'>
-            Plugins <a target='_blank' rel='noopener noreferrer' href='https://medium.com/fusenet/how-to-add-functionality-to-your-community-introducing-plug-ins-209933e5c4ed'>(What this?)</a>
-          </Typography>
-          <Typography component='div' className='accordion__button--sub-title'>({countOfSelectedPlugins} selected)</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className='accordion__panel'>
-          <Typography component='div'>
-            <Plugins />
-          </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel> */}
     </div>
   )
 }
 
-export default DetailsStep
+export default withNetwork(DetailsStep)

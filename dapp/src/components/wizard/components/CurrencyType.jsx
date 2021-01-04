@@ -9,7 +9,7 @@ import classNames from 'classnames'
 import TextField from '@material-ui/core/TextField'
 import { useDispatch, useSelector } from 'react-redux'
 import { isAddress, toChecksumAddress } from 'web3-utils'
-import { fetchTokenFromEthereum } from 'actions/token'
+import { fetchTokenFromCurrentNetwork } from 'actions/token'
 
 const Option = (props) => {
   const { children, className, cx, isDisabled, innerRef, innerProps, data } = props
@@ -60,7 +60,7 @@ const CustomToken = () => {
 
   const fetchCustomToken = (e) => {
     if (isAddress(e.target.value)) {
-      dispatch(fetchTokenFromEthereum(toChecksumAddress(e.target.value)))
+      dispatch(fetchTokenFromCurrentNetwork(toChecksumAddress(e.target.value)))
       setDone(true)
     }
   }
@@ -111,7 +111,7 @@ const CustomToken = () => {
   )
 }
 
-const CurrencyType = ({ networkType }) => {
+const CurrencyType = () => {
   const formik = useFormikContext()
   const existingToken = getIn(formik.values, 'existingToken')
   const currency = getIn(formik.values, 'currency')
@@ -121,22 +121,29 @@ const CurrencyType = ({ networkType }) => {
   const groupedOptions = [
     {
       label: 'Dollar pegged:',
-      options: dollarPeggedTokens(networkType)
+      options: dollarPeggedTokens()
     },
     {
       label: 'Other:',
-      options: otherExistingTokens(networkType)
+      options: otherExistingTokens()
     }
   ]
 
   return (
     <div className='attributes__currency'>
-      {isNew && <h3 className='attributes__title'>
-        Create new token<span style={{ fontSize: 'smaller', fontWeight: '400' }}> | select one</span>
-      </h3>}
-      {isExisting && network !== 'ropsten' && <h3 className='attributes__title'>
-        Pick one of the two options:
-      </h3>}
+      {
+        isNew &&
+          <h3 className='attributes__title'>
+            Create new token<span style={{ fontSize: 'smaller', fontWeight: '400' }}> | select one</span>
+          </h3>
+      }
+      {
+        isExisting &&
+          network !== 'ropsten' &&
+            <h3 className='attributes__title'>
+              Pick one of the two options:
+            </h3>
+      }
       <div className='options grid-x align-middle align-justify'>
         {isNew && (
           CommunityTypes.map((item, index) => {
@@ -159,14 +166,14 @@ const CurrencyType = ({ networkType }) => {
                         <div className='option__logo option__logo--small grid-x align-center cell small-6'>
                           <img src={icon} />
                         </div>
-                        <Fragment>
+                        <>
                           <div className='option__text cell large-auto'>
                             <span>{label} <FontAwesome data-tip data-for={value} name='info-circle' /></span>
                             <ReactTooltip className='tooltip__content' id={value} place='bottom' effect='solid'>
                               <div>{tooltipText}</div>
                             </ReactTooltip>
                           </div>
-                        </Fragment>
+                        </>
                       </div>
                     )
                   }}
@@ -177,9 +184,9 @@ const CurrencyType = ({ networkType }) => {
           })
         )}
         {isExisting && (
-          <Fragment>
+          <>
             {network !== 'ropsten' && (
-              <Fragment>
+              <>
                 <div className='cell large-11 grid-x align-middle'>
                   <Field name='existingToken'>
                     {({ field, form: { setFieldValue } }) => (
@@ -205,12 +212,12 @@ const CurrencyType = ({ networkType }) => {
                   </Field>
                 </div>
                 <p className='or cell shrink'>OR</p>
-              </Fragment>
+              </>
             )}
             <div className='cell large-11'>
               <CustomToken />
             </div>
-          </Fragment>
+          </>
         )}
       </div>
     </div>

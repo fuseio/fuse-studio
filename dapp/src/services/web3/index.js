@@ -1,5 +1,4 @@
 import Web3 from 'web3'
-import Box from '3box'
 import { getProviderUrl } from 'utils/network'
 
 let givenWeb3
@@ -17,15 +16,6 @@ export const getWeb3 = ({ provider, networkType } = {}) => {
   }
 
   if (givenWeb3) return givenWeb3
-}
-
-let box = null
-
-export function get3box ({ accountAddress }) {
-  if (box && box._web3provider.selectedAddress === accountAddress) {
-    return box
-  }
-  return Box.openBox(accountAddress, window.ethereum)
 }
 
 export const fuse = new Web3(CONFIG.web3.fuseProvider)

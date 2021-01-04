@@ -1,6 +1,5 @@
 import React from 'react'
 import { isMobileOnly } from 'react-device-detect'
-// import Community from 'components/common/Community'
 import InfiniteScroll from 'react-infinite-scroller'
 import groupImage from 'images/all-communities.png'
 import groupImageMobile from 'images/all-communities-mobile.png'
@@ -26,7 +25,7 @@ export default ({
   }
 
   return (
-    <React.Fragment>
+    <>
       <div className='communities__wrapper'>
         <div className='grid-container communities__banner grid-x grid-padding-x grid-padding-y align-middle'>
           <div className='communities__banner__content cell medium-14 large-10' style={{ height: '50%' }}>
@@ -65,12 +64,13 @@ export default ({
                 addresses.map((address) => {
                   const token = tokens[communities[address].foreignTokenAddress]
                   const community = communities[address]
+                  const useOld = community?.isMultiBridge || (community?.foreignBridgeAddress && community?.homeBridgeAddress)
                   if (community) {
                     return (
                       <div className='medium-12 large-8 small-24 cell' key={address}>
                         <FeaturedCommunity
                           token={token}
-                          showDashboard={() => showDashboard(address, community.name)}
+                          showDashboard={() => showDashboard(address, community.name, useOld)}
                           community={community}
                         />
                       </div>
@@ -82,6 +82,6 @@ export default ({
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </>
   )
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
+import { getBlockExplorerUrl } from 'utils/network'
 
 const deployProgress = [
   {
@@ -7,7 +8,7 @@ const deployProgress = [
     loaderText: (networkType) => `Your asset is being deployed as an ERC-20 contract to Ethereum ${networkType}`,
     key: 'tokenIssued',
     RenderLink: ({ txHash }) => (
-      <a target='_blank' rel='noopener noreferrer' style={{ marginLeft: '5px' }} href={`https://ropsten.etherscan.io/tx/${txHash}`}>
+      <a target='_blank' rel='noopener noreferrer' style={{ marginLeft: '5px' }} href={`${getBlockExplorerUrl('fuse')}/tx/${txHash}`}>
         <FontAwesome style={{ fontSize: '14px' }} name='external-link-alt' />
       </a>
     )

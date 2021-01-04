@@ -1,106 +1,34 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import capitalize from 'lodash/capitalize'
-import isEmpty from 'lodash/isEmpty'
-import { connect, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
-import { push } from 'connected-react-router'
 
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import NativeBalance from 'components/common/NativeBalance'
-import ProfileCard from 'components/common/ProfileCard'
 import { withAccount } from 'containers/Web3'
 
-import { getBalances, getProviderInfo, getCommunitiesKeys } from 'selectors/accounts'
-import { getNetworkSide, getCurrentNetworkType } from 'selectors/network'
+import { getProviderInfo } from 'selectors/accounts'
+import { getCurrentNetworkType } from 'selectors/network'
 import { convertNetworkName } from 'utils/network'
-import { addressShortener, formatWei } from 'utils/format'
+import { addressShortener } from 'utils/format'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
 import { changeNetwork } from 'actions/network'
 import { loadModal } from 'actions/ui'
-import { fetchBalances } from 'actions/accounts'
+import { logout } from 'actions/user'
 
 import Avatar from 'images/avatar.svg'
 
-const InnerCommunities = ({
-  fetchBalances,
-  balances,
-  accountAddress,
-  communities,
-  networkType,
-  metadata,
-  showDashboard,
-  title
-}) => {
-  if (isEmpty(communities) || isEmpty(communities.filter(({ token }) => token))) return null
-
-  useEffect(() => {
-    if (communities && accountAddress) {
-      fetchBalances(communities.map(({ token }) => token), accountAddress)
-    }
-    return () => { }
-  }, [accountAddress, communities])
-
-  const bridgeType = useSelector(getNetworkSide)
-  return (
-    <div className='profile__communities grid-y'>
-      <span>{title}</span>
-      <div className='grid-y grid-margin-y grid-margin-x'>
-        {communities && communities.map((community, index) => {
-          const { token } = community
-          const { homeTokenAddress, foreignTokenAddress } = community
-          const balance = balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress]
-            ? formatWei(balances[bridgeType === 'home' ? homeTokenAddress : foreignTokenAddress], 2, token.decimals)
-            : 0
-          return (
-            <ProfileCard
-              key={index}
-              balance={balance || 0}
-              community={community}
-              metadata={{ ...metadata[token.tokenURI], ...metadata[community && community.communityURI] }}
-              showDashboard={showDashboard}
-              accountAddress={accountAddress}
-              networkType={networkType}
-            />
-          )
-        }
-        )}
-      </div>
-    </div>
-  )
-}
-
 const ProfileDropDown = ({
-  metadata,
-  balances,
-  networkType,
   accountAddress,
-  communitiesKeys,
-  communities,
-  changeNetwork,
-  loadModal,
   foreignNetwork,
-  push,
-  providerInfo,
-  handleLogOut
+  handleDisconnect
 }) => {
-  const communitiesIOwn = React.useMemo(() => {
-    return communitiesKeys
-      .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj).filter(({ isAdmin, token }) => isAdmin && token).slice(0, 2)
-  }, [communitiesKeys, communities])
-
-  const communitiesIPartOf = React.useMemo(() => {
-    return communitiesKeys
-      .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj).filter(({ isAdmin, token }) => !isAdmin && token).slice(0, 2)
-  }, [communitiesKeys, communities])
-
-  const showDashboard = (communityAddress) => {
-    push(`/view/community/${communityAddress}`)
-  }
+  const providerInfo = useSelector(getProviderInfo)
+  const networkType = useSelector(getCurrentNetworkType)
+  const dispatch = useDispatch()
 
   const loadSwitchModal = (desired) => {
-    loadModal(SWITCH_NETWORK, { desiredNetworkType: [desired], networkType, goBack: false })
+    dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: [desired], networkType, goBack: false }))
   }
 
   const toggleNetwork = () => {
@@ -109,7 +37,7 @@ const ProfileDropDown = ({
         ? 'ropsten' : 'main'
       : networkType === 'ropsten'
         ? 'main' : 'ropsten'
-    changeNetwork(network)
+    dispatch(changeNetwork(network))
   }
 
   const switchNetwork = () => {
@@ -127,9 +55,9 @@ const ProfileDropDown = ({
     } else if (providerInfo.type === 'web') {
       if (foreignNetwork) {
         if (foreignNetwork === networkType) {
-          changeNetwork('fuse')
+          dispatch(changeNetwork('fuse'))
         } else {
-          changeNetwork(foreignNetwork)
+          dispatch(changeNetwork(foreignNetwork))
         }
       } else {
         toggleNetwork()
@@ -137,17 +65,23 @@ const ProfileDropDown = ({
     }
   }
 
-  const logout = () => {
-    if (window && window.analytics) {
-      window.analytics.reset()
-    }
-    handleLogOut()
+  const disconnectWallet = () => {
+    handleDisconnect()
+    window.location.reload()
+  }
+
+  const handleLogout = () => {
+    handleDisconnect()
+    dispatch(logout())
     window.location.reload()
   }
 
   return (
     <div className='profile grid-y'>
       <div className='profile__account grid-x cell small-8 align-middle align-center'>
+        <div className='logout' onClick={handleLogout}>
+          <span>Logout</span>
+        </div>
         <div className='profile__account__avatar cell small-24'>
           <img src={Avatar} />
         </div>
@@ -157,8 +91,9 @@ const ProfileDropDown = ({
             <FontAwesome name='clone' />
           </CopyToClipboard>
         </div>
-        <div onClick={logout} className='cell small-24 profile__account__logout grid-x align-middle align-center'>
-          <span>Log out from {providerInfo.check && providerInfo.check.substring && providerInfo.check.substring(2)}</span>
+        <div className='cell small-24 profile__account__disconnect grid-x align-middle align-center'>
+          <span>Connected to {providerInfo.check && providerInfo.check.substring && providerInfo.check.substring(2)}&nbsp;</span>
+          <span onClick={disconnectWallet} className='disconnect'>(Disconnect)</span>
         </div>
       </div>
       <div className='profile__communities grid-y'>
@@ -168,48 +103,8 @@ const ProfileDropDown = ({
         </p>
       </div>
       <NativeBalance />
-      <InnerCommunities
-        showDashboard={showDashboard}
-        communities={communitiesIOwn}
-        networkType={networkType}
-        accountAddress={accountAddress}
-        metadata={metadata}
-        balances={balances}
-        fetchBalances={fetchBalances}
-        title='Economy I own'
-      />
-      <InnerCommunities
-        showDashboard={showDashboard}
-        title='Economy I am part'
-        communities={communitiesIPartOf}
-        networkType={networkType}
-        accountAddress={accountAddress}
-        metadata={metadata}
-        fetchBalances={fetchBalances}
-        balances={balances}
-      />
     </div>
   )
 }
 
-const mapStateToProps = (state) => ({
-  communitiesKeys: getCommunitiesKeys(state),
-  providerInfo: getProviderInfo(state),
-  tokens: state.entities.tokens,
-  metadata: state.entities.metadata,
-  communities: state.entities.communities,
-  networkType: getCurrentNetworkType(state),
-  balances: getBalances(state)
-})
-
-const mapDispatchToProps = {
-  fetchBalances,
-  changeNetwork,
-  loadModal,
-  push
-}
-
-export default withAccount(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProfileDropDown))
+export default withAccount(ProfileDropDown)

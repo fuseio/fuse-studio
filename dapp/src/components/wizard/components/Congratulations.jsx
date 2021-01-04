@@ -3,13 +3,12 @@ import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
 import capitalize from 'lodash/capitalize'
 import { convertNetworkName } from 'utils/network'
-
 import Box from 'images/box.svg'
 
 const Congratulations = ({ networkType, goToDashboard }) => {
   const { width, height } = useWindowSize()
   return (
-    <Fragment>
+    <>
       <Confetti
         width={width}
         height={height}
@@ -31,7 +30,7 @@ const Congratulations = ({ networkType, goToDashboard }) => {
           <button className='button button--big' onClick={goToDashboard}>Go to the community page</button>
         </div>
       </div>
-    </Fragment>
+    </>
   )
 }
 

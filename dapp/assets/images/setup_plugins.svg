@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="63px" height="78px" viewBox="0 0 63 78" version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Group 12</title>
+  <defs>
+    <linearGradient x1="50%" y1="12.6834876%" x2="50%" y2="94.1438793%" id="linearGradient-1">
+      <stop stop-color="#E3E3E3" offset="0%"></stop>
+      <stop stop-color="#FFFFFF" offset="100%"></stop>
+    </linearGradient>
+    <filter x="0.0%" y="0.0%" width="100.0%" height="100.0%" filterUnits="objectBoundingBox" id="filter-2">
+      <feGaussianBlur stdDeviation="0" in="SourceGraphic"></feGaussianBlur>
+    </filter>
+    <linearGradient x1="50%" y1="0%" x2="50%" y2="99.8574747%" id="linearGradient-3">
+      <stop stop-color="#FFE581" offset="0%"></stop>
+      <stop stop-color="#ECB456" offset="100%"></stop>
+    </linearGradient>
+    <polygon id="path-4" points="28.5 44.6405901 11.7481203 51.5569843 13.1493866 33.4877166 1.39488929 19.6930157 19.0127992 15.4419883 28.5 0 37.9872008 15.4419883 55.6051107 19.6930157 43.8506134 33.4877166 45.2518797 51.5569843"></polygon>
+    <filter x="-9.0%" y="-9.6%" width="117.9%" height="113.3%" filterUnits="objectBoundingBox" id="filter-5">
+      <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+      <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+      <feColorMatrix values="0 0 0 0 0.847146739   0 0 0 0 0.620783643   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+    </filter>
+  </defs>
+  <g id="community-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="New-studio" transform="translate(-966.000000, -356.000000)">
+      <g id="Group-12" transform="translate(969.000000, 359.000000)">
+        <polygon id="Path-8" fill="url(#linearGradient-1)" filter="url(#filter-2)" points="2 20 12.1990409 74.7867504 40.7490716 75 55 20"></polygon>
+        <g id="Star">
+          <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+          <use fill="url(#linearGradient-3)" fill-rule="evenodd" xlink:href="#path-4"></use>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
-import { connect } from 'react-redux'
-import { fetchFeaturedCommunities } from 'actions/token'
-import { withRouter } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
 import CommunityPlaceholderImage from 'images/community_placeholder.png'
 import isEmpty from 'lodash/isEmpty'
 import FeaturedCommunity from 'components/common/FeaturedCommunity'
@@ -11,23 +9,16 @@ import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import arrow from 'images/arrow_3.svg'
 
 const FeaturedCommunities = ({
-  communities,
-  tokens,
-  fetchFeaturedCommunities,
-  featuredCommunities,
-  push,
   showDashboard
 }) => {
+  const dispatch = useDispatch()
+  const communities = useSelector(state => state.entities.communities)
+  const tokens = useSelector(state => state.entities.tokens)
+  const featuredCommunities = useSelector(state => state.accounts.featuredCommunities)
   const [value, onChange] = useState(0)
 
-  useEffect(() => {
-    fetchFeaturedCommunities({ networkType: 'mainnet' })
-    fetchFeaturedCommunities({ networkType: 'ropsten' })
-    return () => { }
-  }, [])
-
   const showCommunities = () => {
-    push('/view/communities')
+    dispatch(push('/view/communities'))
   }
 
   const slides = useMemo(() => {
@@ -35,11 +26,12 @@ const FeaturedCommunities = ({
       return featuredCommunities.map((address) => {
         const token = tokens[communities[address].foreignTokenAddress]
         const community = communities[address]
+        const useOld = community?.isMultiBridge || (community?.foreignBridgeAddress && community?.homeBridgeAddress)
         return (
           <div style={{ width: '90%' }} key={address}>
             <FeaturedCommunity
               token={token}
-              showDashboard={() => showDashboard(address, community.name)}
+              showDashboard={() => showDashboard(address, community.name, useOld)}
               community={community}
               withDescription
             />
@@ -91,19 +83,4 @@ const FeaturedCommunities = ({
 
 FeaturedCommunities.displayName = 'FeaturedCommunities'
 
-const mapStateToProps = state => ({
-  tokens: state.entities.tokens,
-  communities: state.entities.communities,
-  featuredCommunities: state.accounts.featuredCommunities
-})
-
-const mapDispatchToProps = {
-  fetchFeaturedCommunities,
-  push
-}
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(FeaturedCommunities))
+export default FeaturedCommunities

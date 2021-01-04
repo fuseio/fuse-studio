@@ -1,36 +1,25 @@
-import 'babel-polyfill'
+import '@babel/polyfill'
 import 'utils/validation/yup'
-
+import { isMobile } from 'react-device-detect'
+import ReactGA from 'react-ga'
 import React from 'react'
-import { Provider } from 'react-redux'
-import ReactDOM from 'react-dom'
-import { ApolloProvider } from '@apollo/client'
-import * as Sentry from '@sentry/browser'
-import { ConnectedRouter } from 'connected-react-router'
+import { render } from 'react-dom'
+import App from './App'
 
-import ErrorBoundary from 'components/common/ErrorBoundary'
-import ScrollToTopController from 'containers/ScrollToTopController'
-import Root from 'containers/Root'
-import configureStore from 'store/configureStore'
-import rootSaga from 'sagas/index'
-import { client } from 'services/graphql'
+if (typeof CONFIG?.reactGA?.trackingId === 'string') {
+  ReactGA.initialize(CONFIG?.reactGA?.trackingId, CONFIG.reactGA.gaOptions)
+  ReactGA.set({
+    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
+  })
+} else {
+  ReactGA.initialize('test', { testMode: true, debug: true })
+}
 
-Sentry.init({ dsn: `https://${CONFIG.sentry.key}@sentry.io/${CONFIG.sentry.project}` })
+window.addEventListener('error', error => {
+  ReactGA.exception({
+    description: `${error.message} @ ${error.filename}:${error.lineno}:${error.colno}`,
+    fatal: true
+  })
+})
 
-const { store, history } = configureStore(window.__INITIAL_STATE__)
-
-store.runSaga(rootSaga)
-
-ReactDOM.render(
-  <Provider store={store}>
-    <ApolloProvider client={client}>
-      <ConnectedRouter history={history}>
-        <ScrollToTopController>
-          <ErrorBoundary>
-            <Root />
-          </ErrorBoundary>
-        </ScrollToTopController>
-      </ConnectedRouter>
-    </ApolloProvider>
-  </Provider>,
-  document.getElementById('root'))
+render(<App />, document.getElementById('root'))

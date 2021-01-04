@@ -159,9 +159,12 @@
     }
 
     @include element(wallet) {
-      cursor: pointer;
       position: relative;
       margin: 0 0.8em;
+
+      @include modifier(pointer) {
+        cursor: pointer;
+      }
 
       @include breakpoint(medium) {
         @include xy-grid();

@@ -47,7 +47,7 @@ const CommunityInfo = ({
 
   if (tokensTotalSupplies) {
     homeTokenSupply = new BigNumber(homeBalance)
-    foreignTokenSupply = new BigNumber(foreignBalance).minus(homeBalance)
+    foreignTokenSupply = foreignBalance ? new BigNumber(foreignBalance).minus(homeBalance) : foreignBalance
     totalSupply = new BigNumber(foreignTokenSupply).plus(homeTokenSupply)
   }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import CoverPhoto from 'components/wizard/components/CoverPhoto'
 import LogosOptions from 'components/wizard/components/LogosOptions'
-import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import AccordionDetails from '@material-ui/core/AccordionActions'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/styles'
@@ -10,19 +10,19 @@ import set from 'lodash/set'
 import isEmpty from 'lodash/isEmpty'
 import { toChecksumAddress } from 'web3-utils'
 import { getCoverPhotoUri, getImageUri } from 'utils/metadata'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 
 const ExpansionPanelDetails = withStyles({
   root: {
     display: 'flex',
     padding: '24px'
   }
-})(MuiExpansionPanelDetails)
+})(AccordionDetails)
 
 const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, token, communityMetadata }) => {
-  const renderForm = ({ isValid, handleSubmit, handleChange, values }) => {
+  const renderForm = ({ isValid, handleChange, values }) => {
     return (
-      <form onSubmit={handleSubmit} className='issuance__wizard'>
+      <Form className='issuance__wizard'>
         <div className='settings__form'>
           <ExpansionPanelDetails className='accordion__panel'>
             <Typography component='div'>
@@ -115,7 +115,7 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
             <button className='button button--normal join_bonus__button' disabled={!isValid}>Save</button>
           </div>
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -163,11 +163,14 @@ const SettingsForm = ({ community, updateCommunityMetadata, setSecondaryToken, t
     description: get(community, 'description', ''),
     webUrl: get(community, 'webUrl', '')
   }), [communityMetadata, token, community])
+
   return (
     <Formik
-      render={renderForm}
       onSubmit={onSubmit}
-      initialValues={initialValues} />
+      initialValues={initialValues}
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

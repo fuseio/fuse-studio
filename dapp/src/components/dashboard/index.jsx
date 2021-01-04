@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Sidebar from 'react-sidebar'
 import { isMobile } from 'react-device-detect'
 import FontAwesome from 'react-fontawesome'
-import { Route, Switch, useParams } from 'react-router'
+import { Route, Switch, useParams, withRouter } from 'react-router'
 import get from 'lodash/get'
 import { push } from 'connected-react-router'
 
@@ -15,7 +15,6 @@ import { fetchCommunity } from 'actions/token'
 import { loadModal } from 'actions/ui'
 import { fetchEntities } from 'actions/communityEntities'
 import { withNetwork } from 'containers/Web3'
-import withTracker from 'containers/withTracker'
 
 import SidebarContent from 'components/dashboard/components/Sidebar'
 import Dashboard from 'components/dashboard/pages/Dashboard'
@@ -140,7 +139,9 @@ const DashboardLayout = (props) => {
           }
 
           {community && isAdmin && (
-            <Route exact path={`${match.path}/walletbanner`}
+            <Route
+              exact
+              path={`${match.path}/walletbanner`}
               render={() => (
                 <WithBgImage>
                   <WalletBannerLinkPage
@@ -160,19 +161,24 @@ const DashboardLayout = (props) => {
             </Route>
           )}
 
-          {isAdmin && (
-            <Route exact path={`${match.path}/settings`}>
-              <WithBgImage>
-                <SettingsPage
-                  community={community}
-                />
-              </WithBgImage>
-            </Route>
-          )
+          {
+            isAdmin && (
+              <Route exact path={`${match.path}/settings`}>
+                <WithBgImage>
+                  <SettingsPage
+                    community={community}
+                  />
+                </WithBgImage>
+              </Route>
+            )
           }
+
           {
             community && isAdmin && (
-              <Route exact path={`${match.path}/plugins`}>
+              <Route
+                exact
+                path={`${match.path}/plugins`}
+              >
                 <WithBgImage>
                   <PluginsPage
                     community={community}
@@ -204,7 +210,8 @@ const DashboardLayout = (props) => {
                 <WithBgImage>
                   <Users />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
           {
@@ -213,7 +220,8 @@ const DashboardLayout = (props) => {
                 <WithBgImage>
                   <TransferPage />
                 </WithBgImage>
-              </Route>)
+              </Route>
+            )
           }
 
           {
@@ -224,7 +232,8 @@ const DashboardLayout = (props) => {
                     <Dashboard />
                   </div>
                 </div>
-              </Route>)
+              </Route>
+            )
           }
         </Switch >
       </div >
@@ -246,7 +255,7 @@ const mapDispatchToProps = {
   push
 }
 
-export default withTracker(withNetwork(connect(
+export default withRouter(withNetwork(connect(
   mapStateToProps,
   mapDispatchToProps
 )(DashboardLayout)))

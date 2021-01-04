@@ -11,13 +11,11 @@ const blockExplorers = {
 
 export const getBlockExplorerUrl = (networkType) => blockExplorers[networkType]
 
-export const getApiRoot = (networkType) => CONFIG.api.url[toShortName(networkType)] ? CONFIG.api.url[toShortName(networkType)] : CONFIG.api.url['default']
+export const getApiRoot = (networkType) => CONFIG.api.url[toShortName(networkType)] ? CONFIG.api.url[toShortName(networkType)] : CONFIG.api.url.default
 
 export const isFuse = (provider) => (get(provider, 'networkVersion', false) || get(provider, 'connection.networkVersion', false)) === String(CONFIG.web3.chainId.fuse)
 
-const getInfuraUrl = (networkType) => {
-  return `https://${toLongName(networkType)}.infura.io/v3/${CONFIG.web3.apiKey}`
-}
+const getInfuraUrl = (networkType) => `https://${toLongName(networkType)}.infura.io/v3/${CONFIG.web3.apiKey}`
 
 const getForeignProviderUrl = (networkType) => {
   if (CONFIG.web3.providers.default === 'alchemy') {
@@ -29,7 +27,7 @@ const getForeignProviderUrl = (networkType) => {
 
 export const toLongName = (networkType) => networkType === 'main' ? 'mainnet' : networkType
 
-export const toShortName = (networkType) => networkType === 'mainnet' ? 'main' : networkType
+export const toShortName = (networkType) => networkType === 'mainnet' || networkType === 'main' ? 'main' : networkType
 
 export const getProviderUrl = (networkType) => {
   if (networkType === 'fuse') {
@@ -44,9 +42,15 @@ export const getOptions = (networkVersion) => {
   return CONFIG.web3.options[networkType]
 }
 
+export const getWeb3Options = (networkName) => {
+  return CONFIG.web3.options[networkName]
+}
+
 export const getNetworkVersion = (provider) => {
   return get(provider, 'currentProvider.networkVersion', false) || get(provider, 'currentProvider.connection.networkVersion', false)
 }
+
+export const toNetworkType = (networkId) => networkIdToName[networkId] || 'unknown'
 
 export const convertNetworkName = (name) => {
   if (name === 'main') {

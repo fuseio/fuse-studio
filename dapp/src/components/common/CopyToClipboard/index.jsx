@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 const styles = {
@@ -29,17 +29,18 @@ export default ({ text, children }) => {
   }
 
   return (
-    <Fragment>
+    <>
       <CopyToClipboard text={text}>
         <div onClick={handleClick} style={{ display: 'inline-block', marginLeft: '5px', fontSize: '16px' }}>
           {children}
         </div>
       </CopyToClipboard>
       {
-        copyStatus && <div style={styles}>
-          {copyStatus}
-        </div>
+        copyStatus &&
+          <div style={styles}>
+            {copyStatus}
+          </div>
       }
-    </Fragment>
+    </>
   )
 }

@@ -8,8 +8,9 @@ const CommunityFactoryABI = require('@fuse/entities-contracts/abi/CommunityFacto
 
 const { roles: { ADMIN_ROLE, APPROVED_ROLE, EMPTY_ROLE } } = require('@fuse/roles')
 
-const deployCommunity = async ({ home: { createContract, createMethod, send, from }, foreign }, communityProgress) => {
-  const { name, isClosed, adminAddress, isCustom, foreignTokenAddress } = communityProgress.steps.community.args
+const deployCommunity = async ({ home, foreign }, communityProgress) => {
+  const { createContract, createMethod, send, from } = home
+  const { name, isClosed, adminAddress, isCustom, foreignTokenAddress, homeTokenAddress } = communityProgress.steps.community.args
   const method = createMethod(createContract(CommunityFactoryABI, config.get('network.home.addresses.CommunityFactory')), 'createCommunity', name, adminAddress)
 
   const receipt = await send(method, {
@@ -35,11 +36,20 @@ const deployCommunity = async ({ home: { createContract, createMethod, send, fro
     await handleReceipt(receipt)
   }
 
-  let token = await Token.findOne({ address: foreignTokenAddress })
-  if (isCustom && !token) {
-    console.log(`Adding the custom token ${foreignTokenAddress} to the database`)
-    const tokenData = await fetchTokenData(foreignTokenAddress, {}, foreign.web3)
-    await new Token({ address: foreignTokenAddress, networkType: foreign.networkType, tokenType: 'custom', ...tokenData }).save()
+  if (homeTokenAddress) {
+    let token = await Token.findOne({ address: homeTokenAddress })
+    if (isCustom && !token) {
+      console.log(`Adding the home token ${foreignTokenAddress} to the database`)
+      const tokenData = await fetchTokenData(foreignTokenAddress, {}, home.web3)
+      await new Token({ address: homeTokenAddress, networkType: home.networkType, ...tokenData }).save()
+    }
+  } else if (foreignTokenAddress) {
+    let token = await Token.findOne({ address: foreignTokenAddress })
+    if (isCustom && !token) {
+      console.log(`Adding the custom token ${foreignTokenAddress} to the database`)
+      const tokenData = await fetchTokenData(foreignTokenAddress, {}, foreign.web3)
+      await new Token({ address: foreignTokenAddress, networkType: foreign.networkType, tokenType: 'custom', ...tokenData }).save()
+    }
   }
 
   return {

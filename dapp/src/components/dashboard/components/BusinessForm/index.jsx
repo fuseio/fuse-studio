@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import omit from 'lodash/omit'
 import capitalize from 'lodash/capitalize'
 import Select from 'react-select'
-import { Formik } from 'formik'
+import { Formik, Form } from 'formik'
 import entityShape from 'utils/validation/shapes/entity'
 import { businessTypes, options } from 'constants/dropdownOptions'
 import FontAwesome from 'react-fontawesome'
@@ -32,9 +32,9 @@ const BusinessForm = ({ submitEntity, uploadImage, isJoin, users, entity }) => {
   //   }
   // }
 
-  const renderForm = ({ handleSubmit, touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
+  const renderForm = ({ touched, setFieldTouched, setFieldValue, isValid, errors, values, handleChange, ...rest }) => {
     return (
-      <form className='user-form' onSubmit={handleSubmit}>
+      <Form className='user-form'>
         <h5 className='user-form__title'>
           {isJoin ? 'Join community' : 'Add new business'}
         </h5>
@@ -288,7 +288,7 @@ const BusinessForm = ({ submitEntity, uploadImage, isJoin, users, entity }) => {
         <div className='user-form__submit'>
           <TransactionButton frontText={isJoin ? 'Join' : 'Add business'} type='submit' disabled={!isValid} />
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -312,10 +312,12 @@ const BusinessForm = ({ submitEntity, uploadImage, isJoin, users, entity }) => {
         details: get(entity, 'details', '')
       }}
       validationSchema={entityShape}
-      render={renderForm}
+      // render={renderForm}
       onSubmit={onSubmit}
-      isInitialValid={false}
-    />
+      validateOnMount
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
 

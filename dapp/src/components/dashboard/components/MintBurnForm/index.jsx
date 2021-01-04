@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo } from 'react'
-import { Formik, ErrorMessage } from 'formik'
+import { Formik, ErrorMessage, Form } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/SignMessage'
 import { FAILURE, SUCCESS, CONFIRMATION } from 'actions/constants'
@@ -16,7 +16,7 @@ export default ({
   balance,
   actionType,
   error,
-  handleMintOrBurnClick,
+  handleSendTransaction,
   transactionStatus,
   mintMessage,
   burnMessage
@@ -35,7 +35,7 @@ export default ({
     } = values
 
     const amount = actionType === 'mint' ? mintAmount : burnAmount
-    handleMintOrBurnClick(amount)
+    handleSendTransaction(amount)
     formikBag.resetForm()
   }
 
@@ -61,13 +61,13 @@ export default ({
     return transactionError(actionType) && error && typeof error.includes === 'function' && error.includes('denied')
   }
 
-  const renderForm = ({ handleSubmit, errors, handleChange, touched, values, isValid }) => {
+  const renderForm = ({ errors, handleChange, touched, values, isValid }) => {
     const {
       actionType
     } = values
 
     return (
-      <form className='transfer__content grid-y align-justify' style={{ height: '140px' }} onSubmit={handleSubmit}>
+      <Form className='transfer__content grid-y align-justify' style={{ height: '140px' }}>
 
         <Message
           message={`Your just ${lastAction && lastAction.actionType}ed ${lastAction && lastAction.mintBurnAmount} ${symbol} on ${tokenNetworkType} network`}
@@ -173,7 +173,7 @@ export default ({
             actionType && <TransactionButton type='submit' disabled={!isValid} frontText={upperCase(actionType)} />
           }
         </div>
-      </form>
+      </Form>
     )
   }
 
@@ -181,11 +181,12 @@ export default ({
     <Formik
       initialValues={initialValues}
       validationSchema={mintBurnShape(balance && typeof balance.replace === 'function' ? balance.replace(/,/g, '') : 0)}
-      render={renderForm}
       onSubmit={onSubmit}
-      isInitialValid={false}
+      validateOnMount
       enableReinitialize
       validateOnChange
-    />
+    >
+      {(props) => renderForm(props)}
+    </Formik>
   )
 }
