@@ -56,9 +56,7 @@ const ProfileDropDown = ({
       if (foreignNetwork) {
         if (foreignNetwork === networkType) {
           dispatch(changeNetwork('fuse'))
-          store.network.switchNetwork('fuse')
         } else {
-          store.network.switchNetwork(foreignNetwork)
           dispatch(changeNetwork(foreignNetwork))
         }
       } else {
