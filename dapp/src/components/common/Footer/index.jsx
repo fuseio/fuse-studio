@@ -9,13 +9,14 @@ const Footer = ({ networkType }) => {
     <div className='footer'>
       <div className='footer__item'>
         <span className={classNames('footer__status_dot', { 'footer__status_dot--on': networkType }, { 'footer__status_dot--off': !networkType })} />
-        {networkType
-          ? <span>Connected to {capitalize(convertNetworkName(networkType))} network</span>
-          : <span>Not Connected</span>
+        {
+          networkType
+            ? <span>Connected to {capitalize(convertNetworkName(networkType))} network</span>
+            : <span>Not Connected</span>
         }
       </div>
       <div className='footer__item footer__item--last'>
-        <span>Fuse 2020&nbsp;|&nbsp;</span>
+        <span>Fuse 2021&nbsp;|&nbsp;</span>
         <span style={{ fontWeight: 'bold' }}>BETA</span>
       </div>
     </div>
