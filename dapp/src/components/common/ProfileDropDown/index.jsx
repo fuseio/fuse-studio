@@ -33,7 +33,7 @@ const ProfileDropDown = ({
 
   const toggleNetwork = () => {
     const network = networkType === 'fuse'
-      ? (CONFIG.env === 'qa' || CONFIG.env === 'production')
+      ? (CONFIG.env === 'qa')
         ? 'ropsten' : 'main'
       : networkType === 'ropsten'
         ? 'main' : 'ropsten'
@@ -56,7 +56,9 @@ const ProfileDropDown = ({
       if (foreignNetwork) {
         if (foreignNetwork === networkType) {
           dispatch(changeNetwork('fuse'))
+          store.network.switchNetwork('fuse')
         } else {
+          store.network.switchNetwork(foreignNetwork)
           dispatch(changeNetwork(foreignNetwork))
         }
       } else {

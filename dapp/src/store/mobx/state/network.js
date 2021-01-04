@@ -2,7 +2,7 @@ import { action, observable, computed, flow, makeObservable } from 'mobx'
 import Web3 from 'web3'
 import { getProviderInfo } from 'web3modal'
 import { getWeb3 } from 'services/web3'
-import { toNetworkType, getWeb3Options } from 'utils/network'
+import { toNetworkType, getWeb3Options, toLongName } from 'utils/network'
 
 export default class Network {
   homeNetwork = 'fuse'
@@ -66,12 +66,48 @@ export default class Network {
           this._provider.on('chainChanged', async (chainId) => {
             this.networkId = parseInt(chainId)
             this.networkName = toNetworkType(this.networkId)
+            const web3 = new Web3(provider)
+            this._web3 = web3
           })
           break
       }
 
       this.networkId = yield this._web3.eth.net.getId()
       this.networkName = toNetworkType(this.networkId)
+    } catch (error) {
+      console.log({ error })
+    }
+  })
+
+  switchNetwork = flow(function * (network) {
+    console.log({ network })
+    try {
+      // network = toLongName(network)
+      // console.log({
+      //   networkName: network,
+      //   host: network === 'fuse'
+      //     ? CONFIG.web3.fuseProvider
+      //     : network,
+      //   chainId: network === 'fuse'
+      //     ? CONFIG.web3.chainId.fuse
+      //     : undefined
+      // })
+      // const web3 = yield getWeb3()
+      // yield web3.currentProvider.torus.setProvider({
+      //   networkName: network,
+      //   host: network === 'fuse'
+      //     ? CONFIG.web3.fuseProvider
+      //     : network,
+      //   chainId: network === 'fuse'
+      //     ? CONFIG.web3.chainId.fuse
+      //     : undefined
+      // })
+      // this._web3Home = getWeb3({ networkType: this.homeNetwork })
+      // this._web3Foreign = getWeb3({ networkType: this.foreignNetwork })
+      // this._web3 = web3
+      // this._provider = web3.currentProvider
+      // this.networkId = yield this._web3.eth.net.getId()
+      // this.networkName = toNetworkType(this.networkId)
     } catch (error) {
       console.log({ error })
     }

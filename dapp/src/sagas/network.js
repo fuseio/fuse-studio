@@ -15,6 +15,7 @@ import { getAccountAddress } from 'selectors/accounts'
 import { apiCall, tryTakeEvery } from './utils'
 import { eventChannel } from 'redux-saga'
 import { toShortName } from '../utils/network'
+import mobxStore from 'store/mobx'
 
 const cb = (error, result) => {
   if (!error) {
@@ -202,10 +203,12 @@ function * changeNetwork ({ networkType }) {
     yield web3.currentProvider.torus.setProvider({
       host: isFuseNetwork ? CONFIG.web3.fuseProvider : currentNetwork,
       networkName: currentNetwork,
-      chainId: isFuseNetwork ? CONFIG.web3.chainId.fuse : undefined })
+      chainId: isFuseNetwork ? CONFIG.web3.chainId.fuse : undefined
+    })
     yield web3.eth.net.getId()
     yield call(checkNetworkType, { web3 })
   }
+  mobxStore.network.initWeb3(web3.currentProvider)
   yield put({
     type: actions.CHANGE_NETWORK.SUCCESS
   })
