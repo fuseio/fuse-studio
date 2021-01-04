@@ -10,7 +10,7 @@ import CheckGreen from 'images/check_green.svg'
 const includedList = [
   'Token issuance',
   'Powerful backend APIs',
-  'Plugins (fiat on ramp, user bonuses and more)',
+  'Plugins',
   'Fee abstraction',
   'Customizable mobile wallet'
 ]
@@ -31,7 +31,7 @@ function Price () {
         <div className='section_one grid-x align-justify align-middle'>
           <div className='section_one__content cell large-12'>
             <div className='section_one__title'>Pricing</div>
-            <div className='section_one__sub_title'>Pay up to <span>1 cent per transaction</span> regardless of size</div>
+            <div className='section_one__sub_title'>Pay no more than <span>$0.01 cent per transaction</span> regardless of size.</div>
             <div className='included'>
               <div className='included__title'>included</div>
               <div className='included__list'>
