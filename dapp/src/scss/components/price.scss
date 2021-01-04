@@ -27,14 +27,14 @@
 
     @include element(title) {
       font-weight: 500;
-      font-size: 1.875em;
+      font-size: 2em;
       line-height: 36px;
       color: #052235;
       padding: 1em 0;
     }
 
     @include element(sub_title) {
-      font-size: 1.375em;
+      font-size: 1.4em;
       line-height: 31px;
       color: #052235;
       padding-bottom: 1em;
@@ -134,10 +134,7 @@
       @include xy-grid(horizontal, false);
       @include flex-align(null, middle);
       @include block(item) {
-        height: 100%;
-        // &:first-child {
-        //   margin-right: 1em;
-        // }
+        height: 56px;
 
         @include element(title) {
           font-size: 0.875em;
@@ -152,6 +149,7 @@
           font-size: 1.5em;
           line-height: 34px;
           color: #052235;
+          font-weight: 500;
         }
       }
     }
@@ -220,11 +218,11 @@
         @include flex-align(justify, middle);
         > div {
           &:first-child {
-            @include xy-cell(11, 0);
+            @include xy-cell(11, null, 0);
           }
 
           &:last-child {
-            @include xy-cell(auto);
+            @include xy-cell(auto, null, 0);
           }
         }
       }
@@ -233,12 +231,12 @@
         @include flex-align(center, middle);
         > div {
           &:first-child {
-            @include xy-cell(11, 0);
+            @include xy-cell(11, null, 0);
           }
 
           &:last-child {
             margin-top: 2em;
-            @include xy-cell(20);
+            @include xy-cell(20, null, 0);
           }
         }
       }
@@ -271,8 +269,8 @@
         margin-bottom: 1em;
       }
     }
+
     @include element(text) {
-      font-size: 1.125em;
       line-height: 25px;
       color: #052235;
     }
