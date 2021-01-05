@@ -89,6 +89,7 @@ function Dashboard (props) {
       {
         (dashboard?.community?.bridgeDirection === 'foreign-to-home') && (
           <Bridge
+            withTitle
             onConfirmation={handleConfirmation}
           />
         )

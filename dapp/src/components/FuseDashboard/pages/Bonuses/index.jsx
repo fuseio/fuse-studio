@@ -42,36 +42,32 @@ const Bonuses = () => {
   }
 
   return (
-    dashboard?.community
-      ? (
-        <>
-          <div className='join_bonus__header'>
-            <h2 className='join_bonus__header__title'>Bonuses</h2>
-            &nbsp;<FontAwesome data-tip data-for='Bonuses' name='info-circle' />
-            <ReactTooltip className='tooltip__content' id='Bonuses' place='bottom' effect='solid'>
-              <div>Please put some tokens into the funder above and then select here the type of bonus and the amount you would like.</div>
-            </ReactTooltip>
-          </div>
-          <div className='join_bonus__wrapper'>
-            <TransferToFunderForm
-              desiredNetworkName={tokenNetworkName}
-              symbol={dashboard?.homeToken?.symbol}
-              balance={tokenBalance ? formatWei(tokenBalance, 2, decimals) : 0}
-              makeTransaction={makeTransfer}
-              tokenNetworkType={networkName}
-              onConfirmation={handleConfirmation}
-              funderBalance={funderBalance ? formatWei(funderBalance, 2, decimals) : 0}
-            />
-            <RewardUserForm
-              hasFunderBalance={funderBalance && funderBalance !== '0'}
-              setJoinBonus={(amount, isActive) => dashboard?.setBonus('joinBonus', amount, isActive)}
-              setBackupBonus={(amount, isActive) => dashboard?.setBonus('backupBonus', amount, isActive)}
-              setInviteBonus={(amount, isActive) => dashboard?.setBonus('inviteBonus', amount, isActive)}
-            />
-          </div>
-        </>
-      )
-      : <div />
+    <>
+      <div className='join_bonus__header'>
+        <h2 className='join_bonus__header__title'>Bonuses</h2>
+        &nbsp;<FontAwesome data-tip data-for='Bonuses' name='info-circle' />
+        <ReactTooltip className='tooltip__content' id='Bonuses' place='bottom' effect='solid'>
+          <div>Please put some tokens into the funder above and then select here the type of bonus and the amount you would like.</div>
+        </ReactTooltip>
+      </div>
+      <div className='join_bonus__wrapper'>
+        <TransferToFunderForm
+          desiredNetworkName={tokenNetworkName}
+          symbol={dashboard?.homeToken?.symbol}
+          balance={tokenBalance ? formatWei(tokenBalance, 2, decimals) : 0}
+          makeTransaction={makeTransfer}
+          tokenNetworkType={networkName}
+          onConfirmation={handleConfirmation}
+          funderBalance={funderBalance ? formatWei(funderBalance, 2, decimals) : 0}
+        />
+        <RewardUserForm
+          hasFunderBalance={funderBalance && funderBalance !== '0'}
+          setJoinBonus={(amount, isActive) => dashboard?.setBonus('joinBonus', amount, isActive)}
+          setBackupBonus={(amount, isActive) => dashboard?.setBonus('backupBonus', amount, isActive)}
+          setInviteBonus={(amount, isActive) => dashboard?.setBonus('inviteBonus', amount, isActive)}
+        />
+      </div>
+    </>
   )
 }
 

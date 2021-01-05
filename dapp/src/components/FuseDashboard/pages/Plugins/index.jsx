@@ -49,13 +49,35 @@ const generalPlugins = ([
       The integration allows your users to top their account without you holding any custody in the process! Here is how:
       https://www.youtube.com/watch?v=ShxUIljvfLU&feature=emb_title`,
     key: 'onramp'
+  },
+  {
+    title: 'Bridge',
+    coverImage: FiatOnRamp,
+    disabled: false,
+    modalCoverPhoto: FiatOnRampBig,
+    content: `We have created integration with Moonpay, Transak, fiat gateways that allow you to embed the relevant payment option
+      (credit/debit cards and banks wires) inside your app and even show several option for your clients to choose from.
+      The integration allows your users to top their account without you holding any custody in the process! Here is how:
+      https://www.youtube.com/watch?v=ShxUIljvfLU&feature=emb_title`,
+    key: 'bridge'
+  },
+  {
+    title: 'Fuseswap',
+    coverImage: FiatOnRamp,
+    disabled: false,
+    modalCoverPhoto: FiatOnRampBig,
+    content: `We have created integration with Moonpay, Transak, fiat gateways that allow you to embed the relevant payment option
+      (credit/debit cards and banks wires) inside your app and even show several option for your clients to choose from.
+      The integration allows your users to top their account without you holding any custody in the process! Here is how:
+      https://www.youtube.com/watch?v=ShxUIljvfLU&feature=emb_title`,
+    key: 'fuseswap'
   }
 ])
 
-const PluginList = ({ pluginList, pluginTile, showInfoModal, addPlugin, togglePlugin }) => {
+const PluginList = ({ pluginList, showInfoModal, addPlugin, togglePlugin }) => {
   return (
     <div className='plugins__items__wrapper'>
-      <h5 className='plugins__items__title'>{pluginTile}</h5>
+      <h5 className='plugins__items__title'>Choose the plugin you want to add</h5>
       <div className='grid-x grid-margin-x grid-margin-y'>
         {
           pluginList.map(({
@@ -72,7 +94,6 @@ const PluginList = ({ pluginList, pluginTile, showInfoModal, addPlugin, togglePl
             return (
               <Plugin
                 text={text}
-                modifier={pluginTile.includes('Fiat')}
                 key={title}
                 subTitle={subTitle}
                 disabled={disabled}
@@ -119,6 +140,7 @@ const Plugins = () => {
   const addPlugin = (plugin) => {
     handleTracker(plugin)
     dashboard.addCommunityPlugin({ communityAddress, plugin })
+    console.log({ plugin })
   }
 
   const togglePlugin = (key) => {
@@ -129,9 +151,9 @@ const Plugins = () => {
       plugin.isActive = false
     }
     if (dashboard?.plugins) {
-      if (dashboard?.plugins[key] && dashboard?.plugins[key].isRemoved) {
+      if (dashboard?.plugins[key]?.isRemoved) {
         plugin.isRemoved = false
-      } else if (dashboard?.plugins[key] && !dashboard?.plugins[key].isRemoved) {
+      } else {
         plugin.isRemoved = true
       }
     }
@@ -139,29 +161,24 @@ const Plugins = () => {
   }
 
   return (
-    dashboard?.community
-      ? (
-        <div className='plugins'>
-          <h2 className='plugins__title'>Plugins</h2>
-          <div className='plugins__wrapper'>
-            <div className='plugins__content__wrapper'>
-              <div className='plugins__content'>
-                Plug-ins are contracts deployed on the Fuse chain that allow you to add functionality to your app with the click of a button.
-                Any plug-in you activate will open a new navigation menu that allows you to configure it's settings.
-                Give it try!
-              </div>
-              <div className='plugins__puzzle'><img src={Puzzle} /></div>
-            </div>
-            <PluginList
-              pluginList={generalPlugins}
-              pluginTile='Choose the plugin you want to add'
-              showInfoModal={showInfoModal}
-              addPlugin={addPlugin} togglePlugin={togglePlugin}
-            />
+    <div className='plugins'>
+      <h2 className='plugins__title'>Plugins</h2>
+      <div className='plugins__wrapper'>
+        <div className='plugins__content__wrapper'>
+          <div className='plugins__content'>
+            Plug-ins are contracts deployed on the Fuse chain that allow you to add functionality to your app with the click of a button.
+            Any plug-in you activate will open a new navigation menu that allows you to configure it's settings.
+            Give it try!
           </div>
+          <div className='plugins__puzzle'><img src={Puzzle} /></div>
         </div>
-        )
-      : <div />
+        <PluginList
+          pluginList={generalPlugins}
+          showInfoModal={showInfoModal}
+          addPlugin={addPlugin} togglePlugin={togglePlugin}
+        />
+      </div>
+    </div>
   )
 }
 

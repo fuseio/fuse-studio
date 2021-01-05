@@ -17,6 +17,7 @@ import PluginsPage from 'components/FuseDashboard/pages/Plugins'
 import Users from 'components/FuseDashboard/pages/Users'
 import Businesses from 'components/FuseDashboard/pages/Businesses'
 import BonusesPage from 'components/FuseDashboard/pages/Bonuses'
+import BridgePage from 'components/FuseDashboard/pages/Bridge'
 import OnRampPage from 'components/FuseDashboard/pages/OnRamp'
 import WalletBannerLinkPage from 'components/FuseDashboard/pages/WalletBannerLink'
 
@@ -93,7 +94,7 @@ const DashboardLayout = ({
               >
                 {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
               </Sidebar>
-            )
+              )
         }
         <Switch>
           {get(dashboard?.plugins, 'bonuses') && !get(dashboard?.plugins, 'bonuses.isRemoved', false) && dashboard?.isAdmin && (
@@ -125,6 +126,20 @@ const DashboardLayout = ({
               >
                 <WithBgImage>
                   <WalletBannerLinkPage />
+                </WithBgImage>
+              </Route>
+            )
+          }
+
+          {
+            // (dashboard?.community?.bridgeDirection === 'home-to-foreign') &&
+            dashboard?.community && (
+              <Route
+                exact
+                path={`${match.path}/bridge`}
+              >
+                <WithBgImage>
+                  <BridgePage />
                 </WithBgImage>
               </Route>
             )
