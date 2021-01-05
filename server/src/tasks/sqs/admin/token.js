@@ -1,6 +1,6 @@
 const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/MintableBurnableToken')
-const ExpirableTokenAbi = require('@fuse/token-factory-contracts/abi/ExpirableToken')
-const ExpirableTokenBytecode = require('@fuse/token-factory-contracts/build/ExpirableToken')
+const config = require('config')
+const TokenFactoryABI = require('@fuse/token-factory-contracts/abi/TokenFactoryWithEvents')
 const { createNetwork } = require('@utils/web3')
 const { getAbi } = require('@constants/abi')
 const mongoose = require('mongoose')
@@ -11,7 +11,8 @@ const BigNumber = require('bignumber.js')
 
 const createToken = async (account, { bridgeType, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr }, job) => {
   const { createContract, createMethod, send, web3 } = createNetwork(bridgeType, account)
-  const method = createMethod(createContract(ExpirableTokenAbi), 'deploy', { data: ExpirableTokenBytecode.bytecode, arguments: [name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp] })
+  const tokenFactory = createContract(TokenFactoryABI, config.get('network.home.addresses.TokenFactory'))
+  const method = createMethod(tokenFactory, 'createMintableBurnableToken', name, symbol, initialSupplyInWei, tokenURI)
   const receipt = await send(method, {
     from: account.address
   }, {
@@ -21,7 +22,7 @@ const createToken = async (account, { bridgeType, name, symbol, initialSupplyInW
       job.save()
     }
   })
-  const tokenAddress = receipt.options.address
+  const tokenAddress = receipt.events.TokenCreated.returnValues.token
   const { blockNumber } = await web3.eth.getTransaction(receipt.transactionHash)
 
   job.set('data.tokenAddress', tokenAddress)
