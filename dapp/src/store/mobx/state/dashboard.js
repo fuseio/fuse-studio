@@ -114,6 +114,14 @@ export default class Dashboard {
     }
   })
 
+  addBridgePlugin = flow(function * ({ bridgeType, bridgeDirection }) {
+    const response = yield request
+      .post(`${this.baseUrl}/communities/${this.communityAddress}/bridge`)
+      .send({ bridgeType, bridgeDirection })
+      .then(response => response.body)
+    this.community = { ...response.data }
+  })
+
   initStateByCommunity = community => {
     this.community = { ...omit(community, ['plugins']) }
     this.plugins = { ...get(community, 'plugins') }
@@ -285,7 +293,7 @@ export default class Dashboard {
         contract.methods.name().call(),
         contract.methods.symbol().call(),
         contract.methods.totalSupply().call(),
-        contract.methods.decimals().call(),
+        contract.methods.decimals().call()
       ])
       this.homeToken = { ...response.data, name, symbol, totalSupply, decimals }
     } catch (error) {
@@ -300,7 +308,7 @@ export default class Dashboard {
         contract.methods.name().call(),
         contract.methods.symbol().call(),
         contract.methods.totalSupply().call(),
-        contract.methods.decimals().call(),
+        contract.methods.decimals().call()
       ])
       this.foreignToken = { name, symbol, totalSupply, decimals }
     } catch (error) {
@@ -375,7 +383,7 @@ export default class Dashboard {
         const balanceHome = yield basicTokenContract.methods
           .balanceOf(accountAddress)
           .call()
-          this.tokenBalances.home = balanceHome
+        this.tokenBalances.home = balanceHome
       }
       if (this?.community?.foreignTokenAddress) {
         const web3 = this._web3Foreign
@@ -386,7 +394,7 @@ export default class Dashboard {
         const balanceForeign = yield contract.methods
           .balanceOf(accountAddress)
           .call()
-          this.tokenBalances.foreign = balanceForeign
+        this.tokenBalances.foreign = balanceForeign
       }
     } catch (error) {
       console.log('ERROR in fetchTokenBalances', { error })
@@ -436,7 +444,7 @@ export default class Dashboard {
       const communityEntities = get(data, 'communities[0].entitiesList.communityEntities', [])
       this.entitiesCount = communityEntities.length
     } catch (error) {
-      console.log('ERROR in addCommunityPlugin', { error })
+      console.log('ERROR in fetchEntitiesCount', { error })
     }
   })
 
@@ -444,7 +452,6 @@ export default class Dashboard {
     const memberData = yield isCommunityMember(this.communityAddress, accountAddress)
     this.isCommunityMember = memberData?.data?.communityEntities?.length > 0
   })
-
 
   get addedPlugins () {
     return Object.keys(

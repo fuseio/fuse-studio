@@ -57,22 +57,6 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
 })
 
 /**
- * @api {post} /communities/:communityAddress/bridge Add bridge to community
- * @apiName AddBridge
- * @apiGroup Community
- * @apiParam {String} communityAddress Community address
- * @apiParam {bridgeType} bridgeType - 'multiple-erc20-to-erc20'/'multi-amb-erc20-to-erc677'/'amb-erc677-to-erc677'
- * @apiParam {bridgeDirection} bridgeDirection - 'foreign-to-home'/'home-to-foreign'
- */
-
-router.post('/:communityAddress/bridge', async (req, res, next) => {
-  const { communityAddress, bridgeType = 'home-to-foreign', bridgeDirection = 'multi-amb-erc20-to-erc677' } = req.params
-  const community = await Community.findOneAndUpdate({ communityAddress }, { bridgeDirection, bridgeType }, { new: true })
-
-  return res.json({ data: community })
-})
-
-/**
  * @api {put} /communities/:communityAddress Update community metadata
  * @apiName UpdateCommunity
  * @apiGroup Community
@@ -147,6 +131,24 @@ router.post('/:communityAddress/invite', async (req, res, next) => {
     smsProvider.createMessage({ to: phoneNumber, body: `${config.get('inviteTxt')}\n${url}` })
     res.send({ response: 'ok' })
   }
+})
+
+/**
+ * @api {post} /communities/:communityAddress/bridge Add bridge to community
+ * @apiName AddBridge
+ * @apiGroup Community
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {bridgeType} bridgeType - 'multiple-erc20-to-erc20'/'multi-amb-erc20-to-erc677'/'amb-erc677-to-erc677'
+ * @apiParam {bridgeDirection} bridgeDirection - 'foreign-to-home'/'home-to-foreign'
+ */
+
+router.post('/:communityAddress/bridge', async (req, res, next) => {
+  const { communityAddress } = req.params
+  console.log({ ...req.body, communityAddress })
+  const { bridgeType, bridgeDirection } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, { bridgeDirection, bridgeType }, { new: true })
+
+  return res.json({ data: community })
 })
 
 /**
