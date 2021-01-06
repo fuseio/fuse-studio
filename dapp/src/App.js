@@ -1,5 +1,6 @@
 import { hot } from 'react-hot-loader'
 import React, { StrictMode } from 'react'
+import Modal from 'react-modal'
 import { ModalProvider } from 'react-modal-hook'
 import { PersistGate } from 'redux-persist/integration/react'
 import { TransitionGroup } from 'react-transition-group'
@@ -20,6 +21,8 @@ Sentry.init({ dsn: `https://${CONFIG.sentry.key}@sentry.io/${CONFIG.sentry.proje
 const { store, history, persistor } = configureStore(window.__INITIAL_STATE__)
 
 store.runSaga(rootSaga)
+
+Modal.setAppElement('#root')
 
 const App = () => (
   <StrictMode>
