@@ -10,7 +10,7 @@ const NameAndDescription = () => {
   const account = useSelector(getAccount)
 
   useEffect(() => {
-    const hasBalance = parseFloat(account && account.home ? formatWei((account.home), 2) : '0') > 0.01
+    const hasBalance = parseFloat(account && account.home ? formatWei((account.home), 2) : '0') >= 0.01
     formik.setFieldValue('hasBalance', hasBalance)
   }, [account])
 
