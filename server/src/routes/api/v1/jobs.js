@@ -3,7 +3,7 @@ var mongoose = require('mongoose')
 const { agenda } = require('@services/agenda')
 const QueueJob = mongoose.model('QueueJob')
 
-// /**
+// **
 //  * @api {get} api/v1/jobs/:jobId Fetch ethFunder job by id
 //  * @apiName FetchEthFunderJob
 //  * @apiGroup Jobs

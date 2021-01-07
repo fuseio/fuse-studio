@@ -44,7 +44,7 @@ const Bridge = ({
   const bridgeType = dashboard?.community?.bridgeType
   const symbol = dashboard?.homeToken?.symbol
   const decimals = dashboard?.homeToken?.decimals ?? 18
-  const balanceKey = bridgeStatus?.from?.balanceKey
+  const tokenAddress = dashboard?.bridgeStatus?.from?.tokenAddress
   const foreignNetwork = dashboard?.foreignNetwork
   const bridgeDirection = dashboard?.community?.bridgeDirection
   const bridge = dashboard?.bridgeStatus?.from?.bridge
@@ -68,9 +68,6 @@ const Bridge = ({
   }
 
   const makeTransaction = ({ submitType, amount }) => {
-    const tokenAddress = balanceKey === 'fuse'
-      ? homeTokenAddress
-      : foreignTokenAddress
     if (submitType === 'approve') {
       return approveToken({
         bridgeDirection,
@@ -186,7 +183,7 @@ const Bridge = ({
             openModal={() => openModal('from')}
           />
           <Formik
-            initialValues={{ amount: '', allowance: dashboard?.allowance[balanceKey] }}
+            initialValues={{ amount: '', allowance: dashboard?.allowance[tokenAddress] }}
             enableReinitialize
             onSubmit={onSubmit}
             validateOnMount

@@ -1,4 +1,6 @@
-{
+const defer = require('config/defer').deferConfig
+
+module.exports = {
   "env": "qa",
   "web3": {
     "fuseProvider": "https://rpc.fuse.io",
@@ -69,15 +71,19 @@
       },
       "addresses": {
         "homeToForeign": {
-          "fuse": {
-            "MultiBridgeMediatorMain": "0x5ee2cf3eA05648dfbb8f76f848f9e47b843bb946",
-            "MultiBridgeMediatorRopsten": "0x6A90210fc7643Fd4E829204D526C060f0fc347D6"
+          fuse: {
+            MultiBridgeMediator: defer(function () {
+              return this.env === 'production'
+                ? "0x5ee2cf3eA05648dfbb8f76f848f9e47b843bb946"
+                : "0x6A90210fc7643Fd4E829204D526C060f0fc347D6"
+            })
           },
-          "main": {
-            "MultiBridgeMediator": "0xD047C66c583488462dBE76d0f9652eC8fD85c1D8"
-          },
-          "ropsten": {
-            "MultiBridgeMediator": "0x414cca4c7b592F0993A72A44EE9873BB12dd7eC5"
+          foreign: {
+            MultiBridgeMediator: defer(function () {
+              return this.env === 'production'
+                ? "0xD047C66c583488462dBE76d0f9652eC8fD85c1D8"
+                : "0x414cca4c7b592F0993A72A44EE9873BB12dd7eC5"
+            })
           }
         }
       }

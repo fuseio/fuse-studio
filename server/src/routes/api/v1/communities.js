@@ -118,7 +118,7 @@ router.put('/:communityAddress/secondary', async (req, res) => {
  *
  */
 
-router.post('/:communityAddress/foreignToken', async (req, res, next) => {
+router.put('/:communityAddress/foreignToken', async (req, res, next) => {
   const { communityAddress } = req.params
   const { foreignTokenAddress } = req.body
   const foreign = createNetwork('foreign')
@@ -173,7 +173,7 @@ router.post('/:communityAddress/invite', async (req, res, next) => {
  *
  */
 
-router.post('/:communityAddress/bridge', async (req, res, next) => {
+router.put('/:communityAddress/bridge', async (req, res, next) => {
   const { communityAddress } = req.params
   const { bridgeType, bridgeDirection } = req.body
   const community = await Community.findOneAndUpdate({ communityAddress }, { bridgeDirection, bridgeType }, { new: true })

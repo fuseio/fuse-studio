@@ -38,15 +38,9 @@ export default class Dashboard {
   communityBusinesses
   communityAdmins
 
-  tokenBalances = {
-    fuse: 0,
-    ethereum: 0
-  }
+  tokenBalances = {}
 
-  allowance = {
-    fuse: 0,
-    ethereum: 0
-  }
+  allowance = {}
 
   totalSupply = {
     home: 0,
@@ -119,7 +113,7 @@ export default class Dashboard {
   registerForeignTokenAddress = flow(function * ({ foreignTokenAddress }) {
     try {
       const response = yield request
-        .post(`${this.baseUrl}/communities/${this.communityAddress}/foreignToken`)
+        .put(`${this.baseUrl}/communities/${this.communityAddress}/foreignToken`)
         .send({ foreignTokenAddress })
         .then(response => response.body)
       this.community = { ...response.data }
@@ -130,7 +124,7 @@ export default class Dashboard {
 
   addBridgePlugin = flow(function * ({ bridgeType, bridgeDirection }) {
     const response = yield request
-      .post(`${this.baseUrl}/communities/${this.communityAddress}/bridge`)
+      .put(`${this.baseUrl}/communities/${this.communityAddress}/bridge`)
       .send({ bridgeType, bridgeDirection })
       .then(response => response.body)
     this.community = { ...response.data }
@@ -182,15 +176,9 @@ export default class Dashboard {
       this.homeToken = {}
       this.foreignToken = {}
       this.community = {}
-      this.tokenBalances = {
-        fuse: 0,
-        ethereum: 0
-      }
+      this.tokenBalances = {}
       this.plugins = {}
-      this.allowance = {
-        fuse: 0,
-        ethereum: 0
-      }
+      this.allowance = {}
       this.totalSupply = {
         home: 0,
         foreign: 0
@@ -353,7 +341,7 @@ export default class Dashboard {
           bridgeMediator = homeToForeignBridgeMediators.ethereum
         }
         const bridgeMediatorAllowance = yield basicTokenContract.methods.allowance(accountAddress, bridgeMediator).call()
-        this.allowance.fuse = bridgeMediatorAllowance
+        this.allowance[this?.community?.homeTokenAddress] = bridgeMediatorAllowance
       }
       if (this?.community?.foreignTokenAddress) {
         let bridgeMediator
@@ -368,7 +356,7 @@ export default class Dashboard {
           bridgeMediator = homeToForeignBridgeMediators.fuse
         }
         const bridgeMediatorAllowance = yield contract.methods.allowance(accountAddress, bridgeMediator).call()
-        this.allowance.ethereum = bridgeMediatorAllowance
+        this.allowance[this?.community?.foreignTokenAddress] = bridgeMediatorAllowance
       }
     } catch (error) {
       console.log('ERROR in checkAllowance', { error })
@@ -387,7 +375,7 @@ export default class Dashboard {
         const balanceHome = yield basicTokenContract.methods
           .balanceOf(accountAddress)
           .call()
-        this.tokenBalances.fuse = balanceHome
+        this.tokenBalances[this?.community?.homeTokenAddress] = balanceHome
       }
       if (this?.community?.foreignTokenAddress) {
         const web3 = this._web3Foreign
@@ -398,7 +386,7 @@ export default class Dashboard {
         const balanceForeign = yield contract.methods
           .balanceOf(accountAddress)
           .call()
-        this.tokenBalances.ethereum = balanceForeign
+        this.tokenBalances[this?.community?.foreignTokenAddress] = balanceForeign
       }
     } catch (error) {
       console.log('ERROR in fetchTokenBalances', { error })
@@ -470,12 +458,13 @@ export default class Dashboard {
           from: {
             network: this.rootStore.network.homeNetwork,
             bridge: 'foreign',
-            balanceKey: 'fuse'
+            tokenAddress: this?.community?.homeTokenAddress
           },
           to: {
             network: this.foreignNetwork,
             bridge: 'home',
-            balanceKey: 'ethereum'
+            balanceKey: 'ethereum',
+            tokenAddress: this?.community?.foreignTokenAddress
           }
         }
       } else {
@@ -483,12 +472,12 @@ export default class Dashboard {
           from: {
             network: this.foreignNetwork,
             bridge: 'home',
-            balanceKey: 'ethereum'
+            tokenAddress: this?.community?.foreignTokenAddress
           },
           to: {
             network: this.rootStore.network.homeNetwork,
             bridge: 'foreign',
-            balanceKey: 'fuse'
+            tokenAddress: this?.community?.homeTokenAddress
           }
         }
       }
@@ -498,12 +487,12 @@ export default class Dashboard {
           from: {
             network: this.rootStore.network.homeNetwork,
             bridge: 'home',
-            balanceKey: 'fuse'
+            tokenAddress: this?.community?.homeTokenAddress
           },
           to: {
             network: this.foreignNetwork,
             bridge: 'foreign',
-            balanceKey: 'foreign'
+            tokenAddress: this?.community?.foreignTokenAddress
           }
         }
       } else {
@@ -511,12 +500,12 @@ export default class Dashboard {
           from: {
             network: this.foreignNetwork,
             bridge: 'foreign',
-            balanceKey: 'foreign'
+            tokenAddress: this?.community?.foreignTokenAddress
           },
           to: {
             network: this.rootStore.network.homeNetwork,
             bridge: 'home',
-            balanceKey: 'fuse'
+            tokenAddress: this?.community?.homeTokenAddress
           }
         }
       }

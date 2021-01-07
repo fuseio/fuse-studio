@@ -21,15 +21,14 @@ const Balance = ({
   side
 }) => {
   const { dashboard } = useStore()
-  const { network, balanceKey } = dashboard?.bridgeStatus[side]
-  const balance = dashboard?.tokenBalances[balanceKey]
+  const { network, tokenAddress } = dashboard?.bridgeStatus[side]
   return (
     <div className='bridge'>
       <NetworkLogo side={side} />
       <div className='grid-y align-top'>
         <div className='bridge__title cell'>{convertNetworkName(network)}</div>
         <div className='bridge__text cell'>
-          Balance&nbsp;{balance ? formatWei(balance, 2, dashboard?.homeToken?.decimals) : 0} {dashboard?.homeToken?.symbol}
+          Balance&nbsp;{dashboard?.tokenBalances[tokenAddress] ? formatWei(dashboard?.tokenBalances[tokenAddress], 2, dashboard?.homeToken?.decimals) : 0} {dashboard?.homeToken?.symbol}
         </div>
       </div>
       <button className='bridge__more' onClick={openModal}>Show more</button>

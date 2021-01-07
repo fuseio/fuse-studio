@@ -31,8 +31,7 @@ export default function withBridge(WrappedComponent) {
     const { web3: web3Home } = tokenContext
     const { foreignNetwork } = dashboard
     const bridge = dashboard?.bridgeStatus?.from?.bridge
-    const balanceKey = dashboard?.bridgeStatus?.from?.balanceKey
-    const fromBalanceKey = dashboard?.bridgeStatus?.from?.balanceKey
+    const networkName = dashboard?.bridgeStatus?.from?.network
     const bridgeType = dashboard?.community?.bridgeType
     const bridgeDirection = dashboard?.community?.bridgeDirection
     const homeBridgeAddress = dashboard?.community?.homeBridgeAddress
@@ -49,7 +48,7 @@ export default function withBridge(WrappedComponent) {
         homeBridgeAddress,
         foreignBridgeAddress
       }, {
-        web3: balanceKey === 'ethereum'
+        web3: network !== 'fuse'
           ? getWeb3({ networkType: 'fuse' })
           : getWeb3({ networkType: foreignNetwork })
       }).then((events) => {
@@ -75,7 +74,7 @@ export default function withBridge(WrappedComponent) {
       bridgeDirection,
       foreignBridgeAddress,
       foreignTokenAddress,
-      balanceKey,
+      network,
       dashboard?.bridgeStatus
     ])
 
@@ -128,7 +127,7 @@ export default function withBridge(WrappedComponent) {
       if (submitType === 'transfer') {
         const limit = CONFIG.web3.bridge.confirmations[bridge]
         setConfirmationsLimit(limit)
-        if (fromBalanceKey === 'ethereum') {
+        if (networkName !== 'fuse') {
           const homeBlockNumber = await web3Home.eth.getBlockNumber()
           setBlockNumber(homeBlockNumber)
         } else {

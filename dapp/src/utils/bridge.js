@@ -16,12 +16,8 @@ export const getBridgeMediator = (bridgeType, networkType) => {
 }
 
 export const homeToForeignBridgeMediators = {
-  fuse: isProd
-    ? CONFIG.web3.bridge.addresses.homeToForeign.fuse.MultiBridgeMediatorMain
-    : CONFIG.web3.bridge.addresses.homeToForeign.fuse.MultiBridgeMediatorRopsten,
-  ethereum: isProd
-    ? CONFIG.web3.bridge.addresses.homeToForeign.main.MultiBridgeMediator
-    : CONFIG.web3.bridge.addresses.homeToForeign.ropsten.MultiBridgeMediator
+  fuse: CONFIG.web3.bridge.addresses.homeToForeign.fuse,
+  ethereum: CONFIG.web3.bridge.addresses.homeToForeign.foreign
 }
 
 export function approveToken ({
