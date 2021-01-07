@@ -48,7 +48,7 @@ export default function withBridge(WrappedComponent) {
         homeBridgeAddress,
         foreignBridgeAddress
       }, {
-        web3: network !== 'fuse'
+        web3: networkName !== 'fuse'
           ? getWeb3({ networkType: 'fuse' })
           : getWeb3({ networkType: foreignNetwork })
       }).then((events) => {
@@ -74,7 +74,7 @@ export default function withBridge(WrappedComponent) {
       bridgeDirection,
       foreignBridgeAddress,
       foreignTokenAddress,
-      network,
+      networkName,
       dashboard?.bridgeStatus
     ])
 
@@ -113,7 +113,11 @@ export default function withBridge(WrappedComponent) {
 
     const handleSendTransaction = async (submitType, sendTransaction) => {
       const promise = sendTransaction()
-
+      setTransactionStatus(REQUEST)
+      promise.on('transactionHash', transactionHash => {
+        setTransactionHash(transactionHash)
+        setTransactionStatus(PENDING)
+      })
       promise.on('receipt', receipt => {
         setReceipt(receipt)
         if (Number(receipt.status)) {
@@ -125,8 +129,6 @@ export default function withBridge(WrappedComponent) {
       })
 
       if (submitType === 'transfer') {
-        const limit = CONFIG.web3.bridge.confirmations[bridge]
-        setConfirmationsLimit(limit)
         if (networkName !== 'fuse') {
           const homeBlockNumber = await web3Home.eth.getBlockNumber()
           setBlockNumber(homeBlockNumber)
@@ -135,25 +137,23 @@ export default function withBridge(WrappedComponent) {
           setBlockNumber(foreignBlockNumber)
         }
 
-        setTransactionStatus(SUCCESS)
         setDelay(CONFIG.web3.bridge.pollingTimeout)
         if (!foreignTokenAddress) {
           setNewTokenRegisteredDelay(CONFIG.web3.bridge.pollingTimeout)
         }
 
+        const confirmationsLimit = CONFIG.web3.bridge.confirmations[bridge]
+        setConfirmationsLimit(confirmationsLimit)
         promise.on('confirmation', (confirmationNumber) => {
           setConfirmationNumber(confirmationNumber)
         })
       }
-      setTransactionStatus(REQUEST)
-      promise.on('transactionHash', transactionHash => {
-        setTransactionHash(transactionHash)
-        setTransactionStatus(PENDING)
-      })
 
       promise.on('error', error => {
         console.log(error)
         const rejected = 'User denied transaction signature'
+        setDelay()
+        setNewTokenRegisteredDelay()
         if (
           (typeof error === 'string' && error.includes(rejected)) ||
           (typeof error.message === 'string' &&

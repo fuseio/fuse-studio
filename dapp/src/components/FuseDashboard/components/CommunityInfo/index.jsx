@@ -2,7 +2,6 @@ import React from 'react'
 import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { useDispatch } from 'react-redux'
-import get from 'lodash/get'
 import { formatWei, addressShortener } from 'utils/format'
 import { BigNumber } from 'bignumber.js'
 import { loadModal } from 'actions/ui'
@@ -37,14 +36,9 @@ const CommunityInfo = () => {
       ? 'One time issued token'
       : 'Imported'
 
-  const totalSupply = get(dashboard, 'homeToken.totalSupply', 0)
-  const homeBalance = get(dashboard, 'homeToken.totalSupply', 0)
-  const foreignBalance = get(dashboard, 'foreignToken.totalSupply', 0)
-  const homeTokenSupply = new BigNumber(homeBalance).minus(foreignBalance)
-  const foreignTokenSupply = new BigNumber(foreignBalance)
-  const homeTokenBalance = Number(new BigNumber(homeTokenSupply).div(1e18).toFixed())
-  const foreignTokenBalance = Number(new BigNumber(foreignTokenSupply).div(1e18).toFixed())
-  const total = Number(new BigNumber(totalSupply).div(1e18).toFixed())
+  const homeTokenBalance = Number(new BigNumber(dashboard?.communityTotalSupply?.home).div(1e18).toFixed())
+  const foreignTokenBalance = Number(new BigNumber(dashboard?.communityTotalSupply?.foreign).div(1e18).toFixed())
+  const total = Number(new BigNumber(dashboard?.communityTotalSupply?.total).div(1e18).toFixed())
 
   const {
     percentOnHome,
@@ -98,17 +92,17 @@ const CommunityInfo = () => {
         <div className='grid-y total__sides'>
           <p>
             <span className='title'>Total supply</span>
-            {formatWei(get(dashboard, 'homeToken.totalSupply', 0), 2, dashboard?.homeToken?.decimals)} <small>{dashboard?.homeToken?.symbol}</small>
+            {dashboard?.communityTotalSupply?.total ? formatWei(dashboard?.communityTotalSupply?.total, 2, dashboard?.homeToken?.decimals) : 0} <small>{dashboard?.homeToken?.symbol}</small>
           </p>
           <p>
             <span className='dot dot--fuse' />
             <span className='title'>Supply on Fuse:</span>
-            {formatWei(homeTokenSupply, 2, dashboard?.homeToken?.decimals)} <small>{dashboard?.homeToken?.symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
+            {dashboard?.communityTotalSupply?.home ? formatWei(dashboard?.communityTotalSupply?.home, 2, dashboard?.homeToken?.decimals) : 0} <small>{dashboard?.homeToken?.symbol}</small> ({(percentOnHome && (`${percentOnHome.toFixed(2)}%`)) || '0%'})
           </p>
           <p>
             <span className='dot dot--main' />
             <span className='title'>Supply on Ethereum:</span>
-            {formatWei(foreignTokenSupply, 2, dashboard?.homeToken?.decimals)} <small>{dashboard?.homeToken?.symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
+            {dashboard?.communityTotalSupply?.foreign ? formatWei(dashboard?.communityTotalSupply?.foreign, 2, dashboard?.homeToken?.decimals) : 0} <small>{dashboard?.homeToken?.symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
           </p>
         </div>
       </div>

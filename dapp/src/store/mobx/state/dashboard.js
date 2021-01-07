@@ -17,6 +17,7 @@ import HomeMultiAMBErc20ToErc677 from 'constants/abi/HomeMultiAMBErc20ToErc677'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getBridgeMediator, homeToForeignBridgeMediators } from 'utils/bridge'
 import { isZeroAddress } from 'utils/web3'
+import { BigNumber } from 'bignumber.js'
 
 export default class Dashboard {
   community
@@ -64,6 +65,9 @@ export default class Dashboard {
       totalSupply: observable.shallow,
       allowance: observable.shallow,
       addedPlugins: computed,
+      bridgeStatus: computed,
+      tokenContext: computed,
+      communityTotalSupply: computed,
       fetchTokenBalances: action,
       fetchCommunity: action,
       fetchCommunityAdmins: action,
@@ -521,6 +525,20 @@ export default class Dashboard {
       tokenNetworkName: 'fuse',
       tokenBalance: this.tokenBalances.home,
       baseUrl: this.baseUrl
+    }
+  }
+
+  get communityTotalSupply () {
+    return {
+      home: this?.community?.bridgeDirection === 'foreign-to-home'
+        ? new BigNumber(this?.homeToken?.totalSupply)
+        : new BigNumber(this.homeToken.totalSupply).minus(this.foreignToken.totalSupply),
+      foreign: this?.community?.bridgeDirection === 'foreign-to-home'
+        ? new BigNumber(this.foreignToken.totalSupply).minus(this.homeToken.totalSupply)
+        : new  BigNumber(this?.foreignToken?.totalSupply),
+      total: this?.community?.bridgeDirection === 'foreign-to-home'
+        ? new BigNumber(this.foreignToken.totalSupply).minus(this.homeToken.totalSupply)
+        : new BigNumber(this?.homeToken?.totalSupply)
     }
   }
 }
