@@ -1,4 +1,5 @@
 import React from 'react'
+import isEqual from 'lodash/isEqual'
 import Dashboard from './state/dashboard'
 import Network from './state/network'
 import { MobXProviderContext } from 'mobx-react'
@@ -27,4 +28,25 @@ export const useStore = () => {
 
 export const withStore = (Component) => (props) => {
   return <Component {...props} store={useStore()} />
+}
+
+export function Provider ({ children, ...propsValue }) {
+  const contextValue = React.useContext(MobXProviderContext)
+  const [value] = React.useState(() => ({
+    ...contextValue,
+    ...propsValue
+  }))
+
+  if (process.env.NODE_ENV !== 'production') {
+    const newValue = { ...value, ...propsValue }
+    if (!isEqual(value, newValue)) {
+      throw new Error(
+        'MobX Provider: The set of provided stores has changed. Please avoid changing stores as the change might not propagate to all children'
+      )
+    }
+  }
+
+  return (
+    <MobXProviderContext.Provider value={value}>{children}</MobXProviderContext.Provider>
+  )
 }

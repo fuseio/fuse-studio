@@ -12,8 +12,7 @@ import ScrollToTopController from 'containers/ScrollToTopController'
 import Root from 'containers/Root'
 import configureStore from 'store/configureStore'
 import rootSaga from 'sagas/index'
-import mobxStore from 'store/mobx'
-import { Provider as MobxProvider } from 'mobx-react'
+import mobxStore, { Provider as MobxProvider } from 'store/mobx'
 
 Sentry.init({ dsn: `https://${CONFIG.sentry.key}@sentry.io/${CONFIG.sentry.project}` })
 
