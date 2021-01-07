@@ -7,7 +7,7 @@ const loadedState = loadState('state.network') || CONFIG.web3.bridge.network
 const initialState = {
   addresses,
   homeNetwork: 'fuse',
-  foreignNetwork: 'ropsten',
+  foreignNetwork: 'mainnet',
   fuse: {},
   ropsten: {},
   ...loadedState
