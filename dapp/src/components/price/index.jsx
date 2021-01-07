@@ -8,10 +8,10 @@ import FeesIcon from 'images/fees.svg'
 import CheckGreen from 'images/check_green.svg'
 
 const includedList = [
-  'Token issuance',
-  'Powerful backend APIs',
-  'Plugins',
-  'Fee abstraction',
+  'Access token issuance wizard',
+  "Access powerful backend API's",
+  'Add functionality with plugins',
+  'Make your token usable with fee abstraction',
   'Customizable mobile wallet'
 ]
 
@@ -30,8 +30,8 @@ function Price () {
       <div className='section_one__wrapper'>
         <div className='section_one grid-x align-justify align-middle'>
           <div className='section_one__content cell large-12'>
-            <div className='section_one__title'>Pricing</div>
-            <div className='section_one__sub_title'>Pay no more than <span>$0.01 cent per transaction</span> regardless of size.</div>
+            <div className='section_one__title'>Pay no more than $0.01 per transaction regardless of size</div>
+            {/* <div className='section_one__sub_title'>Pay no more than <span>$0.01 cent per transaction</span> regardless of size.</div> */}
             <div className='included'>
               <div className='included__title'>included</div>
               <div className='included__list'>
