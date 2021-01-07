@@ -1,0 +1,303 @@
+@include block(fuseswap) {
+  @include element(wrapper) {
+    position: relative;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.16);
+  }
+
+  @include element(header) {
+    @include xy-grid();
+    @include flex-align(null, middle);
+    color: $color-white;
+
+    @include breakpoint(medium up) {
+      margin-top: 10em;
+      margin-bottom: 1.5em;
+    }
+
+    @include breakpoint(small down) {
+      margin-top: 4em;
+    }
+
+    @include element(title) {
+      font-size: 1.625em;
+      font-weight: 500;
+    }
+  }
+  @include element(container) {
+    @include xy-grid(vertical, false);
+    padding: 2em;
+
+    @include modifier(opacity) {
+      > * {
+        cursor: not-allowed;
+        opacity: 0.3;
+      }
+    }
+  }
+
+  @include element(balances) {
+    @include xy-grid();
+    margin-bottom: 1.5em;
+
+    > div {
+      flex-basis: 50%;
+    }
+  }
+
+  @include element(link) {
+    color: #006aff;
+    font-size: 14px;
+    display: inline;
+
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+
+  @include element(funder_balance) {
+    font-size: 1.125em;
+    line-height: 1.05;
+    letter-spacing: -0.46px;
+    color: $color-light-dark;
+
+    @include breakpoint(medium up) {
+    }
+
+    > div {
+      @include xy-grid();
+      margin-top: 0.5em;
+      align-items: baseline;
+
+      > span {
+        color: $color-gray;
+      }
+
+      > small {
+        font-size: 0.75em;
+        letter-spacing: -0.26px;
+        color: $color-gray;
+        margin-top: auto;
+      }
+    }
+  }
+
+  @include element(main-title) {
+    font-weight: 500;
+
+    @include modifier(white) {
+      font-size: 1.625em;
+      margin-bottom: 1em;
+      color: $color-white;
+    }
+
+    @include modifier(dark) {
+      margin-top: 2em;
+      font-size: 1.5em;
+      margin-bottom: 0.5em;
+      color: $color-light-dark;
+    }
+  }
+
+  @include element(title) {
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.38;
+    letter-spacing: -0.35px;
+    color: $color-light-dark;
+  }
+
+  @include element(field) {
+    margin-top: 2em;
+    @include breakpoint(medium up) {
+    }
+
+    @include breakpoint(small) {
+      width: 100%;
+    }
+
+    input {
+      width: 100%;
+      background-color: $color-white;
+      padding: 0 16px;
+      font-size: 0.938em;
+      color: $color-dark;
+      height: 40px;
+      border-radius: 5px;
+      border: solid 1.8px #e3e3e3;
+
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.3);
+      }
+      &:focus {
+        border: solid 1.8px $color-dark;
+        box-shadow: none;
+      }
+    }
+
+    @include element(add) {
+      font-size: 1em;
+      line-height: 1.38;
+      letter-spacing: -0.35px;
+      color: #a4a4a4;
+    }
+
+    @include modifier(underline) {
+      &:before {
+        border-bottom: none !important;
+      }
+      &:hover:not(.Mui-disabled):before {
+        border-bottom: none !important;
+      }
+      &:after {
+        border-bottom: none !important;
+      }
+    }
+
+    @include modifier(error) {
+      &:after {
+        border-bottom-color: none !important;
+      }
+    }
+  }
+
+  @include element(actions) {
+    @include xy-grid();
+    @include flex-align(justify, middle);
+  }
+
+  @include block(content) {
+    display: block;
+    margin-left: 10px;
+    flex: 1 1 auto;
+    @include xy-grid(vertical);
+    color: $color-dark;
+
+    @include element(title) {
+      font-weight: 500;
+      font-size: 14px;
+
+      @include breakpoint(small) {
+        font-size: 14px;
+      }
+    }
+
+    @include element(text) {
+      color: $color-gray;
+      line-height: 1.25;
+      font-size: 0.75em;
+    }
+
+    @include element(toggle) {
+      @include xy-grid(horizontal, false);
+      @include flex-align(null, middle);
+      padding-top: 1em;
+
+      @include element(text) {
+        font-size: 0.75em;
+        margin-left: 5px;
+        color: rgba(13, 45, 69, 0.5);
+        > span {
+          &:first-child {
+            font-weight: bold;
+            color: $color-dark;
+          }
+        }
+      }
+
+      @include block(toggle) {
+        max-height: 18px;
+        position: relative;
+        height: 100%;
+        display: inline-block;
+
+        @include breakpoint(small only) {
+          margin-bottom: auto;
+        }
+
+        > input {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+          opacity: 0;
+        }
+
+        .toggle {
+          &-wrapper {
+            width: 34px;
+            height: 18px;
+            background-color: $color-disabled;
+            border-radius: 10px;
+            position: relative;
+          }
+
+          &:hover {
+            cursor: pointer;
+          }
+
+          display: block;
+          position: absolute;
+          width: 14px;
+          border-radius: 50%;
+          height: 14px;
+          background: $color-white;
+          top: 2px;
+          left: 2px;
+          border: 1px solid $color-disabled;
+          -webkit-transition: all 0.2s ease;
+          -moz-transition: all 0.2s ease;
+          -ms-transition: all 0.2s ease;
+          -o-transition: all 0.2s ease;
+          transition: all 0.2s ease;
+          text-align: center;
+        }
+
+        .toggle:before {
+          content: "";
+          color: $color-white;
+          text-shadow: 1px 1px $color-black;
+          font-family: tahoma;
+          font-size: 0.688em;
+        }
+        > input:checked ~ .toggle-wrapper {
+          background: $color-fuse_gradient;
+          .toggle {
+            left: 18px;
+            border-color: $color-fuse;
+          }
+        }
+
+        input:checked + .toggle:before {
+          content: "";
+        }
+      }
+    }
+  }
+
+  @include element(button) {
+    margin-left: auto;
+    margin-top: 1em;
+  }
+}
+
+@include block(bonus_options) {
+  @include element(container) {
+    @include xy-grid(vertical, false);
+    @include modifier(opacity) {
+      > * {
+        cursor: not-allowed;
+        opacity: 0.3;
+      }
+    }
+  }
+
+  .table {
+    height: auto;
+    .table__body {
+      height: auto;
+    }
+  }
+}

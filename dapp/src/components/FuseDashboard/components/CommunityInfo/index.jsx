@@ -37,14 +37,14 @@ const CommunityInfo = () => {
       ? 'One time issued token'
       : 'Imported'
 
+  const totalSupply = get(dashboard, 'homeToken.totalSupply', 0)
   const homeBalance = get(dashboard, 'homeToken.totalSupply', 0)
   const foreignBalance = get(dashboard, 'foreignToken.totalSupply', 0)
-  const homeTokenSupply = new BigNumber(homeBalance)
-  const foreignTokenSupply = foreignBalance ? new BigNumber(foreignBalance).minus(homeBalance) : foreignBalance
-  const totalSupply = new BigNumber(foreignTokenSupply).plus(homeTokenSupply)
-  const total = Number(new BigNumber(totalSupply).div(1e18).toFixed())
+  const homeTokenSupply = new BigNumber(homeBalance).minus(foreignBalance)
+  const foreignTokenSupply = new BigNumber(foreignBalance)
   const homeTokenBalance = Number(new BigNumber(homeTokenSupply).div(1e18).toFixed())
   const foreignTokenBalance = Number(new BigNumber(foreignTokenSupply).div(1e18).toFixed())
+  const total = Number(new BigNumber(totalSupply).div(1e18).toFixed())
 
   const {
     percentOnHome,
@@ -98,7 +98,7 @@ const CommunityInfo = () => {
         <div className='grid-y total__sides'>
           <p>
             <span className='title'>Total supply</span>
-            {formatWei(totalSupply, 2, dashboard?.homeToken?.decimals)} <small>{dashboard?.homeToken?.symbol}</small>
+            {formatWei(get(dashboard, 'homeToken.totalSupply', 0), 2, dashboard?.homeToken?.decimals)} <small>{dashboard?.homeToken?.symbol}</small>
           </p>
           <p>
             <span className='dot dot--fuse' />

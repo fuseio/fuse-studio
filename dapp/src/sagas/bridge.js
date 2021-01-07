@@ -22,7 +22,7 @@ export function * fetchHomeTokenAddress ({ communityAddress, foreignTokenAddress
   const homeBridge = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, homeBridgeMediatorAddress)
   const homeTokenAddress = yield call(homeBridge.methods.homeTokenAddress(foreignTokenAddress).call)
   if (isZeroAddress(homeTokenAddress)) {
-    console.log(`Not homeTokenAddress for foreignTokenAddress ` + foreignTokenAddress)
+    console.log(`Not homeTokenAddress for foreignTokenAddress ${foreignTokenAddress}`)
     return
   }
   const accountAddress = yield select(getAccountAddress)

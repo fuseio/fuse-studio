@@ -77,7 +77,7 @@ const Plugins = () => {
     handleTracker(plugin)
     dashboard.addCommunityPlugin({ communityAddress, plugin })
     if (plugin.name === 'bridge' && dashboard?.plugins?.bridge?.isRemoved) {
-      dashboard.addBridgePlugin({ bridgeType: 'home-to-foreign', bridgeDirection: 'multi-amb-erc20-to-erc677' })
+      dashboard.addBridgePlugin({ bridgeType: 'multi-amb-erc20-to-erc677', bridgeDirection: 'home-to-foreign' })
     }
   }
 

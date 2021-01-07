@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import { convertNetworkName } from 'utils/network'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuse_network_logo.svg'
@@ -21,8 +21,8 @@ const Balance = ({
   side
 }) => {
   const { dashboard } = useStore()
-  const { bridge, network } = dashboard?.bridgeStatus[side]
-  const balance = dashboard?.tokenBalances[bridge]
+  const { network, balanceKey } = dashboard?.bridgeStatus[side]
+  const balance = dashboard?.tokenBalances[balanceKey]
   return (
     <div className='bridge'>
       <NetworkLogo side={side} />

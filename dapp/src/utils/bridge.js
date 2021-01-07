@@ -5,6 +5,8 @@ import HomeMultiAMBErc20ToErc677 from 'constants/abi/HomeMultiAMBErc20ToErc677'
 import capitalize from 'lodash/capitalize'
 import { toShortName } from 'utils/network'
 
+const isProd = CONFIG.env === 'production'
+
 export const getBridgeMediator = (bridgeType, networkType) => {
   const foreignNetwork = toShortName(networkType)
   const bridgeMediator = bridgeType === 'foreign'
@@ -13,13 +15,35 @@ export const getBridgeMediator = (bridgeType, networkType) => {
   return bridgeMediator
 }
 
-export function approveToken ({ networkType, tokenAddress, amount, bridgeType = 'home' }, {
+export const homeToForeignBridgeMediators = {
+  fuse: isProd
+    ? CONFIG.web3.bridge.addresses.homeToForeign.fuse.MultiBridgeMediatorMain
+    : CONFIG.web3.bridge.addresses.homeToForeign.fuse.MultiBridgeMediatorRopsten,
+  ethereum: isProd
+    ? CONFIG.web3.bridge.addresses.homeToForeign.main.MultiBridgeMediator
+    : CONFIG.web3.bridge.addresses.homeToForeign.ropsten.MultiBridgeMediator
+}
+
+export function approveToken ({
+  networkType,
+  tokenAddress,
+  amount,
+  bridgeDirection,
+  bridgeType
+}, {
   accountAddress,
   web3
 }) {
-  const bridgeMediatorAddress = getBridgeMediator(bridgeType, networkType)
+  let bridgeMediator
+  if (bridgeDirection === 'foreign-to-home') {
+    bridgeMediator = getBridgeMediator(bridgeType, networkType)
+  } else if (bridgeDirection === 'home-to-foreign') {
+    bridgeMediator = networkType === 'fuse'
+      ? homeToForeignBridgeMediators.fuse
+      : homeToForeignBridgeMediators.ethereum
+  }
   const basicTokenContract = new web3.eth.Contract(BasicTokenABI, tokenAddress)
-  const transactionPromise = basicTokenContract.methods.approve(bridgeMediatorAddress, amount).send({
+  const transactionPromise = basicTokenContract.methods.approve(bridgeMediator, amount).send({
     from: accountAddress
   })
   return transactionPromise
@@ -29,7 +53,7 @@ export function transferToForeign ({
   bridgeType,
   bridgeDirection,
   confirmationsLimit,
-  homeTokenAddress,
+  tokenAddress,
   homeBridgeAddress,
   networkType,
   amount
@@ -38,21 +62,30 @@ export function transferToForeign ({
   web3,
   web3Options
 }) {
-  let transactionPromise
   if (bridgeDirection === 'foreign-to-home') {
     if (bridgeType === 'multiple-erc20-to-erc20') {
-      const contract = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
-      transactionPromise = contract.methods.transfer(homeBridgeAddress, amount).send({
+      const contract = new web3.eth.Contract(BasicTokenABI, tokenAddress, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
+      const transactionPromise = contract.methods.transfer(homeBridgeAddress, amount).send({
         from: accountAddress
       })
+      return transactionPromise
     } else if (bridgeType === 'multi-amb-erc20-to-erc677') {
       const bridgeMediator = getBridgeMediator('home', networkType)
-      const contract = new web3.eth.Contract(BasicTokenABI, homeTokenAddress, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
-      transactionPromise = contract.methods.transferAndCall(bridgeMediator, amount, []).send({
+      const contract = new web3.eth.Contract(BasicTokenABI, tokenAddress, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
+      const transactionPromise = contract.methods.transferAndCall(bridgeMediator, amount, []).send({
         from: accountAddress
       })
+      return transactionPromise
     }
-    return transactionPromise
+  } else if (bridgeDirection === 'home-to-foreign') {
+    if (bridgeType === 'multi-amb-erc20-to-erc677') {
+      const bridgeMediator = homeToForeignBridgeMediators.ethereum
+      const contract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
+      const transactionPromise = contract.methods.relayTokens(tokenAddress, amount).send({
+        from: accountAddress
+      })
+      return transactionPromise
+    }
   }
 }
 
@@ -60,7 +93,7 @@ export function transferToHome ({
   bridgeType,
   bridgeDirection,
   confirmationsLimit,
-  foreignTokenAddress,
+  tokenAddress,
   foreignBridgeAddress,
   networkType,
   amount
@@ -69,22 +102,31 @@ export function transferToHome ({
   web3,
   web3Options
 }) {
-  let transactionPromise
   if (bridgeDirection === 'foreign-to-home') {
     if (bridgeType === 'multiple-erc20-to-erc20') {
-      const contract = new web3.eth.Contract(BasicTokenABI, foreignTokenAddress, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
-      transactionPromise = contract.methods.transfer(foreignBridgeAddress, amount).send({
+      const contract = new web3.eth.Contract(BasicTokenABI, tokenAddress, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
+      const transactionPromise = contract.methods.transfer(foreignBridgeAddress, amount).send({
         from: accountAddress
       })
+      return transactionPromise
     } else if (bridgeType === 'multi-amb-erc20-to-erc677') {
       const bridgeMediator = getBridgeMediator('foreign', networkType)
       const contract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
-      transactionPromise = contract.methods.relayTokens(foreignTokenAddress, amount).send({
+      window.analytics.track('Bridge used', { tokenAddress: tokenAddress, networkType: 'fuse' })
+      const transactionPromise = contract.methods.relayTokens(tokenAddress, amount).send({
         from: accountAddress
       })
+      return transactionPromise
     }
-    window.analytics.track('Bridge used', { tokenAddress: foreignTokenAddress, networkType: 'fuse' })
-    return transactionPromise
+  } else if (bridgeDirection === 'home-to-foreign') {
+    if (bridgeType === 'multi-amb-erc20-to-erc677') {
+      const bridgeMediator = homeToForeignBridgeMediators.fuse
+      const contract = new web3.eth.Contract(BasicTokenABI, tokenAddress, { ...web3Options, transactionConfirmationBlocks: confirmationsLimit })
+      const transactionPromise = contract.methods.transferAndCall(bridgeMediator, amount, []).send({
+        from: accountAddress
+      })
+      return transactionPromise
+    }
   }
 }
 
@@ -106,12 +148,61 @@ export async function fetchForeignBridgePastEvents ({
       const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
       return bridgeContract.getPastEvents('TokensBridged', { fromBlock })
     }
-  } 
-  // else if (bridgeDirection === 'home-to-foreign') {
-  //   const bridgeMediator = getBridgeMediator('foreign', networkType)
-  //   const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
-  //   return bridgeContract.getPastEvents('TokensBridged', { fromBlock })
-  // }
+  } else if (bridgeDirection === 'home-to-foreign') {
+    if (bridgeType === 'multi-amb-erc20-to-erc677') {
+      const bridgeMediator = homeToForeignBridgeMediators.fuse
+      const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+      return bridgeContract.getPastEvents('TokensBridged', { fromBlock })
+    }
+  }
+}
+
+export async function fetchBridgePastEvents ({
+  bridge,
+  bridgeType,
+  bridgeDirection,
+  homeBridgeAddress,
+  networkType,
+  fromBlock,
+  foreignBridgeAddress
+}, {
+  web3
+}) {
+  if (bridge === 'foreign') {
+    if (bridgeDirection === 'foreign-to-home') {
+      if (bridgeType === 'multiple-erc20-to-erc20') {
+        const contract = new web3.eth.Contract(BasicHomeBridgeABI, homeBridgeAddress)
+        return contract.getPastEvents('RelayedMessage', { fromBlock })
+      } else if (bridgeType === 'multi-amb-erc20-to-erc677') {
+        const bridgeMediator = getBridgeMediator('home', networkType)
+        const contract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+        return contract.getPastEvents('TokensBridged', { fromBlock })
+      }
+    } else if (bridgeDirection === 'home-to-foreign') {
+      if (bridgeType === 'multi-amb-erc20-to-erc677') {
+        const bridgeMediator = homeToForeignBridgeMediators.ethereum
+        const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+        return bridgeContract.getPastEvents('TokensBridged', { fromBlock })
+      }
+    }
+  } else {
+    if (bridgeDirection === 'foreign-to-home') {
+      if (bridgeType === 'multiple-erc20-to-erc20') {
+        const bridgeContract = new web3.eth.Contract(BasicForeignBridgeABI, foreignBridgeAddress)
+        return bridgeContract.getPastEvents('RelayedMessage', { fromBlock })
+      } else if (bridgeType === 'multi-amb-erc20-to-erc677') {
+        const bridgeMediator = getBridgeMediator('foreign', networkType)
+        const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+        return bridgeContract.getPastEvents('TokensBridged', { fromBlock })
+      }
+    } else if (bridgeDirection === 'home-to-foreign') {
+      if (bridgeType === 'multi-amb-erc20-to-erc677') {
+        const bridgeMediator = homeToForeignBridgeMediators.fuse
+        const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+        return bridgeContract.getPastEvents('TokensBridged', { fromBlock })
+      }
+    }
+  }
 }
 
 export async function fetchHomeBridgePastEvents ({
@@ -132,10 +223,34 @@ export async function fetchHomeBridgePastEvents ({
       const contract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
       return contract.getPastEvents('TokensBridged', { fromBlock })
     }
+  } else if (bridgeDirection === 'home-to-foreign') {
+    if (bridgeType === 'multi-amb-erc20-to-erc677') {
+      const bridgeMediator = homeToForeignBridgeMediators.ethereum
+      const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+      return bridgeContract.getPastEvents('TokensBridged', { fromBlock })
+    }
   }
-  // else if (bridgeDirection === 'home-to-foreign') {
-  //   const bridgeMediator = getBridgeMediator('home', networkType)
-  //   const contract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
-  //   return contract.getPastEvents('TokensBridged', { fromBlock })
-  // }
+}
+
+export async function fetchHomeNewTokenRegistered ({
+  bridgeType,
+  bridgeDirection,
+  networkType,
+  fromBlock
+}, {
+  web3
+}) {
+  if (bridgeDirection === 'foreign-to-home') {
+    if (bridgeType === 'multi-amb-erc20-to-erc677') {
+      const bridgeMediator = getBridgeMediator('home', networkType)
+      const contract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+      return contract.getPastEvents('NewTokenRegistered', { fromBlock })
+    }
+  } else if (bridgeDirection === 'home-to-foreign') {
+    if (bridgeType === 'multi-amb-erc20-to-erc677') {
+      const bridgeMediator = homeToForeignBridgeMediators.ethereum
+      const bridgeContract = new web3.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+      return bridgeContract.getPastEvents('NewTokenRegistered', { fromBlock })
+    }
+  }
 }

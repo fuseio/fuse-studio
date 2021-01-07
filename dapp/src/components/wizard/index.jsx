@@ -9,9 +9,6 @@ import * as Sentry from '@sentry/browser'
 import { push } from 'connected-react-router'
 import { toChecksumAddress } from 'web3-utils'
 
-import { getForeignNetwork } from 'selectors/network'
-
-import { withNetwork } from 'containers/Web3'
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
 import NameAndDescription from 'components/wizard/pages/NameAndDescription'
@@ -30,14 +27,12 @@ const WizardPage = ({
   deployExistingToken,
   createTokenWithMetadata,
   adminAddress,
-  networkType,
   transactionStatus,
   error,
   createTokenSignature,
   clearTransaction,
   loadModal,
   communityAddress,
-  foreignNetwork,
   push
 }) => {
   const store = useStore()
@@ -51,7 +46,7 @@ const WizardPage = ({
   }, [])
 
   const loadSwitchModal = () => {
-    dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: ['fuse'], networkType, goBack: false }))
+    dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: ['fuse'], goBack: false }))
   }
 
   const switchNetwork = () => {
@@ -185,8 +180,6 @@ const WizardPage = ({
       <Wizard
         push={push}
         adminAddress={adminAddress}
-        networkType={networkType}
-        foreignNetwork={foreignNetwork}
         loadModal={loadModal}
         transactionStatus={transactionStatus}
         createTokenSignature={createTokenSignature}
@@ -204,13 +197,13 @@ const WizardPage = ({
           <DetailsStep />
         </Wizard.Page>
         <Wizard.Page isSubmitStep={Boolean(true).toString()}>
-          <SummaryStep foreignNetwork={foreignNetwork} />
+          <SummaryStep />
         </Wizard.Page>
         <Wizard.Page>
           <DeployProgressStep />
         </Wizard.Page>
         <Wizard.Page>
-          <Congratulations networkType={networkType} goToDashboard={goToDashboard} />
+          <Congratulations goToDashboard={goToDashboard} />
         </Wizard.Page>
       </Wizard>
 
@@ -244,7 +237,6 @@ const WizardPage = ({
 
 const mapStateToProps = (state) => ({
   ...state.screens.issuance,
-  foreignNetwork: getForeignNetwork(state),
   adminAddress: getAccountAddress(state)
 })
 
@@ -257,4 +249,4 @@ const mapDispatchToProps = {
   push
 }
 
-export default withNetwork(connect(mapStateToProps, mapDispatchToProps)(WizardPage))
+export default connect(mapStateToProps, mapDispatchToProps)(WizardPage)

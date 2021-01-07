@@ -44,7 +44,7 @@ const Bridge = ({
   const bridgeType = dashboard?.community?.bridgeType
   const symbol = dashboard?.homeToken?.symbol
   const decimals = dashboard?.homeToken?.decimals ?? 18
-  const tokenAllowed = dashboard?.allowance[bridgeStatus?.from?.bridge] ?? 0
+  const balanceKey = bridgeStatus?.from?.balanceKey
   const foreignNetwork = dashboard?.foreignNetwork
   const bridgeDirection = dashboard?.community?.bridgeDirection
   const bridge = dashboard?.bridgeStatus?.from?.bridge
@@ -53,7 +53,7 @@ const Bridge = ({
     if (bridgeType === 'multi-amb-erc20-to-erc677' && accountAddress) {
       dashboard.checkAllowance(accountAddress)
     }
-  }, [dashboard?.community, network?.accountAddress])
+  }, [dashboard?.community?.bridgeType, network?.accountAddress])
 
   const openModal = (side) => {
     dispatch(loadModal(SHOW_MORE_MODAL, {
@@ -68,17 +68,18 @@ const Bridge = ({
   }
 
   const makeTransaction = ({ submitType, amount }) => {
+    const tokenAddress = balanceKey === 'fuse'
+      ? homeTokenAddress
+      : foreignTokenAddress
     if (submitType === 'approve') {
-      const tokenAddress = bridge === 'home'
-        ? homeTokenAddress
-        : foreignTokenAddress
       return approveToken({
+        bridgeDirection,
         networkType: foreignNetwork,
         bridgeType: bridge,
         tokenAddress,
         amount: toWei(amount)
       },
-        web3Context
+      web3Context
       )
     } else {
       if (bridge === 'foreign') {
@@ -86,31 +87,31 @@ const Bridge = ({
           networkType: foreignNetwork,
           bridgeType,
           bridgeDirection,
-          foreignTokenAddress,
+          tokenAddress,
           foreignBridgeAddress,
           amount: toWei(amount),
           confirmationsLimit: CONFIG.web3.bridge.confirmations.foreign
         },
-          web3Context
+        web3Context
         )
       } else {
         return transferToForeign({
           bridgeType,
           networkType: foreignNetwork,
           bridgeDirection,
-          homeTokenAddress,
+          tokenAddress,
           homeBridgeAddress,
           amount: toWei(amount),
           confirmationsLimit: CONFIG.web3.bridge.confirmations.home
         },
-          web3Context
+        web3Context
         )
       }
     }
   }
 
   const renderForm = ({ values, setFieldValue }) => {
-    const { amount } = values
+    const { amount, allowance } = values
     return (
       <Form className='bridge__transfer shrink'>
         <div className='bridge__transfer__form'>
@@ -123,26 +124,26 @@ const Bridge = ({
         </div>
         {
           bridgeType === 'multi-amb-erc20-to-erc677'
-            ? new BigNumber(tokenAllowed)
-              .isGreaterThanOrEqualTo(new BigNumber(amount ?? 0).multipliedBy(10 ** decimals))
-              ? (
-                <button
-                  className='bridge__transfer__form__btn'
-                  type='submit'
-                  onClick={() => setFieldValue('submitType', 'transfer')}
-                >
-                  Transfer
-                </button>
-              )
-              : (
-                <button
-                  className='bridge__transfer__form__btn'
-                  type='submit'
-                  onClick={() => setFieldValue('submitType', 'approve')}
-                >
-                  Unlock
-                </button>
-              )
+            ? new BigNumber(allowance)
+                .isGreaterThanOrEqualTo(new BigNumber(amount ?? 0).multipliedBy(10 ** decimals))
+                ? (
+                  <button
+                    className='bridge__transfer__form__btn'
+                    type='submit'
+                    onClick={() => setFieldValue('submitType', 'transfer')}
+                  >
+                    Transfer
+                  </button>
+                  )
+                : (
+                  <button
+                    className='bridge__transfer__form__btn'
+                    type='submit'
+                    onClick={() => setFieldValue('submitType', 'approve')}
+                  >
+                    Unlock
+                  </button>
+                  )
             : (
               <button
                 className='bridge__transfer__form__btn'
@@ -151,7 +152,7 @@ const Bridge = ({
               >
                 Transfer
               </button>
-            )
+              )
         }
       </Form>
     )
@@ -160,9 +161,8 @@ const Bridge = ({
   const onSubmit = (values, formikBag) => {
     handleSendTransaction(
       values.submitType,
-      () => makeTransaction(values),
+      () => makeTransaction(values)
     )
-    formikBag.resetForm()
   }
 
   return (
@@ -186,7 +186,7 @@ const Bridge = ({
             openModal={() => openModal('from')}
           />
           <Formik
-            initialValues={{ amount: '' }}
+            initialValues={{ amount: '', allowance: dashboard?.allowance[balanceKey] }}
             enableReinitialize
             onSubmit={onSubmit}
             validateOnMount
@@ -207,12 +207,19 @@ const Bridge = ({
               <div className='bridge-deploying'>
                 <p className='bridge-deploying-text'>Pending<span>.</span><span>.</span><span>.</span></p>
                 <p className='bridge-deploying__loader'><img src={FuseLoader} alt='Fuse loader' /></p>
-                {confirmationsLimit && <div className='bridge-deploying-confirmation'>
-                  Confirmations
-                <div>{confirmationNumber || '0'} / {confirmationsLimit}</div>
-                </div>}
+                {
+                  confirmationsLimit && (
+                    <div className='bridge-deploying-confirmation'>
+                      Confirmations
+                      <div>
+                        {confirmationNumber || '0'} / {confirmationsLimit}
+                      </div>
+                    </div>
+                  )
+                }
               </div>
-            ) : null
+              )
+            : null
         }
         {
           waitingForRelayEvent
@@ -221,7 +228,8 @@ const Bridge = ({
                 <p className='bridge-deploying-text'>Waiting for bridge<span>.</span><span>.</span><span>.</span></p>
                 <p className='bridge-deploying__loader'><img src={FuseLoader} alt='Fuse loader' /></p>
               </div>
-            ) : null
+              )
+            : null
         }
       </div>
     </div>

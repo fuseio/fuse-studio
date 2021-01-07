@@ -115,6 +115,8 @@
     width: 100%;
     padding-top: 137 / 302 * 100%;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
 
     @include modifier(fiat) {
       padding-top: 90 / 275 * 100%;

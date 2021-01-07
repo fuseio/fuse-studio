@@ -72,11 +72,15 @@ function Dashboard (props) {
   const { dashboard, network } = useStore()
   const { accountAddress } = network
   const { success } = useParams()
+  const homeTokenAddress = dashboard?.community?.homeTokenAddress
+  const foreignTokenAddress = dashboard?.community?.foreignTokenAddress
 
   const handleConfirmation = () => {
+    dashboard.checkAllowance(accountAddress)
     dashboard.fetchTokensTotalSupply()
     dashboard.fetchTokenBalances(accountAddress)
-    dashboard.checkAllowance(accountAddress)
+    dashboard.fetchHomeToken(homeTokenAddress)
+    dashboard.fetchForeignToken(foreignTokenAddress)
   }
 
   return (

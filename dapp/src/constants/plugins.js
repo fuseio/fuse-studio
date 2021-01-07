@@ -14,6 +14,10 @@ import FiatOnRamp from 'images/fiat-on-ramp.png'
 import FiatOnRampBig from 'images/fiat-on-ramp-big.png'
 import WalletBannerLink from 'images/wallet_banner_link.png'
 import WalletBannerLinkBig from 'images/wallet_banner_link_big.png'
+import BridgePlugin from 'images/bridge_plugin.png'
+import BridgePluginBig from 'images/bridge_plugin_big.png'
+import FuseswapPlugin from 'images/fuseswap_plugin.png'
+import FuseswapPluginBig from 'images/fuseswap_plugin_big.png'
 
 const openPlugins = {
   businessList: {
@@ -103,10 +107,10 @@ export const generalPlugins = ([
     key: 'onramp'
   },
   {
-    title: 'Bridge',
-    coverImage: FiatOnRamp,
+    title: 'Ethereum bridge',
+    coverImage: BridgePlugin,
     disabled: false,
-    modalCoverPhoto: FiatOnRampBig,
+    modalCoverPhoto: BridgePluginBig,
     content: `We have created integration with Moonpay, Transak, fiat gateways that allow you to embed the relevant payment option
       (credit/debit cards and banks wires) inside your app and even show several option for your clients to choose from.
       The integration allows your users to top their account without you holding any custody in the process! Here is how:
@@ -114,14 +118,15 @@ export const generalPlugins = ([
     key: 'bridge'
   },
   {
-    title: 'Fuseswap',
-    coverImage: FiatOnRamp,
+    title: 'Create Fuseswap pool',
+    coverImage: FuseswapPlugin,
     disabled: false,
-    modalCoverPhoto: FiatOnRampBig,
-    content: `We have created integration with Moonpay, Transak, fiat gateways that allow you to embed the relevant payment option
-      (credit/debit cards and banks wires) inside your app and even show several option for your clients to choose from.
-      The integration allows your users to top their account without you holding any custody in the process! Here is how:
-      https://www.youtube.com/watch?v=ShxUIljvfLU&feature=emb_title`,
+    modalCoverPhoto: BridgePluginBig,
+    content: `Fuseswap is a decentralized exchange that allows anybody with tokens on Fuse to trade their tokens against a
+     smart contract that is managing a liquidity pool. It allows for users of the Studio that create a currency, to create a
+      liquidity pool on Fuseswap and let others trade this coin. In order to create the pool, please go to the following
+       link and add your token along with another currency so the pair can have an exchange rate. You can read more about
+        adding liquidity on the docs Please click here to set up your liquidity pool.`,
     key: 'fuseswap'
   }
 ])

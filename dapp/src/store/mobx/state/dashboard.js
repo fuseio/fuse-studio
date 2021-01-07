@@ -13,8 +13,10 @@ import request from 'superagent'
 import pickBy from 'lodash/pickBy'
 import { getCommunityAdmins, fetchCommunityUsers as fetchCommunityUsersApi, fetchCommunityBusinesses as fetchCommunityBusinessesApi, isCommunityMember, fetchCommunityEntities } from 'services/graphql/community.js'
 import { getWeb3 } from 'services/web3'
+import HomeMultiAMBErc20ToErc677 from 'constants/abi/HomeMultiAMBErc20ToErc677'
 import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
-import { getBridgeMediator } from 'utils/bridge'
+import { getBridgeMediator, homeToForeignBridgeMediators } from 'utils/bridge'
+import { isZeroAddress } from 'utils/web3'
 
 export default class Dashboard {
   community
@@ -37,13 +39,13 @@ export default class Dashboard {
   communityAdmins
 
   tokenBalances = {
-    home: 0,
-    foreign: 0
+    fuse: 0,
+    ethereum: 0
   }
 
   allowance = {
-    home: 0,
-    foreign: 0
+    fuse: 0,
+    ethereum: 0
   }
 
   totalSupply = {
@@ -64,9 +66,9 @@ export default class Dashboard {
       communityUsers: observable,
       communityBusinesses: observable,
       entitiesCount: observable,
-      tokenBalances: observable.struct,
-      totalSupply: observable.struct,
-      allowance: observable.struct,
+      tokenBalances: observable.shallow,
+      totalSupply: observable.shallow,
+      allowance: observable.shallow,
       addedPlugins: computed,
       fetchTokenBalances: action,
       fetchCommunity: action,
@@ -114,6 +116,18 @@ export default class Dashboard {
     }
   })
 
+  registerForeignTokenAddress = flow(function * ({ foreignTokenAddress }) {
+    try {
+      const response = yield request
+        .post(`${this.baseUrl}/communities/${this.communityAddress}/foreignToken`)
+        .send({ foreignTokenAddress })
+        .then(response => response.body)
+      this.community = { ...response.data }
+    } catch (error) {
+      console.log('ERROR in addCommunityPlugin', { error })
+    }
+  })
+
   addBridgePlugin = flow(function * ({ bridgeType, bridgeDirection }) {
     const response = yield request
       .post(`${this.baseUrl}/communities/${this.communityAddress}/bridge`)
@@ -143,8 +157,24 @@ export default class Dashboard {
 
     if (community?.foreignTokenAddress) {
       this.fetchForeignToken(community?.foreignTokenAddress)
+    } else if (community?.bridgeDirection === 'home-to-foreign') {
+      this.fetchHomeTokenAddress(community?.homeTokenAddress)
     }
   }
+
+  fetchHomeTokenAddress = flow(function * (homeTokenAddress) {
+    try {
+      const bridgeMediator = homeToForeignBridgeMediators.ethereum
+      const contract = new this._web3Foreign.eth.Contract(HomeMultiAMBErc20ToErc677, bridgeMediator)
+      const foreignTokenAddress = yield contract.methods.homeTokenAddress(homeTokenAddress).call()
+      if (!isZeroAddress(foreignTokenAddress)) {
+        this.registerForeignTokenAddress({ foreignTokenAddress })
+        this.fetchForeignToken(foreignTokenAddress)
+      }
+    } catch (error) {
+      console.log({ error })
+    }
+  })
 
   fetchCommunity = flow(function * (communityAddress) {
     try {
@@ -153,13 +183,13 @@ export default class Dashboard {
       this.foreignToken = {}
       this.community = {}
       this.tokenBalances = {
-        home: 0,
-        foreign: 0
+        fuse: 0,
+        ethereum: 0
       }
       this.plugins = {}
       this.allowance = {
-        home: 0,
-        foreign: 0
+        fuse: 0,
+        ethereum: 0
       }
       this.totalSupply = {
         home: 0,
@@ -168,17 +198,17 @@ export default class Dashboard {
       this.isFetching = true
       this.communityAddress = communityAddress
       let response = yield request
-        .get(`${CONFIG.api.url.main}/communities/${communityAddress}`)
+        .get(`${CONFIG.api.url.ropsten}/communities/${communityAddress}`)
         .then(response => response.body)
       if (response.data) {
-        this.baseUrl = CONFIG.api.url.main
-        this.foreignNetwork = 'main'
-      } else {
-        response = yield request
-          .get(`${CONFIG.api.url.ropsten}/communities/${communityAddress}`)
-          .then(response => response.body)
         this.baseUrl = CONFIG.api.url.ropsten
         this.foreignNetwork = 'ropsten'
+      } else {
+        response = yield yield request
+          .get(`${CONFIG.api.url.main}/communities/${communityAddress}`)
+          .then(response => response.body)
+        this.baseUrl = CONFIG.api.url.main
+        this.foreignNetwork = 'main'
       }
       const { data } = response
       this.fetchEntitiesCount(communityAddress)
@@ -190,44 +220,6 @@ export default class Dashboard {
       console.log('ERROR in fetchCommunity', { error })
     }
   })
-
-  get bridgeStatus () {
-    if (this.rootStore.network.networkId === 122) {
-      return {
-        from: {
-          network: this.rootStore.network.homeNetwork,
-          bridge: 'home'
-        },
-        to: {
-          network: this.foreignNetwork,
-          bridge: 'foreign'
-        }
-      }
-    } else {
-      return {
-        from: {
-          network: this.foreignNetwork,
-          bridge: 'foreign'
-        },
-        to: {
-          network: this.rootStore.network.homeNetwork,
-          bridge: 'home'
-        }
-      }
-    }
-  }
-
-  get tokenContext () {
-    return {
-      web3: this._web3Home,
-      isHome: true,
-      token: this.homeToken,
-      tokenAddress: this.community?.homeTokenAddress,
-      tokenNetworkName: 'fuse',
-      tokenBalance: this.tokenBalances.home,
-      baseUrl: this.baseUrl
-    }
-  }
 
   fetchCommunityAdmins = flow(function * (communityAddress) {
     try {
@@ -350,21 +342,33 @@ export default class Dashboard {
     try {
       if (this?.community?.homeTokenAddress) {
         const web3 = this._web3Home
+        let bridgeMediator
         const basicTokenContract = new web3.eth.Contract(
           BasicTokenABI,
           this?.community?.homeTokenAddress
         )
-        const bridgeMediator = getBridgeMediator('home', this.foreignNetwork)
-        this.allowance.home = yield basicTokenContract.methods.allowance(accountAddress, bridgeMediator).call()
+        if (this?.community?.bridgeDirection === 'foreign-to-home') {
+          bridgeMediator = getBridgeMediator('home', this.foreignNetwork)
+        } else {
+          bridgeMediator = homeToForeignBridgeMediators.ethereum
+        }
+        const bridgeMediatorAllowance = yield basicTokenContract.methods.allowance(accountAddress, bridgeMediator).call()
+        this.allowance.fuse = bridgeMediatorAllowance
       }
       if (this?.community?.foreignTokenAddress) {
+        let bridgeMediator
         const web3 = this._web3Foreign
         const contract = new web3.eth.Contract(
           BasicTokenABI,
           this.community?.foreignTokenAddress
         )
-        const bridgeMediator = getBridgeMediator('foreign', this.foreignNetwork)
-        this.allowance.foreign = yield contract.methods.allowance(accountAddress, bridgeMediator).call()
+        if (this?.community?.bridgeDirection === 'foreign-to-home') {
+          bridgeMediator = getBridgeMediator('foreign', this.foreignNetwork)
+        } else {
+          bridgeMediator = homeToForeignBridgeMediators.fuse
+        }
+        const bridgeMediatorAllowance = yield contract.methods.allowance(accountAddress, bridgeMediator).call()
+        this.allowance.ethereum = bridgeMediatorAllowance
       }
     } catch (error) {
       console.log('ERROR in checkAllowance', { error })
@@ -383,7 +387,7 @@ export default class Dashboard {
         const balanceHome = yield basicTokenContract.methods
           .balanceOf(accountAddress)
           .call()
-        this.tokenBalances.home = balanceHome
+        this.tokenBalances.fuse = balanceHome
       }
       if (this?.community?.foreignTokenAddress) {
         const web3 = this._web3Foreign
@@ -394,7 +398,7 @@ export default class Dashboard {
         const balanceForeign = yield contract.methods
           .balanceOf(accountAddress)
           .call()
-        this.tokenBalances.foreign = balanceForeign
+        this.tokenBalances.ethereum = balanceForeign
       }
     } catch (error) {
       console.log('ERROR in fetchTokenBalances', { error })
@@ -457,5 +461,77 @@ export default class Dashboard {
     return Object.keys(
       pickBy(this?.plugins, pluginKey => !pluginKey?.isRemoved)
     ).sort()
+  }
+
+  get bridgeStatus () {
+    if (this?.community?.bridgeDirection === 'home-to-foreign') {
+      if (this.rootStore.network.networkId === 122) {
+        return {
+          from: {
+            network: this.rootStore.network.homeNetwork,
+            bridge: 'foreign',
+            balanceKey: 'fuse'
+          },
+          to: {
+            network: this.foreignNetwork,
+            bridge: 'home',
+            balanceKey: 'ethereum'
+          }
+        }
+      } else {
+        return {
+          from: {
+            network: this.foreignNetwork,
+            bridge: 'home',
+            balanceKey: 'ethereum'
+          },
+          to: {
+            network: this.rootStore.network.homeNetwork,
+            bridge: 'foreign',
+            balanceKey: 'fuse'
+          }
+        }
+      }
+    } else {
+      if (this.rootStore.network.networkId === 122) {
+        return {
+          from: {
+            network: this.rootStore.network.homeNetwork,
+            bridge: 'home',
+            balanceKey: 'fuse'
+          },
+          to: {
+            network: this.foreignNetwork,
+            bridge: 'foreign',
+            balanceKey: 'foreign'
+          }
+        }
+      } else {
+        return {
+          from: {
+            network: this.foreignNetwork,
+            bridge: 'foreign',
+            balanceKey: 'foreign'
+          },
+          to: {
+            network: this.rootStore.network.homeNetwork,
+            bridge: 'home',
+            balanceKey: 'fuse'
+          }
+        }
+      }
+    }
+  }
+
+  get tokenContext () {
+    return {
+      web3: this._web3Home,
+      isHome: true,
+      token: this.homeToken,
+      tokenAddress: this.community?.homeTokenAddress,
+      tokenNetworkName: 'fuse',
+      tokenBalance: this.tokenBalances.home,
+      baseUrl: this.baseUrl
+    }
   }
 }

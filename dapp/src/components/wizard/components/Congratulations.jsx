@@ -1,11 +1,9 @@
 import React, { Fragment } from 'react'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
-import capitalize from 'lodash/capitalize'
-import { convertNetworkName } from 'utils/network'
 import Box from 'images/box.svg'
 
-const Congratulations = ({ networkType, goToDashboard }) => {
+const Congratulations = ({ goToDashboard }) => {
   const { width, height } = useWindowSize()
   return (
     <>
@@ -18,7 +16,7 @@ const Congratulations = ({ networkType, goToDashboard }) => {
           Congratulations!
         </div>
         <p className='congratulation__fuse-text'>
-          You have been awarded with {networkType === 'ropsten' ? '10' : '100'} Fuse tokens for launching on Ethereum {capitalize(convertNetworkName(networkType))} network
+          You have been awarded with 100 Fuse tokens for launching on Fuse network
           &nbsp;<small>(<a target='_blank' rel='noopener noreferrer' href='https://docs.fuse.io/the-fuse-chain/fuse-token'>What's that?</a>)</small>
         </p>
         <div className='congratulation__boxImg'>
