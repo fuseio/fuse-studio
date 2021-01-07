@@ -186,17 +186,17 @@ export default class Dashboard {
       this.isFetching = true
       this.communityAddress = communityAddress
       let response = yield request
-        .get(`${CONFIG.api.url.ropsten}/communities/${communityAddress}`)
+        .get(`${CONFIG.api.url.main}/communities/${communityAddress}`)
         .then(response => response.body)
       if (response.data) {
-        this.baseUrl = CONFIG.api.url.ropsten
-        this.foreignNetwork = 'ropsten'
-      } else {
-        response = yield yield request
-          .get(`${CONFIG.api.url.main}/communities/${communityAddress}`)
-          .then(response => response.body)
         this.baseUrl = CONFIG.api.url.main
         this.foreignNetwork = 'main'
+      } else {
+        response = yield request
+          .get(`${CONFIG.api.url.ropsten}/communities/${communityAddress}`)
+          .then(response => response.body)
+        this.baseUrl = CONFIG.api.url.ropsten
+        this.foreignNetwork = 'ropsten'
       }
       const { data } = response
       this.fetchEntitiesCount(communityAddress)
