@@ -151,8 +151,8 @@ const DashboardLayout = ({
           }
 
           {
-            // (dashboard?.community?.bridgeDirection === 'home-to-foreign') &&
-            dashboard?.community && (
+            dashboard?.community &&
+            dashboard?.community?.bridgeDirection === 'home-to-foreign' && (
               <Route
                 exact
                 path={`${match.path}/bridge`}
