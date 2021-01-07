@@ -15,6 +15,16 @@
       "network": {
         "homeNetwork": "fuse",
         "foreignNetwork": "ropsten"
+      },
+      "addresses": {
+        "homeToForeign": {
+          "fuse": {
+            "MultiBridgeMediator": "0x5ee2cf3eA05648dfbb8f76f848f9e47b843bb946"
+          },
+          "foreign": {
+            "MultiBridgeMediator": "0xD047C66c583488462dBE76d0f9652eC8fD85c1D8"
+          }
+        }
       }
     }
   },

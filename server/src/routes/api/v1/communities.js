@@ -105,17 +105,15 @@ router.put('/:communityAddress/secondary', async (req, res) => {
 })
 
 /**
- * @api {post} /communities/:communityAddress/foreignToken Add bridge to community
+ * @api {put} /communities/:communityAddress/foreignToken Add foreign token address to community
  * @apiName AddForeignToken
  * @apiGroup Community
  * @apiParam {String} communityAddress Community address
- * @apiParam {bridgeType} bridgeType - 'multiple-erc20-to-erc20'/'multi-amb-erc20-to-erc677'/'amb-erc677-to-erc677'
- * @apiParam {bridgeDirection} bridgeDirection - 'foreign-to-home'/'home-to-foreign'
+ * @apiParam {foreignTokenAddress} foreignTokenAddress
  * @apiParamExample {json} Request-Example:
  *   {
  *      "foreignTokenAddress": {{foreignTokenAddress}}
  *   }
- *
  */
 
 router.put('/:communityAddress/foreignToken', async (req, res, next) => {

@@ -58,7 +58,6 @@ const Bridge = ({
   const openModal = (side) => {
     dispatch(loadModal(SHOW_MORE_MODAL, {
       name: convertNetworkName(bridgeStatus[side].network),
-      network: bridgeStatus[side].network !== 'fuse' ? `https://api.infura.io/v1/jsonrpc/${bridgeStatus[side].network}` : CONFIG.web3.fuseProvider,
       homeTokenAddress,
       foreignTokenAddress,
       homeBridgeAddress,
@@ -122,25 +121,25 @@ const Bridge = ({
         {
           bridgeType === 'multi-amb-erc20-to-erc677'
             ? new BigNumber(allowance)
-                .isGreaterThanOrEqualTo(new BigNumber(amount ?? 0).multipliedBy(10 ** decimals))
-                ? (
-                  <button
-                    className='bridge__transfer__form__btn'
-                    type='submit'
-                    onClick={() => setFieldValue('submitType', 'transfer')}
-                  >
-                    Transfer
-                  </button>
-                  )
-                : (
-                  <button
-                    className='bridge__transfer__form__btn'
-                    type='submit'
-                    onClick={() => setFieldValue('submitType', 'approve')}
-                  >
-                    Unlock
-                  </button>
-                  )
+              .isGreaterThanOrEqualTo(new BigNumber(amount ?? 0).multipliedBy(10 ** decimals))
+              ? (
+                <button
+                  className='bridge__transfer__form__btn'
+                  type='submit'
+                  onClick={() => setFieldValue('submitType', 'transfer')}
+                >
+                  Transfer
+                </button>
+                )
+              : (
+                <button
+                  className='bridge__transfer__form__btn'
+                  type='submit'
+                  onClick={() => setFieldValue('submitType', 'approve')}
+                >
+                  Unlock
+                </button>
+              )
             : (
               <button
                 className='bridge__transfer__form__btn'
@@ -149,7 +148,7 @@ const Bridge = ({
               >
                 Transfer
               </button>
-              )
+            )
         }
       </Form>
     )
@@ -215,18 +214,15 @@ const Bridge = ({
                   )
                 }
               </div>
+            )
+            : waitingForRelayEvent
+              ? (
+                <div className='bridge-deploying'>
+                  <p className='bridge-deploying-text'>Waiting for bridge<span>.</span><span>.</span><span>.</span></p>
+                  <p className='bridge-deploying__loader'><img src={FuseLoader} alt='Fuse loader' /></p>
+                </div>
               )
-            : null
-        }
-        {
-          waitingForRelayEvent
-            ? (
-              <div className='bridge-deploying'>
-                <p className='bridge-deploying-text'>Waiting for bridge<span>.</span><span>.</span><span>.</span></p>
-                <p className='bridge-deploying__loader'><img src={FuseLoader} alt='Fuse loader' /></p>
-              </div>
-              )
-            : null
+              : null
         }
       </div>
     </div>

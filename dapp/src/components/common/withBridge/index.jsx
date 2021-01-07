@@ -152,8 +152,8 @@ export default function withBridge(WrappedComponent) {
       promise.on('error', error => {
         console.log(error)
         const rejected = 'User denied transaction signature'
-        setDelay()
-        setNewTokenRegisteredDelay()
+        setDelay(null)
+        setNewTokenRegisteredDelay(null)
         if (
           (typeof error === 'string' && error.includes(rejected)) ||
           (typeof error.message === 'string' &&
