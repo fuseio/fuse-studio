@@ -124,19 +124,6 @@ export default function withBridge(WrappedComponent) {
           setTransactionStatus(FAILURE)
         }
       })
-      // promise.on('receipt', receipt => {
-      //   setReceipt(receipt)
-      //   if (Number(receipt.status)) {
-      //     if (submitType === 'transfer') {
-      //       setTransactionStatus(SUCCESS)
-      //     } else {
-      //       setTransactionStatus(null)
-      //       onConfirmation()
-      //     }
-      //   } else {
-      //     setTransactionStatus(FAILURE)
-      //   }
-      // })
 
       if (submitType === 'transfer') {
         const limit = CONFIG.web3.bridge.confirmations[bridge]
