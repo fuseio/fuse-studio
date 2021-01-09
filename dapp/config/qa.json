@@ -1,25 +1,13 @@
 {
   "env": "qa",
   "web3": {
-    "fuseProvider": "https://rpc.fuse.io",
-    "bridge": {
-      "addresses": {
-        "homeToForeign": {
-          "fuse": {
-            "MultiBridgeMediator": "0x6A90210fc7643Fd4E829204D526C060f0fc347D6"
-          },
-          "foreign": {
-            "MultiBridgeMediator": "0x414cca4c7b592F0993A72A44EE9873BB12dd7eC5"
-          }
-        }
-      }
-    }
+    "fuseProvider": "https://rpc.fuse.io"
   },
   "api": {
     "auth": {
-        "domain": {
-          "name": "Fuse Studio QA"
-        }
+      "domain": {
+        "name": "Fuse Studio QA"
+      }
     },
     "url": {
       "main": "https://studio-qa.fuse.io/api/v1",
