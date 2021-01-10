@@ -1,44 +1,18 @@
 import React, { useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
-import { Field, ErrorMessage, useFormikContext, getIn } from 'formik'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAccount, getProviderInfo } from 'selectors/accounts'
+import { Field, ErrorMessage, useFormikContext } from 'formik'
+import { useSelector } from 'react-redux'
+import { getAccount } from 'selectors/accounts'
 import { formatWei } from 'utils/format'
-import { getCurrentNetworkType } from 'selectors/network'
-import { loadModal } from 'actions/ui'
-import { changeNetwork } from 'actions/network'
-import { SWITCH_NETWORK } from 'constants/uiConstants'
 
 const NameAndDescription = () => {
   const formik = useFormikContext()
-  const networkType = useSelector(getCurrentNetworkType)
-  const dispatch = useDispatch()
-  const providerInfo = useSelector(getProviderInfo)
   const account = useSelector(getAccount)
-  const network = getIn(formik.values, 'network')
 
   useEffect(() => {
-    const hasBalance = parseFloat(account && account.home ? formatWei((account.home), 2) : '0') > 0.01
+    const hasBalance = parseFloat(account && account.home ? formatWei((account.home), 2) : '0') >= 0.01
     formik.setFieldValue('hasBalance', hasBalance)
   }, [account])
-
-  const loadSwitchModal = () => {
-    dispatch(loadModal(SWITCH_NETWORK, { desiredNetworkType: ['fuse'], networkType, goBack: false }))
-  }
-
-  const switchNetwork = () => {
-    if (providerInfo.type === 'injected') {
-      loadSwitchModal()
-    } else if (providerInfo.type === 'web') {
-      dispatch(changeNetwork(network))
-    }
-  }
-
-  useEffect(() => {
-    if (networkType !== 'fuse') {
-      switchNetwork()
-    }
-  }, [networkType])
 
   return (
     <div className='name__wrapper'>

@@ -78,6 +78,7 @@ module.exports = {
         WalletImplementation: '0x1DA43F87611B7FFDb104D125389E14313e053A3A',
         CommunityFactory: '0xcc004Ee01Da7D9207aBE384cE601623E9F223536',
         MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
+        TokenFactory: '0x78Cb0FeEC1fA3b3469cA18e79823b6A87C8929a4',
         walletModules: {
           GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
           LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',

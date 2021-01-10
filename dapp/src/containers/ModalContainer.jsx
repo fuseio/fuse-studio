@@ -13,7 +13,6 @@ import ShowMoreModal from 'components/dashboard/modals/ShowMoreModal'
 import ImportExistingEntity from 'components/dashboard/modals/ImportExistingEntity'
 import PluginInfoModal from 'components/dashboard/modals/PluginInfoModal'
 import SwitchNetwork from 'components/common/SwitchNetwork'
-import Web3ConnectModal from 'components/common/modals/Web3ConnectModal'
 import LoginModal from 'components/common/modals/LoginModal'
 
 import {
@@ -27,7 +26,6 @@ import {
   IMAGE_CROPPER_MODAL,
   PLUGIN_INFO_MODAL,
   SWITCH_NETWORK,
-  WEB3_CONNECT_MODAL,
   LOGIN_MODAL
 } from 'constants/uiConstants'
 
@@ -47,7 +45,6 @@ const MODAL_COMPONENTS = {
   [IMAGE_CROPPER_MODAL]: ImageCropperModal,
   [PLUGIN_INFO_MODAL]: PluginInfoModal,
   [SWITCH_NETWORK]: SwitchNetwork,
-  [WEB3_CONNECT_MODAL]: Web3ConnectModal,
   [LOGIN_MODAL]: LoginModal
 }
 
