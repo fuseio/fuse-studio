@@ -18,7 +18,7 @@ export default class Price {
       const tokenPrice = yield request
         .get(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd`)
         .then(response => response.body)
-      this.fusePrice = tokenPrice[tokenAddress].usd
+      this.fusePrice = tokenPrice[tokenAddress.toLowerCase()].usd
     } catch (error) {
       console.log('ERROR in fetchFusePrice', { error })
     }
