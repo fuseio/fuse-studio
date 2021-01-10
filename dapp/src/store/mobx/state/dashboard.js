@@ -18,6 +18,7 @@ import BasicTokenABI from '@fuse/token-factory-contracts/abi/BasicToken'
 import { getBridgeMediator, homeToForeignBridgeMediators } from 'utils/bridge'
 import { isZeroAddress } from 'utils/web3'
 import { BigNumber } from 'bignumber.js'
+import { loadState } from 'utils/storage'
 
 export default class Dashboard {
   community
@@ -27,6 +28,7 @@ export default class Dashboard {
   foreignToken
   isFetching
   isAdmin
+  fuseBalance
   homeNetwork = 'fuse'
   foreignNetwork
   _web3Home
@@ -80,7 +82,8 @@ export default class Dashboard {
       fetchTokensTotalSupply: action,
       fetchEntitiesCount: action,
       checkIsCommunityMember: action,
-      fetchMetadata: action
+      fetchMetadata: action,
+      fetchFuseFunderBalance: action
     })
     this.rootStore = rootStore
   }
@@ -99,6 +102,21 @@ export default class Dashboard {
       }
     } catch (error) {
       console.log('ERROR in addCommunityPlugin', { error })
+    }
+  })
+
+  fetchFuseFunderBalance = flow(function * () {
+    try {
+      const { user } = loadState('persist:root')
+      const { jwtToken } = JSON.parse(user)
+      const url = CONFIG.api.v2.url[this.foreignNetwork || 'main']
+      const { data } = yield request
+        .get(`${url}/communities/accounting/balance/${this.communityAddress}`)
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .then(response => response.body)
+      this.fuseBalance = data.balance
+    } catch (error) {
+      console.log('ERROR in fetchFunderBalance', { error })
     }
   })
 
@@ -535,7 +553,7 @@ export default class Dashboard {
         : new BigNumber(this.homeToken.totalSupply).minus(this.foreignToken.totalSupply),
       foreign: this?.community?.bridgeDirection === 'foreign-to-home'
         ? new BigNumber(this.foreignToken.totalSupply).minus(this.homeToken.totalSupply)
-        : new  BigNumber(this?.foreignToken?.totalSupply),
+        : new BigNumber(this?.foreignToken?.totalSupply),
       total: this?.community?.bridgeDirection === 'foreign-to-home'
         ? new BigNumber(this.foreignToken.totalSupply).minus(this.homeToken.totalSupply)
         : new BigNumber(this?.homeToken?.totalSupply)

@@ -46,6 +46,12 @@ const DashboardLayout = ({
   }, [communityAddress])
 
   useEffect(() => {
+    if (isAdmin) {
+      dashboard.fetchFuseFunderBalance()
+    }
+  }, [isAdmin])
+
+  useEffect(() => {
     if (accountAddress) {
       dashboard.fetchCommunityAdmins(communityAddress)
       dashboard.fetchTokenBalances(accountAddress)
