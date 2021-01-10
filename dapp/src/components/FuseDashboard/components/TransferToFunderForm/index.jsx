@@ -11,15 +11,6 @@ const Scheme = object().noUnknown(false).shape({
 
 const TransferToFunderForm = ({
   handleSendTransaction,
-  transactionStatus,
-  transactionHash,
-  receipt,
-  isRequested,
-  isDenied,
-  isPending,
-  isConfirmed,
-  isFailed,
-  clearTransaction,
   makeTransaction,
   balance,
   symbol,
@@ -28,7 +19,7 @@ const TransferToFunderForm = ({
   const onSubmit = (values, formikBag) => {
     const { amount } = values
     handleSendTransaction(() => makeTransaction(amount))
-    // formikBag.resetForm()
+    formikBag.resetForm()
   }
 
   const renderHasBalanceForm = ({ isValid, values, handleChange }) => {

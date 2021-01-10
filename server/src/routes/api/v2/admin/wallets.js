@@ -52,7 +52,6 @@ router.post('/create', auth.required, async (req, res) => {
   }
 })
 
-
 /**
  * @api {post} /api/v2/admin/wallets/create/foreign Create foreign wallet for the matching home
  * @apiName CreateForeignWallet

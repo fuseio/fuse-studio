@@ -238,8 +238,12 @@
     @include element(wrapper) {
       max-width: 900px;
       @include breakpoint(large up) {
-        width: 65%;
+        width: 80%;
         margin: 5em auto 3em;
+      }
+
+      @include breakpoint(2000) {
+        width: 70%;
       }
 
       @include breakpoint(medium only) {
@@ -446,7 +450,7 @@
 
             @include element(btn) {
               border: none;
-              min-width: 100px;
+              min-width: 110px;
               color: $color-dark;
               padding: 9px 20px;
               background: $color-fuse_gradient;

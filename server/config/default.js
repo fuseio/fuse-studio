@@ -212,6 +212,11 @@ module.exports = {
     key: 'key_live_aaSvQXmuELUQfsYeG4UfWemnqEiq04hr'
   },
   plugins: {
+    fuseswap: {
+      args: {
+        widgetUrl: 'https://fuseswap.com/#/add/'
+      }
+    },
     moonpay: {
       currencies: {
         '0c9480ef-2fab-4d31-9037-da4b29ecc16f': '0x48B0C1D90C3058ab032C44ec52d98633587eE711'

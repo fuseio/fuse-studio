@@ -14,9 +14,11 @@ import TransferPage from 'components/FuseDashboard/pages/Transfer'
 import MintBurnPage from 'components/FuseDashboard/pages/MintBurn'
 import SettingsPage from 'components/FuseDashboard/pages/Settings'
 import PluginsPage from 'components/FuseDashboard/pages/Plugins'
+import FuseswapPage from 'components/FuseDashboard/pages/Fuseswap'
 import Users from 'components/FuseDashboard/pages/Users'
 import Businesses from 'components/FuseDashboard/pages/Businesses'
 import BonusesPage from 'components/FuseDashboard/pages/Bonuses'
+import BridgePage from 'components/FuseDashboard/pages/Bridge'
 import OnRampPage from 'components/FuseDashboard/pages/OnRamp'
 import WalletBannerLinkPage from 'components/FuseDashboard/pages/WalletBannerLink'
 
@@ -37,7 +39,7 @@ const DashboardLayout = ({
   const { address: communityAddress } = useParams()
   const { dashboard, network } = useStore()
   const { accountAddress } = network
-  const { isAdmin } = dashboard
+  const { isAdmin, foreignTokenAddress } = dashboard
 
   useEffect(() => {
     dashboard.fetchCommunity(communityAddress)
@@ -49,6 +51,12 @@ const DashboardLayout = ({
       dashboard.fetchTokenBalances(accountAddress)
     }
   }, [dashboard?.community, network?.accountAddress])
+
+  useEffect(() => {
+    if (foreignTokenAddress) {
+      dashboard.fetchTokenBalances(accountAddress)
+    }
+  }, [dashboard?.community?.foreignTokenAddress, network?.accountAddress])
 
   const [open, onSetSidebarOpen] = useState(false)
 
@@ -121,10 +129,36 @@ const DashboardLayout = ({
             dashboard?.community && dashboard?.isAdmin && (
               <Route
                 exact
+                path={`${match.path}/fuseswap`}
+              >
+                <WithBgImage>
+                  <FuseswapPage />
+                </WithBgImage>
+              </Route>
+            )
+          }
+          {
+            dashboard?.community && dashboard?.isAdmin && (
+              <Route
+                exact
                 path={`${match.path}/walletbanner`}
               >
                 <WithBgImage>
                   <WalletBannerLinkPage />
+                </WithBgImage>
+              </Route>
+            )
+          }
+
+          {
+            dashboard?.community &&
+            dashboard?.community?.bridgeDirection === 'home-to-foreign' && (
+              <Route
+                exact
+                path={`${match.path}/bridge`}
+              >
+                <WithBgImage>
+                  <BridgePage />
                 </WithBgImage>
               </Route>
             )

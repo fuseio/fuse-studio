@@ -5,9 +5,9 @@
   },
   "api": {
     "auth": {
-        "domain": {
-          "name": "Fuse Studio QA"
-        }
+      "domain": {
+        "name": "Fuse Studio QA"
+      }
     },
     "url": {
       "main": "https://studio-qa.fuse.io/api/v1",

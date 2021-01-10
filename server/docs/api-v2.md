@@ -11,6 +11,7 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Burn tokens](#Burn-tokens)
 	- [Get burn events](#Get-burn-events)
 	- [Create token](#Create-token)
+	- [Create foreign wallet for the matching home](#Create-foreign-wallet-for-the-matching-home)
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	- [Get expired by wallet/token/spendabilityId](#Get-expired-by-wallet/token/spendabilityId)
 	- [Mint tokens](#Mint-tokens)
@@ -194,6 +195,37 @@ Create a token on Fuse network
 ```
 POST /api/v2/admin/tokens/create
 body: { name: 'MyCoolToken', symbol: 'MCT', initialSupply: '100', uri: 'ipfs://hash', expiryTimestamp: 1585036857, spendabilityIds: 'a,b,c', networkType: 'fuse' }
+```
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| Started | `String` | <p>job data</p> |
+## <a name='Create-foreign-wallet-for-the-matching-home'></a> Create foreign wallet for the matching home
+[Back to top](#top)
+
+<p>Start async job of creating a wallet on the foreign network</p>
+
+```
+POST /api/v2/admin/wallets/create/foreign
+```
+### Headers
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| wallerAddress | `String` | <p>address create a wallet for, should be an existing wallet on home network (body parameter)</p> |
+
+### Examples
+Create wallet for the provided wallet address
+
+```
+POST /api/v2/admin/wallets/create/foreign
+body: { wallerAddress: '0x92c358fcF6d270F97458C57583FCeabC086c3a26' }
 ```
 
 
@@ -402,7 +434,7 @@ GET api/v2/jobs/correlationId/:correlationId
 ## <a name='Fetch-job-by-id'></a> Fetch job by id
 [Back to top](#top)
 
-<p>Fetches agenda job by job id</p>
+<p>Fetch job by id</p>
 
 ```
 GET api/v2/jobs/:jobId

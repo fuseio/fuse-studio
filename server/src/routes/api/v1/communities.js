@@ -12,6 +12,7 @@ const sendgridUtils = require('@utils/sendgrid')
 const { toChecksumAddress } = require('web3-utils')
 const { getWeb3 } = require('@services/web3')
 const { fetchTokenData } = require('@utils/token')
+const { createNetwork } = require('@utils/web3')
 
 const makePlugin = ({ plugin }) => {
   const { name } = plugin
@@ -104,6 +105,28 @@ router.put('/:communityAddress/secondary', async (req, res) => {
 })
 
 /**
+ * @api {put} /communities/:communityAddress/foreignToken Add foreign token address to community
+ * @apiName AddForeignToken
+ * @apiGroup Community
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {foreignTokenAddress} foreignTokenAddress
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "foreignTokenAddress": {{foreignTokenAddress}}
+ *   }
+ */
+
+router.put('/:communityAddress/foreignToken', async (req, res, next) => {
+  const { communityAddress } = req.params
+  const { foreignTokenAddress } = req.body
+  const foreign = createNetwork('foreign')
+  const tokenData = await fetchTokenData(foreignTokenAddress, {}, foreign.web3)
+  await new Token({ address: foreignTokenAddress, networkType: foreign.networkType, tokenType: 'custom', ...tokenData }).save()
+  const community = await Community.findOneAndUpdate({ communityAddress }, { foreignTokenAddress }, { new: true })
+
+  return res.json({ data: community })
+})
+/**
  * @api {post} /communities/:communityAddress/invite Invite a user to community
  * @apiName InviteUser
  * @apiGroup Community
@@ -131,6 +154,29 @@ router.post('/:communityAddress/invite', async (req, res, next) => {
     smsProvider.createMessage({ to: phoneNumber, body: `${config.get('inviteTxt')}\n${url}` })
     res.send({ response: 'ok' })
   }
+})
+
+/**
+ * @api {post} /communities/:communityAddress/bridge Add bridge to community
+ * @apiName AddBridge
+ * @apiGroup Community
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {bridgeType} bridgeType - 'multiple-erc20-to-erc20'/'multi-amb-erc20-to-erc677'/'amb-erc677-to-erc677'
+ * @apiParam {bridgeDirection} bridgeDirection - 'foreign-to-home'/'home-to-foreign'
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "bridgeType": "multi-amb-erc20-to-erc677",
+ *      "bridgeDirection": "home-to-foreign"
+ *   }
+ *
+ */
+
+router.put('/:communityAddress/bridge', async (req, res, next) => {
+  const { communityAddress } = req.params
+  const { bridgeType, bridgeDirection } = req.body
+  const community = await Community.findOneAndUpdate({ communityAddress }, { bridgeDirection, bridgeType }, { new: true })
+
+  return res.json({ data: community })
 })
 
 /**

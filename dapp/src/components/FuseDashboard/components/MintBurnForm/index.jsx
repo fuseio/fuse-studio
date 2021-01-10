@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from 'react'
+import React from 'react'
 import { Formik, ErrorMessage, Form } from 'formik'
 import TransactionButton from 'components/common/TransactionButton'
 import Message from 'components/common/SignMessage'
@@ -10,7 +10,6 @@ import get from 'lodash/get'
 import { formatWei } from 'utils/format'
 
 function MintBurnForm({
-  tokenNetworkType,
   symbol,
   balance,
   clearTransaction,
@@ -22,15 +21,6 @@ function MintBurnForm({
   isConfirmed,
   isFailed
 }) {
-  const initialValues = useMemo(
-    () => ({
-      actionType,
-      mintAmount: '',
-      burnAmount: ''
-    }),
-    []
-  )
-
   const onSubmit = (values, formikBag) => {
     const { actionType, mintAmount, burnAmount } = values
 
@@ -57,7 +47,7 @@ function MintBurnForm({
           message={`Your just ${actionType}ed ${formatWei(
             get(receipt, 'events.Transfer.returnValues.value', 0),
             2
-          )} ${symbol} on ${tokenNetworkType} network`}
+          )} ${symbol} on Fuse network`}
           isOpen={isConfirmed}
           subTitle=''
           clickHandler={clearTransaction}
@@ -71,49 +61,48 @@ function MintBurnForm({
         />
 
         <Message
-          message={'Oh no'}
-          subTitle={`You reject the action, That’s ok, try next time!`}
+          message='Oh no'
+          subTitle='You reject the action, That’s ok, try next time!'
           isOpen={isDenied}
           clickHandler={clearTransaction}
         />
-        {actionType === 'mint' ? (
-          <>
-            <div className='grid-y field'>
-              <h3 className='field__title'>Insert amount</h3>
-
-              <TextField
-                name='mintAmount'
-                fullWidth
-                placeholder='0'
-                type='number'
-                autoComplete='off'
-                margin='none'
-                error={
-                  errors && errors.mintAmount && touched.mintAmount && true
-                }
-                onChange={handleChange}
-                InputProps={{
-                  classes: {
-                    underline: 'user-form__field__underline',
-                    error: 'user-form__field__error'
+        {
+          actionType === 'mint'
+            ? (
+              <div className='grid-y field'>
+                <h3 className='field__title'>Insert amount</h3>
+                <TextField
+                  name='mintAmount'
+                  fullWidth
+                  placeholder='0'
+                  type='number'
+                  autoComplete='off'
+                  margin='none'
+                  error={
+                    errors && errors.mintAmount && touched.mintAmount && true
                   }
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                  className: 'user-form__field__label'
-                }}
-                inputProps={{
-                  value: values.mintAmount
-                }}
-              />
-              <ErrorMessage
-                name='mintAmount'
-                render={msg => <div className='input-error'>{msg}</div>}
-              />
-            </div>
-          </>
-        ) : (
-            <>
+                  onChange={handleChange}
+                  InputProps={{
+                    classes: {
+                      underline: 'user-form__field__underline',
+                      error: 'user-form__field__error'
+                    }
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                    className: 'user-form__field__label'
+                  }}
+                  inputProps={{
+                    value: values.mintAmount
+                  }}
+                />
+                <ErrorMessage
+                  name='mintAmount'
+                  render={msg => <div className='input-error'>{msg}</div>}
+                />
+              </div>
+              )
+            : (
               <div className='grid-y field'>
                 <h3 className='field__title'>Insert amount</h3>
 
@@ -147,8 +136,8 @@ function MintBurnForm({
                   render={msg => <div className='input-error'>{msg}</div>}
                 />
               </div>
-            </>
-          )}
+              )
+        }
         <div className='transfer__content__button'>
           {actionType && (
             <TransactionButton
@@ -164,7 +153,11 @@ function MintBurnForm({
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={{
+        actionType,
+        mintAmount: '',
+        burnAmount: ''
+      }}
       validationSchema={mintBurnShape(
         balance && typeof balance.replace === 'function'
           ? balance.replace(/,/g, '')

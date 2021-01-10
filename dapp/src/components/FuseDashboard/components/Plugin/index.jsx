@@ -13,7 +13,6 @@ const Plugin = ({
   showInfoModal,
   subTitle,
   managePlugin,
-  modifier,
   text,
   pluginKey
 }) => {
@@ -21,12 +20,12 @@ const Plugin = ({
   const hasPlugin = includes(dashboard?.addedPlugins, pluginKey)
   return (
     <div className='plugin-card cell small-24 medium-8'>
-      <div className={classNames('plugin-card__image', { 'plugin-card__image--fiat': modifier })}>
+      <div className='plugin-card__image'>
         <div className='plugin-card__image__container'>
           <img src={image} />
         </div>
       </div>
-      <div className={classNames('plugin-card__content grid-y align-justify', { 'plugin-card__content--fiat': modifier, 'plugin-card__content--disabled': disabled })}>
+      <div className={classNames('plugin-card__content grid-y align-justify', { 'plugin-card__content--disabled': disabled })}>
         <h2 className='plugin-card__title cell small-24'>{title} <span>{subTitle}</span></h2>
         {text && <p className='plugin-card__text cell small-24'>{text}</p>}
         <div className='plugin-card__actions cell small-24'>

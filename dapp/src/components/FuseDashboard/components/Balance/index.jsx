@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import { convertNetworkName } from 'utils/network'
 import MainnetLogo from 'images/Mainnet.svg'
 import FuseLogo from 'images/fuse_network_logo.svg'
@@ -21,15 +21,14 @@ const Balance = ({
   side
 }) => {
   const { dashboard } = useStore()
-  const { bridge, network } = dashboard?.bridgeStatus[side]
-  const balance = dashboard?.tokenBalances[bridge]
+  const { network, tokenAddress } = dashboard?.bridgeStatus[side]
   return (
     <div className='bridge'>
       <NetworkLogo side={side} />
       <div className='grid-y align-top'>
         <div className='bridge__title cell'>{convertNetworkName(network)}</div>
         <div className='bridge__text cell'>
-          Balance&nbsp;{balance ? formatWei(balance, 2, dashboard?.homeToken?.decimals) : 0} {dashboard?.homeToken?.symbol}
+          Balance&nbsp;{dashboard?.tokenBalances[tokenAddress] ? formatWei(dashboard?.tokenBalances[tokenAddress], 2, dashboard?.homeToken?.decimals) : 0} {dashboard?.homeToken?.symbol}
         </div>
       </div>
       <button className='bridge__more' onClick={openModal}>Show more</button>

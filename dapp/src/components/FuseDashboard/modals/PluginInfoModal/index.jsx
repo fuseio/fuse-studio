@@ -45,17 +45,19 @@ const PluginInfoModal = ({
           className={classNames('plugin-info__btn', { 'plugin-card__btn--add': !hasPlugin }, { 'plugin-card__btn--remove': hasPlugin })}
           onClick={handleClick}
         >
-          {!hasPlugin ? (
-            <React.Fragment>
-              <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
-              <span>ADD</span>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <img src={RemoveIcon} />
-              <span>Remove</span>
-            </React.Fragment>
-          )}
+          {!hasPlugin
+            ? (
+              <>
+                <FontAwesome name='plus-circle' style={{ color: 'white', marginRight: '5px' }} />
+                <span>ADD</span>
+              </>
+              )
+            : (
+              <>
+                <img src={RemoveIcon} />
+                <span>Remove</span>
+              </>
+              )}
         </button>
       </div>
     </Modal>

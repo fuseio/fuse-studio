@@ -7,6 +7,8 @@ The Fuse Studio REST API for accessing the data and the services of the Fuse net
 	- [Fetch bridge](#Fetch-bridge)
 	
 - [Community](#Community)
+	- [Add bridge to community](#Add-bridge-to-community)
+	- [Add foreign token address to community](#Add-foreign-token-address-to-community)
 	- [Add plugins to community](#Add-plugins-to-community)
 	- [](#)
 	- [Fetch community](#Fetch-community)
@@ -55,6 +57,56 @@ GET /bridges/:homeTokenAddress
 | homeBridgeBlockNumber | `Number` | <p>Bridge creation block number on the Fuse network</p> |
 | foreignBridgeBlockNumber | `Number` | <p>Bridge creation block number on the Ethereum network</p> |
 # <a name='Community'></a> Community
+
+## <a name='Add-bridge-to-community'></a> Add bridge to community
+[Back to top](#top)
+
+
+
+```
+POST /communities/:communityAddress/bridge
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Community address</p> |
+| bridgeType | `bridgeType` | <ul> <li>'multiple-erc20-to-erc20'/'multi-amb-erc20-to-erc677'/'amb-erc677-to-erc677'</li> </ul> |
+| bridgeDirection | `bridgeDirection` | <ul> <li>'foreign-to-home'/'home-to-foreign'</li> </ul> |
+
+### Param Examples
+`json` - Request-Example:
+
+```json
+{
+   "bridgeType": "multi-amb-erc20-to-erc677",
+   "bridgeDirection": "home-to-foreign"
+}
+```
+
+## <a name='Add-foreign-token-address-to-community'></a> Add foreign token address to community
+[Back to top](#top)
+
+
+
+```
+PUT /communities/:communityAddress/foreignToken
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| communityAddress | `String` | <p>Community address</p> |
+| foreignTokenAddress | `foreignTokenAddress` |  |
+
+### Param Examples
+`json` - Request-Example:
+
+```json
+{
+   "foreignTokenAddress": {{foreignTokenAddress}}
+}
+```
 
 ## <a name='Add-plugins-to-community'></a> Add plugins to community
 [Back to top](#top)
