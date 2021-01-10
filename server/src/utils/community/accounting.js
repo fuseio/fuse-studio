@@ -11,12 +11,12 @@ const calculateExpenses = async (communityAddress) => {
       _id: { communityAddress: '$communityAddress' },
       expenses: { $sum: '$data.txFee' }
     })
-  return { expenses: response[0].expenses.toString() }
+  return { expenses: response.length > 0 ? response[0].expenses.toString() : 0 }
 }
 
 const countTransactions = async (communityAddress) => {
   const response = await QueueJob.aggregate([{ $match: { communityAddress } }]).count('txCount')
-  return response[0]
+  return response.length > 0 ? response[0] : { txCount: 0 }
 }
 
 const availableBalance = async (communityAddress) => {
