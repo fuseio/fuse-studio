@@ -52,6 +52,7 @@ export default class Dashboard {
 
   constructor (rootStore) {
     makeObservable(this, {
+      fuseBalance: observable,
       metadata: observable.ref,
       community: observable.ref,
       plugins: observable.ref,
