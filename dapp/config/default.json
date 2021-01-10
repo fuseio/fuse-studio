@@ -30,7 +30,7 @@
         "MultiBridgeMediator": "0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419"
       },
       "main": {
-        "FuseToken": "0x4162178B78D6985480A308B2190EE5517460406D",
+        "FuseToken": "0x970B9bB2C0444F5E81e9d0eFb84C8ccdcdcAf84d",
         "TokenFactory": "0xB2100946628D3e45FF94971b35508AfCBBc87432",
         "DaiToken": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
         "UsdToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
