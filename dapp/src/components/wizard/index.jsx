@@ -1,13 +1,26 @@
-import React, { Fragment, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
-import { getAccountAddress, getProviderInfo } from 'selectors/accounts'
-import { createTokenWithMetadata, fetchDeployProgress, deployExistingToken, clearTransaction } from 'actions/token'
-import { loadModal } from 'actions/ui'
-import { FAILURE } from 'actions/constants'
 import * as Sentry from '@sentry/browser'
 import { push } from 'connected-react-router'
 import { toChecksumAddress } from 'web3-utils'
+
+import {
+  getAccountAddress,
+  getProviderInfo,
+  getAccount
+} from 'selectors/accounts'
+import {
+  createTokenWithMetadata,
+  fetchDeployProgress,
+  deployExistingToken,
+  clearTransaction
+} from 'actions/token'
+import { balanceOfNative } from 'actions/accounts'
+import { loadModal } from 'actions/ui'
+import { FAILURE } from 'actions/constants'
+import { changeNetwork } from 'actions/network'
+import { fetchFundingStatus } from 'actions/user'
 
 import Message from 'components/common/SignMessage'
 import Wizard from 'components/wizard/container'
@@ -17,9 +30,10 @@ import DetailsStep from 'components/wizard/pages/DetailsStep'
 import SummaryStep from 'components/wizard/pages/SummaryStep'
 import DeployProgressStep from 'components/wizard/pages/DeployProgress'
 import Congratulations from 'components/wizard/components/Congratulations'
-import { changeNetwork } from 'actions/network'
 import { SWITCH_NETWORK } from 'constants/uiConstants'
 import { useStore } from 'store/mobx'
+import useInterval from 'hooks/useInterval'
+import { formatWei } from 'utils/format'
 
 import contractIcon from 'images/contract.svg'
 
@@ -36,9 +50,26 @@ const WizardPage = ({
   push
 }) => {
   const store = useStore()
+  const issuance = useSelector(state => state.screens.issuance)
+  const account = useSelector(getAccount)
   const dispatch = useDispatch()
   const providerInfo = useSelector(getProviderInfo)
   const { networkId } = store?.network
+  const [delay, setDelay] = useState(null)
+
+  useEffect(() => {
+    const hasBalance = parseFloat(account?.home ? formatWei((account.home), 2) : '0') >= 0.01
+    if (issuance?.jobId && !hasBalance) {
+      setDelay(5000)
+    } else {
+      setDelay(null)
+    }
+  }, [issuance?.jobId, account?.home])
+
+  useInterval(() => {
+    dispatch(fetchFundingStatus())
+  }, delay)
+
   useEffect(() => {
     if (window && window.analytics) {
       window.analytics.track('Wizard init')
