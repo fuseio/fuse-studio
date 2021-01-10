@@ -104,6 +104,14 @@ const CommunityInfo = () => {
             <span className='title'>Supply on Ethereum:</span>
             {dashboard?.communityTotalSupply?.foreign ? formatWei(dashboard?.communityTotalSupply?.foreign, 2, dashboard?.homeToken?.decimals) : 0} <small>{dashboard?.homeToken?.symbol}</small> ({(percentOnForeign && (`${percentOnForeign.toFixed(2)}%`)) || '0%'})
           </p>
+          {
+            dashboard?.isAdmin && (
+              <p>
+                <span className='title'>Funder balance:</span>
+                {dashboard?.fuseBalance ? formatWei(dashboard?.fuseBalance, 2, 18) : 0} <small>FUSE</small>
+              </p>
+            )
+          }
         </div>
       </div>
     </div>
