@@ -30,8 +30,8 @@ contract Exchange is ExchangeERC20, Ownable {
         require(amountA <= IERC20(assetA).allowance(msg.sender, address(this)), "Insufficient allowance");
         require(amountB <= IERC20(assetB).balanceOf(address(this)), "Insufficient balance");
 
-        IERC20(assetA).safeTransferFrom(msg.sender, address(this), amountA);
-        IERC20(assetB).safeTransfer(msg.sender, amountB);
+        IERC20(_assetA).safeTransferFrom(msg.sender, address(this), amountA);
+        IERC20(_assetB).safeTransfer(msg.sender, amountB);
     }
 
     function swapAforB(uint amount) public returns(uint received) {
@@ -57,7 +57,7 @@ contract Exchange is ExchangeERC20, Ownable {
             minted = amountA;
         } else {
             uint reserveA = IERC20(assetA).balanceOf(address(this));
-            int128 unitShare = ABDKMath64x64.divuu(totalLiquidity, reserveA);
+            int128 unitShare = ABDKMath64x64.divu(totalLiquidity, reserveA);
             minted = unitShare.mulu(amountA);
         }
 
@@ -72,13 +72,13 @@ contract Exchange is ExchangeERC20, Ownable {
         uint reserveA = IERC20(assetA).balanceOf(address(this));
         uint reserveB = IERC20(assetB).balanceOf(address(this));
         uint totalLiquidity = totalSupply();
-        int128 unitShare = ABDKMath64x64.divuu(amount, totalLiquidity);
+        int128 unitShare = ABDKMath64x64.divu(amount, totalLiquidity);
         
         totalA = unitShare.mulu(reserveA);
         totalB = unitShare.mulu(reserveB);
 
-        assetA.safeTransfer(msg.sender, totalA);
-        assetB.safeTransfer(msg.sender, totalB);
+        IERC20(assetA).safeTransfer(msg.sender, totalA);
+        IERC20(assetB).safeTransfer(msg.sender, totalB);
 
         burnFrom(msg.sender, amount);
     }
