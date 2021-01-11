@@ -131,13 +131,13 @@ module.exports = {
         TokenFactory: '0xB2100946628D3e45FF94971b35508AfCBBc87432',
         ForeignBridgeFactory: '0xaC116929b2baB59D05a1Da99303e7CAEd100ECC9',
         TotlePrimary: '0x74758acfce059f503a7e6b0fc2c8737600f9f2c4',
-        MultiBridgeMediator: '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419'
+        MultiBridgeMediator: '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
       },
       addressesRopsten: {
         TokenFactory: '0x6004EAdF0aD3aCd568F354CA7E2b410bA0080E98',
         ForeignBridgeFactory: '0xABBf5D8599B2Eb7b4e1D25a1Fd737FF1987655aD',
         TotlePrimary: '0x74758acfce059f503a7e6b0fc2c8737600f9f2c4',
-        MultiBridgeMediator: '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
+        MultiBridgeMediator: '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419'
       },
       addresses: defer(function () {
         if (this.network.foreign.name === 'mainnet') {
