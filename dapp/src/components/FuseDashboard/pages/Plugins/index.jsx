@@ -9,6 +9,7 @@ import { useStore } from 'store/mobx'
 import { observer } from 'mobx-react'
 import { generalPlugins } from 'constants/plugins'
 import includes from 'lodash/includes'
+import get from 'lodash/get'
 
 const PluginList = ({ pluginList, showInfoModal, addPlugin, togglePlugin }) => {
   return (
@@ -84,7 +85,7 @@ const Plugins = () => {
   const togglePlugin = (key) => {
     const plugin = { name: key }
     if (dashboard?.plugins) {
-      if (dashboard?.plugins[key]?.isRemoved) {
+      if (get(dashboard?.plugins, `${key}.isRemoved`, true)) {
         plugin.isRemoved = false
       } else {
         plugin.isRemoved = true
@@ -92,6 +93,8 @@ const Plugins = () => {
     }
     return plugin
   }
+
+  const pluginsList = generalPlugins(dashboard?.community?.bridgeDirection)
 
   return (
     <div className='plugins'>
@@ -106,7 +109,7 @@ const Plugins = () => {
           <div className='plugins__puzzle'><img src={Puzzle} /></div>
         </div>
         <PluginList
-          pluginList={generalPlugins}
+          pluginList={pluginsList}
           showInfoModal={showInfoModal}
           addPlugin={addPlugin} togglePlugin={togglePlugin}
         />

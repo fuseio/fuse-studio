@@ -11,7 +11,6 @@ function BridgePage (props) {
 
   const handleConfirmation = () => {
     dashboard.checkAllowance(accountAddress)
-    dashboard.fetchTokensTotalSupply()
     dashboard.fetchTokenBalances(accountAddress)
     dashboard.fetchHomeToken(homeTokenAddress)
     dashboard.fetchForeignToken(foreignTokenAddress)

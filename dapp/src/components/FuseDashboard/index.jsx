@@ -107,7 +107,7 @@ const DashboardLayout = ({
               >
                 {!open && <div className='hamburger' onClick={() => onSetSidebarOpen(true)}><FontAwesome name='bars' /></div>}
               </Sidebar>
-            )
+              )
         }
         <Switch>
           {get(dashboard?.plugins, 'bonuses') && !get(dashboard?.plugins, 'bonuses.isRemoved', false) && dashboard?.isAdmin && (

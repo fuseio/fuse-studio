@@ -77,7 +77,6 @@ function Dashboard (props) {
 
   const handleConfirmation = () => {
     dashboard.checkAllowance(accountAddress)
-    dashboard.fetchTokensTotalSupply()
     dashboard.fetchTokenBalances(accountAddress)
     dashboard.fetchHomeToken(homeTokenAddress)
     dashboard.fetchForeignToken(foreignTokenAddress)
@@ -87,7 +86,7 @@ function Dashboard (props) {
     <div className='content__wrapper'>
       <Header withLogo />
       {
-        success && <Banner />
+        success === 'justCreated' && <Banner />
       }
       <CommunityInfo />
       {
