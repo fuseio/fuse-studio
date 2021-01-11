@@ -26,10 +26,10 @@ contract Exchange is ExchangeERC20, Ownable {
         r_inv = r.inv();
     }
 
-    function _swap(address assetA, address assetB, uint amountA, uint amountB) internal {
+    function _swap(address _assetA, address _assetB, uint amountA, uint amountB) internal {
         require(amountA <= IERC20(assetA).allowance(msg.sender, address(this)), "Insufficient allowance");
         require(amountB <= IERC20(assetB).balanceOf(address(this)), "Insufficient balance");
-        
+
         IERC20(assetA).safeTransferFrom(msg.sender, address(this), amountA);
         IERC20(assetB).safeTransfer(msg.sender, amountB);
     }
@@ -54,7 +54,7 @@ contract Exchange is ExchangeERC20, Ownable {
         uint totalLiquidity = totalSupply();
 
         if(totalLiquidity == 0) {
-            mintedLiquidity = amountA;
+            minted = amountA;
         } else {
             uint reserveA = IERC20(assetA).balanceOf(address(this));
             int128 unitShare = ABDKMath64x64.divuu(totalLiquidity, reserveA);
