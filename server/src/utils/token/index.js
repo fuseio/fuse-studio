@@ -31,16 +31,13 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
 
 const fetchBalance = async ({ createContract }, tokenAddress, accountAddress) => {
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
-  console.log({ tokenAddress, accountAddress })
   const accountBalance = await tokenContract.methods.balanceOf(accountAddress).call()
-  // console.log(`balance of account ${accountAddress} of token ${tokenAddress} is ${accountBalance}`)
   return accountBalance
 }
 
 const fetchTokenPrice = async (tokenAddress) => {
   const query = `{tokenDayDatas(where: {token: "${tokenAddress}"}, orderDirection: desc, orderBy: date, first: 1) {id, date, priceUSD}}`
   const { tokenDayDatas } = await uniswapClient.request(query)
-  console.log(tokenDayDatas[0])
   return tokenDayDatas.length > 0 ? tokenDayDatas[0] : {}
 }
 
