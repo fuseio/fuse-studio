@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import Modal from 'components/common/Modal'
 import GoogleLogin from 'react-google-login'

@@ -45,11 +45,6 @@ export default class Dashboard {
 
   allowance = {}
 
-  totalSupply = {
-    home: 0,
-    foreign: 0
-  }
-
   constructor (rootStore) {
     makeObservable(this, {
       fuseBalance: observable,
@@ -65,7 +60,6 @@ export default class Dashboard {
       communityBusinesses: observable,
       entitiesCount: observable,
       tokenBalances: observable.shallow,
-      totalSupply: observable.shallow,
       allowance: observable.shallow,
       addedPlugins: computed,
       bridgeStatus: computed,
@@ -80,7 +74,6 @@ export default class Dashboard {
       addCommunityPlugin: action,
       setBonus: action,
       fetchCommunityUsers: action,
-      fetchTokensTotalSupply: action,
       fetchEntitiesCount: action,
       checkIsCommunityMember: action,
       fetchMetadata: action,
@@ -162,8 +155,6 @@ export default class Dashboard {
       this._web3Foreign = getWeb3({ networkType: this.foreignNetwork })
     }
 
-    this.fetchTokensTotalSupply()
-
     if (community?.communityURI) {
       this.fetchMetadata(community?.communityURI)
     }
@@ -202,10 +193,6 @@ export default class Dashboard {
       this.tokenBalances = {}
       this.plugins = {}
       this.allowance = {}
-      this.totalSupply = {
-        home: 0,
-        foreign: 0
-      }
       this.isFetching = true
       this.communityAddress = communityAddress
       let response = yield request
@@ -316,36 +303,6 @@ export default class Dashboard {
       this.foreignToken = { name, symbol, totalSupply, decimals }
     } catch (error) {
       console.log({ error })
-    }
-  })
-
-  fetchTokensTotalSupply = flow(function * () {
-    try {
-      if (this?.community?.homeTokenAddress) {
-        const web3 = this._web3Home
-        const tokenAddress = this?.community?.homeTokenAddress
-        const basicTokenContract = new web3.eth.Contract(
-          BasicTokenABI,
-          tokenAddress
-        )
-        const totalSupplyHome = yield basicTokenContract.methods
-          .totalSupply()
-          .call()
-        this.totalSupply.home = totalSupplyHome
-      }
-      if (this?.community?.foreignTokenAddress) {
-        const web3 = this._web3Foreign
-        const contract = new web3.eth.Contract(
-          BasicTokenABI,
-          this.community?.foreignTokenAddress
-        )
-        const totalSupplyForeign = yield contract.methods
-          .totalSupply()
-          .call()
-        this.totalSupply.foreign = totalSupplyForeign
-      }
-    } catch (error) {
-      console.log('ERROR in fetchTokensTotalSupply', { error })
     }
   })
 
@@ -550,14 +507,14 @@ export default class Dashboard {
   get communityTotalSupply () {
     return {
       home: this?.community?.bridgeDirection === 'foreign-to-home'
-        ? new BigNumber(this?.homeToken?.totalSupply)
-        : new BigNumber(this.homeToken.totalSupply).minus(this.foreignToken.totalSupply),
+        ? new BigNumber(this?.homeToken?.totalSupply ?? 0)
+        : new BigNumber(this.homeToken.totalSupply ?? 0).minus(this.foreignToken.totalSupply ?? 0),
       foreign: this?.community?.bridgeDirection === 'foreign-to-home'
-        ? new BigNumber(this.foreignToken.totalSupply).minus(this.homeToken.totalSupply)
-        : new BigNumber(this?.foreignToken?.totalSupply),
+        ? new BigNumber(this.foreignToken.totalSupply ?? 0).minus(this.homeToken.totalSupply ?? 0)
+        : new BigNumber(this?.foreignToken?.totalSupply ?? 0),
       total: this?.community?.bridgeDirection === 'foreign-to-home'
-        ? new BigNumber(this.foreignToken.totalSupply).minus(this.homeToken.totalSupply)
-        : new BigNumber(this?.homeToken?.totalSupply)
+        ? new BigNumber(this.foreignToken.totalSupply ?? 0).minus(this.homeToken.totalSupply ?? 0)
+        : new BigNumber(this?.homeToken?.totalSupply ?? 0)
     }
   }
 }

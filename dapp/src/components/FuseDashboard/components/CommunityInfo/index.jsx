@@ -3,7 +3,6 @@ import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { useDispatch } from 'react-redux'
 import { formatWei, addressShortener } from 'utils/format'
-import { BigNumber } from 'bignumber.js'
 import { loadModal } from 'actions/ui'
 import { QR_MODAL } from 'constants/uiConstants'
 import { observer } from 'mobx-react'
@@ -36,9 +35,9 @@ const CommunityInfo = () => {
       ? 'One time issued token'
       : 'Imported'
 
-  const homeTokenBalance = Number(new BigNumber(dashboard?.communityTotalSupply?.home).div(1e18).toFixed())
-  const foreignTokenBalance = Number(new BigNumber(dashboard?.communityTotalSupply?.foreign).div(1e18).toFixed())
-  const total = Number(new BigNumber(dashboard?.communityTotalSupply?.total).div(1e18).toFixed())
+  const homeTokenBalance = Number(dashboard?.communityTotalSupply?.home.div(1e18).toFixed())
+  const foreignTokenBalance = Number(dashboard?.communityTotalSupply?.foreign.div(1e18).toFixed())
+  const total = Number(dashboard?.communityTotalSupply?.total.div(1e18).toFixed())
 
   const {
     percentOnHome,

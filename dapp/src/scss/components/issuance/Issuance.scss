@@ -408,7 +408,7 @@
           width: 100%;
           margin: auto;
           @include xy-grid(vertical, false);
-          @include flex-align(spaced, middle);
+          @include flex-align(spaced, null);
         }
 
         @include breakpoint(medium down) {
@@ -416,7 +416,13 @@
             margin: 1em 0;
           }
         }
+
+        @include block(title) {
+          @extend %issuance_title;
+          font-weight: bold;
+        }
       }
+
 
       @include block(or) {
         font-size: 0.775em;

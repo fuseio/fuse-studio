@@ -54,6 +54,7 @@ const ChooseCurrencyType = () => {
 
   return (
     <div className='options__wrapper grid-y align-spaced'>
+      <div className='title'>Please choose one of the following options:</div>
       <div className='options grid-x'>
         <CurrencyOption
           logo={createNewToken}

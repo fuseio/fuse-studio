@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import capitalize from 'lodash/capitalize'
 import { formatWei, toWei } from 'utils/format'
 import Tabs from '@material-ui/core/Tabs'
@@ -45,7 +45,7 @@ const useTabsStyles = makeStyles(theme => ({
 const useTabStyles = makeStyles(theme => ({
   root: {
     fontSize: '16px',
-    fontFamily: `'Gotham SSm A', 'Gotham SSm B', 'icomoon'`
+    fontFamily: "'Gotham SSm A', 'Gotham SSm B', 'icomoon'"
   },
   textColorPrimary: {
     color: '#25435a !important'
@@ -58,6 +58,7 @@ const useTabStyles = makeStyles(theme => ({
 const MintBurn = () => {
   const { dashboard, network } = useStore()
   const decimals = dashboard?.homeToken?.decimals
+  const homeTokenAddress = dashboard?.community?.homeTokenAddress
   const tokenAddress = dashboard?.homeToken?.address
   const { tokenContext } = dashboard
   const { token, tokenNetworkName } = tokenContext
@@ -78,7 +79,7 @@ const MintBurn = () => {
   const handleChange = (event, newValue) => setValue(newValue)
 
   const handleConfirmation = () => {
-    dashboard?.fetchTokensTotalSupply()
+    dashboard.fetchHomeToken(homeTokenAddress)
     dashboard?.fetchTokenBalances(accountAddress)
   }
 
