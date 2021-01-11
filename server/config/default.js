@@ -25,12 +25,17 @@ module.exports = {
     urlBase: 'http://localhost:4000/api'
   },
   graph: {
-    url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio',
-    subgraphs: {
-      fuse: '/fuse-qa',
-      entities: '/fuse-entities-qa',
-      bridgeRopsten: '/fuse-ropsten-bridge',
-      bridgeMain: '/fuse-ethereum-bridge'
+    fuse: {
+      url: 'https://graph.fuse.io/subgraphs/name/fuseio',
+      subgraphs: {
+        fuse: '/fuse-qa',
+        entities: '/fuse-entities-qa',
+        bridgeRopsten: '/fuse-ropsten-bridge',
+        bridgeMain: '/fuse-ethereum-bridge'
+      }
+    },
+    uniswap: {
+      url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     }
   },
   gasLimitForTx: {
@@ -99,7 +104,7 @@ module.exports = {
       })
     },
     foreign: {
-      name: 'ropsten',
+      name: 'mainnet',
       bridgeType: 'foreign',
       contract: {
         options: {
@@ -120,7 +125,7 @@ module.exports = {
         alchemy: {
           http: ''
         },
-        default: 'alchemy'
+        default: 'infura'
       },
       addressesMainnet: {
         TokenFactory: '0xB2100946628D3e45FF94971b35508AfCBBc87432',

@@ -19,6 +19,7 @@ require('./EthFunding')
 require('./QueueJob')
 require('./StudioUser')
 require('./UserAccount')
+require('./AccountBalance')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')

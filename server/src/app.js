@@ -80,6 +80,7 @@ async function init () {
     const taskManager = require('@services/taskManager')
     taskManager.start()
   }
+  require('@utils/tvl')
 }
 
 init()
