@@ -35,13 +35,10 @@ async function start () {
   await agenda.start()
 
   if (yn(config.get('agenda.startPeriodicTasks'))) {
-    await agenda.now('processPastBridgeMappingEvents')
-    await agenda.now('processPastTokenCreatedEvents')
-    await agenda.every('1 hour', 'processPastTokenCreatedEvents')
     await agenda.every('1 hour', 'proccessPendingTransactions')
     await agenda.every('1 hour', 'startTransfers')
     await agenda.every('1 hour', 'lockedAccounts')
-    await agenda.every('1 hour', 'lowBalanceAccounts')
+    await agenda.every('0 2 * * *', 'calculateCurrentTvl', { timezone: 'GMT' })
 
     await agenda.now('proccessPendingTransactions')
   }

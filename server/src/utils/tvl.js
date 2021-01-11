@@ -1,4 +1,3 @@
-// const Promise = require('bluebird')
 const { createNetwork } = require('@utils/web3')
 const config = require('config')
 const { fetchBalance, fetchTokenPrice } = require('./token')
@@ -27,7 +26,7 @@ const fetchTokenPricesInUSD = async (tokenList) => {
   return tokenPrices
 }
 
-const tvlFormula = (tokenBalances, tokenPrices) =>
+const computeTlv = (tokenBalances, tokenPrices) =>
   Object.entries(tokenBalances).reduce((sum, [tokenAddress, tokenBalance]) => sum.plus(new BigNumber(tokenBalance).multipliedBy(tokenPrices[tokenAddress].priceUSD)), new BigNumber(0))
 
 const filterTokenBalances = (tokenBalances, tokenPrices) =>
@@ -39,16 +38,18 @@ const calculateAccountTvl = async (accountAddress, foreignNetwork) => {
   const tokenPrices = await fetchTokenPricesInUSD(tokenList)
 
   const filteredTokenBalances = filterTokenBalances(tokenBalances, tokenPrices)
-  const tvl = tvlFormula(filteredTokenBalances, tokenPrices)
+  const tvlUSDinWei = computeTlv(filteredTokenBalances, tokenPrices)
+  const tvlUSD = tvlUSDinWei.div(new BigNumber(10).pow(18))
+
   new AccountBalance({
     address: accountAddress,
     bridgeType: 'foreign',
     date: new Date(),
+    tvlUSD,
     tokenBalances: filteredTokenBalances,
     description: 'multi-amb-erc20-to-erc677'
   }).save()
-  console.log((await fetchBridgedTokenPairs()).filter(({ foreignAddress }) => !!tokenPrices[foreignAddress]).map(({ foreignAddress, symbol }) => ({ foreignAddress, symbol, balance: filteredTokenBalances[foreignAddress], priceUSD: tokenPrices[foreignAddress].priceUSD, date: new Date(tokenPrices[foreignAddress].date * 1000) })))
-  console.log(`tvl for ${accountAddress} is ${tvl.div(new BigNumber(10).pow(18))} USD`)
+  console.log(`tvl for ${accountAddress} is ${tvlUSD} USD`)
 }
 
 const calculateTvl = async () => {
