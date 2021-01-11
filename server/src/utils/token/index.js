@@ -5,6 +5,7 @@ const BigNumber = require('bignumber.js')
 const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const { toWei } = require('web3-utils')
+const { uniswapClient } = require('@services/graph')
 
 const fetchToken = async (tokenAddress) => {
   const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
@@ -31,8 +32,13 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
 const fetchBalance = async ({ createContract }, tokenAddress, accountAddress) => {
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
   const accountBalance = await tokenContract.methods.balanceOf(accountAddress).call()
-  console.log(`balance of account ${accountAddress} of token ${tokenAddress} is ${accountBalance}`)
   return accountBalance
+}
+
+const fetchTokenPrice = async (tokenAddress) => {
+  const query = `{tokenDayDatas(where: {token: "${tokenAddress}"}, orderDirection: desc, orderBy: date, first: 1) {id, date, priceUSD}}`
+  const { tokenDayDatas } = await uniswapClient.request(query)
+  return tokenDayDatas.length > 0 ? tokenDayDatas[0] : {}
 }
 
 const transfer = async (network, { from, to, tokenAddress, amount }) => {
@@ -73,6 +79,7 @@ const hasAllowance = async (network, { to, tokenAddress, amount }) => {
 module.exports = {
   fetchTokenData,
   fetchBalance,
+  fetchTokenPrice,
   transfer,
   approve,
   hasAllowance,

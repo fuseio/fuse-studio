@@ -25,12 +25,17 @@ module.exports = {
     urlBase: 'http://localhost:4000/api'
   },
   graph: {
-    url: 'https://graph-qa.fuse.io/subgraphs/name/fuseio',
-    subgraphs: {
-      fuse: '/fuse-qa',
-      entities: '/fuse-entities-qa',
-      bridgeRopsten: '/fuse-ropsten-bridge',
-      bridgeMain: '/fuse-ethereum-bridge'
+    fuse: {
+      url: 'https://graph.fuse.io/subgraphs/name/fuseio',
+      subgraphs: {
+        fuse: '/fuse-qa',
+        entities: '/fuse-entities-qa',
+        bridgeRopsten: '/fuse-ropsten-bridge',
+        bridgeMain: '/fuse-ethereum-bridge'
+      }
+    },
+    uniswap: {
+      url: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
     }
   },
   gasLimitForTx: {
@@ -99,7 +104,7 @@ module.exports = {
       })
     },
     foreign: {
-      name: 'ropsten',
+      name: 'mainnet',
       bridgeType: 'foreign',
       contract: {
         options: {
@@ -120,19 +125,19 @@ module.exports = {
         alchemy: {
           http: ''
         },
-        default: 'alchemy'
+        default: 'infura'
       },
       addressesMainnet: {
         TokenFactory: '0xB2100946628D3e45FF94971b35508AfCBBc87432',
         ForeignBridgeFactory: '0xaC116929b2baB59D05a1Da99303e7CAEd100ECC9',
         TotlePrimary: '0x74758acfce059f503a7e6b0fc2c8737600f9f2c4',
-        MultiBridgeMediator: '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419'
+        MultiBridgeMediator: '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
       },
       addressesRopsten: {
         TokenFactory: '0x6004EAdF0aD3aCd568F354CA7E2b410bA0080E98',
         ForeignBridgeFactory: '0xABBf5D8599B2Eb7b4e1D25a1Fd737FF1987655aD',
         TotlePrimary: '0x74758acfce059f503a7e6b0fc2c8737600f9f2c4',
-        MultiBridgeMediator: '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
+        MultiBridgeMediator: '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419'
       },
       addresses: defer(function () {
         if (this.network.foreign.name === 'mainnet') {
