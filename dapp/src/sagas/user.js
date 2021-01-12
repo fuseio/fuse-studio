@@ -124,7 +124,7 @@ function * fetchFundingStatus () {
   const accountAddress = yield select(getAccountAddress)
   const { jobId } = yield select(state => state.screens.issuance)
   try {
-    const response = yield apiCall(api.fetchEthFundStatus, { id: jobId }, { networkType: 'ropsten' })
+    const response = yield apiCall(api.fetchFundStatus, { id: jobId }, { networkType: 'ropsten' })
     const web3 = yield getWeb3({ bridgeType: 'foreign' })
     const balance = yield call(web3.eth.getBalance, accountAddress)
     const { data } = response

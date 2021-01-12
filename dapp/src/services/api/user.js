@@ -21,7 +21,7 @@ export const fund = (apiRoot, { accountAddress, networkName }) =>
     .send({ networkName })
     .then(response => response.body)
 
-export const fetchEthFundStatus = (apiRoot, { id }) =>
+export const fetchFundStatus = (apiRoot, { id }) =>
   request.get(`${apiRoot}/jobs/${id}`)
     .send()
     .then(response => response.body)

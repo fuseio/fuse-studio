@@ -402,7 +402,77 @@
 
     @include block(options) {
       width: 100%;
+
       @include element(wrapper) {
+        @include block(error) {
+          padding-top: 1em;
+          font-size: 0.75em;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.5;
+          letter-spacing: normal;
+
+          // > span {
+          //   &:first-child {
+          //     color: #e75050;
+          //   }
+          // }
+        }
+        @include block(link) {
+          color: #006aff;
+          // font-size: 0.75em;
+
+          &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
+        }
+
+        @include block(pending) {
+          position: relative;
+          font-size: 10px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.5;
+          letter-spacing: normal;
+          color: #4a687b;
+
+          @include block(loader) {
+            width: 17px;
+            height: 17px;
+            @include element(circle) {
+              position: relative;
+              text-indent: -9999em;
+              border-top: 3.5px solid rgba(225, 225, 225, 0.5);
+              border-right: 3.5px solid rgba(225, 225, 225, 0.5);
+              border-bottom: 3.5px solid rgba(225, 225, 225, 0.5);
+              border-left: 3.5px solid #4a687b;
+              -webkit-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              transform: translateZ(0);
+              animation: spinner 1.1s infinite linear;
+              border-radius: 50%;
+              width: 100%;
+              height: 100%;
+
+              &::after {
+                border-radius: 50%;
+                width: 100%;
+                height: 100%;
+              }
+
+              @include modifier(stop) {
+                border-top: 3.5px solid rgba(225, 225, 225, 0.5);
+                border-right: 3.5px solid rgba(225, 225, 225, 0.5);
+                border-bottom: 3.5px solid rgba(225, 225, 225, 0.5);
+                border-left: 3.5px solid rgba(225, 225, 225, 0.5);
+                animation: none;
+              }
+            }
+          }
+        }
         @include breakpoint(medium up) {
           max-width: 620px;
           width: 100%;
@@ -422,7 +492,6 @@
           font-weight: bold;
         }
       }
-
 
       @include block(or) {
         font-size: 0.775em;
