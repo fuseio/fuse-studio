@@ -12,6 +12,8 @@ const secret = config.get('api.secret')
 const StudioUser = mongoose.model('StudioUser')
 const client = new OAuth2Client(clientId)
 
+router.use('/wallet', require('./wallet'))
+
 /**
  * @api {post} api/v2/login/request Request a verification code
  * @apiName Request
