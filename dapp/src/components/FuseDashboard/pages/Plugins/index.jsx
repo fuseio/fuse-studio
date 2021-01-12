@@ -94,8 +94,6 @@ const Plugins = () => {
     return plugin
   }
 
-  const pluginsList = generalPlugins(dashboard?.community?.bridgeDirection)
-
   return (
     <div className='plugins'>
       <h2 className='plugins__title'>Plugins</h2>
@@ -109,7 +107,7 @@ const Plugins = () => {
           <div className='plugins__puzzle'><img src={Puzzle} /></div>
         </div>
         <PluginList
-          pluginList={pluginsList}
+          pluginList={generalPlugins}
           showInfoModal={showInfoModal}
           addPlugin={addPlugin} togglePlugin={togglePlugin}
         />
