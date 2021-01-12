@@ -5,8 +5,8 @@ const smsProvider = require('@utils/smsProvider')
 
 /**
  * @api {post} api/v2/login/wallet/sms/request Request a verification code
- * @apiName Request
- * @apiGroup Login
+ * @apiName RequestSMS
+ * @apiGroup WalletLogin
  * @apiDescription Request a verification code to user's phone number
  *
  * @apiParam {String} phoneNumber User phone number
@@ -27,8 +27,8 @@ router.post('/request', async (req, res) => {
 
 /**
  * @api {post} api/v2/login/wallet/sms/verify Verify user phone number
- * @apiName Verify
- * @apiGroup Login
+ * @apiName VerifySMS
+ * @apiGroup WalletLogin
  * @apiDescription Verify user phone number by SMS verification code
  *
  * @apiParam {String} phoneNumber User phone number

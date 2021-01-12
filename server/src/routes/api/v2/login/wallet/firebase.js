@@ -5,8 +5,8 @@ const { getAdmin } = require('@services/firebase')
 
 /**
  * @api {post} api/v2/login/wallet/firebase/verify Login using firebase ID token
- * @apiName Login
- * @apiGroup Login
+ * @apiName VerifyFirebase
+ * @apiGroup WalletLogin
  * @apiDescription Login using firebase ID token
  *
  * @apiParam {String} accountAddress User account address

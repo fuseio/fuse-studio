@@ -7,8 +7,8 @@ router.use('/sms', require('./sms'))
 
 /**
  * @api {post} api/v2/login/wallet/request Request a verification code
- * @apiName Request
- * @apiGroup Login
+ * @apiName SimpleRequest
+ * @apiGroup WalletLogin
  * @apiDescription Request a verification code to user's phone number
  *
  * @apiParam {String} accountAddress User account address
