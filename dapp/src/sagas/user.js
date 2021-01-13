@@ -1,4 +1,4 @@
-import { all, put, select, call } from 'redux-saga/effects'
+import { all, put, select, call, delay } from 'redux-saga/effects'
 import { apiCall, tryTakeEvery } from './utils'
 import * as actions from 'actions/user'
 import { balanceOfNative } from 'actions/accounts'
@@ -146,6 +146,7 @@ function * fetchFundingStatus () {
       })
     }
     if (get(data, 'data.receipt', false) || !(new BigNumber(balance).isZero())) {
+      yield delay(1500)
       yield put(balanceOfNative(accountAddress, { bridgeType: 'home' }))
       yield put(balanceOfNative(accountAddress, { bridgeType: 'foreign' }))
       yield put({
