@@ -499,7 +499,7 @@ export default class Dashboard {
       token: this.homeToken,
       tokenAddress: this.community?.homeTokenAddress,
       tokenNetworkName: 'fuse',
-      tokenBalance: this.tokenBalances.home,
+      tokenBalance: this.tokenBalances[this.community?.homeTokenAddress],
       baseUrl: this.baseUrl
     }
   }
