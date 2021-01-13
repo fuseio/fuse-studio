@@ -412,16 +412,9 @@
           font-style: normal;
           line-height: 1.5;
           letter-spacing: normal;
-
-          // > span {
-          //   &:first-child {
-          //     color: #e75050;
-          //   }
-          // }
         }
         @include block(link) {
           color: #006aff;
-          // font-size: 0.75em;
 
           &:hover {
             cursor: pointer;
@@ -430,8 +423,9 @@
         }
 
         @include block(pending) {
+          padding-top: 1em;
           position: relative;
-          font-size: 10px;
+          font-size: 0.75em;
           font-weight: normal;
           font-stretch: normal;
           font-style: normal;

@@ -73,7 +73,7 @@ function Price () {
         </div>
       </div>
 
-      {/* <Questions /> */}
+      <Questions />
     </div>
   )
 }

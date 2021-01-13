@@ -120,7 +120,7 @@ const ChooseCurrencyType = () => {
 
       {
         delay && (
-          <div className='pending shrink grid-x' style={{ position: 'relative' }}>
+          <div className='pending shrink grid-x align-middle' style={{ position: 'relative' }}>
             Pending&nbsp;&nbsp;
             <div className='loader'>
               <div className='loader__circle' />
@@ -146,7 +146,7 @@ const ChooseCurrencyType = () => {
 
       {
         !delay && fundingStatus === 'success' && (
-          <div className='pending shrink grid-x'>
+          <div className='pending shrink grid-x align-middle'>
             <span>Sent successfully&nbsp;&nbsp;</span>
             {
               fundingTxHash && (
