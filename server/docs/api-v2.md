@@ -41,6 +41,11 @@ The Fuse Studio V2 REST API for accessing the data and the services of the Fuse 
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	- [Check if wallet exists by wallet address](#Check-if-wallet-exists-by-wallet-address)
 	
+- [WalletLogin](#WalletLogin)
+	- [Request a verification code](#Request-a-verification-code)
+	- [Login using firebase ID token](#Login-using-firebase-ID-token)
+	- [Verify user phone number](#Verify-user-phone-number)
+	
 
 # <a name='Accounts'></a> Accounts
 
@@ -698,3 +703,67 @@ GET api/v2/wallets/exists/:walletAddress
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | data | `Boolean` | <p>True if wallet exists, false otherwide</p> |
+# <a name='WalletLogin'></a> WalletLogin
+
+## <a name='Request-a-verification-code'></a> Request a verification code
+[Back to top](#top)
+
+<p>Request a verification code to user's phone number</p>
+
+```
+POST api/v2/login/wallet/sms/request
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| phoneNumber | `String` | <p>User phone number</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| response | `String` | <p>Response status - ok</p> |
+## <a name='Login-using-firebase-ID-token'></a> Login using firebase ID token
+[Back to top](#top)
+
+<p>Login using firebase ID token</p>
+
+```
+POST api/v2/login/wallet/firebase/verify
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| accountAddress | `String` | <p>User account address</p> |
+| token | `String` | <p>Firebase ID token</p> |
+| identifier | `String` | <p>Phone device identifier</p> |
+| appName | `String` | <p>firebase app name the user is connecting to. optional</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| token | `String` | <p>JWT token</p> |
+## <a name='Verify-user-phone-number'></a> Verify user phone number
+[Back to top](#top)
+
+<p>Verify user phone number by SMS verification code</p>
+
+```
+POST api/v2/login/wallet/sms/verify
+```
+
+### Parameter Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| phoneNumber | `String` | <p>User phone number</p> |
+| accountAddress | `String` | <p>User account address</p> |
+| code | `String` | <p>SMS code recieved to user phone number</p> |
+
+
+### Success 200
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| token | `String` | <p>JWT token</p> |
