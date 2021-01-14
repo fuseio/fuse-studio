@@ -1,7 +1,6 @@
 const config = require('config')
 const { inspect } = require('util')
 const request = require('request-promise-native')
-const BigNumber = require('bignumber.js')
 const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const { toWei } = require('web3-utils')
@@ -76,6 +75,14 @@ const getAllowance = async (network, { tokenAddress, owner, spender }) => {
   return allowance
 }
 
+const stableCoins = [
+  config.get('network.foreign.addresses.USDCoin'),
+  config.get('network.foreign.addresses.DaiStablecoin'),
+  config.get('network.foreign.addresses.TetherUSD')
+]
+
+const isStableCoin = (tokenAddress) => stableCoins.includes(tokenAddress)
+
 module.exports = {
   fetchTokenData,
   fetchBalance,
@@ -83,5 +90,6 @@ module.exports = {
   transfer,
   approve,
   getAllowance,
-  fetchToken
+  fetchToken,
+  isStableCoin
 }

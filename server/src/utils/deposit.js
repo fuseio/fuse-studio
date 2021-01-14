@@ -1,11 +1,11 @@
 const config = require('config')
 const lodash = require('lodash')
 const taskManager = require('@services/taskManager')
+const { isStableCoin } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const ActionOnRelay = mongoose.model('ActionOnRelay')
 const Community = mongoose.model('Community')
-
 
 const makeDeposit = async (deposit) => {
   const {
@@ -30,6 +30,9 @@ const makeDeposit = async (deposit) => {
     console.log(`[makeDeposit] transferring to home with relayTokens`)
     taskManager.now('relayTokens', { accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
   } else {
+    if (!isStableCoin(tokenAddress)) {
+      throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
+    }
     console.log(`[makeDeposit] Fuse dollar flow`)
 
     await new ActionOnRelay({
