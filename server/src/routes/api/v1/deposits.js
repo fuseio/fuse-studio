@@ -170,4 +170,13 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   }
 })
 
+router.post('/test', async (req, res) => {
+  await makeDeposit({
+    ...req.body,
+    amount: web3Utils.toWei(String(req.body.amount)),
+    provider: 'ramp'
+  })
+  return res.json({})
+})
+
 module.exports = router

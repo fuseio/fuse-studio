@@ -20,6 +20,7 @@ require('./QueueJob')
 require('./StudioUser')
 require('./UserAccount')
 require('./AccountBalance')
+require('./ActionOnRelay')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')

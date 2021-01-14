@@ -84,6 +84,7 @@ module.exports = {
         CommunityFactory: '0xcc004Ee01Da7D9207aBE384cE601623E9F223536',
         MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
         TokenFactory: '0x78Cb0FeEC1fA3b3469cA18e79823b6A87C8929a4',
+        FuseDollar: '0x767Eb76a2ba982fBAcD281A940CB46244bA4f56a',
         walletModules: {
           GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
           LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',
@@ -104,7 +105,7 @@ module.exports = {
       })
     },
     foreign: {
-      name: 'mainnet',
+      name: 'ropsten',
       bridgeType: 'foreign',
       contract: {
         options: {
@@ -183,7 +184,7 @@ module.exports = {
       transfer: {
         concurrency: 1
       },
-      startTransfers: {
+      initiateActions: {
         concurrency: 1
       },
       createWallet: {

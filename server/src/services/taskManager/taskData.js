@@ -75,6 +75,12 @@ const tasksData = {
     role: 'admin',
     bridgeType: 'home',
     name: 'adminSpendabilityTransfer'
+  },
+  relayTokens: {
+    name: 'relayTokens'
+  },
+  mintOnRelay: {
+    name: 'mintOnRelay'
   }
 }
 

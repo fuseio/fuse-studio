@@ -1,11 +1,11 @@
 const HomeMultiAMBErc20ToErc677 = require('@constants/abi/HomeMultiAMBErc20ToErc677')
 
-const relayTokens = async (network, { from, tokenAddress, amount, customerAddress }) => {
+const relayTokens = async (network, { from, bridgeAddress, tokenAddress, receiver, amount }) => {
   const { createContract, createMethod, send } = network
 
-  const multiBridgeContract = createContract(HomeMultiAMBErc20ToErc677, tokenAddress)
+  const multiBridgeContract = createContract(HomeMultiAMBErc20ToErc677, bridgeAddress)
 
-  const method = createMethod(multiBridgeContract, 'relayTokens', tokenAddress, customerAddress, amount)
+  const method = createMethod(multiBridgeContract, 'relayTokens', tokenAddress, receiver, amount)
 
   const receipt = await send(method, {
     from

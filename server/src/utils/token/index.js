@@ -54,12 +54,12 @@ const transfer = async (network, { from, to, tokenAddress, amount }) => {
   return receipt
 }
 
-const approve = async (network, { from, to, tokenAddress, amount }) => {
+const approve = async (network, { from, tokenAddress, spender, amount, infinite }) => {
   const { createContract, createMethod, send } = network
 
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
 
-  const method = createMethod(tokenContract, 'approve', to, toWei('1000000'))
+  const method = createMethod(tokenContract, 'approve', spender, infinite ? toWei('1000000000') : amount)
 
   const receipt = await send(method, {
     from
@@ -67,13 +67,13 @@ const approve = async (network, { from, to, tokenAddress, amount }) => {
   return receipt
 }
 
-const hasAllowance = async (network, { to, tokenAddress, amount }) => {
+const getAllowance = async (network, { tokenAddress, owner, spender }) => {
   const { createContract } = network
 
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
 
-  const allowance = await tokenContract.methods.allowance(to).call()
-  return new BigNumber(allowance).isGreaterThanOrEqualTo(amount.toString())
+  const allowance = await tokenContract.methods.allowance(owner, spender).call()
+  return allowance
 }
 
 module.exports = {
@@ -82,6 +82,6 @@ module.exports = {
   fetchTokenPrice,
   transfer,
   approve,
-  hasAllowance,
+  getAllowance,
   fetchToken
 }

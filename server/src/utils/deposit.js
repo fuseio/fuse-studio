@@ -1,9 +1,11 @@
-const mongoose = require('mongoose')
-const { agenda } = require('@services/agenda')
-const Deposit = mongoose.model('Deposit')
-const Transfer = mongoose.model('Transfer')
-const Community = mongoose.model('Community')
 const config = require('config')
+const lodash = require('lodash')
+const taskManager = require('@services/taskManager')
+const mongoose = require('mongoose')
+const Deposit = mongoose.model('Deposit')
+const ActionOnRelay = mongoose.model('ActionOnRelay')
+const Community = mongoose.model('Community')
+
 
 const makeDeposit = async (deposit) => {
   const {
@@ -19,52 +21,33 @@ const makeDeposit = async (deposit) => {
     console.error(`[makeDeposit] could not find community ${communityAddress}`)
     return
   }
-  const { foreignBridgeAddress, foreignTokenAddress, homeTokenAddress, isMultiBridge } = community
-  console.log(`[makeDeposit] foreignBridgeAddress: ${foreignBridgeAddress}, foreignTokenAddress: ${foreignTokenAddress}, homeTokenAddress: ${homeTokenAddress}`)
-
+  const { homeTokenAddress, plugins } = community
+  const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
+  const isFuseDollar = lodash.get(plugins, 'fuseDollar.isActive')
   await new Deposit(deposit).save()
-  console.log(`[makeDeposit] after save()`)
 
-  if (communityAddress === config.get('daipCommunityAddress')) {
-    console.log(`[makeDeposit] is DAIp community`)
-    agenda.now('getDAIPointsToAddress', { from: walletAddress, tokenAddress: foreignTokenAddress, amount, recipient: customerAddress, bridgeType: 'foreign' })
+  if (!isFuseDollar) {
+    console.log(`[makeDeposit] transferring to home with relayTokens`)
+    taskManager.now('relayTokens', { accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
   } else {
-    if (isMultiBridge) {
-      console.log(`[makeDeposit] transferring to home with relayTokens`)
-      const transferToHome = await new Transfer({
-        from: walletAddress,
-        to: config.get('network.foreign.addresses.MultiBridgeMediator'),
-        customerAddress,
-        tokenAddress,
-        amount,
-        bridgeType: 'foreign',
-        status: 'READY'
-      }).save()
-      agenda.now('relayTokens', { transferId: transferToHome._id })
-    } else {
-      console.log(`[makeDeposit] is not DAIp community`)
-      const transferToHome = await new Transfer({
-        from: walletAddress,
-        to: foreignBridgeAddress,
-        tokenAddress,
-        amount,
-        bridgeType: 'foreign',
-        status: 'READY'
-      }).save()
-      console.log(`[makeDeposit] after transferToHome save()`)
+    console.log(`[makeDeposit] Fuse dollar flow`)
 
-      await new Transfer({
-        from: walletAddress,
-        to: customerAddress,
-        tokenAddress: homeTokenAddress,
-        amount,
+    await new ActionOnRelay({
+      accountAddress: walletAddress,
+      tokenAddress: homeTokenAddress,
+      actionType: 'mint',
+      bridgeType: 'home',
+      status: 'WAITING',
+      data: {
         bridgeType: 'home',
-        status: 'WAITING'
-      }).save()
-      console.log(`[makeDeposit] after transferToCustomer save()`)
+        tokenAddress: config.get('network.home.addresses.FuseDollar'),
+        amount,
+        mintTo: customerAddress
+      }
+    }).save()
 
-      agenda.now('transfer', { transferId: transferToHome._id })
-    }
+    console.log(`[makeDeposit] isFuseDollar after transferToCustomer save()`)
+    taskManager.now('relayTokens', { accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: walletAddress, amount }, { generateDeduplicationId: true })
   }
 }
 
