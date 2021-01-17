@@ -17,7 +17,7 @@ const initiateActions = async () => {
       balances[tokenAddress] = new BigNumber(balance).minus(action.data.amount)
       action.status = 'READY'
       await action.save()
-      taskManager.now('mintOnRelay', { actionOnRelayId: action._id, accountAddress: action.accountAddress, ...action.data })
+      taskManager.now('mintOnRelay', { actionOnRelayId: action._id, initiatorId: action.initiatorId, accountAddress: action.accountAddress, ...action.data })
     }
   }
 }

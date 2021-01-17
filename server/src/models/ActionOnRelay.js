@@ -9,6 +9,7 @@ const ActionOnRelaySchema = new Schema({
   actionType: { type: String, required: [true, "can't be blank"] },
   bridgeType: { type: String, required: [true, "can't be blank"] },
   status: { type: String, required: [true, "can't be blank"] },
+  initiatorId: { type: Schema.Types.ObjectId },
   data: { type: Object }
 }, { timestamps: true })
 

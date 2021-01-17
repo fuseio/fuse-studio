@@ -7,14 +7,14 @@ const Deposit = mongoose.model('Deposit')
 const ActionOnRelay = mongoose.model('ActionOnRelay')
 const Community = mongoose.model('Community')
 
-const makeDeposit = async (deposit) => {
-  const {
-    walletAddress,
-    customerAddress,
-    communityAddress,
-    tokenAddress,
-    amount
-  } = deposit
+const makeDeposit = async ({
+  walletAddress,
+  customerAddress,
+  communityAddress,
+  tokenAddress,
+  amount,
+  ...rest
+}) => {
   console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
   const community = await Community.findOne({ communityAddress }).lean()
   if (!community) {
@@ -24,13 +24,20 @@ const makeDeposit = async (deposit) => {
   const { homeTokenAddress, plugins } = community
   const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
   const isFuseDollar = lodash.get(plugins, 'fuseDollar.isActive')
-  await new Deposit(deposit).save()
+  const deposit = await new Deposit({
+    walletAddress,
+    customerAddress,
+    communityAddress,
+    tokenAddress,
+    amount,
+    ...rest
+  }).save()
 
   if (!isFuseDollar) {
     console.log(`[makeDeposit] transferring to home with relayTokens`)
-    taskManager.now('relayTokens', { accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
+    taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
   } else {
-    if (!isStableCoin(tokenAddress)) {
+    if (config.get('env') === 'production' && !isStableCoin(tokenAddress)) {
       throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
@@ -41,6 +48,7 @@ const makeDeposit = async (deposit) => {
       actionType: 'mint',
       bridgeType: 'home',
       status: 'WAITING',
+      initiatorId: deposit._id,
       data: {
         bridgeType: 'home',
         tokenAddress: config.get('network.home.addresses.FuseDollar'),
@@ -50,8 +58,9 @@ const makeDeposit = async (deposit) => {
     }).save()
 
     console.log(`[makeDeposit] isFuseDollar after transferToCustomer save()`)
-    taskManager.now('relayTokens', { accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: walletAddress, amount }, { generateDeduplicationId: true })
+    taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: walletAddress, amount }, { generateDeduplicationId: true })
   }
+  return deposit
 }
 
 module.exports = {
