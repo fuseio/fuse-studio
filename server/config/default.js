@@ -105,7 +105,7 @@ module.exports = {
       })
     },
     foreign: {
-      name: 'ropsten',
+      name: 'mainnet',
       bridgeType: 'foreign',
       contract: {
         options: {
