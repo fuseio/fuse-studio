@@ -11,7 +11,7 @@ const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 
 const getWorkerAccount = (taskData, taskParams) => {
-  if (taskData.role === 'admin') {
+  if (lodash.has(taskParams, 'accountAddress')) {
     const { accountAddress } = taskParams
     if (accountAddress) {
       return lockAccount({ address: accountAddress })
@@ -30,11 +30,20 @@ const startTask = async message => {
   const messageId = message.MessageId
   const task = message.Body
   const { name, params } = task
+  if (!tasks[name]) {
+    console.warn(
+      `no task named ${name} was found, skipping`
+    )
+    return true
+  }
+
+  console.log({ task })
   console.log(`starting a task for ${name}`)
   const taskData = getTaskData(task)
-  if (!taskData || !tasks[name]) {
+
+  if (!taskData) {
     console.warn(
-      `no task data or task function found for task ${name} with task data ${JSON.stringify(
+      `no task data was found for  task ${name} with task data ${JSON.stringify(
         taskData
       )}, skipping`
     )
@@ -45,7 +54,7 @@ const startTask = async message => {
     account = await getWorkerAccount(taskData, params)
     if (!account) {
       console.log(
-        `no unlocked accounts found for task ${name} with task data ${JSON.stringify(
+        `no unlocked accounts found for task ${name} and params ${JSON.stringify(params)}, with task data ${JSON.stringify(
           taskData
         )}, retrying soon.`
       )
@@ -96,7 +105,7 @@ const startTask = async message => {
   }
 }
 
-const now = async (name, params) => {
+const now = async (name, params, options) => {
   const correlationId = lodash.get(params, 'correlationId')
   if (correlationId) {
     const savedJob = await QueueJob.findOne({ 'data.correlationId': correlationId, status: { $ne: 'failed' } })
@@ -107,7 +116,7 @@ const now = async (name, params) => {
   const response = await sendMessage({
     name,
     params
-  })
+  }, options)
   const communityAddress = lodash.get(params, 'communityAddress')
   const job = await new QueueJob({
     name,

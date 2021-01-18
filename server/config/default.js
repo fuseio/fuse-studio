@@ -84,6 +84,7 @@ module.exports = {
         CommunityFactory: '0xcc004Ee01Da7D9207aBE384cE601623E9F223536',
         MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
         TokenFactory: '0x78Cb0FeEC1fA3b3469cA18e79823b6A87C8929a4',
+        FuseDollar: '0x5D42867417d19D51A19661453A38B6F180F1624E',
         walletModules: {
           GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
           LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',
@@ -131,13 +132,19 @@ module.exports = {
         TokenFactory: '0xB2100946628D3e45FF94971b35508AfCBBc87432',
         ForeignBridgeFactory: '0xaC116929b2baB59D05a1Da99303e7CAEd100ECC9',
         TotlePrimary: '0x74758acfce059f503a7e6b0fc2c8737600f9f2c4',
-        MultiBridgeMediator: '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
+        MultiBridgeMediator: '0xf301d525da003e874DF574BCdd309a6BF0535bb6',
+        USDCoin: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        DaiStablecoin: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+        TetherUSD: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
       },
       addressesRopsten: {
         TokenFactory: '0x6004EAdF0aD3aCd568F354CA7E2b410bA0080E98',
         ForeignBridgeFactory: '0xABBf5D8599B2Eb7b4e1D25a1Fd737FF1987655aD',
         TotlePrimary: '0x74758acfce059f503a7e6b0fc2c8737600f9f2c4',
-        MultiBridgeMediator: '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419'
+        MultiBridgeMediator: '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419',
+        USDCoin: '0xe50dc0fe33eb88fc0ce0f1f52cd30a7f46a6eae4',
+        DaiStablecoin: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+        TetherUSD: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
       },
       addresses: defer(function () {
         if (this.network.foreign.name === 'mainnet') {
@@ -183,7 +190,7 @@ module.exports = {
       transfer: {
         concurrency: 1
       },
-      startTransfers: {
+      initiateActions: {
         concurrency: 1
       },
       createWallet: {

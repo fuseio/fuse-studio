@@ -10,7 +10,8 @@ const DepositSchema = new Schema({
   tokenAddress: { type: String, required: [true, "can't be blank"] },
   amount: { type: String, required: [true, "can't be blank"] },
   provider: { type: String, required: [true, "can't be blank"] },
-  externalId: { type: String, required: [true, "can't be blank"] }
+  externalId: { type: String, required: [true, "can't be blank"] },
+  jobs: { type: Object, default: {} }
 }, { timestamps: true })
 
 DepositSchema.index({ transactionHash: 1 }, { unique: true })

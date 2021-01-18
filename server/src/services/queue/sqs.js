@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk')
 const config = require('config')
+const crypto = require('crypto')
 const { get } = require('lodash')
 const sqs = new AWS.SQS(config.get('aws.sqs.constructor'))
 const queueUrl = config.get('aws.sqs.queueUrl')
@@ -10,11 +11,14 @@ const makeMessageGroupId = msg => {
   return `${name}-${bridgeType}`
 }
 
-const sendMessage = async (msg) => {
+const generateDeduplicationId = () => crypto.randomBytes(64).toString('hex')
+
+const sendMessage = async (msg, options = {}) => {
   const params = {
     MessageBody: JSON.stringify(msg),
     QueueUrl: queueUrl,
-    MessageGroupId: makeMessageGroupId(msg)
+    MessageGroupId: makeMessageGroupId(msg),
+    ...(options.generateDeduplicationId && { MessageDeduplicationId: generateDeduplicationId() })
   }
 
   const response = await sqs.sendMessage(params).promise()

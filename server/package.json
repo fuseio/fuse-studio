@@ -57,6 +57,7 @@
     "body-parser": "^1.18.3",
     "config": "^1.30.0",
     "cors": "2.7.1",
+    "crypto": "^1.0.1",
     "debug": "2.6.9",
     "eth-sig-util": "^2.1.1",
     "ethereumjs-wallet": "^0.6.3",

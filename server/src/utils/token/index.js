@@ -1,7 +1,6 @@
 const config = require('config')
 const { inspect } = require('util')
 const request = require('request-promise-native')
-const BigNumber = require('bignumber.js')
 const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const { toWei } = require('web3-utils')
@@ -54,12 +53,12 @@ const transfer = async (network, { from, to, tokenAddress, amount }) => {
   return receipt
 }
 
-const approve = async (network, { from, to, tokenAddress, amount }) => {
+const approve = async (network, { from, tokenAddress, spender, amount, infinite }) => {
   const { createContract, createMethod, send } = network
 
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
 
-  const method = createMethod(tokenContract, 'approve', to, toWei('1000000'))
+  const method = createMethod(tokenContract, 'approve', spender, infinite ? toWei('1000000000') : amount)
 
   const receipt = await send(method, {
     from
@@ -67,14 +66,22 @@ const approve = async (network, { from, to, tokenAddress, amount }) => {
   return receipt
 }
 
-const hasAllowance = async (network, { to, tokenAddress, amount }) => {
+const getAllowance = async (network, { tokenAddress, owner, spender }) => {
   const { createContract } = network
 
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
 
-  const allowance = await tokenContract.methods.allowance(to).call()
-  return new BigNumber(allowance).isGreaterThanOrEqualTo(amount.toString())
+  const allowance = await tokenContract.methods.allowance(owner, spender).call()
+  return allowance
 }
+
+const stableCoins = [
+  config.get('network.foreign.addresses.USDCoin'),
+  config.get('network.foreign.addresses.DaiStablecoin'),
+  config.get('network.foreign.addresses.TetherUSD')
+]
+
+const isStableCoin = (tokenAddress) => stableCoins.includes(tokenAddress)
 
 module.exports = {
   fetchTokenData,
@@ -82,6 +89,7 @@ module.exports = {
   fetchTokenPrice,
   transfer,
   approve,
-  hasAllowance,
-  fetchToken
+  getAllowance,
+  fetchToken,
+  isStableCoin
 }
