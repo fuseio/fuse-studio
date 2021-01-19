@@ -11,6 +11,8 @@ const DepositSchema = new Schema({
   amount: { type: String, required: [true, "can't be blank"] },
   provider: { type: String, required: [true, "can't be blank"] },
   externalId: { type: String, required: [true, "can't be blank"] },
+  status: { type: String, required: [true, "can't be blank"] },
+  type: { type: String, enum: ['simple', 'fuse-dollar'], required: [true, "can't be blank"] },
   jobs: { type: Object, default: {} }
 }, { timestamps: true })
 

@@ -25,12 +25,14 @@ const makeDeposit = async ({
   const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
   const isFuseDollar = lodash.get(plugins, 'fuseDollar.isActive')
   const deposit = await new Deposit({
+    ...rest,
     walletAddress,
     customerAddress,
     communityAddress,
     tokenAddress,
     amount,
-    ...rest
+    status: 'pending',
+    type: isFuseDollar ? 'fuse-dollar' : 'simple'
   }).save()
 
   if (!isFuseDollar) {
@@ -47,7 +49,7 @@ const makeDeposit = async ({
       tokenAddress: homeTokenAddress,
       actionType: 'mint',
       bridgeType: 'home',
-      status: 'WAITING',
+      status: 'pending',
       initiatorId: deposit._id,
       data: {
         bridgeType: 'home',
