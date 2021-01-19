@@ -243,7 +243,12 @@ export default class Dashboard {
         false
       )
     } catch (error) {
-      console.log({ error })
+      if (
+        this?.rootStore?.network?.accountAddress ===
+        this?.community?.creatorAddress
+      ) {
+        this.isAdmin = true
+      }
     }
   })
 
