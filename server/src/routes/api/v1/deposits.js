@@ -6,6 +6,7 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const request = require('request-promise-native')
 const stableStringify = require('fast-json-stable-stringify')
+const auth = require('@routes/auth')
 
 const moonpayAuthCheck = (req, res, next) => {
   console.log(`[deposit-moonpayAuthCheck]`)
@@ -169,5 +170,16 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
     return res.json({})
   }
 })
+
+if (config.get('env') !== 'production') {
+  router.post('/init', auth.admin, async (req, res) => {
+    const deposit = await makeDeposit({
+      ...req.body,
+      amount: web3Utils.toWei(String(req.body.amount)),
+      provider: 'ramp'
+    })
+    return res.json({ data: deposit })
+  })
+}
 
 module.exports = router
