@@ -27,7 +27,15 @@ const fetchBridgedTokenPairs = async () => {
   return bridgedTokens
 }
 
+const fetchBridgedTokenPair = async ({ foreignTokenAddress, homeTokenAddress }) => {
+  const query = foreignTokenAddress ? `{bridgedTokens(where: {foreignAddress: "${foreignTokenAddress}"}) {address, foreignAddress, name}}`
+    : `{bridgedTokens(where: {address: "${homeTokenAddress}"}) {address, foreignAddress, name}}`
+  const { bridgedTokens } = await bridgeClient.request(query)
+  return bridgedTokens.length > 0 ? bridgedTokens[0] : {}
+}
+
 module.exports = {
   fetchTokenByCommunity,
-  fetchBridgedTokenPairs
+  fetchBridgedTokenPairs,
+  fetchBridgedTokenPair
 }

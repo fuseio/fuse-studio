@@ -2,6 +2,7 @@ const config = require('config')
 const lodash = require('lodash')
 const taskManager = require('@services/taskManager')
 const { isStableCoin } = require('@utils/token')
+const { fetchBridgedTokenPair } = require('@utils/graph')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const ActionOnRelay = mongoose.model('ActionOnRelay')
@@ -21,7 +22,7 @@ const makeDeposit = async ({
     console.error(`[makeDeposit] could not find community ${communityAddress}`)
     return
   }
-  const { homeTokenAddress, plugins } = community
+  const { plugins } = community
   const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
   const isFuseDollar = lodash.get(plugins, 'fuseDollar.isActive')
   const deposit = await new Deposit({
@@ -43,7 +44,12 @@ const makeDeposit = async ({
       throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
-
+    const { address: homeTokenAddress } = await fetchBridgedTokenPair({ foreignTokenAddress: tokenAddress })
+    if (!homeTokenAddress) {
+      await deposit.set('status', 'failed').save()
+      throw new Error(`no paired token address on home network is found for token ${tokenAddress}`)
+    }
+    console.log(`[makeDeposit] found a paired token ${homeTokenAddress} for ${tokenAddress}`)
     await new ActionOnRelay({
       accountAddress: walletAddress,
       tokenAddress: homeTokenAddress,
