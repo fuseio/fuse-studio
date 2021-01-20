@@ -26,6 +26,9 @@ const relayTokens = async (account, { depositId, accountAddress, bridgeType, bri
   if (!relayTokensReceipt.status) {
     throw new Error(`Relaying failed with receipt: ${JSON.stringify(relayTokensReceipt)} `)
   }
+  if (deposit.type === 'simple') {
+    await deposit.set('status', 'succeeded').save()
+  }
   return relayTokensReceipt
 }
 
@@ -36,7 +39,7 @@ const mintOnRelay = async (account, { actionOnRelayId, initiatorId, bridgeType, 
     return
   }
 
-  if (actionOnRelay.status !== 'READY') {
+  if (actionOnRelay.status !== 'ready') {
     console.error(`action with ${actionOnRelayId} id got wrong action status ${actionOnRelay.status}`)
     return
   }
@@ -60,13 +63,14 @@ const mintOnRelay = async (account, { actionOnRelayId, initiatorId, bridgeType, 
     })
 
     if (receipt.status) {
-      actionOnRelay.status = 'DONE'
+      actionOnRelay.status = 'succeeded'
+      await deposit.set('status', 'succeeded').save()
     } else {
-      actionOnRelay.status = 'FAILED'
+      actionOnRelay.status = 'failed'
     }
     await actionOnRelay.save()
   } catch (e) {
-    actionOnRelay.status = 'FAILED'
+    actionOnRelay.status = 'failed'
     await actionOnRelay.save()
     throw e
   }

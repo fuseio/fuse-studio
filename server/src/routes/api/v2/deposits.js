@@ -5,14 +5,14 @@ const Deposit = mongoose.model('Deposit')
 const UserWallet = mongoose.model('UserWallet')
 const auth = require('@routes/auth')
 
-router.get('/:depositId', auth.required, async (req, res) => {
-  const deposit = await Deposit.findById(req.params.depositId)
+router.get('/:customerAddress', auth.required, async (req, res) => {
   const { accountAddress } = req.user
-  const { customerAddress } = deposit
+  const { customerAddress } = req.params
   if (await UserWallet.findOne({ accountAddress, walletAddress: customerAddress })) {
-    res.json({ data: deposit })
+    const deposits = await Deposit.find({ customerAddress }).sort({ createdAt: -1 })
+    res.json({ data: deposits })
   } else {
-    res.status(403).send({ error: 'Lacking access for object' })
+    res.status(403).send({ error: 'Lacking access for the customer wallet' })
   }
 })
 

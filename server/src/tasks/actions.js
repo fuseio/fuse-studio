@@ -6,7 +6,7 @@ const { getNetwork } = require('@services/web3')
 const utils = require('@utils/token')
 
 const initiateActions = async () => {
-  const actions = await ActionOnRelay.find({ status: 'WAITING' })
+  const actions = await ActionOnRelay.find({ status: 'pending' })
   const balances = {}
   for (let action of actions) {
     const { tokenAddress } = action
@@ -15,7 +15,7 @@ const initiateActions = async () => {
       await utils.fetchBalance(network, action.tokenAddress, action.accountAddress)
     if (new BigNumber(balance).isGreaterThanOrEqualTo(action.data.amount.toString())) {
       balances[tokenAddress] = new BigNumber(balance).minus(action.data.amount)
-      action.status = 'READY'
+      action.status = 'ready'
       await action.save()
       taskManager.now('mintOnRelay', { actionOnRelayId: action._id, initiatorId: action.initiatorId, accountAddress: action.accountAddress, ...action.data })
     }
