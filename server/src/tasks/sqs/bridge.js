@@ -76,7 +76,39 @@ const mintOnRelay = async (account, { actionOnRelayId, initiatorId, bridgeType, 
   }
 }
 
+const mintDeposited = async (account, { depositId, bridgeType, tokenAddress, receiver, amount }, job) => {
+  const deposit = await Deposit.findById(depositId)
+  await deposit.set('jobs.mintDeposited', job._id).save()
+
+  try {
+    const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+    const tokenContractInstance = createContract(MintableBurnableTokenAbi, tokenAddress)
+    const method = createMethod(tokenContractInstance, 'mint', receiver, amount)
+
+    const receipt = await send(method, {
+      from: account.address
+    }, {
+      transactionHash: (hash) => {
+        console.log(`transaction ${hash} is created by ${account.address}`)
+        job.set('data.txHash', hash)
+        job.save()
+      }
+    })
+
+    if (receipt.status) {
+      await deposit.set('status', 'succeeded').save()
+    } else {
+      await deposit.set('status', 'failed').save()
+      throw new Error(`tx failed to mint ${receipt.txHash}`)
+    }
+  } catch (e) {
+    await deposit.set('status', 'failed').save()
+    throw e
+  }
+}
+
 module.exports = {
   relayTokens,
-  mintOnRelay
+  mintOnRelay,
+  mintDeposited
 }

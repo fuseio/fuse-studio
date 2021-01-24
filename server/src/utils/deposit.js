@@ -2,11 +2,10 @@ const config = require('config')
 const lodash = require('lodash')
 const taskManager = require('@services/taskManager')
 const { isStableCoin } = require('@utils/token')
-const { fetchBridgedTokenPair } = require('@utils/graph')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
-const ActionOnRelay = mongoose.model('ActionOnRelay')
 const Community = mongoose.model('Community')
+const { isProduction } = require('@utils/env')
 
 const makeDeposit = async ({
   walletAddress,
@@ -14,9 +13,16 @@ const makeDeposit = async ({
   communityAddress,
   tokenAddress,
   amount,
+  transactionHash,
+  externalId,
   ...rest
 }) => {
   console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
+  if (!transactionHash && !isProduction()) {
+    transactionHash = '0x' + Math.random().toString(36).substring(7)
+    console.warn(`transactionHash not found for deposit with exernalId ${externalId}. ${transactionHash} generated`)
+  }
+
   const community = await Community.findOne({ communityAddress }).lean()
   if (!community) {
     console.error(`[makeDeposit] could not find community ${communityAddress}`)
@@ -25,8 +31,11 @@ const makeDeposit = async ({
   const { plugins } = community
   const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
   const isFuseDollar = lodash.get(plugins, 'fuseDollar.isActive')
+
   const deposit = await new Deposit({
     ...rest,
+    externalId,
+    transactionHash,
     walletAddress,
     customerAddress,
     communityAddress,
@@ -44,29 +53,9 @@ const makeDeposit = async ({
       throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
-    const { address: homeTokenAddress } = await fetchBridgedTokenPair({ foreignTokenAddress: tokenAddress })
-    if (!homeTokenAddress) {
-      await deposit.set('status', 'failed').save()
-      throw new Error(`no paired token address on home network is found for token ${tokenAddress}`)
-    }
-    console.log(`[makeDeposit] found a paired token ${homeTokenAddress} for ${tokenAddress}`)
-    await new ActionOnRelay({
-      accountAddress: walletAddress,
-      tokenAddress: homeTokenAddress,
-      actionType: 'mint',
-      bridgeType: 'home',
-      status: 'pending',
-      initiatorId: deposit._id,
-      data: {
-        bridgeType: 'home',
-        tokenAddress: config.get('network.home.addresses.FuseDollar'),
-        amount,
-        mintTo: customerAddress
-      }
-    }).save()
-
-    console.log(`[makeDeposit] isFuseDollar after transferToCustomer save()`)
-    taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: walletAddress, amount }, { generateDeduplicationId: true })
+    // taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: walletAddress, amount }, { generateDeduplicationId: true })
+    const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
   }
   return deposit
 }

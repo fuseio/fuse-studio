@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const request = require('request-promise-native')
 const stableStringify = require('fast-json-stable-stringify')
 const auth = require('@routes/auth')
+const { isProduction } = require('@utils/env')
 
 const moonpayAuthCheck = (req, res, next) => {
   console.log(`[deposit-moonpayAuthCheck]`)
@@ -150,7 +151,9 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   console.log(`[deposit-ramp] req.body: ${JSON.stringify(req.body)}`)
   const { customerAddress, communityAddress } = req.params
   const { purchase, type } = req.body
-  if (type === 'CREATED') {
+  console.log(req.body)
+  // transaction is sent on the Ethereum network
+  if (type === 'RELEASED') {
     const { asset: { address }, cryptoAmount, purchaseHash, receiverAddress, id } = purchase
     console.log(`[deposit-ramp] before makeDeposit`)
     await makeDeposit({
@@ -171,7 +174,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   }
 })
 
-if (config.get('env') !== 'production') {
+if (!isProduction()) {
   router.post('/init', auth.admin, async (req, res) => {
     const deposit = await makeDeposit({
       ...req.body,
