@@ -39,8 +39,8 @@ const deployCommunity = async ({ home, foreign }, communityProgress) => {
   if (homeTokenAddress) {
     let token = await Token.findOne({ address: homeTokenAddress })
     if (isCustom && !token) {
-      console.log(`Adding the home token ${foreignTokenAddress} to the database`)
-      const tokenData = await fetchTokenData(foreignTokenAddress, {}, home.web3)
+      console.log(`Adding the home token ${homeTokenAddress} to the database`)
+      const tokenData = await fetchTokenData(homeTokenAddress, {}, home.web3)
       await new Token({ address: homeTokenAddress, networkType: home.networkType, ...tokenData }).save()
     }
   } else if (foreignTokenAddress) {
