@@ -5,7 +5,6 @@ const { isStableCoin } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const Community = mongoose.model('Community')
-const { isProduction } = require('@utils/env')
 
 const makeDeposit = async ({
   walletAddress,
@@ -18,9 +17,8 @@ const makeDeposit = async ({
   ...rest
 }) => {
   console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
-  if (!transactionHash && !isProduction()) {
-    transactionHash = '0x' + Math.random().toString(36).substring(7)
-    console.warn(`transactionHash not found for deposit with exernalId ${externalId}. ${transactionHash} generated`)
+  if (!transactionHash) {
+    console.warn(`transactionHash not given for deposit ${externalId}`)
   }
 
   const community = await Community.findOne({ communityAddress }).lean()
