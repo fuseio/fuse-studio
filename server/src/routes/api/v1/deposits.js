@@ -50,6 +50,10 @@ const transakAuthCheck = (req, res, next) => {
 }
 
 const rampAuthCheck = (req, res, next) => {
+  if (!isProduction()) {
+    console.log('Skipping ramp auth check on test environment')
+    next()
+  }
   if (req.body && req.header('X-Body-Signature')) {
     console.log(`[deposit-rampAuthCheck] X-Body-Signature - ${req.header('X-Body-Signature')}`)
     const verified = crypto.verify(
