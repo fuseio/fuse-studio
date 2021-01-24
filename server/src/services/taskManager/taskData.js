@@ -81,6 +81,10 @@ const tasksData = {
   },
   mintOnRelay: {
     name: 'mintOnRelay'
+  },
+  mintDeposited: {
+    name: 'mintDeposited',
+    bridgeType: 'home'
   }
 }
 

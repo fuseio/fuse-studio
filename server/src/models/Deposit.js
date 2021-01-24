@@ -4,7 +4,7 @@ const { Schema } = mongoose
 const transform = (doc, ret) => ({ ...ret, amount: doc.amount ? doc.amount.toString() : undefined })
 
 const DepositSchema = new Schema({
-  transactionHash: { type: String, required: [true, "can't be blank"] },
+  transactionHash: { type: String },
   walletAddress: { type: String, required: [true, "can't be blank"] },
   customerAddress: { type: String, required: [true, "can't be blank"] },
   tokenAddress: { type: String, required: [true, "can't be blank"] },
@@ -16,7 +16,7 @@ const DepositSchema = new Schema({
   jobs: { type: Object, default: {} }
 }, { timestamps: true })
 
-DepositSchema.index({ transactionHash: 1 }, { unique: true })
+DepositSchema.index({ externalId: 1 }, { unique: true })
 DepositSchema.index({ provider: 1, externalId: 1 }, { unique: true })
 
 DepositSchema.set('toJSON', {
