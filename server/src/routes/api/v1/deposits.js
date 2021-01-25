@@ -151,6 +151,16 @@ router.post('/transak', transakAuthCheck, async (req, res) => {
   }
 })
 
+const getTxHash = (purchase) => {
+  try {
+    const { details } = purchase.actions.find(({ newStatus }) => newStatus === 'RELEASING')
+    return details
+  } catch (err) {
+    console.log('Could not extract the txhash from the purchase')
+    console.error(err)
+  }
+}
+
 router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (req, res) => {
   console.log(`[deposit-ramp] req.body: ${JSON.stringify(req.body)}`)
   const { customerAddress, communityAddress } = req.params
@@ -158,11 +168,11 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   console.log(req.body)
   // transaction is sent on the Ethereum network
   if (type === 'RELEASED') {
-    const { asset: { address }, cryptoAmount, purchaseHash, receiverAddress, id } = purchase
+    const { asset: { address }, cryptoAmount, receiverAddress, id } = purchase
     console.log(`[deposit-ramp] before makeDeposit`)
     await makeDeposit({
-      transactionHash: purchaseHash,
-      walletAddress: receiverAddress,
+      transactionHash: getTxHash(purchase),
+      walletAddress: web3Utils.toChecksumAddress(receiverAddress),
       customerAddress,
       communityAddress,
       tokenAddress: address,
