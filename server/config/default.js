@@ -1,7 +1,7 @@
 const defer = require('config/defer').deferConfig
 
 module.exports = {
-  env: 'qa',
+  env: 'dev',
   api: {
     allowCors: true,
     secret: 'secret',
