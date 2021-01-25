@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 const request = require('request-promise-native')
 const stableStringify = require('fast-json-stable-stringify')
 const auth = require('@routes/auth')
-const { isProduction } = require('@utils/env')
+const { isDevelopment, isProduction } = require('@utils/env')
 
 const moonpayAuthCheck = (req, res, next) => {
   console.log(`[deposit-moonpayAuthCheck]`)
@@ -50,8 +50,8 @@ const transakAuthCheck = (req, res, next) => {
 }
 
 const rampAuthCheck = (req, res, next) => {
-  if (!isProduction()) {
-    console.log('Skipping ramp auth check on test environment')
+  if (isDevelopment()) {
+    console.log('Skipping ramp auth check on the development environment')
     next()
   }
   if (req.body && req.header('X-Body-Signature')) {
