@@ -52,7 +52,6 @@ const makeDeposit = async ({
       throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
-    // taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: walletAddress, amount }, { generateDeduplicationId: true })
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
     taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
   }
