@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { makeDeposit } = require('@utils/deposit')
+const { makeDeposit, getRampAuthKey } = require('@utils/deposit')
 const config = require('config')
 const web3Utils = require('web3-utils')
 const crypto = require('crypto')
@@ -59,7 +59,7 @@ const rampAuthCheck = (req, res, next) => {
     const verified = crypto.verify(
       'sha256',
       Buffer.from(stableStringify(req.body)),
-      config.get('plugins.rampInstant.webhook.publicKey'),
+      getRampAuthKey(),
       Buffer.from(req.header('X-Body-Signature'), 'base64')
     )
     if (verified) {

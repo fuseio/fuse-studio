@@ -160,9 +160,6 @@
       }
     },
     "rampInstant": {
-      "webhook": {
-        "publicKey": "COMMUNITY_PLUGINS_RAMP_INSTANT_PUBLIC_KEY"
-      },
       "api": {
         "key": "COMMUNITY_PLUGINS_RAMP_INSTANT_API_KEY"
       },
