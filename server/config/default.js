@@ -252,8 +252,11 @@ module.exports = {
       args: {
       }
     },
-    ramp: {
+    rampInstant: {
       args: {
+      },
+      webhook: {
+        pemFile: 'ramp-public.staging.pem'
       }
     }
   },

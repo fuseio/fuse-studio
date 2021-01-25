@@ -5,6 +5,7 @@ const { isStableCoin } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const Community = mongoose.model('Community')
+const { readFileSync } = require('fs')
 
 const makeDeposit = async ({
   walletAddress,
@@ -58,6 +59,10 @@ const makeDeposit = async ({
   return deposit
 }
 
+const getRampAuthKey = () =>
+  readFileSync(`./src/constants/pem/ramp/${config.get('plugins.rampInstant.webhook.pemFile')}`).toString()
+
 module.exports = {
-  makeDeposit
+  makeDeposit,
+  getRampAuthKey
 }
