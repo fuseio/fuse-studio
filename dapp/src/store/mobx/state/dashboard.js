@@ -210,8 +210,8 @@ export default class Dashboard {
         this.foreignNetwork = 'ropsten'
       }
       const { data } = response
-      this.fetchEntitiesCount(communityAddress)
-      this.fetchCommunityAdmins(communityAddress)
+      this.fetchEntitiesCount()
+      this.fetchCommunityAdmins()
       this.initStateByCommunity(data)
 
       this.isFetching = false
@@ -221,9 +221,9 @@ export default class Dashboard {
     }
   })
 
-  fetchCommunityAdmins = flow(function * (communityAddress) {
+  fetchCommunityAdmins = flow(function * () {
     try {
-      const admins = yield getCommunityAdmins(communityAddress)
+      const admins = yield getCommunityAdmins(this.communityAddress)
       const communityEntities = get(
         admins.data,
         'communities[0].entitiesList.communityEntities',
@@ -417,9 +417,9 @@ export default class Dashboard {
     }
   })
 
-  fetchEntitiesCount = flow(function * (communityAddress) {
+  fetchEntitiesCount = flow(function * () {
     try {
-      const { data } = yield fetchCommunityEntities(communityAddress)
+      const { data } = yield fetchCommunityEntities(this.communityAddress)
       const communityEntities = get(data, 'communities[0].entitiesList.communityEntities', [])
       this.entitiesCount = communityEntities.length
     } catch (error) {
@@ -428,8 +428,13 @@ export default class Dashboard {
   })
 
   checkIsCommunityMember = flow(function * (accountAddress) {
-    const memberData = yield isCommunityMember(this.communityAddress, accountAddress)
-    this.isCommunityMember = memberData?.data?.communityEntities?.length > 0
+    try {
+      const { data } = yield isCommunityMember(this.communityAddress, accountAddress)
+      const isInCommunityEntities = isEmpty(get(data, 'communities[0].entitiesList.communityEntities', []))
+      this.isCommunityMember = !isInCommunityEntities
+    } catch (error) {
+      console.log('ERROR in checkIsCommunityMember', { error })
+    }
   })
 
   get addedPlugins () {
