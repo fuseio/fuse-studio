@@ -160,8 +160,9 @@
       }
     },
     "rampInstant": {
-      "api": {
-        "key": "COMMUNITY_PLUGINS_RAMP_INSTANT_API_KEY"
+      "webhook": {
+        "pemFile": "COMMUNITY_PLUGINS_RAMP_WEBHOOK_PEM_FILE",
+        "skipAuth": "COMMUNITY_PLUGINS_RAMP_WEBHOOK_SKIP_AUTH"
       },
       "args": {
         "__name": "COMMUNITY_PLUGINS_RAMP_INSTANT_ARGS",

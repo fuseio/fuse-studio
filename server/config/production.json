@@ -70,7 +70,8 @@
     },
     "rampInstant": {
       "webhook": {
-        "pemFile": "ramp-public.prod.pem"
+        "pemFile": "ramp-public.prod.pem",
+        "skipAuth": false
       }
     }
   },
