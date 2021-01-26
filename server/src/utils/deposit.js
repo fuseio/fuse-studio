@@ -5,6 +5,7 @@ const { isStableCoin } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const Community = mongoose.model('Community')
+const QueueJob = mongoose.model('QueueJob')
 const { readFileSync } = require('fs')
 
 const makeDeposit = async ({
@@ -15,6 +16,7 @@ const makeDeposit = async ({
   amount,
   transactionHash,
   externalId,
+  purchase,
   ...rest
 }) => {
   console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
@@ -53,9 +55,50 @@ const makeDeposit = async ({
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
+    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeed', 'data.transactionBody.status': 'confirmed', 'data.purchase': purchase } })
+    // this data is used as a context for a wallet about the job
+    const data = {
+      walletAddress: customerAddress,
+      transactionBody: {
+        status: 'pending',
+        tokenAddress: fuseDollarAddress
+      }
+    }
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount, data }, { generateDeduplicationId: true })
   }
   return deposit
+}
+
+const requestDeposit = ({
+  amount,
+  customerAddress,
+  communityAddress,
+  walletAddress,
+  externalId,
+  provider,
+  purchase
+}) => {
+  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  return new QueueJob({
+    name: 'fake-deposit',
+    messageId: externalId,
+    communityAddress,
+    data: {
+      externalId,
+      provider,
+      transactionBody: {
+        value: amount,
+        status: 'pending',
+        tokenAddress: fuseDollarAddress,
+        tokenDecimal: 18,
+        tokenSymbol: 'FUSD',
+        tokenName: 'Fuse Dollar',
+        from: walletAddress,
+        to: customerAddress
+      },
+      purchase
+    }
+  }).save()
 }
 
 const getRampAuthKey = () =>
@@ -63,5 +106,6 @@ const getRampAuthKey = () =>
 
 module.exports = {
   makeDeposit,
+  requestDeposit,
   getRampAuthKey
 }

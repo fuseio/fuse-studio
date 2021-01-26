@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { makeDeposit, getRampAuthKey } = require('@utils/deposit')
+const { makeDeposit, requestDeposit, getRampAuthKey } = require('@utils/deposit')
 const config = require('config')
 const web3Utils = require('web3-utils')
 const crypto = require('crypto')
@@ -52,7 +52,7 @@ const transakAuthCheck = (req, res, next) => {
 const rampAuthCheck = (req, res, next) => {
   if (isDevelopment()) {
     console.log('Skipping ramp auth check on the development environment')
-    next()
+    return next()
   }
   if (req.body && req.header('X-Body-Signature')) {
     console.log(`[deposit-rampAuthCheck] X-Body-Signature - ${req.header('X-Body-Signature')}`)
@@ -166,8 +166,22 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   const { customerAddress, communityAddress } = req.params
   const { purchase, type } = req.body
   console.log(req.body)
-  // transaction is sent on the Ethereum network
-  if (type === 'RELEASED') {
+
+  if (type === 'CREATED') {
+    const { cryptoAmount, receiverAddress, id } = purchase
+    // deposit is issued, on-ramp is waiting for fiat processing
+    await requestDeposit({
+      customerAddress,
+      communityAddress,
+      amount: cryptoAmount,
+      externalId: id,
+      walletAddress: web3Utils.toChecksumAddress(receiverAddress),
+      purchase,
+      provider: 'ramp'
+    })
+    return res.json({ response: 'ok' })
+  } else if (type === 'RELEASED') {
+    // transaction is sent on the Ethereum network
     const { asset: { address }, cryptoAmount, receiverAddress, id } = purchase
     console.log(`[deposit-ramp] before makeDeposit`)
     await makeDeposit({
@@ -178,7 +192,8 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
       tokenAddress: address,
       amount: cryptoAmount,
       externalId: id,
-      provider: 'ramp'
+      provider: 'ramp',
+      purchase
     })
     console.log(`[deposit-ramp] after makeDeposit`)
     return res.json({ response: 'job started' })
