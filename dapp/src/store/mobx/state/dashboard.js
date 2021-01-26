@@ -6,6 +6,7 @@ import {
   flow
 } from 'mobx'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 import keyBy from 'lodash/keyBy'
 import has from 'lodash/has'
@@ -35,7 +36,7 @@ export default class Dashboard {
   _foreignWeb3
   baseUrl
   entitiesCount
-  isCommunityMember
+  isCommunityMember = false
   metadata
   communityUsers
   communityBusinesses
@@ -210,6 +211,7 @@ export default class Dashboard {
       }
       const { data } = response
       this.fetchEntitiesCount(communityAddress)
+      this.fetchCommunityAdmins(communityAddress)
       this.initStateByCommunity(data)
 
       this.isFetching = false

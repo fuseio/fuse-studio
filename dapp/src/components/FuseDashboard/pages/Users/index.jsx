@@ -39,16 +39,16 @@ const UsersTable = withTransaction(
     isAdmin,
     communityAddress,
     handleSendTransaction,
-    community,
     isRequested,
     isPending,
     toHandleJoin,
-    web3Context,
-    loadModal
+    web3Context
   }) => {
     const [transactionTitle, setTransactionTitle] = useState()
     const { accountAddress } = web3Context
     const dispatch = useDispatch()
+    const { dashboard } = useStore()
+    const { community } = dashboard
 
     const handleRemoveEntity = entityAccountAddress => {
       setTransactionTitle('Removing the user from list')
