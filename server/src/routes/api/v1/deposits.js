@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const request = require('request-promise-native')
 const stableStringify = require('fast-json-stable-stringify')
 const auth = require('@routes/auth')
+const yn = require('yn')
 const { isProduction } = require('@utils/env')
 
 const moonpayAuthCheck = (req, res, next) => {
@@ -50,7 +51,7 @@ const transakAuthCheck = (req, res, next) => {
 }
 
 const rampAuthCheck = (req, res, next) => {
-  if (config.get('plugins.rampInstant.webhook.skipAuth')) {
+  if (yn(config.get('plugins.rampInstant.webhook.skipAuth'))) {
     console.log('Skipping ramp auth check on the development environment')
     return next()
   }
