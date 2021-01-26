@@ -166,7 +166,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   const { customerAddress, communityAddress } = req.params
   const { purchase, type } = req.body
   console.log(req.body)
-  debugger
+
   if (type === 'CREATED') {
     const { cryptoAmount, receiverAddress, id } = purchase
     // deposit is issued, on-ramp is waiting for fiat processing
@@ -176,6 +176,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
       amount: cryptoAmount,
       externalId: id,
       walletAddress: web3Utils.toChecksumAddress(receiverAddress),
+      purchase,
       provider: 'ramp'
     })
     return res.json({ response: 'ok' })
@@ -191,7 +192,8 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
       tokenAddress: address,
       amount: cryptoAmount,
       externalId: id,
-      provider: 'ramp'
+      provider: 'ramp',
+      purchase
     })
     console.log(`[deposit-ramp] after makeDeposit`)
     return res.json({ response: 'job started' })

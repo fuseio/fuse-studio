@@ -16,6 +16,7 @@ const makeDeposit = async ({
   amount,
   transactionHash,
   externalId,
+  purchase,
   ...rest
 }) => {
   console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
@@ -54,8 +55,16 @@ const makeDeposit = async ({
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeed', 'data.transactionBody.status': 'succeeed' } })
-    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
+    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeed', 'data.transactionBody.status': 'confirmed', 'data.purchase': purchase } })
+    // this data is used as a context for a wallet about the job
+    const data = {
+      walletAddress: customerAddress,
+      transactionBody: {
+        status: 'pending',
+        tokenAddress: fuseDollarAddress
+      }
+    }
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount, data }, { generateDeduplicationId: true })
   }
   return deposit
 }
@@ -66,7 +75,8 @@ const requestDeposit = ({
   communityAddress,
   walletAddress,
   externalId,
-  provider
+  provider,
+  purchase
 }) => {
   const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
   return new QueueJob({
@@ -85,7 +95,8 @@ const requestDeposit = ({
         tokenName: 'Fuse Dollar',
         from: walletAddress,
         to: customerAddress
-      }
+      },
+      purchase
     }
   }).save()
 }
