@@ -5,6 +5,7 @@ const { isStableCoin } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const Community = mongoose.model('Community')
+const QueueJob = mongoose.model('QueueJob')
 const { readFileSync } = require('fs')
 
 const makeDeposit = async ({
@@ -53,9 +54,40 @@ const makeDeposit = async ({
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeed', 'data.transactionBody.status': 'succeeed' } })
     taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
   }
   return deposit
+}
+
+const requestDeposit = ({
+  amount,
+  customerAddress,
+  communityAddress,
+  walletAddress,
+  externalId,
+  provider
+}) => {
+  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  return new QueueJob({
+    name: 'fake-deposit',
+    messageId: externalId,
+    communityAddress,
+    data: {
+      externalId,
+      provider,
+      transactionBody: {
+        value: amount,
+        status: 'pending',
+        tokenAddress: fuseDollarAddress,
+        tokenDecimal: 18,
+        tokenSymbol: 'FUSD',
+        tokenName: 'Fuse Dollar',
+        from: walletAddress,
+        to: customerAddress
+      }
+    }
+  }).save()
 }
 
 const getRampAuthKey = () =>
@@ -63,5 +95,6 @@ const getRampAuthKey = () =>
 
 module.exports = {
   makeDeposit,
+  requestDeposit,
   getRampAuthKey
 }
