@@ -50,7 +50,7 @@ const makeDeposit = async ({
     console.log(`[makeDeposit] transferring to home with relayTokens`)
     taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
   } else {
-    if (config.get('env') === 'production' && !isStableCoin(tokenAddress)) {
+    if (config.get('plugins.fuseDollar.verifyStableCoin') && !isStableCoin(tokenAddress)) {
       throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
     }
     console.log(`[makeDeposit] Fuse dollar flow`)

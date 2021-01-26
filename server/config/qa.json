@@ -44,6 +44,9 @@
       "webhook": {
         "skipAuth": false
       }
+    },
+    "fuseDollar": {
+      "verifyStableCoin": true
     }
   }
 }
