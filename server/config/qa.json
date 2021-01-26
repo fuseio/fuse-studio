@@ -38,5 +38,12 @@
         }
       }
     }
+  },
+  "plugins": {
+    "rampInstant": {
+      "webhook": {
+        "skipAuth": false
+      }
+    }
   }
 }

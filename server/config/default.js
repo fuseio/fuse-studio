@@ -256,7 +256,8 @@ module.exports = {
       args: {
       },
       webhook: {
-        pemFile: 'ramp-public.staging.pem'
+        pemFile: 'ramp-public.staging.pem',
+        skipAuth: true
       }
     }
   },
