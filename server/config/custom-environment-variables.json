@@ -162,7 +162,10 @@
     "rampInstant": {
       "webhook": {
         "pemFile": "COMMUNITY_PLUGINS_RAMP_WEBHOOK_PEM_FILE",
-        "skipAuth": "COMMUNITY_PLUGINS_RAMP_WEBHOOK_SKIP_AUTH"
+        "skipAuth": {
+          "__name": "COMMUNITY_PLUGINS_RAMP_WEBHOOK_SKIP_AUTH",
+          "__format": "boolean"
+        }
       },
       "args": {
         "__name": "COMMUNITY_PLUGINS_RAMP_INSTANT_ARGS",
@@ -188,7 +191,10 @@
       }
     },
     "fuseDollar": {
-      "verifyStableCoin": "COMMUNITY_PLUGINS_FUSE_DOLLAR_SKIP_IS_STABLE_COIN"
+      "verifyStableCoin": { 
+        "__name": "COMMUNITY_PLUGINS_FUSE_DOLLAR_VERIFY_IS_STABLE_COIN",
+        "__format": "boolean"
+      }
     }
   },
   "phoneNumbers": {
