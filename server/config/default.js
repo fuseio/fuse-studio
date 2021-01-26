@@ -259,6 +259,9 @@ module.exports = {
         pemFile: 'ramp-public.staging.pem',
         skipAuth: true
       }
+    },
+    fuseDollar: {
+      verifyStableCoin: false
     }
   },
   inviteTxt: 'Hi, a friend has invited you to Fuse',
