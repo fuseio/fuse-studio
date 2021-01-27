@@ -7,6 +7,7 @@ const Deposit = mongoose.model('Deposit')
 const Community = mongoose.model('Community')
 const QueueJob = mongoose.model('QueueJob')
 const { readFileSync } = require('fs')
+const { createNetwork } = require('@utils/web3')
 
 const makeDeposit = async ({
   walletAddress,
@@ -54,8 +55,12 @@ const makeDeposit = async ({
       throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
+
+    const { web3 } = createNetwork('home')
+    const blockNumber = await web3.eth.getBlockNumber()
+    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.transactionBody.blockNumber': blockNumber, 'data.purchase': purchase } })
+
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.purchase': purchase } })
     // this data is used as a context for a wallet about the job
     const additionalData = {
       walletAddress: customerAddress,
@@ -70,7 +75,7 @@ const makeDeposit = async ({
   return deposit
 }
 
-const requestDeposit = ({
+const requestDeposit = async ({
   amount,
   customerAddress,
   communityAddress,
@@ -81,7 +86,7 @@ const requestDeposit = ({
 }) => {
   const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
   return new QueueJob({
-    name: 'fake-deposit',
+    name: 'fiat-processing',
     messageId: externalId,
     communityAddress,
     data: {

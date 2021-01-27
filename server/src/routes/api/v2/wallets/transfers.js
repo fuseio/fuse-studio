@@ -29,12 +29,23 @@ const withJobs = async (transferEvents) => {
   return jobsByTxHashes
 }
 
-const getWalletJobs = (walletAddress, tokenAddress) => QueueJob.find({
-  'data.walletAddress': walletAddress,
-  'data.transactionBody': { '$exists': true },
-  'data.transactionBody.status': 'pending',
-  'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
-})
+const getWalletJobs = async (walletAddress, tokenAddress, blockNumber) => {
+  const pendingJobs = await QueueJob.find({
+    'data.walletAddress': walletAddress,
+    'data.transactionBody': { '$exists': true },
+    'data.transactionBody.status': 'pending',
+    'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
+  })
+  const fiatProcessingJobs = await QueueJob.find({
+    'data.walletAddress': walletAddress,
+    'data.transactionBody': { '$exists': true },
+    'data.transactionBody.tokenAddress': tokenAddress.toLowerCase(),
+    'data.actionType': 'fiat-processing',
+    'data.transactionBody.status': 'confirmed',
+    'data.transactionBody.blockNumber': { $gte: Number(blockNumber) }
+  })
+  return [...pendingJobs, ...fiatProcessingJobs]
+}
 
 /**
  * @api {get} api/v2/wallets/transfers/tokentx/:walletAddress Get token transfer events by address on fuse
@@ -48,7 +59,7 @@ const getWalletJobs = (walletAddress, tokenAddress) => QueueJob.find({
  *
  * @apiSuccess {Object} data Array of transfer events
  */
-router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
+router.get('/tokentx/:walletAddress', async (req, res) => {
   const { walletAddress } = req.params
   const { tokenAddress, sort = 'desc', startblock = 0, page = 1, offset = 50 } = req.query
   const responseTransferEvents = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${walletAddress}&startblock=${startblock}&sort=${sort}&page=${page}&offset=${offset}`)
@@ -68,17 +79,21 @@ router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
         }
         return { ...transferEvent, status: 'confirmed' }
       } else {
-        return { ...transferEvent, status: 'confirmed' }
+        if (hashesByJobs[transferEvent.hash]) {
+          return { ...transferEvent, status: 'confirmed', actionType: get(hashesByJobs[transferEvent.hash], 'data.actionType') }
+        } else {
+          return { ...transferEvent, status: 'confirmed' }
+        }
       }
     })
 
-    const pendingJobs = await getWalletJobs(walletAddress, tokenAddress)
+    const pendingJobs = await getWalletJobs(walletAddress, tokenAddress, startblock)
 
     const formatPendingJobs = pendingJobs.filter(item => !result.some(({ hash }) => hash === item.hash)).map((jobInfo) => formatPending(jobInfo))
 
     return res.json({ data: [...result, ...formatPendingJobs] })
   } else {
-    const pendingJobs = await getWalletJobs(walletAddress, tokenAddress)
+    const pendingJobs = await getWalletJobs(walletAddress, tokenAddress, startblock)
     return res.json({ data: pendingJobs.map(formatPending) })
   }
 })
