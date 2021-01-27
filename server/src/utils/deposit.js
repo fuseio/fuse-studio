@@ -55,7 +55,7 @@ const makeDeposit = async ({
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeed', 'data.transactionBody.status': 'confirmed', 'data.purchase': purchase } })
+    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.purchase': purchase } })
     // this data is used as a context for a wallet about the job
     const additionalData = {
       walletAddress: customerAddress,
