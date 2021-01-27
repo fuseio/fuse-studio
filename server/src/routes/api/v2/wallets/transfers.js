@@ -37,10 +37,10 @@ const getWalletJobs = async (walletAddress, tokenAddress, blockNumber) => {
     'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
   })
   const fiatProcessingJobs = await QueueJob.find({
+    'name': 'fiat-processing',
     'data.walletAddress': walletAddress,
     'data.transactionBody': { '$exists': true },
     'data.transactionBody.tokenAddress': tokenAddress.toLowerCase(),
-    'data.actionType': 'fiat-processing',
     'data.transactionBody.status': 'confirmed',
     'data.transactionBody.blockNumber': { $gte: Number(blockNumber) }
   })
