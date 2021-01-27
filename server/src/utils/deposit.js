@@ -61,7 +61,7 @@ const makeDeposit = async ({
       walletAddress: customerAddress,
       transactionBody: {
         status: 'pending',
-        tokenAddress: fuseDollarAddress
+        tokenAddress: fuseDollarAddress.toLowerCase()
       }
     }
     taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount, data }, { generateDeduplicationId: true })
@@ -86,10 +86,11 @@ const requestDeposit = ({
     data: {
       externalId,
       provider,
+      walletAddress: customerAddress,
       transactionBody: {
         value: amount,
         status: 'pending',
-        tokenAddress: fuseDollarAddress,
+        tokenAddress: fuseDollarAddress.toLowerCase(),
         tokenDecimal: 18,
         tokenSymbol: 'FUSD',
         tokenName: 'Fuse Dollar',

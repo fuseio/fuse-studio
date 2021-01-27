@@ -28,6 +28,13 @@ const withJobs = async (transferEvents) => {
   return jobsByTxHashes
 }
 
+const getWalletJobs = (walletAddress, tokenAddress) => QueueJob.find({
+  'data.walletAddress': walletAddress,
+  'data.transactionBody': { '$exists': true },
+  'data.transactionBody.status': 'pending',
+  'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
+})
+
 /**
  * @api {get} api/v2/wallets/transfers/tokentx/:walletAddress Get token transfer events by address on fuse
  * @apiName FetchTokenTxByAddress
@@ -59,19 +66,15 @@ router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
       }
     })
 
-    const pendingJobs = await QueueJob.find({
-      'data.walletAddress': walletAddress,
-      'data.transactionBody': { '$exists': true },
-      'data.transactionBody.status': 'pending',
-      'data.transactionBody.tokenAddress': tokenAddress.toLowerCase()
-    })
+    const pendingJobs = await getWalletJobs(walletAddress, tokenAddress)
 
     const formatPendingJobs = pendingJobs.filter(item => !result.some(({ hash }) => hash === item.hash)).map((jobInfo) => formatPending(jobInfo))
 
     return res.json({ data: [...result, ...formatPendingJobs] })
+  } else {
+    const pendingJobs = await getWalletJobs(walletAddress, tokenAddress)
+    return res.json({ data: pendingJobs.map(formatPending) })
   }
-
-  return res.json({ data: [] })
 })
 
 module.exports = router
