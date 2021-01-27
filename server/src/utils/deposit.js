@@ -55,16 +55,17 @@ const makeDeposit = async ({
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeed', 'data.transactionBody.status': 'confirmed', 'data.purchase': purchase } })
+    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.purchase': purchase } })
     // this data is used as a context for a wallet about the job
-    const data = {
+    const additionalData = {
       walletAddress: customerAddress,
+      actionType: 'fiat-deposit',
       transactionBody: {
         status: 'pending',
         tokenAddress: fuseDollarAddress.toLowerCase()
       }
     }
-    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount, data }, { generateDeduplicationId: true })
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount, ...additionalData }, { generateDeduplicationId: true })
   }
   return deposit
 }
@@ -87,6 +88,7 @@ const requestDeposit = ({
       externalId,
       provider,
       walletAddress: customerAddress,
+      actionType: 'fiat-processing',
       transactionBody: {
         value: amount,
         status: 'pending',
