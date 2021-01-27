@@ -6,7 +6,7 @@ const auth = require('@routes/auth')
 const request = require('request-promise-native')
 const { get, keyBy } = require('lodash')
 
-const formatPending = ({ _id, data: { transactionBody, txHash } }) => ({
+const formatPending = ({ _id, data: { transactionBody, txHash, actionType } }) => ({
   jobId: _id,
   value: get(transactionBody, 'value', 0),
   tokenName: get(transactionBody, 'tokenName', ''),
@@ -18,6 +18,7 @@ const formatPending = ({ _id, data: { transactionBody, txHash } }) => ({
   type: get(transactionBody, 'type', ''),
   from: get(transactionBody, 'from', ''),
   to: get(transactionBody, 'to', ''),
+  actionType: actionType,
   hash: txHash
 })
 
@@ -58,7 +59,12 @@ router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
     const result = transferEvents.result.map(transferEvent => {
       if (transferEvent.from.toLowerCase() === walletAddress.toLowerCase()) {
         if (hashesByJobs[transferEvent.hash]) {
-          return { ...transferEvent, jobId: hashesByJobs[transferEvent.hash]._id, status: 'confirmed' }
+          return {
+            ...transferEvent,
+            jobId: hashesByJobs[transferEvent.hash]._id,
+            status: 'confirmed',
+            actionType: get(hashesByJobs[transferEvent.hash], 'data.actionType')
+          }
         }
         return { ...transferEvent, status: 'confirmed' }
       } else {
