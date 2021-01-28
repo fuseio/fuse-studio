@@ -101,7 +101,7 @@ const requestDeposit = async ({
         tokenDecimal: 18,
         tokenSymbol: 'FUSD',
         asset: 'FUSD',
-        timeStamp: (new Date().getTime() / 1000).toString(),
+        timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
         tokenName: 'Fuse Dollar',
         from: walletAddress,
         to: customerAddress
