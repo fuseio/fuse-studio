@@ -18,6 +18,7 @@ const formatPending = ({ _id, data: { transactionBody, txHash, actionType } }) =
   type: get(transactionBody, 'type', ''),
   from: get(transactionBody, 'from', ''),
   to: get(transactionBody, 'to', ''),
+  timeStamp: get(transactionBody, 'timeStamp'),
   actionType: actionType,
   hash: txHash
 })
@@ -59,7 +60,7 @@ const getWalletJobs = async (walletAddress, tokenAddress, blockNumber) => {
  *
  * @apiSuccess {Object} data Array of transfer events
  */
-router.get('/tokentx/:walletAddress', async (req, res) => {
+router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
   const { tokenAddress, sort = 'desc', startblock = 0, page = 1, offset = 50 } = req.query
   const responseTransferEvents = await request.get(`${config.get('explorer.fuse.urlBase')}?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${walletAddress}&startblock=${startblock}&sort=${sort}&page=${page}&offset=${offset}`)

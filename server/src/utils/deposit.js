@@ -100,6 +100,8 @@ const requestDeposit = async ({
         tokenAddress: fuseDollarAddress.toLowerCase(),
         tokenDecimal: 18,
         tokenSymbol: 'FUSD',
+        asset: 'FUSD',
+        timeStamp: new Date().getTime(),
         tokenName: 'Fuse Dollar',
         from: walletAddress,
         to: customerAddress
