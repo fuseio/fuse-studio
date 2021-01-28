@@ -58,7 +58,7 @@ const makeDeposit = async ({
 
     const { web3 } = createNetwork('home')
     const blockNumber = await web3.eth.getBlockNumber()
-    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.transactionBody.blockNumber': blockNumber.toString(), 'data.purchase': purchase } })
+    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.transactionBody.blockNumber': blockNumber, 'data.purchase': purchase } })
 
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
     // this data is used as a context for a wallet about the job
