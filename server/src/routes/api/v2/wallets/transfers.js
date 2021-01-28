@@ -19,6 +19,7 @@ const formatPending = ({ _id, data: { transactionBody, txHash, actionType } }) =
   from: get(transactionBody, 'from', ''),
   to: get(transactionBody, 'to', ''),
   timeStamp: get(transactionBody, 'timeStamp'),
+  blockNumber: get(transactionBody, 'blockNumber'),
   actionType: actionType,
   hash: txHash
 })
