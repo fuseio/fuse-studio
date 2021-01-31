@@ -64,7 +64,6 @@ const Users = ({
   join
 }) => {
   const communityEntities = get(community, 'communityEntities', {})
-  // console.log({ communityEntities })
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const foreignNetwork = useSelector(getForeignNetwork)
@@ -101,54 +100,60 @@ const Users = ({
           createdAt: new Date(createdAt * 1000),
           name: metadata
             ? [
-              {
-                name: metadata.name || metadata.displayName,
-                image: metadata.image
-                  ? <div
-                    style={{
-                      backgroundImage: `url(https://ipfs.infura.io/ipfs/${metadata.image.contentUrl['/']})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  : <div
-                    style={{
-                      backgroundImage: `url(${Avatar})`,
-                      width: '36px',
-                      height: '36px',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-              }
-            ]
+                {
+                  name: metadata.name || metadata.displayName,
+                  image: metadata.image
+                    ? (
+                      <div
+                        style={{
+                          backgroundImage: `url(https://ipfs.infura.io/ipfs/${metadata.image.contentUrl['/']})`,
+                          width: '36px',
+                          height: '36px',
+                          backgroundSize: 'contain',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'center'
+                        }}
+                      />
+                      )
+                    : (
+                      <div
+                        style={{
+                          backgroundImage: `url(${Avatar})`,
+                          width: '36px',
+                          height: '36px',
+                          backgroundSize: 'contain',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'center'
+                        }}
+                      />
+                      )
+                }
+              ]
             : [
-              {
-                name: displayName,
-                image: <div
-                  style={{
-                    backgroundImage: `url(${Avatar})`,
-                    width: '36px',
-                    height: '36px',
-                    backgroundSize: 'contain',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center'
-                  }}
-                />
-              }
-            ],
+                {
+                  name: displayName,
+                  image: (
+                    <div
+                      style={{
+                        backgroundImage: `url(${Avatar})`,
+                        width: '36px',
+                        height: '36px',
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center'
+                      }}
+                    />
+                  )
+                }
+              ],
           address,
           status: isAdmin
             ? 'Community admin'
             : (community && !community.isClosed)
-              ? 'Community user'
-              : isApproved
                 ? 'Community user'
-                : 'Pending user'
+                : isApproved
+                  ? 'Community user'
+                  : 'Pending user'
         })
       })
       setData(sortBy(data, ['createdAt']).reverse())
