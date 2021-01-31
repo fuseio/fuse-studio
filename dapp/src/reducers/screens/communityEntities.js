@@ -61,9 +61,14 @@ export default (state = initialState, action) => {
     case FETCH_ENTITIES.REQUEST:
       return { ...omit(state, ['showTransactionMessage', 'transactionHash', 'entityAdded']), toFetchEntities: true }
     case FETCH_ENTITIES.SUCCESS:
-      const businessesAccounts = action.response.result.filter(account => action.response.communityEntities[account].isBusiness)
-      const userAccounts = action.response.result.filter(account => action.response.communityEntities[account].isUser)
-      return { ...state, updateEntities: false, entitiesAccounts: [...action.response.result], businessesAccounts, userAccounts, toFetchEntities: false }
+      return {
+        ...state,
+        updateEntities: false,
+        entitiesAccounts: [...action.response.result],
+        businessesAccounts: [...action.response.businessesAccounts],
+        userAccounts: [...action.response.userAccounts],
+        toFetchEntities: false
+      }
     case FETCH_USER_WALLETS.SUCCESS:
       return { ...state, walletAccounts: [...action.response.result] }
     case JOIN_COMMUNITY.SUCCESS:

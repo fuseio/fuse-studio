@@ -14,6 +14,7 @@ import CopyToClipboard from 'components/common/CopyToClipboard'
 import FontAwesome from 'react-fontawesome'
 import { addressShortener } from 'utils/format'
 import { getBlockExplorerUrl } from 'utils/network'
+import { toChecksumAddress } from 'web3-utils'
 
 import {
   addEntity,
@@ -23,7 +24,6 @@ import {
   removeAdminRole,
   joinCommunity,
   importExistingEntity,
-  fetchUsersMetadata,
   fetchUserWallets,
   fetchUserNames
 } from 'actions/communityEntities'
@@ -54,7 +54,6 @@ const Users = ({
   entityAdded,
   push,
   userAccounts,
-  fetchUsersMetadata,
   fetchUserWallets,
   fetchUserNames,
   walletAccounts,
@@ -65,6 +64,7 @@ const Users = ({
   join
 }) => {
   const communityEntities = get(community, 'communityEntities', {})
+  // console.log({ communityEntities })
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
   const foreignNetwork = useSelector(getForeignNetwork)
@@ -77,7 +77,6 @@ const Users = ({
 
   useEffect(() => {
     if (userAccounts && userAccounts.length > 0) {
-      fetchUsersMetadata(userAccounts)
       fetchUserWallets(userAccounts)
     }
   }, [userAccounts])
@@ -85,7 +84,9 @@ const Users = ({
   useEffect(() => {
     if (walletAccounts && walletAccounts.length > 0) {
       const walletOwners = walletAccounts.filter(wallet => userWallets[wallet] && userWallets[wallet].owner).map(wallet => userWallets[wallet].owner)
+      const walletAddresses = walletAccounts.filter(wallet => userWallets[wallet] && userWallets[wallet].account).map(wallet => userWallets[wallet].account)
       fetchUserNames(walletOwners)
+      fetchUserNames(walletAddresses.map(address => toChecksumAddress(address)))
     }
   }, [walletAccounts])
 
@@ -93,8 +94,7 @@ const Users = ({
     const userEntities = userAccounts.map(account => communityEntities[account])
     if (!isEmpty(userEntities)) {
       const data = userEntities.map(({ isAdmin, isApproved, address, createdAt, displayName }) => {
-        const metadataAddress = userWallets[address] ? userWallets[address].owner : address
-        const metadata = users[metadataAddress]
+        const metadata = users[address] ?? users[toChecksumAddress(address)]
         return ({
           isApproved,
           hasAdminRole: isAdmin,
@@ -150,8 +150,8 @@ const Users = ({
                 ? 'Community user'
                 : 'Pending user'
         })
-      }, ['updatedAt']).reverse()
-      setData(sortBy(data))
+      })
+      setData(sortBy(data, ['createdAt']).reverse())
     }
 
     return () => { }
@@ -266,7 +266,7 @@ const Users = ({
               }
             </div>
           </div>
-          )
+            )
         )
       }
     }
@@ -371,7 +371,6 @@ const mapDispatchToProps = {
   hideModal,
   fetchEntities,
   importExistingEntity,
-  fetchUsersMetadata,
   fetchUserWallets,
   fetchUserNames
 }

@@ -235,14 +235,17 @@ function * fetchEntities ({ communityAddress }) {
   const communityEntities = get(data, 'communities[0].entitiesList.communityEntities', [])
   const entities = keyBy(communityEntities, 'address')
   const result = Object.keys(entities)
-
+  const businessesAccounts = result.filter(account => entities[account].isBusiness)
+  const userAccounts = result.filter(account => entities[account].isUser)
   yield put({
     entity: 'communities',
     type: actions.FETCH_ENTITIES.SUCCESS,
     response: {
       communityAddress,
       result,
-      communityEntities: entities
+      communityEntities: entities,
+      userAccounts,
+      businessesAccounts
     }
   })
 }
@@ -266,23 +269,6 @@ export function * fetchFeaturedCommunityEntitiesCount ({ communityAddress }) {
     })
   } catch (error) {
     console.error(error)
-  }
-}
-
-function * fetchUserMetadata ({ account }) {
-  // const userMetadata = yield call(getProfile, account)
-  // if (userMetadata && userMetadata.account) {
-  //   yield put({
-  //     entity: 'users',
-  //     type: actions.FETCH_USER_METADATA.SUCCESS,
-  //     response: userMetadata
-  //   })
-  // }
-}
-
-function * fetchUsersMetadata ({ accounts }) {
-  for (const account of accounts) {
-    yield put(actions.fetchUserMetadata(account))
   }
 }
 
@@ -316,8 +302,6 @@ export default function * communityEntitiesSaga () {
     tryTakeEvery(actions.FETCH_USER_NAMES, fetchUserNames, 1),
     tryTakeEvery(actions.FETCH_ENTITY, fetchEntity, 1),
     tryTakeEvery(actions.FETCH_ENTITY_METADATA, fetchEntityMetadata, 1),
-    tryTakeEvery(actions.FETCH_USERS_METADATA, fetchUsersMetadata, 1),
-    tryTakeEvery(actions.FETCH_USER_METADATA, fetchUserMetadata, 1),
     tryTakeEvery(actions.ADD_ADMIN_ROLE, addAdminRole, 1),
     tryTakeEvery(actions.REMOVE_ADMIN_ROLE, removeAdminRole, 1),
     tryTakeEvery(actions.CONFIRM_USER, confirmUser, 1),
