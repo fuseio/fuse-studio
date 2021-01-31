@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { push } from 'connected-react-router'
 import dotsIcon from 'images/dots.svg'
 import isEmpty from 'lodash/isEmpty'
+import { toChecksumAddress } from 'web3-utils'
 import { useParams, withRouter } from 'react-router'
 import { connect, useDispatch } from 'react-redux'
 import sortBy from 'lodash/sortBy'
@@ -24,7 +25,7 @@ import {
   removeEntity
 } from 'utils/community'
 
-import { fetchUsersMetadata } from 'actions/communityEntities'
+import { fetchUserNames } from 'actions/communityEntities'
 import { loadModal } from 'actions/ui'
 import { ADD_USER_MODAL } from 'constants/uiConstants'
 
@@ -170,26 +171,30 @@ const UsersTable = withTransaction(
                 )}
                 {hasAdminRole && (
                   <ul className='more__options'>
-                    {accountAddress &&
+                    {
+                      accountAddress &&
                       accountAddress.toLowerCase() !==
-                        address.toLowerCase() && (
+                      address.toLowerCase() && (
                         <li
                           className='more__options__item'
                           onClick={() => handleRemoveEntity(address)}
                         >
                           Remove
                         </li>
-                      )}
-                    {accountAddress &&
+                      )
+                    }
+                    {
+                      accountAddress &&
                       accountAddress.toLowerCase() !==
-                        address.toLowerCase() && (
+                      address.toLowerCase() && (
                         <li
                           className='more__options__item'
                           onClick={() => handleRemoveAdminRole(address)}
                         >
                           Remove as admin
                         </li>
-                      )}
+                      )
+                    }
                     <li
                       className='more__options__item'
                       onClick={() => handleTransfer(address)}
@@ -264,13 +269,13 @@ const UsersTable = withTransaction(
 )
 
 const Users = ({
-  fetchUsersMetadata,
   usersMetadata,
   toHandleJoin
 }) => {
   const { dashboard, network } = useStore()
   const { community, communityUsers, isAdmin } = dashboard
   const { web3Context } = network
+  const dispatch = useDispatch()
 
   const { address: communityAddress } = useParams()
   const [data, setData] = useState([])
@@ -291,7 +296,7 @@ const Users = ({
     () =>
       autorun(() => {
         if (communityUsers && communityUsers.length > 0) {
-          fetchUsersMetadata(communityUsers.map(u => u.address))
+          dispatch(fetchUserNames(communityUsers.map(u => toChecksumAddress(u.address))))
         }
       }),
     [communityUsers]
@@ -304,7 +309,7 @@ const Users = ({
           const data = communityUsers
             .map(
               ({ isAdmin, isApproved, address, createdAt, displayName }) => {
-                const metadata = usersMetadata[address]
+                const metadata = usersMetadata[toChecksumAddress(address)]
                 return {
                   isApproved,
                   hasAdminRole: isAdmin,
@@ -364,11 +369,8 @@ const Users = ({
                     ? 'Community user'
                     : 'Pending user'
                 }
-              },
-              ['updatedAt']
-            )
-            .reverse()
-          setData(sortBy(data))
+              })
+          setData(sortBy(data, ['createdAt']).reverse())
         }
 
         return () => {}
@@ -404,10 +406,6 @@ const mapStateToProps = (state, { match }) => ({
   usersMetadata: state.entities.users
 })
 
-const mapDispatchToProps = {
-  fetchUsersMetadata
-}
-
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(observer(Users))
+  connect(mapStateToProps, null)(observer(Users))
 )
