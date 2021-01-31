@@ -87,8 +87,10 @@ const Plugins = () => {
     if (dashboard?.plugins) {
       if (get(dashboard?.plugins, `${key}.isRemoved`, true)) {
         plugin.isRemoved = false
+        plugin.isActive = true
       } else {
         plugin.isRemoved = true
+        plugin.isActive = false
       }
     }
     return plugin
