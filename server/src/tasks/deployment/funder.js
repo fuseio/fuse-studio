@@ -1,7 +1,6 @@
 const config = require('config')
 const mongoose = require('mongoose')
 const Community = mongoose.model('Community')
-const Account = mongoose.model('Account')
 const { toWei } = require('web3-utils')
 
 const funder = async ({ home: { send, from } }, communityProgress) => {

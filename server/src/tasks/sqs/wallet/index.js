@@ -1,5 +1,4 @@
 const config = require('config')
-const lodash = require('lodash')
 const { createNetwork, signMultiSig } = require('@utils/web3')
 const WalletFactoryABI = require('@constants/abi/WalletFactory')
 const WalletOwnershipManagerABI = require('@constants/abi/WalletOwnershipManager')
@@ -51,19 +50,9 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   const receipt = await send(method, {
     from: account.address
   }, {
-    transactionHash: async (hash) => {
-      console.log(`transaction ${hash} is created by ${account.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job,
+    communityAddress
   })
-
-  if (receipt) {
-    const { txFee, blockNumber, status } = receipt
-    job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: status ? 'confirmed' : 'failed', blockNumber: blockNumber })
-    job.set('data.txFee', txFee, mongoose.Decimal128)
-    await job.save()
-  }
 
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
   console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
@@ -135,19 +124,9 @@ const setWalletOwner = async (account, { walletAddress, communityAddress, newOwn
   const receipt = await send(method, {
     from: account.address
   }, {
-    transactionHash: (hash) => {
-      console.log(`transaction ${hash} is created by ${account.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job,
+    communityAddress
   })
-
-  if (receipt) {
-    const { txFee, blockNumber, status } = receipt
-    job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: status ? 'confirmed' : 'failed', blockNumber: blockNumber })
-    job.set('data.txFee', txFee)
-    job.save()
-  }
 
   await UserWallet.findOneAndUpdate({ walletAddress }, { accountAddress: newOwner })
   return receipt
@@ -168,10 +147,8 @@ const createForeignWallet = async (account, { communityAddress, userWallet, ens 
     from: account.address,
     gas: config.get('gasLimitForTx.createForeignWallet')
   }, {
-    transactionHash: (hash) => {
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    communityAddress,
+    job
   })
 
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet

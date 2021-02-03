@@ -8,7 +8,7 @@ const { toChecksumAddress, isAddress } = require('web3-utils')
 const { AddressZero } = require('ethers/constants')
 const BigNumber = require('bignumber.js')
 const { mapValues, map, isObject } = require('lodash')
-const { agenda } = require('@services/agenda')
+const taskManager = require('@services/taskManager')
 
 const totlePrimaryAddress = config.get('network.foreign.addresses.TotlePrimary').toLowerCase()
 
@@ -114,7 +114,7 @@ const createForeignWalletIfNeeded = async ({ watchedAddress, status }) => {
   await UserWallet.findOneAndUpdate({ walletAddress }, { pendingNetworks })
 
   console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
-  const job = await agenda.now('createForeignWallet', { userWallet, network: config.get('network.foreign.name') })
+  const job = await taskManager.now('createForeignWallet', { userWallet, network: config.get('network.foreign.name') })
   console.log(`watchedAddress ${watchedAddress} does not have wallet on ${network}. Scheduling a job to create one ${job._id || job.attrs._id}`)
 }
 

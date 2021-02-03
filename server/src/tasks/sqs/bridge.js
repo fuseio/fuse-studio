@@ -5,7 +5,6 @@ const { createNetwork } = require('@utils/web3')
 const utils = require('@utils/token')
 const bridgeUtils = require('@utils/bridge')
 const BigNumber = require('bignumber.js')
-const lodash = require('lodash')
 const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/MintableBurnableToken')
 
 const relayTokens = async (account, { depositId, accountAddress, bridgeType, bridgeAddress, tokenAddress, receiver, amount }, job) => {
@@ -56,11 +55,7 @@ const mintOnRelay = async (account, { actionOnRelayId, initiatorId, bridgeType, 
     const receipt = await send(method, {
       from: account.address
     }, {
-      transactionHash: (hash) => {
-        console.log(`transaction ${hash} is created by ${account.address}`)
-        job.set('data.txHash', hash)
-        job.save()
-      }
+      job
     })
 
     if (receipt.status) {
@@ -89,16 +84,10 @@ const mintDeposited = async (account, { depositId, bridgeType, tokenAddress, rec
     const receipt = await send(method, {
       from: account.address
     }, {
-      transactionHash: (hash) => {
-        console.log(`transaction ${hash} is created by ${account.address}`)
-        job.set('data.txHash', hash)
-        job.save()
-      }
+      job
     })
 
     if (receipt.status) {
-      const { blockNumber } = receipt
-      await job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: receipt.status ? 'confirmed' : 'failed', blockNumber }).save()
       await deposit.set('status', 'succeeded').save()
     } else {
       await deposit.set('status', 'failed').save()

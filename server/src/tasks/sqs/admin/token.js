@@ -16,19 +16,13 @@ const createToken = async (account, { bridgeType, name, symbol, initialSupplyInW
   const receipt = await send(method, {
     from: account.address
   }, {
-    transactionHash: (hash) => {
-      console.log(`transaction ${hash} is created by ${account.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job
   })
   const tokenAddress = receipt.events.TokenCreated.returnValues.token
   const { blockNumber } = await web3.eth.getTransaction(receipt.transactionHash)
 
   job.set('data.tokenAddress', tokenAddress)
   job.set('data.blockNumber', blockNumber)
-
-  job.save()
 
   const token = await new Token({
     address: tokenAddress,
@@ -57,11 +51,7 @@ const mint = async (account, { bridgeType, tokenAddress, amount, toAddress }, jo
   await send(method, {
     from: account.address
   }, {
-    transactionHash: (hash) => {
-      console.log(`transaction ${hash} is created by ${account.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job
   })
 }
 
@@ -74,11 +64,7 @@ const burn = async (account, { bridgeType, tokenAddress, amount }, job) => {
   await send(method, {
     from: account.address
   }, {
-    transactionHash: (hash) => {
-      console.log(`transaction ${hash} is created by ${account.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job
   })
 }
 
@@ -91,11 +77,7 @@ const burnFrom = async (account, { bridgeType, tokenAddress, amount, burnFromAdd
   await send(method, {
     from: account.address
   }, {
-    transactionHash: (hash) => {
-      console.log(`transaction ${hash} is created by ${account.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job
   })
 }
 
@@ -108,11 +90,8 @@ const adminApprove = async (account, { bridgeType, tokenAddress, wallet, spender
   await send(method, {
     from: account.address
   }, {
-    transactionHash: (hash) => {
-      console.log(`transaction ${hash} is created by ${account.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job,
+    txName: 'approveToken'
   })
 
   if (burnFromAddress) {
@@ -122,11 +101,8 @@ const adminApprove = async (account, { bridgeType, tokenAddress, wallet, spender
     await send(method, {
       from: account.address
     }, {
-      transactionHash: (hash) => {
-        console.log(`transaction ${hash} is created by ${account.address}`)
-        job.set('data.txHashBurn', hash)
-        job.save()
-      }
+      job,
+      txName: 'burnFrom'
     })
   }
 }
@@ -171,11 +147,7 @@ const adminTransfer = async (account, { bridgeType, tokenAddress, amount, wallet
   await send(method, {
     from: account.address
   }, {
-    transactionHash: (hash) => {
-      console.log(`transaction ${hash} is created by ${account.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job
   })
 }
 

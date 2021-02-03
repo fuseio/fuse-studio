@@ -39,11 +39,7 @@ const ethFunder = async (account, { receiverAddress, networkName }, job) => {
       gas: config.get('gasLimitForTx.funder')
     },
     {
-      transactionHash: hash => {
-        console.log(`transaction ${hash} is created by ${account.address}`)
-        job.set('data.txHash', hash)
-        job.save()
-      }
+      job
     }
   )
   if (receipt.status) {
