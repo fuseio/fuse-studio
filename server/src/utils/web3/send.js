@@ -58,7 +58,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
           job.set(`data.txFee`, new BigNumber(txFee).plus(feeTillNow), mongoose.Decimal128)
         }
 
-        job.save()
+        return job.save()
       }
     }
   }
@@ -160,7 +160,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
       receipt.gasPrice = gasPrice
       receipt.txFee = calculateTxFee(receipt)
       const handleReceipt = get(txContext, 'handleReceipt', defaults.handleReceipt)
-      handleReceipt(receipt)
+      await handleReceipt(receipt)
 
       return receipt
     }
