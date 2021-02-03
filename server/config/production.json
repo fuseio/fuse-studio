@@ -17,6 +17,7 @@
         "MultiSigWallet": "0xec73bA3070EA2267ca6d4dEF4173DCA0a004B4fc",
         "WalletFactory": "0x2FE1F9bBC9CE8Ea4E00F89FC1a8936DE6934b63D",
         "WalletImplementation": "0x811A7F70d12fbd29Ec494eDc75645E66f5fCcCFc",
+        "FuseDollar": "0x249BE57637D8B013Ad64785404b24aeBaE9B098B",
         "walletModules": {
           "ApprovedTransfer": "0x2cbE5fE3d259313F25Ac2Dd10FAB8B851561F366",
           "CommunityManager": "0x0D4926876ba1ada6E9b542e018eBeD517FFc8050",
