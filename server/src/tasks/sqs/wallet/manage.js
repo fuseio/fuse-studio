@@ -15,20 +15,19 @@ const addManager = async (mutisigOwnerAccount, { managerAccountAddress }, job) =
   const signature = await signMultiSig(web3, mutisigOwnerAccount, multiSigWallet, walletFactory.address, addManagerMethodData)
 
   const method = createMethod(multiSigWallet, 'execute', walletFactory.address, 0, addManagerMethodData, signature)
+
   const receipt = await send(method, {
     from: mutisigOwnerAccount.address
   }, {
-    transactionHash: (hash) => {
-      console.log(`transaction ${hash} is created by ${mutisigOwnerAccount.address}`)
-      job.set('data.txHash', hash)
-      job.save()
-    }
+    job,
+    txName: 'addManager'
   })
 
-  const initialBalance = config.get('accounts.wallet.initialBalance')
   if (!receipt.status) {
     throw new Error('addManager failed for unknown reason')
   }
+
+  const initialBalance = config.get('accounts.wallet.initialBalance')
   await send(null,
     {
       to: managerAccountAddress,
@@ -37,11 +36,8 @@ const addManager = async (mutisigOwnerAccount, { managerAccountAddress }, job) =
       gas: config.get('gasLimitForTx.funder')
     },
     {
-      transactionHash: hash => {
-        console.log(`transaction ${hash} is created by ${mutisigOwnerAccount.address}`)
-        job.set('data.txHash', hash)
-        job.save()
-      }
+      job,
+      txName: 'sendFunds'
     }
   )
 

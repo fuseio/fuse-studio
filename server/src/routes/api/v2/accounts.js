@@ -47,7 +47,8 @@ router.post('/', auth.admin, async (req, res) => {
     const jwt = generateCommunityAdminJwt(account.address, appName)
     return res.json({ data: { account, jwt } })
   } else if (role === 'wallet' && bridgeType === 'home') {
-    taskManager.now('addManager', { managerAccountAddress: account.address })
+    const job = await taskManager.now('addManager', { managerAccountAddress: account.address })
+    return res.json({ data: { account, job } })
   }
   return res.json({ data: { account } })
 })

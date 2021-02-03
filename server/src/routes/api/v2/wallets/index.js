@@ -261,6 +261,21 @@ router.post('/backup', auth.required, async (req, res, next) => {
  * @api {post} api/v2/wallets/foreign Create wallet contract for user on Ethereum
  * @apiName CreateWalletForeign
  * @apiGroup Wallet
+ * @apiDescription [Deprecated!] Creates wallet contract for the user on Ethereum
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {Object} Started job data
+ */
+router.post('/foreign', auth.required, async (req, res, next) => {
+  // this endpoint is deprecated
+  return res.json({ })
+})
+
+/**
+ * @api {post} api/v2/wallets/foreign Create wallet contract for user on Ethereum
+ * @apiName CreateWalletForeign
+ * @apiGroup Wallet
  * @apiDescription Creates wallet contract for the user on Ethereum
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
@@ -268,26 +283,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
  * @apiSuccess {Object} Started job data
  */
 router.post('/foreign', auth.required, async (req, res, next) => {
-  const { force } = req.query
-  if (!force) {
-    return res.json({ })
-  }
-  const { phoneNumber, accountAddress } = req.user
-  const { correlationId } = req.body
-  const network = config.get('network.foreign.name')
 
-  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress })
-  if (!userWallet) {
-    const msg = `User ${phoneNumber}, ${accountAddress} doesn't have a wallet account on fuse yet, cannot create on ${network}`
-    return res.status(400).json({ error: msg })
-  }
-  if (userWallet.networks.includes(network)) {
-    const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress} on ${network}`
-    return res.status(400).json({ error: msg })
-  }
-  console.log(`starting a createForeignWallet job for ${JSON.stringify({ walletAddress: userWallet.walletAddress, network })}`)
-  const job = await taskManager.now('createForeignWallet', { userWallet, correlationId, network })
-  return res.json({ job: job })
+
 })
-
 module.exports = router

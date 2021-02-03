@@ -65,21 +65,11 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
       from: account.address,
       gas: config.get('gasLimitForTx.createForeignWallet')
     }, {
-      transactionHash: (hash) => {
-        job.set('data.txHash', hash)
-        job.save()
-      }
+      job
     })
 
     const txSuccess = lodash.get(receipt, 'status')
     const relayingSuccess = txSuccess && lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
-
-    if (receipt) {
-      const { blockNumber, txFee } = receipt
-      job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: txSuccess ? 'confirmed' : 'failed', blockNumber })
-      job.set('data.txFee', txFee)
-      job.save()
-    }
 
     if (relayingSuccess) {
       const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
