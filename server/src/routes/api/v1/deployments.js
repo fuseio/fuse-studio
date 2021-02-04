@@ -2,6 +2,7 @@ const router = require('express').Router()
 const mongoose = require('mongoose')
 const CommunityProgress = mongoose.model('CommunityProgress')
 const { agenda } = require('@services/agenda')
+const taskManager = require('@services/taskManager')
 
 router.get('/:id', async (req, res, next) => {
   const { id } = req.params
@@ -19,7 +20,7 @@ router.post('/', async (req, res, next) => {
   const { steps, correlationId } = req.body
   const communityProgress = await new CommunityProgress({ steps }).save()
 
-  agenda.now('deploy', { communityProgressId: communityProgress._id, correlationId })
+  taskManager.now('deployEconomy', { communityProgressId: communityProgress._id, correlationId })
   return res.json({ data: communityProgress })
 })
 

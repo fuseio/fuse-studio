@@ -85,6 +85,11 @@ const tasksData = {
   mintDeposited: {
     name: 'mintDeposited',
     bridgeType: 'home'
+  },
+  deployEconomy: {
+    name: 'deployEconomy',
+    bridgeType: 'home',
+    role: '*'
   }
 }
 
