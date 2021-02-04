@@ -4,6 +4,7 @@ const bonus = require('./bonus')
 const ethFunder = require('./ethFunder')
 const admin = require('./admin')
 const bridge = require('./bridge')
+const economy = require('./economy')
 
 module.exports = {
   ...relay,
@@ -11,5 +12,6 @@ module.exports = {
   ...bonus,
   ...ethFunder,
   ...admin,
-  ...bridge
+  ...bridge,
+  ...economy
 }

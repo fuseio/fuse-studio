@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const config = require('config')
 const { get } = require('lodash')
-const { withAccount } = require('@utils/account')
 const { createNetwork } = require('@utils/web3')
 
 const { deployCommunity } = require('./community')
@@ -61,7 +60,7 @@ const performStep = async ({ home, foreign }, communityProgress, stepName) => {
     }
   }
 }
-const deploy = withAccount(async (account, { communityProgressId }) => {
+const deployEconomy = async (account, { communityProgressId }) => {
   try {
     let communityProgress = await CommunityProgress.findById(communityProgressId)
 
@@ -100,8 +99,8 @@ const deploy = withAccount(async (account, { communityProgressId }) => {
     console.log('Community deploy failed')
     throw error
   }
-})
+}
 
 module.exports = {
-  deploy
+  deployEconomy
 }
