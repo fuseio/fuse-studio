@@ -6,7 +6,11 @@ const homeAddresses = config.get('network.home.addresses')
 
 const getWalletModules = async (communityAddress) => {
   const community = await Community.findOne({ communityAddress })
-  return get(community, 'plugins.slimWallet.walletModules', homeAddresses.walletModules)
+  if get(community, 'plugins.customWallet.isActive') {
+    return get(community, 'plugins.customWallet.walletModules', homeAddresses.walletModules)
+  } else {
+    return homeAddresses.walletModules
+  }
 }
 
 module.exports = {
