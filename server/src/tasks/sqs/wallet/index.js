@@ -64,7 +64,7 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     const bonusJob = await taskManager.now('bonus', {
       name: 'bonus',
       params: { communityAddress, bonusInfo }
-    })
+    }, { isWalletJob: true })
 
     job.set('data.bonusJob', {
       name: bonusJob.name,

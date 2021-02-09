@@ -5,6 +5,7 @@ const {
 } = require('@services/queue')
 const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
+const { createActionFromJob, successAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
@@ -69,6 +70,7 @@ const startTask = async message => {
     tasks[name](account, params, queueJob)
       .then(async () => {
         await queueJob.successAndUpdate()
+        await successAndUpdateByJob(queueJob)
         unlockAccount(account._id)
       })
       .catch(async err => {
@@ -105,7 +107,7 @@ const startTask = async message => {
   }
 }
 
-const now = async (name, params, options) => {
+const now = async (name, params, options = {}) => {
   const correlationId = lodash.get(params, 'correlationId')
   if (correlationId) {
     const savedJob = await QueueJob.findOne({ 'data.correlationId': correlationId, status: { $ne: 'failed' } })
@@ -113,6 +115,7 @@ const now = async (name, params, options) => {
       throw Error(`Job with the correlationId ${correlationId} already exists. jobId: ${savedJob._id}, status: ${savedJob.status}.`)
     }
   }
+
   const response = await sendMessage({
     name,
     params
@@ -124,6 +127,10 @@ const now = async (name, params, options) => {
     messageId: response.MessageId,
     ...(communityAddress && { communityAddress })
   }).save()
+
+  if (options.isWalletJob) {
+    await createActionFromJob(job)
+  }
   return job
 }
 

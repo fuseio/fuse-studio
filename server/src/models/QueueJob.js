@@ -32,13 +32,6 @@ QueueJobSchema.methods.failAndUpdate = function (reason) {
   return QueueJob.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), status: 'failed', failReason: reason, $inc: { failCount: 1 } })
 }
 
-QueueJobSchema.methods.failAndUpdate = function (reason) {
-  if (reason instanceof Error) {
-    reason = reason.message
-  }
-  return QueueJob.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), status: 'failed', failReason: reason, $inc: { failCount: 1 } })
-}
-
 QueueJobSchema.methods.successAndUpdate = function () {
   if (this.status === 'started') {
     return QueueJob.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), status: 'succeeded' })

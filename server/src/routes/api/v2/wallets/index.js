@@ -12,6 +12,7 @@ const Invite = mongoose.model('Invite')
 router.use('/notify', require('./notify'))
 router.use('/transactions', require('./transactions'))
 router.use('/transfers', require('./transfers'))
+router.use('/actions', require('./actions'))
 
 /**
  * @api {post} api/v2/wallets/ Create wallet contract for user
@@ -29,7 +30,7 @@ router.post('/', auth.required, async (req, res, next) => {
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
-    const job = await taskManager.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, communityAddress, newOwner: accountAddress, correlationId })
+    const job = await taskManager.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, communityAddress, newOwner: accountAddress, correlationId }, { isWalletJob: true })
     return res.json({ job: job })
   } else {
     let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
@@ -54,7 +55,7 @@ router.post('/', auth.required, async (req, res, next) => {
         appName,
         ip: req.clientIp
       }).save()
-      const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, correlationId, _id: userWallet._id, walletModules })
+      const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, correlationId, _id: userWallet._id, walletModules }, { isWalletJob: true })
       return res.json({ job: job })
     }
   }
@@ -211,7 +212,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     appName
   }).save()
 
-  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules })
+  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules }, { isWalletJob: true })
 
   return res.json({ job })
 })
@@ -254,7 +255,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
       bonusId: phoneNumber
     }
 
-    const job = await taskManager.now('bonus', { communityAddress, bonusInfo, correlationId })
+    const job = await taskManager.now('bonus', { communityAddress, bonusInfo, correlationId }, { isWalletJob: true })
     return res.json({ job: job })
   }
 

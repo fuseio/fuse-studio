@@ -5,7 +5,7 @@ const auth = require('@routes/auth')
 router.post('/', auth.required, async (req, res) => {
   const { appName, identifier } = req.user
   try {
-    const job = await taskManager.now('relay', { ...req.body, identifier, appName })
+    const job = await taskManager.now('relay', { ...req.body, identifier, appName }, { isWalletJob: true })
     return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })

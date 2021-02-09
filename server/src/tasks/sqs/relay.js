@@ -2,18 +2,12 @@ const config = require('config')
 const lodash = require('lodash')
 const { createNetwork } = require('@utils/web3')
 const { fetchTokenByCommunity } = require('@utils/graph')
+const { getParamsFromMethodData } = require('@utils/abi')
 const request = require('request-promise-native')
 const mongoose = require('mongoose')
 const { notifyReceiver } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
-
-const getParamsFromMethodData = (web3, abi, methodName, methodData) => {
-  const methodABI = abi.filter(obj => obj.name === methodName)[0]
-  const methodSig = web3.eth.abi.encodeFunctionSignature(methodABI)
-  const params = web3.eth.abi.decodeParameters(methodABI.inputs, `0x${methodData.replace(methodSig, '')}`)
-  return params
-}
 
 const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
   const allowedModules = ['TransferManager', 'DAIPointsManager']
@@ -77,7 +71,7 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
       if (walletModule === 'CommunityManager') {
         try {
-          const { _community: communityAddress } = getParamsFromMethodData(web3, walletModuleABI, 'joinCommunity', methodData)
+          const { _community: communityAddress } = getParamsFromMethodData(walletModuleABI, 'joinCommunity', methodData)
           console.log(`Requesting token funding for wallet: ${wallet} and community ${communityAddress}`)
           let tokenAddress, originNetwork
           if (lodash.get(job.data.transactionBody, 'tokenAddress', false) && lodash.get(job.data.transactionBody, 'originNetwork', false)) {
@@ -106,7 +100,7 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
           console.log(`Error on token funding for wallet: ${wallet}`, e)
         }
       } else if (walletModule === 'TransferManager' && methodName === 'transferToken') {
-        const { _to, _amount, _token, _wallet } = getParamsFromMethodData(web3, walletModuleABI, 'transferToken', methodData)
+        const { _to, _amount, _token, _wallet } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
         notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount, appName, communityAddress })
           .catch(console.error)
       }
