@@ -7,7 +7,6 @@ const auth = require('@routes/auth')
 router.get('/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
   const { updatedAt } = req.query
-  // TODO: add query by updatedAt
   const result = await WalletAction.paginate({
     walletAddress,
     ...(updatedAt && { updatedAt: { $gte: updatedAt } })
