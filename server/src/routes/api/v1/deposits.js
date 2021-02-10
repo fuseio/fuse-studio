@@ -183,7 +183,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
     return res.json({ response: 'ok' })
   } else if (type === 'RELEASED') {
     // transaction is sent on the Ethereum network
-    const { asset: { address }, cryptoAmount, receiverAddress, id } = purchase
+    const { asset: { address, decimals }, cryptoAmount, receiverAddress, id } = purchase
     console.log(`[deposit-ramp] before makeDeposit`)
     await makeDeposit({
       transactionHash: getTxHash(purchase),
@@ -191,6 +191,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
       customerAddress,
       communityAddress,
       tokenAddress: address,
+      tokenDecimals: decimals,
       amount: cryptoAmount,
       externalId: id,
       provider: 'ramp',

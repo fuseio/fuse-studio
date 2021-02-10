@@ -1,7 +1,7 @@
 const config = require('config')
 const lodash = require('lodash')
 const taskManager = require('@services/taskManager')
-const { isStableCoin } = require('@utils/token')
+const { isStableCoin, adjustDecimals } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const Community = mongoose.model('Community')
@@ -14,6 +14,7 @@ const makeDeposit = async ({
   customerAddress,
   communityAddress,
   tokenAddress,
+  tokenDecimals,
   amount,
   transactionHash,
   externalId,
@@ -61,6 +62,8 @@ const makeDeposit = async ({
     await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.transactionBody.blockNumber': blockNumber, 'data.purchase': purchase } })
 
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+    const fuseDollarDecimals = 18
+    const adjustedAmount = adjustDecimals(amount, tokenDecimals, fuseDollarDecimals)
     // this data is used as a context for a wallet about the job
     const additionalData = {
       walletAddress: customerAddress,
@@ -70,7 +73,7 @@ const makeDeposit = async ({
         tokenAddress: fuseDollarAddress.toLowerCase()
       }
     }
-    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount, ...additionalData }, { generateDeduplicationId: true })
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData }, { generateDeduplicationId: true })
   }
   return deposit
 }

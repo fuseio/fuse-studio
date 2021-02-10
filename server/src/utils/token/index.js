@@ -5,6 +5,7 @@ const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const { toWei } = require('web3-utils')
 const { uniswapClient } = require('@services/graph')
+const BigNumber = require('bignumber.js')
 
 const fetchToken = async (tokenAddress) => {
   const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
@@ -26,6 +27,10 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
 
   console.log(`Fetched token ${address} data: ${inspect(fetchedTokedData)}`)
   return fetchedTokedData
+}
+
+const adjustDecimals = (amount, currentDecimals, desiredDecimals) => {
+  return new BigNumber(amount).multipliedBy(new BigNumber(10).pow(desiredDecimals - currentDecimals)).toFixed()
 }
 
 const fetchBalance = async ({ createContract }, tokenAddress, accountAddress) => {
@@ -91,5 +96,6 @@ module.exports = {
   approve,
   getAllowance,
   fetchToken,
-  isStableCoin
+  isStableCoin,
+  adjustDecimals
 }
