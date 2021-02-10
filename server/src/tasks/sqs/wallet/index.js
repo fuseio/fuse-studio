@@ -40,12 +40,12 @@ const subscribeToBlocknative = async (walletAddress) => {
   }
 }
 
-const createWallet = async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName }, job) => {
+const createWallet = async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName, walletModules }, job) => {
   console.log(`Using the account ${account.address} to create a wallet on home`)
   const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
   const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
-  const method = createMethod(walletFactory, 'createCounterfactualWallet', owner, Object.values(homeAddresses.walletModules), ens, salt)
+  const method = createMethod(walletFactory, 'createCounterfactualWallet', owner, Object.values(walletModules || homeAddresses.walletModules), ens, salt)
 
   const receipt = await send(method, {
     from: account.address

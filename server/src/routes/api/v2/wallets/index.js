@@ -4,6 +4,7 @@ const router = require('express').Router()
 const taskManager = require('@services/taskManager')
 const { web3 } = require('@services/web3/home')
 const auth = require('@routes/auth')
+const { getWalletModules } = require('@utils/wallet')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
@@ -36,6 +37,8 @@ router.post('/', auth.required, async (req, res, next) => {
       const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress}`
       return res.status(400).json({ error: msg })
     } else {
+      const walletModules = await getWalletModules(communityAddress)
+
       userWallet = await new UserWallet({
         phoneNumber,
         accountAddress,
@@ -44,14 +47,14 @@ router.post('/', auth.required, async (req, res, next) => {
         walletFactoryCurrentAddress: homeAddresses.WalletFactory,
         walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
         walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
-        walletModulesOriginal: homeAddresses.walletModules,
-        walletModules: homeAddresses.walletModules,
+        walletModulesOriginal: walletModules,
+        walletModules: walletModules,
         networks: ['fuse'],
         identifier,
         appName,
         ip: req.clientIp
       }).save()
-      const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, correlationId, _id: userWallet._id })
+      const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, correlationId, _id: userWallet._id, walletModules })
       return res.json({ job: job })
     }
   }
@@ -166,6 +169,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   }
   let userWallet = await UserWallet.findOne(query)
   if (!userWallet) {
+    const walletModules = await getWalletModules(communityAddress)
     const newUser = {
       phoneNumber: invitedPhoneNumber,
       accountAddress: owner,
@@ -174,8 +178,8 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
       walletFactoryCurrentAddress: homeAddresses.WalletFactory,
       walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
       walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
-      walletModulesOriginal: homeAddresses.walletModules,
-      walletModules: homeAddresses.walletModules,
+      walletModulesOriginal: walletModules,
+      walletModules: walletModules,
       networks: ['fuse']
     }
     if (appName) {
@@ -207,7 +211,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     appName
   }).save()
 
-  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName })
+  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules })
 
   return res.json({ job })
 })
@@ -272,18 +276,4 @@ router.post('/foreign', auth.required, async (req, res, next) => {
   return res.json({ })
 })
 
-/**
- * @api {post} api/v2/wallets/foreign Create wallet contract for user on Ethereum
- * @apiName CreateWalletForeign
- * @apiGroup Wallet
- * @apiDescription Creates wallet contract for the user on Ethereum
- *
- * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
- *
- * @apiSuccess {Object} Started job data
- */
-router.post('/foreign', auth.required, async (req, res, next) => {
-
-
-})
 module.exports = router
