@@ -105,7 +105,8 @@
   },
   "secrets": {
     "accounts": {
-      "seed": "COMMUNITY_SECRETS_ACCOUNTS_SEED"
+      "seed": "COMMUNITY_SECRETS_ACCOUNTS_SEED",
+      "funderSeed": "COMMUNITY_SECRETS_ACCOUNTS_FUNDER_SEED"
     },
     "fuse": {
       "bridge": {

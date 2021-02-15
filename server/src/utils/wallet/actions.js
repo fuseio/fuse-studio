@@ -49,12 +49,12 @@ const makeFromRelayJob = (job) => {
   }
 }
 
-const makeFromBonusJob = (job) => {
+const makeFromFundToken = (job) => {
   return [new WalletAction({
-    name: 'bonus',
+    name: 'tokenBonus',
     job: mongoose.Types.ObjectId(job._id),
     data: {
-      bonusType: get(job, 'data.bonusInfo.bonusType')
+      bonusType: get(job, 'data.bonusType')
     },
     communityAddress: job.communityAddress || job.data.communityAddress
   })]
@@ -73,7 +73,7 @@ const makeActions = {
   createWallet: makeFromCreateWalletJob,
   createForeignWallet: makeFromCreateWalletJob,
   relay: makeFromRelayJob,
-  bonus: makeFromBonusJob,
+  fundToken: makeFromFundToken,
   setWalletOwner: makeFromSetWalletOwnerJob
 }
 
@@ -94,10 +94,13 @@ const createActionFromJob = async (job) => {
   }
 }
 
+const makeJobSucceeded = () => ({ status: 'succeeded' })
+
 const makeSuccess = {
   createWallet: (job) => ({ walletAddress: job.data.walletAddress, status: 'succeeded' }),
-  createForeignWallet: () => ({ status: 'succeeded' }),
-  relay: () => ({ status: 'succeeded' })
+  createForeignWallet: makeJobSucceeded,
+  fundToken: makeJobSucceeded,
+  relay: makeJobSucceeded
 }
 
 const successAndUpdateByJob = async (job) => {

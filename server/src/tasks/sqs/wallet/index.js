@@ -61,10 +61,11 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   if (bonusInfo && communityAddress) {
     const taskManager = require('@services/taskManager')
     bonusInfo.bonusId = walletAddress
+    // TODO: What's that bonus for?
     const bonusJob = await taskManager.now('bonus', {
       name: 'bonus',
       params: { communityAddress, bonusInfo }
-    }, { isWalletJob: true })
+    })
 
     job.set('data.bonusJob', {
       name: bonusJob.name,

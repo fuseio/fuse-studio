@@ -8,6 +8,7 @@ const { getWalletModules } = require('@utils/wallet')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
+const Community = mongoose.model('Community')
 
 router.use('/notify', require('./notify'))
 router.use('/transactions', require('./transactions'))
@@ -231,7 +232,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
  */
 router.post('/backup', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier } = req.user
-  const { communityAddress, correlationId } = req.body
+  const { communityAddress, correlationId, isFunderDeprecated } = req.body
 
   const wallet = await UserWallet.findOne({ phoneNumber, accountAddress }, { contacts: 0 })
   if (!wallet) {
@@ -247,16 +248,21 @@ router.post('/backup', auth.required, async (req, res, next) => {
   await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { backup: true })
 
   if (communityAddress) {
-    const bonusInfo = {
-      phoneNumber,
-      identifier,
-      receiver: walletAddress,
-      bonusType: 'plugins.backupBonus.backupInfo',
-      bonusId: phoneNumber
+    if (isFunderDeprecated) {
+      const { homeTokenAddress } = await Community.find({ communityAddress })
+      const job = await taskManager.now('fundToken', { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup', originNetwork: 'fuse' }, { isWalletJob: true })
+      return res.json({ job: job })
+    } else {
+      const bonusInfo = {
+        phoneNumber,
+        identifier,
+        receiver: walletAddress,
+        bonusType: 'plugins.backupBonus.backupInfo',
+        bonusId: phoneNumber
+      }
+      const job = await taskManager.now('bonus', { communityAddress, bonusInfo, correlationId }, { isWalletJob: true })
+      return res.json({ job: job })
     }
-
-    const job = await taskManager.now('bonus', { communityAddress, bonusInfo, correlationId }, { isWalletJob: true })
-    return res.json({ job: job })
   }
 
   return res.json({ response: 'ok' })

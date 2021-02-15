@@ -90,6 +90,11 @@ const tasksData = {
     name: 'deployEconomy',
     bridgeType: 'home',
     role: '*'
+  },
+  fundToken: {
+    name: 'fundToken',
+    bridgeType: 'home',
+    role: 'funder'
   }
 }
 
