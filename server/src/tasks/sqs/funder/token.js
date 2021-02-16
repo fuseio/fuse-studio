@@ -44,7 +44,7 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
     from: account.address,
     to: receiverAddress,
     tokenName: name,
-    tokenDecimal: decimals,
+    tokenDecimal: parseInt(decimals),
     tokenSymbol: symbol,
     tokenAddress
   })
