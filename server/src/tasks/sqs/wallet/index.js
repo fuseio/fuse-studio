@@ -7,6 +7,7 @@ const homeAddresses = config.get('network.home.addresses')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
+const Community = mongoose.model('Community')
 const Invite = mongoose.model('Invite')
 const Fork = mongoose.model('Fork')
 const branch = require('@utils/branch')
@@ -40,7 +41,7 @@ const subscribeToBlocknative = async (walletAddress) => {
   }
 }
 
-const createWallet = async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName, walletModules }, job) => {
+const createWallet = async (account, { owner, communityAddress, phoneNumber, ens = '', name, amount, symbol, bonusInfo, _id, appName, walletModules, isFunderDeprecated }, job) => {
   console.log(`Using the account ${account.address} to create a wallet on home`)
   const salt = generateSalt()
   const { createContract, createMethod, send } = createNetwork('home', account)
@@ -61,16 +62,25 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   if (bonusInfo && communityAddress) {
     const taskManager = require('@services/taskManager')
     bonusInfo.bonusId = walletAddress
-    // TODO: What's that bonus for?
-    const bonusJob = await taskManager.now('bonus', {
-      name: 'bonus',
-      params: { communityAddress, bonusInfo }
-    })
+    if (isFunderDeprecated) {
+      const { homeTokenAddress } = await Community.find({ communityAddress })
+      const bonusJob = await taskManager.now('fundToken', { phoneNumber, accountAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, originNetwork: 'fuse', communityAddress, bonusType: 'invite' }, { isWalletJob: true })
+      job.set('data.bonusJob', {
+        name: bonusJob.name,
+        _id: bonusJob._id.toString()
+      })
+    } else {
+      const bonusJob = await taskManager.now('bonus', {
+        name: 'bonus',
+        params: { communityAddress, bonusInfo }
+      })
 
-    job.set('data.bonusJob', {
-      name: bonusJob.name,
-      _id: bonusJob._id.toString()
-    })
+      job.set('data.bonusJob', {
+        name: bonusJob.name,
+        _id: bonusJob._id.toString()
+      })
+    }
+
   }
   await job.save()
 
