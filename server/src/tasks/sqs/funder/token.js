@@ -10,7 +10,7 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
   const network = createNetwork('home', account)
   const community = await Community.findOne({ communityAddress })
   const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
-  const { decimals } = await fetchToken(tokenAddress)
+  const { decimals, symbol, name } = await fetchToken(tokenAddress)
   if (!bonusAmount) {
     throw Error(`No bonus of type ${bonusType} defined for community ${communityAddress}.`)
   }
@@ -35,8 +35,20 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
   if (fundingsCountForPhoneNumber >= tokenFundingMaxTimes) {
     throw Error(`Join bonus reached maximum times ${tokenFundingMaxTimes}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
-
-  const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount: adjustDecimals(bonusAmount, 0, decimals) }, { job, communityAddress })
+  const amount = adjustDecimals(bonusAmount, 0, decimals)
+  const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount }, { job, communityAddress })
+  job.set('data.transactionBody', {
+    ...get(job.data, 'transactionBody', {}),
+    blockNumber: get(receipt, 'blockNumber'),
+    value: amount,
+    from: account.address,
+    to: receiverAddress,
+    tokenName: name,
+    tokenDecimal: decimals,
+    tokenSymbol: symbol,
+    tokenAddress
+  })
+  job.save()
   if (receipt.status) {
     console.log(`succesfully funded ${receiverAddress} with ${bonusAmount} of token ${tokenAddress}`)
   } else {
