@@ -161,7 +161,7 @@ router.get('/exists/:walletAddress', auth.required, async (req, res, next) => {
 router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier, appName } = req.user
   const invitedPhoneNumber = req.params.phoneNumber
-  const { communityAddress, name, amount, symbol, correlationId } = req.body
+  const { communityAddress, name, amount, symbol, correlationId, isFunderDeprecated } = req.body
   const owner = config.get('network.home.addresses.MultiSigWallet')
   const query = { phoneNumber: invitedPhoneNumber }
   if (appName) {
@@ -213,7 +213,8 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     appName
   }).save()
 
-  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules }, { isWalletJob: true })
+  const walletModules = await getWalletModules(communityAddress)
+  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules, isFunderDeprecated }, { isWalletJob: true })
 
   return res.json({ job })
 })
