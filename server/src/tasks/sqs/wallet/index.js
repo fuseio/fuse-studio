@@ -64,7 +64,7 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     bonusInfo.bonusId = walletAddress
     if (isFunderDeprecated) {
       const { homeTokenAddress } = await Community.find({ communityAddress })
-      const bonusJob = await taskManager.now('fundToken', { phoneNumber, accountAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'invite' }, { isWalletJob: true })
+      const bonusJob = await taskManager.now('fundToken', { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'invite' }, { isWalletJob: true })
       job.set('data.bonusJob', {
         name: bonusJob.name,
         _id: bonusJob._id.toString()
