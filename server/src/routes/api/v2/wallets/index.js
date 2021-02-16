@@ -170,8 +170,8 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     query.appName = { '$exists': false }
   }
   let userWallet = await UserWallet.findOne(query)
+  const walletModules = await getWalletModules(communityAddress)
   if (!userWallet) {
-    const walletModules = await getWalletModules(communityAddress)
     const newUser = {
       phoneNumber: invitedPhoneNumber,
       accountAddress: owner,
@@ -213,7 +213,6 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     appName
   }).save()
 
-  const walletModules = await getWalletModules(communityAddress)
   const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules, isFunderDeprecated }, { isWalletJob: true })
 
   return res.json({ job })
