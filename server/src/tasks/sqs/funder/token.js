@@ -28,7 +28,6 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
     'data.phoneNumber': phoneNumber,
     'data.tokenAddress': tokenAddress,
     'data.communityAddress': communityAddress,
-    'data.originNetwork': 'fuse',
     'data.receiverAddress': receiverAddress,
     'data.bonusType': bonusType
   }).countDocuments()
