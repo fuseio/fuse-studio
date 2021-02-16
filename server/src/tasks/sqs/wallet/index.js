@@ -80,7 +80,6 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
         _id: bonusJob._id.toString()
       })
     }
-
   }
   await job.save()
 
