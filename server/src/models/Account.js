@@ -4,6 +4,7 @@ const { Schema } = mongoose
 const AccountSchema = new Schema({
   address: { type: String, required: [true, "can't be blank"] },
   childIndex: { type: Number, required: [true, "can't be blank"] },
+  hdPath: { type: String },
   nonces: { type: Object, default: { home: 0, foreign: 0 } },
   isLocked: { type: Boolean, default: false },
   lockingTime: { type: Date },

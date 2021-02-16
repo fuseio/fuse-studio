@@ -42,7 +42,7 @@ const isAllowedToRelay = async (web3, walletModule, walletModuleABI, methodName,
     : isAllowedToRelayHome(web3, walletModule, walletModuleABI, methodName, methodData)
 }
 
-const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
+const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays, isFunderDeprecated }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
@@ -83,19 +83,27 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
             originNetwork = token.originNetwork
           }
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
-          request.post(`${config.get('funder.urlBase')}fund/token`, {
-            json: true,
-            body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork, communityAddress }
-          }, (err, response, body) => {
-            if (err) {
-              console.error(`Error on token funding for wallet: ${wallet}`, err)
-            } else if (body.error) {
-              console.error(`Error on token funding for wallet: ${wallet}`, body.error)
-            } else if (lodash.has(body, 'job._id')) {
-              job.set('data.funderJobId', body.job._id)
-            }
+
+          if (isFunderDeprecated) {
+            const taskManager = require('@services/taskManager')
+            const funderJob = await taskManager.now('fundToken', { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType: 'join' }, { isWalletJob: true })
+            job.set('data.funderJobId', funderJob._id)
             job.save()
-          })
+          } else {
+            request.post(`${config.get('funder.urlBase')}fund/token`, {
+              json: true,
+              body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork, communityAddress }
+            }, (err, response, body) => {
+              if (err) {
+                console.error(`Error on token funding for wallet: ${wallet}`, err)
+              } else if (body.error) {
+                console.error(`Error on token funding for wallet: ${wallet}`, body.error)
+              } else if (lodash.has(body, 'job._id')) {
+                job.set('data.funderJobId', body.job._id)
+              }
+              job.save()
+            })
+          }
         } catch (e) {
           console.log(`Error on token funding for wallet: ${wallet}`, e)
         }

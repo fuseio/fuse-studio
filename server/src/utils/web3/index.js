@@ -4,7 +4,10 @@ const ethers = require('ethers')
 const config = require('config')
 const { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
 const { inspect } = require('util')
-const wallet = fromMasterSeed(config.get('secrets.accounts.seed'))
+const bip39 = require('bip39')
+const studioWallet = fromMasterSeed(config.get('secrets.accounts.seed'))
+const funderWallet = fromMasterSeed(bip39.mnemonicToSeedSync(config.get('secrets.accounts.funderSeed')))
+
 const { send } = require('./send')
 
 const createWeb3 = (providerUrl, account) => {
@@ -53,8 +56,17 @@ const createNetwork = (bridgeType, account) => {
   }
 }
 
+const getDerivedWallet = (account) => {
+  const wallet = account.role === 'funder' ? funderWallet : studioWallet
+  if (account.role === 'funder') {
+    return wallet.derivePath(account.hdPath).getWallet()
+  } else {
+    return wallet.deriveChild(account.childIndex).getWallet()
+  }
+}
+
 const getPrivateKey = (account) => {
-  const derivedWallet = wallet.deriveChild(account.childIndex).getWallet()
+  const derivedWallet = getDerivedWallet(account)
   const derivedAddress = derivedWallet.getChecksumAddressString()
   if (account.address !== derivedAddress) {
     throw new Error(`Account address does not match with the private key. account address: ${account.address}, derived: ${derivedAddress}`)
