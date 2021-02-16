@@ -56,6 +56,7 @@ const makeFromFundToken = (job) => {
     data: {
       bonusType: get(job, 'data.bonusType')
     },
+    walletAddress: job.data.receiverAddress,
     communityAddress: job.communityAddress || job.data.communityAddress
   })]
 }
