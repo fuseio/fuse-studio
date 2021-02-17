@@ -7,7 +7,8 @@ const makeFromCreateWalletJob = (job) => {
   return [new WalletAction({
     name: 'createWallet',
     job: mongoose.Types.ObjectId(job._id),
-    communityAddress: job.communityAddress || job.data.communityAddress
+    communityAddress: job.communityAddress || job.data.communityAddress,
+    walletAddress: job.data.walletAddress
   })]
 }
 

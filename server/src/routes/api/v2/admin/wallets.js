@@ -6,6 +6,7 @@ const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const { toChecksumAddress } = require('web3-utils')
+const { generateSalt } = require('@utils/web3')
 
 /**
  * @api {post} /api/v2/admin/wallets/create Create wallet for phone number
@@ -31,9 +32,11 @@ router.post('/create', auth.required, async (req, res) => {
   }
   try {
     const { phoneNumber, correlationId } = req.body
+    const salt = generateSalt()
     const userWallet = await new UserWallet({
       phoneNumber,
       accountAddress,
+      salt,
       walletOwnerOriginalAddress: accountAddress,
       walletFactoryOriginalAddress: homeAddresses.WalletFactory,
       walletFactoryCurrentAddress: homeAddresses.WalletFactory,
@@ -45,7 +48,7 @@ router.post('/create', auth.required, async (req, res) => {
       identifier,
       appName
     }).save()
-    const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, correlationId, _id: userWallet._id })
+    const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, correlationId, _id: userWallet._id, salt })
     return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })
