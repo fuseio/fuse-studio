@@ -224,7 +224,7 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
   const salt = generateSalt()
   const { createContract } = createNetwork('home')
   const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
-  const walletAddress = await walletFactory.methods.getAddressForCounterfactualWallet(accountAddress, walletModules, salt).call()
+  const walletAddress = await walletFactory.methods.getAddressForCounterfactualWallet(owner, walletModules, salt).call()
   const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules, isFunderDeprecated, salt, walletAddress }, { isWalletJob: true })
 
   return res.json({ job })
