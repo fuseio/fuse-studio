@@ -3,6 +3,9 @@ const homeAddresses = config.get('network.home.addresses')
 const router = require('express').Router()
 const taskManager = require('@services/taskManager')
 const { web3 } = require('@services/web3/home')
+const { generateSalt } = require('@utils/web3')
+const WalletFactoryABI = require('@constants/abi/WalletFactory')
+const { createNetwork } = require('@utils/web3')
 const auth = require('@routes/auth')
 const { getWalletModules } = require('@utils/wallet')
 const mongoose = require('mongoose')
@@ -40,7 +43,10 @@ router.post('/', auth.required, async (req, res, next) => {
       return res.status(400).json({ error: msg })
     } else {
       const walletModules = await getWalletModules(communityAddress)
-
+      const salt = generateSalt()
+      const { createContract } = createNetwork('home')
+      const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
+      const walletAddress = await walletFactory.methods.getAddressForCounterfactualWallet(accountAddress, walletModules, salt).call()
       userWallet = await new UserWallet({
         phoneNumber,
         accountAddress,
@@ -53,10 +59,12 @@ router.post('/', auth.required, async (req, res, next) => {
         walletModules: walletModules,
         networks: ['fuse'],
         identifier,
+        salt,
         appName,
+        walletAddress,
         ip: req.clientIp
       }).save()
-      const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, correlationId, _id: userWallet._id, walletModules }, { isWalletJob: true })
+      const job = await taskManager.now('createWallet', { owner: accountAddress, walletAddress, communityAddress, correlationId, _id: userWallet._id, walletModules, salt }, { isWalletJob: true })
       return res.json({ job: job })
     }
   }
@@ -213,7 +221,9 @@ router.post('/invite/:phoneNumber', auth.required, async (req, res, next) => {
     appName
   }).save()
 
-  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules, isFunderDeprecated }, { isWalletJob: true })
+  const salt = generateSalt()
+
+  const job = await taskManager.now('createWallet', { owner, communityAddress, phoneNumber: invitedPhoneNumber, name, amount, symbol, bonusInfo, correlationId, _id: userWallet._id, appName, walletModules, isFunderDeprecated, salt }, { isWalletJob: true })
 
   return res.json({ job })
 })
