@@ -89,8 +89,7 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
           if (isFunderDeprecated) {
             const taskManager = require('@services/taskManager')
             const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType: 'join' }
-            const { plugins } = await Community.find({ communityAddress })
-            const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+            const transactionBody = await deduceTransactionBodyForFundToken(jobData)
             const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
             job.set('data.funderJobId', funderJob._id)
             job.save()

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const WalletAction = mongoose.model('WalletAction')
+const Community = mongoose.model('Community')
 const { getParamsFromMethodData } = require('@utils/abi')
 const { get } = require('lodash')
 const { adjustDecimals, fetchToken } = require('@utils/token')
@@ -115,12 +116,14 @@ const successAndUpdateByJob = async (job) => {
   await WalletAction.updateMany({ job }, makeSuccessDocFunc(job))
 }
 
-const deduceTransactionBodyForFundToken = async (plugins, params) => {
+const deduceTransactionBodyForFundToken = async (params) => {
   const to = get(params, 'receiverAddress')
   const bonusType = get(params, 'bonusType')
   const tokenAddress = get(params, 'tokenAddress')
   const { decimals, symbol, name } = await fetchToken(tokenAddress)
-  const bonusAmount = get(plugins, `${bonusType}Bonus.${bonusType}Info.amount`)
+  const communityAddress = get(params, 'communityAddress')
+  const community = await Community.find({ communityAddress })
+  const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
   const amount = adjustDecimals(bonusAmount, 0, decimals)
   return {
     value: amount,

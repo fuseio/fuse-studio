@@ -262,9 +262,9 @@ router.post('/backup', auth.required, async (req, res, next) => {
 
   if (communityAddress) {
     if (isFunderDeprecated) {
-      const { homeTokenAddress, plugins } = await Community.find({ communityAddress })
+      const { homeTokenAddress } = await Community.find({ communityAddress })
       const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup' }
-      const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+      const transactionBody = await deduceTransactionBodyForFundToken(jobData)
       const job = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
       return res.json({ job: job })
     } else {
