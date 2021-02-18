@@ -4,12 +4,13 @@ const { get } = require('lodash')
 const { transfer } = require('@utils/token')
 const QueueJob = mongoose.model('QueueJob')
 const Community = mongoose.model('Community')
-const { adjustDecimals } = require('@utils/token')
+const { fetchToken, adjustDecimals } = require('@utils/token')
 
-const fundToken = async (account, { phoneNumber, receiverAddress, identifier, tokenAddress, communityAddress, bonusType, decimals }, job) => {
+const fundToken = async (account, { phoneNumber, receiverAddress, identifier, tokenAddress, communityAddress, bonusType }, job) => {
   const network = createNetwork('home', account)
   const community = await Community.findOne({ communityAddress })
   const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
+  const { decimals } = await fetchToken(tokenAddress)
   if (!bonusAmount) {
     throw Error(`No bonus of type ${bonusType} defined for community ${communityAddress}.`)
   }
