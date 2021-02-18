@@ -4,13 +4,12 @@ const { get } = require('lodash')
 const { transfer } = require('@utils/token')
 const QueueJob = mongoose.model('QueueJob')
 const Community = mongoose.model('Community')
-const { fetchToken, adjustDecimals } = require('@utils/token')
+const { adjustDecimals } = require('@utils/token')
 
-const fundToken = async (account, { phoneNumber, receiverAddress, identifier, tokenAddress, communityAddress, bonusType }, job) => {
+const fundToken = async (account, { phoneNumber, receiverAddress, identifier, tokenAddress, communityAddress, bonusType, decimals }, job) => {
   const network = createNetwork('home', account)
   const community = await Community.findOne({ communityAddress })
   const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
-  const { decimals, symbol, name } = await fetchToken(tokenAddress)
   if (!bonusAmount) {
     throw Error(`No bonus of type ${bonusType} defined for community ${communityAddress}.`)
   }
@@ -35,21 +34,8 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
   if (fundingsCountForPhoneNumber >= tokenFundingMaxTimes) {
     throw Error(`Join bonus reached maximum times ${tokenFundingMaxTimes}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
-  const amount = adjustDecimals(bonusAmount, 0, decimals)
-  job.set('data.transactionBody', {
-    ...get(job.data, 'transactionBody', {}),
-    value: amount,
-    from: account.address,
-    to: receiverAddress,
-    tokenName: name,
-    tokenDecimal: parseInt(decimals),
-    tokenSymbol: symbol,
-    tokenAddress
-  })
-  await job.save()
-  const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount }, { job, communityAddress })
-  job.set('data.transactionBody.blockNumber', get(receipt, 'blockNumber'))
-  job.save()
+
+  const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount: adjustDecimals(bonusAmount, 0, decimals) }, { job, communityAddress })
   if (receipt.status) {
     console.log(`succesfully funded ${receiverAddress} with ${bonusAmount} of token ${tokenAddress}`)
   } else {

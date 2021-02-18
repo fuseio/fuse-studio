@@ -5,7 +5,7 @@ const {
 } = require('@services/queue')
 const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
-const { createActionFromJob, successAndUpdateByJob } = require('@utils/wallet/actions')
+const { createActionFromJob, successAndUpdateByJob, deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
@@ -121,6 +121,9 @@ const now = async (name, params, options = {}) => {
     params
   }, options)
   const communityAddress = lodash.get(params, 'communityAddress')
+  if (options.isFundTokenJob) {
+    params = { ...params, ...deduceTransactionBodyForFundToken(communityAddress, params) }
+  }
   const job = await new QueueJob({
     name,
     data: params,
