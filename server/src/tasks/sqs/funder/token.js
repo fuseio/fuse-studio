@@ -36,10 +36,8 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
     throw Error(`Join bonus reached maximum times ${tokenFundingMaxTimes}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
   const amount = adjustDecimals(bonusAmount, 0, decimals)
-  const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount }, { job, communityAddress })
   job.set('data.transactionBody', {
     ...get(job.data, 'transactionBody', {}),
-    blockNumber: get(receipt, 'blockNumber'),
     value: amount,
     from: account.address,
     to: receiverAddress,
@@ -48,6 +46,9 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
     tokenSymbol: symbol,
     tokenAddress
   })
+  await job.save()
+  const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount }, { job, communityAddress })
+  job.set('data.transactionBody.blockNumber', get(receipt, 'blockNumber'))
   job.save()
   if (receipt.status) {
     console.log(`succesfully funded ${receiverAddress} with ${bonusAmount} of token ${tokenAddress}`)
