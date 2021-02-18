@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const WalletAction = mongoose.model('WalletAction')
 const { getParamsFromMethodData } = require('@utils/abi')
 const { get } = require('lodash')
+const { adjustDecimals, fetchToken } = require('@utils/token')
 
 const makeFromCreateWalletJob = (job) => {
   return [new WalletAction({
@@ -114,7 +115,25 @@ const successAndUpdateByJob = async (job) => {
   await WalletAction.updateMany({ job }, makeSuccessDocFunc(job))
 }
 
+const deduceTransactionBodyForFundToken = async (plugins, params) => {
+  const to = get(params, 'receiverAddress')
+  const bonusType = get(params, 'bonusType')
+  const tokenAddress = get(params, 'tokenAddress')
+  const { decimals, symbol, name } = await fetchToken(tokenAddress)
+  const bonusAmount = get(plugins, `${bonusType}Bonus.${bonusType}Info.amount`)
+  const amount = adjustDecimals(bonusAmount, 0, decimals)
+  return {
+    value: amount,
+    to,
+    tokenName: name,
+    tokenDecimal: parseInt(decimals),
+    tokenSymbol: symbol,
+    tokenAddress
+  }
+}
+
 module.exports = {
   createActionFromJob,
-  successAndUpdateByJob
+  successAndUpdateByJob,
+  deduceTransactionBodyForFundToken
 }

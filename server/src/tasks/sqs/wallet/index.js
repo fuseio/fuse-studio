@@ -14,6 +14,7 @@ const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
 const { watchAddress } = require('@services/blocknative')
 const manageTasks = require('./manage')
+const { deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
 
 const getQueryFilter = ({ _id, owner, phoneNumber }) => {
   if (_id) {
@@ -61,8 +62,10 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     const taskManager = require('@services/taskManager')
     bonusInfo.bonusId = walletAddress
     if (isFunderDeprecated) {
-      const { homeTokenAddress } = await Community.find({ communityAddress })
-      const bonusJob = await taskManager.now('fundToken', { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'invite' }, { isWalletJob: true })
+      const { homeTokenAddress, plugins } = await Community.find({ communityAddress })
+      const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'invite' }
+      const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+      const bonusJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
       job.set('data.bonusJob', {
         name: bonusJob.name,
         _id: bonusJob._id.toString()

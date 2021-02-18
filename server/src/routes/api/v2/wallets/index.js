@@ -12,6 +12,7 @@ const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
 const Community = mongoose.model('Community')
+const { deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
 
 router.use('/notify', require('./notify'))
 router.use('/transactions', require('./transactions'))
@@ -261,8 +262,10 @@ router.post('/backup', auth.required, async (req, res, next) => {
 
   if (communityAddress) {
     if (isFunderDeprecated) {
-      const { homeTokenAddress } = await Community.find({ communityAddress })
-      const job = await taskManager.now('fundToken', { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup' }, { isWalletJob: true })
+      const { homeTokenAddress, plugins } = await Community.find({ communityAddress })
+      const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup' }
+      const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+      const job = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
       return res.json({ job: job })
     } else {
       const bonusInfo = {

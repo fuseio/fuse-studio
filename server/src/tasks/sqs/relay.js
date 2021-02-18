@@ -8,6 +8,8 @@ const mongoose = require('mongoose')
 const { notifyReceiver } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
+const Community = mongoose.model('Community')
+const { deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
 
 const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
   const allowedModules = ['TransferManager', 'DAIPointsManager']
@@ -86,7 +88,10 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
 
           if (isFunderDeprecated) {
             const taskManager = require('@services/taskManager')
-            const funderJob = await taskManager.now('fundToken', { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType: 'join' }, { isWalletJob: true })
+            const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType: 'join' }
+            const { plugins } = await Community.find({ communityAddress })
+            const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+            const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
             job.set('data.funderJobId', funderJob._id)
             job.save()
           } else {
