@@ -195,6 +195,10 @@
       "verifyStableCoin": { 
         "__name": "COMMUNITY_PLUGINS_FUSE_DOLLAR_VERIFY_IS_STABLE_COIN",
         "__format": "boolean"
+      },
+      "useOnly": {
+        "__name": "COMMUNITY_PLUGINS_FUSE_DOLLAR_USE_ONLY",
+        "__format": "boolean"
       }
     }
   },

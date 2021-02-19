@@ -261,7 +261,8 @@ module.exports = {
       }
     },
     fuseDollar: {
-      verifyStableCoin: false
+      verifyStableCoin: false,
+      useOnly: true
     }
   },
   inviteTxt: 'Hi, a friend has invited you to Fuse',

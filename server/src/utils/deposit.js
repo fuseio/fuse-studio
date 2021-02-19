@@ -33,7 +33,7 @@ const makeDeposit = async ({
   }
   const { plugins } = community
   const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
-  const isFuseDollar = lodash.get(plugins, 'fuseDollar.isActive')
+  const isFuseDollar = config.get('plugins.fuseDollar.useOnly') || lodash.get(plugins, 'fuseDollar.isActive')
 
   const deposit = await new Deposit({
     ...rest,
