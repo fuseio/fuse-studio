@@ -32,7 +32,6 @@ const makeDeposit = async ({
     return
   }
   const { plugins } = community
-  const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
   const isFuseDollar = config.get('plugins.fuseDollar.useOnly') || lodash.get(plugins, 'fuseDollar.isActive')
 
   const deposit = await new Deposit({
@@ -45,12 +44,43 @@ const makeDeposit = async ({
     tokenAddress,
     amount,
     status: 'pending',
-    type: isFuseDollar ? 'fuse-dollar' : 'simple'
+    type: isFuseDollar ? 'fuse-dollar' : 'simple',
+    tokenDecimals,
+    purchase
   }).save()
 
+  await startDeposit(deposit)
+  return deposit
+}
+
+const retryDeposit = async ({
+  depositId
+}) => {
+  const deposit = await Deposit.findById(depositId)
+  if (deposit.status !== 'failed') {
+    const msg = `deposit ${depositId} is not failed at. current status is ${deposit.status}`
+    console.error(msg)
+    throw new Error(msg)
+  }
+  return startDeposit(deposit)
+}
+
+const startDeposit = async (deposit) => {
+  const {
+    externalId,
+    walletAddress,
+    customerAddress,
+    tokenAddress,
+    amount,
+    type,
+    tokenDecimals,
+    purchase
+  } = deposit
+  const isFuseDollar = type === 'fuse-dollar'
   if (!isFuseDollar) {
     console.log(`[makeDeposit] transferring to home with relayTokens`)
-    taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
+    const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
+    return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
   } else {
     if (config.get('plugins.fuseDollar.verifyStableCoin') && !isStableCoin(tokenAddress)) {
       throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
@@ -73,9 +103,8 @@ const makeDeposit = async ({
         tokenAddress: fuseDollarAddress.toLowerCase()
       }
     }
-    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData }, { generateDeduplicationId: true })
+    return taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData })
   }
-  return deposit
 }
 
 const requestDeposit = async ({
@@ -119,6 +148,7 @@ const getRampAuthKey = () =>
 
 module.exports = {
   makeDeposit,
+  retryDeposit,
   requestDeposit,
   getRampAuthKey
 }
