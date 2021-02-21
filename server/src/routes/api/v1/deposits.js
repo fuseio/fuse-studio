@@ -200,7 +200,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
       purchase
     })
     console.log(`[deposit-ramp] after makeDeposit`)
-    return res.json({ response: 'job started' })
+    return res.json({ response: 'ok' })
   } else {
     console.log(`[deposit-ramp] reached else type - ${type}`)
     return res.json({})
@@ -209,7 +209,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
 
 router.post('/retry/:depositId', auth.admin, async (req, res) => {
   const { depositId } = req.params
-  const job = retryDeposit({ depositId })
+  const job = await retryDeposit({ depositId })
   return res.json({ data: job })
 })
 
@@ -220,6 +220,12 @@ router.get('/failed', auth.admin, async (req, res) => {
 
 if (!isProduction()) {
   router.post('/init', auth.admin, async (req, res) => {
+    await requestDeposit({
+      ...req.body,
+      amount: web3Utils.toWei(String(req.body.amount)),
+      provider: 'ramp'
+    })
+
     const deposit = await makeDeposit({
       ...req.body,
       amount: web3Utils.toWei(String(req.body.amount)),
