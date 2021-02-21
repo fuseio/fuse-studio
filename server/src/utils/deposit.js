@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const Community = mongoose.model('Community')
 const QueueJob = mongoose.model('QueueJob')
+const WalletAction = mongoose.model('WalletAction')
 const { readFileSync } = require('fs')
 const { createNetwork } = require('@utils/web3')
 
@@ -80,7 +81,7 @@ const startDeposit = async (deposit) => {
   if (!isFuseDollar) {
     console.log(`[makeDeposit] transferring to home with relayTokens`)
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
-    return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { generateDeduplicationId: true })
+    return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
   } else {
     if (config.get('plugins.fuseDollar.verifyStableCoin') && !isStableCoin(tokenAddress)) {
       throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
@@ -89,6 +90,8 @@ const startDeposit = async (deposit) => {
 
     const { web3 } = createNetwork('home')
     const blockNumber = await web3.eth.getBlockNumber()
+
+    // updating the fake-deposit job for soon to be deprecated wallet
     await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.transactionBody.blockNumber': blockNumber, 'data.purchase': purchase } })
 
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
@@ -97,13 +100,14 @@ const startDeposit = async (deposit) => {
     // this data is used as a context for a wallet about the job
     const additionalData = {
       walletAddress: customerAddress,
+      externalId,
       actionType: 'fiat-deposit',
       transactionBody: {
         status: 'pending',
         tokenAddress: fuseDollarAddress.toLowerCase()
       }
     }
-    return taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData })
+    return taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData }, { isWalletJob: true })
   }
 }
 
@@ -117,28 +121,42 @@ const requestDeposit = async ({
   purchase
 }) => {
   const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  const data = {
+    externalId,
+    provider,
+    walletAddress: customerAddress,
+    transactionBody: {
+      value: amount,
+      status: 'pending',
+      tokenAddress: fuseDollarAddress.toLowerCase(),
+      tokenDecimal: 18,
+      tokenSymbol: 'fUSD',
+      asset: 'fUSD',
+      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
+      tokenName: 'Fuse Dollar',
+      from: walletAddress,
+      to: customerAddress
+    },
+    purchase
+  }
+  await new WalletAction({
+    name: 'fiat-onramp',
+    communityAddress,
+    walletAddress: customerAddress,
+    data: {
+      ...data,
+      detailedStatus: 'payment-processing'
+    },
+    status: 'pending'
+  }).save()
+  // soon to be deprecated
   return new QueueJob({
     name: 'fiat-processing',
     messageId: externalId,
     communityAddress,
     data: {
-      externalId,
-      provider,
-      walletAddress: customerAddress,
-      actionType: 'fiat-processing',
-      transactionBody: {
-        value: amount,
-        status: 'pending',
-        tokenAddress: fuseDollarAddress.toLowerCase(),
-        tokenDecimal: 18,
-        tokenSymbol: 'FUSD',
-        asset: 'FUSD',
-        timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-        tokenName: 'Fuse Dollar',
-        from: walletAddress,
-        to: customerAddress
-      },
-      purchase
+      ...data,
+      actionType: 'fiat-processing'
     }
   }).save()
 }
