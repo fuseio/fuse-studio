@@ -8,12 +8,14 @@ const DepositSchema = new Schema({
   walletAddress: { type: String, required: [true, "can't be blank"] },
   customerAddress: { type: String, required: [true, "can't be blank"] },
   tokenAddress: { type: String, required: [true, "can't be blank"] },
+  tokenDecimals: { type: Number, required: [true, "can't be blank"] },
   amount: { type: String, required: [true, "can't be blank"] },
   provider: { type: String, required: [true, "can't be blank"] },
   externalId: { type: String, required: [true, "can't be blank"] },
   status: { type: String, required: [true, "can't be blank"] },
   type: { type: String, enum: ['simple', 'fuse-dollar'], required: [true, "can't be blank"] },
-  jobs: { type: Object, default: {} }
+  jobs: { type: Object, default: {} },
+  purchase: { type: Object }
 }, { timestamps: true })
 
 DepositSchema.index({ externalId: 1 }, { unique: true })

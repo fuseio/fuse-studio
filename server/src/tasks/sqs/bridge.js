@@ -10,26 +10,33 @@ const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/Mint
 const relayTokens = async (account, { depositId, accountAddress, bridgeType, bridgeAddress, tokenAddress, receiver, amount }, job) => {
   const deposit = await Deposit.findById(depositId)
   await deposit.set('jobs.relayTokens', job._id).save()
-
-  const network = createNetwork(bridgeType, account)
-  const allowance = await utils.getAllowance(network, { tokenAddress, owner: accountAddress, spender: bridgeAddress })
-  const hasAllowance = new BigNumber(allowance).isGreaterThanOrEqualTo(amount.toString())
-  if (!hasAllowance) {
-    const approveReceipt = await utils.approve(network, { from: accountAddress, tokenAddress, spender: bridgeAddress, infinite: true })
-    await job.set('data.txHashes.approve', approveReceipt.txHash).save()
-    if (!approveReceipt.status) {
-      console.error(`Approving failed with receipt: ${JSON.stringify(approveReceipt)} `)
+  try {
+    const network = createNetwork(bridgeType, account)
+    const allowance = await utils.getAllowance(network, { tokenAddress, owner: accountAddress, spender: bridgeAddress })
+    const hasAllowance = new BigNumber(allowance).isGreaterThanOrEqualTo(amount.toString())
+    if (!hasAllowance) {
+      const approveReceipt = await utils.approve(network, { from: accountAddress, tokenAddress, spender: bridgeAddress, infinite: true })
+      await job.set('data.txHashes.approve', approveReceipt.txHash).save()
+      if (!approveReceipt.status) {
+        console.error(`Approving failed with receipt: ${JSON.stringify(approveReceipt)} `)
+        throw new Error(`Failed to approve in txHash: ${approveReceipt.txHash}`)
+      }
     }
+    const relayTokensReceipt = await bridgeUtils.relayTokens(network, { from: accountAddress, bridgeAddress, tokenAddress, receiver, amount })
+    await job.set('data.txHashes.relayTokens', relayTokensReceipt.txHash).save()
+    if (!relayTokensReceipt.status) {
+      throw new Error(`Relaying failed with receipt: ${JSON.stringify(relayTokensReceipt)} `)
+    }
+    if (relayTokensReceipt.status) {
+      await deposit.set('status', 'succeeded').save()
+    } else {
+      throw new Error(`tx failed to mint ${relayTokensReceipt.txHash}`)
+    }
+    return relayTokensReceipt
+  } catch (error) {
+    await deposit.set('status', 'failed').save()
+    throw error
   }
-  const relayTokensReceipt = await bridgeUtils.relayTokens(network, { from: accountAddress, bridgeAddress, tokenAddress, receiver, amount })
-  await job.set('data.txHashes.relayTokens', relayTokensReceipt.txHash).save()
-  if (!relayTokensReceipt.status) {
-    throw new Error(`Relaying failed with receipt: ${JSON.stringify(relayTokensReceipt)} `)
-  }
-  if (deposit.type === 'simple') {
-    await deposit.set('status', 'succeeded').save()
-  }
-  return relayTokensReceipt
 }
 
 const mintOnRelay = async (account, { actionOnRelayId, initiatorId, bridgeType, tokenAddress, amount, mintTo }, job) => {
@@ -90,7 +97,6 @@ const mintDeposited = async (account, { depositId, bridgeType, tokenAddress, rec
     if (receipt.status) {
       await deposit.set('status', 'succeeded').save()
     } else {
-      await deposit.set('status', 'failed').save()
       throw new Error(`tx failed to mint ${receipt.txHash}`)
     }
   } catch (e) {

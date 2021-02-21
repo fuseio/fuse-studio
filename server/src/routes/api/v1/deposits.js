@@ -1,5 +1,7 @@
 const router = require('express').Router()
-const { makeDeposit, requestDeposit, getRampAuthKey } = require('@utils/deposit')
+const mongoose = require('mongoose')
+const Deposit = mongoose.model('Deposit')
+const { makeDeposit, requestDeposit, retryDeposit, getRampAuthKey } = require('@utils/deposit')
 const config = require('config')
 const web3Utils = require('web3-utils')
 const crypto = require('crypto')
@@ -203,6 +205,17 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
     console.log(`[deposit-ramp] reached else type - ${type}`)
     return res.json({})
   }
+})
+
+router.post('/retry/:depositId', auth.admin, async (req, res) => {
+  const { depositId } = req.params
+  const job = retryDeposit({ depositId })
+  return res.json({ data: job })
+})
+
+router.get('/failed', auth.admin, async (req, res) => {
+  const deposits = await Deposit.find({ status: 'failed' })
+  return res.json({ data: deposits })
 })
 
 if (!isProduction()) {
