@@ -9,6 +9,7 @@ const stableStringify = require('fast-json-stable-stringify')
 const auth = require('@routes/auth')
 const yn = require('yn')
 const { isProduction } = require('@utils/env')
+const { createActionFromJob } = require('@utils/wallet/actions')
 
 const moonpayAuthCheck = (req, res, next) => {
   console.log(`[deposit-moonpayAuthCheck]`)
@@ -171,7 +172,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   if (type === 'CREATED') {
     const { cryptoAmount, receiverAddress, id } = purchase
     // deposit is issued, on-ramp is waiting for fiat processing
-    await requestDeposit({
+    const job = await requestDeposit({
       customerAddress,
       communityAddress,
       amount: cryptoAmount,
@@ -180,6 +181,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
       purchase,
       provider: 'ramp'
     })
+    await createActionFromJob(job)
     return res.json({ response: 'ok' })
   } else if (type === 'RELEASED') {
     // transaction is sent on the Ethereum network

@@ -63,6 +63,24 @@ const makeFromFundToken = (job) => {
   })]
 }
 
+const makeFromRequestDeposit = (job) => {
+  return [new WalletAction({
+    name: 'fiatProcessing',
+    job: mongoose.Types.ObjectId(job._id),
+    walletAddress: job.data.receiverAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  })]
+}
+
+const makeFromMintDeposited = (job) => {
+  return [new WalletAction({
+    name: 'fiatDeposit',
+    job: mongoose.Types.ObjectId(job._id),
+    walletAddress: job.data.receiverAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  })]
+}
+
 const makeFromSetWalletOwnerJob = (job) => {
   return [new WalletAction({
     name: 'createWallet',
@@ -77,7 +95,9 @@ const makeActions = {
   createForeignWallet: makeFromCreateWalletJob,
   relay: makeFromRelayJob,
   fundToken: makeFromFundToken,
-  setWalletOwner: makeFromSetWalletOwnerJob
+  setWalletOwner: makeFromSetWalletOwnerJob,
+  'fiat-processing': makeFromRequestDeposit,
+  mintDeposited: makeFromMintDeposited
 }
 
 const createActionFromJob = async (job) => {

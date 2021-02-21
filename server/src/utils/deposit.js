@@ -73,7 +73,7 @@ const makeDeposit = async ({
         tokenAddress: fuseDollarAddress.toLowerCase()
       }
     }
-    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData }, { generateDeduplicationId: true })
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData }, { generateDeduplicationId: true, isWalletJob: true })
   }
   return deposit
 }
