@@ -9,6 +9,7 @@ const QueueJob = mongoose.model('QueueJob')
 const WalletAction = mongoose.model('WalletAction')
 const { readFileSync } = require('fs')
 const { createNetwork } = require('@utils/web3')
+const { formatActionData } = require('@utils/wallet/actions')
 
 const makeDeposit = async ({
   walletAddress,
@@ -143,10 +144,10 @@ const requestDeposit = async ({
     name: 'fiat-onramp',
     communityAddress,
     walletAddress: customerAddress,
-    data: {
+    data: formatActionData({
       ...data,
       detailedStatus: 'payment-processing'
-    },
+    }),
     status: 'pending'
   }).save()
   // soon to be deprecated

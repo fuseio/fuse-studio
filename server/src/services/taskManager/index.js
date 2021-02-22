@@ -5,7 +5,7 @@ const {
 } = require('@services/queue')
 const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
-const { createActionFromJob, successAndUpdateByJob } = require('@utils/wallet/actions')
+const { createActionFromJob, successAndUpdateByJob, failAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
@@ -74,7 +74,9 @@ const startTask = async message => {
         unlockAccount(account._id)
       })
       .catch(async err => {
-        await queueJob.failAndUpdate(err)
+        await queueJob.fail(err)
+        await queueJob.save()
+        await failAndUpdateByJob(queueJob)
         unlockAccount(account._id)
         console.error(
           `Error received in task ${name} with task data ${JSON.stringify(
@@ -97,7 +99,9 @@ const startTask = async message => {
 
     // marking queueJob as failed
     if (queueJob) {
-      await queueJob.failAndUpdate(err)
+      await queueJob.fail(err)
+      await queueJob.save()
+      await failAndUpdateByJob(queueJob)
     }
     if (account && account._id) {
       unlockAccount(account._id)
