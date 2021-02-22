@@ -8,7 +8,9 @@ const WalletActionSchema = new Schema({
   walletAddress: { type: String },
   job: { type: Schema.Types.ObjectId, ref: 'QueueJob' },
   data: { type: Object },
-  status: { type: String, default: 'pending' }
+  status: { type: String, default: 'pending' },
+  failedAt: { type: Date },
+  failReason: { type: String }
 }, { timestamps: true })
 
 WalletActionSchema.index({ communityAddress: 1 })

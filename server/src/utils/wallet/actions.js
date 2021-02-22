@@ -8,6 +8,7 @@ const handleCreateWalletJob = async (job) => {
   return new WalletAction({
     name: 'createWallet',
     job: mongoose.Types.ObjectId(job._id),
+    data: job.data,
     communityAddress: job.communityAddress || job.data.communityAddress,
     walletAddress: job.data.walletAddress
   }).save()
@@ -19,6 +20,7 @@ const handleRelayJob = async (job) => {
     return new WalletAction({
       name: 'joinCommunity',
       job: mongoose.Types.ObjectId(job._id),
+      data: job.data,
       walletAddress: job.data.walletAddress,
       communityAddress: job.communityAddress || job.data.communityAddress
     }).save()
@@ -31,8 +33,9 @@ const handleRelayJob = async (job) => {
       name: 'receiveTokens',
       job: mongoose.Types.ObjectId(job._id),
       data: {
-        _amount,
-        _token
+        ...job.data,
+        amount: _amount,
+        tokenAddress: _token
       },
       walletAddress: _to,
       communityAddress: job.communityAddress || job.data.communityAddress
@@ -41,8 +44,8 @@ const handleRelayJob = async (job) => {
       name: 'sendTokens',
       job: mongoose.Types.ObjectId(job._id),
       data: {
-        _amount,
-        _token
+        amount: _amount,
+        tokenAddress: _token
       },
       walletAddress: _wallet,
       communityAddress: job.communityAddress || job.data.communityAddress
@@ -56,6 +59,7 @@ const handleFundToken = (job) => {
     name: 'tokenBonus',
     job: mongoose.Types.ObjectId(job._id),
     data: {
+      ...job.data,
       bonusType: get(job, 'data.bonusType')
     },
     walletAddress: job.data.receiverAddress,
@@ -67,6 +71,7 @@ const handleSetWalletOwnerJob = (job) => {
   return new WalletAction({
     name: 'createWallet',
     job: mongoose.Types.ObjectId(job._id),
+    data: job.data,
     walletAddress: job.data.walletAddress,
     communityAddress: job.communityAddress || job.data.communityAddress
   }).save()
@@ -74,8 +79,9 @@ const handleSetWalletOwnerJob = (job) => {
 
 const makeMintDeposited = async (job) => {
   const action = await WalletAction.findOne({ 'data.externalId': job.data.externalId })
-  action.set('data.detailedStatus', 'minting')
   action.set('job', mongoose.Types.ObjectId(job._id))
+  action.set('data', { ...action.data, ...job.data })
+  action.set('data.detailedStatus', 'minting')
   return action.save()
 }
 
@@ -102,23 +108,45 @@ const createActionFromJob = async (job) => {
   }
 }
 
-const makeJobSucceeded = () => ({ status: 'succeeded' })
+const handleSuccessCreateWalletJob = (action, job) => {
+  action.set('status', 'succeeded')
+  if (!action.walletAddress) {
+    action.set('walletAddress', job.data.walletAddress)
+  }
+  action.set('data', { ...action.data, ...job.data })
+  return action.save()
+}
 
-const makeSuccess = {
-  createWallet: (job) => ({ walletAddress: job.data.walletAddress, status: 'succeeded' }),
-  createForeignWallet: makeJobSucceeded,
-  fundToken: makeJobSucceeded,
-  relay: makeJobSucceeded,
-  mintDeposited: () => ({ status: 'succeeded', 'data.detailedStatus': 'succeeded' })
+const handleSuccessDefaultJob = (action, job) => {
+  action.set('status', 'succeeded')
+  action.set('data', { ...action.data, ...job.data })
+  return action.save()
+}
+
+const handleSuccessMintDeposited = (action, job) => {
+  action.set('status', 'succeeded')
+  action.set('data', { ...action.data, ...job.data })
+  action.set('data.detailedStatus', 'succeeded')
+  return action.save()
+}
+const jobSuccessHandlers = {
+  createWallet: handleSuccessCreateWalletJob,
+  createForeignWallet: handleSuccessDefaultJob,
+  fundToken: handleSuccessDefaultJob,
+  relay: handleSuccessDefaultJob,
+  mintDeposited: handleSuccessMintDeposited
 }
 
 const successAndUpdateByJob = async (job) => {
-  const makeSuccessDocFunc = makeSuccess[job.name]
-  if (!makeSuccessDocFunc) {
+  const jobHandler = jobSuccessHandlers[job.name]
+  if (!jobHandler) {
     console.warn(`No action is defined for ${job.name}`)
     return
   }
-  await WalletAction.updateMany({ job }, makeSuccessDocFunc(job))
+  const walletActions = await WalletAction.find({ job })
+  for (const action of walletActions) {
+    await jobHandler(action, job)
+  }
 }
 
 const deduceTransactionBodyForFundToken = async (plugins, params) => {

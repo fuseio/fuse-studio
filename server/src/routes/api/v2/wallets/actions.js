@@ -10,8 +10,7 @@ router.get('/:walletAddress', auth.required, async (req, res) => {
     {
       walletAddress,
       ...(updatedAt && { updatedAt: { $gte: updatedAt } })
-    },
-    { populate: 'job' }
+    }
   )
   res.send({ data: result })
 })
