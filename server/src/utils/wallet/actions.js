@@ -195,5 +195,6 @@ module.exports = {
   createActionFromJob,
   successAndUpdateByJob,
   failAndUpdateByJob,
-  deduceTransactionBodyForFundToken
+  deduceTransactionBodyForFundToken,
+  formatActionData
 }
