@@ -49,9 +49,15 @@ module.exports = {
       url: 'https://api.3box.io/graph'
     }
   },
-  blocknative: {
-    url: 'https://api.blocknative.com',
-    apiKey: ''
+  subscriptionServices: {
+    blocknative: {
+      url: 'https://api.blocknative.com',
+      apiKey: ''
+    },
+    fuse: {
+      // TODO - setup domain
+      url: 'http://ec2-3-138-193-103.us-east-2.compute.amazonaws.com:3000'
+    }
   },
   network: {
     misc: {

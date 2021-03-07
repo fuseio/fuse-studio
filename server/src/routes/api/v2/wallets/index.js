@@ -14,6 +14,7 @@ const Invite = mongoose.model('Invite')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
 
+router.use('/webhook', require('./webhook'))
 router.use('/notify', require('./notify'))
 router.use('/transactions', require('./transactions'))
 router.use('/transfers', require('./transfers'))

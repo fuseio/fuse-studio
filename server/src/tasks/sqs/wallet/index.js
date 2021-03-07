@@ -12,7 +12,7 @@ const Invite = mongoose.model('Invite')
 const Fork = mongoose.model('Fork')
 const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
-const { watchAddress } = require('@services/blocknative')
+const { watchAddress, subscribeAddress } = require('@services/blocknative')
 const manageTasks = require('./manage')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
 
@@ -33,6 +33,20 @@ const subscribeToBlocknative = async (walletAddress) => {
     const response = await watchAddress(walletAddress)
     if (response.msg !== 'success') {
       console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
+      throw new Error(response.msg ? response.msg : response)
+    }
+  } catch (e) {
+    console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
+    console.error(e)
+  }
+}
+
+const subscribeToSubscriptionService = async (walletAddress) => {
+  try {
+    console.log(`Adding the address ${walletAddress} to the subscription service list of fuse`)
+    const response = await subscribeAddress(walletAddress)
+    if (response.message !== 'Successfully subscribed to event') {
+      console.error(`Failed to subscribe the address ${walletAddress} to the subscription service list of fuse`)
       throw new Error(response.msg ? response.msg : response)
     }
   } catch (e) {
@@ -117,6 +131,7 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     })
   }
 
+  await subscribeToSubscriptionService(walletAddress)
   return receipt
 }
 
