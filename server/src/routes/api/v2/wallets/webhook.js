@@ -5,6 +5,18 @@ const { fetchTokenData } = require('@utils/token')
 const home = require('@services/web3/home')
 const BigNumber = require('bignumber.js')
 const { handleSubscriptionWebHook } = require('@utils/wallet/actions')
+const { subscribeToSubscriptionService } = require('@services/subscriptionServices')
+const auth = require('@routes/auth')
+
+router.post('/subscribe', auth.admin, async (req, res) => {
+  const { walletAddress } = req.body
+  try {
+    await subscribeToSubscriptionService(walletAddress)
+    return res.send({ data: `Subscribed ${walletAddress} successfully` })
+  } catch (error) {
+    return res.status(400).send({ error })
+  }
+})
 
 router.post('/', async (req, res) => {
   const { args, address: tokenAddress, transactionHash } = req.body
