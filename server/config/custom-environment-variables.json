@@ -45,8 +45,10 @@
   "ipfsProxy": {
     "urlBase": "COMMUNITY_IPFS_PROXY_URL_BASE"
   },
-  "blocknative": {
-    "apiKey": "COMMUNITY_BLOCKNATIVE_API_KEY"
+  "subscriptionServices": {
+    "blocknative": {
+      "apiKey": "COMMUNITY_BLOCKNATIVE_API_KEY"
+    }
   },
   "network": {
     "misc": {

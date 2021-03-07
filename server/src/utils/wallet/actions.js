@@ -191,10 +191,20 @@ const deduceTransactionBodyForFundToken = async (plugins, params) => {
   }
 }
 
+const handleSubscriptionWebHook = async (data) => {
+  return new WalletAction({
+    name: 'receiveTokens',
+    data,
+    status: 'succeeded',
+    walletAddress: data.to
+  }).save()
+}
+
 module.exports = {
   createActionFromJob,
   successAndUpdateByJob,
   failAndUpdateByJob,
   deduceTransactionBodyForFundToken,
-  formatActionData
+  formatActionData,
+  handleSubscriptionWebHook
 }
