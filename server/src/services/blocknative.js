@@ -15,13 +15,13 @@ const watchAddress = (address) => {
   })
 }
 
-const subscribeAddress = (address, eventName = 'erc20-transfers-to', webhookUrl = 'http://agnin.fuse.io/api/v2/wallets/webhook') => {
+const subscribeAddress = (address, eventName = 'erc20-transfers-to') => {
   const url = config.get('subscriptionServices.fuse.url')
   return request.post(`${url}/subscribe/wallet/${eventName}`, {
     json: true,
     body: {
       address,
-      webhookUrl
+      webhookUrl: config.get('subscriptionServices.fuse.webhookUrl')
     }
   })
 }

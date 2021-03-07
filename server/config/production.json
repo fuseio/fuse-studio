@@ -10,6 +10,11 @@
       }
     }
   },
+  "subscriptionServices": {
+    "fuse": {
+      "webhookUrl": "https://studio.fuse.io/api/v2/wallets/webhook"
+    }
+  },
   "network": {
     "home": {
       "sharedAddresses": {

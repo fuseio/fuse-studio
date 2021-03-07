@@ -56,7 +56,8 @@ module.exports = {
     },
     fuse: {
       // TODO - setup domain
-      url: 'http://ec2-3-138-193-103.us-east-2.compute.amazonaws.com:3000'
+      url: 'http://ec2-3-138-193-103.us-east-2.compute.amazonaws.com:3000',
+      webhookUrl: 'http://localhost:3000/api/v2/wallets/webhook'
     }
   },
   network: {
