@@ -55,6 +55,7 @@ const subscribeToSubscriptionService = async (walletAddress) => {
 }
 
 module.exports = {
+  subscribeAddress,
   subscribeToBlocknative,
   subscribeToSubscriptionService
 }
