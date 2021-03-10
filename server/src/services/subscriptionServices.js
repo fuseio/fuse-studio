@@ -17,7 +17,7 @@ const watchAddress = (address) => {
 
 const subscribeAddress = (address, eventName = 'erc20-transfers-to') => {
   const url = config.get('subscriptionServices.fuse.url')
-  return request.post(`${url}/subscribe/wallet/${eventName}`, {
+  return request.post(`${url}/subscribe/${eventName}`, {
     json: true,
     body: {
       address,
