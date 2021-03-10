@@ -49,7 +49,7 @@ const subscribeToSubscriptionService = async (walletAddress) => {
       throw new Error(response.msg ? response.msg : response)
     }
   } catch (e) {
-    console.error(`Failed to the add the address ${walletAddress} to the watch list of blocknative`)
+    console.error(`Failed to the add the address ${walletAddress} to the subscription service list of fuse`)
     console.error(e)
   }
 }
