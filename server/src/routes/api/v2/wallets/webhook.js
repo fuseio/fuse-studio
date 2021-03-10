@@ -27,18 +27,16 @@ router.post('/', async (req, res) => {
     const data = {
       txHash: transactionHash,
       walletAddress: to,
-      transactionBody: {
-        to,
-        from,
-        tokenName,
-        tokenSymbol,
-        tokenDecimal,
-        asset: tokenSymbol,
-        status: 'confirmed',
-        value: new BigNumber(hex),
-        tokenAddress: tokenAddress.toLowerCase(),
-        timeStamp: (Math.round(new Date().getTime() / 1000)).toString()
-      }
+      to,
+      from,
+      tokenName,
+      tokenSymbol,
+      tokenDecimal,
+      asset: tokenSymbol,
+      status: 'confirmed',
+      value: new BigNumber(hex),
+      tokenAddress: tokenAddress.toLowerCase(),
+      timeStamp: (Math.round(new Date().getTime() / 1000)).toString()
     }
     await handleSubscriptionWebHook(data)
   }
