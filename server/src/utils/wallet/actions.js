@@ -196,7 +196,7 @@ const handleSubscriptionWebHook = async (data) => {
     name: 'receiveTokens',
     data,
     status: 'succeeded',
-    walletAddress: data.to
+    walletAddress: data.walletAddress
   }).save()
 }
 
