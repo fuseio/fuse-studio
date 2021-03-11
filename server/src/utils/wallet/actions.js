@@ -169,9 +169,11 @@ const successAndUpdateByJob = async (job) => {
 }
 
 const pendingAndUpdateByJob = async (job, hash) => {
+  console.log('IN pendingAndUpdateByJob')
   const walletActions = await WalletAction.find({ job })
   console.log(`found ${walletActions.length} - hash ${hash}`)
   for (const action of walletActions) {
+    console.log('action pendingAndUpdateByJob')
     await handlePendingAction(action, hash)
   }
 }

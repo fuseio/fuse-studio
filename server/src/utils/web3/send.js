@@ -41,6 +41,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
         if (communityAddress) {
           job.set('communityAddress', communityAddress)
         }
+        console.log(`BEFORE - pendingAndUpdateByJob ${hash}`)
         pendingAndUpdateByJob(job, hash)
         job.save()
       }
