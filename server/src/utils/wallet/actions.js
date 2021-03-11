@@ -168,7 +168,7 @@ const successAndUpdateByJob = async (job) => {
   }
 }
 
-const pendingAndUpdateByAction = async (job, hash) => {
+const pendingAndUpdateByJob = async (job, hash) => {
   const walletActions = await WalletAction.find({ job })
   for (const action of walletActions) {
     await handlePendingAction(action, hash)
@@ -219,5 +219,5 @@ module.exports = {
   deduceTransactionBodyForFundToken,
   formatActionData,
   handleSubscriptionWebHook,
-  pendingAndUpdateByAction
+  pendingAndUpdateByJob
 }
