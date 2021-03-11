@@ -9,7 +9,7 @@ const { notifyReceiver } = require('@services/firebase')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
 const Community = mongoose.model('Community')
-const { deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
+const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
 const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
   const allowedModules = ['TransferManager', 'DAIPointsManager']

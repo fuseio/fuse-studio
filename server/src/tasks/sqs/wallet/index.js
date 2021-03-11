@@ -14,7 +14,7 @@ const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
 const { subscribeToBlocknative, subscribeToSubscriptionService } = require('@services/subscriptionServices')
 const manageTasks = require('./manage')
-const { deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
+const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
 const getQueryFilter = ({ _id, owner, phoneNumber }) => {
   if (_id) {

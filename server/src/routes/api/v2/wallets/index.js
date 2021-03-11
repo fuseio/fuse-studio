@@ -12,7 +12,7 @@ const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
 const Community = mongoose.model('Community')
-const { deduceTransactionBodyForFundToken } = require('@utils/wallet/actions')
+const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
 router.use('/webhook', require('./webhook'))
 router.use('/notify', require('./notify'))

@@ -3,8 +3,6 @@ const WalletAction = mongoose.model('WalletAction')
 const { getParamsFromMethodData } = require('@utils/abi')
 const { get, pickBy, identity } = require('lodash')
 
-const { adjustDecimals, fetchToken } = require('@utils/token')
-
 const formatActionData = ({ transactionBody, txHash, bonusType, detailedStatus }) => pickBy({
   value: get(transactionBody, 'value', 0),
   tokenName: get(transactionBody, 'tokenName', ''),
@@ -187,23 +185,6 @@ const failAndUpdateByJob = async (job) => {
   }
 }
 
-const deduceTransactionBodyForFundToken = async (plugins, params) => {
-  const to = get(params, 'receiverAddress')
-  const bonusType = get(params, 'bonusType')
-  const tokenAddress = get(params, 'tokenAddress')
-  const { decimals, symbol, name } = await fetchToken(tokenAddress)
-  const bonusAmount = get(plugins, `${bonusType}Bonus.${bonusType}Info.amount`)
-  const amount = adjustDecimals(bonusAmount, 0, decimals)
-  return {
-    value: amount,
-    to,
-    tokenName: name,
-    tokenDecimal: parseInt(decimals),
-    tokenSymbol: symbol,
-    tokenAddress
-  }
-}
-
 const handleSubscriptionWebHook = async (data) => {
   return new WalletAction({
     name: 'receiveTokens',
@@ -217,7 +198,6 @@ module.exports = {
   createActionFromJob,
   successAndUpdateByJob,
   failAndUpdateByJob,
-  deduceTransactionBodyForFundToken,
   formatActionData,
   handleSubscriptionWebHook,
   pendingAndUpdateByJob
