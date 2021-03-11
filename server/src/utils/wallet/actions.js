@@ -151,8 +151,8 @@ const jobSuccessHandlers = {
   mintDeposited: handleSuccessMintDeposited
 }
 
-const handlePendingAction = (action, hash) => {
-  action.set('data.txHash', hash)
+const handlePendingAction = (action, txHash) => {
+  action.set('data.txHash', txHash)
   return action.save()
 }
 
@@ -170,6 +170,7 @@ const successAndUpdateByJob = async (job) => {
 
 const pendingAndUpdateByJob = async (job, hash) => {
   const walletActions = await WalletAction.find({ job })
+  console.log(`found ${walletActions.length} - hash ${hash}`)
   for (const action of walletActions) {
     await handlePendingAction(action, hash)
   }
