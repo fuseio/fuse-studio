@@ -5,6 +5,7 @@ const Account = mongoose.model('Account')
 const { fetchGasPrice } = require('@utils/network')
 const { get, has } = require('lodash')
 const BigNumber = require('bignumber.js')
+const { pendingAndUpdateByJob } = require('@utils/wallet/actions')
 
 const calculateTxFee = ({ gasUsed, gasPrice }) => {
   return new BigNumber(gasUsed).multipliedBy(gasPrice).toString()
@@ -40,6 +41,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
         if (communityAddress) {
           job.set('communityAddress', communityAddress)
         }
+        pendingAndUpdateByJob(job, hash)
         job.save()
       }
     },

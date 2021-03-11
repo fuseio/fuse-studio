@@ -151,6 +151,11 @@ const jobSuccessHandlers = {
   mintDeposited: handleSuccessMintDeposited
 }
 
+const handlePendingAction = (action, hash) => {
+  action.set('data.txHash', hash)
+  return action.save()
+}
+
 const successAndUpdateByJob = async (job) => {
   const jobHandler = jobSuccessHandlers[job.name]
   if (!jobHandler) {
@@ -160,6 +165,13 @@ const successAndUpdateByJob = async (job) => {
   const walletActions = await WalletAction.find({ job })
   for (const action of walletActions) {
     await jobHandler(action, job)
+  }
+}
+
+const pendingAndUpdateByJob = async (job, hash) => {
+  const walletActions = await WalletAction.find({ job })
+  for (const action of walletActions) {
+    await handlePendingAction(action, hash)
   }
 }
 
@@ -206,5 +218,6 @@ module.exports = {
   failAndUpdateByJob,
   deduceTransactionBodyForFundToken,
   formatActionData,
-  handleSubscriptionWebHook
+  handleSubscriptionWebHook,
+  pendingAndUpdateByJob
 }
