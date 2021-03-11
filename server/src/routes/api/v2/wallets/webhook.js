@@ -21,7 +21,7 @@ router.post('/subscribe', auth.admin, async (req, res) => {
 router.post('/', async (req, res) => {
   const { args, address: tokenAddress, transactionHash } = req.body
   const [from, to, { hex }] = args
-  const { decimal: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
+  const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
   const actions = await WalletAction.find({ 'data.transactionBody.txHash': transactionHash })
   if (!actions.length) {
     const data = {
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
       from,
       tokenName,
       tokenSymbol,
-      tokenDecimal,
+      tokenDecimal: parseInt(tokenDecimal),
       asset: tokenSymbol,
       status: 'confirmed',
       value: new BigNumber(hex),
