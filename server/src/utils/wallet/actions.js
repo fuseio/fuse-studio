@@ -152,7 +152,7 @@ const jobSuccessHandlers = {
 }
 
 const handlePendingAction = (action, txHash) => {
-  action.set('data', { txHash })
+  action.set('data.txHash', txHash)
   return action.save()
 }
 
