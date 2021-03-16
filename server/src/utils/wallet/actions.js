@@ -3,7 +3,7 @@ const WalletAction = mongoose.model('WalletAction')
 const { getParamsFromMethodData } = require('@utils/abi')
 const { get, pickBy, identity } = require('lodash')
 
-const formatActionData = ({ transactionBody, txHash, bonusType, detailedStatus }) => pickBy({
+const formatActionData = ({ transactionBody, txHash, bonusType, externalId, detailedStatus, purchase }) => pickBy({
   value: get(transactionBody, 'value', 0),
   tokenName: get(transactionBody, 'tokenName', ''),
   tokenDecimal: get(transactionBody, 'tokenDecimal', ''),
@@ -14,8 +14,10 @@ const formatActionData = ({ transactionBody, txHash, bonusType, detailedStatus }
   blockNumber: get(transactionBody, 'blockNumber'),
   communityName: get(transactionBody, 'communityName', ''),
   detailedStatus,
+  externalId,
   bonusType,
-  txHash
+  txHash,
+  purchase
 }, identity)
 
 const handleCreateWalletJob = async (job) => {

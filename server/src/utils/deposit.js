@@ -162,6 +162,90 @@ const requestDeposit = async ({
   }).save()
 }
 
+const makeFuseDeposit = async ({
+  walletAddress,
+  customerAddress,
+  communityAddress,
+  tokenAddress,
+  tokenDecimals,
+  amount,
+  transactionHash,
+  externalId,
+  purchase,
+  ...rest
+}) => {
+  const { web3 } = createNetwork('home')
+  const blockNumber = await web3.eth.getBlockNumber()
+  const data = {
+    walletAddress: customerAddress,
+    txHash: transactionHash,
+    purchase,
+    transactionBody: {
+      blockNumber,
+      status: 'confirmed',
+      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
+      txHash: transactionHash
+    }
+  }
+  const action = await WalletAction.findOne({ 'data.externalId': externalId })
+  if (action) {
+    action.set('data', { ...action.data, ...formatActionData(data) })
+    action.set('status', 'succeeded')
+    await action.save()
+  }
+  const deposit = await new Deposit({
+    ...rest,
+    externalId,
+    transactionHash,
+    walletAddress,
+    customerAddress,
+    communityAddress,
+    tokenAddress,
+    amount,
+    status: 'succeeded',
+    type: 'fuse-dollar',
+    tokenDecimals,
+    purchase
+  }).save()
+  return deposit
+}
+
+const requestFuseDeposit = async ({
+  amount,
+  customerAddress,
+  communityAddress,
+  walletAddress,
+  externalId,
+  provider,
+  purchase
+}) => {
+  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  const data = {
+    externalId,
+    provider,
+    walletAddress: customerAddress,
+    transactionBody: {
+      value: amount,
+      status: 'pending',
+      tokenAddress: fuseDollarAddress.toLowerCase(),
+      tokenDecimal: 18,
+      tokenSymbol: 'fUSD',
+      asset: 'fUSD',
+      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
+      tokenName: 'Fuse Dollar',
+      to: customerAddress
+    },
+    purchase
+  }
+  await new WalletAction({
+    name: 'fiat-deposit',
+    communityAddress,
+    walletAddress: customerAddress,
+    data: formatActionData(data),
+    status: 'pending'
+  }).save()
+}
+
 const getRampAuthKey = () =>
   readFileSync(`./src/constants/pem/ramp/${config.get('plugins.rampInstant.webhook.pemFile')}`).toString()
 
@@ -169,5 +253,7 @@ module.exports = {
   makeDeposit,
   retryDeposit,
   requestDeposit,
-  getRampAuthKey
+  getRampAuthKey,
+  requestFuseDeposit,
+  makeFuseDeposit
 }
