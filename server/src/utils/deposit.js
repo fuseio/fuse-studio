@@ -176,30 +176,23 @@ const makeFuseDeposit = async ({
 }) => {
   const { web3 } = createNetwork('home')
   const blockNumber = await web3.eth.getBlockNumber()
-  const action = await WalletAction.findOne({ 'data.externalId': externalId })
   const data = {
     walletAddress: customerAddress,
-    externalId,
-    actionType: 'fiat-deposit',
     txHash: transactionHash,
     purchase,
     transactionBody: {
       blockNumber,
-      tokenAddress,
-      value: amount,
       status: 'confirmed',
-      tokenName: 'Fuse Dollar',
-      tokenDecimal: 18,
-      tokenSymbol: 'fUSD',
       timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-      asset: 'fUSD',
-      to: walletAddress,
       txHash: transactionHash
     }
   }
-  action.set('data', { ...action.data, ...formatActionData(data) })
-  action.set('status', 'succeeded')
-  await action.save()
+  const action = await WalletAction.findOne({ 'data.externalId': externalId })
+  if (action) {
+    action.set('data', { ...action.data, ...formatActionData(data) })
+    action.set('status', 'succeeded')
+    await action.save()
+  }
   const deposit = await new Deposit({
     ...rest,
     externalId,
@@ -240,7 +233,6 @@ const requestFuseDeposit = async ({
       asset: 'fUSD',
       timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
       tokenName: 'Fuse Dollar',
-      from: walletAddress,
       to: customerAddress
     },
     purchase

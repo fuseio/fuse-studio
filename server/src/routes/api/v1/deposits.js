@@ -245,4 +245,21 @@ if (!isProduction()) {
   })
 }
 
+if (!isProduction()) {
+  router.post('/init-fuse', async (req, res) => {
+    await requestFuseDeposit({
+      ...req.body,
+      amount: web3Utils.toWei(String(req.body.amount)),
+      provider: 'ramp'
+    })
+
+    const deposit = await makeFuseDeposit({
+      ...req.body,
+      amount: web3Utils.toWei(String(req.body.amount)),
+      provider: 'ramp'
+    })
+    return res.json({ data: deposit })
+  })
+}
+
 module.exports = router
