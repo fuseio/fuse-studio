@@ -310,8 +310,13 @@ router.get('/:communityAddress/:accountAddress', async (req, res) => {
     community.plugins.onramp.services.transak.widgetUrl = `${community.plugins.onramp.services.transak.widgetUrl}&partnerCustomerId=${accountAddress}_${toChecksumAddress(communityAddress)}`
   }
   if (lodash.has(community, 'plugins.onramp.services.rampInstant.widgetUrl')) {
+    const url = lodash.get(community, 'plugins.onramp.services.rampInstant.widgetUrl')
     const webhookStatusUrl = `${config.get('api.protocol')}://${req.headers.host}/api/v1/deposits/ramp/${accountAddress}/${toChecksumAddress(communityAddress)}`
-    community.plugins.onramp.services.rampInstant.widgetUrl = `${community.plugins.onramp.services.rampInstant.widgetUrl}&webhookStatusUrl=${webhookStatusUrl}`
+    if (lodash.endsWith(url, 'FUSD')) {
+      community.plugins.onramp.services.rampInstant.widgetUrl = `${community.plugins.onramp.services.rampInstant.widgetUrl}&userAddress=${accountAddress}&webhookStatusUrl=${webhookStatusUrl}`
+    } else {
+      community.plugins.onramp.services.rampInstant.widgetUrl = `${community.plugins.onramp.services.rampInstant.widgetUrl}&webhookStatusUrl=${webhookStatusUrl}`
+    }
   }
   return res.json({ data: community })
 })
