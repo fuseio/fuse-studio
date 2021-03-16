@@ -168,65 +168,46 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   console.log(`[deposit-ramp] req.body: ${JSON.stringify(req.body)}`)
   const { customerAddress, communityAddress } = req.params
   const { purchase, type } = req.body
-  const { asset: { address, decimals } } = purchase
+  const { asset: { address, decimals }, cryptoAmount, receiverAddress, id } = purchase
   console.log(req.body)
   const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
   const isFuseDollar = address.toLowerCase() === fuseDollarAddress.toLowerCase()
   if (type === 'CREATED') {
-    const { cryptoAmount, receiverAddress, id } = purchase
     // deposit is issued, on-ramp is waiting for fiat processing
+    const requestData = {
+      customerAddress,
+      communityAddress,
+      amount: cryptoAmount,
+      externalId: id,
+      walletAddress: web3Utils.toChecksumAddress(receiverAddress),
+      purchase,
+      provider: 'ramp'
+    }
     if (isFuseDollar) {
-      await requestFuseDeposit({
-        customerAddress,
-        communityAddress,
-        amount: cryptoAmount,
-        externalId: id,
-        walletAddress: web3Utils.toChecksumAddress(receiverAddress),
-        purchase,
-        provider: 'ramp'
-      })
+      await requestFuseDeposit({ ...requestData })
     } else {
-      await requestDeposit({
-        customerAddress,
-        communityAddress,
-        amount: cryptoAmount,
-        externalId: id,
-        walletAddress: web3Utils.toChecksumAddress(receiverAddress),
-        purchase,
-        provider: 'ramp'
-      })
+      await requestDeposit({ ...requestData })
     }
     return res.json({ response: 'ok' })
   } else if (type === 'RELEASED') {
     // transaction is sent on the Ethereum network
-    const { cryptoAmount, receiverAddress, id } = purchase
     console.log(`[deposit-ramp] before makeDeposit`)
+    const depositData = {
+      transactionHash: getTxHash(purchase),
+      walletAddress: web3Utils.toChecksumAddress(receiverAddress),
+      customerAddress,
+      communityAddress,
+      tokenAddress: address,
+      tokenDecimals: decimals,
+      amount: cryptoAmount,
+      externalId: id,
+      provider: 'ramp',
+      purchase
+    }
     if (isFuseDollar) {
-      await makeFuseDeposit({
-        transactionHash: getTxHash(purchase),
-        walletAddress: web3Utils.toChecksumAddress(receiverAddress),
-        customerAddress,
-        communityAddress,
-        tokenAddress: address,
-        tokenDecimals: decimals,
-        amount: cryptoAmount,
-        externalId: id,
-        provider: 'ramp',
-        purchase
-      })
+      await makeFuseDeposit({ ...depositData })
     } else {
-      await makeDeposit({
-        transactionHash: getTxHash(purchase),
-        walletAddress: web3Utils.toChecksumAddress(receiverAddress),
-        customerAddress,
-        communityAddress,
-        tokenAddress: address,
-        tokenDecimals: decimals,
-        amount: cryptoAmount,
-        externalId: id,
-        provider: 'ramp',
-        purchase
-      })
+      await makeDeposit({ ...depositData })
     }
     console.log(`[deposit-ramp] after makeDeposit`)
     return res.json({ response: 'ok' })

@@ -176,7 +176,30 @@ const makeFuseDeposit = async ({
 }) => {
   const { web3 } = createNetwork('home')
   const blockNumber = await web3.eth.getBlockNumber()
-  await WalletAction.updateOne({ 'data.externalId': externalId, 'name': 'fiat-processing' }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.transactionBody.blockNumber': blockNumber, 'data.purchase': purchase } })
+  const action = await WalletAction.findOne({ 'data.externalId': externalId })
+  const data = {
+    walletAddress: customerAddress,
+    externalId,
+    actionType: 'fiat-deposit',
+    txHash: transactionHash,
+    purchase,
+    transactionBody: {
+      blockNumber,
+      tokenAddress,
+      value: amount,
+      status: 'confirmed',
+      tokenName: 'Fuse Dollar',
+      tokenDecimal: 18,
+      tokenSymbol: 'fUSD',
+      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
+      asset: 'fUSD',
+      to: walletAddress,
+      txHash: transactionHash
+    }
+  }
+  action.set('data', { ...action.data, ...formatActionData(data) })
+  action.set('status', 'succeeded')
+  await action.save()
   const deposit = await new Deposit({
     ...rest,
     externalId,
@@ -190,33 +213,6 @@ const makeFuseDeposit = async ({
     type: 'fuse-dollar',
     tokenDecimals,
     purchase
-  }).save()
-
-  const data = {
-    walletAddress: customerAddress,
-    externalId,
-    actionType: 'fiat-deposit',
-    transactionBody: {
-      blockNumber,
-      tokenAddress,
-      value: amount,
-      status: 'confirmed',
-      tokenName: 'Fuse Dollar',
-      tokenDecimal: 18,
-      tokenSymbol: 'fUSD',
-      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-      asset: 'fUSD',
-      from: walletAddress,
-      to: customerAddress,
-      txHash: transactionHash
-    }
-  }
-  await new WalletAction({
-    name: 'fiat-deposit',
-    communityAddress,
-    walletAddress: customerAddress,
-    data: formatActionData(data),
-    status: 'succeeded'
   }).save()
   return deposit
 }
@@ -250,7 +246,7 @@ const requestFuseDeposit = async ({
     purchase
   }
   await new WalletAction({
-    name: 'fiat-processing',
+    name: 'fiat-deposit',
     communityAddress,
     walletAddress: customerAddress,
     data: formatActionData(data),
