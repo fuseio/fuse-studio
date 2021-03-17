@@ -119,9 +119,9 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
       }
 
       if (nextRelays && nextRelays.length > 0) {
-        const { agenda } = require('@services/agenda')
+        const taskManager = require('@services/taskManager')
         const nextToRelay = nextRelays.shift()
-        const nextRelayJob = await agenda.now('relay', { ...nextToRelay, identifier, appName, nextRelays })
+        const nextRelayJob = await taskManager.now('relay', { ...nextToRelay, identifier, appName, nextRelays })
         job.set('data.nextRealyJobId', nextRelayJob._id.toString())
         job.save()
       }
