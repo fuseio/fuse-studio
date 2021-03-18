@@ -13,11 +13,11 @@ const formatActionData = ({ transactionBody, txHash, bonusType, externalId, deta
   to: get(transactionBody, 'to', ''),
   blockNumber: get(transactionBody, 'blockNumber'),
   communityName: get(transactionBody, 'communityName', ''),
+  metadata: purchase || get(transactionBody, 'tradeInfo'),
   detailedStatus,
   externalId,
   bonusType,
-  txHash,
-  purchase
+  txHash
 }, identity)
 
 const handleCreateWalletJob = async (job) => {
@@ -68,6 +68,23 @@ const handleRelayJob = async (job) => {
       communityAddress: job.communityAddress || job.data.communityAddress
     }).save()
     return { receiverAction, senderAction }
+  } else if (walletModule === 'TransferManager' && methodName === 'approveTokenAndCallContract') {
+    const walletModuleABI = require(`@constants/abi/${walletModule}`)
+    const { methodData } = job.data
+    const { _wallet, _token, _contract, _amount } = getParamsFromMethodData(walletModuleABI, 'approveTokenAndCallContract', methodData)
+    const swapAction = await new WalletAction({
+      name: 'swapTokens',
+      job: mongoose.Types.ObjectId(job._id),
+      data: {
+        ...formatActionData(job.data),
+        spender: _contract,
+        value: _amount,
+        tokenAddress: _token
+      },
+      walletAddress: _wallet,
+      communityAddress: job.communityAddress || job.data.communityAddress
+    }).save()
+    return { swapAction }
   }
 }
 
