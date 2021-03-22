@@ -4,6 +4,7 @@ const { getParamsFromMethodData } = require('@utils/abi')
 const { get, pickBy, identity } = require('lodash')
 
 const formatActionData = ({ transactionBody, txHash, bonusType, externalId, detailedStatus, purchase }) => pickBy({
+  status: get(transactionBody, 'status'),
   value: get(transactionBody, 'value', 0),
   tokenName: get(transactionBody, 'tokenName', ''),
   tokenDecimal: get(transactionBody, 'tokenDecimal', ''),
@@ -140,26 +141,30 @@ const createActionFromJob = async (job) => {
 }
 
 const handleSuccessCreateWalletJob = (action, job) => {
-  action.set('status', 'succeeded')
+  const formattedData = formatActionData(job.data)
+  action.set('status', get(formattedData, 'status'))
   if (!action.walletAddress) {
     action.set('walletAddress', job.data.walletAddress)
   }
-  action.set('data', { ...action.data, ...formatActionData(job.data) })
+  action.set('data', { ...action.data, ...formattedData })
   return action.save()
 }
 
 const handleSuccessDefaultJob = (action, job) => {
-  action.set('status', 'succeeded')
-  action.set('data', { ...action.data, ...formatActionData(job.data) })
+  const formattedData = formatActionData(job.data)
+  action.set('status', get(formattedData, 'status'))
+  action.set('data', { ...action.data, ...formattedData })
   return action.save()
 }
 
 const handleSuccessMintDeposited = (action, job) => {
-  action.set('status', 'succeeded')
-  action.set('data', { ...action.data, ...formatActionData(job.data) })
+  const formattedData = formatActionData(job.data)
+  action.set('status', get(formattedData, 'status'))
+  action.set('data', { ...action.data, ...formattedData })
   action.set('data.detailedStatus', 'succeeded')
   return action.save()
 }
+
 const jobSuccessHandlers = {
   createWallet: handleSuccessCreateWalletJob,
   createForeignWallet: handleSuccessDefaultJob,
