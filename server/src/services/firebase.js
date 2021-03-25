@@ -83,6 +83,10 @@ const firebaseApps = {
   worldXr: {
     appName: 'WorldXR',
     secretKey: 'firebaseSecretIdWorldXR'
+  },
+  fusecash: {
+    appName: 'fusecash',
+    secretKey: 'firebaseSecretIdFuseCash'
   }
 }
 
