@@ -20,16 +20,21 @@ QueueJobSchema.methods.fail = function (reason) {
   if (reason instanceof Error) {
     reason = reason.message
   }
-  this.failReason = reason
+  this.failReason = reason.toString()
   this.failCount = (this.failCount || 0) + 1
   this.status = 'failed'
 }
 
 QueueJobSchema.methods.failAndUpdate = function (reason) {
-  if (reason instanceof Error) {
-    reason = reason.message
+  try {
+    if (reason instanceof Error) {
+      reason = reason.message
+    }
+    return QueueJob.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), status: 'failed', failReason: reason, $inc: { failCount: 1 } })
+  } catch (error) {
+    console.log(`failed to call failAndUpdate on ${this._id}`)
+    return QueueJob.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), status: 'failed', failReason: error.reason, $inc: { failCount: 1 } })
   }
-  return QueueJob.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), status: 'failed', failReason: reason, $inc: { failCount: 1 } })
 }
 
 QueueJobSchema.methods.successAndUpdate = function () {
