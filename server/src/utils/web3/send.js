@@ -33,7 +33,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
   const { job, communityAddress } = txContext
 
   const defaults = {
-    handleTransactionHash: (hash) => {
+    handleTransactionHash: async (hash) => {
       console.log(`transaction ${hash} is created by ${account.address}`)
       if (job) {
         const jobDataPath = getJobDataPath(txContext)
@@ -41,8 +41,8 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
         if (communityAddress) {
           job.set('communityAddress', communityAddress)
         }
-        pendingAndUpdateByJob(job, hash)
-        job.save()
+        await pendingAndUpdateByJob(job, hash)
+        return job.save()
       }
     },
     handleReceipt: (receipt) => {
@@ -70,7 +70,15 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
     const nonce = account.nonces[bridgeType]
     const methodName = getMethodName(method)
     console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
-    const methodParams = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
+    const txObject = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
+
+    const calculateTxHash = async () => {
+      const { transactionHash } = await web3.eth.accounts.signTransaction({ to: method && method.contract._address, data: method ? method.encodeABI() : '', ...txObject }, web3.eth.accounts.wallet[0].privateKey)
+      return transactionHash
+    }
+
+    const handleTransactionHash = get(txContext, 'transactionHash', defaults.handleTransactionHash)
+
     if (!method) {
       web3.eth.transactionConfirmationBlocks = parseInt(
         config.get(
@@ -78,12 +86,29 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
         )
       )
     }
-    const promise = method ? method.send({ ...methodParams }) : web3.eth.sendTransaction(options)
+    try {
+      transactionHash = await calculateTxHash()
+    } catch (err) {
+      console.log('txHash could not get calculated')
+      console.error(err)
+    }
+    if (transactionHash) {
+      console.log(`calculated txHash is ${transactionHash}`)
+      await handleTransactionHash(transactionHash)
+    }
 
-    promise.on('transactionHash', (hash) => {
-      transactionHash = hash
-      const handleTransactionHash = get(txContext, 'transactionHash', defaults.handleTransactionHash)
-      handleTransactionHash(hash)
+    const promise = method ? method.send(txObject) : web3.eth.sendTransaction(options)
+
+    promise.on('transactionHash', (actualTxHash) => {
+      console.log(`actual TxHash is ${actualTxHash}`)
+      if (transactionHash) {
+        if (transactionHash !== actualTxHash) {
+          console.error(`calculates txHash ${transactionHash} is not matching the actual one ${actualTxHash}`)
+        }
+      } else {
+        transactionHash = actualTxHash
+        handleTransactionHash(actualTxHash)
+      }
     })
 
     try {
