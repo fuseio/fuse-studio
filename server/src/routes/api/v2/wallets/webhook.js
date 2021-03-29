@@ -20,10 +20,12 @@ router.post('/subscribe', auth.admin, async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { args, address: tokenAddress, transactionHash } = req.body
+  console.log(`got txHash ${transactionHash} from the wehbook`)
   const [from, to, { hex }] = args
-  const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
-  const actions = await WalletAction.find({ 'data.transactionBody.txHash': transactionHash })
-  if (!actions.length) {
+  const action = await WalletAction.findOne({ 'data.txHash': transactionHash })
+  if (!action) {
+    const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
+
     const data = {
       txHash: transactionHash,
       walletAddress: to,
@@ -39,6 +41,8 @@ router.post('/', async (req, res) => {
       timeStamp: (Math.round(new Date().getTime() / 1000)).toString()
     }
     await handleSubscriptionWebHook(data)
+  } else {
+    console.log(`txHash ${transactionHash} already handled in action ${action._id}`)
   }
   res.send({ data: 'ok' })
 })
