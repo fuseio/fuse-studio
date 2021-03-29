@@ -23,11 +23,6 @@ const funder = async ({ home: { send, from } }, communityProgress) => {
         value: toWei(bonus),
         gasPrice: config.get('network.home.gasPrice'),
         gas: config.get('gasLimitForTx.funder')
-      },
-      {
-        transactionHash: hash => {
-          console.log(`transaction ${hash} is created by ${from}`)
-        }
       }
     )
     if (!receipt.status) {

@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
-const { createAccount, generateCommunityAdminJwt } = require('@utils/account')
+const { createAccount, unlockAccount, generateCommunityAdminJwt } = require('@utils/account')
 const auth = require('@routes/auth')
 const Account = mongoose.model('Account')
 const taskManager = require('@services/taskManager')
@@ -51,6 +51,30 @@ router.post('/', auth.admin, async (req, res) => {
     return res.json({ data: { account, job } })
   }
   return res.json({ data: { account } })
+})
+
+/**
+ * @api {post} api/v2/accounts/ Unlock backend account
+ * @apiName UnlockAccounts
+ * @apiGroup Accounts
+ * @apiDescription Unlock backend account by accout address and bridge type
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiParam {String} accountAddress Account address
+ * @apiParam {String} bridgeType Account bridgeType
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *      "accountAddress": "0x123",
+ *      "bridgeType": "home"
+ *    }
+ * @apiSuccess {Object} Unlocked account object if an account was actually unlocked
+ */
+router.post('/unlock', auth.admin, async (req, res) => {
+  const { accountAddress, bridgeType } = req.body
+  const account = await Account.findOne({ address: accountAddress, bridgeType, isLocked: true })
+  const unlockedAccount = await unlockAccount(account._id)
+  return res.json({ data: { account: unlockedAccount } })
 })
 
 module.exports = router

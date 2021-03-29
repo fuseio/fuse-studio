@@ -72,7 +72,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
     const txObject = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
 
     const getTxHash = async () => {
-      const { transactionHash } = await web3.eth.accounts.signTransaction({ value: '0', to: method && method.contract.address, data: method ? method.encodeABI() : '', ...txObject }, web3.eth.accounts.wallet[0].privateKey)
+      const { transactionHash } = await web3.eth.accounts.signTransaction({ to: method && method.contract._address, data: method ? method.encodeABI() : '', ...txObject }, web3.eth.accounts.wallet[0].privateKey)
       return transactionHash
     }
 
