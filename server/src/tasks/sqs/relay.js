@@ -86,28 +86,32 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
           }
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
 
-          if (isFunderDeprecated) {
-            const taskManager = require('@services/taskManager')
-            const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType: 'join' }
-            const { plugins } = await Community.findOne({ communityAddress })
-            const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
-            const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
-            job.set('data.funderJobId', funderJob._id)
-            job.save()
-          } else {
-            request.post(`${config.get('funder.urlBase')}fund/token`, {
-              json: true,
-              body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork, communityAddress }
-            }, (err, response, body) => {
-              if (err) {
-                console.error(`Error on token funding for wallet: ${wallet}`, err)
-              } else if (body.error) {
-                console.error(`Error on token funding for wallet: ${wallet}`, body.error)
-              } else if (lodash.has(body, 'job._id')) {
-                job.set('data.funderJobId', body.job._id)
-              }
+          const community = await Community.findOne({ communityAddress })
+          const hasBonus = lodash.get(community, `plugins.joinBonus.isActive`, false) && lodash.get(community, `plugins.joinBonus.joinInfo.amount`, false)
+          if (hasBonus) {
+            if (isFunderDeprecated) {
+              const taskManager = require('@services/taskManager')
+              const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType: 'join' }
+              const { plugins } = community
+              const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+              const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
+              job.set('data.funderJobId', funderJob._id)
               job.save()
-            })
+            } else {
+              request.post(`${config.get('funder.urlBase')}fund/token`, {
+                json: true,
+                body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork, communityAddress }
+              }, (err, response, body) => {
+                if (err) {
+                  console.error(`Error on token funding for wallet: ${wallet}`, err)
+                } else if (body.error) {
+                  console.error(`Error on token funding for wallet: ${wallet}`, body.error)
+                } else if (lodash.has(body, 'job._id')) {
+                  job.set('data.funderJobId', body.job._id)
+                }
+                job.save()
+              })
+            }
           }
         } catch (e) {
           console.log(`Error on token funding for wallet: ${wallet}`, e)
