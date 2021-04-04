@@ -1,4 +1,5 @@
 const config = require('config')
+const { get } = require('lodash')
 const { createNetwork, signMultiSig } = require('@utils/web3')
 const WalletFactoryABI = require('@constants/abi/WalletFactory')
 const WalletOwnershipManagerABI = require('@constants/abi/WalletOwnershipManager')
@@ -47,25 +48,28 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   if (bonusInfo && communityAddress) {
     const taskManager = require('@services/taskManager')
     bonusInfo.bonusId = walletAddress
-    if (isFunderDeprecated) {
-      const { homeTokenAddress, plugins } = await Community.findOne({ communityAddress })
-      const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'invite' }
-      const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
-      const bonusJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
-      job.set('data.bonusJob', {
-        name: bonusJob.name,
-        _id: bonusJob._id.toString()
-      })
-    } else {
-      const bonusJob = await taskManager.now('bonus', {
-        name: 'bonus',
-        params: { communityAddress, bonusInfo }
-      })
-
-      job.set('data.bonusJob', {
-        name: bonusJob.name,
-        _id: bonusJob._id.toString()
-      })
+    const community = await Community.findOne({ communityAddress })
+    const { homeTokenAddress, plugins } = community
+    const hasBonus = get(community, `plugins.inviteBonus.isActive`, false) && get(community, `plugins.inviteBonus.inviteInfo.amount`, false)
+    if (hasBonus) {
+      if (isFunderDeprecated) {
+        const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'invite' }
+        const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+        const bonusJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
+        job.set('data.bonusJob', {
+          name: bonusJob.name,
+          _id: bonusJob._id.toString()
+        })
+      } else {
+        const bonusJob = await taskManager.now('bonus', {
+          name: 'bonus',
+          params: { communityAddress, bonusInfo }
+        })
+        job.set('data.bonusJob', {
+          name: bonusJob.name,
+          _id: bonusJob._id.toString()
+        })
+      }
     }
   }
   await job.save()

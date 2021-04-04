@@ -11,6 +11,7 @@ const { getWalletModules } = require('@utils/wallet')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
+const { get } = require('lodash')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
@@ -262,22 +263,26 @@ router.post('/backup', auth.required, async (req, res, next) => {
   await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress }, { backup: true })
 
   if (communityAddress) {
-    if (isFunderDeprecated) {
-      const { homeTokenAddress, plugins } = await Community.findOne({ communityAddress })
-      const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup' }
-      const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
-      const job = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
-      return res.json({ job: job })
-    } else {
-      const bonusInfo = {
-        phoneNumber,
-        identifier,
-        receiver: walletAddress,
-        bonusType: 'plugins.backupBonus.backupInfo',
-        bonusId: phoneNumber
+    const community = await Community.findOne({ communityAddress })
+    const { homeTokenAddress, plugins } = community
+    const hasBonus = get(community, `plugins.backupBonus.isActive`, false) && get(community, `plugins.backupBonus.backupInfo.amount`, false)
+    if (hasBonus) {
+      if (isFunderDeprecated) {
+        const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup' }
+        const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+        const job = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
+        return res.json({ job: job })
+      } else {
+        const bonusInfo = {
+          phoneNumber,
+          identifier,
+          receiver: walletAddress,
+          bonusType: 'plugins.backupBonus.backupInfo',
+          bonusId: phoneNumber
+        }
+        const job = await taskManager.now('bonus', { communityAddress, bonusInfo, correlationId }, { isWalletJob: true })
+        return res.json({ job: job })
       }
-      const job = await taskManager.now('bonus', { communityAddress, bonusInfo, correlationId }, { isWalletJob: true })
-      return res.json({ job: job })
     }
   }
 
@@ -296,7 +301,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
  */
 router.post('/foreign', auth.required, async (req, res, next) => {
   // this endpoint is deprecated
-  return res.json({ })
+  return res.json({})
 })
 
 module.exports = router
