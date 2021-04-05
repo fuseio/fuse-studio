@@ -6,6 +6,7 @@ const WalletActionSchema = new Schema({
   name: { type: String, required: [true, "can't be blank"] },
   communityAddress: { type: String },
   walletAddress: { type: String },
+  tokenAddress: [ { type: String } ],
   job: { type: Schema.Types.ObjectId, ref: 'QueueJob' },
   data: { type: Object, default: {} },
   status: { type: String, default: 'pending' },
@@ -15,6 +16,7 @@ const WalletActionSchema = new Schema({
 
 WalletActionSchema.index({ communityAddress: 1 })
 WalletActionSchema.index({ walletAddress: 1 })
+WalletActionSchema.index({ tokenAddress: 1 })
 
 WalletActionSchema.plugin(mongoosePaginate)
 

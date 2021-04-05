@@ -5,11 +5,12 @@ const auth = require('@routes/auth')
 
 router.get('/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
-  const { updatedAt } = req.query
+  const { updatedAt, tokenAddress } = req.query
   const result = await WalletAction.paginate(
     {
       walletAddress,
-      ...(updatedAt && { updatedAt: { $gte: updatedAt } })
+      ...(updatedAt && { updatedAt: { $gte: updatedAt } }),
+      ...(tokenAddress && { tokenAddress })
     }
   )
   res.send({ data: result })
