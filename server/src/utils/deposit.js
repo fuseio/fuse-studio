@@ -148,9 +148,10 @@ const requestDeposit = async ({
       ...data,
       detailedStatus: 'payment-processing'
     }),
+    tokenAddress: data.transactionBody.tokenAddress,
     status: 'pending'
   }).save()
-  // soon to be deprecated
+  // Deprecated for Fuse Wallet v2
   return new QueueJob({
     name: 'fiat-processing',
     messageId: externalId,
@@ -242,6 +243,7 @@ const requestFuseDeposit = async ({
     communityAddress,
     walletAddress: customerAddress,
     data: formatActionData(data),
+    tokenAddress: data.transactionBody.tokenAddress,
     status: 'pending'
   }).save()
 }
