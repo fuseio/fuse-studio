@@ -1,3 +1,4 @@
+const { get } = require('lodash')
 const { getParamsFromMethodData } = require('@utils/abi')
 const mongoose = require('mongoose')
 const WalletAction = mongoose.model('WalletAction')
@@ -57,7 +58,8 @@ const handleRelayJob = async (job) => {
     const walletModuleABI = require(`@constants/abi/${walletModule}`)
     const { methodData } = job.data
     const { _wallet, _token, _contract, _amount } = getParamsFromMethodData(walletModuleABI, 'approveTokenAndCallContract', methodData)
-    const tokenAddress = _token.toLowerCase()
+    const tokenAddressIn = _token.toLowerCase()
+    const tokenAddressOut = get(job, 'data.txMetadata.currencyOut')
 
     const swapAction = await new WalletAction({
       name: 'swapTokens',
@@ -66,9 +68,9 @@ const handleRelayJob = async (job) => {
         ...formatActionData(job.data),
         spender: _contract,
         value: _amount,
-        tokenAddress
+        tokenAddress: tokenAddressIn
       },
-      tokenAddress,
+      tokenAddress: [ tokenAddressIn, tokenAddressOut ],
       walletAddress: _wallet,
       communityAddress: job.communityAddress || job.data.communityAddress
     }).save()
