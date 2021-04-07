@@ -220,7 +220,7 @@ const requestFuseDeposit = async ({
   provider,
   purchase
 }) => {
-  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar').toLowerCase()
   const data = {
     externalId,
     provider,
@@ -228,7 +228,7 @@ const requestFuseDeposit = async ({
     transactionBody: {
       value: amount,
       status: 'pending',
-      tokenAddress: fuseDollarAddress.toLowerCase(),
+      tokenAddress: fuseDollarAddress,
       tokenDecimal: 18,
       tokenSymbol: 'fUSD',
       asset: 'fUSD',
@@ -238,12 +238,13 @@ const requestFuseDeposit = async ({
     },
     purchase
   }
+  const formattedData = formatActionData(data)
   await new WalletAction({
     name: 'fiat-deposit',
     communityAddress,
     walletAddress: customerAddress,
-    data: formatActionData(data),
-    tokenAddress: data.transactionBody.tokenAddress,
+    data: formattedData,
+    tokenAddress: formattedData.tokenAddress,
     status: 'pending'
   }).save()
 }

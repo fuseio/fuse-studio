@@ -1,3 +1,4 @@
+const { get } = require('lodash')
 const { getParamsFromMethodData } = require('@utils/abi')
 const mongoose = require('mongoose')
 const WalletAction = mongoose.model('WalletAction')
@@ -27,16 +28,16 @@ const handleRelayJob = async (job) => {
     const walletModuleABI = require(`@constants/abi/${walletModule}`)
     const { methodData } = job.data
     const { _to, _amount, _token, _wallet } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
-
+    const tokenAddress = _token.toLowerCase()
     const receiverAction = await new WalletAction({
       name: 'receiveTokens',
       job: mongoose.Types.ObjectId(job._id),
       data: {
         ...formatActionData(job.data),
         value: _amount,
-        tokenAddress: _token
+        tokenAddress
       },
-      tokenAddress: _token,
+      tokenAddress,
       walletAddress: _to,
       communityAddress: job.communityAddress || job.data.communityAddress
     }).save()
@@ -46,10 +47,10 @@ const handleRelayJob = async (job) => {
       data: {
         ...formatActionData(job.data),
         value: _amount,
-        tokenAddress: _token
+        tokenAddress
       },
       walletAddress: _wallet,
-      tokenAddress: _token,
+      tokenAddress,
       communityAddress: job.communityAddress || job.data.communityAddress
     }).save()
     return { receiverAction, senderAction }
@@ -57,6 +58,9 @@ const handleRelayJob = async (job) => {
     const walletModuleABI = require(`@constants/abi/${walletModule}`)
     const { methodData } = job.data
     const { _wallet, _token, _contract, _amount } = getParamsFromMethodData(walletModuleABI, 'approveTokenAndCallContract', methodData)
+    const tokenAddressIn = _token.toLowerCase()
+    const tokenAddressOut = get(job, 'data.txMetadata.currencyOut')
+
     const swapAction = await new WalletAction({
       name: 'swapTokens',
       job: mongoose.Types.ObjectId(job._id),
@@ -64,9 +68,9 @@ const handleRelayJob = async (job) => {
         ...formatActionData(job.data),
         spender: _contract,
         value: _amount,
-        tokenAddress: _token
+        tokenAddress: tokenAddressIn
       },
-      tokenAddress: _token,
+      tokenAddress: [ tokenAddressIn, tokenAddressOut ],
       walletAddress: _wallet,
       communityAddress: job.communityAddress || job.data.communityAddress
     }).save()

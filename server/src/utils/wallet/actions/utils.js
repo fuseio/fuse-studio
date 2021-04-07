@@ -6,7 +6,7 @@ const formatActionData = ({ transactionBody, txHash, bonusType, externalId, deta
   tokenName: get(transactionBody, 'tokenName', ''),
   tokenDecimal: get(transactionBody, 'tokenDecimal', ''),
   tokenSymbol: get(transactionBody, 'asset', ''),
-  tokenAddress: get(transactionBody, 'tokenAddress', ''),
+  tokenAddress: get(transactionBody, 'tokenAddress', '').toLowerCase(),
   from: get(transactionBody, 'from', ''),
   to: get(transactionBody, 'to', ''),
   blockNumber: get(transactionBody, 'blockNumber'),
