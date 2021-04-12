@@ -29,6 +29,7 @@
       "firebaseSecretIdCuraDAI": "COMMUNITY_AWS_FIREBASE_SECRET_ID_CURA_DAI",
       "firebaseSecretIdWorldXR": "COMMUNITY_AWS_FIREBASE_SECRET_ID_WORLD_XR",
       "firebaseSecretIdFuseCash": "COMMUNITY_AWS_FIREBASE_SECRET_ID_FUSECASH",
+      "firebaseSecretIdWellBeing": "COMMUNITY_AWS_FIREBASE_SECRET_ID_WELL_BEING",
       "manager": {
         "region": "COMMUNITY_AWS_SECRET_MANAGER_REGION"
       }
