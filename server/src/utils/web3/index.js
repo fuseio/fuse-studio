@@ -105,7 +105,7 @@ const signMultiSigHash = (walletAddr, destinationAddr, value, data, nonce) => {
 
 const signMultiSig = async (web3, account, multiSigContract, contractAddress, data) => {
   // Get the nonce
-  const nonce = (await multiSigContract.methods.nonce().call()).toNumber()
+  const nonce = parseInt(await multiSigContract.methods.nonce().call())
 
   // Get the sign Hash
   let hash = signMultiSigHash(multiSigContract.address, contractAddress, 0, data, nonce)
