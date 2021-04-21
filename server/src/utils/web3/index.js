@@ -108,7 +108,7 @@ const signMultiSig = async (web3, account, multiSigContract, contractAddress, da
   const nonce = parseInt(await multiSigContract.methods.nonce().call())
 
   // Get the sign Hash
-  let hash = signMultiSigHash(multiSigContract.address, contractAddress, 0, data, nonce)
+  let hash = signMultiSigHash(multiSigContract._address, contractAddress, 0, data, nonce)
 
   // Get the off chain signature
   const signHashBuffer = Buffer.from(hash.slice(2), 'hex')

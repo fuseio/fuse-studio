@@ -12,9 +12,9 @@ const addManager = async (mutisigOwnerAccount, { managerAccountAddress }, job) =
   const addManagerMethodData = addManagerMethod.encodeABI()
 
   const multiSigWallet = createContract(MultiSigWalletABI, config.get('network.home.addresses.MultiSigWallet'))
-  const signature = await signMultiSig(web3, mutisigOwnerAccount, multiSigWallet, walletFactory.address, addManagerMethodData)
+  const signature = await signMultiSig(web3, mutisigOwnerAccount, multiSigWallet, walletFactory._address, addManagerMethodData)
 
-  const method = createMethod(multiSigWallet, 'execute', walletFactory.address, 0, addManagerMethodData, signature)
+  const method = createMethod(multiSigWallet, 'execute', walletFactory._address, 0, addManagerMethodData, signature)
 
   const receipt = await send(method, {
     from: mutisigOwnerAccount.address
