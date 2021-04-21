@@ -120,9 +120,9 @@ const setWalletOwner = async (account, { walletAddress, communityAddress, newOwn
   const setOwnerMethodData = setOwnerMethod.encodeABI()
 
   const multiSigWallet = createContract(MultiSigWalletABI, config.get('network.home.addresses.MultiSigWallet'))
-  const signature = await signMultiSig(web3, account, multiSigWallet, walletOwnershipManager.address, setOwnerMethodData)
+  const signature = await signMultiSig(web3, account, multiSigWallet, walletOwnershipManager._address, setOwnerMethodData)
 
-  const method = createMethod(multiSigWallet, 'execute', walletOwnershipManager.address, 0, setOwnerMethodData, signature)
+  const method = createMethod(multiSigWallet, 'execute', walletOwnershipManager._address, 0, setOwnerMethodData, signature)
   const receipt = await send(method, {
     from: account.address
   }, {
