@@ -1,12 +1,12 @@
 const config = require('config')
 const request = require('request')
 
-const createDeepLink = ({ communityAddress }) => {
+const createDeepLink = ({ communityAddress, appName = 'fuseWallet' }) => {
   return new Promise((resolve, reject) => {
     request.post(`${config.get('branch.urlBase')}url`, {
       json: true,
       body: {
-        'branch_key': config.get('branch.key'),
+        'branch_key': config.get(`branch.keys.${appName}`),
         'campaign': 'switch_community',
         'channel': 'mobile',
         'feature': 'switch_community',

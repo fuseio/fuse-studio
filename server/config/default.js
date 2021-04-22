@@ -228,7 +228,10 @@ module.exports = {
   },
   branch: {
     urlBase: 'https://api2.branch.io/v1/',
-    key: 'key_live_aaSvQXmuELUQfsYeG4UfWemnqEiq04hr'
+    keys: {
+      fusecash: 'key_live_ei3pINZQchWGN7VDrB1njgcfzshiwvmX',
+      fuseWallet: 'key_live_aaSvQXmuELUQfsYeG4UfWemnqEiq04hr'
+    }
   },
   plugins: {
     fuseswap: {
