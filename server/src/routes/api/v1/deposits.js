@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
-const { makeFuseDeposit, requestFuseDeposit, makeDeposit, requestDeposit, retryDeposit, getRampAuthKey } = require('@utils/deposit')
+const { makeFuseDeposit, requestFuseDeposit, makeDeposit, requestDeposit, retryDeposit, cancelDeposit, getRampAuthKey } = require('@utils/deposit')
 const config = require('config')
 const web3Utils = require('web3-utils')
 const crypto = require('crypto')
@@ -172,6 +172,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
   console.log(req.body)
   const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
   const isFuseDollar = address.toLowerCase() === fuseDollarAddress.toLowerCase()
+  console.log(`[deposit-ramp] recieved webhook with status ${type}`)
   if (type === 'CREATED') {
     // deposit is issued, on-ramp is waiting for fiat processing
     const requestData = {
@@ -188,10 +189,9 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
     } else {
       await requestDeposit({ ...requestData })
     }
+    console.log(`[deposit-ramp] after requestDeposit`)
     return res.json({ response: 'ok' })
   } else if (type === 'RELEASED') {
-    // transaction is sent on the Ethereum network
-    console.log(`[deposit-ramp] before makeDeposit`)
     const depositData = {
       transactionHash: getTxHash(purchase),
       walletAddress: web3Utils.toChecksumAddress(receiverAddress),
@@ -210,6 +210,14 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
       await makeDeposit({ ...depositData })
     }
     console.log(`[deposit-ramp] after makeDeposit`)
+    return res.json({ response: 'ok' })
+  } else if (type === 'EXPIRED' || type === 'CANCELLED') {
+    await cancelDeposit({
+      externalId: id,
+      type,
+      purchase
+    })
+    console.log(`[deposit-ramp] after cancelDeposit`)
     return res.json({ response: 'ok' })
   } else {
     console.log(`[deposit-ramp] reached else type - ${type}`)
