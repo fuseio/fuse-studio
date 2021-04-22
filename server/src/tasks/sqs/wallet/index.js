@@ -82,8 +82,8 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
 
   if (communityAddress && bonusInfo) {
     let deepLinkUrl
-    if (!appName) {
-      const { url } = await branch.createDeepLink({ communityAddress })
+    if (!appName || appName === 'fusecash') {
+      const { url } = await branch.createDeepLink({ communityAddress, appName })
       deepLinkUrl = url
     } else {
       const forkData = await Fork.findOne({ appName })
