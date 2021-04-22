@@ -29,14 +29,11 @@ const handleRelayJob = async (job) => {
     const { methodData } = job.data
     const { _to, _amount, _token, _wallet } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
     const tokenAddress = _token.toLowerCase()
+    const actionData = formatActionData({ ...job.data, transactionBody: { ...job.data.transactionBody, value: _amount, tokenAddress } })
     const receiverAction = await new WalletAction({
       name: 'receiveTokens',
       job: mongoose.Types.ObjectId(job._id),
-      data: {
-        ...formatActionData(job.data),
-        value: _amount,
-        tokenAddress
-      },
+      data: actionData,
       tokenAddress,
       walletAddress: _to,
       communityAddress: job.communityAddress || job.data.communityAddress
@@ -44,11 +41,7 @@ const handleRelayJob = async (job) => {
     const senderAction = await new WalletAction({
       name: 'sendTokens',
       job: mongoose.Types.ObjectId(job._id),
-      data: {
-        ...formatActionData(job.data),
-        value: _amount,
-        tokenAddress
-      },
+      data: actionData,
       walletAddress: _wallet,
       tokenAddress,
       communityAddress: job.communityAddress || job.data.communityAddress
