@@ -249,6 +249,17 @@ const requestFuseDeposit = async ({
   }).save()
 }
 
+const cancelDeposit = async ({ externalId, type, purchase }) => {
+  const deposit  = await Deposit.findOne({ externalId })
+  deposit.set('purchase', purchase)
+  deposit.set('status', 'failed')
+  await deposit.save()
+
+  const action = await WalletAction.findOne({ 'data.externalId': externalId })
+  action.fail(`Credit card purchare failed with status ${type}`)
+  return action.save()
+}
+
 const getRampAuthKey = () =>
   readFileSync(`./src/constants/pem/ramp/${config.get('plugins.rampInstant.webhook.pemFile')}`).toString()
 
@@ -258,5 +269,6 @@ module.exports = {
   requestDeposit,
   getRampAuthKey,
   requestFuseDeposit,
+  cancelDeposit,
   makeFuseDeposit
 }

@@ -25,6 +25,7 @@ WalletActionSchema.methods.fail = function (reason) {
     reason = reason.message
   }
   this.failReason = reason
+  this.failedAt = Date.now()
   this.status = 'failed'
 }
 
@@ -32,7 +33,7 @@ WalletActionSchema.methods.failAndUpdate = function (reason) {
   if (reason instanceof Error) {
     reason = reason.message
   }
-  return WalletAction.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), status: 'failed', failReason: reason })
+  return WalletAction.findByIdAndUpdate(this._id, { lastFinishedAt: Date.now(), failedAt: Date.now(), status: 'failed', failReason: reason })
 }
 
 WalletActionSchema.methods.successAndUpdate = function () {
