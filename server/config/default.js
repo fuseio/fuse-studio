@@ -268,7 +268,8 @@ module.exports = {
       webhook: {
         pemFile: 'ramp-public.staging.pem',
         skipAuth: true
-      }
+      },
+      fuseDollarAccount: '0x'
     },
     fuseDollar: {
       verifyStableCoin: false,
