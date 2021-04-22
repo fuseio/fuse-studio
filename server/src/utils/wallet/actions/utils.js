@@ -2,7 +2,7 @@ const { get, pickBy, identity } = require('lodash')
 
 const formatActionData = ({ transactionBody, txHash, bonusType, externalId, detailedStatus, purchase }) => pickBy({
   status: get(transactionBody, 'status'),
-  value: get(transactionBody, 'value', 0),
+  value: get(transactionBody, 'value', 0).toString(),
   tokenName: get(transactionBody, 'tokenName', ''),
   tokenDecimal: get(transactionBody, 'tokenDecimal', ''),
   tokenSymbol: get(transactionBody, 'asset', ''),
