@@ -37,7 +37,7 @@ router.post('/', auth.required, async (req, res, next) => {
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
-    const job = await taskManager.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, communityAddress, newOwner: accountAddress, correlationId }, { isWalletJob: true })
+    const job = await taskManager.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, communityAddress, newOwner: accountAddress, correlationId })
     return res.json({ job: job })
   } else {
     let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
