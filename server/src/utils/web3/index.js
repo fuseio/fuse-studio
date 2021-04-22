@@ -111,8 +111,7 @@ const signMultiSig = async (web3, account, multiSigContract, contractAddress, da
   let hash = signMultiSigHash(multiSigContract._address, contractAddress, 0, data, nonce)
 
   // Get the off chain signature
-  const signHashBuffer = Buffer.from(hash.slice(2), 'hex')
-  const signature = web3.eth.accounts.sign(signHashBuffer, getPrivateKey(account))
+  const signature = web3.eth.accounts.sign(hash, getPrivateKey(account))
 
   return signature.signature
 }
