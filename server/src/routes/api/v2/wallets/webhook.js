@@ -7,6 +7,10 @@ const BigNumber = require('bignumber.js')
 const { handleSubscriptionWebHook } = require('@utils/wallet/actions')
 const { subscribeAddress } = require('@services/subscriptionServices')
 const auth = require('@routes/auth')
+const config = require('config')
+
+const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+const fuseDollarAccount = config.get('plugins.rampInstant.fuseDollarAccount')
 
 router.post('/subscribe', auth.admin, async (req, res) => {
   const { walletAddress } = req.body
@@ -22,6 +26,11 @@ router.post('/', async (req, res) => {
   const { args, address: tokenAddress, transactionHash } = req.body
   console.log(`got txHash ${transactionHash} from the wehbook`)
   const [from, to, { hex }] = args
+  if (tokenAddress === fuseDollarAddress && from === fuseDollarAccount) {
+    console.log(` deposit event received from the subscription webhook, skipping`)
+    res.send({ data: 'ok' })
+    return
+  }
   const action = await WalletAction.findOne({ 'data.txHash': transactionHash })
   if (!action) {
     const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
