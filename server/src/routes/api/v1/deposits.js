@@ -211,7 +211,7 @@ router.post('/ramp/:customerAddress/:communityAddress', rampAuthCheck, async (re
     }
     console.log(`[deposit-ramp] after makeDeposit`)
     return res.json({ response: 'ok' })
-  } else if (type === 'EXPIRED' || type === 'CANCELLED') {
+  } else if (type === 'RETURNED') {
     await cancelDeposit({
       externalId: id,
       type,
