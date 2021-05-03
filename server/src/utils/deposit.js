@@ -250,7 +250,7 @@ const requestFuseDeposit = async ({
 }
 
 const cancelDeposit = async ({ externalId, type, purchase }) => {
-  const deposit  = await Deposit.findOne({ externalId })
+  const deposit = await Deposit.findOne({ externalId })
   deposit.set('purchase', purchase)
   deposit.set('status', 'failed')
   await deposit.save()
