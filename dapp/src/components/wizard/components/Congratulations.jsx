@@ -16,7 +16,7 @@ const Congratulations = ({ goToDashboard }) => {
           Congratulations!
         </div>
         <p className='congratulation__fuse-text'>
-          You have been awarded with 100 Fuse tokens for launching on Fuse network
+          You have been awarded with 1 Fuse token for launching on Fuse network
           &nbsp;<small>(<a target='_blank' rel='noopener noreferrer' href='https://docs.fuse.io/the-fuse-chain/fuse-token'>What's that?</a>)</small>
         </p>
         <div className='congratulation__boxImg'>
