@@ -12,13 +12,11 @@ const { send } = require('./send')
 
 const createWeb3 = (providerUrl, account) => {
   const web3 = new Web3(providerUrl)
-  let walletAccount
   if (account) {
-    walletAccount = web3.eth.accounts.wallet.add(getPrivateKey(account))
-  } else {
-    walletAccount = web3.eth.accounts.wallet.add(ethUtils.addHexPrefix(config.get('secrets.fuse.bridge.privateKey')))
+    const walletAccount = web3.eth.accounts.wallet.add(getPrivateKey(account))
+    return { from: walletAccount.address, web3 }
   }
-  return { from: walletAccount.address, web3 }
+  return { web3 }
 }
 
 const createContract = ({ web3, bridgeType }, abi, address) => {
