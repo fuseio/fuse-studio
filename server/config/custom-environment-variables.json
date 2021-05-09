@@ -111,11 +111,6 @@
     "accounts": {
       "seed": "COMMUNITY_SECRETS_ACCOUNTS_SEED",
       "funderSeed": "COMMUNITY_SECRETS_ACCOUNTS_FUNDER_SEED"
-    },
-    "fuse": {
-      "bridge": {
-        "privateKey": "COMMUNITY_SECRETS_FUSE_BRIDGE_PRIVATE_KEY"
-      }
     }
   },
   "bonus": {
