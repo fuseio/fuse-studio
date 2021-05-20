@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const CommunityProgress = mongoose.model('CommunityProgress')
-const { agenda } = require('@services/agenda')
 const taskManager = require('@services/taskManager')
 
 router.get('/:id', async (req, res, next) => {

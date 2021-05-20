@@ -248,6 +248,19 @@ module.exports = {
     },
     transak: {
       args: {
+      },
+      api: {
+        urlBase: 'https://staging-api.transak.com/api/v2/'
+      },
+      tokensMapping: {
+        'ETH': {
+          tokenAddress: '0x0000000000000000000000000000000000000000',
+          decimals: 18
+        },
+        'BUSD': {
+          tokenAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+          decimals: 18
+        }
       }
     },
     carbon: {

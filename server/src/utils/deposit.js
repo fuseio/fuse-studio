@@ -5,11 +5,35 @@ const { isStableCoin, adjustDecimals } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const Community = mongoose.model('Community')
-const QueueJob = mongoose.model('QueueJob')
 const WalletAction = mongoose.model('WalletAction')
 const { readFileSync } = require('fs')
-const { createNetwork } = require('@utils/web3')
-const { formatActionData } = require('@utils/wallet/actions')
+
+const depositStarted = async ({
+  amount,
+  customerAddress,
+  walletAddress,
+  externalId,
+  provider,
+  tokenDecimals,
+  tokenAddress,
+  purchase
+}) => {
+  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  const isFuseDollar = tokenAddress.toLowerCase() === fuseDollarAddress.toLowerCase()
+
+  await new Deposit({
+    walletAddress,
+    customerAddress,
+    tokenAddress: tokenAddress.toLowerCase(),
+    tokenDecimals,
+    amount,
+    provider,
+    externalId,
+    status: 'pending',
+    type: isFuseDollar ? 'fuse-dollar' : 'simple',
+    purchase
+  }).save()
+}
 
 const makeDeposit = async ({
   walletAddress,
@@ -89,164 +113,20 @@ const startDeposit = async (deposit) => {
     }
     console.log(`[makeDeposit] Fuse dollar flow`)
 
-    const { web3 } = createNetwork('home')
-    const blockNumber = await web3.eth.getBlockNumber()
-
-    // updating the fake-deposit job for soon to be deprecated wallet
-    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.transactionBody.blockNumber': blockNumber, 'data.purchase': purchase } })
-
     const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
     const fuseDollarDecimals = 18
     const adjustedAmount = adjustDecimals(amount, tokenDecimals, fuseDollarDecimals)
-    // this data is used as a context for a wallet about the job
-    const additionalData = {
-      walletAddress: customerAddress,
-      externalId,
-      actionType: 'fiat-deposit',
-      transactionBody: {
-        status: 'pending',
-        tokenAddress: fuseDollarAddress.toLowerCase()
-      }
-    }
-    return taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData }, { isWalletJob: true })
+
+    return taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, externalId, purchase }, { isWalletJob: true })
   }
 }
 
-const requestDeposit = async ({
-  amount,
-  customerAddress,
-  communityAddress,
-  walletAddress,
+const fulfilDeposit = ({
   externalId,
-  provider,
-  purchase
-}) => {
-  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-  const data = {
-    externalId,
-    provider,
-    walletAddress: customerAddress,
-    transactionBody: {
-      value: amount,
-      status: 'pending',
-      tokenAddress: fuseDollarAddress.toLowerCase(),
-      tokenDecimal: 18,
-      tokenSymbol: 'fUSD',
-      asset: 'fUSD',
-      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-      tokenName: 'Fuse Dollar',
-      from: walletAddress,
-      to: customerAddress
-    },
-    purchase
-  }
-  await new WalletAction({
-    name: 'fiat-onramp',
-    communityAddress,
-    walletAddress: customerAddress,
-    data: formatActionData({
-      ...data,
-      detailedStatus: 'payment-processing'
-    }),
-    tokenAddress: data.transactionBody.tokenAddress,
-    status: 'pending'
-  }).save()
-  // Deprecated for Fuse Wallet v2
-  return new QueueJob({
-    name: 'fiat-processing',
-    messageId: externalId,
-    communityAddress,
-    data: {
-      ...data,
-      actionType: 'fiat-processing'
-    }
-  }).save()
-}
-
-const makeFuseDeposit = async ({
-  walletAddress,
-  customerAddress,
-  communityAddress,
-  tokenAddress,
-  tokenDecimals,
-  amount,
   transactionHash,
-  externalId,
-  purchase,
-  ...rest
-}) => {
-  const { web3 } = createNetwork('home')
-  const blockNumber = await web3.eth.getBlockNumber()
-  const data = {
-    walletAddress: customerAddress,
-    txHash: transactionHash,
-    purchase,
-    transactionBody: {
-      blockNumber,
-      status: 'confirmed',
-      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-      txHash: transactionHash
-    }
-  }
-  const action = await WalletAction.findOne({ 'data.externalId': externalId })
-  if (action) {
-    action.set('data', { ...action.data, ...formatActionData(data) })
-    action.set('status', 'succeeded')
-    await action.save()
-  }
-  const deposit = await new Deposit({
-    ...rest,
-    externalId,
-    transactionHash,
-    walletAddress,
-    customerAddress,
-    communityAddress,
-    tokenAddress,
-    amount,
-    status: 'succeeded',
-    type: 'fuse-dollar',
-    tokenDecimals,
-    purchase
-  }).save()
-  return deposit
-}
-
-const requestFuseDeposit = async ({
-  amount,
-  customerAddress,
-  communityAddress,
-  walletAddress,
-  externalId,
-  provider,
   purchase
 }) => {
-  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar').toLowerCase()
-  const data = {
-    externalId,
-    provider,
-    walletAddress: customerAddress,
-    transactionBody: {
-      value: amount,
-      status: 'pending',
-      tokenAddress: fuseDollarAddress,
-      tokenDecimal: 18,
-      tokenSymbol: 'fUSD',
-      asset: 'fUSD',
-      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-      tokenName: 'Fuse Dollar',
-      to: customerAddress
-    },
-    purchase
-  }
-  const formattedData = formatActionData(data)
-  await new WalletAction({
-    name: 'fiat-deposit',
-    communityAddress,
-    walletAddress: customerAddress,
-    data: formattedData,
-    tokenAddress: formattedData.tokenAddress,
-    status: 'pending'
-  }).save()
+  return Deposit.updateOne({ externalId }, { transactionHash, status: 'succeeded', purchase })
 }
 
 const cancelDeposit = async ({ externalId, type, purchase }) => {
@@ -264,11 +144,10 @@ const getRampAuthKey = () =>
   readFileSync(`./src/constants/pem/ramp/${config.get('plugins.rampInstant.webhook.pemFile')}`).toString()
 
 module.exports = {
+  depositStarted,
   makeDeposit,
   retryDeposit,
-  requestDeposit,
   getRampAuthKey,
-  requestFuseDeposit,
   cancelDeposit,
-  makeFuseDeposit
+  fulfilDeposit
 }

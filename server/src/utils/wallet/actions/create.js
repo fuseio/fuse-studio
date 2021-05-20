@@ -94,11 +94,15 @@ const handleSetWalletOwnerJob = (job) => {
 }
 
 const makeMintDeposited = async (job) => {
-  const action = await WalletAction.findOne({ 'data.externalId': job.data.externalId })
-  action.set('job', mongoose.Types.ObjectId(job._id))
-  action.set('data', { ...action.data, ...formatActionData(job.data) })
-  action.set('data.detailedStatus', 'minting')
-  return action.save()
+  const data = formatActionData(job.data)
+  return new WalletAction({
+    name: 'fiat-onramp',
+    job: mongoose.Types.ObjectId(job._id),
+    data,
+    tokenAddress: data.tokenAddress,
+    walletAddress: data.walletAddress,
+    communityAddress: data.communityAddress
+  }).save()
 }
 
 const jobCreationHandlers = {
