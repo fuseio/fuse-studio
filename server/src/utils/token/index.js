@@ -80,13 +80,23 @@ const getAllowance = async (network, { tokenAddress, owner, spender }) => {
   return allowance
 }
 
-const stableCoins = [
-  config.get('network.foreign.addresses.USDCoin'),
-  config.get('network.foreign.addresses.DaiStablecoin'),
-  config.get('network.foreign.addresses.TetherUSD')
-].map(tokenAddress => tokenAddress.toLowerCase())
+const stableCoins = {
+  ethereum: [
+    config.get('network.foreign.addresses.USDCoin'),
+    config.get('network.foreign.addresses.DaiStablecoin'),
+    config.get('network.foreign.addresses.TetherUSD'),
+    ...(config.has('network.foreign.extraStableCoins') && config.get('network.foreign.extraStableCoins'))
+  ],
+  bsc: [
+    config.get('network.bsc.addresses.BUSD')
+  ],
+  fuse: [
+    config.get('network.home.addresses.FuseDollar')
+  ]
+}
 
-const isStableCoin = (tokenAddress) => stableCoins.includes(tokenAddress.toLowerCase())
+const isStableCoin = (tokenAddress, network = 'ethereum') => stableCoins[network].map(tokenAddress => tokenAddress.toLowerCase())
+  .includes(tokenAddress.toLowerCase())
 
 module.exports = {
   fetchTokenData,

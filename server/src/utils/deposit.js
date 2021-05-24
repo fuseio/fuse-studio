@@ -18,7 +18,7 @@ const getDepositType = ({ tokenAddress, network }) => {
     // the tokens are recieved on the fuse network
     return 'naive'
   } else {
-    if (isStableCoin(tokenAddress)) {
+    if (isStableCoin(tokenAddress, network)) {
       // mint of fUSD is required
       return 'mint'
     } else {
