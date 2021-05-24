@@ -22,7 +22,7 @@ module.exports = {
     alias: {
       'react-dom': '@hot-loader/react-dom'
     },
-    extensions: ['.js', '.jsx', '.json', '.scss']
+    extensions: ['.mjs', '.js', '.jsx', '.json', '.scss']
   },
   devServer: {
     port: process.env.COMMUNITY_COLU_PORT || 9000,
