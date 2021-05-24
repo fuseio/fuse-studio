@@ -1,14 +1,40 @@
 const config = require('config')
-const lodash = require('lodash')
 const taskManager = require('@services/taskManager')
 const { isStableCoin, adjustDecimals } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
-const Community = mongoose.model('Community')
-const WalletAction = mongoose.model('WalletAction')
 const { readFileSync } = require('fs')
 
-const depositStarted = async ({
+const isNetworkSupported = (network) => {
+  const supportedNetwork = config.get('deposit.supportedNetworks')
+  return supportedNetwork.includes(network)
+}
+
+const isDepositTypeAvailable = (type) => config.get('deposit.availableTypes').includes(type)
+
+const getDepositType = ({ tokenAddress, network }) => {
+  // const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  if (network === 'fuse') {
+    // the tokens are recieved on the fuse network
+    return 'naive'
+  } else {
+    if (isStableCoin(tokenAddress)) {
+      // mint of fUSD is required
+      return 'mint'
+    } else {
+      return 'relay'
+    }
+  }
+}
+
+const verifyDeposit = async ({ externalId }) => {
+  const deposit = await Deposit.findOne({ externalId })
+  if (deposit) {
+    throw new Error(`deposit with external id ${externalId} already received`)
+  }
+}
+
+const initiateDeposit = async ({
   amount,
   customerAddress,
   walletAddress,
@@ -16,67 +42,92 @@ const depositStarted = async ({
   provider,
   tokenDecimals,
   tokenAddress,
-  purchase
+  communityAddress,
+  purchase,
+  network
 }) => {
-  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-  const isFuseDollar = tokenAddress.toLowerCase() === fuseDollarAddress.toLowerCase()
+  let error
+  if (!isNetworkSupported(network)) {
+    error = `Network ${network} is not supported`
+    console.warn(error)
+  }
 
-  await new Deposit({
+  // TODO: check token decimals
+  await verifyDeposit({ externalId })
+
+  const deposit = await new Deposit({
     walletAddress,
     customerAddress,
+    communityAddress,
     tokenAddress: tokenAddress.toLowerCase(),
     tokenDecimals,
     amount,
     provider,
     externalId,
-    status: 'pending',
-    type: isFuseDollar ? 'fuse-dollar' : 'simple',
-    purchase
+    status: error ? 'failed' : 'pending',
+    type: error ? 'naive' : getDepositType({ tokenAddress, network }),
+    purchase,
+    network,
+    depositError: error
   }).save()
+  console.log({ deposit })
 }
 
-const makeDeposit = async ({
-  walletAddress,
-  customerAddress,
-  communityAddress,
-  tokenAddress,
-  tokenDecimals,
-  amount,
+const fulfillDeposit = async ({
   transactionHash,
   externalId,
-  purchase,
-  ...rest
+  provider,
+  purchase
 }) => {
-  console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
+  // TODO: check tokenHash
   if (!transactionHash) {
-    console.warn(`transactionHash not given for deposit ${externalId}`)
+    throw new Error(`transactionHash not given for deposit ${externalId}`)
+  }
+  const deposit = await Deposit.findOne({ externalId, provider, status: 'pending' })
+  if (!deposit) {
+    throw new Error(`No matching deposit found ${externalId}, ${provider}`)
   }
 
-  const community = await Community.findOne({ communityAddress }).lean()
-  if (!community) {
-    console.error(`[makeDeposit] could not find community ${communityAddress}`)
-    return
-  }
-  const { plugins } = community
-  const isFuseDollar = config.get('plugins.fuseDollar.useOnly') || lodash.get(plugins, 'fuseDollar.isActive')
+  deposit.transactionHash = transactionHash
+  deposit.purchase = purchase
+  await deposit.save()
 
-  const deposit = await new Deposit({
-    ...rest,
-    externalId,
-    transactionHash,
+  await performDeposit(deposit)
+  return deposit
+}
+
+const performDeposit = async (deposit) => {
+  if (deposit.status !== 'pending') {
+    throw new Error(`deposit data does not allow to deposit ${deposit}`)
+  }
+  const {
     walletAddress,
     customerAddress,
-    communityAddress,
-    tokenAddress,
     amount,
-    status: 'pending',
-    type: isFuseDollar ? 'fuse-dollar' : 'simple',
-    tokenDecimals,
-    purchase
-  }).save()
+    type,
+    tokenDecimals
+  } = deposit
+  if (!isDepositTypeAvailable(type)) {
+    throw new Error(`deposit type of ${type} currently not available for deposit ${deposit.externalId}`)
+  }
 
-  await startDeposit(deposit)
-  return deposit
+  deposit.status = 'started'
+  await deposit.save()
+
+  if (type === 'naive') {
+    console.warn(`Funds already received on the Fuse Network, no need to take any action`)
+  } else if (type === 'relay') {
+    const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
+    return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
+  } else if (type === 'mint') {
+    console.log(`[fulfillDeposit] Fuse dollar flow`)
+
+    const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+    const fuseDollarDecimals = 18
+    const adjustedAmount = adjustDecimals(amount, tokenDecimals, fuseDollarDecimals)
+
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount }, { isWalletJob: true })
+  }
 }
 
 const retryDeposit = async ({
@@ -88,66 +139,27 @@ const retryDeposit = async ({
     console.error(msg)
     throw new Error(msg)
   }
-  return startDeposit(deposit)
-}
-
-const startDeposit = async (deposit) => {
-  const {
-    externalId,
-    walletAddress,
-    customerAddress,
-    tokenAddress,
-    amount,
-    type,
-    tokenDecimals,
-    purchase
-  } = deposit
-  const isFuseDollar = type === 'fuse-dollar'
-  if (!isFuseDollar) {
-    console.log(`[makeDeposit] transferring to home with relayTokens`)
-    const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
-    return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
-  } else {
-    if (config.get('plugins.fuseDollar.verifyStableCoin') && !isStableCoin(tokenAddress)) {
-      throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
-    }
-    console.log(`[makeDeposit] Fuse dollar flow`)
-
-    const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-    const fuseDollarDecimals = 18
-    const adjustedAmount = adjustDecimals(amount, tokenDecimals, fuseDollarDecimals)
-
-    return taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, externalId, purchase }, { isWalletJob: true })
+  if (!isNetworkSupported(deposit.network)) {
+    throw new Error(`Network ${deposit.network} is not supported`)
   }
-}
 
-const fulfilDeposit = ({
-  externalId,
-  transactionHash,
-  purchase
-}) => {
-  return Deposit.updateOne({ externalId }, { transactionHash, status: 'succeeded', purchase })
-}
-
-const cancelDeposit = async ({ externalId, type, purchase }) => {
-  const deposit = await Deposit.findOne({ externalId })
-  deposit.set('purchase', purchase)
-  deposit.set('status', 'failed')
+  deposit.status = 'pending'
   await deposit.save()
+  return performDeposit(deposit)
+}
 
-  const action = await WalletAction.findOne({ 'data.externalId': externalId })
-  action.fail(`Credit card purchare failed with status ${type}`)
-  return action.save()
+const cancelDeposit = async ({ externalId, provider, purchase }) => {
+  return Deposit.updateOne({ externalId, provider }, { status: 'failed', purchase }, { new: true })
 }
 
 const getRampAuthKey = () =>
   readFileSync(`./src/constants/pem/ramp/${config.get('plugins.rampInstant.webhook.pemFile')}`).toString()
 
 module.exports = {
-  depositStarted,
-  makeDeposit,
+  initiateDeposit,
+  fulfillDeposit,
   retryDeposit,
   getRampAuthKey,
-  cancelDeposit,
-  fulfilDeposit
+  performDeposit,
+  cancelDeposit
 }

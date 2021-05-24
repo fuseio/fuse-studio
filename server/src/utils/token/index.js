@@ -84,9 +84,9 @@ const stableCoins = [
   config.get('network.foreign.addresses.USDCoin'),
   config.get('network.foreign.addresses.DaiStablecoin'),
   config.get('network.foreign.addresses.TetherUSD')
-]
+].map(tokenAddress => tokenAddress.toLowerCase())
 
-const isStableCoin = (tokenAddress) => stableCoins.includes(tokenAddress)
+const isStableCoin = (tokenAddress) => stableCoins.includes(tokenAddress.toLowerCase())
 
 module.exports = {
   fetchTokenData,

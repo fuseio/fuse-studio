@@ -5,6 +5,7 @@ const transform = (doc, ret) => ({ ...ret, amount: doc.amount ? doc.amount.toStr
 
 const DepositSchema = new Schema({
   transactionHash: { type: String },
+  network: { type: String, enum: ['fuse', 'bsc', 'ethereum'], required: [true, "can't be blank"] },
   walletAddress: { type: String, required: [true, "can't be blank"] },
   customerAddress: { type: String, required: [true, "can't be blank"] },
   tokenAddress: { type: String, required: [true, "can't be blank"] },
@@ -13,8 +14,9 @@ const DepositSchema = new Schema({
   provider: { type: String, required: [true, "can't be blank"] },
   externalId: { type: String, required: [true, "can't be blank"] },
   status: { type: String, required: [true, "can't be blank"] },
-  type: { type: String, enum: ['simple', 'fuse-dollar'], required: [true, "can't be blank"] },
+  type: { type: String, enum: ['naive', 'relay', 'mint'], required: [true, "can't be blank"] },
   jobs: { type: Object, default: {} },
+  depositError: { type: String },
   purchase: { type: Object }
 }, { timestamps: true })
 

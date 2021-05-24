@@ -260,6 +260,10 @@ module.exports = {
         'BUSD': {
           tokenAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
           decimals: 18
+        },
+        'USDC': {
+          tokenAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+          decimals: 6
         }
       }
     },
@@ -288,6 +292,10 @@ module.exports = {
       verifyStableCoin: false,
       useOnly: true
     }
+  },
+  deposit: {
+    supportedNetworks: ['ethereum', 'bsc', 'fuse'],
+    availableTypes: ['mint', 'naive']
   },
   inviteTxt: 'Hi, a friend has invited you to Fuse',
   inviteTxtEmail: 'Hi, a friend has invited you to Fuse. Please open this link from your mobile device',
