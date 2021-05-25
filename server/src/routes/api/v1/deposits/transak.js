@@ -27,7 +27,7 @@ const getToken = (cryptocurrency) => {
   return tokensMapping[cryptocurrency]
 }
 
-router.post('/', async (req, res) => {
+router.post('/', transakAuthCheck, async (req, res) => {
   const { eventID, webhookData } = req.body.data
   const provider = 'transak'
   console.log(`[deposit-transak] eventID: ${eventID}, webhookData: ${JSON.stringify(webhookData)}`)
