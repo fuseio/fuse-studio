@@ -100,8 +100,8 @@ const makeMintDeposited = async (job) => {
     job: mongoose.Types.ObjectId(job._id),
     data,
     tokenAddress: data.tokenAddress,
-    walletAddress: data.walletAddress,
-    communityAddress: data.communityAddress
+    walletAddress: job.data.walletAddress,
+    communityAddress: job.data.communityAddress
   }).save()
 }
 

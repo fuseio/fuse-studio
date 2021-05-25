@@ -142,7 +142,7 @@ const performDeposit = async (deposit) => {
       to: customerAddress,
       tokenName: 'Fuse Dollar',
       tokenDecimal: fuseDollarDecimals,
-      tokenSymbol: 'fUSD',
+      asset: 'fUSD',
       tokenAddress: fuseDollarAddress
     }
     taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, walletAddress, communityAddress, transactionBody }, { isWalletJob: true })
