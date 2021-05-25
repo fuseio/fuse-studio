@@ -157,7 +157,7 @@ const performDeposit = async (deposit) => {
       walletAddress: customerAddress,
       data: formatActionData(data),
       tokenAddress: data.transactionBody.tokenAddress,
-      status: 'pending'
+      status: 'confirmed'
     }).save()
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')

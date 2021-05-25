@@ -82,6 +82,7 @@ router.post('/:customerAddress/:communityAddress', rampAuthCheck, async (req, re
       provider,
       purchase
     })
+    return res.json({ response: 'ok' })
   } else if (type === 'RETURNED') {
     await cancelDeposit({
       externalId: id,
