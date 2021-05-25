@@ -4,7 +4,7 @@ const { isStableCoin, adjustDecimals } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const { readFileSync } = require('fs')
-
+const { isProduction } = require('@utils/env')
 const isNetworkSupported = (network) => {
   const supportedNetwork = config.get('deposit.supportedNetworks')
   return supportedNetwork.includes(network)
@@ -22,15 +22,23 @@ const getDepositType = ({ tokenAddress, network }) => {
       // mint of fUSD is required
       return 'mint'
     } else {
+      // need relay the tokens via bridge manually
       return 'relay'
     }
   }
 }
 
-const verifyDeposit = async ({ externalId }) => {
+const verifyTokenAddress = () => ({ tokenAddress, tokenDecimals }) => {
+
+}
+
+const verifyDeposit = async ({ externalId, network, tokenAddress, tokenDecimals }) => {
   const deposit = await Deposit.findOne({ externalId })
   if (deposit) {
     throw new Error(`deposit with external id ${externalId} already received`)
+  }
+  if (isProduction()) {
+    verifyTokenAddress({ network, tokenAddress, tokenDecimals })
   }
 }
 
@@ -53,7 +61,7 @@ const initiateDeposit = async ({
   }
 
   // TODO: check token decimals
-  await verifyDeposit({ externalId })
+  await verifyDeposit({ externalId, network, tokenDecimals, tokenAddress })
 
   const deposit = await new Deposit({
     walletAddress,
@@ -105,7 +113,9 @@ const performDeposit = async (deposit) => {
     customerAddress,
     amount,
     type,
-    tokenDecimals
+    tokenDecimals,
+    tokenAddress,
+    communityAddress
   } = deposit
   if (!isDepositTypeAvailable(type)) {
     throw new Error(`deposit type of ${type} currently not available for deposit ${deposit.externalId}`)
@@ -126,7 +136,7 @@ const performDeposit = async (deposit) => {
     const fuseDollarDecimals = 18
     const adjustedAmount = adjustDecimals(amount, tokenDecimals, fuseDollarDecimals)
 
-    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount }, { isWalletJob: true })
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, walletAddress, communityAddress }, { isWalletJob: true })
   }
 }
 

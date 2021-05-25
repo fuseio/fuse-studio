@@ -3,7 +3,7 @@ const lodash = require('lodash')
 const jwt = require('jsonwebtoken')
 const { initiateDeposit, cancelDeposit, fulfillDeposit } = require('@utils/deposit')
 const config = require('config')
-const web3Utils = require('web3-utils')
+const { toWei } = require('@utils/token')
 
 const transakAuthCheck = (req, res, next) => {
   console.log(`[deposit-transakAuthCheck] req.body: ${JSON.stringify(req.body)}`)
@@ -27,7 +27,7 @@ const getToken = (cryptocurrency) => {
   return tokensMapping[cryptocurrency]
 }
 
-router.post('/', transakAuthCheck, async (req, res) => {
+router.post('/', async (req, res) => {
   const { eventID, webhookData } = req.body.data
   const provider = 'transak'
   console.log(`[deposit-transak] eventID: ${eventID}, webhookData: ${JSON.stringify(webhookData)}`)
@@ -44,7 +44,7 @@ router.post('/', transakAuthCheck, async (req, res) => {
       communityAddress,
       tokenAddress,
       tokenDecimals: decimals,
-      amount: web3Utils.toWei(String(cryptoAmount)),
+      amount: toWei(cryptoAmount, decimals),
       externalId: id,
       provider,
       network
@@ -62,7 +62,7 @@ router.post('/', transakAuthCheck, async (req, res) => {
       customerAddress,
       walletAddress,
       communityAddress,
-      amount: cryptoAmount,
+      amount: toWei(cryptoAmount, decimals),
       externalId: id,
       network,
       provider
