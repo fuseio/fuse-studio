@@ -96,7 +96,7 @@ const handleSetWalletOwnerJob = (job) => {
 const makeMintDeposited = async (job) => {
   const data = formatActionData(job.data)
   return new WalletAction({
-    name: 'receiveTokens',
+    name: 'fiat-deposit',
     job: mongoose.Types.ObjectId(job._id),
     data,
     tokenAddress: data.tokenAddress,
