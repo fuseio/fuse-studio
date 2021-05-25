@@ -136,7 +136,16 @@ const performDeposit = async (deposit) => {
     const fuseDollarDecimals = 18
     const adjustedAmount = adjustDecimals(amount, tokenDecimals, fuseDollarDecimals)
 
-    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, walletAddress, communityAddress }, { isWalletJob: true })
+    const transactionBody = {
+      value: adjustedAmount,
+      from: '0x0000000000000000000000000000000000000000',
+      to: customerAddress,
+      tokenName: 'Fuse Dollar',
+      tokenDecimal: fuseDollarDecimals,
+      tokenSymbol: 'fUSD',
+      tokenAddress: fuseDollarAddress
+    }
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, walletAddress, communityAddress, transactionBody }, { isWalletJob: true })
   }
 }
 
