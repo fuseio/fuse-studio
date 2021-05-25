@@ -5,6 +5,7 @@ const web3Utils = require('web3-utils')
 const crypto = require('crypto')
 const stableStringify = require('fast-json-stable-stringify')
 const yn = require('yn')
+const { ZERO_ADDRESS } = require('@utils/network')
 
 const getTxHash = (purchase) => {
   try {
@@ -53,7 +54,7 @@ router.post('/:customerAddress/:communityAddress', rampAuthCheck, async (req, re
   if (type === 'CREATED') {
     // deposit is issued, on-ramp is waiting for fiat processing
     const requestData = {
-      tokenAddress: address.toLowerCase(),
+      tokenAddress: address ? address.toLowerCase() : ZERO_ADDRESS,
       tokenDecimals: decimals,
       customerAddress,
       communityAddress,

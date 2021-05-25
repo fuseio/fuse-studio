@@ -3,8 +3,12 @@ const taskManager = require('@services/taskManager')
 const { isStableCoin, adjustDecimals } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
+const WalletAction = mongoose.model('WalletAction')
 const { readFileSync } = require('fs')
 const { isProduction } = require('@utils/env')
+const { createNetwork } = require('@utils/web3')
+const { formatActionData } = require('@utils/wallet/actions')
+
 const isNetworkSupported = (network) => {
   const supportedNetwork = config.get('deposit.supportedNetworks')
   return supportedNetwork.includes(network)
@@ -115,7 +119,8 @@ const performDeposit = async (deposit) => {
     type,
     tokenDecimals,
     tokenAddress,
-    communityAddress
+    communityAddress,
+    transactionHash
   } = deposit
   if (!isDepositTypeAvailable(type)) {
     throw new Error(`deposit type of ${type} currently not available for deposit ${deposit.externalId}`)
@@ -126,6 +131,34 @@ const performDeposit = async (deposit) => {
 
   if (type === 'naive') {
     console.warn(`Funds already received on the Fuse Network, no need to take any action`)
+    const { web3 } = createNetwork('home')
+    const blockNumber = await web3.eth.getBlockNumber()
+    const data = {
+      walletAddress: customerAddress,
+      communityAddress,
+      transactionBody: {
+        value: amount,
+        status: 'confirmed',
+        tokenAddress,
+        tokenDecimal: 18,
+        tokenSymbol: 'fUSD',
+        asset: 'fUSD',
+        timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
+        tokenName: 'Fuse Dollar',
+        from: walletAddress,
+        to: customerAddress,
+        txHash: transactionHash,
+        blockNumber
+      }
+    }
+    await new WalletAction({
+      name: 'fiat-deposit',
+      communityAddress,
+      walletAddress: customerAddress,
+      data: formatActionData(data),
+      tokenAddress: data.transactionBody.tokenAddress,
+      status: 'pending'
+    }).save()
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
     return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
