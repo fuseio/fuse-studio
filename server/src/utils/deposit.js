@@ -159,6 +159,8 @@ const performDeposit = async (deposit) => {
       tokenAddress: data.transactionBody.tokenAddress,
       status: 'confirmed'
     }).save()
+    deposit.status = 'succeeded'
+    await deposit.save()
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
     return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
