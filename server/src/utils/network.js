@@ -19,6 +19,7 @@ const fetchGasPrice = async (speed) => {
 const toShortName = (networkType) => networkType === 'mainnet' ? 'main' : networkType
 
 module.exports = {
+  ZERO_ADDRESS,
   isZeroAddress,
   fetchGasPrice,
   toShortName

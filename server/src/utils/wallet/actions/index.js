@@ -21,20 +21,12 @@ const handleSuccessDefaultJob = (action, job) => {
   return action.save()
 }
 
-const handleSuccessMintDeposited = (action, job) => {
-  const formattedData = formatActionData(job.data)
-  action.set('status', get(formattedData, 'status'))
-  action.set('data', { ...action.data, ...formattedData })
-  action.set('data.detailedStatus', 'succeeded')
-  return action.save()
-}
-
 const jobSuccessHandlers = {
   createWallet: handleSuccessCreateWalletJob,
   createForeignWallet: handleSuccessDefaultJob,
   fundToken: handleSuccessDefaultJob,
   relay: handleSuccessDefaultJob,
-  mintDeposited: handleSuccessMintDeposited
+  mintDeposited: handleSuccessDefaultJob
 }
 
 const handlePendingAction = (action, txHash) => {

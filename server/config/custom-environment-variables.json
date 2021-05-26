@@ -68,6 +68,10 @@
         "url": "COMMUNITY_WEB3_GAS_STATION_URL",
         "speed": "COMMUNITY_WEB3_GAS_STATION_SPEED"
       },
+      "extraStableCoins": {
+        "__name": "COMMUNITY_NETWORK_FOREIGN_EXTRA_STABLE_COINS",
+        "__format": "json"
+      },
       "allowedTokensToRelay": "COMMUNITY_FOREIGN_TOKENS_ALLOWED_TO_RELAY",
       "providers": {
         "alchemy": {

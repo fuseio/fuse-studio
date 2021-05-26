@@ -3,7 +3,7 @@ const { inspect } = require('util')
 const request = require('request-promise-native')
 const foreign = require('@services/web3/foreign')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
-const { toWei } = require('web3-utils')
+const web3Utils = require('web3-utils')
 const { uniswapClient } = require('@services/graph')
 const BigNumber = require('bignumber.js')
 
@@ -31,6 +31,10 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
 
 const adjustDecimals = (amount, currentDecimals, desiredDecimals) => {
   return new BigNumber(amount).multipliedBy(new BigNumber(10).pow(desiredDecimals - currentDecimals)).toFixed()
+}
+
+const toWei = (amount, tokenDecimals = 18) => {
+  return new BigNumber(String(amount)).multipliedBy(new BigNumber(10).pow(tokenDecimals)).toFixed()
 }
 
 const fetchBalance = async ({ createContract }, tokenAddress, accountAddress) => {
@@ -63,7 +67,7 @@ const approve = async (network, { from, tokenAddress, spender, amount, infinite 
 
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
 
-  const method = createMethod(tokenContract, 'approve', spender, infinite ? toWei('1000000000') : amount)
+  const method = createMethod(tokenContract, 'approve', spender, infinite ? web3Utils.toWei('1000000000') : amount)
 
   const receipt = await send(method, {
     from
@@ -80,13 +84,23 @@ const getAllowance = async (network, { tokenAddress, owner, spender }) => {
   return allowance
 }
 
-const stableCoins = [
-  config.get('network.foreign.addresses.USDCoin'),
-  config.get('network.foreign.addresses.DaiStablecoin'),
-  config.get('network.foreign.addresses.TetherUSD')
-]
+const stableCoins = {
+  ethereum: [
+    config.get('network.foreign.addresses.USDCoin'),
+    config.get('network.foreign.addresses.DaiStablecoin'),
+    config.get('network.foreign.addresses.TetherUSD'),
+    ...(config.has('network.foreign.extraStableCoins') ? config.get('network.foreign.extraStableCoins') : [])
+  ],
+  bsc: [
+    config.get('network.bsc.addresses.BUSD')
+  ],
+  fuse: [
+    config.get('network.home.addresses.FuseDollar')
+  ]
+}
 
-const isStableCoin = (tokenAddress) => stableCoins.includes(tokenAddress)
+const isStableCoin = (tokenAddress, network = 'ethereum') => stableCoins[network].map(tokenAddress => tokenAddress.toLowerCase())
+  .includes(tokenAddress.toLowerCase())
 
 module.exports = {
   fetchTokenData,
@@ -97,5 +111,6 @@ module.exports = {
   getAllowance,
   fetchToken,
   isStableCoin,
-  adjustDecimals
+  adjustDecimals,
+  toWei
 }

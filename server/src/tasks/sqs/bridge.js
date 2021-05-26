@@ -83,6 +83,10 @@ const mintDeposited = async (account, { depositId, bridgeType, tokenAddress, rec
   const deposit = await Deposit.findById(depositId)
   await deposit.set('jobs.mintDeposited', job._id).save()
 
+  if (deposit.status !== 'started') {
+    throw new Error(`deposit status is ${deposit.status} instead of done`)
+  }
+
   try {
     const { createContract, createMethod, send } = createNetwork(bridgeType, account)
     const tokenContractInstance = createContract(MintableBurnableTokenAbi, tokenAddress)

@@ -1,58 +1,187 @@
 const config = require('config')
-const lodash = require('lodash')
 const taskManager = require('@services/taskManager')
 const { isStableCoin, adjustDecimals } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
-const Community = mongoose.model('Community')
-const QueueJob = mongoose.model('QueueJob')
 const WalletAction = mongoose.model('WalletAction')
 const { readFileSync } = require('fs')
+const { isProduction } = require('@utils/env')
 const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
 
-const makeDeposit = async ({
-  walletAddress,
-  customerAddress,
-  communityAddress,
-  tokenAddress,
-  tokenDecimals,
+const isNetworkSupported = (network) => {
+  const supportedNetwork = config.get('deposit.supportedNetworks')
+  return supportedNetwork.includes(network)
+}
+
+const isDepositTypeAvailable = (type) => config.get('deposit.availableTypes').includes(type)
+
+const getDepositType = ({ tokenAddress, network }) => {
+  // const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  if (network === 'fuse') {
+    // the tokens are recieved on the fuse network
+    return 'naive'
+  } else {
+    if (isStableCoin(tokenAddress, network)) {
+      // mint of fUSD is required
+      return 'mint'
+    } else {
+      // need relay the tokens via bridge manually
+      return 'relay'
+    }
+  }
+}
+
+const verifyTokenAddress = () => ({ tokenAddress, tokenDecimals }) => {
+
+}
+
+const verifyDeposit = async ({ externalId, network, tokenAddress, tokenDecimals }) => {
+  const deposit = await Deposit.findOne({ externalId })
+  if (deposit) {
+    throw new Error(`deposit with external id ${externalId} already received`)
+  }
+  if (isProduction()) {
+    verifyTokenAddress({ network, tokenAddress, tokenDecimals })
+  }
+}
+
+const initiateDeposit = async ({
   amount,
-  transactionHash,
+  customerAddress,
+  walletAddress,
   externalId,
+  provider,
+  tokenDecimals,
+  tokenAddress,
+  communityAddress,
   purchase,
-  ...rest
+  network
 }) => {
-  console.log(`[makeDeposit] walletAddress: ${walletAddress}, customerAddress: ${customerAddress}, communityAddress: ${communityAddress}, tokenAddress: ${tokenAddress}, amount: ${amount}`)
-  if (!transactionHash) {
-    console.warn(`transactionHash not given for deposit ${externalId}`)
+  let error
+  if (!isNetworkSupported(network)) {
+    error = `Network ${network} is not supported`
+    console.warn(error)
   }
 
-  const community = await Community.findOne({ communityAddress }).lean()
-  if (!community) {
-    console.error(`[makeDeposit] could not find community ${communityAddress}`)
-    return
-  }
-  const { plugins } = community
-  const isFuseDollar = config.get('plugins.fuseDollar.useOnly') || lodash.get(plugins, 'fuseDollar.isActive')
+  // TODO: check token decimals
+  await verifyDeposit({ externalId, network, tokenDecimals, tokenAddress })
 
   const deposit = await new Deposit({
-    ...rest,
-    externalId,
-    transactionHash,
     walletAddress,
     customerAddress,
     communityAddress,
-    tokenAddress,
-    amount,
-    status: 'pending',
-    type: isFuseDollar ? 'fuse-dollar' : 'simple',
+    tokenAddress: tokenAddress.toLowerCase(),
     tokenDecimals,
-    purchase
+    amount,
+    provider,
+    externalId,
+    status: error ? 'failed' : 'pending',
+    type: error ? 'naive' : getDepositType({ tokenAddress, network }),
+    purchase,
+    network,
+    depositError: error
   }).save()
+  console.log({ deposit })
+}
 
-  await startDeposit(deposit)
+const fulfillDeposit = async ({
+  transactionHash,
+  externalId,
+  provider,
+  purchase
+}) => {
+  // TODO: check tokenHash
+  if (!transactionHash) {
+    throw new Error(`transactionHash not given for deposit ${externalId}`)
+  }
+  const deposit = await Deposit.findOne({ externalId, provider, status: 'pending' })
+  if (!deposit) {
+    throw new Error(`No matching deposit found ${externalId}, ${provider}`)
+  }
+
+  deposit.transactionHash = transactionHash
+  deposit.purchase = purchase
+  await deposit.save()
+
+  await performDeposit(deposit)
   return deposit
+}
+
+const performDeposit = async (deposit) => {
+  if (deposit.status !== 'pending') {
+    throw new Error(`deposit data does not allow to deposit ${deposit}`)
+  }
+  const {
+    walletAddress,
+    customerAddress,
+    amount,
+    type,
+    tokenDecimals,
+    tokenAddress,
+    communityAddress,
+    transactionHash
+  } = deposit
+  if (!isDepositTypeAvailable(type)) {
+    throw new Error(`deposit type of ${type} currently not available for deposit ${deposit.externalId}`)
+  }
+
+  deposit.status = 'started'
+  await deposit.save()
+
+  if (type === 'naive') {
+    console.warn(`Funds already received on the Fuse Network, no need to take any action`)
+    const { web3 } = createNetwork('home')
+    const blockNumber = await web3.eth.getBlockNumber()
+    const data = {
+      walletAddress: customerAddress,
+      communityAddress,
+      transactionBody: {
+        value: amount,
+        status: 'confirmed',
+        tokenAddress,
+        tokenDecimal: 18,
+        tokenSymbol: 'fUSD',
+        asset: 'fUSD',
+        timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
+        tokenName: 'Fuse Dollar',
+        from: walletAddress,
+        to: customerAddress,
+        txHash: transactionHash,
+        blockNumber
+      }
+    }
+    await new WalletAction({
+      name: 'fiat-deposit',
+      communityAddress,
+      walletAddress: customerAddress,
+      data: formatActionData(data),
+      tokenAddress: data.transactionBody.tokenAddress,
+      status: 'confirmed'
+    }).save()
+    deposit.status = 'succeeded'
+    await deposit.save()
+  } else if (type === 'relay') {
+    const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
+    return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
+  } else if (type === 'mint') {
+    console.log(`[fulfillDeposit] Fuse dollar flow`)
+
+    const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+    const fuseDollarDecimals = 18
+    const adjustedAmount = adjustDecimals(amount, tokenDecimals, fuseDollarDecimals)
+
+    const transactionBody = {
+      value: adjustedAmount,
+      from: '0x0000000000000000000000000000000000000000',
+      to: customerAddress,
+      tokenName: 'Fuse Dollar',
+      tokenDecimal: fuseDollarDecimals,
+      asset: 'fUSD',
+      tokenAddress: fuseDollarAddress
+    }
+    taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, walletAddress: customerAddress, communityAddress, transactionBody }, { isWalletJob: true })
+  }
 }
 
 const retryDeposit = async ({
@@ -64,211 +193,27 @@ const retryDeposit = async ({
     console.error(msg)
     throw new Error(msg)
   }
-  return startDeposit(deposit)
-}
-
-const startDeposit = async (deposit) => {
-  const {
-    externalId,
-    walletAddress,
-    customerAddress,
-    tokenAddress,
-    amount,
-    type,
-    tokenDecimals,
-    purchase
-  } = deposit
-  const isFuseDollar = type === 'fuse-dollar'
-  if (!isFuseDollar) {
-    console.log(`[makeDeposit] transferring to home with relayTokens`)
-    const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
-    return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
-  } else {
-    if (config.get('plugins.fuseDollar.verifyStableCoin') && !isStableCoin(tokenAddress)) {
-      throw new Error(`token ${tokenAddress} is not a stable coin, cannot convert it to FuseDollar`)
-    }
-    console.log(`[makeDeposit] Fuse dollar flow`)
-
-    const { web3 } = createNetwork('home')
-    const blockNumber = await web3.eth.getBlockNumber()
-
-    // updating the fake-deposit job for soon to be deprecated wallet
-    await QueueJob.updateOne({ messageId: externalId }, { $set: { status: 'succeeded', 'data.transactionBody.status': 'confirmed', 'data.transactionBody.blockNumber': blockNumber, 'data.purchase': purchase } })
-
-    const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-    const fuseDollarDecimals = 18
-    const adjustedAmount = adjustDecimals(amount, tokenDecimals, fuseDollarDecimals)
-    // this data is used as a context for a wallet about the job
-    const additionalData = {
-      walletAddress: customerAddress,
-      externalId,
-      actionType: 'fiat-deposit',
-      transactionBody: {
-        status: 'pending',
-        tokenAddress: fuseDollarAddress.toLowerCase()
-      }
-    }
-    return taskManager.now('mintDeposited', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'home', tokenAddress: fuseDollarAddress, receiver: customerAddress, amount: adjustedAmount, ...additionalData }, { isWalletJob: true })
+  if (!isNetworkSupported(deposit.network)) {
+    throw new Error(`Network ${deposit.network} is not supported`)
   }
-}
 
-const requestDeposit = async ({
-  amount,
-  customerAddress,
-  communityAddress,
-  walletAddress,
-  externalId,
-  provider,
-  purchase
-}) => {
-  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
-  const data = {
-    externalId,
-    provider,
-    walletAddress: customerAddress,
-    transactionBody: {
-      value: amount,
-      status: 'pending',
-      tokenAddress: fuseDollarAddress.toLowerCase(),
-      tokenDecimal: 18,
-      tokenSymbol: 'fUSD',
-      asset: 'fUSD',
-      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-      tokenName: 'Fuse Dollar',
-      from: walletAddress,
-      to: customerAddress
-    },
-    purchase
-  }
-  await new WalletAction({
-    name: 'fiat-onramp',
-    communityAddress,
-    walletAddress: customerAddress,
-    data: formatActionData({
-      ...data,
-      detailedStatus: 'payment-processing'
-    }),
-    tokenAddress: data.transactionBody.tokenAddress,
-    status: 'pending'
-  }).save()
-  // Deprecated for Fuse Wallet v2
-  return new QueueJob({
-    name: 'fiat-processing',
-    messageId: externalId,
-    communityAddress,
-    data: {
-      ...data,
-      actionType: 'fiat-processing'
-    }
-  }).save()
-}
-
-const makeFuseDeposit = async ({
-  walletAddress,
-  customerAddress,
-  communityAddress,
-  tokenAddress,
-  tokenDecimals,
-  amount,
-  transactionHash,
-  externalId,
-  purchase,
-  ...rest
-}) => {
-  const { web3 } = createNetwork('home')
-  const blockNumber = await web3.eth.getBlockNumber()
-  const data = {
-    walletAddress: customerAddress,
-    txHash: transactionHash,
-    purchase,
-    transactionBody: {
-      blockNumber,
-      status: 'confirmed',
-      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-      txHash: transactionHash
-    }
-  }
-  const action = await WalletAction.findOne({ 'data.externalId': externalId })
-  if (action) {
-    action.set('data', { ...action.data, ...formatActionData(data) })
-    action.set('status', 'succeeded')
-    await action.save()
-  }
-  const deposit = await new Deposit({
-    ...rest,
-    externalId,
-    transactionHash,
-    walletAddress,
-    customerAddress,
-    communityAddress,
-    tokenAddress,
-    amount,
-    status: 'succeeded',
-    type: 'fuse-dollar',
-    tokenDecimals,
-    purchase
-  }).save()
-  return deposit
-}
-
-const requestFuseDeposit = async ({
-  amount,
-  customerAddress,
-  communityAddress,
-  walletAddress,
-  externalId,
-  provider,
-  purchase
-}) => {
-  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar').toLowerCase()
-  const data = {
-    externalId,
-    provider,
-    walletAddress: customerAddress,
-    transactionBody: {
-      value: amount,
-      status: 'pending',
-      tokenAddress: fuseDollarAddress,
-      tokenDecimal: 18,
-      tokenSymbol: 'fUSD',
-      asset: 'fUSD',
-      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
-      tokenName: 'Fuse Dollar',
-      to: customerAddress
-    },
-    purchase
-  }
-  const formattedData = formatActionData(data)
-  await new WalletAction({
-    name: 'fiat-deposit',
-    communityAddress,
-    walletAddress: customerAddress,
-    data: formattedData,
-    tokenAddress: formattedData.tokenAddress,
-    status: 'pending'
-  }).save()
-}
-
-const cancelDeposit = async ({ externalId, type, purchase }) => {
-  const deposit = await Deposit.findOne({ externalId })
-  deposit.set('purchase', purchase)
-  deposit.set('status', 'failed')
+  deposit.status = 'pending'
   await deposit.save()
+  return performDeposit(deposit)
+}
 
-  const action = await WalletAction.findOne({ 'data.externalId': externalId })
-  action.fail(`Credit card purchare failed with status ${type}`)
-  return action.save()
+const cancelDeposit = async ({ externalId, provider, purchase }) => {
+  return Deposit.updateOne({ externalId, provider }, { status: 'failed', purchase }, { new: true })
 }
 
 const getRampAuthKey = () =>
   readFileSync(`./src/constants/pem/ramp/${config.get('plugins.rampInstant.webhook.pemFile')}`).toString()
 
 module.exports = {
-  makeDeposit,
+  initiateDeposit,
+  fulfillDeposit,
   retryDeposit,
-  requestDeposit,
   getRampAuthKey,
-  requestFuseDeposit,
-  cancelDeposit,
-  makeFuseDeposit
+  performDeposit,
+  cancelDeposit
 }
