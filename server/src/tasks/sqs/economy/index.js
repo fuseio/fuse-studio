@@ -60,7 +60,7 @@ const performStep = async ({ home, foreign }, communityProgress, stepName) => {
     }
   }
 }
-const deployEconomy = async (account, { communityProgressId }) => {
+const deployEconomy = async (account, { communityProgressId, owner }) => {
   try {
     let communityProgress = await CommunityProgress.findById(communityProgressId)
 
@@ -88,6 +88,7 @@ const deployEconomy = async (account, { communityProgressId }) => {
       communityURI,
       description,
       creatorAddress: adminAddress,
+      owner,
       bridgeDirection: get(steps, 'community.args.foreignTokenAddress') && 'foreign-to-home',
       bridgeType: get(steps, 'community.args.foreignTokenAddress') && 'multi-amb-erc20-to-erc677'
     }).save()

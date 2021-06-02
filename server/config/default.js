@@ -336,7 +336,8 @@ module.exports = {
     }
   },
   community: {
-    initialBalance: '1'
+    initialBalance: '1',
+    limitPerUser: 10
   },
   slack: {
     channel: 'monitor'
