@@ -51,7 +51,6 @@ const makePlugin = ({ plugin }) => {
 
 router.post('/:communityAddress/plugins', auth.communityOwner, async (req, res, next) => {
   const { communityAddress } = req.params
-  console.log(req.user)
   const plugin = makePlugin(req.body)
   const fields = lodash.fromPairs(lodash.toPairs(plugin).map(([key, value]) => [`plugins.${plugin.name}.${key}`, value]))
   const community = await Community.findOneAndUpdate({ communityAddress }, fields, { new: true })
