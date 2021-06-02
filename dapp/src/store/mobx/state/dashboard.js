@@ -119,6 +119,7 @@ export default class Dashboard {
     try {
       const { data } = yield request
         .post(`${this.baseUrl}/communities/${communityAddress}/plugins`)
+        .set('Authorization', `Bearer ${JSON.parse(loadState('persist:root').user).jwtToken}`)
         .send({ plugin })
         .then(response => response.body)
       this.plugins = get(data, 'plugins')
@@ -131,6 +132,7 @@ export default class Dashboard {
     try {
       const response = yield request
         .put(`${this.baseUrl}/communities/${this.communityAddress}/foreignToken`)
+        .set('Authorization', `Bearer ${JSON.parse(loadState('persist:root').user).jwtToken}`)
         .send({ foreignTokenAddress })
         .then(response => response.body)
       this.community = { ...response.data }
@@ -142,6 +144,7 @@ export default class Dashboard {
   addBridgePlugin = flow(function * ({ bridgeType, bridgeDirection }) {
     const response = yield request
       .put(`${this.baseUrl}/communities/${this.communityAddress}/bridge`)
+      .set('Authorization', `Bearer ${JSON.parse(loadState('persist:root').user).jwtToken}`)
       .send({ bridgeType, bridgeDirection })
       .then(response => response.body)
     this.community = { ...response.data }

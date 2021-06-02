@@ -138,8 +138,9 @@ function * deployChosenContracts ({ response: { steps, receipt } }) {
         }
       }
     }
-  },{
-    networkType: 'main'
+  }, {
+    networkType: 'main',
+    auth: true
   })
 
   yield put({
@@ -157,7 +158,7 @@ function * deployExistingToken ({ steps, metadata }) {
   const response = yield call(createMetadata, { metadata })
   const communityURI = response.uri || `ipfs://${response.hash}`
   const newSteps = { ...steps, community: { ...steps.community, args: { ...steps.community.args, communityURI } } }
-  const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps }, { networkType: 'main' })
+  const { data: { _id } } = yield apiCall(api.deployChosenContracts, { steps: newSteps }, { networkType: 'main', auth: true })
   yield put({
     type: actions.DEPLOY_TOKEN.SUCCESS,
     response: {
@@ -322,7 +323,7 @@ function * fetchCommunity ({ type, ...params }) {
 }
 
 function * addCommunityPlugin ({ communityAddress, plugin }) {
-  const { data: community } = yield apiCall(addCommunityPluginApi, { communityAddress, plugin })
+  const { data: community } = yield apiCall(addCommunityPluginApi, { communityAddress, plugin }, { auth: true })
   yield put({
     type: ADD_COMMUNITY_PLUGIN.SUCCESS,
     communityAddress,
@@ -353,7 +354,7 @@ function * updateCommunityMetadata ({ communityAddress, fields: { metadata, ...r
     const { hash, uri } = yield apiCall(createMetadataApi, { metadata: currentMetadata })
     newCommunityURI = uri || `ipfs://${hash}`
   }
-  const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI, ...rest })
+  const { data: community } = yield apiCall(updateCommunityMetadataApi, { communityAddress, communityURI: newCommunityURI, ...rest }, { auth: true })
 
   yield put(fetchMetadata(newCommunityURI))
   yield put({
@@ -365,7 +366,7 @@ function * updateCommunityMetadata ({ communityAddress, fields: { metadata, ...r
 }
 
 function * setSecondaryToken ({ communityAddress, secondaryTokenAddress }) {
-  const { data: community } = yield apiCall(setSecondaryTokenApi, { communityAddress, secondaryTokenAddress, networkType: 'fuse', tokenType: 'basic' })
+  const { data: community } = yield apiCall(setSecondaryTokenApi, { communityAddress, secondaryTokenAddress, networkType: 'fuse', tokenType: 'basic' }, { auth: true })
   yield put({
     type: SET_SECONDARY_TOKEN.SUCCESS,
     communityAddress,
@@ -398,7 +399,7 @@ function * setBonus ({ amount, isActive, bonusType }) {
 
   const infoField = infoFieldsMapping[bonusType]
 
-  yield call(addCommunityPlugin, { communityAddress, plugin: { name: bonusType, isActive, [infoField]: { amount: amount && amount.toString() } } })
+  yield call(addCommunityPlugin, { communityAddress, plugin: { name: bonusType, isActive, [infoField]: { amount: amount && amount.toString() } } }, { auth: true })
 
   yield put({
     type: SET_BONUS.SUCCESS
@@ -412,7 +413,7 @@ export function * setWalletBannerLink ({ link, walletBanner }) {
     plugin.walletBannerHash = hash
   }
   const communityAddress = yield select(getCommunityAddress)
-  yield call(addCommunityPlugin, { communityAddress, plugin })
+  yield call(addCommunityPlugin, { communityAddress, plugin }, { auth: true })
 
   yield put({
     type: SET_WALLET_BANNER_LINK.SUCCESS

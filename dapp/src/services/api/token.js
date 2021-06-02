@@ -18,13 +18,11 @@ export const fetchTokenProgress = (apiRoot, { communityAddress }) =>
 export const fetchDeployProgress = (apiRoot, { id }) =>
   request.get(`${apiRoot}/deployments/${id}`).then(response => response.body)
 
-export const deployChosenContracts = (apiRoot, { steps, accountAddress }) =>
+export const deployChosenContracts = (apiRoot, { jwtToken, steps, accountAddress }) =>
   request.post(`${apiRoot}/deployments`)
+    .set('Authorization', `Bearer ${jwtToken}`)
     .send({ steps, accountAddress })
     .then(response => response.body)
-
-export const deployBridge = (apiRoot, { foreignTokenAddress }) =>
-  request.post(`${apiRoot}/bridges/${foreignTokenAddress}`).then(response => response.body)
 
 export const fetchCommunity = (apiRoot, { communityAddress }) =>
   request.get(`${apiRoot}/communities/${communityAddress}`).then(response => response.body)

@@ -13,6 +13,7 @@ const { toChecksumAddress } = require('web3-utils')
 const { getWeb3 } = require('@services/web3')
 const { fetchTokenData } = require('@utils/token')
 const { createNetwork } = require('@utils/web3')
+const auth = require('@routes/auth')
 
 const makePlugin = ({ plugin }) => {
   const { name } = plugin
@@ -48,7 +49,7 @@ const makePlugin = ({ plugin }) => {
  *    }
  */
 
-router.post('/:communityAddress/plugins', async (req, res, next) => {
+router.post('/:communityAddress/plugins', auth.communityOwner, async (req, res, next) => {
   const { communityAddress } = req.params
   const plugin = makePlugin(req.body)
   const fields = lodash.fromPairs(lodash.toPairs(plugin).map(([key, value]) => [`plugins.${plugin.name}.${key}`, value]))
@@ -69,7 +70,7 @@ router.post('/:communityAddress/plugins', async (req, res, next) => {
  *    }
  */
 
-router.put('/:communityAddress', async (req, res) => {
+router.put('/:communityAddress', auth.communityOwner, async (req, res) => {
   const { communityAddress } = req.params
   const { communityURI, description, webUrl, customData } = req.body
   const community = await Community.findOneAndUpdate({ communityAddress }, lodash.pickBy({ communityURI, description, webUrl, customData }, lodash.identity), { new: true })
@@ -91,7 +92,7 @@ router.put('/:communityAddress', async (req, res) => {
  *    }
  */
 
-router.put('/:communityAddress/secondary', async (req, res) => {
+router.put('/:communityAddress/secondary', auth.communityOwner, async (req, res) => {
   const { communityAddress } = req.params
   const { networkType, tokenType, secondaryTokenAddress } = req.body
   const token = await Token.findOne({ address: secondaryTokenAddress })
@@ -116,7 +117,7 @@ router.put('/:communityAddress/secondary', async (req, res) => {
  *   }
  */
 
-router.put('/:communityAddress/foreignToken', async (req, res, next) => {
+router.put('/:communityAddress/foreignToken', auth.communityOwner, async (req, res, next) => {
   const { communityAddress } = req.params
   const { foreignTokenAddress } = req.body
   const foreign = createNetwork('foreign')
@@ -171,7 +172,7 @@ router.post('/:communityAddress/invite', async (req, res, next) => {
  *
  */
 
-router.put('/:communityAddress/bridge', async (req, res, next) => {
+router.put('/:communityAddress/bridge', auth.communityOwner, async (req, res, next) => {
   const { communityAddress } = req.params
   const { bridgeType, bridgeDirection } = req.body
   const community = await Community.findOneAndUpdate({ communityAddress }, { bridgeDirection, bridgeType }, { new: true })
