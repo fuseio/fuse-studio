@@ -10,6 +10,7 @@ import {
 import { REQUEST, FAILURE, PENDING, SUCCESS } from 'actions/constants'
 import { LOCATION_CHANGE } from 'connected-react-router'
 import pick from 'lodash/pick'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 import { FUND, GET_FUND_STATUS } from 'actions/user'
 
@@ -47,7 +48,7 @@ export default (state = initialState, action) => {
     case DEPLOY_EXISTING_TOKEN.SUCCESS:
       return { ...state, transactionStatus: SUCCESS }
     case DEPLOY_EXISTING_TOKEN.FAILURE:
-      return { ...state, transactionStatus: FAILURE, createTokenSignature: false, ...action.error }
+      return { ...state, transactionStatus: FAILURE, createTokenSignature: false, ...action.error, errorMessage: get(action, 'error.response.text') }
     case CREATE_TOKEN_WITH_METADATA.REQUEST:
       return { ...state, transactionStatus: REQUEST, createTokenSignature: true }
     case CREATE_TOKEN_WITH_METADATA.FAILURE:
