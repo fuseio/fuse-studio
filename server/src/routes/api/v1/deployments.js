@@ -27,7 +27,7 @@ router.post('/', auth.required, async (req, res, next) => {
   const { communitiesLimit } = await StudioUser.findById(req.user.id)
   const limit = isNumber(communitiesLimit) ? parseInt(communitiesLimit) : config.get('community.limitPerUser')
   if (issuedCommunities >= limit) {
-    return res.status(404).json({ error: 'User already issues more than maximum number of communities.' })
+    return res.status(403).json({ error: 'User issued more than the maximum number of communities.' })
   }
   const communityProgress = await new CommunityProgress({ steps }).save()
 

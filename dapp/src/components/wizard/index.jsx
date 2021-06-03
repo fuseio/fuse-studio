@@ -33,7 +33,8 @@ const WizardPage = ({
   clearTransaction,
   loadModal,
   communityAddress,
-  push
+  push,
+  errorMessage
 }) => {
   const store = useStore()
   const dispatch = useDispatch()
@@ -227,7 +228,7 @@ const WizardPage = ({
         radiusAll
         issue
         isOpen={transactionStatus === FAILURE}
-        message='Something went wrong'
+        message={errorMessage || 'Something went wrong'}
         clickHandler={() => clearTransaction()}
         subTitle='Try again later'
       />
