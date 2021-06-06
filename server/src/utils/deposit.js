@@ -8,6 +8,7 @@ const { readFileSync } = require('fs')
 const { isProduction } = require('@utils/env')
 const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
+const { notifyReceiver } = require('@services/firebase')
 
 const isNetworkSupported = (network) => {
   const supportedNetwork = config.get('deposit.supportedNetworks')
@@ -32,9 +33,7 @@ const getDepositType = ({ tokenAddress, network }) => {
   }
 }
 
-const verifyTokenAddress = () => ({ tokenAddress, tokenDecimals }) => {
-
-}
+const verifyTokenAddress = ({ tokenAddress, tokenDecimals }) => { }
 
 const verifyDeposit = async ({ externalId, network, tokenAddress, tokenDecimals }) => {
   const deposit = await Deposit.findOne({ externalId })
@@ -161,6 +160,13 @@ const performDeposit = async (deposit) => {
     }).save()
     deposit.status = 'succeeded'
     await deposit.save()
+    notifyReceiver({
+      isTopUp: true,
+      receiverAddress: customerAddress,
+      tokenAddress,
+      amountInWei: amount
+    })
+      .catch(console.error)
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
     return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })

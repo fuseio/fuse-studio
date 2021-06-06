@@ -8,6 +8,7 @@ const { handleSubscriptionWebHook } = require('@utils/wallet/actions')
 const { subscribeAddress } = require('@services/subscriptionServices')
 const auth = require('@routes/auth')
 const config = require('config')
+const { notifyReceiver } = require('@services/firebase')
 
 const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
 const fuseDollarAccount = config.get('plugins.rampInstant.fuseDollarAccount')
@@ -35,7 +36,7 @@ router.post('/', async (req, res) => {
   const action = await WalletAction.findOne({ 'data.txHash': transactionHash })
   if (!action) {
     const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
-
+    const value = new BigNumber(hex)
     const data = {
       txHash: transactionHash,
       walletAddress: to,
@@ -46,11 +47,17 @@ router.post('/', async (req, res) => {
       tokenDecimal: parseInt(tokenDecimal),
       asset: tokenSymbol,
       status: 'confirmed',
-      value: new BigNumber(hex),
+      value,
       tokenAddress: tokenAddress.toLowerCase(),
       timeStamp: (Math.round(new Date().getTime() / 1000)).toString()
     }
     await handleSubscriptionWebHook(data)
+    notifyReceiver({
+      receiverAddress: to,
+      tokenAddress,
+      amountInWei: value
+    })
+      .catch(console.error)
   } else {
     console.log(`txHash ${transactionHash} already handled in action ${action._id}`)
   }

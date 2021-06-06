@@ -11,7 +11,7 @@ const UserWallet = mongoose.model('UserWallet')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
-const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
+const isAllowedToRelayForeign = (web3, walletModule, walletModuleABI, methodName, methodData) => {
   const allowedModules = ['TransferManager', 'DAIPointsManager']
   console.log(`[isAllowedToRelayForeign] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
   let isAllowed = true
@@ -24,7 +24,7 @@ const isAllowedToRelayForeign = async (web3, walletModule, walletModuleABI, meth
   return isAllowed
 }
 
-const isAllowedToRelayHome = async (web3, walletModule, walletModuleABI, methodName, methodData) => {
+const isAllowedToRelayHome = (web3, walletModule, walletModuleABI, methodName, methodData) => {
   const allowedModules = ['TransferManager', 'CommunityManager']
   console.log(`[isAllowedToRelayHome] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
   let isAllowed = true
@@ -37,7 +37,7 @@ const isAllowedToRelayHome = async (web3, walletModule, walletModuleABI, methodN
   return isAllowed
 }
 
-const isAllowedToRelay = async (web3, walletModule, walletModuleABI, methodName, methodData, networkType) => {
+const isAllowedToRelay = (web3, walletModule, walletModuleABI, methodName, methodData, networkType) => {
   console.log(`[isAllowedToRelay] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}, networkType: ${networkType}`)
   return networkType === 'foreign'
     ? isAllowedToRelayForeign(web3, walletModule, walletModuleABI, methodName, methodData)
@@ -50,7 +50,7 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
 
   console.log(`before isAllowedToRelay`)
-  const allowedToRelay = await isAllowedToRelay(web3, walletModule, walletModuleABI, methodName, methodData, networkType)
+  const allowedToRelay = isAllowedToRelay(web3, walletModule, walletModuleABI, methodName, methodData, networkType)
   console.log(`isAllowedToRelay: ${allowedToRelay}`)
   if (allowedToRelay) {
     const userWallet = await UserWallet.findOne({ walletAddress })
@@ -117,8 +117,13 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
           console.log(`Error on token funding for wallet: ${wallet}`, e)
         }
       } else if (walletModule === 'TransferManager' && methodName === 'transferToken') {
-        const { _to, _amount, _token, _wallet } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
-        notifyReceiver({ senderAddress: _wallet, receiverAddress: _to, tokenAddress: _token, amountInWei: _amount, appName, communityAddress })
+        const { _to, _amount, _token } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
+        notifyReceiver({
+          receiverAddress: _to,
+          tokenAddress: _token,
+          amountInWei: _amount,
+          communityAddress
+        })
           .catch(console.error)
       }
 

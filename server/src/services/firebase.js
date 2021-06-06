@@ -118,26 +118,28 @@ const initAdmins = async () => {
   }
 }
 
-const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appName, communityAddress }) => {
+const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, communityAddress, isTopUp = false }) => {
   console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
   const receiverWallet = await UserWallet.findOne({ walletAddress: web3Utils.toChecksumAddress(receiverAddress) })
   const firebaseTokens = get(receiverWallet, 'firebaseTokens')
   if (firebaseTokens) {
     const { symbol } = await fetchToken(tokenAddress)
     const amount = web3Utils.fromWei(String(amountInWei))
+    const appName = get(receiverWallet, 'appName', 'Fuse wallet')
     let messages = firebaseTokens.map((token) => ({
       notification: {
         title: `You got ${amount} ${symbol}`,
-        body: 'Please click on this message to open your Fuse wallet'
+        body: `Please click on this message to open your ${appName}`
       },
       token
     }))
-    if (!appName) {
+    if (!get(receiverWallet, 'appName')) {
       try {
         messages = messages.map((message) => ({
           ...message,
           data: {
             communityAddress,
+            isTopUp,
             click_action: 'FLUTTER_NOTIFICATION_CLICK'
           }
         }))
@@ -146,7 +148,7 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, appN
       }
     }
     console.log(`Sending tokens receive push message to ${receiverWallet.phoneNumber} ${receiverAddress}`)
-    getAdmin(appName).messaging().sendAll(messages)
+    getAdmin(get(receiverWallet, 'appName')).messaging().sendAll(messages)
   } else {
     console.warn(`No firebase token found for ${receiverAddress} wallet address`)
   }
