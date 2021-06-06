@@ -229,6 +229,9 @@ module.exports = {
     },
     eth: {
       ropsten: 0.05
+    },
+    deposit: {
+      fuse: 50
     }
   },
   branch: {

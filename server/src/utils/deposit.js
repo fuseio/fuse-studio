@@ -167,6 +167,20 @@ const performDeposit = async (deposit) => {
       amountInWei: amount
     })
       .catch(console.error)
+    const WFUSE = '0x0BE9e53fd7EDaC9F859882AfdDa116645287C629'
+    // const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: WFUSE, communityAddress, bonusType: 'top up' }
+    // const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+    const bonusJob = await taskManager.now('fundToken', {
+      // ...jobData,
+      transactionBody: {
+        value: amount,
+        to: walletAddress,
+        tokenName: 'Fuse Dollar',
+        tokenDecimal: 18,
+        tokenSymbol: 'fUSD',
+        tokenAddress
+      }
+    }, { isWalletJob: true })
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
     return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })

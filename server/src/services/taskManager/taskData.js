@@ -95,6 +95,11 @@ const tasksData = {
     name: 'fundToken',
     bridgeType: 'home',
     role: 'funder'
+  },
+  rewardDeposit: {
+    name: 'rewardDeposit',
+    bridgeType: 'home',
+    role: 'funder'
   }
 }
 
