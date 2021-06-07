@@ -1,13 +1,17 @@
 const config = require('config')
+const BigNumber = require('bignumber.js')
 const taskManager = require('@services/taskManager')
 const { isStableCoin, adjustDecimals } = require('@utils/token')
 const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const WalletAction = mongoose.model('WalletAction')
+const UserWallet = mongoose.model('UserWallet')
+
 const { readFileSync } = require('fs')
 const { isProduction } = require('@utils/env')
 const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
+const { fetchTokenPrice } = require('@utils/token')
 
 const isNetworkSupported = (network) => {
   const supportedNetwork = config.get('deposit.supportedNetworks')
@@ -16,8 +20,30 @@ const isNetworkSupported = (network) => {
 
 const isDepositTypeAvailable = (type) => config.get('deposit.availableTypes').includes(type)
 
+const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
+  const bonusAmountInUSD = config.get('bonus.deposit.usd')
+  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  const fuseTokenAddress = config.get('network.foreign.addresses.FuseToken')
+
+  const userWallet = await UserWallet.findOne({ walletAddress })
+  const { phoneNumber } = userWallet
+  const { priceUSD } = await fetchTokenPrice(fuseTokenAddress)
+  const bonusAmount = new BigNumber(bonusAmountInUSD.toString()).div(priceUSD).integerValue(BigNumber.ROUND_UP).toString()
+  const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: fuseDollarAddress, communityAddress, bonusType: 'topup', bonusMaxTimesLimit: 1, bonusAmount }
+  return taskManager.now('fundToken', {
+    ...jobData,
+    transactionBody: {
+      value: adjustDecimals(bonusAmount, 0, 18),
+      to: walletAddress,
+      tokenName: 'Fuse Dollar',
+      tokenDecimal: 18,
+      tokenSymbol: 'fUSD',
+      asset: 'fUSD',
+      tokenAddress: fuseDollarAddress
+    }
+  }, { isWalletJob: true })
+}
 const getDepositType = ({ tokenAddress, network }) => {
-  // const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
   if (network === 'fuse') {
     // the tokens are recieved on the fuse network
     return 'naive'
@@ -32,9 +58,7 @@ const getDepositType = ({ tokenAddress, network }) => {
   }
 }
 
-const verifyTokenAddress = () => ({ tokenAddress, tokenDecimals }) => {
-
-}
+const verifyTokenAddress = ({ tokenAddress, tokenDecimals }) => { }
 
 const verifyDeposit = async ({ externalId, network, tokenAddress, tokenDecimals }) => {
   const deposit = await Deposit.findOne({ externalId })
@@ -74,6 +98,7 @@ const initiateDeposit = async ({
     tokenAddress: tokenAddress.toLowerCase(),
     tokenDecimals,
     amount,
+    humanAmount: parseInt(adjustDecimals(amount, tokenDecimals, 0)),
     provider,
     externalId,
     status: error ? 'failed' : 'pending',
@@ -161,6 +186,13 @@ const performDeposit = async (deposit) => {
     }).save()
     deposit.status = 'succeeded'
     await deposit.save()
+
+    if (deposit.humanAmount >= config.get('bonus.deposit.limit')) {
+      await startDepositBonusJob({
+        walletAddress, communityAddress
+      })
+    }
+
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
     return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
@@ -215,5 +247,6 @@ module.exports = {
   retryDeposit,
   getRampAuthKey,
   performDeposit,
-  cancelDeposit
+  cancelDeposit,
+  startDepositBonusJob
 }

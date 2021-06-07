@@ -11,6 +11,7 @@ const DepositSchema = new Schema({
   tokenAddress: { type: String, required: [true, "can't be blank"] },
   tokenDecimals: { type: Number, required: [true, "can't be blank"] },
   amount: { type: String, required: [true, "can't be blank"] },
+  humanAmount: { type: Number, required: [true, "can't be blank"] },
   provider: { type: String, required: [true, "can't be blank"] },
   externalId: { type: String, required: [true, "can't be blank"] },
   status: { type: String, required: [true, "can't be blank"] },

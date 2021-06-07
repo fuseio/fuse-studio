@@ -12,6 +12,7 @@
     "doc:v2": "apidoc -c src/routes/api/v2 -i src/routes/api/v2 -o docs/api/v2 && apidoc-markdown -p docs/api/v2 -o docs/api-v2.md",
     "lint": "standard",
     "repl": "node --experimental-repl-await scripts/repl.js",
+    "repl-debug": "node --inspect --experimental-repl-await scripts/repl.js",
     "lint-fix": "standard --fix"
   },
   "repository": {

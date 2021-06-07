@@ -268,7 +268,10 @@ router.post('/backup', auth.required, async (req, res, next) => {
     const hasBonus = get(community, `plugins.backupBonus.isActive`, false) && get(community, `plugins.backupBonus.backupInfo.amount`, false)
     if (hasBonus) {
       if (isFunderDeprecated) {
-        const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup' }
+        const bonusType = 'backup'
+        const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
+        const bonusMaxTimesLimit = get(community, `${bonusType}.maxTimes`, 100)
+        const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup', bonusAmount, bonusMaxTimesLimit }
         const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
         const job = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
         return res.json({ job: job })

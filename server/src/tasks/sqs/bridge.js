@@ -6,6 +6,7 @@ const utils = require('@utils/token')
 const bridgeUtils = require('@utils/bridge')
 const BigNumber = require('bignumber.js')
 const MintableBurnableTokenAbi = require('@fuse/token-factory-contracts/abi/MintableBurnableToken')
+const { notifyReceiver } = require('@services/firebase')
 
 const relayTokens = async (account, { depositId, accountAddress, bridgeType, bridgeAddress, tokenAddress, receiver, amount }, job) => {
   const deposit = await Deposit.findById(depositId)
@@ -29,6 +30,12 @@ const relayTokens = async (account, { depositId, accountAddress, bridgeType, bri
     }
     if (relayTokensReceipt.status) {
       await deposit.set('status', 'succeeded').save()
+      notifyReceiver({
+        receiverAddress: receiver,
+        tokenAddress,
+        amountInWei: amount
+      })
+        .catch(console.error)
     } else {
       throw new Error(`tx failed to mint ${relayTokensReceipt.txHash}`)
     }
@@ -100,6 +107,12 @@ const mintDeposited = async (account, { depositId, bridgeType, tokenAddress, rec
 
     if (receipt.status) {
       await deposit.set('status', 'succeeded').save()
+      notifyReceiver({
+        isTopUp: true,
+        receiverAddress: receiver,
+        tokenAddress,
+        amountInWei: amount
+      }).catch(console.error)
     } else {
       throw new Error(`tx failed to mint ${receipt.txHash}`)
     }
