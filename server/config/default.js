@@ -142,7 +142,8 @@ module.exports = {
         MultiBridgeMediator: '0xf301d525da003e874DF574BCdd309a6BF0535bb6',
         USDCoin: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
         DaiStablecoin: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-        TetherUSD: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+        TetherUSD: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+        FuseToken: '0x970b9bb2c0444f5e81e9d0efb84c8ccdcdcaf84d'
       },
       addressesRopsten: {
         TokenFactory: '0x6004EAdF0aD3aCd568F354CA7E2b410bA0080E98',
@@ -151,7 +152,8 @@ module.exports = {
         MultiBridgeMediator: '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419',
         USDCoin: '0xe50dc0fe33eb88fc0ce0f1f52cd30a7f46a6eae4',
         DaiStablecoin: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-        TetherUSD: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+        TetherUSD: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+        FuseToken: '0x970b9bb2c0444f5e81e9d0efb84c8ccdcdcaf84d'
       },
       addresses: defer(function () {
         if (this.network.foreign.name === 'mainnet') {
@@ -231,7 +233,7 @@ module.exports = {
       ropsten: 0.05
     },
     deposit: {
-      fuse: 50
+      usd: 1
     }
   },
   branch: {

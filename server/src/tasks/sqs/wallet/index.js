@@ -53,7 +53,10 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     const hasBonus = get(community, `plugins.inviteBonus.isActive`, false) && get(community, `plugins.inviteBonus.inviteInfo.amount`, false)
     if (hasBonus) {
       if (isFunderDeprecated) {
-        const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'invite' }
+        const bonusType = 'invite'
+        const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
+        const bonusMaxTimesLimit = get(community, `${bonusType}.maxTimes`, 100)
+        const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
         const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
         const bonusJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
         job.set('data.bonusJob', {

@@ -91,7 +91,10 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
           if (hasBonus) {
             if (isFunderDeprecated) {
               const taskManager = require('@services/taskManager')
-              const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType: 'join' }
+              const bonusType = 'join'
+              const bonusAmount = lodash.get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
+              const bonusMaxTimesLimit = lodash.get(community, `${bonusType}.maxTimes`, 100)
+              const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
               const { plugins } = community
               const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
               const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
