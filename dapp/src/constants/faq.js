@@ -1,6 +1,6 @@
 export default [
   {
-    question: 'What is Fuse?',
+    question: 'What is Fuse Studio?',
     answer: `The Fuse Studio is a smart contract platform intended for entrepreneurs.`,
     link: 'https://docs.fuse.io/the-fuse-studio/faq#what-is-fuse'
   },
