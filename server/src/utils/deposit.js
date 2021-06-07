@@ -188,11 +188,10 @@ const performDeposit = async (deposit) => {
     await deposit.save()
 
     if (deposit.humanAmount >= config.get('bonus.deposit.limit')) {
-      startDepositBonusJob({
+      await startDepositBonusJob({
         walletAddress, communityAddress
       })
     }
-
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
     return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
