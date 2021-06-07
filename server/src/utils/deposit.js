@@ -22,24 +22,24 @@ const isDepositTypeAvailable = (type) => config.get('deposit.availableTypes').in
 
 const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
   const bonusAmountInUSD = config.get('bonus.deposit.usd')
-  const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
+  const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
   const fuseTokenAddress = config.get('network.foreign.addresses.FuseToken')
 
   const userWallet = await UserWallet.findOne({ walletAddress })
   const { phoneNumber } = userWallet
   const { priceUSD } = await fetchTokenPrice(fuseTokenAddress)
   const bonusAmount = new BigNumber(bonusAmountInUSD.toString()).div(priceUSD).integerValue(BigNumber.ROUND_UP).toString()
-  const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: fuseDollarAddress, communityAddress, bonusType: 'topup', bonusMaxTimesLimit: 1, bonusAmount }
+  const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: wFUSEAddress, communityAddress, bonusType: 'topup', bonusMaxTimesLimit: 1, bonusAmount }
   return taskManager.now('fundToken', {
     ...jobData,
     transactionBody: {
       value: adjustDecimals(bonusAmount, 0, 18),
       to: walletAddress,
-      tokenName: 'Fuse Dollar',
+      tokenName: 'Wrapped Fuse',
       tokenDecimal: 18,
-      tokenSymbol: 'fUSD',
+      tokenSymbol: 'WFUSE',
       asset: 'fUSD',
-      tokenAddress: fuseDollarAddress
+      tokenAddress: wFUSEAddress
     }
   }, { isWalletJob: true })
 }
@@ -192,7 +192,6 @@ const performDeposit = async (deposit) => {
         walletAddress, communityAddress
       })
     }
-
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
     return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
