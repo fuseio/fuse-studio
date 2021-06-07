@@ -1,9 +1,9 @@
-const config = require('config')
 const mongoose = require('mongoose')
 const { createNetwork } = require('@utils/web3')
 const { transfer } = require('@utils/token')
 const QueueJob = mongoose.model('QueueJob')
 const { fetchToken, adjustDecimals } = require('@utils/token')
+const { notifyReceiver } = require('@services/firebase')
 
 const fundToken = async (account, { phoneNumber, receiverAddress, identifier, tokenAddress, communityAddress, bonusType, bonusMaxTimesLimit, bonusAmount }, job) => {
   const network = createNetwork('home', account)
@@ -30,9 +30,15 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
   if (fundingsCountForPhoneNumber >= bonusMaxTimesLimit) {
     throw Error(`Join bonus reached maximum times ${bonusMaxTimesLimit}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
-
-  const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount: adjustDecimals(bonusAmount, 0, decimals) }, { job, communityAddress })
+  const amountInWei = adjustDecimals(bonusAmount, 0, decimals)
+  const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount: amountInWei }, { job, communityAddress })
   if (receipt.status) {
+    notifyReceiver({
+      isTopUp: bonusType === 'topup',
+      receiverAddress,
+      tokenAddress,
+      amountInWei
+    }).catch(console.error)
     console.log(`succesfully funded ${receiverAddress} with ${bonusAmount} of token ${tokenAddress}`)
   } else {
     console.warn(`error in funding ${receiverAddress} with ${bonusAmount} of token ${tokenAddress}`)

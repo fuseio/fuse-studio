@@ -112,8 +112,7 @@ const mintDeposited = async (account, { depositId, bridgeType, tokenAddress, rec
         receiverAddress: receiver,
         tokenAddress,
         amountInWei: amount
-      })
-        .catch(console.error)
+      }).catch(console.error)
     } else {
       throw new Error(`tx failed to mint ${receipt.txHash}`)
     }

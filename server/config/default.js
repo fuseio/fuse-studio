@@ -233,7 +233,8 @@ module.exports = {
       ropsten: 0.05
     },
     deposit: {
-      usd: 50
+      usd: 50,
+      limit: 200
     }
   },
   branch: {
