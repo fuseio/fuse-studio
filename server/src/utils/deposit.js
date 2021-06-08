@@ -11,7 +11,7 @@ const { readFileSync } = require('fs')
 const { isProduction } = require('@utils/env')
 const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
-const { fetchTokenPrice } = require('@utils/token')
+const { fetchTokenPrice } = require('@utils/fuseswap')
 const { validateBonusAlowance } = require('@utils/jobs')
 
 const isNetworkSupported = (network) => {
@@ -24,12 +24,11 @@ const isDepositTypeAvailable = (type) => config.get('deposit.availableTypes').in
 const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
   const bonusAmountInUSD = config.get('bonus.deposit.usd')
   const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
-  const fuseTokenAddress = config.get('network.foreign.addresses.FuseToken')
 
   const userWallet = await UserWallet.findOne({ walletAddress })
   const { phoneNumber } = userWallet
-  const { priceUSD } = await fetchTokenPrice(fuseTokenAddress)
-  const bonusAmount = new BigNumber(bonusAmountInUSD.toString()).div(priceUSD).integerValue(BigNumber.ROUND_UP).toString()
+  const tokenPrice = await fetchTokenPrice(wFUSEAddress)
+  const bonusAmount = new BigNumber(bonusAmountInUSD.toString()).div(tokenPrice).integerValue(BigNumber.ROUND_UP).toString()
   const bonusMaxTimesLimit = 1
   const bonusType = 'topup'
   const tokenAddress = wFUSEAddress

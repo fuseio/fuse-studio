@@ -60,6 +60,11 @@ module.exports = {
       webhookUrl: 'http://localhost:3000/api/v2/wallets/webhook'
     }
   },
+  fuseswap: {
+    api: {
+      url: 'https://api.fuseswap.com/api/v1/'
+    }
+  },
   network: {
     misc: {
       pageSize: 1000,
