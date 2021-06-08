@@ -23,6 +23,8 @@ const getWorkerAccount = (taskData, taskParams) => {
       console.warn(msg)
       throw Error(msg)
     }
+  } else if (lodash.has(taskParams, 'role')) {
+    return lockAccount(makeAccountsFilter({ ...taskData, role: taskParams.role }))
   }
   return lockAccount(makeAccountsFilter(taskData))
 }
