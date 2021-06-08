@@ -120,6 +120,10 @@
   "bonus": {
     "launch": {
       "fuse": "COMMUNITY_BONUS_LAUNCH_FUSE"
+    },
+    "deposit": {
+      "usd": "COMMUNITY_BONUS_DEPOSIT_USD",
+      "limit": "COMMUNITY_BONUS_DEPOSIT_LIMIT"
     }
   },
   "agenda": {
