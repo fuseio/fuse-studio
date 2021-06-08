@@ -60,6 +60,11 @@ module.exports = {
       webhookUrl: 'http://localhost:3000/api/v2/wallets/webhook'
     }
   },
+  fuseswap: {
+    api: {
+      url: 'https://api.fuseswap.com/api/v1/'
+    }
+  },
   network: {
     misc: {
       pageSize: 1000,
@@ -92,7 +97,6 @@ module.exports = {
         MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
         TokenFactory: '0x78Cb0FeEC1fA3b3469cA18e79823b6A87C8929a4',
         FuseDollar: '0x5D42867417d19D51A19661453A38B6F180F1624E',
-        WrappedFuse: '0x0BE9e53fd7EDaC9F859882AfdDa116645287C629',
         walletModules: {
           GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
           LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',
