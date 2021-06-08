@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 
-const validateFundingLimitPerUser = async ({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit }) => {
+const validateBonusAlowance = async ({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit }) => {
   const fundingsCountForPhoneNumber = await QueueJob.find({
     name: 'fundToken',
     status: { $ne: 'failed' },
@@ -20,5 +20,5 @@ const validateFundingLimitPerUser = async ({ job, phoneNumber, tokenAddress, com
 }
 
 module.exports = {
-  validateFundingLimitPerUser
+  validateBonusAlowance
 }

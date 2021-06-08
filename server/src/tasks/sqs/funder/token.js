@@ -2,7 +2,7 @@ const { createNetwork } = require('@utils/web3')
 const { transfer } = require('@utils/token')
 const { fetchToken, adjustDecimals } = require('@utils/token')
 const { notifyReceiver } = require('@services/firebase')
-const { validateFundingLimitPerUser } = require('@utils/jobs')
+const { validateBonusAlowance } = require('@utils/jobs')
 
 const fundToken = async (account, { phoneNumber, receiverAddress, identifier, tokenAddress, communityAddress, bonusType, bonusMaxTimesLimit, bonusAmount }, job) => {
   const network = createNetwork('home', account)
@@ -14,7 +14,7 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
   if (!identifier) {
     throw Error(`No identifier defined. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
-  if (!validateFundingLimitPerUser({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
+  if (!validateBonusAlowance({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
     throw Error(`Join bonus reached maximum times ${bonusMaxTimesLimit}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
   const amountInWei = adjustDecimals(bonusAmount, 0, decimals)

@@ -12,7 +12,7 @@ const { isProduction } = require('@utils/env')
 const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
 const { fetchTokenPrice } = require('@utils/token')
-const { validateFundingLimitPerUser } = require('@utils/jobs')
+const { validateBonusAlowance } = require('@utils/jobs')
 
 const isNetworkSupported = (network) => {
   const supportedNetwork = config.get('deposit.supportedNetworks')
@@ -35,7 +35,7 @@ const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
   const tokenAddress = wFUSEAddress
   const receiverAddress = walletAddress
   // check if user already recieved deposit bonus
-  if (!validateFundingLimitPerUser({ phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
+  if (!validateBonusAlowance({ phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
     return
   }
 
