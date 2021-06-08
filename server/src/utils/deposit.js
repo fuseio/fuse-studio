@@ -12,6 +12,7 @@ const { isProduction } = require('@utils/env')
 const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
 const { fetchTokenPrice } = require('@utils/token')
+const { validateFundingLimitPerUser } = require('@utils/jobs')
 
 const isNetworkSupported = (network) => {
   const supportedNetwork = config.get('deposit.supportedNetworks')
@@ -29,7 +30,16 @@ const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
   const { phoneNumber } = userWallet
   const { priceUSD } = await fetchTokenPrice(fuseTokenAddress)
   const bonusAmount = new BigNumber(bonusAmountInUSD.toString()).div(priceUSD).integerValue(BigNumber.ROUND_UP).toString()
-  const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: wFUSEAddress, communityAddress, bonusType: 'topup', bonusMaxTimesLimit: 1, bonusAmount }
+  const bonusMaxTimesLimit = 1
+  const bonusType = 'topup'
+  const tokenAddress = wFUSEAddress
+  const receiverAddress = walletAddress
+  // check if user already recieved deposit bonus
+  if (!validateFundingLimitPerUser({ phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
+    return
+  }
+
+  const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress, identifier: phoneNumber, tokenAddress, communityAddress, bonusMaxTimesLimit, bonusAmount }
   return taskManager.now('fundToken', {
     ...jobData,
     transactionBody: {
