@@ -47,8 +47,9 @@ const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
       tokenName: 'Wrapped Fuse',
       tokenDecimal: 18,
       tokenSymbol: 'WFUSE',
-      asset: 'fUSD',
-      tokenAddress: wFUSEAddress
+      asset: 'WFUSE',
+      tokenAddress: wFUSEAddress,
+      bonusType
     }
   }, { isWalletJob: true })
 }
