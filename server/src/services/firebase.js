@@ -125,11 +125,10 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, comm
   if (firebaseTokens) {
     const { symbol } = await fetchToken(tokenAddress)
     const amount = web3Utils.fromWei(String(amountInWei))
-    const appName = get(receiverWallet, 'appName', 'Fuse wallet')
     let messages = firebaseTokens.map((token) => ({
       notification: {
-        title: `You got ${amount} ${symbol}`,
-        body: `Please click on this message to open your ${appName}`
+        title: 'You got funds! 🎉',
+        body: `${amount} ${symbol} arrived click here to review`
       },
       token
     }))
