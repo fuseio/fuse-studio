@@ -55,8 +55,7 @@ module.exports = {
       apiKey: ''
     },
     fuse: {
-      // TODO - setup domain
-      url: 'http://ec2-3-138-193-103.us-east-2.compute.amazonaws.com:3000/api/v1',
+      url: 'https://subscription.fuse.io/api/v1',
       webhookUrl: 'http://localhost:3000/api/v2/wallets/webhook'
     }
   },
