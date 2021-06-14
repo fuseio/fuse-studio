@@ -50,6 +50,9 @@
   "subscriptionServices": {
     "blocknative": {
       "apiKey": "COMMUNITY_BLOCKNATIVE_API_KEY"
+    },
+    "fuse": {
+      "url": "COMMUNITY_SUBSCRIPTION_FUSE_URL"
     }
   },
   "network": {
