@@ -61,9 +61,10 @@ const handleRelayJob = async (job) => {
         ...formatActionData(job.data),
         spender: _contract,
         value: _amount,
-        tokenAddress: tokenAddressIn
+        tokenAddress: tokenAddressIn,
+        timestamp: (Math.round(new Date().getTime() / 1000)).toString()
       },
-      tokenAddress: [ tokenAddressIn, tokenAddressOut ],
+      tokenAddress: [tokenAddressIn, tokenAddressOut],
       walletAddress: _wallet,
       communityAddress: job.communityAddress || job.data.communityAddress
     }).save()
@@ -76,7 +77,10 @@ const handleFundToken = (job) => {
   return new WalletAction({
     name: 'tokenBonus',
     job: mongoose.Types.ObjectId(job._id),
-    data,
+    data: {
+      ...data,
+      from: job.accountAddress
+    },
     tokenAddress: data.tokenAddress,
     walletAddress: job.data.receiverAddress,
     communityAddress: job.communityAddress || job.data.communityAddress
