@@ -46,10 +46,10 @@ const rampAuthCheck = (req, res, next) => {
 router.post('/:customerAddress/:communityAddress', rampAuthCheck, async (req, res) => {
   console.log(`[deposit-ramp] req.body: ${JSON.stringify(req.body)}`)
   const provider = 'ramp'
-  const network = 'fuse'
   const { customerAddress, communityAddress } = req.params
   const { purchase, type } = req.body
-  const { asset: { address, decimals }, cryptoAmount, receiverAddress, id } = purchase
+  const { asset: { address, decimals, symbol }, cryptoAmount, receiverAddress, id } = purchase
+  const network = symbol.includes('FUSE_') ? 'fuse' : 'ethereum'
   console.log(`[deposit-ramp] recieved webhook with status ${type}`)
   if (type === 'CREATED') {
     // deposit is issued, on-ramp is waiting for fiat processing
