@@ -9,6 +9,7 @@ const UserWallet = mongoose.model('UserWallet')
 
 const { readFileSync } = require('fs')
 const { isProduction } = require('@utils/env')
+const { trackDepositSuccess } = require('@utils/analytics')
 const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
 const { fetchTokenPrice } = require('@utils/fuseswap')
@@ -53,6 +54,7 @@ const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
     }
   }, { isWalletJob: true })
 }
+
 const getDepositType = ({ tokenAddress, network }) => {
   if (network === 'fuse') {
     // the tokens are recieved on the fuse network
@@ -164,6 +166,7 @@ const performDeposit = async (deposit) => {
   deposit.status = 'started'
   await deposit.save()
 
+  trackDepositSuccess({ customerAddress })
   if (type === 'naive') {
     console.warn(`Funds already received on the Fuse Network, no need to take any action`)
     const { web3 } = createNetwork('home')
@@ -196,7 +199,6 @@ const performDeposit = async (deposit) => {
     }).save()
     deposit.status = 'succeeded'
     await deposit.save()
-
     if (deposit.humanAmount >= config.get('bonus.deposit.limit')) {
       await startDepositBonusJob({
         walletAddress, communityAddress

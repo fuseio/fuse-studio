@@ -50,6 +50,7 @@
     "@sendgrid/client": "^6.3.0",
     "@sendgrid/mail": "^6.3.1",
     "agenda": "^2.0.2",
+    "analytics-node": "^4.0.1",
     "async": "^2.6.1",
     "aws-sdk": "^2.405.0",
     "bignumber.js": "^8.1.1",

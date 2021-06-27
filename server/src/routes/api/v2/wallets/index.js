@@ -307,4 +307,11 @@ router.post('/foreign', auth.required, async (req, res, next) => {
   return res.json({})
 })
 
+router.put('/context', auth.required, async (req, res) => {
+  const { phoneNumber, accountAddress, appName } = req.user
+  const { os } = req.body
+  await UserWallet.findOneAndUpdate({ phoneNumber, accountAddress, appName }, { os })
+  res.send({ response: 'ok' })
+})
+
 module.exports = router
