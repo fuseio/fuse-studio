@@ -21,6 +21,7 @@ const UserWalletSchema = new Schema({
   pendingNetworks: { type: Array, default: [] },
   identifier: { type: String },
   appName: { type: String },
+  os: { type: String },
   ip: { type: String },
   balancesOnForeign: { type: Map, of: String, default: {} }
 }, { timestamps: true, default: {} })

@@ -371,5 +371,9 @@ module.exports = {
       threshold: '0.25' // in ETH
     }
   },
-  daipCommunityAddress: '0xc036118695Eff203b00B74B5a3ef8c3fA808E09B'
+  daipCommunityAddress: '0xc036118695Eff203b00B74B5a3ef8c3fA808E09B',
+  segment: {
+    ios: 'KzFIKc0VjOnnhoVclBFzyvoaeCpJOOiS',
+    android: 'b4aJlPklY2YWc0Z6KhMFsR486E7k4p2r'
+  }
 }
