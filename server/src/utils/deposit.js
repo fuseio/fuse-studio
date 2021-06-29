@@ -39,7 +39,7 @@ const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
     return
   }
 
-  const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress, identifier: phoneNumber, tokenAddress, communityAddress, bonusMaxTimesLimit, bonusAmount, bonusType }
+  const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress, identifier: phoneNumber, tokenAddress, communityAddress, bonusMaxTimesLimit, bonusAmount: bonusAmount.toNumber(), bonusType }
   return taskManager.now('fundToken', {
     ...jobData,
     transactionBody: {
