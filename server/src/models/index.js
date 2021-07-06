@@ -22,6 +22,10 @@ require('./StudioUser')
 require('./UserAccount')
 require('./AccountBalance')
 require('./ActionOnRelay')
+require('./WalletBalance')
+require('./RewardClaim')
+
+
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
