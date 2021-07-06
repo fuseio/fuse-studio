@@ -18,9 +18,9 @@ router.use('/sms', require('./sms'))
  * @apiSuccess {String} response Response status - ok
  */
 router.post('/request', async (req, res) => {
-  const { accountAddress, phoneNumber } = req.body
+  const { accountAddress, phoneNumber, appName } = req.body
   const secret = config.get('api.secret')
-  const token = jwt.sign({ phoneNumber, accountAddress }, secret)
+  const token = jwt.sign({ phoneNumber, accountAddress, appName }, secret)
   res.json({ token })
 })
 module.exports = router
