@@ -38,13 +38,13 @@ router.post('/request', async (req, res) => {
  * @apiSuccess {String} token JWT token
  */
 router.post('/verify', async (req, res) => {
-  const { phoneNumber, accountAddress, code } = req.body
+  const { phoneNumber, accountAddress, code, appName } = req.body
 
   const response = await smsProvider.verifyCheck({ phoneNumber, code })
 
   if (response.status === 'approved') {
     const secret = config.get('api.secret')
-    const token = jwt.sign({ phoneNumber, accountAddress, verifiedBy: 'sms' }, secret)
+    const token = jwt.sign({ phoneNumber, accountAddress, appName, verifiedBy: 'sms' }, secret)
     res.json({ token })
   } else {
     res.status(400).json({ error: 'Wrong SMS code' })
