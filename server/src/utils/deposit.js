@@ -29,7 +29,7 @@ const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
   const userWallet = await UserWallet.findOne({ walletAddress })
   const { phoneNumber } = userWallet
   const tokenPrice = await fetchTokenPrice(wFUSEAddress)
-  const bonusAmount = new BigNumber(bonusAmountInUSD.toString()).div(tokenPrice).integerValue(BigNumber.ROUND_UP).toString()
+  const bonusAmount = new BigNumber(bonusAmountInUSD.toString()).div(tokenPrice).integerValue(BigNumber.ROUND_UP)
   const bonusMaxTimesLimit = 1
   const bonusType = 'topup'
   const tokenAddress = wFUSEAddress
