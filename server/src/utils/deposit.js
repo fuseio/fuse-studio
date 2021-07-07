@@ -166,7 +166,7 @@ const performDeposit = async (deposit) => {
   deposit.status = 'started'
   await deposit.save()
 
-  trackDepositSuccess({ customerAddress })
+  trackDepositSuccess({ address: customerAddress })
   if (type === 'naive') {
     console.warn(`Funds already received on the Fuse Network, no need to take any action`)
     const { web3 } = createNetwork('home')
