@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 
-const validateBonusAlowance = async ({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit }) => {
+const validateBonusAlowance = async ({ job, phoneNumber, tokenAddress, communityAddress, bonusType, bonusMaxTimesLimit }) => {
   const fundingsCountForPhoneNumber = await QueueJob.find({
     name: 'fundToken',
     status: { $ne: 'failed' },
@@ -9,7 +9,6 @@ const validateBonusAlowance = async ({ job, phoneNumber, tokenAddress, community
     'data.phoneNumber': phoneNumber,
     'data.tokenAddress': tokenAddress,
     'data.communityAddress': communityAddress,
-    'data.receiverAddress': receiverAddress,
     'data.bonusType': bonusType
   }).countDocuments()
 
