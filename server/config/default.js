@@ -90,6 +90,12 @@ module.exports = {
         HomeBridgeFactory: '0xb895638fb3870AD5832402a5BcAa64A044687db0',
         BridgeMapper: '0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66'
       },
+      contracts: {
+        fusd: {
+          decimals: 18,
+          deploymentBlock: 9394716
+        }
+      },
       sharedAddresses: {
         WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
         WalletImplementation: '0x1DA43F87611B7FFDb104D125389E14313e053A3A',
@@ -376,5 +382,15 @@ module.exports = {
   segment: {
     ios: 'KzFIKc0VjOnnhoVclBFzyvoaeCpJOOiS',
     android: 'b4aJlPklY2YWc0Z6KhMFsR486E7k4p2r'
+  },
+  apy: {
+    launch: {
+      blockNumber: 11900000,
+      timestamp: 1625818720
+    },
+    rate: 0.05,
+    sync: {
+      interval: 3600
+    }
   }
 }
