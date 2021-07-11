@@ -25,8 +25,6 @@ require('./ActionOnRelay')
 require('./WalletBalance')
 require('./RewardClaim')
 
-
-
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')
   mongoose.event = mongoose.event || require('./Event')(mongoose)

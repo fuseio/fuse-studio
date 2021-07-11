@@ -4,14 +4,15 @@ const { Schema } = mongoose
 const RewardClaimSchema = new Schema({
   walletAddress: { type: String, required: [true, "can't be blank"] },
   tokenAddress: { type: String, required: [true, "can't be blank"] },
-  amount: { type: String, required: [true, "can't be blank"] },
-  humanAmount: { type: Number, required: [true, "can't be blank"] },
-  blockNumber: { type: Number, required: [true, "can't be blank"] },
-  claimedAt: { type: Date },
-  syncedAt: { type: Date },
-  nextClaimAt: { type: Date, required: [true, "can't be blank"] },
+  amount: { type: String, default: '0' },
+  humanAmount: { type: Number, default: 0 },
+  syncTimestamp: { type: Number, required: [true, "can't be blank"] },
+  syncBlockNumber: { type: Number, required: [true, "can't be blank"] },
+  claimBlockNumber: { type: Number },
+  claimedTimestamp: { type: Date },
+  nextClaimTimestamp: { type: Number },
   isClaimed: { type: Boolean, default: false },
-  transactionHash: { type: String, required: [true, "can't be blank"] }
+  transactionHash: { type: String }
 }, { timestamps: true, default: {} })
 
 RewardClaimSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
