@@ -13,12 +13,12 @@ const makeMessageGroupId = msg => {
 
 const generateDeduplicationId = () => crypto.randomBytes(64).toString('hex')
 
-const sendMessage = async (msg, options = {}) => {
+const sendMessage = async (msg) => {
   const params = {
     MessageBody: JSON.stringify(msg),
     QueueUrl: queueUrl,
     MessageGroupId: makeMessageGroupId(msg),
-    ...(options.generateDeduplicationId && { MessageDeduplicationId: generateDeduplicationId() })
+    MessageDeduplicationId: get(msg, 'params.correlationId') || generateDeduplicationId()
   }
 
   const response = await sqs.sendMessage(params).promise()

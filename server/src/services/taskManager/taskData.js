@@ -95,6 +95,11 @@ const tasksData = {
     name: 'fundToken',
     bridgeType: 'home',
     role: 'funder'
+  },
+  claimApy: {
+    name: 'claimApy',
+    bridgeType: 'home',
+    role: 'apy-funder'
   }
 }
 

@@ -8,9 +8,10 @@ const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const BigNumber = require('bignumber.js')
 const { adjustDecimals } = require('@utils/token')
 const { fuseBlocksClient } = require('@services/graph')
+const { transfer } = require('@utils/token')
+const { createNetwork } = require('@utils/web3')
 
 const SECONDS_IN_YEAR = new BigNumber(3.154e+7)
-const SECONDS_IN_WEEK = 604800
 
 const toHumanAmount = (amount) => adjustDecimals(amount, config.get('network.home.contracts.fusd.decimals'), 0)
 
@@ -76,55 +77,75 @@ const syncWalletBalances = async (walletAddress, tokenAddress) => {
   return latestBlock
 }
 
-const getUnclaimedReward = async (walletAddress, tokenAddress) => {
-  const latestReward = await RewardClaim.findOne({ walletAddress, tokenAddress }).sort({ claimedAt: -1 })
-  if (latestReward && !latestReward.isClaimed) {
-    return latestReward
+const getLatestReward = async (walletAddress, tokenAddress) => {
+  debugger
+  const latestReward = await RewardClaim.findOne({ walletAddress, tokenAddress }).sort({ syncBlockNumber: -1 })
+  if (latestReward) {
+    return latestReward.isClaimed
+      ? new RewardClaim({
+        walletAddress,
+        tokenAddress,
+        syncTimestamp: latestReward.syncTimestamp,
+        syncBlockNumber: latestReward.syncBlockNumber,
+        nextClaimTimestamp: latestReward.claimTimestamp + config.get('apy.claim.interval')
+      })
+      : latestReward
   }
-  let lastClaimTimestamp
-  if (!latestReward) {
-    const firstBalance = await WalletBalance.findOne({ walletAddress, tokenAddress, blockNumber: { $gte: config.get('network.home.contracts.fusd.deploymentBlock') } }).sort({ blockNumber: 1 })
-    lastClaimTimestamp = firstBalance.blockTimestamp
-  } else {
-    lastClaimTimestamp = get(latestReward, 'claimedTimestamp')
-  }
-  const nextClaimTimestamp = lastClaimTimestamp + SECONDS_IN_WEEK
-  const syncBlockNumber = get(latestReward, 'syncBlockNumber', config.get('apy.launch.blockNumber'))
-  const syncTimestamp = get(latestReward, 'syncTimestamp', config.get('apy.launch.timestamp'))
-
-  return new RewardClaim({
-    walletAddress,
-    tokenAddress,
-    nextClaimTimestamp,
-    syncBlockNumber,
-    syncTimestamp
-  })
+  return new RewardClaim({ walletAddress, tokenAddress, syncBlockNumber: config.get('apy.launch.blockNumber') })
 }
 
 const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
-  const reward = await getUnclaimedReward(walletAddress, tokenAddress, latestBlock)
+  debugger
+  const reward = await getLatestReward(walletAddress, tokenAddress)
   const { syncBlockNumber } = reward
   const walletBalancesAfter = await WalletBalance.find({ walletAddress, tokenAddress, blockNumber: { $gte: syncBlockNumber } }).sort({ blockNumber: 1 })
   const walletBalanceBefore = await WalletBalance.findOne({ walletAddress, tokenAddress, blockNumber: { $lt: syncBlockNumber } }).sort({ blockNumber: -1 })
-  const walletBalances = [walletBalanceBefore, ...walletBalancesAfter]
+  const walletBalances = walletBalanceBefore ? [walletBalanceBefore, ...walletBalancesAfter] : walletBalancesAfter
   const rewardSum = walletBalances.reduce((sum, wb, i) => {
     const nextTimestamp = walletBalances[i + 1] ? walletBalances[i + 1].blockTimestamp : latestBlock.timestamp
     const duration = nextTimestamp - wb.blockTimestamp
-    console.log({ nextTimestamp, duration, a: wb.amount })
     return sum.plus(new BigNumber(wb.amount).multipliedBy(duration))
   }, new BigNumber(reward.amount))
 
-  const currentReward = rewardSum.div(SECONDS_IN_YEAR).multipliedBy(config.get('apy.rate'))
-  reward.amount = currentReward.toString()
+  const currentReward = rewardSum.multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR)
+  if (!reward.nextClaimTimestamp) {
+    const firstWalletBalance = walletBalances[0]
+    console.log({ firstWalletBalance })
+    const lastClaimTimestamp = config.get('apy.launch.timestamp') < firstWalletBalance.blockTimestamp ? firstWalletBalance.blockTimestamp : config.get('apy.launch.timestamp')
+    reward.nextClaimTimestamp = lastClaimTimestamp + config.get('apy.claim.interval')
+  }
+  reward.amount = currentReward.plus(get(reward, 'amount', '0')).toFixed(0)
   reward.humanAmount = adjustDecimals(reward.amount, config.get('network.home.contracts.fusd.decimals'), 0)
+  reward.syncBlockNumber = latestBlock.number
+  reward.syncTimestamp = latestBlock.timestamp
+  console.log({ reward })
   return reward.save()
 }
 
 const calculate = async (walletAddress, tokenAddress) => {
   const latestBlock = await syncWalletBalances(walletAddress, tokenAddress)
-  await calulcateReward(walletAddress, tokenAddress, latestBlock)
+  return calulcateReward(walletAddress, tokenAddress, latestBlock)
+}
+
+const claimApy = async (account, { walletAddress, tokenAddress }) => {
+  const reward = await calculate(walletAddress, tokenAddress)
+  const network = createNetwork('home', account)
+  const { web3 } = network
+  const { blockHash, blockNumber, status, transactionHash } = await transfer(network, { from: account.address, to: reward.walletAddress, tokenAddress, amount: reward.amount })
+  if (!status) {
+    throw new Error(`Failed to claim APY for ${walletAddress}`)
+  }
+  const { timestamp } = await web3.eth.getBlock(blockHash)
+  reward.claimBlockNumber = blockNumber
+  reward.claimTimestamp = timestamp
+  reward.transactionHash = transactionHash
+  reward.isClaimed = true
+  await reward.save()
+
+  return reward
 }
 
 module.exports = {
-  calculate
+  calculate,
+  claimApy
 }

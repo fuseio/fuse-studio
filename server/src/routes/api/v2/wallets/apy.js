@@ -5,23 +5,30 @@ const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const RewardClaim = mongoose.model('RewardClaim')
 const { agenda } = require('@services/agenda')
-const UserWallet = require('../../../../models/WalletBalance')
+const taskManager = require('@services/taskManager')
+const UserWallet = require('@models/UserWallet')
 
 router.post('/claim/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
   const { accountAddress } = req.user
   const wallet = await UserWallet.findOne({ walletAddress })
-  if (wallet.accountAddress !== accountAddress) {
+
+  if (wallet.accountAddress.toLowerCase() !== accountAddress.toLowerCase()) {
     return res.status(403).json({ error: `account address ${accountAddress} does not own the wallet ${walletAddress}` })
   }
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
-  let reward = await RewardClaim.findOne({ walletAddress, tokenAddress }).sort({ claimedAt: -1 })
-  if (reward.isClaimed) {
-    return res.status(400).json({ error: `no rewards are found for the wallet ${walletAddress}` })
-  } else {
-    
+  let reward = await RewardClaim.findOne({ walletAddress, tokenAddress, isClaimed: false }).sort({ nextClaimTimestamp: -1 })
+  if (!reward || reward.isClaimed) {
+    const msg = `No active reward found for wallet ${walletAddress}. Starting the calculation`
+    console.warn(msg)
+    await agenda.now('calculateApy', { walletAddress, tokenAddress })
+    return res.status(403).json({ error: msg })
   }
-
+  if (reward.nextClaimTimestamp > moment().unix()) {
+    return res.status(403).json({ error: `reward for ${walletAddress} will be claimable on timestamp ${reward.nextClaimTimestamp}` })
+  }
+  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress })
+  return res.json({ data: job })
 })
 
 router.get('/reward/:walletAddress', auth.required, async (req, res) => {
@@ -29,13 +36,13 @@ router.get('/reward/:walletAddress', auth.required, async (req, res) => {
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
   let reward = await RewardClaim.findOne({ walletAddress, tokenAddress, isClaimed: false }).sort({ claimedAt: -1 })
 
-  if (reward && reward.syncTimestamp - moment().unix() < config.get('apy.sync.interval  ')) {
+  if (reward && reward.syncTimestamp - moment().unix() < config.get('apy.sync.interval')) {
     return res.json({ data: { rewardAmount: reward } })
   }
 
   await agenda.now('calculateApy', { walletAddress, tokenAddress })
   if (reward) {
-    return res.json({ data: { rewardAmount: reward } })
+    return res.json({ data: { reward } })
   } else {
     return res.status(400).json({ error: `no reward found for wallet ${walletAddress}` })
   }

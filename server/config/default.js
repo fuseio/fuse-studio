@@ -385,12 +385,15 @@ module.exports = {
   },
   apy: {
     launch: {
-      blockNumber: 11900000,
-      timestamp: 1625818720
+      blockNumber: 11800000,
+      timestamp: 1625290115
     },
     rate: 0.05,
-    sync: {
+    claim: {
       interval: 3600
+    },
+    sync: {
+      interval: 60
     }
   }
 }

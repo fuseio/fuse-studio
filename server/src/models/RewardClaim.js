@@ -9,7 +9,7 @@ const RewardClaimSchema = new Schema({
   syncTimestamp: { type: Number, required: [true, "can't be blank"] },
   syncBlockNumber: { type: Number, required: [true, "can't be blank"] },
   claimBlockNumber: { type: Number },
-  claimedTimestamp: { type: Date },
+  claimTimestamp: { type: Number },
   nextClaimTimestamp: { type: Number },
   isClaimed: { type: Boolean, default: false },
   transactionHash: { type: String }
