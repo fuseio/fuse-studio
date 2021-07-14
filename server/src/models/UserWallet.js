@@ -23,9 +23,7 @@ const UserWalletSchema = new Schema({
   appName: { type: String },
   os: { type: String },
   ip: { type: String },
-  balancesOnForeign: { type: Map, of: String, default: {} },
-  nextApyClaim: { type: Date },
-  lastApyClaim: { type: Date }
+  balancesOnForeign: { type: Map, of: String, default: {} }
 }, { timestamps: true, default: {} })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
