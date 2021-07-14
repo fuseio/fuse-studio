@@ -31,7 +31,8 @@ module.exports = {
         fuse: '/fuse-qa',
         entities: '/fuse-entities-qa',
         bridgeRopsten: '/fuse-ropsten-bridge',
-        bridgeMain: '/fuse-ethereum-bridge'
+        bridgeMain: '/fuse-ethereum-bridge',
+        blocks: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse-blocks'
       }
     },
     uniswap: {
@@ -89,13 +90,19 @@ module.exports = {
         HomeBridgeFactory: '0xb895638fb3870AD5832402a5BcAa64A044687db0',
         BridgeMapper: '0x3E0d9311E14b8Ba767b8917F3d06D1C178893E66'
       },
+      contracts: {
+        fusd: {
+          decimals: 18,
+          deploymentBlock: 9394716
+        }
+      },
       sharedAddresses: {
         WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
         WalletImplementation: '0x1DA43F87611B7FFDb104D125389E14313e053A3A',
         CommunityFactory: '0xcc004Ee01Da7D9207aBE384cE601623E9F223536',
         MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
         TokenFactory: '0x78Cb0FeEC1fA3b3469cA18e79823b6A87C8929a4',
-        FuseDollar: '0x5D42867417d19D51A19661453A38B6F180F1624E',
+        FuseDollar: '0x249BE57637D8B013Ad64785404b24aeBaE9B098B',
         WrappedFuse: '0x0BE9e53fd7EDaC9F859882AfdDa116645287C629',
         walletModules: {
           GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
@@ -375,5 +382,18 @@ module.exports = {
   segment: {
     ios: 'KzFIKc0VjOnnhoVclBFzyvoaeCpJOOiS',
     android: 'b4aJlPklY2YWc0Z6KhMFsR486E7k4p2r'
+  },
+  apy: {
+    launch: {
+      blockNumber: 11800000,
+      timestamp: 1625290115
+    },
+    rate: 0.05,
+    claim: {
+      interval: 3600
+    },
+    sync: {
+      interval: 60
+    }
   }
 }

@@ -5,6 +5,7 @@ const funder = require('./funder')
 const admin = require('./admin')
 const bridge = require('./bridge')
 const economy = require('./economy')
+const apy = require('./apy')
 
 module.exports = {
   ...relay,
@@ -13,5 +14,6 @@ module.exports = {
   ...funder,
   ...admin,
   ...bridge,
-  ...economy
+  ...economy,
+  ...apy
 }
