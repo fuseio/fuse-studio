@@ -8,9 +8,9 @@ const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const BigNumber = require('bignumber.js')
 const { adjustDecimals } = require('@utils/token')
 const { fuseBlocksClient } = require('@services/graph')
-const { transfer } = require('@utils/token')
+const { transfer, ERC20_TRANSFER_EVENT_HASH } = require('@utils/token')
 const { createNetwork } = require('@utils/web3')
-
+const { hexZeroPad } = require('@ethersproject/bytes')
 const SECONDS_IN_YEAR = new BigNumber(3.154e+7)
 
 const toHumanAmount = (amount) => adjustDecimals(amount, config.get('network.home.contracts.fusd.decimals'), 0)
@@ -38,8 +38,8 @@ const syncWalletBalances = async (walletAddress, tokenAddress) => {
   const currentTokenBalance = await tokenContract.methods.balanceOf(walletAddress).call({}, latestBlockNumber)
   console.log({ currentTokenBalance })
   console.log(`querying trasnfer events for contract ${tokenAddress} from block ${fromBlock} to block ${latestBlockNumber}`)
-  const fromTransfers = await tokenContract.getPastEvents('allEvents', { fromBlock, toBlock: latestBlockNumber, topics: ['0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef', '0x000000000000000000000000d418c5d0c4a3d87a6c555b7aa41f13ef87485ec6'] })
-  const toTransfers = await tokenContract.getPastEvents('allEvents', { fromBlock, toBlock: latestBlockNumber, topics: ['0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef', undefined, '0x000000000000000000000000d418c5d0c4a3d87a6c555b7aa41f13ef87485ec6'] })
+  const fromTransfers = await tokenContract.getPastEvents('allEvents', { fromBlock, toBlock: latestBlockNumber, topics: [ERC20_TRANSFER_EVENT_HASH, hexZeroPad(walletAddress, 32)] })
+  const toTransfers = await tokenContract.getPastEvents('allEvents', { fromBlock, toBlock: latestBlockNumber, topics: [ERC20_TRANSFER_EVENT_HASH, undefined, hexZeroPad(walletAddress, 32)] })
   const transfers = sortBy([...fromTransfers.map(tx => ({ ...tx, type: 'OUT' })), ...toTransfers.map(tx => ({ ...tx, type: 'IN' }))], 'blockNumber')
   console.log(`Found ${fromTransfers.length} OUT transfers and ${toTransfers.length} IN transfers`)
 
@@ -49,7 +49,6 @@ const syncWalletBalances = async (walletAddress, tokenAddress) => {
   const blocksMap = keyBy(await fetchTimestamps(transfers.map(({ blockHash }) => blockHash)), 'id')
   for (let tx of transfers) {
     const { blockNumber, transactionHash, blockHash } = tx
-    // console.log(tx)
     // two events got the same blocknumber. meaning one is redundant
     if (last(walletBalances) && blockNumber === last(walletBalances).blockNumber) {
       walletBalances.pop()
@@ -78,7 +77,6 @@ const syncWalletBalances = async (walletAddress, tokenAddress) => {
 }
 
 const getLatestReward = async (walletAddress, tokenAddress) => {
-  debugger
   const latestReward = await RewardClaim.findOne({ walletAddress, tokenAddress }).sort({ syncBlockNumber: -1 })
   if (latestReward) {
     return latestReward.isClaimed
@@ -95,7 +93,6 @@ const getLatestReward = async (walletAddress, tokenAddress) => {
 }
 
 const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
-  debugger
   const reward = await getLatestReward(walletAddress, tokenAddress)
   const { syncBlockNumber } = reward
   const walletBalancesAfter = await WalletBalance.find({ walletAddress, tokenAddress, blockNumber: { $gte: syncBlockNumber } }).sort({ blockNumber: 1 })
@@ -110,7 +107,6 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
   const currentReward = rewardSum.multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR)
   if (!reward.nextClaimTimestamp) {
     const firstWalletBalance = walletBalances[0]
-    console.log({ firstWalletBalance })
     const lastClaimTimestamp = config.get('apy.launch.timestamp') < firstWalletBalance.blockTimestamp ? firstWalletBalance.blockTimestamp : config.get('apy.launch.timestamp')
     reward.nextClaimTimestamp = lastClaimTimestamp + config.get('apy.claim.interval')
   }
