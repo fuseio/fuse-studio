@@ -6,6 +6,10 @@ const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const web3Utils = require('web3-utils')
 const { uniswapClient } = require('@services/graph')
 const BigNumber = require('bignumber.js')
+const { id } = require('@ethersproject/hash')
+
+const ERC20_TRANSFER_EVENT = 'Transfer(address,address,uint256)'
+const ERC20_TRANSFER_EVENT_HASH = id(ERC20_TRANSFER_EVENT)
 
 const fetchToken = async (tokenAddress) => {
   const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
@@ -112,5 +116,6 @@ module.exports = {
   fetchToken,
   isStableCoin,
   adjustDecimals,
-  toWei
+  toWei,
+  ERC20_TRANSFER_EVENT_HASH
 }
