@@ -49,7 +49,6 @@ const syncWalletBalances = async (walletAddress, tokenAddress) => {
   const blocksMap = keyBy(await fetchTimestamps(transfers.map(({ blockHash }) => blockHash)), 'id')
   for (let tx of transfers) {
     const { blockNumber, transactionHash, blockHash } = tx
-    console.log({ blockNumber, transactionHash })
     // two events got the same blocknumber. meaning one is redundant
     if (last(walletBalances) && blockNumber === last(walletBalances).blockNumber) {
       walletBalances.pop()
@@ -78,7 +77,6 @@ const syncWalletBalances = async (walletAddress, tokenAddress) => {
 }
 
 const getLatestReward = async (walletAddress, tokenAddress) => {
-  debugger
   const latestReward = await RewardClaim.findOne({ walletAddress, tokenAddress }).sort({ syncBlockNumber: -1 })
   if (latestReward) {
     return latestReward.isClaimed
@@ -95,7 +93,6 @@ const getLatestReward = async (walletAddress, tokenAddress) => {
 }
 
 const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
-  debugger
   const reward = await getLatestReward(walletAddress, tokenAddress)
   const { syncBlockNumber } = reward
   const walletBalancesAfter = await WalletBalance.find({ walletAddress, tokenAddress, blockNumber: { $gte: syncBlockNumber } }).sort({ blockNumber: 1 })
@@ -110,7 +107,6 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
   const currentReward = rewardSum.multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR)
   if (!reward.nextClaimTimestamp) {
     const firstWalletBalance = walletBalances[0]
-    console.log({ firstWalletBalance })
     const lastClaimTimestamp = config.get('apy.launch.timestamp') < firstWalletBalance.blockTimestamp ? firstWalletBalance.blockTimestamp : config.get('apy.launch.timestamp')
     reward.nextClaimTimestamp = lastClaimTimestamp + config.get('apy.claim.interval')
   }
