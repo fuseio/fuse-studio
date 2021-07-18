@@ -3,6 +3,35 @@ var mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
+const { get, isEmpty } = require('lodash')
+
+router.get('/external', auth.required, async (req, res) => {
+  const { externalId } = req.query
+  const txs = await QueueJob.find({ 'data.externalId': externalId })
+  if (isEmpty(txs)) {
+    return res.status(400).json({ error: `externalId: ${externalId} has no match job` })
+  }
+
+  return res.json({
+    data: txs.map(({ _id, data: { transactionBody, txHash, externalId } }) => ({
+      jobId: _id,
+      value: get(transactionBody, 'value', 0),
+      tokenName: get(transactionBody, 'tokenName', ''),
+      tokenDecimal: get(transactionBody, 'tokenDecimal', ''),
+      tokenSymbol: get(transactionBody, 'asset', ''),
+      tokenAddress: get(transactionBody, 'tokenAddress', ''),
+      contractAddress: get(transactionBody, 'tokenAddress', ''),
+      status: get(transactionBody, 'status', ''),
+      type: get(transactionBody, 'type', ''),
+      from: get(transactionBody, 'from', ''),
+      to: get(transactionBody, 'to', ''),
+      timeStamp: get(transactionBody, 'timeStamp'),
+      blockNumber: get(transactionBody, 'blockNumber'),
+      hash: txHash,
+      externalId
+    }))
+  })
+})
 
 /**
  * @api {get} api/v2/jobs/correlationId/:correlationId Fetch job by correlationId

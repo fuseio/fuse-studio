@@ -109,10 +109,24 @@ const makeMintDeposited = async (job) => {
   }).save()
 }
 
+const handleClaimApy = async (job) => {
+  const data = formatActionData(job.data)
+  return new WalletAction({
+    name: 'claimApy',
+    job: mongoose.Types.ObjectId(job._id),
+    data: {
+      value: get(job, 'reward.amount')
+    },
+    tokenAddress: data.tokenAddress,
+    walletAddress: job.data.walletAddress
+  }).save()
+}
+
 const jobCreationHandlers = {
   createWallet: handleCreateWalletJob,
   createForeignWallet: handleCreateWalletJob,
   relay: handleRelayJob,
+  claimApy: handleClaimApy,
   fundToken: handleFundToken,
   mintDeposited: makeMintDeposited,
   setWalletOwner: handleSetWalletOwnerJob
