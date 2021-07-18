@@ -48,7 +48,6 @@ const MyCommunities = ({
   const communitiesIOwn = React.useMemo(() => {
     return communitiesKeys
       .map((communityAddress) => communities[communityAddress])
-      .filter(obj => !!obj).filter(({ isAdmin }) => isAdmin)
   }, [communitiesKeys, communities])
 
   const slides = React.useMemo(() => {

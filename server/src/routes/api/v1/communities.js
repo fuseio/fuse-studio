@@ -45,7 +45,7 @@ const makePlugin = ({ plugin }) => {
  */
 router.get('/user', auth.required, async (req, res) => {
   const { id } = req.user
-  const communities = await Community.find({ owner: ObjectId(id) }).lean()
+  const communities = await Community.find({ owner: ObjectId(id) }).sort({ updatedAt: -1 }).lean()
   return res.json({ data: communities })
 })
 
