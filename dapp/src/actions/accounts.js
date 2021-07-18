@@ -19,7 +19,7 @@ export const balanceOfNative = (accountAddress, options) => action(BALANCE_OF_NA
 export const balanceOfFuse = (accountAddress) => action(BALANCE_OF_FUSE.REQUEST, { accountAddress })
 
 export const fetchBalances = (tokens, accountAddress) => action(FETCH_BALANCES.REQUEST, { accountAddress, tokens })
-export const fetchCommunities = (accountAddress) => communitiesAction(FETCH_COMMUNITIES.REQUEST, { accountAddress })
+export const fetchCommunities = (accountAddress) => communitiesAction(FETCH_COMMUNITIES.REQUEST, { accountAddress, options: { auth: true } })
 
 export const postponedActionExecuted = (accountAddress, postponed) => action(EXECUTE_POSTPONED_ACTION, { accountAddress, postponed })
 export const postponeAction = (accountAddress, postponed) => action(POSTPONE_ACTION.REQUEST, { accountAddress, postponed })
