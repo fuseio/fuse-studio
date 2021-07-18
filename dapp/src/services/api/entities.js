@@ -93,5 +93,7 @@ export const fetchEntity = (apiRoot, { communityAddress, account }) =>
 export const fetchEntityMetadata = (apiRoot, { communityAddress, account }) =>
   request.get(`${apiRoot}/entities/metadata/${communityAddress}/${account}`).then(response => response.body)
 
-export const fetchCommunities = (apiRoot, { accountAddress }) =>
-  request.get(`${apiRoot}/communities/account/${accountAddress}`).then(response => response.body)
+export const fetchCommunities = (apiRoot, { jwtToken }) =>
+  request.get(`${apiRoot}/communities/user`)
+    .set('Authorization', `Bearer ${jwtToken}`)
+    .then(response => response.body)

@@ -1,6 +1,7 @@
 const config = require('config')
 const router = require('express').Router()
 const mongoose = require('mongoose')
+const { ObjectId } = mongoose.Types
 const Community = mongoose.model('Community')
 const Entity = mongoose.model('Entity')
 const Token = mongoose.model('Token')
@@ -35,6 +36,18 @@ const makePlugin = ({ plugin }) => {
     return { name, ...plugin }
   }
 }
+
+/**
+ * @api {get} /communities/user Fetch all user communities
+ * @apiName AddPlugins
+ * @apiGroup Community
+ * @apiParam {Array} user communities
+ */
+router.get('/user', auth.required, async (req, res) => {
+  const { id } = req.user
+  const communities = await Community.find({ owner: ObjectId(id) }).lean()
+  return res.json({ data: communities })
+})
 
 /**
  * @api {post} /communities/:communityAddress/plugins Add plugins to community
