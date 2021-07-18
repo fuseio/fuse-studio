@@ -101,32 +101,29 @@
   },
   "api": {
     "auth": {
-      "domain": {
-        "name": "Fuse Studio Dev",
-        "version": 1
-      },
-      "google": {
-        "clientId": "784912570329-hkc327u95ps4ia7ja70s8mkhb6kphrbd.apps.googleusercontent.com"
-      }
+        "domain": {
+          "name": "Fuse Studio Prod",
+          "version": 1
+        },
+        "google": {
+          "clientId": "784912570329-hkc327u95ps4ia7ja70s8mkhb6kphrbd.apps.googleusercontent.com"
+        }
     },
     "url": {
-      "main": "http://localhost:3000/api/v1",
-      "ropsten": "http://localhost:3000/api/v1",
-      "default": "http://localhost:3000/api/v1"
+      "main": "https://studio.fuse.io/api/v1",
+      "ropsten": "https://studio-ropsten.fuse.io/api/v1",
+      "default": "https://studio.fuse.io/api/v1"
     },
-    "timeout": 3000,
-    "retryTimeout": 500,
-    "retryCount": 5,
     "v2": {
       "url": {
-        "main": "http://localhost:3000/api/v2",
-        "ropsten": "http://localhost:3000/api/v2"
+        "main": "https://studio.fuse.io/api/v2",
+        "ropsten": "https://studio-ropsten.fuse.io/api/v2"
       }
     },
     "graph": {
-      "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
+      "url": "https://graph.fuse.io/subgraphs/name/fuseio",
       "subgraphs": {
-        "entities": "/fuse-entities-dev"
+        "entities": "/fuse-entities"
       }
     }
   },
