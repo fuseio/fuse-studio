@@ -233,5 +233,18 @@
         "__format": "json"
       }
     }
+  },
+  "apy": {
+    "launch": {
+      "blockNumber": "COMMUNITY_APY_LAUNCH_BLOCKNUMBER",
+      "timestamp": "COMMUNITY_APY_LAUNCH_TIMESTAMP"
+    },
+    "rate": "COMMUNITY_APY_RATE",
+    "claim": {
+      "interval": "COMMUNITY_APY_CLAIM_INTERVAL"
+    },
+    "sync": {
+      "interval": "COMMUNITY_APY_SYNC_INTERVAL"
+    }
   }
 }
