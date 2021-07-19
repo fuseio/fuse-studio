@@ -153,6 +153,7 @@ export default class Dashboard {
   initStateByCommunity = community => {
     this.community = { ...omit(community, ['plugins']) }
     this.plugins = { ...get(community, 'plugins') }
+    this.initAdmin()
 
     this._web3Home = getWeb3({ networkType: this.homeNetwork })
     if (this.foreignNetwork) {
@@ -214,7 +215,6 @@ export default class Dashboard {
       }
       const { data } = response
       this.fetchEntitiesCount()
-      this.fetchCommunityAdmins()
       this.initStateByCommunity(data)
 
       this.isFetching = false
@@ -223,6 +223,22 @@ export default class Dashboard {
       console.log('ERROR in fetchCommunity', { error })
     }
   })
+
+  initAdmin = () => {
+    try {
+      const state = loadState('persist:root')
+      const userState = get(state, 'user')
+      if (userState) {
+        const user = JSON.parse(userState)
+        this.isAdmin = user._id === this.community.owner
+      } else {
+        this.isAdmin = false
+      }
+    } catch (error) {
+      console.log('ERROR in checkIsAdmin', { error })
+      this.isAdmin = false
+    }
+  }
 
   fetchCommunityAdmins = flow(function * () {
     try {
