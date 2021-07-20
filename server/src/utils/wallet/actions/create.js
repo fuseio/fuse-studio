@@ -114,10 +114,8 @@ const handleClaimApy = async (job) => {
   return new WalletAction({
     name: 'claimApy',
     job: mongoose.Types.ObjectId(job._id),
-    data: {
-      value: get(job, 'reward.amount')
-    },
-    tokenAddress: data.tokenAddress,
+    data: data,
+    tokenAddress: job.data.tokenAddress,
     walletAddress: job.data.walletAddress
   }).save()
 }

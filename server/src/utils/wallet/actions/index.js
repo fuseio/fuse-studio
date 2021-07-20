@@ -26,6 +26,7 @@ const jobSuccessHandlers = {
   createForeignWallet: handleSuccessDefaultJob,
   fundToken: handleSuccessDefaultJob,
   relay: handleSuccessDefaultJob,
+  claimApy: handleSuccessDefaultJob,
   mintDeposited: handleSuccessDefaultJob
 }
 
