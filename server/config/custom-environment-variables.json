@@ -236,15 +236,27 @@
   },
   "apy": {
     "launch": {
-      "blockNumber": "COMMUNITY_APY_LAUNCH_BLOCKNUMBER",
-      "timestamp": "COMMUNITY_APY_LAUNCH_TIMESTAMP"
+      "blockNumber": {
+        "__name": "COMMUNITY_APY_LAUNCH_BLOCKNUMBER",
+        "__format": "number"
+      },
+      "timestamp": {
+        "__name": "COMMUNITY_APY_LAUNCH_TIMESTAMP",
+        "__format": "number"
+      }
     },
     "rate": "COMMUNITY_APY_RATE",
     "claim": {
-      "interval": "COMMUNITY_APY_CLAIM_INTERVAL"
+      "interval": {
+        "__name": "COMMUNITY_APY_CLAIM_INTERVAL",
+        "__format": "number"
+      }
     },
     "sync": {
-      "interval": "COMMUNITY_APY_SYNC_INTERVAL"
+      "interval": {
+        "__name": "COMMUNITY_APY_SYNC_INTERVAL",
+        "__format": "number"
+      }
     }
   }
 }
