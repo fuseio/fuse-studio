@@ -61,7 +61,12 @@
     },
     "home": {
       "provider": "COMMUNITY_NETWORK_HOME_PROVIDER",
-      "gasPrice": "COMMUNITY_NETWORK_HOME_GAS_PRICE"
+      "gasPrice": "COMMUNITY_NETWORK_HOME_GAS_PRICE",
+      "sharedAddresses": {
+        "walletModules": {
+          "TransferManager": "COMMUNITY_NETWORK_HOME_ADDRESSESS_TRANSFER_MANAGER"
+        }
+      }
     },
     "foreign": {
       "apiKey": "COMMUNITY_WEB3_API_KEY",
