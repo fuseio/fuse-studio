@@ -16,7 +16,7 @@ const handleSuccessCreateWalletJob = (action, job) => {
 
 const handleSuccessDefaultJob = (action, job) => {
   const formattedData = formatActionData(job.data)
-  action.set('status', get(formattedData, 'status'))
+  action.set('status', get(formattedData, 'status', 'succeeded'))
   action.set('data', { ...action.data, ...formattedData })
   return action.save()
 }

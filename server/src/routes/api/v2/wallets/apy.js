@@ -27,7 +27,7 @@ router.post('/claim/:walletAddress', auth.required, async (req, res) => {
   if (reward.nextClaimTimestamp > moment().unix()) {
     return res.status(403).json({ error: `reward for ${walletAddress} will be claimable on timestamp ${reward.nextClaimTimestamp}` })
   }
-  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, reward, transactionBody: { value: reward.amount } }, { isWalletJob: true })
+  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, reward, transactionBody: { value: reward.amount, status: 'pending' } }, { isWalletJob: true })
   return res.json({ data: job })
 })
 
