@@ -56,8 +56,10 @@ module.exports = {
       apiKey: ''
     },
     fuse: {
+      transport: 'http',
       url: 'https://subscription.fuse.io/api/v1',
-      webhookUrl: 'http://localhost:3000/api/v2/wallets/webhook'
+      webhookUrl: 'http://localhost:3000/api/v2/wallets/webhook',
+      queueUrl: ''
     }
   },
   fuseswap: {
