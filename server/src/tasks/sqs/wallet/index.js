@@ -13,7 +13,9 @@ const Invite = mongoose.model('Invite')
 const Fork = mongoose.model('Fork')
 const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
-const { subscribeToBlocknative, subscribeToSubscriptionService } = require('@services/subscriptionServices')
+const { subscribeToSubscriptionService } = require('@services/subscription')
+const { subscribeToBlocknative } = require('@services/blocknative')
+
 const manageTasks = require('./manage')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
@@ -42,7 +44,8 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
   })
 
   const walletAddress = receipt.events.WalletCreated.returnValues._wallet
-  console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} for account ${owner}`)
+  const { blockNumber } = receipt
+  console.log(`Created wallet contract ${receipt.events.WalletCreated.returnValues._wallet} at block ${blockNumber} for account ${owner}`)
 
   job.set('data.walletAddress', walletAddress)
   if (bonusInfo && communityAddress) {
@@ -110,7 +113,7 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     })
   }
 
-  await subscribeToSubscriptionService(walletAddress)
+  await subscribeToSubscriptionService(walletAddress, { blockNumber })
   return receipt
 }
 

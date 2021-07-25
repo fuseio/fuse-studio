@@ -52,7 +52,9 @@
       "apiKey": "COMMUNITY_BLOCKNATIVE_API_KEY"
     },
     "fuse": {
-      "url": "COMMUNITY_SUBSCRIPTION_FUSE_URL"
+      "transport": "COMMUNITY_SUBSCRIPTION_FUSE_TRANSPORT",
+      "url": "COMMUNITY_SUBSCRIPTION_FUSE_URL",
+      "queueUrl": "COMMUNITY_SUBSCRIPTION_FUSE_QUEUE_URL"
     }
   },
   "network": {
