@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
+const { ObjectId } = String.Types
 
 const UserWalletSchema = new Schema({
   phoneNumber: { type: String, required: [true, "can't be blank"] },
@@ -7,7 +8,7 @@ const UserWalletSchema = new Schema({
   walletAddress: { type: String },
   firebaseToken: { type: String },
   firebaseTokens: { type: Array },
-  contacts: [{ type: Schema.Types.ObjectId, ref: 'Contact' }],
+  contacts: [{ type: ObjectId, ref: 'Contact' }],
   backup: { type: Boolean, default: false },
   walletOwnerOriginalAddress: { type: String },
   walletFactoryOriginalAddress: { type: String },
@@ -23,7 +24,8 @@ const UserWalletSchema = new Schema({
   appName: { type: String },
   os: { type: String },
   ip: { type: String },
-  balancesOnForeign: { type: Map, of: String, default: {} }
+  balancesOnForeign: { type: Map, of: String, default: {} },
+  upgrades: [{ type: ObjectId, ref: 'WalletUpgrade' }]
 }, { timestamps: true, default: {} })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
