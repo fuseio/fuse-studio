@@ -1,23 +1,38 @@
 const router = require('express').Router()
-const moment = require('moment')
-const config = require('config')
-const auth = require('@routes/auth')
+const auth = require('./auth')
 const mongoose = require('mongoose')
-const RewardClaim = mongoose.model('RewardClaim')
-const { agenda } = require('@services/agenda')
+const WalletUpgrade = mongoose.model('WalletUpgrade')
 const taskManager = require('@services/taskManager')
-const UserWallet = require('@models/UserWallet')
+const { omit, merge } = require('lodash')
 
-router.get('/:walletAddress', auth.required, async (req, res) => {
-  const { walletAddress } = req.params
-  const { accountAddress } = req.user
-  const wallet = await UserWallet.findOne({ walletAddress })
+router.get('/available/:walletAddress', auth.walletOwner, async (req, res) => {
 
-  if (wallet.accountAddress.toLowerCase() !== accountAddress.toLowerCase()) {
-    return res.status(403).json({ error: `account address ${accountAddress} does not own the wallet ${walletAddress}` })
+  const { wallet } = req.user
+
+  const upgrades = await WalletUpgrade.find().sort({ order: 1 })
+  const availableUpgrades = upgrades.filter(upgrade => !wallet.upgradesInstalled.includes(upgrade.id))
+
+  return res.json({ data: availableUpgrades })
+})
+
+router.post('/install/:walletAddress', auth.walletOwner, async (req, res) => {
+  const { wallet, appName, identifier } = req.user
+  const { upgradeId, relayParams } = req.body
+  if (wallet.upgradesInstalled.includes(upgradeId)) {
+    return res.status(400).send({ error: `Upgrade ${upgradeId} already installed for wallet ${wallet.walletAddress}` })
+  }
+  const upgrade = await WalletUpgrade.findById(upgradeId)
+  if (!upgrade) {
+    return res.status(400).send({ error: `Upgrade ${upgradeId} could not be found` })
   }
 
-  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, reward, transactionBody: { value: reward.amount } }, { isWalletJob: true })
+  const onSuccess = () => {
+    wallet.upgradesInstalled.push(upgradeId)
+    wallet.walletModules = merge(omit(wallet.walletModules, Object.keys(upgrade.disabledModules)), upgrade.enabledModules)
+    return wallet.save()
+  }
+
+  const job = taskManager.now('relay', { ...relayParams, identifier, appName, onSuccess })
   return res.json({ data: job })
 })
 

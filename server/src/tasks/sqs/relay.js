@@ -48,7 +48,6 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
-
   console.log(`before isAllowedToRelay`)
   const allowedToRelay = isAllowedToRelay(web3, walletModule, walletModuleABI, methodName, methodData, networkType)
   console.log(`isAllowedToRelay: ${allowedToRelay}`)
@@ -71,6 +70,7 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
       const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
       const { wallet, signedHash } = returnValues
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
+
       if (walletModule === 'CommunityManager') {
         try {
           const { _community: communityAddress } = getParamsFromMethodData(walletModuleABI, 'joinCommunity', methodData)
