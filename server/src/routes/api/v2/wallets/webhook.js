@@ -12,6 +12,8 @@ const { notifyReceiver } = require('@services/firebase')
 
 const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
 const fuseDollarAccount = config.get('plugins.rampInstant.fuseDollarAccount')
+const apyFunderAddress = config.get('apy.account.address')
+const ingnoredAccounts = [fuseDollarAccount, apyFunderAddress]
 
 router.post('/subscribe', auth.admin, async (req, res) => {
   const { walletAddress } = req.body
@@ -27,7 +29,7 @@ router.post('/', async (req, res) => {
   const { args, address: tokenAddress, transactionHash } = req.body
   console.log(`got txHash ${transactionHash} from the wehbook`)
   const [from, to, { hex }] = args
-  if (tokenAddress === fuseDollarAddress && from === fuseDollarAccount) {
+  if (tokenAddress === fuseDollarAddress && ingnoredAccounts.includes(from)) {
     console.log(` deposit event received from the subscription webhook, skipping`)
     res.send({ data: 'ok' })
     return
