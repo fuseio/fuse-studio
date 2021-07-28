@@ -36,7 +36,7 @@ router.get('/reward/:walletAddress', auth.required, async (req, res) => {
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
   let reward = await RewardClaim.findOne({ walletAddress, tokenAddress, isClaimed: false }).sort({ claimedAt: -1 })
 
-  if (reward && reward.syncTimestamp - moment().unix() < config.get('apy.sync.interval')) {
+  if (reward && (moment().unix() - reward.syncTimestamp < config.get('apy.sync.interval'))) {
     return res.json({ data: { rewardAmount: reward } })
   }
 
