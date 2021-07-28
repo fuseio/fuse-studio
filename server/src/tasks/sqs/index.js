@@ -6,6 +6,7 @@ const admin = require('./admin')
 const bridge = require('./bridge')
 const economy = require('./economy')
 const apy = require('./apy')
+const upgrade = require('./upgrade')
 
 module.exports = {
   ...relay,
@@ -15,5 +16,6 @@ module.exports = {
   ...admin,
   ...bridge,
   ...economy,
-  ...apy
+  ...apy,
+  ...upgrade
 }

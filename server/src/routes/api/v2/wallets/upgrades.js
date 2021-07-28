@@ -3,7 +3,6 @@ const auth = require('./auth')
 const mongoose = require('mongoose')
 const WalletUpgrade = mongoose.model('WalletUpgrade')
 const taskManager = require('@services/taskManager')
-const { omit, merge } = require('lodash')
 
 router.get('/available/:walletAddress', auth.walletOwner, async (req, res) => {
 
@@ -26,13 +25,7 @@ router.post('/install/:walletAddress', auth.walletOwner, async (req, res) => {
     return res.status(400).send({ error: `Upgrade ${upgradeId} could not be found` })
   }
 
-  const onSuccess = () => {
-    wallet.upgradesInstalled.push(upgradeId)
-    wallet.walletModules = merge(omit(wallet.walletModules, Object.keys(upgrade.disabledModules)), upgrade.enabledModules)
-    return wallet.save()
-  }
-
-  const job = taskManager.now('relay', { ...relayParams, identifier, appName, onSuccess })
+  const job = await taskManager.now('installUpgrade', { ...relayParams, identifier, appName, upgradeId })
   return res.json({ data: job })
 })
 

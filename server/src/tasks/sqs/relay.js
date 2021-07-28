@@ -6,66 +6,23 @@ const { getParamsFromMethodData } = require('@utils/abi')
 const request = require('request-promise-native')
 const mongoose = require('mongoose')
 const { notifyReceiver } = require('@services/firebase')
+const { sendRelay, isAllowedToRelay } = require('@utils/relay')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
-const isAllowedToRelayForeign = (web3, walletModule, walletModuleABI, methodName, methodData) => {
-  const allowedModules = ['TransferManager', 'DAIPointsManager']
-  console.log(`[isAllowedToRelayForeign] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
-  let isAllowed = true
-  if (!allowedModules.includes(walletModule)) {
-    console.log(`[isAllowedToRelayForeign] FALSE`)
-    isAllowed = false
-  }
-  // TODO add more validations
-  console.log(`[isAllowedToRelayForeign] RETURN ${isAllowed}`)
-  return isAllowed
-}
-
-const isAllowedToRelayHome = (web3, walletModule, walletModuleABI, methodName, methodData) => {
-  const allowedModules = ['TransferManager', 'CommunityManager']
-  console.log(`[isAllowedToRelayHome] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}`)
-  let isAllowed = true
-  if (!allowedModules.includes(walletModule)) {
-    console.log(`[isAllowedToRelayHome] FALSE`)
-    isAllowed = false
-  }
-  // TODO add more validations
-  console.log(`[isAllowedToRelayHome] RETURN ${isAllowed}`)
-  return isAllowed
-}
-
-const isAllowedToRelay = (web3, walletModule, walletModuleABI, methodName, methodData, networkType) => {
-  console.log(`[isAllowedToRelay] walletModule: ${walletModule}, methodName: ${methodName}, methodData: ${methodData}, networkType: ${networkType}`)
-  return networkType === 'foreign'
-    ? isAllowedToRelayForeign(web3, walletModule, walletModuleABI, methodName, methodData)
-    : isAllowedToRelayHome(web3, walletModule, walletModuleABI, methodName, methodData)
-}
-
 const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays, isFunderDeprecated }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
-  const { web3, createContract, createMethod, send } = createNetwork(networkType, account)
+  const { web3 } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
   console.log(`before isAllowedToRelay`)
   const allowedToRelay = isAllowedToRelay(web3, walletModule, walletModuleABI, methodName, methodData, networkType)
   console.log(`isAllowedToRelay: ${allowedToRelay}`)
   if (allowedToRelay) {
     const userWallet = await UserWallet.findOne({ walletAddress })
-    const contract = createContract(walletModuleABI, userWallet.walletModules[walletModule])
-    const method = createMethod(contract, 'execute', walletAddress, methodData, nonce, signature, gasPrice, gasLimit)
-
-    const receipt = await send(method, {
-      from: account.address,
-      gas: config.get('gasLimitForTx.createForeignWallet')
-    }, {
-      job
-    })
-
-    const txSuccess = lodash.get(receipt, 'status')
-    const relayingSuccess = txSuccess && lodash.get(receipt, 'events.TransactionExecuted.returnValues.success')
-
+    const walletModuleAddress = userWallet.walletModules[walletModule]
+    const { relayingSuccess, receipt } = await sendRelay(account, { network, walletModule, walletModuleAddress, walletAddress, methodData, nonce, signature, gasPrice, gasLimit }, job)
     if (relayingSuccess) {
       const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
       const { wallet, signedHash } = returnValues
