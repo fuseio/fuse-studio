@@ -396,6 +396,9 @@ module.exports = {
     },
     sync: {
       interval: 60
+    },
+    account: {
+      address: '0x8fC6e52f774e6154adf44E6d6dAa4C35a12A4D4A'
     }
   }
 }
