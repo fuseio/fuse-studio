@@ -5,7 +5,6 @@ const WalletUpgrade = mongoose.model('WalletUpgrade')
 const taskManager = require('@services/taskManager')
 
 router.get('/available/:walletAddress', auth.walletOwner, async (req, res) => {
-
   const { wallet } = req.user
 
   const upgrades = await WalletUpgrade.find().sort({ order: 1 })
