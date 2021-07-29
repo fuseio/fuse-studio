@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const config = require('config')
 const { Schema } = mongoose
 const { ObjectId } = mongoose.Types
 
@@ -25,7 +26,9 @@ const UserWalletSchema = new Schema({
   os: { type: String },
   ip: { type: String },
   balancesOnForeign: { type: Map, of: String, default: {} },
-  upgradesInstalled: { type: Array, of: { type: ObjectId, ref: 'WalletUpgrade' }, default: [] }
+  upgradesInstalled: { type: Array, of: { type: ObjectId, ref: 'WalletUpgrade' }, default: [] },
+  version: { type: String, default: config.get('wallet.version') },
+  paddedVersion: { type: String, default: config.get('wallet.paddedVersion') }
 }, { timestamps: true, default: {} })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
