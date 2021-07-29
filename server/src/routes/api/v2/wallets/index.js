@@ -21,6 +21,7 @@ router.use('/transactions', require('./transactions'))
 router.use('/transfers', require('./transfers'))
 router.use('/actions', require('./actions'))
 router.use('/apy', require('./apy'))
+router.use('/upgrades', require('./upgrades'))
 
 /**
  * @api {post} api/v2/wallets/ Create wallet contract for user

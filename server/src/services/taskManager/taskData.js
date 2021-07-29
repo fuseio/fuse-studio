@@ -16,6 +16,11 @@ const tasksData = {
     bridgeType: 'home',
     name: 'relay'
   },
+  installUpgrade: {
+    role: 'wallet',
+    bridgeType: 'home',
+    name: 'installUpgrade'
+  },
   bonus: {
     role: '*',
     name: 'bonus'

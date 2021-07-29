@@ -99,22 +99,22 @@ module.exports = {
         }
       },
       sharedAddresses: {
-        WalletFactory: '0x8A6C9aBB48fb68bFe240c0e61DFE7Cc273023649',
-        WalletImplementation: '0x1DA43F87611B7FFDb104D125389E14313e053A3A',
+        WalletFactory: '0x44EECa5BaA921b557cCd62718674D7b1eaF59469',
+        WalletImplementation: '0x5c22F2fbC244af520DbF5c1B039f66bA897eAcA2',
         CommunityFactory: '0xcc004Ee01Da7D9207aBE384cE601623E9F223536',
-        MultiSigWallet: '0x0f5922B9c866c9d7de3E119c83a0A796A36A1307',
+        MultiSigWallet: '0x473a89758216A1983c04ba91A2a11B616fc93392',
         TokenFactory: '0x78Cb0FeEC1fA3b3469cA18e79823b6A87C8929a4',
         FuseDollar: '0x249BE57637D8B013Ad64785404b24aeBaE9B098B',
         WrappedFuse: '0x0BE9e53fd7EDaC9F859882AfdDa116645287C629',
         walletModules: {
-          GuardianManager: '0xb2c9B85a41830655C0f21CAe43F552B6D76A709E',
-          LockManager: '0xf8C62698F6D2322E04C8bDC386e7B640773715b7',
-          RecoveryManager: '0xAC4F70025d0671F88309Db0E588E0565bEFd1f35',
-          ApprovedTransfer: '0x04E92d2ffBb51d53379b4754b3b92f879838902A',
-          TransferManager: '0x8527a2d3d5aC0411933d663b4dcE275a5b7f39D8',
-          TokenExchanger: '0x16127Bbec8d9A24a0801f7B945A18D077f2c629b',
-          CommunityManager: '0x42616C787e3D75aC29b9dCAB35131b585Eaa9837',
-          WalletOwnershipManager: '0x7C38a5E6c0822623392847f6B827E8ADd75130ae'
+          GuardianManager: '0x3879F0446E8F0ed428CCDAc5C373c163E9540D32',
+          LockManager: '0xf132640136FF929e5a1D067f21030ec079bfa239',
+          RecoveryManager: '0xD201b3e96d6794fBB4Dc20A37e1a3757DEA971fD',
+          ApprovedTransfer: '0x15eAEE837143D5509d4A3c1Bb1388225e689E830',
+          TransferManager: '0x6D04DC125227fCDABcC18EFE3De89eAde15e4eE8',
+          TokenExchanger: '0xB8c17dDA33b331CA94B82f63f03a60f736cF5Cd7',
+          CommunityManager: '0xC85ee948605f3AF743D27D2A57bA0f0FB9805F0F',
+          WalletOwnershipManager: '0xc81a757c05F42e299E5c66CA1e28b3c10b0594Bb'
         }
       },
       addresses: defer(function () {
