@@ -53,14 +53,14 @@ const fetchTokenPrice = async (tokenAddress) => {
   return tokenDayDatas.length > 0 ? tokenDayDatas[0] : {}
 }
 
-const transfer = async (network, { from, to, tokenAddress, amount }, options, job) => {
+const transfer = async (network, { from, to, tokenAddress, amount }, options) => {
   const { createContract, createMethod, send } = network
 
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
 
   const method = createMethod(tokenContract, 'transfer', to, amount)
 
-  const receipt = await send(method, { from }, options, { job })
+  const receipt = await send(method, { from }, options)
   return receipt
 }
 
