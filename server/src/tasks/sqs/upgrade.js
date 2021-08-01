@@ -18,6 +18,8 @@ const installUpgrade = async (account, { walletAddress, methodName, methodData, 
     if (relayingSuccess) {
       const upgrade = await WalletUpgrade.findById(upgradeId)
       wallet.upgradesInstalled.push(upgradeId)
+      wallet.version = upgrade.version
+      wallet.paddedVersion = upgrade.paddedVersion
       wallet.walletModules = merge(omit(wallet.walletModules, Object.keys(upgrade.disabledModules)), upgrade.enabledModules)
       return wallet.save()
     }

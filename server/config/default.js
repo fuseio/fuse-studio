@@ -400,5 +400,9 @@ module.exports = {
     account: {
       address: '0x8fC6e52f774e6154adf44E6d6dAa4C35a12A4D4A'
     }
+  },
+  wallet: {
+    version: '1.5.0',
+    paddedVersion: '0001.0005.0000'
   }
 }
