@@ -60,9 +60,7 @@ const transfer = async (network, { from, to, tokenAddress, amount }, options, jo
 
   const method = createMethod(tokenContract, 'transfer', to, amount)
 
-  const receipt = await send(method, {
-    from
-  }, options, job)
+  const receipt = await send(method, { from }, options, { job })
   return receipt
 }
 
