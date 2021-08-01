@@ -127,7 +127,7 @@ const claimApy = async (account, { walletAddress, tokenAddress }, job) => {
   const reward = await calculate(walletAddress, tokenAddress)
   const network = createNetwork('home', account)
   const { web3 } = network
-  const { blockHash, blockNumber, status, transactionHash } = await transfer(network, { from: account.address, to: reward.walletAddress, tokenAddress, amount: reward.amount }, job)
+  const { blockHash, blockNumber, status, transactionHash } = await transfer(network, { from: account.address, to: reward.walletAddress, tokenAddress, amount: reward.amount }, { job })
   if (!status) {
     throw new Error(`Failed to claim APY for ${walletAddress}`)
   }
