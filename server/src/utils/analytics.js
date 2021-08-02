@@ -5,18 +5,18 @@ const { toChecksumAddress } = require('web3-utils')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 
-const trackDepositSuccess = async ({ address }) => {
+const trackDepositStatus = async ({ address, status }) => {
   try {
     const walletAddress = toChecksumAddress(address)
     const userWallet = await UserWallet.findOne({ walletAddress })
-    console.log(`Called track deposit success walletAddress: ${walletAddress}`)
+    console.log(`Called track deposit ${status} walletAddress: ${walletAddress}`)
     if (get(userWallet, 'os')) {
       const { phoneNumber, os } = userWallet
       const analyticsClient = new Analytics(config.get(`segment.${os}`))
-      console.log(`fUSD Purchase Success: ${walletAddress} ${phoneNumber} ${os}`)
-      analyticsClient.track({ event: 'fUSD Purchase Success', userId: phoneNumber })
+      console.log(`fUSD Purchase ${status}: ${walletAddress} ${phoneNumber} ${os}`)
+      analyticsClient.track({ event: `fUSD Purchase ${status}`, userId: phoneNumber })
     } else {
-      console.log(`Couldn't track deposit success for ${walletAddress}`)
+      console.log(`Couldn't track deposit  ${status} for ${walletAddress}`)
     }
   } catch (error) {
     console.log(`Error while track deposit for ${address} ${error}`)
@@ -24,5 +24,5 @@ const trackDepositSuccess = async ({ address }) => {
 }
 
 module.exports = {
-  trackDepositSuccess
+  trackDepositStatus
 }
