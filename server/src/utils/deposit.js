@@ -9,7 +9,7 @@ const UserWallet = mongoose.model('UserWallet')
 
 const { readFileSync } = require('fs')
 const { isProduction } = require('@utils/env')
-const { trackDepositSuccess } = require('@utils/analytics')
+const { trackDepositStatus } = require('@utils/analytics')
 const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
 const { fetchTokenPrice } = require('@utils/fuseswap')
@@ -119,6 +119,7 @@ const initiateDeposit = async ({
     network,
     depositError: error
   }).save()
+  trackDepositStatus({ address: customerAddress, status: 'Pendig' })
   console.log({ deposit })
 }
 
@@ -166,7 +167,7 @@ const performDeposit = async (deposit) => {
   deposit.status = 'started'
   await deposit.save()
 
-  trackDepositSuccess({ address: customerAddress })
+  trackDepositStatus({ address: customerAddress, status: 'Success' })
   if (type === 'naive') {
     console.warn(`Funds already received on the Fuse Network, no need to take any action`)
     const { web3 } = createNetwork('home')
@@ -245,7 +246,8 @@ const retryDeposit = async ({
   return performDeposit(deposit)
 }
 
-const cancelDeposit = async ({ externalId, provider, purchase }) => {
+const cancelDeposit = async ({ customerAddress, externalId, provider, purchase }) => {
+  trackDepositStatus({ address: customerAddress, status: 'Failed' })
   return Deposit.updateOne({ externalId, provider }, { status: 'failed', purchase }, { new: true })
 }
 

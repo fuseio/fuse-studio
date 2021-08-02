@@ -31,11 +31,10 @@ router.post('/', transakAuthCheck, async (req, res) => {
   const { eventID, webhookData } = req.body.data
   const provider = 'transak'
   console.log(`[deposit-transak] eventID: ${eventID}, webhookData: ${JSON.stringify(webhookData)}`)
+  const { id, walletAddress, transactionHash, partnerCustomerId, cryptoAmount, cryptoCurrency, network } = webhookData
+  const [customerAddress, communityAddress] = partnerCustomerId.split('_')
+  const { tokenAddress, decimals } = getToken(cryptoCurrency)
   if (eventID === 'ORDER_COMPLETED' && webhookData.status === 'COMPLETED') {
-    const { id, walletAddress, transactionHash, partnerCustomerId, cryptoAmount, cryptoCurrency, network } = webhookData
-    const { tokenAddress, decimals } = getToken(cryptoCurrency)
-
-    const [customerAddress, communityAddress] = partnerCustomerId.split('_')
     console.log(`[deposit-moonpay] before fulfillDeposit`)
     await fulfillDeposit({
       transactionHash,
@@ -52,10 +51,6 @@ router.post('/', transakAuthCheck, async (req, res) => {
 
     return res.json({ response: 'ok' })
   } else if (eventID === 'ORDER_CREATED' && webhookData.status === 'AWAITING_PAYMENT_FROM_USER') {
-    const { id, walletAddress, partnerCustomerId, cryptoAmount, cryptoCurrency, network } = webhookData
-    const { tokenAddress, decimals } = getToken(cryptoCurrency)
-    const [customerAddress, communityAddress] = partnerCustomerId.split('_')
-
     const requestData = {
       tokenAddress,
       tokenDecimals: decimals,
@@ -73,6 +68,7 @@ router.post('/', transakAuthCheck, async (req, res) => {
   } else if (eventID === 'ORDER_FAILED') {
     const { id } = webhookData
     await cancelDeposit({
+      customerAddress,
       externalId: id,
       provider
     })
