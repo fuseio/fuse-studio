@@ -1,7 +1,5 @@
 const {
-  sendMessage,
-  receiveMessage,
-  deleteMessage
+  tasksFIFOMessenger
 } = require('@services/queue')
 const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
@@ -122,7 +120,7 @@ const now = async (name, params, options = {}) => {
     }
   }
 
-  const response = await sendMessage({
+  const response = await tasksFIFOMessenger.sendMessage({
     name,
     params
   }, options)
@@ -143,11 +141,11 @@ const now = async (name, params, options = {}) => {
 const start = async () => {
   console.log('starting SQS task manager')
   while (true) {
-    const message = await receiveMessage()
+    const message = await tasksFIFOMessenger.receiveMessage()
     if (message) {
       const toBeDeleted = await startTask(message)
       if (toBeDeleted) {
-        await deleteMessage(message)
+        await tasksFIFOMessenger.deleteMessage(message)
       }
     }
   }
