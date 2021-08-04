@@ -26,13 +26,13 @@ router.post('/subscribe', auth.admin, async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', auth.subscriptionService, async (req, res) => {
   const { to, from, address, txHash, value } = req.body
   const tokenAddress = address || AddressZero
   console.log(req.headers)
   console.log(`got txHash ${txHash} from the wehbook`)
   if (tokenAddress === fuseDollarAddress && ingnoredAccounts.includes(from)) {
-    console.log(` deposit event received from the subscription webhook, skipping`)
+    console.log(`deposit event received from the subscription webhook, skipping`)
     res.send({ data: 'ok' })
     return
   }
