@@ -7,31 +7,37 @@ const web3Utils = require('web3-utils')
 const { uniswapClient } = require('@services/graph')
 const BigNumber = require('bignumber.js')
 const { id } = require('@ethersproject/hash')
-
+const { AddressZero } = require('ethers/constants')
 const ERC20_TRANSFER_EVENT = 'Transfer(address,address,uint256)'
 const ERC20_TRANSFER_EVENT_HASH = id(ERC20_TRANSFER_EVENT)
 
 const fetchToken = async (tokenAddress) => {
+  if (isNative(tokenAddress)) {
+    return config.get('network.home.native')
+  }
   const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
   const data = JSON.parse(res)
   return data['result']
 }
 
 const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
+  if (isNative(address)) {
+    return config.get('network.home.native')
+  }
   const tokenContractInstance = new web3.eth.Contract(BasicTokenAbi, address)
-  const [name, symbol, totalSupply, decimals, tokenURI] = await Promise.all([
+  const [name, symbol, totalSupply, decimals] = await Promise.all([
     tokenContractInstance.methods.name().call(),
     tokenContractInstance.methods.symbol().call(),
-    tokenContractInstance.methods.totalSupply().call(),
-    tokenContractInstance.methods.decimals().call(),
-    fields.tokenURI ? tokenContractInstance.methods.tokenURI().call() : undefined
+    tokenContractInstance.methods.decimals().call()
   ])
 
-  const fetchedTokedData = { name, symbol, totalSupply: totalSupply.toString(), decimals, tokenURI }
+  const fetchedTokedData = { name, symbol, totalSupply: totalSupply.toString(), decimals }
 
   console.log(`Fetched token ${address} data: ${inspect(fetchedTokedData)}`)
   return fetchedTokedData
 }
+
+const isNative = (tokenAddress) => tokenAddress === AddressZero
 
 const adjustDecimals = (amount, currentDecimals, desiredDecimals) => {
   return new BigNumber(amount).multipliedBy(new BigNumber(10).pow(desiredDecimals - currentDecimals)).toFixed()

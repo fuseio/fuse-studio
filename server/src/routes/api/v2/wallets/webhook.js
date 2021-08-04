@@ -8,6 +8,7 @@ const { handleSubscriptionWebHook } = require('@utils/wallet/actions')
 const { subscribeAddress } = require('@services/subscription')
 const auth = require('@routes/auth')
 const config = require('config')
+const { AddressZero } = require('ethers/constants')
 const { notifyReceiver } = require('@services/firebase')
 
 const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
@@ -26,21 +27,22 @@ router.post('/subscribe', auth.admin, async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const { args, address: tokenAddress, transactionHash } = req.body
-  console.log(`got txHash ${transactionHash} from the wehbook`)
-  const [from, to, { hex }] = args
+  const { to, from, address, txHash, value } = req.body
+  const tokenAddress = address || AddressZero
+  console.log(req.headers)
+  console.log(`got txHash ${txHash} from the wehbook`)
   if (tokenAddress === fuseDollarAddress && ingnoredAccounts.includes(from)) {
     console.log(` deposit event received from the subscription webhook, skipping`)
     res.send({ data: 'ok' })
     return
   }
 
-  const action = await WalletAction.findOne({ 'data.txHash': transactionHash })
+  const action = await WalletAction.findOne({ 'data.txHash': txHash })
   if (!action) {
     const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
-    const value = new BigNumber(hex)
+
     const data = {
-      txHash: transactionHash,
+      txHash,
       walletAddress: to,
       to,
       from,
@@ -49,7 +51,7 @@ router.post('/', async (req, res) => {
       tokenDecimal: parseInt(tokenDecimal),
       asset: tokenSymbol,
       status: 'confirmed',
-      value,
+      value: new BigNumber(value),
       tokenAddress: tokenAddress.toLowerCase(),
       timeStamp: (Math.round(new Date().getTime() / 1000)).toString()
     }
@@ -61,7 +63,7 @@ router.post('/', async (req, res) => {
     })
       .catch(console.error)
   } else {
-    console.log(`txHash ${transactionHash} already handled in action ${action._id}`)
+    console.log(`txHash ${txHash} already handled in action ${action._id}`)
   }
   res.send({ data: 'ok' })
 })
