@@ -8,6 +8,7 @@ const { handleSubscriptionWebHook } = require('@utils/wallet/actions')
 const { subscribeAddress } = require('@services/subscription')
 const auth = require('@routes/auth')
 const config = require('config')
+const { AddressZero } = require('ethers/constants')
 const { notifyReceiver } = require('@services/firebase')
 
 const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
@@ -26,7 +27,8 @@ router.post('/subscribe', auth.admin, async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const { to, from, address: tokenAddress, txHash, value } = req.body
+  const { to, from, address, txHash, value } = req.body
+  const tokenAddress = address || AddressZero
   console.log(req.headers)
   console.log(`got txHash ${txHash} from the wehbook`)
   if (tokenAddress === fuseDollarAddress && ingnoredAccounts.includes(from)) {
@@ -37,13 +39,8 @@ router.post('/', async (req, res) => {
 
   const action = await WalletAction.findOne({ 'data.txHash': txHash })
   if (!action) {
-    let resp = {}
-    if (!tokenAddress) {
-      resp = { decimals: 18, tokenName: 'Fuse', tokenSymbol: 'FUSE' }
-    } else {
-      resp = await fetchTokenData(tokenAddress, {}, home.web3)
-    }
-    const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = resp
+    const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
+
     const data = {
       txHash,
       walletAddress: to,

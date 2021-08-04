@@ -73,6 +73,11 @@ module.exports = {
       minGasLimit: 50000
     },
     home: {
+      native: {
+        decimals: 18,
+        name: 'Fuse',
+        symbol: 'FUSE'
+      },
       name: 'fuse',
       bridgeType: 'home',
       chainId: 122,
@@ -128,6 +133,11 @@ module.exports = {
     foreign: {
       name: 'mainnet',
       bridgeType: 'foreign',
+      native: {
+        decimals: 18,
+        name: 'Ether',
+        symbol: 'ETH'
+      },
       contract: {
         options: {
           transactionConfirmationBlocks: 2
