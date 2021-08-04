@@ -37,7 +37,13 @@ router.post('/', async (req, res) => {
 
   const action = await WalletAction.findOne({ 'data.txHash': txHash })
   if (!action) {
-    const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
+    let resp = {}
+    if (!tokenAddress) {
+      resp = { decimals: 18, tokenName: 'Fuse', tokenSymbol: 'FUSE' }
+    } else {
+      resp = await fetchTokenData(tokenAddress, {}, home.web3)
+    }
+    const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = resp
     const data = {
       txHash,
       walletAddress: to,
