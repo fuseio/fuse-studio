@@ -28,6 +28,7 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
   const [name, symbol, totalSupply, decimals] = await Promise.all([
     tokenContractInstance.methods.name().call(),
     tokenContractInstance.methods.symbol().call(),
+    tokenContractInstance.methods.totalSupply().call(),
     tokenContractInstance.methods.decimals().call()
   ])
 
