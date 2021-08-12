@@ -11,6 +11,7 @@ const RewardClaimSchema = new Schema({
   claimBlockNumber: { type: Number },
   claimTimestamp: { type: Number },
   nextClaimTimestamp: { type: Number },
+  tokensPerSecond: { type: String },
   isClaimed: { type: Boolean, default: false },
   transactionHash: { type: String }
 }, { timestamps: true, default: {} })

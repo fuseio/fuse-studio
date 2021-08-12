@@ -98,6 +98,10 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
   const walletBalancesAfter = await WalletBalance.find({ walletAddress, tokenAddress, blockNumber: { $gte: syncBlockNumber } }).sort({ blockNumber: 1 })
   const walletBalanceBefore = await WalletBalance.findOne({ walletAddress, tokenAddress, blockNumber: { $lt: syncBlockNumber } }).sort({ blockNumber: -1 })
   const walletBalances = walletBalanceBefore ? [walletBalanceBefore, ...walletBalancesAfter] : walletBalancesAfter
+  if (walletBalances.length === 0) {
+    return
+  }
+
   const rewardSum = walletBalances.reduce((sum, wb, i) => {
     const nextTimestamp = walletBalances[i + 1] ? walletBalances[i + 1].blockTimestamp : latestBlock.timestamp
     const duration = nextTimestamp - wb.blockTimestamp
@@ -114,6 +118,7 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
   reward.humanAmount = adjustDecimals(reward.amount, config.get('network.home.contracts.fusd.decimals'), 0)
   reward.syncBlockNumber = latestBlock.number
   reward.syncTimestamp = latestBlock.timestamp
+  reward.tokensPerSecond = new BigNumber(last(walletBalances).amount).multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR).toFixed(0)
   console.log({ reward })
   return reward.save()
 }
