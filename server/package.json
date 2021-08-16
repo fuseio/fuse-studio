@@ -15,6 +15,10 @@
     "repl-debug": "node --inspect --experimental-repl-await scripts/repl.js",
     "lint-fix": "standard --fix"
   },
+  "engines" : {
+     "node" : ">=15.13.0",
+     "npm": ">=6.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fuseio/fuse-studio.git"

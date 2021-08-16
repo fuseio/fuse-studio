@@ -18,6 +18,33 @@ const formatActionData = ({ transactionBody, txHash, bonusType, externalId, deta
   txHash
 }, identity)
 
+const getActionsTypes = (job) => {
+  if (job.name !== 'relay') {
+    return job.name
+  }
+  const { walletModule, methodName } = job.data
+  switch (walletModule) {
+    case 'CommunityManager':
+      switch (methodName) {
+        case 'joinCommunity':
+          return 'joinCommunity'
+      }
+      break
+    case 'TransferManager':
+      switch (methodName) {
+        case 'transferToken':
+          return ['sendTokens', 'receiveTokens']
+        case 'approveTokenAndCallContract':
+          return 'swapTokens'
+        case 'callContract':
+          return 'sendTokens'
+        default:
+          return 'sendTokens'
+      }
+  }
+}
+
 module.exports = {
-  formatActionData
+  formatActionData,
+  getActionsTypes
 }
