@@ -89,14 +89,15 @@ const getLatestReward = async (walletAddress, tokenAddress) => {
       })
       : latestReward
   }
-  return new RewardClaim({ walletAddress, tokenAddress, syncBlockNumber: config.get('apy.launch.blockNumber') })
+  return new RewardClaim({ walletAddress, tokenAddress, syncBlockNumber: config.get('apy.launch.blockNumber'), syncTimestamp: config.get('apy.launch.timestamp') })
 }
 
 const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
   const reward = await getLatestReward(walletAddress, tokenAddress)
-  const { syncBlockNumber } = reward
+  const { syncBlockNumber, syncTimestamp } = reward
   const walletBalancesAfter = await WalletBalance.find({ walletAddress, tokenAddress, blockNumber: { $gte: syncBlockNumber } }).sort({ blockNumber: 1 })
   const walletBalanceBefore = await WalletBalance.findOne({ walletAddress, tokenAddress, blockNumber: { $lt: syncBlockNumber } }).sort({ blockNumber: -1 })
+
   const walletBalances = walletBalanceBefore ? [walletBalanceBefore, ...walletBalancesAfter] : walletBalancesAfter
   if (walletBalances.length === 0) {
     return
@@ -104,7 +105,7 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
 
   const rewardSum = walletBalances.reduce((sum, wb, i) => {
     const nextTimestamp = walletBalances[i + 1] ? walletBalances[i + 1].blockTimestamp : latestBlock.timestamp
-    const duration = nextTimestamp - wb.blockTimestamp
+    const duration = nextTimestamp - Math.max(wb.blockTimestamp, syncTimestamp)
     return sum.plus(new BigNumber(wb.amount).multipliedBy(duration))
   }, new BigNumber(reward.amount))
 
@@ -123,13 +124,13 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
   return reward.save()
 }
 
-const calculate = async (walletAddress, tokenAddress) => {
+const calculateApy = async (walletAddress, tokenAddress) => {
   const latestBlock = await syncWalletBalances(walletAddress, tokenAddress)
   return calulcateReward(walletAddress, tokenAddress, latestBlock)
 }
 
 const claimApy = async (account, { walletAddress, tokenAddress }, job) => {
-  const reward = await calculate(walletAddress, tokenAddress)
+  const reward = await calculateApy(walletAddress, tokenAddress)
   const network = createNetwork('home', account)
   const { web3 } = network
   const { blockHash, blockNumber, status, transactionHash } = await transfer(network, { from: account.address, to: reward.walletAddress, tokenAddress, amount: reward.amount }, { job })
@@ -147,6 +148,6 @@ const claimApy = async (account, { walletAddress, tokenAddress }, job) => {
 }
 
 module.exports = {
-  calculate,
+  calculateApy,
   claimApy
 }

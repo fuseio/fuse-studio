@@ -2,13 +2,15 @@ const router = require('express').Router()
 const moment = require('moment')
 const config = require('config')
 const auth = require('@routes/auth')
+const { walletOwner } = require('./auth')
 const mongoose = require('mongoose')
 const RewardClaim = mongoose.model('RewardClaim')
 const { agenda } = require('@services/agenda')
+const { get } = require('lodash')
 const taskManager = require('@services/taskManager')
 const UserWallet = require('@models/UserWallet')
 
-router.post('/claim/:walletAddress', auth.required, async (req, res) => {
+router.post('/claim/:walletAddress', walletOwner, async (req, res) => {
   const { walletAddress } = req.params
   const { accountAddress } = req.user
   const wallet = await UserWallet.findOne({ walletAddress })
@@ -19,16 +21,21 @@ router.post('/claim/:walletAddress', auth.required, async (req, res) => {
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
   let reward = await RewardClaim.findOne({ walletAddress, tokenAddress, isClaimed: false }).sort({ nextClaimTimestamp: -1 })
   if (!reward || reward.isClaimed) {
-    const msg = `No active reward found for wallet ${walletAddress}. Starting the calculation`
+    const msg = `No active reward found for wallet ${walletAddress}. This should be calculated soon`
     console.warn(msg)
-    await agenda.now('calculateApy', { walletAddress, tokenAddress })
-    return res.status(403).json({ error: msg })
   }
-  if (reward.nextClaimTimestamp > moment().unix()) {
+  if (reward && reward.nextClaimTimestamp > moment().unix()) {
     return res.status(403).json({ error: `reward for ${walletAddress} will be claimable on timestamp ${reward.nextClaimTimestamp}` })
   }
-  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, reward, transactionBody: { value: reward.amount, status: 'pending' } }, { isWalletJob: true })
+  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, reward, transactionBody: { value: get(reward, 'amount'), status: 'pending' } }, { isWalletJob: true })
   return res.json({ data: job })
+})
+
+router.post('/sync/:walletAddress', auth.admin, async (req, res) => {
+  const { walletAddress } = req.params
+  const tokenAddress = config.get('network.home.addresses.FuseDollar')
+  const job = await agenda.now('calculateApy', { walletAddress, tokenAddress })
+  return res.json({ job })
 })
 
 router.get('/reward/:walletAddress', auth.required, async (req, res) => {

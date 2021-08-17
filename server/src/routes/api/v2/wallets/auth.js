@@ -4,7 +4,6 @@ const auth = require('@routes/auth')
 
 const walletOwner = async (req, res, next) => {
   const { walletAddress } = req.params
-  console.log(req.params)
   const { accountAddress } = req.user
   if (!walletAddress) {
     return res.status(400).send({ error: 'Wallet address is not provided' })

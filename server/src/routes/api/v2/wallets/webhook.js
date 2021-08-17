@@ -10,6 +10,7 @@ const auth = require('@routes/auth')
 const config = require('config')
 const { AddressZero } = require('ethers/constants')
 const { notifyReceiver } = require('@services/firebase')
+const { agenda } = require('@services/agenda')
 
 const fuseDollarAddress = config.get('network.home.addresses.FuseDollar')
 const fuseDollarAccount = config.get('plugins.rampInstant.fuseDollarAccount')
@@ -27,9 +28,15 @@ router.post('/subscribe', auth.admin, async (req, res) => {
 })
 
 router.post('/', auth.subscriptionService, async (req, res) => {
-  const { to, from, address, txHash, value } = req.body
+  const { to, from, address, txHash, value, subscribers } = req.body
   const tokenAddress = address || AddressZero
   console.log(`got txHash ${txHash} from the wehbook`)
+
+  if (tokenAddress === fuseDollarAddress) {
+    for (let subscriber of subscribers) {
+      await agenda.now('calculateApy', { walletAddress: subscriber, tokenAddress })
+    }
+  }
   if (tokenAddress === fuseDollarAddress && ingnoredAccounts.includes(from)) {
     console.log(`deposit event received from the subscription webhook, skipping`)
     res.send({ data: 'ok' })
