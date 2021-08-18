@@ -2,6 +2,7 @@ const config = require('config')
 const mongoose = require('mongoose')
 const WalletBalance = mongoose.model('WalletBalance')
 const RewardClaim = mongoose.model('RewardClaim')
+const WalletApy = mongoose.model('WalletApy')
 const { get, join, sortBy, last, keyBy } = require('lodash')
 const { createContract, web3 } = require('@services/web3/home')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
@@ -89,7 +90,8 @@ const getLatestReward = async (walletAddress, tokenAddress) => {
       })
       : latestReward
   }
-  return new RewardClaim({ walletAddress, tokenAddress, syncBlockNumber: config.get('apy.launch.blockNumber'), syncTimestamp: config.get('apy.launch.timestamp') })
+  const apy = await WalletApy.findOne({ walletAddress })
+  return new RewardClaim({ walletAddress, tokenAddress, syncBlockNumber: apy.sinceBlockNumber, syncTimestamp: apy.sinceTimestamp })
 }
 
 const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
@@ -125,8 +127,14 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
 }
 
 const calculateApy = async (walletAddress, tokenAddress) => {
+  const apy = await WalletApy.findOne({ walletAddress })
+  if (!apy) {
+    throw new Error(`no wallet apy is found for ${walletAddress}`)
+  }
   const latestBlock = await syncWalletBalances(walletAddress, tokenAddress)
-  return calulcateReward(walletAddress, tokenAddress, latestBlock)
+  if (apy.isEnabled) {
+    return calulcateReward(walletAddress, tokenAddress, latestBlock)
+  }
 }
 
 const claimApy = async (account, { walletAddress, tokenAddress }, job) => {

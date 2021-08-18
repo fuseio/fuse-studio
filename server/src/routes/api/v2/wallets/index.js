@@ -102,7 +102,7 @@ router.put('/token/:walletAddress/delete', auth.required, async (req, res) => {
 router.get('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress } = req.user
   const network = req.query.network || 'fuse'
-  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, networks: network }, { contacts: 0, firebaseToken: 0 })
+  const userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, networks: network }, { contacts: 0, firebaseToken: 0 }).populate('apy')
 
   return res.json({ data: userWallet })
 })
