@@ -34,7 +34,7 @@ router.post('/', auth.subscriptionService, async (req, res) => {
 
   if (tokenAddress === fuseDollarAddress) {
     for (let subscriber of subscribers) {
-      await agenda.now('calculateApy', { walletAddress: subscriber, tokenAddress })
+      await agenda.now('syncAndCalculateApy', { walletAddress: subscriber, tokenAddress })
     }
   }
   if (tokenAddress === fuseDollarAddress && ingnoredAccounts.includes(from)) {

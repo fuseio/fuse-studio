@@ -11,6 +11,7 @@ const { get } = require('lodash')
 const taskManager = require('@services/taskManager')
 const UserWallet = require('@models/UserWallet')
 const { web3 } = require('@services/web3/home')
+const { calculateReward } = require('@utils/apy')
 
 router.post('/claim/:walletAddress', walletOwner, async (req, res) => {
   const { walletAddress } = req.params
@@ -58,23 +59,21 @@ router.post('/enable/:walletAddress', walletOwner, async (req, res) => {
 router.post('/sync/:walletAddress', auth.admin, async (req, res) => {
   const { walletAddress } = req.params
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
-  const job = await agenda.now('calculateApy', { walletAddress, tokenAddress })
+  const job = await agenda.now('syncAndCalculateApy', { walletAddress, tokenAddress })
   return res.json({ job })
 })
 
 router.get('/reward/:walletAddress', auth.required, async (req, res) => {
   const { walletAddress } = req.params
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
-  let reward = await RewardClaim.findOne({ walletAddress, tokenAddress, isClaimed: false }).sort({ claimedAt: -1 })
-
-  if (reward && (moment().unix() - reward.syncTimestamp < config.get('apy.sync.interval'))) {
-    return res.json({ data: { rewardAmount: reward } })
-  }
+  const reward = await calculateReward(walletAddress, tokenAddress)
 
   if (reward) {
     return res.json({ data: { reward } })
   } else {
-    return res.status(400).json({ error: `no reward found for wallet ${walletAddress}` })
+    const msg = `no active reward found for wallet ${walletAddress}`
+    console.warn(msg)
+    return res.status(400).json({ error: msg })
   }
 })
 
