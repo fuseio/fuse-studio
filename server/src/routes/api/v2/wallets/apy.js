@@ -5,10 +5,12 @@ const auth = require('@routes/auth')
 const { walletOwner } = require('./auth')
 const mongoose = require('mongoose')
 const RewardClaim = mongoose.model('RewardClaim')
+const WalletApy = mongoose.model('WalletApy')
 const { agenda } = require('@services/agenda')
 const { get } = require('lodash')
 const taskManager = require('@services/taskManager')
 const UserWallet = require('@models/UserWallet')
+const { web3 } = require('@services/web3/home')
 
 router.post('/claim/:walletAddress', walletOwner, async (req, res) => {
   const { walletAddress } = req.params
@@ -31,6 +33,28 @@ router.post('/claim/:walletAddress', walletOwner, async (req, res) => {
   return res.json({ data: job })
 })
 
+router.post('/enable/:walletAddress', walletOwner, async (req, res) => {
+  const { walletAddress } = req.params
+  const wallet = await UserWallet.findOne({ walletAddress }).populate('apy')
+  let { apy } = wallet
+
+  if (apy && apy.isEnabled) {
+    return res.status(403).json({ error: `Apy already enbabled for wallet ${walletAddress}` })
+  }
+
+  const latestBlock = await web3.eth.getBlock('latest')
+  apy = await new WalletApy({
+    isEnabled: true,
+    walletAddress,
+    sinceTimestamp: latestBlock.timestamp,
+    sinceBlockNumber: latestBlock.number
+  }).save()
+
+  wallet.apy = apy._id
+  await wallet.save()
+  return res.json({ data: wallet })
+})
+
 router.post('/sync/:walletAddress', auth.admin, async (req, res) => {
   const { walletAddress } = req.params
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
@@ -47,7 +71,6 @@ router.get('/reward/:walletAddress', auth.required, async (req, res) => {
     return res.json({ data: { rewardAmount: reward } })
   }
 
-  await agenda.now('calculateApy', { walletAddress, tokenAddress })
   if (reward) {
     return res.json({ data: { reward } })
   } else {

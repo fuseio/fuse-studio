@@ -28,7 +28,8 @@ const UserWalletSchema = new Schema({
   balancesOnForeign: { type: Map, of: String, default: {} },
   upgradesInstalled: { type: Array, of: { type: ObjectId, ref: 'WalletUpgrade' }, default: [] },
   version: { type: String, default: config.get('wallet.version') },
-  paddedVersion: { type: String, default: config.get('wallet.paddedVersion') }
+  paddedVersion: { type: String, default: config.get('wallet.paddedVersion') },
+  apy: { type: Schema.Types.ObjectId, ref: 'WalletApy' }
 }, { timestamps: true, default: {} })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
