@@ -1,7 +1,7 @@
 const utils = require('@utils/apy')
 
-const calculateApy = ({ walletAddress, tokenAddress }) => {
-  return utils.calculateApy(walletAddress, tokenAddress)
+const syncAndCalculateApy = ({ walletAddress, tokenAddress }) => {
+  return utils.syncAndCalculateApy(walletAddress, tokenAddress)
 }
 
-module.exports = { calculateApy }
+module.exports = { syncAndCalculateApy }

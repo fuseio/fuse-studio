@@ -13,6 +13,7 @@ const { transfer, ERC20_TRANSFER_EVENT_HASH } = require('@utils/token')
 const { createNetwork } = require('@utils/web3')
 const { hexZeroPad } = require('@ethersproject/bytes')
 const SECONDS_IN_YEAR = new BigNumber(3.154e+7)
+const moment = require('moment')
 
 const toHumanAmount = (amount) => adjustDecimals(amount, config.get('network.home.contracts.fusd.decimals'), 0)
 
@@ -94,7 +95,7 @@ const getLatestReward = async (walletAddress, tokenAddress) => {
   return new RewardClaim({ walletAddress, tokenAddress, syncBlockNumber: apy.sinceBlockNumber, syncTimestamp: apy.sinceTimestamp })
 }
 
-const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
+const calculateApy = async (walletAddress, tokenAddress, latestBlock) => {
   const reward = await getLatestReward(walletAddress, tokenAddress)
   const { syncBlockNumber, syncTimestamp } = reward
   const walletBalancesAfter = await WalletBalance.find({ walletAddress, tokenAddress, blockNumber: { $gte: syncBlockNumber } }).sort({ blockNumber: 1 })
@@ -105,11 +106,17 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
     return
   }
 
-  const rewardSum = walletBalances.reduce((sum, wb, i) => {
-    const nextTimestamp = walletBalances[i + 1] ? walletBalances[i + 1].blockTimestamp : latestBlock.timestamp
-    const duration = nextTimestamp - Math.max(wb.blockTimestamp, syncTimestamp)
+  let rewardSum = walletBalances.reduce((sum, wb, i) => {
+    if (walletBalances.length === i + 1) {
+      return sum
+    }
+    const nextTimestamp = walletBalances[i + 1].blockTimestamp
+    const duration = nextTimestamp - wb.blockTimestamp
     return sum.plus(new BigNumber(wb.amount).multipliedBy(duration))
   }, new BigNumber(reward.amount))
+
+  const currentBalance = last(walletBalances).amount
+  rewardSum = rewardSum.plus(new BigNumber(currentBalance).multipliedBy(latestBlock.timestamp - syncTimestamp))
 
   const currentReward = rewardSum.multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR)
   if (!reward.nextClaimTimestamp) {
@@ -121,19 +128,36 @@ const calulcateReward = async (walletAddress, tokenAddress, latestBlock) => {
   reward.humanAmount = adjustDecimals(reward.amount, config.get('network.home.contracts.fusd.decimals'), 0)
   reward.syncBlockNumber = latestBlock.number
   reward.syncTimestamp = latestBlock.timestamp
-  reward.tokensPerSecond = new BigNumber(last(walletBalances).amount).multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR).toFixed(0)
+  reward.tokensPerSecond = new BigNumber(currentBalance).multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR).toFixed(0)
   console.log({ reward })
   return reward.save()
 }
 
-const calculateApy = async (walletAddress, tokenAddress) => {
+const calculateReward = async (walletAddress, tokenAddress) => {
+  let reward = await RewardClaim.findOne({ walletAddress, tokenAddress, isClaimed: false }).sort({ claimedAt: -1 })
+  if (!reward) {
+    return
+  }
+  const wb = await WalletBalance.findOne({ walletAddress, tokenAddress }).sort({ blockNumber: -1 })
+  const latestBlock = await web3.eth.getBlock('latest')
+
+  const duration = latestBlock.timestamp - wb.blockTimestamp
+  const apyGained = new BigNumber(duration).multipliedBy(reward.tokensPerSecond)
+  reward.amount = new BigNumber(reward.amount).plus(apyGained).toFixed(0)
+  reward.humanAmount = adjustDecimals(reward.amount, config.get('network.home.contracts.fusd.decimals'), 0)
+  reward.syncBlockNumber = latestBlock.number
+  reward.syncTimestamp = latestBlock.timestamp
+  return reward
+}
+
+const syncAndCalculateApy = async (walletAddress, tokenAddress) => {
   const apy = await WalletApy.findOne({ walletAddress })
   if (!apy) {
     throw new Error(`no wallet apy is found for ${walletAddress}`)
   }
   const latestBlock = await syncWalletBalances(walletAddress, tokenAddress)
   if (apy.isEnabled) {
-    return calulcateReward(walletAddress, tokenAddress, latestBlock)
+    return calculateApy(walletAddress, tokenAddress, latestBlock)
   }
 }
 
@@ -157,5 +181,7 @@ const claimApy = async (account, { walletAddress, tokenAddress }, job) => {
 
 module.exports = {
   calculateApy,
+  calculateReward,
+  syncAndCalculateApy,
   claimApy
 }
