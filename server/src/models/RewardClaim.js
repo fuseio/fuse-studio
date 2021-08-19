@@ -16,7 +16,8 @@ const RewardClaimSchema = new Schema({
   transactionHash: { type: String }
 }, { timestamps: true, default: {} })
 
-RewardClaimSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
+RewardClaimSchema.index({ walletAddress: 1, tokenAddress: 1, syncBlockNumber: 1 }, { unique: true })
+RewardClaimSchema.index({ walletAddress: 1, tokenAddress: 1, claimBlockNumber: 1 }, { unique: true })
 
 const RewardClaim = mongoose.model('RewardClaim', RewardClaimSchema)
 
