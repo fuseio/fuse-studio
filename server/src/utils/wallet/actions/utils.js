@@ -23,6 +23,7 @@ const getActionsTypes = (job) => {
     return job.name
   }
   const { walletModule, methodName } = job.data
+  console.log({ walletModule, methodName })
   switch (walletModule) {
     case 'CommunityManager':
       switch (methodName) {
