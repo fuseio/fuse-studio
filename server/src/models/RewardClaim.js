@@ -6,12 +6,15 @@ const RewardClaimSchema = new Schema({
   tokenAddress: { type: String, required: [true, "can't be blank"] },
   amount: { type: String, default: '0' },
   humanAmount: { type: Number, default: 0 },
+  fromTimestamp: { type: Number, required: [true, "can't be blank"] },
+  fromBlockNumber: { type: Number, required: [true, "can't be blank"] },
   syncTimestamp: { type: Number, required: [true, "can't be blank"] },
   syncBlockNumber: { type: Number, required: [true, "can't be blank"] },
   claimBlockNumber: { type: Number },
   claimTimestamp: { type: Number },
-  nextClaimTimestamp: { type: Number },
+  nextClaimTimestamp: { type: Number, required: [true, "can't be blank"] },
   tokensPerSecond: { type: String },
+  duration: { type: Number },
   isClaimed: { type: Boolean, default: false },
   transactionHash: { type: String }
 }, { timestamps: true, default: {} })
