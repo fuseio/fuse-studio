@@ -55,9 +55,9 @@ router.post('/enable/:walletAddress', walletOwner, async (req, res) => {
   await wallet.save()
 
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
-  await agenda.now('syncAndCalculateApy', { walletAddress, tokenAddress })
+  const job = await agenda.now('syncAndCalculateApy', { walletAddress, tokenAddress })
 
-  return res.json({ data: wallet })
+  return res.json({ data: { wallet, job } })
 })
 
 router.post('/sync/:walletAddress', auth.admin, async (req, res) => {
