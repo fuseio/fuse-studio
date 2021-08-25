@@ -2,21 +2,14 @@ const AWS = require('aws-sdk')
 const config = require('config')
 const sqs = new AWS.SQS(config.get('aws.sqs.constructor'))
 const queueUrl = config.get('subscriptionServices.fuse.queueUrl')
-
+const { Messenger } = require('@utils/messenger')
 console.log(`Loading SQS subscription service transport`)
 
-const sendMessage = async (msg) => {
-  const params = {
-    MessageBody: JSON.stringify(msg),
-    QueueUrl: queueUrl
-  }
-
-  const response = await sqs.sendMessage(params).promise()
-  return response
-}
+const sqsArgs = new AWS.SQS(config.get('aws.sqs.constructor'))
+const subscriptionsMessenger = new Messenger({ queueUrl, sqsArgs, receiveArgs, makeMessageGroupId })
 
 const subscribeAddress = (subscribedAddress, extraData, eventName = 'erc20-transfers-to') => {
-  return sendMessage({
+  return subscriptionsMessenger.sendMessage({
     ...extraData,
     eventName,
     subscribedAddress,
