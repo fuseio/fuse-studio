@@ -1,7 +1,7 @@
 import '@babel/polyfill'
 import 'utils/validation/yup'
 import { isMobile } from 'react-device-detect'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import React from 'react'
 import { render } from 'react-dom'
 import App from './App'
