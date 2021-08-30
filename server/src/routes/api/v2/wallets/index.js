@@ -35,7 +35,7 @@ router.use('/upgrades', require('./upgrades'))
  */
 router.post('/', auth.required, async (req, res, next) => {
   const { phoneNumber, accountAddress, identifier, appName } = req.user
-  const { correlationId, communityAddress } = req.body
+  const { correlationId, communityAddress, referralAddress } = req.body
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
@@ -67,7 +67,8 @@ router.post('/', auth.required, async (req, res, next) => {
         salt,
         appName,
         walletAddress,
-        ip: req.clientIp
+        ip: req.clientIp,
+        referralAddress
       }).save()
       const job = await taskManager.now('createWallet', { owner: accountAddress, walletAddress, communityAddress, correlationId, _id: userWallet._id, walletModules, salt }, { isWalletJob: true })
       return res.json({ job: job })

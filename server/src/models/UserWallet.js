@@ -29,7 +29,8 @@ const UserWalletSchema = new Schema({
   upgradesInstalled: { type: Array, of: { type: ObjectId, ref: 'WalletUpgrade' }, default: [] },
   version: { type: String, default: config.get('wallet.version') },
   paddedVersion: { type: String, default: config.get('wallet.paddedVersion') },
-  apy: { type: Schema.Types.ObjectId, ref: 'WalletApy' }
+  apy: { type: Schema.Types.ObjectId, ref: 'WalletApy' },
+  referralAddress: { type: String }
 }, { timestamps: true, default: {} })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
