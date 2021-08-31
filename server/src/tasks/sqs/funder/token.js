@@ -11,9 +11,6 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
     throw Error(`No bonus of type ${bonusType} defined for community ${communityAddress}.`)
   }
 
-  if (!identifier) {
-    throw Error(`No identifier defined. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
-  }
   if (!validateBonusAlowance({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
     throw Error(`Join bonus reached maximum times ${bonusMaxTimesLimit}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
