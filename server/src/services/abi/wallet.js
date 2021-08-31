@@ -1,11 +1,13 @@
-const { Signatures } = require('@utils/abi')
+const { SignatureStore } = require('@utils/abi')
 const TransferManagerABI = require('@constants/abi/TransferManager')
 const CommunityManagerABI = require('@constants/abi/CommunityManager')
+const IUniswapV2Router02ABI = require('@constants/abi/IUniswapV2Router02')
 
-const signatures = new Signatures()
-signatures.addContract('TransferManager', TransferManagerABI)
-signatures.addContract('CommunityManager', CommunityManagerABI)
+const signatureStore = new SignatureStore()
+signatureStore.addContract('TransferManager', TransferManagerABI)
+signatureStore.addContract('CommunityManager', CommunityManagerABI)
+signatureStore.addContract('FuseswapRouter', IUniswapV2Router02ABI)
 
 module.exports = {
-  signatures
+  signatureStore
 }
