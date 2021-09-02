@@ -2,7 +2,7 @@ const config = require('config')
 const { merge, omit } = require('lodash')
 const { createNetwork } = require('@utils/web3')
 const mongoose = require('mongoose')
-const { sendRelay, isAllowedToRelay } = require('@utils/relay')
+const { sendRelay, isAllowedToRelay } = require('@utils/jobs/relay')
 const UserWallet = mongoose.model('UserWallet')
 const WalletUpgrade = mongoose.model('WalletUpgrade')
 

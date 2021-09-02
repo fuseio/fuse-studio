@@ -2,7 +2,7 @@
 require('module-alias/register')
 const { expect } = require('chai')
 const { SignatureStore, MethodParser } = require('@utils/abi')
-const { signatureStore } = require('@services/abi/wallet')
+const signatureStore = require('@services/wallet/signatureStore')
 const TransferManagerABI = require('@constants/abi/TransferManager')
 const CommunityManagerABI = require('@constants/abi/CommunityManager')
 

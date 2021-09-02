@@ -1,13 +1,12 @@
-const { get } = require('lodash')
-const { getParamsFromMethodData } = require('@utils/abi')
+const { first, last } = require('lodash')
 const mongoose = require('mongoose')
 const WalletAction = mongoose.model('WalletAction')
-const { formatActionData, getActionsTypes } = require('./utils')
+const { formatActionData, getActionsTypes, getRelayBody } = require('./utils')
 
-const makeCreateWalletAction = ({ name } = {}) => async (job) => {
+const makeCreateWalletAction = ({ name } = {}, actionName) => async (job) => {
   const data = formatActionData(job.data)
   return new WalletAction({
-    name: name || job.name,
+    name: name || actionName || job.name,
     job: mongoose.Types.ObjectId(job._id),
     data,
     communityAddress: job.communityAddress || job.data.communityAddress,
@@ -19,10 +18,7 @@ const makeCreateWalletAction = ({ name } = {}) => async (job) => {
 const createWalletAction = makeCreateWalletAction()
 
 const handleReceiveTokens = (job) => {
-  const { walletModule } = job.data
-  const walletModuleABI = require(`@constants/abi/${walletModule}`)
-  const { methodData } = job.data
-  const { _to, _amount, _token } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
+  const { _to, _amount, _token } = getRelayBody(job).params
   const tokenAddress = _token.toLowerCase()
   const actionData = formatActionData({ ...job.data, transactionBody: { ...job.data.transactionBody, value: _amount, tokenAddress } })
   return new WalletAction({
@@ -36,10 +32,7 @@ const handleReceiveTokens = (job) => {
 }
 
 const handleSendTokens = (job) => {
-  const { walletModule } = job.data
-  const walletModuleABI = require(`@constants/abi/${walletModule}`)
-  const { methodData } = job.data
-  const { _amount, _token, _wallet } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
+  const { _amount, _token, _wallet } = getRelayBody(job).params
   const tokenAddress = _token.toLowerCase()
   const actionData = formatActionData({ ...job.data, transactionBody: { ...job.data.transactionBody, value: _amount, tokenAddress } })
   return new WalletAction({
@@ -53,12 +46,13 @@ const handleSendTokens = (job) => {
 }
 
 const handleSwapTokens = (job) => {
-  const { walletModule } = job.data
-  const walletModuleABI = require(`@constants/abi/${walletModule}`)
-  const { methodData } = job.data
-  const { _wallet, _token, _contract, _amount } = getParamsFromMethodData(walletModuleABI, 'approveTokenAndCallContract', methodData)
-  const tokenAddressIn = _token.toLowerCase()
-  const tokenAddressOut = get(job, 'data.txMetadata.currencyOut')
+  const { params } = getRelayBody(job)
+  const { to, amountIn, path } = params
+  const walletAddress = to
+  const value = amountIn || 0
+  const { _contract } = job.data.relayBody.params
+  const tokenAddressIn = first(path).toLowerCase()
+  const tokenAddressOut = last(path).toLowerCase()
 
   return new WalletAction({
     name: 'swapTokens',
@@ -66,14 +60,14 @@ const handleSwapTokens = (job) => {
     data: {
       ...formatActionData(job.data),
       spender: _contract,
-      value: _amount,
+      value,
       tokenAddress: tokenAddressIn,
       timestamp: (Math.round(new Date().getTime() / 1000)).toString()
     },
     tokenAddress: [tokenAddressIn, tokenAddressOut],
-    walletAddress: _wallet,
+    walletAddress,
     communityAddress: job.communityAddress || job.data.communityAddress
-  })
+  }).save()
 }
 
 const handleFundToken = (job) => {
@@ -110,7 +104,7 @@ const createActionFromJob = async (job) => {
     for (let action of actionTypes) {
       console.log(`Received action type of ${action}`)
       const makeActionFunc = specialActionHandlers[action] || createWalletAction
-      await makeActionFunc(job)
+      await makeActionFunc(job, action)
     }
   } catch (err) {
     console.error(err)

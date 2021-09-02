@@ -18,34 +18,48 @@ const formatActionData = ({ transactionBody, txHash, bonusType, externalId, deta
   txHash
 }, identity)
 
+const actionsMapping = {
+  'CommunityManager': {
+    'joinCommunity': 'joinCommunity'
+  },
+  'TransferManager': {
+    'transferToken': ['sendTokens', 'receiveTokens']
+  },
+  'FuseswapRouter': {
+    'swapExactTokensForTokens': 'swapTokens',
+    'swapTokensForExactTokens': 'swapTokens',
+    'swapExactETHForTokens': 'swapTokens',
+    'swapTokensForExactETH': 'swapTokens',
+    'swapExactTokensForETH': 'swapTokens',
+    'swapETHForExactTokens': 'swapTokens',
+    'swapExactTokensForTokensSupportingFeeOnTransferTokens': 'swapTokens',
+    'swapExactETHForTokensSupportingFeeOnTransferTokens': 'swapTokens',
+    'swapExactTokensForETHSupportingFeeOnTransferTokens': 'swapTokens',
+    'addLiquidity': 'addLiquidity',
+    'addLiquidityETH': 'addLiquidity',
+    'removeLiquidity': 'removeLiquidity',
+    'removeLiquidityETH': 'removeLiquidity'
+  },
+  'MultiRewardProgram': {
+    'stake': 'stakeLiquidity',
+    'withdraw': 'withdrawLiquidity',
+    'getReward': 'claimReward'
+  }
+}
+
+const getRelayBody = (job) => get(job, 'data.relayBody.nested', get(job, 'data.relayBody'))
+
 const getActionsTypes = (job) => {
   if (job.name !== 'relay') {
     return job.name
   }
-  const { walletModule, methodName } = job.data
-  console.log({ walletModule, methodName })
-  switch (walletModule) {
-    case 'CommunityManager':
-      switch (methodName) {
-        case 'joinCommunity':
-          return 'joinCommunity'
-      }
-      break
-    case 'TransferManager':
-      switch (methodName) {
-        case 'transferToken':
-          return ['sendTokens', 'receiveTokens']
-        case 'approveTokenAndCallContract':
-          return 'swapTokens'
-        case 'callContract':
-          return 'sendTokens'
-        default:
-          return 'sendTokens'
-      }
-  }
+  const { contractName, methodName } = getRelayBody(job)
+  console.log({ contractName, methodName })
+  return get(actionsMapping, `${contractName}.${methodName}`)
 }
 
 module.exports = {
   formatActionData,
-  getActionsTypes
+  getActionsTypes,
+  getRelayBody
 }

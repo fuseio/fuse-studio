@@ -2,6 +2,7 @@
 const config = require('config')
 const lodash = require('lodash')
 const { createNetwork } = require('@utils/web3')
+const RelayJobParser = require('./parser')
 
 const isAllowedToRelayForeign = (web3, walletModule, walletModuleABI, methodName, methodData) => {
   const allowedModules = ['TransferManager', 'DAIPointsManager']
@@ -57,5 +58,6 @@ const sendRelay = async (account, { network, walletModule, walletModuleAddress, 
 
 module.exports = {
   sendRelay,
-  isAllowedToRelay
+  isAllowedToRelay,
+  RelayJobParser
 }
