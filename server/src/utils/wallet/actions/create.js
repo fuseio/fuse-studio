@@ -17,12 +17,12 @@ const makeCreateWalletAction = ({ name } = {}, actionName) => async (job) => {
 
 const createWalletAction = makeCreateWalletAction()
 
-const handleReceiveTokens = (job) => {
+const handleReceiveTokens = (job, name) => {
   const { _to, _amount, _token } = getRelayBody(job).params
   const tokenAddress = _token.toLowerCase()
   const actionData = formatActionData({ ...job.data, transactionBody: { ...job.data.transactionBody, value: _amount, tokenAddress } })
   return new WalletAction({
-    name: 'receiveTokens',
+    name,
     job: mongoose.Types.ObjectId(job._id),
     data: actionData,
     tokenAddress,
@@ -31,12 +31,12 @@ const handleReceiveTokens = (job) => {
   }).save()
 }
 
-const handleSendTokens = (job) => {
+const handleSendTokens = (job, name) => {
   const { _amount, _token, _wallet } = getRelayBody(job).params
   const tokenAddress = _token.toLowerCase()
   const actionData = formatActionData({ ...job.data, transactionBody: { ...job.data.transactionBody, value: _amount, tokenAddress } })
   return new WalletAction({
-    name: 'sendTokens',
+    name,
     job: mongoose.Types.ObjectId(job._id),
     data: actionData,
     walletAddress: _wallet,
@@ -45,7 +45,32 @@ const handleSendTokens = (job) => {
   }).save()
 }
 
-const handleSwapTokens = (job) => {
+const handleSwapTokens = (job, name) => {
+  const { params } = getRelayBody(job)
+  const { to, amountIn, path } = params
+  const walletAddress = to
+  const value = amountIn || 0
+  const { _contract } = job.data.relayBody.params
+  const tokenAddressIn = first(path).toLowerCase()
+  const tokenAddressOut = last(path).toLowerCase()
+
+  return new WalletAction({
+    name,
+    job: mongoose.Types.ObjectId(job._id),
+    data: {
+      ...formatActionData(job.data),
+      spender: _contract,
+      value,
+      tokenAddress: tokenAddressIn,
+      timestamp: (Math.round(new Date().getTime() / 1000)).toString()
+    },
+    tokenAddress: [tokenAddressIn, tokenAddressOut],
+    walletAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
+}
+
+const handleAddLiquidity = (job) => {
   const { params } = getRelayBody(job)
   const { to, amountIn, path } = params
   const walletAddress = to
@@ -95,6 +120,7 @@ const specialActionHandlers = {
   swapTokens: handleSwapTokens,
   setWalletOwner: handleSetWalletOwnerJob,
   tokenBonus: handleFundToken,
+  addLiquidity: handleAddLiquidity,
   'fiat-deposit': makeMintDeposited
 }
 
