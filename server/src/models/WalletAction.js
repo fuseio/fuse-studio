@@ -7,6 +7,8 @@ const WalletActionSchema = new Schema({
   communityAddress: { type: String },
   walletAddress: { type: String },
   tokenAddress: [ { type: String } ],
+  tokensIn: [ { type: Object } ],
+  tokensOut: [ { type: Object } ],
   job: { type: Schema.Types.ObjectId, ref: 'QueueJob' },
   data: { type: Object, default: {} },
   status: { type: String, default: 'pending' },

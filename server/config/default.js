@@ -76,7 +76,8 @@ module.exports = {
       native: {
         decimals: 18,
         name: 'Fuse',
-        symbol: 'FUSE'
+        symbol: 'FUSE',
+        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
       },
       name: 'fuse',
       bridgeType: 'home',
@@ -136,7 +137,8 @@ module.exports = {
       native: {
         decimals: 18,
         name: 'Ether',
-        symbol: 'ETH'
+        symbol: 'ETH',
+        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
       },
       contract: {
         options: {
