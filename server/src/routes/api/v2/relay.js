@@ -1,11 +1,13 @@
 const router = require('express').Router()
 const taskManager = require('@services/taskManager')
 const auth = require('@routes/auth')
+const relayParser = require('@services/wallet/relayJobParser')
 
 router.post('/', auth.required, async (req, res) => {
   const { appName, identifier } = req.user
   try {
-    const job = await taskManager.now('relay', { ...req.body, identifier, appName }, { isWalletJob: true })
+    const relayBody = relayParser.parse(req.body)
+    const job = await taskManager.now('relay', { ...req.body, identifier, appName, relayBody }, { isWalletJob: true })
     return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })

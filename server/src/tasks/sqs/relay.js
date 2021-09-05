@@ -1,18 +1,16 @@
 const config = require('config')
-const lodash = require('lodash')
+const { get } = require('lodash')
 const { createNetwork } = require('@utils/web3')
 const { fetchTokenByCommunity } = require('@utils/graph')
-const { getParamsFromMethodData } = require('@utils/abi')
-const request = require('request-promise-native')
 const mongoose = require('mongoose')
 const { notifyReceiver } = require('@services/firebase')
-const { sendRelay, isAllowedToRelay } = require('@utils/relay')
+const { sendRelay, isAllowedToRelay } = require('@utils/jobs/relay')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
-const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays, isFunderDeprecated }, job) => {
+const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays, relayBody }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3 } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
@@ -24,67 +22,48 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
     const walletModuleAddress = userWallet.walletModules[walletModule]
     const { relayingSuccess, receipt } = await sendRelay(account, { network, walletModule, walletModuleAddress, walletAddress, methodData, nonce, signature, gasPrice, gasLimit }, job)
     if (relayingSuccess) {
-      const returnValues = lodash.get(receipt, 'events.TransactionExecuted.returnValues')
+      const returnValues = get(receipt, 'events.TransactionExecuted.returnValues')
       const { wallet, signedHash } = returnValues
       console.log(`Relay transaction executed successfully from wallet: ${wallet}, signedHash: ${signedHash}`)
 
       if (walletModule === 'CommunityManager') {
         try {
-          const { _community: communityAddress } = getParamsFromMethodData(walletModuleABI, 'joinCommunity', methodData)
+          const communityAddress = get(relayBody, 'params._community')
           console.log(`Requesting token funding for wallet: ${wallet} and community ${communityAddress}`)
-          let tokenAddress, originNetwork
-          if (lodash.get(job.data.transactionBody, 'tokenAddress', false) && lodash.get(job.data.transactionBody, 'originNetwork', false)) {
-            tokenAddress = web3Utils.toChecksumAddress(lodash.get(job.data.transactionBody, 'tokenAddress'))
-            originNetwork = lodash.get(job.data.transactionBody, 'originNetwork')
+          let tokenAddress
+          if (get(job.data.transactionBody, 'tokenAddress', false) && get(job.data.transactionBody, 'originNetwork', false)) {
+            tokenAddress = web3Utils.toChecksumAddress(get(job.data.transactionBody, 'tokenAddress'))
           } else {
             const token = await fetchTokenByCommunity(communityAddress)
             tokenAddress = web3Utils.toChecksumAddress(token.address)
-            originNetwork = token.originNetwork
           }
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
 
           const community = await Community.findOne({ communityAddress })
-          const hasBonus = lodash.get(community, `plugins.joinBonus.isActive`, false) && lodash.get(community, `plugins.joinBonus.joinInfo.amount`, false)
+          const hasBonus = get(community, `plugins.joinBonus.isActive`, false) && get(community, `plugins.joinBonus.joinInfo.amount`, false)
           if (hasBonus) {
-            if (isFunderDeprecated) {
-              const taskManager = require('@services/taskManager')
-              const bonusType = 'join'
-              const bonusAmount = lodash.get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
-              const bonusMaxTimesLimit = lodash.get(community, `${bonusType}.maxTimes`, 100)
-              const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
-              const { plugins } = community
-              const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
-              const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
-              job.set('data.funderJobId', funderJob._id)
-              job.save()
-            } else {
-              request.post(`${config.get('funder.urlBase')}fund/token`, {
-                json: true,
-                body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork, communityAddress }
-              }, (err, response, body) => {
-                if (err) {
-                  console.error(`Error on token funding for wallet: ${wallet}`, err)
-                } else if (body.error) {
-                  console.error(`Error on token funding for wallet: ${wallet}`, body.error)
-                } else if (lodash.has(body, 'job._id')) {
-                  job.set('data.funderJobId', body.job._id)
-                }
-                job.save()
-              })
-            }
+            const taskManager = require('@services/taskManager')
+            const bonusType = 'join'
+            const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
+            const bonusMaxTimesLimit = get(community, `${bonusType}.maxTimes`, 100)
+            const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
+            const { plugins } = community
+            const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+            const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
+            job.set('data.funderJobId', funderJob._id)
+            job.save()
           }
         } catch (e) {
           console.log(`Error on token funding for wallet: ${wallet}`, e)
         }
       } else if (walletModule === 'TransferManager' && methodName === 'transferToken') {
-        const { _to, _amount, _token } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
+        const { _to, _amount, _token } = relayBody.params
         notifyReceiver({
           receiverAddress: _to,
           tokenAddress: _token,
           amountInWei: _amount,
           communityAddress
-        })
-          .catch(console.error)
+        }).catch(console.error)
       }
 
       if (nextRelays && nextRelays.length > 0) {
@@ -95,9 +74,9 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
         job.save()
       }
     } else {
-      job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: 'failed', blockNumber: lodash.get(receipt, 'blockNumber') })
+      job.set('data.transactionBody', { ...get(job.data, 'transactionBody', {}), status: 'failed', blockNumber: get(receipt, 'blockNumber') })
       job.save()
-      console.error(`Relay transaction failed from wallet: ${lodash.get(receipt, 'events.TransactionExecuted.returnValues.wallet')}, signedHash: ${lodash.get(receipt, 'events.TransactionExecuted.returnValues.signedHash')}`)
+      console.error(`Relay transaction failed from wallet: ${get(receipt, 'events.TransactionExecuted.returnValues.wallet')}, signedHash: ${get(receipt, 'events.TransactionExecuted.returnValues.signedHash')}`)
     }
     return receipt
   }

@@ -1,75 +1,235 @@
-const { get } = require('lodash')
-const { getParamsFromMethodData } = require('@utils/abi')
+const config = require('config')
+const { first, last, get, isFunction } = require('lodash')
 const mongoose = require('mongoose')
 const WalletAction = mongoose.model('WalletAction')
 const { formatActionData } = require('./utils')
+const { createContract } = require('@services/web3/home')
+const MultiRewardProgramABI = require('@constants/abi/MultiRewardProgram')
 
-const handleCreateWalletJob = async (job) => {
+const NATIVE_ADDRESS = config.get('network.home.native.address')
+
+const makeCreateWalletAction = ({ name } = {}) => async (job) => {
+  const data = formatActionData(job.data)
   return new WalletAction({
-    name: 'createWallet',
+    name: name || job.name,
     job: mongoose.Types.ObjectId(job._id),
-    data: formatActionData(job.data),
+    data,
     communityAddress: job.communityAddress || job.data.communityAddress,
-    walletAddress: job.data.walletAddress
+    walletAddress: job.data.walletAddress,
+    tokenAddress: data.tokenAddress
   }).save()
 }
 
-const handleRelayJob = async (job) => {
-  const { walletModule, methodName } = job.data
-  if (walletModule === 'CommunityManager' && methodName === 'joinCommunity') {
-    return new WalletAction({
-      name: 'joinCommunity',
-      job: mongoose.Types.ObjectId(job._id),
-      data: formatActionData(job.data),
-      walletAddress: job.data.walletAddress,
-      communityAddress: job.communityAddress || job.data.communityAddress
-    }).save()
-  } else if (walletModule === 'TransferManager' && methodName === 'transferToken') {
-    const walletModuleABI = require(`@constants/abi/${walletModule}`)
-    const { methodData } = job.data
-    const { _to, _amount, _token, _wallet } = getParamsFromMethodData(walletModuleABI, 'transferToken', methodData)
-    const tokenAddress = _token.toLowerCase()
-    const actionData = formatActionData({ ...job.data, transactionBody: { ...job.data.transactionBody, value: _amount, tokenAddress } })
-    const receiverAction = await new WalletAction({
-      name: 'receiveTokens',
-      job: mongoose.Types.ObjectId(job._id),
-      data: actionData,
-      tokenAddress,
-      walletAddress: _to,
-      communityAddress: job.communityAddress || job.data.communityAddress
-    }).save()
-    const senderAction = await new WalletAction({
-      name: 'sendTokens',
-      job: mongoose.Types.ObjectId(job._id),
-      data: actionData,
-      walletAddress: _wallet,
-      tokenAddress,
-      communityAddress: job.communityAddress || job.data.communityAddress
-    }).save()
-    return { receiverAction, senderAction }
-  } else if (walletModule === 'TransferManager' && methodName === 'approveTokenAndCallContract') {
-    const walletModuleABI = require(`@constants/abi/${walletModule}`)
-    const { methodData } = job.data
-    const { _wallet, _token, _contract, _amount } = getParamsFromMethodData(walletModuleABI, 'approveTokenAndCallContract', methodData)
-    const tokenAddressIn = _token.toLowerCase()
-    const tokenAddressOut = get(job, 'data.txMetadata.currencyOut')
+const createWalletAction = makeCreateWalletAction()
 
-    const swapAction = await new WalletAction({
-      name: 'swapTokens',
-      job: mongoose.Types.ObjectId(job._id),
-      data: {
-        ...formatActionData(job.data),
-        spender: _contract,
-        value: _amount,
-        tokenAddress: tokenAddressIn,
-        timestamp: (Math.round(new Date().getTime() / 1000)).toString()
-      },
-      tokenAddress: [tokenAddressIn, tokenAddressOut],
-      walletAddress: _wallet,
-      communityAddress: job.communityAddress || job.data.communityAddress
-    }).save()
-    return { swapAction }
-  }
+const handleReceiveTokens = (job) => {
+  const { _to, _amount, _token } = getRelayBody(job).params
+  const tokenAddress = _token.toLowerCase()
+  const actionData = formatActionData({ ...job.data, transactionBody: { ...job.data.transactionBody, value: _amount, tokenAddress } })
+  return new WalletAction({
+    name: 'receiveTokens',
+    job: mongoose.Types.ObjectId(job._id),
+    data: actionData,
+    tokenAddress,
+    tokensIn: {
+      tokenAddress,
+      amount: _amount
+    },
+    walletAddress: _to,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
+}
+
+const handleSendTokens = (job) => {
+  const { _amount, _token, _wallet } = getRelayBody(job).params
+  const tokenAddress = _token.toLowerCase()
+  const actionData = formatActionData({ ...job.data, transactionBody: { ...job.data.transactionBody, value: _amount, tokenAddress } })
+  return new WalletAction({
+    name: 'sendTokens',
+    job: mongoose.Types.ObjectId(job._id),
+    data: actionData,
+    walletAddress: _wallet,
+    tokenAddress,
+    tokensOut: {
+      tokenAddress,
+      amount: _amount
+    },
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
+}
+
+const handleSwapTokens = (job) => {
+  const { params } = getRelayBody(job)
+  const { to, amountIn, path } = params
+  const walletAddress = to
+  const value = amountIn || 0
+  const tokenAddressIn = first(path).toLowerCase()
+  const tokenAddressOut = last(path).toLowerCase()
+
+  return new WalletAction({
+    name: 'swapTokens',
+    job: mongoose.Types.ObjectId(job._id),
+    data: {
+      ...formatActionData(job.data),
+      value,
+      tokenAddress: tokenAddressIn,
+      timestamp: (Math.round(new Date().getTime() / 1000)).toString()
+    },
+    tokenAddress: [tokenAddressIn, tokenAddressOut],
+    tokensIn: {
+      tokenAddress: tokenAddressIn,
+      amount: value
+    },
+    tokensOut: {
+      tokenAddress: tokenAddressOut
+    },
+    walletAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
+}
+
+const handleSwapEthTokens = (job) => {
+  const { params } = getRelayBody(job)
+  const { to, path, amountOutMin } = params
+  const { _value } = job.data.relayBody.params
+  const walletAddress = to
+  const tokenAddressOut = NATIVE_ADDRESS
+  const tokenAddressIn = last(path).toLowerCase()
+
+  return new WalletAction({
+    name: 'swapTokens',
+    job: mongoose.Types.ObjectId(job._id),
+    data: {
+      ...formatActionData(job.data),
+      value: _value,
+      tokenAddress: tokenAddressIn,
+      timestamp: (Math.round(new Date().getTime() / 1000)).toString()
+    },
+    tokenAddress: [tokenAddressIn, tokenAddressOut],
+    tokensIn: {
+      tokenAddress: tokenAddressIn,
+      amount: amountOutMin
+    },
+    tokensOut: {
+      tokenAddress: tokenAddressOut,
+      amount: _value
+    },
+    walletAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
+}
+
+const handleSwapTokensEth = (job) => {
+  const { params } = getRelayBody(job)
+  const { to, path, amountOutMin } = params
+  const { _value } = job.data.relayBody.params
+  const walletAddress = to
+  const tokenAddressIn = first(path).toLowerCase()
+  const tokenAddressOut = NATIVE_ADDRESS
+
+  return new WalletAction({
+    name: 'swapTokens',
+    job: mongoose.Types.ObjectId(job._id),
+    data: {
+      ...formatActionData(job.data),
+      value: _value,
+      tokenAddress: tokenAddressIn,
+      timestamp: (Math.round(new Date().getTime() / 1000)).toString()
+    },
+    tokenAddress: [tokenAddressIn, tokenAddressOut],
+    tokensIn: {
+      tokenAddress: tokenAddressIn,
+      amount: _value
+    },
+    tokensOut: {
+      tokenAddress: tokenAddressOut,
+      amount: amountOutMin
+    },
+    walletAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
+}
+
+const handleAddLiquidity = (job) => {
+  const { params } = getRelayBody(job)
+  const { to } = params
+  const walletAddress = to
+  // for AddLiquidityETh arguments are different
+  const { tokenA, tokenB, amountADesired, amountBDesired } = params
+
+  return new WalletAction({
+    name: 'addLiquidity',
+    job: mongoose.Types.ObjectId(job._id),
+    data: {
+      ...formatActionData(job.data),
+      timestamp: (Math.round(new Date().getTime() / 1000)).toString()
+    },
+    tokenAddress: [tokenA, tokenB],
+    tokensOut: [{
+      tokenAddress: tokenA,
+      amount: amountADesired
+    },
+    {
+      tokenAddress: tokenB,
+      amount: amountBDesired
+    }],
+    walletAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
+}
+
+const handleAddLiquidityEth = (job) => {
+  const { params } = getRelayBody(job)
+  const { to } = params
+  const walletAddress = to
+  const { _value } = job.data.relayBody.params
+  const { token, amountTokenDesired } = params
+
+  return new WalletAction({
+    name: 'addLiquidity',
+    job: mongoose.Types.ObjectId(job._id),
+    data: {
+      ...formatActionData(job.data),
+      timestamp: (Math.round(new Date().getTime() / 1000)).toString()
+    },
+    tokenAddress: [token, NATIVE_ADDRESS],
+    tokensOut: [{
+      tokenAddress: token,
+      amount: amountTokenDesired
+    },
+    {
+      tokenAddress: NATIVE_ADDRESS,
+      amount: _value
+    }],
+    walletAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
+}
+
+const handleStake = async (job) => {
+  const { params } = getRelayBody(job)
+  const { amount } = params
+  const { _wallet, _contract } = job.data.relayBody.params
+  const stakingContract = createContract(MultiRewardProgramABI, _contract)
+  const tokenAddress = await stakingContract.methods.stakingToken().call()
+  const walletAddress = _wallet
+  return new WalletAction({
+    name: 'stakeLiquidity',
+    job: mongoose.Types.ObjectId(job._id),
+    data: {
+      ...formatActionData(job.data),
+      value: amount,
+      tokenAddress,
+      timestamp: (Math.round(new Date().getTime() / 1000)).toString()
+    },
+    tokenAddress: [tokenAddress],
+    tokensOut: {
+      tokenAddress: tokenAddress,
+      amount
+    },
+    walletAddress,
+    communityAddress: job.communityAddress || job.data.communityAddress
+  }).save()
 }
 
 const handleFundToken = (job) => {
@@ -87,63 +247,73 @@ const handleFundToken = (job) => {
   }).save()
 }
 
-const handleSetWalletOwnerJob = (job) => {
-  return new WalletAction({
-    name: 'createWallet',
-    job: mongoose.Types.ObjectId(job._id),
-    data: formatActionData(job.data),
-    walletAddress: job.data.walletAddress,
-    communityAddress: job.communityAddress || job.data.communityAddress
-  }).save()
+const handleSetWalletOwnerJob = makeCreateWalletAction({ name: 'createWallet' })
+
+const makeMintDeposited = makeCreateWalletAction({ name: 'fiat-deposit' })
+
+const specialActionHandlers = {
+  swapTokens: handleSwapTokens,
+  setWalletOwner: handleSetWalletOwnerJob,
+  tokenBonus: handleFundToken,
+  addLiquidity: handleAddLiquidity,
+  'fiat-deposit': makeMintDeposited
 }
 
-const makeMintDeposited = async (job) => {
-  const data = formatActionData(job.data)
-  return new WalletAction({
-    name: 'fiat-deposit',
-    job: mongoose.Types.ObjectId(job._id),
-    data,
-    tokenAddress: data.tokenAddress,
-    walletAddress: job.data.walletAddress,
-    communityAddress: job.data.communityAddress
-  }).save()
+const actionsMapping = {
+  'CommunityManager': {
+    'joinCommunity': 'joinCommunity'
+  },
+  'TransferManager': {
+    'transferToken': [handleSendTokens, handleReceiveTokens]
+  },
+  'FuseswapRouter': {
+    'swapExactTokensForTokens': handleSwapTokens,
+    'swapTokensForExactTokens': handleSwapTokens,
+    'swapExactETHForTokens': handleSwapEthTokens,
+    'swapTokensForExactETH': handleSwapTokensEth,
+    'swapExactTokensForETH': handleSwapTokensEth,
+    'swapETHForExactTokens': handleSwapEthTokens,
+    'swapExactTokensForTokensSupportingFeeOnTransferTokens': handleSwapTokens,
+    'swapExactETHForTokensSupportingFeeOnTransferTokens': handleSwapEthTokens,
+    'swapExactTokensForETHSupportingFeeOnTransferTokens': handleSwapTokensEth,
+    'addLiquidity': handleAddLiquidity,
+    'addLiquidityETH': handleAddLiquidityEth,
+    'removeLiquidity': 'removeLiquidity',
+    'removeLiquidityETH': 'removeLiquidity'
+  },
+  'MultiRewardProgram': {
+    'stake': handleStake,
+    'withdraw': 'withdrawLiquidity',
+    'getReward': 'claimReward'
+  }
 }
 
-const handleClaimApy = async (job) => {
-  const data = formatActionData(job.data)
-  return new WalletAction({
-    name: 'claimApy',
-    job: mongoose.Types.ObjectId(job._id),
-    data: data,
-    tokenAddress: job.data.tokenAddress,
-    walletAddress: job.data.walletAddress
-  }).save()
-}
+const getRelayBody = (job) => get(job, 'data.relayBody.nested', get(job, 'data.relayBody'))
 
-const jobCreationHandlers = {
-  createWallet: handleCreateWalletJob,
-  createForeignWallet: handleCreateWalletJob,
-  relay: handleRelayJob,
-  claimApy: handleClaimApy,
-  fundToken: handleFundToken,
-  mintDeposited: makeMintDeposited,
-  setWalletOwner: handleSetWalletOwnerJob
+const getActionsTypes = (job) => {
+  if (job.name !== 'relay') {
+    return job.name
+  }
+  const { contractName, methodName } = getRelayBody(job)
+  console.log({ contractName, methodName })
+  return get(actionsMapping, `${contractName}.${methodName}`)
 }
 
 const createActionFromJob = async (job) => {
   try {
-    const makeActionFunc = jobCreationHandlers[job.name]
-    if (!makeActionFunc) {
-      console.warn(`No action is defined for ${job.name}`)
-      return
+    const actionTypes = [getActionsTypes(job)].flat()
+    for (let action of actionTypes) {
+      console.log(`Received action type of ${action}`)
+      const makeActionFunc = isFunction(action) ? action : specialActionHandlers[action] || createWalletAction
+      await makeActionFunc(job, action)
     }
-    const actions = await makeActionFunc(job)
-    return actions
   } catch (err) {
     console.error(err)
   }
 }
 
 module.exports = {
-  createActionFromJob
+  createActionFromJob,
+  getRelayBody,
+  getActionsTypes
 }

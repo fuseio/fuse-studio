@@ -13,7 +13,18 @@
     "lint": "standard",
     "repl": "node --experimental-repl-await scripts/repl.js",
     "repl-debug": "node --inspect --experimental-repl-await scripts/repl.js",
-    "lint-fix": "standard --fix"
+    "lint-fix": "standard --fix",
+    "test" : "mocha test"
+  },
+  "engines": {
+    "node": ">=15.13.0",
+    "npm": ">=6.0.0"
+  },
+  "mocha": {
+    "recursive": true,
+    "extension": [
+      "js"
+    ]
   },
   "repository": {
     "type": "git",
@@ -99,6 +110,8 @@
     "@babel/types": "^7.7.4",
     "@rigwild/apidoc-markdown": "^2.0.2",
     "apidoc": "^0.17.7",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.3",
     "nodemon": "^1.18.11",
     "standard": "^12.0.1"
   }
