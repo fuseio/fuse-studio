@@ -119,6 +119,15 @@ const initiateDeposit = async ({
     network,
     depositError: error
   }).save()
+
+  await new WalletAction({
+    name: 'depositInitiated',
+    communityAddress,
+    walletAddress: customerAddress,
+    tokenAddress: tokenAddress.toLowerCase(),
+    status: error ? 'failed' : 'confirmed'
+  }).save()
+
   trackDepositStatus({ address: customerAddress, status: 'Pendig' })
   console.log({ deposit })
 }
