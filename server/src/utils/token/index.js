@@ -38,6 +38,23 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
   return fetchedTokedData
 }
 
+const fetchNftData = async (address, fields = {}, web3 = foreign.web3) => {
+  if (isNative(address)) {
+    return config.get('network.home.native')
+  }
+  const tokenContractInstance = new web3.eth.Contract(BasicTokenAbi, address)
+  const [name, symbol, totalSupply] = await Promise.all([
+    tokenContractInstance.methods.name().call(),
+    tokenContractInstance.methods.symbol().call(),
+    tokenContractInstance.methods.totalSupply().call()
+  ])
+
+  const fetchedTokedData = { name, symbol, totalSupply: totalSupply.toString() }
+
+  console.log(`Fetched token ${address} data: ${inspect(fetchedTokedData)}`)
+  return fetchedTokedData
+}
+
 const isNative = (tokenAddress) => tokenAddress === AddressZero
 
 const adjustDecimals = (amount, currentDecimals, desiredDecimals) => {
@@ -113,6 +130,7 @@ const isStableCoin = (tokenAddress, network = 'ethereum') => stableCoins[network
 
 module.exports = {
   fetchTokenData,
+  fetchNftData,
   fetchBalance,
   fetchTokenPrice,
   transfer,

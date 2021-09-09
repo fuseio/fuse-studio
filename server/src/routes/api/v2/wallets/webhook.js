@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const WalletAction = mongoose.model('WalletAction')
-const { fetchTokenData } = require('@utils/token')
+const { fetchTokenData, fetchNftData } = require('@utils/token')
 const home = require('@services/web3/home')
 const BigNumber = require('bignumber.js')
 const { handleSubscriptionWebHook } = require('@utils/wallet/actions')
@@ -27,8 +27,19 @@ router.post('/subscribe', auth.admin, async (req, res) => {
   }
 })
 
+const fetchTokenDataByType = async ({ tokenType, tokenAddress }) => {
+  if (tokenType === 'ERC-20') {
+    const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
+    return { tokenDecimal, tokenName, tokenSymbol }
+  } else {
+    const { name: tokenName, symbol: tokenSymbol } = await fetchNftData(tokenAddress, {}, home.web3)
+    return { tokenDecimal: 1, tokenName, tokenSymbol }
+  }
+}
+
 router.post('/', auth.subscriptionService, async (req, res) => {
-  const { to, from, address, txHash, value, subscribers } = req.body
+  const { to, from, address, txHash, value, subscribers, tokenType } = req.body
+
   const tokenAddress = address || AddressZero
   console.log(`got txHash ${txHash} from the wehbook`)
 
@@ -45,8 +56,7 @@ router.post('/', auth.subscriptionService, async (req, res) => {
 
   const action = await WalletAction.findOne({ 'data.txHash': txHash })
   if (!action) {
-    const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
-
+    const { tokenDecimal, tokenName, tokenSymbol } = await fetchTokenDataByType({ tokenAddress, tokenType })
     const data = {
       txHash,
       walletAddress: to,
@@ -57,6 +67,7 @@ router.post('/', auth.subscriptionService, async (req, res) => {
       tokenDecimal: parseInt(tokenDecimal),
       asset: tokenSymbol,
       status: 'confirmed',
+      tokenType,
       value: new BigNumber(value),
       tokenAddress: tokenAddress.toLowerCase(),
       timeStamp: (Math.round(new Date().getTime() / 1000)).toString()
@@ -65,7 +76,8 @@ router.post('/', auth.subscriptionService, async (req, res) => {
     notifyReceiver({
       receiverAddress: to,
       tokenAddress,
-      amountInWei: value
+      amountInWei: value,
+      tokenType
     })
       .catch(console.error)
   } else {
