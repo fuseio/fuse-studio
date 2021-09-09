@@ -119,6 +119,26 @@ const initiateDeposit = async ({
     network,
     depositError: error
   }).save()
+
+  await new WalletAction({
+    name: 'depositInitiated',
+    communityAddress,
+    data: {
+      provider: 'ramp',
+      value: amount,
+      status: 'confirmed',
+      tokenAddress,
+      tokenDecimal: 18,
+      tokenSymbol: 'fUSD',
+      asset: 'fUSD',
+      timeStamp: (Math.round(new Date().getTime() / 1000)).toString(),
+      tokenName: 'Fuse Dollar'
+    },
+    walletAddress: customerAddress,
+    tokenAddress: tokenAddress.toLowerCase(),
+    status: error ? 'failed' : 'confirmed'
+  }).save()
+
   trackDepositStatus({ address: customerAddress, status: 'Pendig' })
   console.log({ deposit })
 }
