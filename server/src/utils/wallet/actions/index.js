@@ -67,13 +67,23 @@ const failAndUpdateByJob = async (job) => {
 }
 
 const handleSubscriptionWebHook = async (data) => {
-  return new WalletAction({
-    name: 'receiveTokens',
-    data,
-    status: 'succeeded',
-    tokenAddress: data.tokenAddress,
-    walletAddress: data.walletAddress
-  }).save()
+  if (data.tokenType === 'ERC-721') {
+    return new WalletAction({
+      name: 'receiveNFT',
+      data,
+      status: 'succeeded',
+      tokenAddress: data.tokenAddress,
+      walletAddress: data.walletAddress
+    }).save()
+  } else {
+    return new WalletAction({
+      name: 'receiveTokens',
+      data,
+      status: 'succeeded',
+      tokenAddress: data.tokenAddress,
+      walletAddress: data.walletAddress
+    }).save()
+  }
 }
 
 module.exports = {
