@@ -199,6 +199,9 @@ const claimApy = async (account, { walletAddress, tokenAddress }, job) => {
   reward.isClaimed = true
   await reward.save()
 
+  job.data.reward = reward
+  await job.save()
+
   await calculateApy(walletAddress, tokenAddress)
 
   return reward
