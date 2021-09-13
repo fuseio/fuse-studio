@@ -28,19 +28,19 @@ router.post('/subscribe', auth.admin, async (req, res) => {
 })
 
 const fetchTokenDataByType = async ({ tokenType, tokenAddress }) => {
-  if (tokenType === 'ERC-20') {
+  if (tokenType === 'ERC-20' || tokenType === 'native') {
     const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
     return { tokenDecimal, tokenName, tokenSymbol }
-  } else {
+  } else if (tokenType === 'ERC-721') {
     const { name: tokenName, symbol: tokenSymbol } = await fetchNftData(tokenAddress, {}, home.web3)
     return { tokenDecimal: 1, tokenName, tokenSymbol }
   }
 }
 
 router.post('/', auth.subscriptionService, async (req, res) => {
-  const { to, from, address, txHash, value, subscribers, tokenType } = req.body
+  const { to, from, address, txHash, value, subscribers, tokenType } = { tokenType: 'native', ...req.body }
 
-  const tokenAddress = address || AddressZero
+  const tokenAddress = address || config.get('network.home.native.address')
   console.log(`got txHash ${txHash} from the wehbook`)
 
   if (tokenAddress === fuseDollarAddress) {
