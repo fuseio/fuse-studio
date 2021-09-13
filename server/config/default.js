@@ -74,6 +74,7 @@ module.exports = {
     },
     home: {
       native: {
+        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         decimals: 18,
         name: 'Fuse',
         symbol: 'FUSE'
@@ -134,6 +135,7 @@ module.exports = {
       name: 'mainnet',
       bridgeType: 'foreign',
       native: {
+        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         decimals: 18,
         name: 'Ether',
         symbol: 'ETH'

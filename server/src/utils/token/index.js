@@ -7,7 +7,6 @@ const web3Utils = require('web3-utils')
 const { uniswapClient } = require('@services/graph')
 const BigNumber = require('bignumber.js')
 const { id } = require('@ethersproject/hash')
-const { AddressZero } = require('ethers/constants')
 const ERC20_TRANSFER_EVENT = 'Transfer(address,address,uint256)'
 const ERC20_TRANSFER_EVENT_HASH = id(ERC20_TRANSFER_EVENT)
 
@@ -55,7 +54,7 @@ const fetchNftData = async (address, fields = {}, web3 = foreign.web3) => {
   return fetchedTokedData
 }
 
-const isNative = (tokenAddress) => tokenAddress === AddressZero
+const isNative = (tokenAddress = '') => tokenAddress.toLowerCase() === config.get('network.home.native.address').toLowerCase()
 
 const adjustDecimals = (amount, currentDecimals, desiredDecimals) => {
   return new BigNumber(amount).multipliedBy(new BigNumber(10).pow(desiredDecimals - currentDecimals)).toFixed()
