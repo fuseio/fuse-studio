@@ -34,8 +34,7 @@ const relayTokens = async (account, { depositId, accountAddress, bridgeType, bri
         receiverAddress: receiver,
         tokenAddress,
         amountInWei: amount
-      })
-        .catch(console.error)
+      }).catch(console.error)
     } else {
       throw new Error(`tx failed to mint ${relayTokensReceipt.txHash}`)
     }
@@ -108,7 +107,7 @@ const mintDeposited = async (account, { depositId, bridgeType, tokenAddress, rec
     if (receipt.status) {
       await deposit.set('status', 'succeeded').save()
       notifyReceiver({
-        isTopUp: true,
+        bonusType: 'topup',
         receiverAddress: receiver,
         tokenAddress,
         amountInWei: amount

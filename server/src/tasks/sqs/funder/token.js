@@ -4,7 +4,7 @@ const { fetchToken, adjustDecimals } = require('@utils/token')
 const { notifyReceiver } = require('@services/firebase')
 const { validateBonusAlowance } = require('@utils/jobs')
 
-const fundToken = async (account, { phoneNumber, receiverAddress, identifier, tokenAddress, communityAddress, bonusType, bonusMaxTimesLimit, bonusAmount }, job) => {
+const fundToken = async (account, { phoneNumber, receiverAddress, tokenAddress, communityAddress, bonusType, bonusMaxTimesLimit, bonusAmount }, job) => {
   const network = createNetwork('home', account)
   const { decimals } = await fetchToken(tokenAddress)
   if (!bonusAmount) {
@@ -18,7 +18,7 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
   const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount: amountInWei }, { job, communityAddress })
   if (receipt.status) {
     notifyReceiver({
-      isTopUp: bonusType === 'topup',
+      bonusType,
       receiverAddress,
       tokenAddress,
       amountInWei
