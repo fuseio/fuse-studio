@@ -31,7 +31,7 @@ router.post('/claim/:walletAddress', walletOwner, async (req, res) => {
     return res.status(403).json({ error: `reward for ${walletAddress} will be claimable on timestamp ${reward.nextClaimTimestamp}` })
   }
   const syncedReward = await syncAndCalculateApy(walletAddress, tokenAddress)
-  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, reward, transactionBody: { value: get(syncedReward, 'amount'), status: 'pending', rewardId: syncedReward._id } }, { isWalletJob: true })
+  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, rewardId: get(syncedReward, '_id'), transactionBody: { value: get(syncedReward, 'amount'), status: 'pending' } }, { isWalletJob: true })
   return res.json({ data: job })
 })
 
