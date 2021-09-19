@@ -183,10 +183,10 @@ const syncAndCalculateApy = async (walletAddress, tokenAddress) => {
   }
 }
 
-const claimApy = async (account, { walletAddress, tokenAddress }, job) => {
+const claimApy = async (account, { walletAddress, tokenAddress, rewardId }, job) => {
+  const reward = await RewardClaim.findById(rewardId)
   const network = createNetwork('home', account)
   const { web3 } = network
-  const reward = await calculateApy(walletAddress, tokenAddress)
   const { blockHash, blockNumber, status, transactionHash } = await transfer(network, { from: account.address, to: reward.walletAddress, tokenAddress, amount: reward.amount }, { job })
   if (!status) {
     throw new Error(`Failed to claim APY for ${walletAddress}`)
@@ -199,9 +199,6 @@ const claimApy = async (account, { walletAddress, tokenAddress }, job) => {
   reward.isClaimed = true
   await reward.save()
 
-  job.data.reward = reward
-  await job.save()
-
   await calculateApy(walletAddress, tokenAddress)
 
   return reward
@@ -210,5 +207,6 @@ const claimApy = async (account, { walletAddress, tokenAddress }, job) => {
 module.exports = {
   calculateReward,
   syncAndCalculateApy,
-  claimApy
+  claimApy,
+  calculateApy
 }

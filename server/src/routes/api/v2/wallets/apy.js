@@ -11,7 +11,7 @@ const { get } = require('lodash')
 const taskManager = require('@services/taskManager')
 const UserWallet = require('@models/UserWallet')
 const { web3 } = require('@services/web3/home')
-const { calculateReward } = require('@utils/apy')
+const { calculateReward, syncAndCalculateApy } = require('@utils/apy')
 
 router.post('/claim/:walletAddress', walletOwner, async (req, res) => {
   const { walletAddress } = req.params
@@ -30,7 +30,8 @@ router.post('/claim/:walletAddress', walletOwner, async (req, res) => {
   if (reward && reward.nextClaimTimestamp > moment().unix()) {
     return res.status(403).json({ error: `reward for ${walletAddress} will be claimable on timestamp ${reward.nextClaimTimestamp}` })
   }
-  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, reward, transactionBody: { value: get(reward, 'amount'), status: 'pending' } }, { isWalletJob: true })
+  const syncedReward = await syncAndCalculateApy(walletAddress, tokenAddress)
+  const job = await taskManager.now('claimApy', { walletAddress, tokenAddress, reward, transactionBody: { value: get(syncedReward, 'amount'), status: 'pending', rewardId: syncedReward._id } }, { isWalletJob: true })
   return res.json({ data: job })
 })
 
