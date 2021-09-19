@@ -118,15 +118,15 @@ const initAdmins = async () => {
   }
 }
 
-const generateNotifyMessage = ({ amount, symbol, tokenType }) => (tokenType === 'ERC-721' ? {
+const generateNotifyMessage = ({ amount, symbol, tokenType, bonusType }) => (tokenType === 'ERC-721' ? {
   title: 'You got a collectable!',
   body: `${symbol} NFT arrived click here to review`
 } : {
-  title: 'You got funds! 🎉',
+  title: bonusType === 'referral' ? 'You got referral bonus! 🎉' : 'You got funds! 🎉',
   body: `${amount} ${symbol} arrived click here to review`
 })
 
-const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, communityAddress, isTopUp = false, tokenType = 'ERC-20' }) => {
+const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, communityAddress, bonusType, tokenType = 'ERC-20' }) => {
   console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
   const receiverWallet = await UserWallet.findOne({ walletAddress: web3Utils.toChecksumAddress(receiverAddress) })
   const firebaseTokens = get(receiverWallet, 'firebaseTokens')
@@ -134,7 +134,7 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, comm
     const { symbol } = await fetchToken(tokenAddress)
     const amount = web3Utils.fromWei(String(amountInWei))
     let messages = firebaseTokens.map((token) => ({
-      notification: generateNotifyMessage({ amount, symbol, tokenType }),
+      notification: generateNotifyMessage({ amount, symbol, tokenType, bonusType }),
       token
     }))
     if (!get(receiverWallet, 'appName')) {
@@ -143,7 +143,7 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, comm
           ...message,
           data: {
             communityAddress,
-            isTopUp,
+            isTopUp: bonusType === 'topup',
             click_action: 'FLUTTER_NOTIFICATION_CLICK'
           }
         }))

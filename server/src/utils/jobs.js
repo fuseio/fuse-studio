@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 
 const validateBonusAlowance = async ({ job, phoneNumber, tokenAddress, communityAddress, bonusType, bonusMaxTimesLimit }) => {
+  if (bonusType === 'referral') {
+    return true
+  }
   const fundingsCountForPhoneNumber = await QueueJob.find({
     name: 'fundToken',
     status: { $ne: 'failed' },

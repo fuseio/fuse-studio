@@ -261,6 +261,9 @@ module.exports = {
     deposit: {
       usd: 50,
       limit: 200
+    },
+    referral: {
+      percentage: 10
     }
   },
   branch: {

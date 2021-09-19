@@ -6,7 +6,6 @@ const mongoose = require('mongoose')
 const Deposit = mongoose.model('Deposit')
 const WalletAction = mongoose.model('WalletAction')
 const UserWallet = mongoose.model('UserWallet')
-
 const { readFileSync } = require('fs')
 const { isProduction } = require('@utils/env')
 const { trackDepositStatus } = require('@utils/analytics')
@@ -22,29 +21,82 @@ const isNetworkSupported = (network) => {
 
 const isDepositTypeAvailable = (type) => config.get('deposit.availableTypes').includes(type)
 
-const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
-  const bonusAmountInUSD = config.get('bonus.deposit.usd')
+const fetchBonusAmount = async ({ tokenAddress, amountInUSD }) => {
+  const tokenPrice = await fetchTokenPrice(tokenAddress)
+  const bonusAmount = new BigNumber(amountInUSD.toString()).div(tokenPrice).integerValue(BigNumber.ROUND_UP)
+  return bonusAmount
+}
+
+const checkDepositBonus = async (deposit) => {
+  const {
+    customerAddress: walletAddress,
+    communityAddress,
+    humanAmount
+  } = deposit
+
+  if (humanAmount < config.get('bonus.deposit.limit')) {
+    console.log(`deposit ${deposit._id} the amount is ${humanAmount}, less than the minumum for the bonus`)
+    return
+  }
   const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
 
   const userWallet = await UserWallet.findOne({ walletAddress })
   const { phoneNumber } = userWallet
-  const tokenPrice = await fetchTokenPrice(wFUSEAddress)
-  const bonusAmount = new BigNumber(bonusAmountInUSD.toString()).div(tokenPrice).integerValue(BigNumber.ROUND_UP)
+  const bonusAmount = fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: config.get('bonus.deposit.usd') })
   const bonusMaxTimesLimit = 1
   const bonusType = 'topup'
   const tokenAddress = wFUSEAddress
   const receiverAddress = walletAddress
+
   // check if user already recieved deposit bonus
   if (!await validateBonusAlowance({ phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
     return
   }
 
-  const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress, identifier: phoneNumber, tokenAddress, communityAddress, bonusMaxTimesLimit, bonusAmount: bonusAmount.toNumber(), bonusType }
+  const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress, tokenAddress, communityAddress, bonusMaxTimesLimit, bonusAmount: bonusAmount.toNumber(), bonusType }
   return taskManager.now('fundToken', {
     ...jobData,
     transactionBody: {
       value: adjustDecimals(bonusAmount, 0, 18),
-      to: walletAddress,
+      to: receiverAddress,
+      tokenName: 'Wrapped Fuse',
+      tokenDecimal: 18,
+      tokenSymbol: 'WFUSE',
+      asset: 'WFUSE',
+      tokenAddress: wFUSEAddress,
+      bonusType
+    }
+  }, { isWalletJob: true })
+}
+
+const checkReferralBonus = async (deposit) => {
+  const {
+    customerAddress: walletAddress,
+    communityAddress,
+    amount
+  } = deposit
+
+  const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
+
+  const { referralAddress } = await UserWallet.findOne({ walletAddress })
+  const referralWallet = await UserWallet.findOne({ walletAddress: referralAddress })
+  if (!referralWallet) {
+    console.warn(`referal wallet address ${referralAddress} from wallet ${walletAddress} was not found in db`)
+    return
+  }
+  const bonusAmountInUSD = new BigNumber(amount).multipliedBy(config.get('bonus.referral.percentage'))
+  const bonusAmount = fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: bonusAmountInUSD })
+  const bonusType = 'referral'
+  const tokenAddress = wFUSEAddress
+  const receiverAddress = referralWallet.walletAddress
+  const phoneNumber = referralWallet.phoneNumber
+
+  const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress, tokenAddress, communityAddress, bonusAmount: bonusAmount.toNumber(), bonusType }
+  return taskManager.now('fundToken', {
+    ...jobData,
+    transactionBody: {
+      value: adjustDecimals(bonusAmount, 0, 18),
+      to: receiverAddress,
       tokenName: 'Wrapped Fuse',
       tokenDecimal: 18,
       tokenSymbol: 'WFUSE',
@@ -188,6 +240,7 @@ const performDeposit = async (deposit) => {
   await deposit.save()
 
   trackDepositStatus({ address: customerAddress, status: 'Success' })
+
   if (type === 'naive') {
     console.warn(`Funds already received on the Fuse Network, no need to take any action`)
     const { web3 } = createNetwork('home')
@@ -210,6 +263,7 @@ const performDeposit = async (deposit) => {
         blockNumber
       }
     }
+
     await new WalletAction({
       name: 'fiat-deposit',
       communityAddress,
@@ -218,13 +272,12 @@ const performDeposit = async (deposit) => {
       tokenAddress: data.transactionBody.tokenAddress,
       status: 'confirmed'
     }).save()
+
     deposit.status = 'succeeded'
     await deposit.save()
-    if (deposit.humanAmount >= config.get('bonus.deposit.limit')) {
-      await startDepositBonusJob({
-        walletAddress, communityAddress
-      })
-    }
+
+    await checkDepositBonus(deposit)
+    await checkReferralBonus(deposit)
   } else if (type === 'relay') {
     const bridgeAddress = config.get('network.foreign.addresses.MultiBridgeMediator')
     return taskManager.now('relayTokens', { depositId: deposit._id, accountAddress: walletAddress, bridgeType: 'foreign', bridgeAddress, tokenAddress, receiver: customerAddress, amount }, { isWalletJob: true })
@@ -280,6 +333,5 @@ module.exports = {
   retryDeposit,
   getRampAuthKey,
   performDeposit,
-  cancelDeposit,
-  startDepositBonusJob
+  cancelDeposit
 }
