@@ -35,7 +35,7 @@ const startDepositBonusJob = async ({ walletAddress, communityAddress }) => {
   const tokenAddress = wFUSEAddress
   const receiverAddress = walletAddress
   // check if user already recieved deposit bonus
-  if (!validateBonusAlowance({ phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
+  if (await !validateBonusAlowance({ phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
     return
   }
 
