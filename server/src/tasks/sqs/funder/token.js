@@ -11,7 +11,7 @@ const fundToken = async (account, { phoneNumber, receiverAddress, identifier, to
     throw Error(`No bonus of type ${bonusType} defined for community ${communityAddress}.`)
   }
 
-  if (!validateBonusAlowance({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
+  if (!await validateBonusAlowance({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
     throw Error(`Join bonus reached maximum times ${bonusMaxTimesLimit}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
   const amountInWei = adjustDecimals(bonusAmount, 0, decimals)
