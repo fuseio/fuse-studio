@@ -42,7 +42,7 @@ const checkDepositBonus = async (deposit) => {
 
   const userWallet = await UserWallet.findOne({ walletAddress })
   const { phoneNumber } = userWallet
-  const bonusAmount = fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: config.get('bonus.deposit.usd') })
+  const bonusAmount = await fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: config.get('bonus.deposit.usd') })
   const bonusMaxTimesLimit = 1
   const bonusType = 'topup'
   const tokenAddress = wFUSEAddress
@@ -85,7 +85,7 @@ const checkReferralBonus = async (deposit) => {
     return
   }
   const bonusAmountInUSD = new BigNumber(amount).multipliedBy(config.get('bonus.referral.percentage'))
-  const bonusAmount = fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: bonusAmountInUSD })
+  const bonusAmount = await fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: bonusAmountInUSD })
   const bonusType = 'referral'
   const tokenAddress = wFUSEAddress
   const receiverAddress = referralWallet.walletAddress
