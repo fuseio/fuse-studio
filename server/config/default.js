@@ -263,7 +263,7 @@ module.exports = {
       limit: 200
     },
     referral: {
-      percentage: 10
+      percentage: 0.1
     }
   },
   branch: {
