@@ -162,7 +162,7 @@ const initiateDeposit = async ({
     tokenAddress: tokenAddress.toLowerCase(),
     tokenDecimals,
     amount,
-    humanAmount: parseInt(adjustDecimals(amount, tokenDecimals, 0)),
+    humanAmount: adjustDecimals(amount, tokenDecimals, 0),
     provider,
     externalId,
     status: error ? 'failed' : 'pending',
