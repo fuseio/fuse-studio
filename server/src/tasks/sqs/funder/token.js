@@ -12,7 +12,7 @@ const fundToken = async (account, { phoneNumber, receiverAddress, tokenAddress, 
   }
 
   if (!await validateBonusAlowance({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
-    throw Error(`Join bonus reached maximum times ${bonusMaxTimesLimit}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
+    throw Error(`Bonus type ${bonusType} reached maximum times ${bonusMaxTimesLimit}. [phoneNumber: ${phoneNumber}, receiverAddress: ${receiverAddress}, tokenAddress: ${tokenAddress}, communityAddress: ${communityAddress}, bonusType: ${bonusType}]`)
   }
   const amountInWei = adjustDecimals(bonusAmount, 0, decimals)
   const receipt = await transfer(network, { from: account.address, to: receiverAddress, tokenAddress, amount: amountInWei }, { job, communityAddress })
