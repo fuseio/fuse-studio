@@ -73,7 +73,7 @@ const checkReferralBonus = async (deposit) => {
   const {
     customerAddress: walletAddress,
     communityAddress,
-    amount
+    humanAmount
   } = deposit
 
   const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
@@ -84,7 +84,7 @@ const checkReferralBonus = async (deposit) => {
     console.warn(`referal wallet address ${referralAddress} from wallet ${walletAddress} was not found in db`)
     return
   }
-  const bonusAmountInUSD = new BigNumber(amount).multipliedBy(config.get('bonus.referral.percentage'))
+  const bonusAmountInUSD = new BigNumber(humanAmount).multipliedBy(config.get('bonus.referral.percentage'))
   const bonusAmount = await fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: bonusAmountInUSD })
   const bonusType = 'referral'
   const tokenAddress = wFUSEAddress
