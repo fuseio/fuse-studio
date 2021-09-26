@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 
 const validateBonusAlowance = async ({ job, phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit }) => {
-  if (bonusType === 'referral') {
+  if (bonusType === 'referral' || bonusType === 'topup') {
     console.log(`User wallet ${receiverAddress} is allowed for a ${bonusType} bonus`)
     return true
   }

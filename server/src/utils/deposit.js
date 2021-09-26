@@ -33,16 +33,14 @@ const checkDepositBonus = async (deposit) => {
     communityAddress,
     humanAmount
   } = deposit
-
-  if (humanAmount < config.get('bonus.deposit.limit')) {
-    console.log(`deposit ${deposit._id} the amount is ${humanAmount}, less than the minumum for the bonus`)
-    return
-  }
   const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
 
   const userWallet = await UserWallet.findOne({ walletAddress })
   const { phoneNumber } = userWallet
-  const bonusAmount = await fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: config.get('bonus.deposit.usd') })
+
+  const bonusAmountInUSD = new BigNumber(humanAmount).multipliedBy(config.get('bonus.topup.percentage'))
+  const bonusAmount = await fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: bonusAmountInUSD })
+
   const bonusMaxTimesLimit = 1
   const bonusType = 'topup'
   const tokenAddress = wFUSEAddress
