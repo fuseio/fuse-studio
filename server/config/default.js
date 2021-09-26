@@ -259,8 +259,7 @@ module.exports = {
       ropsten: 0.05
     },
     deposit: {
-      usd: 50,
-      limit: 200
+      percentage: 0.1
     },
     referral: {
       percentage: 0.1
