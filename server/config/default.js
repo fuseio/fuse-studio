@@ -258,7 +258,7 @@ module.exports = {
     eth: {
       ropsten: 0.05
     },
-    deposit: {
+    topup: {
       percentage: 0.1
     },
     referral: {
