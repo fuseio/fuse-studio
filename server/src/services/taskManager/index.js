@@ -5,6 +5,7 @@ const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
 const { createActionFromJob, successAndUpdateByJob, failAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
+const { get } = require('lodash')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
@@ -79,7 +80,7 @@ const startTask = async message => {
         await failAndUpdateByJob(queueJob)
         unlockAccount(account._id)
         console.error(
-          `Error received in task ${name} with task data ${JSON.stringify(
+          `Error received in task ${name} with id ${get(queueJob, '_id')} and task data ${JSON.stringify(
             taskData
           )}. ${err}`
         )
@@ -89,7 +90,7 @@ const startTask = async message => {
     return true
   } catch (err) {
     console.error(
-      `Unexpected error received in task ${name} with task data ${JSON.stringify(
+      `Unexpected error received in task ${name} with id ${get(queueJob, '_id')} and task data ${JSON.stringify(
         taskData
       )}, skipping. ${err}`
     )

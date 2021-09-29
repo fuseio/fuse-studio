@@ -77,6 +77,10 @@ const checkReferralBonus = async (deposit) => {
   const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
 
   const { referralAddress } = await UserWallet.findOne({ walletAddress })
+  if (!referralAddress) {
+    console.log(`No referral address is defined for wallet ${walletAddress}`)
+    return
+  }
   const referralWallet = await UserWallet.findOne({ walletAddress: referralAddress })
   if (!referralWallet) {
     console.warn(`referal wallet address ${referralAddress} from wallet ${walletAddress} was not found in db`)
