@@ -6,7 +6,6 @@ import GoogleIcon from 'images/google.svg'
 import { login } from 'actions/user'
 
 const { clientId } = CONFIG.api.auth.google
-
 export default ({ hideModal, handleConnect }) => {
   const dispatch = useDispatch()
   const handleLogin = ({ tokenId }) => {
@@ -33,7 +32,7 @@ export default ({ hideModal, handleConnect }) => {
         render={renderButton}
         onSuccess={handleLogin}
         cookiePolicy='single_host_origin'
-        isSignedIn
+        
       />
     </Modal>
   )
