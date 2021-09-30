@@ -5,7 +5,7 @@ const get = require('lodash/get')
 const mongoose = require('mongoose')
 const web3Utils = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
-const { fetchToken } = require('@utils/token')
+const { fetchToken, adjustDecimals } = require('@utils/token')
 
 const firebaseApps = {
   wellBeing: {
@@ -126,13 +126,13 @@ const generateNotifyMessage = ({ amount, symbol, tokenType, bonusType }) => (tok
   body: `${amount} ${symbol} arrived click here to review`
 })
 
-const notifyReceiver = async ({ receiverAddress, tokenAddress, amountInWei, communityAddress, bonusType, tokenType = 'ERC-20' }) => {
+const notifyReceiver = async ({ receiverAddress, tokenAddress, humanAmount, amountInWei, tokenDecimals = 18, communityAddress, bonusType, tokenType = 'ERC-20' }) => {
   console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
   const receiverWallet = await UserWallet.findOne({ walletAddress: web3Utils.toChecksumAddress(receiverAddress) })
   const firebaseTokens = get(receiverWallet, 'firebaseTokens')
   if (firebaseTokens) {
     const { symbol } = await fetchToken(tokenAddress)
-    const amount = web3Utils.fromWei(String(amountInWei))
+    const amount = humanAmount || adjustDecimals(amountInWei, tokenDecimals, 0)
     let messages = firebaseTokens.map((token) => ({
       notification: generateNotifyMessage({ amount, symbol, tokenType, bonusType }),
       token

@@ -21,7 +21,7 @@ const fundToken = async (account, { phoneNumber, receiverAddress, tokenAddress, 
       bonusType,
       receiverAddress,
       tokenAddress,
-      amountInWei
+      humanAmount: bonusAmount
     }).catch(console.error)
     console.log(`succesfully funded ${receiverAddress} with ${bonusAmount} of token ${tokenAddress}`)
   } else {
