@@ -63,8 +63,9 @@ router.post('/enable/:walletAddress', walletOwner, async (req, res) => {
 
 router.post('/sync/:walletAddress', auth.admin, async (req, res) => {
   const { walletAddress } = req.params
+  const { toBlockNumber } = req.body
   const tokenAddress = config.get('network.home.addresses.FuseDollar')
-  const job = await agenda.now('syncAndCalculateApy', { walletAddress, tokenAddress })
+  const job = await agenda.now('syncAndCalculateApy', { walletAddress, tokenAddress, toBlockNumber })
   return res.json({ job })
 })
 

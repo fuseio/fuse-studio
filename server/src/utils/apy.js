@@ -29,15 +29,26 @@ const fetchTimestamps = async (blockHashesList) => {
   }
 }
 
-const syncWalletBalances = async (walletAddress, tokenAddress) => {
+const syncWalletBalances = async (walletAddress, tokenAddress, toBlockNumber) => {
   const walletBalance = await WalletBalance.findOne({ walletAddress, tokenAddress }).sort({ blockNumber: -1 })
   const fromBlock = get(walletBalance, 'blockNumber', config.get('network.home.contracts.fusd.deploymentBlock')) + 1
-  const latestBlock = await web3.eth.getBlock('latest')
-  const latestBlockNumber = latestBlock.number
+  let latestBlock = await web3.eth.getBlock(toBlockNumber || 'latest')
+  let latestBlockNumber = latestBlock.number
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
-
-  const currentTokenBalance = await tokenContract.methods.balanceOf(walletAddress).call({}, latestBlockNumber)
-  console.log({ currentTokenBalance })
+  let currentTokenBalance
+  try {
+    currentTokenBalance = await tokenContract.methods.balanceOf(walletAddress).call({}, latestBlockNumber)
+  } catch (error) {
+    console.error(`Could not fetch token balance for block number ${toBlockNumber}. Using latest`)
+    console.log(error)
+    latestBlock = await web3.eth.getBlock('latest')
+    latestBlockNumber = latestBlock.number
+  }
+  if (fromBlock >= latestBlockNumber) {
+    console.error(`halting the job. reason: fromBlock ${fromBlock} is greater or equal than the toBlock ${latestBlockNumber}`)
+    return
+  }
+  console.log(`token balance of token ${tokenAddress} is ${currentTokenBalance} in block ${latestBlockNumber}`)
   console.log(`querying trasnfer events for contract ${tokenAddress} from block ${fromBlock} to block ${latestBlockNumber}`)
   const fromTransfers = await tokenContract.getPastEvents('allEvents', { fromBlock, toBlock: latestBlockNumber, topics: [ERC20_TRANSFER_EVENT_HASH, hexZeroPad(walletAddress, 32)] })
   const toTransfers = await tokenContract.getPastEvents('allEvents', { fromBlock, toBlock: latestBlockNumber, topics: [ERC20_TRANSFER_EVENT_HASH, undefined, hexZeroPad(walletAddress, 32)] })
@@ -172,12 +183,12 @@ const calculateReward = async (walletAddress, tokenAddress) => {
   return reward
 }
 
-const syncAndCalculateApy = async (walletAddress, tokenAddress) => {
+const syncAndCalculateApy = async (walletAddress, tokenAddress, toBlockNumber) => {
   const apy = await WalletApy.findOne({ walletAddress })
   if (!apy) {
     throw new Error(`no wallet apy is found for ${walletAddress}`)
   }
-  const latestBlock = await syncWalletBalances(walletAddress, tokenAddress)
+  const latestBlock = await syncWalletBalances(walletAddress, tokenAddress, toBlockNumber)
   if (apy.isEnabled) {
     return calculateApy(walletAddress, tokenAddress, { latestBlock })
   }
