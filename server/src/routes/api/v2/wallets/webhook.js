@@ -28,11 +28,11 @@ router.post('/subscribe', auth.admin, async (req, res) => {
 
 const fetchTokenDataByType = async ({ tokenType, tokenAddress }) => {
   if (tokenType === 'ERC-20' || tokenType === 'native') {
-    const { decimals: tokenDecimal, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
-    return { tokenDecimal, tokenName, tokenSymbol }
+    const { decimals: tokenDecimals, name: tokenName, symbol: tokenSymbol } = await fetchTokenData(tokenAddress, {}, home.web3)
+    return { tokenDecimals, tokenName, tokenSymbol }
   } else if (tokenType === 'ERC-721') {
     const { name: tokenName, symbol: tokenSymbol } = await fetchNftData(tokenAddress, {}, home.web3)
-    return { tokenDecimal: 1, tokenName, tokenSymbol }
+    return { tokenDecimals: 1, tokenName, tokenSymbol }
   }
 }
 
@@ -55,7 +55,7 @@ router.post('/', auth.subscriptionService, async (req, res) => {
 
   const action = await WalletAction.findOne({ 'data.txHash': txHash })
   if (!action) {
-    const { tokenDecimal, tokenName, tokenSymbol } = await fetchTokenDataByType({ tokenAddress, tokenType })
+    const { tokenDecimals, tokenName, tokenSymbol } = await fetchTokenDataByType({ tokenAddress, tokenType })
     const data = {
       txHash,
       walletAddress: to,
@@ -63,7 +63,7 @@ router.post('/', auth.subscriptionService, async (req, res) => {
       from,
       tokenName,
       tokenSymbol,
-      tokenDecimal: parseInt(tokenDecimal),
+      tokenDecimal: parseInt(tokenDecimals),
       asset: tokenSymbol,
       status: 'confirmed',
       tokenType,
@@ -76,7 +76,7 @@ router.post('/', auth.subscriptionService, async (req, res) => {
       receiverAddress: to,
       tokenAddress,
       amountInWei: value,
-      tokenDecimal: parseInt(tokenDecimal),
+      tokenDecimals: parseInt(tokenDecimals),
       tokenType
     })
       .catch(console.error)
