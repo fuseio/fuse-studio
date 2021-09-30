@@ -38,14 +38,14 @@ const fetchTokenDataByType = async ({ tokenType, tokenAddress }) => {
 }
 
 router.post('/', auth.subscriptionService, async (req, res) => {
-  const { to, from, address, txHash, value, subscribers, tokenType } = { tokenType: 'native', ...req.body }
+  const { to, from, address, txHash, value, subscribers, tokenType, blockNumber } = { tokenType: 'native', ...req.body }
 
   const tokenAddress = address || config.get('network.home.native.address')
   console.log(`got txHash ${txHash} from the wehbook`)
 
   if (tokenAddress === fuseDollarAddress) {
     for (let subscriber of subscribers) {
-      await agenda.now('syncAndCalculateApy', { walletAddress: subscriber, tokenAddress })
+      await agenda.now('syncAndCalculateApy', { walletAddress: subscriber, tokenAddress, toBlockNumber: blockNumber })
     }
   }
   if (tokenAddress === fuseDollarAddress && ingnoredAccounts.includes(from)) {
