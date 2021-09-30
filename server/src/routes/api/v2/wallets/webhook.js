@@ -8,7 +8,6 @@ const { handleSubscriptionWebHook } = require('@utils/wallet/actions')
 const { subscribeAddress } = require('@services/subscription')
 const auth = require('@routes/auth')
 const config = require('config')
-const { AddressZero } = require('ethers/constants')
 const { notifyReceiver } = require('@services/firebase')
 const { agenda } = require('@services/agenda')
 
@@ -77,6 +76,7 @@ router.post('/', auth.subscriptionService, async (req, res) => {
       receiverAddress: to,
       tokenAddress,
       amountInWei: value,
+      tokenDecimal: parseInt(tokenDecimal),
       tokenType
     })
       .catch(console.error)
