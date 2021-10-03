@@ -163,7 +163,7 @@ const createForeignWallet = async (account, { communityAddress, userWallet, ens 
   console.log(`Created wallet contract ${walletAddress} for account ${owner}`)
   userWallet.networks.push(config.get('network.foreign.name'))
 
-  await UserWallet.findOneAndUpdate({ walletAddress }, { networks: userWallet.networks })
+  await UserWallet.findOneAndUpdate({ walletAddress }, { networks: userWallet.networks, isContractDeployed: true })
 
   await subscribeToBlocknative(walletAddress)
 

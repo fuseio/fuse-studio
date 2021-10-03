@@ -7,6 +7,7 @@ const UserWalletSchema = new Schema({
   phoneNumber: { type: String, required: [true, "can't be blank"] },
   accountAddress: { type: String, required: [true, "can't be blank"] },
   walletAddress: { type: String },
+  isContractDeployed: { type: Boolean, default: false },
   firebaseToken: { type: String },
   firebaseTokens: { type: Array },
   contacts: [{ type: ObjectId, ref: 'Contact' }],

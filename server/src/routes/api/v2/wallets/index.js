@@ -11,7 +11,7 @@ const { getWalletModules } = require('@utils/wallet')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
-const { get } = require('lodash')
+const { get, omit } = require('lodash')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
@@ -74,6 +74,16 @@ router.post('/', auth.required, async (req, res, next) => {
       return res.json({ job: job })
     }
   }
+})
+
+router.post('/retry/:walletAddress', auth.required, async (req, res, next) => {
+  const { walletAddress } = req.params
+  const wallet = await UserWallet.findOne({ walletAddress })
+  if (wallet.isContractDeployed) {
+    return res.status(403).json({ error: `User wallet contract ${walletAddress} is already deployed` })
+  }
+  const job = await taskManager.now('createWallet', { ...omit(wallet.toObject(), 'accountAddress'), owner: wallet.accountAddress }, { isWalletJob: false })
+  return res.json({ job: job })
 })
 
 router.put('/token/:walletAddress', auth.required, async (req, res) => {
