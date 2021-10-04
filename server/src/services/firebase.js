@@ -118,15 +118,15 @@ const initAdmins = async () => {
   }
 }
 
-const generateNotifyMessage = ({ amount, symbol, tokenType, bonusType }) => (tokenType === 'ERC-721' ? {
+const generateNotifyMessage = ({ amount, symbol, tokenType, bonusType, isDeposit }) => (tokenType === 'ERC-721' ? {
   title: 'You got a collectable!',
   body: `${symbol} NFT arrived click here to review`
 } : {
   title: bonusType === 'referral' ? 'You got referral bonus! 🎉' : 'You got funds! 🎉',
-  body: `${amount} ${symbol} arrived click here to review`
+  body: isDeposit ? `You deposited a ${amount} ${symbol}!` : `${amount} ${symbol} arrived click here to review`
 })
 
-const notifyReceiver = async ({ receiverAddress, tokenAddress, humanAmount, amountInWei, tokenDecimals = 18, communityAddress, bonusType, tokenType = 'ERC-20' }) => {
+const notifyReceiver = async ({ receiverAddress, tokenAddress, humanAmount, amountInWei, tokenDecimals = 18, communityAddress, bonusType, tokenType = 'ERC-20', isDeposit = false }) => {
   console.log(`notifying receiver ${receiverAddress} for token ${tokenAddress} transfer`)
   const receiverWallet = await UserWallet.findOne({ walletAddress: web3Utils.toChecksumAddress(receiverAddress) })
   const firebaseTokens = get(receiverWallet, 'firebaseTokens')
@@ -134,7 +134,7 @@ const notifyReceiver = async ({ receiverAddress, tokenAddress, humanAmount, amou
     const { symbol } = await fetchToken(tokenAddress)
     const amount = humanAmount || adjustDecimals(amountInWei, tokenDecimals, 0)
     let messages = firebaseTokens.map((token) => ({
-      notification: generateNotifyMessage({ amount, symbol, tokenType, bonusType }),
+      notification: generateNotifyMessage({ amount, symbol, tokenType, bonusType, isDeposit }),
       token
     }))
     if (!get(receiverWallet, 'appName')) {

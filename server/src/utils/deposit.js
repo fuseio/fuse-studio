@@ -13,6 +13,7 @@ const { createNetwork } = require('@utils/web3')
 const { formatActionData } = require('@utils/wallet/actions')
 const { fetchTokenPrice } = require('@utils/fuseswap')
 const { validateBonusAlowance } = require('@utils/jobs')
+const { notifyReceiver } = require('@services/firebase')
 
 const isNetworkSupported = (network) => {
   const supportedNetwork = config.get('deposit.supportedNetworks')
@@ -276,6 +277,14 @@ const performDeposit = async (deposit) => {
     deposit.status = 'succeeded'
     await deposit.save()
 
+    notifyReceiver({
+      isDeposit: true,
+      receiverAddress: customerAddress,
+      tokenAddress,
+      amountInWei: amount,
+      tokenDecimals: parseInt(tokenDecimals)
+    })
+      .catch(console.error)
     await checkDepositBonus(deposit)
     await checkReferralBonus(deposit)
   } else if (type === 'relay') {
