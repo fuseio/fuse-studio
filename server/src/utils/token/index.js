@@ -78,7 +78,9 @@ const fetchTokenPrice = async (tokenAddress) => {
 
 const transfer = async (network, { from, to, tokenAddress, amount }, options) => {
   const { createContract, createMethod, send } = network
-
+  if (isNative(tokenAddress)) {
+    return send(null, { from, to, value: amount }, options)
+  }
   const tokenContract = createContract(BasicTokenAbi, tokenAddress)
 
   const method = createMethod(tokenContract, 'transfer', to, amount)

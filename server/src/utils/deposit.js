@@ -33,35 +33,34 @@ const checkDepositBonus = async (deposit) => {
     communityAddress,
     humanAmount
   } = deposit
-  const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
+  const fuseToken = config.get('network.home.native')
 
   const userWallet = await UserWallet.findOne({ walletAddress })
   const { phoneNumber } = userWallet
 
   const bonusAmountInUSD = new BigNumber(humanAmount).multipliedBy(config.get('bonus.topup.percentage'))
-  const bonusAmount = await fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: bonusAmountInUSD })
+  const bonusAmount = await fetchBonusAmount({ tokenAddress: fuseToken.address, amountInUSD: bonusAmountInUSD })
 
   const bonusMaxTimesLimit = 1
   const bonusType = 'topup'
-  const tokenAddress = wFUSEAddress
+  const tokenAddress = fuseToken.address
   const receiverAddress = walletAddress
 
   // check if user already recieved deposit bonus
   if (!await validateBonusAlowance({ phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
     return
   }
-
   const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress, tokenAddress, communityAddress, bonusMaxTimesLimit, bonusAmount: bonusAmount.toNumber(), bonusType }
   return taskManager.now('fundToken', {
     ...jobData,
     transactionBody: {
       value: adjustDecimals(bonusAmount, 0, 18),
       to: receiverAddress,
-      tokenName: 'Wrapped Fuse',
-      tokenDecimal: 18,
-      tokenSymbol: 'WFUSE',
-      asset: 'WFUSE',
-      tokenAddress: wFUSEAddress,
+      tokenName: fuseToken.name,
+      tokenDecimal: fuseToken.decimals,
+      tokenSymbol: fuseToken.symbol,
+      asset: fuseToken.symbol,
+      tokenAddress: fuseToken.address,
       bonusType
     }
   }, { isWalletJob: true })
@@ -73,8 +72,7 @@ const checkReferralBonus = async (deposit) => {
     communityAddress,
     humanAmount
   } = deposit
-
-  const wFUSEAddress = config.get('network.home.addresses.WrappedFuse')
+  const fuseToken = config.get('network.home.native')
 
   const { referralAddress } = await UserWallet.findOne({ walletAddress })
   if (!referralAddress) {
@@ -87,9 +85,9 @@ const checkReferralBonus = async (deposit) => {
     return
   }
   const bonusAmountInUSD = new BigNumber(humanAmount).multipliedBy(config.get('bonus.referral.percentage'))
-  const bonusAmount = await fetchBonusAmount({ tokenAddress: wFUSEAddress, amountInUSD: bonusAmountInUSD })
+  const bonusAmount = await fetchBonusAmount({ tokenAddress: fuseToken.address, amountInUSD: bonusAmountInUSD })
   const bonusType = 'referral'
-  const tokenAddress = wFUSEAddress
+  const tokenAddress = fuseToken.address
   const receiverAddress = referralWallet.walletAddress
   const phoneNumber = referralWallet.phoneNumber
 
@@ -99,11 +97,11 @@ const checkReferralBonus = async (deposit) => {
     transactionBody: {
       value: adjustDecimals(bonusAmount, 0, 18),
       to: receiverAddress,
-      tokenName: 'Wrapped Fuse',
-      tokenDecimal: 18,
-      tokenSymbol: 'WFUSE',
-      asset: 'WFUSE',
-      tokenAddress: wFUSEAddress,
+      tokenName: fuseToken.name,
+      tokenDecimal: fuseToken.decimals,
+      tokenSymbol: fuseToken.symbol,
+      asset: fuseToken.symbol,
+      tokenAddress: fuseToken.address,
       bonusType
     }
   }, { isWalletJob: true })
