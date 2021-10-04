@@ -280,6 +280,7 @@ const performDeposit = async (deposit) => {
     await deposit.save()
 
     notifyReceiver({
+      isDeposit: true,
       receiverAddress: customerAddress,
       tokenAddress,
       amountInWei: amount,
