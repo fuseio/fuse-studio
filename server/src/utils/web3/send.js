@@ -78,14 +78,6 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
     }
 
     const handleTransactionHash = get(txContext, 'transactionHash', defaults.handleTransactionHash)
-
-    if (!method) {
-      web3.eth.transactionConfirmationBlocks = parseInt(
-        config.get(
-          `network.foreign.contract.options.transactionConfirmationBlocks`
-        )
-      )
-    }
     try {
       transactionHash = await calculateTxHash()
     } catch (err) {
@@ -97,7 +89,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
       await handleTransactionHash(transactionHash)
     }
 
-    const promise = method ? method.send(txObject) : web3.eth.sendTransaction(options)
+    const promise = method ? method.send(txObject) : web3.eth.sendTransaction(txObject)
 
     promise.on('transactionHash', (actualTxHash) => {
       console.log(`actual TxHash is ${actualTxHash}`)
