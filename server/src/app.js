@@ -7,14 +7,11 @@ const paginate = require('express-paginate')
 const util = require('util')
 const config = require('config')
 const mongo = require('./services/mongo')
-const initSecrets = require('@utils/awsSecrets')
 require('express-async-errors')
 const requestIp = require('request-ip')
 const yn = require('yn')
 
 async function initConfig () {
-  await initSecrets(config)
-
   config.util.makeHidden(config, 'secrets')
 }
 
