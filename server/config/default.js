@@ -404,16 +404,34 @@ module.exports = {
       blockNumber: 11800000,
       timestamp: 1625290115
     },
-    rate: 0.05,
     claim: {
-      interval: 3600
+      interval: 25200
     },
     sync: {
-      interval: 60
+      interval: 600
     },
     account: {
       address: '0x8fC6e52f774e6154adf44E6d6dAa4C35a12A4D4A'
-    }
+    },
+    campaigns: [
+      {
+        rate: 0.05,
+        since: {
+          timestamp: 1625290115
+        },
+        until: {
+          timestamp: 1634025600
+        }
+      },
+      {
+        rate: 0.5,
+        maxPerWallet: 2000,
+        maxTotal: 10000,
+        since: {
+          timestamp: 1634025600
+        }
+      }
+    ]
   },
   wallet: {
     version: '1.5.0',

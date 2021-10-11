@@ -16,7 +16,8 @@ const RewardClaimSchema = new Schema({
   tokensPerSecond: { type: String },
   duration: { type: Number },
   isClaimed: { type: Boolean, default: false },
-  transactionHash: { type: String }
+  transactionHash: { type: String },
+  campaignRate: { type: Number }
 }, { timestamps: true, default: {} })
 
 RewardClaimSchema.index({ walletAddress: 1, tokenAddress: 1, syncBlockNumber: 1 }, { unique: true })
