@@ -259,10 +259,12 @@ module.exports = {
       ropsten: 0.05
     },
     topup: {
-      percentage: 0.1
+      percentage: 0.1,
+      enabled: false
     },
     referral: {
-      percentage: 0.1
+      percentage: 0.1,
+      enabled: true
     }
   },
   branch: {
