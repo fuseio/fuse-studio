@@ -279,6 +279,8 @@ const getCommunitiesByEntities = (entities) => {
   const communityAddresses = entities.map(entity => entity.communityAddress)
   return Community.find({ communityAddress: { $in: communityAddresses } }).sort({ createdAt: -1 })
 }
+
+
 /**
  * @api {get} /communities/account/:account Fetch my communities
  * @apiDescription Fetching communities I'm part of

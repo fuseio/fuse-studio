@@ -14,6 +14,8 @@ import FiatOnRamp from 'images/fiat-on-ramp.png'
 import FiatOnRampBig from 'images/fiat-on-ramp-big.png'
 import WalletBannerLink from 'images/wallet_banner_link.png'
 import WalletBannerLinkBig from 'images/wallet_banner_link_big.png'
+import { useEffect } from 'react'
+import { setDefault, isOwner } from 'actions/owner'
 
 const generalPlugins = ([
   {
@@ -96,10 +98,15 @@ const PluginList = ({ pluginList, pluginTile, plugins, showInfoModal, addPlugin,
 }
 
 const Plugins = ({
+  address,
+  isAdmin,
+  isOwner,
+  communityCreator,
   loadModal,
   addCommunityPlugin,
   community
 }) => {
+  const dispatch = useDispatch()
   const { address: communityAddress } = useParams()
   const { plugins } = community
   const showInfoModal = (key, props) => {
@@ -140,6 +147,19 @@ const Plugins = ({
     return plugin
   }
 
+  useEffect(()=>{
+    dispatch(isOwner(communityAddress, address))
+    if(isOwner && !isAdmin){
+      loadModal(SWITCH_ACCOUNT_MODAL), {
+        ...props,
+      })
+    }
+  
+    return () =>{
+      dispatch(setDefault)
+    }
+  }, [dispatch])
+
   return (
     community ? <div className='plugins'>
       <h2 className='plugins__title'>Plugins</h2>
@@ -163,4 +183,10 @@ const mapDispatchToProps = {
   addCommunityPlugin
 }
 
-export default connect(null, mapDispatchToProps)(Plugins)
+const mapStateToProps = (state) => ({
+  address: getAccountAddress(state)
+
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Plugins)
