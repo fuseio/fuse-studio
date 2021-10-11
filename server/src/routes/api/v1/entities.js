@@ -7,8 +7,6 @@ const Profile = mongoose.model('Profile')
 const metadataUtils = require('@utils/metadata')
 const ipfsUtils = require('@utils/metadata/ipfs')
 const Community = mongoose.model('Community')
-const Token = mongoose.model('Token')
-const { sortBy, keyBy, get, has, last } = require('lodash')
 const { toChecksumAddress } = require('web3-utils')
 
 const withCommunities = async (entities) => {
