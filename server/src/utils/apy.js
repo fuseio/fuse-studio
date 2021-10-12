@@ -1,4 +1,5 @@
 const config = require('config')
+const pRetry = require('p-retry')
 const mongoose = require('mongoose')
 const WalletBalance = mongoose.model('WalletBalance')
 const RewardClaim = mongoose.model('RewardClaim')
@@ -59,8 +60,14 @@ const syncWalletBalances = async (walletAddress, tokenAddress, toBlockNumber) =>
 
   let iteratedBalanceAmount = new BigNumber(get(walletBalance, 'amount', '0'))
   let walletBalances = []
-
-  const blocksMap = keyBy(await fetchTimestamps(transfers.map(({ blockHash }) => blockHash)), 'id')
+  const blockHashesList = transfers.map(({ blockHash }) => blockHash)
+  const timestamps = await pRetry(() => fetchTimestamps(blockHashesList), {
+    onFailedAttempt: (error) => {
+      console.error(error)
+    },
+    retries: 5
+  })
+  const blocksMap = keyBy(timestamps, 'id')
   for (let tx of transfers) {
     const { blockNumber, transactionHash, blockHash } = tx
     // two events got the same blocknumber. meaning one is redundant
@@ -134,12 +141,12 @@ const getCampaign = ({ timestamp }) => {
   throw new Error(`no active campaign found for timestamp ${timestamp}`)
 }
 
-const getCappedBalance = (walletBalance, campaign) => {
+const getCappedBalance = ({ amount }, campaign) => {
   if (campaign.maxPerWallet) {
     const maxPerWalletInWei = toWeiAmount(campaign.maxPerWallet)
-    return BigNumber.minimum(maxPerWalletInWei, walletBalance.amount)
+    return BigNumber.minimum(maxPerWalletInWei, amount)
   } else {
-    return walletBalance.amount
+    return amount
   }
 }
 
@@ -192,7 +199,7 @@ const calculateApy = async (walletAddress, tokenAddress, { latestBlock } = {}) =
   reward.syncBlockNumber = latestBlock.number
   reward.syncTimestamp = latestBlock.timestamp
   reward.campaignRate = campaign.rate
-  const currentBalance = getCappedBalance(last(walletBalances).amount, campaign)
+  const currentBalance = getCappedBalance(last(walletBalances), campaign)
   reward.tokensPerSecond = new BigNumber(currentBalance).multipliedBy(campaign.rate).div(SECONDS_IN_YEAR).toFixed(0)
   console.log({ reward })
   return reward.save()
