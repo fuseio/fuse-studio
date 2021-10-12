@@ -141,12 +141,12 @@ const getCampaign = ({ timestamp }) => {
   throw new Error(`no active campaign found for timestamp ${timestamp}`)
 }
 
-const getCappedBalance = (walletBalance, campaign) => {
+const getCappedBalance = ({ amount }, campaign) => {
   if (campaign.maxPerWallet) {
     const maxPerWalletInWei = toWeiAmount(campaign.maxPerWallet)
-    return BigNumber.minimum(maxPerWalletInWei, walletBalance.amount)
+    return BigNumber.minimum(maxPerWalletInWei, amount)
   } else {
-    return walletBalance.amount
+    return amount
   }
 }
 
@@ -199,7 +199,7 @@ const calculateApy = async (walletAddress, tokenAddress, { latestBlock } = {}) =
   reward.syncBlockNumber = latestBlock.number
   reward.syncTimestamp = latestBlock.timestamp
   reward.campaignRate = campaign.rate
-  const currentBalance = getCappedBalance(last(walletBalances).amount, campaign)
+  const currentBalance = getCappedBalance(last(walletBalances), campaign)
   reward.tokensPerSecond = new BigNumber(currentBalance).multipliedBy(campaign.rate).div(SECONDS_IN_YEAR).toFixed(0)
   console.log({ reward })
   return reward.save()
