@@ -130,8 +130,8 @@ const getCampaign = ({ timestamp }) => {
         return campaign
       }
     }
-    throw new Error(`no active campaign found for block number ${timestamp}`)
   }
+  throw new Error(`no active campaign found for timestamp ${timestamp}`)
 }
 
 const getCappedBalance = (walletBalance, campaign) => {
