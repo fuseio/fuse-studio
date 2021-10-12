@@ -120,12 +120,12 @@ const getLatestReward = async (walletAddress, tokenAddress) => {
 const getCampaign = ({ timestamp }) => {
   const campaigns = config.get('apy.campaigns')
   for (let campaign of campaigns) {
-    if (campaign.since.timestamp >= timestamp) {
+    if (campaign.since.timestamp <= timestamp) {
       if (!campaign.until) {
         console.log(`campaign with APY campaign of ${campaign.rate} is found. the campaign has no expiration date`)
         return campaign
       }
-      if (campaign.until.timestamp < timestamp) {
+      if (campaign.until.timestamp > timestamp) {
         console.log(`campaign with APY campaign of ${campaign.rate} is found. the campaign is valid until block ${campaign.until.timestamp}`)
         return campaign
       }
