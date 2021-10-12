@@ -29,6 +29,11 @@ const fetchBonusAmount = async ({ tokenAddress, amountInUSD }) => {
 }
 
 const checkDepositBonus = async (deposit) => {
+  if (!config.get('bonus.topup.enabled')) {
+    console.log('deposit bonus is disabled')
+    return
+  }
+
   const {
     customerAddress: walletAddress,
     communityAddress,
@@ -68,6 +73,11 @@ const checkDepositBonus = async (deposit) => {
 }
 
 const checkReferralBonus = async (deposit) => {
+  if (!config.get('bonus.referral.enabled')) {
+    console.log('referral bonus is disabled')
+    return
+  }
+
   const {
     customerAddress: walletAddress,
     communityAddress,

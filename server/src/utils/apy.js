@@ -16,6 +16,8 @@ const SECONDS_IN_YEAR = new BigNumber(3.154e+7)
 
 const toHumanAmount = (amount) => adjustDecimals(amount, config.get('network.home.contracts.fusd.decimals'), 0)
 
+const toWeiAmount = (amount) => adjustDecimals(amount, 0, config.get('network.home.contracts.fusd.decimals'))
+
 const fetchTimestamps = async (blockHashesList) => {
   if (blockHashesList.length > 0) {
     const query = `{blocks(where: {id_in: ["${join(blockHashesList, '", "')}"]}) {timestamp, id}}`
@@ -115,6 +117,32 @@ const getLatestReward = async (walletAddress, tokenAddress) => {
   })
 }
 
+const getCampaign = ({ timestamp }) => {
+  const campaigns = config.get('apy.campaigns')
+  for (let campaign of campaigns) {
+    if (campaign.since.timestamp >= timestamp) {
+      if (!campaign.until) {
+        console.log(`campaign with APY campaign of ${campaign.rate} is found. the campaign has no expiration date`)
+        return campaign
+      }
+      if (campaign.until.timestamp < timestamp) {
+        console.log(`campaign with APY campaign of ${campaign.rate} is found. the campaign is valid until block ${campaign.until.timestamp}`)
+        return campaign
+      }
+    }
+    throw new Error(`no active campaign found for block number ${timestamp}`)
+  }
+}
+
+const getCappedBalance = (walletBalance, campaign) => {
+  if (campaign.maxPerWallet) {
+    const maxPerWalletInWei = toWeiAmount(campaign.maxPerWallet)
+    return BigNumber.minimum(maxPerWalletInWei, walletBalance.amount)
+  } else {
+    return walletBalance.amount
+  }
+}
+
 const getWalletBalances = async ({ walletAddress, tokenAddress, reward, latestBlock }) => {
   const walletBalancesAfter = await WalletBalance.find({ walletAddress, tokenAddress, blockNumber: { $gte: reward.syncBlockNumber } }).sort({ blockNumber: 1 })
   const walletBalanceBefore = await WalletBalance.findOne({ walletAddress, tokenAddress, blockNumber: { $lt: reward.syncBlockNumber } }).sort({ blockNumber: -1 })
@@ -140,6 +168,7 @@ const getWalletBalances = async ({ walletAddress, tokenAddress, reward, latestBl
 
 const calculateApy = async (walletAddress, tokenAddress, { latestBlock } = {}) => {
   latestBlock = latestBlock || await web3.eth.getBlock('latest')
+  const campaign = getCampaign(latestBlock)
   const reward = await getLatestReward(walletAddress, tokenAddress)
   const walletBalances = await getWalletBalances({ walletAddress, tokenAddress, reward, latestBlock })
 
@@ -153,16 +182,18 @@ const calculateApy = async (walletAddress, tokenAddress, { latestBlock } = {}) =
     }
     const nextTimestamp = walletBalances[i + 1].blockTimestamp
     const duration = nextTimestamp - wb.blockTimestamp
-    return sum.plus(new BigNumber(wb.amount).multipliedBy(duration))
+    const cappedBalance = getCappedBalance(wb, campaign)
+    return sum.plus(cappedBalance.multipliedBy(duration))
   }, new BigNumber(reward.amount))
 
-  const currentReward = rewardSum.multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR)
+  const currentReward = rewardSum.multipliedBy(campaign.rate).div(SECONDS_IN_YEAR)
   reward.amount = currentReward.plus(get(reward, 'amount', '0')).toFixed(0)
   reward.humanAmount = adjustDecimals(reward.amount, config.get('network.home.contracts.fusd.decimals'), 0)
   reward.syncBlockNumber = latestBlock.number
   reward.syncTimestamp = latestBlock.timestamp
-  const currentBalance = last(walletBalances).amount
-  reward.tokensPerSecond = new BigNumber(currentBalance).multipliedBy(config.get('apy.rate')).div(SECONDS_IN_YEAR).toFixed(0)
+  reward.campaignRate = campaign.rate
+  const currentBalance = getCappedBalance(last(walletBalances).amount, campaign)
+  reward.tokensPerSecond = new BigNumber(currentBalance).multipliedBy(campaign.rate).div(SECONDS_IN_YEAR).toFixed(0)
   console.log({ reward })
   return reward.save()
 }
