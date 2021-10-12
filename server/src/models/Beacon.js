@@ -8,7 +8,7 @@ const BeaconSchema = new Schema({
   minor: { type: Number, required: true }
 }, { timestamps: true, default: {} })
 
-BeaconSchema.index({ proximityUUID: 1, major: 1, minor: 1 }, { unique: true })
+BeaconSchema.index({ walletAddress: 1 }, { unique: true })
 
 const Beacon = mongoose.model('Beacon', BeaconSchema)
 
