@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const WalletAction = mongoose.model('WalletAction')
+const WalletApy = mongoose.model('WalletApy')
 const { fetchTokenData, fetchNftData } = require('@utils/token')
 const home = require('@services/web3/home')
 const BigNumber = require('bignumber.js')
@@ -44,7 +45,10 @@ router.post('/', auth.subscriptionService, async (req, res) => {
 
   if (tokenAddress === fuseDollarAddress) {
     for (let subscriber of subscribers) {
-      await agenda.now('syncAndCalculateApy', { walletAddress: subscriber, tokenAddress, toBlockNumber: blockNumber })
+      const apy = await WalletApy.findOne({ walletAddress: subscriber })
+      if (apy && apy.isEnabled) {
+        await agenda.now('syncAndCalculateApy', { walletAddress: subscriber, tokenAddress, toBlockNumber: blockNumber })
+      }
     }
   }
   if (tokenAddress === fuseDollarAddress && ingnoredAccounts.includes(from)) {
