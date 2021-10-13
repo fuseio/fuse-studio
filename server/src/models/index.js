@@ -26,6 +26,8 @@ require('./AccountBalance')
 require('./ActionOnRelay')
 require('./WalletBalance')
 require('./RewardClaim')
+require('./Beacon')
+require('./BeaconCounter')
 
 module.exports = (mongoose) => {
   mongoose = mongoose || require('mongoose')

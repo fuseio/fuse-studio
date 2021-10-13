@@ -31,7 +31,8 @@ const UserWalletSchema = new Schema({
   version: { type: String, default: config.get('wallet.version') },
   paddedVersion: { type: String, default: config.get('wallet.paddedVersion') },
   apy: { type: Schema.Types.ObjectId, ref: 'WalletApy' },
-  referralAddress: { type: String }
+  referralAddress: { type: String },
+  beacon: { type: Schema.Types.ObjectId, ref: 'Beacon' }
 }, { timestamps: true, default: {} })
 
 UserWalletSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })

@@ -438,5 +438,8 @@ module.exports = {
   wallet: {
     version: '1.5.0',
     paddedVersion: '0001.0005.0000'
+  },
+  beacons: {
+    proximityUUID: '46697306-6d16-4bce-a9d6-c79752370810'
   }
 }
