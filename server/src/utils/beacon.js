@@ -19,6 +19,12 @@ const createBeacon = async ({ walletAddress }) => {
   return beacon
 }
 
+const getBeacon = ({ major, minor }) => {
+  const proximityUUID = config.get('beacons.proximityUUID')
+  return Beacon.findOne({ proximityUUID, major, minor })
+}
+
 module.exports = {
-  createBeacon
+  createBeacon,
+  getBeacon
 }

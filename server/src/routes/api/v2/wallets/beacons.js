@@ -1,10 +1,11 @@
 const router = require('express').Router()
 const mongoose = require('mongoose')
 const Beacon = mongoose.model('Beacon')
-const auth = require('./auth')
-const { createBeacon } = require('@utils/beacon'
-)
-router.post('/:walletAddress', auth.walletOwner, async (req, res) => {
+const { walletOwner } = require('./auth')
+const auth = require('@routes/auth')
+const { createBeacon, getBeacon } = require('@utils/beacon')
+
+router.post('/:walletAddress', walletOwner, async (req, res) => {
   const { wallet } = req.user
   let beacon
   if (!wallet.beacon) {
@@ -14,6 +15,12 @@ router.post('/:walletAddress', auth.walletOwner, async (req, res) => {
   } else {
     beacon = await Beacon.findById(wallet.beacon)
   }
+  return res.json({ data: beacon })
+})
+
+router.get('/:major/:minor', auth.required, async (req, res) => {
+  const { major, minor } = req.params
+  const beacon = await getBeacon({ major, minor })
   return res.json({ data: beacon })
 })
 
