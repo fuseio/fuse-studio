@@ -440,6 +440,6 @@ module.exports = {
     paddedVersion: '0001.0005.0000'
   },
   beacons: {
-    proximityUUID: 'CB10023F-A318-3394-4199-A8730C7C1AEC'
+    proximityUUID: '46697306-6d16-4bce-a9d6-c79752370810'
   }
 }
