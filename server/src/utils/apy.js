@@ -24,6 +24,9 @@ const fetchTimestamps = async (blockHashesList) => {
     const query = `{blocks(where: {id_in: ["${join(blockHashesList, '", "')}"]}) {timestamp, id}}`
     const { blocks } = await fuseBlocksClient.request(query)
     if (blockHashesList.length !== blocks.length) {
+      console.error(`Received ${blocks.length} blocks, while ${blockHashesList.length} hashes were sent`)
+      console.log(`requested hashes: ${join(blockHashesList, '", "')}`)
+      console.log(`received hashes: ${join(blocks.map(({ id }) => id), '", "')}`)
       throw new Error('Block timestamps are missing. Cannot continue.')
     }
     return blocks
