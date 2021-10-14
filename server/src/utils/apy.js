@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const WalletBalance = mongoose.model('WalletBalance')
 const RewardClaim = mongoose.model('RewardClaim')
 const WalletApy = mongoose.model('WalletApy')
-const { get, join, sortBy, last, keyBy } = require('lodash')
+const { get, join, sortBy, last, keyBy, uniq } = require('lodash')
 const { createContract, web3 } = require('@services/web3/home')
 const BasicTokenAbi = require('@fuse/token-factory-contracts/abi/BasicToken')
 const BigNumber = require('bignumber.js')
@@ -20,6 +20,7 @@ const toHumanAmount = (amount) => adjustDecimals(amount, config.get('network.hom
 const toWeiAmount = (amount) => adjustDecimals(amount, 0, config.get('network.home.contracts.fusd.decimals'))
 
 const fetchTimestamps = async (blockHashesList) => {
+  blockHashesList = uniq(blockHashesList)
   if (blockHashesList.length > 0) {
     const query = `{blocks(where: {id_in: ["${join(blockHashesList, '", "')}"]}) {timestamp, id}}`
     const { blocks } = await fuseBlocksClient.request(query)
