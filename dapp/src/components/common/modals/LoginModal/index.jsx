@@ -33,7 +33,6 @@ export default ({ hideModal, handleConnect }) => {
         render={renderButton}
         onSuccess={handleLogin}
         cookiePolicy='single_host_origin'
-        isSignedIn
       />
     </Modal>
   )
