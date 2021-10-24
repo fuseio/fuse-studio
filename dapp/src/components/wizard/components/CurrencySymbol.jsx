@@ -21,7 +21,7 @@ const CurrencySymbol = () => {
               minLength='2'
               disabled={!communityType}
               onChange={(event) => {
-                setFieldValue('communitySymbol', event.target.value)
+                setFieldValue('', event.target.value)
               }}
             />
           )}

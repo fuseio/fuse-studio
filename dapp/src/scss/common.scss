@@ -1070,8 +1070,10 @@
   @include element(button) {
     color: #0d2d45;
     cursor: pointer;
-    font-size: 1.125em !important;
+    font-size: 1.25em !important;
     font-weight: bold !important;
+    padding-left: 1em;
+    padding-top: 1.25em;
 
     > a {
       font-size: 0.875em !important;

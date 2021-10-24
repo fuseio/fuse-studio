@@ -67,16 +67,7 @@ const DetailsStep = () => {
   return (
     <div className='accordion'>
       <ExpansionPanel defaultExpanded>
-        <ExpansionPanelSummary
-          classes={{
-            root: 'ExpansionPanelSummary--first'
-          }}
-          expandIcon={<DropDownIcon />}
-          aria-controls='panel1a-content'
-          id='panel1a-header'
-        >
           <Typography component='div' className='accordion__button'>Token</Typography>
-        </ExpansionPanelSummary>
         <ExpansionPanelDetails className='accordion__panel'>
           <Typography component='div'>
             <CurrencyType />
@@ -91,13 +82,7 @@ const DetailsStep = () => {
       </ExpansionPanel>
 
       <ExpansionPanel defaultExpanded>
-        <ExpansionPanelSummary
-          expandIcon={<DropDownIcon />}
-          aria-controls='panel2a-content'
-          id='panel2a-header'
-        >
           <Typography className='accordion__button'>Community</Typography>
-        </ExpansionPanelSummary>
         <ExpansionPanelDetails className='accordion__panel'>
           <Typography component='div'>
             <div className='grid-x'>
