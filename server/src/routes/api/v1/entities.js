@@ -10,6 +10,9 @@ const Community = mongoose.model('Community')
 const Token = mongoose.model('Token')
 const { sortBy, keyBy, get, has, last } = require('lodash')
 const { toChecksumAddress } = require('web3-utils')
+const UserAccount = mongoose.model('UserAccount')
+const auth = require('@routes/auth')
+const { ObjectId } = mongoose.Types
 
 const withCommunities = async (entities) => {
   const communityAddresses = entities.map(token => token.communityAddress)
@@ -204,6 +207,50 @@ router.get('/:communityAddress', async (req, res, next) => {
     data: results,
     pageCount
   })
+})
+
+/**
+ * @apiDefine Onwership Data
+ * @apiDescription Resolves whether FuseStudioUser Accounts is admin on different wallet address 
+ * @apiSuccess {String} account Community account address of owner
+ * @apiSuccess {Boolean} isAdmin 
+ */
+
+/**
+ * @api {get} /entities/owner/:communityAddress/:account Fetch entity
+ * @apiName GetEntity
+ * @apiGroup Entity
+ *
+ * @apiParam {String} communityAddress Community address
+ * @apiParam {String} emails user's registered email
+ *
+ * @apiUse EntityData
+ */ 
+ router.post('/owner/:communityAddress/:account', auth.required,  async (req, res, next) => {
+  const { account, communityAddress } = req.params
+  const { id } = req.user
+  const userAccounts =  await UserAccount.find({ studioUser: ObjectId(id) })
+  const result = {isAdmin: false, isOwner: false, creatorAddress: undefined}
+    userAccounts.forEach(async (user) => {
+      const entities = await Entity.find(ObjectId(user.accountAddress)).sort({ blockNumber: -1 })
+      const data = await withCommunities(entities)
+      const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse()
+        communitiesUserOwn.forEach((communityOwned) =>{
+          if (communityOwned.community.communityAddress === communityAddress){
+            result.isOwner = true 
+            result.creatorAddress = communitiesUserOwn.creatorAddress
+            if(communityOwned.comunity.creatorAddress === account  ){
+              result.isAdmin = true; 
+            }
+          return result
+        }
+      })
+  });
+
+  /* if user is on valid account return isAdmin: true, isOwner: true, accountAddress: account
+  if user has valid account return isAdmin: false, isOwner: true, accountAddress: accountAddress
+  if user is not owner return isAdmin: false, isOwner: false, accountAddress: undefined */
+  return res.json(result)
 })
 
 module.exports = router
