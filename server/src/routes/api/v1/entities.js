@@ -236,10 +236,10 @@ router.get('/:communityAddress', async (req, res, next) => {
       const data = await withCommunities(entities)
       const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse()
         communitiesUserOwn.forEach((communityOwned) =>{
-          if (communityOwned.community.communityAddress === communityAddress){
+          if (communityOwned.communityAddress === communityAddress){
             result.isOwner = true 
             result.creatorAddress = communitiesUserOwn.creatorAddress
-            if(communityOwned.comunity.creatorAddress === account  ){
+            if(communityOwned.creatorAddress === account  ){
               result.isAdmin = true; 
             }
           return result
@@ -250,7 +250,7 @@ router.get('/:communityAddress', async (req, res, next) => {
   /* if user is on valid account return isAdmin: true, isOwner: true, accountAddress: account
   if user has valid account return isAdmin: false, isOwner: true, accountAddress: accountAddress
   if user is not owner return isAdmin: false, isOwner: false, accountAddress: undefined */
-  return res.json(result)
+  return res.json({response: result, list: entities, owned: communitiesUserOwn})
 })
 
 module.exports = router
