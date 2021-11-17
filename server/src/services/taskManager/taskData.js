@@ -4,6 +4,7 @@ const tasksData = {
   createWallet: {
     role: 'wallet',
     bridgeType: 'home',
+    description: 'owner',
     name: 'createWallet'
   },
   createForeignWallet: {
@@ -28,6 +29,7 @@ const tasksData = {
   setWalletOwner: {
     role: 'wallet',
     bridgeType: 'home',
+    description: 'owner',
     name: 'setWalletOwner'
   },
   addManager: {
