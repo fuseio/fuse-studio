@@ -7,7 +7,7 @@ export default () => {
     <div className='faq__wrapper cell large-auto'>
       <div className='grid-x align-justify align-middle faq__title'>
         <h3 className='faq__title'>FAQ</h3>
-        <a href='https://docs.fuse.io/consumer-tutorials/getting-started' target='_blank' rel='noopener noreferrer' className='faq__action'>
+        <a href='https://tutorials.fuse.io/tutorials/studio-tutorials' target='_blank' rel='noopener noreferrer' className='faq__action'>
           Learn more&nbsp;<img src={arrow} alt='arrow' />
         </a>
       </div>
