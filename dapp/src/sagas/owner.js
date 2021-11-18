@@ -3,13 +3,13 @@ import { apiCall, tryTakeEvery } from "./utils";
 import { fetchOwner } from "services/api/entities";
 import * as actions from "actions/owner";
 
-function* isOwner({ accountAddress, communityAddress }) {
-    const response = yield apiCall(fetchOwner, { accountAddress, communityAddress });
+function* isOwner({ communityAddress, account }) {
+    const response = yield apiCall(fetchOwner, { communityAddress, account });
     yield put({
         type: actions.OWNERSHIP.SUCCESS,
-        accountAddress,
         communityAddress,
-        response,
+        account,
+        response
     });
 }
 

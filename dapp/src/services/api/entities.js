@@ -97,3 +97,8 @@ export const fetchCommunities = (apiRoot, { jwtToken }) =>
   request.get(`${apiRoot}/communities/user`)
     .set('Authorization', `Bearer ${jwtToken}`)
     .then(response => response.body)
+
+export const fetchOwner = (apiRoot, { jwtToken, communityAddress, account }) =>
+  request.get(`${apiRoot}/entities/owner/${communityAddress}/${account}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .then(response => response.body)

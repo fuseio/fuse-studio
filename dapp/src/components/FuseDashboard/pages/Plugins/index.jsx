@@ -10,6 +10,9 @@ import { observer } from 'mobx-react'
 import { generalPlugins } from 'constants/plugins'
 import includes from 'lodash/includes'
 import get from 'lodash/get'
+import { isOwner } from 'actions/owner'
+import { addressShortener } from 'utils/format'
+import { SWITCH_ACCOUNT_MODAL } from 'constants/uiConstants'
 
 const PluginList = ({ pluginList, showInfoModal, addPlugin, togglePlugin }) => {
   return (
@@ -56,7 +59,8 @@ const PluginList = ({ pluginList, showInfoModal, addPlugin, togglePlugin }) => {
 
 const Plugins = () => {
   const dispatch = useDispatch()
-  const { dashboard } = useStore()
+  const { dashboard, network } = useStore()
+  const { accountAddress } = network
   const { address: communityAddress } = useParams()
   const showInfoModal = (key, props) => {
     dispatch(loadModal(PLUGIN_INFO_MODAL, {
@@ -95,6 +99,17 @@ const Plugins = () => {
     }
     return plugin
   }
+
+  useEffect(async () => {
+    const communityOwner = await dispatch(isOwner({accountAddress: accountAddress, communityAddress}))
+    if(!communityOwner.isAdmin && communityOwner.isOwner){
+      dispatch(loadModal(SWITCH_ACCOUNT_MODAL, {
+        community: communityOwner.community, user: accountAddress, owner: communityOwner.creator
+      }))
+    }
+    return () => {
+    }
+  }, [])
 
   return (
     <div className='plugins'>
