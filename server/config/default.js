@@ -113,7 +113,7 @@ module.exports = {
         FuseDollar: '0x249BE57637D8B013Ad64785404b24aeBaE9B098B',
         WrappedFuse: '0x0BE9e53fd7EDaC9F859882AfdDa116645287C629',
         walletModules: {
-          GuardianManager: '0x3879F0446E8F0ed428CCDAc5C373c163E9540D32',
+          GuardianManager: '0x8132d03887a08D75BaE1FF830A969b7DbE1Dadcf',
           LockManager: '0xf132640136FF929e5a1D067f21030ec079bfa239',
           RecoveryManager: '0xD201b3e96d6794fBB4Dc20A37e1a3757DEA971fD',
           ApprovedTransfer: '0x15eAEE837143D5509d4A3c1Bb1388225e689E830',
