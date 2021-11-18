@@ -227,30 +227,49 @@ router.get('/:communityAddress', async (req, res, next) => {
  * @apiUse EntityData
  */ 
  router.post('/owner/:communityAddress/:account', auth.required,  async (req, res, next) => {
-  const { account, communityAddress } = req.params
+  const { communityAddress, account } = req.params
   const { id } = req.user
-  const userAccounts =  await UserAccount.find({ studioUser: ObjectId(id) })
-  const result = {isAdmin: false, isOwner: false, creatorAddress: undefined}
-    userAccounts.forEach(async (user) => {
-      const entities = await Entity.find(ObjectId(user.accountAddress)).sort({ blockNumber: -1 })
-      const data = await withCommunities(entities)
-      const communitiesUserOwn = sortBy(data.filter(({ isAdmin }) => isAdmin), ['updatedAt']).reverse()
-        communitiesUserOwn.forEach((communityOwned) =>{
-          if (communityOwned.community.communityAddress === communityAddress){
-            result.isOwner = true 
-            result.creatorAddress = communitiesUserOwn.creatorAddress
-            if(communityOwned.comunity.creatorAddress === account  ){
-              result.isAdmin = true; 
-            }
-          return result
+  //cmon re-build already!
+  const community = await Community.findOne({ communityAddress: communityAddress })
+  const entity = await Entity.findOne({ account, communityAddress })
+  const result = { user:{
+    id,
+    account,
+    accounts: [],
+    all: []
+  }, community: {
+    name: community.name,
+    creator: community.creatorAddress
+  }, isAdmin: false, isOwner: false , isAny: false } 
+
+  const userAccounts = await UserAccount.find({ studioUser: ObjectId(id) }).lean()
+  const all = await UserAccount.find().lean()
+  result.user.all = all
+  result.user.accounts = userAccounts
+
+  try {
+
+    if (entity.isAdmin) {
+      result.isAdmin = true;
+    }
+    if (entity.account === community.creatorAddress) {
+      result.isOwner = true;
+    }
+
+    if (!result.isAdmin && !result.isOwner) {
+
+      userAccounts.forEach(account => {
+        if (account === result.community.creator) {
+          result.isAny = true;
         }
       })
-  });
+    }
 
-  /* if user is on valid account return isAdmin: true, isOwner: true, accountAddress: account
-  if user has valid account return isAdmin: false, isOwner: true, accountAddress: accountAddress
-  if user is not owner return isAdmin: false, isOwner: false, accountAddress: undefined */
-  return res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+
+
+  return res.json({ ...result })
 })
-
 module.exports = router
