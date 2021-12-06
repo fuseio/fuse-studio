@@ -26,12 +26,10 @@ module.exports = {
   },
   graph: {
     fuse: {
-      url: 'https://graph.fuse.io/subgraphs/name/fuseio',
       subgraphs: {
-        fuse: '/fuse-qa',
-        entities: '/fuse-entities-qa',
-        bridgeRopsten: '/fuse-ropsten-bridge',
-        bridgeMain: '/fuse-ethereum-bridge',
+        fuse: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse',
+        entities: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse-entities',
+        bridgeMain: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse-ethereum-bridged-tokens',
         blocks: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse-blocks'
       }
     },

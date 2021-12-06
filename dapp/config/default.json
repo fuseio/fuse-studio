@@ -124,9 +124,8 @@
       }
     },
     "graph": {
-      "url": "https://graph-qa.fuse.io/subgraphs/name/fuseio",
       "subgraphs": {
-        "entities": "/fuse-entities-dev"
+        "entities": "https://api.thegraph.com/subgraphs/name/fuseio/fuse-entities"
       }
     }
   },
