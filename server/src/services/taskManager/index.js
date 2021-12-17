@@ -10,6 +10,14 @@ const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 
+const cancelTask = async (queueJob) => {
+  const { messageId } = queueJob
+  console.log(`Skipping a task ${queueJob._id} with ${queueJob.name} and messageId ${messageId}. Reason: cancel request`)
+  queueJob.accountAddress = lodash.get(queueJob, 'data.accountAddress')
+  queueJob.status = 'cancelled'
+  return queueJob.save()
+}
+
 const getWorkerAccount = (taskData, taskParams) => {
   if (lodash.has(taskParams, 'accountAddress')) {
     const { accountAddress } = taskParams
@@ -40,6 +48,12 @@ const startTask = async message => {
   }
 
   console.log({ task })
+
+  const queueJob = await QueueJob.findOne({ messageId })
+  if (queueJob.status === 'cancelRequested') {
+    await cancelTask(queueJob)
+    return true
+  }
   console.log(`starting a task for ${name}`)
   const taskData = getTaskData(task)
 
@@ -51,7 +65,7 @@ const startTask = async message => {
     )
     return true
   }
-  let account, queueJob
+  let account
   try {
     account = await getWorkerAccount(taskData, params)
     if (!account) {
@@ -63,7 +77,6 @@ const startTask = async message => {
       return
     }
 
-    queueJob = await QueueJob.findOne({ messageId })
     queueJob.accountAddress = account.address
     queueJob.status = 'started'
     await queueJob.save()
