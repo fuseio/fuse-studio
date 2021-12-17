@@ -6,14 +6,23 @@ const tasks = require('@tasks/sqs')
 const { createActionFromJob, successAndUpdateByJob, failAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { get } = require('lodash')
-const { lockAccount, unlockAccount } = require('@utils/account')
+const { getAccount, lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 
+<<<<<<< HEAD
 const cancelTask = async (queueJob) => {
   const { messageId } = queueJob
   console.log(`Skipping a task ${queueJob._id} with ${queueJob.name} and messageId ${messageId}. Reason: cancel request`)
   queueJob.accountAddress = lodash.get(queueJob, 'data.accountAddress')
+=======
+const cancelTask = async (message) => {
+  const messageId = message.MessageId
+  const task = message.Body
+  console.log(`skipping a task ${task._id} with ${task.name} with  and messageId ${messageId}`)
+  const queueJob = await QueueJob.findOne({ messageId })
+  queueJob.accountAddress = lodash.get(task.params, 'accountAddress')
+>>>>>>> save
   queueJob.status = 'cancelled'
   return queueJob.save()
 }
@@ -22,7 +31,7 @@ const getWorkerAccount = (taskData, taskParams) => {
   if (lodash.has(taskParams, 'accountAddress')) {
     const { accountAddress } = taskParams
     if (accountAddress) {
-      return lockAccount({ address: accountAddress })
+      return getAccount({ address: accountAddress })
     } else {
       const msg = `no account address supplied for task  with task data ${JSON.stringify(
         taskData
@@ -31,9 +40,9 @@ const getWorkerAccount = (taskData, taskParams) => {
       throw Error(msg)
     }
   } else if (lodash.has(taskParams, 'role')) {
-    return lockAccount(makeAccountsFilter({ ...taskData, role: taskParams.role }))
+    return getAccount(makeAccountsFilter({ ...taskData, role: taskParams.role }))
   }
-  return lockAccount(makeAccountsFilter(taskData))
+  return getAccount(makeAccountsFilter(taskData))
 }
 
 const startTask = async message => {
@@ -49,9 +58,14 @@ const startTask = async message => {
 
   console.log({ task })
 
+<<<<<<< HEAD
   let queueJob = await QueueJob.findOne({ messageId })
   if (queueJob.status === 'cancelRequested') {
     await cancelTask(queueJob)
+=======
+  if (name === 'mint' && lodash.get(params, 'accountAddress') === '0xAD83391a180835bB5F41CC06f2A64F9e14842764') {
+    await cancelTask(message)
+>>>>>>> save
     return true
   }
   console.log(`starting a task for ${name}`)

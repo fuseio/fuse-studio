@@ -14,6 +14,15 @@ const lockAccount = async (query = { role: '*' }) => {
   console.log(`no free account found by query ${JSON.stringify(query)}`)
 }
 
+const getAccount = async (query = { role: '*' }) => {
+  const account = await Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date() })
+  if (account) {
+    console.log(`account ${account.address} with id ${account._id} is locked by query ${JSON.stringify(query)}`)
+    return account
+  }
+  console.log(`no free account found by query ${JSON.stringify(query)}`)
+}
+
 const lockAccountWithReason = async (query = { role: '*' }, reason) => {
   const account = await Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date(), lockingReason: reason })
   if (account) {
