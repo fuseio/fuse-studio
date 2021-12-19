@@ -49,7 +49,7 @@ const startTask = async message => {
 
   console.log({ task })
 
-  const queueJob = await QueueJob.findOne({ messageId })
+  let queueJob = await QueueJob.findOne({ messageId })
   if (queueJob.status === 'cancelRequested') {
     await cancelTask(queueJob)
     return true
