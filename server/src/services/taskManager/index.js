@@ -99,13 +99,11 @@ const startTask = async message => {
       .then(async () => {
         await queueJob.successAndUpdate()
         await successAndUpdateByJob(queueJob)
-        unlockAccount(account._id)
       })
       .catch(async err => {
         await queueJob.fail(err)
         await queueJob.save()
         await failAndUpdateByJob(queueJob)
-        unlockAccount(account._id)
         console.error(
           `Error received in task ${name} with id ${get(queueJob, '_id')} and task data ${JSON.stringify(
             taskData
@@ -130,9 +128,6 @@ const startTask = async message => {
       await queueJob.fail(err)
       await queueJob.save()
       await failAndUpdateByJob(queueJob)
-    }
-    if (account && account._id) {
-      unlockAccount(account._id)
     }
     console.log({ err })
     return true
