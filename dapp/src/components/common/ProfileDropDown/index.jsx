@@ -52,7 +52,7 @@ const ProfileDropDown = ({
         }
       } else {
         const desired = networkType === 'ropsten' ? 'main' : 'ropsten'
-        loadSwitchModal(desired)
+        loadSwitchModal('fuse')
       }
     } else if (providerInfo.type === 'web') {
       if (foreignNetwork) {
@@ -94,16 +94,33 @@ const ProfileDropDown = ({
           </CopyToClipboard>
         </div>
         <div className='cell small-24 profile__account__disconnect grid-x align-middle align-center'>
-          <span>Connected to {providerInfo.check && providerInfo.check.substring && providerInfo.check.substring(2)}&nbsp;</span>
-          <span onClick={disconnectWallet} className='disconnect'>(Disconnect)</span>
+         <span>Connected to 
+            {providerInfo.check &&
+            providerInfo.check.substring &&
+            providerInfo.check.substring(2)}
+            &nbsp;
+          </span>
+          <span onClick={disconnectWallet} className="disconnect">
+            Disconnect
+          </span>
         </div>
       </div>
-      <div className='profile__communities grid-y'>
-        <p className='profile__switch' onClick={switchNetwork}>
-          <FontAwesome name='exchange-alt' />
-          <span>Switch to {capitalize(convertNetworkName((foreignNetwork === networkType ? 'fuse' : foreignNetwork) || (networkType === 'ropsten' ? 'main' : 'ropsten')))} network</span>
-        </p>
-      </div>
+      {networkType === "fuse" ? ("") : (
+        <div className="profile__communities grid-y">
+          <p className="profile__switch" onClick={switchNetwork}>
+            <FontAwesome name="exchange-alt" />
+            <span>
+              Switch to{" "}
+              {capitalize(
+                convertNetworkName(
+                  foreignNetwork === networkType ? "fuse" : "fuse"
+                )
+              )}{" "}
+              network
+            </span>
+          </p>
+        </div>
+      )}
       <NativeBalance />
     </div>
   )

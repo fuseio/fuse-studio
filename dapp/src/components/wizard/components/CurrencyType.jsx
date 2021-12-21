@@ -78,7 +78,7 @@ const CustomToken = () => {
                 fetchCustomToken(e)
               }}
               type='text'
-              placeholder={`Enter ethereum token address`}
+              placeholder={`Enter a Fuse token address`}
               classes={{
                 root: 'customToken__field'
               }}

@@ -194,7 +194,7 @@ class Wizard extends React.Component {
         <div className='issuance__wrapper'>
           <div className='issuance__header grid-x align-justify'>
             <div className='issuance__header__logo align-self-middle grid-x align-middle'>
-              <Logo showHomePage={() => push('/')} isGradientLogo />
+              <Logo showHomePage={() => push('/')} />
             </div>
             <div className='issuance__header__indicators grid-x cell align-center' ref={stepIndicator => (this.stepIndicator = stepIndicator)}>
               <div className='grid-y cell auto'>
