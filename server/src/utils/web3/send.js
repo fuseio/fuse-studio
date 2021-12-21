@@ -67,9 +67,8 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
 
   const doSend = async (retry) => {
     let transactionHash
-    // const nonce = account.nonces[bridgeType]
-    debugger
-    const nonce = await Account.updateOne({ accountAddress: account.address }, { [`${account.nonces[bridgeType]}`]: { $inc: 1 } })
+    const updatedAccount = await Account.findByIdAndUpdate(account._id, { $inc: { [`nonces.${bridgeType}`]: 1 } })
+    const nonce = get(updatedAccount, `nonces.${bridgeType}`, 0)
     const methodName = getMethodName(method)
     console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
     const txObject = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }

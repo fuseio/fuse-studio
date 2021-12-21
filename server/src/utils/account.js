@@ -15,9 +15,9 @@ const lockAccount = async (query = { role: '*' }) => {
 }
 
 const getAccount = async (query = { role: '*' }) => {
-  const account = await Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date() })
+  const account = await Account.findOne({ ...query })
   if (account) {
-    console.log(`account ${account.address} with id ${account._id} is locked by query ${JSON.stringify(query)}`)
+    console.log(`account ${account.address} with id ${account._id} is fetched by query ${JSON.stringify(query)}`)
     return account
   }
   console.log(`no free account found by query ${JSON.stringify(query)}`)
@@ -111,6 +111,7 @@ const generateCommunityAdminJwt = (accountAddress, appName) => {
 
 module.exports = {
   lockAccount,
+  getAccount,
   lockAccountWithReason,
   unlockAccount,
   withAccount,
