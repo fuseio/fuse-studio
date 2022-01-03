@@ -5,7 +5,7 @@ const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
 const { createActionFromJob, successAndUpdateByJob, failAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
-const { get } = require('lodash')
+const { get, isEqual } = require('lodash')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
@@ -50,7 +50,7 @@ const startTask = async message => {
   console.log({ task })
 
   let queueJob = await QueueJob.findOne({ messageId })
-  if (queueJob.status === 'cancelRequested') {
+  if (isEqual(get(queueJob, 'status'), 'cancelRequested')) {
     await cancelTask(queueJob)
     return true
   }
@@ -155,12 +155,17 @@ const now = async (name, params, options = {}) => {
 const start = async () => {
   console.log('starting SQS task manager')
   while (true) {
-    const message = await tasksFIFOMessenger.receiveMessage()
-    if (message) {
-      const toBeDeleted = await startTask(message)
-      if (toBeDeleted) {
-        await tasksFIFOMessenger.deleteMessage(message)
+    try {
+      const message = await tasksFIFOMessenger.receiveMessage()
+      if (message) {
+        const toBeDeleted = await startTask(message)
+        if (toBeDeleted) {
+          await tasksFIFOMessenger.deleteMessage(message)
+        }
       }
+    } catch (error) {
+      console.error(`Unexpected error occured in the task manager`)
+      console.error(error)
     }
   }
 }
