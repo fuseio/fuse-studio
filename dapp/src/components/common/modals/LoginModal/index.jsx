@@ -15,6 +15,10 @@ export default ({ hideModal, handleConnect }) => {
     handleConnect()
   }
 
+  const handleError = (error) => {
+    console.log('handleError', { ...error })
+  }
+
   const renderButton = ({ onClick, disabled }) => (
     <button className='login-modal__button' onClick={onClick} disabled={disabled}>
       <img src={GoogleIcon} />
@@ -29,6 +33,8 @@ export default ({ hideModal, handleConnect }) => {
         In order to use the Studio you must have an account, you can create or log-in to your account using you Google account:
       </div>
       <GoogleLogin
+        onScriptLoadFailure={(err) => console.log('onScriptLoadFailure', { err })}
+        onFailure={handleError}
         clientId={clientId}
         render={renderButton}
         onSuccess={handleLogin}
