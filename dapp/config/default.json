@@ -4,12 +4,10 @@
     "fuseProvider": "https://rpc.fuse.io",
     "supportedNetworks": [
       "main",
-      "ropsten",
       "fuse"
     ],
     "supportedForeignNetworks": [
-      "main",
-      "ropsten"
+      "main"
     ],
     "providers": {
       "default": "alchemy",
@@ -65,7 +63,7 @@
       "pollingTimeout": 5000,
       "network": {
         "homeNetwork": "fuse",
-        "foreignNetwork": "ropsten"
+        "foreignNetwork": "main"
       },
       "addresses": {
         "homeToForeign": {

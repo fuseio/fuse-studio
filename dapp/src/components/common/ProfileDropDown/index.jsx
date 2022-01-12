@@ -32,13 +32,13 @@ const ProfileDropDown = ({
   }
 
   const toggleNetwork = () => {
-    const network = networkType === 'fuse'
-      ? (CONFIG.env === 'qa')
-          ? 'ropsten'
-          : 'main'
-      : networkType === 'ropsten'
-        ? 'main'
-        : 'ropsten'
+    const network = networkType === 'fuse' ? 'main' : 'fuse'
+    // ? (CONFIG.env === 'qa')
+    //     ? 'ropsten'
+    //     : 'main'
+    // : networkType === 'ropsten'
+    //   ? 'main'
+    //   : 'main'
     dispatch(changeNetwork(network))
   }
 
@@ -51,8 +51,8 @@ const ProfileDropDown = ({
           loadSwitchModal(foreignNetwork)
         }
       } else {
-        const desired = networkType === 'ropsten' ? 'main' : 'ropsten'
-        loadSwitchModal(desired)
+        // const desired = networkType === 'ropsten' ? 'main' : 'ropsten'
+        loadSwitchModal('main')
       }
     } else if (providerInfo.type === 'web') {
       if (foreignNetwork) {
