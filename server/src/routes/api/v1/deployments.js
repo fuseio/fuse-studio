@@ -25,7 +25,7 @@ router.post('/', auth.required, async (req, res, next) => {
 
   const issuedCommunities = await Community.find({ owner: req.user.id }).count()
   const studioUser = await StudioUser.findById(req.user.id)
-  const limit =  parseInt(get(studioUser, 'communitiesLimit', config.get('community.limitPerUser'))) 
+  const limit = parseInt(get(studioUser, 'communitiesLimit', config.get('community.limitPerUser')))
   if (issuedCommunities >= limit) {
     return res.status(403).json({ error: 'User issued more than the maximum number of communities.' })
   }
