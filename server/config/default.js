@@ -387,8 +387,20 @@ module.exports = {
           bridgeType: 'home'
         },
         {
-          role: 'wallet',
-          bridgeType: 'foreign'
+          role: 'fuse-funder',
+          bridgeType: 'home'
+        },
+        {
+          role: 'apy-funder',
+          bridgeType: 'home'
+        },
+        {
+          role: 'funder',
+          bridgeType: 'home'
+        },
+        {
+          role: 'deposits',
+          bridgeType: 'home'
         }
       ],
       threshold: '0.25' // in ETH
