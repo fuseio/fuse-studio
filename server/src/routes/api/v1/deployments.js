@@ -6,7 +6,7 @@ const StudioUser = mongoose.model('StudioUser')
 const taskManager = require('@services/taskManager')
 const auth = require('@routes/auth')
 const config = require('config')
-const { isNumber } = require('lodash')
+const { get } = require('lodash')
 
 router.get('/:id', async (req, res, next) => {
   const { id } = req.params
@@ -24,8 +24,8 @@ router.post('/', auth.required, async (req, res, next) => {
   const { steps, correlationId } = req.body
 
   const issuedCommunities = await Community.find({ owner: req.user.id }).count()
-  const { communitiesLimit } = await StudioUser.findById(req.user.id)
-  const limit = isNumber(communitiesLimit) ? parseInt(communitiesLimit) : config.get('community.limitPerUser')
+  const studioUser = await StudioUser.findById(req.user.id)
+  const limit =  parseInt(get(studioUser, 'communitiesLimit', config.get('community.limitPerUser'))) 
   if (issuedCommunities >= limit) {
     return res.status(403).json({ error: 'User issued more than the maximum number of communities.' })
   }
