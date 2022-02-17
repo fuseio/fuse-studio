@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const mailchimpUtils = require('@utils/mailchimp')
 const auth = require('@routes/auth')
+const { isAddress } = require('web3-utils')
 
 router.post('/', async (req, res) => {
   try {
@@ -59,6 +60,22 @@ router.post('/getnames', async (req, res) => {
   res.json({
     data: users
   })
+})
+
+router.post('/contact-info', auth.required, async (req, res) => {
+  const { address } = req.body
+  if (!isAddress(address)) {
+    return res.status(400).json({ error: 'invalid address' })
+  }
+
+  const user = await User.findOne(
+    { accountAddress: { $eq: address } },
+    { _id: 0, email: 1, displayName: 1 }
+  )
+  if (user) {
+    return res.json({ data: user })
+  }
+  return res.status(404).json({ error: 'user not found' })
 })
 
 module.exports = router
