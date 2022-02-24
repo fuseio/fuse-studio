@@ -20,8 +20,8 @@ var auth = {
 }
 
 auth.admin = [auth.required, (req, res, next) => req.user.isAdmin ? next() : res.status(403).send({ error: 'The user is not admin' })]
-
 auth.subscriptionService = [auth.required, (req, res, next) => req.user.role === 'subscription-service' ? next() : res.status(403).send({ error: 'The user does not have the required role' })]
+auth.userInfo = [auth.required, (req, res, next) => req.user.role === 'user-info' ? next() : res.status(403).send({ error: 'User not authorized' })]
 
 const communityOwner = async (req, res, next) => {
   const { communityAddress } = req.params
