@@ -62,7 +62,7 @@ router.post('/getnames', async (req, res) => {
   })
 })
 
-router.post('/contact-info', auth.admin, async (req, res) => {
+router.post('/contact-info', auth.userInfo, async (req, res) => {
   const { address } = req.body
   if (!isAddress(address)) {
     return res.status(400).json({ error: 'Invalid account address' })
@@ -70,7 +70,7 @@ router.post('/contact-info', auth.admin, async (req, res) => {
 
   const user = await User.findOne(
     { accountAddress: { $eq: address } },
-    { _id: 0, email: 1, displayName: 1 }
+    { _id: 0, email: 1, name: '$displayName' }
   )
   if (!user) {
     return res.status(404).json({ error: 'User not found' })
