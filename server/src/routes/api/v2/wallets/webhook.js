@@ -71,7 +71,7 @@ router.post('/', auth.subscriptionService, async (req, res) => {
       asset: tokenSymbol,
       status: 'confirmed',
       tokenType,
-      value: new BigNumber(value),
+      value: new BigNumber(value).toFixed(),
       tokenAddress: tokenAddress.toLowerCase(),
       timeStamp: (Math.round(new Date().getTime() / 1000)).toString()
     }
