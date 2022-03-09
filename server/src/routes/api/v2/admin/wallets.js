@@ -8,6 +8,8 @@ const UserWallet = mongoose.model('UserWallet')
 const { toChecksumAddress } = require('web3-utils')
 const { generateSalt } = require('@utils/web3')
 
+router.use('/transfers', require('./transfers'))
+
 /**
  * @api {post} /api/v2/admin/wallets/create Create wallet for phone number
  * @apiName CreateWallet
