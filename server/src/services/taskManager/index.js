@@ -3,25 +3,12 @@ const {
 } = require('@services/queue')
 const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
-const BigNumber = require('bignumber.js')
 const { createActionFromJob, successAndUpdateByJob, failAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { get, has, isEqual } = require('lodash')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
-const { web3 } = require('@services/web3/home')
-
-const checkUnlock = async (queueJob) => {
-  if (lodash.get(queueJob, 'data.role') === 'fuse-funder') {
-    const accountBalance = await web3.eth.getBalance(queueJob.accountAddress)
-    if (new BigNumber(accountBalance).isLessThan('100000000000000000000')) {
-      console.log(`Low balance. Do not unlock account ${queueJob.accountAddress}`)
-      return false
-    }
-  }
-  return true
-}
 
 const cancelTask = async (queueJob) => {
   console.log(`Skipping a task ${queueJob._id} with ${queueJob.name}. Reason: cancel request`)
@@ -110,17 +97,13 @@ const startTask = async message => {
       .then(async () => {
         await queueJob.successAndUpdate()
         await successAndUpdateByJob(queueJob)
-        if (await checkUnlock(queueJob)) {
-          unlockAccount(account._id)
-        }
+        unlockAccount(account._id)
       })
       .catch(async err => {
         await queueJob.fail(err)
         await queueJob.save()
         await failAndUpdateByJob(queueJob)
-        if (await checkUnlock(queueJob)) {
-          unlockAccount(account._id)
-        }
+        unlockAccount(account._id)
         console.error(
           `Error received in task ${name} with id ${get(queueJob, '_id')} and task data ${JSON.stringify(
             taskData
@@ -144,13 +127,9 @@ const startTask = async message => {
       await queueJob.fail(err)
       await queueJob.save()
       await failAndUpdateByJob(queueJob)
-      if (account && account._id && await checkUnlock(queueJob)) {
-        unlockAccount(account._id)
-      }
-    } else {
-      if (account && account._id) {
-        unlockAccount(account._id)
-      }
+    }
+    if (account && account._id) {
+      unlockAccount(account._id)
     }
 
     console.log({ err })

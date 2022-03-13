@@ -291,7 +291,7 @@ router.post('/backup', auth.required, async (req, res, next) => {
       if (isFunderDeprecated) {
         const bonusType = 'backup'
         const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
-        const bonusMaxTimesLimit = get(community, `${bonusType}.maxTimes`, 1)
+        const bonusMaxTimesLimit = get(community, `${bonusType}.maxTimes`, 100)
         const tokenAddress = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.tokenAddress`, homeTokenAddress)
         const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
         const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
