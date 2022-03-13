@@ -2,11 +2,12 @@ const Web3 = require('web3')
 const ethUtils = require('ethereumjs-util')
 const ethers = require('ethers')
 const config = require('config')
-const { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
+const { hdkey } = require('ethereumjs-wallet')
+
 const { inspect } = require('util')
 const bip39 = require('bip39')
-const studioWallet = fromMasterSeed(config.get('secrets.accounts.seed'))
-const funderWallet = fromMasterSeed(bip39.mnemonicToSeedSync(config.get('secrets.accounts.funderSeed')))
+const studioWallet = hdkey.fromMasterSeed(config.get('secrets.accounts.seed'))
+const funderWallet = hdkey.fromMasterSeed(bip39.mnemonicToSeedSync(config.get('secrets.accounts.funderSeed')))
 
 const { send } = require('./send')
 

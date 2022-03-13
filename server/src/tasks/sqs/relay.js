@@ -3,16 +3,15 @@ const lodash = require('lodash')
 const { createNetwork } = require('@utils/web3')
 const { fetchTokenByCommunity } = require('@utils/graph')
 const { getParamsFromMethodData } = require('@utils/abi')
-const request = require('request-promise-native')
 const mongoose = require('mongoose')
 const { notifyReceiver } = require('@services/firebase')
 const { sendRelay, isAllowedToRelay } = require('@utils/relay')
-const web3Utils = require('web3-utils')
+const { toChecksumAddress } = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
-const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays, isFunderDeprecated }, job) => {
+const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
   const { web3 } = createNetwork(networkType, account)
   const walletModuleABI = require(`@constants/abi/${walletModule}`)
@@ -32,46 +31,28 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
         try {
           const { _community: communityAddress } = getParamsFromMethodData(walletModuleABI, 'joinCommunity', methodData)
           console.log(`Requesting token funding for wallet: ${wallet} and community ${communityAddress}`)
-          let tokenAddress, originNetwork
-          if (lodash.get(job.data.transactionBody, 'tokenAddress', false) && lodash.get(job.data.transactionBody, 'originNetwork', false)) {
-            tokenAddress = web3Utils.toChecksumAddress(lodash.get(job.data.transactionBody, 'tokenAddress'))
-            originNetwork = lodash.get(job.data.transactionBody, 'originNetwork')
+          let tokenAddress
+          if (lodash.has(job, 'data.transactionBody.tokenAddress')) {
+            tokenAddress = toChecksumAddress(lodash.get(job, 'data.transactionBody.tokenAddress'))
           } else {
             const token = await fetchTokenByCommunity(communityAddress)
-            tokenAddress = web3Utils.toChecksumAddress(token.address)
-            originNetwork = token.originNetwork
+            tokenAddress = toChecksumAddress(token.address)
           }
           const { phoneNumber } = await UserWallet.findOne({ walletAddress })
 
           const community = await Community.findOne({ communityAddress })
           const hasBonus = lodash.get(community, `plugins.joinBonus.isActive`, false) && lodash.get(community, `plugins.joinBonus.joinInfo.amount`, false)
           if (hasBonus) {
-            if (isFunderDeprecated) {
-              const taskManager = require('@services/taskManager')
-              const bonusType = 'join'
-              const bonusAmount = lodash.get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
-              const bonusMaxTimesLimit = lodash.get(community, `${bonusType}.maxTimes`, 100)
-              const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
-              const { plugins } = community
-              const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
-              const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
-              job.set('data.funderJobId', funderJob._id)
-              job.save()
-            } else {
-              request.post(`${config.get('funder.urlBase')}fund/token`, {
-                json: true,
-                body: { phoneNumber, accountAddress: walletAddress, identifier, tokenAddress, originNetwork, communityAddress }
-              }, (err, response, body) => {
-                if (err) {
-                  console.error(`Error on token funding for wallet: ${wallet}`, err)
-                } else if (body.error) {
-                  console.error(`Error on token funding for wallet: ${wallet}`, body.error)
-                } else if (lodash.has(body, 'job._id')) {
-                  job.set('data.funderJobId', body.job._id)
-                }
-                job.save()
-              })
-            }
+            const taskManager = require('@services/taskManager')
+            const bonusType = 'join'
+            const bonusAmount = lodash.get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
+            const bonusMaxTimesLimit = lodash.get(community, `${bonusType}.maxTimes`, 100)
+            const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
+            const { plugins } = community
+            const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+            const funderJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
+            job.set('data.funderJobId', funderJob._id)
+            job.save()
           }
         } catch (e) {
           console.log(`Error on token funding for wallet: ${wallet}`, e)

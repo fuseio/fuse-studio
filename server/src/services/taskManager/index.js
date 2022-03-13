@@ -3,16 +3,28 @@ const {
 } = require('@services/queue')
 const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
+const BigNumber = require('bignumber.js')
 const { createActionFromJob, successAndUpdateByJob, failAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
-const { get, isEqual } = require('lodash')
+const { get, has, isEqual } = require('lodash')
 const { lockAccount, unlockAccount } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
+const { web3 } = require('@services/web3/home')
+
+const checkUnlock = async (queueJob) => {
+  if (lodash.get(queueJob, 'data.role') === 'fuse-funder') {
+    const accountBalance = await web3.eth.getBalance(queueJob.accountAddress)
+    if (new BigNumber(accountBalance).isLessThan('100000000000000000000')) {
+      console.log(`Low balance. Do not unlock account ${queueJob.accountAddress}`)
+      return false
+    }
+  }
+  return true
+}
 
 const cancelTask = async (queueJob) => {
-  const { messageId } = queueJob
-  console.log(`Skipping a task ${queueJob._id} with ${queueJob.name} and messageId ${messageId}. Reason: cancel request`)
+  console.log(`Skipping a task ${queueJob._id} with ${queueJob.name}. Reason: cancel request`)
   queueJob.accountAddress = lodash.get(queueJob, 'data.accountAddress')
   queueJob.status = 'cancelled'
   return queueJob.save()
@@ -38,8 +50,9 @@ const getWorkerAccount = (taskData, taskParams) => {
 
 const startTask = async message => {
   const messageId = message.MessageId
-  const task = message.Body
-  const { name, params } = task
+  const messageBody = message.Body
+  const { name, jobId, params } = messageBody
+
   if (!tasks[name]) {
     console.warn(
       `no task named ${name} was found, skipping`
@@ -47,15 +60,23 @@ const startTask = async message => {
     return true
   }
 
-  console.log({ task })
+  console.log({ messageBody })
+  console.log(`received a task ${name} with message id ${messageId} and job id ${jobId}`)
 
-  let queueJob = await QueueJob.findOne({ messageId })
+  let queueJob = await QueueJob.findById(jobId)
+
+  if (!queueJob) {
+    console.error(`Job was not found by id ${jobId}. Skipping`)
+    return true
+  }
+
   if (isEqual(get(queueJob, 'status'), 'cancelRequested')) {
     await cancelTask(queueJob)
     return true
   }
-  console.log(`starting a task for ${name}`)
-  const taskData = getTaskData(task)
+
+  console.log(`starting a task ${name} with message id ${messageId}, job id is ${get(queueJob, '_id')}`)
+  const taskData = getTaskData(messageBody)
 
   if (!taskData) {
     console.warn(
@@ -77,6 +98,10 @@ const startTask = async message => {
       return
     }
 
+    if (!queueJob) {
+      queueJob = await QueueJob.findById(jobId)
+    }
+
     queueJob.accountAddress = account.address
     queueJob.status = 'started'
     await queueJob.save()
@@ -85,13 +110,17 @@ const startTask = async message => {
       .then(async () => {
         await queueJob.successAndUpdate()
         await successAndUpdateByJob(queueJob)
-        unlockAccount(account._id)
+        if (await checkUnlock(queueJob)) {
+          unlockAccount(account._id)
+        }
       })
       .catch(async err => {
         await queueJob.fail(err)
         await queueJob.save()
         await failAndUpdateByJob(queueJob)
-        unlockAccount(account._id)
+        if (await checkUnlock(queueJob)) {
+          unlockAccount(account._id)
+        }
         console.error(
           `Error received in task ${name} with id ${get(queueJob, '_id')} and task data ${JSON.stringify(
             taskData
@@ -99,7 +128,6 @@ const startTask = async message => {
         )
         console.log({ err })
       })
-
     return true
   } catch (err) {
     console.error(
@@ -108,7 +136,7 @@ const startTask = async message => {
       )}, skipping. ${err}`
     )
     if (!queueJob) {
-      queueJob = await QueueJob.findOne({ messageId })
+      queueJob = await QueueJob.findById(jobId)
     }
 
     // marking queueJob as failed
@@ -116,10 +144,15 @@ const startTask = async message => {
       await queueJob.fail(err)
       await queueJob.save()
       await failAndUpdateByJob(queueJob)
+      if (account && account._id && await checkUnlock(queueJob)) {
+        unlockAccount(account._id)
+      }
+    } else {
+      if (account && account._id) {
+        unlockAccount(account._id)
+      }
     }
-    if (account && account._id) {
-      unlockAccount(account._id)
-    }
+
     console.log({ err })
     return true
   }
@@ -134,17 +167,24 @@ const now = async (name, params, options = {}) => {
     }
   }
 
-  const response = await tasksFIFOMessenger.sendMessage({
-    name,
-    params
-  }, options)
+  if (name === 'relay' || name === 'fundToken') {
+    if (!has(options, 'isWalletJob')) {
+      options.isWalletJob = true
+    }
+  }
+
   const communityAddress = lodash.get(params, 'communityAddress')
   const job = await new QueueJob({
     name,
     data: params,
-    messageId: response.MessageId,
     ...(communityAddress && { communityAddress })
   }).save()
+
+  await tasksFIFOMessenger.sendMessage({
+    name,
+    jobId: job._id,
+    params
+  }, options)
 
   if (options.isWalletJob) {
     await createActionFromJob(job)
@@ -152,25 +192,38 @@ const now = async (name, params, options = {}) => {
   return job
 }
 
+const retry = async (failedJob) => {
+  const { _id, status, retryJob } = failedJob
+  console.log(`Requested a retry of the job ${_id}`)
+
+  if (status !== 'failed' && status !== 'cancelled' && status !== 'cancelRequested') {
+    throw Error(`Cannot retry job ${_id} with status ${status}`)
+  } else if (retryJob) {
+    throw Error(`job ${_id} already retried with id ${retryJob}`)
+  }
+  const job = await now(failedJob.name, failedJob.data)
+  failedJob.retryJob = job._id
+  await failedJob.save()
+
+  console.log(`Retry of job ${_id} is scheduled in a new jobb ${job._id}`)
+  return job
+}
+
 const start = async () => {
   console.log('starting SQS task manager')
   while (true) {
-    try {
-      const message = await tasksFIFOMessenger.receiveMessage()
-      if (message) {
-        const toBeDeleted = await startTask(message)
-        if (toBeDeleted) {
-          await tasksFIFOMessenger.deleteMessage(message)
-        }
+    const message = await tasksFIFOMessenger.receiveMessage()
+    if (message) {
+      const toBeDeleted = await startTask(message)
+      if (toBeDeleted) {
+        await tasksFIFOMessenger.deleteMessage(message)
       }
-    } catch (error) {
-      console.error(`Unexpected error occured in the task manager`)
-      console.error(error)
     }
   }
 }
 
 module.exports = {
   start,
-  now
+  now,
+  retry
 }

@@ -45,7 +45,7 @@ const sendRelay = async (account, { network, walletModule, walletModuleAddress, 
 
   const receipt = await send(method, {
     from: account.address,
-    gas: config.get('gasLimitForTx.createForeignWallet')
+    gas: config.get('gasLimitForTx.relay')
   }, {
     job
   })

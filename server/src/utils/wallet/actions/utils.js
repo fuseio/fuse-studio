@@ -11,7 +11,7 @@ const formatActionData = ({ transactionBody, txHash, bonusType, externalId, deta
   to: get(transactionBody, 'to', ''),
   blockNumber: get(transactionBody, 'blockNumber'),
   communityName: get(transactionBody, 'communityName', ''),
-  metadata: purchase || get(transactionBody, 'tradeInfo'),
+  metadata: purchase || get(transactionBody, 'metadata', get(transactionBody, 'tradeInfo')),
   detailedStatus,
   externalId,
   bonusType,

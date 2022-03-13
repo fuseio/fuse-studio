@@ -2,6 +2,7 @@ const defer = require('config/defer').deferConfig
 
 module.exports = {
   env: 'dev',
+  mode: 'executor',
   api: {
     allowCors: true,
     secret: 'secret',
@@ -39,7 +40,7 @@ module.exports = {
   },
   gasLimitForTx: {
     createForeignWallet: 550000,
-    relay: 250000,
+    relay: 1500000,
     funder: 21000,
     getDAIPointsToAddress: 1000000
   },
@@ -353,7 +354,6 @@ module.exports = {
       bucket: 'fuse-studio-qa'
     },
     sqs: {
-      enabled: false,
       queueUrl: '',
       constructor: {
         region: 'eu-cental-1',
@@ -413,8 +413,8 @@ module.exports = {
   },
   apy: {
     launch: {
-      blockNumber: 11800000,
-      timestamp: 1625290115
+      blockNumber: 12150000,
+      timestamp: 1627188580
     },
     claim: {
       interval: 25200
@@ -436,18 +436,19 @@ module.exports = {
         }
       },
       {
-        rate: 0.5,
-        maxPerWallet: 2000,
-        maxTotal: 10000,
         since: {
           timestamp: 1634025600
-        }
+        },
+        rewardBrackets: [
+          { limitAmount: 1000, rate: 0.5 },
+          { limitAmount: 10000, rate: 0.05 }
+        ]
       }
     ]
   },
   wallet: {
-    version: '1.5.0',
-    paddedVersion: '0001.0005.0000'
+    version: '1.7.0',
+    paddedVersion: '0001.0007.0000'
   },
   beacons: {
     proximityUUID: '46697306-6d16-4bce-a9d6-c79752370810'
