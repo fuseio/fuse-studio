@@ -4,6 +4,8 @@ const QueueJob = mongoose.model('QueueJob')
 const { agenda } = require('@services/agenda')
 const auth = require('@routes/auth')
 const { get, isEmpty } = require('lodash')
+const taskManager = require('@services/taskManager')
+const { ObjectId } = require('mongodb')
 
 router.get('/external', auth.required, async (req, res) => {
   const { externalId } = req.query
@@ -71,6 +73,52 @@ router.get('/:id', auth.required, async (req, res) => {
     return res.json({ data: job })
   }
   return res.json({ data: jobs[0] })
+})
+
+/**
+ * @api {get} api/v2/jobs/retry/:jobId Retry failed job by id
+ * @apiName RetryJob
+ * @apiGroup Jobs
+ * @apiDescription Retry failed job by id
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {Object} data Job object
+ */
+router.post('/retry/:id', auth.admin, async (req, res) => {
+  const { id } = req.params
+  const failedJob = await QueueJob.findById(id)
+  const job = await taskManager.retry(failedJob)
+  return res.json({ job })
+})
+
+/**
+ * @api {get} api/v2/jobs/retry Retry failed job by query
+ * @apiName RetryJobByQuery
+ * @apiGroup Jobs
+ * @apiDescription Retry failed job by id
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {Object} data Job object
+ */
+router.post('/retry', auth.admin, async (req, res) => {
+  const jobsIds = req.body
+
+  if (!Array.isArray(jobsIds)) {
+    throw Error('request data is empty or invalid')
+  }
+
+  const _ids = jobsIds.map(id => ObjectId(id))
+  const cancelledJobs = await QueueJob.find({ _id: { $in: _ids } })
+
+  console.log(`found ${cancelledJobs.length} cancelled jobs to retry`)
+  const retryJobs = []
+  for (const cancelledJob of cancelledJobs) {
+    const job = await taskManager.retry(cancelledJob)
+    retryJobs.push(job)
+  }
+  return res.json({ data: retryJobs, size: retryJobs.length })
 })
 
 module.exports = router
