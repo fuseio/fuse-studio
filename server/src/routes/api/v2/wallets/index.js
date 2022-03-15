@@ -11,7 +11,7 @@ const { getWalletModules } = require('@utils/wallet')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const Invite = mongoose.model('Invite')
-const { get, omit } = require('lodash')
+const { get, omit, isEqual } = require('lodash')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
 
@@ -40,39 +40,46 @@ router.post('/', auth.required, async (req, res, next) => {
   const transferOwnerWallet = await UserWallet.findOne({ phoneNumber, accountAddress: config.get('network.home.addresses.MultiSigWallet') })
   if (transferOwnerWallet) {
     console.log(`User ${phoneNumber} already has wallet account: ${transferOwnerWallet.walletAddress} owned by MultiSig - need to setOwner`)
-    const job = await taskManager.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, communityAddress, newOwner: accountAddress, correlationId })
+    const job = await taskManager.now('setWalletOwner', { walletAddress: transferOwnerWallet.walletAddress, communityAddress, newOwner: accountAddress, correlationId, walletModules: transferOwnerWallet.walletModules })
     return res.json({ job: job })
   } else {
-    let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
-    if (userWallet) {
-      const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress}`
+    const walletByAccount = await UserWallet.findOne({ accountAddress, appName })
+    if (walletByAccount && !isEqual(phoneNumber, walletByAccount.phoneNumber)) {
+      const msg = `Account ${accountAddress} already has another owner`
       return res.status(400).json({ error: msg })
     } else {
-      const walletModules = await getWalletModules(communityAddress)
-      const salt = generateSalt()
-      const { createContract } = createNetwork('home')
-      const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
-      const walletAddress = await walletFactory.methods.getAddressForCounterfactualWallet(accountAddress, Object.values(walletModules || homeAddresses.walletModules), salt).call()
-      userWallet = await new UserWallet({
-        phoneNumber,
-        accountAddress,
-        walletOwnerOriginalAddress: accountAddress,
-        walletFactoryOriginalAddress: homeAddresses.WalletFactory,
-        walletFactoryCurrentAddress: homeAddresses.WalletFactory,
-        walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
-        walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
-        walletModulesOriginal: walletModules,
-        walletModules: walletModules,
-        networks: ['fuse'],
-        identifier,
-        salt,
-        appName,
-        walletAddress,
-        ip: req.clientIp,
-        referralAddress
-      }).save()
-      const job = await taskManager.now('createWallet', { owner: accountAddress, walletAddress, communityAddress, correlationId, _id: userWallet._id, walletModules, salt }, { isWalletJob: true })
-      return res.json({ job: job })
+      let userWallet = await UserWallet.findOne({ phoneNumber, accountAddress, appName })
+      if (userWallet) {
+        const msg = `User ${phoneNumber}, ${accountAddress} already has wallet account: ${userWallet.walletAddress}`
+        return res.status(400).json({ error: msg })
+      } else {
+        const walletModules = await getWalletModules(communityAddress)
+        const salt = generateSalt()
+        const { createContract } = createNetwork('home')
+        const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
+        const walletAddress = await walletFactory.methods.getAddressForCounterfactualWallet(accountAddress, Object.values(walletModules), salt).call()
+        userWallet = await new UserWallet({
+          phoneNumber,
+          accountAddress,
+          walletOwnerOriginalAddress: accountAddress,
+          walletFactoryOriginalAddress: homeAddresses.WalletFactory,
+          walletFactoryCurrentAddress: homeAddresses.WalletFactory,
+          walletImplementationOriginalAddress: homeAddresses.WalletImplementation,
+          walletImplementationCurrentAddress: homeAddresses.WalletImplementation,
+          walletModulesOriginal: walletModules,
+          walletModules: walletModules,
+          networks: ['fuse'],
+          identifier,
+          salt,
+          appName,
+          walletAddress,
+          ip: req.clientIp,
+          referralAddress
+        }).save()
+
+        const job = await taskManager.now('createWallet', { owner: accountAddress, walletAddress, communityAddress, correlationId, _id: userWallet._id, walletModules, salt }, { isWalletJob: true })
+        return res.json({ job: job })
+      }
     }
   }
 })
@@ -285,7 +292,8 @@ router.post('/backup', auth.required, async (req, res, next) => {
         const bonusType = 'backup'
         const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
         const bonusMaxTimesLimit = get(community, `${bonusType}.maxTimes`, 100)
-        const jobData = { phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress: homeTokenAddress, communityAddress, bonusType: 'backup', bonusAmount, bonusMaxTimesLimit }
+        const tokenAddress = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.tokenAddress`, homeTokenAddress)
+        const jobData = { role: 'fuse-funder', phoneNumber, receiverAddress: walletAddress, identifier, tokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
         const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
         const job = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
         return res.json({ job: job })

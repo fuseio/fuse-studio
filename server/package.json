@@ -62,7 +62,7 @@
     "crypto": "^1.0.1",
     "debug": "2.6.9",
     "eth-sig-util": "^2.1.1",
-    "ethereumjs-wallet": "^0.6.3",
+    "ethereumjs-wallet": "^1.0.2",
     "ethers": "^4.0.40",
     "express": "4.16.3",
     "express-async-errors": "^2.1.2",

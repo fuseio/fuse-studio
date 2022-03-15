@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const config = require('config')
 const jwt = require('jsonwebtoken')
+const { verifyWalletOwner } = require('@utils/login')
 
 router.use('/firebase', require('./firebase'))
 router.use('/sms', require('./sms'))
@@ -20,7 +21,11 @@ router.use('/sms', require('./sms'))
 router.post('/request', async (req, res) => {
   const { accountAddress, phoneNumber, appName } = req.body
   const secret = config.get('api.secret')
-  const token = jwt.sign({ phoneNumber, accountAddress, appName }, secret)
-  res.json({ token })
+  if (await verifyWalletOwner({ phoneNumber, accountAddress })) {
+    const token = jwt.sign({ phoneNumber, accountAddress, appName }, secret)
+    res.json({ token })
+  } else {
+    res.status(403).json({ error: 'This account is registered to another phone, Please contact support to update your phone number' })
+  }
 })
 module.exports = router

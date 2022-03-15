@@ -55,27 +55,16 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     const { homeTokenAddress, plugins } = community
     const hasBonus = get(community, `plugins.inviteBonus.isActive`, false) && get(community, `plugins.inviteBonus.inviteInfo.amount`, false)
     if (hasBonus) {
-      if (isFunderDeprecated) {
-        const bonusType = 'invite'
-        const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
-        const bonusMaxTimesLimit = get(community, `${bonusType}.maxTimes`, 100)
-        const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
-        const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
-        const bonusJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
-        job.set('data.bonusJob', {
-          name: bonusJob.name,
-          _id: bonusJob._id.toString()
-        })
-      } else {
-        const bonusJob = await taskManager.now('bonus', {
-          name: 'bonus',
-          params: { communityAddress, bonusInfo }
-        })
-        job.set('data.bonusJob', {
-          name: bonusJob.name,
-          _id: bonusJob._id.toString()
-        })
-      }
+      const bonusType = 'invite'
+      const bonusAmount = get(community, `plugins.${bonusType}Bonus.${bonusType}Info.amount`)
+      const bonusMaxTimesLimit = get(community, `${bonusType}.maxTimes`, 100)
+      const jobData = { phoneNumber, receiverAddress: walletAddress, identifier: phoneNumber, tokenAddress: homeTokenAddress, communityAddress, bonusType, bonusAmount, bonusMaxTimesLimit }
+      const transactionBody = await deduceTransactionBodyForFundToken(plugins, jobData)
+      const bonusJob = await taskManager.now('fundToken', { ...jobData, transactionBody }, { isWalletJob: true })
+      job.set('data.bonusJob', {
+        name: bonusJob.name,
+        _id: bonusJob._id.toString()
+      })
     }
   }
   await job.save()

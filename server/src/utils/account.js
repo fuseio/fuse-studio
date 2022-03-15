@@ -3,7 +3,7 @@ const { toChecksumAddress } = require('web3-utils')
 const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
 const jwt = require('jsonwebtoken')
-var { fromMasterSeed } = require('ethereumjs-wallet/hdkey')
+const { hdkey } = require('ethereumjs-wallet')
 
 const lockAccount = async (query = { role: '*' }) => {
   const account = await Account.findOneAndUpdate({ isLocked: false, ...query }, { isLocked: true, lockingTime: new Date() })
@@ -61,7 +61,7 @@ const withWalletAccount = (func) => withAccount(func, ({ network }) => {
 })
 
 const generateAccounts = (seed, accountsNumber) => {
-  const wallet = fromMasterSeed(seed)
+  const wallet = hdkey.fromMasterSeed(seed)
   for (let i = 0; i < accountsNumber; i++) {
     const derivedWallet = wallet.deriveChild(i).getWallet()
     const derivedAddress = derivedWallet.getChecksumAddressString()
@@ -71,7 +71,7 @@ const generateAccounts = (seed, accountsNumber) => {
 
 const generateAccountAddress = (childIndex = 0) => {
   const mnemonic = config.get('secrets.accounts.seed')
-  const address = fromMasterSeed(mnemonic).deriveChild(childIndex).getWallet().getAddressString()
+  const address = hdkey.fromMasterSeed(mnemonic).deriveChild(childIndex).getWallet().getAddressString()
   return toChecksumAddress(address)
 }
 

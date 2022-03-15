@@ -1,4 +1,5 @@
 {
+  "mode": "COMMUNITY_MODE",
   "api": {
     "allowCors": "COMMUNITY_API_ALLOW_CORS",
     "secret": "COMMUNITY_API_SECRET",
@@ -40,7 +41,6 @@
       "smsType": "COMMUNITY_AWS_SNS_SMS_TYPE"
     },
     "sqs": {
-      "enabled": "COMMUNITY_AWS_SQS_ENABLED",
       "queueUrl": "COMMUNITY_AWS_SQS_QUEUE_URL"
     }
   },
