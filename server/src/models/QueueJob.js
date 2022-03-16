@@ -10,6 +10,7 @@ const QueueJobSchema = new Schema({
   lastFinishedAt: { type: Date },
   failedAt: { type: Date },
   failReason: { type: String },
+  retryJob: { type: Schema.Types.ObjectId, ref: 'QueueJob' },
   failCount: { type: Number },
   communityAddress: { type: String }
 }, { timestamps: true })
