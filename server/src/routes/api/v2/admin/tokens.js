@@ -85,17 +85,17 @@ router.post('/create', auth.required, async (req, res) => {
  * @apiSuccess {String} Started job data
  */
 router.post('/mint', auth.required, async (req, res) => {
-  const { isCommunityAdmin, accountAddress } = req.user
+  const { isCommunityAdmin, accountAddress, role } = req.user
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
   const { tokenAddress, networkType, amount, toAddress, correlationId } = req.body
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  } 
   try {
     const amountInWei = toWei(amount.toString())
-    const job = await taskManager.now('mint', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, toAddress, correlationId })
+    const job = await taskManager.now('mint', { tokenAddress, bridgeType: 'home', accountAddress, role, amount: amountInWei, toAddress, correlationId })
     return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })
@@ -120,7 +120,7 @@ router.post('/mint', auth.required, async (req, res) => {
  * @apiSuccess {String} Started job data
  */
 router.post('/burn', auth.required, async (req, res) => {
-  const { isCommunityAdmin, accountAddress } = req.user
+  const { isCommunityAdmin, accountAddress, role } = req.user
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
@@ -133,9 +133,9 @@ router.post('/burn', auth.required, async (req, res) => {
     let job
     if (tokenAddress) {
       if (!from) {
-        job = await taskManager.now('burn', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, correlationId })
+        job = await taskManager.now('burn', { tokenAddress, bridgeType: 'home', accountAddress, role, amount: amountInWei, correlationId })
       } else {
-        job = await taskManager.now('adminApprove', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
+        job = await taskManager.now('adminApprove', { tokenAddress, bridgeType: 'home', accountAddress, role, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
       }
     } else {
       const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
@@ -180,7 +180,7 @@ router.post('/burn', auth.required, async (req, res) => {
  * @apiSuccess {String} Started job data
  */
 router.post('/transfer', auth.required, async (req, res) => {
-  const { isCommunityAdmin, accountAddress } = req.user
+  const { isCommunityAdmin, accountAddress, role } = req.user
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
@@ -191,7 +191,7 @@ router.post('/transfer', auth.required, async (req, res) => {
   const amountInWei = toWei(amount)
   if (tokenAddress) {
     try {
-      const job = await taskManager.now('adminTransfer', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, to, correlationId })
+      const job = await taskManager.now('adminTransfer', { tokenAddress, bridgeType: 'home', accountAddress, role, amount: amountInWei, wallet: from, to, correlationId })
       return res.json({ job })
     } catch (err) {
       return res.status(400).send({ error: err.message })
@@ -210,7 +210,7 @@ router.post('/transfer', auth.required, async (req, res) => {
         return res.status(400).send({ error: `Could not find tokens for spendabilityIds: ${spendabilityIds}` })
       }
       const tokenAddresses = tokens.map(t => t.address)
-      const job = await taskManager.now('adminSpendabilityTransfer', { tokenAddresses, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, to, correlationId: `${correlationId}-1` })
+      const job = await taskManager.now('adminSpendabilityTransfer', { tokenAddresses, bridgeType: 'home', accountAddress, role, amount: amountInWei, wallet: from, to, correlationId: `${correlationId}-1` })
       return res.json({ job })
     } catch (err) {
       return res.status(400).send({ error: err.message })
