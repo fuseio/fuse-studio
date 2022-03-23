@@ -92,10 +92,11 @@ router.post('/mint', auth.required, async (req, res) => {
   const { tokenAddress, networkType, amount, toAddress, correlationId } = req.body
   if (networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  } 
+  }
   try {
     const amountInWei = toWei(amount.toString())
-    const job = await taskManager.now('mint', { tokenAddress, bridgeType: 'home', accountAddress, role, amount: amountInWei, toAddress, correlationId })
+    const taskExectionParams = role ? { role } : { accountAddress }
+    const job = await taskManager.now('mint', { tokenAddress, bridgeType: 'home', ...taskExectionParams, amount: amountInWei, toAddress, correlationId })
     return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })
