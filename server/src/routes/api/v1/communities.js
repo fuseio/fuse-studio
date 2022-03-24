@@ -170,21 +170,6 @@ router.post('/:communityAddress/invite', async (req, res, next) => {
   }
 })
 
-/**
- * @api {post} /communities/:communityAddress/bridge Add bridge to community
- * @apiName AddBridge
- * @apiGroup Community
- * @apiParam {String} communityAddress Community address
- * @apiParam {bridgeType} bridgeType - 'multiple-erc20-to-erc20'/'multi-amb-erc20-to-erc677'/'amb-erc677-to-erc677'
- * @apiParam {bridgeDirection} bridgeDirection - 'foreign-to-home'/'home-to-foreign'
- * @apiParamExample {json} Request-Example:
- *   {
- *      "bridgeType": "multi-amb-erc20-to-erc677",
- *      "bridgeDirection": "home-to-foreign"
- *   }
- *
- */
-
 router.put('/:communityAddress/bridge', auth.communityOwner, async (req, res, next) => {
   const { communityAddress } = req.params
   const { bridgeType, bridgeDirection } = req.body

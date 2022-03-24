@@ -6,19 +6,6 @@ const UserWallet = mongoose.model('UserWallet')
 const Contact = mongoose.model('Contact')
 const { compact } = require('lodash')
 
-/**
- * @api {post} api/v2/contacts/ Sync contacts list
- * @apiName SyncContacts
- * @apiGroup Contacts
- * @apiDescription Sync contacts list
- *
- * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
- *
- * @apiParam {String[]} contacts phone numbers list
- *
- * @apiSuccess {Object[]} new contacts list (phoneNumber, account)
- * @apiSuccess {Number} nonce
- */
 router.post('/', auth.required, async (req, res) => {
   const { phoneNumber, accountAddress, appName } = req.user
   const { contacts } = req.body
@@ -71,16 +58,6 @@ router.post('/', auth.required, async (req, res) => {
   res.send({ data: { newContacts, nonce } })
 })
 
-/**
- * @api {post} /api/v2/contacts/:nonce Acknowledge contacts list sync with nonce
- * @apiName AckSyncContacts
- * @apiGroup Contacts
- * @apiDescription Acknowledge contacts list sync with nonce
- *
- * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
- *
- * @apiSuccess {String} response Response status - ok
- */
 router.post('/:nonce', auth.required, async (req, res) => {
   const { phoneNumber, accountAddress, appName } = req.user
   const { nonce } = req.params
