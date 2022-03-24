@@ -7,6 +7,7 @@ const QueueJobSchema = new Schema({
   data: { type: Object },
   status: { type: String, default: 'pending' },
   accountAddress: { type: String },
+  role: { type: String },
   lastFinishedAt: { type: Date },
   failedAt: { type: Date },
   failReason: { type: String },
