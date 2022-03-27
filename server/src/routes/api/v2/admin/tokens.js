@@ -27,6 +27,8 @@ const { toChecksumAddress } = require('web3-utils')
  * @apiParam {String} spendabilityIds Token spendability ids (comma-seperated list)
  * @apiParam {String} networkType Token's network (must be Fuse)
  *
+ * @apiParam (Query) {String} apiKey API key is used to access the API
+ *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
  * @apiSuccess {String} Started job data
@@ -80,6 +82,8 @@ router.post('/create', auth.required, async (req, res) => {
  * @apiParam {String} amount Token amount to mint
  * @apiParam {String} toAddress account to transfer to
  *
+ * @apiParam (Query) {String} apiKey API key is used to access the API
+ *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
  * @apiSuccess {String} Started job data
@@ -115,6 +119,8 @@ router.post('/mint', auth.required, async (req, res) => {
  * @apiParam {String} networkType Token's network (must be Fuse)
  * @apiParam {String} amount Token amount to burn
  * @apiParam {String} from account to burn from (optional)
+ *
+ * @apiParam (Query) {String} apiKey API key is used to access the API
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
@@ -176,6 +182,8 @@ router.post('/burn', auth.required, async (req, res) => {
  * @apiParam {String} from account to transfer from
  * @apiParam {String} to address to transfer to
  *
+ * @apiParam (Query) {String} apiKey API key is used to access the API
+ *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
  * @apiSuccess {String} Started job data
@@ -231,6 +239,8 @@ router.post('/transfer', auth.required, async (req, res) => {
  * @apiParam {String} tokenAddress
  * @apiParam {String} spendabilityId
  * @apiParam {String} networkType Token's network (must be Fuse)
+ *
+ * @apiParam (Query) {String} apiKey API key is used to access the API 
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  */
@@ -333,6 +343,8 @@ router.post('/expired', auth.required, async (req, res) => {
  * @apiParam {String} startTime
  * @apiParam {String} endTime
  * @apiParam {String} networkType Token's network (must be Fuse)
+ *
+ * @apiParam (Query) {String} apiKey API key is used to access the API
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  */

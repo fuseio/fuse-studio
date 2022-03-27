@@ -12,7 +12,6 @@ REST API for accessing and managing communities (or economies) on the Fuse Studi
 	- [Burn tokens](#Burn-tokens)
 	- [Get burn events](#Get-burn-events)
 	- [Create token](#Create-token)
-	- [Create foreign wallet for the matching home](#Create-foreign-wallet-for-the-matching-home)
 	- [Create wallet for phone number](#Create-wallet-for-phone-number)
 	- [Get expired by wallet/token/spendabilityId](#Get-expired-by-wallet/token/spendabilityId)
 	- [Get token jobs by address on fuse](#Get-token-jobs-by-address-on-fuse)
@@ -159,6 +158,10 @@ POST /api/v2/admin/tokens/burn
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
 | amount | `String` | <p>Token amount to burn</p> |
 | from | `String` | <p>account to burn from (optional)</p> |
+### Query Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| apiKey | `String` | <p>API key is used to access the API</p> |
 
 ### Examples
 Burn 1.1 tokens on Fuse network
@@ -193,6 +196,10 @@ POST /api/v2/admin/tokens/burnEvents
 | startTime | `String` |  |
 | endTime | `String` |  |
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
+### Query Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| apiKey | `String` | <p>API key is used to access the API</p> |
 
 ### Examples
 GET /api/v2/admin/tokens/burnEvents
@@ -226,6 +233,10 @@ POST /api/v2/admin/tokens/create
 | expiryTimestamp | `String` | <p>Token expiry timestamp after which cannot transfer (Unix epoch time - in seconds)</p> |
 | spendabilityIds | `String` | <p>Token spendability ids (comma-seperated list)</p> |
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
+### Query Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| apiKey | `String` | <p>API key is used to access the API</p> |
 
 ### Examples
 Create a token on Fuse network
@@ -233,37 +244,6 @@ Create a token on Fuse network
 ```
 POST /api/v2/admin/tokens/create
 body: { name: 'MyCoolToken', symbol: 'MCT', initialSupply: '100', uri: 'ipfs://hash', expiryTimestamp: 1585036857, spendabilityIds: 'a,b,c', networkType: 'fuse' }
-```
-
-
-### Success 200
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| Started | `String` | <p>job data</p> |
-## <a name='Create-foreign-wallet-for-the-matching-home'></a> Create foreign wallet for the matching home
-[Back to top](#top)
-
-<p>Start async job of creating a wallet on the foreign network</p>
-
-```
-POST /api/v2/admin/wallets/create/foreign
-```
-### Headers
-| Name    | Type      | Description                          |
-|---------|-----------|--------------------------------------|
-| Authorization | String | <p>JWT Authorization in a format &quot;Bearer {jwtToken}&quot;</p>|
-
-### Parameter Parameters
-| Name     | Type       | Description                           |
-|:---------|:-----------|:--------------------------------------|
-| wallerAddress | `String` | <p>address create a wallet for, should be an existing wallet on home network (body parameter)</p> |
-
-### Examples
-Create wallet for the provided wallet address
-
-```
-POST /api/v2/admin/wallets/create/foreign
-body: { wallerAddress: '0x92c358fcF6d270F97458C57583FCeabC086c3a26' }
 ```
 
 
@@ -288,6 +268,10 @@ POST /api/v2/admin/wallets/create
 | Name     | Type       | Description                           |
 |:---------|:-----------|:--------------------------------------|
 | phoneNumber | `String` | <p>phone number to create a wallet for (body parameter)</p> |
+### Query Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| apiKey | `String` | <p>API key is used to access the API</p> |
 
 ### Examples
 Create wallet for the provided phone number
@@ -322,6 +306,10 @@ POST /api/v2/admin/tokens/expired
 | tokenAddress | `String` |  |
 | spendabilityId | `String` |  |
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
+### Query Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| apiKey | `String` | <p>API key is used to access the API</p> |
 
 ### Examples
 GET /api/v2/admin/tokens/expired
@@ -350,6 +338,10 @@ GET api/v2/admin/wallets/transfers/tokentx/:walletAddress
 |:---------|:-----------|:--------------------------------------|
 | tokenAddress | `String` | <p>Address of the token</p> |
 | fromBlockNumer | `String` | <p>The block number to start fetch from</p> |
+### Query Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| apiKey | `String` | <p>API key is used to access the API</p> |
 
 
 ### Success 200
@@ -376,6 +368,10 @@ POST /api/v2/admin/tokens/mint
 | networkType | `String` | <p>Token's network (must be Fuse)</p> |
 | amount | `String` | <p>Token amount to mint</p> |
 | toAddress | `String` | <p>account to transfer to</p> |
+### Query Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| apiKey | `String` | <p>API key is used to access the API</p> |
 
 ### Examples
 Minting 1.1 tokens on Fuse network
@@ -413,6 +409,10 @@ POST /api/v2/admin/tokens/transfer
 | amount | `String` | <p>Token amount to transfer</p> |
 | from | `String` | <p>account to transfer from</p> |
 | to | `String` | <p>address to transfer to</p> |
+### Query Parameters
+| Name     | Type       | Description                           |
+|:---------|:-----------|:--------------------------------------|
+| apiKey | `String` | <p>API key is used to access the API</p> |
 
 ### Examples
 Transfer 1.1 tokens on Fuse network

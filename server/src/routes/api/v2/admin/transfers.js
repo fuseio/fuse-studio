@@ -13,6 +13,8 @@ const auth = require('@routes/auth')
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
+ * @apiParam (Query) {String} apiKey API key is used to access the API
+ *
  * @apiSuccess {Object} data Array of jobs
  */
 router.get('/tokentx/:walletAddress', auth.required, async (req, res) => {
