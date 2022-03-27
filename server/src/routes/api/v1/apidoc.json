@@ -1,5 +1,5 @@
 {
-  "name": "Studio Backend API",
+  "name": "Studio Backend API (DEPRECATED)",
   "version": "0.1.0",
   "description": "The Fuse Studio REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. Learn more on https://github.com/fuseio/fuse-studio.",
   "title": "Fuse Studio REST API",

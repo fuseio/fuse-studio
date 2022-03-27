@@ -21,7 +21,8 @@ const CommunitySchema = new Schema({
   owner: { type: Schema.Types.ObjectId, ref: 'StudioUser' },
   isMultiBridge: { type: Boolean, default: false },
   bridgeType: { type: String, enum: ['multiple-erc20-to-erc20', 'multi-amb-erc20-to-erc677', 'amb-erc677-to-erc677'] },
-  bridgeDirection: { type: String, enum: ['foreign-to-home', 'home-to-foreign'] }
+  bridgeDirection: { type: String, enum: ['foreign-to-home', 'home-to-foreign'] },
+  apiKey: { type: String }
 }, { timestamps: true })
 
 CommunitySchema.index({ communityAddress: 1 }, { unique: true })

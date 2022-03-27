@@ -1,7 +1,7 @@
 {
   "name": "Studio Backend API",
   "version": "2.0.0",
-  "description": "The Fuse Studio V2 REST API for accessing the data and the services of the Fuse network in a simple way. You can use this API to query and interact with the objects of the Fuse network such as: Communities, Tokens, Bridges and Entities. The backend base URL is https://studio.fuse.io. Learn more on https://github.com/fuseio/fuse-studio",
+  "description": "REST API for accessing and managing communities (or economies) on the Fuse Studio platform. Please attach the API key for all your request, you can get an API key by creating an economy on Fuse Studio. Important part of the API is the Admin module, it offers a simple API for minting and transfering tokens between economy members. Please contract the team to get access to the API. The backend base URL is https://studio.fuse.io. Learn more on https://github.com/fuseio/fuse-studio",
   "title": "Fuse Studio REST API",
   "url" : "https://github.com/fuseio/fuse-studio",
   "sampleUrl": "https://studio.fuse.io/api/v2",

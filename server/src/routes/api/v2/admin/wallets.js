@@ -22,6 +22,8 @@ router.use('/transfers', require('./transfers'))
  *
  * @apiParam {String} phoneNumber phone number to create a wallet for (body parameter)
  *
+ * @apiParam (Query) {String} apiKey API key is used to access the API
+ *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  *
  * @apiSuccess {String} Started job data
@@ -57,22 +59,6 @@ router.post('/create', auth.required, async (req, res) => {
   }
 })
 
-/**
- * @api {post} /api/v2/admin/wallets/create/foreign Create foreign wallet for the matching home
- * @apiName CreateForeignWallet
- * @apiGroup Admin
- * @apiDescription Start async job of creating a wallet on the foreign network
- *
- * @apiExample Create wallet for the provided wallet address
- *  POST /api/v2/admin/wallets/create/foreign
- *  body: { wallerAddress: '0x92c358fcF6d270F97458C57583FCeabC086c3a26' }
- *
- * @apiParam {String} wallerAddress address create a wallet for, should be an existing wallet on home network (body parameter)
- *
- * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
- *
- * @apiSuccess {String} Started job data
- */
 router.post('/create/foreign', auth.admin, async (req, res) => {
   const walletAddress = toChecksumAddress(req.body.walletAddress)
   const userWallet = await UserWallet.findOne({ walletAddress })
