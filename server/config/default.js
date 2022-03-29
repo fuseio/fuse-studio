@@ -244,6 +244,12 @@ module.exports = {
       }
     }
   },
+  taskManager: {
+    transport: 'sqs',
+    lockedAccounts: {
+      delayTimeout: 5
+    }
+  },
   funder: {
     urlBase: 'https://funder-qa.fuse.io/api/'
   },

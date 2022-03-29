@@ -3,6 +3,7 @@ const {
 } = require('@services/queue')
 const lodash = require('lodash')
 const tasks = require('@tasks/sqs')
+const config = require('config')
 const { createActionFromJob, successAndUpdateByJob, failAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { get, has, isEqual } = require('lodash')
@@ -82,6 +83,7 @@ const startTask = async message => {
           taskData
         )}, retrying soon.`
       )
+      await tasksFIFOMessenger.delayMessage(message, config.get('taskManager.lockedAccounts.delayTimeout'))
       return
     }
 
