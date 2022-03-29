@@ -2,10 +2,11 @@
 const AWS = require('aws-sdk')
 
 class Messenger {
-  constructor ({ queueUrl, sqsArgs, receiveArgs }) {
+  constructor ({ queueUrl, sqsArgs, receiveArgs, delayTimeout }) {
     this.queueUrl = queueUrl
     this.receiveArgs = receiveArgs
     this.sqs = new AWS.SQS(sqsArgs)
+    this.delayTimeout = delayTimeout
   }
 
   generateSendParams (msg) {
@@ -45,7 +46,19 @@ class Messenger {
     }
 
     const response = await this.sqs.deleteMessage(params).promise()
+    return response
+  }
 
+  async delayMessage ({ ReceiptHandle }, delayTimeout) {
+    console.log(`deleting message ${ReceiptHandle}`)
+
+    var params = {
+      QueueUrl: this.queueUrl,
+      ReceiptHandle,
+      VisibilityTimeout: delayTimeout
+    }
+
+    const response = await this.sqs.changeMessageVisibility(params).promise()
     return response
   }
 }
