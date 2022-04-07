@@ -91,6 +91,10 @@ const firebaseApps = {
   fusecash: {
     appName: 'fusecash',
     secretKey: 'firebaseSecretIdFuseCash'
+  },
+  freedom: {
+    appName: 'Freedom',
+    secretKey: 'firebaseSecretIdFreedom'
   }
 }
 
