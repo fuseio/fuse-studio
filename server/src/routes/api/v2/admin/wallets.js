@@ -55,6 +55,7 @@ router.post('/create', auth.required, async (req, res) => {
     const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, correlationId, _id: userWallet._id, salt })
     return res.json({ job })
   } catch (err) {
+    console.log('Error in create admin wallet', { error: err.message })
     return res.status(400).send({ error: err.message })
   }
 })
