@@ -6,7 +6,7 @@ import MyCommunities from 'components/home/components/MyCommunities'
 import Faqs from 'components/home/components/Faq'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 
-import homeImage from 'images/studio_home.png'
+import deprecationLogo from 'images/deprecation_logo.png'
 import arrowImage from 'images/arrow_1.svg'
 import { fetchFeaturedCommunities } from 'actions/token'
 import { loadModal } from 'actions/ui'
@@ -81,7 +81,7 @@ const HomePage = ({
             </div>
           </div>
           <div className='home_page__image cell large-12 medium-12'>
-            <img src={homeImage} />
+            <img src={deprecationLogo} />
           </div>
         </div>
       </div>
