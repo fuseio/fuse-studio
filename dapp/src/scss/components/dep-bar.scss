@@ -1,0 +1,39 @@
+@include block(dep-bar){
+    @include breakpoint(small down) {
+        display: none;
+    }
+    position: relative;
+    width: 100%;
+    @include element(img){
+    width: 100%;
+    }
+    @include element(text){
+        font-style: normal;
+        position: absolute;
+        left: 50%;
+        top: 30%;
+        width: 37.9375em;
+        color: white;
+        font-weight: 500;
+        font-size: 0.9em;
+        
+        @media (min-width: 640px) {
+            font-size: 0.6em;
+        }
+        @media (min-width: 1300px) {
+            font-size: 0.7em;
+        }
+        @media (min-width: 1600px) {
+            font-size: 0.8em;
+        }
+        @media (min-width: 1800px) {
+            font-size: 1em;
+        }
+        @media (min-width: 2250px) {
+            font-size: 1.2em;
+        }
+        @include breakpoint(medium down) {
+            font-size: 0.4em;
+          }
+    }
+}
