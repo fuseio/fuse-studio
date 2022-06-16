@@ -65,9 +65,18 @@
     display: flex;
     align-items: baseline;
     margin: auto 0;
+    @include element(dl){
+      display: none;
+    }
 
     @include breakpoint(small down) {
       margin: auto;
+      @include element(dl){
+        display: block;
+      }
+      @include element(default){
+        display: none;
+      }
     }
   }
 

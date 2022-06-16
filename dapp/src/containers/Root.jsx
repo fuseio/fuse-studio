@@ -22,6 +22,7 @@ import TorusIcon from 'images/torus_icon.jpeg'
 import EtherIcon from 'images/ether.svg'
 import MetamaskIcon from 'images/metamask-fox.png'
 import FuseLoader from 'images/loader-fuse.gif'
+import DepBar from 'images/deprecation-banner.svg'
 
 import { connectToWallet } from 'actions/network'
 import { getWeb3 } from 'services/web3'
@@ -125,6 +126,7 @@ function Root () {
   return (
     <div className='root__wrapper'>
       <NavBar handleConnect={handleConnect} handleDisconnect={handleDisconnect} />
+      <div className='dep-bar'><img className='dep-bar__img' src={DepBar} /><div className='dep-bar__text'>The Studio will be deperacated in H2 and all the old and new API’s of the Studio will be availible in the new Charge platform launch soon.</div> </div>
       <Route component={GoogleAnalyticsReporter} />
       <Switch>
         <Route exact path='/'>

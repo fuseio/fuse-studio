@@ -7,6 +7,7 @@ import Faqs from 'components/home/components/Faq'
 import FeaturedCommunities from 'components/home/components/FeaturedCommunities'
 
 import deprecationLogo from 'images/deprecation_logo.png'
+import homeImage from 'images/studio_home.png'
 import arrowImage from 'images/arrow_1.svg'
 import { fetchFeaturedCommunities } from 'actions/token'
 import { loadModal } from 'actions/ui'
@@ -65,6 +66,7 @@ const HomePage = ({
   return (
     <div className='home_page'>
       <div className='home_page__wrapper grid-container'>
+
         <div className='home_page__banner grid-x align-middle'>
           <div className='home_page__content cell medium-12 large-12' style={{ height: '50%' }}>
             <h2 className='home_page__title'>Welcome to Fuse Studio</h2>
@@ -81,7 +83,8 @@ const HomePage = ({
             </div>
           </div>
           <div className='home_page__image cell large-12 medium-12'>
-            <img src={deprecationLogo} />
+            <img className='home_page__image__dl' src={deprecationLogo} />
+            <img className='home_page__image__default' src={homeImage} />
           </div>
         </div>
       </div>
