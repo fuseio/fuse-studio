@@ -83,8 +83,9 @@ const HomePage = ({
             </div>
           </div>
           <div className='home_page__image cell large-12 medium-12'>
-            <img className='home_page__image__dl' src={deprecationLogo} />
-            <img className='home_page__image__default' src={homeImage} />
+            {/* <img className='home_page__image__dl' src={deprecationLogo} />
+            <img className='home_page__image__default' src={homeImage} /> */}
+            <img src={homeImage} />
           </div>
         </div>
       </div>
