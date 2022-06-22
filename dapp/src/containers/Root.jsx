@@ -126,12 +126,14 @@ function Root () {
   return (
     <div className='root__wrapper'>
       <NavBar handleConnect={handleConnect} handleDisconnect={handleDisconnect} />
+
       <div className='dep-bar'><img className='dep-bar__img' src={DepBar} />
         <div className='dep-bar__text'>
           The Studio will soon be replaced by a new Fuse blockchain API platform - Charge!
           Look out for the launch and early access coming soon.
         </div>
       </div>
+ 
       <Route component={GoogleAnalyticsReporter} />
       <Switch>
         <Route exact path='/'>
