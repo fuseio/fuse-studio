@@ -8,14 +8,15 @@
     width: 100%;
     }
     @include element(text){
+       font-family: 'SF Pro Display', sans-serif;
         font-style: normal;
         position: absolute;
         left: 50%;
-        top: 30%;
-        width: 37.9375em;
+        top: 25%;
+        width: 40.9375em;
         color: white;
-        font-weight: 500;
-        font-size: 0.9em;
+        font-weight: 600;
+        font-size: 1em;
         
         @media (min-width: 640px) {
             font-size: 0.6em;

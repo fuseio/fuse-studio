@@ -74,7 +74,7 @@
       @include element(dl){
         display: block;
       }
-      @include element(default){
+      @include element(home-picture){
         display: none;
       }
     }
