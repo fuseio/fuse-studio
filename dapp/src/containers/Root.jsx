@@ -129,11 +129,17 @@ function Root () {
 
       <div className='dep-bar'><img className='dep-bar__img' src={DepBar} />
         <div className='dep-bar__text'>
-          The Studio will soon be replaced by a new Fuse blockchain API platform - Charge!
-          Look out for the launch and early access coming soon.
+          Meet Charge! New blockchain payments API platform replaced Fuse Studio!
         </div>
+        <a
+          target='_blank'
+          rel='noopener noreferrer'
+          href='https://charge.fuse.io/'
+          className='dep-bar__btn'
+        >Transfer to the Charge &gt;
+        </a>
       </div>
- 
+
       <Route component={GoogleAnalyticsReporter} />
       <Switch>
         <Route exact path='/'>
