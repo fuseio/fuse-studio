@@ -1,4 +1,24 @@
 @include block(dep-bar){
+    font-family: 'SF Pro Display', sans-serif;
+    color: #ffff;
+    @media (min-width: 640px) {
+        font-size: 0.6em;
+    }
+    @media (min-width: 1300px) {
+        font-size: 0.7em;
+    }
+    @media (min-width: 1600px) {
+        font-size: 0.8em;
+    }
+    @media (min-width: 1800px) {
+        font-size: 1em;
+    }
+    @media (min-width: 2250px) {
+        font-size: 1.2em;
+    }
+    @include breakpoint(medium down) {
+        font-size: 0.4em;
+      }
     @include breakpoint(small down) {
         display: none;
     }
@@ -8,33 +28,29 @@
     width: 100%;
     }
     @include element(text){
-       font-family: 'SF Pro Display', sans-serif;
-        font-style: normal;
         position: absolute;
         left: 50%;
         top: 25%;
         width: 40.9375em;
-        color: white;
         font-weight: 600;
         font-size: 1em;
         
-        @media (min-width: 640px) {
-            font-size: 0.6em;
-        }
-        @media (min-width: 1300px) {
-            font-size: 0.7em;
-        }
-        @media (min-width: 1600px) {
-            font-size: 0.8em;
-        }
-        @media (min-width: 1800px) {
-            font-size: 1em;
-        }
-        @media (min-width: 2250px) {
-            font-size: 1.2em;
-        }
-        @include breakpoint(medium down) {
-            font-size: 0.4em;
-          }
+        
+    }
+    @include element(btn){
+        padding:  0.4375em 1.375em  0.4375em 1.375em;
+        max-height: 1.9em;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        left: 58%;
+        top: 52%;
+        background: linear-gradient(272.68deg, #7A159A 0.31%, #063B64 99.69%);
+        border-radius: 5px;
+        font-weight: 600;
+        &:hover{
+            background: linear-gradient(84.57deg, #6E39EF 8.68%, #C99CFA 91.32%);
+            }
     }
 }
