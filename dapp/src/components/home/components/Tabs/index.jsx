@@ -8,7 +8,6 @@ import Carousel, { Dots } from '@brainhubeu/react-carousel'
 import isEmpty from 'lodash/isEmpty'
 
 import FeaturedCommunity from 'components/common/FeaturedCommunity'
-import Templates from 'components/home/components/Templates'
 
 import { getCommunitiesKeys } from 'selectors/accounts'
 
@@ -73,7 +72,6 @@ const useTabStyles = makeStyles(theme => ({
 const TabsWrapper = memo(({
   communitiesKeys,
   communities,
-  showIssuance,
   showDashboard
 }) => {
   const [value, setValue] = useState(0)
@@ -154,7 +152,7 @@ const TabsWrapper = memo(({
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <div style={{ padding: '25px' }}><Templates showIssuance={showIssuance} /></div>
+        {/* <div style={{ padding: '25px' }}><Templates /></div> */}
       </TabPanel>
     </div>
   )

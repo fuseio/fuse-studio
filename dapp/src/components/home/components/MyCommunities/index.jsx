@@ -21,13 +21,13 @@ const Empty = () => {
   )
 }
 
-const NoCommunities = ({ showIssuance }) => {
+const NoCommunities = () => {
   return (
-    <div className='cell medium-12 small-24' onClick={showIssuance}>
+    <div className='cell medium-12 small-24'>
       <div className='no_communities'>
         <div className='content'>
-          <div className='empty'>You have no economies yet</div>
-          <div className='title'>Click here to create your first one!</div>
+          <div className='empty'>You have no economies</div>
+          {/* <div className='title'>Click here to create your first one!</div> */}
           <img src={PlusIcon} />
         </div>
       </div>
@@ -36,7 +36,6 @@ const NoCommunities = ({ showIssuance }) => {
 }
 
 const MyCommunities = ({
-  showIssuance,
   title = 'My economies',
   communitiesKeys,
   communities,
@@ -75,7 +74,7 @@ const MyCommunities = ({
     } else {
       return [
         <div key='NoCommunities' style={{ width: '100%', height: '100%' }} className='grid-x grid-margin-x grid-margin-y'>
-          <NoCommunities showIssuance={showIssuance} />
+          <NoCommunities />
           <Empty />
           <Empty />
           <Empty />
