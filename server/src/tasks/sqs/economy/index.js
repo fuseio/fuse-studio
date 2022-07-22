@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const config = require('config')
 const { get } = require('lodash')
-const generateApiKey = require('generate-api-key')
 const { createNetwork } = require('@utils/web3')
 
 const { deployCommunity } = require('./community')
@@ -91,8 +90,7 @@ const deployEconomy = async (account, { communityProgressId, owner }) => {
       creatorAddress: adminAddress,
       owner,
       bridgeDirection: get(steps, 'community.args.foreignTokenAddress') && 'foreign-to-home',
-      bridgeType: get(steps, 'community.args.foreignTokenAddress') && 'multi-amb-erc20-to-erc677',
-      apiKey: generateApiKey({ method: 'string' })
+      bridgeType: get(steps, 'community.args.foreignTokenAddress') && 'multi-amb-erc20-to-erc677'
     }).save()
 
     await CommunityProgress.findByIdAndUpdate(communityProgress._id, { communityAddress, done: true })
