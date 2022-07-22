@@ -10,6 +10,7 @@ import ModalContainer from 'containers/ModalContainer'
 
 import CommunitiesPage from 'components/oven/CommunitiesPage'
 import GoogleAnalyticsReporter from 'components/common/analytics'
+import Wizard from 'components/wizard'
 import Dashboard from 'components/dashboard'
 import FuseDashboard from 'components/FuseDashboard'
 import Price from 'components/price'
@@ -143,6 +144,9 @@ function Root () {
       <Switch>
         <Route exact path='/'>
           <HomePage handleConnect={handleConnect} />
+        </Route>
+        <Route path='/view/issuance'>
+          <Wizard />
         </Route>
         <Route path='/view/communities'>
           <CommunitiesPage />

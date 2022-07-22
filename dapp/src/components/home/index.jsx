@@ -17,12 +17,38 @@ const HomePage = ({
   handleConnect
 }) => {
   const dispatch = useDispatch()
+  const { accountAddress } = useSelector(state => state.network)
+  const { isLoggedIn } = useSelector(state => state.user)
+  const [moveToIssuance, setMove] = useState(false)
 
   useEffect(() => {
     dispatch(fetchFeaturedCommunities({ networkType: 'mainnet' }))
     dispatch(fetchFeaturedCommunities({ networkType: 'ropsten' }))
     return () => { }
   }, [])
+
+  useEffect(() => {
+    if (moveToIssuance && accountAddress) {
+      dispatch(push('/view/issuance'))
+    }
+  }, [moveToIssuance, accountAddress])
+
+  const showIssuance = () => {
+    if (!accountAddress) {
+      if (window && window.analytics) {
+        window.analytics.track('Launch community button pressed - not connected')
+      }
+      if (!isLoggedIn) {
+        dispatch(loadModal(LOGIN_MODAL, { handleConnect }))
+      } else if (isLoggedIn) {
+        handleConnect()
+      }
+      setMove(true)
+    } else {
+      window.analytics.track('Launch community button pressed - connected')
+      dispatch(push('/view/issuance'))
+    }
+  }
 
   const showDashboard = (communityAddress, name, useOld) => {
     if (window && window.analytics) {
@@ -47,6 +73,14 @@ const HomePage = ({
             <p className='home_page__text'>
               Create your own custom branded wallet and<br /> currency in a few simple steps
             </p>
+            <div className='home_page__button'>
+              <button onClick={showIssuance}>
+                Launch an economy
+                <span style={{ marginLeft: '5px' }}>
+                  <img src={arrowImage} alt='arrow' />
+                </span>
+              </button>
+            </div>
           </div>
           <div className='home_page__image cell large-12 medium-12'>
             <img className='home_page__image__dl' src={deprecationLogo} />
@@ -58,7 +92,7 @@ const HomePage = ({
         <div className='grid-container'>
           <div className='grid-x align-justify grid-margin-x grid-margin-y'>
             <div className='cell medium-24 large-12'>
-              <MyCommunities showDashboard={showDashboard} />
+              <MyCommunities showDashboard={showDashboard} showIssuance={showIssuance} />
             </div>
             <div className='cell medium-24 large-12'>
               <FeaturedCommunities showDashboard={showDashboard} />
