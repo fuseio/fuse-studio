@@ -141,7 +141,7 @@ router.post('/burn', auth.required, async (req, res) => {
       if (!from) {
         job = await taskManager.now('burn', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, correlationId })
       } else {
-        job = await taskManager.now('adminApprove', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
+        job = await taskManager.now('adminApprove', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: correlationId ? `${correlationId}-1` : correlationId })
       }
     } else {
       const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
