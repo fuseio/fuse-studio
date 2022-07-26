@@ -11,6 +11,8 @@ const QueueJob = mongoose.model('QueueJob')
 const request = require('request-promise-native')
 const Promise = require('bluebird')
 const { toChecksumAddress } = require('web3-utils')
+import isEmpty from 'lodash/isEmpty'
+
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
  * @apiName Create
@@ -39,7 +41,7 @@ router.post('/create', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
   const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, networkType, correlationId } = req.body
-  if (networkType !== 'fuse') {
+  if (!isEmpty(networkType) && networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
   if (!name) {
@@ -51,16 +53,13 @@ router.post('/create', auth.required, async (req, res) => {
   const initialSupplyInWei = toWei((initialSupply || 0).toString())
   const tokenURI = uri || ''
   if (!expiryTimestamp) {
-    return res.status(400).send({ error: 'Missing expiryTimestamp' })
+    expiryTimestamp = 2524608000
   }
   const now = moment().unix()
   if (expiryTimestamp < now) {
     return res.status(400).send({ error: 'Invalid expiryTimestamp - before current time' })
   }
   const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
-  if (!spendabilityIdsArr.length) {
-    return res.status(400).send({ error: 'Missing spendabilityIds' })
-  }
   try {
     const job = await taskManager.now('createToken', { bridgeType: 'home', accountAddress, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr, correlationId })
     return res.json({ job })
@@ -94,7 +93,7 @@ router.post('/mint', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
   const { tokenAddress, networkType, amount, toAddress, correlationId } = req.body
-  if (networkType !== 'fuse') {
+  if (!isEmpty(networkType) && networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
   try {
@@ -132,7 +131,7 @@ router.post('/burn', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
   const { tokenAddress, networkType, amount, from, correlationId, spendabilityIds, spendabilityOrder } = req.body
-  if (networkType !== 'fuse') {
+  if (!isEmpty(networkType) && networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
   try {
@@ -146,10 +145,7 @@ router.post('/burn', auth.required, async (req, res) => {
       }
     } else {
       const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
-      if (!spendabilityIdsArr.length) {
-        return res.status(400).send({ error: 'Missing spendabilityIds' })
-      }
-      if (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc')) {
+      if (spendabilityIdsArr.length > 0 && (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc'))) {
         return res.status(400).send({ error: 'Missing spendabilityOrder' })
       }
       const tokens = await mongoose.token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
@@ -194,7 +190,7 @@ router.post('/transfer', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
   const { tokenAddress, networkType, amount, from, to, correlationId, spendabilityIds, spendabilityOrder } = req.body
-  if (networkType !== 'fuse') {
+  if (!isEmpty(networkType) && networkType !== 'fuse') {
     return res.status(400).send({ error: 'Supported only on Fuse Network' })
   }
   const amountInWei = toWei(amount)
