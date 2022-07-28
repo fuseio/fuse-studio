@@ -40,10 +40,7 @@ router.post('/create', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, networkType, correlationId } = req.body
-  if (!isEmpty(networkType) && networkType !== 'fuse') {
-    return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, correlationId } = req.body
   if (!name) {
     return res.status(400).send({ error: 'Missing name' })
   }
@@ -92,10 +89,7 @@ router.post('/mint', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount, toAddress, correlationId } = req.body
-  if (!isEmpty(networkType) && networkType !== 'fuse') {
-    return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  const { tokenAddress, amount, toAddress, correlationId } = req.body
   try {
     const amountInWei = toWei(amount.toString())
     const taskExectionParams = role ? { role } : { accountAddress }
@@ -130,10 +124,7 @@ router.post('/burn', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount, from, correlationId, spendabilityIds, spendabilityOrder } = req.body
-  if (!isEmpty(networkType) && networkType !== 'fuse') {
-    return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  const { tokenAddress, amount, from, correlationId, spendabilityIds, spendabilityOrder } = req.body
   try {
     const amountInWei = toWei(amount)
     let job
@@ -189,10 +180,7 @@ router.post('/transfer', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount, from, to, correlationId, spendabilityIds, spendabilityOrder } = req.body
-  if (!isEmpty(networkType) && networkType !== 'fuse') {
-    return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  const { tokenAddress, amount, from, to, correlationId, spendabilityIds, spendabilityOrder } = req.body
   const amountInWei = toWei(amount)
   if (tokenAddress) {
     try {
