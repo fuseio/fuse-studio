@@ -11,6 +11,7 @@ const QueueJob = mongoose.model('QueueJob')
 const request = require('request-promise-native')
 const Promise = require('bluebird')
 const { toChecksumAddress } = require('web3-utils')
+
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
  * @apiName Create
@@ -38,10 +39,7 @@ router.post('/create', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, networkType, correlationId } = req.body
-  if (networkType !== 'fuse') {
-    return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, correlationId } = req.body
   if (!name) {
     return res.status(400).send({ error: 'Missing name' })
   }
@@ -51,16 +49,13 @@ router.post('/create', auth.required, async (req, res) => {
   const initialSupplyInWei = toWei((initialSupply || 0).toString())
   const tokenURI = uri || ''
   if (!expiryTimestamp) {
-    return res.status(400).send({ error: 'Missing expiryTimestamp' })
+    expiryTimestamp = 2524608000
   }
   const now = moment().unix()
   if (expiryTimestamp < now) {
     return res.status(400).send({ error: 'Invalid expiryTimestamp - before current time' })
   }
   const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
-  if (!spendabilityIdsArr.length) {
-    return res.status(400).send({ error: 'Missing spendabilityIds' })
-  }
   try {
     const job = await taskManager.now('createToken', { bridgeType: 'home', accountAddress, name, symbol, initialSupplyInWei, tokenURI, expiryTimestamp, spendabilityIdsArr, correlationId })
     return res.json({ job })
@@ -93,10 +88,7 @@ router.post('/mint', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount, toAddress, correlationId } = req.body
-  if (networkType !== 'fuse') {
-    return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  const { tokenAddress, amount, toAddress, correlationId } = req.body
   try {
     const amountInWei = toWei(amount.toString())
     const taskExectionParams = role ? { role } : { accountAddress }
@@ -131,10 +123,7 @@ router.post('/burn', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount, from, correlationId, spendabilityIds, spendabilityOrder } = req.body
-  if (networkType !== 'fuse') {
-    return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  const { tokenAddress, amount, from, correlationId, spendabilityIds, spendabilityOrder } = req.body
   try {
     const amountInWei = toWei(amount)
     let job
@@ -142,14 +131,11 @@ router.post('/burn', auth.required, async (req, res) => {
       if (!from) {
         job = await taskManager.now('burn', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, correlationId })
       } else {
-        job = await taskManager.now('adminApprove', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: `${correlationId}-1` })
+        job = await taskManager.now('adminApprove', { tokenAddress, bridgeType: 'home', accountAddress, amount: amountInWei, wallet: from, spender: accountAddress, burnFromAddress: from, correlationId: correlationId ? `${correlationId}-1` : correlationId })
       }
     } else {
       const spendabilityIdsArr = spendabilityIds ? spendabilityIds.split(',') : []
-      if (!spendabilityIdsArr.length) {
-        return res.status(400).send({ error: 'Missing spendabilityIds' })
-      }
-      if (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc')) {
+      if (spendabilityIdsArr.length > 0 && (!spendabilityOrder || (spendabilityOrder !== 'asc' && spendabilityOrder !== 'desc'))) {
         return res.status(400).send({ error: 'Missing spendabilityOrder' })
       }
       const tokens = await mongoose.token.getBySpendability('home', spendabilityIdsArr, spendabilityOrder === 'asc' ? 1 : -1)
@@ -193,10 +179,7 @@ router.post('/transfer', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { tokenAddress, networkType, amount, from, to, correlationId, spendabilityIds, spendabilityOrder } = req.body
-  if (networkType !== 'fuse') {
-    return res.status(400).send({ error: 'Supported only on Fuse Network' })
-  }
+  const { tokenAddress, amount, from, to, correlationId, spendabilityIds, spendabilityOrder } = req.body
   const amountInWei = toWei(amount)
   if (tokenAddress) {
     try {
