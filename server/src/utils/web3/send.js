@@ -13,12 +13,12 @@ const calculateTxFee = ({ gasUsed, gasPrice }) => {
 
 const getMethodName = (method) => method ? get(method, 'methodName', 'unknown') : 'raw'
 
-const getGasPrice = async (bridgeType, web3, gasSpeed) => {
+const getGasPrice = async (bridgeType, web3) => {
   if (config.has(`network.${bridgeType}.gasPrice`)) {
     return config.get(`network.${bridgeType}.gasPrice`)
   }
-  const gasPrice = await fetchGasPrice(gasSpeed)
-  return web3.utils.toWei(gasPrice.toString(), 'gwei')
+  const gasPrice = await web3.eth.getGasPrice()
+  return gasPrice.toString()
 }
 
 const retries = 3
@@ -164,7 +164,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
 
   const from = address
   const gas = await estimateGas()
-  const gasPrice = await getGasPrice(bridgeType, web3, options.gasSpeed)
+  const gasPrice = await getGasPrice(bridgeType, web3)
   const account = await Account.findOne({ address })
   for (let i = 0; i < retries; i++) {
     const response = await doSend(i) || {}
