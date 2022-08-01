@@ -11,7 +11,7 @@ const QueueJob = mongoose.model('QueueJob')
 const request = require('request-promise-native')
 const Promise = require('bluebird')
 const { toChecksumAddress } = require('web3-utils')
-const { fetchToken } = require('@utils/token')
+const { fetchToken, adjustDecimals } = require('@utils/token')
 
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
