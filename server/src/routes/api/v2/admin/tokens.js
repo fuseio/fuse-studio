@@ -40,7 +40,9 @@ router.post('/create', auth.required, async (req, res) => {
   if (!isCommunityAdmin) {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
-  const { name, symbol, initialSupply, uri, expiryTimestamp, spendabilityIds, correlationId } = req.body
+  const { name, symbol, initialSupply, uri, spendabilityIds, correlationId } = req.body
+  var { expiryTimestamp } = req.body
+  
   if (!name) {
     return res.status(400).send({ error: 'Missing name' })
   }
