@@ -8,6 +8,8 @@ const UserWallet = mongoose.model('UserWallet')
 const { toChecksumAddress } = require('web3-utils')
 const { generateSalt, createNetwork } = require('@utils/web3')
 const WalletFactoryABI = require('@constants/abi/WalletFactory')
+const { getWalletModules } = require('@utils/wallet')
+
 
 router.use('/transfers', require('./transfers'))
 
@@ -38,6 +40,7 @@ router.post('/create', auth.required, async (req, res) => {
   try {
     const { phoneNumber, correlationId } = req.body
     const { createContract } = createNetwork('home')
+    const walletModules = await getWalletModules(communityAddress)
     const salt = generateSalt()
     const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
     const walletAddress = await walletFactory.methods.getAddressForCounterfactualWallet(accountAddress, Object.values(walletModules), salt).call()
