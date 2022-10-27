@@ -155,8 +155,9 @@ router.get('/:phoneNumber', auth.required, async (req, res, next) => {
  * @apiSuccess {Object} data Array of Wallet objects
  */
 router.get('/all/:phoneNumber', auth.required, async (req, res, next) => {
+  const { appName } = req.user
   const { phoneNumber } = req.params
-  const userWallets = await UserWallet.find({ phoneNumber }, { contacts: 0 }).sort({ updatedAt: -1 })
+  const userWallets = await UserWallet.find({ phoneNumber, appName }, { contacts: 0 }).sort({ updatedAt: -1 })
 
   return res.json({ data: userWallets })
 })
