@@ -36,7 +36,10 @@ router.post('/create', auth.required, async (req, res) => {
   }
   try {
     const { phoneNumber, correlationId } = req.body
+    const { createContract } = createNetwork('home')
     const salt = generateSalt()
+    const walletFactory = createContract(WalletFactoryABI, homeAddresses.WalletFactory)
+    const walletAddress = await walletFactory.methods.getAddressForCounterfactualWallet(accountAddress, Object.values(walletModules), salt).call()
     const userWallet = await new UserWallet({
       phoneNumber,
       accountAddress,
@@ -50,9 +53,10 @@ router.post('/create', auth.required, async (req, res) => {
       walletModules: homeAddresses.walletModules,
       networks: ['fuse'],
       identifier,
-      appName
+      appName,
+      walletAddress
     }).save()
-    const job = await taskManager.now('createWallet', { owner: accountAddress, communityAddress, phoneNumber, correlationId, _id: userWallet._id, salt })
+    const job = await taskManager.now('createWallet', { owner: accountAddress, walletAddress, communityAddress, phoneNumber, correlationId, _id: userWallet._id, salt })
     return res.json({ job })
   } catch (err) {
     return res.status(400).send({ error: err.message })
