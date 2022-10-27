@@ -6,7 +6,7 @@ const auth = require('@routes/auth')
 const mongoose = require('mongoose')
 const UserWallet = mongoose.model('UserWallet')
 const { toChecksumAddress } = require('web3-utils')
-const { generateSalt } = require('@utils/web3')
+const { generateSalt, createNetwork } = require('@utils/web3')
 
 router.use('/transfers', require('./transfers'))
 
