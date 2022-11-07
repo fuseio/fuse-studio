@@ -88,7 +88,7 @@ module.exports = {
           transactionPollingTimeout: 30
         }
       },
-      provider: 'https://rpc.fuse.io',
+      provider: 'https://nd-942-551-550.p2pify.com/29d9adc81d097da8de657a5c8c773586',
       addressesMainnet: {
         HomeBridgeFactory: '0xFbf20Fa994A577439Cd0b6033Db373f7a995E147',
         BridgeMapper: '0x89b98bB511A41FeF73b388cF8C052221f42cd44f'
