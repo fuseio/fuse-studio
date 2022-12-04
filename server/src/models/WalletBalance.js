@@ -12,8 +12,6 @@ const WalletBalanceSchema = new Schema({
   transactionHash: { type: String, required: [true, "can't be blank"] }
 }, { timestamps: true, default: {} })
 
-WalletBalanceSchema.index({ phoneNumber: 1, accountAddress: 1, appName: 1 })
-
 const UserWallet = mongoose.model('WalletBalance', WalletBalanceSchema)
 
 module.exports = UserWallet
