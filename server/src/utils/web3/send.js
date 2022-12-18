@@ -165,7 +165,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
   const from = address
   const gas = await estimateGas()
   // const gasPrice = await getGasPrice(bridgeType, web3)
-  const gasPrice = '10000000000'
+  const gasPrice = '11000000000'
   const account = await Account.findOne({ address })
   for (let i = 0; i < retries; i++) {
     const response = await doSend(i) || {}
