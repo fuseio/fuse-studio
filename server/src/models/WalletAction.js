@@ -14,7 +14,6 @@ const WalletActionSchema = new Schema({
   failReason: { type: String }
 }, { timestamps: true })
 
-WalletActionSchema.index({ communityAddress: 1 })
 WalletActionSchema.index({ walletAddress: 1 })
 WalletActionSchema.index({ tokenAddress: 1 })
 

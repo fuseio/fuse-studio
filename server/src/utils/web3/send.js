@@ -166,7 +166,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
   const gas = await estimateGas()
   // const gasPrice = await getGasPrice(bridgeType, web3)
   const gasPrice = '11000000000'
-  const account = await Account.findOne({ address })
+  const account = await Account.findOne({ address, bridgeType })
   for (let i = 0; i < retries; i++) {
     const response = await doSend(i) || {}
     const { receipt, error } = response
@@ -175,7 +175,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
         console.warn(`Transaction ${receipt.transactionHash} is reverted`)
       }
       account.nonces[bridgeType]++
-      await Account.updateOne({ address }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
+      await Account.updateOne({ address, bridgeType }, { [`nonces.${bridgeType}`]: account.nonces[bridgeType] })
       receipt.bridgeType = bridgeType
       receipt.gasPrice = gasPrice
       receipt.txFee = calculateTxFee(receipt)
