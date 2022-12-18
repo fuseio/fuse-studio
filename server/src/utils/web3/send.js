@@ -166,7 +166,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
   const gas = await estimateGas()
   // const gasPrice = await getGasPrice(bridgeType, web3)
   const gasPrice = '10000000000'
-  const account = await Account.findOne({ address, bridgeType, isLocked: false })
+  const account = await Account.findOne({ address, bridgeType })
   for (let i = 0; i < retries; i++) {
     const response = await doSend(i) || {}
     const { receipt, error } = response
