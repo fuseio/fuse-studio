@@ -52,7 +52,7 @@ const checkDepositBonus = async (deposit) => {
   const tokenAddress = fuseToken.address
   const receiverAddress = walletAddress
 
-  // check if user already recieved deposit bonus
+  // check if user already received deposit bonus
   if (!await validateBonusAlowance({ phoneNumber, tokenAddress, communityAddress, receiverAddress, bonusType, bonusMaxTimesLimit })) {
     return
   }
@@ -120,7 +120,7 @@ const checkReferralBonus = async (deposit) => {
 
 const getDepositType = ({ tokenAddress, network }) => {
   if (network === 'fuse') {
-    // the tokens are recieved on the fuse network
+    // the tokens are received on the fuse network
     return 'naive'
   } else {
     if (isStableCoin(tokenAddress, network)) {

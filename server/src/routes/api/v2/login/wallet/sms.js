@@ -34,7 +34,7 @@ router.post('/request', async (req, res) => {
  *
  * @apiParam {String} phoneNumber User phone number
  * @apiParam {String} accountAddress User account address
- * @apiParam {String} code SMS code recieved to user phone number
+ * @apiParam {String} code SMS code received to user phone number
  *
  * @apiSuccess {String} token JWT token
  */
