@@ -32,7 +32,7 @@ class Messenger {
     const response = await this.sqs.receiveMessage(params).promise()
     if (response.Messages) {
       const message = response.Messages[0]
-      console.log(`message with id ${message.MessageId} recieved`)
+      console.log(`message with id ${message.MessageId} received`)
       return { ...message, Body: JSON.parse(message.Body) }
     }
     console.log('no new messages found')
@@ -50,7 +50,7 @@ class Messenger {
   }
 
   async delayMessage ({ ReceiptHandle }, delayTimeout) {
-    console.log(`deleting message ${ReceiptHandle}`)
+    console.log(`delaying message ${ReceiptHandle}`)
 
     var params = {
       QueueUrl: this.queueUrl,

@@ -560,7 +560,7 @@ POST api/v2/login/verify
 |:---------|:-----------|:--------------------------------------|
 | phoneNumber | `String` | <p>User phone number</p> |
 | accountAddress | `String` | <p>User account address</p> |
-| code | `String` | <p>SMS code recieved to user phone number</p> |
+| code | `String` | <p>SMS code received to user phone number</p> |
 
 
 ### Success 200
@@ -810,7 +810,7 @@ POST api/v2/login/wallet/sms/verify
 |:---------|:-----------|:--------------------------------------|
 | phoneNumber | `String` | <p>User phone number</p> |
 | accountAddress | `String` | <p>User account address</p> |
-| code | `String` | <p>SMS code recieved to user phone number</p> |
+| code | `String` | <p>SMS code received to user phone number</p> |
 
 
 ### Success 200
