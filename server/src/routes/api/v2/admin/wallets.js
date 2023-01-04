@@ -10,7 +10,6 @@ const { generateSalt, createNetwork } = require('@utils/web3')
 const WalletFactoryABI = require('@constants/abi/WalletFactory')
 const { getWalletModules } = require('@utils/wallet')
 
-
 router.use('/transfers', require('./transfers'))
 
 /**

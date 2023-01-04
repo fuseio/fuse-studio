@@ -42,7 +42,7 @@ router.post('/create', auth.required, async (req, res) => {
   }
   const { name, symbol, initialSupply, uri, spendabilityIds, correlationId } = req.body
   var { expiryTimestamp } = req.body
-  
+
   if (!name) {
     return res.status(400).send({ error: 'Missing name' })
   }
@@ -229,7 +229,7 @@ router.post('/transfer', auth.required, async (req, res) => {
  * @apiParam {String} spendabilityId
  * @apiParam {String} networkType Token's network (must be Fuse)
  *
- * @apiParam (Query) {String} apiKey API key is used to access the API 
+ * @apiParam (Query) {String} apiKey API key is used to access the API
  *
  * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
  */
