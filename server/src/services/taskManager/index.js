@@ -8,7 +8,7 @@ const config = require('config')
 const { createActionFromJob, successAndUpdateByJob, failAndUpdateByJob } = require('@utils/wallet/actions')
 const { getTaskData, makeAccountsFilter } = require('./taskData')
 const { get, has, isEqual } = require('lodash')
-const { lockAccount, unlockAccount } = require('@utils/account')
+const { lockAccount, unlockAccount, unlockAccountConditionally } = require('@utils/account')
 const mongoose = require('mongoose')
 const QueueJob = mongoose.model('QueueJob')
 const { web3 } = require('@services/web3/home')
@@ -97,6 +97,9 @@ const startTask = async message => {
         )}, retrying soon.`
       )
       await tasksFIFOMessenger.delayMessage(message, config.get('taskManager.lockedAccounts.delayTimeout'))
+      if (lodash.has(params, 'accountAddress')) {
+        unlockAccountConditionally(params.accountAddress)
+      }
       return
     }
 
