@@ -373,7 +373,8 @@ module.exports = {
   accounts: {
     wallet: {
       initialBalance: '0.1'
-    }
+    },
+    maxLockSeconds: 60
   },
   community: {
     initialBalance: '1',
