@@ -10,15 +10,8 @@ const lockAccount = async (query = { role: '*' }) => {
   if (account) {
     console.log(`account ${account.address} with id ${account._id} is locked by query ${JSON.stringify(query)}`)
     return account
-  } else {
-    console.log(`no free account found by query ${JSON.stringify(query)}`)
-    // If account is locked more than maxLockMinutes, release account
-    var time = new Date();
-    time.setSeconds(time.getSeconds() - config.get('accounts.maxLockSeconds'));
-    await Account.findOneAndUpdate(
-      { isLocked: true, ...{lockingTime: {$lt: time} ,...query} }, { isLocked: false})
-    console.log(`account ${account.address} with id ${account._id} is unlocked as maximum lock time has passed`)
   }
+  console.log(`no free account found by query ${JSON.stringify(query)}`)
 }
 
 const lockAccountWithReason = async (query = { role: '*' }, reason) => {
@@ -41,10 +34,12 @@ const unlockAccount = async (accountId) => {
 
 const unlockAccountConditionally = async (accountAddress) => {
   // If account is locked more than maxLockMinutes, release account
-  var time = new Date();
-  time.setSeconds(time.getSeconds() - config.get('accounts.maxLockSeconds'));
+  const time = new Date()
+  time.setSeconds(time.getSeconds() - config.get('accounts.maxLockSeconds'))
   await Account.findOneAndUpdate(
-    { isLocked: true, lockingTime: {$lt: time}, address: accountAddress}, { isLocked: false, lockingTime: null, lockingReason: null})
+    { isLocked: true, lockingTime: { $lt: time }, address: accountAddress },
+    { isLocked: false, lockingTime: null, lockingReason: null }
+  )
   console.log(`account ${accountAddress} is unlocked as maximum lock time has passed`)
 }
 
