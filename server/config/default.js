@@ -59,6 +59,9 @@ module.exports = {
       url: 'https://subscription.fuse.io/api/v1',
       webhookUrl: 'http://localhost:3000/api/v2/wallets/webhook',
       queueUrl: ''
+    },
+    charge: {
+      url: 'https://api.chargeweb3.com/api/v0/notifications/webhook/add-addresses'
     }
   },
   fuseswap: {

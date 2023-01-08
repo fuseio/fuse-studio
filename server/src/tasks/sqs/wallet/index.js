@@ -13,7 +13,7 @@ const Invite = mongoose.model('Invite')
 const Fork = mongoose.model('Fork')
 const branch = require('@utils/branch')
 const smsProvider = require('@utils/smsProvider')
-const { subscribeToSubscriptionService } = require('@services/subscription')
+const { subscribeToNotificationService } = require('@services/subscription/charge')
 const { subscribeToBlocknative } = require('@services/blocknative')
 
 const manageTasks = require('./manage')
@@ -102,7 +102,7 @@ const createWallet = async (account, { owner, communityAddress, phoneNumber, ens
     })
   }
 
-  await subscribeToSubscriptionService(walletAddress, { blockNumber })
+  subscribeToNotificationService(walletAddress)
   return receipt
 }
 
