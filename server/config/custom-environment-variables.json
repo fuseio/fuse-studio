@@ -55,6 +55,11 @@
       "transport": "COMMUNITY_SUBSCRIPTION_FUSE_TRANSPORT",
       "url": "COMMUNITY_SUBSCRIPTION_FUSE_URL",
       "queueUrl": "COMMUNITY_SUBSCRIPTION_FUSE_QUEUE_URL"
+    },
+    "charge": {
+      "secretKey": "COMMUNITY_CHARGE_SECRET_KEY",
+      "publicApiKey": "COMMUNITY_CHARGE_PUBLIC_API_KEY",
+      "webhookId": "COMMUNITY_NOTIFICATION_WEBHOOK_ID"
     }
   },
   "network": {
