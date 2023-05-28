@@ -3,7 +3,7 @@ const { inspect } = require('util')
 const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
 const { fetchGasPrice } = require('@utils/network')
-const { get, has } = require('lodash')
+const { get, has, includes } = require('lodash')
 const BigNumber = require('bignumber.js')
 const { pendingAndUpdateByJob } = require('@utils/wallet/actions')
 
@@ -184,7 +184,8 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
 
       return receipt
     }
-    if (error && i === retries - 1) {
+    const errorMessage = error.message || error.error
+    if ((error && i === retries - 1) || includes(errorMessage, 'InsufficientFunds')) {
       throw error
     }
   }
