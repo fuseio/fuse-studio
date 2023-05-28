@@ -184,7 +184,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
 
       return receipt
     }
-    const errorMessage = error.message || error.error
+    const errorMessage = get(error, 'message') || get(error, 'error')
     if ((error && i === retries - 1) || includes(errorMessage, 'InsufficientFunds')) {
       throw error
     }
