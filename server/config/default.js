@@ -61,7 +61,7 @@ module.exports = {
       queueUrl: ''
     },
     charge: {
-      url: 'https://api.chargeweb3.com/api/v0/notifications/webhook/add-addresses'
+      url: 'https://api.fuse.io/api/v0/notifications/webhook/add-addresses'
     }
   },
   fuseswap: {
