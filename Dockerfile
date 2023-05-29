@@ -18,7 +18,7 @@ RUN cd @fuse/roles && npm install
 
 RUN cd @fuse/contract-utils && npm install
 
-RUN export NODE_ENV=qa && cd dapp && npm install && npm run build && cp -r dist/* ../server/public
+# RUN export NODE_ENV=qa && cd dapp && npm install && npm run build && cp -r dist/* ../server/public
 
 RUN cd server && npm install
 
