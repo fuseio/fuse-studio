@@ -32,12 +32,12 @@ async function initApi () {
 
   app.use(requestIp.mw())
 
-  app.use(express.static(path.join(__dirname, '../public')))
+  // app.use(express.static(path.join(__dirname, '../public')))
 
   // react-router routing
-  app.get('/view/*', function (request, response) {
-    response.sendFile(path.resolve(__dirname, '../public', 'index.html'))
-  })
+  // app.get('/view/*', function (request, response) {
+  //   response.sendFile(path.resolve(__dirname, '../public', 'index.html'))
+  // })
   app.use(require('./routes'))
 
   // catch 404 and forward to error handler
