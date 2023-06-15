@@ -10,6 +10,7 @@ const { toChecksumAddress } = require('web3-utils')
 const UserWallet = mongoose.model('UserWallet')
 const Community = mongoose.model('Community')
 const { deduceTransactionBodyForFundToken } = require('@utils/wallet/misc')
+const Web3 = require('web3')
 
 const relay = async (account, { walletAddress, communityAddress, methodName, methodData, nonce, gasPrice, gasLimit, signature, walletModule, network, identifier, appName, nextRelays }, job) => {
   const networkType = network === config.get('network.foreign.name') ? 'foreign' : 'home'
@@ -79,6 +80,19 @@ const relay = async (account, { walletAddress, communityAddress, methodName, met
       job.set('data.transactionBody', { ...lodash.get(job.data, 'transactionBody', {}), status: 'failed', blockNumber: lodash.get(receipt, 'blockNumber') })
       job.save()
       console.error(`Relay transaction failed from wallet: ${lodash.get(receipt, 'events.TransactionExecuted.returnValues.wallet')}, signedHash: ${lodash.get(receipt, 'events.TransactionExecuted.returnValues.signedHash')}`)
+      if (lodash.has(receipt, 'error')) {
+        try {
+          const hexError = receipt.error.split(' ')[1]
+          const failReason = Web3.utils.hexToUtf8(hexError)
+          console.error(`Fail reason: ${failReason}`)
+          throw Error(failReason)
+        } catch (error) {
+          // Failed to parse the error message using the default
+          throw Error(`Transaction failed due to internal contract error. One possible reason might be that the wallet doesn't have sufficient funds.`)
+        }
+      } else {
+        throw Error(`Transaction failed due to internal contract error. One possible reason might be that the wallet doesn't have sufficient funds.`)
+      }
     }
     return receipt
   }
