@@ -32,17 +32,6 @@ const unlockAccount = async (accountId) => {
   console.log(`no account found to unlock with id ${accountId}`)
 }
 
-const unlockAccountConditionally = async (accountAddress) => {
-  // If account is locked more than maxLockMinutes, release account
-  const time = new Date()
-  time.setSeconds(time.getSeconds() - config.get('accounts.maxLockSeconds'))
-  await Account.findOneAndUpdate(
-    { isLocked: true, lockingTime: { $lt: time }, address: accountAddress },
-    { isLocked: false, lockingTime: null, lockingReason: null }
-  )
-  console.log(`account ${accountAddress} is unlocked as maximum lock time has passed`)
-}
-
 const withAccount = (func, filterOrLockingFunction) => async (...params) => {
   let account
   if (typeof filterOrLockingFunction === 'function') {
@@ -115,7 +104,6 @@ module.exports = {
   lockAccount,
   lockAccountWithReason,
   unlockAccount,
-  unlockAccountConditionally,
   withAccount,
   withWalletAccount,
   createAccount,

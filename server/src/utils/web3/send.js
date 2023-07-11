@@ -2,7 +2,6 @@ const config = require('config')
 const { inspect } = require('util')
 const mongoose = require('mongoose')
 const Account = mongoose.model('Account')
-const { fetchGasPrice } = require('@utils/network')
 const { get, has, includes } = require('lodash')
 const BigNumber = require('bignumber.js')
 const { pendingAndUpdateByJob } = require('@utils/wallet/actions')
@@ -13,14 +12,6 @@ const calculateTxFee = ({ gasUsed, gasPrice }) => {
 
 const getMethodName = (method) => method ? get(method, 'methodName', 'unknown') : 'raw'
 
-const getGasPrice = async (bridgeType, web3) => {
-  if (config.has(`network.${bridgeType}.gasPrice`)) {
-    return config.get(`network.${bridgeType}.gasPrice`)
-  }
-  const gasPrice = await web3.eth.getGasPrice()
-  return gasPrice.toString()
-}
-
 const retries = 3
 
 const TRANSACTION_HASH_IMPORTED = 'Node error: {"code":-32010,"message":"Transaction with the same hash was already imported."}'
@@ -30,7 +21,7 @@ const TRANSACTION_TIMEOUT = 'Error: Timeout exceeded during the transaction conf
 const getJobDataPath = (txContext) => has(txContext, 'txName') ? `data.${get(txContext, 'txName')}` : 'data'
 
 const send = async ({ web3, bridgeType, address }, method, options, txContext = {}) => {
-  const { job, communityAddress } = txContext
+  const { job } = txContext
 
   const defaults = {
     handleTransactionHash: async (hash) => {
@@ -38,6 +29,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
       if (job) {
         const jobDataPath = getJobDataPath(txContext)
         job.set(`${jobDataPath}.txHash`, hash)
+        const { communityAddress } = txContext
         if (communityAddress) {
           job.set('communityAddress', communityAddress)
         }
@@ -124,7 +116,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
     } catch (error) {
       console.error(error)
 
-      // reverted: transaction has beed confirmed but failed
+      // reverted: transaction has been confirmed but failed
       if (error.receipt) {
         return error
       }
@@ -164,7 +156,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
 
   const from = address
   const gas = await estimateGas()
-  // const gasPrice = await getGasPrice(bridgeType, web3)
+  // const gasPrice = await getGasPrice(bridgeType, web3, options.gasSpeed)
   const gasPrice = '11000000000'
   const account = await Account.findOne({ address, bridgeType })
   for (let i = 0; i < retries; i++) {
@@ -184,8 +176,11 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
 
       return receipt
     }
-    const errorMessage = get(error, 'message') || get(error, 'error')
-    if ((error && i === retries - 1) || includes(errorMessage, 'InsufficientFunds')) {
+    if (includes(error.message, 'AlreadyKnown') || includes(error.message, 'InsufficientFunds')) {
+      console.log(`Insufficient funds in the relayer account: ${address}`)
+      throw Error(error.message)
+    }
+    if (error && i === retries - 1) {
       throw error
     }
   }
