@@ -1,4 +1,3 @@
-
 const Messenger = require('./simple')
 const { get } = require('lodash')
 const crypto = require('crypto')

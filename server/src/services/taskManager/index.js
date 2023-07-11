@@ -113,7 +113,7 @@ const startTask = async message => {
 
     tasks[name](account, params, queueJob)
       .then(async () => {
-        await queueJob.successAndUpdate()
+        queueJob = await queueJob.successAndUpdate()
         await successAndUpdateByJob(queueJob)
         if (await checkUnlock(queueJob)) {
           unlockAccount(account._id)
@@ -210,7 +210,7 @@ const retry = async (failedJob) => {
   failedJob.retryJob = job._id
   await failedJob.save()
 
-  console.log(`Retry of job ${_id} is scheduled in a new jobb ${job._id}`)
+  console.log(`Retry of job ${_id} is scheduled in a new job ${job._id}`)
   return job
 }
 
