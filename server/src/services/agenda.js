@@ -36,7 +36,6 @@ async function start () {
 
   if (yn(config.get('agenda.startPeriodicTasks'))) {
     await agenda.every('1 hour', 'lockedAccounts')
-    await agenda.every('0 2 * * *', 'calculateCurrentTvl', { timezone: 'GMT' })
   }
 
   console.log('Agenda job scheduling is successfully defined')
