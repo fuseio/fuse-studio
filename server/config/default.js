@@ -205,8 +205,6 @@ module.exports = {
     uri: 'mongodb://localhost/fuse-studio',
     debug: true,
     options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
     }
   },
   mail: {
