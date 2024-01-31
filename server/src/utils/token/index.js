@@ -16,6 +16,7 @@ const fetchToken = async (tokenAddress) => {
   }
   const res = await request.get(`${config.get('explorer.fuse.urlBase')}?module=token&action=getToken&contractaddress=${tokenAddress}`)
   const data = JSON.parse(res)
+  console.log(`Fetched token from explorer: ${tokenAddress} data: ${inspect(data['result'])}`)
   return data['result']
 }
 
@@ -33,7 +34,7 @@ const fetchTokenData = async (address, fields = {}, web3 = foreign.web3) => {
 
   const fetchedTokedData = { name, symbol, totalSupply: totalSupply.toString(), decimals }
 
-  console.log(`Fetched token ${address} data: ${inspect(fetchedTokedData)}`)
+  console.log(`Fetched token from RPC: ${address} data: ${inspect(fetchedTokedData)}`)
   return fetchedTokedData
 }
 

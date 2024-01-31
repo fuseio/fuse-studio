@@ -11,7 +11,8 @@ const QueueJob = mongoose.model('QueueJob')
 const request = require('request-promise-native')
 const Promise = require('bluebird')
 const { toChecksumAddress } = require('web3-utils')
-const { fetchToken, adjustDecimals } = require('@utils/token')
+const { fetchTokenData, adjustDecimals } = require('@utils/token')
+const { web3 } = require('@services/web3/home')
 
 /**
  * @api {post} /api/v2/admin/tokens/create Create token
@@ -93,7 +94,7 @@ router.post('/mint', auth.required, async (req, res) => {
   }
   const { tokenAddress, amount, toAddress, correlationId } = req.body
   try {
-    const { decimals } = await fetchToken(tokenAddress)
+    const { decimals } = await fetchTokenData(tokenAddress, {}, web3)
     const amountInWei = adjustDecimals(amount, 0, decimals)
     const taskExectionParams = role ? { role } : { accountAddress }
     const job = await taskManager.now('mint', { tokenAddress, bridgeType: 'home', ...taskExectionParams, amount: amountInWei, toAddress, correlationId })
@@ -129,7 +130,7 @@ router.post('/burn', auth.required, async (req, res) => {
   }
   const { tokenAddress, amount, from, correlationId, spendabilityIds, spendabilityOrder } = req.body
   try {
-    const { decimals } = await fetchToken(tokenAddress)
+    const { decimals } = await fetchTokenData(tokenAddress, {}, web3)
     const amountInWei = adjustDecimals(amount, 0, decimals)
     let job
     if (tokenAddress) {
@@ -185,7 +186,7 @@ router.post('/transfer', auth.required, async (req, res) => {
     return res.status(400).send({ error: 'The user is not a community admin' })
   }
   const { tokenAddress, amount, from, to, correlationId, spendabilityIds, spendabilityOrder } = req.body
-  const { decimals } = await fetchToken(tokenAddress)
+  const { decimals } = await fetchTokenData(tokenAddress, {}, web3)
   const amountInWei = adjustDecimals(amount, 0, decimals)
   if (tokenAddress) {
     try {
