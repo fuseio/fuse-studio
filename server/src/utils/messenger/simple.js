@@ -29,7 +29,7 @@ class Messenger {
     }
 
     const response = await this.sqs.receiveMessage(params).promise()
-    if (response.Messages) {
+    if (response.Messages && response.Messages.length > 0) {
       const message = response.Messages[0]
       console.log(`message with id ${message.MessageId} received`)
       return { ...message, Body: JSON.parse(message.Body) }
