@@ -29,9 +29,9 @@ module.exports = {
     fuse: {
       subgraphs: {
         fuse: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse',
-        entities: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse-entities',
-        bridgeMain: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse-ethereum-bridged-tokens',
-        blocks: 'https://api.thegraph.com/subgraphs/name/fuseio/fuse-blocks'
+        entities: 'https://gateway-arbitrum.network.thegraph.com/api/6c36ee2960eabbf1c9fa79e38547232e/subgraphs/id/BDJoPmz4BTZwXsSxt8Rw7cTwYx3bSn667Qa84QVAkZMA',
+        bridgeMain: 'https://gateway-arbitrum.network.thegraph.com/api/6c36ee2960eabbf1c9fa79e38547232e/subgraphs/id/3THneDa4GzN2avVU3fTzeK4QJU4eVKuJVsniQhMNGLmU',
+        blocks: 'https://gateway-arbitrum.network.thegraph.com/api/6c36ee2960eabbf1c9fa79e38547232e/subgraphs/id/4NdGNtBYVAuWriUfcb58vLmiaendp7v8EQ9tGe3i1RPo'
       }
     },
     uniswap: {
