@@ -20,7 +20,7 @@ Fuse studio is aimed to launch DeFi communities on Fuse network. The community c
 - Entities List contract to store community members and their roles
 - Community ERC20 token on Fuse network with transfer rules
 - ERC20 token on Ethereum. That's the token that the user issues part of the community deploy process
-- [Multitoken bridge](https://github.com/fuseio/bridge-contracts) - to minimize friction and costs we extended the POA ERC20-ERC20 bridge contract to many-ERC20-to-many contract.
+- [Multitoken bridge](https://docs.fuse.io/docs/developers/important-smart-contracts/major-deployed-contracts) - to minimize friction and costs we extended the POA ERC20-ERC20 bridge contract to many-ERC20-to-many contract.
 
 # Plugins
 The plugins are used to customise the community to your special needs. They can be smart contracts, backend services or the integration of two. The available plugins now are:
