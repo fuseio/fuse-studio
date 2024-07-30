@@ -61,6 +61,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
     let transactionHash
     const nonce = account.nonces[bridgeType]
     const methodName = getMethodName(method)
+    const gasPrice = await web3.eth.getGasPrice()
     console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
     const txObject = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
 
@@ -157,7 +158,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
   const from = address
   const gas = await estimateGas()
   // const gasPrice = await getGasPrice(bridgeType, web3, options.gasSpeed)
-  const gasPrice = '11000000000'
+  const gasPrice = await web3.eth.getGasPrice()
   const account = await Account.findOne({ address, bridgeType })
   for (let i = 0; i < retries; i++) {
     const response = await doSend(i) || {}

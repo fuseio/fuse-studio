@@ -141,8 +141,7 @@ const createForeignWallet = async (account, { communityAddress, userWallet, ens 
   }
 
   const receipt = await send(method, {
-    from: account.address,
-    gas: config.get('gasLimitForTx.createForeignWallet')
+    from: account.address
   }, {
     communityAddress,
     job
