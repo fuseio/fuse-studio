@@ -20,9 +20,7 @@ const funder = async ({ home: { send, from } }, communityProgress) => {
       {
         to: adminAddress,
         from,
-        value: toWei(bonus),
-        gasPrice: config.get('network.home.gasPrice'),
-        gas: config.get('gasLimitForTx.funder')
+        value: toWei(bonus)
       }
     )
     if (!receipt.status) {

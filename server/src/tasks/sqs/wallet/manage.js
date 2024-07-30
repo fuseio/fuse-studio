@@ -32,8 +32,7 @@ const addManager = async (mutisigOwnerAccount, { managerAccountAddress }, job) =
     {
       to: managerAccountAddress,
       from: mutisigOwnerAccount.address,
-      value: toWei(initialBalance),
-      gas: config.get('gasLimitForTx.funder')
+      value: toWei(initialBalance)
     },
     {
       job,

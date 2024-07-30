@@ -8,8 +8,7 @@ const relayTokens = async (network, { from, bridgeAddress, tokenAddress, receive
   const method = createMethod(multiBridgeContract, 'relayTokens', tokenAddress, receiver, amount)
 
   const receipt = await send(method, {
-    from,
-    gasSpeed
+    from
   })
   return receipt
 }
