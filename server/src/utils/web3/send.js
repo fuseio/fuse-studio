@@ -61,8 +61,49 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
     let transactionHash
     const nonce = account.nonces[bridgeType]
     const methodName = getMethodName(method)
-    console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${from} with nonce ${nonce}. gas price: ${gasPrice}, gas limit: ${gas}, options: ${inspect(options)}`)
-    const txObject = { ...options, gasPrice, gas, nonce, chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined }
+    // Estimate gas
+    let estimatedGas
+    try {
+      estimatedGas = await (method
+        ? method.estimateGas({ from: address, ...options })
+        : web3.eth.estimateGas({ ...options, from: address }))
+    } catch (error) {
+      console.error('Gas estimation failed:', error)
+      estimatedGas = options.gas || 300000 // fallback gas limit
+    }
+
+    // Add a buffer to the estimated gas (e.g., 20% more)
+    const gas = Math.floor(estimatedGas * 1.2)
+
+    // Get the latest block
+    const latestBlock = await web3.eth.getBlock('latest')
+    const baseFeePerGas = web3.utils.toBN(latestBlock.baseFeePerGas)
+
+    // Ensure minimum priority fee of 10 Gwei
+    const minPriorityFee = web3.utils.toWei('10', 'gwei')
+
+    // Get current gas price as a fallback for maxPriorityFeePerGas
+    const currentGasPrice = web3.utils.toBN(await web3.eth.getGasPrice())
+
+    // Use the larger of minPriorityFee or (currentGasPrice - baseFeePerGas)
+    const maxPriorityFeePerGas = web3.utils.toBN(minPriorityFee).gt(currentGasPrice.sub(baseFeePerGas))
+      ? web3.utils.toBN(minPriorityFee)
+      : currentGasPrice.sub(baseFeePerGas)
+
+    // Calculate max fee: 2 * baseFee + maxPriorityFeePerGas
+    const maxFeePerGas = baseFeePerGas.mul(web3.utils.toBN(2)).add(maxPriorityFeePerGas)
+
+    console.log(`[${bridgeType}][retry: ${retry}] sending method ${methodName} from ${address} with nonce ${nonce}. maxFeePerGas: ${maxFeePerGas}, maxPriorityFeePerGas: ${maxPriorityFeePerGas}, gas limit: ${gas}, options: ${inspect(options)}`)
+
+    const txObject = {
+      ...options,
+      maxFeePerGas: maxFeePerGas.toString(),
+      maxPriorityFeePerGas: maxPriorityFeePerGas.toString(),
+      gas,
+      nonce,
+      chainId: bridgeType === 'home' ? config.get('network.home.chainId') : undefined,
+      type: 2 // Explicitly set EIP-1559 transaction type
+    }
 
     const calculateTxHash = async () => {
       const { transactionHash } = await web3.eth.accounts.signTransaction({ to: method && method.contract._address, data: method ? method.encodeABI() : '', ...txObject }, web3.eth.accounts.wallet[0].privateKey)
@@ -151,12 +192,7 @@ const send = async ({ web3, bridgeType, address }, method, options, txContext = 
     }
   }
 
-  const estimateGas = () => options.gas ||
-    (method ? method.estimateGas({ from }) : web3.eth.estimateGas(options))
-
   const from = address
-  const gas = await estimateGas()
-  // const gasPrice = await getGasPrice(bridgeType, web3, options.gasSpeed)
   const gasPrice = await web3.eth.getGasPrice()
   const account = await Account.findOne({ address, bridgeType })
   for (let i = 0; i < retries; i++) {
