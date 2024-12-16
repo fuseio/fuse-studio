@@ -82,6 +82,11 @@ const tasksData = {
     bridgeType: 'home',
     name: 'adminSpendabilityTransfer'
   },
+  transferTokenOwnership: {
+    role: 'admin',
+    bridgeType: 'home',
+    name: 'transferTokenOwnership'
+  },
   relayTokens: {
     name: 'relayTokens'
   },
