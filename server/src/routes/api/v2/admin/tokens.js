@@ -380,4 +380,48 @@ router.post('/burnEvents', auth.required, async (req, res) => {
   return res.json({ result })
 })
 
+/**
+ * @api {post} /api/v2/admin/tokens/transferOwnership Transfer token ownership
+ * @apiName TransferOwnership
+ * @apiGroup Admin
+ * @apiDescription Start async job of transferring token ownership
+ * @apiExample Transfer token ownership on Fuse network
+ *  POST /api/v2/admin/tokens/transferOwnership
+ *  body: { tokenAddress: '0xbAa75ecD3Ea911c78A23D7cD16961Eadc5867d2b', newOwner: '0x5d651E34B6694A8778839441dA954Ece0EA733D8' }
+ * @apiParam {String} tokenAddress Token address to transfer ownership of
+ * @apiParam {String} newOwner Address of the new owner
+ *
+ * @apiParam (Query) {String} apiKey API key is used to access the API
+ *
+ * @apiHeader {String} Authorization JWT Authorization in a format "Bearer {jwtToken}"
+ *
+ * @apiSuccess {String} Started job data
+ */
+router.post('/transferOwnership', auth.required, async (req, res) => {
+  const { isCommunityAdmin, accountAddress } = req.user
+  if (!isCommunityAdmin) {
+    return res.status(400).send({ error: 'The user is not a community admin' })
+  }
+  const { tokenAddress, newOwner } = req.body
+
+  if (!tokenAddress) {
+    return res.status(400).send({ error: 'Missing tokenAddress' })
+  }
+  if (!newOwner) {
+    return res.status(400).send({ error: 'Missing newOwner address' })
+  }
+
+  try {
+    const job = await taskManager.now('transferTokenOwnership', {
+      bridgeType: 'home',
+      accountAddress,
+      tokenAddress,
+      newOwner
+    })
+    return res.json({ job })
+  } catch (err) {
+    return res.status(400).send({ error: err.message })
+  }
+})
+
 module.exports = router

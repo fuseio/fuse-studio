@@ -181,6 +181,18 @@ const adminSpendabilityTransfer = async (account, { bridgeType, tokenAddresses, 
   job.save()
 }
 
+const transferTokenOwnership = async (account, { bridgeType, tokenAddress, newOwner }, job) => {
+  const { createContract, createMethod, send } = createNetwork(bridgeType, account)
+  const tokenContractInstance = createContract(BasicTokenAbi, tokenAddress)
+  const method = createMethod(tokenContractInstance, 'transferOwnership', newOwner)
+
+  await send(method, {
+    from: account.address
+  }, {
+    job
+  })
+}
+
 module.exports = {
   createToken,
   mint,
@@ -189,5 +201,6 @@ module.exports = {
   adminApprove,
   adminSpendabilityApprove,
   adminTransfer,
-  adminSpendabilityTransfer
+  adminSpendabilityTransfer,
+  transferTokenOwnership
 }
